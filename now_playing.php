@@ -57,10 +57,10 @@ if (AmpConfig::get('now_playing_refresh_limit') > 1) {
 Stream::gc_now_playing();
 $results = Stream::get_now_playing();
 
-if ($_REQUEST['user_id']) {
+if (Core::get_request('user_id') !== '') {
     // If the URL specifies a specific user, filter the results on that user
     $results = array_filter($results, function ($item) {
-        return ($item['client']->id == $_REQUEST['user_id']);
+        return ($item['client']->id === (int) Core::get_request('user_id'));
     });
 }
 

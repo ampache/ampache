@@ -56,7 +56,7 @@ switch ($_REQUEST['action']) {
     case 'append_item':
         // Only song item are supported with playlists
 
-        debug_event('playlist.ajax', 'Appending items to playlist {' . $_REQUEST['playlist_id'] . '}...', 5);
+        debug_event('playlist.ajax', 'Appending items to playlist {' . Core::get_request('playlist_id') . '}...', 5);
 
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
             if (!Access::check('interface', '25')) {

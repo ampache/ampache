@@ -102,7 +102,7 @@ switch ($_REQUEST['action']) {
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
             $_GET[$key] = unhtmlentities((string) scrub_in($data));
-            debug_event('playlist', $key . '=' . $_GET[$key], 5);
+            debug_event('playlist', $key . '=' . Core::get_get($key), 5);
         }
 
         if (isset($_GET['order'])) {

@@ -120,12 +120,12 @@ switch ($_REQUEST['action']) {
         /* Verify that this plugin exists */
         $plugins = Plugin::get_plugins();
         if (!array_key_exists($_REQUEST['plugin'], $plugins)) {
-            debug_event('modules', 'Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected', 1);
+            debug_event('modules', 'Error: Invalid Plugin: ' . Core::get_request('plugin') . ' selected', 1);
             break;
         }
         $plugin = new Plugin($_REQUEST['plugin']);
         if (!$plugin->install()) {
-            debug_event('modules', 'Error: Plugin Install Failed, ' . $_REQUEST['plugin'], 1);
+            debug_event('modules', 'Error: Plugin Install Failed, ' . Core::get_request('plugin'), 1);
             $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
             $title  = T_('Unable to Install Plugin');
             $body   = '';
@@ -153,7 +153,7 @@ switch ($_REQUEST['action']) {
         /* Verify that this plugin exists */
         $plugins = Plugin::get_plugins();
         if (!array_key_exists($_REQUEST['plugin'], $plugins)) {
-            debug_event('modules', 'Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected', 1);
+            debug_event('modules', 'Error: Invalid Plugin: ' . Core::get_request('plugin') . ' selected', 1);
             break;
         }
         $plugin = new Plugin($_REQUEST['plugin']);
@@ -172,7 +172,7 @@ switch ($_REQUEST['action']) {
         /* Verify that this plugin exists */
         $plugins = Plugin::get_plugins();
         if (!array_key_exists($_REQUEST['plugin'], $plugins)) {
-            debug_event('modules', 'Error: Invalid Plugin: ' . $_REQUEST['plugin'] . ' selected', 1);
+            debug_event('modules', 'Error: Invalid Plugin: ' . Core::get_request('plugin') . ' selected', 1);
             break;
         }
         $plugin = new Plugin($_REQUEST['plugin']);
