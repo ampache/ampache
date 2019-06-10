@@ -631,7 +631,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     position: fixed;
     right: 10px;
     top: 66px;
-    width: 200px;
+    min-width: 100px;
+    max-width: 250px;
     margin: 5px 15px auto auto;
     max-height: 85%;
     padding: 4px;
