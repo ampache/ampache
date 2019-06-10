@@ -29,7 +29,13 @@ if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {
 $htmllang                             = str_replace("_", "-", AmpConfig::get('lang'));
 is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
 
-$web_path = AmpConfig::get('web_path');
+$web_path       = AmpConfig::get('web_path');
+$mobile_session = false;
+$user_agent     = $_SERVER['HTTP_USER_AGENT'];
+
+if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'))) {
+    $mobile_session = true;
+}
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -43,13 +49,11 @@ $web_path = AmpConfig::get('web_path');
     </head>
     <body id="loginPage">
         <div id="maincontainer">
-            <div id="header"><!-- This is the header -->
-                <h1 id="headerlogo">
-                    <a href="<?php echo $web_path ?>/login.php">
-                        <img src="<?php echo UI::get_logo_url(); ?>" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
-                    </a>
-                </h1>
-            </div>
+            <?php if (!$mobile_session) {
+    echo "<div id=\"header\"><!-- This is the header -->";
+    echo "<a href=\"" . $web_path . "\"><h1 id=\"headerlogo\"></h1></a>";
+    echo "</div>";
+} ?>
             <div id="loginbox">
                 <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
                 <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path ?>/lostpassword.php">
@@ -60,6 +64,11 @@ $web_path = AmpConfig::get('web_path');
                     </div>
                     <input class="button" id="lostpasswordbutton" type="submit" value="<?php echo T_('Submit'); ?>" />
                 </form>
+            <?php if ($mobile_session) {
+    echo "<div id=\"mobileheader\"><!-- This is the header -->";
+    echo "<h1 id=\"headerlogo\"></h1>";
+    echo "</div>";
+} ?>
             </div>
         </div>
         <div id="footer">
@@ -69,3 +78,4 @@ $web_path = AmpConfig::get('web_path');
         </div>
     </body>
 </html>
+
