@@ -806,7 +806,7 @@ class Query
     public function set_catalog($catalog_number)
     {
         $this->catalog = $catalog_number;
-        debug_event('query.class', "set catalog id: " . $this->catalog, "5");
+        debug_event('query.class', "set catalog id: " . $this->catalog, 5);
     }
 
     /**
@@ -1271,10 +1271,14 @@ class Query
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
-        if (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
+        // filter albums when you have grouped disks!
+        if ($this->get_type() == 'album' && !$this->_state['custom'] && AmpConfig::get('album_group')) {
+            $final_sql .= " GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ";
+        } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
+        debug_event('query.class', "get_sql: " . $final_sql, 5);
 
         return $final_sql;
     } // get_sql

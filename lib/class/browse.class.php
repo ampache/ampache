@@ -217,6 +217,17 @@ class Browse extends Query
                 } else {
                     $allow_group_disks = false;
                 }
+                if (AmpConfig::get('album_group')) {
+                    $allow_group_disks = true;
+                    $box_req           = AmpConfig::get('prefix') . UI::find_template('show_albums.inc.php');
+                } else {
+                    $box_req = AmpConfig::get('prefix') . UI::find_template('show_album_group_disks.inc.php');
+                }
+
+
+
+
+
                 $box_req = AmpConfig::get('prefix') . UI::find_template('show_albums.inc.php');
             break;
             case 'user':
