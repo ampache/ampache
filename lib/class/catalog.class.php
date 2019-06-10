@@ -230,7 +230,7 @@ abstract class Catalog extends database_object
     public static function create_catalog_type($type, $id = 0)
     {
         if (!$type) {
-            return false;
+            return null;
         }
 
         $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '/' . $type . '.catalog.php';
@@ -240,7 +240,7 @@ abstract class Catalog extends database_object
             /* Throw Error Here */
             debug_event('catalog.class', 'Unable to load ' . $type . ' catalog type', 2);
 
-            return false;
+            return null;
         } // include
         else {
             $class_name = "Catalog_" . $type;
@@ -252,7 +252,7 @@ abstract class Catalog extends database_object
             if (!($catalog instanceof Catalog)) {
                 debug_event('catalog.class', $type . ' not an instance of Catalog abstract, unable to load', 1);
 
-                return false;
+                return null;
             }
 
             return $catalog;
@@ -663,7 +663,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        return $insert_id;
+        return (int) $insert_id;
     }
 
     /**
@@ -749,6 +749,7 @@ abstract class Catalog extends database_object
         $results['artists']        = $artists;
         $results['playlists']      = $playlists;
         $results['smartplaylists'] = $smartplaylists;
+        $results['live_stream']    = $live_streams;
         $results['podcasts']       = $podcasts;
         $results['size']           = $size;
         $results['time']           = $time;
@@ -2412,6 +2413,7 @@ abstract class Catalog extends database_object
         switch ($_REQUEST['action']) {
             case 'add_to_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
+                // intentional fall through
             case 'add_to_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2428,6 +2430,7 @@ abstract class Catalog extends database_object
                 break;
             case 'update_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
+                // intentional fall through
             case 'update_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2456,6 +2459,7 @@ abstract class Catalog extends database_object
                 break;
             case 'clean_all_catalogs':
                 $catalogs = Catalog::get_catalogs();
+                // intentional fall through
             case 'clean_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {

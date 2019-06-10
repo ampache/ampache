@@ -120,7 +120,7 @@ class LDAP
     /**
      * Connect to the LDAP
      * Note: This does not open a connection. It checks whether
-     * the given parameters are plausibe and can be used to open a
+     * the given parameters are plausible and can be used to open a
      * connection as soon as one is needed.
      */
     private static function connect()
@@ -196,7 +196,7 @@ class LDAP
 
     /**
      * Search for a DN in the LDAP
-     * @return string
+     * @return string|array
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true)
     {

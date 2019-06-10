@@ -206,7 +206,7 @@ function charset_rename_file($full_file, $translated_filename) {
     $old_sum = Core::get_filesize($full_file);
     $new_sum = Core::get_filesize($translated_filename);
 
-    if ($old_sum != $new_sum OR !$new_sum) {
+    if ($old_sum != $new_sum || !$new_sum) {
         printf (T_('Error: Size Inconsistency, not deleting %s'), $full_file);
         echo "\n";
         return false;

@@ -1431,7 +1431,7 @@ class User extends database_object
      * activate_user
      * the user from public_registration
      */
-    public function activate_user($username)
+    public static function activate_user($username)
     {
         $username = Dba::escape($username);
 

@@ -109,5 +109,7 @@ function usage() {
             artists       $desc5
         $desc6\n\n";
 
-        exit($string); 
+        echo $string;
+        
+        return;
 } // usage

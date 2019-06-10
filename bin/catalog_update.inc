@@ -85,12 +85,12 @@ if (count($options) == 0) {
             $optimizetables = 1;
         }
 }
-if (count($_SERVER['argv']) != 1 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1) {
+if (count($_SERVER['argv']) != 1 && $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $plimp != 1) {
     usage();
     return false;
 }
 
-if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0) {    //didn't pass any clean/verify/add arguments
+if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0 && $plimp == 0) {    //didn't pass any clean/verify/add arguments
     $catclean = 1;     //set them all to on
     $catverify = 1;
     $catadd = 1;
@@ -235,7 +235,7 @@ function usage() {
     echo "----------------------------------------------------------\033[31m\n";
     echo "1. " . T_('Use this option at your own risk! Your system could crash or become unresponsive due to huge memory consumption!') . "\n";
     echo "2. " . T_('Depending on your systems performance, this option could need a long time to finish and extremely slow down other database processes if you have big catalogs!') . "\n";
-    echo "!  " . T_('The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-v|-a|-g] is used.');
+    echo "!  " . T_('The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-a|-g] is used.');
     echo "\033[0m\n";
     echo "----------------------------------------------------------";
     echo "\n";

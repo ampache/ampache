@@ -357,7 +357,7 @@ class Localplay
     {
         $data = $this->_player->get();
 
-        if (!count($data) || !is_array($data)) {
+        if (empty($data) || !is_array($data)) {
             debug_event('localplay.class', 'Error Unable to get song info, check ' . $this->type . ' controller', 1);
 
             return array();

@@ -279,7 +279,7 @@ class Shoutbox
      * this function deletes a specific shoutbox entry
      */
 
-    public function delete($shout_id)
+    public static function delete($shout_id)
     {
         // Delete the shoutbox post
         $shout_id = Dba::escape($shout_id);

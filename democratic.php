@@ -37,6 +37,7 @@ switch ($_REQUEST['action']) {
                 $democratic = Democratic::get_current_playlist();
                 $democratic->set_parent();
                 $democratic->format();
+    // intentional fall through
     case 'show_create':
         if (!Access::check('interface', '75')) {
             UI::access_denied();
