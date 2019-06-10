@@ -209,19 +209,17 @@ class Browse extends Query
             case 'album':
                 Album::build_cache($object_ids);
                 $box_title = T_('Albums') . $match;
+                $allow_group_disks = false;
                 if (is_array($argument)) {
                     $allow_group_disks = $argument['group_disks'];
                     if ($argument['title']) {
                         $box_title = $argument['title'];
                     }
-                } else {
-                    $allow_group_disks = false;
                 }
-                $box_req = AmpConfig::get('prefix') . UI::find_template('show_albums.inc.php');
                 if (AmpConfig::get('album_group')) {
                     $allow_group_disks = true;
-                    $box_req           = AmpConfig::get('prefix') . UI::find_template('show_album_group_disks.inc.php');
                 }
+                $box_req = AmpConfig::get('prefix') . UI::find_template('show_albums.inc.php');
             break;
             case 'user':
                 $box_title = T_('Users') . $match;
