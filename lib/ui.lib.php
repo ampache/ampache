@@ -240,7 +240,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
     while ($row = Dba::fetch_assoc($db_results)) {
         $selected   = '';
         $album_name = trim($row['prefix'] . " " . $row['name']);
-        if ($row['disk'] >= 1) {
+        if ($row['disk'] >= 1 && !AmpConfig::get('album_group')) {
             $album_name .= ' [Disk ' . $row['disk'] . ']';
         }
         if ($row['id'] == $album_id) {
