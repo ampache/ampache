@@ -208,7 +208,7 @@ class Browse extends Query
             break;
             case 'album':
                 Album::build_cache($object_ids);
-                $box_title = T_('Albums') . $match;
+                $box_title         = T_('Albums') . $match;
                 $allow_group_disks = false;
                 if (is_array($argument)) {
                     $allow_group_disks = $argument['group_disks'];
