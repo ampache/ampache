@@ -385,12 +385,12 @@ class vainfo
             $info['mb_artistid']      = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
             $info['mb_albumartistid'] = $info['mb_albumartistid'] ?: trim($tags['mb_albumartistid']);
             $info['release_type']     = $info['release_type'] ?: trim($tags['release_type']);
+            $info['artists']          = $info['artists'] ?: trim($tags['artists']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
             $info['comment']  = $info['comment'] ?: trim($tags['comment']);
+            $info['lyrics']   = $info['lyrics'] ?: strip_tags(nl2br($tags['lyrics']), "<br>");
 
-            $info['lyrics']    = $info['lyrics']
-                    ?: strip_tags(nl2br($tags['lyrics']), "<br>");
             $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: floatval($tags['replaygain_track_gain']);
             $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: floatval($tags['replaygain_track_peak']);
             $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: floatval($tags['replaygain_album_gain']);
@@ -897,6 +897,9 @@ class vainfo
                 // getID3 has copies of text properly converted to utf-8 encoding in comments/text
                 foreach ($id3v2['TXXX'] as $txxx) {
                     switch (strtolower($this->trimAscii($txxx['description']))) {
+                        case 'artists':
+                            $parsed['artists'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
                         case 'musicbrainz album id':
                             $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;

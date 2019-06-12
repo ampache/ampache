@@ -1939,12 +1939,11 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * trim_slashed_list
-     * Return only the first item from / separated list
+     * parse_ID3_list
      * @param string $string
-     * @return string
+     * @return array
      */
-    public static function trim_slashed_list($string)
+    public static function parse_ID3_list($string)
     {
         if ($string) {
             $items = explode("\x00", $string);
@@ -1961,7 +1960,24 @@ abstract class Catalog extends database_object
             }
         }
         if ($first == '') {
-            $first = null;
+            $items = null;
+        }
+
+        return $items;
+    } // parse_ID3_list
+
+
+    /**
+     * trim_slashed_list
+     * Return only the first item from / separated list
+     * @param string $string
+     * @return string
+     */
+    public static function trim_slashed_list($string)
+    {
+        $items = self::parse_ID3_list($string);
+        if (isset($items) && isset($items[0]) && $items[0] != '') {
+            $first = $items[0];
         }
 
         return $first;
