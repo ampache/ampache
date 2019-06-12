@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
         if (!$song->id) {
             debug_event('song', 'Requested a song that does not exist', 2);
             echo T_("Error: Requested a song that does not exist.");
-        } else{
+        } else {
             require_once AmpConfig::get('prefix') . UI::find_template('show_song.inc.php');
         }
     break;

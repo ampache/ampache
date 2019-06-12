@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
         if (!$artist->id) {
             debug_event('artists', 'Requested an artist that does not exist', 2);
             echo T_("Error: Requested an artist that does not exist.");
-        } else{
+        } else {
             require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
         }
     break;

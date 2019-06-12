@@ -312,10 +312,12 @@ abstract class Catalog extends database_object
      * @param string $path
      * @return boolean
      */
-    public static function create_catalog_path($path) {
+    public static function create_catalog_path($path)
+    {
         if (!is_dir($path)) {
             if (mkdir($path) === false) {
                 debug_event('podcast.class', 'Cannot create directory ' . $path, 2);
+
                 return false;
             }
         }
