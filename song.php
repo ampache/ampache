@@ -71,7 +71,12 @@ switch ($_REQUEST['action']) {
         $song = new Song($_REQUEST['song_id']);
         $song->format();
         $song->fill_ext_info();
-        require_once AmpConfig::get('prefix') . UI::find_template('show_song.inc.php');
+        if (!$song->id) {
+            debug_event('song', 'Requested a song that does not exist', 2);
+            echo T_("Error: Requested a song that does not exist.");
+        } else{
+            require_once AmpConfig::get('prefix') . UI::find_template('show_song.inc.php');
+        }
     break;
 } // end data collection
 

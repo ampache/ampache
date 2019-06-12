@@ -125,7 +125,7 @@ switch ($_REQUEST['action']) {
         $album = new Album($_REQUEST['album']);
         $album->format();
         if (!$album->id) {
-            debug_event('albums', 'Requested to display an album that does not exist', 2);
+            debug_event('albums', 'Requested an album that does not exist', 2);
             echo T_("Error: Requested an album that does not exist.");
         } elseif (!count($album->album_suite)) {
             require AmpConfig::get('prefix') . UI::find_template('show_album.inc.php');
