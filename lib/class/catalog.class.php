@@ -1975,7 +1975,7 @@ abstract class Catalog extends database_object
     public static function trim_slashed_list($string)
     {
         $items = self::parse_ID3_list($string);
-        if (isset($items) && isset($items[0])  && $items[0] != '') {
+        if (isset($items) && isset($items[0]) && $items[0] != '') {
             $first = $items[0];
         }
 
