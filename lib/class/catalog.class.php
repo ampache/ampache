@@ -1962,6 +1962,7 @@ abstract class Catalog extends database_object
         if ($first == '') {
             $items = null;
         }
+
         return $items;
     } // parse_ID3_list
 
