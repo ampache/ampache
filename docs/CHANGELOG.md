@@ -22,8 +22,8 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - Added a $_SESSION['mobile'] variable to allow changing pages for mobile devices.
 - Viewport settings for mobile devices
 - Format the input fields. (you get a datetime picker on mobile!)
-- Login screen moves the logo to the bottom on mobile like cockpit does! (makes typing easier on a touch screen)
-- Load webplayer to stop popup preferences hiding the window
+- Login/lostpassword moves the logo to the bottom on mobile like cockpit does! (makes typing easier on a touch screen)
+- Load webplayer hidden to stop popup preferences hiding the window
 - Hide video in search/stats if not enabled
 - Use a random cover for playlist art
 - Move some $_GET, POST, $_REQUEST calls to Core
@@ -31,12 +31,15 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - Code documentation and bug hunting
 - Fixed setting button requiring two single clicks to open. (Thanks for this 2016 pull @AshotN)
 - Fixed import_playlist code. Do not recreate existing playlists and don't imports existing songs.
+- Stop trying to insert art when present during catalog update
 - Lots of code tweaks to make things more uniform and readable.
-- Add now_playing.php to allow badges for currently playing tracks.
+- Add now_playing.php to allow badges for currently playing tracks. (Fall back to last played if none.)
 - Add year information and links to the data rows and interface
 - Default to mashup for artists and albums
 - Add rating_browse_filter, rating_browse_minimum_stars to filter based on a star rating.
 - Add send_full_stream to config, to allow pushing the full track instead of segmenting
+- Add debugging in song.class.php when the file may be corrupt
+- Remove '[Disk x]' when grouped from all UI areas by enforcing the group setting.
 
 3.9.1
 ----------

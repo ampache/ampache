@@ -385,6 +385,10 @@ class Song extends database_object implements media, library_item
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
 
+        if ($mode !== 'vbr' || $mode !== 'cbr' || $mode !== 'abr') {
+            debug_event('song.class', 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
+            $mode = null;
+        }
         if (!isset($results['albumartist_id'])) {
             $albumartist_id   = null;
             if ($albumartist) {
