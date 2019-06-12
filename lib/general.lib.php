@@ -92,7 +92,7 @@ function scrub_in($input)
  */
 function scrub_out($string)
 {
-    return htmlentities($string, ENT_QUOTES, AmpConfig::get('site_charset'));
+    return htmlentities($string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
 } // scrub_out
 
 /**
