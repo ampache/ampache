@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,7 +40,6 @@ UI::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
             $current_name = 'catalog_' . $catalog->id; ?>
             <option value="<?php echo $catalog->id; ?>"<?php echo ${$current_name}; ?>><?php echo scrub_out($catalog->name); ?></option>
 <?php
-
         }
 ?>
         </select>

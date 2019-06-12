@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,21 +56,28 @@ if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'hands
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-$username =
-    ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping')
-    ? $_REQUEST['user']
-    : Session::username($_REQUEST['auth']);
+$username = null;
+$apikey   = null;
 
-if (!Access::check_network('init-api', $username, 5)) {
+if (($_REQUEST['action'] == 'handshake') && isset($_REQUEST['timestamp'])) {
+    $username = $_REQUEST['user'];
+} else {
+    $apikey = $_REQUEST['auth'];
+}
+
+if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
     debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
     exit();
 }
 
-if ($_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
-    Session::extend($_REQUEST['auth']);
-    $GLOBALS['user'] = User::get_from_username($username);
+if (($_REQUEST['action'] != 'handshake') && ($_REQUEST['action'] != 'ping')) {
+    if (isset($_REQUEST['user'])) {
+        $GLOBALS['user'] = User::get_from_username($_REQUEST['user']);
+    } else {
+        $GLOBALS['user'] = User::get_from_apikey($_REQUEST['auth']);
+    }
 }
 
 // Make sure beautiful url is disabled as it is not supported by most Ampache clients

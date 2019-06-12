@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,7 @@ class Search extends playlist_object
         $this->searchtype = $searchtype;
         if ($id) {
             $info = $this->get_info($id);
-            foreach ($info as $key=>$value) {
+            foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
 
@@ -58,235 +58,278 @@ class Search extends playlist_object
         // Define our basetypes
 
         $this->basetypes['numeric'][] = array(
-            'name'    => 'gte',
+            'name' => 'gte',
             'description' => T_('is greater than or equal to'),
-            'sql'     => '>='
+            'sql' => '>='
         );
 
         $this->basetypes['numeric'][] = array(
-            'name'    => 'lte',
+            'name' => 'lte',
             'description' => T_('is less than or equal to'),
-            'sql'     => '<='
+            'sql' => '<='
         );
 
         $this->basetypes['numeric'][] = array(
-            'name'    => 'equal',
+            'name' => 'equal',
             'description' => T_('is'),
-            'sql'     => '<=>'
+            'sql' => '<=>'
         );
 
         $this->basetypes['numeric'][] = array(
-            'name'    => 'ne',
+            'name' => 'ne',
             'description' => T_('is not'),
-            'sql'     => '<>'
+            'sql' => '<>'
         );
 
         $this->basetypes['numeric'][] = array(
-            'name'    => 'gt',
+            'name' => 'gt',
             'description' => T_('is greater than'),
-            'sql'     => '>'
+            'sql' => '>'
         );
 
         $this->basetypes['numeric'][] = array(
-            'name'    => 'lt',
+            'name' => 'lt',
             'description' => T_('is less than'),
-            'sql'     => '<'
+            'sql' => '<'
         );
 
 
         $this->basetypes['boolean'][] = array(
-            'name'    => 'true',
-            'description' => T_('is true')
+            'name' => 'true',
+            'description' => T_('is true'),
+            'sql' => '1'
         );
 
         $this->basetypes['boolean'][] = array(
-            'name'    => 'false',
-            'description' => T_('is false')
+            'name' => 'false',
+            'description' => T_('is false'),
+            'sql' => '0'
         );
 
 
         $this->basetypes['text'][] = array(
-            'name'     => 'contain',
-            'description'  => T_('contains'),
-            'sql'      => 'LIKE',
-            'preg_match'   => array('/^/','/$/'),
+            'name' => 'contain',
+            'description' => T_('contains'),
+            'sql' => 'LIKE',
+            'preg_match' => array('/^/','/$/'),
             'preg_replace' => array('%', '%')
         );
 
         $this->basetypes['text'][] = array(
-            'name'     => 'notcontain',
-            'description'  => T_('does not contain'),
-            'sql'      => 'NOT LIKE',
-            'preg_match'   => array('/^/','/$/'),
+            'name' => 'notcontain',
+            'description' => T_('does not contain'),
+            'sql' => 'NOT LIKE',
+            'preg_match' => array('/^/','/$/'),
             'preg_replace' => array('%', '%')
         );
 
         $this->basetypes['text'][] = array(
-            'name'     => 'start',
-            'description'  => T_('starts with'),
-            'sql'      => 'LIKE',
-            'preg_match'   => '/$/',
+            'name' => 'start',
+            'description' => T_('starts with'),
+            'sql' => 'LIKE',
+            'preg_match' => '/$/',
             'preg_replace' => '%'
         );
 
         $this->basetypes['text'][] = array(
-            'name'     => 'end',
-            'description'  => T_('ends with'),
-            'sql'      => 'LIKE',
-            'preg_match'   => '/^/',
+            'name' => 'end',
+            'description' => T_('ends with'),
+            'sql' => 'LIKE',
+            'preg_match' => '/^/',
             'preg_replace' => '%'
         );
 
         $this->basetypes['text'][] = array(
-            'name'    => 'equal',
+            'name' => 'equal',
             'description' => T_('is'),
-            'sql'     => '='
+            'sql' => '='
         );
 
         $this->basetypes['text'][] = array(
-            'name'    => 'sounds',
+            'name' => 'sounds',
             'description' => T_('sounds like'),
-            'sql'     => 'SOUNDS LIKE'
+            'sql' => 'SOUNDS LIKE'
         );
 
         $this->basetypes['text'][] = array(
-            'name'    => 'notsounds',
+            'name' => 'notsounds',
             'description' => T_('does not sound like'),
-            'sql'     => 'NOT SOUNDS LIKE'
+            'sql' => 'NOT SOUNDS LIKE'
         );
 
 
         $this->basetypes['boolean_numeric'][] = array(
-            'name'    => 'equal',
+            'name' => 'equal',
             'description' => T_('is'),
-            'sql'     => '<=>'
+            'sql' => '<=>'
         );
 
         $this->basetypes['boolean_numeric'][] = array(
-            'name'    => 'ne',
+            'name' => 'ne',
             'description' => T_('is not'),
-            'sql'     => '<>'
+            'sql' => '<>'
         );
 
 
         $this->basetypes['boolean_subsearch'][] = array(
-            'name'    => 'equal',
+            'name' => 'equal',
             'description' => T_('is'),
-            'sql'     => ''
+            'sql' => ''
         );
 
         $this->basetypes['boolean_subsearch'][] = array(
-            'name'    => 'ne',
+            'name' => 'ne',
             'description' => T_('is not'),
-            'sql'     => 'NOT'
+            'sql' => 'NOT'
         );
 
 
         $this->basetypes['date'][] = array(
-            'name'    => 'lt',
+            'name' => 'lt',
             'description' => T_('before'),
-            'sql'     => '<'
+            'sql' => '<'
         );
 
         $this->basetypes['date'][] = array(
-            'name'    => 'gt',
+            'name' => 'gt',
             'description' => T_('after'),
-            'sql'     => '>'
+            'sql' => '>'
         );
+
+
+        $this->basetypes['days'][] = array(
+            'name' => 'lt',
+            'description' => T_('before (x) days ago'),
+            'sql' => '<'
+        );
+
+        $this->basetypes['days'][] = array(
+            'name' => 'gt',
+            'description' => T_('after (x) days ago'),
+            'sql' => '>'
+        );
+
         $this->basetypes['multiple'] = array_merge($this->basetypes['text'], $this->basetypes['numeric']);
 
         switch ($searchtype) {
         case 'song':
             $this->types[] = array(
-                'name'   => 'anywhere',
-                'label'  =>  T_('Any searchable text'),
-                'type'   => 'text',
+                'name' => 'anywhere',
+                'label' => T_('Any searchable text'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'title',
-                'label'  => T_('Title'),
-                'type'   => 'text',
+                'name' => 'title',
+                'label' => T_('Title'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'album',
-                'label'  => T_('Album'),
-                'type'   => 'text',
+                'name' => 'album',
+                'label' => T_('Album'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'artist',
-                'label'  => T_('Artist'),
-                'type'   => 'text',
+                'name' => 'artist',
+                'label' => T_('Artist'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'composer',
-                'label'  => T_('Composer'),
-                'type'   => 'text',
+                'name' => 'composer',
+                'label' => T_('Composer'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'comment',
-                'label'  =>  T_('Comment'),
-                'type'   => 'text',
+                'name' => 'comment',
+                'label' => T_('Comment'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'label',
-                'label'  =>  T_('Label'),
-                'type'   => 'text',
+                'name' => 'label',
+                'label' => T_('Label'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
 
             $this->types[] = array(
-                'name'   => 'tag',
-                'label'  => T_('Tag'),
-                'type'   => 'text',
+                'name' => 'tag',
+                'label' => T_('Tag'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'album_tag',
-                'label'  => T_('Album tag'),
-                'type'   => 'text',
+                'name' => 'album_tag',
+                'label' => T_('Album tag'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'file',
-                'label'  => T_('Filename'),
-                'type'   => 'text',
+                'name' => 'file',
+                'label' => T_('Filename'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'year',
-                'label'  => T_('Year'),
-                'type'   => 'numeric',
+                'name' => 'year',
+                'label' => T_('Year'),
+                'type' => 'numeric',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'time',
-                'label'  => T_('Length (in minutes)'),
-                'type'   => 'numeric',
+                'name' => 'time',
+                'label' => T_('Length (in minutes)'),
+                'type' => 'numeric',
                 'widget' => array('input', 'text')
             );
 
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
-                    'name'   => 'rating',
-                    'label'  => T_('Rating'),
-                    'type'   => 'numeric',
+                    'name' => 'rating',
+                    'label' => T_('Rating (Average)'),
+                    'type' => 'numeric',
+                    'widget' => array(
+                        'select',
+                        array(
+                            '1 Star',
+                            '2 Stars',
+                            '3 Stars',
+                            '4 Stars',
+                            '5 Stars'
+                        )
+                    )
+                );
+            }
+
+            if (AmpConfig::get('userflags')) {
+                $this->types[] = array(
+                    'name' => 'favorite',
+                    'label' => T_('Favorites'),
+                    'type' => 'text',
+                    'widget' => array('input', 'text')
+                );
+            }
+
+            if (AmpConfig::get('ratings')) {
+                $this->types[] = array(
+                    'name' => 'myratings',
+                    'label' => T_('Rating (Mine)'),
+                    'type' => 'numeric',
                     'widget' => array(
                         'select',
                         array(
@@ -302,17 +345,17 @@ class Search extends playlist_object
 
             if (AmpConfig::get('show_played_times')) {
                 $this->types[] = array(
-                    'name'   => 'played_times',
-                    'label'  => T_('# Played'),
-                    'type'   => 'numeric',
+                    'name' => 'played_times',
+                    'label' => T_('# Played'),
+                    'type' => 'numeric',
                     'widget' => array('input', 'text')
                 );
             }
 
             $this->types[] = array(
-                'name'   => 'bitrate',
-                'label'  => T_('Bitrate'),
-                'type'   => 'numeric',
+                'name' => 'bitrate',
+                'label' => T_('Bitrate'),
+                'type' => 'numeric',
                 'widget' => array(
                     'select',
                     array(
@@ -335,23 +378,30 @@ class Search extends playlist_object
             );
 
             $this->types[] = array(
-                'name'   => 'played',
-                'label'  => T_('Played'),
-                'type'   => 'boolean',
-                'widget' => array('input', 'hidden')
-            );
-
-            $this->types[] = array(
-                'name'   => 'added',
-                'label'  => T_('Added'),
-                'type'   => 'date',
+                'name' => 'last_play',
+                'label' => T_('My Last Play'),
+                'type' => 'days',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'updated',
-                'label'  => T_('Updated'),
-                'type'   => 'date',
+                'name' => 'played',
+                'label' => T_('Played'),
+                'type' => 'boolean',
+                'widget' => array('input', 'hidden')
+            );
+
+            $this->types[] = array(
+                'name' => 'added',
+                'label' => T_('Added'),
+                'type' => 'date',
+                'widget' => array('input', 'text')
+            );
+
+            $this->types[] = array(
+                'name' => 'updated',
+                'label' => T_('Updated'),
+                'type' => 'date',
                 'widget' => array('input', 'text')
             );
 
@@ -362,42 +412,42 @@ class Search extends playlist_object
                 $catalogs[$catid] = $catalog->f_name;
             }
             $this->types[] = array(
-                'name'   => 'catalog',
-                'label'  => T_('Catalog'),
-                'type'   => 'boolean_numeric',
+                'name' => 'catalog',
+                'label' => T_('Catalog'),
+                'type' => 'boolean_numeric',
                 'widget' => array('select', $catalogs)
             );
 
             $playlists = array();
             foreach (Playlist::get_playlists() as $playlistid) {
                 $playlist = new Playlist($playlistid);
-                $playlist->format();
+                $playlist->format(false);
                 $playlists[$playlistid] = $playlist->f_name;
             }
             $this->types[] = array(
-                'name'   => 'playlist',
-                'label'  => T_('Playlist'),
+                'name' => 'playlist',
+                'label' => T_('Playlist'),
                 'type' => 'boolean_numeric',
                 'widget' => array('select', $playlists)
             );
 
             $this->types[] = array(
-                'name'   => 'playlist_name',
-                'label'  => T_('Playlist Name'),
-                'type'   => 'text',
+                'name' => 'playlist_name',
+                'label' => T_('Playlist Name'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $playlists = array();
             foreach (Search::get_searches() as $playlistid) {
                 // Slightly different from the above so we don't instigate
-            // a vicious loop.
+                // a vicious loop.
                 $playlists[$playlistid] = Search::get_name_byid($playlistid);
             }
             $this->types[] = array(
-                'name'   => 'smartplaylist',
-                'label'  => T_('Smart Playlist'),
-                'type'   => 'boolean_subsearch',
+                'name' => 'smartplaylist',
+                'label' => T_('Smart Playlist'),
+                'type' => 'boolean_subsearch',
                 'widget' => array('select', $playlists)
             );
 
@@ -421,9 +471,9 @@ class Search extends playlist_object
             }
             if (AmpConfig::get('licensing')) {
                 $this->types[] = array(
-                    'name'   => 'license',
-                    'label'  => T_('Music License'),
-                    'type'   => 'boolean_numeric',
+                    'name' => 'license',
+                    'label' => T_('Music License'),
+                    'type' => 'boolean_numeric',
                     'widget' => array('select', $licenses)
                 );
             }
@@ -431,45 +481,45 @@ class Search extends playlist_object
         break;
         case 'album':
             $this->types[] = array(
-                'name'   => 'title',
-                'label'  => T_('Title'),
-                'type'   => 'text',
+                'name' => 'title',
+                'label' => T_('Title'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'artist',
-                'label'  => T_('Artist'),
-                'type'   => 'text',
+                'name' => 'artist',
+                'label' => T_('Artist'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'year',
-                'label'  => T_('Year'),
-                'type'   => 'numeric',
+                'name' => 'year',
+                'label' => T_('Year'),
+                'type' => 'numeric',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'image width',
-                'label'  => T_('Image Width'),
-                'type'   => 'numeric',
+                'name' => 'image width',
+                'label' => T_('Image Width'),
+                'type' => 'numeric',
                 'widget' => array('input', 'text')
             );
 
             $this->types[] = array(
-                'name'   => 'image height',
-                'label'  => T_('Image Height'),
-                'type'   => 'numeric',
+                'name' => 'image height',
+                'label' => T_('Image Height'),
+                'type' => 'numeric',
                 'widget' => array('input', 'text')
             );
 
             if (AmpConfig::get('ratings')) {
                 $this->types[] = array(
-                    'name'   => 'rating',
-                    'label'  => T_('Rating'),
-                    'type'   => 'numeric',
+                    'name' => 'rating',
+                    'label' => T_('Rating (Average)'),
+                    'type' => 'numeric',
                     'widget' => array(
                         'select',
                         array(
@@ -483,6 +533,31 @@ class Search extends playlist_object
                 );
             }
 
+            if (AmpConfig::get('ratings')) {
+                $this->types[] = array(
+                    'name' => 'myratings',
+                    'label' => T_('Rating (Mine)'),
+                    'type' => 'numeric',
+                    'widget' => array(
+                        'select',
+                        array(
+                            '1 Star',
+                            '2 Stars',
+                            '3 Stars',
+                            '4 Stars',
+                            '5 Stars'
+                        )
+                    )
+                );
+            }
+
+            $this->types[] = array(
+                'name' => 'last_play',
+                'label' => T_('My Last Play'),
+                'type' => 'days',
+                'widget' => array('input', 'text')
+            );
+
             $catalogs = array();
             foreach (Catalog::get_catalogs() as $catid) {
                 $catalog = Catalog::create_from_id($catid);
@@ -490,81 +565,123 @@ class Search extends playlist_object
                 $catalogs[$catid] = $catalog->f_name;
             }
             $this->types[] = array(
-                'name'   => 'catalog',
-                'label'  => T_('Catalog'),
-                'type'   => 'boolean_numeric',
+                'name' => 'catalog',
+                'label' => T_('Catalog'),
+                'type' => 'boolean_numeric',
                 'widget' => array('select', $catalogs)
             );
 
 
             $this->types[] = array(
-                'name'   => 'tag',
-                'label'  => T_('Tag'),
-                'type'   => 'text',
+                'name' => 'tag',
+                'label' => T_('Tag'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
         break;
         case 'video':
             $this->types[] = array(
-                'name'   => 'filename',
-                'label'  => T_('Filename'),
-                'type'   => 'text',
+                'name' => 'filename',
+                'label' => T_('Filename'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
         break;
         case 'artist':
             $this->types[] = array(
-                'name'   => 'name',
-                'label'  => T_('Name'),
-                'type'   => 'text',
+                'name' => 'name',
+                'label' => T_('Name'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
             $this->types[] = array(
-                'name'   => 'yearformed',
-                'label'  => T_('Year'),
-                'type'   => 'numeric',
+                'name' => 'yearformed',
+                'label' => T_('Year'),
+                'type' => 'numeric',
                 'widget' => array('input', 'text')
             );
             $this->types[] = array(
-                'name'   => 'placeformed',
-                'label'  => T_('Place'),
-                'type'   => 'text',
+                'name' => 'placeformed',
+                'label' => T_('Place'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
             $this->types[] = array(
-                'name'   => 'tag',
-                'label'  => T_('Tag'),
-                'type'   => 'text',
+                'name' => 'tag',
+                'label' => T_('Tag'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
+            if (AmpConfig::get('ratings')) {
+                $this->types[] = array(
+                    'name' => 'rating',
+                    'label' => T_('Rating (Average)'),
+                    'type' => 'numeric',
+                    'widget' => array(
+                        'select',
+                        array(
+                            '1 Star',
+                            '2 Stars',
+                            '3 Stars',
+                            '4 Stars',
+                            '5 Stars'
+                        )
+                    )
+                );
+            }
+
+            $this->types[] = array(
+                'name' => 'last_play',
+                'label' => T_('My Last Play'),
+                'type' => 'days',
+                'widget' => array('input', 'text')
+            );
+
+            if (AmpConfig::get('ratings')) {
+                $this->types[] = array(
+                    'name' => 'myratings',
+                    'label' => T_('Rating (Mine)'),
+                    'type' => 'numeric',
+                    'widget' => array(
+                        'select',
+                        array(
+                            '1 Star',
+                            '2 Stars',
+                            '3 Stars',
+                            '4 Stars',
+                            '5 Stars'
+                        )
+                    )
+                );
+            }
         break;
         case 'playlist':
             $this->types[] = array(
-                'name'   => 'name',
-                'label'  => T_('Name'),
-                'type'   => 'text',
+                'name' => 'name',
+                'label' => T_('Name'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
         break;
         case 'label':
             $this->types[] = array(
-                'name'   => 'name',
-                'label'  => T_('Name'),
-                'type'   => 'text',
+                'name' => 'name',
+                'label' => T_('Name'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
             $this->types[] = array(
-                'name'   => 'category',
-                'label'  => T_('Category'),
-                'type'   => 'text',
+                'name' => 'category',
+                'label' => T_('Category'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
         break;
         case 'user':
             $this->types[] = array(
-                'name'   => 'username',
-                'label'  => T_('Username'),
-                'type'   => 'text',
+                'name' => 'username',
+                'label' => T_('Username'),
+                'type' => 'text',
                 'widget' => array('input', 'text')
             );
         break;
@@ -627,6 +744,7 @@ class Search extends playlist_object
         $sql        = "SELECT `name` FROM `search` WHERE `id` = '$id'";
         $db_results = Dba::read($sql);
         $r          = Dba::fetch_assoc($db_results);
+
         return $r['name'];
     }
 
@@ -817,6 +935,7 @@ class Search extends playlist_object
                 return $type['type'];
             }
         }
+
         return false;
     }
 
@@ -866,6 +985,7 @@ class Search extends playlist_object
         Dba::write($sql, array($this->name, $this->type, $GLOBALS['user']->id, json_encode($this->rules), $this->logic_operator, $this->random ? 1 : 0, $this->limit));
         $insert_id = Dba::insert_id();
         $this->id  = $insert_id;
+
         return $insert_id;
     }
 
@@ -883,6 +1003,7 @@ class Search extends playlist_object
                 'SearchRow.add("' . $rule[0] . '","' .
                 $rule[1] . '","' . $rule[2] . '", "' . $rule[3] . '"); </script>';
         }
+
         return $js;
     }
 
@@ -906,7 +1027,7 @@ class Search extends playlist_object
         if ($data && is_array($data)) {
             $this->name   = $data['name'];
             $this->type   = $data['pl_type'];
-            $this->random = $data['random'];
+            $this->random = is_null($data['random']) ? 0 : 1;
             $this->limit  = $data['limit'];
         }
 
@@ -996,6 +1117,16 @@ class Search extends playlist_object
                     }
                     $join['rating'] = true;
                 break;
+                case 'myratings':
+                    $userid          = $GLOBALS['user']->id;
+                    $where[]         = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    $join['ratings'] = true;
+                break;
+                case 'last_play':
+                    $userid               = $GLOBALS['user']->id;
+                    $where[]              = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['object_count'] = true;
+                    break;
                 case 'catalog':
                     $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
                     $join['song'] = true;
@@ -1050,13 +1181,28 @@ class Search extends playlist_object
                 $where_sql .= " AND `catalog_se`.`enabled` = '1'";
             }
         }
+        if ($join['user_flag']) {
+            $table['user_flag']  = "LEFT JOIN `user_flag` ON `album`.`id`=`user_flag`.`object_id`";
+        }
         if ($join['rating']) {
             $userid          = intval($GLOBALS['user']->id);
-            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' ";
-            if ($this->type != 'public') {
-                $table['rating'] .= "AND `rating`.`user`='$userid' ";
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
+            if ($this->type != "public") {
+                $table['rating'] .= "`rating`.`user`='$userid' AND ";
             }
-            $table['rating'] .= "AND `rating`.`object_id`=`album`.`id`";
+            $table['rating'] .= "`rating`.`object_id`=`album`.`id`";
+        }
+        if ($join['myratings']) {
+            $userid          = intval($GLOBALS['user']->id);
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
+            $table['rating'] .= "`rating`.`user`='$userid' AND ";
+            $table['rating'] .= "`rating`.`object_id`=`album`.`id`";
+        }
+        if ($join['object_count']) {
+            $userid          = intval($GLOBALS['user']->id);
+            $table['rating'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='album' AND ";
+            $table['rating'] .= "`object_count`.`user`='$userid' AND ";
+            $table['rating'] .= "`object_count`.`object_id`=`album`.`id`";
         }
         if ($join['image']) {
             $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
@@ -1122,6 +1268,25 @@ class Search extends playlist_object
                     $where[]           = "`realtag_$key`.`match` > 0";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
                 break;
+                case 'rating':
+                    if ($this->type != "public") {
+                        $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    } else {
+                        $group[]  = "`artist`.`id`";
+                        $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
+                    }
+                    $join['rating'] = true;
+                break;
+                case 'myratings':
+                    $userid            = $GLOBALS['user']->id;
+                    $where[]           = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    $join['myratings'] = true;
+                break;
+                case 'last_play':
+                    $userid               = $GLOBALS['user']->id;
+                    $where[]              = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['object_count'] = true;
+                    break;
                 default:
                     // Nihil
                 break;
@@ -1153,7 +1318,26 @@ class Search extends playlist_object
                 $where_sql .= " AND `catalog_se`.`enabled` = '1'";
             }
         }
-
+        if ($join['rating']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
+            if ($this->type != "public") {
+                $table['rating'] .= "`rating`.`user`='$userid' AND ";
+            }
+            $table['rating'] .= "`rating`.`object_id`=`artist`.`id`";
+        }
+        if ($join['myratings']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
+            $table['rating'] .= "`rating`.`user`='$userid' AND ";
+            $table['rating'] .= "`rating`.`object_id`=`artist`.`id`";
+        }
+        if ($join['object_count']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='artist' AND ";
+            $table['rating'] .= "`object_count`.`user`='$userid' AND ";
+            $table['rating'] .= "`object_count`.`object_id`=`artist`.`id`";
+        }
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(', ', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
@@ -1248,7 +1432,7 @@ class Search extends playlist_object
                     $join['song_data'] = true;
                 break;
                 case 'played':
-                    $where[] = " `song`.`played` = '$input'";
+                    $where[] = " `song`.`played` = '$sql_match_operator'";
                 break;
                 case 'bitrate':
                     $input   = $input * 1000;
@@ -1263,6 +1447,22 @@ class Search extends playlist_object
                     }
                     $join['rating'] = true;
                 break;
+                case 'favorite':
+                    $userid             = $GLOBALS['user']->id;
+                    $join['user_flag']  = true;
+                    $where[]            = "`song`.`title` $sql_match_operator '$input' AND `user_flag`.`user` = $userid";
+                    $where[] .= "`user_flag`.`object_type` = 'song'";
+                break;
+                case 'myratings':
+                    $userid            = $GLOBALS['user']->id;
+                    $where[]           = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
+                    $join['myratings'] = true;
+                break;
+                case 'last_play':
+                    $userid               = $GLOBALS['user']->id;
+                    $where[]              = "`object_count`.`date` IS NOT NULL AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['object_count'] = true;
+                    break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' " .
@@ -1364,6 +1564,23 @@ class Search extends playlist_object
                 $table['rating'] .= "`rating`.`user`='$userid' AND ";
             }
             $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
+        }
+
+        if ($join['user_flag']) {
+            $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`id`=`user_flag`.`object_id` ";
+        }
+
+        if ($join['myratings']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";
+            $table['rating'] .= "`rating`.`user`='$userid' AND ";
+            $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
+        }
+        if ($join['object_count']) {
+            $userid          = $GLOBALS['user']->id;
+            $table['rating'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='song' AND ";
+            $table['rating'] .= "`object_count`.`user`='$userid' AND ";
+            $table['rating'] .= "`object_count`.`object_id`=`song`.`id`";
         }
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";

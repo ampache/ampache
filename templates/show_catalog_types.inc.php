@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,13 +53,13 @@ $web_path = AmpConfig::get('web_path');
             <td class="cel_version"><?php echo scrub_out($catalog->get_version()); ?></td>
             <td class="cel_action"><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&amp;type=<?php echo urlencode($catalog->get_type()); ?>"><?php echo $action_txt; ?></a></td>
         </tr>
-        <?php 
+        <?php
         } if (!count($catalogs)) {
             ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="4"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
         </tr>
-        <?php 
+        <?php
         } ?>
     </tbody>
     <tfoot>

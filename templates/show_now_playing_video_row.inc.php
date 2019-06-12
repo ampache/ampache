@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ $media->format();
         Art::display($release_art['object_type'], $release_art['object_id'], $media->get_fullname(), 6, $media->link); ?>
             </div>
         </div>
-    <?php 
+    <?php
     }
 ?>
 
@@ -73,7 +73,7 @@ $media->format();
                 <?php Userflag::show($media->id, 'video'); ?>
             </div>
         </div>
-    <?php 
+    <?php
     }
 ?>
 </div>

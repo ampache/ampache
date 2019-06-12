@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,6 +55,7 @@ class AmpacheStreamTime
         }
         Preference::insert('stream_control_time_max', 'Stream control maximal time (Minutes)', '-1', '50', 'integer', 'plugins', $this->name);
         Preference::insert('stream_control_time_days', 'Stream control time history (days)', '30', '50', 'integer', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -67,6 +68,7 @@ class AmpacheStreamTime
     {
         Preference::delete('stream_control_time_max');
         Preference::delete('stream_control_time_days');
+
         return true;
     } // uninstall
 
@@ -112,7 +114,7 @@ class AmpacheStreamTime
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)

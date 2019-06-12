@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -298,6 +298,10 @@ table.tabledata {
 
 table.tabledata a {
     color: #666;
+}
+
+#catalog_type_fields table.tabledata a {
+	color: #1990db;
 }
 
 table.tabledata a:hover, table.tabledata a:focus {

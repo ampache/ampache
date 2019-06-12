@@ -18,7 +18,7 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
     $requestRaw = file_get_contents('php://input');
     if ($requestRaw != '') {
         $upnpRequest = Upnp_Api::parseUPnPRequest($requestRaw);
-        //!!debug_event('upnp', 'Request: ' . $requestRaw, '5');
+    //!!debug_event('upnp', 'Request: ' . $requestRaw, '5');
     } else {
         echo 'Error: no UPnP request.';
         debug_event('upnp', 'No request', '5');
@@ -40,11 +40,11 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
                 // Root items
                 if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
                     $items[] = array(
-                        'id'            => '0',
-                        'parentID'      => '-1',
-                        'childCount'    => '2',
-                        'dc:title'      => T_('root'),
-                        'upnp:class'    => 'object.container',
+                        'id' => '0',
+                        'parentID' => '-1',
+                        'childCount' => '2',
+                        'dc:title' => T_('root'),
+                        'upnp:class' => 'object.container',
                     );
                 } else {
                     $items = $rootMediaItems;

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,6 +56,7 @@ class Ampache7digital
         }
         Preference::insert('7digital_api_key', '7digital consumer key', '', '75', 'string', 'plugins', $this->name);
         Preference::insert('7digital_secret_api_key', '7digital secret', '', '75', 'string', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -68,6 +69,7 @@ class Ampache7digital
     {
         Preference::delete('7digital_api_key');
         Preference::delete('7digital_secret_api_key');
+
         return true;
     } // uninstall
 
@@ -140,7 +142,7 @@ class Ampache7digital
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
@@ -152,12 +154,14 @@ class Ampache7digital
             $this->api_key = trim($data['7digital_api_key']);
         } else {
             debug_event($this->name, 'No 7digital api key, song preview plugin skipped', '3');
+
             return false;
         }
         if (strlen(trim($data['7digital_secret_api_key']))) {
             $this->secret = trim($data['7digital_secret_api_key']);
         } else {
             debug_event($this->name, 'No 7digital secret, song preview plugin skipped', '3');
+
             return false;
         }
         

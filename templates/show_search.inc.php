@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,22 +35,22 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
             <?php echo T_('Batch Download'); ?>
         </li>
-            <?php 
+            <?php
 } ?>
         <li>
             <?php echo Ajax::button('?action=basket&type=search&id=' . $playlist->id, 'add', T_('Add All'), 'play_playlist'); ?>
             <?php echo T_('Add All'); ?>
         </li>
         <?php if ($playlist->has_access()) {
-    ?>
+        ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
                 <?php echo UI::get_icon('delete'); ?>
             </a>
             <?php echo T_('Delete'); ?>
         </li>
-        <?php 
-} ?>
+        <?php
+    } ?>
     </ul>
 </div>
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,9 +37,11 @@ class Recommendation
      */
     public static function get_lastfm_results($method, $query)
     {
+        $lang     =  AmpConfig::get('lang');
+        $resp     = explode('_', $lang);
         $api_key  = AmpConfig::get('lastfm_api_key');
         $api_base = "http://ws.audioscrobbler.com/2.0/?method=";
-        $url      = $api_base . $method . '&api_key=' . $api_key . '&' . $query;
+        $url      = $api_base . $method . '&api_key=' . $api_key . '&' . $query . '&lang=' . $resp[0];
 
         return self::query_lastfm($url);
     }
@@ -125,12 +127,17 @@ class Recommendation
      */
     public static function get_songs_like($song_id, $limit = 5, $local_only = true)
     {
-        $song = new Song($song_id);
+        if (!AmpConfig::get('lastfm_api_key')) {
+            return false;
+        }
+
+        $song   = new Song($song_id);
+        $artist = new Artist($song->artist);
 
         if (isset($song->mbid)) {
             $query = 'mbid=' . rawurlencode($song->mbid);
         } else {
-            $query = 'track=' . rawurlencode($song->title);
+            $query = 'artist=' . rawurlencode($artist->name) . '&track=' . rawurlencode($song->title) ;
         }
 
         $cache = self::get_recommendation_cache('song', $song_id, true);
@@ -215,6 +222,10 @@ class Recommendation
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
     {
+        if (!AmpConfig::get('lastfm_api_key')) {
+            return false;
+        }
+
         $artist = new Artist($artist_id);
 
         $cache = self::get_recommendation_cache('artist', $artist_id, true);
@@ -312,7 +323,7 @@ class Recommendation
             $artist = new Artist($artist_id);
             $artist->format();
             $fullname = $artist->f_full_name;
-
+            
             // Data newer than 6 months, use it
             if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
                 $results                = array();
@@ -324,6 +335,7 @@ class Recommendation
                 $results['smallphoto']  = $results['largephoto'];    // TODO: Change to thumb size?
                 $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
                 $results['megaphoto']   = $results['largephoto'];
+            
                 return $results;
             }
         }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,7 @@ if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
     ?>
   <col id="col_applytoall" />
   <col id="col_level" />
-    <?php 
+    <?php
 } ?>
 </colgroup>
 <thead>
@@ -44,11 +44,11 @@ if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
         <?php if ($is_admin) {
-    ?>
+        ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
-        <?php 
-} ?>
+        <?php
+    } ?>
     </tr>
 </thead>
 <tbody>
@@ -62,7 +62,6 @@ if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
                 $fsubcat = ucwords($fsubcat); ?>
                 <tr class="<?php echo UI::flip_class() ?>"><td colspan="4"><h5><?php echo T_($fsubcat) ?></h5></td></tr>
                 <?php
-
             }
         } ?>
         <tr class="<?php echo UI::flip_class() ?>">
@@ -71,11 +70,11 @@ if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
                 <?php create_preference_input($pref['name'], $pref['value']); ?>
             </td>
             <?php if ($is_admin) {
-    ?>
+            ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
                 <td class="cel_level">
-                    <?php $name = 'on_' . $pref['level'];
-    ${$name}                    = 'selected="selected"'; ?>
+                    <?php $name         = 'on_' . $pref['level'];
+            ${$name}                    = 'selected="selected"'; ?>
                     <select name="level_<?php echo $pref['name']; ?>">
                         <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
                         <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>
@@ -85,22 +84,22 @@ if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
                     </select>
                     <?php unset(${$name}); ?>
                 </td>
-            <?php 
-} ?>
+            <?php
+        } ?>
         </tr>
-    <?php 
-    } // End foreach ($preferences['prefs'] as $pref) ?>
+    <?php
+    } // End foreach ($preferences['prefs'] as $pref)?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
         <?php if ($is_admin) {
-    ?>
+        ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
-        <?php 
-} ?>
+        <?php
+    } ?>
     </tr>
 </tfoot>
 </table>

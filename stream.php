@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -116,7 +116,7 @@ switch ($_REQUEST['action']) {
             $matchlist['catalog'] = $_REQUEST['catalog'];
         }
         /* Setup the options array */
-        $options   = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit'=>$_REQUEST['size_limit']);
+        $options   = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit' => $_REQUEST['size_limit']);
         $media_ids = get_random_songs($options, $matchlist);
     break;
     case 'democratic':
@@ -186,7 +186,7 @@ if (count($media_ids) || isset($urls)) {
         $playlist->add_urls($urls);
     }
     // Depending on the stream type, will either generate a redirect or actually do the streaming.
-    $playlist->generate_playlist($stream_type, true);
+    $playlist->generate_playlist($stream_type, false);
 } else {
     debug_event('stream.php', 'No item. Ignoring...', 5);
 }

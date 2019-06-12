@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -67,7 +67,7 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluf nothing more... **/
-$results['version']            = '3.8.3-develop';
+$results['version']            = '3.9.1-develop';
 $results['int_config_version'] = '34';
 
 if (!empty($results['force_ssl'])) {
@@ -88,16 +88,19 @@ if (empty($results['local_web_path'])) {
     $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
 }
 $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
+
 $results['web_path']  = $http_type . $results['http_host'] .
-        (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
-        $results['web_path'];
+    (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
+    $results['web_path'];
+    
 $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
 $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
 if (!isset($results['max_upload_size'])) {
     $results['max_upload_size'] = 1048576;
 }
-$_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
-
+if (!defined('CLI')) {
+    $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
+}
 if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
     $results['user_ip_cardinality'] = 42;
 }
@@ -129,7 +132,7 @@ $old_error_handler = set_error_handler('ampache_error_handler');
 
 /* Check their PHP Vars to make sure we're cool here */
 $post_size = @ini_get('post_max_size');
-if (substr($post_size, strlen($post_size)-1, strlen($post_size)) != 'M') {
+if (substr($post_size, strlen($post_size) - 1, strlen($post_size)) != 'M') {
     /* Sane value time */
     ini_set('post_max_size', '8M');
 }

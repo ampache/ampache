@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -194,7 +194,7 @@ class Album extends database_object implements library_item
         $info = $this->get_info($id);
 
         // Foreach what we've got
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
 
@@ -219,7 +219,7 @@ class Album extends database_object implements library_item
     public static function construct_from_array(array $data)
     {
         $album = new Album(0);
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             $album->$key = $value;
         }
 
@@ -371,6 +371,7 @@ class Album extends database_object implements library_item
         }
 
         $owner = $this->get_user_owner();
+
         return ($owner && $owner === $user);
     }
 
@@ -398,10 +399,6 @@ class Album extends database_object implements library_item
         $mbid         = empty($mbid) ? null : $mbid;
         $mbid_group   = empty($mbid_group) ? null : $mbid_group;
         $release_type = empty($release_type) ? null : $release_type;
-
-        // Not even sure if these can be negative, but better safe than llama.
-        $year = Catalog::normalize_year($year);
-        $disk = abs(intval($disk));
 
         if (!$name) {
             $name         = T_('Unknown (Orphaned)');
@@ -437,6 +434,7 @@ class Album extends database_object implements library_item
         if ($row = Dba::fetch_assoc($db_results)) {
             $id                                                  = $row['id'];
             self::$_mapcache[$name][$disk][$mbid][$album_artist] = $id;
+
             return $id;
         }
 
@@ -463,6 +461,7 @@ class Album extends database_object implements library_item
         }
 
         self::$_mapcache[$name][$disk][$mbid][$album_artist] = $id;
+
         return $id;
     }
 
@@ -615,7 +614,7 @@ class Album extends database_object implements library_item
         if ($details) {
             /* Pull the advanced information */
             $data = $this->_get_extra_info($limit_threshold);
-            foreach ($data as $key=>$value) {
+            foreach ($data as $key => $value) {
                 $this->$key = $value;
             }
 
@@ -642,7 +641,7 @@ class Album extends database_object implements library_item
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
 
-        $this->f_link .="</a>";
+        $this->f_link .= "</a>";
 
         $this->f_title = $this->full_name;
         if ($this->artist_count == '1') {
@@ -764,6 +763,7 @@ class Album extends database_object implements library_item
                 );
             }
         }
+
         return $medias;
     }
 
@@ -789,6 +789,7 @@ class Album extends database_object implements library_item
         }
 
         $artist = new Artist($this->album_artist);
+
         return $artist->get_user_owner();
     }
 
@@ -805,6 +806,7 @@ class Album extends database_object implements library_item
     {
         // Album description is not supported yet, always return artist description
         $artist = new Artist($this->artist_id);
+
         return $artist->get_description();
     }
 
@@ -1042,6 +1044,7 @@ class Album extends database_object implements library_item
     private static function update_field($field, $value, $album_id)
     {
         $sql = "UPDATE `album` SET `" . $field . "` = ? WHERE `id` = ?";
+
         return Dba::write($sql, array($value, $album_id));
     }
 
@@ -1071,7 +1074,7 @@ class Album extends database_object implements library_item
         }
         if ($with_art) {
             $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'album' AND `image`.`object_id` = `album`.`id`) ";
-            $where .="AND `image`.`id` IS NOT NULL ";
+            $where .= "AND `image`.`id` IS NOT NULL ";
         }
 
         $sql .= $where;

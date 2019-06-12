@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -86,7 +86,7 @@ class Daap_Api
         if (function_exists('curl_version')) {
             $headers      = apache_request_headers();
             $reqheaders   = array();
-            $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            $reqheaders[] = "User-Agent: " . urlencode(preg_replace('/[\s\/]+/', '_', $headers['User-Agent']));
             if (isset($headers['Range'])) {
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
@@ -136,6 +136,7 @@ class Daap_Api
                 header($rheader);
             }
         }
+
         return strlen($header);
     }
 
@@ -145,30 +146,31 @@ class Daap_Api
     public static function server_info($input)
     {
         $o = self::tlv('dmap.status', 200);
-		$o .= self::tlv('dmap.protocolversion', '0.2.0.0');
-		$o .= self::tlv('dmap.itemname', 'Ampache');
+        $o .= self::tlv('dmap.protocolversion', '0.2.0.0');
+        $o .= self::tlv('dmap.itemname', 'Ampache');
         $o .= self::tlv('daap.protocolversion', '0.3.0.0');
         $o .= self::tlv('daap.supportsextradata', 0);//daap.supportsextradata
-		$o .= self::tlv('daap.supportsgroups', 0); 
-		$o .= self::tlv('daap.aeMQ', 1);//unknown - used by iTunes
-		$o .= self::tlv('daap.aeTr', 1);//unknown - used by iTunes
-		$o .= self::tlv('daap.aeSL', 1);//unknown - used by iTunes
-		$o .= self::tlv('daap.aeSR', 1);//unknown - used by iTunes
-		$o .= self::tlv('dmap.supportsedit', 0);
-		
-		if (AmpConfig::get('daap_pass')) {
+        $o .= self::tlv('daap.supportsgroups', 0);
+        $o .= self::tlv('daap.aeMQ', 1);//unknown - used by iTunes
+        $o .= self::tlv('daap.aeTr', 1);//unknown - used by iTunes
+        $o .= self::tlv('daap.aeSL', 1);//unknown - used by iTunes
+        $o .= self::tlv('daap.aeSR', 1);//unknown - used by iTunes
+        $o .= self::tlv('dmap.supportsedit', 0);
+        
+        if (AmpConfig::get('daap_pass')) {
             $o .= self::tlv('dmap.loginrequired', 1);
+        } else {
+            $o .= self::tlv('dmap.loginrequired', 0);
         }
-		else { $o .= self::tlv('dmap.loginrequired', 0);}
-		$o .= self::tlv('dmap.timeoutinterval', 1800); 
-		$o .= self::tlv('dmap.supportsautologout', 1);
-		                 
-		$o .= self::tlv('dmap.authenticationmethod', 2);//im not shre about this value "2"?
-		$o .= self::tlv('dmap.supportsupdate', 1);
-		$o .= self::tlv('dmap.supportspersistentids', 1);//im not shuure if ampache supports it
-		$o .= self::tlv('dmap.supportsextensions', 0);
-		$o .= self::tlv('dmap.supportsbrowse', 0);
-		$o .= self::tlv('dmap.supportsquery', 0);
+        $o .= self::tlv('dmap.timeoutinterval', 1800);
+        $o .= self::tlv('dmap.supportsautologout', 1);
+                         
+        $o .= self::tlv('dmap.authenticationmethod', 2);//im not shre about this value "2"?
+        $o .= self::tlv('dmap.supportsupdate', 1);
+        $o .= self::tlv('dmap.supportspersistentids', 1);//im not shuure if ampache supports it
+        $o .= self::tlv('dmap.supportsextensions', 0);
+        $o .= self::tlv('dmap.supportsbrowse', 0);
+        $o .= self::tlv('dmap.supportsquery', 0);
         $o .= self::tlv('dmap.supportsindex', 0);
         $o .= self::tlv('dmap.databasescount', 1);
         
@@ -392,6 +394,7 @@ class Daap_Api
                     $headers = apache_request_headers();
                     $client  = $headers['User-Agent'];
                     if (! empty($client)) {
+                        $client = urlencode(preg_replace('/[\s\/]/', '_', $client));
                         $params .= '&client=' . $client;
                     }
                     $params .= '&transcode_to=' . $type;
@@ -540,6 +543,7 @@ class Daap_Api
         $p .= self::tlv('daap.baseplaylist', 1);
         $stats = Catalog::count_medias();
         $p .= self::tlv('dmap.itemcount', $stats['songs']);
+
         return self::tlv('dmap.listingitem', $p);
     }
 
@@ -557,6 +561,7 @@ class Daap_Api
         if ($isSmart) {
             $p .= self::tlv('com.apple.itunes.smart-playlist', 1);
         }
+
         return self::tlv('dmap.listingitem', $p);
     }
 
@@ -585,6 +590,7 @@ class Daap_Api
                     debug_event('daap', 'Unsupported tag type `' . self::$tags[$tag]['type'] . '`.', '5');
                     break;
             }
+
             return $code . pack("N", strlen($value)) . $value;
         } else {
             debug_event('daap', 'Unknown DAAP tag `' . $tag . '`.', '5');
@@ -606,6 +612,7 @@ class Daap_Api
         $lowMap  = 0x00000000ffffffff;
         $higher  = ($value & $highMap) >> 32;
         $lower   = $value & $lowMap;
+
         return $tag . "\x00\x00\x00\x08" . pack("NN", $higher, $lower);
     }
 
@@ -732,12 +739,12 @@ class Daap_Api
         self::add_dict('prsv', 'list', 'daap.resolve');
         self::add_dict('arif', 'list', 'daap.resolveinfo');
         self::add_dict('ated', 'short', 'daap.supportsextradata');
-		self::add_dict('asgr', 'short', 'daap.supportsgroups');
-		self::add_dict('aeMQ', 'byte', 'daap.aeMQ');
-		self::add_dict('aeTr', 'byte', 'daap.aeTr');
-		self::add_dict('aeSL', 'byte', 'daap.aeSL');
-		self::add_dict('aeSR', 'byte', 'daap.aeSR');
-		self::add_dict('msed', 'byte', 'dmap.supportsedit');
+        self::add_dict('asgr', 'short', 'daap.supportsgroups');
+        self::add_dict('aeMQ', 'byte', 'daap.aeMQ');
+        self::add_dict('aeTr', 'byte', 'daap.aeTr');
+        self::add_dict('aeSL', 'byte', 'daap.aeSL');
+        self::add_dict('aeSR', 'byte', 'daap.aeSR');
+        self::add_dict('msed', 'byte', 'dmap.supportsedit');
         self::add_dict('aeNV', 'int', 'com.apple.itunes.norm-volume');
         self::add_dict('aeSP', 'byte', 'com.apple.itunes.smart-playlist');
     }

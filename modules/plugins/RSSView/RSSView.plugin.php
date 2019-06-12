@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -122,7 +122,7 @@ class AmpacheRSSView
     
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
@@ -134,6 +134,7 @@ class AmpacheRSSView
             $this->feed_url = trim($data['rssview_feed_url']);
         } else {
             debug_event($this->name, 'No rss feed url, home plugin skipped', '3');
+
             return false;
         }
         $this->maxitems = intval($data['rssview_max_items']);

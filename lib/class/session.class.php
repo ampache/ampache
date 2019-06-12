@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -188,6 +188,10 @@ class Session
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
+                $key = isset($data['apikey'])
+                    ? $data['apikey']
+                    : md5(uniqid(rand(), true));
+                break;
             case 'stream':
                 $key = isset($data['sid'])
                     ? $data['sid']
@@ -245,6 +249,7 @@ class Session
 
         if (!$db_results) {
             debug_event('session', 'Session creation failed', '1');
+
             return false;
         }
 
@@ -270,6 +275,7 @@ class Session
 
         // Set up the cookie params before we start the session.
         // This is vital
+        session_write_close();
         session_set_cookie_params(
             AmpConfig::get('cookie_life'),
             AmpConfig::get('cookie_path'),
@@ -298,6 +304,7 @@ class Session
         // Switch on the type they pass
         switch ($type) {
             case 'api':
+                return true;
             case 'stream':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
                     "AND `type` IN ('api', 'stream')";
@@ -359,6 +366,7 @@ class Session
     public static function update_username($sid, $username)
     {
         $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
+
         return Dba::write($sql, array($username, $sid));
     }
 
@@ -443,9 +451,9 @@ class Session
         $cookie_path   = AmpConfig::get('cookie_path');
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
-
+        
+        session_write_close();
         session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
-
         session_name(AmpConfig::get('session_name'));
 
         /* Start the session */
@@ -504,6 +512,7 @@ class Session
     public static function storeTokenForUser($username, $token, $remember_length)
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
+
         return Dba::write($sql, array($username, $token, time() + $remember_length));
     }
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,7 +55,7 @@ $catalogs = array();
 
 while ($r = Dba::fetch_row($db_results)) {
 
-    $catalog = Catalog::create_from_id($r['0']);
+    $catalog = Catalog::create_from_id($r['id']);
     $songs = $catalog->get_songs();
 
     printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
@@ -113,7 +113,7 @@ function sort_find_home($song,$sort_pattern,$base) {
     /* Do the various check */
     $album_object = new Album($song->album);
     $album_object->format();
-    if ($album_object->artist_count != '1') {
+    if ($album_object->artist_count != 1) {
         $artist = "Various";
     }
 

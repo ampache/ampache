@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -107,7 +107,7 @@ class Userflag extends database_object
         }
     }
 
-    public function get_flag($user_id = null)
+    public function get_flag($user_id = null, $get_date = null)
     {
         if ($user_id === null) {
             $user_id = $GLOBALS['user']->id;
@@ -118,16 +118,21 @@ class Userflag extends database_object
             return parent::get_from_cache($key, $this->id);
         }
 
-        $sql = "SELECT `id` FROM `user_flag` WHERE `user` = ? " .
+        $sql = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? " .
             "AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
         $flagged = false;
-        if (Dba::fetch_assoc($db_results)) {
-            $flagged = true;
+        if ($row = Dba::fetch_assoc($db_results)) {
+            if ($get_date) {
+                return array(true, $row['date']);
+            } else {
+                $flagged = true;
+            }
         }
 
         parent::add_to_cache($key, $this->id, $flagged);
+
         return $flagged;
     }
 
@@ -218,6 +223,7 @@ class Userflag extends database_object
             }
         }
         $sql .= " ORDER BY `user_flag`.`date` DESC ";
+
         return $sql;
     }
     /**

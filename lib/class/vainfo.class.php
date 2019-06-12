@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -252,7 +252,7 @@ class vainfo
             $TagData                      = $this->_raw['tags']['id3v2'];
 
             // Foreach what we've got
-            foreach ($data as $key=>$value) {
+            foreach ($data as $key => $value) {
                 if ($key != 'APIC') {
                     $TagData[$key][0] = $value;
                 }
@@ -362,9 +362,9 @@ class vainfo
             $info['original_name'] = $info['original_name'] ?: stripslashes(trim($tags['original_name']));
             $info['title']         = $info['title'] ?: stripslashes(trim($tags['title']));
 
-            $info['year'] = $info['year'] ?: intval($tags['year']);
-
-            $info['disk'] = $info['disk'] ?: intval($tags['disk']);
+            // Not even sure if these can be negative, but better safe than llama.
+            $info['year'] = Catalog::normalize_year($info['year'] ?: intval($tags['year']));
+            $info['disk'] = abs($info['disk'] ?: intval($tags['disk']));
 
             $info['totaldisks'] = $info['totaldisks'] ?: intval($tags['totaldisks']);
 
@@ -436,7 +436,7 @@ class vainfo
             unset($info['totaldisks']);
         }
 
-    // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
+        // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
         if (isset($results['general']['size'])) {
             $size = $results['general']['size'];
         } else {
@@ -860,12 +860,20 @@ class vainfo
                     // First array key can be xFF\xFE in case of UTF-8, better to get it this way
                     $parsed['comment'] = reset($data);
                 break;
+                case 'composer':
+                    $BOM = chr(0xff) . chr(0xfe);
+                    if (strlen($data[0]) == 2 && $data[0] == $BOM) {
+                        $parsed['composer'] = str_replace($BOM, '', $data[0]);
+                    } else {
+                        $parsed['composer'] = reset($data);
+                    }
+                     break;
                 case 'comments':
                     $parsed['comment'] = $data[0];
-                break;
+                    break;
                 case 'unsynchronised_lyric':
                     $parsed['lyrics'] = $data[0];
-                break;
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
@@ -1136,6 +1144,7 @@ class vainfo
                 $results['size'] = Core::get_filesize(Core::conv_lc_file($origin));
             }
         }
+
         return $results;
     }
     
@@ -1183,6 +1192,7 @@ class vainfo
 
             $results['title'] = $results['title'] ?: basename($filepath);
         }
+
         return $results;
     }
     
@@ -1192,11 +1202,12 @@ class vainfo
         $commonabbr   = preg_replace("~\n~", '', $abbr);
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
 
-       //scan for brackets, braces, etc and ignore case.
-       for ($i=0; $i< count($commonabbr);$i++) {
-           $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
-       }
+        //scan for brackets, braces, etc and ignore case.
+        for ($i=0; $i < count($commonabbr);$i++) {
+            $commonabbr[$i] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$i]) . "\b\]*|\)*|\>*|\}*~";
+        }
         $string = preg_replace($commonabbr, '', $name);
+
         return $string;
     }
     

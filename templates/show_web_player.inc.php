@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
-header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
+header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">

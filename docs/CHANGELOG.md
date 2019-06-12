@@ -1,6 +1,133 @@
 CHANGELOG
 =========
 
+3.9.1
+----------
+- Fixed Beets catalog creation and updating.
+- Autoupdate now ignores pre-release (preview) versions.
+- Fixed various command ine utilities in bin folder.
+- Fixed XML api syntax for logging in with user name.
+- Fixed newline display in xml data returned in playlist, etc.
+
+3.9.0
+----------
+- Video details now correctly displayed for personal video.
+- XML API now fully accepts user's API key. Session will be extended if it exists; Otherwise it's replaced.
+- Artist name added to Lastfm track.getsimilar query.
+- Catalog_update.inc now includes switches for catalog name and catalog type.
+- Added Beets catalog to Composer autoload.
+- Performance improved with playlist display and search.
+- General translation Updates.
+- Documented php module requirement for FreeBSD.
+
+3.8.9
+----------
+- Improved display of artist summary on web page.
+- Fixed uploading of avatar.
+- DSub now writes the correct extension when the ampache config switch `encode_player_api_target` is enabled.
+- Artist info now properly displayed.
+- Fixed login bug with PHP-7.2 installed.
+
+3.8.8
+----------
+- Subsonic API now removes illegal characters before returning text.
+- Removed hardcoded access level to allow guests to stream audio.
+- Guest accounts can now access songs and public playlists.
+- Fixed bug in subsonic API which caused DSub not to create folders or
+  add file extensions when caching.
+
+3.8.7
+----------
+- Better able to clean up image extentions when gathering art from remote sites.
+- Check for B.O.M. (\xff\xfe) only in mp3 composer tag and remove.
+- Added .ogv encoding target for more efficient streaming of mkv files.
+- Top menu appearance more reader friendly for translations.
+- Additional fixes to update_remote_catalog function.
+- Enabled similar songs when clicking on radio icon in DSub.
+- Repaired problem with removing "empty" albums.
+- Can now access XML-API when default ACL(s) are removed.
+- 'Find Duplicates' tool now works.
+- Cleaning now checks for mounted path before removing empty albums/missing files.
+- Starring album and artist now work via Subsonic client.
+- Modified "Gather Art" debug message to remove confusion from "Image less than 5 chars...".
+
+3.8.6
+----------
+- Updated Subsonic Remote Catalog Module to version 2.
+- Subsonic Catalog now grabs artwork directly from the subsonic server.
+- Various fixes to Subsonic Catalog and Subsonic API.
+- Release package now downloads from release update alert.
+- Develop package downloads from develop update alert.
+- Fixed album Search.
+
+
+3.8.5
+----------
+- Added search capability for user's own ratings option for Song, Artist, Album search.
+- Clean process now removes empty albums.
+- Further translation updates and fixes.
+- Updated Subsonic API to increase compliance with Subsonic json API specs.
+- Added starred date to album list and song and formatted per Subsonic spec.
+- Now compatible with latest Ultrasonic client (json transfer).
+- Fixed ability to edit/save smartplaylist name without setting 'random'.
+- Search/smart playlist now includes favorite artists and albums.
+- Modified SQL statement to not offend default SQL_MODE of ONLY_FULL_GROUP_BY on server versions after 5.7.6.
+- Set redirect to false for streaming types.
+
+
+3.8.4
+----------
+- Subsonic catalog now displays album art and artist bio.
+- Artist info now displays in Ampache's installed language.
+- Updated translations.
+- Composer tag changes now saved to database.
+- Seafile catalog module added.
+- Dropbox catalog updated to V2 API.
+- ip6 addresses now added to user history.
+- Updated api.class.php
+- fix for web_path auto configuration for subdirectory installation
+- Composer tag changes now written to database
+- Fixed catch null reference
+- Changes to make translation easier
+- Smart Playlist can now be edited/saved without 'random' set.
+
+
+3.8.3
+----------
+- Fixed upload problem
+- Fixed charting problem
+- Updated composer dependencies
+- Fixed ipv6 issue
+- Improved Opus transcoding
+- Fixed localization chart
+- Improved Subsonic API
+- Improved ID3v2.3 and v2.4 to better handle multivalued lists
+- Added sort by disc numbers
+- Song comments are now editable
+- Fixed composer column in iTunes
+- Many typos fixed
+- Fixed field types in modules and localplay
+- Fixed timeline function
+- Activated jplayer "preload" option
+- Fixed missing submit button on options page
+- Increased info on DSub failing via Subsonic API
+- Fixed Group actions in private message page causing JavaScript error
+- Fixed some info lievel issues in Codacy
+- Apply trim on dropbox parameters
+- Added Prompt for user to change secret_key during install
+- Enabled use of cache in PHPCs
+- All files now use UTF8 without BOM
+- Now require Exact catalog name match on catalog update
+- Port 443 removed from play url
+- Now test all images found to select the one with the good dimensions
+- Rewrote LDAP class
+- Song count in handshake now matches the number returned from songs
+- Blocking of webplayer when transcoding fixed
+- Cover art is added to live stream
+- Added browse filter and light sidebar options
+- Updated gettext, zipstream, react and sabre dependencies
+- Fixed Subsonic scrobble submission check
+
 3.8.2
 ----------
 - Fixed potential security vulnerability on smartplaylist search rule and catalog management actions (thanks Roman Ammann)
@@ -17,7 +144,7 @@ CHANGELOG
 - Added preference subcategory
 - Added prompt for new playlist name
 - Fixed page refresh when canceling album art change (thanks EvilLivesHere)
-- Added /play htaccess rewrite rule to avoid default max limit redirection 
+- Added /play htaccess rewrite rule to avoid default max limit redirection
 - Fixed Subsonic artist/album/song name JSON parsing if the name is numeric only
 - Added ignored articles and cover art to Subsonic getArtists.view function
 - Fixed MySQL requests to support ONLY_FULL_GROUP_BY mode
@@ -139,12 +266,12 @@ CHANGELOG
 - Fixed search by rating (thanks iamnumbersix)
 - Added UPnP localplay (thanks SeregaPru)
 - Changed preferences to return the global value if preference is missing for the searched user
-- Fixed special chars in songs names and tags (thanks SeregaPru) 
+- Fixed special chars in songs names and tags (thanks SeregaPru)
 - Fixed Subsonic API playlist edition/delation (thanks dhsc19)
 - Fixed integer default value in Apache XML API
 - Fixed image thumb on webplayer and search preview (thanks RobertoCarlo and eephyne)
 - Fixed proxy setting on all external http requests (thanks brendankearney)
-- Added QRCode view of user API key 
+- Added QRCode view of user API key
 - Fixed http status code on Subsonic API streams when using curl (thanks nicklan)
 - Added Server-Sent Events on catalog actions
 - Added option to enable/disable channel and live stream features
@@ -419,7 +546,7 @@ CHANGELOG
 ----------
 - Fixed issue with long session IDs that affected OS X Mavericks and possibly
   other newer PHP installations (reported by yebo29)
-- Fixed some sort issues (patch by Afterster) 
+- Fixed some sort issues (patch by Afterster)
 - Fixed Fresh theme display on large screens (patch by Afterster)
 - Fixed bug that allowed guests to add radio stations
 - Added support for aacp transcoding
@@ -470,7 +597,7 @@ CHANGELOG
 - Removed the Flash player
 - Added an HTML5 player (patch by Holger Brunn)
 - Changed the way themes handle RTL languages
-- Fixed a display problem with the Penguin theme by adding a new CSS class 
+- Fixed a display problem with the Penguin theme by adding a new CSS class
   (patch by Fred Thomsen)
 - Made transcoding and its configuration more flexible
 - Made transcoded streams more standards compliant by not sending a random
@@ -490,7 +617,7 @@ CHANGELOG
 -----------------------
 - Removed lyric support, which was broken and ugly
 - Removed tight coupling to the PHP mysql extension
-- Fixed an issue with adding catalogs on Windows caused by inconsistent 
+- Fixed an issue with adding catalogs on Windows caused by inconsistent
   behaviour of is_readable() (reported by Lockzi)
 
 3.6-Alpha3 *2012-10-15*
@@ -523,7 +650,7 @@ CHANGELOG
 - Fixed an issue with filename pattern matching when patterns contained
   characters that are part of regex syntax (such as -)
 - Fixed display of logic operator in rules (reported by Twister)
-- Fixed newsearch issue preventing use of more than 9 rules 
+- Fixed newsearch issue preventing use of more than 9 rules
   (reported by Twister)
 - Fixed JSON escaping issue that broke search in some cases
   (reported by XeeNiX)
@@ -547,12 +674,12 @@ CHANGELOG
 - Fixed Last.FM art method (reported by claudio)
 - Updated Captcha PHP to 2.3
 - Updated PHPMailer to 5.2.0
-- Fixed bug in MPD module which affected toggling random or repeat 
+- Fixed bug in MPD module which affected toggling random or repeat
   (patch from jherold)
 - Properly escape config values when writing ampache.cfg.php
 - Fixed session persistence with auth disabled (reported by Nathanael
   Anderson)
-- Fixed item count retention for Advanced Random (reported by USAF_Pride) 
+- Fixed item count retention for Advanced Random (reported by USAF_Pride)
 - Made catalog verify respect memory_cache
 - Some catalog operations are now done in chunks, which works better on
   large catalogs
@@ -611,8 +738,8 @@ CHANGELOG
   %10 reduces cpu load due to javascript excution (Thx Dmole)
 - Add bmp to the list of allowed / supported album art types
 - Strip extranious whitespace from cmdline catalog update (Thx ascheel)
-- Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl) 
-- Fix httpq not correctly skipping to new song 
+- Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl)
+- Fix httpq not correctly skipping to new song
 - Fix refreshing of localplay playlist when an item is skipped to
 - Fix missing Content-Disposition filename= on non-transcoded songs
 - Fix refresh of localplay playlist when you delete a track from it
@@ -630,15 +757,15 @@ CHANGELOG
 - Fix tag methods so that alpha_match and exact_match work
 - Fix limit and offset not working on search_songs API method
 - Fix import m3u on catalog build so it does something
-- Fix inconsistent view during catalog operations    
+- Fix inconsistent view during catalog operations
 - Sort malformed files into "Unknown (Broken)" rather then leaving
   them in "Unknown (Orphaned)"
 - Fix API democratic voting methods (Thx kindachris)
 - Add server version to API ping response
-- Fix Localplay API methods (Thx thomasa) 
+- Fix Localplay API methods (Thx thomasa)
 - Improve bin/catalog_update.inc to allow only verify, clean or add
   (Thx ascheel)
-- Fix issue with batch download and UNC paths (Thx greengeek) 
+- Fix issue with batch download and UNC paths (Thx greengeek)
 - Added config option to turn caching on/off, Default is off
 - Fix issue where file tag pattern was ignore if files have no tag structure
 - Add TDRC to list of parsed id3v2 tags
@@ -649,10 +776,10 @@ CHANGELOG
   playlist order rather then using track order
 - Strip excessive \n's from catalog_update (Thx ascheel)
 - Fix incorrect default ogg transcode target in base config file
-- Fix stream user preferences using cached system preferences 
-  rather then their own 
+- Fix stream user preferences using cached system preferences
+  rather then their own
 - Fixed prevent_multiple_logins preventing all logins (Thx Hugh)
-- Added additional information to installation process 
+- Added additional information to installation process
 - Fix PHP 5.3 errors (Thx momo-i)
 - Fix random methods not working for localplay
 - Fixed extra space on prefixed albums (Thx ibizaman)
@@ -661,7 +788,7 @@ CHANGELOG
 - Add MusicBrainz MBID support to uniqly identify albums and
   also get more album art (Thx flowerysong)
 - Fix the url to song function
-- Add full path to the files needed by the installation just to 
+- Add full path to the files needed by the installation just to
   make it a little clearer
 - Fixed potential endless loop with malformed genre tags in mp3s
   (Thx Bernhard Weyrauch)
@@ -690,7 +817,7 @@ CHANGELOG
 - Fix maxlength on acl fields being to small for all IPv6 addresses
 - Add error message when file exists but is unreadable do not
   remove unreadable songs from catalog
-- Fixed missing title tag on song browse for the title 
+- Fixed missing title tag on song browse for the title
   (Thx flowerysong)
 - Fix htmlchar'd rss feed url
 - Fix Port not correctly being added to URL in most cases
@@ -701,21 +828,21 @@ CHANGELOG
 - Fix dynamic playlist items so they work in stream methods again
 - Fixed Recently played so that it correctly shows unique songs
   with the correct data
-- Fix some issues with filenames with Multi-byte characters 
+- Fix some issues with filenames with Multi-byte characters
   (Thx Momo-i)
 - Add WMV/MPG specific parsing functions (Thx Momo-i)
 - Add text to /test.php for hash() and SHA256() support under PHP
   section
 - Fix SHA256 Support so that it references something that exists
 - Fix incorrect debug_event() on login due to typo
-- Remove manage democratic playlist as it has no meaning in the 
+- Remove manage democratic playlist as it has no meaning in the
   current version
 - Run Dba::reset_db_charset() after upgrade in case people are playing
-  hot potato with their charsets. 
+  hot potato with their charsets.
 - Move Server Preferences to Admin menu (Thx geekdawg)
 - Fixed missing web_path reference on radio creation link
 - Fixed remote catalog_clean not working
-- Fixed xmlrpc get image. getEncoding wasn't static 
+- Fixed xmlrpc get image. getEncoding wasn't static
 
 3.5-Beta1 *2009-03-15*
 ----------------------
@@ -736,7 +863,7 @@ CHANGELOG
 - Updated README language
 - Updated getid3 library 2.0.0b4 to 2.0.0b5
 - Make the Democratic playlist be associated with the user
-  who sends it to a 'player' 
+  who sends it to a 'player'
 - Fixed missing page headers on democratic playlist
 - Show who voted for the sogns on democratic playlist
 - Increase default stream length to account for the fact that movies
@@ -758,17 +885,17 @@ CHANGELOG
   verify
 - Added default_user_level config option that allows you to define
   the user level when use_auth is false. Also allows manual
-  login of admin users when use_auth is false. 
+  login of admin users when use_auth is false.
 - Fix Version checking and Version Error Message on install (Thx Paleo)
 - Moved Statistics to main menu, split out newest/popular/stats
 - Fixed bug where saved Thumbnails were almost never used
 - Fixed Localplay HTTPQ and MPD controls to reconize Live Stream
-  urls. 
-- Added Localplay controls to API 
+  urls.
+- Added Localplay controls to API
 - Added Added/Updated filters to API include the ability to specify
   a date range using ISO 8601 format with [START]/[END]
-- Changed API Date format to ISO 8601 
-- Fixed Incorrect Caching of Album records that caused the 
+- Changed API Date format to ISO 8601
+- Fixed Incorrect Caching of Album records that caused the
   Name + Year + Disk to not be respected
 - Added Lyrics Patch (Thx alister55 & momo-i)
 - Fixed password not updating when editing an HTTPQ localplay
@@ -777,17 +904,17 @@ CHANGELOG
 - Fixed normalize tracks not re-displaying playlist correctly
 - Fixed now playing now showing currently playing song
 - Fixed now playing clear all not correctly refreshing screen
-- Fixed adding object to playlist so that it correctly shows the 
+- Fixed adding object to playlist so that it correctly shows the
   songs rather then an empty playlist
 - Added User Agent to IP History information gathering
 - Added Access Control List Wizards to make API interface
   setup easier
-- Added IPv6 support for Access Control, Sessions, IP History 
+- Added IPv6 support for Access Control, Sessions, IP History
 - Fixed sorting issue on artist when using search method
 - Updated flash player to 5.9.5
 - Fixed bug where you admins couldn't edit preferences of
   users due to missing 'key' on form
-- Added Mime type to Song XML 
+- Added Mime type to Song XML
 
 3.5-Alpha1 *2008-12-31*
 -----------------------
@@ -802,7 +929,7 @@ CHANGELOG
 - Allow Add / Verify of sub directories of existing catalogs
 - Prevent an fread of 0 bytes if you seek to the end of a file
 - Added require_localnet_session config that allows you to exclude
-  IP(s) from session checks, see config.dist 
+  IP(s) from session checks, see config.dist
 - Added Nusoap (http://sourceforge.net/projects/nusoap/) library
   for use with future lyrics feature
 - Fixed problem with flash player where random urls were not being
@@ -811,17 +938,17 @@ CHANGELOG
 - Switched to SHA256() for API and Passwords
 - Added check for BADTIME error code from Last.FM and correctly
   return the error rather then a generic one
-- Fix http auth session issues, where every request blew away the 
+- Fix http auth session issues, where every request blew away the
   old session information
 - Many other minor improvements (Thx Dipsol)
 - Fixed warnings in caching code (Thx Dipsol)
 - Massive text cleanup (Thx Dipsol)
-- Fixed tag searching and improved some other search methods to 
+- Fixed tag searching and improved some other search methods to
   prevent SQL warnings on no results
 - Improved Test page checks to more accuratly verify putENV support
-- Make network downsampling a little more sane, don't require 
+- Make network downsampling a little more sane, don't require
   access level
-- Added caching to Playlist dropdown 
+- Added caching to Playlist dropdown
 - Fixed double caching on some objects
 - Added base.css and 4 tag 'font' sizes depending on weight/count
 - Fixed inline song edit
@@ -843,7 +970,7 @@ CHANGELOG
 - Updated multibyte character strings mail.
 - Fixed To send mail don't remove the last comma from recipient.
 - Updated More translatable templates.
-- Removed merge-messages.sh and Add LANGLIST (each languages 
+- Removed merge-messages.sh and Add LANGLIST (each languages
   translation statistics).
 - Fixed If database name don't named ampache, can't renamed tags
   to tag.
@@ -856,8 +983,8 @@ CHANGELOG
   artist time to the many artist view
 - Fixed test config page so it bounces you back to the test page
   if the config starts parsing correctly
-- Fixed browsing so that you can browse two different types in two 
-  windows at the same time 
+- Fixed browsing so that you can browse two different types in two
+  windows at the same time
 - Improved gather script for translations (Thx momo-i)
 - Added paging to the localplay playlist
 - Updated German Translation (Thx Laurent)
@@ -874,7 +1001,7 @@ CHANGELOG
 - Corrected some translation strings and added jp_JP (Thx momo-i)
 - Ignore filenames that start with . (hidden) solves an issue
   with mac filesystems
-- Fix tracking of stats for downloaded songs 
+- Fix tracking of stats for downloaded songs
 - Fix divide by 0 error during transcode in some configurations
 - Remove root mysql pw requirement from installer
 - Added Image Dimensions on Find Album Art page
@@ -907,11 +1034,11 @@ CHANGELOG
 - Genre Tag is now used as a 'Tag', Browse Genre removed
 - Ignore getid3() iconv stuff doesn't seem to work
 - Improved fix_filenames.inc, tries a translation first then strips
-  invalid characters 
-- Fixed album art not clearing thumbnail correctly on gather 
+  invalid characters
+- Fixed album art not clearing thumbnail correctly on gather
 - Fixed localplay instance not displaying correctly after change
   until a page refresh
-- Fixed endless loop on index if you haven't played a song in 
+- Fixed endless loop on index if you haven't played a song in
   over two years
 - Fixed gather art and parse m3u not working on catalog create
   also added URL read support to m3u import

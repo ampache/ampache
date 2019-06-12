@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -90,6 +90,7 @@ switch ($_REQUEST['action']) {
             foreach ($data as $key => $value) {
                 $data[$key] = is_array($value) ? $entities($value) : unhtmlentities(scrub_in($value));
             }
+
             return $data;
         };
         $entities($_POST);

@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,7 +40,7 @@ abstract class Handler
 
     public function setHandler(Catalog $handler, $command)
     {
-        $this->handler = $handler;
+        $this->handler        = $handler;
         $this->handlerCommand = $command;
     }
 
@@ -63,7 +63,7 @@ abstract class Handler
     {
         foreach ($this->fieldMapping as $from => $to) {
             list($key, $format) = $to;
-            $song[$key] = sprintf($format, $song[$from]);
+            $song[$key]         = sprintf($format, $song[$from]);
         }
         $song['genre'] = preg_split('/[\s]?[,|;][\s?]/', $song['genre']);
 
@@ -89,7 +89,7 @@ abstract class Handler
             // Add an empty part so we get a trailing slash if needed
             $commandParts[] = '';
         }
+
         return implode($this->commandSeperator, $commandParts);
     }
-
 }

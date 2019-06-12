@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 04.11.2016 15:44:08 CET 
+ # Last Update: 26.05.2019 15:10:29 CEST 
 
  #######################################################################
 
@@ -34,12 +34,6 @@ msgstr ""
 #: Database preference table id 29
 msgid "Type of Playback"
 msgstr ""
-
-#: Database preference table id 31
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Language"
-# msgstr ""
 
 #: Database preference table id 32
 msgid "Playlist Type"
@@ -84,18 +78,6 @@ msgstr ""
 #: Database preference table id 53
 msgid "Playlist Method"
 msgstr ""
-
-#: Database preference table id 55
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Transcoding"
-# msgstr ""
-
-#: Database preference table id 69
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Show Lyrics"
-# msgstr ""
 
 #: Database preference table id 72
 msgid "Shoutcast Active Instance"
@@ -202,7 +184,7 @@ msgid "Auto-pause betweens tabs"
 msgstr ""
 
 #: Database preference table id 101
-msgid "Use beautiful stream url"
+msgid "Enable url rewriting"
 msgstr ""
 
 #: Database preference table id 102
@@ -431,4 +413,28 @@ msgstr ""
 
 #: Database preference table id 168
 msgid "Amazon associate tag"
+msgstr ""
+
+#: Database preference subcategory table id 150
+msgid "library"
+msgstr ""
+
+#: Database preference subcategory table id 151
+msgid "upload"
+msgstr ""
+
+#: Database preference subcategory table id 152
+msgid "catalog"
+msgstr ""
+
+#: Database preference subcategory table id 154
+msgid "theme"
+msgstr ""
+
+#: Database preference subcategory table id 155
+msgid "custom"
+msgstr ""
+
+#: Database preference subcategory table id 164
+msgid "amazon"
 msgstr ""

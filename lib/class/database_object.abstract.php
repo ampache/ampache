@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -98,6 +98,7 @@ abstract class database_object
         // Check if the object is set
         if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$id])) {
             self::$cache_hit++;
+
             return self::$object_cache[$index][$id];
         }
 

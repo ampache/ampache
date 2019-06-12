@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,10 +33,10 @@
             <select name="field">
             <?php
                 $fields = Song::get_fields();
-                foreach ($fields as $key=>$value) {
+                foreach ($fields as $key => $value) {
                     $name = ucfirst(str_replace('_', ' ', $key)); ?>
                 <option value="<?php echo scrub_out($key); ?>"><?php echo scrub_out($name); ?></option>
-            <?php 
+            <?php
                 } ?>
             </select>
         </td>
