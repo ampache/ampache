@@ -1884,6 +1884,9 @@ class Song extends database_object implements media, library_item
 
     /**
      * Get transcode settings for media.
+     * It can be confusing byt when waveforms are enabled
+     * it will transcode the file twice.
+     *
      * @param string $source
      * @param string $target
      * @param string $media_type
@@ -1892,28 +1895,31 @@ class Song extends database_object implements media, library_item
      */
     public static function get_transcode_settings_for_media($source, $target = null, $player = null, $media_type = 'song', $options = array())
     {
-		// default target for songs
+        // default target for songs
         $setting_target = 'encode_target';
-		// default target for video
+        // default target for video
         if ($media_type != 'song') {
             $setting_target = 'encode_' . $media_type . '_target';
         }
+        // webplayer / api transcode actions
         if ($player) {
-			// encode target for songs in webplayer/api
+            // encode target for songs in webplayer/api
             $player_setting_target = 'encode_player_' . $player . '_target';
             if ($media_type != 'song') {
-				// encode target for video in webplayer/api
+                // encode target for video in webplayer/api
                 $player_setting_target = 'encode_' . $media_type . '_player_' . $player . '_target';
             }
         }
-		// get the default target for DEFAULT, PLAYER, SOURCE
-		$has_default_target = AmpConfig::get($setting_target);
-		$has_player_target  = AmpConfig::get($player_setting_target);
-		$has_codec_target   = AmpConfig::get('encode_target_' . $source);
+        // get the default target for DEFAULT, PLAYER, SOURCE
+        $has_default_target = AmpConfig::get($setting_target);
+        $has_player_target  = AmpConfig::get($player_setting_target);
+        $has_codec_target   = AmpConfig::get('encode_target_' . $source);
 
         // Fall backwards from the specific transcode formats to default
-		// PLAYER > CODEC > DEFAULT
-		if ($has_player_target) {
+        // TARGET > PLAYER > CODEC > DEFAULT
+        if ($target) {
+            debug_event('song.class', 'Explicit target requested: {' . $target . '} format for: ' . $source, 5);
+        } elseif ($has_player_target) {
             $target = $has_player_target;
             debug_event('song.class', 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_codec_target) {
@@ -1923,10 +1929,10 @@ class Song extends database_object implements media, library_item
             $target = $has_default_target;
             debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
-		// fall back to resampling if no defuault
-		if (!$target) {
-			$target = $source;
-			debug_event('song.class', 'No transcode target for: ' . $source . ', choosing to resample', 5);
+        // fall back to resampling if no defuault
+        if (!$target) {
+            $target = $source;
+            debug_event('song.class', 'No transcode target for: ' . $source . ', choosing to resample', 5);
         }
         debug_event('song.class', 'Transcoding from ' . $source . ' to ' . $target, 3);
 
