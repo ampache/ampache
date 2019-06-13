@@ -1913,13 +1913,13 @@ class Song extends database_object implements media, library_item
 
         // Fall backwards from the specific transcode formats to default
 		// PLAYER > CODEC > DEFAULT
-		if ($has_player_target)) {
+		if ($has_player_target) {
             $target = $has_player_target;
             debug_event('song.class', 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_codec_target)) {
+        } elseif ($has_codec_target) {
             $target = $has_codec_target;
             debug_event('song.class', 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_default_target)) {
+        } elseif ($has_default_target) {
             $target = $has_default_target;
             debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
