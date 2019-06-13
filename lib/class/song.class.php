@@ -1907,21 +1907,21 @@ class Song extends database_object implements media, library_item
             }
         }
 
-        if ($target !== null && $target !== '') {
-            debug_event('song.class', 'Explicit format request {' . $target . '}', 5);
-        } else {
-            if ($target = AmpConfig::get('encode_target_' . $source)) {
-                debug_event('song.class', 'Defaulting to configured target format for ' . $source, 5);
-            } else {
-                if ($target = AmpConfig::get($setting_target)) {
-                    debug_event('song.class', 'Using default target format', 5);
-                } else {
-                    $target = $source;
-                    debug_event('song.class', 'No default target for ' . $source . ', choosing to resample', 5);
-                }
-            }
-        }
-
+        //if ($target !== null && $target !== '') {
+        //    debug_event('song.class', 'Explicit format request {' . $target . '}', 5);
+        //}
+		if (AmpConfig::get('encode_target_' . $source)) {
+			$target = AmpConfig::get('encode_target_' . $source);
+			debug_event('song.class', 'Defaulting to ' . $target . ' format for: ' . $source, 5);
+		} else {
+			if (AmpConfig::get($setting_target)) {
+				$target = AmpConfig::get($setting_target);
+				debug_event('song.class', 'Using ' . $target . ' format for: ' . $setting_target, 5);
+			} else {
+				$target = $source;
+				debug_event('song.class', 'No default target for: ' . $source . ', choosing to resample', 5);
+			}
+		}
         debug_event('song.class', 'Transcode settings: from ' . $source . ' to ' . $target, 4);
 
         $cmd  = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
