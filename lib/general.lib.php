@@ -71,7 +71,7 @@ function generate_password($length = null)
 function scrub_in($input)
 {
     if (!is_array($input)) {
-        return stripslashes(htmlspecialchars(strip_tags($input), ENT_QUOTES, AmpConfig::get('site_charset')));
+        return stripslashes(htmlspecialchars(strip_tags($input), ENT_NOQUOTES, AmpConfig::get('site_charset')));
     } else {
         $results = array();
         foreach ($input as $item) {
@@ -92,7 +92,7 @@ function scrub_in($input)
  */
 function scrub_out($string)
 {
-    return htmlentities($string, ENT_QUOTES, AmpConfig::get('site_charset'));
+    return htmlentities($string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
 } // scrub_out
 
 /**

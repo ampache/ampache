@@ -1184,7 +1184,9 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
-                    $where[] = "`album`.`name` $sql_match_operator '$input'";
+                    $where[] = "`album`.`name` $sql_match_operator '$input' " .
+                                " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
+                                "' ', `album`.`name`)) $sql_match_operator '$input'";
                 break;
                 case 'year':
                     $where[] = "`album`.`year` $sql_match_operator '$input'";
@@ -1345,7 +1347,9 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'name':
-                    $where[] = "`artist`.`name` $sql_match_operator '$input'";
+                    $where[] = "`artist`.`name` $sql_match_operator '$input' " .
+                                " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
+                                "' ', `artist`.`name`)) $sql_match_operator '$input'";
                 break;
                 case 'yearformed':
                     $where[] = "`artist`.`yearformed` $sql_match_operator '$input'";
