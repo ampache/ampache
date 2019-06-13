@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Efraim GENÇ <eg@efraimgenc.com>, 2019
 # Ulaş Çakmak <Celonfix@protonmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-05-26 15:10+0200\n"
-"PO-Revision-Date: 2019-03-17 15:23+0000\n"
-"Last-Translator: Afterster\n"
+"POT-Creation-Date: 2019-06-13 23:31+0200\n"
+"PO-Revision-Date: 2019-06-03 14:38+0000\n"
+"Last-Translator: Efraim GENÇ <eg@efraimgenc.com>\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/ampache/ampache/"
 "language/tr_TR/)\n"
 "Language: tr_TR\n"
@@ -595,11 +596,11 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:213
 msgid "Name of Catalog (Optional)"
-msgstr ""
+msgstr "Katalog İsmi (opsiyonel)"
 
 #: ../../bin/catalog_update.inc:215
 msgid "Type of Catalog (Optional)"
-msgstr ""
+msgstr "Katalog Türü (opsiyonel)"
 
 #: ../../bin/catalog_update.inc:217
 msgid "Temporarily deactivates PHP memory limit."
@@ -617,7 +618,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:223
 msgid "Adds new media to catalogs."
-msgstr ""
+msgstr "Kataloğa yeni medya ekleyin."
 
 #: ../../bin/catalog_update.inc:225
 msgid "Gathers media Art."
@@ -625,7 +626,7 @@ msgstr ""
 
 #: ../../bin/catalog_update.inc:227
 msgid "Imports playlists."
-msgstr ""
+msgstr "Oynatma listesi içe aktarın."
 
 #: ../../bin/catalog_update.inc:229
 msgid "Optimizes Database Tables."
@@ -732,7 +733,7 @@ msgstr ""
 #: ../../bin/fix_filenames.inc:56
 #, php-format
 msgid "Translated: %s"
-msgstr ""
+msgstr "Çevrildi: %s"
 
 #: ../../bin/fix_filenames.inc:59
 #, php-format
@@ -780,11 +781,11 @@ msgstr ""
 #: ../../bin/fix_filenames.inc:143
 #, php-format
 msgid "NEW: %s"
-msgstr ""
+msgstr "YENİ: %s"
 
 #: ../../bin/fix_filenames.inc:147
 msgid "Rename File (Y/N):"
-msgstr ""
+msgstr "Yeniden Adlandırın (E/H):"
 
 #: ../../bin/fix_filenames.inc:150
 msgid "Not Renaming..."
@@ -811,7 +812,7 @@ msgstr ""
 
 #: ../../bin/fix_filenames.inc:212
 msgid "File Moved..."
-msgstr ""
+msgstr "Dosya Taşındı..."
 
 #: ../../bin/install/add_user.inc:50
 #, php-format
@@ -864,12 +865,12 @@ msgstr ""
 
 #: ../../bin/print_tags.inc:37
 msgid "File not found."
-msgstr ""
+msgstr "Dosya bulunamadı."
 
 #: ../../bin/print_tags.inc:43
 #, php-format
 msgid "Reading: %s"
-msgstr ""
+msgstr "Okunuyor: %s"
 
 #: ../../bin/print_tags.inc:58
 #, php-format
@@ -892,7 +893,7 @@ msgstr ""
 
 #: ../../bin/print_tags.inc:80
 msgid "Usage:"
-msgstr ""
+msgstr "Kullanım: "
 
 #: ../../bin/print_tags.inc:82
 msgid "php print_tags.inc <Filename>"
@@ -931,12 +932,12 @@ msgstr ""
 #: ../../bin/sort_files.inc:249
 #, php-format
 msgid "Copying %1$s to %2$s"
-msgstr ""
+msgstr "%1$s'dan %2$s'a kopyalanıyor"
 
 #: ../../bin/sort_files.inc:260
 #, php-format
 msgid "Error: %s already exists"
-msgstr ""
+msgstr "Hata: %s zaten mevcut"
 
 #: ../../bin/sort_files.inc:281
 #, php-format
@@ -1005,23 +1006,23 @@ msgstr ""
 
 #: ../../channel/index.php:75 ../../plex/web/init.php:38
 msgid "Unauthorized."
-msgstr ""
+msgstr "Yetkilendirilmemiş."
 
 #: ../../channel.php:61
 msgid "Channel Created"
-msgstr ""
+msgstr "Kanal Oluşturuldu"
 
 #: ../../channel.php:70
 msgid "Channel Delete"
-msgstr ""
+msgstr "Kanalı Sil"
 
 #: ../../channel.php:83
 msgid "Channel Deleted"
-msgstr ""
+msgstr "Kanal Silindi"
 
 #: ../../channel.php:83
 msgid "The Channel has been deleted"
-msgstr ""
+msgstr "Kanal Silindi"
 
 #: ../../democratic.php:57
 msgid "The Requested Playlist has been deleted."
@@ -1082,7 +1083,7 @@ msgstr ""
 #: ../../templates/show_mail_users.inc.php:31
 #: ../../templates/show_random.inc.php:60
 msgid "All"
-msgstr ""
+msgstr "Tümü"
 
 #: ../../lib/class/access.class.php:469 ../../templates/list_header.inc.php:131
 #: ../../templates/show_add_access.inc.php:37
@@ -1090,19 +1091,19 @@ msgstr ""
 #: ../../templates/show_graphs.inc.php:83
 #: ../../templates/show_tagcloud.inc.php:33
 msgid "View"
-msgstr ""
+msgstr "Görüntüle"
 
 #: ../../lib/class/access.class.php:472
 #: ../../templates/show_add_access.inc.php:38
 #: ../../templates/show_edit_access.inc.php:70
 msgid "Read"
-msgstr ""
+msgstr "Oku"
 
 #: ../../lib/class/access.class.php:475
 #: ../../templates/show_add_access.inc.php:39
 #: ../../templates/show_edit_access.inc.php:71
 msgid "Read/Write"
-msgstr ""
+msgstr "Oku/Yaz"
 
 #: ../../lib/class/access.class.php:506
 #: ../../templates/show_add_access.inc.php:56
@@ -1111,7 +1112,7 @@ msgstr ""
 #: ../../templates/show_add_access.inc.php:75
 #: ../../templates/show_edit_access.inc.php:38
 msgid "API/RPC"
-msgstr ""
+msgstr "API/RPC"
 
 #: ../../lib/class/access.class.php:508
 #: ../../templates/show_add_access.inc.php:65
@@ -1167,7 +1168,7 @@ msgstr ""
 #: ../../templates/sidebar_home.inc.php:188
 #: ../../templates/sidebar.light.inc.php:27
 msgid "Artists"
-msgstr ""
+msgstr "Sanatçılar"
 
 #: ../../lib/class/album.class.php:653 ../../lib/class/album.class.php:654
 #: ../../templates/show_edit_album_row.inc.php:38
@@ -1219,7 +1220,7 @@ msgstr ""
 #: ../../templates/show_wanted_albums.inc.php:27
 #: ../../templates/sidebar_home.inc.php:176
 msgid "Artist"
-msgstr ""
+msgstr "Sanatçı"
 
 #: ../../lib/class/album.class.php:682 ../../lib/class/search.class.php:232
 #: ../../templates/show_add_upload.inc.php:188
@@ -1245,28 +1246,28 @@ msgstr ""
 #: ../../templates/show_wanted_albums.inc.php:26
 #: ../../templates/sidebar_home.inc.php:175
 msgid "Album"
-msgstr ""
+msgstr "Albüm"
 
 #: ../../lib/class/ampache_rss.class.php:92
 #: ../../lib/class/localplay.class.php:628 ../../templates/header.inc.php:41
 #: ../../templates/show_localplay_status.inc.php:31
 #: ../../templates/show_now_playing.inc.php:32
 msgid "Now Playing"
-msgstr ""
+msgstr "Şuan Çalıyor"
 
 #: ../../lib/class/ampache_rss.class.php:93 ../../templates/header.inc.php:42
 #: ../../templates/show_recently_played.inc.php:24
 #: ../../templates/show_user.inc.php:114
 msgid "Recently Played"
-msgstr ""
+msgstr "Son Çalan"
 
 #: ../../lib/class/ampache_rss.class.php:94 ../../templates/header.inc.php:43
 msgid "Newest Albums"
-msgstr ""
+msgstr "En Yeni Albüm"
 
 #: ../../lib/class/ampache_rss.class.php:95 ../../templates/header.inc.php:44
 msgid "Newest Artists"
-msgstr ""
+msgstr "En Yeni Sanatçı"
 
 #: ../../lib/class/ampache_rss.class.php:96 ../../templates/header.inc.php:48
 msgid "Newest Shouts"
@@ -1274,35 +1275,35 @@ msgstr ""
 
 #: ../../lib/class/ampache_rss.class.php:150
 msgid "RSS Feed"
-msgstr ""
+msgstr "RSS Besleme"
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "seconds ago"
-msgstr ""
+msgstr "saniye önce"
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "minutes ago"
-msgstr ""
+msgstr "dakika önce"
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "hours ago"
-msgstr ""
+msgstr "saat önce"
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "days ago"
-msgstr ""
+msgstr "gün önce"
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "weeks ago"
-msgstr ""
+msgstr "hafta önce"
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "months ago"
-msgstr ""
+msgstr "ay önce"
 
 #: ../../lib/class/ampache_rss.class.php:227
 msgid "years ago"
-msgstr ""
+msgstr "yıl önce"
 
 #: ../../lib/class/ampache_rss.class.php:354
 #: ../../modules/plugins/Flattr/Flattr.plugin.php:91
@@ -1317,7 +1318,7 @@ msgstr ""
 
 #: ../../lib/class/api.class.php:152
 msgid "Login Failed: version too old"
-msgstr ""
+msgstr "Giriş Yapılamadı: versiyon çok eski"
 
 #: ../../lib/class/api.class.php:181 ../../lib/class/api.class.php:182
 msgid "Login Failed: timestamp out of range"
@@ -1331,12 +1332,12 @@ msgstr ""
 #: ../../lib/class/api.class.php:194 ../../lib/class/api.class.php:195
 #: ../../lib/class/api.class.php:290
 msgid "Invalid Username/Password"
-msgstr ""
+msgstr "Geçersiz Kullanıcı Adı/Parola"
 
 #: ../../lib/class/api.class.php:669 ../../lib/class/api.class.php:687
 #: ../../lib/class/api.class.php:705
 msgid "Access denied to this playlist."
-msgstr ""
+msgstr "Bu oynatma listesine girişiniz reddedildi."
 
 #: ../../lib/class/api.class.php:823 ../../lib/class/api.class.php:884
 #: ../../server/xml.server.php:109
@@ -1413,7 +1414,7 @@ msgstr ""
 
 #: ../../lib/class/autoupdate.class.php:234
 msgid "Update available"
-msgstr ""
+msgstr "Güncelleme mevcut"
 
 #: ../../lib/class/autoupdate.class.php:237
 msgid "See"
@@ -1482,7 +1483,7 @@ msgstr ""
 #: ../../templates/show_video.inc.php:129
 #: ../../templates/show_video_row.inc.php:126
 msgid "Edit"
-msgstr ""
+msgstr "Düzenle"
 
 #: ../../lib/class/broadcast.class.php:362
 #: ../../lib/class/channel.class.php:189 ../../lib/class/share.class.php:207
@@ -1526,7 +1527,7 @@ msgstr ""
 #: ../../templates/show_video.inc.php:136
 #: ../../templates/show_video_row.inc.php:133
 msgid "Delete"
-msgstr ""
+msgstr "Sil"
 
 #: ../../lib/class/broadcast.class.php:374
 msgid "Broadcast"
@@ -1554,7 +1555,7 @@ msgstr ""
 #: ../../templates/show_stats.inc.php:35 ../../templates/show_stats.inc.php:75
 #: ../../templates/sidebar_home.inc.php:186
 msgid "Songs"
-msgstr ""
+msgstr "Şarkılar"
 
 #: ../../lib/class/browse.class.php:210 ../../lib/class/upnp_api.class.php:355
 #: ../../lib/ui.lib.php:176 ../../server/search.ajax.php:90
@@ -1573,17 +1574,17 @@ msgstr ""
 #: ../../templates/sidebar_home.inc.php:187
 #: ../../templates/sidebar.light.inc.php:28
 msgid "Albums"
-msgstr ""
+msgstr "Albümler"
 
 #: ../../lib/class/browse.class.php:222 ../../server/search.ajax.php:229
 msgid "Users"
-msgstr ""
+msgstr "Kullanıcılar"
 
 #: ../../lib/class/browse.class.php:231 ../../lib/class/upnp_api.class.php:451
 #: ../../templates/sidebar_home.inc.php:55
 #: ../../templates/sidebar.light.inc.php:33
 msgid "Radio Stations"
-msgstr ""
+msgstr "Radyo İstasyonları"
 
 #: ../../lib/class/browse.class.php:236 ../../lib/class/upnp_api.class.php:403
 #: ../../server/search.ajax.php:148 ../../templates/header.inc.php:420
@@ -1592,11 +1593,11 @@ msgstr ""
 #: ../../templates/sidebar_home.inc.php:189
 #: ../../templates/sidebar.light.inc.php:29
 msgid "Playlists"
-msgstr ""
+msgstr "Oynatma Listeleri"
 
 #: ../../lib/class/browse.class.php:240
 msgid "Playlist Medias"
-msgstr ""
+msgstr "Oynatma Listesi Medyaları"
 
 #: ../../lib/class/browse.class.php:244
 msgid "Current Playlist"
@@ -1605,12 +1606,12 @@ msgstr ""
 #: ../../lib/class/browse.class.php:249 ../../lib/class/upnp_api.class.php:427
 #: ../../templates/sidebar_home.inc.php:42
 msgid "Smart Playlists"
-msgstr ""
+msgstr "Akıllı Oynatma Listesi"
 
 #: ../../lib/class/browse.class.php:253 ../../templates/show_stats.inc.php:27
 #: ../../templates/sidebar_admin.inc.php:24
 msgid "Catalogs"
-msgstr ""
+msgstr "Kataloglar"
 
 #: ../../lib/class/browse.class.php:257
 msgid "Shoutbox Records"
@@ -1622,7 +1623,7 @@ msgstr ""
 #: ../../templates/show_stats.inc.php:36 ../../templates/show_stats.inc.php:76
 #: ../../templates/sidebar_home.inc.php:192
 msgid "Videos"
-msgstr ""
+msgstr "Videolar"
 
 #: ../../lib/class/browse.class.php:272
 #: ../../templates/show_democratic.inc.php:23
@@ -1642,7 +1643,7 @@ msgstr ""
 #: ../../templates/show_video.inc.php:154
 #: ../../templates/sidebar_home.inc.php:45
 msgid "Channels"
-msgstr ""
+msgstr "Kanallar"
 
 #: ../../lib/class/browse.class.php:292 ../../templates/sidebar_home.inc.php:50
 msgid "Broadcasts"
@@ -1655,13 +1656,13 @@ msgstr ""
 #: ../../lib/class/browse.class.php:300 ../../lib/class/upnp_api.class.php:743
 #: ../../templates/sidebar_home.inc.php:75
 msgid "TV Shows"
-msgstr ""
+msgstr "TV Şovları"
 
 #: ../../lib/class/browse.class.php:304 ../../templates/show_tvshow.inc.php:108
 #: ../../templates/show_tvshows.inc.php:42
 #: ../../templates/show_tvshows.inc.php:98
 msgid "Seasons"
-msgstr ""
+msgstr "Sezonlar"
 
 #: ../../lib/class/browse.class.php:308
 #: ../../templates/show_podcast.inc.php:125
@@ -1673,21 +1674,21 @@ msgstr ""
 #: ../../templates/show_tvshows.inc.php:41
 #: ../../templates/show_tvshows.inc.php:97
 msgid "Episodes"
-msgstr ""
+msgstr "Bölümler"
 
 #: ../../lib/class/browse.class.php:313 ../../lib/class/upnp_api.class.php:807
 #: ../../templates/sidebar_home.inc.php:76
 msgid "Movies"
-msgstr ""
+msgstr "Filmler"
 
 #: ../../lib/class/browse.class.php:318 ../../lib/class/upnp_api.class.php:783
 msgid "Clips"
-msgstr ""
+msgstr "Klipler"
 
 #: ../../lib/class/browse.class.php:323 ../../lib/class/upnp_api.class.php:831
 #: ../../templates/sidebar_home.inc.php:77
 msgid "Personal Videos"
-msgstr ""
+msgstr "Kişisel Videolar"
 
 #: ../../lib/class/browse.class.php:328 ../../server/search.ajax.php:178
 #: ../../templates/show_artist.inc.php:237
@@ -1699,7 +1700,7 @@ msgstr ""
 
 #: ../../lib/class/browse.class.php:332
 msgid "Private Messages"
-msgstr ""
+msgstr "Özel Mesajlar"
 
 #: ../../lib/class/browse.class.php:336 ../../lib/class/upnp_api.class.php:475
 #: ../../templates/sidebar_home.inc.php:60
@@ -1713,7 +1714,7 @@ msgstr ""
 #: ../../lib/class/browse.class.php:381 ../../templates/rightbar.inc.php:140
 #: ../../templates/show_recently_played.inc.php:181
 msgid "More"
-msgstr ""
+msgstr "Devamı"
 
 #: ../../lib/class/catalog.class.php:518 ../../lib/class/catalog.class.php:521
 #: ../../lib/class/catalog.class.php:524 ../../lib/class/user.class.php:1014
@@ -1740,7 +1741,7 @@ msgstr ""
 
 #: ../../lib/class/catalog.class.php:1524
 msgid "No Update Needed"
-msgstr ""
+msgstr "Güncelleme Gerekmemektedir"
 
 #: ../../lib/class/catalog.class.php:1844
 #, php-format
@@ -1848,7 +1849,7 @@ msgstr ""
 
 #: ../../lib/class/localplay.class.php:632
 msgid "Paused"
-msgstr ""
+msgstr "Duraklatıldı"
 
 #: ../../lib/class/localplay.class.php:634
 #: ../../lib/class/playlist.class.php:138
@@ -1858,7 +1859,7 @@ msgstr ""
 #: ../../modules/localplay/mpd/mpd.controller.php:494
 #: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:77
 msgid "Unknown"
-msgstr ""
+msgstr "Bilinmeyen"
 
 #: ../../lib/class/playlist_object.abstract.php:70
 #: ../../templates/show_edit_playlist_row.inc.php:37
@@ -2095,7 +2096,7 @@ msgstr ""
 #: ../../templates/show_manage_shoutbox.inc.php:62
 #: ../../templates/show_song.inc.php:157
 msgid "Comment"
-msgstr ""
+msgstr "Yorum"
 
 #: ../../lib/class/search.class.php:268 ../../lib/class/search.class.php:577
 #: ../../lib/class/search.class.php:611 ../../lib/class/tag.class.php:739
@@ -2115,7 +2116,7 @@ msgstr ""
 #: ../../templates/show_import_playlist.inc.php:28
 #: ../../templates/show_song.inc.php:170 ../../templates/show_video.inc.php:156
 msgid "Filename"
-msgstr ""
+msgstr "Dosya Adı"
 
 #: ../../lib/class/search.class.php:289 ../../lib/class/search.class.php:499
 #: ../../lib/class/search.class.php:599 ../../templates/show_albums.inc.php:42
@@ -2131,11 +2132,11 @@ msgstr ""
 #: ../../templates/show_song.inc.php:152
 #: ../../templates/show_wanted_albums.inc.php:28
 msgid "Year"
-msgstr ""
+msgstr "Yıl"
 
 #: ../../lib/class/search.class.php:296
 msgid "Length (in minutes)"
-msgstr ""
+msgstr "Süre (dakika)"
 
 #: ../../lib/class/search.class.php:304 ../../lib/class/search.class.php:521
 #: ../../lib/class/search.class.php:618
@@ -2146,7 +2147,7 @@ msgstr ""
 #: ../../templates/sidebar_home.inc.php:142
 #: ../../templates/sidebar.light.inc.php:38
 msgid "Favorites"
-msgstr ""
+msgstr "Favoriler"
 
 #: ../../lib/class/search.class.php:331 ../../lib/class/search.class.php:539
 #: ../../lib/class/search.class.php:643
@@ -2191,7 +2192,7 @@ msgstr ""
 #: ../../templates/show_add_podcast.inc.php:34
 #: ../../templates/show_export.inc.php:32
 msgid "Catalog"
-msgstr ""
+msgstr "Katalog"
 
 #: ../../lib/class/search.class.php:429 ../../lib/ui.lib.php:135
 #: ../../templates/show_manage_democratic.inc.php:26
@@ -2199,7 +2200,7 @@ msgstr ""
 #: ../../templates/sidebar_home.inc.php:92
 #: ../../templates/sidebar_home.inc.php:177
 msgid "Playlist"
-msgstr ""
+msgstr "Oynatma Listesi"
 
 #: ../../lib/class/search.class.php:436
 #: ../../templates/show_playlists.inc.php:35
@@ -2207,11 +2208,11 @@ msgstr ""
 #: ../../templates/show_searches.inc.php:42
 #: ../../templates/show_searches.inc.php:72
 msgid "Playlist Name"
-msgstr ""
+msgstr "Oynatma Listesi Adı"
 
 #: ../../lib/class/search.class.php:449
 msgid "Smart Playlist"
-msgstr ""
+msgstr "Akıllı Oynatma Listesi"
 
 #: ../../lib/class/search.class.php:461
 msgid "Metadata"
@@ -2313,7 +2314,7 @@ msgstr ""
 #: ../../lib/class/share.class.php:359 ../../lib/class/share.class.php:361
 #: ../../templates/show_shares.inc.php:23
 msgid "Share"
-msgstr ""
+msgstr "Paylaş"
 
 #: ../../lib/class/share.class.php:369
 msgid "Advanced Share"
@@ -2350,7 +2351,7 @@ msgstr ""
 #: ../../templates/show_podcasts.inc.php:29
 #: ../../templates/show_searches.inc.php:29
 msgid "Add"
-msgstr ""
+msgstr "Ekle"
 
 #: ../../lib/class/shoutbox.class.php:315
 #: ../../templates/show_album_group_disks.inc.php:135
@@ -2411,13 +2412,13 @@ msgstr ""
 #: ../../templates/show_tvshow_seasons.inc.php:38
 #: ../../templates/show_tvshow_seasons.inc.php:91
 msgid "Season"
-msgstr ""
+msgstr "Sezon"
 
 #: ../../lib/class/tvshow_episode.class.php:184
 #: ../../templates/show_partial_tvshow_episode.inc.php:25
 #: ../../templates/show_partial_tvshow_episodes.inc.php:23
 msgid "Episode"
-msgstr ""
+msgstr "Bölüm"
 
 #: ../../lib/class/update.class.php:606
 msgid "No updates needed."
@@ -2441,7 +2442,7 @@ msgstr ""
 #: ../../templates/show_add_catalog.inc.php:72
 #: ../../templates/sidebar_home.inc.php:24
 msgid "Music"
-msgstr ""
+msgstr "Müzik"
 
 #: ../../lib/class/upnp_api.class.php:852
 #: ../../templates/show_now_playing_video_row.inc.php:41
@@ -2484,11 +2485,11 @@ msgstr ""
 
 #: ../../lib/class/user.class.php:1543
 msgid "Unfollow"
-msgstr ""
+msgstr "Takipten Çıkar"
 
 #: ../../lib/class/user.class.php:1543
 msgid "Follow"
-msgstr ""
+msgstr "Takip Et"
 
 #: ../../lib/class/video.class.php:798
 msgid "Afar"
@@ -3228,7 +3229,7 @@ msgstr ""
 
 #: ../../lib/class/wanted.class.php:222
 msgid "Unknown Artist"
-msgstr ""
+msgstr "Bilinmeyen Sanatçı"
 
 #: ../../lib/class/wanted.class.php:412
 msgid "Accept"
@@ -3355,7 +3356,7 @@ msgstr ""
 #: ../../templates/show_localplay_controllers.inc.php:48
 #: ../../templates/show_user_row.inc.php:81
 msgid "Enable"
-msgstr ""
+msgstr "Etkinleştir"
 
 #: ../../lib/preferences.php:219 ../../lib/preferences.php:362
 #: ../../templates/show_catalog_types.inc.php:45
@@ -3364,7 +3365,7 @@ msgstr ""
 #: ../../templates/show_localplay_controllers.inc.php:45
 #: ../../templates/show_user_row.inc.php:83
 msgid "Disable"
-msgstr ""
+msgstr "Devre Dışı"
 
 #: ../../lib/preferences.php:240 ../../lib/preferences.php:277
 #: ../../lib/ui.lib.php:415 ../../lib/ui.lib.php:506
@@ -8423,7 +8424,7 @@ msgstr ""
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 17.03.2019 12:16:09 CET
+# Last Update: 26.05.2019 15:10:29 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
