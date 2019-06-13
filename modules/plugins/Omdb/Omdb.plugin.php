@@ -29,7 +29,7 @@ class AmpacheOmdb
     public $version        = '000001';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
-    
+
     /**
      * Constructor
      * This function does nothing
@@ -77,7 +77,7 @@ class AmpacheOmdb
 
         return json_decode($request->body);
     }
-    
+
     protected function parse_runtime($runtime)
     {
         $time  = 0;
@@ -105,9 +105,9 @@ class AmpacheOmdb
 
             return null;
         }
-        
+
         $title = $media_info['original_name'] ?: $media_info['title'];
-        
+
         $results = array();
         try {
             // We cannot distinguish movies from tvshows with Omdb API (related to Imdb)
@@ -132,7 +132,7 @@ class AmpacheOmdb
                     }
                     $match = true;
                 }
-                
+
                 if (in_array('tvshow', $gather_types) && $query->Type == 'series') {
                     if ($yse[0] != "N/A") {
                         $results['tvshow_year'] = $yse[0];
@@ -147,7 +147,7 @@ class AmpacheOmdb
                     }
                     $match = true;
                 }
-                
+
                 if ($match) {
                     if ($query->Runtime != "N/A") {
                         $results['time'] = $this->parse_runtime($query->Runtime);
@@ -158,7 +158,7 @@ class AmpacheOmdb
         } catch (Exception $e) {
             debug_event('omdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
-        
+
         return $results;
     } // get_metadata
 

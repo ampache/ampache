@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
             }
             mb_language("uni");
         }
-        
+
         if (Mailer::is_mail_enabled()) {
             $mailer = new Mailer();
 

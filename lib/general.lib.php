@@ -52,7 +52,7 @@ function generate_password($length = null)
 {
     // set a random password length so it's not as easy to guess
     if ($length === null) {
-        $length = rand(14,20);
+        $length = rand(14, 20);
     }
     $strong   = true;
     $string   = openssl_random_pseudo_bytes((int) ceil($length * 0.67), $strong);
@@ -71,7 +71,7 @@ function generate_password($length = null)
 function scrub_in($input)
 {
     if (!is_array($input)) {
-        return stripslashes(htmlspecialchars(strip_tags($input), ENT_QUOTES, AmpConfig::get('site_charset')));
+        return stripslashes(htmlspecialchars(strip_tags($input), ENT_NOQUOTES, AmpConfig::get('site_charset')));
     } else {
         $results = array();
         foreach ($input as $item) {
@@ -92,7 +92,7 @@ function scrub_in($input)
  */
 function scrub_out($string)
 {
-    return htmlentities($string, ENT_QUOTES, AmpConfig::get('site_charset'));
+    return htmlentities($string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
 } // scrub_out
 
 /**
@@ -158,7 +158,7 @@ function invert_bool($value)
 function get_languages()
 {
     /* Open the locale directory */
-    $handle    = opendir(AmpConfig::get('prefix') . '/locale');
+    $handle = opendir(AmpConfig::get('prefix') . '/locale');
 
     if (!is_resource($handle)) {
         debug_event('general.lib', 'Error unable to open locale directory', 1);
@@ -321,7 +321,7 @@ function get_languages()
     ksort($results);
 
     // Prepend English (US)
-    $results = array( "en_US" => "English (US)" ) + $results;
+    $results = array("en_US" => "English (US)") + $results;
 
     return $results;
 } // get_languages
@@ -384,8 +384,8 @@ function generate_config($current)
         if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)) {
-            $key    = $matches[1];
-            $value  = $matches[2];
+            $key   = $matches[1];
+            $value = $matches[2];
 
             // Put in the current value
             if ($key == 'config_version') {

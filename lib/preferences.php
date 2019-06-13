@@ -43,7 +43,7 @@ function update_preferences($pref_id = 0)
     $results = array();
     // Collect the current possible keys
     while ($row = Dba::fetch_assoc($db_results)) {
-        $results[] = array('id' => $row['id'], 'name' => $row['name'],'type' => $row['type']);
+        $results[] = array('id' => $row['id'], 'name' => $row['name'], 'type' => $row['type']);
     } // end collecting keys
 
     /* Foreach through possible keys and assign them */
@@ -228,7 +228,6 @@ function create_preference_input($name, $value)
             $is_localplay  = '';
             $is_democratic = '';
             $is_web_player = '';
-            $is_stream     = '';
             switch ($value) {
                 case 'localplay':
                     $is_localplay = 'selected="selected"';

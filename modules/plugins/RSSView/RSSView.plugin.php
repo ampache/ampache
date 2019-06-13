@@ -29,12 +29,12 @@ class AmpacheRSSView
     public $version        = '000001';
     public $min_ampache    = '370021';
     public $max_ampache    = '999999';
-    
+
     // These are internal settings used by this class, run this->load to
     // fill them out
     private $feed_url;
     private $maxitems;
-    
+
     /**
      * Constructor
      * This function does nothing...
@@ -71,7 +71,7 @@ class AmpacheRSSView
     {
         Preference::delete('rssview_feed_url');
         Preference::delete('rssview_max_items');
-        
+
         return true;
     }
 
@@ -109,7 +109,7 @@ class AmpacheRSSView
                 echo '<div>' . $item->description . '</div>';
                 echo '</div>';
                 echo '</td></tr>';
-                
+
                 $count++;
                 if ($count >= $this->maxitems) {
                     break;
@@ -119,7 +119,7 @@ class AmpacheRSSView
             UI::show_box_bottom();
         }
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes

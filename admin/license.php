@@ -47,6 +47,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_edit':
         $license = new License($_REQUEST['license_id']);
+        // intentional fall through
     case 'show_create':
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_license.inc.php');
         break;

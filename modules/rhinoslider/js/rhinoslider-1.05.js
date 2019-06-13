@@ -70,11 +70,11 @@
 				settings.parts = [];
 				return settings;
 			},
-			
+
 			//init function
 			init = function ($slider, settings, vars) {
 				settings = setUpSettings(settings);
-				
+
 				$slider.wrap("<div class=\"" + vars.prefix + "container\">");
 				vars.container = $slider.parent("." + vars.prefix + "container");
 				vars.isPlaying = settings.autoPlay;
@@ -130,14 +130,14 @@
 						}
 					});
 				}
-				
+
 				//style
 				vars.container.find("." + vars.prefix + "btn").css({
 					position: "absolute",
 					display: "block",
 					cursor: "pointer"
 				});
-				
+
 				//hide/show controls on hover or never
 				if (settings.showControls !== "always") {
 					var allControls = vars.container.find("." + vars.prefix + "btn");
@@ -153,7 +153,6 @@
 				if(settings.showControls !== "never"){
 					vars.container.addClass(vars.prefix + "show-controls");
 				}
-				
 
 				//get content-elements and set css-reset for positioning
 				vars.items = $slider.children();
@@ -244,7 +243,7 @@
 						vars.navigation.delay(200).fadeOut(settings.controlFadeTime);
 					});
 				}
-				
+
 				//add captions
 				if (settings.showCaptions !== "never") {
 					vars.container.addClass(vars.prefix + "show-captions");
@@ -375,7 +374,7 @@
 							$item.addClass(vars.prefix + "lastItem");
 						}
 					});
-					
+
 					if(vars.active.is(":first-child") && settings.controlsPrevNext){
 						vars.buttons.prev.addClass("disabled");
 					}
@@ -389,7 +388,7 @@
 						}
 					}
 				}
-				
+
 				if(typeof(preparations[settings.effect]) === "undefined"){
 					console.log("Effect for " + settings.effect + " not found.");
 				}else{
@@ -401,12 +400,12 @@
 
 				settings.callBackInit();
 			},
-			
+
 			//check if item element is first-child
 			isFirst = function($item) {
 				return $item.is(":first-child");
 			},
-			
+
 			//check if item element is last-child
 			isLast = function($item) {
 				return $item.is(":last-child");
@@ -443,9 +442,9 @@
 				if(!settings.cycled && isFirst(vars.active)){
 					return false;
 				}
-				
+
 				settings.callBeforePrev();
-				
+
 				//if some effect is already running, don"t stack up another one
 				if (vars.container.hasClass("inProgress")) {
 					return false;
@@ -471,7 +470,7 @@
 				if (settings.showCaptions !== "never") {
 					$("." + vars.prefix + "caption").stop(true, true).fadeOut(settings.captionsFadeTime);
 				}
-				
+
 				if (settings.showBullets !== "never" && settings.changeBullets === "before") {
 					vars.navigation.find("." + vars.prefix + "active-bullet").removeClass(vars.prefix + "active-bullet");
 					vars.navigation.find("#" + vars.next.attr("id") + "-bullet").addClass(vars.prefix + "active-bullet");
@@ -497,7 +496,7 @@
 						settings.callBackPrev();
 					}, settings.effectTime);
 				}, settings.captionsFadeTime);
-				
+
 				if (settings.showBullets !== "never" && settings.changeBullets === "after") {
 					vars.navigation.find("." + vars.prefix + "active-bullet").removeClass(vars.prefix + "active-bullet");
 					vars.navigation.find("#" + vars.next.attr("id") + "-bullet").addClass(vars.prefix + "active-bullet");
@@ -509,9 +508,9 @@
 				if(!settings.cycled && isLast(vars.active)){
 					return false;
 				}
-				
+
 				settings.callBeforeNext();
-				
+
 				//if some effect is already running, don"t stack up another one
 				if (vars.container.hasClass("inProgress")) {
 					return false;
@@ -537,7 +536,7 @@
 				if (settings.showCaptions !== "never") {
 					$("." + vars.prefix + "caption").stop(true, true).fadeOut(settings.captionsFadeTime);
 				}
-								
+
 				if (settings.showBullets !== "never" && settings.changeBullets === "before") {
 					vars.navigation.find("." + vars.prefix + "active-bullet").removeClass(vars.prefix + "active-bullet");
 					vars.navigation.find("#" + vars.next.attr("id") + "-bullet").addClass(vars.prefix + "active-bullet");
@@ -563,7 +562,7 @@
 						}
 						settings.callBackNext();
 					}, settings.effectTime);
-					
+
 				}, settings.captionsFadeTime);
 			},
 
@@ -613,9 +612,9 @@
 					})
 					//and remove its active class
 					.removeClass(vars.prefix + "active");
-					
+
 				settings.additionalResets();
-				
+
 				//check if cycled is false and start or end is reached
 				if(!settings.cycled) {
 					if(settings.controlsPrevNext){
@@ -640,9 +639,9 @@
 						}
 					}
 				}
-				
+
 				if (settings.showBullets !== "never") {
-					
+
 					vars.navigation.find("." + vars.prefix + "active-bullet").removeClass(vars.prefix + "active-bullet");
 					vars.navigation.find("#" + vars.next.attr("id") + "-bullet").addClass(vars.prefix + "active-bullet");
 				}
@@ -654,7 +653,7 @@
 				if (settings.showCaptions !== "never") {
 					vars.active.find("." + vars.prefix + "caption").stop(true, true).fadeTo(settings.captionsFadeTime, settings.captionsOpacity);
 				}
-				
+
 				vars.container.removeClass("inProgress");
 			};
 
@@ -679,7 +678,7 @@
 			if (element.data("rhinoslider")) {
 				return element.data("rhinoslider");
 			}
-			
+
 			element.data("slider:original", element.clone());
 			var rhinoslider = new rhinoSlider(this, opts);
 			element.data("rhinoslider", rhinoslider);

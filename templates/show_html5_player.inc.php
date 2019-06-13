@@ -146,7 +146,7 @@ if ($isVideo) {
 if (!$isVideo && !$isRadio && !$is_share) {
         if ($iframed) {
             if (AmpConfig::get('sociable')) {
-                echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-media_id'),'shouts_data');";
+                echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-media_id'), 'shouts_data');";
             }
             echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=song&object_id=' + currenti.attr('data-media_id'));";
             echo "var titleobj = (currenti.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";

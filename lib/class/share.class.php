@@ -48,7 +48,7 @@ class Share extends database_object
     /**
      * Constructor
      */
-    public function __construct($id=0)
+    public function __construct($id = 0)
     {
         if (!$id) {
             return true;
@@ -121,7 +121,7 @@ class Share extends database_object
      * @param string $object_type
      * @param integer $object_id
      */
-    public static function create_share($object_type, $object_id, $allow_stream=true, $allow_download=true, $expire=0, $secret='', $max_counter=0, $description='')
+    public static function create_share($object_type, $object_id, $allow_stream = true, $allow_download = true, $expire = 0, $secret = '', $max_counter = 0, $description = '')
     {
         $object_type = self::format_type($object_type);
         if (empty($object_type)) {

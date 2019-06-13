@@ -111,7 +111,7 @@ class Search extends playlist_object
             'name' => 'contain',
             'description' => T_('contains'),
             'sql' => 'LIKE',
-            'preg_match' => array('/^/','/$/'),
+            'preg_match' => array('/^/', '/$/'),
             'preg_replace' => array('%', '%')
         );
 
@@ -119,7 +119,7 @@ class Search extends playlist_object
             'name' => 'notcontain',
             'description' => T_('does not contain'),
             'sql' => 'NOT LIKE',
-            'preg_match' => array('/^/','/$/'),
+            'preg_match' => array('/^/', '/$/'),
             'preg_replace' => array('%', '%')
         );
 
@@ -1162,6 +1162,7 @@ class Search extends playlist_object
         $group       = array();
         $having      = array();
         $join['tag'] = array();
+        $groupdisks  = AmpConfig::get('album_group');
 
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
@@ -1175,10 +1176,17 @@ class Search extends playlist_object
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
+            if ($groupdisks) {
+                $group[] = "`album`.`name`";
+                $group[] = "`album`.`album_artist`";
+                $group[] = "`album`.`mbid`";
+            }
 
             switch ($rule[0]) {
                 case 'title':
-                    $where[] = "`album`.`name` $sql_match_operator '$input'";
+                    $where[] = "`album`.`name` $sql_match_operator '$input' " .
+                                " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
+                                "' ', `album`.`name`)) $sql_match_operator '$input'";
                 break;
                 case 'year':
                     $where[] = "`album`.`year` $sql_match_operator '$input'";
@@ -1187,7 +1195,9 @@ class Search extends playlist_object
                     if ($this->type != "public") {
                         $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     } else {
-                        $group[]  = "`album`.`id`";
+                        if (!$groupdisks) {
+                            $group[] = "`album`.`id`";
+                        }
                         $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
                     }
                     $join['rating'] = true;
@@ -1290,7 +1300,7 @@ class Search extends playlist_object
         }
 
         $table_sql  = implode(' ', $table);
-        $group_sql  = implode(', ', $group);
+        $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
@@ -1337,7 +1347,9 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'name':
-                    $where[] = "`artist`.`name` $sql_match_operator '$input'";
+                    $where[] = "`artist`.`name` $sql_match_operator '$input' " .
+                                " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
+                                "' ', `artist`.`name`)) $sql_match_operator '$input'";
                 break;
                 case 'yearformed':
                     $where[] = "`artist`.`yearformed` $sql_match_operator '$input'";
@@ -1425,7 +1437,7 @@ class Search extends playlist_object
             $table['object_count'] .= "`object_count`.`object_id`=`artist`.`id`";
         }
         $table_sql  = implode(' ', $table);
-        $group_sql  = implode(', ', $group);
+        $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
@@ -1728,7 +1740,7 @@ class Search extends playlist_object
         }
 
         $table_sql  = implode(' ', $table);
-        $group_sql  = implode(', ', $group);
+        $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
@@ -1790,7 +1802,7 @@ class Search extends playlist_object
         }
 
         $table_sql  = implode(' ', $table);
-        $group_sql  = implode(', ', $group);
+        $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
@@ -1865,7 +1877,7 @@ class Search extends playlist_object
         }
 
         $table_sql  = implode(' ', $table);
-        $group_sql  = implode(', ', $group);
+        $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(

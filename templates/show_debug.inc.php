@@ -136,7 +136,7 @@
             if (Preference::is_boolean($key)) {
                 $value = print_bool($value);
             }
-    
+
             // Be sure to print only scalar values
             if ($value === null || is_scalar($value)) {
                 ?>

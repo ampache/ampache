@@ -93,9 +93,9 @@ class AmpacheYourls
 
             return false;
         }
-        
+
         $shorturl = '';
-    
+
         $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api_key . '&action=shorturl&format=simple&url=' . urlencode($url);
         try {
             debug_event('yourls.plugin', 'YOURLS api call: ' . $apiurl, 5);
@@ -113,10 +113,10 @@ class AmpacheYourls
 
             return false;
         }
-        
+
         return $shorturl;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes
@@ -141,7 +141,7 @@ class AmpacheYourls
 
             return false;
         }
-        
+
         $this->yourls_use_idn = ((int) ($data['yourls_use_idn']) == 1);
 
         return true;

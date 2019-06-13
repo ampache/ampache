@@ -90,19 +90,19 @@ class Broadcast_Server implements MessageComponentInterface
                             $this->notifySong($from, $cmdinfo[1]);
                         break;
                         case self::BROADCAST_SONG_POSITION:
-                            $this->notifySongPosition($from, $cmdinfo[1]);
+                            $this->notifySongPosition($from, (int) $cmdinfo[1]);
                         break;
                         case self::BROADCAST_PLAYER_PLAY:
-                            $this->notifyPlayerPlay($from, $cmdinfo[1]);
+                            $this->notifyPlayerPlay($from, make_bool($cmdinfo[1]));
                         break;
                         case self::BROADCAST_ENDED:
                             $this->notifyEnded($from);
                         break;
                         case self::BROADCAST_REGISTER_BROADCAST:
-                            $this->registerBroadcast($from, $cmdinfo[1]);
+                            $this->registerBroadcast($from, (int) $cmdinfo[1]);
                         break;
                         case self::BROADCAST_REGISTER_LISTENER:
-                            $this->registerListener($from, $cmdinfo[1]);
+                            $this->registerListener($from, (int) $cmdinfo[1]);
                         break;
                         case self::BROADCAST_AUTH_SID:
                             $this->authSid($from, $cmdinfo[1]);
@@ -388,7 +388,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param string $cmd
      * @param string $value
      */
-    protected function broadcastMessage($clients, $cmd, $value='')
+    protected function broadcastMessage($clients, $cmd, $value = '')
     {
         $msg = $cmd . ':' . $value . ';';
         foreach ($clients as $client) {

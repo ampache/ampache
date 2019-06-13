@@ -19,8 +19,6 @@
  *
  */
 
-
-
 /**
  * array_filter_key
  *
@@ -42,8 +40,6 @@ function array_filter_key($array, $callback)
 // {
 //     return array_filter ($array, $callback, ARRAY_FILTER_USE_KEY);
 // }
-
-
 
 /**
  * This class defines custom LDAP exceptions that will be used in the
@@ -73,8 +69,6 @@ class LDAPException extends Exception
     }
 }
 
-
-
 /**
  * This class handles all the contacts with a LDAP server
  */
@@ -103,10 +97,10 @@ class LDAP
     private static function clean_search_results($sr)
     {
         $sr_clean = [];
-        
+
         foreach (array_filter_key($sr, 'is_int') as $i => $result) {
             $sr_clean[$i] = [];
-            
+
             foreach ($result as $field => $values) {
                 if ($field == 'count' || is_int($field)) {
                     continue;
@@ -120,15 +114,13 @@ class LDAP
 
         return $sr_clean;
     }
-    
 
     /** Actual LDAP functions */
-    
-    
+
     /**
      * Connect to the LDAP
      * Note: This does not open a connection. It checks whether
-     * the given parameters are plausibe and can be used to open a
+     * the given parameters are plausible and can be used to open a
      * connection as soon as one is needed.
      */
     private static function connect()
@@ -155,7 +147,6 @@ class LDAP
         return $link;
     }
 
-    
     /**
      * Binds to the LDAP
      * @param string $password
@@ -164,7 +155,7 @@ class LDAP
     private static function bind($link, $username = null, $password = null)
     {
         debug_event('ldap.class', "binding with username `$username`", 5);
-        
+
         if ($username === null && $password === null) {
             $username = AmpConfig::get('ldap_username', '');
             $password = AmpConfig::get('ldap_password', '');
@@ -175,7 +166,6 @@ class LDAP
         }
     }
 
-    
     /**
      * Unbinds from the LDAP
      */
@@ -188,11 +178,11 @@ class LDAP
     /**
      * Read attributes for a DN from the LDAP
      */
-    private static function read($link, $dn, $attrs = [], $filter='objectClass=*')
+    private static function read($link, $dn, $attrs = [], $filter = 'objectClass=*')
     {
         $attrs_json = json_encode($attrs);
         debug_event('ldap.class', "reading attributes $attrs_json in `$dn`", 5);
-        
+
         if (! $result = ldap_read($link, $dn, $filter, $attrs)) {
             throw new LDAPException("Could not read attributes `$attrs_json` for dn `$dn`");
         }
@@ -204,15 +194,14 @@ class LDAP
         return $infos[0];
     }
 
-    
     /**
      * Search for a DN in the LDAP
-     * @return string
+     * @return string|array
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true)
     {
         debug_event('ldap.class', "searching in `$base_dn` for `$filter`", 5);
-        
+
         if (! $result = ldap_search($link, $base_dn, $filter)) {
             throw new LDAPException(ldap_errno($link));
         }
@@ -235,9 +224,7 @@ class LDAP
             return $entries;
         }
     }
-    
 
-    
     /**
      * ldap_auth
 
@@ -279,7 +266,7 @@ class LDAP
 
             $user_entry = self::search($link, $base_dn, $search, true);
             $user_dn    = $user_entry['dn'];
-            
+
             self::bind($link, $user_dn, $password);
 
             /* Test if the user is in the required group (optional) */
@@ -310,7 +297,7 @@ class LDAP
                 'name' => $name,
                 'email' => $email
             ];
-            
+
             if (($state_field = AmpConfig::get('ldap_state_field')) !== null) {
                 $return_value['state'] = $user_entry[strtolower($state_field)][0];
             }

@@ -83,10 +83,10 @@ class AmpacheLibravatar
             $url .= "?s=" . $size . "&r=g";
             $url .= "&d=identicon";
         }
-        
+
         return $url;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes

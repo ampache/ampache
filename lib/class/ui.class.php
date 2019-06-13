@@ -239,7 +239,7 @@ class UI
 
         return $value;
     }
-    
+
     /**
      * get_icon
      *

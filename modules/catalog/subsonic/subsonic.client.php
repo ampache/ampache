@@ -29,7 +29,7 @@ class SubsonicClient
     protected $_creds;
     protected $_commands;
 
-    public function __construct($username, $password, $serverUrl, $port="4040", $client="Ampache")
+    public function __construct($username, $password, $serverUrl, $port = "4040", $client = "Ampache")
     {
         $this->setServer($serverUrl, $port);
 
@@ -78,11 +78,11 @@ class SubsonicClient
         );
     }
 
-    public function querySubsonic($action, $object=array(), $rawAnswer=false)
+    public function querySubsonic($action, $object = array(), $rawAnswer = false)
     {
         return $this->_querySubsonic($action, $object, $rawAnswer);
     }
-    
+
     public function parameterize($url, $object = array())
     {
         $params = array_merge($this->_creds, $object);
@@ -90,12 +90,12 @@ class SubsonicClient
         return $url . http_build_query($params);
     }
 
-    protected function _querySubsonic($action, $o=array(), $rawAnswer=false)
+    protected function _querySubsonic($action, $o = array(), $rawAnswer = false)
     {
         // Make sure the command is in the list of commands
         if ($this->isCommand($action)) {
             $url = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $o);
-            
+
             $options = array(
                 CURLOPT_URL => $url,
                 CURLOPT_HEADER => 0,
@@ -119,7 +119,7 @@ class SubsonicClient
         }
     }
 
-    public function setServer($server, $port=null)
+    public function setServer($server, $port = null)
     {
         $protocol = "";
         if (preg_match("/^https\:\/\//", $server)) {
@@ -154,7 +154,7 @@ class SubsonicClient
         return $this->_serverUrl . ":" . $this->_serverPort;
     }
 
-    protected function error($error, $data=null)
+    protected function error($error, $data = null)
     {
         error_log($error . "\n" . print_r($data, true));
 

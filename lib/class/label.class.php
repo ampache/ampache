@@ -83,7 +83,7 @@ class Label extends database_object implements library_item
     /**
      * __construct
      */
-    public function __construct($id=null)
+    public function __construct($id = null)
     {
         if (!$id) {
             return false;
@@ -405,7 +405,7 @@ class Label extends database_object implements library_item
      * get_display
      * This returns a csv formated version of the labels that we are given
      */
-    public static function get_display($labels, $link=false)
+    public static function get_display($labels, $link = false)
     {
         if (!is_array($labels)) {
             return '';

@@ -44,6 +44,12 @@
             <?php
     } ?>
         </select>
-        <input class="button" type="submit" value="<?php echo T_('Search'); ?>" id="searchBtn" />
+        <?php if ($_SESSION['mobile']) {
+        echo "<input class=\"button\" type=\"submit\" value=\"" . T_('Search') . "\"style=\"display: none;\" id=\"searchBtn\" />";
+    } else {
+        echo "<input class=\"button\" type=\"submit\" value=\"" . T_('Search') . "\" id=\"searchBtn\" />";
+    }
+?>
     </form>
 </div>
+

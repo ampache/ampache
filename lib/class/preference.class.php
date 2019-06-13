@@ -71,7 +71,7 @@ class Preference extends database_object
      * update
      * This updates a single preference from the given name or id
      */
-    public static function update($preference, $user_id, $value, $applytoall=false, $applytodefault=false)
+    public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false)
     {
         // First prepare
         if (!is_numeric($preference)) {
@@ -274,7 +274,7 @@ class Preference extends database_object
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('name' => $row['name'],'level' => $row['level'],'description' => $row['description'],'value' => $row['value'],'subcategory' => $row['subcatagory']);
+            $results[] = array('name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'], 'value' => $row['value'], 'subcategory' => $row['subcatagory']);
         }
 
         return $results;
@@ -291,7 +291,7 @@ class Preference extends database_object
      * @param string $type
      * @param string $catagory
      */
-    public static function insert($name, $description, $default, $level, $type, $catagory, $subcatagory=null)
+    public static function insert($name, $description, $default, $level, $type, $catagory, $subcatagory = null)
     {
         if ($subcatagory !== null) {
             $subcatagory = strtolower($subcatagory);
@@ -399,7 +399,7 @@ class Preference extends database_object
      * load_from_session
      * This loads the preferences from the session rather then creating a connection to the database
      */
-    public static function load_from_session($uid=-1)
+    public static function load_from_session($uid = -1)
     {
         if (isset($_SESSION['userdata']['preferences']) && is_array($_SESSION['userdata']['preferences']) && $_SESSION['userdata']['uid'] == $uid) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
@@ -428,18 +428,18 @@ class Preference extends database_object
      */
     public static function is_boolean($key)
     {
-        $boolean_array = array('session_cookiesecure','require_session',
-                    'access_control','require_localnet_session',
-                    'downsample_remote','track_user_ip',
-                    'xml_rpc','allow_zip_download','ratings',
-                    'shoutbox','resize_images',
-                    'show_album_art','allow_public_registration',
-                    'captcha_public_reg','admin_notify_reg',
-                    'use_rss','download','force_http_play','cookie_secure',
-                    'allow_stream_playback','allow_democratic_playback',
-                    'use_auth','allow_localplay_playback','debug','lock_songs',
-                    'transcode_m4a','transcode_mp3','transcode_ogg','transcode_flac',
-                    'shoutcast_active','httpq_active','show_lyrics');
+        $boolean_array = array('session_cookiesecure', 'require_session',
+                    'access_control', 'require_localnet_session',
+                    'downsample_remote', 'track_user_ip',
+                    'xml_rpc', 'allow_zip_download', 'ratings',
+                    'shoutbox', 'resize_images',
+                    'show_album_art', 'allow_public_registration',
+                    'captcha_public_reg', 'admin_notify_reg',
+                    'use_rss', 'download', 'force_http_play', 'cookie_secure',
+                    'allow_stream_playback', 'allow_democratic_playback',
+                    'use_auth', 'allow_localplay_playback', 'debug', 'lock_songs',
+                    'transcode_m4a', 'transcode_mp3', 'transcode_ogg', 'transcode_flac',
+                    'shoutcast_active', 'httpq_active', 'show_lyrics');
 
         if (in_array($key, $boolean_array)) {
             return true;

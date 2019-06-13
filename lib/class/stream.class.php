@@ -140,7 +140,7 @@ class Stream
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
-        debug_event('stream.class', 'Starting transcode for {' . $media->file . '}. Type {' . $type . '}. Options: ' . print_r($options, true) . '}...', 5);
+        debug_event('stream.class', 'Starting transcode for {' . $media->file . '}. Type {' . $type . '}. Options: ' . print_r($options, false) . '}...', 4);
 
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
@@ -166,7 +166,7 @@ class Stream
             $bit_rate = self::validate_bitrate($media->bitrate / 1000);
         }
 
-        debug_event('stream.class', 'Final transcode bitrate is ' . $bit_rate, 5);
+        debug_event('stream.class', 'Final transcode bitrate is ' . $bit_rate, 4);
 
         $song_file = scrub_arg($media->file);
 
@@ -473,7 +473,7 @@ class Stream
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      */
-    public static function get_base_url($local=false)
+    public static function get_base_url($local = false)
     {
         $session_string = '';
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {

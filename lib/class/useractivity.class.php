@@ -47,7 +47,7 @@ class Useractivity extends database_object
         if (!$useract_id) {
             return false;
         }
-        
+
         /* Get the information from the db */
         $info = $this->get_info($useract_id, 'user_activity');
 
@@ -104,7 +104,7 @@ class Useractivity extends database_object
             }
         }
     }
-    
+
     /**
      * post_activity
      * @param integer $user_id
@@ -174,7 +174,7 @@ class Useractivity extends database_object
 
             return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
         }
-        
+
         // This is probably a good feature to keep by default
         $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
 
@@ -193,7 +193,7 @@ class Useractivity extends database_object
         if ($limit <= 0) {
             $limit = AmpConfig::get('popular_threshold');
         }
-        
+
         $params = array($user_id);
         $sql    = "SELECT `id` FROM `user_activity` WHERE `user` = ?";
         if ($since > 0) {
@@ -209,7 +209,7 @@ class Useractivity extends database_object
 
         return $results;
     }
-    
+
     /**
      * get_friends_activities
      * @param integer $user_id
@@ -222,7 +222,7 @@ class Useractivity extends database_object
         if ($limit <= 0) {
             $limit = AmpConfig::get('popular_threshold');
         }
-        
+
         $params = array($user_id);
         $sql    = "SELECT `user_activity`.`id` FROM `user_activity`" .
                 " INNER JOIN `user_follower` ON `user_follower`.`follow_user` = `user_activity`.`user`"

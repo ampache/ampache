@@ -68,7 +68,12 @@ switch ($_REQUEST['action']) {
             $object_ids = $artist->get_albums($_REQUEST['catalog']);
         }
         $object_type = 'album';
-        require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
+        if (!$artist->id) {
+            debug_event('artists', 'Requested an artist that does not exist', 2);
+            echo T_("Error: Requested an artist that does not exist.");
+        } else {
+            require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
+        }
     break;
     case 'showyear':
         $artist = new Artist($_REQUEST['artist']);

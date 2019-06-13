@@ -29,7 +29,7 @@ class Ampache7digital
     public $version     = '000001';
     public $min_ampache = '370015';
     public $max_ampache = '999999';
-    
+
     private $api_key;
     private $secret;
 
@@ -118,13 +118,13 @@ class Ampache7digital
 
         if ($enSong != null) {
             $file = $enSong[0]['tracks'][0]['preview_url'];
-            
+
             debug_event('7digital.plugin', 'EchoNest `' . $title . '` preview: ' . $file, 1);
         }
-        
+
         return $file;
     }
-    
+
     public function stream_song_preview($file)
     {
         if (strpos($file, "7digital") !== false) {
@@ -132,15 +132,15 @@ class Ampache7digital
             $request  = OAuthRequest::from_consumer_and_token($consumer, null, 'GET', $file);
             $request->sign_request(new OAuthSignatureMethod_HMAC_SHA1(), $consumer, null);
             $url = $request->to_url();
-            
+
             header("Location: " . $url);
 
             return false;
         }
-        
+
         return false;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes
@@ -150,7 +150,7 @@ class Ampache7digital
     {
         $user->set_preferences();
         $data = $user->prefs;
-        
+
         if (strlen(trim($data['7digital_api_key']))) {
             $this->api_key = trim($data['7digital_api_key']);
         } else {
@@ -165,7 +165,7 @@ class Ampache7digital
 
             return false;
         }
-        
+
         return true;
     } // load
 } // end Ampache7digital

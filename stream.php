@@ -78,7 +78,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'play_item':
         $object_type = $_REQUEST['object_type'];
-        $object_ids  = explode(',', filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
+        $object_ids  = explode(',', Core::get_get('object_id'));
 
         if (Core::is_playable_item($object_type)) {
             foreach ($object_ids as $object_id) {
@@ -116,7 +116,7 @@ switch ($_REQUEST['action']) {
             $matchlist['catalog'] = Core::get_request('catalog');
         }
         /* Setup the options array */
-        $options   = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit' => $_REQUEST['size_limit']);
+        $options   = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'], 'size_limit' => $_REQUEST['size_limit']);
         $media_ids = get_random_songs($options, $matchlist);
     break;
     case 'democratic':

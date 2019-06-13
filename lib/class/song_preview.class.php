@@ -182,7 +182,7 @@ class Song_Preview extends database_object implements media, playable_item
      * get_artist_name
      * gets the name of $this->artist, allows passing of id
      */
-    public function get_artist_name($artist_id=0)
+    public function get_artist_name($artist_id = 0)
     {
         if (!$artist_id) {
             $artist_id = $this->artist;
@@ -278,10 +278,10 @@ class Song_Preview extends database_object implements media, playable_item
     /**
      * play_url
      * This function takes all the song information and correctly formats a
-     * a stream URL taking into account the downsmapling mojo and everything
+     * a stream URL taking into account the downsampling mojo and everything
      * else, this is the true function
      */
-    public static function play_url($oid, $additional_params='', $player=null, $local=false)
+    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
     {
         $song        = new Song_Preview($oid);
         $user_id     = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
@@ -319,7 +319,7 @@ class Song_Preview extends database_object implements media, playable_item
      *
      * FIXME: Song Preview transcoding is not implemented
      */
-    public function get_transcode_settings($target = null, $player = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return false;
     }

@@ -91,7 +91,7 @@ class PrivateMsg extends database_object
     /**
      * __construct
      */
-    public function __construct($id=null)
+    public function __construct($id = null)
     {
         if (!$id) {
             return false;

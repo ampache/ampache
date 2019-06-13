@@ -161,13 +161,13 @@ class Localplay
                 debug_event('localplay.class', $file . ' is not a directory.', 3);
                 continue;
             }
-            
+
             // Make sure the plugin base file exists inside the plugin directory
             if (! file_exists($basedir . '/' . $file . '/' . $file . '.controller.php')) {
                 debug_event('localplay.class', 'Missing class for ' . $file, 3);
                 continue;
             }
-            
+
             $results[] = $file;
         } // end while
 
@@ -357,7 +357,7 @@ class Localplay
     {
         $data = $this->_player->get();
 
-        if (!count($data) || !is_array($data)) {
+        if (empty($data) || !is_array($data)) {
             debug_event('localplay.class', 'Error Unable to get song info, check ' . $this->type . ' controller', 1);
 
             return array();

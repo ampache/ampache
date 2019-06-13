@@ -31,7 +31,7 @@ class Ampacheflickr
     public $max_ampache = '999999';
 
     private $api_key;
-    
+
     /**
      * Constructor
      * This function does nothing...
@@ -94,16 +94,16 @@ class Ampacheflickr
                 }
             }
         }
-        
+
         return $photos;
     }
-    
+
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         if (!$limit) {
             $limit = 5;
         }
-        
+
         $images  = $this->get_photos($options['keyword'], '');
         $results = array();
         foreach ($images as $image) {
@@ -116,15 +116,15 @@ class Ampacheflickr
                 'mime' => 'image/jpeg',
                 'title' => $title
             );
-            
+
             if ($limit && count($results) >= $limit) {
                 break;
             }
         }
-        
+
         return $results;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes
@@ -134,7 +134,7 @@ class Ampacheflickr
     {
         $user->set_preferences();
         $data = $user->prefs;
-        
+
         if (strlen(trim($data['flickr_api_key']))) {
             $this->api_key = trim($data['flickr_api_key']);
         } else {

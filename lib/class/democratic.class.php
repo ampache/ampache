@@ -50,7 +50,7 @@ class Democratic extends Tmp_Playlist
      * constructor
      * We need a constructor for this class. It does it's own thing now
      */
-    public function __construct($id='')
+    public function __construct($id = '')
     {
         if (!$id) {
             return false;
@@ -541,7 +541,7 @@ class Democratic extends Tmp_Playlist
         $user     = Dba::escape(Core::get_global('user')->id);
 
         $sql = "INSERT INTO `democratic` (`name`,`base_playlist`,`cooldown`,`level`,`user`,`primary`) " .
-            "VALUES ('$name','$base','$cool','$level','$user','$default')";
+            "VALUES ('$name', '$base', '$cool', '$level', '$user', '$default')";
         $db_results = Dba::write($sql);
 
         if ($db_results) {

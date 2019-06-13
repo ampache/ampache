@@ -57,10 +57,25 @@ if (AmpConfig::get('now_playing_refresh_limit') > 1) {
 Stream::gc_now_playing();
 $results = Stream::get_now_playing();
 
-if ($_REQUEST['user_id']) {
+if (Core::get_request('user_id') !== '') {
+    if (empty($results)) {
+        debug_event('now_playing', 'no result; getting last song played instead', 5);
+        $last_song = Stats::get_last_song(Core::get_request('user_id'));
+        $type      = $last_song['object_type'];
+        $media     = new $type($last_song['object_id']);
+        $media->format();
+        $client = new User($last_song['user']);
+        $client->format();
+        $results[] = array(
+            'media' => $media,
+            'client' => $client,
+            'agent' => $last_song['agent'],
+            'expire' => ''
+        );
+    }
     // If the URL specifies a specific user, filter the results on that user
     $results = array_filter($results, function ($item) {
-        return ($item['client']->id == $_REQUEST['user_id']);
+        return ($item['client']->id === Core::get_request('user_id'));
     });
 }
 

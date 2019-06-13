@@ -40,7 +40,7 @@ class MetadataField extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
      * @var string
      */
     protected $name;
-    
+
     /**
      * Is the Tag public?
      * @var boolean
@@ -64,7 +64,7 @@ class MetadataField extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
     {
         return $this->name;
     }
-    
+
     /**
      *
      * @return string
@@ -82,7 +82,7 @@ class MetadataField extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
     {
         $this->name = $name;
     }
-    
+
     /**
      *
      * @return boolean
@@ -91,7 +91,7 @@ class MetadataField extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
     {
         return $this->public;
     }
-    
+
     /**
      * Set public to false
      */

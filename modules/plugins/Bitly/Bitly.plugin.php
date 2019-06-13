@@ -90,9 +90,9 @@ class AmpacheBitly
 
             return false;
         }
-        
+
         $shorturl = '';
-    
+
         $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
         try {
             debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
@@ -103,10 +103,10 @@ class AmpacheBitly
 
             return false;
         }
-        
+
         return $shorturl;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes

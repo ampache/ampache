@@ -82,7 +82,7 @@ class Browse extends Query
 
     /**
      * get_supplemental_objects
-     * This returns an array of 'class','id' for additional objects that
+     * This returns an array of 'class', 'id' for additional objects that
      * need to be created before we start this whole browsing thing.
      *
      * @return array
@@ -208,14 +208,16 @@ class Browse extends Query
             break;
             case 'album':
                 Album::build_cache($object_ids);
-                $box_title = T_('Albums') . $match;
+                $box_title         = T_('Albums') . $match;
+                $allow_group_disks = false;
                 if (is_array($argument)) {
                     $allow_group_disks = $argument['group_disks'];
                     if ($argument['title']) {
                         $box_title = $argument['title'];
                     }
-                } else {
-                    $allow_group_disks = false;
+                }
+                if (AmpConfig::get('album_group')) {
+                    $allow_group_disks = true;
                 }
                 $box_req = AmpConfig::get('prefix') . UI::find_template('show_albums.inc.php');
             break;
@@ -470,7 +472,7 @@ class Browse extends Query
     {
         return $this->_state['use_pages'];
     }
-    
+
     /**
      *
      * @param boolean $grid_view
@@ -482,7 +484,7 @@ class Browse extends Query
         }
         $this->_state['grid_view'] = $grid_view;
     }
-    
+
     /**
      *
      * @return boolean
@@ -502,7 +504,7 @@ class Browse extends Query
             $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
         }
         $this->_state['use_alpha'] = $use_alpha;
-        
+
         if ($use_alpha) {
             if (count($this->_state['filter']) == 0) {
                 $this->set_filter('regex_match', '^A');
@@ -574,7 +576,7 @@ class Browse extends Query
     {
         return $this->_state['threshold'];
     }
-    
+
     /**
      *
      * @return string

@@ -210,7 +210,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #header #headerlogo, #header #headerbox , #header .box_headerbox, #header .box-inside, #header .box-content {
     height: 100%;
-	overflow: hidden;
+    overflow: hidden;
 }
 
 #header #headerlogo {
@@ -363,7 +363,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #registerbox .require label::after {
-	content: " *";
+    content: " *";
 }
 
 #loginPage #loginbox #usernamefield input:focus,
@@ -503,7 +503,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-light li {
-	padding-top: 10px;
+    padding-top: 10px;
 }
 
 #sidebar-light img {
@@ -575,24 +575,24 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-tabs .sb2 li ul li a {
-	width: 100%;
-	margin: 0 0 0 5px;
-	background-color: transparent;
-	-webkit-transition: color .1s;
-	-moz-transition: color .1s;
-	-ms-transition: color .1s;
-	-o-transition: color .1s;
-	transition: color .1s;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	box-sizing: border-box;
-	display: inline-block;
+    width: 100%;
+    margin: 0 0 0 5px;
+    background-color: transparent;
+    -webkit-transition: color .1s;
+    -moz-transition: color .1s;
+    -ms-transition: color .1s;
+    -o-transition: color .1s;
+    transition: color .1s;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
 }
 
 #sidebar-tabs .sb2 li ul li a:hover {
-	width: 95%;
-	padding-left: 5px;
+    width: 95%;
+    padding-left: 5px;
 }
 
 #sidebar-tabs .sb2 #browse_filters li {
@@ -631,11 +631,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     position: fixed;
     right: 10px;
     top: 66px;
-    width: 200px;
+    min-width: 100px;
+    max-width: 250px;
     margin: 5px 15px auto auto;
     max-height: 85%;
     padding: 4px;
-	border-color: #161616;
+    border-color: #161616;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
@@ -709,9 +710,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     padding: 0.6em;
     font-size: 12px;
     z-index: 99;
-	overflow: hidden;
+    overflow: hidden;
     overflow-y: scroll;
-	max-height: 350px;
+    max-height: 350px;
 }
 
 #rightbar #rb_action .submenu li {
@@ -868,7 +869,7 @@ table.tabledata tbody tr:hover .cel_play_content, table.tabledata tbody tr:focus
 }
 
 table.tabledata tbody tr.unread {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 table.tabledata tbody .cel_add {
@@ -921,7 +922,7 @@ table.tabledata tbody .cel_cover img {
     -moz-border-radius: 2px;
     border-radius: 2px;
     margin: 2px;
-	object-fit: cover;
+    object-fit: cover;
 }
 
 table.tabledata tbody .cel_cover img:hover {
@@ -1086,7 +1087,7 @@ div.box.box_rules {
     max-width: 350px;
     white-space: normal !important;
     text-overflow: ellipsis;
-	overflow: hidden;
+    overflow: hidden;
 }
 
 /***********************************************
@@ -1266,7 +1267,6 @@ span.fatalerror {
 
 .item_properties {
     text-align: right;
-    color: #999;
     font-size: 13px;
     clear: right;
     max-width: 128px;
@@ -1376,9 +1376,9 @@ span.fatalerror {
 }
 
 .item_uploaded_by {
-	padding-left: 0px;
-	padding-top: 10px;
-	font-size: small;
+    padding-left: 0px;
+    padding-top: 10px;
+    font-size: small;
 }
 
 .item_right_info {
@@ -1575,35 +1575,35 @@ ol, ul, #rightbar ul {
 }
 
 #plugins_user_field {
-	margin-top: 15px;
+    margin-top: 15px;
 }
 
 .list-header-navmenu-border {
-	border: 1px solid;
-	border-radius: 2px;
+    border: 1px solid;
+    border-radius: 2px;
 }
 
 input.list-header-navmenu-input {
-	padding: 0px;
-	margin-bottom: 2px;
-	width: 50px;
-	height: 16px;
-	text-align: center;
+    padding: 0px;
+    margin-bottom: 2px;
+    width: 50px;
+    height: 16px;
+    text-align: center;
 }
 
 span.item-count {
-	font-size: 11px;
+    font-size: 11px;
 }
 
 a.option-list {
-	border: solid 1px transparent;
-	width: 100%;
-	margin: 0;
-	display: inline-block;
+    border: solid 1px transparent;
+    width: 100%;
+    margin: 0;
+    display: inline-block;
 }
 
 a.option-list:hover {
-	border: 1px solid;
+    border: 1px solid;
 }
 
 .stats_graph {
@@ -1611,18 +1611,18 @@ a.option-list:hover {
 }
 
 .followbtn {
-	background-repeat: repeat-x;
-	position: relative;
-	padding: 5px 12px 4px;
-	font-size: 15px;
-	line-height: normal;
-	border: 0px none;
-	cursor: pointer;
-	border-radius: 2px;
-	background-position: 0px -10px;
-	transition: background-position 0.1s linear 0s;
-	text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
-	text-decoration: none;
-	min-width: 100px;
-	background-color: #363F4A;
+    background-repeat: repeat-x;
+    position: relative;
+    padding: 5px 12px 4px;
+    font-size: 15px;
+    line-height: normal;
+    border: 0px none;
+    cursor: pointer;
+    border-radius: 2px;
+    background-position: 0px -10px;
+    transition: background-position 0.1s linear 0s;
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
+    text-decoration: none;
+    min-width: 100px;
+    background-color: #363F4A;
 }

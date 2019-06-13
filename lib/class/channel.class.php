@@ -57,7 +57,7 @@ class Channel extends database_object implements media, library_item
     /**
      * Constructor
      */
-    public function __construct($id=0)
+    public function __construct($id = 0)
     {
         if (!$id) {
             return true;
@@ -97,7 +97,7 @@ class Channel extends database_object implements media, library_item
      * @param integer $listeners
      * @param boolean $addition
      */
-    public function update_listeners($listeners, $addition=false)
+    public function update_listeners($listeners, $addition = false)
     {
         $sql             = "UPDATE `channel` SET `listeners` = ? ";
         $params          = array($listeners);
@@ -114,7 +114,7 @@ class Channel extends database_object implements media, library_item
         $params[] = $this->id;
         Dba::write($sql, $params);
     }
-    
+
     /**
      * get_genre
      * @return string
@@ -656,7 +656,7 @@ class Channel extends database_object implements media, library_item
      * @param string $additional_params
      * @return string
      */
-    public static function play_url($oid, $additional_params='', $player=null, $local=false)
+    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
     {
         $channel = new Channel($oid);
 
@@ -687,7 +687,7 @@ class Channel extends database_object implements media, library_item
         // Do nothing
     }
 
-    public function get_transcode_settings($target = null, $player = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return false;
     }
@@ -704,7 +704,7 @@ class Channel extends database_object implements media, library_item
      */
     private function strtohex($source)
     {
-        $string='';
+        $string= '';
         foreach (str_split($source) as $char) {
             $string .= sprintf("%02X", ord($char));
         }

@@ -29,10 +29,10 @@ class AmpacheDiscogs
     public $version        = '000001';
     public $min_ampache    = '370021';
     public $max_ampache    = '999999';
-    
+
     private $api_key;
     private $secret;
-    
+
     /**
      * Constructor
      * This function does nothing
@@ -78,7 +78,7 @@ class AmpacheDiscogs
     {
         $user->set_preferences();
         $data = $user->prefs;
-        
+
         if (strlen(trim($data['discogs_api_key']))) {
             $this->api_key = trim($data['discogs_api_key']);
         } else {
@@ -93,7 +93,7 @@ class AmpacheDiscogs
 
             return false;
         }
-        
+
         return true;
     } // load
 
@@ -107,28 +107,28 @@ class AmpacheDiscogs
 
         return json_decode($request->body, true);
     }
-    
+
     protected function search_artist($artist)
     {
         $query = "database/search?type=artist&title=" . rawurlencode($artist) . "&per_page=10";
 
         return $this->query_discogs($query);
     }
-    
+
     protected function get_artist($id)
     {
         $query = "artists/" . $id;
 
         return $this->query_discogs($query);
     }
-    
+
     protected function search_album($artist, $album)
     {
         $query = "database/search?type=master&release_title=" . rawurlencode($album) . "&artist=" . rawurlencode($artist) . "&per_page=10";
 
         return $this->query_discogs($query);
     }
-    
+
     protected function get_album($id)
     {
         $query = "masters/" . $id;
@@ -150,7 +150,7 @@ class AmpacheDiscogs
 
             return null;
         }
-        
+
         $results = array();
         try {
             if (in_array('artist', $gather_types)) {
@@ -175,7 +175,7 @@ class AmpacheDiscogs
         } catch (Exception $e) {
             debug_event('discogs.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
-        
+
         return $results;
     } // get_metadata
 

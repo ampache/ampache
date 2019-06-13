@@ -239,7 +239,7 @@ class AmazonSearch
      */
     public function signString($string_to_sign)
     {
-        
+
         // hash and encode the query string
         $signature = base64_encode(hash_hmac("sha256", $string_to_sign, $this->private_key, true));
 
@@ -278,7 +278,7 @@ class AmazonSearch
      */
     public function runSearchAsin($asin)
     {
-        
+
         // get the proxy config
         $options = $this->getProxyConfig();
 

@@ -91,8 +91,11 @@ class Playlist extends playlist_object
     /**
      * get_playlists
      * Returns a list of playlists accessible by the user.
+     * @param boolean $incl_public
+     * @param int $user_id
+     * @return array
      */
-    public static function get_playlists($incl_public = true, $user_id = null)
+    public static function get_playlists($incl_public = true, $user_id = -1, $playlist_name = '')
     {
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
@@ -107,13 +110,21 @@ class Playlist extends playlist_object
 
         if ($incl_public) {
             if (count($params) > 0) {
-                $sql .= ' OR ';
+                $sql .= " OR `type` = 'public'";
             } else {
-                $sql .= ' WHERE ';
+                $sql .= " WHERE `type` = 'public'";
             }
-            $sql .= "`type` = 'public'";
+        }
+
+        if ($playlist_name !== '') {
+            if (count($params) > 0 || $incl_public) {
+                $sql .= " AND `name` = '" . $playlist_name . "'";
+            } else {
+                $sql .= " WHERE `name` = '" . $playlist_name . "'";
+            }
         }
         $sql .= ' ORDER BY `name`';
+        debug_event('playlist.class', 'get_playlists query: ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();
@@ -173,7 +184,7 @@ class Playlist extends playlist_object
         parent::format($details);
         $this->link   = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
-        
+
         $this->f_date        = $this->date ? date('d/m/Y h:i', $this->date) : T_('Unknown');
         $this->f_last_update = $this->last_update ? date('d/m/Y h:i', $this->last_update) : T_('Unknown');
     } // format
@@ -222,7 +233,7 @@ class Playlist extends playlist_object
      * get_random_items
      * This is the same as before but we randomize the buggers!
      */
-    public function get_random_items($limit='')
+    public function get_random_items($limit = '')
     {
         $results = array();
 
@@ -251,8 +262,8 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $sql        = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
-        $db_results = Dba::read($sql, array($this->id));
+        $sql         = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
+        $db_results  = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];
@@ -409,7 +420,7 @@ class Playlist extends playlist_object
             $this->update_track_number($item['track_id'], $index);
             $index++;
         }
-        
+
         $this->update_last_update();
     }
 
@@ -417,7 +428,7 @@ class Playlist extends playlist_object
      * add_songs
      * This takes an array of song_ids and then adds it to the playlist
      */
-    public function add_songs($song_ids=array(), $ordered=false)
+    public function add_songs($song_ids = array(), $ordered = false)
     {
         $medias = array();
         foreach ($song_ids as $song_id) {
@@ -429,7 +440,7 @@ class Playlist extends playlist_object
         $this->add_medias($medias, $ordered);
     } // add_songs
 
-    public function add_medias($medias, $ordered=false)
+    public function add_medias($medias, $ordered = false)
     {
         /* We need to pull the current 'end' track and then use that to
          * append, rather then integrate take end track # and add it to
@@ -437,8 +448,8 @@ class Playlist extends playlist_object
          */
         $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track` DESC LIMIT 1";
         $db_results = Dba::read($sql, array($this->id));
-        $data       = Dba::fetch_assoc($db_results);
-        $base_track = $data['track'] ?: 0;
+        $track_data = Dba::fetch_assoc($db_results);
+        $base_track = $track_data['track'] ?: 0;
         debug_event('playlist.class', 'Adding Media; Track number: ' . $base_track, 5);
 
         $count = 0;
@@ -502,7 +513,7 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $object_id));
-        
+
         $this->update_last_update();
 
         return true;
@@ -516,7 +527,7 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $track));
-        
+
         $this->update_last_update();
 
         return true;

@@ -145,7 +145,7 @@ class User extends database_object
      * This function is the constructor object for the user
      * class, it currently takes a username
      */
-    public function __construct($user_id=0)
+    public function __construct($user_id = 0)
     {
         if (!$user_id) {
             return false;
@@ -357,7 +357,7 @@ class User extends database_object
      * This function pulls all of them an arranges them into a spiffy little array
      * You can specify a type to limit it to a single type of preference
      * []['title'] = ucased type name
-     * []['prefs'] = array(array('name','display','value'));
+     * []['prefs'] = array(array('name', 'display', 'value'));
      * []['admin'] = t/f value if this is an admin only section
      */
     public function get_preferences($type = 0, $system = false)
@@ -390,8 +390,8 @@ class User extends database_object
             if ($type == 'system') {
                 $admin = true;
             }
-            $type_array[$type][$row['name']] = array('name' => $row['name'],'level' => $row['level'],'description' => $row['description'],'value' => $row['value'],'subcategory' => $row['subcatagory']);
-            $results[$type]                  = array('title' => ucwords($type),'admin' => $admin,'prefs' => $type_array[$type]);
+            $type_array[$type][$row['name']] = array('name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'], 'value' => $row['value'], 'subcategory' => $row['subcatagory']);
+            $results[$type]                  = array('title' => ucwords($type), 'admin' => $admin, 'prefs' => $type_array[$type]);
         } // end while
 
         return $results;
@@ -927,7 +927,7 @@ class User extends database_object
             $sip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
             debug_event('user.class', 'Login from ip adress: ' . $sip, 3);
         }
-        
+
         // Remove port information if any
         if (!empty($sip)) {
             // Use parse_url to support easily ipv6
@@ -944,7 +944,7 @@ class User extends database_object
         $user_id = $this->id;
         $agent   = Dba::escape($_SERVER['HTTP_USER_AGENT']);
 
-        $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$uip','$user_id','$date','$agent')";
+        $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
         Dba::write($sql);
 
         /* Clean up old records... sometimes  */
@@ -1180,7 +1180,7 @@ class User extends database_object
                     $row['value'] = $zero_results[$key];
                 }
                 $value = Dba::escape($row['value']);
-                $sql   = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id','$key','$value')";
+                $sql   = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id', '$key', '$value')";
                 Dba::write($sql);
             }
         } // while preferences
@@ -1291,7 +1291,7 @@ class User extends database_object
      * This gets the recently played items for this user respecting
      * the limit passed
      */
-    public function get_recently_played($limit, $type='')
+    public function get_recently_played($limit, $type = '')
     {
         if (!$type) {
             $type = 'song';
@@ -1314,7 +1314,7 @@ class User extends database_object
      * This returns the ip_history from the
      * last AmpConfig::get('user_ip_cardinality') days
      */
-    public function get_ip_history($count='', $distinct='')
+    public function get_ip_history($count = '', $distinct = '')
     {
         $username     = Dba::escape($this->id);
         $count        = $count ? (int) ($count) : (int) (AmpConfig::get('user_ip_cardinality'));
@@ -1405,7 +1405,7 @@ class User extends database_object
         $art = new Art($this->id, 'user');
         $art->insert($data, $mime);
     }
-    
+
     public function upload_avatar()
     {
         $upload = array();
@@ -1431,7 +1431,7 @@ class User extends database_object
      * activate_user
      * the user from public_registration
      */
-    public function activate_user($username)
+    public static function activate_user($username)
     {
         $username = Dba::escape($username);
 
@@ -1552,13 +1552,13 @@ class User extends database_object
         } else {
             $sql      = "INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, ?)";
             $params[] = time();
-            
+
             Useractivity::post_activity($this->id, 'follow', 'user', $user_id);
         }
 
         return Dba::write($sql, $params);
     }
-    
+
     /**
      * get_display_follow
      * Get html code to display the follow/unfollow link

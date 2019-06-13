@@ -20,7 +20,7 @@
  *
  */
 
-class scrobbler_async extends Thread
+abstract class scrobbler_async extends Thread
 {
     public function __construct($user, $song_info)
     {

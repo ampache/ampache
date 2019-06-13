@@ -188,7 +188,7 @@ class mpd
         }
 
         $this->_debug('construct', 'constructor called', 5);
-        
+
         if (empty($this->host)) {
             $this->_error('construct', 'Host is empty');
 

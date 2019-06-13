@@ -59,7 +59,7 @@ class vainfo
      * @param string $encoding_id3v1
      * @param string $encoding_id3v2
      */
-    public function __construct($file, $gather_types = array(), $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern ='', $islocal = true)
+    public function __construct($file, $gather_types = array(), $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern = '', $islocal = true)
     {
         $this->islocal      = $islocal;
         $this->filename     = $file;
@@ -417,11 +417,11 @@ class vainfo
             $info['release_date']   = $info['release_date'] ?: trim($tags['release_date']);
             $info['summary']        = $info['summary'] ?: trim($tags['summary']);
             $info['tvshow_summary'] = $info['tvshow_summary'] ?: trim($tags['tvshow_summary']);
-            
+
             $info['tvshow_art']        = $info['tvshow_art'] ?: trim($tags['tvshow_art']);
             $info['tvshow_season_art'] = $info['tvshow_season_art'] ?: trim($tags['tvshow_season_art']);
             $info['art']               = $info['art'] ?: trim($tags['art']);
-            
+
             if (AmpConfig::get('enable_custom_metadata') && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
                 foreach ($tags as $tag => $value) {
@@ -431,7 +431,7 @@ class vainfo
                 }
             }
         }
-        
+
         // Some things set the disk number even though there aren't multiple
         if ($info['totaldisks'] == 1 && $info['disk'] == 1) {
             unset($info['disk']);
@@ -627,7 +627,7 @@ class vainfo
     private function _parse_general($tags)
     {
         $parsed = array();
-        
+
         if ((in_array('movie', $this->gather_types)) || (in_array('tvshow', $this->gather_types))) {
             $parsed['title'] = $this->formatVideoName(urldecode($this->_pathinfo['filename']));
         } else {
@@ -958,7 +958,6 @@ class vainfo
                 }
             }
         }
-        
 
         return $parsed;
     }
@@ -1064,7 +1063,7 @@ class vainfo
         $origin  = $filepath;
         $results = array();
         $file    = pathinfo($filepath, PATHINFO_FILENAME);
-        
+
         if (in_array('tvshow', $this->gather_types)) {
             $season  = array();
             $episode = array();
@@ -1072,7 +1071,7 @@ class vainfo
             $temp    = array();
             preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath, $tvyear);
             $results['year'] = !empty($tvyear) ? (int) ($tvyear[0]) : null;
-        
+
             if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
                 $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~", $file, 2);
                 preg_match("~(?<=[Ss])\d+~", $file, $season);
@@ -1100,7 +1099,7 @@ class vainfo
                     }
                 }
             }
-    
+
             $results['tvshow_season']  = $season[0];
             $results['tvshow_episode'] = $episode[0];
             $results['tvshow']         = $this->formatVideoName($temp[0]);
@@ -1139,11 +1138,11 @@ class vainfo
 
             $results['title'] = $results['tvshow'];
         }
-    
+
         if (in_array('movie', $this->gather_types)) {
             $results['original_name'] = $results['title'] = $this->formatVideoName($file);
         }
-        
+
         if (in_array('music', $this->gather_types) || in_array('clip', $this->gather_types)) {
             $patres  = vainfo::parse_pattern($filepath, $this->_dir_pattern, $this->_file_pattern);
             $results = array_merge($results, $patres);
@@ -1154,7 +1153,7 @@ class vainfo
 
         return $results;
     }
-    
+
     /**
      * @param string $filepath
      * @param string $dir_pattern
@@ -1207,7 +1206,7 @@ class vainfo
 
         return $results;
     }
-    
+
     /**
      * @return string
      */
@@ -1226,7 +1225,7 @@ class vainfo
 
         return $string;
     }
-    
+
     private function formatVideoName($name)
     {
         return ucwords(trim($this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name), "\s\t\n\r\0\x0B\.\_\-")));

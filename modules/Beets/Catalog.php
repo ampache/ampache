@@ -143,7 +143,7 @@ abstract class Catalog extends \Catalog
     public function addSong($song)
     {
         $song['catalog'] = $this->id;
-                
+
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {

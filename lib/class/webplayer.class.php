@@ -56,7 +56,7 @@ class WebPlayer
      * @param string $force_type
      * @return array
      */
-    protected static function get_types($item, $force_type='')
+    protected static function get_types($item, $force_type= '')
     {
         $types = array('real' => 'mp3', 'player' => '');
 
@@ -191,7 +191,7 @@ class WebPlayer
      * @param string $callback_container
      * @return string
      */
-    public static function add_media_js($playlist, $callback_container='')
+    public static function add_media_js($playlist, $callback_container = '')
     {
         $addjs = "";
         foreach ($playlist->urls as $item) {
@@ -212,7 +212,7 @@ class WebPlayer
      * @param string $callback_container
      * @return string
      */
-    public static function play_next_js($playlist, $callback_container='')
+    public static function play_next_js($playlist, $callback_container = '')
     {
         $addjs = "";
         foreach ($playlist->urls as $item) {
@@ -233,7 +233,7 @@ class WebPlayer
      * @param string $force_type
      * @return string
      */
-    public static function get_media_js_param($item, $force_type='')
+    public static function get_media_js_param($item, $force_type = '')
     {
         $js = array();
         foreach (array('title', 'author') as $member) {

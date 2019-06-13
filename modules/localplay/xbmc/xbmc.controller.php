@@ -184,11 +184,11 @@ class AmpacheXbmc extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields['name']         = array('description' => T_('Instance Name'),'type' => 'text');
-        $fields['host']         = array('description' => T_('Hostname'),'type' => 'text');
-        $fields['port']         = array('description' => T_('Port'),'type' => 'number');
-        $fields['user']         = array('description' => T_('Username'),'type' => 'text');
-        $fields['pass']         = array('description' => T_('Password'),'type' => 'password');
+        $fields['name']         = array('description' => T_('Instance Name'), 'type' => 'text');
+        $fields['host']         = array('description' => T_('Hostname'), 'type' => 'text');
+        $fields['port']         = array('description' => T_('Port'), 'type' => 'number');
+        $fields['user']         = array('description' => T_('Username'), 'type' => 'text');
+        $fields['pass']         = array('description' => T_('Password'), 'type' => 'password');
 
         return $fields;
     } // instance_fields
@@ -197,7 +197,7 @@ class AmpacheXbmc extends localplay_controller
     * get_instance
     * This returns a single instance and all it's variables
     */
-    public function get_instance($instance='')
+    public function get_instance($instance = '')
     {
         $instance = $instance ? $instance : AmpConfig::get('xbmc_active');
 
@@ -213,7 +213,7 @@ class AmpacheXbmc extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      */
-    public function set_active_instance($uid, $user_id='')
+    public function set_active_instance($uid, $user_id = '')
     {
         // Not an admin? bubkiss!
         if (!Core::get_global('user')->has_access('100')) {

@@ -158,12 +158,12 @@ class Artist extends database_object implements library_item
 
     /**
      * Artist
-     * Artist class, for modifing a artist
+     * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
      * @param integer|null $id
      * @param integer $catalog_init
      */
-    public function __construct($id=null, $catalog_init=0)
+    public function __construct($id = null, $catalog_init = 0)
     {
         /* If they failed to pass in an id, just run for it */
         if ($id === null) {
@@ -221,7 +221,7 @@ class Artist extends database_object implements library_item
      * @param boolean $extra
      * @return boolean
      */
-    public static function build_cache($ids, $extra=false, $limit_threshold = '')
+    public static function build_cache($ids, $extra = false, $limit_threshold = '')
     {
         if (!is_array($ids) || !count($ids)) {
             return false;
@@ -240,7 +240,7 @@ class Artist extends database_object implements library_item
         if ($extra) {
             $sql = "SELECT `song`.`artist`, COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` WHERE `song`.`artist` IN $idlist GROUP BY `song`.`artist`";
 
-            debug_event("artist.class", "build_cache sql: " . $sql, "6");
+            debug_event("artist.class", "build_cache sql: " . $sql, 5);
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -318,6 +318,10 @@ class Artist extends database_object implements library_item
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
+        if (!$ignoreAlbumGroups) {
+            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+                    "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
+        }
 
         $db_results = Dba::read($sql);
 
@@ -405,6 +409,10 @@ class Artist extends database_object implements library_item
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
+        if (!$ignoreAlbumGroups) {
+            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+                    "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
+        }
 
         $db_results = Dba::read($sql);
 
@@ -504,7 +512,7 @@ class Artist extends database_object implements library_item
      * @param integer $catalog
      * @return array
      */
-    private function _get_extra_info($catalog=0, $limit_threshold ='')
+    private function _get_extra_info($catalog = 0, $limit_threshold = '')
     {
         // Try to find it in the cache and save ourselves the trouble
         if (parent::is_cached('artist_extra', $this->id)) {
@@ -525,15 +533,14 @@ class Artist extends database_object implements library_item
 
             $db_results = Dba::read($sql, $params);
             $row        = Dba::fetch_assoc($db_results);
-            
-            
+
             // Get associated information from first song only
             $sql = "SELECT `song`.`artist`, `song`.`catalog` as `catalog_id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
             $sql .= $sqlw . "LIMIT 1";
-            
+
             $db_results = Dba::read($sql, $params);
             $row        = array_merge($row, Dba::fetch_assoc($db_results));
-            
+
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
             }

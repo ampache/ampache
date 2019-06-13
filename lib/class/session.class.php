@@ -252,7 +252,7 @@ class Session
         if (!$db_results) {
             debug_event('session.class', 'Session creation failed', 1);
 
-            return false;
+            return '';
         }
 
         debug_event('session.class', 'Session created: ' . $key, 5);
@@ -322,7 +322,7 @@ class Session
                 if (AmpConfig::get('use_auth')) {
                     // Build a list of enabled authentication types
                     $types         = AmpConfig::get('auth_methods');
-                    $enabled_types = implode("','", $types);
+                    $enabled_types = implode("', '", $types);
                     $sql .= " AND `type` IN('$enabled_types')";
                 }
                 $db_results = Dba::read($sql, array($key, time()));
@@ -456,7 +456,7 @@ class Session
         $cookie_path   = AmpConfig::get('cookie_path');
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
-        
+
         session_write_close();
         session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         session_name(AmpConfig::get('session_name'));

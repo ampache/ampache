@@ -40,7 +40,7 @@ $configfile   = $prefix . '/config/ampache.cfg.php';
 // We still allow scripts to run (it could be the purpose of the maintenance)
 if (!defined('CLI')) {
     if (file_exists($prefix . '/.maintenance')) {
-        require_once($prefix . '/.maintenance');
+        require_once $prefix . '/.maintenance';
     }
 }
 

@@ -101,7 +101,7 @@ class Catalog_local extends Catalog
 
     public function catalog_fields()
     {
-        $fields['path']      = array('description' => T_('Path'),'type' => 'text');
+        $fields['path']      = array('description' => T_('Path'), 'type' => 'text');
 
         return $fields;
     }
@@ -261,8 +261,8 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            debug_event('local.catalog', "Starting work on $file inside $path", 5);
-            debug_event('local.catalog', UI::format_bytes(memory_get_usage(true)), 5);
+            debug_event('local.catalog', "Reading $file inside $path", 5);
+            debug_event('local.catalog', "Memory usage: " . (string) UI::format_bytes(memory_get_usage(true)), 5);
 
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
@@ -462,6 +462,7 @@ class Catalog_local extends Catalog
             if ($options['parse_playlist'] && count($this->_playlists)) {
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
+                    debug_event('local.catalog', 'Processing playlist: ' . $full_file, 5);
                     $result = $this->import_playlist($full_file);
                     if ($result['success']) {
                         $file = basename($full_file);
@@ -661,7 +662,7 @@ class Catalog_local extends Catalog
         $db_results = Dba::read($sql);
 
         while ($results = Dba::fetch_assoc($db_results)) {
-            debug_event('local.catalog', 'Starting work on ' . $results['file'] . '(' . $results['id'] . ')', 5);
+            debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . '(' . $results['id'] . ')', 5);
             $count++;
             if (UI::check_ticker()) {
                 $file = str_replace(array('(', ')', '\''), '', $results['file']);
@@ -850,7 +851,7 @@ class Catalog_local extends Catalog
      * check_local_mp3
      * Checks the song to see if it's there already returns true if found, false if not
      */
-    public function check_local_mp3($full_file, $gather_type='')
+    public function check_local_mp3($full_file, $gather_type = '')
     {
         $file_date = filemtime($full_file);
         if ($file_date < $this->last_add) {

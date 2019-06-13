@@ -91,7 +91,7 @@ class License
         Dba::write($sql, array($data['name'], $data['description'], $data['external_link']));
         $insert_id = Dba::insert_id();
 
-        return $insert_id;
+        return (int) $insert_id;
     } // create
 
     /**

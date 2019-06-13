@@ -1253,12 +1253,12 @@ class Api
         $type      = 'song';
         $user      = new User($user_id);
         $valid     = in_array($user->id, User::get_valid_users());
-        
+
         // validate supplied user
         if (!$valid) {
             echo XML_Data::error('404', T_('User_id not found.'));
         }
-        
+
         // validate client string or fall back to 'api'
         if ($input['client']) {
             $agent = $input['client'];
@@ -1333,4 +1333,27 @@ class Api
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
     } // friends_timeline
+
+    /**
+     * catalog_action
+     * MINIMUM_API_VERSION=400001
+     *
+     * Kick off a catalog update or clean for the selected catalog
+     *
+     * $input = array(task    = (string) 'add_to_catalog'|'clean_catalog'
+     *                catalog = (int) $catalog_id)
+     *
+     * @param array $input
+     */
+    public static function catalog_action($input)
+    {
+        $catalog = Catalog::create_from_id((int) $input['catalog']);
+
+        if ($catalog && ((string) $input['task'] === 'add_to_catalog' || (string) $input['task'] === 'clean_catalog')) {
+            $catalog->process_action($input['task'], (int) $input['catalog']);
+            echo XML_Data::single_string('successfull started: ' . (string) $input['task']);
+        } else {
+            echo XML_Data::error('401', T_('Bad information in the call to catalog_action.'));
+        }
+    }
 } // API class
