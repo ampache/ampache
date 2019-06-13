@@ -1884,7 +1884,7 @@ class Song extends database_object implements media, library_item
 
     /**
      * Get transcode settings for media.
-     * It can be confusing byt when waveforms are enabled
+     * It can be confusing but when waveforms are enabled
      * it will transcode the file twice.
      *
      * @param string $source
