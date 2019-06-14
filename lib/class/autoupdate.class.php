@@ -209,6 +209,7 @@ class AutoUpdate
         $git_branch = self::is_force_git_branch() === 'core';
         if ($git_branch === 'core') {
             return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/core'));
+        }
 
         return '';
     }
