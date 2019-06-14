@@ -681,7 +681,7 @@ class Subsonic_XML_Data
             }
         }
 
-        return htmlspecialchars_decode($name);
+        return html_entity_decode($name, ENT_NOQUOTES, 'UTF-8');
     }
 
     /**
@@ -1190,7 +1190,7 @@ class Subsonic_XML_Data
         $xepisode->addAttribute("channelId", self::getPodcastId($episode->podcast));
         $xepisode->addAttribute("title", self::checkName($episode->f_title));
         $xepisode->addAttribute("album", $episode->f_podcast);
-        $xepisode->addAttribute("description", $episode->f_description);
+        $xepisode->addAttribute("description", self::checkName($episode->f_description));
         $xepisode->addAttribute("duration", $episode->time);
         $xepisode->addAttribute("genre", "Podcast");
         $xepisode->addAttribute("isDir", "false");
