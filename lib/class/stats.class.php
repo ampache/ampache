@@ -502,6 +502,9 @@ class Stats
         } else {
             $sql = "SELECT DISTINCT(`$type`) as `id`, `addition_time` AS `real_atime` FROM `" . $base_type . "` ";
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
+            if (AmpConfig::get('album_group') && $type == 'album') {
+                $sql .= "LEFT JOIN `album` ON `album`.`id` = `" . $base_type . "`.`album` ";
+            }
             if (AmpConfig::get('catalog_disable')) {
                 $sql .= "WHERE `catalog`.`enabled` = '1' ";
             }
@@ -515,10 +518,15 @@ class Stats
                         " (SELECT `object_id` FROM `rating`" .
                         " WHERE `rating`.`object_type` = '" . $type . "'" .
                         " AND `rating`.`rating` <=" . $rating_filter .
-                        " AND `rating`.`user` = " . $user_id . ")";
+                        " AND `rating`.`user` = " . $user_id . ") ";
             }
         }
-        $sql .= "GROUP BY `$type` ORDER BY `real_atime` DESC ";
+        if (AmpConfig::get('album_group') && $type == 'album') {
+            $sql .= "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid` ORDER BY `real_atime` DESC ";
+        } else {
+            $sql .= "GROUP BY `$type` ORDER BY `real_atime` DESC ";
+        }
+        debug_event('stats.class', 'get_newest_sql ' . $sql, 5);
 
         return $sql;
     }
