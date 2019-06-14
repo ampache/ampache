@@ -1071,4 +1071,23 @@ class Video extends database_object implements media, library_item
 
         return true;
     } // _update_item
+    /**
+     * get_item_count
+     * Return the number of entries in the database...
+     * @param string $type
+     * @return int
+     */
+    public static function get_item_count($type)
+    {
+        $type       = self::validate_type($type);
+        $sql        = 'SELECT count(*) as count from `' . strtolower($type) . '`;';
+        $db_results = Dba::read($sql,array());
+        if ($results = Dba::fetch_assoc($db_results)) {
+            if ($results['count']) {
+                return $results['count'];
+            }
+        }
+
+        return 0;
+    } // get_item_count
 } // end Video class
