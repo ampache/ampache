@@ -2,7 +2,7 @@
 #
 # vim:set softtabstop=4 shiftwidth=4 expandtab:
 #
-# Copyright 2001 - 2019 Ampache.org
+# Copyright 2001 - 2017 Ampache.org
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License v2
@@ -26,7 +26,7 @@ if ! which xgettext &>/dev/null ; then
     exit 1;
 fi
 
-[[ $OLANG ]] || OLANG=$(echo "${LANG//.*/}")
+[[ $OLANG ]] || OLANG=$(echo $LANG | sed 's/\..*//;')
 potfile='messages.pot'
 tdstxt='translatable-database-strings.txt'
 ampconf='../../config/ampache.cfg.php'

@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-05-26 15:10+0200\n"
-"PO-Revision-Date: 2019-03-17 15:23+0000\n"
+"POT-Creation-Date: 2019-06-13 23:31+0200\n"
+"PO-Revision-Date: 2019-05-26 16:07+0000\n"
 "Last-Translator: Afterster\n"
 "Language-Team: Italian (Italy) (http://www.transifex.com/ampache/ampache/"
 "language/it_IT/)\n"
@@ -8480,7 +8480,7 @@ msgstr "Impossibile eliminare questo video."
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 17.03.2019 12:16:09 CET
+# Last Update: 26.05.2019 15:10:29 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
