@@ -141,13 +141,18 @@ class AutoUpdate
         // Forced or last check expired, check latest version from Github
         if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
             // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
-            $time = time();
+            $time       = time();
+            $git_branch = self::is_force_git_branch() === 'core';
             Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, $time);
             AmpConfig::set('autoupdate_lastcheck', $time, true);
 
             // Development version, get latest commit on develop branch
-            if (self::is_develop()) {
-                $commits = self::github_request('/commits/develop');
+            if (self::is_develop() || $git_branch === 'core') {
+                if ($git_branch === 'core') {
+                    $commits = self::github_request('/commits/core');
+                } else {
+                    $commits = self::github_request('/commits/develop');
+                }
                 if (!empty($commits)) {
                     $lastversion = $commits->sha;
                     Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
