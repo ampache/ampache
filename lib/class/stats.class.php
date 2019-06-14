@@ -292,13 +292,21 @@ class Stats
         }
         if ($user_id !== null) {
             /* Select Top objects counting by # of rows for you only */
-            $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
-                    " WHERE `object_type` = '" . $type . "' AND `user` = " . $user_id;
+            $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count";
+            if (AmpConfig::get('album_group') && $type == 'album') {
+                $sql .= " LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id`" .
+                        " and `object_count`.`object_type` = 'album'";
+            }
+            $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . $user_id;
         }
         if ($user_id === null) {
             /* Select Top objects counting by # of rows */
-            $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count" .
-                    " WHERE `object_type` = '" . $type . "' AND `date` >= '" . $date . "' ";
+            $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count";
+            if (AmpConfig::get('album_group') && $type == 'album') {
+                $sql .= " LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id`" .
+                        " and `object_count`.`object_type` = 'album'";
+            }
+            $sql .= " WHERE `object_type` = '" . $type . "' AND `date` >= '" . $date . "' ";
         }
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`object_id`');

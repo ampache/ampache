@@ -51,7 +51,7 @@ UI::show_box_bottom();
 ?>
 <a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=popular"><?php UI::show_box_top(T_('Popular')) ?></a>
 <?php
-$object_ids = Stats::get_top($object_type, $count, $threshold, '', $user_id, true);
+$object_ids = Stats::get_top($object_type, $count, $threshold, '', $user_id);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
