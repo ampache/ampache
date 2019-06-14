@@ -203,12 +203,12 @@ class AutoUpdate
      */
     public static function get_current_commit()
     {
+        $git_branch = self::is_force_git_branch() === 'core';
+        if ($git_branch === 'core' && is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/core')) {
+            return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/core'));
+        }
         if (self::is_branch_develop_exists()) {
             return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/develop'));
-        }
-        $git_branch = self::is_force_git_branch() === 'core';
-        if ($git_branch === 'core') {
-            return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/core'));
         }
 
         return '';
