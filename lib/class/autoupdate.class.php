@@ -48,7 +48,7 @@ class AutoUpdate
         $version         = AmpConfig::get('version');
         $vspart          = explode('-', $version);
 
-        if (($version_develop == '1') || self::is_force_git_branch() === 'develop') {
+        if (($version_develop == '1') || self::is_force_git_branch() === 'develop' || self::is_force_git_branch() === 'core') {
             return true;
         }
 

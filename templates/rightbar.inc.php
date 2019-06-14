@@ -88,7 +88,7 @@
     $objects = array();
 
     //FIXME :: this is kludgy
-    if (!defined('NO_SONGS')) {
+    if (!defined('NO_SONGS') && Core::get_global('user')->playlist) {
         $objects = Core::get_global('user')->playlist->get_items();
     }
 ?>
