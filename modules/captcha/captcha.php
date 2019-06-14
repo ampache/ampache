@@ -168,7 +168,7 @@ class easy_captcha
         }
         $this->id                      = $this->new_id();
 
-        #-- meta informations
+        #-- meta information
         $this->created       = time();
         $this->{'created$'} = gmdate("r", $this->created);
         $this->expires      = $this->created + CAPTCHA_TIMEOUT;

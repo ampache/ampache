@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
             break;
         }
         $access = new Access(Core::get_get('access_id'));
-        show_confirmation(T_('Deletion Request'), T_('Are you sure you want to permanently delete') . ' ' . $access->name,
+        show_confirmation(T_('Confirm Action'), T_('Are you sure you want to permanently delete') . ' ' . $access->name,
                 'admin/access.php?action=delete_record&amp;access_id=' . $access->id, 1, 'delete_access');
     break;
     case 'add_host':
