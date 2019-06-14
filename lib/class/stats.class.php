@@ -290,22 +290,15 @@ class Stats
 
             return $sql;
         }
-        if ($user_id !== null) {
-            /* Select Top objects counting by # of rows for you only */
-            $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count";
-            if (AmpConfig::get('album_group') && $type == 'album') {
-                $sql .= " LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id`" .
-                        " and `object_count`.`object_type` = 'album'";
-            }
-            $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . $user_id;
+        /* Select Top objects counting by # of rows for you only */
+        $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count";
+        if (AmpConfig::get('album_group') && $type == 'album') {
+            $sql .= " LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id`" .
+                    " and `object_count`.`object_type` = 'album'";
         }
-        if ($user_id === null) {
-            /* Select Top objects counting by # of rows */
-            $sql = "SELECT object_id as `id`, COUNT(*) AS `count` FROM object_count";
-            if (AmpConfig::get('album_group') && $type == 'album') {
-                $sql .= " LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id`" .
-                        " and `object_count`.`object_type` = 'album'";
-            }
+        if ($user_id !== null) {
+            $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . $user_id;
+        } else {
             $sql .= " WHERE `object_type` = '" . $type . "' AND `date` >= '" . $date . "' ";
         }
         if (AmpConfig::get('catalog_disable')) {
@@ -331,7 +324,6 @@ class Stats
         } else {
             $sql .= "ORDER BY `count` DESC ";
         }
-        debug_event('stats.class', 'get_top_sql ' . $sql, 5);
 
         return $sql;
     }
@@ -348,7 +340,7 @@ class Stats
      * @param boolean $random
      * @return array
      */
-    public static function get_top($type, $count = '', $threshold = '', $offset = '', $user_id = null, $random = false)
+    public static function get_top($type, $count = null, $threshold = '', $offset = '', $user_id = null, $random = false)
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
@@ -368,10 +360,10 @@ class Stats
             $sql = self::get_top_sql($type, $threshold);
             $sql .= "LIMIT $limit";
         }
+        debug_event('stats.class', 'get_top ' . $sql, 5);
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
