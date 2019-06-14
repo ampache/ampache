@@ -73,7 +73,6 @@ class AutoUpdate
         $git_branch = (string) AmpConfig::get('github_force_branch');
 
         if ($git_branch === 'master' || $git_branch === 'develop') {
-
             return $git_branch;
         }
 
@@ -274,7 +273,7 @@ class AutoUpdate
      */
     public static function update_files()
     {
-        $cmd = 'git pull https://github.com/ampache/ampache.git';
+        $cmd        = 'git pull https://github.com/ampache/ampache.git';
         $git_branch = self::is_force_git_branch();
         if ($git_branch !== '') {
             $cmd = 'git pull https://github.com/ampache/ampache.git ' . $git_branch;
