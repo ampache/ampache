@@ -190,7 +190,7 @@ class AutoUpdate
      */
     public static function get_current_version()
     {
-        if (self::is_develop()) {
+        if (self::is_develop() || self::is_force_git_branch() === 'core') {
             return self::get_current_commit();
         } else {
             return AmpConfig::get('version');
