@@ -57,9 +57,9 @@
         <div>
             <table class="table" cellpadding="3" cellspacing="0">
                 <tr>
-                    <th><?php echo T_('CHECK'); ?></th>
-                    <th><?php echo T_('STATUS'); ?></th>
-                    <th><?php echo T_('DESCRIPTION'); ?></th>
+                    <th><?php echo T_('Check'); ?></th>
+                    <th><?php echo T_('Status'); ?></th>
+                    <th><?php echo T_('Description'); ?></th>
                 </tr>
                 <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
             </table>
