@@ -313,10 +313,15 @@ class Stats
                     " AND `rating`.`user` = " . $user_id . ")";
         }
         $sql .= " AND `count_type` = '" . $count_type . "'";
-        if ($random) {
-            $sql .= " GROUP BY object_id ORDER BY RAND() DESC ";
+        if (AmpConfig::get('album_group') && $type == 'album') {
+            $sql .= " GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid` ";
         } else {
-            $sql .= " GROUP BY object_id ORDER BY `count` DESC ";
+            $sql .= " GROUP BY object_id ";
+        }
+        if ($random) {
+            $sql .= "ORDER BY RAND() DESC ";
+        } else {
+            $sql .= "ORDER BY `count` DESC ";
         }
         debug_event('stats.class', 'get_top_sql ' . $sql, 5);
 
