@@ -63,11 +63,18 @@ class Clip extends Video
      */
     public static function _get_artist_id($data)
     {
-      if (isset($data['artist_id']) && !empty($data['artist_id'])) return $data['artist_id'];
-      if (!isset($data['artist']) || empty($data['artist'])) return null;
-      $artist_mbid = isset($data['mbid_artistid']) ? $data['mbid_artistid'] : null;
-      if ($artist_mbid) $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-      return Artist::check($data['artist'],$artist_mbid);
+        if (isset($data['artist_id']) && !empty($data['artist_id'])) {
+            return $data['artist_id'];
+        }
+        if (!isset($data['artist']) || empty($data['artist'])) {
+            return null;
+        }
+        $artist_mbid = isset($data['mbid_artistid']) ? $data['mbid_artistid'] : null;
+        if ($artist_mbid) {
+            $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
+        }
+
+        return Artist::check($data['artist'],$artist_mbid);
     } // _get_artist_id
     /**
      * create
@@ -75,16 +82,19 @@ class Clip extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-	debug_event('clips', 'insert '.print_r($data,true) , 5);
-	$artist_id = self::_get_artist_id($data);
-	$song_id = Song::find($data);
-	if (empty($song_id)) $song_id = null;
-	if ($artist_id || $song_id) {
-	  debug_event('clips', 'insert '.print_r(['artist_id'=>$artist_id,'song_id'=>$song_id],true) , 5);
-          $sql = "INSERT INTO `clip` (`id`,`artist`,`song`) " .
-	      "VALUES (?, ?, ?)";
-          Dba::write($sql, array($data['id'], $artist_id, $song_id));
-	}
+        debug_event('clips', 'insert ' . print_r($data,true) , 5);
+        $artist_id = self::_get_artist_id($data);
+        $song_id   = Song::find($data);
+        if (empty($song_id)) {
+            $song_id = null;
+        }
+        if ($artist_id || $song_id) {
+            debug_event('clips', 'insert ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
+            $sql = "INSERT INTO `clip` (`id`,`artist`,`song`) " .
+          "VALUES (?, ?, ?)";
+            Dba::write($sql, array($data['id'], $artist_id, $song_id));
+        }
+
         return $data['id'];
     } // create
 
@@ -94,10 +104,10 @@ class Clip extends Video
      */
     public function update(array $data)
     {
-	debug_event('clips', 'update '.print_r($data,true) , 5);
-	$artist_id = self::_get_artist_id($data);
-	$song_id = Song::find($data);
-        debug_event('clips', 'update '.print_r(['artist_id'=>$artist_id,'song_id'=>$song_id],true) , 5);
+        debug_event('clips', 'update ' . print_r($data,true) , 5);
+        $artist_id = self::_get_artist_id($data);
+        $song_id   = Song::find($data);
+        debug_event('clips', 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
 
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($artist_id, $song_id, $this->id));
