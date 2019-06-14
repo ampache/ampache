@@ -138,6 +138,7 @@ class Stats
      * @param string $type
      * @param integer $user
      * @param integer $oid
+     * @return boolean
      */
     public static function is_already_inserted($type, $oid, $user, $count_type = 'stream')
     {
@@ -153,8 +154,13 @@ class Stats
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
+        if (count($results) > 0) {
+            debug_event('stats.class', 'Object already_inserted {' . (string) $oid . '} ' . (string) count($results), 5);
 
-        return count($results) > 0;
+            return true;
+        }
+
+        return false;
     } // is_already_inserted
 
     /**
@@ -312,6 +318,7 @@ class Stats
         } else {
             $sql .= " GROUP BY object_id ORDER BY `count` DESC ";
         }
+        debug_event('stats.class', 'get_top_sql ' . $sql, 5);
 
         return $sql;
     }

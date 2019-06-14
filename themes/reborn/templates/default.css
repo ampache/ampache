@@ -830,7 +830,7 @@ table.tabledata td {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 3px 3px 3px 0;
+    padding: 3px 10px 3px 0;
 }
 
 table.tabledata tr:hover, table.tabledata tr:focus {
