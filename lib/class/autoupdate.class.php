@@ -48,7 +48,7 @@ class AutoUpdate
         $version         = AmpConfig::get('version');
         $vspart          = explode('-', $version);
 
-        if ($version_develop == '1') {
+        if (($version_develop == '1') || self::is_force_git_branch() === 'develop') {
             return true;
         }
 
@@ -62,6 +62,22 @@ class AutoUpdate
     protected static function is_git_repository()
     {
         return is_dir(AmpConfig::get('prefix') . '/.git');
+    }
+
+    /**
+     * Check if there is a default branch set in the config file.
+     * @return string
+     */
+    protected static function is_force_git_branch()
+    {
+        $git_branch = (string) AmpConfig::get('github_force_branch');
+
+        if ($git_branch === 'master' || $git_branch === 'develop') {
+
+            return $git_branch;
+        }
+
+        return '';
     }
 
     /**
@@ -259,8 +275,11 @@ class AutoUpdate
     public static function update_files()
     {
         $cmd = 'git pull https://github.com/ampache/ampache.git';
-        if (self::is_develop()) {
-            $cmd = 'git pull https://github.com/ampcore/amuzak.git develop';
+        $git_branch = self::is_force_git_branch();
+        if ($git_branch !== '') {
+            $cmd = 'git pull https://github.com/ampache/ampache.git ' . $git_branch;
+        } elseif (self::is_develop()) {
+            $cmd = 'git pull https://github.com/ampache/ampache.git develop';
         }
         echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
         ob_flush();
