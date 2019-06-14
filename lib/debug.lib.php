@@ -374,7 +374,7 @@ function debug_result($status = false, $value = null, $comment = '')
     $class = $status ? 'success' : 'danger';
 
     if (!$value) {
-        $value = $status ? T_('OK') : T_('ERROR');
+        $value = $status ? T_('OK') : T_('Error');
     }
 
     return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .

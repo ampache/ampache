@@ -43,7 +43,7 @@
 </table>
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr id="search_item_count">
-        <td><?php echo T_('Item count'); ?></td>
+        <td><?php echo T_('Item Count'); ?></td>
         <td>
         <select name="random">
 <?php
