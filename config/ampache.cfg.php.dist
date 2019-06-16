@@ -7,7 +7,12 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 36
+config_version = 40
+
+; Allow you to hard code a default git branch for Ampache
+; If you set this value the inbuilt updater will use this branch for updates.
+; DEFAULT: ""
+;github_force_branch = "develop"
 
 ;#########################################################
 ; Path Vars                                              #
@@ -262,7 +267,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ;catalog_disable = "false"
 
 ; Delete from disk
-; This determines if catalog manager users can delete medias from disk.
+; This determines if catalog manager users can delete media from disk.
 ; DEFAULT: false
 ;delete_from_disk = "false"
 

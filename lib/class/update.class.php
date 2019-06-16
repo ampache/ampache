@@ -4145,15 +4145,6 @@ class Update
                "'plex_public_port ', 'plex_local_auth', 'plex_match_email');";
         $retval &= Dba::write($sql);
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`,`subcatagory`) " .
-               "VALUES ('autoupdate_develop', '0', 'Force server to follow develop branch', '100', 'boolean', 'system', 'update')";
-        $retval &= Dba::write($sql);
-
-        $id = Dba::insert_id();
-
-        $sql = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
-        $retval &= Dba::write($sql, array($id));
-
         return $retval;
     }
 }

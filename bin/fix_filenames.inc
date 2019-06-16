@@ -104,13 +104,13 @@ function charset_directory_correct($path) {
         $handle = opendir($path);
 
     if (!is_resource($handle)) {
-        printf (T_('ERROR: Unable to open %s'), $path);
+        printf (T_('Error: Unable to open %s'), $path);
         echo "\n";
         return false;
     }
 
     if (!chdir($path)) {
-        printf (T_('ERROR: Unable to chdir to %s'), $path);
+        printf (T_('Error: Unable to chdir to %s'), $path);
         echo "\n";
         return false;
     }

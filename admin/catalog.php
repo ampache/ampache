@@ -105,14 +105,14 @@ switch ($_REQUEST['action']) {
         }
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php';
         if ($deleted) {
-            show_confirmation(T_('Catalog Deleted'), T_('The Catalog and all associated records have been deleted'), $next_url);
+            show_confirmation(T_('Deleted'), T_('Catalog and all associated records have been deleted'), $next_url);
         } else {
             show_confirmation(T_('Error'), T_('Cannot delete the catalog'), $next_url);
         }
     break;
     case 'show_delete_catalog':
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $catalogs);
-        show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_catalog');
+        show_confirmation(T_('Confirm Action'), T_('Delete Catalog'), $next_url, 1, 'delete_catalog');
     break;
     case 'enable_disabled':
         if (AmpConfig::get('demo_mode')) {
@@ -245,7 +245,7 @@ switch ($_REQUEST['action']) {
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
-        show_confirmation(T_('Delete Catalog'), T_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)", $nexturl, 1);
+        show_confirmation(T_('Confirm Action'), T_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)", $nexturl, 1);
     break;
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);

@@ -44,11 +44,10 @@ class AutoUpdate
      */
     protected static function is_develop()
     {
-        $version_develop = AmpConfig::get('autoupdate_develop');
         $version         = AmpConfig::get('version');
         $vspart          = explode('-', $version);
 
-        if ($version_develop == '1') {
+        if (self::is_force_git_branch() == 'develop' || self::is_force_git_branch() == 'core') {
             return true;
         }
 
@@ -62,6 +61,20 @@ class AutoUpdate
     protected static function is_git_repository()
     {
         return is_dir(AmpConfig::get('prefix') . '/.git');
+    }
+
+    /**
+     * Check if there is a default branch set in the config file.
+     * @return string
+     */
+    protected static function is_force_git_branch()
+    {
+        $git_branch = (string) AmpConfig::get('github_force_branch');
+        if ($git_branch == 'master' || $git_branch == 'develop' || $git_branch == 'core') {
+            return $git_branch;
+        }
+
+        return '';
     }
 
     /**
@@ -126,13 +139,18 @@ class AutoUpdate
         // Forced or last check expired, check latest version from Github
         if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
             // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
-            $time = time();
+            $time       = time();
+            $git_branch = self::is_force_git_branch();
             Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, $time);
             AmpConfig::set('autoupdate_lastcheck', $time, true);
 
             // Development version, get latest commit on develop branch
-            if (self::is_develop()) {
-                $commits = self::github_request('/commits/develop');
+            if (self::is_develop() || $git_branch == 'core') {
+                if ($git_branch == 'core') {
+                    $commits = self::github_request('/commits/core');
+                } else {
+                    $commits = self::github_request('/commits/develop');
+                }
                 if (!empty($commits)) {
                     $lastversion = $commits->sha;
                     Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
@@ -170,9 +188,13 @@ class AutoUpdate
      */
     public static function get_current_version()
     {
-        if (self::is_develop()) {
+        if (self::is_develop() || self::is_force_git_branch() == 'core') {
+            debug_event('autoupdate.class', 'get_current_version develop/core branch', 5);
+
             return self::get_current_commit();
         } else {
+            debug_event('autoupdate.class', 'get_current_version', 5);
+
             return AmpConfig::get('version');
         }
     }
@@ -183,6 +205,10 @@ class AutoUpdate
      */
     public static function get_current_commit()
     {
+        $git_branch = self::is_force_git_branch() == 'core';
+        if ($git_branch === 'core' && is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/core')) {
+            return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/core'));
+        }
         if (self::is_branch_develop_exists()) {
             return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/develop'));
         }
@@ -258,9 +284,12 @@ class AutoUpdate
      */
     public static function update_files()
     {
-        $cmd = 'git pull https://github.com/ampache/ampache.git';
-        if (self::is_develop()) {
-            $cmd = 'git pull https://github.com/ampcore/amuzak.git develop';
+        $cmd        = 'git pull https://github.com/ampache/ampache.git';
+        $git_branch = self::is_force_git_branch();
+        if ($git_branch !== '') {
+            $cmd = 'git pull https://github.com/ampache/ampache.git ' . $git_branch;
+        } elseif (self::is_develop()) {
+            $cmd = 'git pull https://github.com/ampache/ampache.git develop';
         }
         echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
         ob_flush();

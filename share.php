@@ -96,7 +96,7 @@ switch ($_REQUEST['action']) {
         $share_id = Core::get_request('id');
 
         $next_url = AmpConfig::get('web_path') . '/share.php?action=delete&id=' . scrub_out($share_id);
-        show_confirmation(T_('Share Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_share');
+        show_confirmation(T_('Confirm Action'), T_('Delete Share'), $next_url, 1, 'delete_share');
         UI::show_footer();
 
         return false;
@@ -111,7 +111,7 @@ switch ($_REQUEST['action']) {
         $share_id = Core::get_request('id');
         if (Share::delete_share($share_id)) {
             $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
-            show_confirmation(T_('Share Deleted'), T_('The Share has been deleted'), $next_url);
+            show_confirmation(T_('Deleted'), T_('Share has been deleted'), $next_url);
         }
         UI::show_footer();
 
