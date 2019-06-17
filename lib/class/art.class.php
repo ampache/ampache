@@ -1089,7 +1089,7 @@ class Art extends database_object
                 }
             } else {
                 if (in_array($method_name, $methods)) {
-                    debug_event('art.class', "Method used: $method_name", 3);
+                    debug_event('art.class', "Method used: $method_name", 4);
                     // Some of these take options!
                     switch ($method_name) {
                     case 'gather_lastfm':
@@ -1110,9 +1110,8 @@ class Art extends database_object
             // Add the results we got to the current set
             $results = array_merge($results, (array) $data);
 
-            debug_event('art.class', 'results:' . json_encode($results), 3);
-
             if ($limit && count($results) >= $limit) {
+                debug_event('art.class', 'results:' . json_encode($results), 3);
                 return array_slice($results, 0, $limit);
             }
         } // end foreach
