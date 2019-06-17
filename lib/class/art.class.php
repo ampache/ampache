@@ -640,8 +640,8 @@ class Art extends database_object
             return false;
         }
 
-        $width    = (int) ($size['width']);
-        $height   = (int) ($size['height']);
+        $width    = $size['width'];
+        $height   = $size['height'];
         $sizetext = $width . 'x' . $height;
 
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
@@ -846,6 +846,9 @@ class Art extends database_object
             } catch (Exception $e) {
                 debug_event('art.class', 'Error getting art: ' . $e->getMessage(), 2);
                 $raw = null;
+            }
+            if (!$raw) {
+                $raw = file_get_contents($data['url']);
             }
 
             return $raw;
