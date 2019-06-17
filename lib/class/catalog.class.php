@@ -1341,18 +1341,16 @@ abstract class Catalog extends database_object
             $searches['video'] = $videos;
         }
 
+        debug_event('catalog.class', 'gather_art found ' . (string) count($searches) . 'items missing art', 5);
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $objectid) {
-                // Skip searching for art that is already in the DB
-                if (!Art::has_db($objectid, $key)) {
-                    $this->gather_art_item($key, $objectid);
+                $this->gather_art_item($key, $objectid);
 
-                    // Stupid little cutesie thing
-                    $search_count++;
-                    if (UI::check_ticker()) {
-                        UI::update_text('count_art_' . $this->id, $search_count);
-                    }
+                // Stupid little cutesie thing
+                $search_count++;
+                if (UI::check_ticker()) {
+                    UI::update_text('count_art_' . $this->id, $search_count);
                 }
             }
         }
