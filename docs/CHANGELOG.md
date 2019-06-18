@@ -40,6 +40,7 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - Add send_full_stream to config, to allow pushing the full track instead of segmenting
 - Add debugging in song.class.php when the file may be corrupt
 - Remove '[Disk x]' when grouped from all UI areas by enforcing the group setting.
+- Make test.php & install.php show an error page instead of blank screen.
 
 3.9.1
 ----------
