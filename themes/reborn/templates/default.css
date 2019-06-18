@@ -646,7 +646,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -ms-box-sizing: border-box;
     box-sizing: border-box;
     z-index: 10000;
-    overflow-y: auto;
 }
 
 /* For jQuery scrolling feature */
@@ -706,7 +705,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     top: 98px;
     right: 15px;
     border: 2px solid;
-    width: 210px;
+    max-width: 210px
+    min-width: 150px;
     padding: 0.6em;
     font-size: 12px;
     z-index: 99;
