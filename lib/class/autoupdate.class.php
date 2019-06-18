@@ -205,7 +205,7 @@ class AutoUpdate
      */
     public static function get_current_commit()
     {
-        $git_branch = self::is_force_git_branch() == 'core';
+        $git_branch = self::is_force_git_branch();
         if ($git_branch === 'core' && is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/core')) {
             return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/core'));
         }
