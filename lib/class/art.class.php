@@ -818,7 +818,7 @@ class Art extends database_object
      * ['raw']      = Actual Image data, already captured
      * @param array $data
      * @param string $type
-     * @return string|null
+     * @return string
      */
     public static function get_from_source($data, $type = 'album')
     {
@@ -845,10 +845,7 @@ class Art extends database_object
                 $raw                = $request->body;
             } catch (Exception $e) {
                 debug_event('art.class', 'Error getting art: ' . $e->getMessage(), 2);
-                $raw = null;
-            }
-            if (!$raw) {
-                $raw = file_get_contents($data['url']);
+                $raw = '';
             }
 
             return $raw;
@@ -1557,7 +1554,7 @@ class Art extends database_object
         try {
             // Need this to not be considered as a bot (are we? ^^)
             $headers = array(
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0',
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0',
             );
 
             $query = Requests::get($url, $headers, Core::requests_options());
