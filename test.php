@@ -57,7 +57,7 @@ switch ($_REQUEST['action']) {
         if (isset($_COOKIE[$session_name . '_lang'])) {
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
-        if (!function_exists('Gettext\Translations')) {
+        if (!class_exists('Gettext\Translations')) {
             require_once $prefix . '/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
         } else {

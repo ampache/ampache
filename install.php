@@ -101,7 +101,7 @@ if (!$htmllang) {
 }
 AmpConfig::set('lang', $htmllang, true);
 AmpConfig::set('site_charset', $charset ?: 'UTF-8', true);
-if (!function_exists('Gettext\Translations')) {
+if (!class_exists('Gettext\Translations')) {
     require_once $prefix . '/templates/test_error_page.inc.php';
     throw new Exception('load_gettext()');
 } else {
