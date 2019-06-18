@@ -73,8 +73,8 @@ function sse_worker($url)
 }
 
 /**
- * return_referer
- * returns the script part of the referer address passed by the web browser
+ * return_referrer
+ * returns the script part of the referrer address passed by the web browser
  * this is not %100 accurate. Also because this is not passed by us we need
  * to clean it up, take the filename then check for a /admin/ and dump the rest
  * @return string
