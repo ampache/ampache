@@ -376,9 +376,10 @@ class Recommendation
 
         if ($artist) {
             $results['id'] = $artist->id;
-            if (!empty($results['summary']) || !empty($results['megaphoto'])) {
+            if (!empty($results['summary'])) {
                 $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
-
+            }
+            if (!empty($results['megaphoto']) && !Art::has_db($artist_id, 'artist')) {
                 $image = Art::get_from_source(array('url' => $results['megaphoto']), 'artist');
                 $rurl  = pathinfo($results['megaphoto']);
                 $mime  = 'image/' . $rurl['extension'];
