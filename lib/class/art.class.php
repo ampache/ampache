@@ -1112,6 +1112,7 @@ class Art extends database_object
 
             if ($limit && count($results) >= $limit) {
                 debug_event('art.class', 'results:' . json_encode($results), 3);
+
                 return array_slice($results, 0, $limit);
             }
         } // end foreach
