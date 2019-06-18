@@ -47,7 +47,7 @@
     <div class="container" role="main">
         <div class="jumbotron">
             <h1><?php echo 'Error'; ?></h1>
-            <p><?php echo("Unable to lead required dependencies. <a href=\"https://github.com/ampache/ampache/wiki/Installation\" rel=\"nofollow\">Please install composer following the wiki</a>"); ?></p>
+            <p><?php echo("Unable to load required dependencies. <a href=\"https://github.com/ampache/ampache/wiki/Installation\" rel=\"nofollow\">Please visit the wiki for installation help</a>"); ?></p>
         </div>
         <?php AmpError::display('general'); ?>
     </div>

@@ -101,7 +101,12 @@ if (!$htmllang) {
 }
 AmpConfig::set('lang', $htmllang, true);
 AmpConfig::set('site_charset', $charset ?: 'UTF-8', true);
-load_gettext();
+if (!function_exists('Gettext\Translations')) {
+    require_once $prefix . '/templates/test_error_page.inc.php';
+    throw new Exception('load_gettext()');
+} else {
+    load_gettext();
+}
 header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
 
 // Correct potential \ or / in the dirname

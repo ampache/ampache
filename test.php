@@ -57,10 +57,11 @@ switch ($_REQUEST['action']) {
         if (isset($_COOKIE[$session_name . '_lang'])) {
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
-        if (! load_gettext()) {
+        if (!function_exists('Gettext\Translations')) {
             require_once $prefix . '/templates/test_error_page.inc.php';
-            echo $error_message->getMessage();
+            throw new Exception('load_gettext()');
         } else {
+            load_gettext();
             // Load template
             require_once $prefix . '/templates/show_test.inc.php';
         }
