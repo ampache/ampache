@@ -640,8 +640,8 @@ class Art extends database_object
             return false;
         }
 
-        $width    = (int) ($size['width']);
-        $height   = (int) ($size['height']);
+        $width    = $size['width'];
+        $height   = $size['height'];
         $sizetext = $width . 'x' . $height;
 
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
@@ -846,6 +846,9 @@ class Art extends database_object
             } catch (Exception $e) {
                 debug_event('art.class', 'Error getting art: ' . $e->getMessage(), 2);
                 $raw = null;
+            }
+            if (!$raw) {
+                $raw = file_get_contents($data['url']);
             }
 
             return $raw;
@@ -1086,7 +1089,7 @@ class Art extends database_object
                 }
             } else {
                 if (in_array($method_name, $methods)) {
-                    debug_event('art.class', "Method used: $method_name", 3);
+                    debug_event('art.class', "Method used: $method_name", 4);
                     // Some of these take options!
                     switch ($method_name) {
                     case 'gather_lastfm':
@@ -1107,9 +1110,9 @@ class Art extends database_object
             // Add the results we got to the current set
             $results = array_merge($results, (array) $data);
 
-            debug_event('art.class', 'results:' . json_encode($results), 3);
-
             if ($limit && count($results) >= $limit) {
+                debug_event('art.class', 'results:' . json_encode($results), 3);
+
                 return array_slice($results, 0, $limit);
             }
         } // end foreach

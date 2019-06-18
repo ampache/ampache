@@ -19,11 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+$user = Core::get_global('user');
 
-foreach (Plugin::get_plugins('display_home') as $plugin_name) {
-    $plugin = new Plugin($plugin_name);
-    if ($plugin->load(Core::get_global('user'))) {
-        $plugin->_plugin->display_home();
+if ($user) {
+    foreach (Plugin::get_plugins('display_home') as $plugin_name) {
+        $plugin = new Plugin($plugin_name);
+        if ($plugin->load(Core::get_global('user'))) {
+            $plugin->_plugin->display_home();
+        }
     }
 }
 ?>

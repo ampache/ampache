@@ -26,7 +26,7 @@ use Gettext\Translator;
  * load_gettext
  * Sets up our local gettext settings.
  *
- * @return void
+ * @return boolean
  */
 function load_gettext()
 {
