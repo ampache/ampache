@@ -26,12 +26,15 @@ use Gettext\Translator;
  * load_gettext
  * Sets up our local gettext settings.
  *
- * @return void
+ * @return boolean
  */
 function load_gettext()
 {
     $lang   = AmpConfig::get('lang');
     $popath = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.po';
+    if (!function_exists('Gettext\Translations')) {
+        return false;
+    }
 
     $t = new Translator();
     if (file_exists($popath)) {
@@ -39,6 +42,8 @@ function load_gettext()
         $t->loadTranslations($translations);
     }
     $t->register();
+    
+    return true;
 } // load_gettext
 
 /*

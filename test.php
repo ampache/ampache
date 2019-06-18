@@ -57,13 +57,12 @@ switch ($_REQUEST['action']) {
         if (isset($_COOKIE[$session_name . '_lang'])) {
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
-        try {// Load gettext mojo
-            load_gettext();
-        } catch (Exception $error_message) {         
+        if (! load_gettext()) {
             require_once $prefix . '/templates/test_error_page.inc.php';
             echo $error_message->getMessage();
+        } else {
+            // Load template
+            require_once $prefix . '/templates/show_test.inc.php';
         }
-        // Load template
-        require_once $prefix . '/templates/show_test.inc.php';
     break;
 } // end switch on action
