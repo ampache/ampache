@@ -39,7 +39,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="<?php echo "./theme/reborn" . UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
+                <img src="<?php echo "./themes/reborn" . UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
                 <?php echo 'Ampache'; ?> - For the love of Music
             </a>
         </div>
@@ -47,8 +47,9 @@
     <div class="container" role="main">
         <div class="jumbotron">
             <h1><?php echo 'Error'; ?></h1>
-            <p><?php echo("Unable to find required dependencies. <a href=\"https://github.com/ampache/ampache/wiki/Installation\" rel=\"nofollow\">Please install composer following the wiki</a>"); ?></p>
+            <p><?php echo("Unable to lead required dependencies. <a href=\"https://github.com/ampache/ampache/wiki/Installation\" rel=\"nofollow\">Please install composer following the wiki</a>"); ?></p>
         </div>
+        <?php AmpError::display('general'); ?>
     </div>
 </body>
 </html>
