@@ -27,7 +27,6 @@
 
 <head>
 <!-- Propulsed by Ampache | ampache.org -->
-<meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
 <?php UI::show_custom_style(); ?>
 <title><?php echo("Ampache error page");?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -40,7 +39,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
+                <img src="<?php echo "./theme/reborn" . UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
                 <?php echo 'Ampache'; ?> - For the love of Music
             </a>
         </div>
@@ -48,10 +47,8 @@
     <div class="container" role="main">
         <div class="jumbotron">
             <h1><?php echo 'Error'; ?></h1>
-            <p><?php echo("The following error has occured, you will automaticly be redirected after 10 seconds."); ?></p>
+            <p><?php echo("Unable to find required dependencies. <a href=\"https://github.com/ampache/ampache/wiki/Installation\" rel=\"nofollow\">Please install composer following the wiki</a>"); ?></p>
         </div>
-        <h2><?php echo("Error messages");?>:</h2>
-        <?php AmpError::display('general'); ?>
     </div>
 </body>
 </html>
