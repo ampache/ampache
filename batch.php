@@ -62,12 +62,13 @@ if (!check_can_zip($object_type)) {
 }
 
 if (Core::is_playable_item(Core::get_request('action'))) {
-    $object_id = Core::get_request('id');
+    $object_id = $_REQUEST['id'];
     if (!is_array($object_id)) {
         $object_id = array($object_id);
     }
     $media_ids = array();
     foreach ($object_id as $item) {
+        debug_event('batch', 'Requested item ' . $item, 5);
         $libitem = new $object_type($item);
         if ($libitem->id) {
             $libitem->format();
@@ -83,7 +84,7 @@ if (Core::is_playable_item(Core::get_request('action'))) {
             $name      = Core::get_global('user')->username . ' - Playlist';
         break;
         case 'browse':
-            $object_id        = (int) scrub_in(filter_input(INPUT_POST, 'browse_id', FILTER_SANITIZE_NUMBER_INT));
+            $object_id        = scrub_in(Core::get_post('browse_id'));
             $browse           = new Browse($object_id);
             $browse_media_ids = $browse->get_saved();
             foreach ($browse_media_ids as $media_id) {
@@ -100,7 +101,9 @@ if (Core::is_playable_item(Core::get_request('action'))) {
                     break;
                 } // switch on type
             } // foreach media_id
-            $name = 'Batch-' . date("dmY", time());
+            if ($name === $default_name) {
+                $name = 'Batch-' . date("dmY", time());
+            }
         default:
             // Rien a faire
         break;
