@@ -145,7 +145,7 @@ class Userflag extends database_object
     /**
      * set_flag
      * This function sets the user flag for the current object.
-     * If no userid is passed in, we use the currently logged in user.
+     * If no user_id is passed in, we use the currently logged in user.
      */
     public function set_flag($flagged, $user_id = null)
     {
@@ -153,7 +153,16 @@ class Userflag extends database_object
             $user_id = Core::get_global('user')->id;
         }
         $user_id = (int) ($user_id);
-
+        $results = array();
+        if ($this->type == 'album' && AmpConfig::get('album_group')) {
+            $sql = "SELECT `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
+                    " WHERE `id` = ?";
+            $db_results = Dba::read($sql, array($this->id));
+            $results    = Dba::fetch_assoc($db_results);
+        }
+        if (!empty($results)) {
+            return self::set_flag_for_group($flagged, $results, $user_id);
+        }
         debug_event('userflag.class', "Setting userflag for $this->type $this->id to $flagged", 4);
 
         if (!$flagged) {
@@ -195,6 +204,63 @@ class Userflag extends database_object
 
         return true;
     } // set_flag
+
+    /**
+     * set_flag_for_group
+     * This function sets the user flag for an album group.
+     */
+    public function set_flag_for_group($flagged, $album, $user_id = null)
+    {
+        $sql = "SELECT `album`.`id` FROM `album`" .
+                " WHERE `album`.`name` = '" . str_replace("'", "\'", $album['name']) . "' AND" .
+                " `album`.`album_artist` = " . $album['album_artist'] . " AND" .
+                " `album`.`mbid` = '" . $album['mbid'] . "'";
+        $db_results = Dba::read($sql);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+        foreach ($results as $album_id) {
+            if (!$flagged) {
+                $sql = "DELETE FROM `user_flag` WHERE " .
+                    "`object_id` = ? AND " .
+                    "`object_type` = ? AND " .
+                    "`user` = ?";
+                $params = array($this->id, $this->type, $user_id);
+            } else {
+                $sql = "REPLACE INTO `user_flag` " .
+                "(`object_id`, `object_type`, `user`, `date`) " .
+                "VALUES (?, ?, ?, ?)";
+                $params = array($this->id, $this->type, $user_id, time());
+
+                Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id);
+            }
+            Dba::write($sql, $params);
+
+            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, $flagged);
+
+            // Forward flag to last.fm and Libre.fm (song only)
+            if ($this->type == 'song') {
+                $user = new User($user_id);
+                $song = new Song($this->id);
+                if ($song) {
+                    $song->format();
+                    foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
+                        try {
+                            $plugin = new Plugin($plugin_name);
+                            if ($plugin->load($user)) {
+                                $plugin->_plugin->set_flag($song, $flagged);
+                            }
+                        } catch (Exception $e) {
+                            debug_event('userflag.class', 'Stats plugin error: ' . $e->getMessage(), 1);
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    } // set_flag_for_group
 
     /**
      * get_latest_sql

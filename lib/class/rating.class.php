@@ -325,17 +325,18 @@ class Rating extends database_object
 
                 parent::add_to_cache('rating_' . 'album' . '_user' . (int) $user_id, $album_id, $rating);
 
-                foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
-                    $plugin = new Plugin($plugin_name);
-                    if ($plugin->load(Core::get_global('user'))) {
-                        $plugin->_plugin->save_rating($this, $rating);
-                    }
+            }
+            foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->load(Core::get_global('user'))) {
+                    $plugin->_plugin->save_rating($album_id, $rating);
                 }
             }
         }
 
         return true;
-    }
+    } // set_rating_for_group
+
     /**
      * show
      * This takes an id and a type and displays the rating if ratings are
