@@ -223,40 +223,21 @@ class Userflag extends database_object
         foreach ($results as $album_id) {
             if (!$flagged) {
                 $sql = "DELETE FROM `user_flag` WHERE " .
-                    "`object_id` = ? AND " .
-                    "`object_type` = ? AND " .
-                    "`user` = ?";
-                $params = array($this->id, $this->type, $user_id);
+                    "`object_id` = " . $album_id . " AND " .
+                    "`object_type` = 'album' AND " .
+                    "`user` = " . $user_id;
+                Dba::write($sql);
             } else {
                 $sql = "REPLACE INTO `user_flag` " .
                 "(`object_id`, `object_type`, `user`, `date`) " .
                 "VALUES (?, ?, ?, ?)";
-                $params = array($this->id, $this->type, $user_id, time());
+                $params = array($album_id, 'album', $user_id, time());
 
-                Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id);
+                Useractivity::post_activity($user_id, 'userflag', 'album', $album_id);
+                Dba::write($sql, $params);
             }
-            Dba::write($sql, $params);
 
-            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, $flagged);
-
-            // Forward flag to last.fm and Libre.fm (song only)
-            if ($this->type == 'song') {
-                $user = new User($user_id);
-                $song = new Song($this->id);
-                if ($song) {
-                    $song->format();
-                    foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
-                        try {
-                            $plugin = new Plugin($plugin_name);
-                            if ($plugin->load($user)) {
-                                $plugin->_plugin->set_flag($song, $flagged);
-                            }
-                        } catch (Exception $e) {
-                            debug_event('userflag.class', 'Stats plugin error: ' . $e->getMessage(), 1);
-                        }
-                    }
-                }
-            }
+            parent::add_to_cache('userflag_album_user' . $user_id, $album_id, $flagged);
         }
 
         return true;
