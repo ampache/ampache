@@ -324,7 +324,6 @@ class Rating extends database_object
                 Dba::write($sql, $params);
 
                 parent::add_to_cache('rating_' . 'album' . '_user' . (int) $user_id, $album_id, $rating);
-
             }
             foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
