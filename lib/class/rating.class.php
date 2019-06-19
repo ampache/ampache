@@ -249,6 +249,18 @@ class Rating extends database_object
             $user_id = Core::get_global('user')->id;
         }
 
+        $results = array();
+        if ($this->type == 'album' && AmpConfig::get('album_group')) {
+            $sql = "SELECT `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
+                    " WHERE `id` = ?";
+            $db_results = Dba::read($sql, array($this->id));
+            $results = Dba::fetch_assoc($db_results);
+        }
+        if (!empty($results)) {
+
+            return self::set_rating_for_group($rating, $results, $user_id);
+        }
+
         debug_event('rating.class', "Setting rating for $this->type $this->id to $rating", 5);
 
         // If score is -1, then remove rating
@@ -278,6 +290,53 @@ class Rating extends database_object
         return true;
     } // set_rating
 
+    /**
+     * set_rating_for_group
+     * This function sets the rating for the current object.
+     * This is currently only for grouped disk albums!
+     * @param array $album
+     * @return boolean
+     */
+    private static function set_rating_for_group($rating, $album, $user_id = null)
+    {
+        $sql = "SELECT `album`.`id` FROM `album`" .
+                " WHERE `album`.`name` = '" . str_replace("'", "\'", $album['name']) ."' AND" .
+                " `album`.`album_artist` = " . $album['album_artist'] ." AND" .
+                " `album`.`mbid` = '" . $album['mbid'] ."'";
+        $db_results = Dba::read($sql);
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+        foreach ($results as $album_id) {
+                debug_event('rating.class', "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
+            // If score is -1, then remove rating
+            if ($rating == '-1') {
+                $sql = "DELETE FROM `rating`" .
+                        " WHERE `object_id` = '" . $album_id ."' AND " .
+                        " `object_type` = 'album' AND" .
+                        " `user` = " . $user_id;
+                Dba::write($sql);
+            } else {
+                $sql = "REPLACE INTO `rating` " .
+                        "(`object_id`, `object_type`, `rating`, `user`) " .
+                        "VALUES (?, ?, ?, ?)";
+                $params = array($album_id, 'album', $rating, $user_id);
+                Dba::write($sql, $params);
+
+                parent::add_to_cache('rating_' . 'album' . '_user' . (int) $user_id, $album_id, $rating);
+
+                foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
+                    $plugin = new Plugin($plugin_name);
+                    if ($plugin->load(Core::get_global('user'))) {
+                        $plugin->_plugin->save_rating($this, $rating);
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
     /**
      * show
      * This takes an id and a type and displays the rating if ratings are
