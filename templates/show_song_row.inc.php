@@ -53,7 +53,7 @@ if ($libitem->enabled || Access::check('interface', '50')) {
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $libitem->id ?>')">
             <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
         </a>
-    <?php
+    <?php 
         if (AmpConfig::get('directplay')) {
             echo $libitem->show_custom_play_actions();
         }
@@ -136,9 +136,9 @@ if ($libitem->enabled || Access::check('interface', '50')) {
 <?php
     if (Access::check('interface', '50') && isset($argument) && $argument) {
         ?>
-<td class="cel_drag">
-    <?php echo UI::get_icon('drag', T_('Reorder')); ?>
-</td>
+<!--<td class="cel_drag">
+    <?php # echo UI::get_icon('drag', T_('Reorder')); ?>
+</td>-->
 <?php
     }
 }
