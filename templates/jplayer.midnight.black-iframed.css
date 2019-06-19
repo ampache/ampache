@@ -152,8 +152,6 @@ div.jp-interface ul.jp-controls {
 div.jp-audio ul.jp-controls {
 	position: absolute;
 	top: 15px;
-	left: 15px;
-	right: 15px;
 	padding: 0;
 }
 
@@ -724,7 +722,7 @@ div.jp-audio .jp-type-playlist ul.jp-toggles {
 	width: auto;
 	margin: 0;
 	position: absolute;
-	right: 15px;
+	/*right: 15px;*/
 	top: 22px;
 }
 
