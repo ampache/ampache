@@ -540,7 +540,7 @@ class Channel extends database_object implements media, library_item
                                 debug_event('channel.class', 'Missing settings to transcode ' . $this->media->file . ', skipped.', 3);
                                 $this->media = null;
                             } else {
-                                debug_event('channel.class', 'Now listening to ' . $this->media->file . '.', 5);
+                                debug_event('channel.class', 'Now listening to ' . $this->media->file . '.', 4);
                             }
                         }
                     }

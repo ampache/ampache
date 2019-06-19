@@ -273,7 +273,7 @@ class Catalog_subsonic extends Catalog
         // Update the last update value
         $this->update_last_update();
 
-        debug_event('subsonic.catalog', 'Catalog updated.', 5);
+        debug_event('subsonic.catalog', 'Catalog updated.', 4);
 
         return true;
     }

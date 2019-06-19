@@ -164,7 +164,7 @@ switch ($_REQUEST['action']) {
                 if ($artist->mbid) {
                     $walbums = Wanted::get_missing_albums($artist);
                 } else {
-                    debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', 5);
+                    debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', 3);
                 }
             } else {
                 $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);

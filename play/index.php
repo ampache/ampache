@@ -327,7 +327,7 @@ if ($media->catalog) {
 
     /* If the media is disabled */
     if (isset($media->enabled) && !make_bool($media->enabled)) {
-        debug_event('play/index', "Error: $media->file is currently disabled, song skipped", 5);
+        debug_event('play/index', "Error: $media->file is currently disabled, song skipped", 3);
         // Check to see if this is a democratic playlist, if so remove it completely
         if ($demo_id !== '' && isset($democratic)) {
             $democratic->delete_from_oid($oid, $type);
@@ -400,7 +400,7 @@ $browser = new Horde_Browser();
  * and then present them with the download file
  */
 if (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
-    debug_event('play/index', 'Downloading file...', 5);
+    debug_event('play/index', 'Downloading file...', 4);
     // STUPID IE
     $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
 
@@ -515,7 +515,7 @@ if (!$cpaction) {
         }
     } else {
         if ($transcode_cfg != 'never') {
-            debug_event('play/index', 'Transcoding is not enabled for this media type. Valid types: {' . json_encode($valid_types) . '}', 5);
+            debug_event('play/index', 'Transcoding is not enabled for this media type. Valid types: {' . json_encode($valid_types) . '}', 4);
         } else {
             debug_event('play/index', 'Transcode disabled in user settings.', 5);
         }
@@ -550,7 +550,7 @@ if ($transcode) {
             // 10 seconds segment. Should it be an option?
             $ssize            = 10;
             $send_all_in_once = true; // Should we use temporary folder instead?
-            debug_event('play/index', 'Sending all data in once.', 5);
+            debug_event('play/index', 'Sending all data in one piece.', 5);
             $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
             $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
         }
@@ -644,7 +644,7 @@ if (!isset($_REQUEST['segment'])) {
     } else {
         if (!$share_id) {
             if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
-                debug_event('play/index', 'Registering stream stats for {' . $media->get_stream_name() . '}...', 5);
+                debug_event('play/index', 'Registering stream stats for {' . $media->get_stream_name() . '}...', 4);
                 $sessionkey = $sid ?: Stream::get_session();
                 $agent      = Session::agent($sessionkey);
                 $location   = Session::get_geolocation($sessionkey);

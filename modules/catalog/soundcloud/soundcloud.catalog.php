@@ -443,7 +443,7 @@ class Catalog_soundcloud extends Catalog
                     debug_event('soundcloud.catalog', 'Started remote stream - ' . $headers['Location'], 5);
                     header('Location: ' . $headers['Location']);
                 } else {
-                    debug_event('soundcloud.catalog', 'Cannot get remote stream for song ' . $media->file, 5);
+                    debug_event('soundcloud.catalog', 'Cannot get remote stream for song ' . $media->file, 3);
                 }
             } else {
                 debug_event('soundcloud.catalog', 'API Error: cannot connect to SoundCloud.', 1);

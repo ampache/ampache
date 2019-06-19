@@ -1896,7 +1896,7 @@ class Subsonic_Api
         if (Subsonic_XML_Data::isArtist($id)) {
             $similars = Recommendation::get_artists_like(Subsonic_XML_Data::getAmpacheId($id));
             if (!empty($similars)) {
-                debug_event('subsonic_api.class', 'Found: ' . count($similars) . ' similar artists', 5);
+                debug_event('subsonic_api.class', 'Found: ' . count($similars) . ' similar artists', 4);
                 foreach ($similars as $similar) {
                     debug_event('subsonic_api.class', $similar['name'] . ' (id=' . $similar['id'] . ')', 5);
                     if ($similar['id']) {

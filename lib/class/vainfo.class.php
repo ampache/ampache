@@ -275,7 +275,7 @@ class vainfo
                     debug_event('vainfo.class', 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
                 }
             } else {
-                debug_event('vainfo.class', 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 5);
+                debug_event('vainfo.class', 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 3);
             }
         }
     } // write_id3
@@ -701,7 +701,7 @@ class vainfo
                 return $type;
             default:
                 /* Log the fact that we couldn't figure it out */
-                debug_event('vainfo.class', 'Unable to determine file type from ' . $type . ' on file ' . $this->filename, 5);
+                debug_event('vainfo.class', 'Unable to determine file type from ' . $type . ' on file ' . $this->filename, 3);
 
                 return $type;
         }

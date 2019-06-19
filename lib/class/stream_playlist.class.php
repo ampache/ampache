@@ -251,7 +251,7 @@ class Stream_Playlist
             return false;
         }
 
-        debug_event('stream_playlist.class', 'Generating a {' . $type . '} object...', 5);
+        debug_event('stream_playlist.class', 'Generating a {' . $type . '} object...', 4);
 
         $ext = $type;
         switch ($type) {

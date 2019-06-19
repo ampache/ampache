@@ -326,7 +326,7 @@ class Art extends database_object
      */
     public function insert_url($url)
     {
-        debug_event('art.class', 'Insert art from url ' . $url, 5);
+        debug_event('art.class', 'Insert art from url ' . $url, 4);
         $image = Art::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
         $mime  = "image/" . $rurl['extension'];
@@ -339,7 +339,7 @@ class Art extends database_object
      */
     public function insert_from_file($filepath)
     {
-        debug_event('art.class', 'Insert art from file on disk ' . $filepath, 5);
+        debug_event('art.class', 'Insert art from file on disk ' . $filepath, 4);
         $image = Art::get_from_source(array('file' => $filepath), $this->type);
         $rfile = pathinfo($filepath);
         $mime  = "image/" . $rfile['extension'];
@@ -1167,7 +1167,7 @@ class Art extends database_object
         try {
             $release = $mb->lookup('release', $data['mbid'], $includes);
         } catch (Exception $e) {
-            debug_event('art.class', "gather_musicbrainz exception: " . $e, 5);
+            debug_event('art.class', "gather_musicbrainz exception: " . $e, 3);
 
             return $images;
         }
@@ -1644,7 +1644,7 @@ class Art extends database_object
                 }
             } // end foreach
         } catch (Exception $e) {
-            debug_event('art.class', 'LastFM error: ' . $e->getMessage(), 5);
+            debug_event('art.class', 'LastFM error: ' . $e->getMessage(), 3);
         }
 
         return $images;

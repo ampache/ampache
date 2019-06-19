@@ -138,7 +138,7 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, $url);
     break;
     case 'remove_duplicates':
-        debug_event('playlist', 'Remove duplicates called.', 5);
+        debug_event('playlist', 'Remove duplicates called.', 4);
 
         $playlist = new Playlist($_REQUEST['playlist_id']);
         /* Make sure they have permission */

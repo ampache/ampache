@@ -221,7 +221,7 @@ class AmpacheLastfm
         if (strlen(trim($data['lastfm_challenge']))) {
             $this->challenge= trim($data['lastfm_challenge']);
         } else {
-            debug_event('lastfm.plugin', 'No session key, not scrobbling (need to grant Ampache to last.fm)', 5);
+            debug_event('lastfm.plugin', 'No session key, not scrobbling (need to grant Ampache to last.fm)', 4);
 
             return false;
         }
