@@ -26,13 +26,13 @@
         <input type="hidden" name="action" value="search" />
         <input type="hidden" name="rule_1_operator" value="0" />
         <input type="hidden" name="object_type" value="song" />
-        <select name="rule_1" id="searchStringRule">
+       <!-- <select name="rule_1" id="searchStringRule">
             <option value="anywhere"><?php echo T_('Anywhere')?></option>
             <option value="title"><?php echo T_('Title')?></option>
             <option value="album"><?php echo T_('Album')?></option>
             <option value="artist"><?php echo T_('Artist')?></option>
             <option value="playlist_name"><?php echo T_('Playlist')?></option>
-            <option value="tag"><?php echo T_('Tag')?></option>
+            <option value="tag"><?php echo T_('Tag')?></option> -->
             <?php if (AmpConfig::get('label')) {
     ?>
                 <option value="label"><?php echo T_('Label')?></option>
