@@ -69,7 +69,7 @@ if ($client->f_avatar) {
     } elseif ($client->id == Core::get_global('user')->id) {
         ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?tab=account"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
-            
+
         <?php
     }
     if (AmpConfig::get('use_now_playing_embedded')) {

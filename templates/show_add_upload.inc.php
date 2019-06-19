@@ -77,9 +77,9 @@ $(function () {
                     tmp.create.label = "New";
                     tmp.create.submenu = {
                         "create_folder" : {
-                            "separator_after"	: true,
-                            "label"				: "Folder",
-                            "action"			: function (data) {
+                            "separator_after"    : true,
+                            "label"                : "Folder",
+                            "action"            : function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                     obj = inst.get_node(data.reference);
                                 inst.create_node(obj, { type : "default", text : "New folder" }, "last", function (new_node) {

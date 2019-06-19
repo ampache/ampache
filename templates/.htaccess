@@ -1,16 +1,16 @@
 # Apache 2.4
 <IfModule mod_authz_core.c>
-	Require all denied
-	<FilesMatch "\.css$|\.gif$">
-		Require all granted
-	</FilesMatch>
+    Require all denied
+    <FilesMatch "\.css$|\.gif$">
+        Require all granted
+    </FilesMatch>
 </IfModule>
 
 # Apache 2.2
 <IfModule mod_access.c>
-	Order deny,allow
-	Deny from all
-	<Files ~ "\.css$|\.gif$">
-		Allow from all
-	</Files>
+    Order deny,allow
+    Deny from all
+    <Files ~ "\.css$|\.gif$">
+        Allow from all
+    </Files>
 </IfModule>

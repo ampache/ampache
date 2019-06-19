@@ -1047,10 +1047,10 @@ class vainfo
      * This function uses the file and directory patterns to pull out extra tag
      * information.
      *  parses TV show name variations:
-     *    1. title.[date].S#[#]E#[#].ext		(Upper/lower case)
-     *    2. title.[date].#[#]X#[#].ext		(both upper/lower case letters
+     *    1. title.[date].S#[#]E#[#].ext        (Upper/lower case)
+     *    2. title.[date].#[#]X#[#].ext        (both upper/lower case letters
      *    3. title.[date].Season #[#] Episode #[#].ext
-     *    4. title.[date].###.ext		(maximum of 9 seasons)
+     *    4. title.[date].###.ext        (maximum of 9 seasons)
      *  parse directory  path for name, season and episode numbers
      *   /TV shows/show name [(year)]/[season ]##/##.Episode.Title.ext
      *  parse movie names:

@@ -983,7 +983,7 @@ module.exports = FFT;
 
 var ICStream = require('./ics');
 var MDCT = require('./mdct');
-  
+
 function FilterBank(smallFrames, channels) {
     if (smallFrames) {
         throw new Error("WHA?? No small frames allowed.");
@@ -1005,7 +1005,7 @@ function FilterBank(smallFrames, channels) {
 
     this.buf = new Float32Array(2 * this.length);
 }
-  
+
 function generateSineWindow(len) {
     var d = new Float32Array(len);
     for (var i = 0; i < len; i++) {

@@ -55,13 +55,13 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
             } else {
                 # The parse_url function returns an array in this format:
                 # Array (
-                #	[scheme] => http
-                #	[host] => hostname
-                #	[user] => username
-                #	[pass] => password
-                #	[path] => /path
-                #	[query] => arg=value
-                #	[fragment] => anchor
+                #    [scheme] => http
+                #    [host] => hostname
+                #    [user] => username
+                #    [pass] => password
+                #    [path] => /path
+                #    [query] => arg=value
+                #    [fragment] => anchor
                 # )
                 $reqObjectURL = parse_url($upnpRequest['objectid']);
                 switch ($reqObjectURL['scheme']) {

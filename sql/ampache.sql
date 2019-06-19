@@ -16,7 +16,7 @@
 --
 -- Host: localhost    Database: ampache_clean
 -- ------------------------------------------------------
--- Server version	5.4.16-log
+-- Server version    5.4.16-log
 
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";

@@ -1,6 +1,6 @@
 [bugtraq]
-	url = "https://github.com/ampache/ampache/issues/#BUGID#"
-	label = GitHub Issue Number
-	warnifnoissue = false
-	number = true
-	logregex = "#\\d+\n\\d+"
+    url = "https://github.com/ampache/ampache/issues/#BUGID#"
+    label = GitHub Issue Number
+    warnifnoissue = false
+    number = true
+    logregex = "#\\d+\n\\d+"

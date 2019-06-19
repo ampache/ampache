@@ -755,12 +755,12 @@ if (!OggDemuxer) return;
 
 OggDemuxer.plugins.push({
   magic: "\177FLAC",
-  
+
   init: function() {
     this.list = new AV.BufferList();
     this.stream = new AV.Stream(this.list);
   },
-  
+
   readHeaders: function(packet) {
     var stream = this.stream;
     this.list.append(new AV.Buffer(packet));
@@ -780,7 +780,7 @@ OggDemuxer.plugins.push({
     this.flac.prototype.readChunk.call(this);
     return true;
   },
-  
+
   readPacket: function(packet) {
     this.list.append(new AV.Buffer(packet));
     this.flac.prototype.readChunk.call(this);
