@@ -1222,7 +1222,7 @@ abstract class Catalog extends database_object
      */
     public function gather_art_item($type, $id)
     {
-        debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 5);
+        debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 4);
 
         // Should be more generic !
         if ($type == 'video') {
@@ -1341,7 +1341,7 @@ abstract class Catalog extends database_object
             $searches['video'] = $videos;
         }
 
-        debug_event('catalog.class', 'gather_art found ' . (string) count($searches) . 'items missing art', 5);
+        debug_event('catalog.class', 'gather_art found ' . (string) count($searches) . 'items missing art', 4);
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $objectid) {
@@ -1454,7 +1454,7 @@ abstract class Catalog extends database_object
                         debug_event('catalog.class', "$album->name Art written to $file", 5);
                     }
                 } else {
-                    debug_event('catalog.class', "Unable to open $file for writing", 5);
+                    debug_event('catalog.class', "Unable to open $file for writing", 3);
                     echo "Error: unable to open file for writing [$file]\n";
                 }
             }
@@ -1876,7 +1876,7 @@ abstract class Catalog extends database_object
         $dead_total = $this->clean_catalog_proc();
         self::clean_empty_albums();
 
-        debug_event('catalog.class', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 5);
+        debug_event('catalog.class', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
 
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
@@ -1922,7 +1922,7 @@ abstract class Catalog extends database_object
      */
     public static function garbage_collection()
     {
-        debug_event('catalog.class', 'Database cleanup started', 5);
+        debug_event('catalog.class', 'Database cleanup started', 4);
         Song::garbage_collection();
         Album::garbage_collection();
         Artist::garbage_collection();
@@ -1940,7 +1940,7 @@ abstract class Catalog extends database_object
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         \Lib\Metadata\Repository\Metadata::garbage_collection();
         \Lib\Metadata\Repository\MetadataField::garbage_collection();
-        debug_event('catalog.class', 'Database cleanup ended', 5);
+        debug_event('catalog.class', 'Database cleanup ended', 4);
     }
 
     /**

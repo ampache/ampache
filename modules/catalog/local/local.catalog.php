@@ -238,7 +238,7 @@ class Catalog_local extends Catalog
         $handle = opendir($path);
 
         if (!is_resource($handle)) {
-            debug_event('local.catalog', "Unable to open $path", 5);
+            debug_event('local.catalog', "Unable to open $path", 3);
             AmpError::add('catalog_add', sprintf(T_('Error: Unable to open %s'), $path));
 
             return false;
@@ -761,7 +761,7 @@ class Catalog_local extends Catalog
                         if (rename($file, $mvfile)) {
                             $results['file'] = $mvfile;
                         } else {
-                            debug_event('local.catalog', 'File rename failed', 5);
+                            debug_event('local.catalog', 'File rename failed', 3);
                         }
                     }
                 }

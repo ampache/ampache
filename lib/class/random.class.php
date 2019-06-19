@@ -156,6 +156,9 @@ class Random
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
                     "WHERE `catalog`.`enabled` = '1' ";
         }
+        if (AmpConfig::get('album_group')) {
+            $sql .= " LEFT JOIN `album` on `rating`.`object_id` = `album`.`id` and `rating`.`object_type` = 'album'";
+        }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5) {
             $user_id = Core::get_global('user')->id;
@@ -169,6 +172,9 @@ class Random
                     " WHERE `rating`.`object_type` = 'album'" .
                     " AND `rating`.`rating` <=" . $rating_filter .
                     " AND `rating`.`user` = " . $user_id . ")";
+        }
+        if (AmpConfig::get('album_group')) {
+            "GROUP BY album.name, album.album_artist, album.mbid ORDER BY `rating` DESC";
         }
         $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);

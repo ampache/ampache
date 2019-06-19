@@ -130,7 +130,7 @@ while(true)
                 debug_event('channel_run', 'Connection accepted from ' . stream_socket_get_name($new_client, true) . '.', 5);
                 $client_socks[] = $new_client;
                 $channel->update_listeners(count($client_socks), true);
-                debug_event('channel_run', 'Now there are total '. count($client_socks) . ' clients.', 5);
+                debug_event('channel_run', 'Now there are total '. count($client_socks) . ' clients.', 4);
                 echo "New client connected.\n";
                 ob_flush();
             }
@@ -202,13 +202,13 @@ while(true)
                 $chunk_buffer = substr($chunk_buffer, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
                 //debug_event('channel_run', '$new chunk buffer : '.substr($chunk_buffer,0,300) . ' $hex: '.strtohex(substr($chunk_buffer,0,600)) . ' $ogg_nr_of_segments: ' .$ogg_nr_of_segments . ' bytes cut off: '.(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces) . ' naive: ' .$naive, 5);
             } elseif (strtolower($channel->stream_type) == "ogg") {
-                debug_event('channel_run', 'Ogg alignament broken! Trying repair...', 5);
+                debug_event('channel_run', 'Ogg alignament broken! Trying repair...', 4);
                 $manual_search = strpos($chunk_buffer, 'OggS');
                 $chunk_buffer = substr($chunk_buffer, $manual_search);
             } else { // no chunk alignment required
                 $chunk_buffer = substr($chunk_buffer, $chunklen);
             }
-            //debug_event('channel_run', 'remvd chunk from buffer ', 5);
+            //debug_event('channel_run', 'removed chunk from buffer ', 5);
         }
 
         if ($chunklen > 0) {
@@ -282,7 +282,7 @@ while(true)
             }
         } else {
             $channel->update_listeners(0);
-            debug_event('channel_run', 'No more data, stream ended.', 5);
+            debug_event('channel_run', 'No more data, stream ended.', 4);
             die('No more data, stream ended.');
         }
     }
@@ -300,7 +300,7 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
         throw new \RuntimeException('The file handle ' . $sock . ' could not be closed.');
     }
     $channel->update_listeners(count($client_socks));
-    debug_event('channel_run', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', 5);
+    debug_event('channel_run', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', 4);
     echo "Client disconnected.\n";
     ob_flush();
 }

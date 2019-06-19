@@ -473,10 +473,10 @@ class Label extends database_object implements library_item
         // Look if we need to add some new labels
         foreach ($editedLabels as  $lk => $lv) {
             if ($lv != '') {
-                debug_event('label.class', 'Adding new label {' . $lv . '}', 5);
+                debug_event('label.class', 'Adding new label {' . $lv . '}', 4);
                 $label_id = Label::lookup(array('name' => $lv));
                 if ($label_id === 0) {
-                    debug_event('label.class', 'Creating a label directly from artist editing is not allowed.', 5);
+                    debug_event('label.class', 'Creating a label directly from artist editing is not allowed.', 3);
                     //$label_id = Label::create(array('name' => $lv));
                 }
                 if ($label_id > 0) {

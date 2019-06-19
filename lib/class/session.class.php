@@ -153,7 +153,7 @@ class Session
             return $results[$column];
         }
 
-        debug_event('session.class', 'Unable to read session from key ' . $key . ' no data found', 5);
+        debug_event('session.class', 'Unable to read session from key ' . $key . ' no data found', 3);
 
         return '';
     }

@@ -129,7 +129,7 @@ class UPnPDevice
         debug_event('upnpdevice', 'sendRequestToDevice responseCode: ' . $responseCode, 5);
         if ($responseCode == 500)
         {
-            debug_event('upnpdevice', 'sendRequestToDevice HTTP-Code 500 - Create error response', 5);
+            debug_event('upnpdevice', 'sendRequestToDevice HTTP-Code 500 - Create error response', 3);
         }
         else
         {

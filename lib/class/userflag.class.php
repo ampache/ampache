@@ -154,7 +154,7 @@ class Userflag extends database_object
         }
         $user_id = (int) ($user_id);
 
-        debug_event('userflag.class', "Setting userflag for $this->type $this->id to $flagged", 5);
+        debug_event('userflag.class', "Setting userflag for $this->type $this->id to $flagged", 4);
 
         if (!$flagged) {
             $sql = "DELETE FROM `user_flag` WHERE " .

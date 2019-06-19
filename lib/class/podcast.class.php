@@ -483,7 +483,7 @@ class Podcast extends database_object implements library_item
      */
     public function sync_episodes($gather = false)
     {
-        debug_event('podcast.class', 'Syncing feed ' . $this->feed . ' ...', 5);
+        debug_event('podcast.class', 'Syncing feed ' . $this->feed . ' ...', 4);
 
         $xmlstr = file_get_contents($this->feed);
         if ($xmlstr === false) {

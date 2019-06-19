@@ -124,7 +124,7 @@ class Playlist extends playlist_object
             }
         }
         $sql .= ' ORDER BY `name`';
-        debug_event('playlist.class', 'get_playlists query: ' . $sql, 5);
+        //debug_event('playlist.class', 'get_playlists query: ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();

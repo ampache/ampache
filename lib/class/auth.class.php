@@ -242,7 +242,7 @@ class Auth
             fclose($pipes[0]);
             fclose($pipes[1]);
             if ($stderr = fread($pipes[2], 8192)) {
-                debug_event('auth.class', "external_auth fread error: " . $stderr, 5);
+                debug_event('auth.class', "external_auth fread error: " . $stderr, 3);
             }
             fclose($pipes[2]);
         } else {

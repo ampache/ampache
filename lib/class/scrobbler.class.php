@@ -180,7 +180,7 @@ class scrobbler
     public function queue_track($artist, $album, $title, $timestamp, $length, $track)
     {
         if ($length < 30) {
-            debug_event('scrobbler.class', "Not queuing track, too short", 5);
+            debug_event('scrobbler.class', "Not queuing track, too short", 3);
 
             return false;
         }

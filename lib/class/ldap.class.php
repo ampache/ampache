@@ -64,7 +64,7 @@ class LDAPException extends Exception
             $message = 'LDAP error: [' . $message . '] ' . ldap_err2str($message);
         }
 
-        debug_event('ldap.class', 'Exception: ' . $message, 5);
+        debug_event('ldap.class', 'Exception: ' . $message, 3);
         parent::__construct($message);
     }
 }

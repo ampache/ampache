@@ -404,7 +404,7 @@ class Podcast_Episode extends database_object implements media, library_item
             if (!empty($file)) {
                 $pinfo = pathinfo($this->source);
                 $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . $this->title . '-' . strtok($pinfo['basename'], '?');
-                debug_event('podcast_episode.class', 'Downloading ' . $this->source . ' to ' . $file . ' ...', 5);
+                debug_event('podcast_episode.class', 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
                 if (file_put_contents($file, fopen($this->source, 'r')) !== false) {
                     debug_event('podcast_episode.class', 'Download completed.', 4);
                     $this->file = $file;

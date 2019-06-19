@@ -222,7 +222,7 @@ class Ampachelibrefm
         if (strlen(trim($data['librefm_challenge']))) {
             $this->challenge= trim($data['librefm_challenge']);
         } else {
-            debug_event('librefm.plugin', 'No session key, not scrobbling (need to grant Ampache to libre.fm)', 5);
+            debug_event('librefm.plugin', 'No session key, not scrobbling (need to grant Ampache to libre.fm)', 4);
 
             return false;
         }
