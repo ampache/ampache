@@ -34,11 +34,11 @@ body {
 }
 
 a {
-    color: #ff9d00;
+    color: #0064c8;
 }
 
 a:hover {
-    color: #ffc466;
+    color: #6696ff;
 }
 
 hr {
@@ -58,12 +58,12 @@ input[type=password], input[type=text], textarea {
 }
 
 input[type=button], input[type=submit] {
-    background-image: -moz-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: -ms-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#ff9d00),to(#cc6200));
-    background-image: -webkit-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: -o-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: linear-gradient(top,#ff9d00,#cc6200);
+    background-image: -moz-linear-gradient(top,#0064c8,#005ccc);
+    background-image: -ms-linear-gradient(top,#0064c8,#005ccc);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#0064c8),to(#005ccc));
+    background-image: -webkit-linear-gradient(top,#0064c8,#005ccc);
+    background-image: -o-linear-gradient(top,#0064c8,#005ccc);
+    background-image: linear-gradient(top,#0064c8,#005ccc);
     -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
     -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
@@ -71,7 +71,7 @@ input[type=button], input[type=submit] {
 }
 
 input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, input[type=submit]:focus {
-    background-color: #cc6200;
+    background-color: #005ccc;
 }
 
 input[type=button]:focus:active, input[type=submit]:focus:active {
@@ -84,7 +84,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Main
 ***********************************************/
 #ajax-loading {
-    color: #ff9d00;
+    color: #0064c8;
     background-image: url(../images/ajax-loader.gif);
 }
 
@@ -106,7 +106,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #sb_Subsearch input[type=text]:focus {
     color: #555;
     background: rgba(255,255,255,0.9);
-    border-color:#ff9d00;
+    border-color:#0064c8;
 }
 
 #headerbox  select {
@@ -166,7 +166,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #footer #donate {
-    color: #ff9d00;
+    color: #0064c8;
 }
 
 /***********************************************
@@ -174,6 +174,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 ***********************************************/
 #sidebar {
     color: #999;
+	margin-top: -60 !important;
 }
 
 #sidebar-header {
@@ -255,13 +256,13 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #rightbar #rb_current_playlist li a:hover, #rightbar #rb_current_playlist li a:focus {
     color: #fff;
-    background-color: #c85a00;
-    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
-    background-image: linear-gradient(top,#cc6200,#c24d00);
+    background-color: #0064c8;
+    background-image: -moz-linear-gradient(top,#005ccc,#0034c2);
+    background-image: -ms-linear-gradient(top,#005ccc,#0034c2);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#005ccc),to(#0034c2));
+    background-image: -webkit-linear-gradient(top,#005ccc,#0034c2);
+    background-image: -o-linear-gradient(top,#005ccc,#0034c2);
+    background-image: linear-gradient(top,#005ccc,#0034c2);
 }
 
 #rightbar #rb_current_playlist li.odd {
@@ -279,7 +280,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #rightbar .submenu a:hover {
-    color: #ff9d00;
+    color: #0064c8;
 }
 
 /***********************************************
@@ -292,6 +293,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
     color: #fff;
+	margin-bottom: 125px;
 }
 
 .list-header, .list-header a {
@@ -303,7 +305,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 span.page-nb {
-    color: #ff9d00;
+    color: #0064c8;
  }
 
 table.tabledata {
@@ -315,11 +317,11 @@ table.tabledata a {
 }
 
 #catalog_type_fields table.tabledata a{
-	color: #ff9d00
+	color: #0064c8
 }
 
 table.tabledata a:hover, table.tabledata a:focus {
-    color: #ffc466;
+    color: #6696ff;
 }
 
 table.tabledata thead .th-top, table.tabledata tfoot .th-bottom {
@@ -338,17 +340,17 @@ table.tabledata tfoot .th-bottom {
 }
 
 table.tabledata th a {
-    color: #ff9d00;
+    color: #0064c8;
 }
 
 table.tabledata tr:hover, table.tabledata tr:focus {
-    background-color: #c85a00;
-    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
-    background-image: linear-gradient(top,#cc6200,#c24d00);
+    background-color: #0064c8;
+    background-image: -moz-linear-gradient(top,#005ccc,#0034c2);
+    background-image: -ms-linear-gradient(top,#005ccc,#0034c2);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#005ccc),to(#0034c2));
+    background-image: -webkit-linear-gradient(top,#005ccc,#0034c2);
+    background-image: -o-linear-gradient(top,#005ccc,#0034c2);
+    background-image: linear-gradient(top,#005ccc,#0034c2);
 }
 
 table.tabledata .th-top:hover,
@@ -370,7 +372,7 @@ table.tabledata tbody .cel_cover img {
 }
 
 table.tabledata tbody .cel_cover img:hover {
-    border-color: #ff9d00;
+    border-color: #0064c8;
 }
 
 /***********************************************
@@ -389,7 +391,7 @@ table.tabledata tbody .cel_cover img:hover {
 }
 
 .random_selection .random_album .art_album img:hover {
-    border-color: #ff9d00;
+    border-color: #0064c8;
 }
 
 #content .missing {
@@ -435,13 +437,13 @@ span.fatalerror {
 }
 
 .box-content #tag_filter .tag_button span:hover {
-    background-color: #c85a00;
-    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
-    background-image: linear-gradient(top,#cc6200,#c24d00);
+    background-color: #0064c8;
+    background-image: -moz-linear-gradient(top,#005ccc,#0034c2);
+    background-image: -ms-linear-gradient(top,#005ccc,#0034c2);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#005ccc),to(#0034c2));
+    background-image: -webkit-linear-gradient(top,#005ccc,#0034c2);
+    background-image: -o-linear-gradient(top,#005ccc,#0034c2);
+    background-image: linear-gradient(top,#005ccc,#0034c2);
 }
 
 /***********************************************
@@ -462,7 +464,7 @@ span.fatalerror {
 }
 
 .item_art:hover {
-    border-color: #ff9d00;
+    border-color: #0064c8;
 }
 
 #information_actions ul li{
@@ -470,7 +472,7 @@ span.fatalerror {
 }
 
 #information_actions a:hover, #information_actions li:hover {
-    color: #fff;/*#ffc466;*/
+    color: #fff;/*#6696ff;*/
 }
 
 /************************************************/
@@ -517,7 +519,7 @@ div.jp-audio,
 div.jp-audio-stream,
 div.jp-video {
 	color: #999;
-	border: 1px solid #191919;
+	/*border: 1px solid #191919;*/
 }
 
 div.jp-video div.jp-interface {
@@ -536,7 +538,7 @@ div.jp-playlist {
 }
 
 #webplayer {
-	background-color: #191919 !important;
+	background-color: #191919;
 }
 
 div.playing_title a {
@@ -595,11 +597,11 @@ a.option-list:hover {
 }
 
 #tabs li a {
-  color: #ff9d00;
+  color: #0064c8;
 }
 
 #tabs li a:hover {
-  color: #ffc466;
+  color: #6696ff;
 }
 
 #tabs li.tab_active a {
