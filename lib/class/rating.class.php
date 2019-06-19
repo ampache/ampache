@@ -254,10 +254,9 @@ class Rating extends database_object
             $sql = "SELECT `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
                     " WHERE `id` = ?";
             $db_results = Dba::read($sql, array($this->id));
-            $results = Dba::fetch_assoc($db_results);
+            $results    = Dba::fetch_assoc($db_results);
         }
         if (!empty($results)) {
-
             return self::set_rating_for_group($rating, $results, $user_id);
         }
 
@@ -300,20 +299,20 @@ class Rating extends database_object
     private static function set_rating_for_group($rating, $album, $user_id = null)
     {
         $sql = "SELECT `album`.`id` FROM `album`" .
-                " WHERE `album`.`name` = '" . str_replace("'", "\'", $album['name']) ."' AND" .
-                " `album`.`album_artist` = " . $album['album_artist'] ." AND" .
-                " `album`.`mbid` = '" . $album['mbid'] ."'";
+                " WHERE `album`.`name` = '" . str_replace("'", "\'", $album['name']) . "' AND" .
+                " `album`.`album_artist` = " . $album['album_artist'] . " AND" .
+                " `album`.`mbid` = '" . $album['mbid'] . "'";
         $db_results = Dba::read($sql);
-        $results = array();
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
         foreach ($results as $album_id) {
-                debug_event('rating.class', "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
+            debug_event('rating.class', "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
             // If score is -1, then remove rating
             if ($rating == '-1') {
                 $sql = "DELETE FROM `rating`" .
-                        " WHERE `object_id` = '" . $album_id ."' AND " .
+                        " WHERE `object_id` = '" . $album_id . "' AND " .
                         " `object_type` = 'album' AND" .
                         " `user` = " . $user_id;
                 Dba::write($sql);
