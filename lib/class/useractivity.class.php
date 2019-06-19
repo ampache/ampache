@@ -163,7 +163,6 @@ class Useractivity extends database_object
             $name_album   = $album->f_title;
             $mbid_album   = $album->mbid;
             $mbid_artist  = $album->mbid_group;
-            debug_event('useractivity.class', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
 
             if ($name_artist && $name_album) {
                 debug_event('useractivity.class', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
