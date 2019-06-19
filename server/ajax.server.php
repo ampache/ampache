@@ -31,7 +31,7 @@ require_once '../lib/init.php';
 xoutput_headers();
 
 $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
-if (page) {
+if ($page) {
     debug_event('ajax.server', 'Called for page: {' . $page . '}', 5);
 }
 
