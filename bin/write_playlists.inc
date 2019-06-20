@@ -80,7 +80,7 @@ foreach ($items as $item) {
     foreach ($medias as $media) {
         $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, 'file');
     }
-    
+
     $plstr = $pl->{'get_' . $ext . '_string'}();
     if (file_put_contents($filename, $plstr) === false) {
         echo "Error: cannot write playlist file `" . $filename . "`.\n";
@@ -110,6 +110,6 @@ function usage() {
         $desc6\n\n";
 
         echo $string;
-        
+
         return;
 } // usage

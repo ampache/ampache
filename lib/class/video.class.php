@@ -263,10 +263,10 @@ class Video extends database_object implements media, library_item
      */
     public function format($details = true)
     {
-        $this->f_title      = scrub_out($this->title);
+        $this->f_title      = filter_var($this->title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $this->f_full_title = $this->f_title;
         $this->link         = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
-        $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_title) . "\"> " . scrub_out($this->f_title) . "</a>";
+        $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . $this->f_title . "\"> " . $this->f_title . "</a>";
         $this->f_codec      = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
@@ -1087,4 +1087,23 @@ class Video extends database_object implements media, library_item
 
         return true;
     } // _update_item
+    /**
+     * get_item_count
+     * Return the number of entries in the database...
+     * @param string $type
+     * @return int
+     */
+    public static function get_item_count($type)
+    {
+        $type       = self::validate_type($type);
+        $sql        = 'SELECT count(*) as count from `' . strtolower($type) . '`;';
+        $db_results = Dba::read($sql,array());
+        if ($results = Dba::fetch_assoc($db_results)) {
+            if ($results['count']) {
+                return $results['count'];
+            }
+        }
+
+        return 0;
+    } // get_item_count
 } // end Video class

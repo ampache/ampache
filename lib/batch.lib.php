@@ -25,14 +25,13 @@
  *
  * Takes an array of media ids and returns an array of the actual filenames
  *
- * @param    array    $media_ids    Media IDs.
+ * @param array $media_ids Media IDs.
  * @return array
  */
 function get_media_files($media_ids)
 {
     $media_files = array();
-
-    $total_size = 0;
+    $total_size  = 0;
     foreach ($media_ids as $element) {
         if (is_array($element)) {
             if (isset($element['object_type'])) {
@@ -82,7 +81,8 @@ function send_zip($name, $media_files)
         throw new Exception('Missing ZipStream dependency.');
     }
 
-    $arc     = new ZipStream\ZipStream($name . ".zip");
+    $filter  = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+    $arc     = new ZipStream\ZipStream($filter . ".zip");
     $options = array(
         'comment' => AmpConfig::get('file_zip_comment'),
     );
@@ -92,6 +92,7 @@ function send_zip($name, $media_files)
             $arc->addFileFromPath($dir . "/" . basename($file), $file, $options);
         }
     }
+    debug_event('batch.lib', 'Sending Zip ' . $name, 5);
 
     $arc->finish();
 } // send_zip

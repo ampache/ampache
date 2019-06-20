@@ -506,6 +506,10 @@ class Stats
         $type = self::validate_type($input_type);
 
         $base_type = 'song';
+        $sql_type  = $base_type . "`.`" . $type;
+        if ($input_type === 'song') {
+            $sql_type = 'song`.`id';
+        }
 
         // add playlists to mashup browsing
         if ($type == 'playlist') {
@@ -513,11 +517,14 @@ class Stats
             $sql  = "SELECT `$type` as `id`, `playlist`.`last_update` AS `real_atime` FROM `playlist` ";
         } else {
             $sql = "SELECT DISTINCT(`$type`) as `id`, `addition_time` AS `real_atime` FROM `" . $base_type . "` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
+            if ($input_type === 'song') {
+                $sql = "SELECT DISTINCT(`$type`.`id`) as `id`, `addition_time` AS `real_atime` FROM `" . $base_type . "` ";
+            }
             if (AmpConfig::get('album_group') && $type == 'album') {
                 $sql .= "LEFT JOIN `album` ON `album`.`id` = `" . $base_type . "`.`album` ";
             }
             if (AmpConfig::get('catalog_disable')) {
+                $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
                 $sql .= "WHERE `catalog`.`enabled` = '1' ";
             }
             if ($catalog > 0) {
@@ -526,7 +533,7 @@ class Stats
             $rating_filter = AmpConfig::get_rating_filter();
             if ($rating_filter > 0 && $rating_filter <= 5) {
                 $user_id = Core::get_global('user')->id;
-                $sql .= "WHERE `" . $base_type . "`.`" . $type . "` NOT IN" .
+                $sql .= "WHERE `" . $sql_type . "` NOT IN" .
                         " (SELECT `object_id` FROM `rating`" .
                         " WHERE `rating`.`object_type` = '" . $type . "'" .
                         " AND `rating`.`rating` <=" . $rating_filter .
@@ -536,7 +543,7 @@ class Stats
         if (AmpConfig::get('album_group') && $type == 'album') {
             $sql .= "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid` ORDER BY `real_atime` DESC ";
         } else {
-            $sql .= "GROUP BY `$type` ORDER BY `real_atime` DESC ";
+            $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
         }
         debug_event('stats.class', 'get_newest_sql ' . $sql, 5);
 

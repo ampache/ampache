@@ -8,7 +8,6 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - Resolve CVE-2019-12385 for the SQL Injection
 - Resolve CVE-2019-12386 for the persistent XSS
 - Remove charts/graphs that use non-free graph library pchart
-- Ignore items with existing art in the database when gathering.
 - Update the CSS theme colors and structure.
 - Light theme updated.
 - Remove plex, seafile, dropbox, googleplus plugins
@@ -32,8 +31,10 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - Fixed setting button requiring two single clicks to open. (Thanks for this 2016 pull @AshotN)
 - Fixed import_playlist code. Do not recreate existing playlists and don't imports existing songs.
 - Stop trying to insert art when present during catalog update
+- Don't allow last.fm queries to overwrite existing art
 - Lots of code tweaks to make things more uniform and readable.
 - Add now_playing.php to allow badges for currently playing tracks. (Fall back to last played if none.)
+- Add Now Playing icon to each user page if enabled.
 - Add year information and links to the data rows and interface
 - Default to mashup for artists and albums
 - Add rating_browse_filter, rating_browse_minimum_stars to filter based on a star rating.
@@ -41,6 +42,13 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - Add debugging in song.class.php when the file may be corrupt
 - Remove '[Disk x]' when grouped from all UI areas by enforcing the group setting.
 - Make test.php & install.php show an error page instead of blank screen.
+- Filter zip names in batch so they are named correctly by the download
+- API - Extended Method: stats allow songs|artists|albums (instead of just albums)
+- API - Extended Method: playlists allow return of smartlists as well as regular playlists (Only allow smartlists with an item limit)
+- API - New Method: flag allows flagging object by id & type
+- API - New Method: record_play allows recording play of object without streaming
+- API - New Method: catalog_action allow running add_to_catalog|clean_catalog
+- API - New Method: playlist_edit alow editing name and type of playlist
 
 3.9.1
 ----------

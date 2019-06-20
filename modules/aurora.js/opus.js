@@ -27,7 +27,7 @@ var opus = require('../build/libopus');
 
 var OpusDecoder = AV.Decoder.extend(function() {
   AV.Decoder.register('opus', this);
-  
+
   this.prototype.init = function() {
     this.buflen = 4096;
     this.buf = opus._malloc(this.buflen);
@@ -38,7 +38,7 @@ var OpusDecoder = AV.Decoder.extend(function() {
 
     this.opus = opus._opus_decoder_create(this.format.sampleRate, this.format.channelsPerFrame, this.buf);
   };
-  
+
   this.prototype.readChunk = function() {
     if (!this.stream.available(1))
       throw new AV.UnderflowError();
@@ -61,7 +61,7 @@ var OpusDecoder = AV.Decoder.extend(function() {
     var samples = opus.HEAPF32.subarray(this.f32, this.f32 + len * this.format.channelsPerFrame);
     return new Float32Array(samples);
   };
-  
+
   this.prototype.destroy = function() {
     this._super();
     opus._free(this.buf);
@@ -82,7 +82,7 @@ var OggDemuxer = (typeof window !== "undefined" ? window.AV.OggDemuxer : typeof 
 
 OggDemuxer.plugins.push({
   magic: "OpusHead",
-  
+
   readHeaders: function(packet) {
     if (packet[8] !== 1)
       throw new Error("Unknown opus version");
@@ -96,7 +96,7 @@ OggDemuxer.plugins.push({
 
     return true;
   },
-  
+
   readPacket: function(packet) {
     var tag = packet.subarray(0, 8);
     if (String.fromCharCode.apply(String, tag) === "OpusTags") {

@@ -6,136 +6,136 @@
 
 THREE.EffectComposer = function ( renderer, renderTarget ) {
 
-	this.renderer = renderer;
+    this.renderer = renderer;
 
-	if ( typeof renderTarget === "undefined" ) {
+    if ( typeof renderTarget === "undefined" ) {
 
-		var width = window.innerWidth || 1;
-		var height = window.innerHeight || 1;
-		var parameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false };
+        var width = window.innerWidth || 1;
+        var height = window.innerHeight || 1;
+        var parameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false };
 
-		renderTarget = new THREE.WebGLRenderTarget( width, height, parameters );
+        renderTarget = new THREE.WebGLRenderTarget( width, height, parameters );
 
-	}
-
-	this.renderTarget1 = renderTarget;
-	this.renderTarget2 = renderTarget.clone();
-
-	this.writeBuffer = this.renderTarget1;
-	this.readBuffer = this.renderTarget2;
-
-	this.passes = [];
-
-	if ( typeof THREE.CopyShader === "undefined" ) {
-		console.error( "THREE.EffectComposer relies on THREE.CopyShader" );
     }
 
-	this.copyPass = new THREE.ShaderPass( THREE.CopyShader );
+    this.renderTarget1 = renderTarget;
+    this.renderTarget2 = renderTarget.clone();
+
+    this.writeBuffer = this.renderTarget1;
+    this.readBuffer = this.renderTarget2;
+
+    this.passes = [];
+
+    if ( typeof THREE.CopyShader === "undefined" ) {
+        console.error( "THREE.EffectComposer relies on THREE.CopyShader" );
+    }
+
+    this.copyPass = new THREE.ShaderPass( THREE.CopyShader );
 
 };
 
 THREE.EffectComposer.prototype = {
 
-	swapBuffers: function() {
+    swapBuffers: function() {
 
-		var tmp = this.readBuffer;
-		this.readBuffer = this.writeBuffer;
-		this.writeBuffer = tmp;
+        var tmp = this.readBuffer;
+        this.readBuffer = this.writeBuffer;
+        this.writeBuffer = tmp;
 
-	},
+    },
 
-	addPass( pass ) {
+    addPass( pass ) {
 
-		this.passes.push( pass );
+        this.passes.push( pass );
 
-	},
+    },
 
-	insertPass( pass, index ) {
+    insertPass( pass, index ) {
 
-		this.passes.splice( index, 0, pass );
+        this.passes.splice( index, 0, pass );
 
-	},
+    },
 
-	render( delta ) {
+    render( delta ) {
 
-		this.writeBuffer = this.renderTarget1;
-		this.readBuffer = this.renderTarget2;
+        this.writeBuffer = this.renderTarget1;
+        this.readBuffer = this.renderTarget2;
 
-		var maskActive = false;
+        var maskActive = false;
 
-		var pass, i, il = this.passes.length;
+        var pass, i, il = this.passes.length;
 
-		for ( i = 0; i < il; i ++ ) {
+        for ( i = 0; i < il; i ++ ) {
 
-			pass = this.passes[ i ];
+            pass = this.passes[ i ];
 
-			if ( !pass.enabled ) {
+            if ( !pass.enabled ) {
                 continue;
             }
 
-			pass.render( this.renderer, this.writeBuffer, this.readBuffer, delta, maskActive );
+            pass.render( this.renderer, this.writeBuffer, this.readBuffer, delta, maskActive );
 
-			if ( pass.needsSwap ) {
+            if ( pass.needsSwap ) {
 
-				if ( maskActive ) {
+                if ( maskActive ) {
 
-					var context = this.renderer.context;
+                    var context = this.renderer.context;
 
-					context.stencilFunc( context.NOTEQUAL, 1, 0xffffffff );
+                    context.stencilFunc( context.NOTEQUAL, 1, 0xffffffff );
 
-					this.copyPass.render( this.renderer, this.writeBuffer, this.readBuffer, delta );
+                    this.copyPass.render( this.renderer, this.writeBuffer, this.readBuffer, delta );
 
-					context.stencilFunc( context.EQUAL, 1, 0xffffffff );
+                    context.stencilFunc( context.EQUAL, 1, 0xffffffff );
 
-				}
+                }
 
-				this.swapBuffers();
+                this.swapBuffers();
 
-			}
+            }
 
-			if ( pass instanceof THREE.MaskPass ) {
+            if ( pass instanceof THREE.MaskPass ) {
 
-				maskActive = true;
+                maskActive = true;
 
-			} else if ( pass instanceof THREE.ClearMaskPass ) {
+            } else if ( pass instanceof THREE.ClearMaskPass ) {
 
-				maskActive = false;
+                maskActive = false;
 
-			}
+            }
 
-		}
+        }
 
-	},
+    },
 
-	reset( renderTarget ) {
+    reset( renderTarget ) {
 
-		if ( typeof renderTarget === "undefined" ) {
+        if ( typeof renderTarget === "undefined" ) {
 
-			renderTarget = this.renderTarget1.clone();
+            renderTarget = this.renderTarget1.clone();
 
-			renderTarget.width = window.innerWidth;
-			renderTarget.height = window.innerHeight;
+            renderTarget.width = window.innerWidth;
+            renderTarget.height = window.innerHeight;
 
-		}
+        }
 
-		this.renderTarget1 = renderTarget;
-		this.renderTarget2 = renderTarget.clone();
+        this.renderTarget1 = renderTarget;
+        this.renderTarget2 = renderTarget.clone();
 
-		this.writeBuffer = this.renderTarget1;
-		this.readBuffer = this.renderTarget2;
+        this.writeBuffer = this.renderTarget1;
+        this.readBuffer = this.renderTarget2;
 
-	},
+    },
 
-	setSize( width, height ) {
+    setSize( width, height ) {
 
-		var renderTarget = this.renderTarget1.clone();
+        var renderTarget = this.renderTarget1.clone();
 
-		renderTarget.width = width;
-		renderTarget.height = height;
+        renderTarget.width = width;
+        renderTarget.height = height;
 
-		this.reset( renderTarget );
+        this.reset( renderTarget );
 
-	}
+    }
 
 };
 

@@ -31,8 +31,9 @@ require_once '../lib/init.php';
 xoutput_headers();
 
 $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : null;
-
-debug_event('ajax.server', 'Called for page: {' . $page . '}', 5);
+if ($page) {
+    debug_event('ajax.server', 'Called for page: {' . $page . '}', 5);
+}
 
 switch ($page) {
     case 'stats':

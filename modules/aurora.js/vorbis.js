@@ -46,7 +46,7 @@ var VorbisDecoder = AV.Decoder.extend(function() {
       self.decodedBuffer = new Float32Array(samples);
     });
   };
-  
+
   this.prototype.readChunk = function() {
     if (!this.stream.available(1))
       throw new AV.UnderflowError();
@@ -67,7 +67,7 @@ var VorbisDecoder = AV.Decoder.extend(function() {
 
     return this.decodedBuffer;
   };
-  
+
   this.prototype.destroy = function() {
     Vorbis._free(this.buf);
     Vorbis._free(this.outbuf);
@@ -92,7 +92,7 @@ var VorbisGetComment = Vorbis.cwrap('VorbisGetComment', 'string', ['number', 'nu
 // vorbis demuxer plugin for Ogg
 OggDemuxer.plugins.push({
   magic: "\001vorbis",
-  
+
   init: function() {
     this.vorbis = Vorbis._VorbisInit();
     this.buflen = 4096;
@@ -142,7 +142,7 @@ OggDemuxer.plugins.push({
 
     return this.headers === 0;
   },
-  
+
   readPacket: function(packet) {
     this.emit('data', new AV.Buffer(packet));
   }

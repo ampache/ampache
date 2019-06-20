@@ -284,13 +284,13 @@ class Upnp_Api
          * $prmDIDL is DIDL XML string
          * XML-Layout:
          *
-         *	    -s:Envelope
-         *	        -s:Body
-         *	            -u:BrowseResponse
-         *	                Result (DIDL)
-         *	                NumberReturned
-         *	                TotalMatches
-         *	                UpdateID
+         *        -s:Envelope
+         *            -s:Body
+         *                -u:BrowseResponse
+         *                    Result (DIDL)
+         *                    NumberReturned
+         *                    TotalMatches
+         *                    UpdateID
          */
         $doc               = new DOMDocument('1.0', 'utf-8');
         $doc->formatOutput = true;

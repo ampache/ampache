@@ -55,6 +55,24 @@ if ($directplay_limit > 0) {
     }
     ?>
 </div>
+<?php if (User::is_registered()) {
+        ?>
+    <?php if (AmpConfig::get('ratings')) {
+            ?>
+    <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
+            <?php Rating::show($album->id, 'album'); ?>
+    </div>
+    <?php
+        } ?>
+    <?php if (AmpConfig::get('userflags')) {
+            ?>
+    <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
+            <?php Userflag::show($album->id, 'album'); ?>
+    </div>
+    <?php
+        } ?>
+<?php
+    } ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>

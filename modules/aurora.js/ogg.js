@@ -20,14 +20,14 @@ var Ogg = require('../build/libogg');
 
 var OggDemuxer = AV.Demuxer.extend(function() {
   AV.Demuxer.register(this);
-  
+
   this.probe = function(buffer) {
     return buffer.peekString(0, 4) === 'OggS';
   };
-  
+
   this.plugins = [];
   var BUFFER_SIZE = 8192;
-  
+
   this.prototype.init = function() {
     this.ogg = Ogg._AVOggInit();
     this.buf = Ogg._malloc(BUFFER_SIZE);
@@ -67,14 +67,14 @@ var OggDemuxer = AV.Demuxer.extend(function() {
         plugin.readPacket.call(self, data);
     });
   };
-  
+
   this.prototype.readChunk = function() {
     while (this._stream.available(BUFFER_SIZE)) {
       Ogg.HEAPU8.set(this._stream.readBuffer(BUFFER_SIZE).data, this.buf);
       Ogg._AVOggRead(this.ogg, this.buf, BUFFER_SIZE, this.callback);
     }
   };
-  
+
   this.prototype.destroy = function() {
     this._super();
     Ogg.Runtime.removeFunction(this.callback);

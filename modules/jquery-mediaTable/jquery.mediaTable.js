@@ -237,7 +237,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
     }; // EndOf: "__liInitActions()" ###
 
   var __analyze = function(i) {
-  
+
     // Get the widget context.
     var _this = this;
     var wdg = $(this).data( "MediaTable" );
@@ -263,7 +263,7 @@ http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
     }
 
   };
-  
+
   var __reset = function() {
     // Get the widget context.
     var wdg = $(this).data( "MediaTable" );

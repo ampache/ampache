@@ -9,7 +9,7 @@
     {
         "vendor-dir": "lib/vendor",
         "component-dir": "lib/components",
-        
+
         "platform": {
             "ext-curl": "1.0",
             "ext-gd": "1.0",
@@ -31,7 +31,7 @@
     "require": {
         "php": ">=5.6.0",
         "wikimedia/composer-merge-plugin": "1.*",
-        
+
         "doctrine/cache": "1.*.*",
         "gettext/gettext": "4.*.*",
         "james-heinrich/getid3": "dev-master",
@@ -50,9 +50,9 @@
         "openid/php-openid": "2.*",
         "sabre/dav": "3.*.*",
         "maennchen/zipstream-php": "0.4.*",
-        
+
         "afterster/php-echonest-api": "dev-master",
-        
+
         "components/jquery": "2.2.*",
         "components/jqueryui": "1.*",
         "vakata/jstree": "3.*",
@@ -72,7 +72,7 @@
         "tightenco/collect": "5.2.*",
         "ampache/ampacheapi-php": "^1.0"
     },
-    
+
     "repositories":
     [
         {
@@ -372,7 +372,7 @@
             }
         }
     ],
-    
+
     "extra": {
         "merge-plugin": {
             "include": [

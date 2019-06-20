@@ -69,8 +69,16 @@ if ($client->f_avatar) {
     } elseif ($client->id == Core::get_global('user')->id) {
         ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?tab=account"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
+
         <?php
-    } ?>
+    }
+    if (AmpConfig::get('use_now_playing_embedded')) {
+        ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo UI::get_icon('play_preview', T_('Now Playing')); ?></a>
+ <?php
+    }
+?>
+
     </dd>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Member Since'); ?></dt>
@@ -80,13 +88,13 @@ if ($client->f_avatar) {
     <dd class="<?php echo $rowparity; ?>"><?php echo $last_seen; ?></dd>
     <?php $rowparity = UI::flip_class(); ?>
     <?php if (Access::check('interface', '50')) {
-        ?>
+    ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php echo $client->f_useage; ?>
     </dd>
     <?php
-    } ?>
+} ?>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Status'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
@@ -212,3 +220,4 @@ if ($client->f_avatar) {
         } ?>
     </div>
 </div>
+

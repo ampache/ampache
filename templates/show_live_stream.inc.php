@@ -50,7 +50,7 @@
     $itemprops[gettext_noop('Website')]  = scrub_out($radio->site_url);
     $itemprops[gettext_noop('Stream')]   = $radio->f_url_link;
     $itemprops[gettext_noop('Codec')]    = scrub_out($video->codec);
-  
+
     foreach ($itemprops as $key => $value) {
         if (trim($value)) {
             $rowparity = UI::flip_class();
