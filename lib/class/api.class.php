@@ -1056,7 +1056,15 @@ class Api
 
         if ($results !== null) {
             ob_end_clean();
-            echo XML_Data::$type($results);
+            if ($type === 'song') {
+                echo XML_Data::songs($results);
+            }
+            if ($type === 'artist') {
+                echo XML_Data::artists($results);
+            }
+            if ($type === 'album') {
+                echo XML_Data::albums($results);
+            }
         }
     } // stats
 
