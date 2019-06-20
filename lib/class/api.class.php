@@ -988,7 +988,7 @@ class Api
      * This get library stats for different object types.
      * 
      * $input = array(type     = (string) 'song'|'album'|'artist'
-     *                filter   = (string) 'highest'|'frequent'|'recent'|'flagged'
+     *                filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'
      *                offset   = (integer)
      *                limit    = (integer)
      *                user_id  = (integer)
@@ -999,6 +999,7 @@ class Api
     public static function stats($input)
     {
         if ((int) self::$version < 400001) {
+            debug_event('api.class', 'stats OLD API IN USE', 4);
             //settings for the old API call
             $type     = 'album';
             $filter   = $input['type'];
@@ -1007,6 +1008,7 @@ class Api
             $username = $input['username'];
             $user_id  = User::get_from_username($username);
         } else {
+            debug_event('api.class', 'stats using new api version ' . self::$version, 4);
             //settings for the new api call
             $type     = $input['type'];
             $filter   = $input['filter'];
@@ -1017,24 +1019,30 @@ class Api
 
         $results = null;
         if ($filter == "newest") {
+            debug_event('api.class', 'stats newest', 5);
             $results = Stats::get_newest($type, $limit, $offset);
         } else {
             if ($filter == "highest") {
+                debug_event('api.class', 'stats highest', 4);
                 $results = Rating::get_highest($type, $limit, $offset);
             } else {
                 if ($filter == "frequent") {
+                debug_event('api.class', 'stats frequent', 4);
                     $results = Stats::get_top($type, $limit, '', $offset);
                 } else {
                     if ($filter == "recent") {
+                        debug_event('api.class', 'stats recent', 4);
                         if ($user_id !== null) {
-                                $results = $user_id->get_recently_played($limit, $type);
+                            $results = $user_id->get_recently_played($limit, $type);
                         } else {
                             $results = Stats::get_recent($type, $limit, $offset);
                         }
                     } else {
                         if ($filter == "flagged") {
+                            debug_event('api.class', 'stats flagged', 4);
                             $results = Userflag::get_latest($type);
                         } else {
+                            debug_event('api.class', 'stats random', 4);
                             if (!$limit) {
                                 $limit = AmpConfig::get('popular_threshold');
                             }
@@ -1056,6 +1064,7 @@ class Api
 
         if ($results !== null) {
             ob_end_clean();
+            debug_event('api.class', 'stats found results searching for ' . $type, 5);
             if ($type === 'song') {
                 echo XML_Data::songs($results);
             }
