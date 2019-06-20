@@ -1740,7 +1740,7 @@ ul.jp-toggles li a {
 }
 div.playing_info {
     position: absolute !important;
-    left: 130px !important;
+    left: 150px !important;
     top: 20px !important;
     font-size: 1.5em !important;
     font-family: 'Verdana',Arial,sans-serif !important;
