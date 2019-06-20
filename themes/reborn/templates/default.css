@@ -169,7 +169,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #footer {
     width: auto;
     z-index: 5;
-    margin: 15px 250px 0px 0px;
+    margin: 15px 250px 150px 0px;
 }
 
 .footer-wild {
