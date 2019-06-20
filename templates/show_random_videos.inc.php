@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,9 +32,18 @@ if ($videos) {
     <div class="random_video">
         <div id="video_<?php echo $video_id ?>" class="art_album libitem_menu">
             <?php if (Art::is_enabled()) {
-            $release_art = $video->get_release_item_art();
-            $thumb       = UI::is_grid_view('video') ? 6 : 7;
-            Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), $thumb, $video->link);
+            debug_event('show_random_videos.inc', 'video item: ' . print_r($video,true) , 5);
+            $art_showed = false;
+            if ($video->get_default_art_kind() == 'preview') {
+                $art_showed = Art::display('video', $video->id, $video->f_full_title, 9, $video->link, false, 'preview');
+            }
+            if (!$art_showed) {
+                $thumb = UI::is_grid_view('video') ? 7 : 6;
+                Art::display('video', $video->id, $video->f_full_title, $thumb, $video->link);
+            }
+            //$release_art = $video->get_release_item_art();
+            //$thumb       = UI::is_grid_view('video') ? 6 : 7;
+            //Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), $thumb, $video->link);
         } else {
             ?>
                 <?php echo $video->get_fullname(); ?>

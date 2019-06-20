@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,11 +46,11 @@ class Personal_Video extends Video
     } // Constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused personal videos
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `personal_video` USING `personal_video` LEFT JOIN `video` ON `video`.`id` = `personal_video`.`id` " .
             "WHERE `video`.`id` IS NULL";

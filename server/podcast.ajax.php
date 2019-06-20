@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,29 +24,31 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'sync':
         if (!Access::check('interface', '75')) {
-            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to sync podcast', 1);
-            exit;
+            debug_event('podcast.ajax', Core::get_global('user')->username . ' attempted to sync podcast', 1);
+
+            return false;
         }
-        
+
         if (isset($_REQUEST['podcast_id'])) {
             $podcast = new Podcast($_REQUEST['podcast_id']);
             if ($podcast->id) {
                 $podcast->sync_episodes(true);
             } else {
-                debug_event('podcast', 'Cannot found podcast', 1);
+                debug_event('podcast.ajax', 'Cannot find podcast', 1);
             }
         } elseif (isset($_REQUEST['podcast_episode_id'])) {
             $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
-            if ($episode->id) {
+            if ($episode->id !== null) {
                 $episode->gather();
             } else {
-                debug_event('podcast', 'Cannot found podcast episode', 1);
+                debug_event('podcast.ajax', 'Cannot find podcast episode', 1);
             }
         }
         $results['rfc3514'] = '0x1';

@@ -36,6 +36,6 @@ should be implemented as a public method:
     get_song_preview(string $track_mbid, string $artist_name, string $title)
     stream_song_preview(string $file)
     display_home()
-	external_share(string $url, string $text)
+    external_share(string $url, string $text)
     display_user_field(library_item $libitem = null)
-	display_on_footer
+    display_on_footer

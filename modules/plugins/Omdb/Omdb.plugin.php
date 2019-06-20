@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,7 @@ class AmpacheOmdb
     public $version        = '000001';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
-    
+
     /**
      * Constructor
      * This function does nothing
@@ -77,14 +77,14 @@ class AmpacheOmdb
 
         return json_decode($request->body);
     }
-    
+
     protected function parse_runtime($runtime)
     {
-        $time = 0;
-        $r    = explode(' ', $runtime, 2);
-        if (count($r) == 2) {
-            if ($r[1] == 'min') {
-                $time = intval($r[0]) * 60;
+        $time  = 0;
+        $rtime = explode(' ', $runtime, 2);
+        if (count($rtime) == 2) {
+            if ($rtime[1] == 'min') {
+                $time = (int) ($rtime[0]) * 60;
             }
         }
 
@@ -97,68 +97,68 @@ class AmpacheOmdb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('omdb', 'Getting metadata from Omdb...', '5');
+        debug_event('omdb.plugin', 'Getting metadata from Omdb...', 5);
 
         // TVShow and Movie metadata only
         if (!in_array('tvshow', $gather_types) && !in_array('movie', $gather_types)) {
-            debug_event('omdb', 'Not a valid media type, skipped.', '5');
+            debug_event('omdb.plugin', 'Not a valid media type, skipped.', 5);
 
             return null;
         }
-        
+
         $title = $media_info['original_name'] ?: $media_info['title'];
-        
+
         $results = array();
         try {
             // We cannot distinguish movies from tvshows with Omdb API (related to Imdb)
-            $q = $this->query_omdb($title);
-            if ($q->Response == 'True') {
+            $query = $this->query_omdb($title);
+            if ($query->Response == 'True') {
                 $match = false;
-                $yse   = explode('-', $q->Year);
-                if (in_array('movie', $gather_types) && $q->Type == 'movie') {
+                $yse   = explode('-', $query->Year);
+                if (in_array('movie', $gather_types) && $query->Type == 'movie') {
                     if ($yse[0] != "N/A") {
                         $results['year'] = $yse[0];
                     }
-                    if ($q->Released != "N/A") {
-                        $results['release_date'] = $q->Released;
+                    if ($query->Released != "N/A") {
+                        $results['release_date'] = $query->Released;
                     }
-                    $results['original_name'] = $q->Title;
-                    $results['imdb_id']       = $q->imdbID;
-                    if ($q->Plot != "N/A") {
-                        $results['description'] = $q->Plot;
+                    $results['original_name'] = $query->Title;
+                    $results['imdb_id']       = $query->imdbID;
+                    if ($query->Plot != "N/A") {
+                        $results['description'] = $query->Plot;
                     }
-                    if ($q->Poster != "N/A") {
-                        $results['art'] = $q->Poster;
+                    if ($query->Poster != "N/A") {
+                        $results['art'] = $query->Poster;
                     }
                     $match = true;
                 }
-                
-                if (in_array('tvshow', $gather_types) && $q->Type == 'series') {
+
+                if (in_array('tvshow', $gather_types) && $query->Type == 'series') {
                     if ($yse[0] != "N/A") {
                         $results['tvshow_year'] = $yse[0];
                     }
-                    $results['tvshow'] = $q->Title;
-                    if ($q->Plot != "N/A") {
-                        $results['tvshow_description'] = $q->Plot;
+                    $results['tvshow'] = $query->Title;
+                    if ($query->Plot != "N/A") {
+                        $results['tvshow_description'] = $query->Plot;
                     }
-                    $results['imdb_tvshow_id'] = $q->imdbID;
-                    if ($q->Poster != "N/A") {
-                        $results['tvshow_art'] = $q->Poster;
+                    $results['imdb_tvshow_id'] = $query->imdbID;
+                    if ($query->Poster != "N/A") {
+                        $results['tvshow_art'] = $query->Poster;
                     }
                     $match = true;
                 }
-                
+
                 if ($match) {
-                    if ($q->Runtime != "N/A") {
-                        $results['time'] = $this->parse_runtime($q->Runtime);
+                    if ($query->Runtime != "N/A") {
+                        $results['time'] = $this->parse_runtime($query->Runtime);
                     }
-                    $results['genre'] = $q->Genre;
+                    $results['genre'] = $query->Genre;
                 }
             }
         } catch (Exception $e) {
-            debug_event('omdb', 'Error getting metadata: ' . $e->getMessage(), '1');
+            debug_event('omdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
-        
+
         return $results;
     } // get_metadata
 

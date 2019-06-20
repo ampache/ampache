@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,14 +46,14 @@ class Tmp_Playlist extends database_object
      * information.  If no playlist_id is passed or the requested one isn't
      * found, return false.
      */
-    public function __construct($playlist_id='')
+    public function __construct($playlist_id = '')
     {
         if (!$playlist_id) {
             return false;
         }
 
-        $this->id     = intval($playlist_id);
-        $info         = $this->_get_info();
+        $this->id     = (int) ($playlist_id);
+        $info         = $this->has_info();
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -63,11 +63,11 @@ class Tmp_Playlist extends database_object
     } // __construct
 
     /**
-     * _get_info
+     * has_info
      * This is an internal (private) function that gathers the information
      * for this object from the playlist_id that was passed in.
      */
-    private function _get_info()
+    private function has_info()
     {
         $sql        = "SELECT * FROM `tmp_playlist` WHERE `id`='" . Dba::escape($this->id) . "'";
         $db_results = Dba::read($sql);
@@ -75,12 +75,13 @@ class Tmp_Playlist extends database_object
         $results = Dba::fetch_assoc($db_results);
 
         return $results;
-    } // _get_info
+    } // has_info
 
     /**
      * get_from_session
      * This returns a playlist object based on the session that is passed to
      * us.  This is used by the load_playlist on user for the most part.
+     * @param string $session_id
      */
     public static function get_from_session($session_id)
     {
@@ -144,13 +145,13 @@ class Tmp_Playlist extends database_object
         /* Define the array */
         $items = array();
 
-        $i = 1;
+        $count = 1;
         while ($results = Dba::fetch_assoc($db_results)) {
             $items[]     = array(
                 'object_type' => $results['object_type'],
                 'object_id' => $results['object_id'],
                 'track_id' => $results['id'],
-                'track' => $i++,
+                'track' => $count++,
             );
         }
 
@@ -255,10 +256,10 @@ class Tmp_Playlist extends database_object
     } // session_clean
 
     /**
-     * gc
+     * garbage_collection
      * This cleans up old data
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         self::prune_playlists();
         self::prune_tracks();

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,6 +46,10 @@
     <div class="np_cell cel_artist">
         <label><?php echo T_('Artist'); ?></label>
         <?php echo $media->f_artist_link; ?>
+    </div>
+    <div class="np_cell cel_year">
+        <label><?php echo T_('Year'); ?></label>
+        <?php echo $media->f_year_link; ?>
     </div>
     <?php
         if (!empty($media->f_tags)) {

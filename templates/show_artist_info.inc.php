@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,7 +38,7 @@
 } ?>
     <div class="item_properties">
         <?php
-        if ($biography && is_array($biography)) {
+        if (! empty($biography) && is_array($biography)) {
             $dcol = array();
             if ($biography['placeformed']) {
                 $dcol[] = $biography['placeformed'];
@@ -47,14 +47,14 @@
                 $dcol[] = $biography['yearformed'];
             }
             if (count($dcol) > 0) {
-                echo implode(', ', $dcol);
+                echo implode(',', $dcol);
             }
         }
         ?>
     </div>
 </div>
 <div id="item_summary">
-    <?php if ($biography && is_array($biography)) {
+    <?php if (! empty($biography) && is_array($biography)) {
             ?>
         <?php echo nl2br($biography['summary'], true); ?>
     <?php

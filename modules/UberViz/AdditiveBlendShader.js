@@ -1,3 +1,5 @@
+/* global THREE */
+
 /**
  * @author felixturner / http://airtight.cc/
  *
@@ -13,44 +15,44 @@
 
 THREE.AdditiveBlendShader = {
 
-	uniforms: {
+    uniforms: {
 
-		"tBase": { type: "t", value: null },
-		"tAdd": { type: "t", value: null },
-		"amount": { type: "f", value: 1.0 } 
+        "tBase": { type: "t", value: null },
+        "tAdd": { type: "t", value: null },
+        "amount": { type: "f", value: 1.0 } 
 
-	},
+    },
 
-	vertexShader: [
+    vertexShader: [
 
-		"varying vec2 vUv;",
+        "varying vec2 vUv;",
 
-		"void main() {",
+        "void main() {",
 
-			"vUv = uv;",
-			"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+            "vUv = uv;",
+            "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
 
-		"}"
+        "}"
 
-	].join("\n"),
+    ].join("\n"),
 
-	fragmentShader: [
+    fragmentShader: [
 
 
-		"uniform sampler2D tBase;",
-		"uniform sampler2D tAdd;",
-		"uniform float amount;",
+        "uniform sampler2D tBase;",
+        "uniform sampler2D tAdd;",
+        "uniform float amount;",
 
-		"varying vec2 vUv;",
+        "varying vec2 vUv;",
 
-		"void main() {",
+        "void main() {",
 
-			"vec4 texel1 = texture2D( tBase, vUv );",
-			"vec4 texel2 = texture2D( tAdd, vUv );",
-			"gl_FragColor = texel1 + texel2 * amount;",
+            "vec4 texel1 = texture2D( tBase, vUv );",
+            "vec4 texel2 = texture2D( tAdd, vUv );",
+            "gl_FragColor = texel1 + texel2 * amount;",
 
-		"}"
+        "}"
 
-	].join("\n")
+    ].join("\n")
 
 };

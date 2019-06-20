@@ -4,7 +4,8 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
     echo "Disabled.";
-    exit;
+
+    return false;
 }
 
 if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
@@ -18,7 +19,7 @@ if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
 <!-- Propulsed by Ampache | ampache.org -->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <?php
-    if ($_GET['btnSendAuto']) {
+    if (Core::get_get('btnSendAuto') !== '') {
         echo '<meta http-equiv="refresh" content="1">';
     }
 ?>

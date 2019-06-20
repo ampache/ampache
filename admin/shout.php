@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,12 +24,13 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 UI::show_header();
 
-// Switch on the incomming action
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'edit_shout':
         $shout = new Shoutbox($_REQUEST['shout_id']);
@@ -47,6 +48,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_shout.inc.php');
         break;
     case 'delete':
+        $shout = new Shoutbox($_REQUEST['shout_id']);
         Shoutbox::delete($_REQUEST['shout_id']);
         show_confirmation(T_('Shoutbox Post Deleted'), '', AmpConfig::get('web_path') . '/admin/shout.php');
     break;

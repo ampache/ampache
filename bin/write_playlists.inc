@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,11 +28,11 @@ require_once($prefix . '/lib/init.php');
 
 $valid_exts = array ('m3u', 'xspf', 'pls');
 
-if (!$GLOBALS['argv'][1] || $GLOBALS['argv'][1] == '-h') { usage(); }
+if (!Core::get_global('argv')[1] || Core::get_global('argv')[1] == '-h') { usage(); }
 else {
-    $dirname    = $GLOBALS['argv'][1];
-    $type       = $GLOBALS['argv'][2];
-    $ext        = $GLOBALS['argv'][3];
+    $dirname    = Core::get_global('argv')[1];
+    $type       = Core::get_global('argv')[2];
+    $ext        = Core::get_global('argv')[3];
     if (!$ext || !in_array($ext, $valid_exts)) {
         $ext = 'm3u';
     }
@@ -50,8 +50,8 @@ switch ($type) {
     case 'albums':
         $ids = Catalog::get_albums();
         $items = array();
-        foreach ($ids as $id) {
-            $items[] = new Album($id);
+        foreach ($ids as $albumid) {
+            $items[] = new Album($albumid);
         }
     break;
     case 'artists':
@@ -60,8 +60,8 @@ switch ($type) {
     default:
         $ids = Playlist::get_playlists(false, -1);
         $items = array();
-        foreach ($ids as $id) {
-            $items[] = new Playlist($id);
+        foreach ($ids as $playlistid) {
+            $items[] = new Playlist($playlistid);
         }
     break;
 } // end type switch
@@ -80,7 +80,7 @@ foreach ($items as $item) {
     foreach ($medias as $media) {
         $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, 'file');
     }
-    
+
     $plstr = $pl->{'get_' . $ext . '_string'}();
     if (file_put_contents($filename, $plstr) === false) {
         echo "Error: cannot write playlist file `" . $filename . "`.\n";
@@ -109,6 +109,7 @@ function usage() {
             artists       $desc5
         $desc6\n\n";
 
-        exit($string); 
+        echo $string;
+
+        return;
 } // usage
-?>

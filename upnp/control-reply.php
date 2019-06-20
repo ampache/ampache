@@ -4,7 +4,8 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
     echo "Disabled.";
-    exit;
+
+    return false;
 }
 
 set_time_limit(600);
@@ -18,11 +19,12 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
     $requestRaw = file_get_contents('php://input');
     if ($requestRaw != '') {
         $upnpRequest = Upnp_Api::parseUPnPRequest($requestRaw);
-    //!!debug_event('upnp', 'Request: ' . $requestRaw, '5');
+    //!!debug_event('control-reply', 'Request: ' . $requestRaw, 5);
     } else {
         echo 'Error: no UPnP request.';
-        debug_event('upnp', 'No request', '5');
-        exit;
+        debug_event('control-reply', 'No request', 5);
+
+        return false;
     }
 
     $items        = array();
@@ -53,13 +55,13 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
             } else {
                 # The parse_url function returns an array in this format:
                 # Array (
-                #	[scheme] => http
-                #	[host] => hostname
-                #	[user] => username
-                #	[pass] => password
-                #	[path] => /path
-                #	[query] => arg=value
-                #	[fragment] => anchor
+                #    [scheme] => http
+                #    [host] => hostname
+                #    [user] => username
+                #    [pass] => password
+                #    [path] => /path
+                #    [query] => arg=value
+                #    [fragment] => anchor
                 # )
                 $reqObjectURL = parse_url($upnpRequest['objectid']);
                 switch ($reqObjectURL['scheme']) {
@@ -100,4 +102,4 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
     $soapXML = $domSOAP->saveXML();
 
     echo $soapXML;
-    //!!debug_event('upnp', 'Response: ' . $soapXML, '5');
+    //!!debug_event('control-reply', 'Response: ' . $soapXML, 5);

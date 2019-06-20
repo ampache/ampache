@@ -1,9 +1,11 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +28,7 @@
  * and then runs throught $_REQUEST looking for those
  * values and updates them for this user
  */
-function update_preferences($pref_id=0)
+function update_preferences($pref_id = 0)
 {
     /* Get current keys */
     $sql = "SELECT `id`,`name`,`type` FROM `preference`";
@@ -40,8 +42,8 @@ function update_preferences($pref_id=0)
 
     $results = array();
     // Collect the current possible keys
-    while ($r = Dba::fetch_assoc($db_results)) {
-        $results[] = array('id' => $r['id'], 'name' => $r['name'],'type' => $r['type']);
+    while ($row = Dba::fetch_assoc($db_results)) {
+        $results[] = array('id' => $row['id'], 'name' => $row['name'], 'type' => $row['type']);
     } // end collecting keys
 
     /* Foreach through possible keys and assign them */
@@ -96,14 +98,14 @@ function update_preference($user_id, $name, $pref_id, $value)
     $level_check = "level_" . $name;
 
     /* First see if they are an administrator and we are applying this to everything */
-    if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$apply_check])) {
+    if (Core::get_global('user')->has_access(100) && make_bool($_REQUEST[$apply_check])) {
         Preference::update_all($pref_id, $value);
 
         return true;
     }
 
     /* Check and see if they are an admin and the level def is set */
-    if ($GLOBALS['user']->has_access(100) and make_bool($_REQUEST[$level_check])) {
+    if (Core::get_global('user')->has_access(100) && make_bool($_REQUEST[$level_check])) {
         Preference::update_level($pref_id, $_REQUEST[$level_check]);
     }
 
@@ -226,15 +228,18 @@ function create_preference_input($name, $value)
             $is_localplay  = '';
             $is_democratic = '';
             $is_web_player = '';
-            $is_stream     = '';
-            if ($value == 'localplay') {
-                $is_localplay = 'selected="selected"';
-            } elseif ($value == 'democratic') {
-                $is_democratic = 'selected="selected"';
-            } elseif ($value == 'web_player') {
-                $is_web_player = 'selected="selected"';
-            } else {
-                $is_stream = "selected=\"selected\"";
+            switch ($value) {
+                case 'localplay':
+                    $is_localplay = 'selected="selected"';
+                    // intentional fallthrough
+                case 'democratic':
+                    $is_democratic = 'selected="selected"';
+                    // intentional fallthrough
+                case 'web_player':
+                    $is_web_player = 'selected="selected"';
+                    // intentional fallthrough
+                default:
+                    $is_stream = "selected=\"selected\"";
             }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
@@ -265,9 +270,9 @@ function create_preference_input($name, $value)
         case 'lang':
             $languages = get_languages();
             echo '<select name="' . $name . '">' . "\n";
-            foreach ($languages as $lang => $name) {
+            foreach ($languages as $lang => $tongue) {
                 $selected = ($lang == $value) ? 'selected="selected"' : '';
-                echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
+                echo "\t<option value=\"$lang\" " . $selected . ">$tongue</option>\n";
             } // end foreach
             echo "</select>\n";
         break;

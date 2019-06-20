@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,10 +37,10 @@
                 <option value="personal" <?php if (empty($_REQUEST['category']) || $_REQUEST['category'] === "personal") {
     echo "selected";
 } ?>><?php echo T_('Personal'); ?></option>
-                <option value="association" <?php if ($_REQUEST['category'] === "association") {
+                <option value="association" <?php if (Core::get_request('category') === "association") {
     echo "selected";
 } ?>><?php echo T_('Association'); ?></option>
-                <option value="company" <?php if ($_REQUEST['category'] === "company") {
+                <option value="company" <?php if (Core::get_request('category') === "company") {
     echo "selected";
 } ?>><?php echo T_('Company'); ?></option>
             </select>

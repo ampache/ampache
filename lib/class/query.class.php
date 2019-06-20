@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,10 +63,10 @@ class Query
     /**
      * constructor
      * This should be called
-     * @param int|null $id
+     * @param integer|null $query_id
      * @param boolean $cached
      */
-    public function __construct($id = null, $cached = true)
+    public function __construct($query_id = null, $cached = true)
     {
         $sid = session_id();
 
@@ -76,7 +76,7 @@ class Query
             return true;
         }
 
-        if (is_null($id)) {
+        if ($query_id === null) {
             $this->reset();
             $data = self::_serialize($this->_state);
 
@@ -88,9 +88,9 @@ class Query
         } else {
             $sql = 'SELECT `data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
 
-            $db_results = Dba::read($sql, array($id, $sid));
+            $db_results = Dba::read($sql, array($query_id, $sid));
             if ($results = Dba::fetch_assoc($db_results)) {
-                $this->id     = $id;
+                $this->id     = $query_id;
                 $this->_state = (array) self::_unserialize($results['data']);
 
                 return true;
@@ -417,10 +417,10 @@ class Query
     }
 
     /**
-     * gc
+     * garbage_collection
      * This cleans old data out of the table
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = 'DELETE FROM `tmp_browse` USING `tmp_browse` LEFT JOIN ' .
             '`session` ON `session`.`id` = `tmp_browse`.`sid` ' .
@@ -496,7 +496,7 @@ class Query
             case 'user':
             case 'to_user':
             case 'enabled':
-                $this->_state['filter'][$key] = intval($value);
+                $this->_state['filter'][$key] = (int) ($value);
             break;
             case 'exact_match':
             case 'alpha_match':
@@ -610,6 +610,7 @@ class Query
     /**
      * get_filter
      * returns the specified filter value
+     * @param string $key
      * @return string|boolean
      */
     public function get_filter($key)
@@ -644,7 +645,7 @@ class Query
     /**
      * set_total
      * This sets the total number of objects
-     * @param int $total
+     * @param integer $total
      */
     public function set_total($total)
     {
@@ -662,7 +663,7 @@ class Query
     public function get_total($objects = null)
     {
         // If they pass something then just return that
-        if (is_array($objects) and !$this->is_simple()) {
+        if (is_array($objects) && !$this->is_simple()) {
             return count($objects);
         }
 
@@ -762,7 +763,7 @@ class Query
      * @param string $sort
      * @param string $order
      */
-    public function set_sort($sort, $order='')
+    public function set_sort($sort, $order = '')
     {
         // If it's not in our list, smeg off!
         if (!in_array($sort, self::$allowed_sorts[$this->get_type()])) {
@@ -791,7 +792,7 @@ class Query
     /**
      * set_offset
      * This sets the current offset of this query
-     * @param int $offset
+     * @param integer $offset
      */
     public function set_offset($offset)
     {
@@ -800,12 +801,12 @@ class Query
 
     /**
      *
-     * @param int $catalog_number
+     * @param integer $catalog_number
      */
     public function set_catalog($catalog_number)
     {
         $this->catalog = $catalog_number;
-        debug_event("Catalog", "set catalog id: " . $this->catalog, "5");
+        debug_event('query.class', "set catalog id: " . $this->catalog, 5);
     }
 
     /**
@@ -827,7 +828,7 @@ class Query
      * @param string $table
      * @param string $source
      * @param string $dest
-     * @param int $priority
+     * @param integer $priority
      */
     public function set_join($type, $table, $source, $dest, $priority)
     {
@@ -850,11 +851,11 @@ class Query
      * This sets the start point for our show functions
      * We need to store this in the session so that it can be pulled
      * back, if they hit the back button
-     * @param int $start
+     * @param integer $start
      */
     public function set_start($start)
     {
-        $start                 = intval($start);
+        $start                 = (int) ($start);
         $this->_state['start'] = $start;
     } // set_start
 
@@ -904,7 +905,7 @@ class Query
     } // is_simple
 
     /**
-     * get_savedget_saved
+     * get_saved
      * This looks in the session for the saved stuff and returns what it
      * finds.
      * @return array
@@ -1011,7 +1012,7 @@ class Query
                     $sql = "SELECT %%SELECT%% FROM `playlist` ";
                 break;
                 case 'smartplaylist':
-                    self::set_select('`search`.`id`');
+                    $this->set_select('`search`.`id`');
                     $sql = "SELECT %%SELECT%% FROM `search` ";
                 break;
                 case 'shoutbox':
@@ -1092,6 +1093,7 @@ class Query
                     $sql = "SELECT %%SELECT%% FROM `podcast_episode` ";
                 break;
                 case 'playlist_media':
+                    $sql = '';
                 break;
                 case 'song':
                 default:
@@ -1189,7 +1191,7 @@ class Query
         }
 
         $sql = rtrim($sql, 'ORDER BY ');
-        $sql = rtrim($sql, ',');
+        $sql = rtrim($sql, ', ');
 
         return $sql;
     } // get_sort_sql
@@ -1205,7 +1207,7 @@ class Query
             return '';
         }
 
-        $sql = ' LIMIT ' . intval($this->get_start()) . ',' . intval($this->get_offset());
+        $sql = ' LIMIT ' . (string) ($this->get_start()) . ', ' . (string) ($this->get_offset());
 
         return $sql;
     } // get_limit_sql
@@ -1269,10 +1271,14 @@ class Query
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
-        if (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
+        // filter albums when you have grouped disks!
+        if ($this->get_type() == 'album' && !$this->_state['custom'] && AmpConfig::get('album_group')) {
+            $final_sql .= " GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ";
+        } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
+        //debug_event('query.class', "get_sql: " . $final_sql, 5);
 
         return $final_sql;
     } // get_sql
@@ -1333,7 +1339,7 @@ class Query
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                     }
-                    $filter_sql = rtrim($filter_sql, 'AND') . ') AND ';
+                    $filter_sql = rtrim($filter_sql, 'AND') . ") AND ";
                 break;
                 case 'exact_match':
                     $filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND ";
@@ -1404,7 +1410,7 @@ class Query
                     foreach ($value as $tag_id) {
                         $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
                     }
-                    $filter_sql = rtrim($filter_sql, 'AND') . ') AND ';
+                    $filter_sql = rtrim($filter_sql, 'AND') . ") AND ";
                 break;
                 case 'exact_match':
                     $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
@@ -1578,7 +1584,7 @@ class Query
                     $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'playlist_type':
-                    $user_id    = intval($GLOBALS['user']->id);
+                    $user_id    = (int) (Core::get_global('user')->id);
                     $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
                 break;
                 default:
@@ -1605,7 +1611,7 @@ class Query
                     $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
                 case 'playlist_type':
-                    $user_id    = intval($GLOBALS['user']->id);
+                    $user_id    = (int) (Core::get_global('user')->id);
                     $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
                 break;
             } // end switch on $filter
@@ -1869,7 +1875,7 @@ class Query
      * these should be limited as they are often intensive and
      * require additional queries per object... :(
      *
-     * @param int $object_id
+     * @param integer $object_id
      * @return boolean
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -2326,7 +2332,7 @@ class Query
             $objects = $this->get_saved();
 
             // If there's nothing there don't do anything
-            if (!count($objects) or !is_array($objects)) {
+            if (!count($objects) || !is_array($objects)) {
                 return false;
             }
             $type      = $this->get_type();
@@ -2336,7 +2342,7 @@ class Query
                 $object_id = Dba::escape($object_id);
                 $where_sql .= "'$object_id',";
             }
-            $where_sql = rtrim($where_sql, ',');
+            $where_sql = rtrim($where_sql, ', ');
 
             $where_sql .= ")";
 

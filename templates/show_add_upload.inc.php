@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,8 +26,8 @@
 UI::show_box_top(T_('Upload'));
 $ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';
 
-$artist = intval($_REQUEST['artist']);
-$album  = intval($_REQUEST['album']);
+$artist = (int) ($_REQUEST['artist']);
+$album  = (int) ($_REQUEST['album']);
 ?>
 <div id="container" role="main">
     <div id="tree"></div>
@@ -77,9 +77,9 @@ $(function () {
                     tmp.create.label = "New";
                     tmp.create.submenu = {
                         "create_folder" : {
-                            "separator_after"	: true,
-                            "label"				: "Folder",
-                            "action"			: function (data) {
+                            "separator_after"    : true,
+                            "label"                : "Folder",
+                            "action"            : function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                     obj = inst.get_node(data.reference);
                                 inst.create_node(obj, { type : "default", text : "New folder" }, "last", function (new_node) {
@@ -98,7 +98,7 @@ $(function () {
                 'default' : { 'icon' : 'folder' },
                 'file' : { 'valid_children' : [], 'icon' : 'file' }
             },
-            'plugins' : ['state','dnd','sort','types','contextmenu','unique']
+            'plugins' : ['state', 'dnd', 'sort', 'types', 'contextmenu', 'unique']
         })
         .on('delete_node.jstree', function (e, data) {
             $.get('<?php echo $ajaxfs; ?>?operation=delete_node', { 'id' : data.node.id })
@@ -176,7 +176,7 @@ if ($upload_max > 0) {
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
     <td>
-        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $GLOBALS['user']->id); ?>
+        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
         <div id="artist_select_album_1">
             <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
         </div>
@@ -187,7 +187,7 @@ if ($upload_max > 0) {
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
     <td>
-        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $GLOBALS['user']->id); ?>
+        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
         <div id="album_select_upload_1">
             <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
         </div>

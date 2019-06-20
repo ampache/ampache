@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,28 +25,30 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('daap_backend')) {
     echo "Disabled.";
-    exit;
+
+    return false;
 }
 
-$action = $_GET['action'];
+$action = Core::get_get('action');
 
 $headers = apache_request_headers();
 //$daapAccessIndex = $headers['Client-DAAP-Access-Index'];
 //$daapVersion = $headers['Client-DAAP-Version'];
 //$daapValidation = $headers['Client-DAAP-Validation']; // That's header hash, we don't care about it (only required by iTunes >= 7.0)
-debug_event('daap', 'Request headers: ' . print_r($headers, true), '5');
+debug_event('daap/index', 'Request headers: ' . print_r($headers, true), 5);
 
-// Get the list of possible methods for the Plex API
+// Get the list of possible methods for the daap API
 $methods = get_class_methods('daap_api');
 // Define list of internal functions that should be skipped
 $internal_functions = array('apiOutput', 'create_dictionary', 'createError', 'output_body', 'output_header', 'follow_stream');
 
 Daap_Api::create_dictionary();
 
-$params = array_filter(explode('/', $action), 'strlen');
-if (count($params) > 0) {
+$params  = array_filter(explode('/', $action), 'strlen');
+$p_count = count($params);
+if ($p_count > 0) {
     // Recurse through them and see if we're calling one of them
-    for ($i = count($params); $i > 0; $i--) {
+    for ($i = $p_count; $i > 0; $i--) {
         $act = strtolower(implode('_', array_slice($params, 0, $i)));
         $act = str_replace("-", "_", $act);
         foreach ($methods as $method) {
@@ -57,9 +59,9 @@ if (count($params) > 0) {
             // If the method is the same as the action being called
             // Then let's call this function!
             if ($act == $method) {
-                call_user_func(array('daap_api', $method), array_slice($params, $i, count($params) - $i));
+                call_user_func(array('daap_api', $method), array_slice($params, $i, $p_count - $i));
                 // We only allow a single function to be called, and we assume it's cleaned up!
-                exit();
+                return false;
             }
         } // end foreach methods in API
     }

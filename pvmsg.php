@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,19 +23,20 @@
 require_once 'lib/init.php';
 
 if (!Access::check('interface', '25') || !AmpConfig::get('sociable')) {
-    debug_event('UI::access_denied', 'Access Denied: sociable features are not enabled.', '3');
+    debug_event('pvmsg', 'Access Denied: sociable features are not enabled.', 3);
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 UI::show_header();
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+$action = isset($_REQUEST['action']) ? Core::get_request('action') : '';
 
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'show_add_message':
         if (isset($_REQUEST['reply_to'])) {
             $pvmsg = new PrivateMsg($_REQUEST['reply_to']);
-            if ($pvmsg->id && ($pvmsg->from_user === $GLOBALS['user']->id || $pvmsg->to_user === $GLOBALS['user']->id)) {
+            if ($pvmsg->id && ($pvmsg->from_user === (int) Core::get_global('user')->id || $pvmsg->to_user === (int) Core::get_global('user')->id)) {
                 $to_user             = new User($pvmsg->from_user);
                 $_REQUEST['to_user'] = $to_user->username;
                 $_REQUEST['subject'] = "RE: " . $pvmsg->subject;
@@ -76,14 +77,15 @@ switch ($action) {
 
         $msgs = explode(',', $_REQUEST['msgs']);
         foreach ($msgs as $msg_id) {
-            $pvmsg = new PrivateMsg(intval($msg_id));
-            if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
-                $read = intval($_REQUEST['read']) !== 0;
+            $pvmsg = new PrivateMsg((int) ($msg_id));
+            if ($pvmsg->id && $pvmsg->to_user === (int) Core::get_global('user')->id) {
+                $read = (int) ($_REQUEST['read']) !== 0;
                 $pvmsg->set_is_read($read);
             } else {
-                debug_event('UI::access_denied', 'Unknown or unauthorized private message `' . $pvmsg->id . '`.', '3');
+                debug_event('pvmsg', 'Unknown or unauthorized private message `' . $pvmsg->id . '`.', 3);
                 UI::access_denied();
-                exit();
+
+                return false;
             }
         }
 
@@ -110,14 +112,15 @@ switch ($action) {
 
         $msgs = explode(',', $_REQUEST['msgs']);
         foreach ($msgs as $msg_id) {
-            $msg_id = intval($msg_id);
+            $msg_id = (int) ($msg_id);
             $pvmsg  = new PrivateMsg($msg_id);
-            if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
+            if ($pvmsg->id && $pvmsg->to_user === (int) Core::get_global('user')->id) {
                 $pvmsg->delete();
             } else {
-                debug_event('UI::access_denied', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
+                debug_event('pvmsg', 'Unknown or unauthorized private message #' . $msg_id . '.', 3);
                 UI::access_denied();
-                exit();
+
+                return false;
             }
         }
 
@@ -125,18 +128,19 @@ switch ($action) {
     break;
     case 'show':
     default:
-        $msg_id = intval($_REQUEST['pvmsg_id']);
+        $msg_id = (int) filter_input(INPUT_GET, 'pvmsg_id', FILTER_SANITIZE_NUMBER_INT);
         $pvmsg  = new PrivateMsg($msg_id);
-        if ($pvmsg->id && $pvmsg->to_user === $GLOBALS['user']->id) {
+        if ($pvmsg->id && $pvmsg->to_user === (int) Core::get_global('user')->id) {
             $pvmsg->format();
             if (!$pvmsg->is_read) {
                 $pvmsg->set_is_read(true);
             }
             require_once AmpConfig::get('prefix') . UI::find_template('show_pvmsg.inc.php');
         } else {
-            debug_event('UI::access_denied', 'Unknown or unauthorized private message #' . $msg_id . '.', '3');
+            debug_event('pvmsg', 'Unknown or unauthorized private message #' . $msg_id . '.', 3);
             UI::access_denied();
-            exit();
+
+            return false;
         }
     break;
 }

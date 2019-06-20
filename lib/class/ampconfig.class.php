@@ -1,9 +1,10 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 
 /**
  * Config Class
@@ -51,7 +51,7 @@ class AmpConfig
      * This returns a config value.
      * @param string $name
      */
-    public static function get($name, $default=null)
+    public static function get($name, $default = null)
     {
         if (isset(self::$_global[$name])) {
             return self::$_global[$name];
@@ -72,6 +72,27 @@ class AmpConfig
     }
 
     /**
+     * get_rating_filter
+     * Find out whether you are filtering ratings on your search
+     * This function is used in mashup and random queries
+     * @return int
+     */
+    public static function get_rating_filter()
+    {
+        $rating_filter = 0;
+        if (self::get('rating_browse_filter')) {
+            $rating_filter = (int) self::get('rating_browse_minimum_stars');
+            debug_event('ampconfig.class', 'Requested a ratings filter of: ' . $rating_filter . '.', 5);
+        }
+        if ($rating_filter > 0 && $rating_filter <= 5) {
+            return $rating_filter;
+        }
+
+        return 0;
+    }
+    // get_rating_filter
+
+    /**
      * set
      *
      * This sets config values.
@@ -81,7 +102,7 @@ class AmpConfig
     public static function set($name, $value, $clobber = false)
     {
         if (isset(self::$_global[$name]) && !$clobber) {
-            debug_event('Config', "Tried to overwrite existing key $name without setting clobber", 5);
+            debug_event('ampconfig.class', "Tried to overwrite existing key $name without setting clobber", 5);
             AmpError::add('Config Global', sprintf(T_('Trying to clobber \'%s\' without setting clobber'), $name));
 
             return false;

@@ -23,16 +23,23 @@
 define('NO_SESSION', '1');
 require_once 'lib/init.php';
 
-$action = (isset($_POST['action'])) ? $_POST['action'] : "";
+/* Check Perms */
+if (!Mailer::is_mail_enabled() || AmpConfig::get('demo_mode')) {
+    UI::access_denied();
 
-switch ($action) {
+    return false;
+}
+
+$action = Core::get_post('action');
+
+switch ($_REQUEST['action']) {
     case 'send':
         /* Check for posted email */
         $result = false;
-        if (isset($_POST['email']) && $_POST['email']) {
+        if (isset($_POST['email']) && Core::get_post('email')) {
             /* Get the email address and the current ip*/
-            $email      = scrub_in($_POST['email']);
-            $current_ip =(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] :$_SERVER['REMOTE_ADDR'];
+            $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+            $current_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') ? filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR', FILTER_VALIDATE_IP) : filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
             $result     = send_newpassword($email, $current_ip);
         }
         /* Do not acknowledge a password has been sent or failed
@@ -62,7 +69,7 @@ function send_newpassword($email, $current_ip)
     if ($client->has_access(100)) {
         return false;
     }
-    if ($client && $client->email == $email) {
+    if ($client && $client->email == $email && Mailer::is_mail_enabled()) {
         $newpassword = generate_password();
         $client->update_password($newpassword);
 

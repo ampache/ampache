@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 ?>
 <?php if (!defined('INSTALL')) {
-    exit;
+    return false;
 } ?>
 <?php $results = 0; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -36,6 +36,7 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
+    <meta name="viewport" content="width=1024, initial-scale=1.0">
 
     <title>Ampache :: For the love of Music - Install</title>
     <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -48,7 +49,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
+                <img src="<?php echo "./themes/reborn/images/ampache-dark.png"; ?>" title="Ampache" alt="Ampache">
                 <?php echo T_('Ampache Installation'); ?> - For the love of Music
             </a>
         </div>

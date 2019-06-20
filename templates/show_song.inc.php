@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -109,23 +109,14 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
-        <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface', '50')) {
-        ?>
-            <?php if (AmpConfig::get('statistical_graphs')) {
-            ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=song&object_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
-            <?php
-        } ?>
-        <?php
-    } ?>
-        <?php if (Access::check('interface', '50') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
+        <?php if (Access::check('interface', '50') || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) {
         ?>
             <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_' . $song->id ?>', '<?php echo T_('Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
     } ?>
-        <?php if (Access::check('interface', '75') || ($song->user_upload == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit'))) {
+        <?php if (Access::check('interface', '75') || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) {
         ?>
             <span id="<?php echo($button_flip_state_id); ?>">
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $icon, T_(ucfirst($icon)), 'flip_song_' . $song->id); ?>

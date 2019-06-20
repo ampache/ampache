@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,18 +24,21 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 UI::show_header();
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'delete_record':
         if (!Core::form_verify('delete_access')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
-        Access::delete($_REQUEST['access_id']);
+        Access::delete(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $url = AmpConfig::get('web_path') . '/admin/access.php';
         show_confirmation(T_('Deleted'), T_('Your Access List Entry has been removed'), $url);
     break;
@@ -43,8 +46,8 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('demo_mode')) {
             break;
         }
-        $access = new Access($_GET['access_id']);
-        show_confirmation(T_('Deletion Request'), T_('Are you sure you want to permanently delete') . ' ' . $access->name,
+        $access = new Access(Core::get_get('access_id'));
+        show_confirmation(T_('Confirm Action'), T_('Are you sure you want to permanently delete') . ' ' . $access->name,
                 'admin/access.php?action=delete_record&amp;access_id=' . $access->id, 1, 'delete_access');
     break;
     case 'add_host':
@@ -52,19 +55,20 @@ switch ($_REQUEST['action']) {
         // Make sure we've got a valid form submission
         if (!Core::form_verify('add_acl', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         Access::create($_POST);
 
         // Create Additional stuff based on the type
-        if ($_POST['addtype'] == 'stream' ||
-            $_POST['addtype'] == 'all'
+        if (Core::get_post('addtype') == 'stream' ||
+            Core::get_post('addtype') == 'all'
         ) {
             $_POST['type'] = 'stream';
             Access::create($_POST);
         }
-        if ($_POST['addtype'] == 'all') {
+        if (Core::get_post('addtype') == 'all') {
             $_POST['type'] = 'interface';
             Access::create($_POST);
         }
@@ -73,16 +77,17 @@ switch ($_REQUEST['action']) {
             $url = AmpConfig::get('web_path') . '/admin/access.php';
             show_confirmation(T_('Added'), T_('Your new Access Control List(s) have been created'), $url);
         } else {
-            $action = 'show_add_' . $_POST['type'];
+            $action = 'show_add_' . Core::get_post('type');
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
         }
     break;
     case 'update_record':
         if (!Core::form_verify('edit_acl')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
-        $access = new Access($_REQUEST['access_id']);
+        $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->update($_POST);
         if (!AmpError::occurred()) {
             show_confirmation(T_('Updated'), T_('Access List Entry updated'), AmpConfig::get('web_path') . '/admin/access.php');
@@ -95,11 +100,11 @@ switch ($_REQUEST['action']) {
     case 'show_add_rpc':
     case 'show_add_local':
     case 'show_add_advanced':
-        $action = $_REQUEST['action'];
+        $action = Core::get_request('action');
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
     break;
     case 'show_edit_record':
-        $access = new Access($_REQUEST['access_id']);
+        $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');
     break;

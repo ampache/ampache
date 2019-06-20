@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,8 @@ UI::show_header();
 // Check to see if we've got the rights to be here
 if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', '25')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 switch ($_REQUEST['action']) {

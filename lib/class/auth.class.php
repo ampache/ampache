@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,7 @@ class Auth
      * @param string $key
      * @param boolean $relogin
      */
-    public static function logout($key='', $relogin = true)
+    public static function logout($key = '', $relogin = true)
     {
         // If no key is passed try to find the session id
         $key = $key ? $key : session_id();
@@ -77,7 +77,7 @@ class Auth
             header('Location: ' . $target);
         }
 
-        exit;
+        return false;
     }
 
     /**
@@ -242,7 +242,7 @@ class Auth
             fclose($pipes[0]);
             fclose($pipes[1]);
             if ($stderr = fread($pipes[2], 8192)) {
-                debug_event('external_auth', "fread error: " . $stderr, 5);
+                debug_event('auth.class', "external_auth fread error: " . $stderr, 3);
             }
             fclose($pipes[2]);
         } else {
@@ -349,7 +349,7 @@ class Auth
                             $results['error']   = 'Could not redirect to server: ' . $redirect_url->message;
                         } else {
                             // Send redirect.
-                            debug_event('auth', 'OpenID 1: redirecting to ' . $redirect_url, '5');
+                            debug_event('auth.class', 'OpenID 1: redirecting to ' . $redirect_url, 5);
                             header("Location: " . $redirect_url);
                         }
                     } else {
@@ -361,24 +361,24 @@ class Auth
                             $results['success'] = false;
                             $results['error']   = 'Could not render authentication form.';
                         } else {
-                            debug_event('auth', 'OpenID 2: javascript redirection code to OpenID form.', '5');
+                            debug_event('auth.class', 'OpenID 2: javascript redirection code to OpenID form.', 5);
                             // First step is a success, UI interaction required.
                             $results['success']     = false;
                             $results['ui_required'] = $form_html;
                         }
                     }
                 } else {
-                    debug_event('auth', $website . ' is not a valid OpenID.', '3');
+                    debug_event('auth.class', $website . ' is not a valid OpenID.', 3);
                     $results['success'] = false;
                     $results['error']   = 'Not a valid OpenID.';
                 }
             } else {
-                debug_event('auth', 'Cannot initialize OpenID resources.', '3');
+                debug_event('auth.class', 'Cannot initialize OpenID resources.', 3);
                 $results['success'] = false;
                 $results['error']   = 'Cannot initialize OpenID resources.';
             }
         } else {
-            debug_event('auth', 'Skipped OpenID authentication: missing scheme in ' . $website . '.', '3');
+            debug_event('auth.class', 'Skipped OpenID authentication: missing scheme in ' . $website . '.', 3);
             $results['success'] = false;
             $results['error']   = 'Missing scheme in OpenID.';
         }
@@ -434,8 +434,8 @@ class Auth
                             } else {
                                 // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
                                 // Should we make website field unique?
-                                foreach ($users as $id) {
-                                    $user = new User($id);
+                                foreach ($users as $userid) {
+                                    $user = new User($userid);
                                     if ($user->username == $results['username']) {
                                         $results['success']  = true;
                                         $results['username'] = $user->username;

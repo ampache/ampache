@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -90,19 +90,19 @@ class Broadcast_Server implements MessageComponentInterface
                             $this->notifySong($from, $cmdinfo[1]);
                         break;
                         case self::BROADCAST_SONG_POSITION:
-                            $this->notifySongPosition($from, $cmdinfo[1]);
+                            $this->notifySongPosition($from, (int) $cmdinfo[1]);
                         break;
                         case self::BROADCAST_PLAYER_PLAY:
-                            $this->notifyPlayerPlay($from, $cmdinfo[1]);
+                            $this->notifyPlayerPlay($from, make_bool($cmdinfo[1]));
                         break;
                         case self::BROADCAST_ENDED:
                             $this->notifyEnded($from);
                         break;
                         case self::BROADCAST_REGISTER_BROADCAST:
-                            $this->registerBroadcast($from, $cmdinfo[1]);
+                            $this->registerBroadcast($from, (int) $cmdinfo[1]);
                         break;
                         case self::BROADCAST_REGISTER_LISTENER:
-                            $this->registerListener($from, $cmdinfo[1]);
+                            $this->registerListener($from, (int) $cmdinfo[1]);
                         break;
                         case self::BROADCAST_AUTH_SID:
                             $this->authSid($from, $cmdinfo[1]);
@@ -124,7 +124,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param int $song_id
+     * @param integer $song_id
      * @return string
      */
     protected function getSongJS($song_id)
@@ -142,7 +142,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param \Ratchet\ConnectionInterface $from
-     * @param int $song_id
+     * @param integer $song_id
      */
     protected function notifySong(ConnectionInterface $from, $song_id)
     {
@@ -159,14 +159,14 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[" . time() . "][info]Broadcast " . $broadcast->id . " now playing song " . $song_id . "." . "\r\n";
             }
         } else {
-            debug_event('broadcast', 'Action unauthorized.', '3');
+            debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
     }
 
     /**
      *
      * @param \Ratchet\ConnectionInterface $from
-     * @param int $song_position
+     * @param integer $song_position
      */
     protected function notifySongPosition(ConnectionInterface $from, $song_position)
     {
@@ -183,7 +183,7 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[" . time() . "][info]Broadcast " . $broadcast->id . " has song position to " . $song_position . "." . "\r\n";
             }
         } else {
-            debug_event('broadcast', 'Action unauthorized.', '3');
+            debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -203,7 +203,7 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[" . time() . "][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n";
             }
         } else {
-            debug_event('broadcast', 'Action unauthorized.', '3');
+            debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -222,7 +222,7 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[" . time() . "][info]Broadcast " . $broadcast->id . " ended." . "\r\n";
             }
         } else {
-            debug_event('broadcast', 'Action unauthorized.', '3');
+            debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -265,7 +265,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param int $broadcast_id
+     * @param integer $broadcast_id
      * @return Broadcast
      */
     protected function getRunningBroadcast($broadcast_id)
@@ -284,7 +284,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param \Ratchet\ConnectionInterface $from
-     * @param int $broadcast_id
+     * @param integer $broadcast_id
      */
     protected function registerListener(ConnectionInterface $from, $broadcast_id)
     {
@@ -302,7 +302,7 @@ class Broadcast_Server implements MessageComponentInterface
                 echo "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n";
             }
         } else {
-            debug_event('broadcast', 'Listener unauthorized.', '3');
+            debug_event('broadcast.class', 'Listener unauthorized.', 3);
         }
     }
 
@@ -388,7 +388,7 @@ class Broadcast_Server implements MessageComponentInterface
      * @param string $cmd
      * @param string $value
      */
-    protected function broadcastMessage($clients, $cmd, $value='')
+    protected function broadcastMessage($clients, $cmd, $value = '')
     {
         $msg = $cmd . ':' . $value . ';';
         foreach ($clients as $client) {

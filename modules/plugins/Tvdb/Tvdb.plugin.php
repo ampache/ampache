@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,7 @@ class AmpacheTvdb
     public $version        = '000003';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
-    
+
     // These are internal settings used by this class, run this->load to
     // fill them out
     private $api_key;
@@ -54,7 +54,7 @@ class AmpacheTvdb
         }
 
         Preference::insert('tvdb_api_key', 'Tvdb api key', '', '75', 'string', 'plugins', $this->name);
-        
+
         return true;
     } // install
 
@@ -65,7 +65,7 @@ class AmpacheTvdb
     public function uninstall()
     {
         Preference::delete('tvdb_api_key');
-        
+
         return true;
     } // uninstall
 
@@ -82,11 +82,11 @@ class AmpacheTvdb
         if (strlen(trim($data['tvdb_api_key']))) {
             $this->api_key = trim($data['tvdb_api_key']);
         } else {
-            debug_event($this->name, 'No Tvdb api key, metadata plugin skipped', '3');
+            debug_event('tvdb.plugin', 'No Tvdb api key, metadata plugin skipped', 3);
 
             return false;
         }
-        
+
         return true;
     } // load
 
@@ -96,20 +96,20 @@ class AmpacheTvdb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('tvdb', 'Getting metadata from Tvdb...', '5');
+        debug_event('tvdb.plugin', 'Getting metadata from Tvdb...', 5);
 
         // TVShow metadata only
         if (!in_array('tvshow', $gather_types)) {
-            debug_event('tvdb', 'Not a valid media type, skipped.', '5');
+            debug_event('tvdb.plugin', 'Not a valid media type, skipped.', 5);
 
             return null;
         }
-        
+
         try {
             $tvdburl = 'http://thetvdb.com';
             $client  = new Moinax\TvDb\Client($tvdburl, $this->api_key);
             $title   = $media_info['original_name'] ?: $media_info['title'];
-            
+
             if ($media_info['tvshow']) {
                 $releases = $client->getSeries($media_info['tvshow']);
                 if (count($releases) == 0) {
@@ -121,7 +121,7 @@ class AmpacheTvdb
                 $results['tvshow_imdb_id'] = $release->imdbId ;
                 $results['tvshow_summary'] = substr($release->overview, 0, 255);   //Summary column in db is only 256 characters.
                 $results['tvshow']         = $release->name;
-                
+
                 if ($release->FirstAired) {
                     $results['tvshow_year'] = $release->firstAired->format('Y');
                 }
@@ -129,11 +129,11 @@ class AmpacheTvdb
                     $results['tvshow_banner_art'] = $tvdburl . '/banners/' . $release->banner;
                 }
                 $baseSeries = $client->getSerie($results['tvdb_tvshow_id']);
-                    
+
                 if (count($baseSeries->genres) > 0) {
                     $results['genre'] = $baseSeries->genres;
                 }
-                                        
+
                 $banners = $client->getBanners($results['tvdb_tvshow_id']);
                 foreach ($banners as $banner) {
                     if ($banner->language == "en") {
@@ -142,7 +142,7 @@ class AmpacheTvdb
                                 $results['tvshow_art'] = $tvdburl . '/banners/' . $banner->path;
                             }
                         }
-                            
+
                         if ($media_info['tvshow_season'] && !$results['tvshow_season_art']) {
                             if ($banner->type == "season" && $banner->season == $media_info['tvshow_season']) {
                                 $results['tvshow_season_art'] = $tvdburl . '/banners/' . $banner->path;
@@ -150,7 +150,7 @@ class AmpacheTvdb
                         }
                     }
                 }
-                    
+
                 if ($media_info['tvshow_season'] && $media_info['tvshow_episode']) {
                     $release = $client->getEpisode($results['tvdb_tvshow_id'], ltrim($media_info['tvshow_season'], "0"), ltrim($media_info['tvshow_episode'], "0"));
                     if ($release->id) {
@@ -171,19 +171,19 @@ class AmpacheTvdb
                 }
             }
         } catch (Exception $e) {
-            debug_event('tvdb', 'Error getting metadata: ' . $e->getMessage(), '1');
+            debug_event('tvdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
-        
+
         return $results;
     } // get_metadata
 
     public function gather_arts($type, $options = array(), $limit = 5)
     {
-        debug_event('Tvdb', 'gather_arts for type `' . $type . '`', 5);
+        debug_event('tvdb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
         return Art::gather_metadata_plugin($this, $type, $options);
     }
-    
+
     private function getReleaseByTitle($results, $title, $year)
     {
         $titles = array();
@@ -193,7 +193,7 @@ class AmpacheTvdb
                 $titles[] = $index;
             }
         }
-    
+
         if ((count($titles) > 1) && ($year != null)) {
             foreach ($titles as $index) {
                 $y = $index->firstAired->format('Y');
