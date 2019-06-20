@@ -984,10 +984,10 @@ class Api
      * stats
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=400001
-     * 
+     *
      * This get library stats for different object types.
      * When filter is null get some random items instead
-     * 
+     *
      * $input = array(type     = (string) 'song'|'album'|'artist'
      *                filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'|null
      *                offset   = (integer) //optional
