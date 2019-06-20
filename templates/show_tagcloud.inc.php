@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,7 @@ $tag_types = array(
         <?php
         foreach ($tag_types as $tag_type => $tag_name) {
             echo "<option value='" . $tag_type . "'";
-            if ($tag_type == $_REQUEST['type']) {
+            if ($tag_type == (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) {
                 echo " selected";
             }
             echo ">" . $tag_name . "</option>";
@@ -75,7 +75,7 @@ $tag_types = array(
 <br /><br /><br />
 <?php
 if (isset($_GET['show_tag'])) {
-            $show_tag = intval($_GET['show_tag']); ?>
+            $show_tag = (int) (Core::get_get('show_tag')); ?>
 <script>
 $(document).ready(function () {
     <?php echo Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $show_tag, ''); ?>

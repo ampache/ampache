@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 require $prefix . '/templates/install_header.inc.php';
 ?>
 <?php if (!defined('INSTALL')) {
-    exit;
+    return false;
 } ?>
         <div class="page-header requirements">
             <h1><?php echo T_('Requirements'); ?></h1>
@@ -41,9 +41,9 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
 <table class="table" cellspacing="0" cellpadding="0">
     <tr>
-        <th><?php echo T_('CHECK'); ?></th>
-        <th><?php echo T_('STATUS'); ?></th>
-        <th><?php echo T_('DESCRIPTION'); ?></th>
+        <th><?php echo T_('Check'); ?></th>
+        <th><?php echo T_('Status'); ?></th>
+        <th><?php echo T_('Description'); ?></th>
     </tr>
     <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
     <tr>

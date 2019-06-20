@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,8 +35,9 @@ require_once 'lib/init.php';
 if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
     // Check to see if they've got an interface session or a valid API session, if not GTFO
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
-        debug_event('image', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
-        exit;
+        debug_event('image', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . Core::get_request('auth'), 2);
+
+        return false;
     }
 }
 
@@ -46,26 +47,28 @@ if (!AmpConfig::get('resize_images')) {
 }
 
 // FIXME: Legacy stuff - should be removed after a version or so
-if (!isset($_GET['object_type'])) {
+if (!filter_has_var(INPUT_GET, 'object_type')) {
     $_GET['object_type'] = 'album';
 }
 
-$type = $_GET['object_type'];
+$type = Core::get_get('object_type');
 if (!Art::is_valid_type($type)) {
-    exit;
+    debug_event('image', 'INVALID TYPE: ' . $type, 4);
+
+    return false;
 }
 
 /* Decide what size this image is */
-$size = Art::get_thumb_size($_GET['thumb']);
-$kind = isset($_GET['kind']) ? $_GET['kind'] : 'default';
+$size = Art::get_thumb_size(filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT));
+$kind = filter_has_var(INPUT_GET, 'kind') ? filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : 'default';
 
 $image       = '';
 $mime        = '';
 $filename    = '';
 $etag        = '';
 $typeManaged = false;
-if (isset($_GET['type'])) {
-    switch ($_GET['type']) {
+if (filter_has_var(INPUT_GET, 'type')) {
+    switch (filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
         case 'popup':
             $typeManaged = true;
             require_once AmpConfig::get('prefix') . UI::find_template('show_big_art.inc.php');
@@ -81,11 +84,11 @@ if (isset($_GET['type'])) {
     }
 }
 if (!$typeManaged) {
-    $item     = new $type($_GET['object_id']);
+    $item     = new $type(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
     $filename = $item->name ?: $item->title;
 
     $art = new Art($item->id, $type, $kind);
-    $art->get_db();
+    $art->has_db_info();
     $etag = $art->id;
 
     // That means the client has a cached version of the image
@@ -98,7 +101,8 @@ if (!$typeManaged) {
             // Same image than the cached one? Use the cache.
             if ($cetag == $etag) {
                 header('HTTP/1.1 304 Not Modified');
-                exit;
+
+                return false;
             }
         }
     }
@@ -125,9 +129,9 @@ if (!$typeManaged) {
         }
         $image = file_get_contents($defaultimg);
     } else {
-        if ($_GET['thumb']) {
+        if (filter_has_var(INPUT_GET, 'thumb')) {
             $thumb_data = $art->get_thumb($size);
-            $etag .= '-' . $_GET['thumb'];
+            $etag .= '-' . filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
 
         $mime  = isset($thumb_data['thumb_mime']) ? $thumb_data['thumb_mime'] : $art->raw_mime;

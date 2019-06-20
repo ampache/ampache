@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,8 @@
  */
 
 $threshold = AmpConfig::get('stats_threshold');
-$count     = 6;
+$user_id   = Core::get_global('user')->id;
+$count     = AmpConfig::get('popular_threshold');
 ?>
 <p>
     <input type="button" value="<?php echo T_('Browse Library') ?>" onclick="NavigateTo('<?php echo AmpConfig::get('web_path') ?>/browse.php?action=<?php echo $object_type ?>');" />
@@ -29,7 +30,7 @@ $count     = 6;
 </p>
 <?php
 UI::show_box_top(T_('Trending'));
-$object_ids = Stats::get_top($object_type, $count, 7);
+$object_ids = Stats::get_top($object_type, $count, $threshold);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
@@ -40,7 +41,7 @@ UI::show_box_bottom();
 ?>
 <a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=newest#browse_content_<?php echo $object_type ?>"><?php UI::show_box_top(T_('Newest')) ?></a>
 <?php
-$object_ids = Stats::get_newest($object_type, $count);
+$object_ids = Stats::get_newest($object_type, $count, $threshold);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
@@ -50,7 +51,9 @@ UI::show_box_bottom();
 ?>
 <a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=popular"><?php UI::show_box_top(T_('Popular')) ?></a>
 <?php
-$object_ids = Stats::get_top($object_type, $count, $threshold);
+$object_ids = array_slice(Stats::get_top($object_type, $count, '', '', $user_id), 0, 100);
+shuffle($object_ids);
+$object_ids = array_slice($object_ids, 0, $count);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,10 +24,13 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 $results = array();
+$action  = Core::get_request('action');
+
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'delete_track':
         // Create the object and remove the track
@@ -53,17 +56,17 @@ switch ($_REQUEST['action']) {
     case 'append_item':
         // Only song item are supported with playlists
 
-        debug_event('playlist', 'Appending items to playlist {' . $_REQUEST['playlist_id'] . '}...', '5');
+        debug_event('playlist.ajax', 'Appending items to playlist {' . Core::get_request('playlist_id') . '}...', 5);
 
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
             if (!Access::check('interface', '25')) {
-                debug_event('DENIED', 'Error:' . $GLOBALS['user']->username . ' does not have user access, unable to create playlist', '1');
+                debug_event('playlist.ajax', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', 1);
                 break;
             }
 
             $name        = $_REQUEST['name'];
             if (empty($name)) {
-                $name = $GLOBALS['user']->username . ' - ' . date("Y-m-d H:i:s", time());
+                $name = Core::get_global('user')->username . ' - ' . date("Y-m-d H:i:s", time());
             }
             $playlist_id = Playlist::create($name, 'private');
             if (!$playlist_id) {
@@ -83,27 +86,27 @@ switch ($_REQUEST['action']) {
         $item_type = $_REQUEST['item_type'];
 
         if (!empty($item_type) && Core::is_playable_item($item_type)) {
-            debug_event('playlist', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
+            debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
             $item_ids = explode(',', $item_id);
             foreach ($item_ids as $iid) {
                 $libitem = new $item_type($iid);
                 $medias  = array_merge($medias, $libitem->get_medias());
             }
         } else {
-            debug_event('playlist', 'Adding all medias of current playlist...', 5);
-            $medias = $GLOBALS['user']->playlist->get_items();
+            debug_event('playlist.ajax', 'Adding all medias of current playlist...', 5);
+            $medias = Core::get_global('user')->playlist->get_items();
         }
 
         if (count($medias) > 0) {
             Ajax::set_include_override(true);
             $playlist->add_medias($medias, true);
-            
-            debug_event('playlist', 'Items added successfully!', '5');
+
+            debug_event('playlist.ajax', 'Items added successfully!', 5);
             ob_start();
             display_notification(T_('Added to playlist'));
             $results['rfc3514'] = ob_get_clean();
         } else {
-            debug_event('playlist', 'No item to add. Aborting...', '5');
+            debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
         }
     break;
     default:

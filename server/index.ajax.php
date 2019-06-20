@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,14 +24,22 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 $results = array();
+$action  = Core::get_request('action');
+$moment  = (int) AmpConfig::get('of_the_moment');
+// filter album and video of the moment instead of hardcoding
+if (!$moment > 0) {
+    $moment = 6;
+}
+
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'random_albums':
-        $albums = Album::get_random(6);
-        if (count($albums) and is_array($albums)) {
+        $albums = Album::get_random($moment);
+        if (count($albums) && is_array($albums)) {
             ob_start();
             require_once AmpConfig::get('prefix') . UI::find_template('show_random_albums.inc.php');
             $results['random_selection'] = ob_get_clean();
@@ -47,8 +55,8 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'random_videos':
-        $videos = Video::get_random(6);
-        if (count($videos) and is_array($videos)) {
+        $videos = Video::get_random($moment);
+        if (count($videos) && is_array($videos)) {
             ob_start();
             require_once AmpConfig::get('prefix') . UI::find_template('show_random_videos.inc.php');
             $results['random_video_selection'] = ob_get_clean();
@@ -134,8 +142,8 @@ switch ($_REQUEST['action']) {
             $labels     = Label::get_labels($_REQUEST['artist']);
             $object_ids = array();
             if (count($labels) > 0) {
-                foreach ($labels as $id => $label) {
-                    $object_ids[] = $id;
+                foreach ($labels as $labelid => $label) {
+                    $object_ids[] = $labelid;
                 }
             }
             $browse = new Browse();
@@ -156,7 +164,7 @@ switch ($_REQUEST['action']) {
                 if ($artist->mbid) {
                     $walbums = Wanted::get_missing_albums($artist);
                 } else {
-                    debug_event('wanted', 'Cannot get missing albums: MusicBrainz ID required.', '5');
+                    debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', 3);
                 }
             } else {
                 $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
@@ -188,7 +196,7 @@ switch ($_REQUEST['action']) {
                 $walbum->show_action_buttons();
                 $results['wanted_action_' . $mbid] = ob_get_clean();
             } else {
-                debug_event('wanted', 'Already wanted, skipped.', '5');
+                debug_event('index.ajax', 'Already wanted, skipped.', 5);
             }
         }
     break;
@@ -239,11 +247,11 @@ switch ($_REQUEST['action']) {
                 if (Access::check('interface', '100')) {
                     $button = $_REQUEST['button'];
                 } else {
-                    exit;
+                    return false;
                 }
             break;
             default:
-                exit;
+                return false;
         } // end switch on button
 
         Ajax::set_include_override(true);
@@ -256,7 +264,7 @@ switch ($_REQUEST['action']) {
     case 'start_channel':
         if (Access::check('interface', '75')) {
             ob_start();
-            $channel = new Channel($_REQUEST['id']);
+            $channel = new Channel(Core::get_request('id'));
             if ($channel->id) {
                 if ($channel->check_channel()) {
                     $channel->stop_channel();
@@ -265,19 +273,19 @@ switch ($_REQUEST['action']) {
                 sleep(1);
                 echo $channel->get_channel_state();
             }
-            $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
+            $results['channel_state_' . Core::get_request('id')] = ob_get_clean();
         }
     break;
     case 'stop_channel':
         if (Access::check('interface', '75')) {
             ob_start();
-            $channel = new Channel($_REQUEST['id']);
+            $channel = new Channel(Core::get_request('id'));
             if ($channel->id) {
                 $channel->stop_channel();
                 sleep(1);
                 echo $channel->get_channel_state();
             }
-            $results['channel_state_' . $_REQUEST['id']] = ob_get_clean();
+            $results['channel_state_' . Core::get_request('id')] = ob_get_clean();
         }
     break;
     case 'slideshow':
@@ -287,7 +295,7 @@ switch ($_REQUEST['action']) {
             $fsname = 'fslider_' . time();
             echo "<div id='" . $fsname . "'>";
             foreach ($images as $image) {
-                echo "<img src='" . $image['url'] . "' alt='' onclick='update_action();' />";
+                echo "<img src='" . $image['url'] . "' alt= '' onclick='update_action();' />";
             }
             echo "</div>";
             $results['fslider'] = ob_get_clean();
@@ -308,7 +316,7 @@ switch ($_REQUEST['action']) {
         $results['fslider_script'] = ob_get_clean();
     break;
     case 'songs':
-        $label_id = intval($_REQUEST['label']);
+        $label_id = (int) ($_REQUEST['label']);
 
         ob_start();
         if ($label_id > 0) {

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,22 +40,23 @@ class Preference extends database_object
     /**
      * get_by_user
      * Return a preference for specific user identifier
+     * @param string $pref_name
      */
     public static function get_by_user($user_id, $pref_name)
     {
-        //debug_event('preference.class.php', 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', '5');
+        //debug_event('preference.class', 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', 5);
         $user_id   = Dba::escape($user_id);
         $pref_name = Dba::escape($pref_name);
-        $id        = self::id_from_name($pref_name);
+        $pref_id   = self::id_from_name($pref_name);
 
         if (parent::is_cached('get_by_user', $user_id)) {
             return parent::get_from_cache('get_by_user', $user_id);
         }
 
-        $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='$user_id'";
+        $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$pref_id' AND `user`='$user_id'";
         $db_results = Dba::read($sql);
         if (Dba::num_rows($db_results) < 1) {
-            $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$id' AND `user`='-1'";
+            $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$pref_id' AND `user`='-1'";
             $db_results = Dba::read($sql);
         }
         $data = Dba::fetch_assoc($db_results);
@@ -70,15 +71,15 @@ class Preference extends database_object
      * update
      * This updates a single preference from the given name or id
      */
-    public static function update($preference, $user_id, $value, $applytoall=false, $applytodefault=false)
+    public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false)
     {
         // First prepare
         if (!is_numeric($preference)) {
-            $id   = self::id_from_name($preference);
-            $name = $preference;
+            $pref_id = self::id_from_name($preference);
+            $name    = $preference;
         } else {
-            $name = self::name_from_id($preference);
-            $id   = $preference;
+            $pref_id = $preference;
+            $name    = self::name_from_id($preference);
         }
         if ($applytoall and Access::check('interface', '100')) {
             $user_check = "";
@@ -91,7 +92,7 @@ class Preference extends database_object
         }
 
         if ($applytodefault and Access::check('interface', '100')) {
-            $sql = "UPDATE `preference` SET `value`='$value' WHERE `id`='$id'";
+            $sql = "UPDATE `preference` SET `value`='$value' WHERE `id`='$pref_id'";
             Dba::write($sql);
         }
 
@@ -99,15 +100,15 @@ class Preference extends database_object
 
         if (self::has_access($name)) {
             $user_id = Dba::escape($user_id);
-            $sql     = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$id'$user_check";
+            $sql     = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id'$user_check";
             Dba::write($sql);
-            Preference::clear_from_session();
+            self::clear_from_session();
 
             parent::remove_from_cache('get_by_user', $user_id);
 
             return true;
         } else {
-            debug_event('denied', $GLOBALS['user'] ? $GLOBALS['user']->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
+            debug_event('preference.class', Core::get_global('user') ? Core::get_global('user')->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
         }
 
         return false;
@@ -155,6 +156,7 @@ class Preference extends database_object
     /**
      * exists
      * This just checks to see if a preference currently exists
+     * @param string $preference
      */
     public static function exists($preference)
     {
@@ -272,7 +274,7 @@ class Preference extends database_object
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('name' => $row['name'],'level' => $row['level'],'description' => $row['description'],'value' => $row['value'],'subcategory' => $row['subcatagory']);
+            $results[] = array('name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'], 'value' => $row['value'], 'subcategory' => $row['subcatagory']);
         }
 
         return $results;
@@ -282,15 +284,21 @@ class Preference extends database_object
      * insert
      * This inserts a new preference into the preference table
      * it does NOT sync up the users, that should be done independently
+     * @param string $name
+     * @param string $description
+     * @param string $default
+     * @param string $level
+     * @param string $type
+     * @param string $catagory
      */
-    public static function insert($name, $description, $default, $level, $type, $catagory, $subcatagory=null)
+    public static function insert($name, $description, $default, $level, $type, $catagory, $subcatagory = null)
     {
         if ($subcatagory !== null) {
             $subcatagory = strtolower($subcatagory);
         }
         $sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`,`subcatagory`) " .
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, intval($level), $type, $catagory, $subcatagory));
+        $db_results = Dba::write($sql, array($name, $description, $default, (int) ($level), $type, $catagory, $subcatagory));
 
         if (!$db_results) {
             return false;
@@ -356,7 +364,8 @@ class Preference extends database_object
     /**
      * fix_preferences
      * This takes the preferences, explodes what needs to
-     * become an array and boolean everythings
+     * become an array and boolean everything
+     * @return array
      */
     public static function fix_preferences($results)
     {
@@ -390,9 +399,9 @@ class Preference extends database_object
      * load_from_session
      * This loads the preferences from the session rather then creating a connection to the database
      */
-    public static function load_from_session($uid=-1)
+    public static function load_from_session($uid = -1)
     {
-        if (isset($_SESSION['userdata']['preferences']) && is_array($_SESSION['userdata']['preferences']) and $_SESSION['userdata']['uid'] == $uid) {
+        if (isset($_SESSION['userdata']['preferences']) && is_array($_SESSION['userdata']['preferences']) && $_SESSION['userdata']['uid'] == $uid) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
 
             return true;
@@ -419,18 +428,18 @@ class Preference extends database_object
      */
     public static function is_boolean($key)
     {
-        $boolean_array = array('session_cookiesecure','require_session',
-                    'access_control','require_localnet_session',
-                    'downsample_remote','track_user_ip',
-                    'xml_rpc','allow_zip_download','ratings',
-                    'shoutbox','resize_images',
-                    'show_album_art','allow_public_registration',
-                    'captcha_public_reg','admin_notify_reg',
-                    'use_rss','download','force_http_play','cookie_secure',
-                    'allow_stream_playback','allow_democratic_playback',
-                    'use_auth','allow_localplay_playback','debug','lock_songs',
-                    'transcode_m4a','transcode_mp3','transcode_ogg','transcode_flac',
-                    'shoutcast_active','httpq_active','show_lyrics');
+        $boolean_array = array('session_cookiesecure', 'require_session',
+                    'access_control', 'require_localnet_session',
+                    'downsample_remote', 'track_user_ip',
+                    'xml_rpc', 'allow_zip_download', 'ratings',
+                    'shoutbox', 'resize_images',
+                    'show_album_art', 'allow_public_registration',
+                    'captcha_public_reg', 'admin_notify_reg',
+                    'use_rss', 'download', 'force_http_play', 'cookie_secure',
+                    'allow_stream_playback', 'allow_democratic_playback',
+                    'use_auth', 'allow_localplay_playback', 'debug', 'lock_songs',
+                    'transcode_m4a', 'transcode_mp3', 'transcode_ogg', 'transcode_flac',
+                    'shoutcast_active', 'httpq_active', 'show_lyrics');
 
         if (in_array($key, $boolean_array)) {
             return true;
@@ -446,7 +455,7 @@ class Preference extends database_object
      */
     public static function init()
     {
-        $user_id = $GLOBALS['user']->id ? intval($GLOBALS['user']->id) : -1;
+        $user_id = Core::get_global('user')->id ? (int) (Core::get_global('user')->id) : -1;
 
         // First go ahead and try to load it from the preferences
         if (self::load_from_session($user_id)) {

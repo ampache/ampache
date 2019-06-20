@@ -28,7 +28,7 @@ class OAuthConsumer
     public $key;
     public $secret;
 
-    public function __construct($key, $secret, $callback_url=null)
+    public function __construct($key, $secret, $callback_url = null)
     {
         $this->key          = $key;
         $this->secret       = $secret;
@@ -122,8 +122,8 @@ abstract class OAuthSignatureMethod
 
         // Avoid a timing leak with a (hopefully) time insensitive compare
         $result = 0;
-        for ($i = 0; $i < strlen($signature); $i++) {
-            $result |= ord($built{$i}) ^ ord($signature{$i});
+        for ($count = 0; $count < strlen($signature); $count++) {
+            $result |= ord($built{$count}) ^ ord($signature{$count});
         }
 
         return $result == 0;
@@ -238,7 +238,7 @@ abstract class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
         $privatekeyid = openssl_get_privatekey($cert);
 
         // Sign using the key
-        $ok = openssl_sign($base_string, $signature, $privatekeyid);
+        $okay = openssl_sign($base_string, $signature, $privatekeyid);
 
         // Release the key resource
         openssl_free_key($privatekeyid);
@@ -259,12 +259,12 @@ abstract class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod
         $publickeyid = openssl_get_publickey($cert);
 
         // Check the computed signature against the one passed in the query
-        $ok = openssl_verify($base_string, $decoded_sig, $publickeyid);
+        $okay = openssl_verify($base_string, $decoded_sig, $publickeyid);
 
         // Release the key resource
         openssl_free_key($publickeyid);
 
-        return $ok == 1;
+        return $okay == 1;
     }
 }
 
@@ -278,7 +278,7 @@ class OAuthRequest
     public static $version    = '1.0';
     public static $POST_INPUT = 'php://input';
 
-    public function __construct($http_method, $http_url, $parameters=null)
+    public function __construct($http_method, $http_url, $parameters = null)
     {
         $parameters        = ($parameters) ? $parameters : array();
         $parameters        = array_merge(OAuthUtil::parse_parameters(parse_url($http_url, PHP_URL_QUERY)), $parameters);
@@ -291,7 +291,7 @@ class OAuthRequest
     /**
      * attempt to build up a request from what was passed to the server
      */
-    public static function from_request($http_method=null, $http_url=null, $parameters=null)
+    public static function from_request($http_method = null, $http_url = null, $parameters = null)
     {
         $scheme = (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on")
               ? 'http'
@@ -343,7 +343,7 @@ class OAuthRequest
     /**
      * pretty much a helper function to set up the request
      */
-    public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters=null)
+    public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters = null)
     {
         $parameters = ($parameters) ?  $parameters : array();
         $defaults   = array("oauth_version" => OAuthRequest::$version,
@@ -482,7 +482,7 @@ class OAuthRequest
     /**
      * builds the Authorization: header
      */
-    public function to_header($realm=null)
+    public function to_header($realm = null)
     {
         $first = true;
         if ($realm) {
@@ -500,7 +500,7 @@ class OAuthRequest
             if (is_array($v)) {
                 throw new OAuthException('Arrays not supported in headers');
             }
-            $out .= ($first) ? ' ' : ',';
+            $out .= ($first) ? ' ' : ', ';
             $out .= OAuthUtil::urlencode_rfc3986($k) .
               '="' .
               OAuthUtil::urlencode_rfc3986($v) .
@@ -761,7 +761,7 @@ class OAuthServer
         'Missing timestamp parameter. The parameter is required'
       );
         }
-    
+
         // verify that timestamp is recentish
         $now = time();
         if (abs($now - $timestamp) > $this->timestamp_threshold) {
@@ -924,7 +924,7 @@ class OAuthUtil
 
     // This function takes a input like a=b&a=c&d=e and returns the parsed
     // parameters like this
-    // array('a' => array('b','c'), 'd' => 'e')
+    // array('a' => array('b', 'c'), 'd' => 'e')
     public static function parse_parameters($input)
     {
         if (!isset($input) || !$input) {

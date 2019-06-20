@@ -45,7 +45,6 @@
     background: none;
     background-color: rgba(255,255,255,0.1);
     height: 40px;
-    border: 0;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
@@ -136,7 +135,7 @@
 }
 
 .edit_dialog_content .metadataAccordion {
-	display: none;
+    display: none;
 }
 
 /***********************************************
@@ -159,14 +158,14 @@
 
 .playlistdialogstyle.ui-widget-content a {
     background-color: #222;
-	color: #eee;
-	text-decoration: none;
-	text-align: left;
-	padding: 0.4em;
+    color: #eee;
+    text-decoration: none;
+    text-align: left;
+    padding: 0.4em;
 }
 
 .playlistdialogstyle.ui-widget-content a:hover {
-	color: #ff9d00;
+    color: #ff9d00;
     cursor: pointer;
 }
 
@@ -220,14 +219,14 @@
 
 .broadcastsdialogstyle.ui-widget-content a {
     background-color: #222;
-	color: #eee;
-	text-decoration: none;
-	text-align: left;
-	padding: 0.4em;
+    color: #eee;
+    text-decoration: none;
+    text-align: left;
+    padding: 0.4em;
 }
 
 .broadcastsdialogstyle.ui-widget-content a:hover {
-	color: #ff9d00;
+    color: #ff9d00;
     cursor: pointer;
 }
 
@@ -281,14 +280,14 @@
 
 .sharedialogstyle.ui-widget-content a {
     background-color: #222;
-	color: #eee;
-	text-decoration: none;
-	text-align: left;
-	padding: 0.4em;
+    color: #eee;
+    text-decoration: none;
+    text-align: left;
+    padding: 0.4em;
 }
 
 .sharedialogstyle.ui-widget-content a:hover {
-	color: #ff9d00;
+    color: #ff9d00;
     cursor: pointer;
 }
 

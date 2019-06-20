@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,7 @@
 $web_path = AmpConfig::get('web_path');
 $thcount  = 8;
 ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
@@ -34,6 +34,7 @@ $thcount  = 8;
             <th class="cel_add essential"></th>
             <th class="cel_artist optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Artist'), 'sort_song_artist' . $browse->id); ?></th>
             <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
+            <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'album_sort_year_bottom'); ?></th>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
             <th class="cel_time optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
             <?php if (AmpConfig::get('licensing')) {
@@ -134,6 +135,6 @@ $thcount  = 8;
 </table>
 
 <?php show_table_render($argument); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
                 require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
             } ?>

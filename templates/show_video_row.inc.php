@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@ if (Art::is_enabled()) {
             $art_showed = Art::display('video', $libitem->id, $libitem->f_title, 9, $libitem->link, false, 'preview');
         }
         if (!$art_showed) {
-            $thumb = (isset($browse) && !$browse->get_grid_view()) ? 7 : 6;
+            $thumb = (isset($browse) && !$browse->is_grid_view()) ? 7 : 6;
             Art::display('video', $libitem->id, $libitem->f_title, $thumb, $libitem->link);
         } ?>
 </td>

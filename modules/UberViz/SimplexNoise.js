@@ -5,36 +5,38 @@
 // Sean McCullough banksean@gmail.com
 //
 // Added 4D noise
-// Joshua Koo zz85nus@gmail.com 
+// Joshua Koo zz85nus@gmail.com
 
 /**
  * You can pass in a random number generator object if you like.
  * It is assumed to have a random() method.
  */
 var SimplexNoise = function(r) {
-	if (r == undefined) r = Math;
+    if (typeof r === "undefined") {
+        r = Math;
+    }
   this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0], 
                                  [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1], 
                                  [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]]; 
 
   this.grad4 = [[0,1,1,1], [0,1,1,-1], [0,1,-1,1], [0,1,-1,-1],
-	     [0,-1,1,1], [0,-1,1,-1], [0,-1,-1,1], [0,-1,-1,-1],
-	     [1,0,1,1], [1,0,1,-1], [1,0,-1,1], [1,0,-1,-1],
-	     [-1,0,1,1], [-1,0,1,-1], [-1,0,-1,1], [-1,0,-1,-1],
-	     [1,1,0,1], [1,1,0,-1], [1,-1,0,1], [1,-1,0,-1],
-	     [-1,1,0,1], [-1,1,0,-1], [-1,-1,0,1], [-1,-1,0,-1],
-	     [1,1,1,0], [1,1,-1,0], [1,-1,1,0], [1,-1,-1,0],
-	     [-1,1,1,0], [-1,1,-1,0], [-1,-1,1,0], [-1,-1,-1,0]];
+         [0,-1,1,1], [0,-1,1,-1], [0,-1,-1,1], [0,-1,-1,-1],
+         [1,0,1,1], [1,0,1,-1], [1,0,-1,1], [1,0,-1,-1],
+         [-1,0,1,1], [-1,0,1,-1], [-1,0,-1,1], [-1,0,-1,-1],
+         [1,1,0,1], [1,1,0,-1], [1,-1,0,1], [1,-1,0,-1],
+         [-1,1,0,1], [-1,1,0,-1], [-1,-1,0,1], [-1,-1,0,-1],
+         [1,1,1,0], [1,1,-1,0], [1,-1,1,0], [1,-1,-1,0],
+         [-1,1,1,0], [-1,1,-1,0], [-1,-1,1,0], [-1,-1,-1,0]];
 
   this.p = [];
   for (var i=0; i<256; i++) {
-	  this.p[i] = Math.floor(r.random()*256);
+      this.p[i] = Math.floor(r.random()*256);
   }
   // To remove the need for index wrapping, double the permutation table length 
   this.perm = []; 
   for(var i=0; i<512; i++) {
-		this.perm[i]=this.p[i & 255];
-	} 
+        this.perm[i]=this.p[i & 255];
+    } 
 
   // A lookup table to traverse the simplex around a given point in 4D. 
   // Details can be found where this table is used, in the 4D noise method. 
@@ -50,12 +52,12 @@ var SimplexNoise = function(r) {
 };
 
 SimplexNoise.prototype.dot = function(g, x, y) { 
-	return g[0]*x + g[1]*y;
+    return g[0]*x + g[1]*y;
 };
 
 SimplexNoise.prototype.dot3 = function(g, x, y, z) {
   return g[0]*x + g[1]*y + g[2]*z; 
-}
+};
 
 SimplexNoise.prototype.dot4 = function(g, x, y, z, w) {
   return g[0]*x + g[1]*y + g[2]*z + g[3]*w;
@@ -94,19 +96,25 @@ SimplexNoise.prototype.noise = function(xin, yin) {
   var gi2 = this.perm[ii+1+this.perm[jj+1]] % 12; 
   // Calculate the contribution from the three corners 
   var t0 = 0.5 - x0*x0-y0*y0; 
-  if(t0<0) n0 = 0.0; 
+  if(t0<0) {
+      n0 = 0.0;
+  }
   else { 
     t0 *= t0; 
     n0 = t0 * t0 * this.dot(this.grad3[gi0], x0, y0);  // (x,y) of grad3 used for 2D gradient 
   } 
   var t1 = 0.5 - x1*x1-y1*y1; 
-  if(t1<0) n1 = 0.0; 
+  if(t1<0) {
+      n1 = 0.0;
+  } 
   else { 
     t1 *= t1; 
     n1 = t1 * t1 * this.dot(this.grad3[gi1], x1, y1); 
   }
   var t2 = 0.5 - x2*x2-y2*y2; 
-  if(t2<0) n2 = 0.0; 
+  if(t2<0) {
+      n2 = 0.0;
+  } 
   else { 
     t2 *= t2; 
     n2 = t2 * t2 * this.dot(this.grad3[gi2], x2, y2); 
@@ -171,25 +179,33 @@ SimplexNoise.prototype.noise3d = function(xin, yin, zin) {
   var gi3 = this.perm[ii+1+this.perm[jj+1+this.perm[kk+1]]] % 12; 
   // Calculate the contribution from the four corners 
   var t0 = 0.6 - x0*x0 - y0*y0 - z0*z0; 
-  if(t0<0) n0 = 0.0; 
+  if(t0<0) {
+      n0 = 0.0;
+  } 
   else { 
     t0 *= t0; 
     n0 = t0 * t0 * this.dot3(this.grad3[gi0], x0, y0, z0); 
   }
   var t1 = 0.6 - x1*x1 - y1*y1 - z1*z1; 
-  if(t1<0) n1 = 0.0; 
+  if(t1<0) {
+      n1 = 0.0;
+  } 
   else { 
     t1 *= t1; 
     n1 = t1 * t1 * this.dot3(this.grad3[gi1], x1, y1, z1); 
   } 
   var t2 = 0.6 - x2*x2 - y2*y2 - z2*z2; 
-  if(t2<0) n2 = 0.0; 
+  if(t2<0) {
+      n2 = 0.0;
+  } 
   else { 
     t2 *= t2; 
     n2 = t2 * t2 * this.dot3(this.grad3[gi2], x2, y2, z2); 
   } 
   var t3 = 0.6 - x3*x3 - y3*y3 - z3*z3; 
-  if(t3<0) n3 = 0.0; 
+  if(t3<0) {
+      n3 = 0.0;
+  } 
   else { 
     t3 *= t3; 
     n3 = t3 * t3 * this.dot3(this.grad3[gi3], x3, y3, z3); 
@@ -201,11 +217,11 @@ SimplexNoise.prototype.noise3d = function(xin, yin, zin) {
 
 // 4D simplex noise
 SimplexNoise.prototype.noise4d = function( x, y, z, w ) {
-	// For faster and easier lookups
-	var grad4 = this.grad4;
-	var simplex = this.simplex;
-	var perm = this.perm;
-	
+    // For faster and easier lookups
+    var grad4 = this.grad4;
+    var simplex = this.simplex;
+    var perm = this.perm;
+
    // The skewing and unskewing factors are hairy again for the 4D case
    var F4 = (Math.sqrt(5.0)-1.0)/4.0;
    var G4 = (5.0-Math.sqrt(5.0))/20.0;
@@ -291,30 +307,40 @@ SimplexNoise.prototype.noise4d = function( x, y, z, w ) {
    var gi4 = perm[ii+1+perm[jj+1+perm[kk+1+perm[ll+1]]]] % 32;
    // Calculate the contribution from the five corners
    var t0 = 0.6 - x0*x0 - y0*y0 - z0*z0 - w0*w0;
-   if(t0<0) n0 = 0.0;
+   if (t0<0) {
+       n0 = 0.0;
+   }
    else {
      t0 *= t0;
      n0 = t0 * t0 * this.dot4(grad4[gi0], x0, y0, z0, w0);
    }
   var t1 = 0.6 - x1*x1 - y1*y1 - z1*z1 - w1*w1;
-   if(t1<0) n1 = 0.0;
+   if (t1<0) {
+       n1 = 0.0;
+   }
    else {
      t1 *= t1;
      n1 = t1 * t1 * this.dot4(grad4[gi1], x1, y1, z1, w1);
    }
   var t2 = 0.6 - x2*x2 - y2*y2 - z2*z2 - w2*w2;
-   if(t2<0) n2 = 0.0;
+   if (t2<0) {
+       n2 = 0.0;
+   }
    else {
      t2 *= t2;
      n2 = t2 * t2 * this.dot4(grad4[gi2], x2, y2, z2, w2);
    }   var t3 = 0.6 - x3*x3 - y3*y3 - z3*z3 - w3*w3;
-   if(t3<0) n3 = 0.0;
+   if (t3<0) {
+       n3 = 0.0;
+   }
    else {
      t3 *= t3;
      n3 = t3 * t3 * this.dot4(grad4[gi3], x3, y3, z3, w3);
    }
   var t4 = 0.6 - x4*x4 - y4*y4 - z4*z4 - w4*w4;
-   if(t4<0) n4 = 0.0;
+   if (t4<0) {
+       n4 = 0.0;
+   }
    else {
      t4 *= t4;
      n4 = t4 * t4 * this.dot4(grad4[gi4], x4, y4, z4, w4);

@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -74,7 +74,7 @@ class UPnPPlayer
         require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/UPnPDevice.php';
         require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/UPnPPlaylist.php';
 
-        debug_event('upnpPlayer', 'constructor: ' . $name . ' | ' . $description_url, 5);
+        debug_event('upnpplayer.class', 'constructor: ' . $name . ' | ' . $description_url, 5);
         $this->_description_url = $description_url;
 
         $this->ReadIndState();
@@ -132,7 +132,7 @@ class UPnPPlayer
         $responseXML = simplexml_load_string($response);
         list($state) = $responseXML->xpath('//CurrentTransportState');
 
-        //!!debug_event('upnpPlayer', 'GetState = ' . $state, 5);
+        //!!debug_event('upnpplayer.class', 'GetState = ' . $state, 5);
 
         return $state;
     }
@@ -210,12 +210,12 @@ class UPnPPlayer
 
     private function CallAsyncURL($url)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_exec($ch);
-        curl_close($ch);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_exec($curl);
+        curl_close($curl);
     }
 
     /**
@@ -271,7 +271,7 @@ class UPnPPlayer
     public function Pause()
     {
         $state = $this->GetState();
-        debug_event('upnpPlayer', 'Pause. prev state = ' . $state, 5);
+        debug_event('upnpplayer.class', 'Pause. prev state = ' . $state, 5);
 
         if ($state == 'PLAYING') {
             $response = $this->Device()->instanceOnly('Pause');
@@ -369,7 +369,7 @@ class UPnPPlayer
 
         $responseXML  = simplexml_load_string($response);
         list($volume) = ($responseXML->xpath('//CurrentVolume'));
-        debug_event('upnpPlayer', 'GetVolume:' . $volume, 5);
+        debug_event('upnpplayer.class', 'GetVolume:' . $volume, 5);
 
         return $volume;
     }
@@ -386,7 +386,7 @@ class UPnPPlayer
         } else {
             Session::write($sid, $data);
         }
-        debug_event('upnpPlayer', 'SetIntState:' . $this->_intState, 5);
+        debug_event('upnpplayer.class', 'SetIntState:' . $this->_intState, 5);
     }
 
     private function ReadIndState()
@@ -395,7 +395,7 @@ class UPnPPlayer
         $data = Session::read($sid);
 
         $this->_intState = json_decode($data, true);
-        debug_event('upnpPlayer', 'ReadIndState:' . $this->_intState, 5);
+        debug_event('upnpplayer.class', 'ReadIndState:' . $this->_intState, 5);
     }
 } // End UPnPPlayer Class
 ;

@@ -1,9 +1,10 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,20 +41,20 @@ abstract class database_object
      * get_info
      * retrieves the info from the database and puts it in the cache
      */
-    public function get_info($id, $table_name='')
+    public function get_info($object_id, $table_name = '')
     {
         $table_name = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
 
         // Make sure we've got a real id
-        if (!is_numeric($id)) {
+        if (!is_numeric($object_id)) {
             return array();
         }
 
-        if (self::is_cached($table_name, $id)) {
-            return self::get_from_cache($table_name, $id);
+        if (self::is_cached($table_name, $object_id)) {
+            return self::get_from_cache($table_name, $object_id);
         }
 
-        $sql        = "SELECT * FROM `$table_name` WHERE `id`='$id'";
+        $sql        = "SELECT * FROM `$table_name` WHERE `id`='$object_id'";
         $db_results = Dba::read($sql);
 
         if (!$db_results) {
@@ -62,7 +63,7 @@ abstract class database_object
 
         $row = Dba::fetch_assoc($db_results);
 
-        self::add_to_cache($table_name, $id, $row);
+        self::add_to_cache($table_name, $object_id, $row);
 
         return $row;
     } // get_info
@@ -79,55 +80,60 @@ abstract class database_object
      * is_cached
      * this checks the cache to see if the specified object is there
      */
-    public static function is_cached($index, $id)
+    public static function is_cached($index, $object_id)
     {
         // Make sure we've got some parents here before we dive below
         if (!isset(self::$object_cache[$index])) {
             return false;
         }
 
-        return isset(self::$object_cache[$index][$id]);
+        return isset(self::$object_cache[$index][$object_id]);
     } // is_cached
 
     /**
      * get_from_cache
      * This attempts to retrieve the specified object from the cache we've got here
      */
-    public static function get_from_cache($index, $id)
+    public static function get_from_cache($index, $object_id)
     {
         // Check if the object is set
-        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$id])) {
+        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$object_id])) {
             self::$cache_hit++;
 
-            return self::$object_cache[$index][$id];
+            return self::$object_cache[$index][$object_id];
         }
 
-        return false;
+        return array();
     } // get_from_cache
 
     /**
      * add_to_cache
      * This adds the specified object to the specified index in the cache
      */
-    public static function add_to_cache($index, $id, $data)
+    public static function add_to_cache($index, $object_id, $data)
     {
         if (!self::$_enabled) {
             return false;
         }
 
-        $value                           = is_null($data) ? false : $data;
-        self::$object_cache[$index][$id] = $value;
-    } // add_to_cache
+        $value = false;
+        if ($data !== null) {
+            $value = $data;
+        }
+
+        self::$object_cache[$index][$object_id] = $value;
+    }
+    // add_to_cache
 
     /**
      * remove_from_cache
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
      */
-    public static function remove_from_cache($index, $id)
+    public static function remove_from_cache($index, $object_id)
     {
-        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$id])) {
-            unset(self::$object_cache[$index][$id]);
+        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$object_id])) {
+            unset(self::$object_cache[$index][$object_id]);
         }
     } // remove_from_cache
 

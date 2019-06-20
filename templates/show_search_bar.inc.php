@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,7 +44,12 @@
             <?php
     } ?>
         </select>
-        <input class="button" type="submit" value="<?php echo T_('Search'); ?>" id="searchBtn" />
-        <a href="<?php echo $web_path; ?>/search.php?type=song" class="button" id="advSearchBtn"><?php echo T_('Advanced Search'); ?></a>
+        <?php if ($_SESSION['mobile']) {
+        echo "<input class=\"button\" type=\"submit\" value=\"" . T_('Search') . "\"style=\"display: none;\" id=\"searchBtn\" />";
+    } else {
+        echo "<input class=\"button\" type=\"submit\" value=\"" . T_('Search') . "\" id=\"searchBtn\" />";
+    }
+?>
     </form>
 </div>
+

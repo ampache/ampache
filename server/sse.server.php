@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,10 +25,11 @@ require_once AmpConfig::get('prefix') . '/modules/catalog/local/local.catalog.ph
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 if (AmpConfig::get('demo_mode')) {
-    exit;
+    return false;
 }
 
 ob_end_clean();
@@ -64,7 +65,7 @@ switch ($worker) {
             flush();
         }
 
-        Catalog::process_action($_REQUEST['action'], $catalogs, $options);
+        Catalog::process_action(Core::get_request('action'), $catalogs, $options);
 
         if (defined('SSE_OUTPUT')) {
             echo "data: toggleVisible('ajax-loading')\n\n";

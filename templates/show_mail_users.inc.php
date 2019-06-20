@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,7 +47,7 @@
         <tr>
             <td><?php echo T_('Subject'); ?>:</td>
             <td colspan="3">
-                <input name="subject" value="<?php echo scrub_out($_POST['subject']); ?>" />
+                <input name="subject" value="<?php echo scrub_out(Core::get_post('subject')); ?>" />
             </td>
         </tr>
         <tr>

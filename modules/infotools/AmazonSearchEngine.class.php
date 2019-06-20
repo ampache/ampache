@@ -1,7 +1,7 @@
 <?php
 /**
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -64,10 +64,10 @@ class AmazonSearch
         /* If we have a base url then use it */
         if ($base_url_param != '') {
             $this->base_url = str_replace('http://', '', $base_url_param);
-            debug_event('amazon-search-results', 'Retrieving from ' . $base_url_param . $this->url_suffix, '5');
+            debug_event('amazonsearchengine.class', 'Retrieving from ' . $base_url_param . $this->url_suffix, 5);
         } else {
             $this->base_url = $this->base_url_default;
-            debug_event('amazon-search-results', 'Retrieving from DEFAULT', '5');
+            debug_event('amazonsearchengine.class', 'Retrieving from DEFAULT', 5);
         }
 
         // AWS credentials
@@ -149,23 +149,24 @@ class AmazonSearch
         // get the proxy config
         $options = $this->getProxyConfig();
 
-        debug_event('amazon-search-results', 'Amazon request: ' . $url, 5);
+        debug_event('amazonsearchengine.class', 'Amazon request: ' . $url, 5);
         // make the request and retrieve the response
         $request  = Requests::get($url, array(), $options);
         $contents = $request->body;
 
-        //debug_event('AMAZON XML', $contents, 5);
+        //debug_event('amazonsearchengine.class', $contents, 5);
         if (!xml_parse($this->_parser, $contents)) {
-            debug_event('amazon-search-results', 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), '1');
+            debug_event('amazonsearchengine.class', 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
         }
 
         xml_parser_free($this->_parser);
     } // runSearch
 
     /**
+     * getProxyConfig
      * Build the proxy options array.
-     *
-     * @return array() $options The array of proxy config options.
+     * Returning the array of proxy config options.
+     * @return array 
      */
     public function getProxyConfig()
     {
@@ -184,11 +185,11 @@ class AmazonSearch
     } // getProxyConfig
 
     /**
-     * Create the search string.
+     * Create an XML search string.
      *
-     * @param array() $terms The serach terms to include within the query.
+     * @param array() $terms The search terms to include within the query.
      * @param string $type The type of result desired.
-     * @return string $results The XML return string.
+     * @return string
      */
     public function search($terms, $type = 'Music')
     {
@@ -231,14 +232,14 @@ class AmazonSearch
     } // search
 
     /**
+     * signString
      * Sign a query string
-     *
      * @param string $string_to_sign The string to sign
-     * @return string $signature The signed query.
+     * @return string
      */
     public function signString($string_to_sign)
     {
-        
+
         // hash and encode the query string
         $signature = base64_encode(hash_hmac("sha256", $string_to_sign, $this->private_key, true));
 
@@ -277,7 +278,7 @@ class AmazonSearch
      */
     public function runSearchAsin($asin)
     {
-        
+
         // get the proxy config
         $options = $this->getProxyConfig();
 
@@ -319,7 +320,7 @@ class AmazonSearch
         $contents = $request->body;
 
         if (!xml_parse($this->_parser, $contents)) {
-            debug_event('amazon-search-results', 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), '1');
+            debug_event('amazonsearchengine.class', 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
         }
 
         xml_parser_free($this->_parser);
@@ -366,7 +367,7 @@ class AmazonSearch
                 $this->_sourceTag = trim($cdata);
                 break;
             case 'TotalPages':
-                debug_event('amazon-search-results', "TotalPages= " . trim($cdata), '5');
+                debug_event('amazonsearchengine.class', "TotalPages= " . trim($cdata), 5);
                 $this->_maxPage = trim($cdata);
                 break;
             default:

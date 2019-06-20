@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -86,7 +86,7 @@ abstract class playlist_object extends database_object implements library_item
         if (!Access::check('interface', 25)) {
             return false;
         }
-        if ($this->user == $GLOBALS['user']->id) {
+        if ($this->user == Core::get_global('user')->id) {
             return true;
         } else {
             return Access::check('interface', 75);
@@ -140,6 +140,8 @@ abstract class playlist_object extends database_object implements library_item
 
     public function search_childrens($name)
     {
+        debug_event('playlist_object.abstract', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
@@ -163,6 +165,7 @@ abstract class playlist_object extends database_object implements library_item
         if (AmpConfig::get('playlist_art')) {
             $medias     = $this->get_medias();
             $media_arts = array();
+            shuffle($medias);
             foreach ($medias as $media) {
                 if (Core::is_library_item($media['object_type'])) {
                     if (!Art::has_db($media['object_id'], $media['object_type'])) {
@@ -178,14 +181,14 @@ abstract class playlist_object extends database_object implements library_item
                     if ($media !== null) {
                         if (!in_array($media, $media_arts)) {
                             $media_arts[] = $media;
-                            if (count($media_arts) >= 4) {
+                            if (count($media_arts) >= 1) {
                                 break;
                             }
                         }
                     }
                 }
             }
-            
+
             foreach ($media_arts as $media) {
                 Art::display($media['object_type'], $media['object_id'], $this->get_fullname(), $thumb, $this->link);
             }
@@ -196,7 +199,7 @@ abstract class playlist_object extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {

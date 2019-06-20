@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -83,10 +83,10 @@ class AmpacheLibravatar
             $url .= "?s=" . $size . "&r=g";
             $url .= "&d=identicon";
         }
-        
+
         return $url;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes

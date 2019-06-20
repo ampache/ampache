@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,10 +29,10 @@ class AmpacheDiscogs
     public $version        = '000001';
     public $min_ampache    = '370021';
     public $max_ampache    = '999999';
-    
+
     private $api_key;
     private $secret;
-    
+
     /**
      * Constructor
      * This function does nothing
@@ -78,22 +78,22 @@ class AmpacheDiscogs
     {
         $user->set_preferences();
         $data = $user->prefs;
-        
+
         if (strlen(trim($data['discogs_api_key']))) {
             $this->api_key = trim($data['discogs_api_key']);
         } else {
-            debug_event($this->name, 'No Discogs api key, metadata plugin skipped', '3');
+            debug_event('discogs.plugin', 'No Discogs api key, metadata plugin skipped', 3);
 
             return false;
         }
         if (strlen(trim($data['discogs_secret_api_key']))) {
             $this->secret = trim($data['discogs_secret_api_key']);
         } else {
-            debug_event($this->name, 'No Discogs secret, metadata plugin skipped', '3');
+            debug_event('discogs.plugin', 'No Discogs secret, metadata plugin skipped', 3);
 
             return false;
         }
-        
+
         return true;
     } // load
 
@@ -102,33 +102,33 @@ class AmpacheDiscogs
         $url     = 'https://api.discogs.com/' . $query;
         $url .= (strpos($query, '?') !== false) ? '&' : '?';
         $url .= 'key=' . $this->api_key . '&secret=' . $this->secret;
-        debug_event('discogs', 'Discogs request: ' . $url, 5);
+        debug_event('discogs.plugin', 'Discogs request: ' . $url, 5);
         $request = Requests::get($url);
 
         return json_decode($request->body, true);
     }
-    
+
     protected function search_artist($artist)
     {
         $query = "database/search?type=artist&title=" . rawurlencode($artist) . "&per_page=10";
 
         return $this->query_discogs($query);
     }
-    
+
     protected function get_artist($id)
     {
         $query = "artists/" . $id;
 
         return $this->query_discogs($query);
     }
-    
+
     protected function search_album($artist, $album)
     {
         $query = "database/search?type=master&release_title=" . rawurlencode($album) . "&artist=" . rawurlencode($artist) . "&per_page=10";
 
         return $this->query_discogs($query);
     }
-    
+
     protected function get_album($id)
     {
         $query = "masters/" . $id;
@@ -142,15 +142,15 @@ class AmpacheDiscogs
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('discogs', 'Getting metadata from Discogs...', '5');
+        debug_event('discogs.plugin', 'Getting metadata from Discogs...', 5);
 
         // TVShow and Movie metadata only
         if (!in_array('music', $gather_types)) {
-            debug_event('discogs', 'Not a valid media type, skipped.', '5');
+            debug_event('discogs.plugin', 'Not a valid media type, skipped.', 5);
 
             return null;
         }
-        
+
         $results = array();
         try {
             if (in_array('artist', $gather_types)) {
@@ -173,9 +173,9 @@ class AmpacheDiscogs
                 }
             }
         } catch (Exception $e) {
-            debug_event('discogs', 'Error getting metadata: ' . $e->getMessage(), '1');
+            debug_event('discogs.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
         }
-        
+
         return $results;
     } // get_metadata
 

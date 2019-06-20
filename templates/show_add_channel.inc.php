@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,8 +22,8 @@
 ?>
 <?php UI::show_box_top(T_('Create Channel'), 'box box_add_channel'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=create">
-<input type="hidden" name="type" value="<?php echo scrub_out($_REQUEST['type']); ?>" />
-<input type="hidden" name="id" value="<?php echo scrub_out($_REQUEST['id']); ?>" />
+<input type="hidden" name="type" value="<?php echo scrub_out(Core::get_request('type')); ?>" />
+<input type="hidden" name="id" value="<?php echo scrub_out(Core::get_request('id')); ?>" />
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
     <td><?php echo T_('Stream Source'); ?></td>

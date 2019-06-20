@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,13 +25,14 @@ require_once '../lib/init.php';
 
 if (!AmpConfig::get('subsonic_backend')) {
     echo "Disabled.";
-    exit;
+
+    return false;
 }
 
 $action = strtolower($_REQUEST['ssaction']);
 // Compatibility reason
 if (empty($action)) {
-    $action = strtolower($_REQUEST['action']);
+    $action = strtolower(Core::get_request('action'));
 }
 $f        = $_REQUEST['f'];
 $callback = $_REQUEST['callback'];
@@ -42,10 +43,11 @@ if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $acti
 
 // If we don't even have access control on then we can't use this!
 if (!AmpConfig::get('access_control')) {
-    debug_event('Access Control', 'Error Attempted to use Subsonic API with Access Control turned off', '3');
+    debug_event('rest/index', 'Error Attempted to use Subsonic API with Access Control turned off', 3);
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')), $callback);
-    exit;
+
+    return false;
 }
 
 // Authenticate the user with preemptive HTTP Basic authentication first
@@ -68,9 +70,10 @@ if (empty($_SERVER['HTTP_USER_AGENT'])) {
 
 if (empty($user) || (empty($password) && (empty($token) || empty($salt))) || empty($version) || empty($action) || empty($clientapp)) {
     ob_end_clean();
-    debug_event('subsonic', 'Missing Subsonic base parameters', 3);
+    debug_event('rest/index', 'Missing Subsonic base parameters', 3);
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM), $callback);
-    exit();
+
+    return false;
 }
 
 if (isset($token) && isset($salt)) {
@@ -83,10 +86,11 @@ if (isset($token) && isset($salt)) {
     //hopefully they will fall back to earlier authentication method
     //( pre api 1.13 using the p parameter with the password)
 
-    debug_event('Access Denied', 'Token authentication not supported in Subsonic API for user [' . $user . ']', '3');
+    debug_event('rest/index', 'Token authentication not supported in Subsonic API for user [' . $user . ']', 3);
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_TOKENAUTHNOTSUPPORTED), $callback);
-    exit();
+
+    return false;
 }
 
 $password = Subsonic_Api::decrypt_password($password);
@@ -94,26 +98,29 @@ $password = Subsonic_Api::decrypt_password($password);
 // Check user authentication
 $auth = Auth::login($user, $password, true);
 if (!$auth['success']) {
-    debug_event('Access Denied', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', '3');
+    debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', 3);
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_BADAUTH), $callback);
-    exit();
+
+    return false;
 }
 
 if (!Access::check_network('init-api', $user, 5)) {
-    debug_event('Access Denied', 'Unauthorized access attempt to Subsonic API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+    debug_event('rest/index', 'Unauthorized access attempt to Subsonic API [' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', 3);
     ob_end_clean();
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'), $callback);
-    exit();
+
+    return false;
 }
 
-$GLOBALS['user'] = User::get_from_username($user);
+$GLOBALS['user'] =  User::get_from_username($user);
 // Check server version
 if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
     ob_end_clean();
-    debug_event('subsonic', 'Requested client version is not supported', 3);
+    debug_event('rest/index', 'Requested client version is not supported', 3);
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_SERVER), $callback);
-    exit();
+
+    return false;
 }
 Preference::init();
 
@@ -136,17 +143,17 @@ foreach ($query as $param) {
     list($name, $value) = explode('=', $param);
     $decname            = urldecode($name);
     $decvalue           = urldecode($value);
-    
+
     // workaround for clementine/Qt5 bug
     // see https://github.com/clementine-player/Clementine/issues/6080
     $matches = array();
     if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
         $calc = (($matches[1] << 24) + ($matches[2] << 16) + ($matches[3] << 8) + $matches[4]);
         if ($calc) {
-            debug_event('subsonic', "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc", '4');
+            debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc", 4);
             $decvalue = $calc;
         } else {
-            debug_event('subsonic', "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though", '4');
+            debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though", 3);
         }
     }
 
@@ -161,8 +168,8 @@ foreach ($query as $param) {
         $params[$decname] = $decvalue;
     }
 }
-//debug_event('subsonic', print_r($params, true), '5');
-//debug_event('subsonic', print_r(apache_request_headers(), true), '5');
+//debug_event('rest/index', print_r($params, true), 5);
+//debug_event('rest/index', print_r(apache_request_headers(), true), 5);
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
@@ -172,11 +179,11 @@ foreach ($methods as $method) {
 
     // If the method is the same as the action being called
     // Then let's call this function!
-    
+
     if ($action == $method) {
         call_user_func(array('subsonic_api', $method), $params);
         // We only allow a single function to be called, and we assume it's cleaned up!
-        exit();
+        return false;
     }
 } // end foreach methods in API
 

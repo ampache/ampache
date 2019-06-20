@@ -1,12 +1,13 @@
- ![Logo](http://ampache.org/img/logo/ampache-logo_x64.png) Ampache
-=======
+# Ampache
+
+![Logo](http://ampache.org/img/logo/ampache-logo_x64.png) Ampache
+
 [www.ampache.org](http://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
 
 **Notice:**  Only pull requests (PR) for bug fixes will be considered.
 
-Basics
-------
+## Basics
 
 Ampache is a web based audio/video streaming application and file
 manager allowing you to access your music & videos from anywhere,
@@ -19,8 +20,7 @@ presents an already organised collection in a useful way. It assumes
 that you know best how to manage your files and are capable of
 choosing a suitable method for doing so.
 
-Recommended Version
--------------------
+## Recommended Version
 
 The recommended and most stable version is [git HEAD](https://github.com/ampache/ampache/archive/master.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=master)](https://travis-ci.org/ampache/ampache)
@@ -28,51 +28,47 @@ The recommended and most stable version is [git HEAD](https://github.com/ampache
 You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
 [![Build Status](https://api.travis-ci.org/ampache/ampache.png?branch=develop)](https://travis-ci.org/ampache/ampache)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
-[![Codacy Badge](https://api.codacy.com/project/badge/b28cdb9e9ee2431c7cb9c23d5438cb80)](https://www.codacy.com/app/afterster_2222/ampache)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/91ed1d627b7a4ab7a5cc3d69db3361b3)](https://www.codacy.com/app/Ampache/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 
-Installation
-------------
+## Installation
 
 Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
 
-Requirements
-------------
+## Requirements
 
-* A web server. All of the following have been used, though Apache
-receives the most testing:
-    * Apache
-    * lighttpd
-    * nginx
-    * IIS
+* A web server. All of the following have been used, though Apache receives the most testing:
+  * Apache
+  * lighttpd
+  * nginx
+  * IIS
 
 * PHP 5.6 or greater.
 
 * PHP modules:
-    * PDO
-    * PDO_MYSQL
-    * hash
-    * session
-    * json
-    * simplexml (optional)
-    * curl (optional)
+  * PDO
+  * PDO_MYSQL
+  * hash
+  * session
+  * json
+  * simplexml (optional)
+  * curl (optional)
 
-  * For FreeBSD The following modules must be loaded:
-    * php-xml
-    * php-dom
+* For FreeBSD The following php modules must be loaded:
+  * php-xml
+  * php-dom
 
-* MySQL 5.x
+* MySQL 5.x / MariaDB 10.x
 
-Upgrading
----------
+## Upgrading
 
 If you are upgrading from an older version of Ampache we recommend
 moving the old directory out of the way, extracting the new copy in
 its place and then copying the old /config/ampache.cfg.php, /rest/.htaccess,
-and /play/.htaccess files if any. All database updates will be handled by Ampache.
+/channel/.htaccess, and /play/.htaccess files if any.
+All database updates will be handled by Ampache.
 
-License
--------
+## License
 
 Ampache is free software; you can redistribute it and/or
 modify it under the terms of the GNU Affero General Public License v3 (AGPLv3)
@@ -80,8 +76,7 @@ as published by the Free Software Foundation.
 
 Ampache includes some [external modules](https://github.com/ampache/ampache/blob/develop/composer.lock) that carry their own licensing.
 
-Translations
-------------
+## Translations
 
 Ampache is currently translated (at least partially) into the
 following languages. If you are interested in updating an existing
@@ -91,16 +86,13 @@ for more instructions.
 
 Translation progress so far:
 
-[![](https://www.transifex.com/_/charts/redirects/ampache/ampache/image_png/messagespot/)](https://www.transifex.com/projects/p/ampache/)
+[![Transifex](https://www.transifex.com/_/charts/redirects/ampache/ampache/image_png/messagespot/)](https://www.transifex.com/projects/p/ampache/)
 
-Credits
--------
+## Credits
 
 Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS)
 
-
-Contact Us
-----------
+## Contact Us
 
 Hate it? Love it? Let us know! Dozens of people send ideas for amazing new features, report bugs and further develop Ampache actively. Be a part of Ampache with it's more than 10 years long history and get in touch with an awesome and friendly community!
 
@@ -108,8 +100,7 @@ Hate it? Love it? Let us know! Dozens of people send ideas for amazing new featu
 * For harder cases or general discussion about Ampache take a look at our [Google Groups Forum](https://groups.google.com/forum/#!forum/ampache)
 * Found a bug or Ampache isn't working as expected? Please refer to the [Issues Template](https://github.com/ampache/ampache/wiki/Issues) and head over to our [Issue Tracker](https://github.com/ampache/ampache/issues)
 
-Further Information and basic Help
-----------------------------------
+## Further Information and basic Help
 
 * Everything related to the Ampache Project can be found on our [Public Repository](https://github.com/ampache)
 * Want to know, how to get Apache to work or learn more about the functions? See our [Documentation](https://github.com/ampache/ampache/wiki)

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,8 +22,8 @@
 ?>
 <?php UI::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=create">
-<input type="hidden" name="type" value="<?php echo scrub_out($_REQUEST['type']); ?>" />
-<input type="hidden" name="id" value="<?php echo scrub_out($_REQUEST['id']); ?>" />
+<input type="hidden" name="type" value="<?php echo scrub_out(Core::get_request('type')); ?>" />
+<input type="hidden" name="id" value="<?php echo scrub_out(Core::get_request('id')); ?>" />
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
     <td><?php echo T_('Shared Object'); ?></td>
@@ -57,7 +57,7 @@
         <input type="checkbox" name="allow_stream" value="1" <?php echo ($_REQUEST['allow_stream'] || $_SERVER['REQUEST_METHOD'] === 'GET') ? 'checked' : ''; ?> />
     </td>
 </tr>
-<?php if ((($_REQUEST['type'] == 'song' || $_REQUEST['type'] == 'video') && Access::check_function('download')) || Access::check_function('batch_download')) {
+<?php if (((Core::get_request('type') == 'song' || Core::get_request('type') == 'video') && Access::check_function('download')) || Access::check_function('batch_download')) {
     ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>

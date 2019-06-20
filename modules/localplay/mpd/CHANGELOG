@@ -47,7 +47,7 @@ ENHANCEMENTS
 * Although the command queuing (bulk command) methods were included in v1.0,
     they were not documented. The QueueCommand() and SendCommandQueue() are now
     official methods.
- 
+
 BUGFIXES
 * None noted.
 
