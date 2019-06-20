@@ -506,7 +506,7 @@ class Stats
         $type = self::validate_type($input_type);
 
         $base_type = 'song';
-        $sql_type = $base_type . "`.`" . $type;
+        $sql_type  = $base_type . "`.`" . $type;
         if ($input_type === 'song') {
             $sql_type = 'song`.`id';
         }
