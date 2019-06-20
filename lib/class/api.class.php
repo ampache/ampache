@@ -984,11 +984,12 @@ class Api
      * stats
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=400001
-     *
+     * 
      * This get library stats for different object types.
-     *
+     * When filter is null get some random items instead
+     * 
      * $input = array(type     = (string) 'song'|'album'|'artist'
-     *                filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'
+     *                filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'|null
      *                offset   = (integer) //optional
      *                limit    = (integer) //optional
      *                user_id  = (integer) //optional
@@ -1047,15 +1048,15 @@ class Api
                             debug_event('api.class', 'stats flagged', 4);
                             $results = Userflag::get_latest($type);
                         } else {
-                            debug_event('api.class', 'stats random', 4);
+                            debug_event('api.class', 'stats random ' . $type, 4);
                             if ($type === 'song') {
                                 $results = Random::get_default($limit);
                             }
                             if ($type === 'artist') {
-                                $results = Random::get_artist($limit);
+                                $results = Artist::get_random($limit);
                             }
                             if ($type === 'album') {
-                                $results = Random::get_album($limit);
+                                $results = Album::get_random($limit);
                             }
                         }
                     }

@@ -507,6 +507,56 @@ class Artist extends database_object implements library_item
     } // get_random_songs
 
     /**
+     * get_random
+     *
+     * This returns a number of random artists.
+     * @param integer $count
+     * @param boolean $with_art
+     * @return integer[]
+     */
+    public static function get_random($count = 1, $with_art = false)
+    {
+        $results = array();
+
+        if (!$count) {
+            $count = 1;
+        }
+
+        $sql = "SELECT DISTINCT `artist`.`id` FROM `artist` " .
+                "LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+            $where = "WHERE `catalog`.`enabled` = '1' ";
+        } else {
+            $where = "WHERE '1' = '1' ";
+        }
+        if ($with_art) {
+            $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id`) ";
+            $where .= "AND `image`.`id` IS NOT NULL ";
+        }
+        $sql .= $where;
+
+        $rating_filter = AmpConfig::get_rating_filter();
+        if ($rating_filter > 0 && $rating_filter <= 5) {
+            $user_id = Core::get_global('user')->id;
+            $sql .= " AND `artist`.`id` NOT IN" .
+                    " (SELECT `object_id` FROM `rating`" .
+                    " WHERE `rating`.`object_type` = 'artist'" .
+                    " AND `rating`.`rating` <=" . $rating_filter .
+                    " AND `rating`.`user` = " . $user_id . ")";
+        }
+
+        $sql .= "ORDER BY RAND() LIMIT " . (string) $count;
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
      * @param integer $catalog
