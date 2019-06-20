@@ -252,7 +252,7 @@ class Video extends database_object implements media, library_item
      */
     public function format($details = true)
     {
-        $this->f_title      = scrub_out($this->title);
+        $this->f_title      = filter_var($this->title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $this->f_full_title = $this->f_title;
         $this->link         = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
         $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . $this->f_title . "\"> " . $this->f_title . "</a>";
