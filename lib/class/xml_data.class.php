@@ -568,20 +568,19 @@ class XML_Data
                 } else {
                     $playlist_user  = $playlist->type;
                 }
-                if ((int) $playlist->limit === 0 || (int) $playlist->limit > 5000) {
-                    $playitem_total = 5000;
-                } else {
-                    $playitem_total = $playlist->limit;
-                }
+                $playitem_total = $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
-            // Build this element
-            $string .= "<playlist id=\"$playlist_id\">\n" .
-                    "\t<name><![CDATA[$playlist_name]]></name>\n" .
-                    "\t<owner><![CDATA[$playlist_user]]></owner>\n" .
-                    "\t<items>$playitem_total</items>\n" .
-                    "\t<type>$playlist_type</type>\n" .
-                    "</playlist>\n";
+            // don't allow unlimited smartlists or empty playlists into xml
+            if ((int) $playitem_total > 0) {
+                // Build this element
+                $string .= "<playlist id=\"$playlist_id\">\n" .
+                        "\t<name><![CDATA[$playlist_name]]></name>\n" .
+                        "\t<owner><![CDATA[$playlist_user]]></owner>\n" .
+                        "\t<items>$playitem_total</items>\n" .
+                        "\t<type>$playlist_type</type>\n" .
+                        "</playlist>\n";
+            }
         } // end foreach
 
         return self::output_xml($string);
