@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,9 +58,9 @@ class Song_Preview extends database_object implements media, playable_item
             return false;
         }
 
-        $this->id = (int) ($id);
+        $this->id = intval($id);
 
-        if ($info = $this->has_info()) {
+        if ($info = $this->_get_info()) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -99,7 +99,7 @@ class Song_Preview extends database_object implements media, playable_item
         ));
 
         if (!$db_results) {
-            debug_event('song_preview.class', 'Unable to insert ' . $results[''], 2);
+            debug_event('song_preview', 'Unable to insert ' . $results[''], 2);
 
             return false;
         }
@@ -147,9 +147,9 @@ class Song_Preview extends database_object implements media, playable_item
     } // build_cache
 
     /**
-     * has_info
+     * _get_info
      */
-    private function has_info()
+    private function _get_info()
     {
         $id = $this->id;
 
@@ -182,7 +182,7 @@ class Song_Preview extends database_object implements media, playable_item
      * get_artist_name
      * gets the name of $this->artist, allows passing of id
      */
-    public function get_artist_name($artist_id = 0)
+    public function get_artist_name($artist_id=0)
     {
         if (!$artist_id) {
             $artist_id = $this->artist;
@@ -198,7 +198,7 @@ class Song_Preview extends database_object implements media, playable_item
     /**
      * format
      * This takes the current song object
-     * and does a ton of formatting on it creating f_??? variables on the current
+     * and does a ton of formating on it creating f_??? variables on the current
      * object
      */
     public function format($details = true)
@@ -246,15 +246,13 @@ class Song_Preview extends database_object implements media, playable_item
 
     public function search_childrens($name)
     {
-        debug_event('song_preview.class', 'search_childrens ' . $name, 5);
-
         return array();
     }
 
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'song_preview') {
+        if (!$filter_type || $filter_type == 'song_preview') {
             $medias[] = array(
                 'object_type' => 'song_preview',
                 'object_id' => $this->id
@@ -268,7 +266,7 @@ class Song_Preview extends database_object implements media, playable_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return integer[]
+     * @return int[]
      */
     public function get_catalogs()
     {
@@ -278,13 +276,13 @@ class Song_Preview extends database_object implements media, playable_item
     /**
      * play_url
      * This function takes all the song information and correctly formats a
-     * a stream URL taking into account the downsampling mojo and everything
+     * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
      */
-    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
+    public static function play_url($oid, $additional_params='', $player=null, $local=false)
     {
         $song        = new Song_Preview($oid);
-        $user_id     = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
+        $user_id     = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
         $type        = $song->type;
 
         $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);
@@ -299,7 +297,7 @@ class Song_Preview extends database_object implements media, playable_item
         $data = null;
         foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load(Core::get_global('user'))) {
+            if ($plugin->load($GLOBALS['user'])) {
                 if ($plugin->_plugin->stream_song_preview($this->file)) {
                     break;
                 }
@@ -319,7 +317,7 @@ class Song_Preview extends database_object implements media, playable_item
      *
      * FIXME: Song Preview transcoding is not implemented
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array())
+    public function get_transcode_settings($target = null, $player = null, $options=array())
     {
         return false;
     }
@@ -334,9 +332,6 @@ class Song_Preview extends database_object implements media, playable_item
         // Do nothing
     }
 
-    /**
-     * @param string $album_mbid
-     */
     public static function get_song_previews($album_mbid)
     {
         $songs = array();
@@ -352,7 +347,7 @@ class Song_Preview extends database_object implements media, playable_item
         return $songs;
     }
 
-    public static function garbage_collection()
+    public static function gc()
     {
         $sql = 'DELETE FROM `song_preview` USING `song_preview` ' .
             'LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` ' .

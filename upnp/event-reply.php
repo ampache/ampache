@@ -15,5 +15,4 @@ if (empty($timeout)) {
 header("SID: uuid:" . uniqid());
 header("TIMEOUT:" . $timeout);
 header("Connection: close");
-
-return false;
+exit;

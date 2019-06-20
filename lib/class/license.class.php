@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,23 +48,23 @@ class License
      * Constructor
      * This pulls the license information from the database and returns
      * a constructed object
-     * @param integer $id
+     * @param int $id
      */
     public function __construct($id)
     {
         // Load the data from the database
-        $this->has_info($id);
+        $this->_get_info($id);
 
         return true;
     } // Constructor
 
     /**
-     * has_info
+     * _get_info
      * does the db call, reads from the license table
-     * @param integer $id
+     * @param int $id
      * @return boolean
      */
-    private function has_info($id)
+    private function _get_info($id)
     {
         $sql        = "SELECT * FROM `license` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($id));
@@ -76,7 +76,7 @@ class License
         }
 
         return true;
-    } // has_info
+    } // _get_info
 
     /**
      * create
@@ -91,7 +91,7 @@ class License
         Dba::write($sql, array($data['name'], $data['description'], $data['external_link']));
         $insert_id = Dba::insert_id();
 
-        return (int) $insert_id;
+        return $insert_id;
     } // create
 
     /**
@@ -120,7 +120,7 @@ class License
     /**
      * delete
      * this function deletes a specific license entry
-     * @param integer $license_id
+     * @param int $license_id
      */
     public static function delete($license_id)
     {
@@ -131,7 +131,7 @@ class License
     /**
      * get_licenses
      * Returns a list of licenses accessible by the current user.
-     * @return integer[]
+     * @return int[]
      */
     public static function get_licenses()
     {

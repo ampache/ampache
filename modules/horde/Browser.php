@@ -264,7 +264,7 @@ class Horde_Browser
     public function match($userAgent = null, $accept = null)
     {
         // Set our agent string.
-        if ($userAgent == null) {
+        if (is_null($userAgent)) {
             if (isset($_SERVER['HTTP_USER_AGENT'])) {
                 $this->_agent = trim($_SERVER['HTTP_USER_AGENT']);
             }
@@ -274,7 +274,7 @@ class Horde_Browser
         $this->_lowerAgent = strtolower($this->_agent);
 
         // Set our accept string.
-        if ($accept === null) {
+        if (is_null($accept)) {
             if (isset($_SERVER['HTTP_ACCEPT'])) {
                 $this->_accept = strtolower(trim($_SERVER['HTTP_ACCEPT']));
             }
@@ -534,7 +534,7 @@ class Horde_Browser
                 // numbers until Version 3.
                 if (preg_match('|Version/([0-9.]+)|', $agent, $version_string)) {
                     list($this->_majorVersion, $this->_minorVersion) = explode('.', $version_string[1], 2);
-                    $this->_minorVersion                             = (int) ($this->_minorVersion);
+                    $this->_minorVersion                             = intval($this->_minorVersion);
                     $this->setFeature('ajax');
                     $this->setFeature('rte');
                 } elseif ($this->_majorVersion >= 412) {
@@ -837,7 +837,7 @@ class Horde_Browser
      */
     public function isRobot()
     {
-        if ($this->_robotAgentRegexp === null) {
+        if (is_null($this->_robotAgentRegexp)) {
             $regex = array();
             foreach ($this->_robotAgents as $r) {
                 $regex[] = preg_quote($r, '/');
@@ -1051,7 +1051,7 @@ class Horde_Browser
     public function getIPAddress()
     {
         return empty($_SERVER['HTTP_X_FORWARDED_FOR'])
-            ? filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP)
+            ? $_SERVER['REMOTE_ADDR']
             : $_SERVER['HTTP_X_FORWARDED_FOR'];
     }
 
@@ -1073,38 +1073,38 @@ class Horde_Browser
         $filesize = ini_get('upload_max_filesize');
         switch (strtolower(substr($filesize, -1, 1))) {
         case 'k':
-            $filesize = (int) (floatval($filesize) * 1024);
+            $filesize = intval(floatval($filesize) * 1024);
             break;
 
         case 'm':
-            $filesize = (int) (floatval($filesize) * 1024 * 1024);
+            $filesize = intval(floatval($filesize) * 1024 * 1024);
             break;
 
         case 'g':
-            $filesize = (int) (floatval($filesize) * 1024 * 1024 * 1024);
+            $filesize = intval(floatval($filesize) * 1024 * 1024 * 1024);
             break;
 
         default:
-            $filesize = (int) ($filesize);
+            $filesize = intval($filesize);
             break;
         }
 
         $postsize = ini_get('post_max_size');
         switch (strtolower(substr($postsize, -1, 1))) {
         case 'k':
-            $postsize = (int) (floatval($postsize) * 1024);
+            $postsize = intval(floatval($postsize) * 1024);
             break;
 
         case 'm':
-            $postsize = (int) (floatval($postsize) * 1024 * 1024);
+            $postsize = intval(floatval($postsize) * 1024 * 1024);
             break;
 
         case 'g':
-            $postsize = (int) (floatval($postsize) * 1024 * 1024 * 1024);
+            $postsize = intval(floatval($postsize) * 1024 * 1024 * 1024);
             break;
 
         default:
-            $postsize = (int) ($postsize);
+            $postsize = intval($postsize);
             break;
         }
 
@@ -1124,7 +1124,7 @@ class Horde_Browser
      */
     public function wasFileUploaded($field, $name = null)
     {
-        if ($name === null) {
+        if (is_null($name)) {
             $name = 'file';
         }
 
@@ -1199,7 +1199,7 @@ class Horde_Browser
 
         /* Content-Type/Content-Disposition Header. */
         if ($inline) {
-            if ($cType !== null) {
+            if (!is_null($cType)) {
                 header('Content-Type: ' . trim($cType));
             } elseif ($this->isBrowser('msie')) {
                 header('Content-Type: application/x-msdownload');
@@ -1210,7 +1210,7 @@ class Horde_Browser
         } else {
             if ($this->isBrowser('msie')) {
                 header('Content-Type: application/x-msdownload');
-            } elseif ($cType !== null) {
+            } elseif (!is_null($cType)) {
                 header('Content-Type: ' . trim($cType));
             } else {
                 header('Content-Type: application/octet-stream');
@@ -1225,7 +1225,7 @@ class Horde_Browser
 
         /* Content-Length Header. Only send if we are not compressing
          * output. */
-        if ($cLength !== null &&
+        if (!is_null($cLength) &&
             !in_array('ob_gzhandler', ob_list_handlers())) {
             header('Content-Length: ' . $cLength);
         }

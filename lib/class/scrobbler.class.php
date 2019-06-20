@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,7 @@ class scrobbler
      * Constructor
      * This is the constructer it takes a username and password
      */
-    public function __construct($api_key, $scheme = 'https', $host = '', $challenge = '', $secret = '')
+    public function __construct($api_key, $scheme='https', $host='', $challenge='', $secret='')
     {
         $this->error_msg     = '';
         $this->challenge     = $challenge;
@@ -50,7 +50,7 @@ class scrobbler
      * Provide the API signature for calling Last.fm / Libre.fm services
      * It is the md5 of the <name><value> of all parameter plus API's secret
      */
-    public function get_api_sig($vars = null)
+    public function get_api_sig($vars=null)
     {
         ksort($vars);
         $sig = '';
@@ -67,9 +67,8 @@ class scrobbler
      * call_url
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
-     * @param string $url
      */
-    public function call_url($url, $method = 'GET', $vars = null)
+    public function call_url($url, $method='GET', $vars=null)
     {
         // Encode parameters per RFC1738
         $params=http_build_query($vars);
@@ -87,25 +86,25 @@ class scrobbler
             $opts['http']['content']  = $params;
             $opts['http']['header'][] = 'Content-type: application/x-www-form-urlencoded';
             $opts['http']['header'][] = 'Content-length: ' . strlen($params);
-            $params                   = '';
+            $params                   ='';
         }
         $context = stream_context_create($opts);
         if ($params != '') {
             // If there are paramters for GET request, adding the "?" caracter before
             $params='?' . $params;
         }
-        $target       = $this->scheme . '://' . $this->host . $url . $params;
-        $filepath     = @fopen($target, 'r', false, $context);
-        if (!$filepath) {
-            debug_event('scrobbler.class', 'Cannot access ' . $target, 1);
+        $target = $this->scheme . '://' . $this->host . $url . $params;
+        $fp     = @fopen($target, 'r', false, $context);
+        if (!$fp) {
+            debug_event('Scrobbler', 'Cannot access ' . $target, 1);
 
             return false;
         }
         ob_start();
-        fpassthru($filepath);
+        fpassthru($fp);
         $buffer = ob_get_contents();
         ob_end_clean();
-        fclose($filepath);
+        fclose($fp);
 
         return $buffer;
     } // call_url
@@ -131,9 +130,9 @@ class scrobbler
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
      */
-    public function get_session_key($token = null)
+    public function get_session_key($token=null)
     {
-        if ($token !== null) {
+        if (!is_null($token)) {
             $vars = array(
             'method' => 'auth.getSession',
             'api_key' => $this->api_key,
@@ -180,7 +179,7 @@ class scrobbler
     public function queue_track($artist, $album, $title, $timestamp, $length, $track)
     {
         if ($length < 30) {
-            debug_event('scrobbler.class', "Not queuing track, too short", 3);
+            debug_event('Scrobbler', "Not queuing track, too short", '5');
 
             return false;
         }
@@ -216,17 +215,17 @@ class scrobbler
         ksort($this->queued_tracks);
 
         // Build the query string (encoded per RFC1738 by the call method)
-        $count   = 0;
-        $vars    = array();
+        $i   = 0;
+        $vars= array();
         foreach ($this->queued_tracks as $track) {
             //construct array of parameters for each song
-            $vars["artist[$count]"]      = $track['artist'];
-            $vars["track[$count]"]       = $track['title'];
-            $vars["timestamp[$count]"]   = $track['time'];
-            $vars["album[$count]"]       = $track['album'];
-            $vars["trackNumber[$count]"] = $track['track'];
-            $vars["duration[$count]"]    = $track['length'];
-            $count++;
+            $vars["artist[$i]"]      = $track['artist'];
+            $vars["track[$i]"]       = $track['title'];
+            $vars["timestamp[$i]"]   = $track['time'];
+            $vars["album[$i]"]       = $track['album'];
+            $vars["trackNumber[$i]"] = $track['track'];
+            $vars["duration[$i]"]    = $track['length'];
+            $i++;
         }
         // Add the method, API and session keys
         $vars['method']  = 'track.scrobble';
@@ -263,7 +262,6 @@ class scrobbler
      */
     public function love($is_loved, $type, $artist = '', $title = '', $album = '')
     {
-        $vars           = array();
         $vars['track']  = $title;
         $vars['artist'] = $artist;
         // Add the method, API and session keys

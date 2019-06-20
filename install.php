@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,8 +30,7 @@ set_error_handler('ampache_error_handler');
 if (!install_check_status($configfile)) {
     $redirect_url = 'login.php';
     require_once AmpConfig::get('prefix') . UI::find_template('error_page.inc.php');
-
-    return false;
+    exit;
 }
 
 define('INSTALL', 1);
@@ -101,12 +100,7 @@ if (!$htmllang) {
 }
 AmpConfig::set('lang', $htmllang, true);
 AmpConfig::set('site_charset', $charset ?: 'UTF-8', true);
-if (!class_exists('Gettext\Translations')) {
-    require_once $prefix . '/templates/test_error_page.inc.php';
-    throw new Exception('load_gettext()');
-} else {
-    load_gettext();
-}
+load_gettext();
 header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
 
 // Correct potential \ or / in the dirname
@@ -116,14 +110,13 @@ $web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
 
 unset($safe_dirname);
 
-// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'create_db':
         $new_user = '';
         $new_pass = '';
-        if (Core::get_post('db_user') == 'create_db_user') {
-            $new_user = Core::get_post('db_username');
-            $new_pass = Core::get_post('db_password');
+        if ($_POST['db_user'] == 'create_db_user') {
+            $new_user = $_POST['db_username'];
+            $new_pass = $_POST['db_password'];
 
             if (!strlen($new_user) || !strlen($new_pass)) {
                 AmpError::add('general', T_('Error: Ampache SQL Username or Password missing'));
@@ -159,13 +152,13 @@ switch ($_REQUEST['action']) {
 
             $created_config = true;
             if ($write_htaccess_channel || $download_htaccess_channel || $all) {
-                $created_config = $created_config && install_rewrite_rules($htaccess_channel_file, Core::get_post('web_path'), $download_htaccess_channel);
+                $created_config = $created_config && install_rewrite_rules($htaccess_channel_file, $_POST['web_path'], $download_htaccess_channel);
             }
             if ($write_htaccess_rest || $download_htaccess_rest || $all) {
-                $created_config = $created_config && install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
+                $created_config = $created_config && install_rewrite_rules($htaccess_rest_file, $_POST['web_path'], $download_htaccess_rest);
             }
             if ($write_htaccess_play || $download_htaccess_play || $all) {
-                $created_config = $created_config && install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
+                $created_config = $created_config && install_rewrite_rules($htaccess_play_file, $_POST['web_path'], $download_htaccess_play);
             }
             if ($write || $download || $all) {
                 $created_config = $created_config && install_create_config($download);

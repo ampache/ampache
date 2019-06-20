@@ -69,7 +69,7 @@
                 <?php echo  T_('State'); ?>:
             </td>
             <td>
-                <input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
+                <input type="text" readonly name="state" value="<?php echo scrub_out($client->state); ?>" />
                 <?php AmpError::display('state'); ?>
             </td>
         </tr>
@@ -78,7 +78,7 @@
                 <?php echo  T_('City'); ?>:
             </td>
             <td>
-                <input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
+                <input type="text" readonly name="city" value="<?php echo scrub_out($client->city); ?>" />
                 <?php AmpError::display('city'); ?>
             </td>
         </tr>
@@ -87,7 +87,7 @@
                 <?php echo T_('Password'); ?> :
             </td>
             <td>
-                <input type="password" name="password_1" value="" autocomplete="off" />
+                <input type="password" readonly name="password_1" value="" />
                 <?php AmpError::display('password'); ?>
             </td>
         </tr>
@@ -96,7 +96,7 @@
                 <?php echo T_('Confirm Password'); ?>:
             </td>
             <td>
-                <input type="password" name="password_2" value="" autocomplete="off" />
+                <input type="password" readonly name="password_2" value="" />
             </td>
         </tr>
         <tr>

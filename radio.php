@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,19 +24,17 @@ require_once 'lib/init.php';
 
 if (!AmpConfig::get('live_stream')) {
     UI::access_denied();
-
-    return false;
+    exit;
 }
 
 UI::show_header();
 
-// Switch on the actions
+// Switch on Action
 switch ($_REQUEST['action']) {
     case 'show_create':
         if (!Access::check('interface', 75)) {
             UI::access_denied();
-
-            return false;
+            exit;
         }
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_live_stream.inc.php');
@@ -45,14 +43,12 @@ switch ($_REQUEST['action']) {
     case 'create':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
-
-            return false;
+            exit;
         }
 
         if (!Core::form_verify('add_radio', 'post')) {
             UI::access_denied();
-
-            return false;
+            exit;
         }
 
         // Try to create the sucker

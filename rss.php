@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,19 +26,18 @@ require_once 'lib/init.php';
 /* Check Perms */
 if (!AmpConfig::get('use_rss') || AmpConfig::get('demo_mode')) {
     UI::access_denied();
-
-    return false;
+    exit;
 }
 
 // Add in our base hearder defining the content type
 header("Content-Type: application/xml; charset=" . AmpConfig::get('site_charset'));
 
-$type   = Core::get_request('type');
+$type   = $_REQUEST['type'];
 $rss    = new Ampache_RSS($type);
 $params = null;
 if ($type === "podcast") {
     $params                = array();
-    $params['object_type'] = Core::get_request('object_type');
-    $params['object_id']   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+    $params['object_type'] = $_REQUEST['object_type'];
+    $params['object_id']   = $_REQUEST['object_id'];
 }
 echo $rss->get_xml($params);

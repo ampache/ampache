@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,11 @@
 $prefix = dirname(__FILE__);
 require_once $prefix . '/lib/init-tiny.php';
 
-switch ($_REQUEST['action']) {
+$action = 'default';
+if (isset($_REQUEST['action'])) {
+    $action = $_REQUEST['action'];
+}
+switch ($action) {
     case 'config':
         // Check to see if the config file is working now, if so fall
         // through to the default, else show the appropriate template
@@ -57,13 +61,11 @@ switch ($_REQUEST['action']) {
         if (isset($_COOKIE[$session_name . '_lang'])) {
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
-        if (!class_exists('Gettext\Translations')) {
-            require_once $prefix . '/templates/test_error_page.inc.php';
-            throw new Exception('load_gettext()');
-        } else {
-            load_gettext();
-            // Load template
-            require_once $prefix . '/templates/show_test.inc.php';
-        }
+
+        // Load gettext mojo
+        load_gettext();
+
+        // Load template
+        require_once $prefix . '/templates/show_test.inc.php';
     break;
 } // end switch on action

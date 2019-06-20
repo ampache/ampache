@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -91,7 +91,7 @@ class PrivateMsg extends database_object
     /**
      * __construct
      */
-    public function __construct($id = null)
+    public function __construct($id=null)
     {
         if (!$id) {
             return false;
@@ -149,7 +149,7 @@ class PrivateMsg extends database_object
         }
 
         if (!AmpError::occurred()) {
-            $from_user     = $data['from_user'] ?: Core::get_global('user')->id;
+            $from_user     = $data['from_user'] ?: $GLOBALS['user']->id;
             $creation_date = $data['creation_date'] ?: time();
             $is_read       = $data['is_read'] ?: 0;
             $sql           = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) " .
@@ -160,7 +160,7 @@ class PrivateMsg extends database_object
                 // Never send email in case of user impersonation
                 if (!isset($data['from_user']) && $insert_id) {
                     if (Preference::get_by_user($to_user->id, 'notify_email')) {
-                        if (!empty($to_user->email) && Mailer::is_mail_enabled()) {
+                        if (!empty($to_user->email)) {
                             $mailer = new Mailer();
                             $mailer->set_default_sender();
                             $mailer->recipient      = $to_user->email;
@@ -172,7 +172,7 @@ class PrivateMsg extends database_object
         ----------------------
 
         %s
-        "), Core::get_global('user')->fullname, $message, AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id);
+        "), $GLOBALS['user']->fullname, $message, AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id);
                             $mailer->send();
                         }
                     }
@@ -191,7 +191,7 @@ class PrivateMsg extends database_object
      * @param integer $to_user
      * @param boolean $unread_only
      * @param integer $from_user
-     * @return integer[]
+     * @return int[]
      */
     public static function get_private_msgs($to_user, $unread_only = false, $from_user = 0)
     {

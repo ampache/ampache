@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,14 +25,12 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    return false;
+    exit;
 }
 
-debug_event('stream.ajax', 'Called for action {' . Core::get_request('action') . '}', 5);
+debug_event('stream.ajax.php', 'Called for action {' . $_REQUEST['action'] . '}', 5);
 
 $results = array();
-
-// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'set_play_type':
         // Make sure they have the rights to do this
@@ -45,15 +43,15 @@ switch ($_REQUEST['action']) {
             case 'stream':
             case 'localplay':
             case 'democratic':
-                $key = 'allow_democratic_playback';
+                $key = 'allow_' . $_POST['type'] . '_playback';
                 if (!AmpConfig::get($key)) {
                     $results['rfc3514'] = '0x1';
                     break 2;
                 }
-                $new = 'democratic';
+                $new = $_POST['type'];
             break;
             case 'web_player':
-                $new = 'web_player';
+                $new = $_POST['type'];
                 // Rien a faire
             break;
             default:
@@ -65,11 +63,11 @@ switch ($_REQUEST['action']) {
         $current = AmpConfig::get('play_type');
 
         // Go ahead and update their preference
-        if (Preference::update('play_type', Core::get_global('user')->id, $new)) {
+        if (Preference::update('play_type', $GLOBALS['user']->id, $new)) {
             AmpConfig::set('play_type', $new, true);
         }
 
-        if (($new == 'localplay' && $current != 'localplay') || ($current == 'localplay' && $new != 'localplay')) {
+        if (($new == 'localplay' and $current != 'localplay') or ($current == 'localplay' and $new != 'localplay')) {
             $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
         }
 
@@ -77,12 +75,12 @@ switch ($_REQUEST['action']) {
     break;
     case 'directplay':
 
-        $object_type = Core::get_request('object_type');
-        $object_id   = $_GET['object_id'];
+        debug_event('stream.ajax.php', 'Play type {' . $_REQUEST['playtype'] . '}', 5);
+        $object_type = $_REQUEST['object_type'];
+        $object_id   = $_REQUEST['object_id'];
         if (is_array($object_id)) {
             $object_id = implode(',', $object_id);
         }
-        debug_event('stream.ajax', 'Called for ' . $object_type . ': {' . $object_id . '}', 5);
 
         if (Core::is_playable_item($object_type)) {
             $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;

@@ -188,7 +188,7 @@ class mpd
         }
 
         $this->_debug('construct', 'constructor called', 5);
-
+        
         if (empty($this->host)) {
             $this->_error('construct', 'Host is empty');
 
@@ -476,7 +476,7 @@ class mpd
             $command = self::COMMAND_SETVOL;
         } else {
             $this->RefreshInfo(); // Get the latest volume
-            if ($this->status['volume'] === null) {
+            if (is_null($this->status['volume'])) {
                 return false;
             } else {
                 $command = self::COMMAND_VOLUME;
@@ -517,8 +517,8 @@ class mpd
     {
         $this->_debug('PLAddBulk', 'start', 5);
         $num_files = count($trackArray);
-        for ($count = 0; $count < $num_files; $count++) {
-            $this->QueueCommand(self::COMMAND_ADD, $trackArray[$count]);
+        for ($i = 0; $i < $num_files; $i++) {
+            $this->QueueCommand(self::COMMAND_ADD, $trackArray[$i]);
         }
         $response = $this->SendCommandQueue();
         $this->_debug('PLAddBulk', "return: $response", 5);
@@ -938,7 +938,7 @@ class mpd
         $this->_debug('GetAlbums', 'start', 5);
 
         $params[] = self::TABLE_ALBUM;
-        if ($artist === null) {
+        if (!is_null($artist)) {
             $params[] = $artist;
         }
 
@@ -1073,7 +1073,7 @@ class mpd
             echo "$source / $message\n";
         }
 
-        if ($this->_debug_callback === null) {
+        if (!is_null($this->_debug_callback)) {
             call_user_func($this->_debug_callback, 'MPD', "$source / $message", $level);
         }
     }

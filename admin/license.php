@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,17 +24,15 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-
-    return false;
+    exit;
 }
 
 UI::show_header();
 
-// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'edit':
-        if ((filter_has_var(INPUT_POST, 'license_id'))) {
-            $license = new License(filter_input(INPUT_POST, 'license_id', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        if (isset($_POST['license_id'])) {
+            $license = new License($_POST['license_id']);
             if ($license->id) {
                 $license->update($_POST);
             }
@@ -47,7 +45,6 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_edit':
         $license = new License($_REQUEST['license_id']);
-        // intentional fall through
     case 'show_create':
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_license.inc.php');
         break;

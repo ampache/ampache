@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,21 +24,20 @@
 
 require_once 'lib/init.php';
 // We special-case this so we can send a 302 if the delete succeeded
-if (Core::get_request('action') == 'delete_playlist') {
+if ($_REQUEST['action'] == 'delete_playlist') {
     // Check rights
     $playlist = new Playlist($_REQUEST['playlist_id']);
     if ($playlist->has_access()) {
         $playlist->delete();
         // Go elsewhere
         header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=playlist');
-
-        return false;
+        exit;
     }
 }
 
 UI::show_header();
 
-// Switch on the actions
+/* Switch on the action passed in */
 switch ($_REQUEST['action']) {
     case 'create_playlist':
         /* Check rights */
@@ -48,7 +47,7 @@ switch ($_REQUEST['action']) {
         }
 
         $playlist_name = scrub_in($_REQUEST['playlist_name']);
-        $playlist_type = scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $playlist_type = scrub_in($_REQUEST['type']);
 
         $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
         $_SESSION['data']['playlist_id'] = $playlist_id;
@@ -90,7 +89,7 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, AmpConfig::get('web_path') . '/playlist.php?action=' . $url);
     break;
     case 'set_track_numbers':
-        debug_event('playlist', 'Set track numbers called.', 5);
+        debug_event('playlist', 'Set track numbers called.', '5');
 
         $playlist = new Playlist($_REQUEST['playlist_id']);
         /* Make sure they have permission */
@@ -101,13 +100,13 @@ switch ($_REQUEST['action']) {
 
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
-            $_GET[$key] = unhtmlentities((string) scrub_in($data));
-            debug_event('playlist', $key . '=' . Core::get_get($key), 5);
+            $_GET[$key] = unhtmlentities(scrub_in($data));
+            debug_event('playlist', $key . '=' . $_GET[$key], '5');
         }
 
         if (isset($_GET['order'])) {
             $songs = explode(";", $_GET['order']);
-            $track = $_GET['offset'] ? ((int) ($_GET['offset']) + 1) : 1;
+            $track = $_GET['offset'] ? (intval($_GET['offset']) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     $playlist->update_track_number($song_id, $track);
@@ -126,7 +125,7 @@ switch ($_REQUEST['action']) {
         $playlist->add_songs(array($_REQUEST['song_id']), true);
     break;
     case 'prune_empty':
-        if (!Core::get_global('user')->has_access(100)) {
+        if (!$GLOBALS['user']->has_access(100)) {
             UI::access_denied();
             break;
         }
@@ -138,7 +137,7 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, $url);
     break;
     case 'remove_duplicates':
-        debug_event('playlist', 'Remove duplicates called.', 4);
+        debug_event('playlist', 'Remove duplicates called.', '5');
 
         $playlist = new Playlist($_REQUEST['playlist_id']);
         /* Make sure they have permission */

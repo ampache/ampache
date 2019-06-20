@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-// Switch on the actions
+// Switch on the incomming action
 switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
@@ -47,10 +47,9 @@ switch ($_REQUEST['action']) {
 
         $label = new Label($_REQUEST['label_id']);
         if (!Catalog::can_remove($label)) {
-            debug_event('labels', 'Unauthorized to remove the label `.' . $label->id . '`.', 1);
+            debug_event('label', 'Unauthorized to remove the label `.' . $label->id . '`.', 1);
             UI::access_denied();
-
-            return false;
+            exit;
         }
 
         if ($label->remove()) {
@@ -63,14 +62,12 @@ switch ($_REQUEST['action']) {
         // Must be at least a content manager or edit upload enabled
         if (!Access::check('interface', '50') && !AmpConfig::get('upload_allow_edit')) {
             UI::access_denied();
-
-            return false;
+            exit;
         }
 
         if (!Core::form_verify('add_label', 'post')) {
             UI::access_denied();
-
-            return false;
+            exit;
         }
 
         // Remove unauthorized defined values from here
@@ -91,7 +88,7 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'show':
-        $label_id = (int) filter_input(INPUT_GET, 'label', FILTER_SANITIZE_NUMBER_INT);
+        $label_id = intval($_REQUEST['label']);
         if (!$label_id) {
             if (!empty($_REQUEST['name'])) {
                 $label_id = Label::lookup($_REQUEST);
@@ -104,10 +101,8 @@ switch ($_REQUEST['action']) {
             $object_type = 'artist';
             require_once AmpConfig::get('prefix') . UI::find_template('show_label.inc.php');
             UI::show_footer();
-
-            return false;
+            exit;
         }
-        // intentional fall through
     case 'show_add_label':
         if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');

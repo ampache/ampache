@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,7 +32,7 @@ use Lib\Interfaces\Model;
 class Repository
 {
     protected $modelClassName;
-
+    
     /**
      *
      * @var array Stores relation between SQL field name and class name so we
@@ -60,19 +60,16 @@ class Repository
 
     /**
      *
-     * @param type $object_id
+     * @param type $id
      * @return DatabaseObject
      */
-    public function findById($object_id)
+    public function findById($id)
     {
-        $rows = $this->findBy(array('id'), array($object_id));
+        $rows = $this->findBy(array('id'), array($id));
 
         return count($rows) ? reset($rows) : null;
     }
 
-    /**
-     * @param string $table
-     */
     private function getRecords($table, $field = null, $value = null)
     {
         $data = array();
@@ -110,8 +107,8 @@ class Repository
         $nameParts = explode('\\', $className);
         $tableName = preg_replace_callback(
                 '/(?<=.)([A-Z])/',
-                function ($name) {
-                    return '_' . strtolower($name[0]);
+                function ($m) {
+                    return '_' . strtolower($m[0]);
                 }, end($nameParts));
 
         return lcfirst($tableName);
@@ -166,11 +163,11 @@ class Repository
         );
     }
 
-    protected function deleteRecord($object_id)
+    protected function deleteRecord($id)
     {
         $sql = 'DELETE FROM ' . $this->getTableName()
                 . ' WHERE id = ?';
-        \Dba::write($sql, array($object_id));
+        \Dba::write($sql, array($id));
     }
 
     protected function getKeyValuePairs($properties)
@@ -186,7 +183,7 @@ class Repository
     /**
      * Set a private or protected variable.
      * Only used in case where a property should not publicly writable
-     * @param Model $object
+     * @param Object $object
      * @param string $property
      * @param mixed $value
      */
@@ -231,7 +228,7 @@ class Repository
             }
             $sql .= implode(' and ', $sqlParts);
         }
-
+        
         return $sql;
     }
 

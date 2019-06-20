@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,7 +39,7 @@ class Userflag extends database_object
      */
     public function __construct($id, $type)
     {
-        $this->id   = (int) ($id);
+        $this->id   = intval($id);
         $this->type = $type;
 
         return true;
@@ -49,16 +49,15 @@ class Userflag extends database_object
       * build_cache
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
-     * @param string $type
      */
     public static function build_cache($type, $ids, $user_id = null)
     {
-        if (!is_array($ids) || !count($ids)) {
+        if (!is_array($ids) or !count($ids)) {
             return false;
         }
 
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user_id = $GLOBALS['user']->id;
         }
 
         $userflags = array();
@@ -73,25 +72,24 @@ class Userflag extends database_object
             $userflags[$row['object_id']] = true;
         }
 
-        foreach ($ids as $objectid) {
-            if (!isset($userflags[$objectid])) {
+        foreach ($ids as $id) {
+            if (!isset($userflags[$id])) {
                 $userflag = 0;
             } else {
-                $userflag = (int) ($userflags[$objectid]);
+                $userflag = intval($userflags[$id]);
             }
-            parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, $userflag);
+            parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $id, $userflag);
         }
 
         return true;
     } // build_cache
 
     /**
-     * garbage_collection
+     * gc
      *
      * Remove userflag for items that no longer exist.
-     * @param string $object_type
      */
-    public static function garbage_collection($object_type = null, $object_id = null)
+    public static function gc($object_type = null, $object_id = null)
     {
         $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
 
@@ -100,7 +98,7 @@ class Userflag extends database_object
                 $sql = "DELETE FROM `user_flag` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('userflag.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event('userflag', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -109,14 +107,10 @@ class Userflag extends database_object
         }
     }
 
-    /**
-     * get_flag
-     * @param boolean $get_date
-     */
     public function get_flag($user_id = null, $get_date = null)
     {
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user_id = $GLOBALS['user']->id;
         }
 
         $key = 'userflag_' . $this->type . '_user' . $user_id;
@@ -145,25 +139,16 @@ class Userflag extends database_object
     /**
      * set_flag
      * This function sets the user flag for the current object.
-     * If no user_id is passed in, we use the currently logged in user.
+     * If no userid is passed in, we use the currently logged in user.
      */
     public function set_flag($flagged, $user_id = null)
     {
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user_id = $GLOBALS['user']->id;
         }
-        $user_id = (int) ($user_id);
-        $results = array();
-        if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $sql = "SELECT `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
-                    " WHERE `id` = ?";
-            $db_results = Dba::read($sql, array($this->id));
-            $results    = Dba::fetch_assoc($db_results);
-        }
-        if (!empty($results)) {
-            return self::set_flag_for_group($flagged, $results, $user_id);
-        }
-        debug_event('userflag.class', "Setting userflag for $this->type $this->id to $flagged", 4);
+        $user_id = intval($user_id);
+
+        debug_event('Userflag', "Setting userflag for $this->type $this->id to $flagged", 5);
 
         if (!$flagged) {
             $sql = "DELETE FROM `user_flag` WHERE " .
@@ -176,7 +161,7 @@ class Userflag extends database_object
             "(`object_id`, `object_type`, `user`, `date`) " .
             "VALUES (?, ?, ?, ?)";
             $params = array($this->id, $this->type, $user_id, time());
-
+            
             Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id);
         }
         Dba::write($sql, $params);
@@ -196,7 +181,7 @@ class Userflag extends database_object
                             $plugin->_plugin->set_flag($song, $flagged);
                         }
                     } catch (Exception $e) {
-                        debug_event('userflag.class', 'Stats plugin error: ' . $e->getMessage(), 1);
+                        debug_event('user.class.php', 'Stats plugin error: ' . $e->getMessage(), '1');
                     }
                 }
             }
@@ -206,55 +191,15 @@ class Userflag extends database_object
     } // set_flag
 
     /**
-     * set_flag_for_group
-     * This function sets the user flag for an album group.
-     */
-    public function set_flag_for_group($flagged, $album, $user_id = null)
-    {
-        $sql = "SELECT `album`.`id` FROM `album`" .
-                " WHERE `album`.`name` = '" . str_replace("'", "\'", $album['name']) . "' AND" .
-                " `album`.`album_artist` = " . $album['album_artist'] . " AND" .
-                " `album`.`mbid` = '" . $album['mbid'] . "'";
-        $db_results = Dba::read($sql);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-        foreach ($results as $album_id) {
-            if (!$flagged) {
-                $sql = "DELETE FROM `user_flag` WHERE " .
-                    "`object_id` = " . $album_id . " AND " .
-                    "`object_type` = 'album' AND " .
-                    "`user` = " . $user_id;
-                Dba::write($sql);
-            } else {
-                $sql = "REPLACE INTO `user_flag` " .
-                "(`object_id`, `object_type`, `user`, `date`) " .
-                "VALUES (?, ?, ?, ?)";
-                $params = array($album_id, 'album', $user_id, time());
-
-                Useractivity::post_activity($user_id, 'userflag', 'album', $album_id);
-                Dba::write($sql, $params);
-            }
-
-            parent::add_to_cache('userflag_album_user' . $user_id, $album_id, $flagged);
-        }
-
-        return true;
-    } // set_flag_for_group
-
-    /**
      * get_latest_sql
      * Get the latest sql
-     * @param string|null $type
-     * @param string $user_id
      */
-    public static function get_latest_sql($type, $user_id = null)
+    public static function get_latest_sql($type, $user_id=null)
     {
         if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
+            $user_id = $GLOBALS['user']->id;
         }
-        $user_id = (int) ($user_id);
+        $user_id = intval($user_id);
 
         $sql = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, `user_flag`.`user` as `user` FROM `user_flag`";
         if ($user_id <= 0) {
@@ -284,19 +229,17 @@ class Userflag extends database_object
     /**
      * get_latest
      * Get the latest user flagged objects
-     * @param string $type
-     * @param string $user_id
      */
-    public static function get_latest($type = null, $user_id = null, $count = '', $offset = '')
+    public static function get_latest($type=null, $user_id=null, $count='', $offset='')
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
         }
-        $count = (int) ($count);
+        $count = intval($count);
         if (!$offset) {
             $limit = $count;
         } else {
-            $limit = (int) ($offset) . "," . $count;
+            $limit = intval($offset) . "," . $count;
         }
 
         /* Select Top objects counting by # of rows */

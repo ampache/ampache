@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,12 +43,8 @@ class Registration
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function send_confirmation($username, $fullname, $email, $website, $validation)
+    public static function send_confirmation($username, $fullname, $email, $website, $password, $validation)
     {
-        if (!Mailer::is_mail_enabled()) {
-            return false;
-        }
-
         $mailer = new Mailer();
 
         // We are the system
@@ -128,13 +124,13 @@ Website: %s
         }
 
         /* Check for existance */
-        $filepointer = fopen($filename, 'r');
+        $fp = fopen($filename, 'r');
 
-        if (!$filepointer) {
+        if (!$fp) {
             return false;
         }
 
-        $data = fread($filepointer, filesize($filename));
+        $data = fread($fp, filesize($filename));
 
         /* Scrub and show */
         echo $data;

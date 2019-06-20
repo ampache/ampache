@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,8 +34,7 @@ if (AmpConfig::get('use_auth') && !isset($_GET['force_display'])) {
     }
     if ($auth) {
         header("Location: " . AmpConfig::get('web_path'));
-
-        return false;
+        exit;
     }
 }
 require_once 'lib/login.php';

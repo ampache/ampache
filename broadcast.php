@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,38 +24,34 @@ require_once 'lib/init.php';
 
 if (!AmpConfig::get('broadcast')) {
     UI::access_denied();
-
-    return false;
+    exit;
 }
 
 UI::show_header();
 
-// Switch on the actions
+/* Switch on the action passed in */
 switch ($_REQUEST['action']) {
     case 'show_delete':
-        $object_id = Core::get_request('id');
+        $id = $_REQUEST['id'];
 
-        $next_url = AmpConfig::get('web_path') . '/broadcast.php?action=delete&id=' . scrub_out($object_id);
-        show_confirmation(T_('Confirm Action'), T_('Delete Broadcast'), $next_url, 1, 'delete_broadcast');
+        $next_url = AmpConfig::get('web_path') . '/broadcast.php?action=delete&id=' . scrub_out($id);
+        show_confirmation(T_('Broadcast Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_broadcast');
         UI::show_footer();
-
-        return false;
+        exit;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-
-            return false;
+            exit;
         }
 
-        $object_id = Core::get_request('id');
-        $broadcast = new Broadcast($object_id);
+        $id        = $_REQUEST['id'];
+        $broadcast = new Broadcast($id);
         if ($broadcast->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=broadcast';
-            show_confirmation(T_('Deleted'), T_('Broadcast has been deleted'), $next_url);
+            show_confirmation(T_('Broadcast Deleted'), T_('The Broadcast has been deleted'), $next_url);
         }
         UI::show_footer();
-
-        return false;
+        exit;
 } // switch on the action
 
 UI::show_footer();

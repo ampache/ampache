@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,7 @@ if (!Core::is_session_started()) {
 }
 
 if (!defined('AJAX_INCLUDE')) {
-    return false;
+    exit;
 }
 
 if (isset($_REQUEST['browse_id'])) {
@@ -39,7 +39,7 @@ if (isset($_REQUEST['browse_id'])) {
     $browse_id = null;
 }
 
-debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '}', 5);
+debug_event('browse.ajax.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
 
 $browse = new Browse($browse_id);
 
@@ -47,21 +47,19 @@ if (isset($_REQUEST['show_header']) && $_REQUEST['show_header']) {
     $browse->set_show_header($_REQUEST['show_header'] == 'true');
 }
 
-$argument = false;
+$argument = null;
 if ($_REQUEST['argument']) {
     $argument = scrub_in($_REQUEST['argument']);
 }
 
 $results = array();
-
-// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'browse':
         $object_ids = array();
 
         // Check 'value' with isset because it can null
         //(user type a "start with" word and deletes it)
-        if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) || isset($_REQUEST['value']))) {
+        if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) or isset($_REQUEST['value']))) {
             // Set any new filters we've just added
             $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
             $browse->set_catalog($_SESSION['catalog']);
@@ -75,7 +73,7 @@ switch ($_REQUEST['action']) {
         if ($_REQUEST['catalog_key'] || $_SESSION['catalog'] != 0) {
             $browse->set_filter('catalog', $_REQUEST['catalog_key']);
             $_SESSION['catalog'] = $_REQUEST['catalog_key'];
-        } elseif ((int) Core::get_request('catalog_key') == 0) {
+        } elseif ($_REQUEST['catalog_key'] == 0) {
             $browse->set_filter('catalog', null);
             unset($_SESSION['catalog']);
         }
@@ -89,7 +87,7 @@ switch ($_REQUEST['action']) {
             $browse->set_sort($_REQUEST['sort']);
         }
 
-        if (!$browse->is_use_pages()) {
+        if (!$browse->get_use_pages()) {
             $browse->set_start(0);
         }
 
@@ -105,9 +103,9 @@ switch ($_REQUEST['action']) {
         switch ($_REQUEST['type']) {
             case 'playlist':
                 // Check the perms we need to on this
-                $playlist = new Playlist(Core::get_request('id'));
+                $playlist = new Playlist($_REQUEST['id']);
                 if (!$playlist->has_access()) {
-                    return false;
+                    exit;
                 }
 
                 // Delete it!
@@ -115,23 +113,23 @@ switch ($_REQUEST['action']) {
                 $key = 'playlist_row_' . $playlist->id;
             break;
             case 'smartplaylist':
-                $playlist = new Search(Core::get_request('id'), 'song');
+                $playlist = new Search($_REQUEST['id'], 'song');
                 if (!$playlist->has_access()) {
-                    return false;
+                    exit;
                 }
                 $playlist->delete();
                 $key = 'smartplaylist_row_' . $playlist->id;
             break;
             case 'live_stream':
-                if (!Core::get_global('user')->has_access('75')) {
-                    return false;
+                if (!$GLOBALS['user']->has_access('75')) {
+                    exit;
                 }
-                $radio = new Live_Stream(Core::get_request('id'));
+                $radio = new Live_Stream($_REQUEST['id']);
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
             break;
             default:
-                return false;
+                exit;
         } // end switch on type
 
         $results[$key] = '';
@@ -182,13 +180,13 @@ switch ($_REQUEST['action']) {
                 $browse->set_grid_view($value);
             break;
             case 'limit':
-                $value = (int) ($value);
+                $value = intval($value);
                 if ($value > 0) {
                     $browse->set_offset($value);
                 }
             break;
             case 'custom':
-                $value = (int) ($value);
+                $value = intval($value);
                 $limit = $browse->get_offset();
                 if ($limit > 0 && $value > 0) {
                     $total = $browse->get_total();
@@ -207,13 +205,12 @@ switch ($_REQUEST['action']) {
         $results[$browse->get_content_div()] = ob_get_clean();
     break;
     case 'get_share_links':
-        $object_type = Core::get_request('object_type');
-        $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+        $object_type = $_REQUEST['object_type'];
+        $object_id   = intval($_REQUEST['object_id']);
 
         if (Core::is_library_item($object_type) && $object_id > 0) {
             Share::display_ui_links($object_type, $object_id);
-
-            return false;
+            exit;
         }
     break;
     default:

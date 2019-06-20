@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,13 +24,10 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    return false;
+    exit;
 }
 
 $results = array();
-$action  = Core::get_request('action');
-
-// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'song':
         $songs = Random::get_default();
@@ -41,14 +38,14 @@ switch ($_REQUEST['action']) {
         }
 
         foreach ($songs as $song_id) {
-            Core::get_global('user')->playlist->add_object($song_id, 'song');
+            $GLOBALS['user']->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
     case 'album':
         $album_id = Album::get_random();
 
-        if (empty($album_id)) {
+        if (!$album_id) {
             $results['rfc3514'] = '0x1';
             break;
         }
@@ -56,7 +53,7 @@ switch ($_REQUEST['action']) {
         $album = new Album($album_id[0]);
         $songs = $album->get_songs();
         foreach ($songs as $song_id) {
-            Core::get_global('user')->playlist->add_object($song_id, 'song');
+            $GLOBALS['user']->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
@@ -71,7 +68,7 @@ switch ($_REQUEST['action']) {
         $artist = new Artist($artist_id);
         $songs  = $artist->get_songs();
         foreach ($songs as $song_id) {
-            Core::get_global('user')->playlist->add_object($song_id, 'song');
+            $GLOBALS['user']->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
@@ -86,7 +83,7 @@ switch ($_REQUEST['action']) {
         $playlist = new Playlist($playlist_id);
         $items    = $playlist->get_items();
         foreach ($items as $item) {
-            Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
+            $GLOBALS['user']->playlist->add_object($item['object_id'], $item['object_type']);
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
@@ -96,7 +93,7 @@ switch ($_REQUEST['action']) {
         // First add them to the active playlist
         if (is_array($object_ids)) {
             foreach ($object_ids as $object_id) {
-                Core::get_global('user')->playlist->add_object($object_id, 'song');
+                $GLOBALS['user']->playlist->add_object($object_id, 'song');
             }
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');

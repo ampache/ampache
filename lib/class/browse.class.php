@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,7 +39,7 @@ class Browse extends Query
     /**
      * Constructor.
      *
-     * @param integer|null $id
+     * @param int|null $id
      * @param boolean $cached
      */
     public function __construct($id = null, $cached = true)
@@ -71,18 +71,18 @@ class Browse extends Query
      * Legacy function, need to find a better way to do that
      *
      * @param string $class
-     * @param integer $uid
+     * @param int $uid
      */
     public function add_supplemental_object($class, $uid)
     {
-        $_SESSION['browse']['supplemental'][$this->id][$class] = (int) ($uid);
+        $_SESSION['browse']['supplemental'][$this->id][$class] = intval($uid);
 
         return true;
     } // add_supplemental_object
 
     /**
      * get_supplemental_objects
-     * This returns an array of 'class', 'id' for additional objects that
+     * This returns an array of 'class','id' for additional objects that
      * need to be created before we start this whole browsing thing.
      *
      * @return array
@@ -132,12 +132,11 @@ class Browse extends Query
      * and requires the correct template based on the
      * type that we are currently browsing
      *
-     * @param array $object_ids
-     * @param boolean|array $argument
+     * @param int[] $object_ids
      */
-    public function show_objects($object_ids = array(), $argument = false)
+    public function show_objects($object_ids = null, $argument = null)
     {
-        if ($this->is_simple() || !is_array($object_ids) || empty($object_ids)) {
+        if ($this->is_simple() || !is_array($object_ids)) {
             $object_ids = $this->get_saved();
         } else {
             $this->save_objects($object_ids);
@@ -179,14 +178,14 @@ class Browse extends Query
             $match = ' (' . $filter_value . ')';*/
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
-            $catalog = Catalog::create_from_id((int) ($filter_value));
+            $catalog = Catalog::create_from_id(intval($filter_value));
             $match   = ' (' . $catalog->name . ')';
         }
 
         $type = $this->get_type();
 
         // Update the session value only if it's allowed on the current browser
-        if ($this->is_update_session()) {
+        if ($this->get_update_session()) {
             $_SESSION['browse_current_' . $type]['start'] = $browse->get_start();
         }
 
@@ -195,7 +194,7 @@ class Browse extends Query
 
         $argument_param = ($argument ? '&argument=' . scrub_in($argument) : '');
 
-        debug_event('browse.class', 'Show objects called for type {' . $type . '}', 5);
+        debug_event('browse', 'Show objects called for type {' . $type . '}', '5');
 
         $limit_threshold = $this->get_threshold();
 
@@ -208,16 +207,14 @@ class Browse extends Query
             break;
             case 'album':
                 Album::build_cache($object_ids);
-                $box_title         = T_('Albums') . $match;
-                $allow_group_disks = false;
+                $box_title = T_('Albums') . $match;
                 if (is_array($argument)) {
                     $allow_group_disks = $argument['group_disks'];
                     if ($argument['title']) {
                         $box_title = $argument['title'];
                     }
-                }
-                if (AmpConfig::get('album_group')) {
-                    $allow_group_disks = true;
+                } else {
+                    $allow_group_disks = false;
                 }
                 $box_req = AmpConfig::get('prefix') . UI::find_template('show_albums.inc.php');
             break;
@@ -349,7 +346,7 @@ class Browse extends Query
         } // end switch on type
 
         Ajax::start_container($this->get_content_div(), 'browse_content');
-        if ($this->is_show_header()) {
+        if ($this->get_show_header()) {
             if (isset($box_req) && isset($box_title)) {
                 UI::show_box_top($box_title, $class);
             }
@@ -359,7 +356,7 @@ class Browse extends Query
             require $box_req;
         }
 
-        if ($this->is_show_header()) {
+        if ($this->get_show_header()) {
             if (isset($box_req)) {
                 UI::show_box_bottom();
             }
@@ -367,7 +364,7 @@ class Browse extends Query
             echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
         } else {
-            if (!$this->is_use_pages()) {
+            if (!$this->get_use_pages()) {
                 $this->show_next_link($argument);
             }
         }
@@ -419,22 +416,22 @@ class Browse extends Query
      */
     public function set_type($type, $custom_base = '')
     {
-        $name = 'browse_' . $type . '_pages';
-        if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+        $cn = 'browse_' . $type . '_pages';
+        if (isset($_COOKIE[$cn])) {
+            $this->set_use_pages($_COOKIE[$cn] == 'true');
         }
-        $name = 'browse_' . $type . '_alpha';
-        if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+        $cn = 'browse_' . $type . '_alpha';
+        if (isset($_COOKIE[$cn])) {
+            $this->set_use_alpha($_COOKIE[$cn] == 'true');
         } else {
             $default_alpha = explode(",", AmpConfig::get('libitem_browse_alpha'));
             if (in_array($type, $default_alpha)) {
                 $this->set_use_alpha(true, false);
             }
         }
-        $name = 'browse_' . $type . '_grid_view';
-        if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+        $cn = 'browse_' . $type . '_grid_view';
+        if (isset($_COOKIE[$cn])) {
+            $this->set_grid_view($_COOKIE[$cn] == 'true');
         }
 
         parent::set_type($type, $custom_base);
@@ -468,11 +465,11 @@ class Browse extends Query
      *
      * @return boolean
      */
-    public function is_use_pages()
+    public function get_use_pages()
     {
         return $this->_state['use_pages'];
     }
-
+    
     /**
      *
      * @param boolean $grid_view
@@ -484,12 +481,12 @@ class Browse extends Query
         }
         $this->_state['grid_view'] = $grid_view;
     }
-
+    
     /**
      *
      * @return boolean
      */
-    public function is_grid_view()
+    public function get_grid_view()
     {
         return $this->_state['grid_view'];
     }
@@ -504,7 +501,7 @@ class Browse extends Query
             $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
         }
         $this->_state['use_alpha'] = $use_alpha;
-
+        
         if ($use_alpha) {
             if (count($this->_state['filter']) == 0) {
                 $this->set_filter('regex_match', '^A');
@@ -518,7 +515,7 @@ class Browse extends Query
      *
      * @return boolean
      */
-    public function is_use_alpha()
+    public function get_use_alpha()
     {
         return $this->_state['use_alpha'];
     }
@@ -545,7 +542,7 @@ class Browse extends Query
      *
      * @return boolean
      */
-    public function is_show_header()
+    public function get_show_header()
     {
         return $this->show_header;
     }
@@ -554,7 +551,7 @@ class Browse extends Query
      *
      * @return boolean
      */
-    public function is_update_session()
+    public function get_update_session()
     {
         return $this->_state['update_session'];
     }
@@ -576,7 +573,7 @@ class Browse extends Query
     {
         return $this->_state['threshold'];
     }
-
+    
     /**
      *
      * @return string

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2017 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-// Switch on the actions
+// Switch on Action
 switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
@@ -49,8 +49,7 @@ switch ($_REQUEST['action']) {
         if (!Catalog::can_remove($song)) {
             debug_event('song', 'Unauthorized to remove the song `.' . $song->id . '`.', 1);
             UI::access_denied();
-
-            return false;
+            exit;
         }
 
         if ($song->remove_from_disk()) {
@@ -71,12 +70,7 @@ switch ($_REQUEST['action']) {
         $song = new Song($_REQUEST['song_id']);
         $song->format();
         $song->fill_ext_info();
-        if (!$song->id) {
-            debug_event('song', 'Requested a song that does not exist', 2);
-            echo T_("Error: Requested a song that does not exist.");
-        } else {
-            require_once AmpConfig::get('prefix') . UI::find_template('show_song.inc.php');
-        }
+        require_once AmpConfig::get('prefix') . UI::find_template('show_song.inc.php');
     break;
 } // end data collection
 
