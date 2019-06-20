@@ -38,6 +38,14 @@ $uid            = scrub_in($_REQUEST['uid']);
 $oid            = scrub_in($_REQUEST['oid']);
 $sid            = scrub_in($_REQUEST['ssid']);
 $type           = scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+$cache          = scrub_in($_REQUEST['cache']);
+$record_stats   = true;
+
+// allow disabling stat recording from the play url
+if ($cache === '1') {
+    debug_event('play/index', 'record_stats disabled: cache {' . $cache . "}", 5);
+    $record_stats = false;
+}
 
 $transcode_to = null;
 $player       = null;
@@ -415,7 +423,7 @@ if (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
     }
 
     if (!$share_id) {
-        if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+        if ($_SERVER['REQUEST_METHOD'] != 'HEAD' && $record_stats) {
             debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
             $sessionkey = $sid ?: Stream::get_session();
             $agent      = Session::agent($sessionkey);
@@ -493,7 +501,7 @@ if (!$cpaction) {
                     debug_event('play/index', 'Transcoding due to downsample_remote', 5);
                 } else {
                     $media_bitrate = floor($media->bitrate / 1000);
-                    // debug_event('play', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
+                    // debug_event('play/index', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
                     if (($bitrate > 0 && ($bitrate) < $media_bitrate) || ($maxbitrate > 0 && ($maxbitrate) < $media_bitrate)) {
                         $transcode = true;
                         debug_event('play/index', 'Transcoding because explicit bitrate request', 5);
@@ -642,7 +650,7 @@ if (!isset($_REQUEST['segment'])) {
     if ($start > 0) {
         debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
     } else {
-        if (!$share_id) {
+        if (!$share_id && $record_stats) {
             if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
                 debug_event('play/index', 'Registering stream stats for {' . $media->get_stream_name() . '}...', 4);
                 $sessionkey = $sid ?: Stream::get_session();
