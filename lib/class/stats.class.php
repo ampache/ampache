@@ -513,6 +513,9 @@ class Stats
             $sql  = "SELECT `$type` as `id`, `playlist`.`last_update` AS `real_atime` FROM `playlist` ";
         } else {
             $sql = "SELECT DISTINCT(`$type`) as `id`, `addition_time` AS `real_atime` FROM `" . $base_type . "` ";
+            if ($input_type === 'song') {
+                $sql = "SELECT DISTINCT(`$type`.`id`) as `id`, `addition_time` AS `real_atime` FROM `" . $base_type . "` ";
+            }
             if (AmpConfig::get('album_group') && $type == 'album') {
                 $sql .= "LEFT JOIN `album` ON `album`.`id` = `" . $base_type . "`.`album` ";
             }
