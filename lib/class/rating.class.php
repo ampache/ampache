@@ -334,6 +334,7 @@ class Rating extends database_object
         }
 
         return true;
+
     } // set_rating_for_group
 
     /**
