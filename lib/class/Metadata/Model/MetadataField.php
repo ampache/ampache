@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,7 +40,7 @@ class MetadataField extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
      * @var string
      */
     protected $name;
-    
+
     /**
      * Is the Tag public?
      * @var boolean
@@ -64,7 +64,7 @@ class MetadataField extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
     {
         return $this->name;
     }
-    
+
     /**
      *
      * @return string
@@ -82,7 +82,7 @@ class MetadataField extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
     {
         $this->name = $name;
     }
-    
+
     /**
      *
      * @return boolean
@@ -91,7 +91,7 @@ class MetadataField extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
     {
         return $this->public;
     }
-    
+
     /**
      * Set public to false
      */

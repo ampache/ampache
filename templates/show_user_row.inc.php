@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,7 @@
                 }
                 echo $libitem->username;
                 if ($libitem->fullname_public || Access::check('interface', 100)) {
-                    echo "(" . $libitem->fullname . ")";
+                    echo " (" . $libitem->fullname . ")";
                 }
             ?>
         </a>
@@ -90,7 +90,7 @@
     ?>
     </td>
     <?php
-        if (($libitem->is_logged_in()) and ($libitem->is_online())) {
+        if (($libitem->is_logged_in()) && ($libitem->is_online())) {
             echo "<td class=\"cel_online user_online\"> &nbsp; </td>";
         } elseif ($libitem->disabled == 1) {
             echo "<td class=\"cel_online user_disabled\"> &nbsp; </td>";

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,29 +25,31 @@ require_once AmpConfig::get('prefix') . '/modules/catalog/local/local.catalog.ph
 
 if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 UI::show_header();
 
 $catalogs = $_REQUEST['catalogs'];
+$action   = Core::get_request('action');
 // If only one catalog, check it is ready.
-if (is_array($catalogs) && count($catalogs) == 1 && $_REQUEST['action'] !== 'delete_catalog' && $_REQUEST['action'] !== 'show_delete_catalog') {
+if (is_array($catalogs) && count($catalogs) == 1 && $action !== 'delete_catalog' && $action !== 'show_delete_catalog') {
     // If not ready, display the data to make it ready / stop the action.
     $catalog = Catalog::create_from_id($catalogs[0]);
     if (!$catalog->isReady()) {
         if (!isset($_REQUEST['perform_ready'])) {
             $catalog->show_ready_process();
             UI::show_footer();
-            exit;
+
+            return false;
         } else {
             $catalog->perform_ready();
         }
     }
 }
 
-
-/* Big switch statement to handle various actions */
+// Big switch statement to handle various actions
 switch ($_REQUEST['action']) {
     case 'add_to_all_catalogs':
         catalog_worker('add_to_all_catalogs');
@@ -89,7 +91,8 @@ switch ($_REQUEST['action']) {
 
         if (!Core::form_verify('delete_catalog')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         $deleted = true;
@@ -102,14 +105,14 @@ switch ($_REQUEST['action']) {
         }
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php';
         if ($deleted) {
-            show_confirmation(T_('Catalog Deleted'), T_('The Catalog and all associated records have been deleted'), $next_url);
+            show_confirmation(T_('Deleted'), T_('Catalog and all associated records have been deleted'), $next_url);
         } else {
             show_confirmation(T_('Error'), T_('Cannot delete the catalog'), $next_url);
         }
     break;
     case 'show_delete_catalog':
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $catalogs);
-        show_confirmation(T_('Catalog Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_catalog');
+        show_confirmation(T_('Confirm Action'), T_('Delete Catalog'), $next_url, 1, 'delete_catalog');
     break;
     case 'enable_disabled':
         if (AmpConfig::get('demo_mode')) {
@@ -168,17 +171,18 @@ switch ($_REQUEST['action']) {
 
         ob_end_flush();
 
-        if (!strlen($_POST['type']) || $_POST['type'] == 'none') {
+        if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'none') {
             AmpError::add('general', T_('Error: Please select a catalog type'));
         }
 
-        if (!strlen($_POST['name'])) {
+        if (!strlen(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) {
             AmpError::add('general', T_('Error: Name not specified'));
         }
 
         if (!Core::form_verify('add_catalog', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         // If an error hasn't occured
@@ -241,7 +245,7 @@ switch ($_REQUEST['action']) {
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
-        show_confirmation(T_('Delete Catalog'), T_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)", $nexturl, 1);
+        show_confirmation(T_('Confirm Action'), T_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)", $nexturl, 1);
     break;
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);

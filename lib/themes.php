@@ -1,9 +1,10 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +26,7 @@
  * this looks in /themes and pulls all of the
  * theme.cfg.php files it can find and returns an
  * array of the results
+ * @return array
  */
 function get_themes()
 {
@@ -32,41 +34,42 @@ function get_themes()
     $handle = opendir(AmpConfig::get('prefix') . '/themes');
 
     if (!is_resource($handle)) {
-        debug_event('theme', 'Failed to open /themes directory', 2);
+        debug_event('themes', 'Failed to open /themes directory', 2);
 
         return array();
     }
 
     $results = array();
-    while (($f = readdir($handle)) !== false) {
-        debug_event('theme', "Checking $f", 5);
-        $cfg = get_theme($f);
-        if ($cfg !== null) {
-            $results[$cfg['name']] = $cfg;
+    while (($file = readdir($handle)) !== false) {
+        if ((string) $file !== '.' && (string) $file !== '..') {
+            debug_event('themes', "Checking $file", 5);
+            $cfg = get_theme($file);
+            if ($cfg !== null) {
+                $results[$cfg['name']] = $cfg;
+            }
         }
     } // end while directory
-
     // Sort by the theme name
     ksort($results);
 
     return $results;
 } // get_themes
 
-/*!
-    @function get_theme
-    @discussion get a single theme and read the config file
-        then return the results
-*/
+/**
+ * @function get_theme
+ * @discussion get a single theme and read the config file
+ * then return the results
+ */
 function get_theme($name)
 {
     static $_mapcache = array();
-            
+
     if (strlen($name) < 1) {
         return false;
     }
-    
+
     $name = strtolower($name);
-    
+
     if (isset($_mapcache[$name])) {
         return $_mapcache[$name];
     }
@@ -77,23 +80,22 @@ function get_theme($name)
         $results['path'] = $name;
         $results['base'] = explode(',', $results['base']);
         $nbbases         = count($results['base']);
-        for ($i = 0; $i < $nbbases; $i++) {
-            $results['base'][$i] = explode('|', $results['base'][$i]);
+        for ($count = 0; $count < $nbbases; $count++) {
+            $results['base'][$count] = explode('|', $results['base'][$count]);
         }
         $results['colors'] = explode(',', $results['colors']);
     } else {
-        debug_event('theme', $config_file . ' not found.', 3);
         $results = null;
     }
     $_mapcache[$name] = $results;
-    
+
     return $results;
 } // get_theme
 
-/*!
-    @function get_theme_author
-    @discussion returns the author of this theme
-*/
+/**
+ * @function get_theme_author
+ * @discussion returns the author of this theme
+ */
 function get_theme_author($theme_name)
 {
     $theme_path = AmpConfig::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';
@@ -102,10 +104,11 @@ function get_theme_author($theme_name)
     return $results['author'];
 } // get_theme_author
 
-/*!
-    @function theme_exists
-    @discussion this function checks to make sure that a theme actually exists
-*/
+/**
+ * @function theme_exists
+ * @discussion this function checks to make sure that a theme actually exists
+ * @return boolean
+ */
 function theme_exists($theme_name)
 {
     $theme_path = AmpConfig::get('prefix') . '/themes/' . $theme_name . '/theme.cfg.php';

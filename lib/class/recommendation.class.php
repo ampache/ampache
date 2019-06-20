@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,6 +34,8 @@ class Recommendation
     /**
      * get_lastfm_results
      * Runs a last.fm query and returns the parsed results
+     * @param string $method
+     * @param string $query
      */
     public static function get_lastfm_results($method, $query)
     {
@@ -46,9 +48,12 @@ class Recommendation
         return self::query_lastfm($url);
     }
 
+    /**
+     * @param string $url
+     */
     public static function query_lastfm($url)
     {
-        debug_event('Recommendation', 'search url : ' . $url, 5);
+        debug_event('recommendation.class', 'search url : ' . $url, 5);
 
         $request = Requests::get($url, array(), Core::requests_options());
         $content = $request->body;
@@ -65,18 +70,22 @@ class Recommendation
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out old recommendations cache
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         Dba::write('DELETE FROM `recommendation` WHERE `last_update` < ?', array((time() - 604800)));
     }
 
+    /**
+     * @param string $type
+     * @param integer $id
+     */
     protected static function get_recommendation_cache($type, $id, $get_items = false)
     {
-        self::gc();
+        self::garbage_collection();
 
         $sql        = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($type, $id));
@@ -100,6 +109,10 @@ class Recommendation
         return $cache;
     }
 
+    /**
+     * @param string $type
+     * @param integer $id
+     */
     protected static function delete_recommendation_cache($type, $id)
     {
         $cache = self::get_recommendation_cache($type, $id);
@@ -109,6 +122,10 @@ class Recommendation
         }
     }
 
+    /**
+     * @param string $type
+     * @param integer $id
+     */
     protected static function update_recommendation_cache($type, $id, $recommendations)
     {
         self::delete_recommendation_cache($type, $id);
@@ -124,11 +141,12 @@ class Recommendation
     /**
      * get_songs_like
      * Returns a list of similar songs
+     * @param integer $song_id
      */
     public static function get_songs_like($song_id, $limit = 5, $local_only = true)
     {
         if (!AmpConfig::get('lastfm_api_key')) {
-            return false;
+            return array();
         }
 
         $song   = new Song($song_id);
@@ -171,15 +189,15 @@ class Recommendation
                         $local_id = $result['id'];
                     }
 
-                    if (is_null($local_id)) {
-                        debug_event('Recommendation', "$name did not match any local song", 5);
+                    if ($local_id === null) {
+                        debug_event('recommendation.class', "$name did not match any local song", 5);
                         $similars[] = array(
                             'id' => null,
                             'name' => $name,
                             'rel' => $artist_name
                         );
                     } else {
-                        debug_event('Recommendation', "$name matched local song $local_id", 5);
+                        debug_event('recommendation.class', "$name matched local song $local_id", 5);
                         $similars[] = array(
                             'id' => $local_id,
                             'name' => $name
@@ -199,7 +217,7 @@ class Recommendation
         if ($similars) {
             $results = array();
             foreach ($similars as $similar) {
-                if (!$local_only || !is_null($similar['id'])) {
+                if (!$local_only || $similar['id'] !== null) {
                     $results[] = $similar;
                 }
 
@@ -213,17 +231,18 @@ class Recommendation
             return $results;
         }
 
-        return false;
+        return array();
     }
 
     /**
      * get_artists_like
      * Returns a list of similar artists
+     * @param integer $artist_id
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
     {
         if (!AmpConfig::get('lastfm_api_key')) {
-            return false;
+            return array();
         }
 
         $artist = new Artist($artist_id);
@@ -254,7 +273,7 @@ class Recommendation
 
                 // Then we fall back to the less likely to work exact
                 // name match
-                if (is_null($local_id)) {
+                if ($local_id === null) {
                     $searchname = Catalog::trim_prefix($name);
                     $searchname = Dba::escape($searchname['string']);
                     $sql        = "SELECT `artist`.`id` FROM `artist` WHERE `name` = ?";
@@ -268,15 +287,15 @@ class Recommendation
                 }
 
                 // Then we give up
-                if (is_null($local_id)) {
-                    debug_event('Recommendation', "$name did not match any local artist", 5);
+                if ($local_id === null) {
+                    debug_event('recommendation.class', "$name did not match any local artist", 5);
                     $similars[] = array(
                         'id' => null,
                         'name' => $name,
                         'mbid' => $mbid
                     );
                 } else {
-                    debug_event('Recommendation', "$name matched local artist " . $local_id, 5);
+                    debug_event('recommendation.class', "$name matched local artist " . $local_id, 5);
                     $similars[] = array(
                         'id' => $local_id,
                         'name' => $name
@@ -295,7 +314,7 @@ class Recommendation
         if ($similars) {
             $results = array();
             foreach ($similars as $similar) {
-                if (!$local_only || !is_null($similar['id'])) {
+                if (!$local_only || $similar['id'] !== null) {
                     $results[] = $similar;
                 }
 
@@ -309,21 +328,22 @@ class Recommendation
             return $results;
         }
 
-        return false;
+        return array();
     } // get_artists_like
 
     /**
      * get_artist_info
      * Returns artist information
+     * @param integer $artist_id
      */
-    public static function get_artist_info($artist_id, $fullname='')
+    public static function get_artist_info($artist_id, $fullname = '')
     {
         $artist = null;
         if ($artist_id) {
             $artist = new Artist($artist_id);
             $artist->format();
             $fullname = $artist->f_full_name;
-            
+
             // Data newer than 6 months, use it
             if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
                 $results                = array();
@@ -335,7 +355,7 @@ class Recommendation
                 $results['smallphoto']  = $results['largephoto'];    // TODO: Change to thumb size?
                 $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
                 $results['megaphoto']   = $results['largephoto'];
-            
+
                 return $results;
             }
         }
@@ -356,9 +376,10 @@ class Recommendation
 
         if ($artist) {
             $results['id'] = $artist->id;
-            if (!empty($results['summary']) || !empty($results['megaphoto'])) {
+            if (!empty($results['summary'])) {
                 $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
-
+            }
+            if (!empty($results['megaphoto']) && !Art::has_db($artist_id, 'artist')) {
                 $image = Art::get_from_source(array('url' => $results['megaphoto']), 'artist');
                 $rurl  = pathinfo($results['megaphoto']);
                 $mime  = 'image/' . $rurl['extension'];

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -136,7 +136,7 @@
             if (Preference::is_boolean($key)) {
                 $value = print_bool($value);
             }
-    
+
             // Be sure to print only scalar values
             if ($value === null || is_scalar($value)) {
                 ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,17 +24,19 @@ require_once '../lib/init.php';
 
 if (!Access::check('interface', '75')) {
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 UI::show_header();
 
-// Action switch
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'send_mail':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         // Multi-byte Character Mail
@@ -46,28 +48,30 @@ switch ($_REQUEST['action']) {
             mb_language("uni");
         }
 
-        $mailer = new Mailer();
+        if (Mailer::is_mail_enabled()) {
+            $mailer = new Mailer();
 
-        // Set the vars on the object
-        $mailer->subject = $_REQUEST['subject'];
-        $mailer->message = $_REQUEST['message'];
+            // Set the vars on the object
+            $mailer->subject = $_REQUEST['subject'];
+            $mailer->message = $_REQUEST['message'];
 
-        if ($_REQUEST['from'] == 'system') {
-            $mailer->set_default_sender();
-        } else {
-            $mailer->sender      = $GLOBALS['user']->email;
-            $mailer->sender_name = $GLOBALS['user']->fullname;
+            if (Core::get_request('from') == 'system') {
+                $mailer->set_default_sender();
+            } else {
+                $mailer->sender      = Core::get_global('user')->email;
+                $mailer->sender_name = Core::get_global('user')->fullname;
+            }
+
+            if ($mailer->send_to_group($_REQUEST['to'])) {
+                $title  = T_('E-mail Sent');
+                $body   = T_('Your E-mail was successfully sent.');
+            } else {
+                $title     = T_('E-mail Not Sent');
+                $body      = T_('Your E-mail was not sent.');
+            }
+            $url = AmpConfig::get('web_path') . '/admin/mail.php';
+            show_confirmation($title, $body, $url);
         }
-
-        if ($mailer->send_to_group($_REQUEST['to'])) {
-            $title  = T_('E-mail Sent');
-            $body   = T_('Your E-mail was successfully sent.');
-        } else {
-            $title     = T_('E-mail Not Sent');
-            $body      = T_('Your E-mail was not sent.');
-        }
-        $url = AmpConfig::get('web_path') . '/admin/mail.php';
-        show_confirmation($title, $body, $url);
 
     break;
     default:

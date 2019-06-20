@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,11 +29,11 @@ class AmpacheStreamTime
     public $version     = '000001';
     public $min_ampache = '370024';
     public $max_ampache = '999999';
-    
+
     private $user_id;
     private $time_days;
     private $time_max;
-    
+
     /**
      * Constructor
      * This function does nothing...
@@ -92,26 +92,26 @@ class AmpacheStreamTime
         if ($this->time_max < 0) {
             return true;
         }
-        
+
         // Calculate all media time
         $next_total = 0;
         foreach ($media_ids as $media_id) {
             $media = new $media_id['object_type']($media_id['object_id']);
             $next_total += $media->time;
         }
-        
+
         $graph         = new Graph();
         $end_date      = time();
         $start_date    = $end_date - ($this->time_days * 86400);
         $current_total = $graph->get_total_time($this->user_id, $start_date, $end_date);
         $next_total += $current_total;
         $max = $this->time_max * 60;
-        
-        debug_event('stream_control_time', 'Next stream time will be ' . $next_total . ' / ' . $max, 3);
-        
+
+        debug_event('streamtime.plugin', 'Next stream time will be ' . $next_total . ' / ' . $max, 3);
+
         return ($next_total <= $max);
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes
@@ -121,19 +121,19 @@ class AmpacheStreamTime
     {
         $user->set_preferences();
         $data = $user->prefs;
-        
+
         $this->user_id = $user->id;
-        if (intval($data['stream_control_time_max'])) {
-            $this->time_max = intval($data['stream_control_time_max']);
+        if ((int) ($data['stream_control_time_max'])) {
+            $this->time_max = (int) ($data['stream_control_time_max']);
         } else {
             $this->time_max = 1024;
         }
-        if (intval($data['stream_control_time_days']) > 0) {
-            $this->time_days = intval($data['stream_control_time_days']);
+        if ((int) ($data['stream_control_time_days']) > 0) {
+            $this->time_days = (int) ($data['stream_control_time_days']);
         } else {
             $this->time_days = 30;
         }
-        
+
         return true;
     } // load
 }

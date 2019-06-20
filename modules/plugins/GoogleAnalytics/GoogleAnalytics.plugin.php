@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -92,7 +92,7 @@ class AmpacheGoogleAnalytics
         echo "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n";
         echo "(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n";
         echo "m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n";
-        echo "})(window,document,'script','//www.google-analytics.com/analytics.js','ga');\n";
+        echo "})(window,document, 'script', '//www.google-analytics.com/analytics.js', 'ga');\n";
         echo "ga('create', '" . scrub_out($this->tracking_id) . "', 'auto');\n";
         echo "ga('send', 'pageview');\n";
         echo "</script>\n";
@@ -111,7 +111,7 @@ class AmpacheGoogleAnalytics
 
         $this->tracking_id = trim($data['googleanalytics_tracking_id']);
         if (!strlen($this->tracking_id)) {
-            debug_event($this->name, 'No Tracking ID, user field plugin skipped', '3');
+            debug_event('googleanalytics.plugin', 'No Tracking ID, user field plugin skipped', 3);
 
             return false;
         }

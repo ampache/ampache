@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -74,9 +74,9 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Constructor
-     * @param int $id
+     * @param integer $id
      */
-    public function __construct($id=0)
+    public function __construct($id = 0)
     {
         if (!$id) {
             return true;
@@ -98,7 +98,7 @@ class Broadcast extends database_object implements library_item
      * @param boolean $started
      * @param string $key
      */
-    public function update_state($started, $key='')
+    public function update_state($started, $key =  '')
     {
         $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
         Dba::write($sql, array($started, $key, $this->id));
@@ -108,7 +108,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast listeners.
-     * @param int $listeners
+     * @param integer $listeners
      */
     public function update_listeners($listeners)
     {
@@ -120,7 +120,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast current song.
-     * @param int $song_id
+     * @param integer $song_id
      */
     public function update_song($song_id)
     {
@@ -133,7 +133,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Delete the broadcast.
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public function delete()
     {
@@ -148,11 +148,11 @@ class Broadcast extends database_object implements library_item
      * @param string $description
      * @return int
      */
-    public static function create($name, $description='')
+    public static function create($name, $description =  '')
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
-            $params = array($GLOBALS['user']->id, $name, $description);
+            $params = array(Core::get_global('user')->id, $name, $description);
             Dba::write($sql, $params);
 
             return Dba::insert_id();
@@ -233,6 +233,8 @@ class Broadcast extends database_object implements library_item
      */
     public function search_childrens($name)
     {
+        debug_event('broadcast.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
@@ -245,7 +247,7 @@ class Broadcast extends database_object implements library_item
     {
         // Not a media, shouldn't be that
         $medias = array();
-        if (!$filter_type || $filter_type == 'broadcast') {
+        if ($filter_type === null || $filter_type == 'broadcast') {
             $medias[] = array(
                 'object_type' => 'broadcast',
                 'object_id' => $this->id
@@ -259,7 +261,7 @@ class Broadcast extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -309,7 +311,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get all broadcasts.
-     * @return int[]
+     * @return integer[]
      */
     public static function get_broadcast_list()
     {
@@ -357,7 +359,7 @@ class Broadcast extends database_object implements library_item
     public function show_action_buttons()
     {
         if ($this->id) {
-            if ($GLOBALS['user']->has_access('75')) {
+            if (Core::get_global('user')->has_access('75')) {
                 echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', 'broadcast_row_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
@@ -379,7 +381,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get unbroadcast link.
-     * @param int $id
+     * @param integer $id
      * @return string
      */
     public static function get_unbroadcast_link($id)
@@ -394,8 +396,8 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get broadcasts from an user.
-     * @param int $user_id
-     * @return int[]
+     * @param integer $user_id
+     * @return integer[]
      */
     public static function get_broadcasts($user_id)
     {
@@ -410,21 +412,21 @@ class Broadcast extends database_object implements library_item
         return $broadcasts;
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
     }
 
     /*
      * Get play url.
      *
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function play_url($oid, $additional_params='', $player=null, $local=false)
+    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
     {
         return $oid;
     }

@@ -6,11 +6,11 @@
  * things like a confirmation box, etc and so forth
  *
  */
- 
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,7 +38,7 @@
  * @param    integer    $cancel    T/F show a cancel button that uses return_referrer()
  * @return    void
  */
-function show_confirmation($title, $text, $next_url, $cancel=0, $form_name='confirmation', $visible=true)
+function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = 'confirmation', $visible = true)
 {
     if (substr_count($next_url, AmpConfig::get('web_path'))) {
         $path = $next_url;
@@ -62,6 +62,9 @@ function catalog_worker($action, $catalogs = null, $options = null)
     }
 }
 
+/**
+ * @param string $url
+ */
 function sse_worker($url)
 {
     echo '<script type="text/javascript">';
@@ -70,10 +73,11 @@ function sse_worker($url)
 }
 
 /**
- * return_referer
- * returns the script part of the referer address passed by the web browser
+ * return_referrer
+ * returns the script part of the referrer address passed by the web browser
  * this is not %100 accurate. Also because this is not passed by us we need
  * to clean it up, take the filename then check for a /admin/ and dump the rest
+ * @return string
  */
 function return_referer()
 {
@@ -120,68 +124,68 @@ function get_location()
 
     switch ($location['page']) {
         case 'index.php':
-            $location['title']     = T_('Home');
+            $location['title'] = T_('Home');
             break;
         case 'upload.php':
-            $location['title']     = T_('Upload');
+            $location['title'] = T_('Upload');
             break;
         case 'localplay.php':
-            $location['title']     = T_('Local Play');
+            $location['title'] = T_('Local Play');
             break;
         case 'randomplay.php':
-            $location['title']     = T_('Random Play');
+            $location['title'] = T_('Random Play');
             break;
         case 'playlist.php':
-            $location['title']     = T_('Playlist');
+            $location['title'] = T_('Playlist');
             break;
         case 'search.php':
-            $location['title']     = T_('Search');
+            $location['title'] = T_('Search');
             break;
         case 'preferences.php':
-            $location['title']     = T_('Preferences');
+            $location['title'] = T_('Preferences');
             break;
         case 'admin/index.php':
-            $location['title']      = T_('Admin-Catalog');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Catalog');
+            $location['section'] = 'admin';
             break;
         case 'admin/catalog.php':
-            $location['title']      = T_('Admin-Catalog');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Catalog');
+            $location['section'] = 'admin';
             break;
         case 'admin/users.php':
-            $location['title']      = T_('Admin-User Management');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-User Management');
+            $location['section'] = 'admin';
             break;
         case 'admin/mail.php':
-            $location['title']      = T_('Admin-Mail Users');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Mail Users');
+            $location['section'] = 'admin';
             break;
         case 'admin/access.php':
-            $location['title']      = T_('Admin-Manage Access Lists');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Manage Access Lists');
+            $location['section'] = 'admin';
             break;
         case 'admin/preferences.php':
-            $location['title']      = T_('Admin-Site Preferences');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Site Preferences');
+            $location['section'] = 'admin';
             break;
         case 'admin/modules.php':
-            $location['title']      = T_('Admin-Manage Modules');
-            $location['section']    = 'admin';
+            $location['title']   = T_('Admin-Manage Modules');
+            $location['section'] = 'admin';
             break;
         case 'browse.php':
-            $location['title']      = T_('Browse Music');
-            $location['section']    = 'browse';
+            $location['title']   = T_('Browse Music');
+            $location['section'] = 'browse';
             break;
         case 'albums.php':
-            $location['title']      = T_('Albums');
-            $location['section']    = 'browse';
+            $location['title']   = T_('Albums');
+            $location['section'] = 'browse';
             break;
         case 'artists.php':
-            $location['title']      = T_('Artists');
-            $location['section']    = 'browse';
+            $location['title']   = T_('Artists');
+            $location['section'] = 'browse';
             break;
         case 'stats.php':
-            $location['title']    = T_('Statistics');
+            $location['title'] = T_('Statistics');
             break;
         default:
             $location['title'] = '';
@@ -205,7 +209,7 @@ function show_preference_box($preferences)
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_album_select($name='album', $album_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
+function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
 {
     static $album_id_cnt = 0;
 
@@ -233,17 +237,17 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
         echo "\t<option value=\"-2\"></option>\n";
     }
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected   = '';
-        $album_name = trim($r['prefix'] . " " . $r['name']);
-        if ($r['disk'] >= 1) {
-            $album_name .= ' [Disk ' . $r['disk'] . ']';
+        $album_name = trim($row['prefix'] . " " . $row['name']);
+        if ($row['disk'] >= 1 && !AmpConfig::get('album_group')) {
+            $album_name .= " [" . T_('Disk') . " " . $row['disk'] . "]";
         }
-        if ($r['id'] == $album_id) {
+        if ($row['id'] == $album_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($album_name) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($album_name) . "</option>\n";
     } // end while
 
     if ($allow_add) {
@@ -263,7 +267,7 @@ function show_album_select($name='album', $album_id=0, $allow_add=false, $song_i
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
  */
-function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $song_id=0, $allow_none=false, $user=null)
+function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
 {
     static $artist_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -289,14 +293,14 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
         echo "\t<option value=\"-2\"></option>\n";
     }
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected    = '';
-        $artist_name = trim($r['prefix'] . " " . $r['name']);
-        if ($r['id'] == $artist_id) {
+        $artist_name = trim($row['prefix'] . " " . $row['name']);
+        if ($row['id'] == $artist_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($artist_name) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($artist_name) . "</option>\n";
     } // end while
 
     if ($allow_add) {
@@ -316,7 +320,7 @@ function show_artist_select($name='artist', $artist_id=0, $allow_add=false, $son
  * This is the same as show_album_select except it's *gasp* for tvshows! How
  * inventive!
  */
-function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $season_id=0, $allow_none=false)
+function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false)
 {
     static $tvshow_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -335,13 +339,13 @@ function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $sea
     $sql        = "SELECT `id`, `name` FROM `tvshow` ORDER BY `name`";
     $db_results = Dba::read($sql);
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected = '';
-        if ($r['id'] == $tvshow_id) {
+        if ($row['id'] == $tvshow_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['name']) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
     } // end while
 
     if ($allow_add) {
@@ -352,7 +356,7 @@ function show_tvshow_select($name='tvshow', $tvshow_id=0, $allow_add=false, $sea
     echo "</select>\n";
 } // show_tvshow_select
 
-function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add=false, $video_id=0, $allow_none=false)
+function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false)
 {
     if (!$season_id) {
         return false;
@@ -376,13 +380,13 @@ function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add
     $sql        = "SELECT `id`, `season_number` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
     $db_results = Dba::read($sql, array($season->tvshow));
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected = '';
-        if ($r['id'] == $season_id) {
+        if ($row['id'] == $season_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['season_number']) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['season_number']) . "</option>\n";
     } // end while
 
     if ($allow_add) {
@@ -397,13 +401,15 @@ function show_tvshow_season_select($name='tvshow_season', $season_id, $allow_add
  * show_catalog_select
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
+ * @param string $name
+ * @param integer $catalog_id
  */
-function show_catalog_select($name='catalog', $catalog_id=0, $style='', $allow_none=false, $filter_type='')
+function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = '')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
-    $params     = array();
-    $sql        = "SELECT `id`, `name` FROM `catalog` ";
+    $params = array();
+    $sql    = "SELECT `id`, `name` FROM `catalog` ";
     if (!empty($filter_type)) {
         $sql .= "WHERE `gather_types` = ?";
         $params[] = $filter_type;
@@ -415,13 +421,13 @@ function show_catalog_select($name='catalog', $catalog_id=0, $style='', $allow_n
         echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
     }
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected = '';
-        if ($r['id'] == $catalog_id) {
+        if ($row['id'] == (string) $catalog_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected>" . scrub_out($r['name']) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
     } // end while
 
     echo "</select>\n";
@@ -432,7 +438,7 @@ function show_catalog_select($name='catalog', $catalog_id=0, $style='', $allow_n
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  */
-function show_license_select($name='license', $license_id=0, $song_id=0)
+function show_license_select($name, $license_id = 0, $song_id = 0)
 {
     static $license_id_cnt = 0;
 
@@ -449,20 +455,20 @@ function show_license_select($name='license', $license_id=0, $song_id=0)
     $sql        = "SELECT `id`, `name`, `description`, `external_link` FROM `license` ORDER BY `name`";
     $db_results = Dba::read($sql);
 
-    while ($r = Dba::fetch_assoc($db_results)) {
+    while ($row = Dba::fetch_assoc($db_results)) {
         $selected = '';
-        if ($r['id'] == $license_id) {
+        if ($row['id'] == $license_id) {
             $selected = "selected=\"selected\"";
         }
 
-        echo "\t<option value=\"" . $r['id'] . "\" $selected";
-        if (!empty($r['description'])) {
-            echo " title=\"" . addslashes($r['description']) . "\"";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected";
+        if (!empty($row['description'])) {
+            echo " title=\"" . addslashes($row['description']) . "\"";
         }
-        if (!empty($r['external_link'])) {
-            echo " data-link=\"" . $r['external_link'] . "\"";
+        if (!empty($row['external_link'])) {
+            echo " data-link=\"" . $row['external_link'] . "\"";
         }
-        echo ">" . $r['name'] . "</option>\n";
+        echo ">" . $row['name'] . "</option>\n";
     } // end while
 
     echo "</select>\n";
@@ -474,7 +480,7 @@ function show_license_select($name='license', $license_id=0, $song_id=0)
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
  */
-function show_user_select($name, $selected='', $style='')
+function show_user_select($name, $selected = '', $style = '')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('All') . "</option>\n";
@@ -500,7 +506,7 @@ function show_user_select($name, $selected='', $style='')
  * show_playlist_select
  * This one is for playlists!
  */
-function show_playlist_select($name, $selected='', $style='')
+function show_playlist_select($name, $selected = '', $style = '')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('None') . "</option>\n";
@@ -527,7 +533,7 @@ function show_playlist_select($name, $selected='', $style='')
 
 function xoutput_headers()
 {
-    $output = isset($_REQUEST['xoutput']) ? $_REQUEST['xoutput'] : 'xml';
+    $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
         header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
         header("Content-Disposition: attachment; filename=ajax.xml");
@@ -543,98 +549,17 @@ function xoutput_headers()
 
 function xoutput_from_array($array, $callback = false, $type = '')
 {
-    $output = isset($_REQUEST['xoutput']) ? $_REQUEST['xoutput'] : 'xml';
+    $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
-        return xml_from_array($array, $callback, $type);
+        return XML_Data::output_xml_from_array($array, $callback, $type);
     } elseif ($output == 'raw') {
-        $outputnode = $_REQUEST['xoutputnode'];
+        $outputnode = Core::get_request('xoutputnode');
 
         return $array[$outputnode];
     } else {
         return json_from_array($array, $callback, $type);
     }
 }
-
-// FIXME: This should probably go in XML_Data
-/**
- * xml_from_array
- * This takes a one dimensional array and creates a XML document from it. For
- * use primarily by the ajax mojo.
- */
-function xml_from_array($array, $callback = false, $type = '')
-{
-    $string = '';
-
-    // If we weren't passed an array then return
-    if (!is_array($array)) {
-        return $string;
-    }
-
-    // The type is used for the different XML docs we pass
-    switch ($type) {
-    case 'itunes':
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $value = xoutput_from_array($value, true, $type);
-                $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-            } else {
-                if ($key == "key") {
-                    $string .= "\t\t<$key>$value</$key>\n";
-                } elseif (is_int($value)) {
-                    $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
-                } elseif ($key == "Date Added") {
-                    $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
-                } elseif (is_string($value)) {
-                    /* We need to escape the value */
-                    $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
-                }
-            }
-        } // end foreach
-
-        return $string;
-    case 'xspf':
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $value = xoutput_from_array($value, true, $type);
-                $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-            } else {
-                if ($key == "key") {
-                    $string .= "\t\t<$key>$value</$key>\n";
-                } elseif (is_numeric($value)) {
-                    $string .= "\t\t\t<$key>$value</$key>\n";
-                } elseif (is_string($value)) {
-                    /* We need to escape the value */
-                    $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
-                }
-            }
-        } // end foreach
-
-        return $string;
-    default:
-        foreach ($array as $key => $value) {
-            // No numeric keys
-            if (is_numeric($key)) {
-                $key = 'item';
-            }
-
-            if (is_array($value)) {
-                // Call ourself
-                $value = xoutput_from_array($value, true);
-                $string .= "\t<content div=\"$key\">$value</content>\n";
-            } else {
-                /* We need to escape the value */
-                $string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
-            }
-            // end foreach elements
-        }
-        if (!$callback) {
-            $string = '<?xml version="1.0" encoding="utf-8" ?>' .
-                "\n<root>\n" . $string . "</root>\n";
-        }
-
-        return UI::clean_utf8($string);
-    }
-} // xml_from_array
 
 function json_from_array($array, $callback = false, $type = '')
 {
@@ -644,64 +569,66 @@ function json_from_array($array, $callback = false, $type = '')
 /**
  * xml_get_header
  * This takes the type and returns the correct xml header
+ * @param string $type
  */
 function xml_get_header($type)
 {
     switch ($type) {
-    case 'itunes':
-        $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
-        "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
-        "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
-        "<plist version=\"1.0\">\n" .
-        "<dict>\n" .
-        "       <key>Major Version</key><integer>1</integer>\n" .
-        "       <key>Minor Version</key><integer>1</integer>\n" .
-        "       <key>Application Version</key><string>7.0.2</string>\n" .
-        "       <key>Features</key><integer>1</integer>\n" .
-        "       <key>Show Content Ratings</key><true/>\n" .
-        "       <key>Tracks</key>\n" .
-        "       <dict>\n";
+        case 'itunes':
+            $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
+                "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
+                "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
+                "<plist version=\"1.0\">\n" .
+                "<dict>\n" .
+                "       <key>Major Version</key><integer>1</integer>\n" .
+                "       <key>Minor Version</key><integer>1</integer>\n" .
+                "       <key>Application Version</key><string>7.0.2</string>\n" .
+                "       <key>Features</key><integer>1</integer>\n" .
+                "       <key>Show Content Ratings</key><true/>\n" .
+                "       <key>Tracks</key>\n" .
+                "       <dict>\n";
 
-        return $header;
-    case 'xspf':
-        $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
+            return $header;
+        case 'xspf':
+            $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
             "<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->";
             "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n " .
             "<title>Ampache XSPF Playlist</title>\n" .
             "<creator>" . AmpConfig::get('site_title') . "</creator>\n" .
             "<annotation>" . AmpConfig::get('site_title') . "</annotation>\n" .
             "<info>" . AmpConfig::get('web_path') . "</info>\n" .
-            "<trackList>\n\n\n\n";
+                "<trackList>\n\n\n\n";
 
-        return $header;
-    default:
-        $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+            return $header;
+        default:
+            $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
-        return $header;
+            return $header;
     }
 } //xml_get_header
 
 /**
  * xml_get_footer
  * This takes the type and returns the correct xml footer
+ * @param string $type
  */
 function xml_get_footer($type)
 {
     switch ($type) {
-    case 'itunes':
-        $footer = "      </dict>\n" .
-        "</dict>\n" .
-        "</plist>\n";
+        case 'itunes':
+            $footer = "      </dict>\n" .
+                "</dict>\n" .
+                "</plist>\n";
 
-        return $footer;
-    case 'xspf':
-        $footer = "      </trackList>\n" .
-              "</playlist>\n";
+            return $footer;
+        case 'xspf':
+            $footer = "      </trackList>\n" .
+                "</playlist>\n";
 
-        return $footer;
-    default:
+            return $footer;
+        default:
 
-    break;
+            break;
     }
 } // xml_get_footer
 
@@ -716,6 +643,11 @@ function toggle_visible($element)
     echo "</script>\n";
 } // toggle_visible
 
+/**
+ * display_notification
+ * Show a javascript notification to the user
+ * @param string $message
+ */
 function display_notification($message, $timeout = 5000)
 {
     echo "<script type='text/javascript'>";
@@ -746,7 +678,7 @@ function print_bool($value)
  */
 function show_now_playing()
 {
-    Session::gc();
+    Session::garbage_collection();
     Stream::gc_now_playing();
 
     $web_path = AmpConfig::get('web_path');

@@ -61,7 +61,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 #tabs_wrapper {
-	width: auto;
+    width: auto;
 }
 
 #tabs_container {
@@ -73,7 +73,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 #tabs li {
-	display: inline-block;
+    display: inline-block;
     font-size: 18px;
     line-height: 18px;
     margin-right: 30px;
@@ -97,12 +97,12 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 #tabs_content {
-	padding: 10px;
-	width: auto;
+    padding: 10px;
+    width: auto;
 }
 
 .tab_content {
-	display: none;
+    display: none;
 }
 
 #aslideshow {
@@ -299,39 +299,40 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 #notification {
-	position: fixed;
+    position: fixed;
     top: auto;
-	bottom: 20px;
-	left: 50%;
-	z-index: 8888;
-	width: 50%;
-	padding: 5px 20px;
-	margin: 0;
-	background-color: #000;
-	border-radius: 10px;
-	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,.5);
-	box-shadow: 0 4px 12px rgba(0,0,0,.5);
-	-webkit-transition: all .5s;
-	transition: all .5s;
-	-webkit-transform: translate(-50%,0);
-	-ms-transform: translate(-50%,0);
-	transform: translate(-50%,0);
+    bottom: 20px;
+    left: 50%;
+    z-index: 8888;
+    width: 50%;
+    padding: 5px 20px;
+    margin: 0;
+    background-color: #000;
+    border-radius: 10px;
+    -webkit-box-shadow: 0 4px 12px rgba(0,0,0,.5);
+    box-shadow: 0 4px 12px rgba(0,0,0,.5);
+    -webkit-transition: all .5s;
+    transition: all .5s;
+    -webkit-transform: translate(-50%,0);
+    -ms-transform: translate(-50%,0);
+    transform: translate(-50%,0);
 }
 
 #notification.notification-out {
-	opacity: 0;
-	filter: alpha(opacity=0);
-	-webkit-transform: translate(-50%,80px);
-	-ms-transform: translate(-50%,80px);
-	transform: translate(-50%,80px);
+    opacity: 0;
+    filter: alpha(opacity=0);
+    -webkit-transform: translate(-50%,80px);
+    -ms-transform: translate(-50%,80px);
+    transform: translate(-50%,80px);
 }
 
 #notification img {
-	height: 100%;
-	vertical-align: middle;
-	margin-top: -3px;
+    height: 100%;
+    vertical-align: middle;
+    margin-top: -3px;
 }
 
 #notification-content {
-	margin-left: 10px;
+    color: #fff;
+    margin-left: 10px;
 }

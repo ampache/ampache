@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,12 +26,12 @@ use Gettext\Translator;
  * load_gettext
  * Sets up our local gettext settings.
  *
- * @return void
+ * @return boolean
  */
 function load_gettext()
 {
-    $lang    = AmpConfig::get('lang');
-    $popath  = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.po';
+    $lang   = AmpConfig::get('lang');
+    $popath = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.po';
 
     $t = new Translator();
     if (file_exists($popath)) {
@@ -41,6 +41,12 @@ function load_gettext()
     $t->register();
 } // load_gettext
 
+/*
+ * T_
+ * Translate string
+ * @param string $msgid
+ * @return string
+ */
 function T_($msgid)
 {
     if (function_exists('__')) {

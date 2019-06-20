@@ -1,9 +1,9 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,21 +20,32 @@
  *
  */
 
-require_once('../../lib/class/plex_xml_data.class.php');
+?>
+<html>
+<head>
+<title><?php echo AmpConfig::get('site_title'); ?></title>
+<script language="javascript" type="text/javascript">
+function PlayerFrame()
+{
+    var appendmedia = false;
+    var playnext = false;
+    var $webplayer = $("#webplayer");
+    if ($webplayer.is(':visible')) {
 
-$ow_config = array(
-    'http_host' => $_SERVER["SERVER_NAME"] . ':' . $_SERVER["SERVER_PORT"],
-    'web_path' => '/web'
- );
-
-require_once '../../lib/init.php';
-
-if (!AmpConfig::get('plex_backend')) {
-    echo "Disabled.";
-    exit;
+<?php if (AmpConfig::get('webplayer_confirmclose')) {
+    ?>
+    document.onbeforeunload = null;
+<?php
+} ?>
+        $webplayer.show();
+        $("#webplayer-minimize").show();
+    }
+    return false;
 }
 
-if (!defined('NO_SESSION') && !Access::check('interface', '100')) {
-    echo T_('Unauthorized.');
-    exit();
-}
+PlayerFrame();
+</script>
+</head>
+<body>
+</body>
+</html>

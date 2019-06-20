@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -86,27 +86,27 @@ class AmpacheBitly
     public function shortener($url)
     {
         if (empty($this->bitly_username) || empty($this->bitly_api_key)) {
-            debug_event($this->name, 'Bit.ly username or api key missing', '3');
+            debug_event('bitly.plugin', 'Bit.ly username or api key missing', 3);
 
             return false;
         }
-        
+
         $shorturl = '';
-    
+
         $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
         try {
-            debug_event($this->name, 'Bit.ly api call: ' . $apiurl, '5');
+            debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
             $request  = Requests::get($apiurl, array(), Core::requests_options());
             $shorturl = json_decode($request->body)->data->url;
         } catch (Exception $e) {
-            debug_event($this->name, 'Bit.ly api http exception: ' . $e->getMessage(), '1');
+            debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $e->getMessage(), 1);
 
             return false;
         }
-        
+
         return $shorturl;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes
@@ -120,14 +120,14 @@ class AmpacheBitly
         if (strlen(trim($data['bitly_username']))) {
             $this->bitly_username = trim($data['bitly_username']);
         } else {
-            debug_event($this->name, 'No Bit.ly username, shortener skipped', '3');
+            debug_event('bitly.plugin', 'No Bit.ly username, shortener skipped', 3);
 
             return false;
         }
         if (strlen(trim($data['bitly_api_key']))) {
             $this->bitly_api_key = trim($data['bitly_api_key']);
         } else {
-            debug_event($this->name, 'No Bit.ly api key, shortener skipped', '3');
+            debug_event('bitly.plugin', 'No Bit.ly api key, shortener skipped', 3);
 
             return false;
         }

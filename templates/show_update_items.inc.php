@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,9 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 UI::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
+
 Catalog::update_single_item($type, $object_id);
+
+//gather art for this item
+if (is_array($catalog_id) && $catalog_id[0] != '') {
+    $catalog = Catalog::create_from_id($catalog_id[0]);
+    $catalog->gather_art_item($type, $object_id);
+}
+
 ?>
 <br />
 <strong><?php echo T_('Update from Tags Complete'); ?></strong>&nbsp;&nbsp;

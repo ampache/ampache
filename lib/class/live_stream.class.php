@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,6 +48,11 @@ class Live_Stream extends database_object implements media, library_item
      */
     public $url;
     /**
+     *  @var string $f_link
+     */
+    public $link;
+
+    /**
      *  @var string $codec
      */
     public $codec;
@@ -60,7 +65,7 @@ class Live_Stream extends database_object implements media, library_item
      *  @var string $f_name
      */
     public $f_name;
-    
+
     /**
      *  @var string $f_link
      */
@@ -131,13 +136,15 @@ class Live_Stream extends database_object implements media, library_item
 
     public function search_childrens($name)
     {
+        debug_event('live_stream.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'live_stream') {
+        if ($filter_type === null || $filter_type == 'live_stream') {
             $medias[] = array(
                 'object_type' => 'live_stream',
                 'object_id' => $this->id
@@ -151,7 +158,7 @@ class Live_Stream extends database_object implements media, library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -192,14 +199,14 @@ class Live_Stream extends database_object implements media, library_item
             AmpError::add('general', T_('Name Required'));
         }
 
-        $allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp','rtmp');
+        $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
 
         $elements = explode(":", $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('general', T_('Invalid URL must be mms:// , https:// or http://'));
         }
-        
+
         if (!empty($data['site_url'])) {
             $elements = explode(":", $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
@@ -232,14 +239,14 @@ class Live_Stream extends database_object implements media, library_item
             AmpError::add('codec', T_('Codec (eg. MP3, OGG...) Required'));
         }
 
-        $allowed_array = array('https','http','mms','mmsh','mmsu','mmst','rtsp','rtmp');
+        $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
 
         $elements = explode(":", $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('url', T_('Invalid URL must be http:// or https://'));
         }
-        
+
         if (!empty($data['site_url'])) {
             $elements = explode(":", $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
@@ -290,7 +297,7 @@ class Live_Stream extends database_object implements media, library_item
      * play_url
      * This is needed by the media interface
      */
-    public static function play_url($oid, $additional_params='', $player=null, $local=false, $sid='', $force_http='')
+    public static function play_url($oid, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
     {
         $radio = new Live_Stream($oid);
 
@@ -307,7 +314,7 @@ class Live_Stream extends database_object implements media, library_item
      *
      * This will probably never be implemented
      */
-    public function get_transcode_settings($target = null, $player = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return false;
     }
@@ -336,7 +343,7 @@ class Live_Stream extends database_object implements media, library_item
         return $radios;
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
     }
 

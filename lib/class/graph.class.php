@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,13 +24,13 @@ class Graph
 {
     public function __construct()
     {
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Data.php';
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Draw.php';
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Image.php';
-
         return true;
     }
-    
+
+    /**
+     * @param string $field
+     * @param string $zoom
+     */
     protected function get_sql_date_format($field, $zoom)
     {
         switch ($zoom) {
@@ -57,21 +57,21 @@ class Graph
         if ($end_date == null) {
             $end_date = time();
         } else {
-            $end_date = intval($end_date);
+            $end_date = (int) ($end_date);
         }
         if ($start_date == null) {
             $start_date = $end_date - 864000;
         } else {
-            $start_date = intval($start_date);
+            $start_date = (int) ($start_date);
         }
 
         $sql = "WHERE `object_count`.`date` >= " . $start_date . " AND `object_count`.`date` <= " . $end_date;
         if ($user > 0) {
-            $user = intval($user);
+            $user = (int) ($user);
             $sql .= " AND `object_count`.`user` = " . $user;
         }
 
-        $object_id = intval($object_id);
+        $object_id = (int) ($object_id);
         if (Core::is_library_item($object_type)) {
             $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
             if ($object_id) {
@@ -87,21 +87,21 @@ class Graph
         if ($end_date == null) {
             $end_date = time();
         } else {
-            $end_date = intval($end_date);
+            $end_date = (int) ($end_date);
         }
         if ($start_date == null) {
             $start_date = $end_date - 864000;
         } else {
-            $start_date = intval($start_date);
+            $start_date = (int) ($start_date);
         }
 
         $sql = "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date;
         if ($catalog > 0) {
-            $catalog = intval($catalog);
+            $catalog = (int) ($catalog);
             $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog;
         }
 
-        $object_id = intval($object_id);
+        $object_id = (int) ($object_id);
         if ($object_id) {
             $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
         }
@@ -109,6 +109,9 @@ class Graph
         return $sql;
     }
 
+    /**
+     * @param string $fct
+     */
     protected function get_all_type_pts($fct, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         if ($object_type == null) {
@@ -133,66 +136,6 @@ class Graph
         ksort($values, SORT_NUMERIC);
 
         return $values;
-    }
-
-    protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
-    {
-        $values = $this->get_all_type_pts($fct, $id, $object_type, $object_id, $start_date, $end_date, $zoom);
-        foreach ($values as $date => $value) {
-            if ($show_total) {
-                $MyData->addPoints($value, "Total");
-            }
-            $MyData->addPoints($date, "TimeStamp");
-        }
-
-        return $values;
-    }
-
-    protected function get_user_all_pts($fct, CpChart\Chart\Data $MyData, $user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
-    {
-        $values = $this->get_all_pts($fct, $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
-
-        $ustats = User::count();
-        // Only display other users if the graph is not for a specific user and user count is small
-        if (!$user && $ustats['users'] < 10) {
-            $user_ids = User::get_valid_users();
-            foreach ($user_ids as $user_id) {
-                $u           = new User($user_id);
-                $user_values = $this->get_all_type_pts($fct, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-                foreach ($values as $date => $value) {
-                    if (array_key_exists($date, $user_values)) {
-                        $value = $user_values[$date];
-                    } else {
-                        $value = 0;
-                    }
-                    $MyData->addPoints($value, $u->username);
-                }
-            }
-        }
-    }
-
-    protected function get_catalog_all_pts($fct, CpChart\Chart\Data $MyData, $catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
-    {
-        $values = $this->get_all_pts($fct, $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom, false);
-
-        // Only display other users if the graph is not for a specific catalog
-        if (!$catalog) {
-            $catalog_ids = Catalog::get_catalogs();
-            foreach ($catalog_ids as $catalog_id) {
-                $c              = Catalog::create_from_id($catalog_id);
-                $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-                $pv             = 0;
-                foreach ($values as $date => $value) {
-                    if (array_key_exists($date, $catalog_values)) {
-                        $value = $catalog_values[$date];
-                        $pv    = $value;
-                    } else {
-                        $value = $pv;
-                    }
-                    $MyData->addPoints($value, $c->name);
-                }
-            }
-        }
     }
 
     protected function get_user_hits_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
@@ -297,108 +240,6 @@ class Graph
         return $pts;
     }
 
-    protected function render_graph($title, CpChart\Chart\Data $MyData, $zoom, $width = 0, $height = 0)
-    {
-        // Check graph size sanity
-        $width = intval($width);
-        if ($width <= 50 || $width > 4096) {
-            $width = 700;
-        }
-        $height = intval($height);
-        if ($height <= 60 || $height > 4096) {
-            $height = 260;
-        }
-
-        $MyData->setSerieDescription("TimeStamp", "time");
-        $MyData->setAbscissa("TimeStamp");
-        switch ($zoom) {
-            case 'hour':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_TIME, "H:00");
-                break;
-            case 'year':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y");
-                break;
-            case 'month':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y-m");
-                break;
-            case 'day':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y-m-d");
-                break;
-        }
-
-        /* Create the pChart object */
-        $myPicture = new CpChart\Chart\Image($width, $height, $MyData);
-
-        /* Turn of Antialiasing */
-        $myPicture->Antialias = false;
-
-        /* Draw a background */
-        $Settings = array("R" => 90, "G" => 90, "B" => 90, "Dash" => 1, "DashR" => 120, "DashG" => 120, "DashB" => 120);
-        $myPicture->drawFilledRectangle(0, 0, $width, $height, $Settings);
-
-        /* Overlay with a gradient */
-        $Settings = array("StartR" => 200, "StartG" => 200, "StartB" => 200, "EndR" => 50, "EndG" => 50, "EndB" => 50, "Alpha" => 50);
-        $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_VERTICAL, $Settings);
-        $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_HORIZONTAL, $Settings);
-
-        /* Add a border to the picture */
-        $myPicture->drawRectangle(0, 0, $width - 1, $height - 1, array("R" => 0, "G" => 0, "B" => 0));
-
-        $font_path = AmpConfig::get('prefix') . "/lib/vendor/szymach/c-pchart/src/Resources/fonts";
-        /* Write the chart title */
-        $myPicture->setFontProperties(array("FontName" => $font_path . "/Forgotte.ttf", "FontSize" => 11));
-        $myPicture->drawText(150, 35, $title, array("FontSize" => 20, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
-
-        /* Set the default font */
-        $myPicture->setFontProperties(array("FontName" => $font_path . "/pf_arma_five.ttf", "FontSize" => 6));
-
-        /* Define the chart area */
-        $myPicture->setGraphArea(60, 40, $width - 20, $height - 50);
-
-        /* Draw the scale */
-        $scaleSettings = array("XMargin" => 10,"YMargin" => 10,"Floating" => true,"GridR" => 200,"GridG" => 200,"GridB" => 200,"RemoveSkippedAxis" => true,"DrawSubTicks" => false,"Mode" => SCALE_MODE_START0,"LabelRotation" => 45,"LabelingMethod" => LABELING_DIFFERENT);
-        $myPicture->drawScale($scaleSettings);
-
-        /* Turn on Antialiasing */
-        $myPicture->Antialias = true;
-
-        /* Draw the line chart */
-        $myPicture->setShadow(true, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
-        $myPicture->drawLineChart();
-
-        /* Write a label over the chart */
-        $myPicture->writeLabel("Inbound", 720);
-
-        /* Write the chart legend */
-        $myPicture->drawLegend(280, 20, array("Style" => LEGEND_NOBORDER, "Mode" => LEGEND_HORIZONTAL));
-
-        header("Content-Disposition: filename=\"ampache-graph.png\"");
-        /* Render the picture (choose the best way) */
-        $myPicture->autoOutput();
-    }
-
-    public function render_user_hits($user = 0, $object_type, $object_id, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
-    {
-        $MyData = new CpChart\Chart\Data();
-        $this->get_user_all_pts('get_user_hits_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
-
-        $MyData->setAxisName(0, "Hits");
-        $MyData->setAxisDisplay(0, AXIS_FORMAT_METRIC);
-
-        $this->render_graph('Hits', $MyData, $zoom, $width, $height);
-    }
-
-    public function render_user_bandwidth($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
-    {
-        $MyData = new CpChart\Chart\Data();
-        $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
-
-        $MyData->setAxisName(0, "Bandwidth");
-        $MyData->setAxisDisplay(0, AXIS_FORMAT_TRAFFIC);
-
-        $this->render_graph('Bandwidth', $MyData, $zoom, $width, $height);
-    }
-
     public function get_total_bandwidth($user = 0, $start_date = null, $end_date = null)
     {
         $total  = 0;
@@ -432,36 +273,13 @@ class Graph
         return $total;
     }
 
-    public function render_catalog_files($catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
-    {
-        $MyData = new CpChart\Chart\Data();
-        $this->get_catalog_all_pts('get_catalog_files_pts', $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom);
-
-        $MyData->setAxisName(0, "Files");
-        $MyData->setAxisDisplay(0, AXIS_FORMAT_METRIC);
-
-        $this->render_graph('Files', $MyData, $zoom, $width, $height);
-    }
-
-    public function render_catalog_size($catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
-    {
-        $MyData = new CpChart\Chart\Data();
-        $this->get_catalog_all_pts('get_catalog_size_pts', $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom);
-
-        $MyData->setAxisName(0, "Size");
-        $MyData->setAxisUnit(0, "B");
-        $MyData->setAxisDisplay(0, AXIS_FORMAT_CUSTOM, "pGraph_Yformat_bytes");
-
-        $this->render_graph('Size', $MyData, $zoom, $width, $height);
-    }
-
     public function display_map($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $pts = $this->get_geolocation_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         foreach (Plugin::get_plugins('display_map') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($GLOBALS['user'])) {
+            if ($plugin->load(Core::get_global('user'))) {
                 if ($plugin->_plugin->display_map($pts)) {
                     break;
                 }
@@ -471,9 +289,9 @@ class Graph
 
     public static function display_from_request()
     {
-        $object_type = $_REQUEST['object_type'];
-        $object_id   = $_REQUEST['object_id'];
-        
+        $object_type = Core::get_request('object_type');
+        $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+
         $libitem  = null;
         $owner_id = 0;
         if ($object_id) {
@@ -482,11 +300,11 @@ class Graph
                 $owner_id = $libitem->get_user_owner();
             }
         }
-        
-        if (($owner_id <= 0 || $owner_id != $GLOBALS['user']->id) && !Access::check('interface', '50')) {
+
+        if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', '50')) {
             UI::access_denied();
         } else {
-            $user_id      = $_REQUEST['user_id'];
+            $user_id      = Core::get_request('user_id');
             $end_date     = $_REQUEST['end_date'] ? strtotime($_REQUEST['end_date']) : time();
             $f_end_date   = date("Y-m-d H:i", $end_date);
             $start_date   = $_REQUEST['start_date'] ? strtotime($_REQUEST['start_date']) : ($end_date - 864000);

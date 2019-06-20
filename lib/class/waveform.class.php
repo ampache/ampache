@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,7 +66,7 @@ class Waveform
 
     /**
      * Get a song waveform.
-     * @param int $song_id
+     * @param integer $song_id
      * @return binary|string|null
      */
     public static function get($song_id)
@@ -77,7 +77,7 @@ class Waveform
         if ($song->id) {
             $song->format();
             $waveform = $song->waveform;
-            if (!$waveform) {
+            if ($waveform === null) {
                 $catalog = Catalog::create_from_id($song->catalog);
                 if ($catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';
@@ -92,25 +92,25 @@ class Waveform
 
                                 $tfp = fopen($tmpfile, 'wb');
                                 if (!is_resource($tfp)) {
-                                    debug_event('waveform', "Failed to open " . $tmpfile, 3);
+                                    debug_event('waveform.class', "Failed to open " . $tmpfile, 3);
 
                                     return null;
                                 }
 
-                                $transcoder = Stream::start_transcode($song, $transcode_to);
-                                $fp         = $transcoder['handle'];
-                                if (!is_resource($fp)) {
-                                    debug_event('waveform', "Failed to open " . $song->file . " for waveform.", 3);
+                                $transcoder  = Stream::start_transcode($song, $transcode_to);
+                                $filepointer = $transcoder['handle'];
+                                if (!is_resource($filepointer)) {
+                                    debug_event('waveform.class', "Failed to open " . $song->file . " for waveform.", 3);
 
                                     return null;
                                 }
 
                                 do {
-                                    $buf = fread($fp, 2048);
+                                    $buf = fread($filepointer, 2048);
                                     fwrite($tfp, $buf);
-                                } while (!feof($fp));
+                                } while (!feof($filepointer));
 
-                                fclose($fp);
+                                fclose($filepointer);
                                 fclose($tfp);
 
                                 Stream::kill_process($transcoder);
@@ -118,12 +118,14 @@ class Waveform
                                 $waveform = self::create_waveform($tmpfile);
                                 //$waveform = self::create_waveform("C:\\tmp\\test.wav");
 
-                                @unlink($tmpfile);
+                                if (unlink($tmpfile) === false) {
+                                    throw new \RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked.');
+                                }
                             } else {
-                                debug_event('waveform', 'transcode setting to wav required for waveform.', '3');
+                                debug_event('waveform.class', 'transcode setting to wav required for waveform.', 3);
                             }
                         } else {
-                            debug_event('waveform', 'tmp_dir_path setting required for waveform.', '3');
+                            debug_event('waveform.class', 'tmp_dir_path setting required for waveform.', 3);
                         }
                     }
                     // Already wav file, no transcode required
@@ -132,7 +134,7 @@ class Waveform
                     }
                 }
 
-                if ($waveform) {
+                if ($waveform !== null) {
                     self::save_to_db($song_id, $waveform);
                 }
             }
@@ -169,18 +171,18 @@ class Waveform
     /**
      * Create waveform from song file.
      * @param string $filename
-     * @return binary|string|null
+     * @return null|string
      */
     protected static function create_waveform($filename)
     {
         if (!file_exists($filename)) {
-            debug_event('waveform', 'File ' . $filename . ' doesn\'t exists', 1);
+            debug_event('waveform.class', 'File ' . $filename . ' doesn\'t exists', 1);
 
             return null;
         }
-        
+
         if (!check_php_gd()) {
-            debug_event('waveform', 'GD extension must be loaded', 1);
+            debug_event('waveform.class', 'GD extension must be loaded', 1);
 
             return null;
         }
@@ -189,11 +191,10 @@ class Waveform
         $width      = 400;
         $height     = 32;
         $foreground = AmpConfig::get('waveform_color') ?: '#FF0000';
-        $background = '';
         $draw_flat  = true;
 
         // generate foreground color
-        list($r, $g, $b) = self::html2rgb($foreground);
+        list($red, $green, $blue) = self::html2rgb($foreground);
 
         $handle = fopen($filename, "r");
         // wav file header retrieval
@@ -229,30 +230,25 @@ class Waveform
         // create original image width based on amount of detail
         // each waveform to be processed with be $height high, but will be condensed
         // and resized later (if specified)
-        $img = imagecreatetruecolor($data_size / $detail, $height);
+        $img = imagecreatetruecolor((int) ($data_size / $detail), $height);
         if ($img === false) {
-            debug_event('waveform', 'Cannot create image.', 1);
+            debug_event('waveform.class', 'Cannot create image.', 1);
 
             return null;
         }
 
         // fill background of image
-        if ($background == "") {
-            // transparent background specified
-            imagesavealpha($img, true);
-            $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
-            imagefill($img, 0, 0, $transparentColor);
-        } else {
-            list($br, $bg, $bb) = self::html2rgb($background);
-            imagefilledrectangle($img, 0, 0, (int) ($data_size / $detail), $height, imagecolorallocate($img, $br, $bg, $bb));
-        }
+        // transparent background specified
+        imagesavealpha($img, true);
+        $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
+        imagefill($img, 0, 0, $transparentColor);
         while (!feof($handle) && $data_point < $data_size) {
             if ($data_point++ % $detail == 0) {
                 $bytes = array();
 
                 // get number of bytes depending on bitrate
-                for ($i = 0; $i < $byte; $i++) {
-                    $bytes[$i] = fgetc($handle);
+                for ($count = 0; $count < $byte; $count++) {
+                    $bytes[$count] = fgetc($handle);
                 }
 
                 switch ($byte) {
@@ -296,12 +292,12 @@ class Waveform
                   (int) ($data_point / $detail),
                   // y2: same as y1, but from the bottom of the image
                   $height - ($height - $v),
-                  imagecolorallocate($img, $r, $g, $b)
+                  imagecolorallocate($img, $red, $green, $blue)
                 );
                 }
             } else {
                 // skip this one due to lack of detail
-                fseek($handle, $ratio + $byte, SEEK_CUR);
+                fseek($handle, (int) ($ratio + $byte), SEEK_CUR);
             }
         }
 
@@ -313,13 +309,15 @@ class Waveform
         if ($width) {
             // resample the image to the proportions defined in the form
             $rimg = imagecreatetruecolor($width, $height);
-            // save alpha from original image
-            imagesavealpha($rimg, true);
-            imagealphablending($rimg, false);
-            // copy to resized
-            imagecopyresampled($rimg, $img, 0, 0, 0, 0, $width, $height, imagesx($img), imagesy($img));
-            imagepng($rimg);
-            imagedestroy($rimg);
+            if ($rimg !== false) {
+                // save alpha from original image
+                imagesavealpha($rimg, true);
+                imagealphablending($rimg, false);
+                // copy to resized
+                imagecopyresampled($rimg, $img, 0, 0, 0, 0, $width, $height, imagesx($img), imagesy($img));
+                imagepng($rimg);
+                imagedestroy($rimg);
+            }
         } else {
             imagepng($img);
         }
@@ -333,8 +331,8 @@ class Waveform
 
     /**
      * Save waveform to db.
-     * @param int $song_id
-     * @param binary|string $waveform
+     * @param integer $song_id
+     * @param string $waveform
      * @return boolean
      */
     protected static function save_to_db($song_id, $waveform)

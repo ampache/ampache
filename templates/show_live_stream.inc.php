@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@
     $itemprops[gettext_noop('Website')]  = scrub_out($radio->site_url);
     $itemprops[gettext_noop('Stream')]   = $radio->f_url_link;
     $itemprops[gettext_noop('Codec')]    = scrub_out($video->codec);
-  
+
     foreach ($itemprops as $key => $value) {
         if (trim($value)) {
             $rowparity = UI::flip_class();

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
 $democratic = Democratic::get_current_playlist();
@@ -32,6 +32,9 @@ $democratic->set_parent();
 
 $show_browse = false;
 $results     = array();
+$action      = Core::get_request('action');
+
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'delete_vote':
         $democratic->remove_vote($_REQUEST['row_id']);
@@ -40,16 +43,17 @@ switch ($_REQUEST['action']) {
     case 'add_vote':
         $democratic->add_vote(array(
             array(
-                'object_type' => $_REQUEST['type'],
-                'object_id' => $_REQUEST['object_id']
+                'object_type' => Core::get_request('type'),
+                'object_id' => filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
             )
         ));
         $show_browse = true;
     break;
     case 'delete':
-        if (!$GLOBALS['user']->has_access('75')) {
+        if (!Core::get_global('user')->has_access('75')) {
             echo xoutput_from_array(array('rfc3514' => '0x1'));
-            exit;
+
+            return false;
         }
 
         $democratic->delete_votes($_REQUEST['row_id']);
@@ -58,7 +62,8 @@ switch ($_REQUEST['action']) {
     case 'send_playlist':
         if (!Access::check('interface', '75')) {
             echo xoutput_from_array(array('rfc3514' => '0x1'));
-            exit;
+
+            return false;
         }
 
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
@@ -67,7 +72,8 @@ switch ($_REQUEST['action']) {
     case 'clear_playlist':
         if (!Access::check('interface', '100')) {
             echo xoutput_from_array(array('rfc3514' => '0x1'));
-            exit;
+
+            return false;
         }
 
         $democratic = new Democratic($_REQUEST['democratic_id']);

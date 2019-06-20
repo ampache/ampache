@@ -9,7 +9,7 @@
 .navbar-brand img {
     height: 48px;
     width: 48px;
-	display: inline;
+    display: inline;
 }
 
 .panel-heading a:after {
@@ -25,4 +25,8 @@
 
 body {
     margin-bottom: 10px;
+}
+.navbar-inverse {
+    background-color: #000;
+    background-image: none;
 }

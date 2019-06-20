@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,9 +28,6 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 ob_end_flush();
 
-use Ratchet\MessageComponentInterface;
-use Ratchet\ConnectionInterface;
-
 $verbose = false;
 $port = 8100;
 
@@ -43,7 +40,7 @@ if ($cargv > 1) {
             $verbose = true;
         } 
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
-            $port = intval($_SERVER['argv'][++$x]);
+            $port = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t" . T_('- Port ' . $port);
         }
     }
@@ -76,5 +73,3 @@ function usage()
     echo "----------------------------------------------------------";
     echo "\n";
 }
-
-?>

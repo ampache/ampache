@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,12 +23,12 @@
 if ($playlist) {
     $logic_operator = $playlist->logic_operator;
 } else {
-    $logic_operator = $_REQUEST['operator'];
+    $logic_operator = Core::get_request('operator');
 }
 $logic_operator = strtolower($logic_operator);
 ?>
 <script type="text/javascript" src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
-<script type="text/javascript" src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>"></script>
+<script type="text/javascript" src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>"></script>
 
 <?php UI::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata" cellpadding="3" cellspacing="0">
@@ -63,7 +63,7 @@ $logic_operator = strtolower($logic_operator);
 if ($playlist) {
     $out = $playlist->to_js();
 } else {
-    $mysearch = new Search(null, $_REQUEST['type']);
+    $mysearch = new Search(null, (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
     $mysearch->parse_rules(Search::clean_request($_REQUEST));
     $out = $mysearch->to_js();
 }

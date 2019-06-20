@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,7 @@ class Share extends database_object
     /**
      * Constructor
      */
-    public function __construct($id=0)
+    public function __construct($id = 0)
     {
         if (!$id) {
             return true;
@@ -69,15 +69,15 @@ class Share extends database_object
     {
         $sql    = "DELETE FROM `share` WHERE `id` = ?";
         $params = array( $id );
-        if (!$GLOBALS['user']->has_access('75')) {
+        if (!Core::get_global('user')->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = $GLOBALS['user']->id;
+            $params[] = Core::get_global('user')->id;
         }
 
         return Dba::write($sql, $params);
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < " . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)";
         Dba::write($sql);
@@ -94,13 +94,16 @@ class Share extends database_object
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $secret     = '';
-        for ($i = 0; $i < $length; $i++) {
+        for ($count = 0; $count < $length; $count++) {
             $secret .= $characters[rand(0, strlen($characters) - 1)];
         }
 
         return $secret;
     }
 
+    /**
+     * @param string $type
+     */
     public static function format_type($type)
     {
         switch ($type) {
@@ -114,7 +117,11 @@ class Share extends database_object
         }
     }
 
-    public static function create_share($object_type, $object_id, $allow_stream=true, $allow_download=true, $expire=0, $secret='', $max_counter=0, $description='')
+    /**
+     * @param string $object_type
+     * @param integer $object_id
+     */
+    public static function create_share($object_type, $object_id, $allow_stream = true, $allow_download = true, $expire = 0, $secret = '', $max_counter = 0, $description = '')
     {
         $object_type = self::format_type($object_type);
         if (empty($object_type)) {
@@ -126,7 +133,7 @@ class Share extends database_object
         }
 
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array($GLOBALS['user']->id, $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
+        $params = array(Core::get_global('user')->id, $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
         Dba::write($sql, $params);
 
         $id = Dba::insert_id();
@@ -136,7 +143,7 @@ class Share extends database_object
         foreach (Plugin::get_plugins('shortener') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load($GLOBALS['user'])) {
+                if ($plugin->load(Core::get_global('user'))) {
                     $short_url = $plugin->_plugin->shortener($url);
                     if (!empty($short_url)) {
                         $url = $short_url;
@@ -144,7 +151,7 @@ class Share extends database_object
                     }
                 }
             } catch (Exception $e) {
-                debug_event('share', 'Share plugin error: ' . $e->getMessage(), '1');
+                debug_event('share.class', 'Share plugin error: ' . $e->getMessage(), 1);
             }
         }
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
@@ -153,6 +160,9 @@ class Share extends database_object
         return $id;
     }
 
+    /**
+     * @param string $secret
+     */
     public static function get_url($id, $secret)
     {
         $url = AmpConfig::get('web_path') . '/share.php?id=' . $id;
@@ -167,8 +177,8 @@ class Share extends database_object
     {
         $sql = "SELECT `id` FROM `share` ";
 
-        if (!$GLOBALS['user']->has_access('75')) {
-            $sql .= "WHERE `user` = '" . scrub_in($GLOBALS['user']->id) . "'";
+        if (!Core::get_global('user')->has_access('75')) {
+            $sql .= "WHERE `user` = '" . (string) Core::get_global('user')->id . "'";
         }
 
         return $sql;
@@ -202,7 +212,7 @@ class Share extends database_object
     public function show_action_buttons()
     {
         if ($this->id) {
-            if ($GLOBALS['user']->has_access('75') || $this->user == $GLOBALS['user']->id) {
+            if (Core::get_global('user')->has_access('75') || $this->user == (int) Core::get_global('user')->id) {
                 echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
@@ -228,8 +238,8 @@ class Share extends database_object
 
     public function update(array $data)
     {
-        $this->max_counter    = intval($data['max_counter']);
-        $this->expire_days    = intval($data['expire']);
+        $this->max_counter    = (int) ($data['max_counter']);
+        $this->expire_days    = (int) ($data['expire']);
         $this->allow_stream   = $data['allow_stream'] == '1';
         $this->allow_download = $data['allow_download'] == '1';
         $this->description    = isset($data['description']) ? $data['description'] : $this->description;
@@ -237,9 +247,9 @@ class Share extends database_object
         $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " .
             "WHERE `id` = ?";
         $params = array($this->max_counter, $this->expire_days, $this->allow_stream ? 1 : 0, $this->allow_download ? 1 : 0, $this->description, $this->id);
-        if (!$GLOBALS['user']->has_access('75')) {
+        if (!Core::get_global('user')->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = $GLOBALS['user']->id;
+            $params[] = Core::get_global('user')->id;
         }
 
         return Dba::write($sql, $params);
@@ -255,43 +265,43 @@ class Share extends database_object
     public function is_valid($secret, $action)
     {
         if (!$this->id) {
-            debug_event('share', 'Access Denied: Invalid share.', '3');
+            debug_event('share.class', 'Access Denied: Invalid share.', 3);
 
             return false;
         }
 
         if (!AmpConfig::get('share')) {
-            debug_event('share', 'Access Denied: share feature disabled.', '3');
+            debug_event('share.class', 'Access Denied: share feature disabled.', 3);
 
             return false;
         }
 
         if ($this->expire_days > 0 && ($this->creation_date + ($this->expire_days * 86400)) < time()) {
-            debug_event('share', 'Access Denied: share expired.', '3');
+            debug_event('share.class', 'Access Denied: share expired.', 3);
 
             return false;
         }
 
         if ($this->max_counter > 0 && $this->counter >= $this->max_counter) {
-            debug_event('share', 'Access Denied: max counter reached.', '3');
+            debug_event('share.class', 'Access Denied: max counter reached.', 3);
 
             return false;
         }
 
         if (!empty($this->secret) && $secret != $this->secret) {
-            debug_event('share', 'Access Denied: secret requires to access share ' . $this->id . '.', '3');
+            debug_event('share.class', 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
 
             return false;
         }
 
         if ($action == 'download' && (!AmpConfig::get('download') || !$this->allow_download)) {
-            debug_event('share', 'Access Denied: download unauthorized.', '3');
+            debug_event('share.class', 'Access Denied: download unauthorized.', 3);
 
             return false;
         }
 
         if ($action == 'stream' && !$this->allow_stream) {
-            debug_event('share', 'Access Denied: stream unauthorized.', '3');
+            debug_event('share.class', 'Access Denied: stream unauthorized.', 3);
 
             return false;
         }
@@ -334,8 +344,8 @@ class Share extends database_object
             case 'playlist':
                 $object = new $this->object_type($this->object_id);
                 $songs  = $object->get_songs();
-                foreach ($songs as $id) {
-                    $is_shared = ($media_id == $id);
+                foreach ($songs as $songid) {
+                    $is_shared = ($media_id == $songid);
                     if ($is_shared) {
                         break;
                     }

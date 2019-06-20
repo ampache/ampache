@@ -146,13 +146,13 @@ if ($isVideo) {
 if (!$isVideo && !$isRadio && !$is_share) {
         if ($iframed) {
             if (AmpConfig::get('sociable')) {
-                echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-media_id'),'shouts_data');";
+                echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-media_id'), 'shouts_data');";
             }
             echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=song&object_id=' + currenti.attr('data-media_id'));";
             echo "var titleobj = (currenti.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";
             echo "var artistobj = (currenti.attr('data-artist_id') !== 'undefined') ?'<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
             echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-media_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
-            echo "var actionsobj = '|';";
+            echo "var actionsobj = '';";
             if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface', '25'))) {
                 echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
             }
@@ -339,15 +339,6 @@ if ($is_share && $isVideo) {
 </head>
 <body>
 <?php
-if ($iframed && !$is_share) {
-    ?>
-  <div class="jp-close">
-    <a href="javascript:ExitPlayer();" title="Close Player"><img src="<?php echo AmpConfig::get('web_path') ?>/images/close.png" border="0" /></a><br />
-  </div>
-<?php
-}
-?>
-<?php
 $areaClass = "";
 if ((!AmpConfig::get('waveform') || $is_share) && !$embed) {
     $areaClass .= " jp-area-center";
@@ -461,7 +452,7 @@ if ($isVideo) {
     } ?>
         </div>
       </div>
-<?php if (!$is_share) {
+<?php if (!$is_share && !$_SESSION['mobile']) {
         ?>
       <div class="player_actions">
 <?php if (AmpConfig::get('broadcast') && Access::check('interface', '25')) {
@@ -469,7 +460,7 @@ if ($isVideo) {
         <div id="broadcast" class="broadcast action_button">
 <?php
         if (AmpConfig::get('broadcast_by_default')) {
-            $broadcasts = Broadcast::get_broadcasts($GLOBALS['user']->id);
+            $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);
             if (count($broadcasts) < 1) {
                 $broadcast_id = Broadcast::create(T_('My Broadcast'));
             } else {

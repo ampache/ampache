@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,10 +27,10 @@
     <?php echo Ajax::button('?action=basket&type=browse_set&browse_id=' . $browse->id, 'add', T_('Add Search Results'), 'add_search_results'); ?>
     <?php echo T_('Add Search Results'); ?>
 </li>
-    <?php if (Access::check_function('batch_download') && check_can_zip($_REQUEST['type'])) {
+    <?php if (Access::check_function('batch_download') && check_can_zip((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) {
     ?>
 <li>
-    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out($_REQUEST['type']); ?>&amp;browse_id=<?php echo $browse->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>&amp;browse_id=<?php echo $browse->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
     <?php echo T_('Batch Download'); ?>
 </li>
     <?php

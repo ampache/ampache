@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +24,7 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'get_advanced':
         $object_ids = Random::advanced($_REQUEST['type'], $_POST);
@@ -31,7 +32,7 @@ switch ($_REQUEST['action']) {
         // We need to add them to the active playlist
         if (is_array($object_ids)) {
             foreach ($object_ids as $object_id) {
-                $GLOBALS['user']->playlist->add_object($object_id, 'song');
+                Core::get_global('user')->playlist->add_object($object_id, 'song');
             }
         }
     case 'advanced':

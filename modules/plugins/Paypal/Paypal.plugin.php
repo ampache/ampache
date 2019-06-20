@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -106,7 +106,7 @@ class AmpachePaypal
         echo "<input type='hidden' name='currency_code' value='" . scrub_out($this->currency_code) . "'>\n";
         echo "<input type='hidden' name='bn' value='PP-DonationsBF:btn_donate_SM.gif:NonHostedGuest'>\n";
         echo "<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif' border='0' name='submit' alt='PayPal - The safer, easier way to pay online!'>\n";
-        echo "<img alt='' border='0' src='https://www.paypalobjects.com/fr_XC/i/scr/pixel.gif' width='1' height='1'>\n";
+        echo "<img alt= '' border='0' src='https://www.paypalobjects.com/fr_XC/i/scr/pixel.gif' width='1' height='1'>\n";
         echo "</form>\n";
     }
 
@@ -123,7 +123,7 @@ class AmpachePaypal
 
         $this->business = trim($data['paypal_business']);
         if (!strlen($this->business)) {
-            debug_event($this->name, 'No Paypal ID, user field plugin skipped', '3');
+            debug_event('paypal.plugin', 'No Paypal ID, user field plugin skipped', 3);
 
             return false;
         }

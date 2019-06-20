@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,35 +22,35 @@
 
 require_once 'lib/init.php';
 
-if (!isset($_REQUEST['action']) || empty($_REQUEST['action'])) {
-    debug_event("stream.php", "Asked without action. Exiting...", 5);
-    exit;
+if (!Core::get_request('action')) {
+    debug_event('stream', "Asked without action. Exiting...", 5);
+
+    return false;
 }
 
 if (!defined('NO_SESSION')) {
     /* If we are running a demo, quick while you still can! */
     if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface', '25')) {
         UI::access_denied();
-        exit;
+
+        return false;
     }
 }
 
 $media_ids = array();
 $web_path  = AmpConfig::get('web_path');
 
-debug_event("stream.php", "Asked for {" . $_REQUEST['action'] . "}.", 5);
+debug_event('stream', "Asked for {" . Core::get_request('action') . "}.", 5);
 
-/**
- * action switch
- */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'basket':
         // Pull in our items (multiple types)
-        $media_ids = $GLOBALS['user']->playlist->get_items();
+        $media_ids = Core::get_global('user')->playlist->get_items();
 
         // Check to see if 'clear' was passed if it was then we need to reset the basket
         if (($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
-            $GLOBALS['user']->playlist->clear();
+            Core::get_global('user')->playlist->clear();
         }
     break;
     /* This is run if we need to gather info based on a tmp playlist */
@@ -59,9 +59,9 @@ switch ($_REQUEST['action']) {
         $media_ids    = $tmp_playlist->get_items();
     break;
     case 'play_favorite':
-        $data      = $GLOBALS['user']->get_favorites($_REQUEST['type']);
+        $data      = Core::get_global('user')->get_favorites((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $media_ids = array();
-        switch ($_REQUEST['type']) {
+        switch ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) {
             case 'artist':
             case 'album':
                 foreach ($data as $value) {
@@ -78,7 +78,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'play_item':
         $object_type = $_REQUEST['object_type'];
-        $object_ids  = explode(',', $_REQUEST['object_id']);
+        $object_ids  = explode(',', Core::get_get('object_id'));
 
         if (Core::is_playable_item($object_type)) {
             foreach ($object_ids as $object_id) {
@@ -112,11 +112,11 @@ switch ($_REQUEST['action']) {
         if ($_REQUEST['genre'][0] != '-1') {
             $matchlist['genre'] = $_REQUEST['genre'];
         }
-        if ($_REQUEST['catalog'] != '-1') {
-            $matchlist['catalog'] = $_REQUEST['catalog'];
+        if (Core::get_request('catalog') != '-1') {
+            $matchlist['catalog'] = Core::get_request('catalog');
         }
         /* Setup the options array */
-        $options   = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'],'size_limit' => $_REQUEST['size_limit']);
+        $options   = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'], 'size_limit' => $_REQUEST['size_limit']);
         $media_ids = get_random_songs($options, $matchlist);
     break;
     case 'democratic':
@@ -145,7 +145,7 @@ switch ($_REQUEST['action']) {
     break;
 } // end action switch
 
-// See if we need a special streamtype
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'download':
         $stream_type = 'download';
@@ -165,19 +165,20 @@ switch ($_REQUEST['action']) {
     break;
 }
 
-debug_event('stream.php', 'Stream Type: ' . $stream_type . ' Media IDs: ' . json_encode($media_ids), 5);
+debug_event('stream', 'Stream Type: ' . $stream_type . ' Media IDs: ' . json_encode($media_ids), 5);
 
 if (count($media_ids) || isset($urls)) {
     if ($stream_type != 'democratic') {
         if (!User::stream_control($media_ids)) {
-            debug_event('UI::access_denied', 'Stream control failed for user ' . $GLOBALS['user']->username, 3);
+            debug_event('stream', 'Stream control failed for user ' . Core::get_global('user')->username, 3);
             UI::access_denied();
-            exit;
+
+            return false;
         }
     }
 
-    if ($GLOBALS['user']->id > -1) {
-        Session::update_username(Stream::get_session(), $GLOBALS['user']->username);
+    if (Core::get_global('user')->id > -1) {
+        Session::update_username(Stream::get_session(), Core::get_global('user')->username);
     }
 
     $playlist = new Stream_Playlist();
