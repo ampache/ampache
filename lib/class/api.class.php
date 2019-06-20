@@ -983,55 +983,80 @@ class Api
     /**
      * stats
      * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=400001
+     * 
+     * This get library stats for different object types.
+     * 
+     * $input = array(type     = (string) 'song'|'album'|'artist'
+     *                filter   = (string) 'highest'|'frequent'|'recent'|'flagged'
+     *                offset   = (integer)
+     *                limit    = (integer)
+     *                user_id  = (integer)
+     *                username = (string) DEPRECIATED 400001
      *
-     * This get library stats.
      * @param array $input
      */
     public static function stats($input)
     {
-        $type     = $input['type'];
-        $offset   = $input['offset'];
-        $limit    = $input['limit'];
-        $username = $input['username'];
-
-        $albums = null;
-        if ($type == "newest") {
-            $albums = Stats::get_newest("album", $limit, $offset);
+        if ((int) self::$version < 400001) {
+            //settings for the old API call
+            $type     = 'album';
+            $filter   = $input['type'];
+            $offset   = $input['offset'];
+            $limit    = $input['limit'];
+            $username = $input['username'];
+            $user_id  = User::get_from_username($username);
         } else {
-            if ($type == "highest") {
-                $albums = Rating::get_highest("album", $limit, $offset);
+            //settings for the new api call
+            $type     = $input['type'];
+            $filter   = $input['filter'];
+            $offset   = $input['offset'];
+            $limit    = $input['limit'];
+            $user_id  = $input['user_id'];
+        }
+
+        $results = null;
+        if ($filter == "newest") {
+            $results = Stats::get_newest($type, $limit, $offset);
+        } else {
+            if ($filter == "highest") {
+                $results = Rating::get_highest($type, $limit, $offset);
             } else {
-                if ($type == "frequent") {
-                    $albums = Stats::get_top("album", $limit, '', $offset);
+                if ($filter == "frequent") {
+                    $results = Stats::get_top($type, $limit, '', $offset);
                 } else {
-                    if ($type == "recent") {
-                        if (!empty($username)) {
-                            $user = User::get_from_username($username);
-                            if ($user !== null) {
-                                $albums = $user->get_recently_played($limit, 'album');
-                            } else {
-                                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
-                            }
+                    if ($filter == "recent") {
+                        if ($user_id !== null) {
+                                $results = $user_id->get_recently_played($limit, $type);
                         } else {
-                            $albums = Stats::get_recent("album", $limit, $offset);
+                            $results = Stats::get_recent($type, $limit, $offset);
                         }
                     } else {
-                        if ($type == "flagged") {
-                            $albums = Userflag::get_latest('album');
+                        if ($filter == "flagged") {
+                            $results = Userflag::get_latest($type);
                         } else {
                             if (!$limit) {
                                 $limit = AmpConfig::get('popular_threshold');
                             }
-                            $albums = Album::get_random($limit);
+                            if ($type === 'song') {
+                                $results = Random::get_default($limit);
+                            }
+                            if ($type === 'artist') {
+                                $results = Random::get_artist($limit);
+                            }
+                            if ($type === 'album') {
+                                $results = Random::get_album($limit);
+                            }
+                            
                         }
                     }
                 }
             }
         }
 
-        if ($albums !== null) {
+        if ($results !== null) {
             ob_end_clean();
-            echo XML_Data::albums($albums);
+            echo XML_Data::$type($results);
         }
     } // stats
 
