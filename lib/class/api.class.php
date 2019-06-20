@@ -989,17 +989,17 @@ class Api
      * 
      * $input = array(type     = (string) 'song'|'album'|'artist'
      *                filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'
-     *                offset   = (integer)
-     *                limit    = (integer)
-     *                user_id  = (integer)
+     *                offset   = (integer) //optional
+     *                limit    = (integer) //optional
+     *                user_id  = (integer) //optional
      *                username = (string) DEPRECIATED 400001
      *
      * @param array $input
      */
     public static function stats($input)
     {
+        debug_event('api.class', 'stats requested using api version ' . self::$version, 4);
         if ((int) self::$version < 400001) {
-            debug_event('api.class', 'stats OLD API IN USE', 4);
             //settings for the old API call
             $type     = 'album';
             $filter   = $input['type'];
@@ -1008,13 +1008,18 @@ class Api
             $username = $input['username'];
             $user_id  = User::get_from_username($username);
         } else {
-            debug_event('api.class', 'stats using new api version ' . self::$version, 4);
             //settings for the new api call
             $type     = $input['type'];
             $filter   = $input['filter'];
             $offset   = $input['offset'];
             $limit    = $input['limit'];
             $user_id  = $input['user_id'];
+        }
+        if (!$limit) {
+            $limit = AmpConfig::get('popular_threshold');
+        }
+        if (!$offset) {
+            $offset = '';
         }
 
         $results = null;
@@ -1043,9 +1048,6 @@ class Api
                             $results = Userflag::get_latest($type);
                         } else {
                             debug_event('api.class', 'stats random', 4);
-                            if (!$limit) {
-                                $limit = AmpConfig::get('popular_threshold');
-                            }
                             if ($type === 'song') {
                                 $results = Random::get_default($limit);
                             }
