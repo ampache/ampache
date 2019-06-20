@@ -984,9 +984,9 @@ class Api
      * stats
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=400001
-     * 
+     *
      * This get library stats for different object types.
-     * 
+     *
      * $input = array(type     = (string) 'song'|'album'|'artist'
      *                filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'
      *                offset   = (integer) //optional
@@ -1032,7 +1032,7 @@ class Api
                 $results = Rating::get_highest($type, $limit, $offset);
             } else {
                 if ($filter == "frequent") {
-                debug_event('api.class', 'stats frequent', 4);
+                    debug_event('api.class', 'stats frequent', 4);
                     $results = Stats::get_top($type, $limit, '', $offset);
                 } else {
                     if ($filter == "recent") {
@@ -1057,7 +1057,6 @@ class Api
                             if ($type === 'album') {
                                 $results = Random::get_album($limit);
                             }
-                            
                         }
                     }
                 }
