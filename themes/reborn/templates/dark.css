@@ -293,7 +293,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
     color: #fff;
-	margin-bottom: 125px;
+	margin-bottom: 0px;
 }
 
 .list-header, .list-header a {
