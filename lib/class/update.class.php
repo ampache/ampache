@@ -568,7 +568,7 @@ class Update
         $version[]     = array('version' => '400000', 'description' => $update_string);
 
         $update_string = "* Update preferences for older users to match current subcategory items<br />" .
-                         "  (This won't affect many but older installs never got the updates)<br />" .
+                         "  (This won't affect many but older installs never got the updates)<br />";
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
         return $version;
