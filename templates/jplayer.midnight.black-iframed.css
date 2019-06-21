@@ -925,4 +925,8 @@ a.jp-shuffle-off:hover {
 		height:0px;
 	}
 	
+	.player_actions {
+		width: 50px;
+	}
+	
 }
