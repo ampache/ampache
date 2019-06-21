@@ -4174,7 +4174,7 @@ class Update
 
         $sql = "UPDATE `preference` " .
                "SET `preference`.`subcatagory` = 'catalog' " .
-               "WHERE `preference`.`name` = catalog_check_duplicate' AND " .
+               "WHERE `preference`.`name` = 'catalog_check_duplicate' AND " .
                "`preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
