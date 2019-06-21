@@ -216,7 +216,11 @@ $_SESSION['login'] = false;
         </script>
         <script type="text/javascript">
             var lastaction = new Date().getTime();
-            var refresh_slideshow_interval=<?php echo AmpConfig::get('slideshow_time'); ?>;
+            var refresh_slideshow_interval=<?php if (Preference::exists('flickr_api_key')) {
+            echo AmpConfig::get('slideshow_time');
+        } else {
+            echo 0;
+        } ?>;
             var iSlideshow = null;
             var tSlideshow = null;
             function init_slideshow_check()
