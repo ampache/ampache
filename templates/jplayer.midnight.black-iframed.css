@@ -895,3 +895,34 @@ a.jp-shuffle-off:hover {
 }
 
 /* @end */
+
+/*
+ *
+ * Mobile Template
+ *
+ */
+
+@media only screen and (max-width: 1024px) {
+
+	div.jp-area {
+		height: 100px;
+		width: 75%;
+	}
+	
+	div.jp-audio {
+		width: 480px;
+		margin-top: 170px;
+	}
+
+	div.jp-jplayer-audio {
+		top: 10px;
+		left: 31%;
+	}
+	
+	div#expandplaylistbtn {
+		visibility: hidden !important;
+		width: 0px;
+		height:0px;
+	}
+	
+}
