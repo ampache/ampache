@@ -4159,7 +4159,7 @@ class Update
     public static function update_400001()
     {
         $retval = true;
-        $sql = "UPDATE `preference` " .
+        $sql    = "UPDATE `preference` " .
                "SET `preference`.`subcatagory` = 'library' " .
                "WHERE `preference`.`name` in ('album_sort', 'show_played_times', 'album_group', 'album_release_type', 'album_release_type_sort', 'libitem_contextmenu', 'browse_filter', 'libitem_browse_alpha') AND " .
                "`preference`.`subcatagory` IS NULL;";
