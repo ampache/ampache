@@ -293,7 +293,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
     color: #fff;
-	margin-bottom: 0px;
+	margin-bottom: 125px;
 }
 
 .list-header, .list-header a {
@@ -606,4 +606,19 @@ a.option-list:hover {
 
 #tabs li.tab_active a {
 	color: #fff;
+}
+
+/*
+ *
+ * Mobile Template
+ *
+ */
+
+@media only screen and (max-width: 1024px) {
+	
+	#sidebar-page {
+		border-color: rgba(0,0,0,0.0) !important;
+		background-color: rgba(0,0,0,0.0) !important;
+	}
+	
 }
