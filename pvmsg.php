@@ -1,4 +1,5 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -19,7 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 require_once 'lib/init.php';
 
 if (!Access::check('interface', '25') || !AmpConfig::get('sociable')) {
@@ -36,7 +36,7 @@ switch ($_REQUEST['action']) {
     case 'show_add_message':
         if (isset($_REQUEST['reply_to'])) {
             $pvmsg = new PrivateMsg($_REQUEST['reply_to']);
-            if ($pvmsg->id && ($pvmsg->from_user === (int) Core::get_global('user')->id || $pvmsg->to_user === (int) Core::get_global('user')->id)) {
+            if ($pvmsg->id && ($pvmsg->from_user === Core::get_global('user')->id || $pvmsg->to_user === Core::get_global('user')->id)) {
                 $to_user             = new User($pvmsg->from_user);
                 $_REQUEST['to_user'] = $to_user->username;
                 $_REQUEST['subject'] = "RE: " . $pvmsg->subject;
@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
             }
         }
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_pvmsg.inc.php');
-    break;
+        break;
     case 'add_message':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
             $title = '';
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=pvmsg');
         }
-    break;
+        break;
     case 'set_is_read':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -78,7 +78,7 @@ switch ($_REQUEST['action']) {
         $msgs = explode(',', $_REQUEST['msgs']);
         foreach ($msgs as $msg_id) {
             $pvmsg = new PrivateMsg((int) ($msg_id));
-            if ($pvmsg->id && $pvmsg->to_user === (int) Core::get_global('user')->id) {
+            if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
                 $read = (int) ($_REQUEST['read']) !== 0;
                 $pvmsg->set_is_read($read);
             } else {
@@ -90,7 +90,7 @@ switch ($_REQUEST['action']) {
         }
 
         show_confirmation(T_('Messages State Changed'), T_('Messages state have been changed.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
-    break;
+        break;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -98,13 +98,13 @@ switch ($_REQUEST['action']) {
 
         $msgs = scrub_out($_REQUEST['msgs']);
         show_confirmation(
-            T_('Message Deletion'),
-            T_('Are you sure you want to permanently delete the selected messages?'),
-            AmpConfig::get('web_path') . "/pvmsg.php?action=confirm_delete&msgs=" . $msgs,
-            1,
-            'delete_message'
+                T_('Message Deletion'),
+                T_('Are you sure you want to permanently delete the selected messages?'),
+                AmpConfig::get('web_path') . "/pvmsg.php?action=confirm_delete&msgs=" . $msgs,
+                1,
+                'delete_message'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -114,7 +114,7 @@ switch ($_REQUEST['action']) {
         foreach ($msgs as $msg_id) {
             $msg_id = (int) ($msg_id);
             $pvmsg  = new PrivateMsg($msg_id);
-            if ($pvmsg->id && $pvmsg->to_user === (int) Core::get_global('user')->id) {
+            if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
                 $pvmsg->delete();
             } else {
                 debug_event('pvmsg', 'Unknown or unauthorized private message #' . $msg_id . '.', 3);
@@ -125,12 +125,12 @@ switch ($_REQUEST['action']) {
         }
 
         show_confirmation(T_('Messages Deletion'), T_('Messages have been deleted.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
-    break;
+        break;
     case 'show':
     default:
         $msg_id = (int) filter_input(INPUT_GET, 'pvmsg_id', FILTER_SANITIZE_NUMBER_INT);
         $pvmsg  = new PrivateMsg($msg_id);
-        if ($pvmsg->id && $pvmsg->to_user === (int) Core::get_global('user')->id) {
+        if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
             $pvmsg->format();
             if (!$pvmsg->is_read) {
                 $pvmsg->set_is_read(true);
@@ -142,7 +142,7 @@ switch ($_REQUEST['action']) {
 
             return false;
         }
-    break;
+        break;
 }
 
 UI::show_footer();
