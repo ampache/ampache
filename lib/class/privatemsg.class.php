@@ -1,4 +1,5 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -29,31 +30,36 @@
 class PrivateMsg extends database_object
 {
     /* Variables from DB */
-
     /**
      *  @var int $id
      */
     public $id;
+
     /**
      *  @var string $subject
      */
     public $subject;
+
     /**
      *  @var string $message
      */
     public $message;
+
     /**
      *  @var integer $from_user
      */
     public $from_user;
+
     /**
      *  @var integer $to_user
      */
     public $to_user;
+
     /**
      *  @var integer $creation_date
      */
     public $creation_date;
+
     /**
      *  @var boolean $is_read
      */
@@ -63,26 +69,32 @@ class PrivateMsg extends database_object
      *  @var string $f_subject
      */
     public $f_subject;
+
     /**
      *  @var string $f_message
      */
     public $f_message;
+
     /**
      *  @var string $link
      */
     public $link;
+
     /**
      *  @var string $f_link
      */
     public $f_link;
+
     /**
      *  @var string $f_from_user_link
      */
     public $f_from_user_link;
+
     /**
      *  @var string $f_to_user_link
      */
     public $f_to_user_link;
+
     /**
      *  @var string $f_creation_date
      */
@@ -136,8 +148,8 @@ class PrivateMsg extends database_object
 
     public static function create(array $data)
     {
-        $subject = trim(strip_tags($data['subject']));
-        $message = trim(strip_tags($data['message']));
+        $subject = trim(strip_tags(filter_var($data['subject'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
+        $message = trim(strip_tags(filter_var($data['message'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
 
         if (empty($subject)) {
             AmpError::add('subject', T_('Error: Subject Required'));
@@ -153,7 +165,7 @@ class PrivateMsg extends database_object
             $creation_date = $data['creation_date'] ?: time();
             $is_read       = $data['is_read'] ?: 0;
             $sql           = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) " .
-                "VALUES (?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?, ?)";
             if (Dba::write($sql, array($subject, $message, $from_user, $to_user->id, $creation_date, $is_read))) {
                 $insert_id = Dba::insert_id();
 
