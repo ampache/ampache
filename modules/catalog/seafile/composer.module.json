@@ -1,0 +1,11 @@
+{
+	"name": "ampache/ampache-seafile",
+	"description": "Seafile catalog for Ampache.",
+	"homepage": "http://ampache.org",
+	"keywords": ["ampache", "seafile", "catalog"],
+	"type": "ampache-catalog",
+	"license": "GPL-2.0",
+    "require": {
+		"rsd/seafile-php-sdk": "1.*"
+    }
+}
