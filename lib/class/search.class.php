@@ -958,7 +958,7 @@ class Search extends playlist_object
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
         $rating_filter = AmpConfig::get_rating_filter();
-         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
             $user_id = Core::get_global('user')->id;
             if (empty($sqltbl['where_sql'])) {
                 $sql .= " WHERE ";

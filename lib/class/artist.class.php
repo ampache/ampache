@@ -537,7 +537,7 @@ class Artist extends database_object implements library_item
         $sql .= $where;
 
         $rating_filter = AmpConfig::get_rating_filter();
-         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
             $user_id = Core::get_global('user')->id;
             $sql .= " AND `artist`.`id` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
