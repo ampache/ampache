@@ -1078,7 +1078,7 @@ class User extends database_object
             /* Get Users Last ip */
             if (count($data = $this->get_ip_history(1))) {
                 $ip = $data['0']['ip'];
-                if (!empty($ip)) {
+                if (!empty($ip) && filter_var($ip, FILTER_VALIDATE_IP)) {
                     $this->ip_history = inet_ntop($ip);
                 }
             } else {

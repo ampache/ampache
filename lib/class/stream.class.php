@@ -140,8 +140,6 @@ class Stream
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
-        debug_event('stream.class', 'Starting transcode for {' . $media->file . '}. Type {' . $type . '}. Options: ' . print_r($options, false) . '}...', 4);
-
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
         if ($transcode_settings === false) {
