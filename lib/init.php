@@ -227,7 +227,12 @@ else {
 Preference::init();
 
 // Load gettext mojo
-load_gettext();
+if (!class_exists('Gettext\Translations')) {
+    require_once $prefix . '/templates/test_error_page.inc.php';
+    throw new Exception('load_gettext()');
+} else {
+    load_gettext();
+}
 
 Core::get_global('user')->format(false);
 
