@@ -705,8 +705,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     top: 98px;
     right: 15px;
     border: 2px solid;
-    max-width: 210px;
-    min-width: 150px;
+    width: 214px;
     padding: 0.6em;
     font-size: 12px;
     z-index: 99;
