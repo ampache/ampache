@@ -305,7 +305,7 @@ class Stats
             $sql .= "AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5) {
+         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
             $user_id = Core::get_global('user')->id;
             $sql .= " AND `object_id` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
@@ -391,8 +391,7 @@ class Stats
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5) {
-            $user_id = Core::get_global('user')->id;
+         if ($rating_filter > 0 && $rating_filter <= 5 && !empty($user_id)) {
             $sql .= " AND `object_id` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = '" . $type . "'" .
@@ -531,7 +530,7 @@ class Stats
                 $sql .= "AND `catalog` = '" . (string) scrub_in($catalog) . "' ";
             }
             $rating_filter = AmpConfig::get_rating_filter();
-            if ($rating_filter > 0 && $rating_filter <= 5) {
+             if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
                 $user_id = Core::get_global('user')->id;
                 $sql .= "WHERE `" . $sql_type . "` NOT IN" .
                         " (SELECT `object_id` FROM `rating`" .
