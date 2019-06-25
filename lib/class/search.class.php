@@ -1135,7 +1135,7 @@ class Search extends playlist_object
             );
         }
 
-        if ($type == 'numeric') {
+        if ($type == 'numeric' || $type == 'days') {
             return (int) ($data);
         }
 
