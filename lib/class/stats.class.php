@@ -507,8 +507,8 @@ class Stats
 
         $base_type = 'song';
         $sql_type  = $base_type . "`.`" . $type;
-        if ($input_type === 'song') {
-            $sql_type = 'song`.`id';
+        if ($input_type === 'song' || $input_type === 'playlist') {
+            $sql_type = $input_type . '`.`id';
         }
 
         // add playlists to mashup browsing
