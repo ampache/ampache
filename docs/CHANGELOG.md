@@ -1,16 +1,14 @@
 CHANGELOG
 =========
 
-CURRENT PROGRESS IN THE CORE BRANCH
-
-4.0.0-CORE
+4.0.0-DEVELOP
 ----------
 - Resolve CVE-2019-12385 for the SQL Injection
 - Resolve CVE-2019-12386 for the persistent XSS
 - Remove charts/graphs that use non-free graph library pchart
 - Update the CSS theme colors and structure.
 - Light theme updated.
-- Remove plex, seafile, dropbox, googleplus plugins
+- Remove plex, dropbox, googleplus plugins
 - Remove all plex code
 - Remove message of the day
 - Don't allow lost password reset for Admin users
@@ -41,7 +39,7 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - Add send_full_stream to config, to allow pushing the full track instead of segmenting
 - Add debugging in song.class.php when the file may be corrupt
 - Remove '[Disk x]' when grouped from all UI areas by enforcing the group setting.
-- Make test.php & install.php show an error page instead of blank screen.
+- Make test.php, init.php & install.php show an error page instead of blank screen. (gettext)
 - Filter zip names in batch so they are named correctly by the download
 - API - Extended Method: stats allow songs|artists|albums (instead of just albums)
 - API - Extended Method: playlists allow return of smartlists as well as regular playlists (Only allow smartlists with an item limit)
@@ -49,6 +47,7 @@ CURRENT PROGRESS IN THE CORE BRANCH
 - API - New Method: record_play allows recording play of object without streaming
 - API - New Method: catalog_action allow running add_to_catalog|clean_catalog
 - API - New Method: playlist_edit alow editing name and type of playlist
+- Fix slideshow creating black screen when using web player
 
 3.9.1
 ----------
