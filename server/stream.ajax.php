@@ -45,12 +45,12 @@ switch ($_REQUEST['action']) {
             case 'stream':
             case 'localplay':
             case 'democratic':
-                $key = 'allow_democratic_playback';
+                $key = 'allow_' . Core::get_post('type') . '_playback';
                 if (!AmpConfig::get($key)) {
                     $results['rfc3514'] = '0x1';
                     break 2;
                 }
-                $new = 'democratic';
+                $new = Core::get_post('type');
             break;
             case 'web_player':
                 $new = 'web_player';
