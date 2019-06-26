@@ -128,7 +128,12 @@ class Api
      *
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
-     * @param array
+     *
+     * @param array $input
+     * $input = array(user      = (string) $username
+     *                auth      = (string) $passphrase
+     *                timestamp = (int) UNIXTIME()
+     *                version   = (string) $version //optional)
      * @return boolean
      */
     public static function handshake($input)
@@ -303,7 +308,9 @@ class Api
      *
      * This can be called without being authenticated, it is useful for determining if what the status
      * of the server is, and what version it is running/compatible with
+     *
      * @param array $input
+     * $input = array(auth = (string))
      */
     public static function ping($input)
     {
@@ -327,6 +334,7 @@ class Api
      *
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
+     *
      * @param array $input
      */
     public static function artists($input)
@@ -355,6 +363,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns a single artist based on the UID of said artist
+     *
      * @param array $input
      */
     public static function artist($input)
@@ -368,6 +377,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns the albums of an artist
+     *
      * @param array $input
      */
     public static function artist_albums($input)
@@ -388,6 +398,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns the songs of the specified artist
+     *
      * @param array $input
      */
     public static function artist_songs($input)
@@ -407,6 +418,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns albums based on the provided search filters
+     *
      * @param array $input
      */
     public static function albums($input)
@@ -433,6 +445,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns a single album based on the UID provided
+     *
      * @param array $input
      */
     public static function album($input)
@@ -446,6 +459,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns the songs of a specified album
+     *
      * @param array $input
      */
     public static function album_songs($input)
@@ -466,6 +480,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns the tags (Genres) based on the specified filter
+     *
      * @param array $input
      */
     public static function tags($input)
@@ -491,6 +506,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns a single tag based on UID
+     *
      * @param array $input
      */
     public static function tag($input)
@@ -505,6 +521,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns the artists associated with the tag in question as defined by the UID
+     *
      * @param array $input
      */
     public static function tag_artists($input)
@@ -524,6 +541,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns the albums associated with the tag in question
+     *
      * @param array $input
      */
     public static function tag_albums($input)
@@ -543,6 +561,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * returns the songs for this tag
+     *
      * @param array $input
      */
     public static function tag_songs($input)
@@ -561,6 +580,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * Returns songs based on the specified filter
+     *
      * @param array $input
      */
     public static function songs($input)
@@ -590,7 +610,8 @@ class Api
      * song
      * MINIMUM_API_VERSION=380001
      *
-     * returns a single song
+     * return a single song
+     *
      * @param array $input
      */
     public static function song($input)
@@ -606,6 +627,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This takes a url and returns the song object in question
+     *
      * @param array $input
      */
     public static function url_to_song($input)
@@ -621,6 +643,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns playlists based on the specified filter
+     *
      * @param array $input
      */
     public static function playlists($input)
@@ -646,6 +669,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns a single playlist
+     *
      * @param array $input
      */
     public static function playlist($input)
@@ -661,6 +685,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This returns the songs for a playlist
+     *
      * @param array $input
      */
     public static function playlist_songs($input)
@@ -695,6 +720,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This create a new playlist and return it
+     *
      * @param array $input
      */
     public static function playlist_create($input)
@@ -714,6 +740,7 @@ class Api
      * MINIMUM_API_VERSION=400001
      *
      * This modifies name and type of playlist
+     *
      * @param array $input
      */
     public static function playlist_edit($input)
@@ -739,7 +766,8 @@ class Api
      * playlist_delete
      * MINIMUM_API_VERSION=380001
      *
-     * This delete a playlist
+     * This deletes a playlist
+     *
      * @param array $input
      */
     public static function playlist_delete($input)
@@ -758,7 +786,8 @@ class Api
      * playlist_add_song
      * MINIMUM_API_VERSION=380001
      *
-     * This add a song to a playlist
+     * This adds a song to a playlist
+     *
      * @param array $input
      */
     public static function playlist_add_song($input)
@@ -777,15 +806,22 @@ class Api
     /**
      * playlist_remove_song
      * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=400001
      *
-     * This remove a song from a playlist
+     * This removes a song from a playlist.
+     * Pre-400001 the api required 'track' instead of 'song'.
+     *
      * @param array $input
      */
     public static function playlist_remove_song($input)
     {
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $track    = scrub_in($input['track']);
+        if ($input['song']) {
+            $track = scrub_in($input['song']);
+        } else {
+            $track = scrub_in($input['track']);
+        }
         if (!$playlist->has_access()) {
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {
@@ -800,6 +836,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This searches the songs and returns... songs
+     *
      * @param array $input
      */
     public static function search_songs($input)
@@ -825,6 +862,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * Perform an advanced search given passed rules
+     *
      * @param array $input
      */
     public static function advanced_search($input)
@@ -857,6 +895,7 @@ class Api
     /**
      * videos
      * This returns video objects!
+     *
      * @param array $input
      */
     public static function videos($input)
@@ -893,6 +932,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This is for controlling localplay
+     *
      * @param array $input
      */
     public static function localplay($input)
@@ -922,6 +962,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This is for controlling democratic play
+     *
      * @param array $input
      */
     public static function democratic($input)
@@ -988,19 +1029,17 @@ class Api
      * This get library stats for different object types.
      * When filter is null get some random items instead
      *
+     * @param array $input
      * $input = array(type     = (string) 'song'|'album'|'artist'
      *                filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'|null
      *                offset   = (integer) //optional
      *                limit    = (integer) //optional
      *                user_id  = (integer) //optional
-     *                username = (string) DEPRECIATED 400001
-     *
-     * @param array $input
+     *                username = (string) //optional
      */
     public static function stats($input)
     {
-        debug_event('api.class', 'stats requested using api version ' . self::$version, 4);
-        if ((int) self::$version < 400001) {
+        if ($input['username']) {
             //settings for the old API call
             $type     = 'album';
             $filter   = $input['type'];
@@ -1084,6 +1123,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This get an user public information
+     *
      * @param array $input
      */
     public static function user($input)
@@ -1107,6 +1147,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This get an user followers
+     *
      * @param array $input
      */
     public static function followers($input)
@@ -1135,6 +1176,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This get the user list followed by an user
+     *
      * @param array $input
      */
     public static function following($input)
@@ -1164,6 +1206,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This follow/unfollow an user
+     *
      * @param array $input
      */
     public static function toggle_follow($input)
@@ -1190,6 +1233,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This get the latest posted shouts
+     *
      * @param array $input
      */
     public static function last_shouts($input)
@@ -1218,6 +1262,7 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This rates a library item
+     *
      * @param array $input
      */
     public static function rate($input)
@@ -1249,11 +1294,10 @@ class Api
      * Setting flag to true (1) will set the flag
      * Setting flag to false (0) will remove the flag
      *
+     * @param array $input
      * $input = array(type = (string) 'song'|'album'|'artist'
      *                id   = (int) $object_id
      *                flag = (bool) 0|1)
-     *
-     * @param array $input
      */
     public static function flag($input)
     {
@@ -1283,11 +1327,10 @@ class Api
      * Take a song_id and update the object_count and user_activity table with a play
      * This allows other sources to record play history to ampache
      *
+     * @param array $input
      * $input = array(id     = (int) $object_id
      *                user   = (int) $user_id
      *                client = (string) $agent (optional))
-     *
-     * @param array $input
      */
     public static function record_play($input)
     {
@@ -1324,11 +1367,75 @@ class Api
     } // record_play
 
     /**
+     * scrobble
+     * MINIMUM_API_VERSION=400001
+     *
+     * Search for a song using text info and then record a play if found.
+     * This allows other sources to record play history to ampache
+     *
+     * @param array $input
+     * $input = array(song       = (string) $song_name
+     *                artist     = (string) $artist_name
+     *                album      = (string) $album_name
+     *                songmbid   = (string) $song_mbid //optional
+     *                artistmbid = (string) $artist_mbid //optional
+     *                albummbid  = (string) $album_mbid //optional
+     *                date       = (int) UNIXTIME() //optional
+     *                client     = (string) $agent //optional)
+     */
+    public static function scrobble($input)
+    {
+        ob_end_clean();
+        $song_name   = $input['song']
+        $artist_name = $input['$artist']
+        $album_name  = $input['$album']
+        $song_mbid   = $input['$song_mbid'] //optional
+        $artist_mbid = $input['$artist_mbid'] //optional
+        $album_mbid  = $input['$album_mbid'] //optional
+        $date        = $input['date'] //optional)
+        $user_id     = Core::get_global('user')->id;);
+        $user        = new User($user_id);
+        $valid       = in_array($user->id, User::get_valid_users());
+
+        // set time to now if not included
+        if (!$date) {
+            $date = UNIX_TIMESTAMP();
+        }
+        // validate supplied user
+        if (!$valid) {
+            echo XML_Data::error('404', T_('User_id not found.'));
+        }
+
+        // validate client string or fall back to 'api'
+        if ($input['client']) {
+            $agent = $input['client'];
+        } else {
+            $agent = 'api';
+        }
+        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
+        if ($scrobble_id === '') {
+            echo XML_Data::error('401', T_('failed to scrobble: no item found!'));
+        } else {
+            $item = new Song($scrobble_id);
+            if (!$item->id) {
+                echo XML_Data::error('404', T_('Library item not found.'));
+            } elseif ($valid) {
+                $user->update_stats($type, $scrobble_id, $agent, array(), false, $date);
+                echo XML_Data::single_string('successfully scrobbled: ' . $scrobble_id);
+            }
+        }
+    } // scrobble
+
+    /**
      * timeline
      * MINIMUM_API_VERSION=380001
      *
-     * This get an user timeline
+     * This gets a user timeline from their username
+     *
      * @param array $input
+     * $input = array(username = (string)
+     *                limit    = (int)
+     *                since    = (int) UNIXTIME())
      */
     public static function timeline($input)
     {
@@ -1359,7 +1466,10 @@ class Api
      * MINIMUM_API_VERSION=380001
      *
      * This get current user friends timeline
+     *
      * @param array $input
+     * $input = array(limit = (int)
+     *                since = (int) UNIXTIME())
      */
     public static function friends_timeline($input)
     {
@@ -1384,10 +1494,9 @@ class Api
      *
      * Kick off a catalog update or clean for the selected catalog
      *
+     * @param array $input
      * $input = array(task    = (string) 'add_to_catalog'|'clean_catalog'
      *                catalog = (int) $catalog_id)
-     *
-     * @param array $input
      */
     public static function catalog_action($input)
     {

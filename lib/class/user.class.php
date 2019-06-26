@@ -863,7 +863,7 @@ class User extends database_object
      * updates the playcount mojo for this specific user
      * @param string $media_type
      */
-    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $noscrobble = false)
+    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $noscrobble = false, $date = null)
     {
         debug_event('user.class', 'Updating stats for {' . $media_type . '/' . $media_id . '} {' . $agent . '}...', 5);
         $media = new $media_type($media_id);

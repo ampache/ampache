@@ -587,6 +587,40 @@ class Song extends database_object implements media, library_item
     }
 
     /**
+     * can_scrobble
+     *
+     * return a song id based on a last.fm-style search in the database
+     * @return string
+     */
+    private static function can_scrobble($song_name, $artist_name, $album_name, $song_mbid = '', $artist_mbid = '', $album_mbid = '')
+    {
+        // by default require song, album, artist for any searches
+        $sql = 'SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
+                'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' .
+                "WHERE `song`.`name` = '". $song_name ."' AND " .
+                "(`artist`.`name` = '". $artist_name ."' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '". $artist_name ."') AND " .
+                "(`album`.`name` = '". $album_name ."' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '". $album_name ."')";
+        if ($song_mbid) {
+            $sql .= " AND `song`.`mbid` = '". $song_mbid . "'";
+        }
+        if ($artist_mbid) {
+            $sql .= " AND `artist`.`mbid` = '". $song_mbid . "'";
+        }
+        if ($album_mbid) {
+            $sql .= " AND `album`.`mbid` = '". $song_mbid . "'";
+        }
+        $db_results = Dba::read($sql);
+
+        $results = Dba::fetch_assoc($db_results);
+        if (isset($results['id'])) {
+            return $results['id'];
+        }
+
+        return '';
+    }
+
+    
+    /**
      * _get_ext_info
      * This function gathers information from the song_ext_info table and adds it to the
      * current object
