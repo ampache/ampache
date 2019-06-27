@@ -893,7 +893,7 @@ class User extends database_object
             debug_event('user.class', 'Scrobbling explicitly skipped', 5);
         }
 
-        $media->set_played($user_id, $agent, $location);
+        $media->set_played($user_id, $agent, $location, $date);
 
         return true;
     } // update_stats

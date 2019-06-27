@@ -112,8 +112,11 @@ class Useractivity extends database_object
      * @param string $object_type
      * @param integer $object_id
      */
-    public static function post_activity($user_id, $action, $object_type, $object_id)
+    public static function post_activity($user_id, $action, $object_type, $object_id, $date = null)
     {
+        if (!$date) {
+            $date = time();
+        }
         if ($object_type === 'song') {
             // insert fields to be more like last.fm activity stats
             $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`," .
@@ -130,11 +133,11 @@ class Useractivity extends database_object
             debug_event('useractivity.class', 'Inserting details for ' . $name_song . ' - ' . $name_artist . ' - ' . $name_album . '.', 5);
 
             if ($name_song && $name_artist && $name_album) {
-                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_song, $name_artist, $name_album, $mbid_song, $mbid_artist, $mbid_album));
+                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_song, $name_artist, $name_album, $mbid_song, $mbid_artist, $mbid_album));
             }
             $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
 
-            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
+            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
         }
         if ($object_type === 'artist') {
             // insert fields to be more like last.fm activity stats
@@ -147,11 +150,11 @@ class Useractivity extends database_object
             debug_event('useractivity.class', 'Inserting details for ' . $name_artist . '.', 5);
 
             if ($name_artist) {
-                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_artist, $mbid_artist));
+                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_artist, $mbid_artist));
             }
             $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
 
-            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
+            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
         }
         if ($object_type === 'album') {
             // insert fields to be more like last.fm activity stats
@@ -167,17 +170,17 @@ class Useractivity extends database_object
             if ($name_artist && $name_album) {
                 debug_event('useractivity.class', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
 
-                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time(), $name_artist, $name_album, $mbid_artist, $mbid_album));
+                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_artist, $name_album, $mbid_artist, $mbid_album));
             }
             $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
 
-            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
+            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
         }
 
         // This is probably a good feature to keep by default
         $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
+        return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
     }
 
     /**
