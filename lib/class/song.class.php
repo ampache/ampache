@@ -597,17 +597,17 @@ class Song extends database_object implements media, library_item
         // by default require song, album, artist for any searches
         $sql = 'SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
                 'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' .
-                "WHERE `song`.`name` = '". $song_name ."' AND " .
-                "(`artist`.`name` = '". $artist_name ."' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '". $artist_name ."') AND " .
-                "(`album`.`name` = '". $album_name ."' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '". $album_name ."')";
+                "WHERE `song`.`name` = '" . $song_name ."' AND " .
+                "(`artist`.`name` = '" . $artist_name ."' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '" . $artist_name ."') AND " .
+                "(`album`.`name` = '" . $album_name ."' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '" . $album_name ."')";
         if ($song_mbid) {
-            $sql .= " AND `song`.`mbid` = '". $song_mbid . "'";
+            $sql .= " AND `song`.`mbid` = '" . $song_mbid . "'";
         }
         if ($artist_mbid) {
-            $sql .= " AND `artist`.`mbid` = '". $song_mbid . "'";
+            $sql .= " AND `artist`.`mbid` = '" . $song_mbid . "'";
         }
         if ($album_mbid) {
-            $sql .= " AND `album`.`mbid` = '". $song_mbid . "'";
+            $sql .= " AND `album`.`mbid` = '" . $song_mbid . "'";
         }
         $db_results = Dba::read($sql);
 
@@ -1793,7 +1793,7 @@ class Song extends database_object implements media, library_item
         }
 
         $media->format();
-        $media_name = $media->get_stream_name() . "." . $type;
+        $media_name = $media->get_stream_name() . " ." . $type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 

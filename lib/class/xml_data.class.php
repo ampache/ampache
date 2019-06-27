@@ -690,6 +690,30 @@ class XML_Data
     {
         $string = '<total_count>' . count($videos) . "</total_count>\n";
 
+        if (count($videos) > self::$limit or self::$offset > 0) {
+            if (null !== self::$limit) {
+                $videos = array_slice($videos, self::$offset, self::$limit);
+            } else {
+                $videos = array_slice($videos, self::$offset);
+            }
+        }
+
+        foreach ($videos as $video_id) {
+            $video = new Video($video_id);
+            $video->format();
+
+            $string .= "<video id=\"" . $video->id . "\">\n" .
+                    // Title is an alias for name
+                    "\t<title><![CDATA[" . $video->title . "]]></title>\n" .
+                    "\t<name><![CDATA[" . $video->title . "]]></name>\n" .
+                    "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
+                    "\t<resolution>" . $video->f_resolution . "</resolution>\n" .
+                    "\t<size>" . $video->size . "</size>\n" .
+                    self::tags_string($video->tags) .
+                    "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api') . "]]></url>\n" .
+                    "</video>\n";
+        } // end foreach
+
         return self::output_xml($string);
     }
     // videos
@@ -796,6 +820,34 @@ class XML_Data
         return self::output_xml($string);
     }
     // users
+
+    /**
+     * shouts
+     *
+     * This handles creating an xml document for a shout list
+     *
+     * @param    int[]    $shouts    Shout identifier list
+     * @return    string    return xml
+     */
+    public static function shouts($shouts)
+    {
+        $string = "<shouts>\n";
+        foreach ($shouts as $shout_id) {
+            $shout = new Shoutbox($shout_id);
+            $shout->format();
+            $user = new User($shout->user);
+            $string .= "\t<shout id=\"" . $shout_id . "\">\n" .
+                    "\t\t<date>" . $shout->date . "</date>\n" .
+                    "\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
+            if ($user->id) {
+                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
+            }
+            $string .= "\t</shout>n";
+        }
+        $string .= "</shouts>\n";
+
+        return self::output_xml($string);
+    } // shouts
 
     public static function output_xml($string, $full_xml = true)
     {
