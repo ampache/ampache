@@ -1344,6 +1344,8 @@ class Api
         // validate supplied user
         if (!$valid) {
             echo XML_Data::error('404', T_('User_id not found.'));
+
+            return;
         }
 
         // validate client string or fall back to 'api'
@@ -1404,6 +1406,7 @@ class Api
         // validate supplied user
         if (!$valid) {
             echo XML_Data::error('404', T_('User_id not found.'));
+
             return;
         }
         
