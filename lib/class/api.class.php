@@ -1385,6 +1385,7 @@ class Api
      */
     public static function scrobble($input)
     {
+        debug_event('api.class', 'Ampache Scrobbling.', 4);
         ob_end_clean();
         $song_name   = $input['song'];
         $artist_name = $input['$artist'];
@@ -1399,7 +1400,7 @@ class Api
 
         // set time to now if not included
         if (!$date) {
-            $date = UNIX_TIMESTAMP();
+            $date = time();
         }
         // validate supplied user
         if (!$valid) {
@@ -1424,6 +1425,7 @@ class Api
                 echo XML_Data::single_string('successfully scrobbled: ' . $scrobble_id);
             }
         }
+        debug_event('api.class', 'Ampache Scrobbling completed.', 5);
     } // scrobble
 
     /**
