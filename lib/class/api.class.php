@@ -1409,7 +1409,7 @@ class Api
         }
         
         //validate minimum required options
-        debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - '. $album_name, 5);
+        debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 5);
         if (!$song_name || !$album_name || !$artist_name) {
             echo XML_Data::error('401', T_('Invalid input options.'));
             return;
