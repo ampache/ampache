@@ -1388,11 +1388,11 @@ class Api
         debug_event('api.class', 'Ampache Scrobbling.', 4);
         ob_end_clean();
         $song_name   = $input['song'];
-        $artist_name = $input['$artist'];
-        $album_name  = $input['$album'];
-        $song_mbid   = $input['$song_mbid']; //optional
-        $artist_mbid = $input['$artist_mbid']; //optional
-        $album_mbid  = $input['$album_mbid']; //optional
+        $artist_name = $input['artist'];
+        $album_name  = $input['album'];
+        $song_mbid   = $input['song_mbid']; //optional
+        $artist_mbid = $input['artist_mbid']; //optional
+        $album_mbid  = $input['album_mbid']; //optional
         $date        = $input['date']; //optional
         $user_id     = Core::get_global('user')->id;
         $user        = new User($user_id);
@@ -1405,6 +1405,14 @@ class Api
         // validate supplied user
         if (!$valid) {
             echo XML_Data::error('404', T_('User_id not found.'));
+            return;
+        }
+        
+        //validate minimum required options
+        debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - '. $album_name, 5);
+        if (!$song_name || !$album_name || !$artist_name) {
+            echo XML_Data::error('401', T_('Invalid input options.'));
+            return;
         }
 
         // validate client string or fall back to 'api'
@@ -1414,6 +1422,7 @@ class Api
             $agent = 'api';
         }
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
+
         if ($scrobble_id === '') {
             echo XML_Data::error('401', T_('failed to scrobble: no item found!'));
         } else {
@@ -1421,11 +1430,10 @@ class Api
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
             } elseif ($valid) {
-                $user->update_stats($type, $scrobble_id, $agent, array(), false, $date);
+                $user->update_stats('song', $scrobble_id, $agent, array(), false, $date);
                 echo XML_Data::single_string('successfully scrobbled: ' . $scrobble_id);
             }
         }
-        debug_event('api.class', 'Ampache Scrobbling completed.', 5);
     } // scrobble
 
     /**

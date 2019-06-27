@@ -592,12 +592,12 @@ class Song extends database_object implements media, library_item
      * return a song id based on a last.fm-style search in the database
      * @return string
      */
-    private static function can_scrobble($song_name, $artist_name, $album_name, $song_mbid = '', $artist_mbid = '', $album_mbid = '')
+    public static function can_scrobble($song_name, $artist_name, $album_name, $song_mbid = '', $artist_mbid = '', $album_mbid = '')
     {
         // by default require song, album, artist for any searches
         $sql = 'SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
                 'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' .
-                "WHERE `song`.`name` = '" . $song_name . "' AND " .
+                "WHERE `song`.`title` = '" . $song_name . "' AND " .
                 "(`artist`.`name` = '" . $artist_name . "' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '" . $artist_name . "') AND " .
                 "(`album`.`name` = '" . $album_name . "' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '" . $album_name . "')";
         if ($song_mbid) {
