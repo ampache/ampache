@@ -1386,14 +1386,14 @@ class Api
     public static function scrobble($input)
     {
         ob_end_clean();
-        $song_name   = $input['song']
-        $artist_name = $input['$artist']
-        $album_name  = $input['$album']
-        $song_mbid   = $input['$song_mbid'] //optional
-        $artist_mbid = $input['$artist_mbid'] //optional
-        $album_mbid  = $input['$album_mbid'] //optional
-        $date        = $input['date'] //optional)
-        $user_id     = Core::get_global('user')->id;);
+        $song_name   = $input['song'];
+        $artist_name = $input['$artist'];
+        $album_name  = $input['$album'];
+        $song_mbid   = $input['$song_mbid']; //optional
+        $artist_mbid = $input['$artist_mbid']; //optional
+        $album_mbid  = $input['$album_mbid']; //optional
+        $date        = $input['date']; //optional
+        $user_id     = Core::get_global('user')->id;
         $user        = new User($user_id);
         $valid       = in_array($user->id, User::get_valid_users());
 
