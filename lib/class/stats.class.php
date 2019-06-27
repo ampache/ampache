@@ -125,7 +125,7 @@ class Stats
             }
 
             if (!$db_results) {
-                debug_event('stats.class', 'Unabled to insert statistics:' . $sql, 3);
+                debug_event('stats.class', 'Unable to insert statistics for ' . $user . ':' . $sql, 3);
             }
         } else {
             debug_event('stats.class', 'Statistics insertion ignored due to graceful delay.', 3);
