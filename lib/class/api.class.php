@@ -1385,15 +1385,14 @@ class Api
      */
     public static function scrobble($input)
     {
-        debug_event('api.class', 'Ampache Scrobbling.', 4);
         ob_end_clean();
-        $song_name   = $input['song'];
-        $artist_name = $input['artist'];
-        $album_name  = $input['album'];
-        $song_mbid   = $input['song_mbid']; //optional
-        $artist_mbid = $input['artist_mbid']; //optional
-        $album_mbid  = $input['album_mbid']; //optional
-        $date        = $input['date']; //optional
+        $song_name   = scrub_in($input['song']);
+        $artist_name = scrub_in($input['artist']);
+        $album_name  = scrub_in($input['album']);
+        $song_mbid   = scrub_in($input['song_mbid']); //optional
+        $artist_mbid = scrub_in($input['artist_mbid']); //optional
+        $album_mbid  = scrub_in($input['album_mbid']); //optional
+        $date        = scrub_in($input['date']); //optional
         $user_id     = Core::get_global('user')->id;
         $user        = new User($user_id);
         $valid       = in_array($user->id, User::get_valid_users());
@@ -1409,7 +1408,7 @@ class Api
         }
         
         //validate minimum required options
-        debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 5);
+        debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
             echo XML_Data::error('401', T_('Invalid input options.'));
             return;
