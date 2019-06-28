@@ -820,9 +820,6 @@ abstract class Catalog extends database_object
         $results = array();
 
         $sql        = 'SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `song`.`catalog` = ?';
-        if ($filter === 'art') {
-            $sql .= ' AND `song`.`album` NOT IN (SELECT `object_id` FROM `image` WHERE `object_type` = \'album\')';
-        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -965,9 +962,6 @@ abstract class Catalog extends database_object
         $results = array();
 
         $sql        = 'SELECT DISTINCT(`song`.`artist`) FROM `song` WHERE `song`.`catalog` = ?';
-        if ($filter === 'art') {
-            $sql .= ' AND `song`.`artist` NOT IN (SELECT `object_id` FROM `image` WHERE `object_type` = \'artist\')';
-        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {

@@ -909,9 +909,9 @@ class Song extends database_object implements media, library_item
      */
     public function set_played($user, $agent, $location, $date = null)
     {
-        Stats::insert('song', $this->id, $user, $agent, $location, null, $date);
-        Stats::insert('album', $this->album, $user, $agent, $location, null, $date);
-        Stats::insert('artist', $this->artist, $user, $agent, $location, null, $date);
+        Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date);
+        Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date);
+        Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date);
 
         if ($this->played) {
             return true;
