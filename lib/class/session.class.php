@@ -273,6 +273,7 @@ class Session
         // No cookie no go!
         if (!isset($_COOKIE[$session_name])) {
             debug_event('session.class', 'Existing session NOT found', 5);
+
             return false;
         }
         debug_event('session.class', 'Existing session found', 4);
