@@ -154,7 +154,7 @@ class Stream
             debug_event('stream.class', 'Configured bitrate is ' . $bit_rate, 5);
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
-        } else if ($bit_rate > (int) $options['bitrate'] || $bit_rate = 0) {
+        } elseif ($bit_rate > (int) $options['bitrate'] || $bit_rate = 0) {
             //use the file bitrate if lower than the gathered
             $bit_rate = $options['bitrate'];
         }
