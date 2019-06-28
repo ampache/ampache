@@ -76,9 +76,9 @@ class Stream
 
     /**
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @return integer
      */
-    public static function get_allowed_bitrate($song)
+    public static function get_allowed_bitrate()
     {
         $max_bitrate = AmpConfig::get('max_bit_rate');
         $min_bitrate = AmpConfig::get('min_bit_rate');
@@ -117,7 +117,7 @@ class Stream
                 debug_event('stream.class', 'Max transcode bandwidth already allocated. Active streams: ' . $active_streams, 2);
                 header('HTTP/1.1 503 Service Temporarily Unavailable');
 
-                return false;
+                return 0;
             }
 
             // Never go over the user's sample rate
@@ -129,7 +129,7 @@ class Stream
             $bit_rate = $user_bit_rate;
         }
 
-        return $bit_rate;
+        return (int) $bit_rate;
     }
 
     /**
@@ -148,13 +148,14 @@ class Stream
             return false;
         }
 
-        //$media_rate = $media->video_bitrate ?: $media->bitrate;
+        // don't ignore user bitrates
+        $bit_rate = (int) self::get_allowed_bitrate();
         if (!$options['bitrate']) {
-            $bit_rate = self::get_allowed_bitrate($media);
             debug_event('stream.class', 'Configured bitrate is ' . $bit_rate, 5);
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
-        } else {
+        } else if ($bit_rate > (int) $options['bitrate'] || $bit_rate = 0) {
+            //use the file bitrate if lower than the gathered
             $bit_rate = $options['bitrate'];
         }
 
