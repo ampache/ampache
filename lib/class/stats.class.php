@@ -98,9 +98,9 @@ class Stats
      * @param integer $oid
      * @param integer $user
      */
-    public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream')
+    public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null)
     {
-        if (!self::is_already_inserted($input_type, $oid, $user)) {
+        if (!self::is_already_inserted($input_type, $oid, $user, $count_type, $date)) {
             $type = self::validate_type($input_type);
 
             $latitude  = null;
@@ -115,17 +115,21 @@ class Stats
             if (isset($location['name'])) {
                 $geoname = $location['name'];
             }
+            // allow setting date for scrobbles
+            if (!$date) {
+                $date = time();
+            }
 
             $sql = "INSERT INTO `object_count` (`object_type`,`object_id`,`count_type`,`date`,`user`,`agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $db_results = Dba::write($sql, array($type, $oid, $count_type, time(), $user, $agent, $latitude, $longitude, $geoname));
+            $db_results = Dba::write($sql, array($type, $oid, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
             if (Core::is_media($type)) {
-                Useractivity::post_activity($user, 'play', $type, $oid);
+                Useractivity::post_activity($user, 'play', $type, $oid, $date);
             }
 
             if (!$db_results) {
-                debug_event('stats.class', 'Unabled to insert statistics:' . $sql, 3);
+                debug_event('stats.class', 'Unable to insert statistics for ' . $user . ':' . $sql, 3);
             }
         } else {
             debug_event('stats.class', 'Statistics insertion ignored due to graceful delay.', 3);
@@ -140,12 +144,19 @@ class Stats
      * @param integer $oid
      * @return boolean
      */
-    public static function is_already_inserted($type, $oid, $user, $count_type = 'stream')
+    public static function is_already_inserted($type, $oid, $user, $count_type = 'stream', $date = null)
     {
-        $delay = time() - 10; // We look 10 seconds in the past
+        // We look 10 seconds in the past
+        $delay = time() - 10;
+        if ($date) {
+            $delay = $date - 10;
+        }
 
         $sql = "SELECT `id` FROM `object_count` ";
         $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?  AND `object_count`.`count_type` = ? AND `object_count`.`date` >= ? ";
+        if ($date) {
+            $sql .= "AND `object_count`.`date` <= " . $date . " ";
+        }
         $sql .= "ORDER BY `object_count`.`date` DESC";
 
         $db_results = Dba::read($sql, array($user, $type, $oid, $count_type, $delay));

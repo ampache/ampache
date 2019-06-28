@@ -587,6 +587,40 @@ class Song extends database_object implements media, library_item
     }
 
     /**
+     * can_scrobble
+     *
+     * return a song id based on a last.fm-style search in the database
+     * @return string
+     */
+    public static function can_scrobble($song_name, $artist_name, $album_name, $song_mbid = '', $artist_mbid = '', $album_mbid = '')
+    {
+        // by default require song, album, artist for any searches
+        $sql = 'SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
+                'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' .
+                "WHERE `song`.`title` = '" . $song_name . "' AND " .
+                "(`artist`.`name` = '" . $artist_name . "' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), `artist`.`name`)) = '" . $artist_name . "') AND " .
+                "(`album`.`name` = '" . $album_name . "' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`)) = '" . $album_name . "')";
+        if ($song_mbid) {
+            $sql .= " AND `song`.`mbid` = '" . $song_mbid . "'";
+        }
+        if ($artist_mbid) {
+            $sql .= " AND `artist`.`mbid` = '" . $song_mbid . "'";
+        }
+        if ($album_mbid) {
+            $sql .= " AND `album`.`mbid` = '" . $song_mbid . "'";
+        }
+        $db_results = Dba::read($sql);
+
+        $results = Dba::fetch_assoc($db_results);
+        if (isset($results['id'])) {
+            return $results['id'];
+        }
+
+        return '';
+    }
+
+    
+    /**
      * _get_ext_info
      * This function gathers information from the song_ext_info table and adds it to the
      * current object
@@ -873,11 +907,11 @@ class Song extends database_object implements media, library_item
      * @param array $location
      * @return boolean
      */
-    public function set_played($user, $agent, $location)
+    public function set_played($user, $agent, $location, $date = null)
     {
-        Stats::insert('song', $this->id, $user, $agent, $location);
-        Stats::insert('album', $this->album, $user, $agent, $location);
-        Stats::insert('artist', $this->artist, $user, $agent, $location);
+        Stats::insert('song', $this->id, $user, $agent, $location, null, $date);
+        Stats::insert('album', $this->album, $user, $agent, $location, null, $date);
+        Stats::insert('artist', $this->artist, $user, $agent, $location, null, $date);
 
         if ($this->played) {
             return true;
@@ -1753,13 +1787,13 @@ class Song extends database_object implements media, library_item
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $media->get_transcode_settings(null);
             if ($transcode_settings) {
-                debug_event('song.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings...", 5);
+                debug_event('song.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings... ", 5);
                 $type = $transcode_settings['format'];
             }
         }
 
         $media->format();
-        $media_name = $media->get_stream_name() . "." . $type;
+        $media_name = $media->get_stream_name() . " . " . $type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 

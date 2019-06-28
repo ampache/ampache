@@ -208,7 +208,11 @@ class Core
 
         // Register it
         $_SESSION['forms'][$sid] = array('name' => $name, 'expire' => $expire);
-        debug_event('core.class', "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
+        if (!isset($_SESSION['forms'][$sid])) {
+            debug_event('core.class', "Form $sid not found in session, failed to register!", 2);
+        } else {
+            debug_event('core.class', "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
+        }
 
         switch ($type) {
             case 'get':
@@ -234,16 +238,16 @@ class Core
     {
         switch ($type) {
             case 'post':
-                $sid = self::get_post('form_validation');
+                $sid = $_POST['form_validation'];
             break;
             case 'get':
-                $sid = self::get_get('form_validation');
+                $sid = $_GET['form_validation'];
             break;
             case 'cookie':
                 $sid = $_COOKIE['form_validation'];
             break;
             case 'request':
-                $sid = self::get_request('form_validation');
+                $sid = $_REQUEST['form_validation'];
             break;
             default:
                 return false;
