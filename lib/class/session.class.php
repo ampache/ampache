@@ -271,9 +271,12 @@ class Session
         $session_name = AmpConfig::get('session_name');
 
         // No cookie no go!
-        if (!(filter_has_var(INPUT_COOKIE, $session_name))) {
+        if (!isset($_COOKIE[$session_name])) {
+            debug_event('session.class', 'Existing session NOT found', 5);
+
             return false;
         }
+        debug_event('session.class', 'Existing session found', 4);
 
         // Set up the cookie params before we start the session.
         // This is vital

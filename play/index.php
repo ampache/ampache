@@ -581,7 +581,7 @@ if ($transcode) {
     // Content-length guessing if required by the player.
     // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
     if (Core::get_request('content_length') == 'required') {
-        $max_bitrate = Stream::get_allowed_bitrate($media);
+        $max_bitrate = Stream::get_allowed_bitrate();
         if ($media->time > 0 && $max_bitrate > 0) {
             $stream_size = ($media->time * $max_bitrate * 1000) / 8;
         } else {
