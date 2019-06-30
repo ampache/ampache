@@ -4322,7 +4322,7 @@ class Update
                "WHERE `preference`.`name` = 'lang' ";
         $retval &= Dba::write($sql);
         $sql    = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'httpQ Active Instance'' " .
+               "SET `preference`.`description` = 'httpQ Active Instance' " .
                "WHERE `preference`.`name` = 'httpq_active' ";
         $retval &= Dba::write($sql);
 
