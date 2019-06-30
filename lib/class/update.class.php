@@ -573,7 +573,7 @@ class Update
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
         $update_string = "* Make sure preference names are updated to current strings<br />";
-        $version[]     = array('version' => '400001', 'description' => $update_string);
+        $version[]     = array('version' => '400002', 'description' => $update_string);
 
         return $version;
     }
