@@ -314,7 +314,7 @@ class Update
         $update_string = '- Remove unused live_stream fields and add codec field.<br />';
         $version[]     = array('version' => '360022', 'description' => $update_string);
 
-        $update_string = '- Enable/Disable SubSonic and Plex backend.<br />';
+        $update_string = '- Enable/Disable Subsonic and Plex backend.<br />';
         $version[]     = array('version' => '360023', 'description' => $update_string);
 
         $update_string = '- Drop flagged table.<br />';
@@ -326,12 +326,12 @@ class Update
         $update_string = '- Added agent to `object_count` table.<br />';
         $version[]     = array('version' => '360026', 'description' => $update_string);
 
-        $update_string = '- Add option to allow/disallow to show personnal information to other users (now playing and recently played).<br />';
+        $update_string = '- Add option to allow/disallow to show personnal information to other users (now playing and Recently Played).<br />';
         $version[]     = array('version' => '360027', 'description' => $update_string);
 
         $update_string = '- Personnal information: allow/disallow to show in now playing.<br />' .
-                '- Personnal information: allow/disallow to show in recently played.<br />' .
-                '- Personnal information: allow/disallow to show time and/or agent in recently played.<br />';
+                '- Personnal information: allow/disallow to show in Recently Played.<br />' .
+                '- Personnal information: allow/disallow to show time and/or agent in Recently Played.<br />';
         $version[] = array('version' => '360028', 'description' => $update_string);
 
         $update_string = '- Add new table to store wanted releases.<br />';
@@ -570,6 +570,9 @@ class Update
         $update_string = "* Update preferences for older users to match current subcategory items<br />" .
                          "  (~3.6 introduxed subcategories but didn't include updates for existing users.<br />" .
                          "  This is a cosmetic update and does not affect any operation)<br />";
+        $version[]     = array('version' => '400001', 'description' => $update_string);
+
+        $update_string = "* Make sure preference names are updated to current strings<br />";
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
         return $version;
@@ -2002,14 +2005,14 @@ class Update
     /**
      * update_360023
      *
-     * Enable/Disable SubSonic and Plex backend
+     * Enable/Disable Subsonic and Plex backend
      */
     public static function update_360023()
     {
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('subsonic_backend', '1', 'Use SubSonic backend',100, 'boolean', 'system')";
+            "VALUES ('subsonic_backend', '1', 'Use Subsonic backend',100, 'boolean', 'system')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -2086,14 +2089,14 @@ class Update
     /**
      * update_360027
      *
-     * Personal information: allow/disallow to show my personal information into now playing and recently played lists.
+     * Personal information: allow/disallow to show my personal information into now playing and Recently Played lists.
      */
     public static function update_360027()
     {
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_personal_info', '1', 'Allow to show my personal info to other users (now playing, recently played)',25, 'boolean', 'interface')";
+            "VALUES ('allow_personal_info', '1', 'Allow to show my personal info to other users (now playing, Recently Played)',25, 'boolean', 'interface')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -2108,8 +2111,8 @@ class Update
      * update_360028
      *
      * Personal information: allow/disallow to show in now playing.
-     * Personal information: allow/disallow to show in recently played.
-     * Personal information: allow/disallow to show time and/or agent in recently played.
+     * Personal information: allow/disallow to show in Recently Played.
+     * Personal information: allow/disallow to show time and/or agent in Recently Played.
      */
     public static function update_360028()
     {
@@ -2119,9 +2122,9 @@ class Update
         $sql    = "UPDATE `preference` SET `name`='allow_personal_info_now', `description`='Personal information visibility - Now playing' WHERE `name`='allow_personal_info'";
         $retval &= Dba::write($sql);
 
-        // Insert new recently played preference
+        // Insert new Recently Played preference
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_personal_info_recent', '1', 'Personal information visibility - Recently played / actions',25, 'boolean', 'interface')";
+            "VALUES ('allow_personal_info_recent', '1', 'Personal information visibility - Recently Played / actions',25, 'boolean', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -2129,7 +2132,7 @@ class Update
 
         // Insert streaming time preference
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_personal_info_time', '1', 'Personal information visibility - Recently played - Allow to show streaming date/time',25, 'boolean', 'interface')";
+            "VALUES ('allow_personal_info_time', '1', 'Personal information visibility - Recently Played - Allow to show streaming date/time',25, 'boolean', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -2137,7 +2140,7 @@ class Update
 
         // Insert streaming agent preference
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_personal_info_agent', '1', 'Personal information visibility - Recently played - Allow to show streaming agent',25, 'boolean', 'interface')";
+            "VALUES ('allow_personal_info_agent', '1', 'Personal information visibility - Recently Played - Allow to show streaming agent',25, 'boolean', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -3160,14 +3163,14 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('home_moment_albums', '1', 'Show Albums of the moment at home page',25, 'integer', 'interface')";
+            "VALUES ('home_moment_albums', '1', 'Show Albums of the Moment at home page',25, 'integer', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('home_moment_videos', '1', 'Show Videos of the moment at home page',25, 'integer', 'interface')";
+            "VALUES ('home_moment_videos', '1', 'Show Videos of the Moment at home page',25, 'integer', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -4291,6 +4294,111 @@ class Update
                "SET `preference`.`subcatagory` = 'upload' " .
                "WHERE `preference`.`name` in ('upload_catalog', 'allow_upload', 'upload_subdir', 'upload_user_artist', 'upload_script', 'upload_allow_edit', 'upload_allow_remove', 'upload_catalog_pattern') AND " .
                "`preference`.`subcatagory` IS NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400002
+     *
+     * Make sure preference names are updated to current strings
+     */
+    public static function update_400002()
+    {
+        $retval = true;
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Force HTTP playback regardless of port' " .
+               "WHERE `preference`.`name` = 'force_http_play' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Playback Type' " .
+               "WHERE `preference`.`name` = 'play_type' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Language' " .
+               "WHERE `preference`.`name` = 'lang' ";
+        $retval &= Dba::write($sql);
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'httpQ Active Instance'' " .
+               "WHERE `preference`.`name` = 'httpq_active' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Now Playing filtered per user' " .
+               "WHERE `preference`.`name` = 'now_playing_per_user' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Use Subsonic backend' " .
+               "WHERE `preference`.`name` = 'subsonic_backend' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Personal information visibility - Now Playing' " .
+               "WHERE `preference`.`name` = 'allow_personal_info_now' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Personal information visibility - Recently Played' " .
+               "WHERE `preference`.`name` = 'allow_personal_info_recent' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Personal information visibility - Recently Played - Allow to show streaming date/time' " .
+               "WHERE `preference`.`name` = 'allow_personal_info_time' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Personal information visibility - Recently Played - Allow to show streaming agent' " .
+               "WHERE `preference`.`name` = 'allow_personal_info_agent' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Enable URL rewriting' " .
+               "WHERE `preference`.`name` = 'stream_beautiful_url' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Upload: destination catalog' " .
+               "WHERE `preference`.`name` = 'upload_catalog' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Upload: allow user uploads' " .
+               "WHERE `preference`.`name` = 'allow_upload' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Upload: create a subdirectory per user' " .
+               "WHERE `preference`.`name` = 'upload_subdir' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Show Albums of the Moment at home page' " .
+               "WHERE `preference`.`name` = 'home_moment_albums' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Show Videos of the Moment at home page' " .
+               "WHERE `preference`.`name` = 'home_moment_videos' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Custom logo URL' " .
+               "WHERE `preference`.`name` = 'custom_logo' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Custom login page logo URL' " .
+               "WHERE `preference`.`name` = 'custom_login_logo' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Custom favicon URL' " .
+               "WHERE `preference`.`name` = 'custom_favicon' ";
         $retval &= Dba::write($sql);
 
         return $retval;

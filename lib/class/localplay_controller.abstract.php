@@ -23,7 +23,7 @@
 /*
  * localplay_controller Class
  *
- * This is the abstract class for any localplay controller
+ * This is the abstract class for any Localplay controller
  *
  */
 abstract class localplay_controller
@@ -84,7 +84,7 @@ abstract class localplay_controller
     /**
      * parse_url
      * This takes an Ampache URL and then returns the 'primary' part of it
-     * So that it's easier for localplay modules to return valid song information
+     * So that it's easier for Localplay modules to return valid song information
      */
     public function parse_url($url)
     {

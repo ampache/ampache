@@ -21,7 +21,7 @@
  */
 
 /**
- * This is the now playing container, it holds the master div for now playing
+ * This is the Now Playing container, it holds the master div for Now Playing
  * and loops through what's current playing as passed and includes
  * the now_playing_row's This will display regardless, but potentially
  * goes all ajaxie if you've got javascript on

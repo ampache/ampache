@@ -221,7 +221,7 @@ switch ($_REQUEST['action']) {
             break;
         }
         Stream::clear_now_playing();
-        show_confirmation(T_('Now Playing Cleared'), T_('All now playing data has been cleared'), AmpConfig::get('web_path') . '/admin/catalog.php');
+        show_confirmation(T_('Now Playing Cleared'), T_('All Now Playing data has been cleared'), AmpConfig::get('web_path') . '/admin/catalog.php');
     break;
     case 'show_disabled':
         /* Stop the demo hippies */

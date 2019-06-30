@@ -68,7 +68,7 @@ if ($server_allow && $controller && $access_check) {
 <?php
 } else {
         ?>
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay Disabled'); ?>"><?php echo T_('Localplay Disabled'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_localplay_disabled')) ? $_COOKIE['sb_localplay_disabled'] : 'expanded'; ?>" id="localplay_disabled" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4></li>
+  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay disabled'); ?>"><?php echo T_('Localplay disabled'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_localplay_disabled')) ? $_COOKIE['sb_localplay_disabled'] : 'expanded'; ?>" id="localplay_disabled" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4></li>
   <?php if (!$server_allow) {
             ?>
     <li><?php echo T_('Allow Localplay set to False'); ?></li>

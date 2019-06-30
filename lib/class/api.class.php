@@ -931,13 +931,13 @@ class Api
      * localplay
      * MINIMUM_API_VERSION=380001
      *
-     * This is for controlling localplay
+     * This is for controlling Localplay
      *
      * @param array $input
      */
     public static function localplay($input)
     {
-        // Load their localplay instance
+        // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 

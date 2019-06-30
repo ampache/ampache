@@ -673,7 +673,7 @@ function print_bool($value)
 
 /**
  * show_now_playing
- * This shows the now playing templates and does some garbage collecion
+ * This shows the Now Playing templates and does some garbage collecion
  * this should really be somewhere else
  */
 function show_now_playing()

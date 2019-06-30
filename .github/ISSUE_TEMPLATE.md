@@ -18,7 +18,7 @@
 * Client type:
   * Web
   * Ampache
-  * SubSonic
+  * Subsonic
   * DAAP
   * UPnP
   * WebDAV
