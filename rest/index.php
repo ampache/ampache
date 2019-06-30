@@ -45,7 +45,7 @@ if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $acti
 if (!AmpConfig::get('access_control')) {
     debug_event('rest/index', 'Error Attempted to use Subsonic API with Access Control turned off', 3);
     ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')), $callback);
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not enabled')), $callback);
 
     return false;
 }

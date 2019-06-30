@@ -188,12 +188,12 @@ switch ($_REQUEST['action']) {
         if (!AmpConfig::get('user_no_email_confirm')) {
             Registration::send_account_enabled($client->username, $client->fullname, $client->email);
         }
-        show_confirmation(T_('User Enabled'), $client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path') . '/admin/users.php');
+        show_confirmation(T_('User enabled'), $client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'disable':
         $client = new User(Core::get_request('user_id'));
         if ($client->disable()) {
-            show_confirmation(T_('User Disabled'), $client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path') . '/admin/users.php');
+            show_confirmation(T_('User disabled'), $client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path') . '/admin/users.php');
         } else {
             show_confirmation(T_('Error'), T_('Unable to disable last Administrator'), AmpConfig::get('web_path') . '/admin/users.php');
         }

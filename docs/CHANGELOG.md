@@ -179,7 +179,7 @@ CHANGELOG
 - Song comments are now editable
 - Fixed composer column in iTunes
 - Many typos fixed
-- Fixed field types in modules and localplay
+- Fixed field types in modules and Localplay
 - Fixed timeline function
 - Activated jplayer "preload" option
 - Fixed missing submit button on options page
@@ -249,7 +249,7 @@ CHANGELOG
 - Fixed random albums art size (thanks Bidules079)
 - Moved tag cloud to artist browsing by default
 - Fixed utf8 BOM empty string on song comparison
-- Improved recently played and user stats queries performance (thanks thinca)
+- Improved Recently Played and user stats queries performance (thanks thinca)
 - Renamed SAMPLE_RATE to TRANSCODE_BITRATE on transcoding
 - Fixed tag deletion sql error (thanks stebe)
 - Moved to PNG default blank image instead of JPG (thanks Psy-Virus)
@@ -276,7 +276,7 @@ CHANGELOG
 - Fixed iTunes 12 browsing when using DAAP (thanks Chattaway83)
 - Moved http_port user preference to ampache.cfg.php
 - Upgraded last.fm and libre.fm scrobbling to latest API version (thanks nioc)
-- Added missing space between track and album in localplay playlist (thanks arnaudbey)
+- Added missing space between track and album in Localplay playlist (thanks arnaudbey)
 - Added check fo mbstring.func_overload support before using id3 write functionality (thanks anonymous2ch)
 - Fixed file size calculation when using id3v2 tag (thanks hypfvieh)
 - Added rating from id3 tag (thanks nioc)
@@ -308,7 +308,7 @@ CHANGELOG
 - Added option to hide user fullname from other users
 - Added playlist track information in Apache XML API (thanks RyanCopley)
 - Fixed playlist remove song in Apache XML API (thanks RyanCopley)
-- Fixed SubSonic API ifModifiedSince information
+- Fixed Subsonic API ifModifiedSince information
 - Added Podcast links to albums / artists
 - Added Piwik and Google Analytics plugins
 - Added Apache 2.4 access control declaration in htaccess files
@@ -319,12 +319,12 @@ CHANGELOG
 - Added .maintenance page
 - Fixed captcha
 - Added private messages between users
-- Fixed SubSonic API rating information on albums and songs
+- Fixed Subsonic API rating information on albums and songs
 - Added latest artists and shouts RSS feeds
 - Fixed tag cloud ordering
 - Added Label entities associated to artists / users
 - Added WebDAV backend
-- Fixed SubSonic API requests with musicFolderId parameter (thanks dhsc19)
+- Fixed Subsonic API requests with musicFolderId parameter (thanks dhsc19)
 - Added footer text edition setting
 - Added uploaded artist list on user page
 - Added custom Ampache login logo and favicon support
@@ -337,7 +337,7 @@ CHANGELOG
 - Added Shoutbox home plugin
 - Added catalog favorites home plugin
 - Fixed search by rating (thanks iamnumbersix)
-- Added UPnP localplay (thanks SeregaPru)
+- Added UPnP Localplay (thanks SeregaPru)
 - Changed preferences to return the global value if preference is missing for the searched user
 - Fixed special chars in songs names and tags (thanks SeregaPru)
 - Fixed Subsonic API playlist edition/delation (thanks dhsc19)
@@ -365,7 +365,7 @@ CHANGELOG
 - Added new setting to define album art min and max width/height
 - Fixed Subsonic API getAlbum returned artist id on songs
 - Fixed Subsonic API cover art when PHP-GD unavailable
-- Fixed localplay playlist refresh on volume changes (thanks essagl)
+- Fixed Localplay playlist refresh on volume changes (thanks essagl)
 - Fixed web player equalizer option if visualizer is not enabled (thanks brownl)
 - Fixed asx file mime type (thanks thinca)
 - Added song genre parsing options (thanks Razrael and lotan)
@@ -432,11 +432,11 @@ CHANGELOG
 - Added email when registered user must be enabled by administrators
 - Fixed local catalog clean on Windows (thanks Rouzax)
 - Added Subsonic API maxBitRate parameter support (thanks philipl)
-- Fixed SubSonic API special characters encode (thanks nan4k7)
+- Fixed Subsonic API special characters encode (thanks nan4k7)
 - Added Beets local and remote catalog support (thanks Razrael)
 - Fixed XML error code returned with invalid Ampache API handshake (thanks funkygaddafi)
 - Replaced iframe to Ajax dynamic page loading
-- Changed `Albums of the moment` to not necessarily have a cover
+- Changed `Albums of the Moment` to not necessarily have a cover
 - Added Plex backend items edition support
 - Added hls stream support
 - Added X-Content-Duration header support on streams
@@ -449,7 +449,7 @@ CHANGELOG
 - Added Smart Playlist songs list
 - Added zlib test
 - Removed old Ampache themes
-- Fixed SubSonic API lastModified element (thanks bikkuri10)
+- Fixed Subsonic API lastModified element (thanks bikkuri10)
 - Disabled `beautiful url` on XML-API for retro-compatibility
 - Fixed image resource allocation (thanks greengeek1)
 - Added setting to write id3 metadata to files (thanks tsquare66)
@@ -474,7 +474,7 @@ CHANGELOG
 - Added random option on SmartPlaylists
 - Added 'item count' on browse
 - Added direct typed links on items tags
-- Fixed SubSonic API compatibility with few players requesting information on library -1
+- Fixed Subsonic API compatibility with few players requesting information on library -1
 - Added license information on songs
 - Added upload feature on web interface
 - Added albumartist information on songs (thanks tsquare66)
@@ -515,7 +515,7 @@ CHANGELOG
 - Fixed Subsonic offline storage file path (reported by Tetram76)
 - Added optional top dock menu
 - Added html5 web audio api visualizer and equalizer
-- Added `Play List` to localplay mode
+- Added `Play List` to Localplay mode
 - Fixed encoding issue in batch download
 - Added pagination to democratic playlists
 - Added an option to group albums discs to an unique album
@@ -580,8 +580,8 @@ CHANGELOG
 - Added 'Missing Albums' / 'Wanted List' feature
 - Upgraded to MusicBrainz api v2
 - Replaced Snoopy project with Requests project
-- Added user-agent on recently played
-- Added option to show/hide recently played, time and user-agent per user
+- Added user-agent on Recently Played
+- Added option to show/hide Recently Played, time and user-agent per user
 - Updated French language
 - Added option for iframe or popup web player mode
 - Improved Song/Video web player with jPlayer, Radio player with Muse Radio Player
@@ -684,7 +684,7 @@ CHANGELOG
   have access to update the password (patch by Fred Thomsen)
 - Fixed streaming on Android devices and anything else that expects to
   be able to pass a playlist URL to an application and have it work
-- Removed the SHOUTcast localplay controller
+- Removed the SHOUTcast Localplay controller
 
 3.6-Alpha4 *2012-11-27*
 -----------------------
@@ -812,10 +812,10 @@ CHANGELOG
 - Add bmp to the list of allowed / supported album art types
 - Strip extranious whitespace from cmdline catalog update (Thx ascheel)
 - Fix catalog size math for catalogs up to 4TB (Thx Joost.t.Hart@planet.nl)
-- Fix httpq not correctly skipping to new song
-- Fix refreshing of localplay playlist when an item is skipped to
+- Fix httpQ not correctly skipping to new song
+- Fix refreshing of Localplay playlist when an item is skipped to
 - Fix missing Content-Disposition filename= on non-transcoded songs
-- Fix refresh of localplay playlist when you delete a track from it
+- Fix refresh of Localplay playlist when you delete a track from it
 - Added ability to add Ampache as a search descriptor (Thx Vlet)
 - Correct issue with single song downloads
 - Removed old useless files
@@ -854,7 +854,7 @@ CHANGELOG
 - Fixed prevent_multiple_logins preventing all logins (Thx Hugh)
 - Added additional information to installation process
 - Fix PHP 5.3 errors (Thx momo-i)
-- Fix random methods not working for localplay
+- Fix random methods not working for Localplay
 - Fixed extra space on prefixed albums (Thx ibizaman)
 - Add missing operator on tag and rating searches so they will
   work with other methods (Thx kiehnet@netscape.net)
@@ -899,7 +899,7 @@ CHANGELOG
   v.3.5-Beta2 04/07/2009
 - Fix ASX playlists so more data shows up in WMP (Thx Jon611)
 - Fix dynamic playlist items so they work in stream methods again
-- Fixed Recently played so that it correctly shows unique songs
+- Fixed Recently Played so that it correctly shows unique songs
   with the correct data
 - Fix some issues with filenames with Multi-byte characters
   (Thx Momo-i)
@@ -962,7 +962,7 @@ CHANGELOG
 - Fix Version checking and Version Error Message on install (Thx Paleo)
 - Moved Statistics to main menu, split out newest/popular/stats
 - Fixed bug where saved Thumbnails were almost never used
-- Fixed Localplay HTTPQ and MPD controls to reconize Live Stream
+- Fixed Localplay httpQ and MPD controls to recognize Live Stream
   urls.
 - Added Localplay controls to API
 - Added Added/Updated filters to API include the ability to specify
@@ -971,7 +971,7 @@ CHANGELOG
 - Fixed Incorrect Caching of Album records that caused the
   Name + Year + Disk to not be respected
 - Added Lyrics Patch (Thx alister55 & momo-i)
-- Fixed password not updating when editing an HTTPQ localplay
+- Fixed password not updating when editing an httpQ Localplay
   instance
 - Added Video support
 - Fixed normalize tracks not re-displaying playlist correctly
@@ -1059,7 +1059,7 @@ CHANGELOG
 - Fixed browsing so that you can browse two different types in two
   windows at the same time
 - Improved gather script for translations (Thx momo-i)
-- Added paging to the localplay playlist
+- Added paging to the Localplay playlist
 - Updated German Translation (Thx Laurent)
 - Fixed issue where Remote songs would never be removed from
   the democratic playlist
@@ -1109,7 +1109,7 @@ CHANGELOG
 - Improved fix_filenames.inc, tries a translation first then strips
   invalid characters
 - Fixed album art not clearing thumbnail correctly on gather
-- Fixed localplay instance not displaying correctly after change
+- Fixed Localplay instance not displaying correctly after change
   until a page refresh
 - Fixed endless loop on index if you haven't played a song in
   over two years

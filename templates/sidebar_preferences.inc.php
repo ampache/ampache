@@ -20,7 +20,7 @@
  *
  */
 
-/* This one is a little dynamic as we add plugins or localplay modules
+/* This one is a little dynamic as we add plugins or Localplay modules
  * they can have their own preference sections so we need to build the
  * links based on that, always ignore 'internal' though
  */

@@ -23,8 +23,8 @@
 /**
  * VlcPlayer Class
  *
- * This player controls an instance of Vlc webinterface
- * which in turn controls vlc. All functions
+ * This player controls an instance of VLC webinterface
+ * which in turn controls VLC. All functions
  * return null on failure.
  *
  */
@@ -193,7 +193,7 @@ class VlcPlayer
 
     /**
       * repeat
-     * This toggles the repeat state of Vlc
+     * This toggles the repeat state of VLC
      */
     public function repeat($value)
     {
@@ -208,7 +208,7 @@ class VlcPlayer
 
     /**
      * random
-     * this toggles the random state of Vlc
+     * this toggles the random state of VLC
      */
     public function random($value)
     {
@@ -238,7 +238,7 @@ class VlcPlayer
 
     /**
      * state
-     * This returns the current state of the Vlc player
+     * This returns the current state of the VLC player
      */
     public function state()
     {
@@ -279,7 +279,7 @@ class VlcPlayer
 
     /**
      * volume_up
-     * This increases the volume of vlc , set to +20 can be changed to your preference
+     * This increases the volume of VLC , set to +20 can be changed to your preference
      */
     public function volume_up()
     {
@@ -294,7 +294,7 @@ class VlcPlayer
 
     /**
      * volume_down
-     * This decreases the volume of vlc, can be set to your preference
+     * This decreases the volume of VLC, can be set to your preference
      */
     public function volume_down()
     {
@@ -343,12 +343,12 @@ class VlcPlayer
     /**
     * get_tracks
     * This returns a delimiated string of all of the filenames
-    * current in your playlist, only url's at the moment,normal files put in the playlist with vlc wil not show'
+    * current in your playlist, only url's at the moment,normal files put in the playlist with VLC wil not show'
     */
     public function get_tracks()
     {
 
-        // Gets complete playlist + medialib in vlc's case, needs to be looked at
+        // Gets complete playlist + medialib in VLC's case, needs to be looked at
         $args = array();
 
         $results = $this->sendCommand('playlist.xml', $args);
@@ -362,14 +362,14 @@ class VlcPlayer
     /**
       * sendCommand
      * This is the core of this library it takes care of sending the HTTP
-     * request to the vlc server and getting the response
+     * request to the VLC server and getting the response
      */
     private function sendCommand($cmd, $args)
     {
         $fsock = fsockopen($this->host, $this->port, $errno, $errstr);
 
         if (!$fsock) {
-            debug_event('vlcplayer.class', "VlcPlayer: $errstr ($errno)", 1);
+            debug_event('vlcplayer.class', "VLCPlayer: $errstr ($errno)", 1);
 
             return null;
         }
@@ -416,7 +416,7 @@ class VlcPlayer
     } // sendCommand
 
     //this function parses the xml page into an array thx to bin-co
-    //warning vlc returns it's complete media lib if asked for playlist
+    //warning VLC returns it's complete media lib if asked for playlist
     private function xmltoarray($contents, $get_attributes = 1, $priority = 'attribute')
     {
         if (!$contents) {
@@ -553,5 +553,5 @@ class VlcPlayer
 
         return($bigxml_array);
     }   //end xml parser
-} // End VlcPlayer Class
+} // End VLCPlayer Class
 ;

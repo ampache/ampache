@@ -124,7 +124,7 @@ msgid "Show current song in Web player page title"
 msgstr ""
 
 #: Database preference table id 86
-msgid "Use SubSonic backend"
+msgid "Use Subsonic backend"
 msgstr ""
 
 #: Database preference table id 87

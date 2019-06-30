@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
-        $title  = T_('localplay enabled');
+        $title  = T_('Localplay enabled');
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
