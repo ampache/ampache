@@ -4487,6 +4487,11 @@ class Update
                "WHERE `preference`.`name` = 'podcast_new_download' ";
         $retval &= Dba::write($sql);
 
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow Transcoding' " .
+               "WHERE `preference`.`name` = 'transcode' ";
+        $retval &= Dba::write($sql);
+
         return $retval;
     }
 }
