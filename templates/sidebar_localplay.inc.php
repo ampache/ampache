@@ -40,7 +40,7 @@ if ($server_allow && $controller && $access_check) {
 <?php if (Access::check('localplay', '75')) {
             ?>
     <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
-    <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show instances'); ?></a></li>
+    <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show Instances'); ?></a></li>
 <?php
         } ?>
     <li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo T_('Show Playlist'); ?></a></li>

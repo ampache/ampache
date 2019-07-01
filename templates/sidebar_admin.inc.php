@@ -23,7 +23,7 @@
 <ul class="sb2" id="sb_admin">
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Catalogs'); ?>"><?php echo T_('Catalogs'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'catalogs', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_catalogs')) ? $_COOKIE['sb_catalogs'] : 'expanded')); ?></h4>
    <ul class="sb3" id="sb_admin_catalogs">
-    <li id="sb_admin_catalogs_Add"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo T_('Add a Catalog'); ?></a></li>
+    <li id="sb_admin_catalogs_Add"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo T_('Add Catalog'); ?></a></li>
     <li id="sb_admin_catalogs_Show"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_catalogs"><?php echo T_('Show Catalogs'); ?></a></li>
    </ul>
   </li>
