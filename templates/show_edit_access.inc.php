@@ -28,7 +28,7 @@
             <td colspan="3"><input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" autofocus /></td>
         </tr>
         <tr>
-            <td><?php echo T_('ACL Type'); ?>: </td>
+            <td><?php echo T_('Type'); ?>: </td>
             <td colspan="3">
                 <select name="type">
                 <?php $name = 'sl_' . $access->type; ${$name} = ' selected="selected"'; ?>

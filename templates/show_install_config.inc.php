@@ -127,7 +127,7 @@ require $prefix . '/templates/install_header.inc.php';
 </div>
 
 <p>&nbsp;</p>
-<h3><?php echo T_('Transcoding'); ?></h3>
+<h3><?php echo T_('Allow Transcoding'); ?></h3>
 <div>
     <?php echo T_('Transcoding allows you to convert one type of file to another. Ampache supports on the fly transcoding of all file types based on user, player, IP address or available bandwidth. In order to transcode, Ampache takes advantage of existing binary applications such as ffmpeg. In order for transcoding to work you must first install the supporting applications and ensure that they are executable by the web server.'); ?>
     <br />

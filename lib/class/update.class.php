@@ -861,7 +861,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('transcode', 'default', 'Transcoding', '25', 'string', 'streaming')";
+            "VALUES ('transcode', 'default', 'Allow Transcoding', '25', 'string', 'streaming')";
         $retval &= Dba::write($sql);
 
         /* We need to check for playlist_method here because I fubar'd an earlier update */
@@ -1883,7 +1883,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('album_sort', '0', 'Album Default Sort',25, 'string', 'interface')";
+            "VALUES ('album_sort', '0', 'Album - Default Sort',25, 'string', 'interface')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -2735,7 +2735,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('demo_clear_sessions', '0', 'Clear democratic votes of expired user sessions',25, 'boolean', 'playlist')";
+            "VALUES ('demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions',25, 'boolean', 'playlist')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
@@ -3010,7 +3010,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('allow_video', '1', 'Allow video features',75, 'integer', 'options')";
+            "VALUES ('allow_video', '1', 'Allow Video Features',75, 'integer', 'options')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -3163,28 +3163,28 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('home_moment_albums', '1', 'Show Albums of the Moment at home page',25, 'integer', 'interface')";
+            "VALUES ('home_moment_albums', '1', 'Show Albums of the Moment',25, 'integer', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('home_moment_videos', '1', 'Show Videos of the Moment at home page',25, 'integer', 'interface')";
+            "VALUES ('home_moment_videos', '1', 'Show Videos of the Moment',25, 'integer', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('home_recently_played', '1', 'Show Recently Played at home page',25, 'integer', 'interface')";
+            "VALUES ('home_recently_played', '1', 'Show Recently Played',25, 'integer', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('home_now_playing', '1', 'Show Now Playing at home page',25, 'integer', 'interface')";
+            "VALUES ('home_now_playing', '1', 'Show Now Playing',25, 'integer', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -3307,7 +3307,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('geolocation', '0', 'Allow geolocation',25, 'integer', 'options')";
+            "VALUES ('geolocation', '0', 'Allow Geolocation',25, 'integer', 'options')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
@@ -4307,98 +4307,123 @@ class Update
     public static function update_400002()
     {
         $retval = true;
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Force HTTP playback regardless of port' " .
                "WHERE `preference`.`name` = 'force_http_play' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Playback Type' " .
                "WHERE `preference`.`name` = 'play_type' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Language' " .
                "WHERE `preference`.`name` = 'lang' ";
         $retval &= Dba::write($sql);
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'httpQ Active Instance' " .
                "WHERE `preference`.`name` = 'httpq_active' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Now Playing filtered per user' " .
                "WHERE `preference`.`name` = 'now_playing_per_user' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Use Subsonic backend' " .
                "WHERE `preference`.`name` = 'subsonic_backend' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Personal information visibility - Now Playing' " .
                "WHERE `preference`.`name` = 'allow_personal_info_now' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Personal information visibility - Recently Played' " .
                "WHERE `preference`.`name` = 'allow_personal_info_recent' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Personal information visibility - Recently Played - Allow to show streaming date/time' " .
                "WHERE `preference`.`name` = 'allow_personal_info_time' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Personal information visibility - Recently Played - Allow to show streaming agent' " .
                "WHERE `preference`.`name` = 'allow_personal_info_agent' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Enable URL rewriting' " .
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Enable URL Rewriting' " .
                "WHERE `preference`.`name` = 'stream_beautiful_url' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Upload: destination catalog' " .
                "WHERE `preference`.`name` = 'upload_catalog' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Upload: allow user uploads' " .
                "WHERE `preference`.`name` = 'allow_upload' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Upload: create a subdirectory per user' " .
                "WHERE `preference`.`name` = 'upload_subdir' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Show Albums of the Moment at home page' " .
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Show Albums of the Moment' " .
                "WHERE `preference`.`name` = 'home_moment_albums' ";
         $retval &= Dba::write($sql);
 
         $sql    = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Show Videos of the Moment at home page' " .
+               "SET `preference`.`description` = 'Show Videos of the Moment' " .
                "WHERE `preference`.`name` = 'home_moment_videos' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Custom logo URL' " .
                "WHERE `preference`.`name` = 'custom_logo' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Custom login page logo URL' " .
                "WHERE `preference`.`name` = 'custom_login_logo' ";
         $retval &= Dba::write($sql);
 
-        $sql    = "UPDATE `preference` " .
+        $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Custom favicon URL' " .
                "WHERE `preference`.`name` = 'custom_favicon' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Album - Default Sort' " .
+               "WHERE `preference`.`name` = 'album_sort' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow Geolocation' " .
+               "WHERE `preference`.`name` = 'Geolocation' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow Video Features' " .
+               "WHERE `preference`.`name` = 'allow_video' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Democratic - Clear votes for expired user sessions' " .
+               "WHERE `preference`.`name` = 'demo_clear_sessions' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow Transcoding' " .
+               "WHERE `preference`.`name` = 'transcoding' ";
         $retval &= Dba::write($sql);
 
         return $retval;
