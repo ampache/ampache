@@ -4388,7 +4388,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = Uploads - Allow users to remove uploaded songs' " .
+               "SET `preference`.`description` = 'Uploads - Allow users to remove uploaded songs' " .
                "WHERE `preference`.`name` = 'upload_allow_remove' ";
         $retval &= Dba::write($sql);
 
@@ -4465,11 +4465,6 @@ class Update
         $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Authorize JavaScript decoder (Aurora.js) in Web player' " .
                "WHERE `preference`.`name` = 'webplayer_aurora' ";
-        $retval &= Dba::write($sql);
-
-        $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = '' " .
-               "WHERE `preference`.`name` = '' ";
         $retval &= Dba::write($sql);
 
         return $retval;
