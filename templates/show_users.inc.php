@@ -54,7 +54,7 @@ $web_path = AmpConfig::get('web_path');
       <th class="cel_activity"><?php echo T_('Activity'); ?></th>
       <?php if (AmpConfig::get('track_user_ip')) {
             ?>
-      <th class="cel_lastip"><?php echo T_('Last Ip'); ?></th>
+      <th class="cel_lastip"><?php echo T_('Last IP'); ?></th>
       <?php
         } ?>
       <?php
@@ -91,7 +91,7 @@ foreach ($object_ids as $user_id) {
       <th class="cel_activity"><?php echo T_('Activity'); ?></th>
       <?php if (AmpConfig::get('track_user_ip')) {
             ?>
-      <th class="cel_lastip"><?php echo T_('Last Ip'); ?></th>
+      <th class="cel_lastip"><?php echo T_('Last IP'); ?></th>
       <?php
         } ?>
       <?php

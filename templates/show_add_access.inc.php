@@ -47,7 +47,7 @@
             </td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('ACL Type'); ?>:</td>
+            <td valign="top"><?php echo T_('Type'); ?>:</td>
             <td colspan="3">
         <?php if ($action == 'show_add_rpc') {
     ?>

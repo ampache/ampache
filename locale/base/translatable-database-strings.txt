@@ -112,7 +112,7 @@ msgid "Now playing filtered per user"
 msgstr ""
 
 #: Database preference table id 83
-msgid "Album Default Sort"
+msgid "Album - Default Sort"
 msgstr ""
 
 #: Database preference table id 84
@@ -220,7 +220,7 @@ msgid "Top menu"
 msgstr ""
 
 #: Database preference table id 110
-msgid "Clear democratic votes of expired user sessions"
+msgid "Democratic - Clear votes for expired user sessions"
 msgstr ""
 
 #: Database preference table id 111
@@ -264,7 +264,7 @@ msgid "Use UPnP backend"
 msgstr ""
 
 #: Database preference table id 121
-msgid "Allow video features"
+msgid "Allow Video Features"
 msgstr ""
 
 #: Database preference table id 122
@@ -280,19 +280,19 @@ msgid "Limit direct play to maximum media count"
 msgstr ""
 
 #: Database preference table id 125
-msgid "Show Albums of the moment at home page"
+msgid "Show Albums of the moment"
 msgstr ""
 
 #: Database preference table id 126
-msgid "Show Videos of the moment at home page"
+msgid "Show Videos of the moment"
 msgstr ""
 
 #: Database preference table id 127
-msgid "Show Recently Played at home page"
+msgid "Show Recently Played"
 msgstr ""
 
 #: Database preference table id 128
-msgid "Show Now Playing at home page"
+msgid "Show Now Playing"
 msgstr ""
 
 #: Database preference table id 129
@@ -312,7 +312,7 @@ msgid "WebPlayer browser notifications timeout (seconds)"
 msgstr ""
 
 #: Database preference table id 133
-msgid "Allow geolocation"
+msgid "Allow Geolocation"
 msgstr ""
 
 #: Database preference table id 134
