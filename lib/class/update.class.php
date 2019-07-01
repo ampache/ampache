@@ -2799,28 +2799,28 @@ class Update
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_subdir', '1', 'Uploads - Create a subdirectory per user (recommended)',75, 'boolean', 'system')";
+            "VALUES ('upload_subdir', '1', 'Upload - Create a subdirectory per user (recommended)',75, 'boolean', 'system')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_user_artist', '0', 'Uploads - Consider the user sender as the track\'s artist',75, 'boolean', 'system')";
+            "VALUES ('upload_user_artist', '0', 'Upload - Consider the user sender as the track\'s artist',75, 'boolean', 'system')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_script', '', 'Uploads - Post-upload script (current directory = upload target directory)',75, 'string', 'system')";
+            "VALUES ('upload_script', '', 'Upload - Post-upload script (current directory = upload target directory)',75, 'string', 'system')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_allow_edit', '1', 'Uploads - Allow users to edit uploaded songs',75, 'boolean', 'system')";
+            "VALUES ('upload_allow_edit', '1', 'Upload - Allow users to edit uploaded songs',75, 'boolean', 'system')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -3458,7 +3458,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_allow_remove', '1', 'Uploads - Allow users to remove uploaded songs',75, 'boolean', 'system')";
+            "VALUES ('upload_allow_remove', '1', 'Upload - Allow users to remove uploaded songs',75, 'boolean', 'system')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -3779,14 +3779,14 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-                "VALUES ('podcast_keep', '10', 'Podcast: # latest episodes to keep',100, 'integer', 'system')";
+                "VALUES ('podcast_keep', '10', 'Podcast - # latest episodes to keep',100, 'integer', 'system')";
         $retval &= Dba::write($sql);
         $id  = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?, '10')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-                "VALUES ('podcast_new_download', '1', 'Podcast: # episodes to download when new episodes are available',100, 'integer', 'system')";
+                "VALUES ('podcast_new_download', '1', 'Podcast - # episodes to download when new episodes are available',100, 'integer', 'system')";
         $retval &= Dba::write($sql);
         $id  = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -4358,37 +4358,37 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Uploads - Destination catalog' " .
+               "SET `preference`.`description` = 'Upload - Destination catalog' " .
                "WHERE `preference`.`name` = 'upload_catalog' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Uploads - Allow user uploads' " .
+               "SET `preference`.`description` = 'Upload - Allow user uploads' " .
                "WHERE `preference`.`name` = 'allow_upload' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Uploads - Create a subdirectory per user' " .
+               "SET `preference`.`description` = 'Upload - Create a subdirectory per user' " .
                "WHERE `preference`.`name` = 'upload_subdir' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Uploads - Consider the user sender as the track''s artist' " .
+               "SET `preference`.`description` = 'Upload - Consider the user sender as the track''s artist' " .
                "WHERE `preference`.`name` = 'upload_user_artist' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Uploads - Post-upload script (current directory = upload target directory)' " .
+               "SET `preference`.`description` = 'Upload - Post-upload script (current directory = upload target directory)' " .
                "WHERE `preference`.`name` = 'upload_script' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Uploads - Allow users to edit uploaded songs' " .
+               "SET `preference`.`description` = 'Upload - Allow users to edit uploaded songs' " .
                "WHERE `preference`.`name` = 'upload_allow_edit' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Uploads - Allow users to remove uploaded songs' " .
+               "SET `preference`.`description` = 'Upload - Allow users to remove uploaded songs' " .
                "WHERE `preference`.`name` = 'upload_allow_remove' ";
         $retval &= Dba::write($sql);
 
@@ -4475,6 +4475,16 @@ class Update
         $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Show Recently Played' " .
                "WHERE `preference`.`name` = 'home_recently_played' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Podcast - # latest episodes to keep' " .
+               "WHERE `preference`.`name` = 'podcast_keep' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Podcast - # episodes to download when new episodes are available' " .
+               "WHERE `preference`.`name` = 'podcast_new_download' ";
         $retval &= Dba::write($sql);
 
         return $retval;
