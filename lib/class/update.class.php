@@ -4467,6 +4467,16 @@ class Update
                "WHERE `preference`.`name` = 'webplayer_aurora' ";
         $retval &= Dba::write($sql);
 
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Show Now Playing' " .
+               "WHERE `preference`.`name` = 'home_now_playing' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Show Recently Played' " .
+               "WHERE `preference`.`name` = 'home_recently_played' ";
+        $retval &= Dba::write($sql);
+
         return $retval;
     }
 }
