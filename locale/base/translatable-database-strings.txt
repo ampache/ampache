@@ -236,19 +236,19 @@ msgid "Allow users to upload media"
 msgstr ""
 
 #: Database preference table id 114
-msgid "Uploads - Create a subdirectory per user"
+msgid "Upload - Create a subdirectory per user"
 msgstr ""
 
 #: Database preference table id 115
-msgid "Uploads - Consider the user sender as the track's artist"
+msgid "Upload - Consider the user sender as the track's artist"
 msgstr ""
 
 #: Database preference table id 116
-msgid "Uploads - Post-upload script (current directory = upload target directory)"
+msgid "Upload - Post-upload script (current directory = upload target directory)"
 msgstr ""
 
 #: Database preference table id 117
-msgid "Uploads - Allow users to edit uploaded songs"
+msgid "Upload - Allow users to edit uploaded songs"
 msgstr ""
 
 #: Database preference table id 118
@@ -320,7 +320,7 @@ msgid "Authorize JavaScript decoder (Aurora.js) in Web player"
 msgstr ""
 
 #: Database preference table id 139
-msgid "Uploads - Allow users to remove uploaded songs"
+msgid "Upload - Allow users to remove uploaded songs"
 msgstr ""
 
 #: Database preference table id 140
@@ -356,11 +356,11 @@ msgid "Disable custom metadata fields. Insert them in a comma separated list. Th
 msgstr ""
 
 #: Database preference table id 148
-msgid "Podcast: # latest episodes to keep"
+msgid "Podcast - # latest episodes to keep"
 msgstr ""
 
 #: Database preference table id 149
-msgid "Podcast: # episodes to download when new episodes are available"
+msgid "Podcast - # episodes to download when new episodes are available"
 msgstr ""
 
 #: Database preference table id 150
