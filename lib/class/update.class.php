@@ -4307,7 +4307,7 @@ class Update
     public static function update_400002()
     {
         $retval = true;
-        $sql = "UPDATE `preference` " .
+        $sql    = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Force HTTP playback regardless of port' " .
                "WHERE `preference`.`name` = 'force_http_play' ";
         $retval &= Dba::write($sql);
