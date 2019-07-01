@@ -1743,7 +1743,7 @@ class Art extends database_object
                 $size['width']     = 80;
             break;
             case 5:
-                /* Web Player size */
+                /* Web player size */
                 $size['height'] = 32;
                 $size['width']  = 32;
             break;
@@ -1773,7 +1773,7 @@ class Art extends database_object
                  $size['width']  = 24;
             break;
             case 4:
-                /* Popup Web Player size */
+                /* Popup Web player size */
             case 11:
                 /* Large view browse size */
             case 12:

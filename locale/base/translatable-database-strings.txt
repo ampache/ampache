@@ -132,11 +132,11 @@ msgid "Use Plex backend"
 msgstr ""
 
 #: Database preference table id 88
-msgid "Authorize Flash Web Player(s)"
+msgid "Authorize Flash Web player"
 msgstr ""
 
 #: Database preference table id 89
-msgid "Authorize HTML5 Web Player(s)"
+msgid "Authorize HTML5 Web player"
 msgstr ""
 
 #: Database preference table id 90
@@ -236,19 +236,19 @@ msgid "Allow users to upload media"
 msgstr ""
 
 #: Database preference table id 114
-msgid "Upload: create a subdirectory per user (recommended)"
+msgid "Uploads - Create a subdirectory per user"
 msgstr ""
 
 #: Database preference table id 115
-msgid "Upload: consider the user sender as the track's artist"
+msgid "Uploads - Consider the user sender as the track's artist"
 msgstr ""
 
 #: Database preference table id 116
-msgid "Upload: run the following script after upload (current directory = upload target directory)"
+msgid "Uploads - Post-upload script (current directory = upload target directory)"
 msgstr ""
 
 #: Database preference table id 117
-msgid "Upload: allow users to edit uploaded songs"
+msgid "Uploads - Allow users to edit uploaded songs"
 msgstr ""
 
 #: Database preference table id 118
@@ -304,11 +304,11 @@ msgid "Album - Group per release type Sort"
 msgstr ""
 
 #: Database preference table id 131
-msgid "WebPlayer browser notifications"
+msgid "Web player browser notifications"
 msgstr ""
 
 #: Database preference table id 132
-msgid "WebPlayer browser notifications timeout (seconds)"
+msgid "Web player browser notifications timeout (seconds)"
 msgstr ""
 
 #: Database preference table id 133
@@ -316,11 +316,11 @@ msgid "Allow Geolocation"
 msgstr ""
 
 #: Database preference table id 134
-msgid "Authorize JavaScript decoder (Aurora.js) in Web Player(s)"
+msgid "Authorize JavaScript decoder (Aurora.js) in Web player"
 msgstr ""
 
 #: Database preference table id 139
-msgid "Upload: allow users to remove uploaded songs"
+msgid "Uploads - Allow users to remove uploaded songs"
 msgstr ""
 
 #: Database preference table id 140

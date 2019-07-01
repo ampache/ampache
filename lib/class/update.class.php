@@ -2054,7 +2054,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('webplayer_flash', '1', 'Authorize Flash Web Player(s)',25, 'boolean', 'streaming')";
+            "VALUES ('webplayer_flash', '1', 'Authorize Flash Web player',25, 'boolean', 'streaming')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -2063,7 +2063,7 @@ class Update
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('webplayer_html5', '1', 'Authorize HTML5 Web Player(s)',25, 'boolean', 'streaming')";
+            "VALUES ('webplayer_html5', '1', 'Authorize HTML5 Web player',25, 'boolean', 'streaming')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -2799,28 +2799,28 @@ class Update
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_subdir', '1', 'Upload: create a subdirectory per user (recommended)',75, 'boolean', 'system')";
+            "VALUES ('upload_subdir', '1', 'Uploads - Create a subdirectory per user (recommended)',75, 'boolean', 'system')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_user_artist', '0', 'Upload: consider the user sender as the track\'s artist',75, 'boolean', 'system')";
+            "VALUES ('upload_user_artist', '0', 'Uploads - Consider the user sender as the track\'s artist',75, 'boolean', 'system')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_script', '', 'Upload: run the following script after upload (current directory = upload target directory)',75, 'string', 'system')";
+            "VALUES ('upload_script', '', 'Uploads - Post-upload script (current directory = upload target directory)',75, 'string', 'system')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_allow_edit', '1', 'Upload: allow users to edit uploaded songs',75, 'boolean', 'system')";
+            "VALUES ('upload_allow_edit', '1', 'Uploads - Allow users to edit uploaded songs',75, 'boolean', 'system')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -3260,14 +3260,14 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('browser_notify', '1', 'WebPlayer browser notifications',25, 'integer', 'interface')";
+            "VALUES ('browser_notify', '1', 'Web player browser notifications',25, 'integer', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('browser_notify_timeout', '10', 'WebPlayer browser notifications timeout (seconds)',25, 'integer', 'interface')";
+            "VALUES ('browser_notify_timeout', '10', 'Web player browser notifications timeout (seconds)',25, 'integer', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '10')";
@@ -3326,7 +3326,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)',25, 'boolean', 'streaming')";
+            "VALUES ('webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web player',25, 'boolean', 'streaming')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -3458,7 +3458,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs',75, 'boolean', 'system')";
+            "VALUES ('upload_allow_remove', '1', 'Uploads - Allow users to remove uploaded songs',75, 'boolean', 'system')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
@@ -4308,8 +4308,8 @@ class Update
     {
         $retval = true;
         $sql    = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Force HTTP playback regardless of port' " .
-               "WHERE `preference`.`name` = 'force_http_play' ";
+                  "SET `preference`.`description` = 'Force HTTP playback regardless of port' " .
+                  "WHERE `preference`.`name` = 'force_http_play' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
@@ -4317,10 +4317,6 @@ class Update
                "WHERE `preference`.`name` = 'play_type' ";
         $retval &= Dba::write($sql);
 
-        $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Language' " .
-               "WHERE `preference`.`name` = 'lang' ";
-        $retval &= Dba::write($sql);
         $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'httpQ Active Instance' " .
                "WHERE `preference`.`name` = 'httpq_active' ";
@@ -4362,18 +4358,38 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Upload: destination catalog' " .
+               "SET `preference`.`description` = 'Uploads - Destination catalog' " .
                "WHERE `preference`.`name` = 'upload_catalog' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Upload: allow user uploads' " .
+               "SET `preference`.`description` = 'Uploads - Allow user uploads' " .
                "WHERE `preference`.`name` = 'allow_upload' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Upload: create a subdirectory per user' " .
+               "SET `preference`.`description` = 'Uploads - Create a subdirectory per user' " .
                "WHERE `preference`.`name` = 'upload_subdir' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Uploads - Consider the user sender as the track''s artist' " .
+               "WHERE `preference`.`name` = 'upload_user_artist' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Uploads - Post-upload script (current directory = upload target directory)' " .
+               "WHERE `preference`.`name` = 'upload_script' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Uploads - Allow users to edit uploaded songs' " .
+               "WHERE `preference`.`name` = 'upload_allow_edit' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = Uploads - Allow users to remove uploaded songs' " .
+               "WHERE `preference`.`name` = 'upload_allow_remove' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
@@ -4424,6 +4440,36 @@ class Update
         $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Allow Transcoding' " .
                "WHERE `preference`.`name` = 'transcoding' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Authorize Flash Web player' " .
+               "WHERE `preference`.`name` = 'webplayer_flash' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Authorize HTML5 Web player' " .
+               "WHERE `preference`.`name` = 'webplayer_html5' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Web player browser notifications' " .
+               "WHERE `preference`.`name` = 'browser_notify' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Web player browser notifications timeout (seconds)' " .
+               "WHERE `preference`.`name` = 'browser_notify_timeout' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Authorize JavaScript decoder (Aurora.js) in Web player' " .
+               "WHERE `preference`.`name` = 'webplayer_aurora' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = '' " .
+               "WHERE `preference`.`name` = '' ";
         $retval &= Dba::write($sql);
 
         return $retval;
