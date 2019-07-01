@@ -24,7 +24,7 @@ class AmpacheStreamBandwidth
 {
     public $name        = 'Stream Bandwidth';
     public $categories  = 'stream_control';
-    public $description = 'Stream Control Bandwidth per user';
+    public $description = 'Control bandwidth per user';
     public $url         = '';
     public $version     = '000001';
     public $min_ampache = '370024';

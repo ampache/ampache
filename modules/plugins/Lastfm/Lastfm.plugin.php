@@ -24,7 +24,7 @@ class AmpacheLastfm
 {
     public $name        = 'Last.FM';
     public $categories  = 'scrobbling';
-    public $description = 'Records your played songs to your Last.FM Account';
+    public $description = 'Records your played songs to your Last.FM account';
     public $url;
     public $version     = '000005';
     public $min_ampache = '360003';

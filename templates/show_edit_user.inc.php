@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php UI::show_box_top(T_('Editing existing User')); ?>
+<?php UI::show_box_top(T_('Editing Existing User')); ?>
 <?php AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php"; ?>">
     <table class="tabledata" cellspacing="0" cellpadding="0">
@@ -151,7 +151,7 @@
         <tr>
             <td><?php echo T_('Prevent Preset Override'); ?></td>
             <td>
-                <input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This Affects all non-Admin accounts'); ?></span>
+                <input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This affects all non-admin accounts'); ?></span>
             </td>
         </tr>
         <tr>

@@ -308,7 +308,7 @@ class Update
         $update_string = '- Catalog types are plugins now.<br />';
         $version[]     = array('version' => '360020', 'description' => $update_string);
 
-        $update_string = '- Add insertion date on Now Playing and option to show the current song in page title for Web player.<br />';
+        $update_string = '- Add insertion date on Now Playing and option to show the current song in page title for Web Player.<br />';
         $version[]     = array('version' => '360021', 'description' => $update_string);
 
         $update_string = '- Remove unused live_stream fields and add codec field.<br />';
@@ -326,7 +326,7 @@ class Update
         $update_string = '- Added agent to `object_count` table.<br />';
         $version[]     = array('version' => '360026', 'description' => $update_string);
 
-        $update_string = '- Add option to allow/disallow to show personnal information to other users (now playing and Recently Played).<br />';
+        $update_string = '- Add option to allow/disallow showing personnal information to other users (now playing and Recently Played).<br />';
         $version[]     = array('version' => '360027', 'description' => $update_string);
 
         $update_string = '- Personnal information: allow/disallow to show in now playing.<br />' .
@@ -1883,7 +1883,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('album_sort', '0', 'Album - Default Sort',25, 'string', 'interface')";
+            "VALUES ('album_sort', '0', 'Album - Default sort',25, 'string', 'interface')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -1963,7 +1963,7 @@ class Update
     /**
      * update_360021
      *
-     * Add insertion date on Now Playing and option to show the current song in page title for Web player
+     * Add insertion date on Now Playing and option to show the current song in page title for Web Player
      */
     public static function update_360021()
     {
@@ -1973,7 +1973,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('song_page_title', '1', 'Show current song in Web player page title',25, 'boolean', 'interface')";
+            "VALUES ('song_page_title', '1', 'Show current song in Web Player page title',25, 'boolean', 'interface')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -2054,7 +2054,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('webplayer_flash', '1', 'Authorize Flash Web player',25, 'boolean', 'streaming')";
+            "VALUES ('webplayer_flash', '1', 'Authorize Flash Web Player',25, 'boolean', 'streaming')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -2063,7 +2063,7 @@ class Update
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('webplayer_html5', '1', 'Authorize HTML5 Web player',25, 'boolean', 'streaming')";
+            "VALUES ('webplayer_html5', '1', 'Authorize HTML5 Web Player',25, 'boolean', 'streaming')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -3241,7 +3241,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type Sort',25, 'string', 'interface')";
+            "VALUES ('album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort',25, 'string', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, 'album,ep,live,single')";
@@ -3260,14 +3260,14 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('browser_notify', '1', 'Web player browser notifications',25, 'integer', 'interface')";
+            "VALUES ('browser_notify', '1', 'Web Player browser notifications',25, 'integer', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('browser_notify_timeout', '10', 'Web player browser notifications timeout (seconds)',25, 'integer', 'interface')";
+            "VALUES ('browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)',25, 'integer', 'interface')";
         $retval &= Dba::write($sql);
         $id     = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '10')";
@@ -3326,7 +3326,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-            "VALUES ('webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web player',25, 'boolean', 'streaming')";
+            "VALUES ('webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player',25, 'boolean', 'streaming')";
         $retval &= Dba::write($sql);
 
         $id = Dba::insert_id();
@@ -4418,7 +4418,7 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Album - Default Sort' " .
+               "SET `preference`.`description` = 'Album - Default sort' " .
                "WHERE `preference`.`name` = 'album_sort' ";
         $retval &= Dba::write($sql);
 
@@ -4443,27 +4443,27 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Authorize Flash Web player' " .
+               "SET `preference`.`description` = 'Authorize Flash Web Player' " .
                "WHERE `preference`.`name` = 'webplayer_flash' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Authorize HTML5 Web player' " .
+               "SET `preference`.`description` = 'Authorize HTML5 Web Player' " .
                "WHERE `preference`.`name` = 'webplayer_html5' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Web player browser notifications' " .
+               "SET `preference`.`description` = 'Web Player browser notifications' " .
                "WHERE `preference`.`name` = 'browser_notify' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Web player browser notifications timeout (seconds)' " .
+               "SET `preference`.`description` = 'Web Player browser notifications timeout (seconds)' " .
                "WHERE `preference`.`name` = 'browser_notify_timeout' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Authorize JavaScript decoder (Aurora.js) in Web player' " .
+               "SET `preference`.`description` = 'Authorize JavaScript decoder (Aurora.js) in Web Player' " .
                "WHERE `preference`.`name` = 'webplayer_aurora' ";
         $retval &= Dba::write($sql);
 
