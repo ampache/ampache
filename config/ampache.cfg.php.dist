@@ -134,7 +134,7 @@ auth_methods = "mysql"
 ; DEFAULT: false
 ;auth_password_save = "false"
 
-; Logout redirection target
+; Log out redirection target
 ; Defaults to our own login.php, but we can override it here if, for instance,
 ; we want to redirect to an SSO provider instead.
 ; logout_redirect = "http://sso.example.com/logout"
