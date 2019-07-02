@@ -234,9 +234,13 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         }
         $sql .= "IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
         if (!Dba::write($sql)) {
-            AmpError::add('general', sprintf(T_('Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s'), $db_user, $database, $db_host, Dba::error()));
+            //try mysql8 legacy auth on failure
+            $sql = str_replace('IDENTIFIED BY ', 'IDENTIFIED WITH mysql_native_password BY ', $sql);
+            if (!Dba::write($sql)) {
+                AmpError::add('general', sprintf(T_('Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s'), $db_user, $database, $db_host, Dba::error()));
 
-            return false;
+                return false;
+            }
         }
     } // end if we are creating a user
 
