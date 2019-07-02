@@ -40,7 +40,7 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
-                <?php echo 'Ampache'; ?> - For the love of Music
+                <?php echo 'Ampache'; ?> - For the Love of Music
             </a>
         </div>
     </div>

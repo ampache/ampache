@@ -38,7 +38,7 @@
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Ampache :: For the love of Music - Install</title>
+    <title>Ampache :: For the Love of Music - Install</title>
     <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
@@ -49,8 +49,8 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="./images/ampache-dark.png" title="Ampache" alt="Ampache">
-                <?php echo T_('Ampache Installation'); ?> - For the love of Music
+                <img src="<?php echo "./themes/reborn/images/ampache-dark.png"; ?>" title="Ampache" alt="Ampache">
+                <?php echo T_('Ampache Installation'); ?> - For the Love of Music
             </a>
         </div>
     </div>

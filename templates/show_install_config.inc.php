@@ -38,7 +38,7 @@ if (empty($local_pass)) {
 require $prefix . '/templates/install_header.inc.php';
 ?>
         <div class="jumbotron">
-            <h1><?php echo T_('Install progress'); ?></h1>
+            <h1><?php echo T_('Install Progress'); ?></h1>
             <div class="progress">
                 <div class="progress-bar progress-bar-warning"
                     role="progressbar"
@@ -68,7 +68,7 @@ require $prefix . '/templates/install_header.inc.php';
         <input type="text" class="form-control" id="web_path" name="web_path" value="<?php echo scrub_out($web_path_guess); ?>">
     </div>
 </div>
-            <h3><?php echo T_('Database connection'); ?></h3>
+            <h3><?php echo T_('Database Connection'); ?></h3>
             <?php AmpError::display('config'); ?>
 <div class="form-group">
     <label for="local_db" class="col-sm-4 control-label"><?php echo T_('Database Name'); ?></label>
@@ -105,33 +105,33 @@ require $prefix . '/templates/install_header.inc.php';
 <input type="hidden" name="charset" value="<?php echo $charset; ?>" />
 
 <p>&nbsp;</p>
-<h3><?php echo T_('Installation type'); ?></h3>
-<div><?php echo T_('Configure Ampache at best for your use case, enabling / disabling features automatically.'); ?></div>
+<h3><?php echo T_('Installation Type'); ?></h3>
+<div><?php echo T_('Optimize Ampache for your use case. The installer will enable/disable features automatically.'); ?></div>
 <br />
 <div class="form-group">
     <div class="radio">
       <label><input type="radio" name="usecase" value="default" <?php if (!isset($_REQUEST['usecase']) || $_REQUEST['usecase'] == 'default') {
     echo 'checked';
-} ?>><?php echo T_('Default'); ?> &mdash; <?php echo T_('Ampache is configured for personal use with most greatest features.'); ?></label>
+} ?>><?php echo T_('Default'); ?> &mdash; <?php echo T_('Ampache is configured for personal use with the best features.'); ?></label>
     </div>
     <div class="radio">
       <label><input type="radio" name="usecase" value="minimalist" <?php if (isset($_REQUEST['usecase']) && $_REQUEST['usecase'] == 'minimalist') {
     echo 'checked';
-} ?>><?php echo T_('Minimalist'); ?> &mdash; <?php echo T_('only essential features are enabled to stream simply your music from a web interface.'); ?></label>
+} ?>><?php echo T_('Minimalist'); ?> &mdash; <?php echo T_('Only essential features are enabled to simply stream your music from the Web Interface.'); ?></label>
     </div>
     <div class="radio">
       <label><input type="radio" name="usecase" value="community" <?php if (isset($_REQUEST['usecase']) && $_REQUEST['usecase'] == 'community') {
     echo 'checked';
-} ?>><?php echo T_('Community'); ?> &mdash; <?php echo T_('use recommended settings when using Ampache as a frontend for a music community.'); ?></label>
+} ?>><?php echo T_('Community'); ?> &mdash; <?php echo T_('Recommended settings when using Ampache as a frontend for a music community.'); ?></label>
     </div>
 </div>
 
 <p>&nbsp;</p>
 <h3><?php echo T_('Allow Transcoding'); ?></h3>
 <div>
-    <?php echo T_('Transcoding allows you to convert one type of file to another. Ampache supports on the fly transcoding of all file types based on user, player, IP address or available bandwidth. In order to transcode, Ampache takes advantage of existing binary applications such as ffmpeg. In order for transcoding to work you must first install the supporting applications and ensure that they are executable by the web server.'); ?>
+    <?php echo T_('Transcoding allows you to convert music from one encoding to another. Ampache supports on the fly transcoding of any file type based on user, player, IP address or available bandwidth. In order to transcode, Ampache takes advantage of existing binary applications such as ffmpeg. In order for transcoding to work you must first install the supporting applications and ensure that they are executable by the web server.'); ?>
     <br />
-    <?php echo T_('This section apply default transcoding configuration according to the application you want to use. You may need to customize settings once this setup ended'); ?>. <a href="https://github.com/ampache/ampache/wiki/Transcoding" target="_blank"><?php echo T_('See wiki page'); ?>.</a>
+    <?php echo T_('This section applies the default transcoding configuration according to the application you want to use. You may need to customize settings once setup has ended'); ?>. <a href="https://github.com/ampache/ampache/wiki/Transcoding" target="_blank"><?php echo T_('See wiki page'); ?>.</a>
 </div>
 <br />
 <div class="form-group">
@@ -152,7 +152,7 @@ require $prefix . '/templates/install_header.inc.php';
         <?php
         if (count($modes) == 0) {
             ?>
-        <label><?php echo T_('No default transcoding application found. You may need to install a popular application (ffmpeg, avconv ...) or customize transcoding settings manually after installation.'); ?></label>
+        <label><?php echo T_('No default transcoding application found. You may need to install a popular application (FFmpeg, avconv ...) or customize transcoding settings manually after installation.'); ?></label>
         <?php
         } ?>
     </div>
@@ -160,12 +160,12 @@ require $prefix . '/templates/install_header.inc.php';
 
 <p>&nbsp;</p>
 <h3><?php echo T_('Players'); ?></h3>
-<div><?php echo T_('Ampache is more than only a web interface. Several backends are implemented to ensure you can stream your media from anywhere.'); ?></div>
-<div><?php echo T_('Select backends to enable. Depending the backend, you may need to perform additional configuration.'); ?> <a href="https://github.com/ampache/ampache/wiki/API" target="_blank"><?php echo T_('See wiki page'); ?>.</a></div>
+<div><?php echo T_('Ampache is more than only a web interface. Several backends are implemented to ensure you can stream your media to any player.'); ?></div>
+<div><?php echo T_('Select each backend to enable. Depending on the backend, you may need to perform additional configuration.'); ?> <a href="https://github.com/ampache/ampache/wiki/API" target="_blank"><?php echo T_('See wiki page'); ?>.</a></div>
 <br />
 <div class="form-group">
     <div class="checkbox-inline disabled">
-        <label><input type="checkbox" value="1" checked disabled>Web interface</label>
+        <label><input type="checkbox" value="1" checked disabled>Web Interface</label>
     </div>
     <div class="checkbox-inline disabled">
         <label><input type="checkbox" value="1" checked disabled>Ampache API</label>
@@ -289,7 +289,7 @@ require $prefix . '/templates/install_header.inc.php';
     <button type="submit" class="btn btn-warning" name="skip_config"><?php echo T_('Skip'); ?></button>
 </div>
 <div class="col-sm-8">
-    <button type="submit" class="btn btn-warning" name="create_all"><?php echo T_('Create config'); ?></button>
+    <button type="submit" class="btn btn-warning" name="create_all"><?php echo T_('Create Config'); ?></button>
 </div>
 </form>
 

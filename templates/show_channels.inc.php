@@ -39,7 +39,7 @@
             <th class="cel_bitrate optional"><?php echo T_('Bitrate'); ?></th>
             <th class="cel_startdate optional"><?php echo T_('Start Date'); ?></th>
             <th class="cel_listeners optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=listeners', T_('Listeners'), 'channel_sort_listeners'); ?></th>
-            <th class="cel_streamurl essential"><?php echo T_('Stream Url'); ?></th>
+            <th class="cel_streamurl essential"><?php echo T_('Stream URL'); ?></th>
             <th class="cel_state optional"><?php echo T_('State'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
