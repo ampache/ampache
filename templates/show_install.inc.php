@@ -65,7 +65,7 @@ require $prefix . '/templates/install_header.inc.php';
        </div>
    </div>
     <div class="form-group">
-        <label for="local_username" class="col-sm-4 control-label"><?php echo T_('MySQL Administrative Username'); ?></label>
+        <label for="local_username" class="col-sm-4 control-label"><?php echo T_('MySQL Administrative username'); ?></label>
         <div class="col-sm-8">
             <input type="text" class="form-control" id="local_username" name="local_username" value="root">
         </div>
@@ -115,7 +115,7 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
     </div>
     <div class="form-group" style="display: none;" id="specificuser">
-        <label for="db_username" class="col-sm-4 control-label"><?php echo T_('Ampache Database Username'); ?></label>
+        <label for="db_username" class="col-sm-4 control-label"><?php echo T_('Ampache Database username'); ?></label>
         <div class="col-sm-8">
             <input type="text" class="form-control" id="db_username" name="db_username" value="ampache">
         </div>

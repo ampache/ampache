@@ -20,12 +20,12 @@
  *
  */
 
-define('NO_SESSION','1'); 
+define('NO_SESSION','1');
 
 $unmigratable = array('auth_methods'=>'mysql',
     'tag_order'=>'id3v2,id3v1,vorbiscomment,quicktime,ape,asf',
     'album_art_order'=>'db,id3,folder,lastfm,amazon',
-    'amazon_base_urls'=>'http://webservices.amazon.com'); 
+    'amazon_base_urls'=>'http://webservices.amazon.com');
 
 $translate = array('local_host'=>'database_hostname',
     'local_db'=>'database_name',
@@ -39,7 +39,7 @@ $translate = array('local_host'=>'database_hostname',
     'stream_cmd_mpc'=>'transcode_cmd_mpc',
     'sess_name'=>'session_name',
     'sess_cookielife'=>'session_cookielife',
-    'sess_cookiesecure'=>'session_cookiesecure'); 
+    'sess_cookiesecure'=>'session_cookiesecure');
 
 $path = dirname(__FILE__);
 $prefix = realpath($path . '/../');
@@ -89,6 +89,6 @@ if ($worked) {
     echo "\n";
 }
 else {
-    echo T_("Access Denied, config migration failed");
+    echo T_("Access denied, config migration failed");
     echo "\n";
 }

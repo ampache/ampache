@@ -64,16 +64,16 @@ if (!$db_user || !$db_pass || !$db_host || !$db_name) {
 }
 
 // Now let's make sure it's not already installed
-if (!install_check_status($configfile)) { 
+if (!install_check_status($configfile)) {
     echo "\n", T_('Existing Ampache installation found.'), "\n";
     if ($force) {
         echo T_('Force specified, proceeding anyway.'), "\n";
     }
     else {
-        echo T_('Exiting.'), "\n"; 
+        echo T_('Exiting.'), "\n";
         exit(1);
     }
-} 
+}
 
 AmpConfig::set_by_array(array(
     'web_path' => $web_path,
@@ -85,11 +85,11 @@ AmpConfig::set_by_array(array(
 ), true);
 
 // Install the database
-if (!install_insert_db($new_db_user, $new_db_pass, true, $force, true)) { 
-    echo T_('Database creation failed'), "\n"; 
-    echo AmpError::get('general'), "\n\n"; 
-    exit(1); 
-} 
+if (!install_insert_db($new_db_user, $new_db_pass, true, $force, true)) {
+    echo T_('Database creation failed'), "\n";
+    echo AmpError::get('general'), "\n\n";
+    exit(1);
+}
 
 AmpConfig::set_by_array(array(
     'database_username' => $new_db_user ?: $db_user,
@@ -97,11 +97,11 @@ AmpConfig::set_by_array(array(
 ), true);
 
 // Write the config file
-if (!install_create_config()) { 
-    echo T_('Config file creation failed'), "\n"; 
-    echo AmpError::get('general') . "\n\n"; 
-    exit(1); 
-} 
+if (!install_create_config()) {
+    echo T_('Config file creation failed'), "\n";
+    echo AmpError::get('general') . "\n\n";
+    exit(1);
+}
 
 /**
  * usage
@@ -117,13 +117,13 @@ function usage() {
     echo 'MySQL Hostname';
     echo "\n\t--database-port\t\t\t";
     echo 'MySQL Database Port';
-    echo "\n\t-d, --database-name\t\t\t"; 
-    echo "MySQL Database Name"; 
+    echo "\n\t-d, --database-name\t\t\t";
+    echo "MySQL Database Name";
     echo "\n\t-u, --ampache-database-user\t";
     echo 'MySQL Application Username';
-    echo "\n\t-p, --ampache-database-password\t"; 
-    echo 'MySQL Application Password'; 
-    echo "\n\t-w, --webpath\t\t\t\t"; 
+    echo "\n\t-p, --ampache-database-password\t";
+    echo 'MySQL Application Password';
+    echo "\n\t-w, --webpath\t\t\t\t";
     echo 'Web path';
     echo "\n\t-f, --force\t\t\t\t";
     echo 'Force installation', "\n";

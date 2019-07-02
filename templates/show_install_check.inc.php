@@ -54,7 +54,7 @@ require $prefix . '/templates/install_header.inc.php';
     <tr>
         <td><?php echo sprintf(T_('%s is readable'), 'ampache.sql'); ?></td>
         <td><?php echo debug_result(is_readable($prefix . '/sql/ampache.sql')); ?></td>
-        <td><?php echo T_('This tests whether the file needed to initialise the database structure is available.'); ?></td>
+        <td><?php echo T_('This tests whether the file needed to initialize the database structure is available.'); ?></td>
     </tr>
     <tr>
         <td><?php echo T_('ampache.cfg.php is writable'); ?></td>

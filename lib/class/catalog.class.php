@@ -668,7 +668,7 @@ abstract class Catalog extends database_object
             $insert_id = Dba::insert_id();
 
             if (!$insert_id) {
-                AmpError::add('general', T_('Catalog Insert Failed check debug logs'));
+                AmpError::add('general', T_('Error: Catalog Insert failed, check debug logs'));
                 debug_event('catalog.class', 'Insert failed: ' . json_encode($data), 2);
 
                 return 0;
@@ -2505,7 +2505,7 @@ abstract class Catalog extends database_object
                 } // end if update
 
                 if ($catalog_id <= 0) {
-                    AmpError::add('general', T_("This subdirectory is not part of an existing catalog. Update cannot be processed."));
+                    AmpError::add('general', T_("Error: This subdirectory is not part of an existing catalog. Update cannot be processed."));
                 }
                 break;
             case 'gather_media_art':

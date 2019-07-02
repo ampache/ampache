@@ -41,10 +41,10 @@ else {
 // Make sure the output dir is valid and writeable
 if (!is_writeable($dirname)) {
     printf (T_('Error: Directory %s is not writable'), $dirname);
-    echo "\n"; 
+    echo "\n";
 }
 
-// Switch on the type of playlist dump we want to do 
+// Switch on the type of playlist dump we want to do
 // here
 switch ($type) {
     case 'albums':
@@ -95,7 +95,7 @@ echo "Playlist export completed.\n";
 function usage() {
     $desc1 = T_("This will dump a collection of playlists files based on type");
     $desc2 = T_("Types:");
-    $desc3 = T_("Dumps all of your Playlists");
+    $desc3 = T_("Dumps all of your playlists");
     $desc4 = T_("Dumps all Albums as individual playlists");
     $desc5 = T_("Dumps all Artists as individual playlists");
     $desc6 = T_("Extensions: m3u (default), xspf, pls");

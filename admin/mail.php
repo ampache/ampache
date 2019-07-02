@@ -64,10 +64,10 @@ switch ($_REQUEST['action']) {
 
             if ($mailer->send_to_group($_REQUEST['to'])) {
                 $title  = T_('E-mail Sent');
-                $body   = T_('Your E-mail was successfully sent.');
+                $body   = T_('Your e-mail was successfully sent.');
             } else {
                 $title     = T_('E-mail Not Sent');
-                $body      = T_('Your E-mail was not sent.');
+                $body      = T_('Your e-mail was not sent.');
             }
             $url = AmpConfig::get('web_path') . '/admin/mail.php';
             show_confirmation($title, $body, $url);

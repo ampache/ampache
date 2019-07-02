@@ -24,7 +24,7 @@
 /**
  * API Class
  *
- * This handles functions relating to the API written for ampache, initially
+ * This handles functions relating to the API written for Ampache, initially
  * this is very focused on providing functionality for Amarok so it can
  * integrate with Ampache.
  *
@@ -158,8 +158,8 @@ class Api
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < self::$auth_version) {
-            debug_event('api.class', 'Login Failed: version too old', 1);
-            AmpError::add('api', T_('Login Failed: version too old'));
+            debug_event('api.class', 'Login Failed: Version too old', 1);
+            AmpError::add('api', T_('Error: Login failed, version too old'));
 
             return false;
         }
@@ -187,9 +187,9 @@ class Api
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
-                    debug_event('api.class', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
-                    AmpError::add('api', T_('Login Failed: timestamp out of range'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    debug_event('api.class', 'Login Failed: Timestamp out of range ' . $timestamp . '/' . time(), 1);
+                    AmpError::add('api', T_('Error: Login failed, timestamp out of range'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Error: Login failed, timestamp out of range'));
 
                     return false;
                 }
@@ -201,8 +201,8 @@ class Api
 
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
-                    AmpError::add('api', T_('Invalid Username/Password'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    AmpError::add('api', T_('Error: Invalid username/password'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Error: Invalid username/password'));
 
                     return false;
                 }
@@ -297,7 +297,7 @@ class Api
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid username/password'));
 
         return false;
     } // handshake
@@ -1325,7 +1325,7 @@ class Api
      * MINIMUM_API_VERSION=400001
      *
      * Take a song_id and update the object_count and user_activity table with a play
-     * This allows other sources to record play history to ampache
+     * This allows other sources to record play history to Ampache
      *
      * @param array $input
      * $input = array(id     = (int) $object_id
@@ -1373,7 +1373,7 @@ class Api
      * MINIMUM_API_VERSION=400001
      *
      * Search for a song using text info and then record a play if found.
-     * This allows other sources to record play history to ampache
+     * This allows other sources to record play history to Ampache
      *
      * @param array $input
      * $input = array(song       = (string) $song_name
@@ -1409,7 +1409,7 @@ class Api
 
             return;
         }
-        
+
         //validate minimum required options
         debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {

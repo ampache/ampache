@@ -53,7 +53,7 @@ $_SESSION['login'] = true;
                 }
                 ?>
                 <br /><br />
-                <a href="<?php echo $web_path; ?>/login.php"><?php echo T_('Return to Login Page'); ?></a>
+                <a href="<?php echo $web_path; ?>/login.php"><?php echo T_('Return to login page'); ?></a>
                 <p><?php echo AmpConfig::get('site_title'); ?></p>
             </div>
         </div>

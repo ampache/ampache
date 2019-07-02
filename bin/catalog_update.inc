@@ -40,7 +40,7 @@ $cattype = '';
 $catname = '';
 $options = getopt("hn:t:mvcagio");
 
-if (count($options) == 0) { 
+if (count($options) == 0) {
     $operations_string = "\n\t- ". T_('Doing all catalog operations');
 } else {
 
@@ -63,24 +63,24 @@ if (count($options) == 0) {
         if (array_key_exists('c', $options)) {
             $operations_string .= "\n\t- " . T_('Cleaning catalog/s');
             $catclean = 1;
-        } 
+        }
         if (array_key_exists('v', $options)) {
             $operations_string .= "\n\t- " . T_('Verifying catalog/s');
             $catverify = 1;
-        } 
+        }
         if (array_key_exists('a', $options)) {
             $operations_string .= "\n\t- " . T_('Adding new media to catalog/s');
             $catadd = 1;
         }
-        if (array_key_exists('g', $options)) { 
+        if (array_key_exists('g', $options)) {
             $operations_string .= "\n\t- " . T_('Gathering new media art');
             $artadd = 1;
-        } 
-        if (array_key_exists('i', $options)) { 
+        }
+        if (array_key_exists('i', $options)) {
             $operations_string .= "\n\t- " . T_('Importing playlist/s');
             $plimp = 1;
         }
-        if (array_key_exists('o', $options)) { 
+        if (array_key_exists('o', $options)) {
             $operations_string .= "\n\t- " . T_('Database table optimization');
             $optimizetables = 1;
         }
@@ -126,7 +126,7 @@ if ($plimp == 1) {
 if ($catname !== false) {
     $where = " name = '$catname' ";
 }
-if ($cattype) { 
+if ($cattype) {
     $where .= "catalog_type='$cattype'";
 } elseif (!$where) {
     $where .= "catalog_type='local'";
@@ -167,7 +167,7 @@ while ($row = Dba::fetch_row($db_results)) {
         $catalog->add_to_catalog($options);
         echo "----------------\n\n";
     }
-    elseif ($artadd == 1) { 
+    elseif ($artadd == 1) {
         // Look for media art
         echo "- " . T_('Start searching new media art') . " - \n";
         echo "\n";
@@ -214,9 +214,9 @@ function usage() {
     echo "\n-h\t";
     echo T_('This help message');
     echo "\n-n\t";
-    echo T_('Name of Catalog (Optional)');
+    echo T_('Name of catalog (optional)');
     echo "\n-t\t";
-    echo T_('Type of Catalog (Optional)');
+    echo T_('Type of catalog (optional)');
     echo "\n-m\t";
     echo T_('Temporarily deactivates PHP memory limit.') . " (\033[31m1\033[0m)";
     echo "\n-c\t";
@@ -230,11 +230,11 @@ function usage() {
     echo "\n-i\t";
     echo T_('Imports playlists.');
     echo "\n-o\t";
-    echo T_('Optimizes Database Tables.') . " (\033[31m2\033[0m)";
+    echo T_('Optimizes database tables.') . " (\033[31m2\033[0m)";
     echo "\n";
     echo "----------------------------------------------------------\033[31m\n";
     echo "1. " . T_('Use this option at your own risk! Your system could crash or become unresponsive due to huge memory consumption!') . "\n";
-    echo "2. " . T_('Depending on your systems performance, this option could need a long time to finish and extremely slow down other database processes if you have big catalogs!') . "\n";
+    echo "2. " . T_('Depending on your systems performance, this option may need a long time to finish and could greatly slow down other database processes if you have big catalogs!') . "\n";
     echo "!  " . T_('The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-a|-g] is used.');
     echo "\033[0m\n";
     echo "----------------------------------------------------------";

@@ -149,7 +149,7 @@ class Catalog_subsonic extends Catalog
         }
 
         if (!strlen($username) || !strlen($password)) {
-            AmpError::add('general', T_('Error: Username and Password Required for Subsonic Catalogs'));
+            AmpError::add('general', T_('Error: Username and password required for Subsonic catalogs'));
 
             return false;
         }
@@ -251,7 +251,7 @@ class Catalog_subsonic extends Catalog
                                     $song_Id = Song::insert($data);
                                     if (!$song_Id) {
                                         debug_event('subsonic.catalog', 'Insert failed for ' . $song['path'], 1);
-                                        AmpError::add('general', T_('Unable to Insert Song - %s'), $song['path']);
+                                        AmpError::add('general', T_('Error: Unable to Insert Song - %s'), $song['path']);
                                     } else {
                                         if ($song['coverArt']) {
                                             $this->insertArt($song, $song_Id);

@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
     case 'install_localplay':
         $localplay = new Localplay(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!$localplay->player_loaded()) {
-            AmpError::add('general', T_('Failed to enable the module, Controller Error'));
+            AmpError::add('general', T_('Error: Failed to enable the module, controller error'));
             AmpError::display('general');
             break;
         }
@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
         $type    = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            AmpError::add('general', T_('Failed to enable the module, Catalog Error'));
+            AmpError::add('general', T_('Error: Failed to enable the module, catalog error'));
             AmpError::display('general');
             break;
         }
@@ -104,7 +104,7 @@ switch ($_REQUEST['action']) {
 
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            AmpError::add('general', T_('Failed to disable module, Catalog Error'));
+            AmpError::add('general', T_('Error: Failed to disable module, catalog error'));
             AmpError::display('general');
             break;
         }

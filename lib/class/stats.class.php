@@ -563,7 +563,7 @@ class Stats
     /**
      * get_newest
      * This returns an array of the newest artists/albums/whatever
-     * in this ampache instance
+     * in this Ampache instance
      * @param string $type
      */
     public static function get_newest($type, $count = '', $offset = '', $catalog = 0)
