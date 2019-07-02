@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php UI::show_box_top(T_('Share')); ?>
+<?php UI::show_box_top(T_('Shares')); ?>
 <div id="information_actions">
     <ul>
         <li>

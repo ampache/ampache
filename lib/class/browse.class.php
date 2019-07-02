@@ -280,7 +280,7 @@ class Browse extends Query
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_wanted_albums.inc.php');
             break;
             case 'share':
-                $box_title = T_('Shared Objects');
+                $box_title = T_('Shares');
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_shared_objects.inc.php');
             break;
             case 'song_preview':
