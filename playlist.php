@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
 
         $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
         $_SESSION['data']['playlist_id'] = $playlist_id;
-        show_confirmation(T_('Playlist Created'), sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type), 'playlist.php');
+        show_confirmation(T_('Playlist created'), sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type), 'playlist.php');
     break;
     case 'delete_playlist':
         // If we made it here, we didn't have sufficient rights.

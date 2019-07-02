@@ -253,7 +253,7 @@ class Update
                 '- Change Tables to FULLTEXT() for improved searching<br />' .
                 '- Increase Filename lengths to 4096<br />' .
                 '- Remove useless "KEY" reference from ACL and Catalog tables<br />' .
-                '- Add new Remote User / Remote Password fields to Catalog<br />';
+                '- Add new Remote User / Remote password fields to Catalog<br />';
         $version[] = array('version' => '360002', 'description' => $update_string);
 
         $update_string = '- Add image table to store images.<br />' .
@@ -1548,7 +1548,7 @@ class Update
         $sql    = "ALTER TABLE `access_list` DROP `key`";
         $retval &= Dba::write($sql);
 
-        // Add in Username / Password for catalog - to be used for remote catalogs
+        // Add in username / password for catalog - to be used for remote catalogs
         $sql    = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `catalog_type`";
         $retval &= Dba::write($sql);
 
@@ -1713,7 +1713,7 @@ class Update
         } // end while
 
         if (!$remote_username) {
-            // Add in Username / Password for catalog - to be used for remote catalogs
+            // Add in username / password for catalog - to be used for remote catalogs
             $sql    = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `catalog_type`";
             $retval &= Dba::write($sql);
         }

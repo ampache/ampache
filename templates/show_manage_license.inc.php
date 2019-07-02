@@ -48,7 +48,7 @@ $web_path = AmpConfig::get('web_path');
         } if (!count($object_ids)) {
             ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="6" class="error"><?php echo T_('No Licenses Found'); ?></td>
+            <td colspan="6" class="error"><?php echo T_('No licenses found'); ?></td>
         </tr>
         <?php
         } ?>

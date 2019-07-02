@@ -128,7 +128,7 @@ switch ($_REQUEST['action']) {
         }
 
         if (!User::check_username((string) $username) || $username == null) {
-            AmpError::add('duplicate_user', T_("Error Username already exists"));
+            AmpError::add('duplicate_user', T_("Error username already exists"));
         }
 
         // If we've hit an error anywhere up there break!
@@ -155,7 +155,7 @@ switch ($_REQUEST['action']) {
         $new_user = User::create($username, $fullname, $email, (string) $website, $pass1, $access, (string) $state, (string) $city, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
-            AmpError::add('duplicate_user', T_("Error: Insert Failed"));
+            AmpError::add('duplicate_user', T_("Error: Insert failed"));
             require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
             break;
         }

@@ -158,8 +158,8 @@ class Api
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < self::$auth_version) {
-            debug_event('api.class', 'Login Failed: version too old', 1);
-            AmpError::add('api', T_('Login Failed: version too old'));
+            debug_event('api.class', 'Login Failed: Version too old', 1);
+            AmpError::add('api', T_('Login Failed: Version too old'));
 
             return false;
         }
@@ -187,9 +187,9 @@ class Api
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
-                    debug_event('api.class', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
-                    AmpError::add('api', T_('Login Failed: timestamp out of range'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    debug_event('api.class', 'Login Failed: Timestamp out of range ' . $timestamp . '/' . time(), 1);
+                    AmpError::add('api', T_('Login Failed: Timestamp out of range'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: Timestamp out of range'));
 
                     return false;
                 }
@@ -201,8 +201,8 @@ class Api
 
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
-                    AmpError::add('api', T_('Invalid Username/Password'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    AmpError::add('api', T_('Invalid username/password'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid username/password'));
 
                     return false;
                 }
@@ -297,7 +297,7 @@ class Api
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid username/password'));
 
         return false;
     } // handshake

@@ -61,7 +61,7 @@ $web_path = AmpConfig::get('web_path');
         } if (!count($plugins)) {
             ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="5"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
+            <td colspan="5"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
         <?php
         } ?>

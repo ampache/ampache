@@ -126,7 +126,7 @@ switch ($_REQUEST['action']) {
             $new_pass = Core::get_post('db_password');
 
             if (!strlen($new_user) || !strlen($new_pass)) {
-                AmpError::add('general', T_('Error: Ampache SQL Username or Password missing'));
+                AmpError::add('general', T_('Error: Ampache SQL username or password missing'));
                 require_once 'templates/show_install.inc.php';
                 break;
             }

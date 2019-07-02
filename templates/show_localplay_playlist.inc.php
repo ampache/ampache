@@ -57,7 +57,7 @@ $status = $localplay->status();
         } if (!count($object_ids)) {
             ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="3"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
+            <td colspan="3"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
         <?php
         } ?>

@@ -1635,7 +1635,7 @@ class Subsonic_Api
     }
 
     /**
-     * changePassword
+     * change password
      * Change the password of an existing user.
      * Takes the username with new password in parameters.
      */

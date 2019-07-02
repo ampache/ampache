@@ -39,7 +39,7 @@
     <?php if (!check_dependencies_folder()) {
     ?>
         <br />
-        <b><?php echo T_('Please download and install Composer from http://getcomposer.org and install it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer install --prefer-source --no-interaction` on Ampache directory.'); ?></b>
+        <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --prefer-source --no-interaction` on the Ampache directory.'); ?></b>
     <?php
 } ?>
     </td>
@@ -180,12 +180,12 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP Integer Size'); ?></td>
+    <td valign="top"><?php echo T_('PHP integer size'); ?></td>
     <td valign="top">
     <?php echo debug_wresult(check_php_int_size()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether Ampache can manage large files (> 2GB). This is not strictly necessary, but may result in a better experience. This generally requires 64-bit operating system.'); ?>
+    <?php echo T_('This tests whether Ampache can manage large files (> 2GB). This is not strictly necessary, but may result in a better experience. This generally requires a 64-bit operating system.'); ?>
     </td>
 </tr>
 <tr>
@@ -206,7 +206,7 @@ if (!defined('INSTALL')) {
     <?php echo debug_result(is_readable($configfile)); ?>
     </td>
     <td width="350px">
-    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file either is not in the correct location or is not currently readable.'); ?>
+    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?>
     </td>
 </tr>
 <tr>

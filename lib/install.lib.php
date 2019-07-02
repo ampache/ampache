@@ -99,7 +99,7 @@ function install_check_status($configfile)
     if (!Dba::num_rows($db_results)) {
         return true;
     } else {
-        AmpError::add('general', T_('Existing Database detected, unable to continue installation'));
+        AmpError::add('general', T_('Existing database detected, unable to continue installation'));
 
         return false;
     }
@@ -294,7 +294,7 @@ function install_create_config($download = false)
 
     // Connect to the DB
     if (!Dba::check_database()) {
-        AmpError::add('general', T_("Database Connection Failed Check Hostname, Username and Password"));
+        AmpError::add('general', T_("Database connection failed: Check hostname, username and password"));
 
         return false;
     }
@@ -333,7 +333,7 @@ function install_create_config($download = false)
 function install_create_account($username, $password, $password2)
 {
     if (!strlen($username) || !strlen($password)) {
-        AmpError::add('general', T_('No Username/Password specified'));
+        AmpError::add('general', T_('No username/password specified'));
 
         return false;
     }

@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
         }
 
         if ($tvshow_season->remove_from_disk()) {
-            show_confirmation(T_('Deleted'), T_('TV Show Season has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Deleted'), T_('Season has been deleted.'), AmpConfig::get('web_path'));
         } else {
             show_confirmation(T_('Error'), T_('Cannot delete this tvshow season.'), AmpConfig::get('web_path'));
         }

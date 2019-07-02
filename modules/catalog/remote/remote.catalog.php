@@ -147,7 +147,7 @@ class Catalog_remote extends Catalog
         }
 
         if (!strlen($username) || !strlen($password)) {
-            AmpError::add('general', T_('Error: Username and Password Required for Remote Catalogs'));
+            AmpError::add('general', T_('Error: Username and password required for Remote catalogs'));
 
             return false;
         }

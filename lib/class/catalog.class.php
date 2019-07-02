@@ -668,7 +668,7 @@ abstract class Catalog extends database_object
             $insert_id = Dba::insert_id();
 
             if (!$insert_id) {
-                AmpError::add('general', T_('Catalog Insert Failed check debug logs'));
+                AmpError::add('general', T_('Catalog Insert failed, check debug logs'));
                 debug_event('catalog.class', 'Insert failed: ' . json_encode($data), 2);
 
                 return 0;

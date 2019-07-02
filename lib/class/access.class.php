@@ -165,17 +165,17 @@ class Access
         $endn   = @inet_pton($endp);
 
         if (!$startn && $startp != '0.0.0.0' && $startp != '::') {
-            AmpError::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
+            AmpError::add('start', T_('Invalid IPv4 / IPv6 Address entered'));
 
             return false;
         }
         if (!$endn) {
-            AmpError::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
+            AmpError::add('end', T_('Invalid IPv4 / IPv6 Address entered'));
         }
 
         if (strlen(bin2hex($startn)) != strlen(bin2hex($endn))) {
-            AmpError::add('start', T_('IP Address Version Mismatch'));
-            AmpError::add('end', T_('IP Address Version Mismatch'));
+            AmpError::add('start', T_('IP Address version mismatch'));
+            AmpError::add('end', T_('IP Address version mismatch'));
 
             return false;
         }

@@ -79,7 +79,7 @@ if (empty($_REQUEST['step'])) {
                 return false;
             } else {
                 debug_event('login.class', scrub_out($username) . ' From ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' attempted to login and failed', 1);
-                AmpError::add('general', T_('Error Username or Password incorrect, please try again'));
+                AmpError::add('general', T_('Error username or password incorrect, please try again'));
             }
         }
     }
@@ -107,7 +107,7 @@ if (!empty($username) && isset($auth)) {
         $current_ip = inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
         if ($current_ip && ($current_ip != $session_ip)) {
             $auth['success'] = false;
-            AmpError::add('general', T_('User Already Logged in'));
+            AmpError::add('general', T_('User already logged in'));
             debug_event('login.class', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, 1);
         } // if logged in multiple times
     } // if prevent multiple logins

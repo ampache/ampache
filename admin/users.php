@@ -61,16 +61,16 @@ switch ($_REQUEST['action']) {
 
         /* Verify Input */
         if (empty($username)) {
-            AmpError::add('username', T_("Error Username Required"));
+            AmpError::add('username', T_("Error username required"));
         } else {
             if ($username != $client->username) {
                 if (!User::check_username($username)) {
-                    AmpError::add('username', T_("Error Username already exists"));
+                    AmpError::add('username', T_("Error username already exists"));
                 }
             }
         }
         if ($pass1 !== $pass2 && !empty($pass1)) {
-            AmpError::add('password', T_("Error Passwords don't match"));
+            AmpError::add('password', T_("Error passwords don't match"));
         }
 
         // Check the mail for correct address formation.
@@ -137,16 +137,16 @@ switch ($_REQUEST['action']) {
         $city           = (string) scrub_in(Core::get_get('city'));
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {
-            AmpError::add('password', T_("Error Passwords don't match"));
+            AmpError::add('password', T_("Error passwords don't match"));
         }
 
         if (empty($username)) {
-            AmpError::add('username', T_('Error Username Required'));
+            AmpError::add('username', T_('Error username Required'));
         }
 
         /* make sure the username doesn't already exist */
         if (!User::check_username($username)) {
-            AmpError::add('username', T_('Error Username already exists'));
+            AmpError::add('username', T_('Error username already exists'));
         }
 
         // Check the mail for correct address formation.
@@ -163,7 +163,7 @@ switch ($_REQUEST['action']) {
         /* Attempt to create the user */
         $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $state, $city);
         if (!$user_id) {
-            AmpError::add('general', T_("Error: Insert Failed"));
+            AmpError::add('general', T_("Error: Insert failed"));
         }
         $user = new User($user_id);
         $user->upload_avatar();

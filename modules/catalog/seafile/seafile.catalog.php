@@ -72,7 +72,7 @@ class Catalog_Seafile extends Catalog
     public function get_create_help()
     {
         $help = "<ul><li>" . T_("Install a Seafile server as described in its documentation on %s") . "</li>" .
-                "<li>" . T_("Enter url to server (e.g. 'https://seafile.example.com') and library name (e.g. 'Music').") . "</li>" .
+                "<li>" . T_("Enter URL to server (e.g. 'https://seafile.example.com') and library name (e.g. 'Music').") . "</li>" .
                 "<li>" . T_("'API Call Delay' is a delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accomodate Seafile's Rate Limiting. <br/>" .
                 "The default is tuned towards Seafile's default rate limit settings; see %sthis forum post%s for more information.") . "</li>" .
                 "<li>" . T_("After creating the catalog, you must 'Make it ready' on the catalog table.") . "</li></ul>";
@@ -123,7 +123,7 @@ class Catalog_Seafile extends Catalog
         $fields['library_name']   = array('description' => T_('Library Name'), 'type' => 'text', 'value' => 'Music');
         $fields['api_call_delay'] = array('description' => T_('API Call Delay'), 'type' => 'number', 'value' => '250');
         $fields['username']       = array('description' => T_('Seafile Username/Email'), 'type' => 'text', 'value' => '' );
-        $fields['password']       = array('description' => T_('Seafile Password'), 'type' => 'password', 'value' => '' );
+        $fields['password']       = array('description' => T_('Seafile password'), 'type' => 'password', 'value' => '' );
 
         return $fields;
     }
@@ -152,25 +152,25 @@ class Catalog_Seafile extends Catalog
         $password       = trim($data['password']);
 
         if (!strlen($server_uri)) {
-            AmpError::add('general', T_('Error: Seafile Server URL is required.'));
+            AmpError::add('general', T_('Error: Seafile server URL is required.'));
 
             return false;
         }
 
         if (!strlen($library_name)) {
-            AmpError::add('general', T_('Error: Seafile Server Library Name is required.'));
+            AmpError::add('general', T_('Error: Seafile server library name is required.'));
 
             return false;
         }
 
         if (!strlen($username)) {
-            AmpError::add('general', T_('Error: Seafile Username is required.'));
+            AmpError::add('general', T_('Error: Seafile username is required.'));
 
             return false;
         }
 
         if (!strlen($password)) {
-            AmpError::add('general', T_('Error: Seafile Password is required.'));
+            AmpError::add('general', T_('Error: Seafile password is required.'));
 
             return false;
         }
@@ -267,7 +267,7 @@ class Catalog_Seafile extends Catalog
             UI::update_text('', sprintf(T_('Catalog Update finished.  Total Media: [%s]'), $count));
 
             if ($count <= 0) {
-                AmpError::add('general', T_('No media updated, do you respect the patterns?'));
+                AmpError::add('general', T_('No media updated, did you respect the patterns?'));
             } else {
                 $success = true;
             }
@@ -480,7 +480,7 @@ class Catalog_Seafile extends Catalog
     public function format()
     {
         parent::format();
-        
+
         if ($this->seafile != null) {
             $this->f_info      = $this->seafile->get_format_string();
             $this->f_full_info = $this->seafile->get_format_string();

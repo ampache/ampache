@@ -49,7 +49,7 @@ $source_encoding = iconv_get_encoding('output_encoding');
 
 // Attempt a simple translation
 $string = sprintf(T_('%s'), iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset'), 'For the Love of Music'));
-echo T_('Testing Basic Translation, the two strings below should look the same');
+echo T_('Testing basic translation, the two strings below should look the same');
 echo "\n";
 echo T_('Original: For the Love of Music');
 echo "\n";
@@ -198,7 +198,7 @@ function charset_rename_file($full_file, $translated_filename) {
     $results_copy = copy($full_file,$translated_filename);
 
     if (!$results_copy) {
-        echo T_('Error: Copy Failed, not deleting old file');
+        echo T_('Error: Copy failed, not deleting old file');
         echo "\n";
         return false;
     }
@@ -207,7 +207,7 @@ function charset_rename_file($full_file, $translated_filename) {
     $new_sum = Core::get_filesize($translated_filename);
 
     if ($old_sum != $new_sum || !$new_sum) {
-        printf (T_('Error: Size Inconsistency, not deleting %s'), $full_file);
+        printf (T_('Error: Size inconsistency, not deleting %s'), $full_file);
         echo "\n";
         return false;
     }

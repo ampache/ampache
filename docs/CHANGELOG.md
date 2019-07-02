@@ -983,7 +983,7 @@ CHANGELOG
 - Fixed problem with flash player where random urls were not being
   added correctly
 - Fixed problem with user creation using old method (Thx Purdyk)
-- Switched to SHA256() for API and Passwords
+- Switched to SHA256() for API and passwords
 - Added check for BADTIME error code from Last.FM and correctly
   return the error rather then a generic one
 - Fix http auth session issues, where every request blew away the
@@ -1045,7 +1045,7 @@ CHANGELOG
 - Fixed home menu not always displaying the entire contents
 - Fixed logic error with duplicate login setting which caused it
   to only work if mysql auth was used
-- Changed Passwords to SHA1 will prompt to reset password
+- Changed passwords to SHA1 will prompt to reset password
 - Corrected some translation strings and added jp_JP (Thx momo-i)
 - Ignore filenames that start with . (hidden) solves an issue
   with mac filesystems

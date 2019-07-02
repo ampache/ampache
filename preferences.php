@@ -145,13 +145,13 @@ switch ($_REQUEST['action']) {
         }
 
         if (!Core::get_global('user')->update($_POST)) {
-            AmpError::add('general', T_('Error Update Failed'));
+            AmpError::add('general', T_('Error update failed'));
         } else {
             Core::get_global('user')->upload_avatar();
 
             //$_REQUEST['action'] = 'confirm';
             $title    = T_('Updated');
-            $text     = T_('Your Account has been updated');
+            $text     = T_('Your account has been updated');
             $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=account';
         }
 
@@ -170,11 +170,11 @@ switch ($_REQUEST['action']) {
                 $plugin->load(Core::get_global('user'));
                 if ($plugin->_plugin->get_session(Core::get_global('user')->id, Core::get_request('token'))) {
                     $title    = T_('Updated');
-                    $text     = T_('Your Account has been updated') . ' : ' . Core::get_request('plugin');
+                    $text     = T_('Your account has been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 } else {
                     $title    = T_('Error');
-                    $text     = T_('Your Account has not been updated') . ' : ' . Core::get_request('plugin');
+                    $text     = T_('Your account has not been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 }
             }

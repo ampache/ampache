@@ -179,7 +179,7 @@ class Catalog_local extends Catalog
 
         // Make sure that there isn't a catalog with a directory above this one
         if (self::get_from_path($path)) {
-            AmpError::add('general', T_('Error: Defined Path is inside an existing catalog'));
+            AmpError::add('general', T_('Error: Defined path is inside an existing catalog'));
 
             return false;
         }
