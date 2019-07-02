@@ -112,7 +112,7 @@ function usage() {
     echo "\n\t-U, --database-user\t\t\t";
     echo 'MySQL Admin User';
     echo "\n\t-P, --database-password\t\t\t";
-    echo 'MySQL Admin password';
+    echo 'MySQL Admin Password';
     echo "\n\t-h, --database-host\t\t\t";
     echo 'MySQL Hostname';
     echo "\n\t--database-port\t\t\t";
@@ -122,7 +122,7 @@ function usage() {
     echo "\n\t-u, --ampache-database-user\t";
     echo 'MySQL Application Username';
     echo "\n\t-p, --ampache-database-password\t";
-    echo 'MySQL Application password';
+    echo 'MySQL Application Password';
     echo "\n\t-w, --webpath\t\t\t\t";
     echo 'Web path';
     echo "\n\t-f, --force\t\t\t\t";

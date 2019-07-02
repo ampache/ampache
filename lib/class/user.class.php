@@ -595,7 +595,7 @@ class User extends database_object
     public function update(array $data)
     {
         if (empty($data['username'])) {
-            AmpError::add('username', T_('Error: Error username required'));
+            AmpError::add('username', T_('Error: Username required'));
         }
 
         if ($data['password1'] != $data['password2'] && !empty($data['password1'])) {

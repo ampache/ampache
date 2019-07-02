@@ -310,7 +310,7 @@ function install_create_config($download = false)
         } else {
             // Given that $final is > 0, we can ignore lazy comparison problems
             if (!file_put_contents($config_file, $final)) {
-                AmpError::add('general', T_('Error: Error writing config file'));
+                AmpError::add('general', T_('Error: Failed writing config file'));
 
                 return false;
             }
