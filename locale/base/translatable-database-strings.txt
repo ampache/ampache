@@ -148,11 +148,11 @@ msgid "Personal information visibility - Recently played"
 msgstr ""
 
 #: Database preference table id 92
-msgid "Personal information visibility - Recently played - Allow to show streaming date/time"
+msgid "Personal information visibility - Recently played - Allow access to streaming date/time"
 msgstr ""
 
 #: Database preference table id 93
-msgid "Personal information visibility - Recently played - Allow to show streaming agent"
+msgid "Personal information visibility - Recently played - Allow access to streaming agent"
 msgstr ""
 
 #: Database preference table id 94
@@ -236,19 +236,19 @@ msgid "Allow users to upload media"
 msgstr ""
 
 #: Database preference table id 114
-msgid "Upload - Create a subdirectory per user"
+msgid "Create a subdirectory per user"
 msgstr ""
 
 #: Database preference table id 115
-msgid "Upload - Consider the user sender as the track's artist"
+msgid "Consider the user sender as the track's artist"
 msgstr ""
 
 #: Database preference table id 116
-msgid "Upload - Post-upload script (current directory = upload target directory)"
+msgid "Post-upload script (current directory = upload target directory)"
 msgstr ""
 
 #: Database preference table id 117
-msgid "Upload - Allow users to edit uploaded songs"
+msgid "Allow users to edit uploaded songs"
 msgstr ""
 
 #: Database preference table id 118
@@ -320,7 +320,7 @@ msgid "Authorize JavaScript decoder (Aurora.js) in Web player"
 msgstr ""
 
 #: Database preference table id 139
-msgid "Upload - Allow users to remove uploaded songs"
+msgid "Allow users to remove uploaded songs"
 msgstr ""
 
 #: Database preference table id 140
@@ -340,7 +340,7 @@ msgid "Use WebDAV backend"
 msgstr ""
 
 #: Database preference table id 144
-msgid "Receive notifications by email (shouts, private messages, ...)"
+msgid "Allow E-mail notifications"
 msgstr ""
 
 #: Database preference table id 145
@@ -356,11 +356,11 @@ msgid "Disable custom metadata fields. Insert them in a comma separated list. Th
 msgstr ""
 
 #: Database preference table id 148
-msgid "Podcast - # latest episodes to keep"
+msgid "# latest episodes to keep"
 msgstr ""
 
 #: Database preference table id 149
-msgid "Podcast - # episodes to download when new episodes are available"
+msgid "# episodes to download when new episodes are available"
 msgstr ""
 
 #: Database preference table id 150
