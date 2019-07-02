@@ -186,7 +186,7 @@ class Catalog_Seafile extends Catalog
 
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
         } catch (Exception $e) {
-            AmpError::add('general', sprintf(T_('Error while authenticating against Seafile API: %s', $e->getMessage())));
+            AmpError::add('general', sprintf(T_('Error: Error while authenticating against Seafile API: %s', $e->getMessage())));
             debug_event('seafile_catalog', 'Exception while Authenticating: ' . $e->getMessage(), 2);
         }
 
@@ -267,7 +267,7 @@ class Catalog_Seafile extends Catalog
             UI::update_text('', sprintf(T_('Catalog Update finished.  Total Media: [%s]'), $count));
 
             if ($count <= 0) {
-                AmpError::add('general', T_('No media updated, did you respect the patterns?'));
+                AmpError::add('general', T_('Error: No media updated, did you respect the patterns?'));
             } else {
                 $success = true;
             }

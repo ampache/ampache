@@ -251,7 +251,7 @@ class Catalog_subsonic extends Catalog
                                     $song_Id = Song::insert($data);
                                     if (!$song_Id) {
                                         debug_event('subsonic.catalog', 'Insert failed for ' . $song['path'], 1);
-                                        AmpError::add('general', T_('Unable to Insert Song - %s'), $song['path']);
+                                        AmpError::add('general', T_('Error: Unable to Insert Song - %s'), $song['path']);
                                     } else {
                                         if ($song['coverArt']) {
                                             $this->insertArt($song, $song_Id);

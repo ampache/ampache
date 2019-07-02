@@ -61,21 +61,21 @@ switch ($_REQUEST['action']) {
 
         /* Verify Input */
         if (empty($username)) {
-            AmpError::add('username', T_("Error username required"));
+            AmpError::add('username', T_("Error: Username required"));
         } else {
             if ($username != $client->username) {
                 if (!User::check_username($username)) {
-                    AmpError::add('username', T_("Error username already exists"));
+                    AmpError::add('username', T_("Error: Username already exists"));
                 }
             }
         }
         if ($pass1 !== $pass2 && !empty($pass1)) {
-            AmpError::add('password', T_("Error passwords don't match"));
+            AmpError::add('password', T_("Error: Passwords don't match"));
         }
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            AmpError::add('email', T_('Invalid e-mail address'));
+            AmpError::add('email', T_('Error: Invalid e-mail address'));
         }
 
         /* If we've got an error then show edit form! */
@@ -137,21 +137,21 @@ switch ($_REQUEST['action']) {
         $city           = (string) scrub_in(Core::get_get('city'));
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {
-            AmpError::add('password', T_("Error passwords don't match"));
+            AmpError::add('password', T_("Error: Passwords don't match"));
         }
 
         if (empty($username)) {
-            AmpError::add('username', T_('Error username Required'));
+            AmpError::add('username', T_('Error: Username Required'));
         }
 
         /* make sure the username doesn't already exist */
         if (!User::check_username($username)) {
-            AmpError::add('username', T_('Error username already exists'));
+            AmpError::add('username', T_('Error: Username already exists'));
         }
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            AmpError::add('email', T_('Invalid e-mail address'));
+            AmpError::add('email', T_('Error: Invalid e-mail address'));
         }
 
         /* If we've got an error then show add form! */

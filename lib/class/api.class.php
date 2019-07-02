@@ -159,7 +159,7 @@ class Api
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < self::$auth_version) {
             debug_event('api.class', 'Login Failed: Version too old', 1);
-            AmpError::add('api', T_('Login Failed: Version too old'));
+            AmpError::add('api', T_('Error: Login failed, version too old'));
 
             return false;
         }
@@ -188,8 +188,8 @@ class Api
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
                     debug_event('api.class', 'Login Failed: Timestamp out of range ' . $timestamp . '/' . time(), 1);
-                    AmpError::add('api', T_('Login Failed: Timestamp out of range'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: Timestamp out of range'));
+                    AmpError::add('api', T_('Error: Login failed, timestamp out of range'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Error: Login failed, timestamp out of range'));
 
                     return false;
                 }
@@ -201,8 +201,8 @@ class Api
 
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
-                    AmpError::add('api', T_('Invalid username/password'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid username/password'));
+                    AmpError::add('api', T_('Error: Invalid username/password'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Error: Invalid username/password'));
 
                     return false;
                 }

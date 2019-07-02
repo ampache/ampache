@@ -595,11 +595,11 @@ class User extends database_object
     public function update(array $data)
     {
         if (empty($data['username'])) {
-            AmpError::add('username', T_('Error username required'));
+            AmpError::add('username', T_('Error: Error username required'));
         }
 
         if ($data['password1'] != $data['password2'] && !empty($data['password1'])) {
-            AmpError::add('password', T_("Error passwords don't match"));
+            AmpError::add('password', T_("Error: Passwords don't match"));
         }
 
         if (AmpError::occurred()) {

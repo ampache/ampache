@@ -169,7 +169,7 @@ class Catalog_soundcloud extends Catalog
         $secret = $data['secret'];
 
         if (!strlen($userid) || !strlen($secret)) {
-            AmpError::add('general', T_('Error: UserID and Secret required for SoundCloud catalogs'));
+            AmpError::add('general', T_('Error: UserID and secret required for SoundCloud catalogs'));
 
             return false;
         }
@@ -297,7 +297,7 @@ class Catalog_soundcloud extends Catalog
                                 debug_event('soundcloud.catalog', 'Adding song ' . $data['file'], 5, 'ampache-catalog');
                                 if (!Song::insert($data)) {
                                     debug_event('soundcloud.catalog', 'Insert failed for ' . $data['file'], 1);
-                                    AmpError::add('general', T_('Unable to Insert Song - %s'), $data['file']);
+                                    AmpError::add('general', T_('Error: Unable to insert song - %s'), $data['file']);
                                 } else {
                                     $songsadded++;
                                 }
@@ -310,15 +310,15 @@ class Catalog_soundcloud extends Catalog
                     // Update the last update value
                     $this->update_last_update();
                 } else {
-                    AmpError::add('general', T_('API Error: cannot get song list.'));
-                    debug_event('soundcloud.catalog', 'API Error: cannot get song list.', 1);
+                    AmpError::add('general', T_('API Error: Cannot get song list.'));
+                    debug_event('soundcloud.catalog', 'API Error: Cannot get song list.', 1);
                 }
             } else {
-                AmpError::add('general', T_('API Error: cannot connect to SoundCloud.'));
-                debug_event('soundcloud.catalog', 'API Error: cannot connect to SoundCloud.', 1);
+                AmpError::add('general', T_('API Error: Cannot connect to SoundCloud.'));
+                debug_event('soundcloud.catalog', 'API Error: Cannot connect to SoundCloud.', 1);
             }
         } catch (Exception $ex) {
-            AmpError::add('general', T_('SoundCloud exception: ') . $ex->getMessage());
+            AmpError::add('general', T_('Error: SoundCloud exception: ') . $ex->getMessage());
             debug_event('soundcloud.catalog', 'SoundCloud exception: ' . $ex->getMessage(), 1);
         }
 

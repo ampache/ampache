@@ -202,7 +202,7 @@ abstract class Catalog extends \Catalog
             debug_event('beets_catalog', 'Adding song ' . $song['file'], 5, 'ampache-catalog');
         } else {
             debug_event('beets_catalog', 'Insert failed for ' . $song['file'], 1);
-            AmpError::add('general', T_('Unable to Insert Song - %s'), $song['file']);
+            AmpError::add('general', T_('Error: Unable to Insert Song - %s'), $song['file']);
             AmpError::display('general');
         }
         flush();
