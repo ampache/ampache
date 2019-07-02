@@ -1587,7 +1587,7 @@ class Song extends database_object implements media, library_item
         // Format the size
         $this->f_size = UI::format_bytes($this->size);
 
-        $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show lyrics') . "</a>";
+        $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
         $this->f_file = $this->f_artist . ' - ';
         if ($this->track) {

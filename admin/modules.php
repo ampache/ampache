@@ -179,7 +179,7 @@ switch ($_REQUEST['action']) {
         $plugin->upgrade();
         User::rebuild_all_preferences();
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title  = T_('Plugin Upgraded');
+        $title  = T_('Plugin upgraded');
         $body   = '';
         show_confirmation($title, $body, $url);
     break;

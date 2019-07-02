@@ -60,6 +60,6 @@ UI::show_box_top(T_('Manage'));  ?>
 </table>
 <br />
 <div>
-    <a class="button" href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=show_create"><?php echo T_('Create New Playlist'); ?></a>
+    <a class="button" href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=show_create"><?php echo T_('Create Playlist'); ?></a>
 </div>
 <?php UI::show_box_bottom(); ?>

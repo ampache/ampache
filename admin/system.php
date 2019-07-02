@@ -66,7 +66,7 @@ switch ($_REQUEST['action']) {
             case 'artist': Artist::clear_cache(); break;
             case 'album': Album::clear_cache(); break;
         }
-        show_confirmation(T_('Cache cleared'), T_('Your cache has been cleared successfully.'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
+        show_confirmation(T_('Succeeded'), T_('Your cache has been cleared successfully.'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
     break;
     default:
         // Rien a faire

@@ -63,7 +63,7 @@ require $prefix . '/templates/install_header.inc.php';
             <h2><?php echo T_('Generate Config File'); ?></h2>
             <h3><?php echo T_('Various'); ?></h3>
 <div class="form-group">
-    <label for="web_path" class="col-sm-4 control-label"><?php echo T_('Web Path'); ?></label>
+    <label for="web_path" class="col-sm-4 control-label"><?php echo T_('Web path'); ?></label>
     <div class="col-sm-8">
         <input type="text" class="form-control" id="web_path" name="web_path" value="<?php echo scrub_out($web_path_guess); ?>">
     </div>

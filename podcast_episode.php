@@ -54,9 +54,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($episode->remove()) {
-            show_confirmation(T_('Podcast Episode Deletion'), T_('Episode has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Deleted'), T_('Episode has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Podcast Episode Deletion'), T_('Cannot delete this episode.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Error'), T_('Cannot delete this episode.'), AmpConfig::get('web_path'));
         }
     break;
     case 'show':

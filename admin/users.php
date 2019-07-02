@@ -75,7 +75,7 @@ switch ($_REQUEST['action']) {
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            AmpError::add('email', T_('Invalid email address'));
+            AmpError::add('email', T_('Invalid e-mail address'));
         }
 
         /* If we've got an error then show edit form! */
@@ -113,7 +113,7 @@ switch ($_REQUEST['action']) {
         }
         $client->upload_avatar();
 
-        show_confirmation(T_('User Updated'), $client->fullname . "(" . $client->username . ")" . T_('updated'), AmpConfig::get('web_path') . '/admin/users.php');
+        show_confirmation(T_('User Updated'), $client->fullname . "(" . $client->username . ")" . T_('Updated'), AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'add_user':
         if (AmpConfig::get('demo_mode')) {
@@ -151,7 +151,7 @@ switch ($_REQUEST['action']) {
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            AmpError::add('email', T_('Invalid email address'));
+            AmpError::add('email', T_('Invalid e-mail address'));
         }
 
         /* If we've got an error then show add form! */
@@ -216,9 +216,9 @@ switch ($_REQUEST['action']) {
         }
         $client = new User(Core::get_request('user_id'));
         if ($client->delete()) {
-            show_confirmation(T_('User Deleted'), sprintf(T_('%s has been Deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_('Deleted'), sprintf(T_('%s has been Deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
         } else {
-            show_confirmation(T_('Delete Error'), T_("Unable to delete last Administrator"), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_('Error'), T_("Unable to delete last Administrator"), AmpConfig::get('web_path') . "/admin/users.php");
         }
     break;
     case 'delete':
@@ -251,7 +251,7 @@ switch ($_REQUEST['action']) {
         $client->delete_avatar();
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
-        show_confirmation(T_('Deleted'), T_('User Avatar has been deleted'), $next_url);
+        show_confirmation(T_('Deleted'), T_('User avatar has been deleted'), $next_url);
     break;
     case 'show_generate_apikey':
         $user_id = Core::get_request('user_id');

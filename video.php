@@ -54,9 +54,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($video->remove_from_disk()) {
-            show_confirmation(T_('Video Deletion'), T_('Video has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Deleted'), T_('Video has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Video Deletion'), T_('Cannot delete this video.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Error'), T_('Cannot delete this video.'), AmpConfig::get('web_path'));
         }
     break;
     case 'show_video':

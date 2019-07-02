@@ -619,7 +619,7 @@ class Update
             if (!defined('CLI')) {
                 echo '<p align="center">';
             }
-            echo T_('No updates needed.');
+            echo T_('No Update Needed');
             if (!defined('CLI')) {
                 echo ' [<a href="', AmpConfig::get('web_path'), '/">', T_('Return to main page'), '</a>]</p>';
             } else {

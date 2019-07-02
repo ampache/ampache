@@ -99,7 +99,7 @@ if (!empty($username) && isset($auth)) {
 
     if ($user->disabled) {
         $auth['success'] = false;
-        AmpError::add('general', T_('User Disabled please contact Admin'));
+        AmpError::add('general', T_('User disabled please contact Admin'));
         debug_event('login.class', scrub_out($username) . ' is disabled and attempted to login', 1);
     } // if user disabled
     elseif (AmpConfig::get('prevent_multiple_logins')) {
