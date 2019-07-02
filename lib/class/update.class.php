@@ -3720,14 +3720,14 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-                "VALUES ('disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)',100, 'string', 'system')";
+                "VALUES ('disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields',100, 'string', 'system')";
         $retval &= Dba::write($sql);
         $id  = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?, '')";
         $retval &= Dba::write($sql, array($id));
 
         $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) " .
-                "VALUES ('disabled_custom_metadata_fields_input', '', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.',100, 'string', 'system')";
+                "VALUES ('disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list',100, 'string', 'system')";
         $retval &= Dba::write($sql);
         $id  = Dba::insert_id();
         $sql = "INSERT INTO `user_preference` VALUES (-1,?, '')";
@@ -4403,17 +4403,17 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Custom URL - logo' " .
+               "SET `preference`.`description` = 'Custom URL - Logo' " .
                "WHERE `preference`.`name` = 'custom_logo' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Custom URL - login page logo' " .
+               "SET `preference`.`description` = 'Custom URL - Login page logo' " .
                "WHERE `preference`.`name` = 'custom_login_logo' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Custom URL - favicon' " .
+               "SET `preference`.`description` = 'Custom URL - Favicon' " .
                "WHERE `preference`.`name` = 'custom_favicon' ";
         $retval &= Dba::write($sql);
 
@@ -4495,6 +4495,16 @@ class Update
         $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Allow E-mail notifications' " .
                "WHERE `preference`.`name` = 'notify_email' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Custom metadata - Disable these fields' " .
+               "WHERE `preference`.`name` = 'disabled_custom_metadata_fields' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Custom metadata - Define field list' " .
+               "WHERE `preference`.`name` = 'disabled_custom_metadata_fields_input' ";
         $retval &= Dba::write($sql);
 
         return $retval;
