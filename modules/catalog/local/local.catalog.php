@@ -340,9 +340,9 @@ class Catalog_local extends Catalog
 
             if (!Core::is_readable($full_file)) {
                 // not readable, warn user
-                debug_event('local.catalog', "$full_file is not readable by ampache", 2);
+                debug_event('local.catalog', "$full_file is not readable by Ampache", 2);
                 /* HINT: FullFile */
-                AmpError::add('catalog_add', sprintf(T_('%s is not readable by ampache'), $full_file));
+                AmpError::add('catalog_add', sprintf(T_('%s is not readable by Ampache'), $full_file));
 
                 return false;
             }

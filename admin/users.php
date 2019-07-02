@@ -216,9 +216,9 @@ switch ($_REQUEST['action']) {
         }
         $client = new User(Core::get_request('user_id'));
         if ($client->delete()) {
-            show_confirmation(T_('Deleted'), sprintf(T_('%s has been Deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_('Deleted'), sprintf(T_('%s has been deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
         } else {
-            show_confirmation(T_('Error'), T_("Unable to delete last Administrator"), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_('Error'), T_("Unable to delete last administrator"), AmpConfig::get('web_path') . "/admin/users.php");
         }
     break;
     case 'delete':

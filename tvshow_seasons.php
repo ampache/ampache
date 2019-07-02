@@ -34,7 +34,7 @@ switch ($_REQUEST['action']) {
         $tvshow_season_id = scrub_in($_REQUEST['tvshow_season_id']);
         show_confirmation(
             T_('TV Show Season Deletion'),
-            T_('Are you sure you want to permanently delete this tvshow season?'),
+            T_('Are you sure you want to permanently delete this season?'),
             AmpConfig::get('web_path') . "/tvshow_seasons.php?action=confirm_delete&tvshow_season_id=" . $tvshow_season_id,
             1,
             'delete_tvshow_season'

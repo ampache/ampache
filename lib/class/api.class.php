@@ -24,7 +24,7 @@
 /**
  * API Class
  *
- * This handles functions relating to the API written for ampache, initially
+ * This handles functions relating to the API written for Ampache, initially
  * this is very focused on providing functionality for Amarok so it can
  * integrate with Ampache.
  *
@@ -1325,7 +1325,7 @@ class Api
      * MINIMUM_API_VERSION=400001
      *
      * Take a song_id and update the object_count and user_activity table with a play
-     * This allows other sources to record play history to ampache
+     * This allows other sources to record play history to Ampache
      *
      * @param array $input
      * $input = array(id     = (int) $object_id
@@ -1373,7 +1373,7 @@ class Api
      * MINIMUM_API_VERSION=400001
      *
      * Search for a song using text info and then record a play if found.
-     * This allows other sources to record play history to ampache
+     * This allows other sources to record play history to Ampache
      *
      * @param array $input
      * $input = array(song       = (string) $song_name
@@ -1409,7 +1409,7 @@ class Api
 
             return;
         }
-        
+
         //validate minimum required options
         debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {

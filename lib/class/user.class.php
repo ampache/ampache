@@ -959,7 +959,7 @@ class User extends database_object
 
     /**
      * create
-     * inserts a new user into ampache
+     * inserts a new user into Ampache
      * @param null|string $website
      */
     public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false)

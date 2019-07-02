@@ -28,7 +28,7 @@
 <head>
 <!-- Propulsed by Ampache | ampache.org -->
 <?php UI::show_custom_style(); ?>
-<title><?php echo("Ampache error page");?></title>
+<title><?php echo("Ampache Error Page");?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
