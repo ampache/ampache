@@ -291,16 +291,16 @@ class Podcast extends database_object implements library_item
         $feed = $data['feed'];
         // Feed must be http/https
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
-            AmpError::add('feed', T_('Wrong feed url'));
+            AmpError::add('feed', T_('Error: Wrong feed URL'));
         }
 
         $catalog_id = (int) ($data['catalog']);
         if ($catalog_id <= 0) {
-            AmpError::add('catalog', T_('Target catalog required'));
+            AmpError::add('catalog', T_('Error: Target catalog required'));
         } else {
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog->gather_types !== "podcast") {
-                AmpError::add('catalog', T_('Wrong target catalog type'));
+                AmpError::add('catalog', T_('Error: Wrong target catalog type'));
             }
         }
 
@@ -320,11 +320,11 @@ class Podcast extends database_object implements library_item
 
         $xmlstr = file_get_contents($feed);
         if ($xmlstr === false) {
-            AmpError::add('feed', T_('Cannot access the feed.'));
+            AmpError::add('feed', T_('Error: Cannot access the feed.'));
         } else {
             $xml = simplexml_load_string($xmlstr);
             if ($xml === false) {
-                AmpError::add('feed', T_('Cannot read the feed.'));
+                AmpError::add('feed', T_('Error: Cannot read the feed.'));
             } else {
                 $title            = html_entity_decode($xml->channel->title);
                 $website          = $xml->channel->link;

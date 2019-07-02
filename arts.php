@@ -55,7 +55,7 @@ switch ($_REQUEST['action']) {
     case 'upload_art':
         // we didn't find anything
         if (empty($_FILES['file']['tmp_name'])) {
-            show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'), $burl);
+            show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly.'), $burl);
             break;
         }
 
@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
         }
         // Else it failed
         else {
-            show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'), $burl);
+            show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly.'), $burl);
         }
 
     break;
@@ -138,7 +138,7 @@ switch ($_REQUEST['action']) {
         }
         // Else nothing
         else {
-            show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'), $burl);
+            show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly.'), $burl);
         }
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');

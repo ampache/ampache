@@ -107,7 +107,7 @@ switch ($_REQUEST['action']) {
         if ($deleted) {
             show_confirmation(T_('Deleted'), T_('Catalog and all associated records have been deleted'), $next_url);
         } else {
-            show_confirmation(T_('Error'), T_('Cannot delete the catalog'), $next_url);
+            show_confirmation(T_('Error'), T_('Cannot delete this catalog'), $next_url);
         }
     break;
     case 'show_delete_catalog':

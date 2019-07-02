@@ -147,7 +147,7 @@ class Catalog_remote extends Catalog
         }
 
         if (!strlen($username) || !strlen($password)) {
-            AmpError::add('general', T_('Error: Username and Password Required for Remote Catalogs'));
+            AmpError::add('general', T_('Error: Username and password required for Remote catalogs'));
 
             return false;
         }
@@ -214,7 +214,7 @@ class Catalog_remote extends Catalog
 
         if ($remote_handle->state() != 'CONNECTED') {
             debug_event('remote.catalog', 'API client failed to connect', 1);
-            AmpError::add('general', T_('Error connecting to remote server'));
+            AmpError::add('general', T_('Error: Failed to connect to remote server'));
             AmpError::display('general');
 
             return false;
@@ -270,7 +270,7 @@ class Catalog_remote extends Catalog
                     $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
                     if (!Song::insert($data['song'])) {
                         debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
-                        AmpError::add('general', T_('Unable to Insert Song - %s'), $data['song']['title']);
+                        AmpError::add('general', T_('Error: Unable to insert song - %s'), $data['song']['title']);
                         AmpError::display('general');
                         flush();
                     }

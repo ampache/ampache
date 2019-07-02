@@ -253,7 +253,7 @@ class Update
                 '- Change Tables to FULLTEXT() for improved searching<br />' .
                 '- Increase Filename lengths to 4096<br />' .
                 '- Remove useless "KEY" reference from ACL and Catalog tables<br />' .
-                '- Add new Remote User / Remote Password fields to Catalog<br />';
+                '- Add new Remote User / Remote password fields to Catalog<br />';
         $version[] = array('version' => '360002', 'description' => $update_string);
 
         $update_string = '- Add image table to store images.<br />' .
@@ -1548,7 +1548,7 @@ class Update
         $sql    = "ALTER TABLE `access_list` DROP `key`";
         $retval &= Dba::write($sql);
 
-        // Add in Username / Password for catalog - to be used for remote catalogs
+        // Add in username / password for catalog - to be used for remote catalogs
         $sql    = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `catalog_type`";
         $retval &= Dba::write($sql);
 
@@ -1713,7 +1713,7 @@ class Update
         } // end while
 
         if (!$remote_username) {
-            // Add in Username / Password for catalog - to be used for remote catalogs
+            // Add in username / password for catalog - to be used for remote catalogs
             $sql    = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR ( 255 ) AFTER `catalog_type`";
             $retval &= Dba::write($sql);
         }
@@ -2670,14 +2670,14 @@ class Update
             $created = false;
             if (check_htaccess_play_writable()) {
                 if (!install_rewrite_rules($htaccess_play_file, AmpConfig::get('raw_web_path'), false)) {
-                    AmpError::add('general', T_('File copy error.'));
+                    AmpError::add('general', T_('Error: File copy error.'));
                 } else {
                     $created = true;
                 }
             }
 
             if (!$created) {
-                AmpError::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_play_file . '.dist</b> to <b>' . $htaccess_play_file . '</b>.');
+                AmpError::add('general', T_('Error: Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_play_file . '.dist</b> to <b>' . $htaccess_play_file . '</b>.');
                 $ret = false;
             }
         }
@@ -2686,14 +2686,14 @@ class Update
             $created = false;
             if (check_htaccess_rest_writable()) {
                 if (!install_rewrite_rules($htaccess_rest_file, AmpConfig::get('raw_web_path'), false)) {
-                    AmpError::add('general', T_('File copy error.'));
+                    AmpError::add('general', T_('Error: File copy error.'));
                 } else {
                     $created = true;
                 }
             }
 
             if (!$created) {
-                AmpError::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_rest_file . '.dist</b> to <b>' . $htaccess_rest_file . '</b>.');
+                AmpError::add('general', T_('Error: Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_rest_file . '.dist</b> to <b>' . $htaccess_rest_file . '</b>.');
                 $ret = false;
             }
         }
@@ -2702,14 +2702,14 @@ class Update
             $created = false;
             if (check_htaccess_channel_writable()) {
                 if (!install_rewrite_rules($htaccess_channel_file, AmpConfig::get('raw_web_path'), false)) {
-                    AmpError::add('general', T_('File copy error.'));
+                    AmpError::add('general', T_('Error: File copy error.'));
                 } else {
                     $created = true;
                 }
             }
 
             if (!$created) {
-                AmpError::add('general', T_('Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_channel_file . '.dist</b> to <b>' . $htaccess_channel_file . '</b>.');
+                AmpError::add('general', T_('Error: Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_channel_file . '.dist</b> to <b>' . $htaccess_channel_file . '</b>.');
                 $ret = false;
             }
         }

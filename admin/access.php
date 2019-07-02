@@ -40,7 +40,7 @@ switch ($_REQUEST['action']) {
         }
         Access::delete(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $url = AmpConfig::get('web_path') . '/admin/access.php';
-        show_confirmation(T_('Deleted'), T_('Your Access List Entry has been removed'), $url);
+        show_confirmation(T_('Deleted'), T_('Your Access List entry has been removed'), $url);
     break;
     case 'show_delete_record':
         if (AmpConfig::get('demo_mode')) {
@@ -90,7 +90,7 @@ switch ($_REQUEST['action']) {
         $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->update($_POST);
         if (!AmpError::occurred()) {
-            show_confirmation(T_('Updated'), T_('Access List Entry updated'), AmpConfig::get('web_path') . '/admin/access.php');
+            show_confirmation(T_('Updated'), T_('Access List entry updated'), AmpConfig::get('web_path') . '/admin/access.php');
         } else {
             $access->format();
             require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');

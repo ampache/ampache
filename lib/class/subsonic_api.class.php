@@ -109,8 +109,8 @@ class Subsonic_Api
         ob_end_clean();
         header("Access-Control-Allow-Origin: *");
         if (function_exists('curl_version')) {
-            // Here, we use curl from the ampache server to download data from
-            // the ampache server, which can be a bit counter-intuitive.
+            // Here, we use curl from the Ampache server to download data from
+            // the Ampache server, which can be a bit counter-intuitive.
             // We use the curl `writefunction` and `headerfunction` callbacks
             // to write the fetched data back to the open stream from the
             // client.
@@ -340,7 +340,7 @@ class Subsonic_Api
 
     /**
      * getMusicFolders
-     * Get all configured top-level music folders (= ampache catalogs).
+     * Get all configured top-level music folders (= Ampache catalogs).
      * Takes no parameter.
      */
     public static function getmusicfolders($input)
@@ -1628,7 +1628,7 @@ class Subsonic_Api
     }
 
     /**
-     * changePassword
+     * change password
      * Change the password of an existing user.
      * Takes the username with new password in parameters.
      */

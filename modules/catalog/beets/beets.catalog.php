@@ -100,7 +100,7 @@ class Catalog_beets extends Beets\Catalog
         $beetsdb = $data['beetsdb'];
 
         if (preg_match('/^[\s]+$/', $beetsdb)) {
-            AmpError::add('general', T_('Error: Beets selected, but no Beets DB File provided'));
+            AmpError::add('general', T_('Error: Beets selected, but no Beets DB file provided'));
 
             return false;
         }

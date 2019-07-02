@@ -52,7 +52,7 @@ require $prefix . '/templates/install_header.inc.php';
             <p><?php echo T_('Step 1 - Create the Ampache database'); ?></p>
                 <p><strong><?php echo T_('Step 2 - Create configuration files (ampache.cfg.php ...)'); ?></strong></p>
                 <dl>
-                    <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s'), $prefix); ?></dd>
+                    <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s.'), $prefix); ?></dd>
                 </dl>
             <ul class="list-unstyled">
                 <li><?php echo T_('Step 3 - Set up the initial account'); ?></li>
@@ -131,7 +131,7 @@ require $prefix . '/templates/install_header.inc.php';
 <div>
     <?php echo T_('Transcoding allows you to convert music from one encoding to another. Ampache supports on the fly transcoding of any file type based on user, player, IP address or available bandwidth. In order to transcode, Ampache takes advantage of existing binary applications such as ffmpeg. In order for transcoding to work you must first install the supporting applications and ensure that they are executable by the web server.'); ?>
     <br />
-    <?php echo T_('This section applies the default transcoding configuration according to the application you want to use. You may need to customize settings once setup has ended'); ?>. <a href="https://github.com/ampache/ampache/wiki/Transcoding" target="_blank"><?php echo T_('See wiki page'); ?>.</a>
+    <?php echo T_('This section applies the default transcoding configuration according to the application you want to use. You may need to customize settings once setup has ended.'); ?>. <a href="https://github.com/ampache/ampache/wiki/Transcoding" target="_blank"><?php echo T_('See wiki page'); ?>.</a>
 </div>
 <br />
 <div class="form-group">

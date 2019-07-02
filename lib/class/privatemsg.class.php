@@ -148,7 +148,7 @@ class PrivateMsg extends database_object
         $message = trim(strip_tags(filter_var($data['message'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
 
         if (empty($subject)) {
-            AmpError::add('subject', T_('Error: Subject Required'));
+            AmpError::add('subject', T_('Error: Subject required'));
         }
 
         $to_user = User::get_from_username($data['to_user']);

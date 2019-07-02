@@ -179,7 +179,7 @@ class Catalog_local extends Catalog
 
         // Make sure that there isn't a catalog with a directory above this one
         if (self::get_from_path($path)) {
-            AmpError::add('general', T_('Error: Defined Path is inside an existing catalog'));
+            AmpError::add('general', T_('Error: Defined path is inside an existing catalog'));
 
             return false;
         }
@@ -340,9 +340,9 @@ class Catalog_local extends Catalog
 
             if (!Core::is_readable($full_file)) {
                 // not readable, warn user
-                debug_event('local.catalog', "$full_file is not readable by ampache", 2);
+                debug_event('local.catalog', "$full_file is not readable by Ampache", 2);
                 /* HINT: FullFile */
-                AmpError::add('catalog_add', sprintf(T_('%s is not readable by ampache'), $full_file));
+                AmpError::add('catalog_add', sprintf(T_('Error: %s is not readable by Ampache'), $full_file));
 
                 return false;
             }
@@ -365,7 +365,7 @@ class Catalog_local extends Catalog
                 if (!$convok) {
                     debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
                     /* HINT: FullFile */
-                    AmpError::add('catalog_add', sprintf(T_('%s does not match site charset'), $full_file));
+                    AmpError::add('catalog_add', sprintf(T_('Error: %s does not match site charset'), $full_file));
 
                     return false;
                 }
@@ -572,7 +572,7 @@ class Catalog_local extends Catalog
             }
 
             if (!Core::is_readable(Core::conv_lc_file($row['file']))) {
-                AmpError::add('general', sprintf(T_('%s does not exist or is not readable'), $row['file']));
+                AmpError::add('general', sprintf(T_('Error: %s does not exist or is not readable'), $row['file']));
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }
@@ -601,7 +601,7 @@ class Catalog_local extends Catalog
             // First sanity check; no point in proceeding with an unreadable
             // catalog root.
             debug_event('local.catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
-            AmpError::add('general', T_('Catalog Root unreadable, stopping clean'));
+            AmpError::add('general', T_('Error: Catalog Root unreadable, stopping clean'));
             AmpError::display('general');
 
             return 0;
@@ -627,7 +627,7 @@ class Catalog_local extends Catalog
             if (!file_exists($this->path)) {
                 if ($dead_count >= $total) {
                     debug_event('local.catalog', 'All files would be removed. Doing nothing.', 1);
-                    AmpError::add('general', T_('All files would be removed. Doing nothing'));
+                    AmpError::add('general', T_('Error: All files would be removed. Doing nothing'));
                     continue;
                 }
             }
@@ -671,7 +671,7 @@ class Catalog_local extends Catalog
             $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
             if (!file_exists(Core::conv_lc_file($results['file'])) || $file_info < 1) {
                 debug_event('local.catalog', 'File not found or empty: ' . $results['file'], 5);
-                AmpError::add('general', sprintf(T_('Error File Not Found or 0 Bytes: %s'), $results['file']));
+                AmpError::add('general', sprintf(T_('Error: File Not Found or 0 Bytes: %s'), $results['file']));
 
 
                 // Store it in an array we'll delete it later...

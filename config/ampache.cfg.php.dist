@@ -1073,7 +1073,7 @@ encode_ss_duration = "-t %DURATION%"
 ;#########################################################
 
 ; Enable or disable email server features
-; otherwise, you can reset your password 
+; otherwise, you can reset your password
 ; and never receive an email with the new one
 ; Default: false
 ;mail_enable = "false"
@@ -1134,11 +1134,11 @@ encode_ss_duration = "-t %DURATION%"
 ; DEFAULT: false
 ;mail_auth = "true"
 
-; SMTP Username
+; SMTP username
 ; your mail auth username.
 ;mail_auth_user = ""
 
-; SMTP Password
+; SMTP password
 ; your mail auth password.
 ;mail_auth_pass = ""
 
