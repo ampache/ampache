@@ -20,7 +20,7 @@
  *
  */
 
-UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
+UI::show_box_top(T_('Manage'));  ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <tr class="th-top">
         <th class="cel_number"><?php echo T_('Playlist'); ?></th>

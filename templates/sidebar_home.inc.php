@@ -29,7 +29,7 @@
         }
         ?>
         <ul class="sb3" id="sb_browse_music">
-            <li id="sb_home_browse_music_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Song Titles'); ?></a></li>
+            <li id="sb_home_browse_music_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Songs'); ?></a></li>
             <li id="sb_home_browse_music_album"><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo T_('Albums'); ?></a></li>
             <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo T_('Artists'); ?></a></li>
             <?php if (AmpConfig::get('label')) {
@@ -109,11 +109,6 @@
         <?php if (AmpConfig::get('home_now_playing') || AmpConfig::get('allow_democratic_playback') || Access::check('interface', '50')) {
             ?>
         <ul class="sb3" id="sb_home_playlist">
-            <?php if (AmpConfig::get('home_now_playing')) {
-                ?>
-            <li id="sb_home_playlist_currentlyPlaying"><a href="<?php echo AmpConfig::get('web_path') ?>/index.php"><?php echo T_('Currently Playing') ?></a></li>
-            <?php
-            } ?>
             <?php if (AmpConfig::get('allow_democratic_playback')) {
                 ?>
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic') ?></a></li>
@@ -160,12 +155,12 @@
         } ?>
                 <?php if (AmpConfig::get('wanted')) {
             ?>
-                <li id="sb_home_info_wanted"><a href="<?php echo $web_path ?>/stats.php?action=wanted"><?php echo T_('Wanted List') ?></a></li>
+                <li id="sb_home_info_wanted"><a href="<?php echo $web_path ?>/stats.php?action=wanted"><?php echo T_('Wanted') ?></a></li>
                 <?php
         } ?>
                 <?php if (AmpConfig::get('share')) {
             ?>
-                <li id="sb_home_info_share"><a href="<?php echo $web_path ?>/stats.php?action=share"><?php echo T_('Shared Objects') ?></a></li>
+                <li id="sb_home_info_share"><a href="<?php echo $web_path ?>/stats.php?action=share"><?php echo T_('Shares') ?></a></li>
                 <?php
         } ?>
                 <?php if (AmpConfig::get('allow_upload')) {
