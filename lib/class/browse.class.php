@@ -222,7 +222,7 @@ class Browse extends Query
                 $box_req = AmpConfig::get('prefix') . UI::find_template('show_albums.inc.php');
             break;
             case 'user':
-                $box_title = T_('Users') . $match;
+                $box_title = T_('Browse Users') . $match;
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_users.inc.php');
             break;
             case 'artist':

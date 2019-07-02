@@ -20,7 +20,7 @@
  *
  */
 ?>
-<?php UI::show_box_top(T_('Debug Tools'), 'box box_debug_tools'); ?>
+<?php UI::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
             <li>
