@@ -240,7 +240,7 @@ class Browse extends Query
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_playlists.inc.php');
             break;
             case 'playlist_media':
-                $box_title = T_('Playlist Medias') . $match;
+                $box_title = T_('Playlist Items') . $match;
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_playlist_medias.inc.php');
             break;
             case 'playlist_localplay':

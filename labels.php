@@ -54,9 +54,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($label->remove()) {
-            show_confirmation(T_('Label Deletion'), T_('Label has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Deleted'), T_('Label has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Label Deletion'), T_('Cannot delete this label.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Error'), T_('Cannot delete this label.'), AmpConfig::get('web_path'));
         }
     break;
     case 'add_label':

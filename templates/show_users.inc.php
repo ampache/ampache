@@ -83,7 +83,7 @@ foreach ($object_ids as $user_id) {
 </tbody>
 <tfoot>
     <tr class="th-bottom">
-      <th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1');?><?php echo " ( " . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Fullname'), 'users_sort_fullname1') . ")";?></th>
+      <th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1');?><?php echo " ( " . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Full Name'), 'users_sort_fullname1') . ")";?></th>
       <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen1'); ?></th>
       <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate1'); ?></th>
       <?php if (Access::check('interface', 50)) {
@@ -102,7 +102,7 @@ foreach ($object_ids as $user_id) {
       <?php
     } ?>
       <th class="cel_action"><?php echo T_('Action'); ?></th>
-      <th class="cel_online"><?php echo T_('On-line'); ?></th>
+      <th class="cel_online"><?php echo T_('Online'); ?></th>
     </tr>
 </tfoot>
 </table>

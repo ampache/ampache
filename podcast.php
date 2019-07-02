@@ -91,9 +91,9 @@ switch ($_REQUEST['action']) {
 
         $podcast = new Podcast($_REQUEST['podcast_id']);
         if ($podcast->remove()) {
-            show_confirmation(T_('Podcast Deletion'), T_('Podcast has been deleted.'), AmpConfig::get('web_path') . '/browse.php?action=podcast');
+            show_confirmation(T_('Deleted'), T_('Podcast has been deleted.'), AmpConfig::get('web_path') . '/browse.php?action=podcast');
         } else {
-            show_confirmation(T_('Podcast Deletion'), T_('Cannot delete this podcast.'), AmpConfig::get('web_path') . '/browse.php?action=podcast');
+            show_confirmation(T_('Error'), T_('Cannot delete this podcast.'), AmpConfig::get('web_path') . '/browse.php?action=podcast');
         }
     break;
     case 'show':

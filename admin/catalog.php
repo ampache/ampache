@@ -125,12 +125,12 @@ switch ($_REQUEST['action']) {
             foreach ($songs as $song_id) {
                 Song::update_enabled(true, $song_id);
             }
-            $body = count($songs) . nT_(' Song Enabled', ' Songs Enabled', count($songs));
+            $body = count($songs) . ' ' . nT_('Song Enabled', 'Songs Enabled', count($songs));
         } else {
-            $body = T_('No Disabled Songs selected');
+            $body = T_('No disabled songs selected');
         }
         $url      = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = count($songs) . nT_(' Disabled Song Processed', ' Disabled Songs Processed', count($songs));
+        $title    = count($songs) . ' ' . nT_('Disabled Song Processed', 'Disabled Songs Processed', count($songs));
         show_confirmation($title, $body, $url);
     break;
     case 'clean_all_catalogs':
@@ -208,7 +208,7 @@ switch ($_REQUEST['action']) {
         }
         Stats::clear();
         $url      = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = T_('Catalog statistics cleared');
+        $title    = T_('Catalog Statistics cleared');
         $body     = '';
         show_confirmation($title, $body, $url);
     break;
@@ -233,7 +233,7 @@ switch ($_REQUEST['action']) {
         if (count($songs)) {
             require AmpConfig::get('prefix') . UI::find_template('show_disabled_songs.inc.php');
         } else {
-            echo "<div class=\"error\" align=\"center\">" . T_('No Disabled songs found') . "</div>";
+            echo "<div class=\"error\" align=\"center\">" . T_('No disabled songs found') . "</div>";
         }
     break;
     case 'show_delete_catalog':

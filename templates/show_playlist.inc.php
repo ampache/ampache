@@ -111,7 +111,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
                 <?php echo UI::get_icon('flow'); ?>
-                &nbsp;&nbsp;<?php echo T_('Create channel'); ?>
+                &nbsp;&nbsp;<?php echo T_('Create Channel'); ?>
             </a>
         </li>
     <?php

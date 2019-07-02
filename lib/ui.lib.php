@@ -130,7 +130,7 @@ function get_location()
             $location['title'] = T_('Upload');
             break;
         case 'localplay.php':
-            $location['title'] = T_('Local Play');
+            $location['title'] = T_('Localplay');
             break;
         case 'randomplay.php':
             $location['title'] = T_('Random Play');

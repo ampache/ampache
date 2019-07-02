@@ -31,6 +31,6 @@ if (is_array($catalog_id) && $catalog_id[0] != '') {
 
 ?>
 <br />
-<strong><?php echo T_('Update from Tags Complete'); ?></strong>&nbsp;&nbsp;
+<strong><?php echo T_('Update from tags Complete'); ?></strong>&nbsp;&nbsp;
 <a class="button" href="<?php echo $target_url; ?>"><?php echo T_('Continue'); ?></a>
 <?php UI::show_box_bottom(); ?>

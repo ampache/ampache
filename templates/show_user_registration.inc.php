@@ -159,7 +159,7 @@ $_SESSION['login'] = true;
 
                     <div class="registerButtons">
                         <input type="hidden" name="action" value="add_user" />
-                        <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />
+                        <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register'); ?>' />
                     </div>
                 </form>
 <?php

@@ -102,7 +102,7 @@ switch ($_REQUEST['action']) {
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            AmpError::add('email', T_('Invalid email address'));
+            AmpError::add('email', T_('Invalid e-mail address'));
         }
 
         $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');

@@ -264,7 +264,7 @@ class Catalog_Seafile extends Catalog
                 return 0;
             });
 
-            UI::update_text('', sprintf(T_('Catalog Update Finished.  Total Media: [%s]'), $count));
+            UI::update_text('', sprintf(T_('Catalog Update finished.  Total Media: [%s]'), $count));
 
             if ($count <= 0) {
                 AmpError::add('general', T_('No media updated, do you respect the patterns?'));

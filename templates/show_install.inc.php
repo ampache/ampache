@@ -59,7 +59,7 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
     </div>
     <div class="form-group">
-        <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL port (optional)'); ?></label>
+        <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL Port (optional)'); ?></label>
         <div class="col-sm-8">
             <input type="text" class="form-control" id="local_port" name="local_port"/>
        </div>

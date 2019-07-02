@@ -54,9 +54,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($song->remove_from_disk()) {
-            show_confirmation(T_('Song Deletion'), T_('Song has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Deleted'), T_('Song has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Song Deletion'), T_('Cannot delete this song.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Error'), T_('Cannot delete this song.'), AmpConfig::get('web_path'));
         }
     break;
     case 'show_lyrics':

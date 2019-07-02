@@ -54,9 +54,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($album->remove_from_disk()) {
-            show_confirmation(T_('Album Deletion'), T_('Album has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Deleted'), T_('Album has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Album Deletion'), T_('Cannot delete this album.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Error'), T_('Cannot delete this album.'), AmpConfig::get('web_path'));
         }
     break;
     case 'update_from_tags':
