@@ -348,11 +348,11 @@ msgid "Theme color"
 msgstr ""
 
 #: Database preference table id 146
-msgid "Disable custom metadata fields (ctrl / shift click to select multiple)"
+msgid "Custom metadata - Disable these fields"
 msgstr ""
 
 #: Database preference table id 147
-msgid "Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above."
+msgid "Custom metadata - Define field list"
 msgstr ""
 
 #: Database preference table id 148
