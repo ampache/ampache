@@ -21,7 +21,7 @@
  */
 ?>
 
-<?php UI::show_box_top(T_('Send E-mail to Users'), 'box box_mail_users'); ?>
+<?php UI::show_box_top(T_('E-mail Users'), 'box box_mail_users'); ?>
 <form name="mail" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/mail.php?action=send_mail" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">
         <tr>
