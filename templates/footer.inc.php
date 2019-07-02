@@ -55,7 +55,7 @@
             <?php
                 $load_time_end         = microtime(true);
             $load_time                 = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4); ?>
-            | <?php echo T_('Load time:'); ?><?php echo $load_time; ?>
+            | <?php echo T_('Load Time:'); ?><?php echo $load_time; ?>
         <?php
         } ?>
         </div>

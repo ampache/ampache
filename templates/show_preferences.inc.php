@@ -26,7 +26,7 @@
  */
 
 ?>
-<?php /* HINT: Username */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $fullname), 'box box_preferences'); ?>
+<?php /* HINT: Username */ UI::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences'); ?>
 <?php  if (Core::get_request('tab') !== 'account' && Core::get_request('tab') !== 'modules') {
     debug_event('show_preferences.inc', (string) Core::get_request('tab'), 5); ?>
 

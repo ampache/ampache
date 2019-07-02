@@ -24,7 +24,7 @@ class AmpacheTvdb
 {
     public $name           = 'Tvdb';
     public $categories     = 'metadata';
-    public $description    = 'Tvdb metadata integration';
+    public $description    = 'TVDb metadata integration';
     public $url            = 'http://thetvdb.com';
     public $version        = '000003';
     public $min_ampache    = '370009';
@@ -53,7 +53,7 @@ class AmpacheTvdb
             return false;
         }
 
-        Preference::insert('tvdb_api_key', 'Tvdb api key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('tvdb_api_key', 'TVDb API key', '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -82,7 +82,7 @@ class AmpacheTvdb
         if (strlen(trim($data['tvdb_api_key']))) {
             $this->api_key = trim($data['tvdb_api_key']);
         } else {
-            debug_event('tvdb.plugin', 'No Tvdb api key, metadata plugin skipped', 3);
+            debug_event('tvdb.plugin', 'No TVDb API key, metadata plugin skipped', 3);
 
             return false;
         }
@@ -96,7 +96,7 @@ class AmpacheTvdb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('tvdb.plugin', 'Getting metadata from Tvdb...', 5);
+        debug_event('tvdb.plugin', 'Getting metadata from TVDb...', 5);
 
         // TVShow metadata only
         if (!in_array('tvshow', $gather_types)) {

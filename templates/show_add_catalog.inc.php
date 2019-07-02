@@ -65,7 +65,7 @@ $default_sort   = "%a/%A";
             <td><input type="checkbox" name="parse_playlist" value="1" /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Catalog media type'); ?>:</td>
+            <td valign="top"><?php echo T_('Catalog Media Type'); ?>:</td>
             <td>
 
                 <select name="gather_media">

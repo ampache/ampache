@@ -24,7 +24,7 @@ class AmpacheStreamTime
 {
     public $name        = 'Stream Time';
     public $categories  = 'stream_control';
-    public $description = 'Stream Control Time per user';
+    public $description = 'Control time per user';
     public $url         = '';
     public $version     = '000001';
     public $min_ampache = '370024';

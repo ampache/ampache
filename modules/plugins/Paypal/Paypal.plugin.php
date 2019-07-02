@@ -24,7 +24,7 @@ class AmpachePaypal
 {
     public $name           = 'Paypal';
     public $categories     = 'user';
-    public $description    = 'Paypal donation button on user page';
+    public $description    = 'PayPal donation button on user page';
     public $url            = '';
     public $version        = '000001';
     public $min_ampache    = '370034';
@@ -57,8 +57,8 @@ class AmpachePaypal
             return false;
         }
 
-        Preference::insert('paypal_business', 'Paypal ID', '', 25, 'string', 'plugins', $this->name);
-        Preference::insert('paypal_currency_code', 'Paypal Currency Code', 'USD', 25, 'string', 'plugins', $this->name);
+        Preference::insert('paypal_business', 'PayPal ID', '', 25, 'string', 'plugins', $this->name);
+        Preference::insert('paypal_currency_code', 'PayPal Currency Code', 'USD', 25, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -123,7 +123,7 @@ class AmpachePaypal
 
         $this->business = trim($data['paypal_business']);
         if (!strlen($this->business)) {
-            debug_event('paypal.plugin', 'No Paypal ID, user field plugin skipped', 3);
+            debug_event('paypal.plugin', 'No PayPal ID, user field plugin skipped', 3);
 
             return false;
         }

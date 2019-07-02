@@ -41,7 +41,7 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
-                <?php echo T_('Ampache'); ?> - For the love of Music
+                <?php echo T_('Ampache'); ?> - For the Love of Music
             </a>
         </div>
     </div>
@@ -50,7 +50,7 @@
             <h1><?php echo T_('Error'); ?></h1>
             <p><?php echo(T_("The following error has occured, you will automaticly be redirected after 10 seconds.")); ?></p>
         </div>
-        <h2><?php echo(T_("Error messages"));?>:</h2>
+        <h2><?php echo(T_("Error Messages"));?>:</h2>
         <?php AmpError::display('general'); ?>
     </div>
 </body>

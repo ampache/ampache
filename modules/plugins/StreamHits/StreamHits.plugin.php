@@ -24,7 +24,7 @@ class AmpacheStreamHits
 {
     public $name        = 'Stream Hits';
     public $categories  = 'stream_control';
-    public $description = 'Stream Control Hits per user';
+    public $description = 'Control hits per user';
     public $url         = '';
     public $version     = '000001';
     public $min_ampache = '370024';
