@@ -29,7 +29,7 @@
  */
 class Subsonic_XML_Data
 {
-    const API_VERSION = "1.11.0";
+    const API_VERSION = "1.13.0";
 
     const SSERROR_GENERIC               = 0;
     const SSERROR_MISSINGPARAM          = 10;

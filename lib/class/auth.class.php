@@ -90,7 +90,7 @@ class Auth
      * @param boolean $allow_ui
      * @return array
      */
-    public static function login($username, $password, $allow_ui = false)
+    public static function login($username, $password, $allow_ui = false, $token = null, $salt = null)
     {
         $results = array();
         foreach (AmpConfig::get('auth_methods') as $method) {
@@ -100,7 +100,7 @@ class Auth
                 continue;
             }
 
-            $results = self::$function_name($username, $password);
+            $results = self::$function_name($username, $password, $token, $salt);
             if ($results['success'] || ($allow_ui && !empty($results['ui_required']))) {
                 break;
             }
@@ -137,8 +137,25 @@ class Auth
      * @param string $password
      * @return array
      */
-    private static function mysql_auth($username, $password)
+    private static function mysql_auth($username, $password, $token = null, $salt = null)
     {
+        // subsonic token auth with apikey
+        if (strlen($password) && strlen($token) && strlen($salt) && strlen($username)) {
+            $sql        = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
+            $db_results = Dba::read($sql, array($username));
+
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $hash_token = hash('md5', ($row['apikey'] . $salt));
+                debug_event('auth.class', 'attempting token auth ' . $hash_token, 5);
+                if ($token == $hash_token) {
+                    return array(
+                        'success' => true,
+                        'type' => 'mysql',
+                        'username' => $username
+                    );
+                }
+            }
+        }
         if (strlen($password) && strlen($username)) {
             $sql        = 'SELECT `password` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
@@ -186,7 +203,7 @@ class Auth
      * @param string $password
      * @return array
      */
-    private static function pam_auth($username, $password)
+    private static function pam_auth($username, $password, $token = null, $salt = null)
     {
         $results = array();
         if (!function_exists('pam_auth')) {
@@ -272,7 +289,7 @@ class Auth
      * @param string $password
      * @return array
      */
-    private static function ldap_auth($username, $password)
+    private static function ldap_auth($username, $password, $token = null, $salt = null)
     {
         return LDAP::auth($username, $password);
     }
@@ -286,7 +303,7 @@ class Auth
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private static function http_auth($username, $password)
+    private static function http_auth($username, $password, $token = null, $salt = null)
     {
         $results = array();
         if (($_SERVER['REMOTE_USER'] == $username) ||
@@ -313,7 +330,7 @@ class Auth
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private static function openid_auth($username, $password)
+    private static function openid_auth($username, $password, $token = null, $salt = null)
     {
         $results = array();
         // Username contains the openid url. We don't care about password here.
