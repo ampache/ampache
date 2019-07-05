@@ -432,7 +432,7 @@ class Album extends database_object implements library_item
      * @param boolean $readonly
      * @return integer|null
      */
-    public static function check($name, $year = 0, $disk = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false)
+    public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false)
     {
         $trimmed      = Catalog::trim_prefix(trim($name));
         $name         = $trimmed['string'];
