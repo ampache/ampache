@@ -442,7 +442,6 @@ class Album extends database_object implements library_item
         $mbid         = empty($mbid) ? null : $mbid;
         $mbid_group   = empty($mbid_group) ? null : $mbid_group;
         $release_type = empty($release_type) ? null : $release_type;
-        
 
         if (!$name) {
             $name         = T_('Unknown (Orphaned)');
@@ -486,7 +485,7 @@ class Album extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`, `originalyear`, `barcode`, `catalognumber`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`, `originalyear`, `barcode`, `catalognumber`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group, $release_type, $album_artist, $originalyear, $barcode, $catalognumber));
         if (!$db_results) {
