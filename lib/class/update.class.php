@@ -572,6 +572,9 @@ class Update
                          "  This is a cosmetic update and does not affect any operation)<br />";
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
+        $update_string = "* Update disk to allow 1 instead of making it 0 by default<br />";
+        $version[]     = array('version' => '400003', 'description' => $update_string);
+        
         return $version;
     }
 
@@ -4291,6 +4294,19 @@ class Update
                "SET `preference`.`subcatagory` = 'upload' " .
                "WHERE `preference`.`name` in ('upload_catalog', 'allow_upload', 'upload_subdir', 'upload_user_artist', 'upload_script', 'upload_allow_edit', 'upload_allow_remove', 'upload_catalog_pattern') AND " .
                "`preference`.`subcatagory` IS NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    /**
+     * update_400003
+     *
+     * Update disk to allow 1 instead of making it 0 by default
+     */
+    public static function update_400003()
+    {
+        $sql = "UPDATE `album` SET `album`.`disk` = 1 " .
+               "WHERE `album`.`disk` = 0 AND `album`.`mbid` IS NOT NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;
