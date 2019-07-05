@@ -572,7 +572,8 @@ class Update
                          "  This is a cosmetic update and does not affect any operation)<br />";
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
-        $update_string = "* Update disk to allow 1 instead of making it 0 by default<br />";
+        $update_string = "* Update disk to allow 1 instead of making it 0 by default<br />" .
+                         "* Add barcode catalognumber and originalyear<br />";
         $version[]     = array('version' => '400003', 'description' => $update_string);
         
         return $version;
@@ -4302,11 +4303,17 @@ class Update
      * update_400003
      *
      * Update disk to allow 1 instead of making it 0 by default
+     * Add barcode catalognumber and originalyear
      */
     public static function update_400003()
     {
         $sql = "UPDATE `album` SET `album`.`disk` = 1 " .
                "WHERE `album`.`disk` = 0 AND `album`.`mbid` IS NOT NULL;";
+        $retval &= Dba::write($sql);
+        
+        $sql = "ALTER TABLE `album` ADD `originalyear` INT(4) NULL," .
+               "ADD `barcode` VARCHAR(64) NULL," .
+               "ADD `catalognumber` VARCHAR(64) NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;

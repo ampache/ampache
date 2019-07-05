@@ -1637,6 +1637,10 @@ abstract class Catalog extends database_object
         $album_mbid            = $results['mb_albumid'];
         $album_mbid_group      = $results['mb_albumid_group'];
         $disk                  = $results['disk'];
+        $releasetype           = $results['releasetype'];
+        $originalyear          = $results['originalyear'];
+        $barcode               = $results['barcode'];
+        $catalognumber         = $results['catalognumber'];
 
         /*
         * We have the artist/genre/album name need to check it in the tables
@@ -1646,7 +1650,8 @@ abstract class Catalog extends database_object
         if ($albumartist) {
             $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
         }
-        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->albumartist);
+        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
+                                        $new_song->albumartist, $releasetype, false, $originalyear, $barcode, $catalognumber);
         $new_song->title = self::check_title($new_song->title, $new_song->file);
 
         /* Since we're doing a full compare make sure we fill the extended information */
