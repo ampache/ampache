@@ -342,7 +342,6 @@ class vainfo
     public static function clean_tag_info($results, $keys, $filename = null)
     {
         $info = array();
-        //debug_event('vainfo.class', 'Clean tag info: ' . print_r($results, true), 5);
 
         $info['file'] = $filename;
 
@@ -387,7 +386,13 @@ class vainfo
             $info['mb_albumid_group'] = $info['mb_albumid_group'] ?: trim($tags['mb_albumid_group']);
             $info['mb_artistid']      = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
             $info['mb_albumartistid'] = $info['mb_albumartistid'] ?: trim($tags['mb_albumartistid']);
-            $info['release_type']     = $info['release_type'] ?: trim($tags['release_type']);
+            if (trim($tags['release_type'] !== '')) {
+                $info['release_type']     = $info['release_type'] ?: trim($tags['release_type']);
+            }
+
+            $info['originalyear'] = $info['originalyear'] ?: trim($tags['originalyear']);
+            $info['barcode'] = $info['barcode'] ?: trim($tags['barcode']);
+            $info['catalognumber'] = $info['catalognumber'] ?: trim($tags['catalognumber']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
             $info['comment']  = $info['comment'] ?: trim($tags['comment']);
@@ -430,12 +435,6 @@ class vainfo
                     }
                 }
             }
-        }
-
-        // Some things set the disk number even though there aren't multiple
-        if ($info['totaldisks'] == 1 && $info['disk'] == 1) {
-            unset($info['disk']);
-            unset($info['totaldisks']);
         }
 
         // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
@@ -936,6 +935,15 @@ class vainfo
                         break;
                         case 'replaygain_album_peak':
                             $parsed['replaygain_album_peak'] = floatval($txxx['data']);
+                        break;
+                        case 'originalyear':
+                            $parsed['originalyear'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                        case 'barcode':
+                            $parsed['barcode'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                        case 'catalognumber':
+                            $parsed['catalognumber'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     }
                 }
