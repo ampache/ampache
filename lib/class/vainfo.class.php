@@ -387,11 +387,11 @@ class vainfo
             $info['mb_artistid']      = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
             $info['mb_albumartistid'] = $info['mb_albumartistid'] ?: trim($tags['mb_albumartistid']);
             if (trim($tags['release_type'] !== '')) {
-                $info['release_type']     = $info['release_type'] ?: trim($tags['release_type']);
+                $info['release_type'] = $info['release_type'] ?: trim($tags['release_type']);
             }
 
-            $info['originalyear'] = $info['originalyear'] ?: trim($tags['originalyear']);
-            $info['barcode'] = $info['barcode'] ?: trim($tags['barcode']);
+            $info['originalyear']  = $info['originalyear'] ?: trim($tags['originalyear']);
+            $info['barcode']       = $info['barcode'] ?: trim($tags['barcode']);
             $info['catalognumber'] = $info['catalognumber'] ?: trim($tags['catalognumber']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
