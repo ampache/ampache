@@ -367,7 +367,7 @@ class Song extends database_object implements media, library_item
         $album_mbid_group      = $results['mb_albumid_group'];
         $artist_mbid           = $results['mb_artistid'];
         $albumartist_mbid      = $results['mb_albumartistid'];
-        $disk                  = $results['disk'] ?: 0;
+        $disk                  = $results['disk'] ?: 1;
         $year                  = Catalog::normalize_year($results['year'] ?: 0);
         $comment               = $results['comment'];
         $tags                  = $results['genre']; // multiple genre support makes this an array
@@ -384,6 +384,9 @@ class Song extends database_object implements media, library_item
         $replaygain_track_peak = isset($results['replaygain_track_peak']) ? $results['replaygain_track_peak'] : null;
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
+        $originalyear          = $results['originalyear'];
+        $barcode               = $results['barcode'];
+        $catalognumber         = $results['catalognumber'];
 
         if ($mode !== 'vbr' || $mode !== 'cbr' || $mode !== 'abr') {
             debug_event('song.class', 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
@@ -407,7 +410,7 @@ class Song extends database_object implements media, library_item
             $artist_id = (int) ($results['artist_id']);
         }
         if (!isset($results['album_id'])) {
-            $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type);
+            $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, false, $originalyear, $barcode, $catalognumber);
         } else {
             $album_id = (int) ($results['album_id']);
         }
