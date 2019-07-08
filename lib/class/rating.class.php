@@ -294,6 +294,7 @@ class Rating extends database_object
      * This function sets the rating for the current object.
      * This is currently only for grouped disk albums!
      * @param array $album
+     * @param string $rating
      * @return boolean
      */
     private static function set_rating_for_group($rating, $album, $user_id = null)

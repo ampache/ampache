@@ -491,6 +491,7 @@ class Tag extends database_object implements library_item
     /**
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
+     * @param string $type
      */
     public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
     {

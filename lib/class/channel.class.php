@@ -665,7 +665,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_stream_types
-     * @return array
+     * @return string[]
      */
     public function get_stream_types($player = null)
     {

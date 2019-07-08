@@ -485,13 +485,13 @@ class Art extends database_object
      * @param string $uid
      * @param string $kind
      * @param boolean $autocreate
-     * @return boolean|string
+     * @return false|string
      */
     public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
-            debug_event('art.class', 'local_metadata_dir setting is required to store arts on disk.', 1);
+            debug_event('art.class', 'local_metadata_dir setting is required to store art on disk.', 1);
 
             return false;
         }
