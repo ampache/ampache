@@ -780,10 +780,6 @@ class Subsonic_XML_Data
         }
     }
 
-    /**
-     * @param SimpleXMLElement $xml
-     * @param Video $video
-     */
     public static function addVideo($xml, $video, $elementName = 'video')
     {
         $xvideo = $xml->addChild($elementName);
