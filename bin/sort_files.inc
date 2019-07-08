@@ -117,7 +117,7 @@ function sort_find_home($song,$sort_pattern,$base) {
         $artist = "Various";
     }
     $disk  = $album_object->disk;
-    $genre = implode(", ", $album_object->tags);
+    $genre = implode("; ", $album_object->tags);
 
     /* IF we want a,b,c,d we need to know the first element */
     if (Core::get_global('alphabet_prefix')) {
