@@ -4314,7 +4314,7 @@ class Update
         $sql = "ALTER TABLE `album` ADD `originalyear` INT(4) NULL," .
                "ADD `barcode` VARCHAR(64) NULL," .
                "ADD `catalognumber` VARCHAR(64) NULL;";
-        $retval &= Dba::write($sql);
+        $retval = Dba::write($sql);
 
         return $retval;
     }
