@@ -35,6 +35,8 @@ UI::show_box_top(sprintf(T_('Settings for %s'), $catalog->name . ' (' . $catalog
                 <span class="format-specifier">%T</span>= <?php echo T_('track number (padded with leading 0)'); ?><br />
                 <span class="format-specifier">%t</span>= <?php echo T_('song title'); ?><br />
                 <span class="format-specifier">%y</span>= <?php echo T_('year'); ?><br />
+                <span class="format-specifier">%d</span>= <?php echo T_('Disk'); ?><br />
+                <span class="format-specifier">%g</span>= <?php echo T_('Genre'); ?><br />
                 <span class="format-specifier">%o</span>= <?php echo T_('other'); ?><br />
             </td>
         </tr>

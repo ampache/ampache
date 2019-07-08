@@ -116,6 +116,8 @@ function sort_find_home($song,$sort_pattern,$base) {
     if ($album_object->artist_count != 1) {
         $artist = "Various";
     }
+    $disk  = $album_object->disk;
+    $genre = implode(", ", $album_object->tags);
 
     /* IF we want a,b,c,d we need to know the first element */
     if (Core::get_global('alphabet_prefix')) {
@@ -134,8 +136,8 @@ function sort_find_home($song,$sort_pattern,$base) {
     }
 
     /* Replace everything we can find */
-    $replace_array = array('%a','%A','%t','%T','%y','%c');
-    $content_array = array($artist,$album,$title,$track,$year,$comment);
+    $replace_array = array('%a','%A','%t','%T','%y','%c','%d','%g');
+    $content_array = array($artist,$album,$title,$track,$year,$comment,$disk,$genre);
     $sort_pattern = str_replace($replace_array,$content_array,$sort_pattern);
 
     /* Remove non A-Z0-9 chars */
@@ -165,6 +167,12 @@ function sort_element_name($key) {
             return 'album';
         case '%y':
             return 'year';
+        case '%c':
+            return 'comment';
+        case '%d';
+            return 'disk';
+        case '%g';
+            return 'genre';
         default:
             break;
     } // switch on key
