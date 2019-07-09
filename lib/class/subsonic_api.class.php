@@ -362,9 +362,9 @@ class Subsonic_Api
     {
         self::check_version($input);
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addMusicFolders($r, Catalog::get_catalogs());
-        self::apiOutput($input, $r);
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addMusicFolders($response, Catalog::get_catalogs());
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -415,12 +415,12 @@ class Subsonic_Api
             $fcatalogs = $catalogs;
         }
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse();
         if (count($fcatalogs) > 0) {
             $artists = Catalog::get_artists($fcatalogs);
-            Subsonic_XML_Data::addArtistsIndexes($r, $artists, $lastmodified);
+            Subsonic_XML_Data::addArtistsIndexes($response, $artists, $lastmodified);
         }
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -434,17 +434,17 @@ class Subsonic_Api
 
         $id = self::check_parameter($input, 'id');
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse();
         if (Subsonic_XML_Data::isArtist($id)) {
             $artist = new Artist(Subsonic_XML_Data::getAmpacheId($id));
-            Subsonic_XML_Data::addArtistDirectory($r, $artist);
+            Subsonic_XML_Data::addArtistDirectory($response, $artist);
         } else {
             if (Subsonic_XML_Data::isAlbum($id)) {
                 $album = new Album(Subsonic_XML_Data::getAmpacheId($id));
-                Subsonic_XML_Data::addAlbumDirectory($r, $album);
+                Subsonic_XML_Data::addAlbumDirectory($response, $album);
             }
         }
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -456,9 +456,9 @@ class Subsonic_Api
     {
         self::check_version($input, "1.9.0");
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addGenres($r, Tag::get_tags('song'));
-        self::apiOutput($input, $r);
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addGenres($response, Tag::get_tags('song'));
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -470,10 +470,10 @@ class Subsonic_Api
     {
         self::check_version($input, "1.7.0");
 
-        $r       = Subsonic_XML_Data::createSuccessResponse();
-        $artists = Catalog::get_artists(Catalog::get_catalogs());
-        Subsonic_XML_Data::addArtistsRoot($r, $artists, true);
-        self::apiOutput($input, $r);
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        $artists  = Catalog::get_artists(Catalog::get_catalogs());
+        Subsonic_XML_Data::addArtistsRoot($response, $artists, true);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -512,13 +512,13 @@ class Subsonic_Api
 
         $album = new Album(Subsonic_XML_Data::getAmpacheId($albumid));
         if (empty($album->name)) {
-            $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Album not found.");
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Album not found.");
         } else {
-            $r = Subsonic_XML_Data::createSuccessResponse();
-            Subsonic_XML_Data::addAlbum($r, $album, true, $addAmpacheInfo);
+            $response = Subsonic_XML_Data::createSuccessResponse();
+            Subsonic_XML_Data::addAlbum($response, $album, true, $addAmpacheInfo);
         }
 
-        self::apiOutput($input, $r, array('musicFolder', 'artist', 'child', 'playlist', 'song'));
+        self::apiOutput($input, $response, array('musicFolder', 'artist', 'child', 'playlist', 'song'));
     }
 
     /**
@@ -559,7 +559,7 @@ class Subsonic_Api
             $catalogs[] = $musicFolderId;
         }
 
-        $r            = Subsonic_XML_Data::createSuccessResponse();
+        $response     = Subsonic_XML_Data::createSuccessResponse();
         $errorOccured = false;
         $albums       = array();
 
@@ -622,7 +622,7 @@ class Subsonic_Api
                                                     $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
                                                 }
                                             } else {
-                                                $r            = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type));
+                                                $response     = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type));
                                                 $errorOccured = true;
                                             }
                                         }
@@ -636,9 +636,9 @@ class Subsonic_Api
         }
 
         if (!$errorOccured) {
-            Subsonic_XML_Data::addAlbumList($r, $albums, $elementName);
+            Subsonic_XML_Data::addAlbumList($response, $albums, $elementName);
         }
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -721,9 +721,9 @@ class Subsonic_Api
             $songs = Random::get_default($size);
         }
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addRandomSongs($r, $songs);
-        self::apiOutput($input, $r);
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addRandomSongs($response, $songs);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -735,11 +735,11 @@ class Subsonic_Api
     {
         self::check_version($input, "1.7.0");
 
-        $songid = self::check_parameter($input, 'id');
-        $r      = Subsonic_XML_Data::createSuccessResponse();
-        $song   = Subsonic_XML_Data::getAmpacheId($songid);
-        Subsonic_XML_Data::addSong($r, $song);
-        self::apiOutput($input, $r, array('musicFolder', 'artist', 'child', 'playlist', 'album'));
+        $songid   = self::check_parameter($input, 'id');
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        $song     = Subsonic_XML_Data::getAmpacheId($songid);
+        Subsonic_XML_Data::addSong($response, $song);
+        self::apiOutput($input, $response, array('musicFolder', 'artist', 'child', 'playlist', 'album'));
     }
 
     /**
@@ -761,9 +761,9 @@ class Subsonic_Api
         } else {
             $songs = array();
         }
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addSongsByGenre($r, $songs);
-        self::apiOutput($input, $r);
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addSongsByGenre($response, $songs);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -775,10 +775,10 @@ class Subsonic_Api
     {
         self::check_version($input);
 
-        $data = Stream::get_now_playing();
-        $r    = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addNowPlaying($r, $data);
-        self::apiOutput($input, $r);
+        $data     = Stream::get_now_playing();
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addNowPlaying($response, $data);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -873,21 +873,21 @@ class Subsonic_Api
     {
         self::check_version($input);
 
-        $r        = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse();
         $username = $input['username'];
 
         // Don't allow playlist listing for another user
         if (empty($username) || $username == Core::get_global('user')->username) {
-            Subsonic_XML_Data::addPlaylists($r, Playlist::get_playlists(), Search::get_searches());
+            Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists(), Search::get_searches());
         } else {
             $user = User::get_from_username($username);
             if ($user->id) {
-                Subsonic_XML_Data::addPlaylists($r, Playlist::get_users($user->id));
+                Subsonic_XML_Data::addPlaylists($response, Playlist::get_users($user->id));
             } else {
-                Subsonic_XML_Data::addPlaylists($r, array());
+                Subsonic_XML_Data::addPlaylists($response, array());
             }
         }
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -901,15 +901,15 @@ class Subsonic_Api
 
         $playlistid = self::check_parameter($input, 'id');
 
-        $r = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse();
         if (Subsonic_XML_Data::isSmartPlaylist($playlistid)) {
             $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistid), 'song');
-            Subsonic_XML_Data::addSmartPlaylist($r, $playlist, true);
+            Subsonic_XML_Data::addSmartPlaylist($response, $playlist, true);
         } else {
             $playlist = new Playlist($playlistid);
-            Subsonic_XML_Data::addPlaylist($r, $playlist, true);
+            Subsonic_XML_Data::addPlaylist($response, $playlist, true);
         }
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -927,19 +927,19 @@ class Subsonic_Api
 
         if ($playlistId) {
             self::_updatePlaylist($playlistId, $name, $songId);
-            $r = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse();
         } else {
             if (!empty($name)) {
                 $playlistId = Playlist::create($name, 'private');
                 if (count($songId) > 0) {
                     self::_updatePlaylist($playlistId, "", $songId);
                 }
-                $r = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse();
             } else {
-                $r = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
             }
         }
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $response);
     }
 
     private static function _updatePlaylist($id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true)
@@ -1359,8 +1359,8 @@ class Subsonic_Api
         self::check_version($input, "1.7.0");
 
         if (Core::get_global('user')->access >= 100) {
-            $response     = Subsonic_XML_Data::createSuccessResponse();
-            $users        = User::get_valid_users();
+            $response = Subsonic_XML_Data::createSuccessResponse();
+            $users    = User::get_valid_users();
             Subsonic_XML_Data::addUsers($response, $users);
         } else {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get details for other users.');
@@ -1412,8 +1412,8 @@ class Subsonic_Api
     {
         self::check_version($input, "1.9.0");
 
-        $response      = Subsonic_XML_Data::createSuccessResponse();
-        $radios        = Live_Stream::get_all_radios();
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        $radios   = Live_Stream::get_all_radios();
         Subsonic_XML_Data::addRadios($response, $radios);
         self::apiOutput($input, $response);
     }
@@ -1427,8 +1427,8 @@ class Subsonic_Api
     {
         self::check_version($input, "1.6.0");
 
-        $response      = Subsonic_XML_Data::createSuccessResponse();
-        $shares        = Share::get_share_list();
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        $shares   = Share::get_share_list();
         Subsonic_XML_Data::addShares($response, $shares);
         self::apiOutput($input, $response);
     }
@@ -1467,9 +1467,9 @@ class Subsonic_Api
             }
 
             if (!empty($object_type)) {
-                $response        = Subsonic_XML_Data::createSuccessResponse();
-                $shares          = array();
-                $shares[]        = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, Share::generate_secret(), 0, $description);
+                $response = Subsonic_XML_Data::createSuccessResponse();
+                $shares   = array();
+                $shares[] = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, Share::generate_secret(), 0, $description);
                 Subsonic_XML_Data::addShares($response, $shares);
             } else {
                 $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
@@ -1854,10 +1854,10 @@ class Subsonic_Api
         $includeNotPresent = ($input['includeNotPresent'] === "true");
 
         if (Subsonic_XML_Data::isArtist($id)) {
-            $artist_id        = Subsonic_XML_Data::getAmpacheId($id);
-            $info             = Recommendation::get_artist_info($artist_id);
-            $similars         = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
-            $response         = Subsonic_XML_Data::createSuccessResponse();
+            $artist_id = Subsonic_XML_Data::getAmpacheId($id);
+            $info      = Recommendation::get_artist_info($artist_id);
+            $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
+            $response  = Subsonic_XML_Data::createSuccessResponse();
             Subsonic_XML_Data::addArtistInfo($response, $info, $similars);
         } else {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
@@ -1958,8 +1958,8 @@ class Subsonic_Api
                     $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
                 }
             } else {
-                $podcasts        = Catalog::get_podcasts();
-                $response        = Subsonic_XML_Data::createSuccessResponse();
+                $podcasts = Catalog::get_podcasts();
+                $response = Subsonic_XML_Data::createSuccessResponse();
                 Subsonic_XML_Data::addPodcasts($response, $podcasts, $includeEpisodes);
             }
         } else {
@@ -2127,8 +2127,8 @@ class Subsonic_Api
     {
         self::check_version($input, "1.9.0");
 
-        $response         = Subsonic_XML_Data::createSuccessResponse();
-        $bookmarks        = Bookmark::get_bookmarks();
+        $response  = Subsonic_XML_Data::createSuccessResponse();
+        $bookmarks = Bookmark::get_bookmarks();
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
         self::apiOutput($input, $response);
     }

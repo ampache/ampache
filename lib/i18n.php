@@ -33,12 +33,12 @@ function load_gettext()
     $lang   = AmpConfig::get('lang');
     $popath = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.po';
 
-    $t = new Translator();
+    $gettext = new Translator();
     if (file_exists($popath)) {
         $translations = Gettext\Translations::fromPoFile($popath);
-        $t->loadTranslations($translations);
+        $gettext->loadTranslations($translations);
     }
-    $t->register();
+    $gettext->register();
 } // load_gettext
 
 /*
