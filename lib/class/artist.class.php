@@ -353,8 +353,8 @@ class Artist extends database_object implements library_item
                 } else {
                     $results[] = $row['id'];
                 }
-                if (!empty($r['mbid'])) {
-                    $mbids[] = $r['mbid'];
+                if (!empty($row['mbid'])) {
+                    $mbids[] = $row['mbid'];
                 }
             }
         }
