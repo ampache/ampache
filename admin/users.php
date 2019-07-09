@@ -113,7 +113,7 @@ switch ($_REQUEST['action']) {
         }
         $client->upload_avatar();
 
-        show_confirmation(T_('User Updated'), $client->fullname . "(" . $client->username . ")" . T_('Updated'), AmpConfig::get('web_path') . '/admin/users.php');
+        show_confirmation(T_('User Updated'), $client->fullname . " (" . $client->username . ") " . T_('Updated'), AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'add_user':
         if (AmpConfig::get('demo_mode')) {
