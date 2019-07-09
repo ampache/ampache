@@ -113,7 +113,7 @@ switch ($_REQUEST['action']) {
         }
         $client->upload_avatar();
 
-        show_confirmation(T_('User Updated'), $client->fullname . " (" . $client->username . ") " . T_('Updated'), AmpConfig::get('web_path') . '/admin/users.php');
+        show_confirmation(T_('User Updated'), $client->username . ' (' . $client->fullname . ') ' . T_('Updated'), AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'add_user':
         if (AmpConfig::get('demo_mode')) {
@@ -188,12 +188,12 @@ switch ($_REQUEST['action']) {
         if (!AmpConfig::get('user_no_email_confirm')) {
             Registration::send_account_enabled($client->username, $client->fullname, $client->email);
         }
-        show_confirmation(T_('User enabled'), $client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path') . '/admin/users.php');
+        show_confirmation(T_('User enabled'), $client->username . ' (' . $client->fullname . ')', AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'disable':
         $client = new User(Core::get_request('user_id'));
         if ($client->disable()) {
-            show_confirmation(T_('User disabled'), $client->fullname . ' (' . $client->username . ')', AmpConfig::get('web_path') . '/admin/users.php');
+            show_confirmation(T_('User disabled'), $client->username . ' (' . $client->fullname . ')', AmpConfig::get('web_path') . '/admin/users.php');
         } else {
             show_confirmation(T_('Error'), T_('Unable to disable last Administrator'), AmpConfig::get('web_path') . '/admin/users.php');
         }
