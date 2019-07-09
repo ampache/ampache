@@ -340,8 +340,11 @@ class Artist extends database_object implements library_item
                             unset($results[$rtype]);
                         }
                     }
-
-                    $results = array_merge($results_sort, $results);
+                } else {
+                    $results[] = $row['id'];
+                }
+                if (!empty($row['mbid'])) {
+                    $mbids[] = $row['mbid'];
                 }
             } else {
                 $results[] = $row['id'];
