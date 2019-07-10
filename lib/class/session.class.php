@@ -71,7 +71,7 @@ class Session
         $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
-        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
+        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 5);
 
         return true;
     }
@@ -389,8 +389,6 @@ class Session
         if ($sid) {
             $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
             Dba::write($sql, array($latitude, $longitude, $name, $sid));
-        } else {
-            debug_event('session.class', 'Missing session id to update geolocation.', 3);
         }
     }
 
