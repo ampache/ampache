@@ -268,13 +268,13 @@ class AutoUpdate
         echo '<a href="https://github.com/ampache/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
         if (self::is_develop()) {
             echo ' | <a href="https://github.com/ampache/ampache/archive/' .
-             (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('Download') . '</b></a>';
+             (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank">' . T_('Download') . '</a>';
         } else {
             echo ' | <a href="https://github.com/ampache/ampache/releases/download/' . self::get_latest_version() .
-              '/ampache-' . self::get_latest_version() . '_all.zip"' . ' target="_blank"><b>' . T_('Download') . '</b></a>';
+              '/ampache-' . self::get_latest_version() . '_all.zip"' . ' target="_blank">' . T_('Download') . '</a>';
         }
         if (self::is_git_repository()) {
-            echo ' | <a rel="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update"> ' . T_('Update') . '</a>';
+            echo ' | <a rel="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
         }
         echo '</div>';
     }
