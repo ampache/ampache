@@ -216,29 +216,30 @@ class Subsonic_XML_Data
 
     public static function createFailedResponse($version = '', $function = '')
     {
-        if (empty($version)) {
+        if ($version === '') {
             $version = self::API_VERSION;
         }
-        $response = self::createResponse($version, 'failed');
-        debug_event('subsonic_xml_data.class', 'API fail in function ' . $function . '-' . $version, 3);
+        $response = self::createResponse($version);
+        $response->addAttribute('status', 'failed');
+        debug_event('subsonic_xml_data.class', 'API auth failure ' . $version, 3);
 
         return $response;
     }
 
     public static function createSuccessResponse($version = '', $function = '')
     {
-        if (empty($version)) {
+        if ($version === '') {
             $version = self::API_VERSION;
         }
         $response = self::createResponse($version);
-        debug_event('subsonic_xml_data.class', 'API success in function ' . $function . '-' . $version, 5);
+        debug_event('subsonic_xml_data.class', 'API auth success ' . $version, 5);
 
         return $response;
     }
 
     public static function createResponse($version = '', $status = 'ok')
     {
-        if (empty($version)) {
+        if ($version === '') {
             $version = self::API_VERSION;
         }
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
