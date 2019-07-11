@@ -743,6 +743,28 @@ class Subsonic_Api
     }
 
     /**
+     * getTopSongs
+     * Get most popular songs for a given artist.
+     * Takes the genre with optional count and offset in parameters.
+     */
+    public static function gettopsongs($input)
+    {
+        self::check_version($input, "1.13.0");
+
+        $artist_id = self::check_parameter($input, 'artist');
+        $count     = $input['count'];
+        $artist    = new Artist($artist_id);
+        if ($artist->id) {
+            $songs = Artist::get_top_songs($artist->id, $count);
+        } else {
+            $songs = array();
+        }
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addSongsByArtist($response, $songs);
+        self::apiOutput($input, $response);
+    }
+
+    /**
      * getSongsByGenre
      * Get songs in a given genre.
      * Takes the genre with optional count and offset in parameters.

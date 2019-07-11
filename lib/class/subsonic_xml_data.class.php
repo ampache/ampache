@@ -875,6 +875,16 @@ class Subsonic_XML_Data
     /**
      * @param SimpleXMLElement $xml
      */
+    public static function addSongsByArtist($xml, $songs)
+    {
+        $xsongs = $xml->addChild('songsByArtist');
+        foreach ($songs as $songid) {
+            self::addSong($xsongs, $songid);
+        }
+    }
+    /**
+     * @param SimpleXMLElement $xml
+     */
     public static function addNowPlaying($xml, $data)
     {
         $xplaynow = $xml->addChild('nowPlaying');
