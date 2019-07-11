@@ -752,15 +752,18 @@ class Subsonic_Api
         self::check_version($input, "1.13.0");
 
         $artist_id = self::check_parameter($input, 'artist');
-        $count     = $input['count'];
-        $artist    = new Artist($artist_id);
+        $artist    = new Artist(Subsonic_XML_Data::getAmpacheId($artist_id));
+        $count     = (int) $input['count'];
+        if ($count <= 0) {
+            $count = 50;
+        }
         if ($artist->id) {
             $songs = Artist::get_top_songs($artist->id, $count);
         } else {
             $songs = array();
         }
         $response = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addSongsByArtist($response, $songs);
+        Subsonic_XML_Data::addTopSongs($response, $songs);
         self::apiOutput($input, $response);
     }
 

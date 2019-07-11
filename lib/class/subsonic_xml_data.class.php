@@ -875,9 +875,9 @@ class Subsonic_XML_Data
     /**
      * @param SimpleXMLElement $xml
      */
-    public static function addSongsByArtist($xml, $songs)
+    public static function addTopSongs($xml, $songs)
     {
-        $xsongs = $xml->addChild('songsByArtist');
+        $xsongs = $xml->addChild('topSongs');
         foreach ($songs as $songid) {
             self::addSong($xsongs, $songid);
         }
