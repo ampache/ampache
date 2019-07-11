@@ -1644,8 +1644,8 @@ class Subsonic_Api
         self::check_version($input, "1.10.1");
 
         $username = self::check_parameter($input, 'username');
-        $password = self::check_parameter($input, 'password');
-        $email    = self::check_parameter($input, 'email');
+        $password = $input['password'];
+        $email    = $input['email'];
         //$ldapAuthenticated = $input['ldapAuthenticated'];
         $adminRole    = ($input['adminRole'] == 'true');
         $downloadRole = ($input['downloadRole'] == 'true');
@@ -1653,7 +1653,7 @@ class Subsonic_Api
         $coverArtRole = ($input['coverArtRole'] == 'true');
         $shareRole    = ($input['shareRole'] == 'true');
         //$musicfolderid = $input['musicFolderId'];
-        $maxbitrate = self::check_parameter($input, 'maxBitRate');
+        $maxbitrate = $input['maxBitRate'];
 
         if (Access::check('interface', 100)) {
             $access = 25;
