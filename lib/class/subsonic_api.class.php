@@ -1632,6 +1632,72 @@ class Subsonic_Api
     }
 
     /**
+     * updateUser
+     * Update an existing user.
+     * Takes the username with optional parameters.
+     */
+    public static function updateuser($input)
+    {
+        self::check_version($input, "1.10.1");
+
+        $username = self::check_parameter($input, 'username');
+        $password = self::check_parameter($input, 'password');
+        $email    = self::check_parameter($input, 'email');
+        //$ldapAuthenticated = $input['ldapAuthenticated'];
+        $adminRole    = ($input['adminRole'] == 'true');
+        $downloadRole = ($input['downloadRole'] == 'true');
+        $uploadRole   = ($input['uploadRole'] == 'true');
+        $coverArtRole = ($input['coverArtRole'] == 'true');
+        $shareRole    = ($input['shareRole'] == 'true');
+        //$musicfolderid = $input['musicFolderId'];
+        $maxbitrate = self::check_parameter($input, 'maxBitRate');
+
+        if (Access::check('interface', 100)) {
+            $access = 25;
+            if ($adminRole) {
+                $access = 100;
+            } elseif ($coverArtRole) {
+                $access = 75;
+            }
+            // identify the user to modify
+            $user_id  = User::get_from_username($username);
+            $user     = new User($user_id);
+
+            if ($user_id > 0) {
+                // update password
+                if ($password) {
+                    $password = self::decrypt_password($password);
+                    $user->update_password($password);
+                }
+                // update e-mail
+                if (Mailer::validate_address($email)) {
+                    $user->update_email($email);
+                }
+                // set preferences
+                if ($downloadRole) {
+                    Preference::update('download', $user_id, 1);
+                }
+                if ($uploadRole) {
+                    Preference::update('allow_upload', $user_id, 1);
+                }
+                if ($shareRole) {
+                    Preference::update('share', $user_id, 1);
+                }
+                if ((int) $maxbitrate > 0) {
+                    Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+                }
+                $response = Subsonic_XML_Data::createSuccessResponse();
+            } else {
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            }
+        } else {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+        }
+
+        self::apiOutput($input, $response);
+    }
+
+    /**
      * deleteUser
      * Delete an existing user.
      * Takes the username in parameter.
