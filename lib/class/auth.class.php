@@ -140,7 +140,7 @@ class Auth
     private static function mysql_auth($username, $password, $token = null, $salt = null)
     {
         // subsonic token auth with apikey
-        if (strlen($password) && strlen($token) && strlen($salt) && strlen($username)) {
+        if (strlen($token) && strlen($salt) && strlen($username)) {
             $sql        = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
 
