@@ -174,7 +174,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #ajax-loading {
     background-repeat: no-repeat;
-    background-position: right; 
+    background-position: right;
     display: none;
     font-size: 12px;
     left: 52px;
@@ -322,7 +322,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 128px;
     height: 128px;
     background-repeat: no-repeat;
-    background-position: center; 
+    background-position: center;
     background-size: contain;
     margin: auto;
 }
@@ -1210,6 +1210,11 @@ span.fatalerror {
 
 .box-content #tag_filter .tag_actions {
     margin: 15px 0 0 -8px;
+    visibility: hidden;
+}
+
+.box-content #tag_filter .tag_container:hover .tag_actions {
+    visibility: visible;
 }
 
 .box-content #tag_filter .tag_button span {
