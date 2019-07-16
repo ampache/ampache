@@ -91,11 +91,7 @@
                 <li id="sb_home_browse_video_video"><a href="<?php echo $web_path ?>/browse.php?action=personal_video"><?php echo T_('Personal Videos') ?></a></li>
           <?php
             } ?>
-          <?php if (Video::get_item_count('Video')) {
-                ?>
                 <li id="sb_home_browse_video_tagsVideo"><a href="<?php echo $web_path ?>/browse.php?action=tag&type=video"><?php echo T_('Tag Cloud') ?></a></li>
-          <?php
-            } ?>
             </ul>
         </li>
     <?php
