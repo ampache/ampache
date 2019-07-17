@@ -149,7 +149,7 @@ class Userflag extends database_object
      */
     public function set_flag($flagged, $user_id = null)
     {
-        if ($user_id === null ) {
+        if ($user_id === null) {
             $user_id = (int) (Core::get_global('user')->id);
         }
         if ($user_id === 0) {
