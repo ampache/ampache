@@ -308,12 +308,12 @@ class Stats
                     " and `object_count`.`object_type` = 'album'";
         }
         if ($user_id !== null) {
-            $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . $user_id;
+            $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . $user_id . " ";
         } else {
             $sql .= " WHERE `object_type` = '" . $type . "' AND `date` >= '" . $date . "' ";
         }
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`object_id`');
+            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
@@ -331,9 +331,9 @@ class Stats
             $sql .= " GROUP BY object_id ";
         }
         if ($random) {
-            $sql .= "ORDER BY RAND() DESC ";
+            $sql .= " ORDER BY RAND() DESC";
         } else {
-            $sql .= "ORDER BY `count` DESC ";
+            $sql .= " ORDER BY `count` DESC";
         }
 
         return $sql;
@@ -396,7 +396,7 @@ class Stats
             $user_sql = " AND `user` = '" . $user_id . "'";
         }
 
-        $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM object_count" .
+        $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM `object_count`" .
                 " WHERE `object_type` = '" . $type . "'" . $user_sql;
         if (AmpConfig::get('catalog_disable')) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
@@ -410,6 +410,16 @@ class Stats
                     " AND `rating`.`user` = " . $user_id . ")";
         }
         $sql .= " GROUP BY `object_id` ORDER BY MAX(`date`) DESC, `id` ";
+
+        //playlists aren't the same as other objects so change the sql
+        if ($type === 'playlist') {
+            $sql = "SELECT `id`, `last_update` as `date` FROM `playlist`";
+            if (!empty($user_id)) {
+                $sql .= " WHERE `user` = '" . $user_id . "'";
+            }
+            $sql .= " ORDER BY `last_update` DESC";
+        }
+        debug_event('stats.class', 'get_recent ' . $sql, 5);
 
         return $sql;
     }

@@ -1039,20 +1039,17 @@ class Api
      */
     public static function stats($input)
     {
+        $filter = $input['filter'];
+        $offset = $input['offset'];
+        $limit  = $input['limit'];
+        $type   = 'album'; // original method only searched albums
+        if ($input['type']) {
+            $type = $input['type'];
+        }
         if ($input['username']) {
-            //settings for the old API call
-            $type     = 'album';
-            $filter   = $input['type'];
-            $offset   = $input['offset'];
-            $limit    = $input['limit'];
             $username = $input['username'];
             $user_id  = User::get_from_username($username);
         } else {
-            //settings for the new api call
-            $type     = $input['type'];
-            $filter   = $input['filter'];
-            $offset   = $input['offset'];
-            $limit    = $input['limit'];
             $user_id  = $input['user_id'];
         }
         if (!$limit) {
@@ -1085,7 +1082,7 @@ class Api
                     } else {
                         if ($filter == "flagged") {
                             debug_event('api.class', 'stats flagged', 4);
-                            $results = Userflag::get_latest($type);
+                            $results = Userflag::get_latest($type, $user_id);
                         } else {
                             debug_event('api.class', 'stats random ' . $type, 4);
                             if ($type === 'song') {
@@ -1305,6 +1302,11 @@ class Api
         $type      = $input['type'];
         $object_id = $input['id'];
         $flag      = $input['flag'];
+        $client    = User::get_from_apikey($input['auth']);
+        $user_id    = null;
+        if ($client) {
+            $user_id = $client->id;
+        }
 
         if (!Core::is_library_item($type) || !$object_id) {
             echo XML_Data::error('401', T_('Wrong library item type.'));
@@ -1314,8 +1316,11 @@ class Api
                 echo XML_Data::error('404', T_('Library item not found.'));
             } else {
                 $userflag = new Userflag($object_id, $type);
-                $userflag->set_flag($flag);
-                echo XML_Data::single_string('success');
+                if ($userflag->set_flag($flag, $user_id)) {
+                    echo XML_Data::single_string('success');
+                } else {
+                    echo XML_Data::single_string('failure');
+                }
             }
         }
     } // flag
