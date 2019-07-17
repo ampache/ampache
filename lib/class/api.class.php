@@ -1303,7 +1303,7 @@ class Api
         $object_id = $input['id'];
         $flag      = $input['flag'];
         $client    = User::get_from_apikey($input['auth']);
-        $user_id    = null;
+        $user_id   = null;
         if ($client) {
             $user_id = $client->id;
         }
