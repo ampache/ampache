@@ -1163,7 +1163,7 @@ class Api
         $limit  = $input['limit'];
         // original method only searched albums and had poor method inputs
         if (in_array($input['type'], array('newest', 'highest', 'frequent', 'recent', 'flagged'))) {
-            $type   = 'album'; 
+            $type   = 'album';
             $filter = $input['type'];
         }
         if ($input['username']) {
