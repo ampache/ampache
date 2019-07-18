@@ -1156,21 +1156,15 @@ class Api
      */
     public static function stats($input)
     {
-        if (!self::check_parameter($input, array('type'))) {
-            debug_event('api.class', "'type' required on stats function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type'");
-
-            return false;
-        }
         // moved type to filter and allowed multipe type selection
         $type   = $input['type'];
         $filter = $input['filter'];
         $offset = $input['offset'];
         $limit  = $input['limit'];
         // original method only searched albums and had poor method inputs
-        if (in_array($input['type'], array('newest', 'highest', 'frequent', 'recent', 'flagged'))) {
-            $type   = 'album';
-            $filter = $input['type'];
+        if (in_array($input['type'], array('newest', 'highest', 'frequent', 'recent', 'flagged')) {
+            $type   = 'album'; 
+            $filter = $input['type']
         }
         if ($input['username']) {
             $username = $input['username'];
