@@ -1045,7 +1045,7 @@ class Api
         $offset = $input['offset'];
         $limit  = $input['limit'];
         // original method only searched albums and had poor method inputs
-        if (in_array($input['type'], array('newest', 'highest', 'frequent', 'recent', 'flagged')) {
+        if (in_array($input['type'], array('newest', 'highest', 'frequent', 'recent', 'flagged'))) {
             $type   = 'album'; 
             $filter = $input['type'];
         }
