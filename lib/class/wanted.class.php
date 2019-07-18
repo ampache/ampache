@@ -89,16 +89,12 @@ class Wanted extends database_object
 
     /**
      * Constructor
-     * @param integer $id
+     * @param integer $wanted_id
      */
-    public function __construct($id = 0)
+    public function __construct($wanted_id)
     {
-        if (!$id) {
-            return true;
-        }
-
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($wanted_id);
 
         // Foreach what we've got
         foreach ($info as $key => $value) {
@@ -313,7 +309,7 @@ class Wanted extends database_object
             $mb     = new MusicBrainz(new RequestsHttpAdapter());
             $malbum = $mb->lookup('release', $mbid, array('release-groups'));
             if ($malbum->{'release-group'}) {
-                self::delete_wanted($malbum->{'release-group'});
+                self::delete_wanted(print_r($malbum->{'release-group'}, true));
             }
         }
     }

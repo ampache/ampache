@@ -41,13 +41,40 @@ CHANGELOG
 - Remove '[Disk x]' when grouped from all UI areas by enforcing the group setting.
 - Make test.php, init.php & install.php show an error page instead of blank screen. (gettext)
 - Filter zip names in batch so they are named correctly by the download
+- API - Authentication: Require a handshake and generate unique sessions
+- API - Authentication: allow sha256 encrypted apikey for auth
+  * You must send an encrypted api key in the following fashion. (Hash key joined with username)
+  * $passphrase = hash('sha256', $username . hash('sha256', $apikey));
 - API - Extended Method: stats allow songs|artists|albums (instead of just albums)
 - API - Extended Method: playlists allow return of smartlists as well as regular playlists (Only allow smartlists with an item limit)
 - API - New Method: flag allows flagging object by id & type
 - API - New Method: record_play allows recording play of object without streaming
 - API - New Method: catalog_action allow running add_to_catalog|clean_catalog
 - API - New Method: playlist_edit alow editing name and type of playlist
+- API - New Method: goodbye (Destroy session)
+- API - New Method: get_indexes (return simple index lists to allow a quicker library fill.)
+- API - New Method: check_parameter (error when mandatory inputs are missing)
+- API - New Method: stream (Raw stream of song_id)
+- API - New Method: download (Download, not recorded as a play)
+- API - New Method: get_art (Raw art file like subsonic getCoverArt)
+- API - New Method: user_create ('user' access level only!)
+- API - New Method: user_update (update user details and passwords for non-admins)
+- API - New Method: user_delete (you can't delete yourself or and admin account!)
 - Fix slideshow creating black screen when using web player
+- Default to disk 1 instead of 0 (db updates to handle existing albums)
+- Add Barcode, Original Year and Catalog Number to Album table
+- Extend bin/sort_files.inc & catalog patterns to handle new fields
+- Updated bin/sort_files.inc for a smoother experience that actually works
+- Add -u to bin/catalog_update.inc This function will update the artist table with bio, image, etc as well as update similar artists.
+- Numerous catalog updates to allow data migration when updating file tags. (UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate)
+- Faster tag updates/catalog verify! (Updating an album would update each file multiple times)
+- Subsonic - Update api to 1.13.0 [http://www.subsonic.org/pages/api.jsp]
+- Subsonic - Allow token auth using API Key instead of password.
+- Subsonic - Don't ignore group settings with id3 browsing
+- Subsonic - New Method: updateUser
+- Subsonic - New Method: getTopSongs
+- Subsonic - Fix cover art for playlists and albums
+- Added SVG support to the theme engine.
 
 3.9.1
 ----------
@@ -74,8 +101,6 @@ CHANGELOG
 - Fixed uploading of avatar.
 - DSub now writes the correct extension when the ampache config switch `encode_player_api_target` is enabled.
 - Artist info now properly displayed.
-- Fixed login bug with PHP-7.2 installed.
-
 3.8.8
 ----------
 - Subsonic API now removes illegal characters before returning text.

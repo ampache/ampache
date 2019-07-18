@@ -63,7 +63,7 @@ if (strlen($input) > 0) { $source_encoding = trim($input); }
 printf (T_('Using %s as source character set'), $source_encoding);
 echo "\n";
 
-$sql = "SELECT id FROM `catalog` WHERE `catalog_type`='local'";
+$sql = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
 $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {

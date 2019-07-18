@@ -102,12 +102,8 @@ class Access
      * Takes an ID of the access_id dealie :)
      * @param integer|null $access_id
      */
-    public function __construct($access_id = null)
+    public function __construct($access_id)
     {
-        if ($access_id === null) {
-            return false;
-        }
-
         /* Assign id for use in get_info() */
         $this->id = (int) $access_id;
 
@@ -388,9 +384,9 @@ class Access
     }
 
     /**
-     * check_access
+     * check
      *
-     * This is the global 'has_access' function.(t can check for any 'type'
+     * This is the global 'has_access' function. it can check for any 'type'
      * of object.
      *
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
