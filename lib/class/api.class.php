@@ -1039,12 +1039,15 @@ class Api
      */
     public static function stats($input)
     {
+        // moved type to filter and allowed multipe type selection
+        $type   = $input['type'];
         $filter = $input['filter'];
         $offset = $input['offset'];
         $limit  = $input['limit'];
-        $type   = 'album'; // original method only searched albums
-        if ($input['type']) {
-            $type = $input['type'];
+        // original method only searched albums and had poor method inputs
+        if (in_array($input['type'], array('newest', 'highest', 'frequent', 'recent', 'flagged')) {
+            $type   = 'album'; 
+            $filter = $input['type']
         }
         if ($input['username']) {
             $username = $input['username'];
