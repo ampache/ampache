@@ -1047,7 +1047,7 @@ class Api
         // original method only searched albums and had poor method inputs
         if (in_array($input['type'], array('newest', 'highest', 'frequent', 'recent', 'flagged')) {
             $type   = 'album'; 
-            $filter = $input['type']
+            $filter = $input['type'];
         }
         if ($input['username']) {
             $username = $input['username'];
