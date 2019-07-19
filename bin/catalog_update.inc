@@ -36,8 +36,8 @@ $catadd = 0;
 $artadd = 0;
 $plimp = 0;
 $optimizetables = 0;
-$cattype = '';
-$catname = '';
+$cattype = false;
+$catname = false;
 $options = getopt("hn:t:mvcagio");
 
 if (count($options) == 0) {
@@ -126,7 +126,7 @@ if ($plimp == 1) {
 if ($catname !== false) {
     $where = " name = '$catname' ";
 }
-if ($cattype) {
+if ($cattype !== false) { 
     $where .= "catalog_type='$cattype'";
 } elseif (!$where) {
     $where .= "catalog_type='local'";

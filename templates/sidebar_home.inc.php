@@ -67,7 +67,7 @@
         } ?>
         </ul>
     </li>
-    <?php if (AmpConfig::get('allow_video')) {
+    <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
             ?>
         <li><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Video') ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_browse_video'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="browse_video" lt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
             <ul class="sb3" id="sb_home_browse_video">
@@ -91,11 +91,7 @@
                 <li id="sb_home_browse_video_video"><a href="<?php echo $web_path ?>/browse.php?action=personal_video"><?php echo T_('Personal Videos') ?></a></li>
           <?php
             } ?>
-          <?php if (Video::get_item_count('Video')) {
-                ?>
                 <li id="sb_home_browse_video_tagsVideo"><a href="<?php echo $web_path ?>/browse.php?action=tag&type=video"><?php echo T_('Tag Cloud') ?></a></li>
-          <?php
-            } ?>
             </ul>
         </li>
     <?php
@@ -202,7 +198,7 @@
           <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=album"><?php echo T_('Albums'); ?></a></li>
           <li id="sb_home_search_artist"><a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a></li>
           <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo T_('Playlists'); ?></a></li>
-          <?php if (AmpConfig::get('allow_video')) {
+          <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
         ?>
             <li id="sb_home_search_video"><a href="<?php echo $web_path ?>/search.php?type=video"><?php echo T_('Videos') ?></a></li>
           <?php
