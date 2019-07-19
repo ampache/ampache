@@ -628,7 +628,7 @@ class Stream_Playlist
 
         // Header redirect baby!
         $url = current($this->urls);
-        $url = Stream_URL::add_options($url->url, 'player=download');
+        $url = Stream_URL::add_options($url->url, 'action=download');
         header('Location: ' . $url);
 
         return false;
