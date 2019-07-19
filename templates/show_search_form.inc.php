@@ -40,7 +40,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
     } else {
         echo T_('Artists');
     } ?></td>
-    <?php if (AmpConfig::get('allow_video')) {
+    <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
         ?>
         <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) != 'video') {
             ?>
