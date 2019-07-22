@@ -51,7 +51,7 @@ switch ($_REQUEST['action']) {
         $broadcast = new Broadcast($object_id);
         if ($broadcast->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=broadcast';
-            show_confirmation(T_('As you wish'), T_('Broadcast has been deleted'), $next_url);
+            show_confirmation(T_('No Problem'), sprint_f(T_('%s has been deleted.'), T_('Broadcast')), $next_url);
         }
         UI::show_footer();
 

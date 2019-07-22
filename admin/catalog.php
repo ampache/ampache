@@ -105,9 +105,9 @@ switch ($_REQUEST['action']) {
         }
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php';
         if ($deleted) {
-            show_confirmation(T_('As you wish'), T_('Catalog and all associated records have been deleted'), $next_url);
+            show_confirmation(T_('No Problem'), sprint_f(T_('%s has been deleted.'), T_('Catalog')), $next_url);
         } else {
-            show_confirmation(T_('Please don\'t be mad'), T_('Cannot delete this catalog'), $next_url);
+            show_confirmation(T_('Please don\'t be mad'), sprint_f(T_('Couldn\'t delete this %s.'), T_('Catalog')), $next_url);
         }
     break;
     case 'show_delete_catalog':
@@ -221,7 +221,7 @@ switch ($_REQUEST['action']) {
             break;
         }
         Stream::clear_now_playing();
-        show_confirmation(T_('That was easy'), T_('All Now Playing data has been cleared'), AmpConfig::get('web_path') . '/admin/catalog.php');
+        show_confirmation(T_('No Problem'), T_('All Now Playing data has been cleared'), AmpConfig::get('web_path') . '/admin/catalog.php');
     break;
     case 'show_disabled':
         /* Stop the demo hippies */

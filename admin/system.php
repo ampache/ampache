@@ -51,7 +51,7 @@ switch ($_REQUEST['action']) {
         return false;
     case 'reset_db_charset':
         Dba::reset_db_charset();
-        show_confirmation(T_('That was easy'), T_('Your database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
+        show_confirmation(T_('No Problem'), T_('Your database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
     break;
     case 'show_debug':
         $configuration = AmpConfig::get_all();
@@ -66,7 +66,7 @@ switch ($_REQUEST['action']) {
             case 'artist': Artist::clear_cache(); break;
             case 'album': Album::clear_cache(); break;
         }
-        show_confirmation(T_('That was easy'), T_('Your cache has been cleared successfully.'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
+        show_confirmation(T_('No Problem'), T_('Your cache has been cleared successfully.'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
     break;
     default:
         // Rien a faire

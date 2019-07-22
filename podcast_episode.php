@@ -54,9 +54,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($episode->remove()) {
-            show_confirmation(T_('As you wish'), T_('Episode has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), sprint_f(T_('%s has been deleted.'), T_('Episode')), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Please don\'t be mad'), T_('Cannot delete this episode.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Please don\'t be mad'), sprint_f(T_('Couldn\'t delete this %s.'), T_('Episode')), AmpConfig::get('web_path'));
         }
     break;
     case 'show':

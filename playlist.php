@@ -133,7 +133,7 @@ switch ($_REQUEST['action']) {
 
         prune_empty_playlists();
         $url   = AmpConfig::get('web_path') . '/playlist.php';
-        $title = T_('Empty Playlists Deleted');
+        $title = sprint_f(T_('%s have been deleted.'), T_('Empty Playlists'));
         $body  = '';
         show_confirmation($title, $body, $url);
     break;
