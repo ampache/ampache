@@ -54,9 +54,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($artist->remove_from_disk()) {
-            show_confirmation(T_('As you wish'), T_('Artist has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), sprint_f(T_('%s has been deleted.'), T_('Artist')), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Please don\'t be mad'), T_('Cannot delete this artist.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Please don\'t be mad'), sprint_f(T_('Couldn\'t delete this %s.'), T_('Artist')), AmpConfig::get('web_path'));
         }
     break;
     case 'show':

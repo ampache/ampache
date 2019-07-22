@@ -89,7 +89,7 @@ switch ($_REQUEST['action']) {
             }
         }
 
-        show_confirmation(T_('That was easy'), T_('Messages state changed.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
+        show_confirmation(T_('No Problem'), T_('Messages state changed.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
         break;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
@@ -124,7 +124,7 @@ switch ($_REQUEST['action']) {
             }
         }
 
-        show_confirmation(T_('That was easy'), T_('Messages have been deleted.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
+        show_confirmation(T_('No Problem'), sprint_f(T_('%s have been deleted.'), T_('Messages')), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
         break;
     case 'show':
     default:

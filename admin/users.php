@@ -113,7 +113,7 @@ switch ($_REQUEST['action']) {
         }
         $client->upload_avatar();
 
-        show_confirmation(T_('That was easy'), $client->username . ' (' . $client->fullname . ') ' . T_('Updated'), AmpConfig::get('web_path') . '/admin/users.php');
+        show_confirmation(T_('No Problem'), $client->username . ' (' . $client->fullname . ') ' . T_('Updated'), AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'add_user':
         if (AmpConfig::get('demo_mode')) {
@@ -195,7 +195,7 @@ switch ($_REQUEST['action']) {
         if ($client->disable()) {
             show_confirmation(T_('User disabled'), $client->username . ' (' . $client->fullname . ')', AmpConfig::get('web_path') . '/admin/users.php');
         } else {
-            show_confirmation(T_('Please don\'t be mad'), T_('Unable to disable last Administrator'), AmpConfig::get('web_path') . '/admin/users.php');
+            show_confirmation(T_('Please don\'t be mad'), T_('You need an active Administrator account.'), AmpConfig::get('web_path') . '/admin/users.php');
         }
     break;
     case 'show_edit':
@@ -216,9 +216,9 @@ switch ($_REQUEST['action']) {
         }
         $client = new User(Core::get_request('user_id'));
         if ($client->delete()) {
-            show_confirmation(T_('As you wish'), sprintf(T_('%s has been deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
         } else {
-            show_confirmation(T_('Please don\'t be mad'), T_("Unable to delete last administrator"), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_('Please don\'t be mad'), T_('You need an active Administrator account'), AmpConfig::get('web_path') . "/admin/users.php");
         }
     break;
     case 'delete':
@@ -251,7 +251,7 @@ switch ($_REQUEST['action']) {
         $client->delete_avatar();
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
-        show_confirmation(T_('As you wish'), T_('User avatar has been deleted'), $next_url);
+        show_confirmation(T_('No Problem'), sprint_f(T_('%s has been deleted.'), T_('Avatar')), $next_url);
     break;
     case 'show_generate_apikey':
         $user_id = Core::get_request('user_id');
@@ -274,7 +274,7 @@ switch ($_REQUEST['action']) {
         $client->generate_apikey();
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
-        show_confirmation(T_('That was easy'), T_('New user API Key has been generated.'), $next_url);
+        show_confirmation(T_('No Problem'), T_('New user API Key has been generated.'), $next_url);
     break;
     /* Show IP History for the Specified User */
     case 'show_ip_history':

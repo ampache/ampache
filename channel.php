@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
         $channel   = new Channel($object_id);
         if ($channel->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=channel';
-            show_confirmation(T_('As you wish'), T_('Channel has been deleted'), $next_url);
+            show_confirmation(T_('No Problem'), sprint_f(T_('%s has been deleted.'), T_('Channel')), $next_url);
         }
         UI::show_footer();
 

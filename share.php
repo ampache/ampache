@@ -111,7 +111,7 @@ switch ($_REQUEST['action']) {
         $share_id = Core::get_request('id');
         if (Share::delete_share($share_id)) {
             $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
-            show_confirmation(T_('As you wish'), T_('Share has been deleted'), $next_url);
+            show_confirmation(T_('No Problem'), sprint_f(T_('%s has been deleted.'), T_('Share')), $next_url);
         }
         UI::show_footer();
 
@@ -126,7 +126,7 @@ switch ($_REQUEST['action']) {
         UI::show_header();
         Share::garbage_collection();
         $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
-        show_confirmation(T_('That was easy'), T_('Expired shares have been cleaned.'), $next_url);
+        show_confirmation(T_('No Problem'), T_('Expired shares have been cleaned.'), $next_url);
         UI::show_footer();
 
         return false;

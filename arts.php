@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
     case 'clear_art':
         $art = new Art($object_id, $object_type);
         $art->reset();
-        show_confirmation(T_('That was easy'), T_('Art information has been removed from the database'), $burl);
+        show_confirmation(T_('No Problem'), T_('Art information has been removed from the database'), $burl);
     break;
     // Upload art
     case 'upload_art':
