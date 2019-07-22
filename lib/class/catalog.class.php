@@ -1357,6 +1357,7 @@ abstract class Catalog extends database_object
      * gather_artist_info
      *
      * This runs through all of the artists and refreshes last.fm information
+     * including similar artists that exist in your catalog.
      */
     public function gather_artist_info()
     {
@@ -1372,6 +1373,7 @@ abstract class Catalog extends database_object
         foreach ($searches as $key => $values) {
             foreach ($values as $objectid) {
                 Recommendation::get_artist_info($objectid);
+                Recommendation::get_artists_like($objectid);
 
                 // Stupid little cutesie thing
                 $search_count++;
