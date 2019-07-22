@@ -105,14 +105,14 @@ switch ($_REQUEST['action']) {
         }
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php';
         if ($deleted) {
-            show_confirmation(T_('Deleted'), T_('Catalog and all associated records have been deleted'), $next_url);
+            show_confirmation(T_('As you wish'), T_('Catalog and all associated records have been deleted'), $next_url);
         } else {
-            show_confirmation(T_('Error'), T_('Cannot delete this catalog'), $next_url);
+            show_confirmation(T_('Please don\'t be mad'), T_('Cannot delete this catalog'), $next_url);
         }
     break;
     case 'show_delete_catalog':
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $catalogs);
-        show_confirmation(T_('Confirm Action'), T_('Delete Catalog'), $next_url, 1, 'delete_catalog');
+        show_confirmation(T_('Are you sure?'), sprint_f(T_('Do you really want to delete this %s?'), T_('Catalog')), $next_url, 1, 'delete_catalog');
     break;
     case 'enable_disabled':
         if (AmpConfig::get('demo_mode')) {
@@ -221,7 +221,7 @@ switch ($_REQUEST['action']) {
             break;
         }
         Stream::clear_now_playing();
-        show_confirmation(T_('Now Playing Cleared'), T_('All Now Playing data has been cleared'), AmpConfig::get('web_path') . '/admin/catalog.php');
+        show_confirmation(T_('That was easy'), T_('All Now Playing data has been cleared'), AmpConfig::get('web_path') . '/admin/catalog.php');
     break;
     case 'show_disabled':
         /* Stop the demo hippies */
@@ -245,7 +245,7 @@ switch ($_REQUEST['action']) {
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
-        show_confirmation(T_('Confirm Action'), T_('Do you really want to delete this catalog?') . " -- $catalog->name ($catalog->path)", $nexturl, 1);
+        show_confirmation(T_('Are you sure?'), sprint_f(T_('Do you really want to delete %s?'), $catalog->name), $nexturl, 1);
     break;
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);

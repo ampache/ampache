@@ -33,8 +33,8 @@ switch ($_REQUEST['action']) {
 
         $episode_id = scrub_in($_REQUEST['podcast_episode_id']);
         show_confirmation(
-            T_('Podcast Episode Deletion'),
-            T_('Are you sure you want to permanently delete this episode?'),
+            T_('Are you sure?'),
+            sprint_f(T_('Do you really want to delete this %s?'), T_('Episode')),
             AmpConfig::get('web_path') . "/podcast_episode.php?action=confirm_delete&podcast_episode_id=" . $episode_id,
             1,
             'delete_podcast_episode'
@@ -54,9 +54,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($episode->remove()) {
-            show_confirmation(T_('Deleted'), T_('Episode has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('As you wish'), T_('Episode has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Error'), T_('Cannot delete this episode.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('Please don\'t be mad'), T_('Cannot delete this episode.'), AmpConfig::get('web_path'));
         }
     break;
     case 'show':
