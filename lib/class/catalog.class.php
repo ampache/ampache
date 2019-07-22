@@ -1363,8 +1363,8 @@ abstract class Catalog extends database_object
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $search_count = 0;
-        $searches     = array();
+        $search_count       = 0;
+        $searches           = array();
         $searches['artist'] = $this->get_artist_ids();
 
         debug_event('catalog.class', 'gather_artist_info found ' . (string) count($searches) . 'items to refresh', 4);
