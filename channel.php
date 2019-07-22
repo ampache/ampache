@@ -62,7 +62,7 @@ switch ($_REQUEST['action']) {
         if (!$created) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_channel.inc.php');
         } else {
-            $title = T_('Channel Created');
+            $title = sprint_f(T_('%s created'), T_('Channel'));
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=channel');
         }
         UI::show_footer();

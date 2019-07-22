@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
-        $title  = T_('Localplay enabled');
+        $title  = sprint_f(T_('%s created'), T_('Localplay'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_catalog_types';
-        $title  = T_('Module enabled');
+        $title  = sprint_f(T_('%s enabled'), T_('Module'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
@@ -95,7 +95,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
-        $title  = T_('Module disabled');
+        $title  = sprint_f(T_('%s disabled'), T_('Module'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
@@ -112,7 +112,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_catalog_types';
-        $title  = T_('Module disabled');
+        $title  = sprint_f(T_('%s disabled'), T_('Module'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
@@ -138,7 +138,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title    = T_('Plugin enabled');
+        $title    = sprint_f(T_('%s enabled'), T_('Plugin'));
         $body     = '';
         show_confirmation($title, $body, $url);
     break;
@@ -164,7 +164,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title  = T_('Plugin disabled');
+        $title  = sprint_f(T_('%s disabled'), T_('Plugin'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
@@ -179,7 +179,7 @@ switch ($_REQUEST['action']) {
         $plugin->upgrade();
         User::rebuild_all_preferences();
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title  = T_('Plugin upgraded');
+        $title  = sprint_f(T_('%s upgraded'), T_('Plugin'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;

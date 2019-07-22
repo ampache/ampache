@@ -150,7 +150,7 @@ switch ($_REQUEST['action']) {
             Core::get_global('user')->upload_avatar();
 
             //$_REQUEST['action'] = 'confirm';
-            $title    = T_('Updated');
+            $title    = T_('No Problem');
             $text     = T_('Your account has been updated');
             $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=account';
         }
@@ -169,11 +169,11 @@ switch ($_REQUEST['action']) {
             if ($plugin = new Plugin(Core::get_request('plugin'))) {
                 $plugin->load(Core::get_global('user'));
                 if ($plugin->_plugin->get_session(Core::get_global('user')->id, Core::get_request('token'))) {
-                    $title    = T_('Updated');
+                    $title    = T_('No Problem');
                     $text     = T_('Your account has been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 } else {
-                    $title    = T_('Error');
+                    $title    = T_('Please don\'t be mad');
                     $text     = T_('Your account has not been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 }
