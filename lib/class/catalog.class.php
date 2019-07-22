@@ -1354,6 +1354,38 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * gather_artist_info
+     *
+     * This runs through all of the artists and refreshes last.fm information
+     */
+    public function gather_artist_info()
+    {
+        // Prevent the script from timing out
+        set_time_limit(0);
+
+        $search_count = 0;
+        $searches     = array();
+        $searches['artist'] = $this->get_artist_ids();
+
+        debug_event('catalog.class', 'gather_artist_info found ' . (string) count($searches) . 'items to refresh', 4);
+        // Run through items and refresh info
+        foreach ($searches as $key => $values) {
+            foreach ($values as $objectid) {
+                Recommendation::get_artist_info($objectid);
+
+                // Stupid little cutesie thing
+                $search_count++;
+                if (UI::check_ticker()) {
+                    UI::update_text('count_art_' . $objectid, $search_count);
+                }
+            }
+        }
+
+        // One last time for good measure
+        UI::update_text('count_art_' . $objectid, $search_count);
+    }
+
+    /**
      * get_songs
      *
      * Returns an array of song objects.
