@@ -76,14 +76,14 @@ switch ($_REQUEST['action']) {
     case 'confirm_uninstall_localplay':
         $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
-        $title = T_('Are you sure you want to disable this module?');
+        $title = sprint_f(T_('Do you really want to disable this %s?'), T_('module'));
         $body  = '';
         show_confirmation($title, $body, $url, 1);
     break;
     case 'confirm_uninstall_catalog_type':
         $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
-        $title = T_('Are you sure you want to disable this module?');
+        $title = sprint_f(T_('Do you really want to disable this %s?'), T_('module'));
         $body  = '';
         show_confirmation($title, $body, $url, 1);
     break;
@@ -145,7 +145,7 @@ switch ($_REQUEST['action']) {
     case 'confirm_uninstall_plugin':
         $plugin   = scrub_in($_REQUEST['plugin']);
         $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
-        $title    = T_('Are you sure you want to disable this plugin?');
+        $title    = sprint_f(T_('Do you really want to disable this %s?'), T_('plugin'));
         $body     = '';
         show_confirmation($title, $body, $url, 1);
     break;
