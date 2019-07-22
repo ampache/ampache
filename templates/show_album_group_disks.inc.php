@@ -171,7 +171,7 @@ if ($directplay_limit > 0) {
                                             '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
                 <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
             </a>
-            <a href="javascript:NavigateTo('<?php echo $web_path ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id ?>');" onclick="return confirm('<?php echo sprint_f(T_('Do you really want to %s?'), T_('Update from tags')) ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id ?>');" onclick="return confirm('<?php echo sprintf(T_('Do you really want to %s?'), T_('Update from tags')) ?>');">
                 <?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?>
             </a>
             <a id="<?php echo 'edit_album_' . $c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_' . $c_album->id ?>', '<?php echo T_('Album edit') ?>', '')">
