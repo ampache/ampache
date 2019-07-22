@@ -50,7 +50,7 @@ switch ($_REQUEST['action']) {
         $playlist = new Search();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();
-        show_confirmation(sprint_f(T_('%s has been saved.'), T_('Search')), sprintf(T_('Your search has been saved as a Smart Playlist with the name %s'), $playlist->name), AmpConfig::get('web_path') . "/browse.php?action=smartplaylist");
+        show_confirmation(sprintf(T_('%s has been saved.'), T_('Search')), sprintf(T_('Your search has been saved as a Smart Playlist with the name %s'), $playlist->name), AmpConfig::get('web_path') . "/browse.php?action=smartplaylist");
     break;
     case 'descriptor':
         // This is a little special we don't want header/footers so trash what we've got in the OB

@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
-        $title  = sprint_f(T_('%s created'), T_('Localplay'));
+        $title  = sprintf(T_('%s created'), T_('Localplay'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
@@ -69,21 +69,21 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_catalog_types';
-        $title  = sprint_f(T_('%s enabled'), T_('Module'));
+        $title  = sprintf(T_('%s enabled'), T_('Module'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_localplay':
         $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
-        $title = sprint_f(T_('Do you really want to disable this %s?'), T_('module'));
+        $title = sprintf(T_('Do you really want to disable this %s?'), T_('module'));
         $body  = '';
         show_confirmation($title, $body, $url, 1);
     break;
     case 'confirm_uninstall_catalog_type':
         $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
-        $title = sprint_f(T_('Do you really want to disable this %s?'), T_('module'));
+        $title = sprintf(T_('Do you really want to disable this %s?'), T_('module'));
         $body  = '';
         show_confirmation($title, $body, $url, 1);
     break;
@@ -95,7 +95,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
-        $title  = sprint_f(T_('%s disabled'), T_('Module'));
+        $title  = sprintf(T_('%s disabled'), T_('Module'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
@@ -112,7 +112,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_catalog_types';
-        $title  = sprint_f(T_('%s disabled'), T_('Module'));
+        $title  = sprintf(T_('%s disabled'), T_('Module'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
@@ -138,14 +138,14 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title    = sprint_f(T_('%s enabled'), T_('Plugin'));
+        $title    = sprintf(T_('%s enabled'), T_('Plugin'));
         $body     = '';
         show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_plugin':
         $plugin   = scrub_in($_REQUEST['plugin']);
         $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
-        $title    = sprint_f(T_('Do you really want to disable this %s?'), T_('plugin'));
+        $title    = sprintf(T_('Do you really want to disable this %s?'), T_('plugin'));
         $body     = '';
         show_confirmation($title, $body, $url, 1);
     break;
@@ -164,7 +164,7 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title  = sprint_f(T_('%s disabled'), T_('Plugin'));
+        $title  = sprintf(T_('%s disabled'), T_('Plugin'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;
@@ -179,7 +179,7 @@ switch ($_REQUEST['action']) {
         $plugin->upgrade();
         User::rebuild_all_preferences();
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title  = sprint_f(T_('%s upgraded'), T_('Plugin'));
+        $title  = sprintf(T_('%s upgraded'), T_('Plugin'));
         $body   = '';
         show_confirmation($title, $body, $url);
     break;

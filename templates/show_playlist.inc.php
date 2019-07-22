@@ -119,7 +119,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php if ($playlist->has_access()) {
         ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo sprint_f(T_('Do you really want to delete this %s?'), T_('Playlist')); ?>');">
+            <a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo sprintf(T_('Do you really want to delete this %s?'), T_('Playlist')); ?>');">
                 <?php echo UI::get_icon('delete'); ?>
                 &nbsp;&nbsp;<?php echo T_('Delete'); ?>
             </a>

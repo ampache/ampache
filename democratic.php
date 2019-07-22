@@ -56,7 +56,7 @@ switch ($_REQUEST['action']) {
         Democratic::delete($_REQUEST['democratic_id']);
 
         $title = T_('Deleted');
-        $text  = sprint_f(T_('%s has been deleted.'), T_('Playlist'));
+        $text  = sprintf(T_('%s has been deleted.'), T_('Playlist'));
         $url   = AmpConfig::get('web_path') . '/democratic.php?action=manage_playlists';
         show_confirmation($title, $text, $url);
     break;

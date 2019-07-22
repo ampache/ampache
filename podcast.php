@@ -76,7 +76,7 @@ switch ($_REQUEST['action']) {
         $podcast_id = scrub_in($_REQUEST['podcast_id']);
         show_confirmation(
             T_('Podcast Deletion'),
-            sprint_f(T_('Do you really want to delete this %s?'), T_('Podcast')),
+            sprintf(T_('Do you really want to delete this %s?'), T_('Podcast')),
             AmpConfig::get('web_path') . "/podcast.php?action=confirm_delete&podcast_id=" . $podcast_id,
             1,
             'delete_podcast'
@@ -91,9 +91,9 @@ switch ($_REQUEST['action']) {
 
         $podcast = new Podcast($_REQUEST['podcast_id']);
         if ($podcast->remove()) {
-            show_confirmation(T_('No Problem'), sprint_f(T_('%s has been deleted.'), T_('Podcast')), AmpConfig::get('web_path') . '/browse.php?action=podcast');
+            show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted.'), T_('Podcast')), AmpConfig::get('web_path') . '/browse.php?action=podcast');
         } else {
-            show_confirmation(T_('Please don\'t be mad'), sprint_f(T_('Couldn\'t delete this %s.'), T_('Podcast')), AmpConfig::get('web_path') . '/browse.php?action=podcast');
+            show_confirmation(T_('Please don\'t be mad'), sprintf(T_('Couldn\'t delete this %s.'), T_('Podcast')), AmpConfig::get('web_path') . '/browse.php?action=podcast');
         }
     break;
     case 'show':
