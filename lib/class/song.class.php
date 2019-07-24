@@ -2091,15 +2091,15 @@ class Song extends database_object implements media, library_item
     public static function get_custom_play_actions()
     {
         $actions = array();
-        $int     = 0;
-        while (AmpConfig::get('custom_play_action_title_' . $i)) {
+        $count   = 0;
+        while (AmpConfig::get('custom_play_action_title_' . $count)) {
             $actions[] = array(
-                'index' => ($int + 1),
-                'title' => AmpConfig::get('custom_play_action_title_' . $int),
-                'icon' => AmpConfig::get('custom_play_action_icon_' . $int),
-                'run' => AmpConfig::get('custom_play_action_run_' . $int),
+                'index' => ($count + 1),
+                'title' => AmpConfig::get('custom_play_action_title_' . $count),
+                'icon' => AmpConfig::get('custom_play_action_icon_' . $count),
+                'run' => AmpConfig::get('custom_play_action_run_' . $count),
             );
-            ++$int;
+            ++$count;
         }
 
         return $actions;
