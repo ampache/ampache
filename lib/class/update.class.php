@@ -4307,14 +4307,15 @@ class Update
      */
     public static function update_400002()
     {
-        $sql = "UPDATE `album` SET `album`.`disk` = 1 " .
-               "WHERE `album`.`disk` = 0;";
+        $retval = true;
+        $sql    = "UPDATE `album` SET `album`.`disk` = 1 " .
+                  "WHERE `album`.`disk` = 0;";
         $retval &= Dba::write($sql);
         
         $sql = "ALTER TABLE `album` ADD `originalyear` INT(4) NULL," .
                "ADD `barcode` VARCHAR(64) NULL," .
                "ADD `catalognumber` VARCHAR(64) NULL;";
-        $retval = Dba::write($sql);
+        $retval &= Dba::write($sql);
 
         return $retval;
     }
