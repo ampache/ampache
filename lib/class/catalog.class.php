@@ -1384,7 +1384,7 @@ abstract class Catalog extends database_object
         }
 
         // One last time for good measure
-        UI::update_text('count_art_' . $objectid, $search_count);
+        UI::update_text('count_art_complete', $search_count);
     }
 
     /**
