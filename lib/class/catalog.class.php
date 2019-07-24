@@ -1368,7 +1368,7 @@ abstract class Catalog extends database_object
         $searches           = array();
         $searches['artist'] = $this->get_artist_ids();
 
-        debug_event('catalog.class', 'gather_artist_info found ' . (string) count($searches) . 'items to refresh', 4);
+        debug_event('catalog.class', 'gather_artist_info found ' . (string) count($searches) . 'items to check', 4);
         // Run through items and refresh info
         foreach ($searches as $key => $values) {
             foreach ($values as $objectid) {
@@ -1378,13 +1378,13 @@ abstract class Catalog extends database_object
                 // Stupid little cutesie thing
                 $search_count++;
                 if (UI::check_ticker()) {
-                    UI::update_text('count_art_' . $objectid, $search_count);
+                    UI::update_text('count_artist_' . $objectid, $search_count);
                 }
             }
         }
 
         // One last time for good measure
-        UI::update_text('count_art_complete', $search_count);
+        UI::update_text('count_artist_complete', $search_count);
     }
 
     /**

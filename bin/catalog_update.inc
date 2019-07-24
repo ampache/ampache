@@ -78,7 +78,7 @@ if (count($options) == 0) {
             $artadd = 1;
         }
         if (array_key_exists('u', $options)) { 
-            $operations_string .= "\n\t- " . T_('Update local Artist information using last.fm');
+            $operations_string .= "\n\t- " . T_('Update artist information and fetch similar artists from last.fm.');
             $infoupdate = 1;
         }
         if (array_key_exists('i', $options)) { 
@@ -181,7 +181,7 @@ while ($row = Dba::fetch_row($db_results)) {
     }
     if ($infoupdate == 1) { 
         // Look for updated artist information. (missing or < 6 months since last update)
-        echo "- " . T_('Update local Artist information using last.fm.') . " - \n";
+        echo "- " . T_('Update artist information and fetch similar artists from last.fm.') . " - \n";
         echo "\n";
         $catalog->gather_artist_info();
         echo "----------------\n\n";
@@ -240,7 +240,7 @@ function usage() {
     echo "\n-g\t";
     echo T_('Gathers media Art.');
     echo "\n-u\t";
-    echo T_('Update local Artist information using last.fm.');
+    echo T_('Update artist information and fetch similar artists from last.fm.') . " " . T_('Make sure lastfm_api_key is set in your configuration file.');
     echo "\n-i\t";
     echo T_('Imports playlists.');
     echo "\n-o\t";
