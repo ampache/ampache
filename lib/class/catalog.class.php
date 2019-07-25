@@ -1638,9 +1638,9 @@ abstract class Catalog extends database_object
         $album_mbid_group      = $results['mb_albumid_group'];
         $disk                  = $results['disk'];
         $releasetype           = $results['releasetype'];
-        $originalyear          = $results['originalyear'];
+        $original_year          = $results['original_year'];
         $barcode               = $results['barcode'];
-        $catalognumber         = $results['catalognumber'];
+        $catalog_number         = $results['catalog_number'];
 
         /*
         * We have the artist/genre/album name need to check it in the tables
@@ -1651,7 +1651,7 @@ abstract class Catalog extends database_object
             $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
         }
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
-                                        $new_song->albumartist, $releasetype, false, $originalyear, $barcode, $catalognumber);
+                                        $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
         if ($new_song->album) {
             $tmpalbum = $new_song->album;
             $tmpalbum->update($results);

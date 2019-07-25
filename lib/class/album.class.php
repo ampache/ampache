@@ -80,7 +80,7 @@ class Album extends database_object implements library_item
     /**
      *  @var string $mbid_group
      */
-    public $catalognumber;
+    public $catalog_number;
 
     /**
      *  @var string $mbid_group
@@ -88,9 +88,9 @@ class Album extends database_object implements library_item
     public $barcode;
 
     /**
-     *  @var int $originalyear
+     *  @var int $original_year
      */
-    public $originalyear;
+    public $original_year;
 
     /**
      * @var int $catalog_id
@@ -447,7 +447,7 @@ class Album extends database_object implements library_item
      * @param boolean $readonly
      * @return integer|null
      */
-    public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false, $originalyear = null, $barcode = null, $catalognumber = null)
+    public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false, $original_year = null, $barcode = null, $catalog_number = null)
     {
         $trimmed      = Catalog::trim_prefix(trim($name));
         $name         = $trimmed['string'];
@@ -500,9 +500,9 @@ class Album extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`, `originalyear`, `barcode`, `catalognumber`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`, `original_year`, `barcode`, `catalog_number`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group, $release_type, $album_artist, $originalyear, $barcode, $catalognumber));
+        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group, $release_type, $album_artist, $original_year, $barcode, $catalog_number));
         if (!$db_results) {
             return null;
         }
@@ -945,9 +945,9 @@ class Album extends database_object implements library_item
         $mbid          = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
         $mbid_group    = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
         $release_type  = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
-        $originalyear  = isset($data['originalyear']) ? $data['originalyear'] : $this->originalyear;
+        $original_year  = isset($data['original_year']) ? $data['original_year'] : $this->original_year;
         $barcode       = isset($data['barcode']) ? $data['barcode'] : $this->barcode;
-        $catalognumber = isset($data['catalognumber']) ? $data['catalognumber'] : $this->catalognumber;
+        $catalog_number = isset($data['catalog_number']) ? $data['catalog_number'] : $this->catalog_number;
 
         $current_id = $this->id;
 
@@ -968,7 +968,7 @@ class Album extends database_object implements library_item
             $album_artist = Artist::check($data['album_artist_name']);
         }
 
-        $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, null, $originalyear, $barcode, $catalognumber);
+        $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, null, $original_year, $barcode, $catalog_number);
         if ($album_id != $this->id) {
             if (!is_array($songs)) {
                 $songs = $this->get_songs();
@@ -984,18 +984,18 @@ class Album extends database_object implements library_item
             Art::migrate('album', $this->id, $album_id);
             self::garbage_collection();
         } else {
-            debug_event('album.class', 'Found originalyear' . $originalyear . ' barcode' . $barcode . ' catalognumber' . $catalognumber ,5);
+            debug_event('album.class', 'Found original_year' . $original_year . ' barcode' . $barcode . ' catalog_number' . $catalog_number ,5);
             self::update_year($year, $album_id);
             self::update_mbid_group($mbid_group, $album_id);
             self::update_release_type($release_type, $album_id);
-            if ($originalyear != $this->originalyear && (int) $originalyear != 0) {
-                self::update_field('originalyear', $originalyear, $album_id);
+            if ($original_year != $this->original_year && (int) $original_year != 0) {
+                self::update_field('original_year', $original_year, $album_id);
             }
             if ($barcode != $this->barcode && (string) $barcode != '') {
                 self::update_field('barcode', $barcode, $album_id);
             }
-            if ($catalognumber != $this->catalognumber && (string) $catalognumber != '') {
-                self::update_field('catalognumber', $catalognumber, $album_id);
+            if ($catalog_number != $this->catalog_number && (string) $catalog_number != '') {
+                self::update_field('catalog_number', $catalog_number, $album_id);
             }
         }
         $this->year         = $year;

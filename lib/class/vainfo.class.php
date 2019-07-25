@@ -390,9 +390,9 @@ class vainfo
                 $info['release_type'] = $info['release_type'] ?: trim($tags['release_type']);
             }
 
-            $info['originalyear']  = $info['originalyear'] ?: trim($tags['originalyear']);
+            $info['original_year']  = $info['original_year'] ?: trim($tags['original_year']);
             $info['barcode']       = $info['barcode'] ?: trim($tags['barcode']);
-            $info['catalognumber'] = $info['catalognumber'] ?: trim($tags['catalognumber']);
+            $info['catalog_number'] = $info['catalog_number'] ?: trim($tags['catalog_number']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
             $info['comment']  = $info['comment'] ?: trim($tags['comment']);
@@ -921,7 +921,7 @@ class vainfo
                         case 'musicbrainz album type':
                             $parsed['release_type'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'catalognumber':
+                        case 'catalog_number':
                             $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'replaygain_track_gain':
@@ -936,14 +936,14 @@ class vainfo
                         case 'replaygain_album_peak':
                             $parsed['replaygain_album_peak'] = floatval($txxx['data']);
                         break;
-                        case 'originalyear':
-                            $parsed['originalyear'] = $id3v2['comments']['text'][$txxx['description']];
+                        case 'original_year':
+                            $parsed['original_year'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                         case 'barcode':
                             $parsed['barcode'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'catalognumber':
-                            $parsed['catalognumber'] = $id3v2['comments']['text'][$txxx['description']];
+                        case 'catalog_number':
+                            $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     }
                 }

@@ -384,9 +384,9 @@ class Song extends database_object implements media, library_item
         $replaygain_track_peak = isset($results['replaygain_track_peak']) ? $results['replaygain_track_peak'] : null;
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
-        $originalyear          = $results['originalyear'];
+        $original_year          = $results['original_year'];
         $barcode               = $results['barcode'];
-        $catalognumber         = $results['catalognumber'];
+        $catalog_number         = $results['catalog_number'];
 
         if ($mode !== 'vbr' || $mode !== 'cbr' || $mode !== 'abr') {
             debug_event('song.class', 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
@@ -410,7 +410,7 @@ class Song extends database_object implements media, library_item
             $artist_id = (int) ($results['artist_id']);
         }
         if (!isset($results['album_id'])) {
-            $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, false, $originalyear, $barcode, $catalognumber);
+            $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, false, $original_year, $barcode, $catalog_number);
         } else {
             $album_id = (int) ($results['album_id']);
         }
