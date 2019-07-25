@@ -80,7 +80,7 @@ class Album extends database_object implements library_item
     /**
      *  @var string $mbid_group
      */
-    public $catalog_number;
+    public $catalognumber;
 
     /**
      *  @var string $mbid_group
