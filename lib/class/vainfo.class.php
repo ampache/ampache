@@ -391,7 +391,7 @@ class vainfo
             }
 
             $info['original_year']  = $info['original_year'] ?: trim($tags['original_year']);
-            $info['barcode']       = $info['barcode'] ?: trim($tags['barcode']);
+            $info['barcode']        = $info['barcode'] ?: trim($tags['barcode']);
             $info['catalog_number'] = $info['catalog_number'] ?: trim($tags['catalog_number']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
