@@ -98,7 +98,7 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>
-                <td><input type="text" name="release_type" value="<?php echo $libitem->catalog_number; ?>" /></td>
+                <td><input type="text" name="release_type" value="<?php echo $libitem->catalognumber; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Barcode') ?></td>
@@ -106,7 +106,7 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Original Year') ?></td>
-                <td><input type="text" name="release_type" value="<?php echo $libitem->original_year; ?>" /></td>
+                <td><input type="text" name="release_type" value="<?php echo $libitem->originalyear; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>

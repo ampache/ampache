@@ -88,9 +88,9 @@ class Album extends database_object implements library_item
     public $barcode;
 
     /**
-     *  @var int $original_year
+     *  @var int $originalyear
      */
-    public $original_year;
+    public $originalyear;
 
     /**
      * @var int $catalog_id
@@ -447,7 +447,7 @@ class Album extends database_object implements library_item
      * @param boolean $readonly
      * @return integer|null
      */
-    public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false, $original_year = null, $barcode = null, $catalognumber = null)
+    public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false, $originalyear = null, $barcode = null, $catalognumber = null)
     {
         $trimmed      = Catalog::trim_prefix(trim($name));
         $name         = $trimmed['string'];
@@ -937,14 +937,17 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $year         = isset($data['year']) ? $data['year'] : $this->year;
-        $artist       = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
-        $album_artist = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
-        $name         = isset($data['name']) ? $data['name'] : $this->name;
-        $disk         = isset($data['disk']) ? $data['disk'] : $this->disk;
-        $mbid         = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
-        $mbid_group   = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
-        $release_type = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
+        $year          = isset($data['year']) ? $data['year'] : $this->year;
+        $artist        = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
+        $album_artist  = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
+        $name          = isset($data['name']) ? $data['name'] : $this->name;
+        $disk          = isset($data['disk']) ? $data['disk'] : $this->disk;
+        $mbid          = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
+        $mbid_group    = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
+        $release_type  = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
+        $originalyear  = isset($data['originalyear']) ? $data['originalyear'] : $this->originalyear;
+        $barcode       = isset($data['barcode']) ? $data['barcode'] : $this->barcode;
+        $catalognumber = isset($data['catalognumber']) ? $data['catalognumber'] : $this->catalognumber;
 
         $current_id = $this->id;
 
@@ -965,7 +968,7 @@ class Album extends database_object implements library_item
             $album_artist = Artist::check($data['album_artist_name']);
         }
 
-        $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type);
+        $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, null, $originalyear, $barcode, $catalognumber);
         if ($album_id != $this->id) {
             if (!is_array($songs)) {
                 $songs = $this->get_songs();
@@ -981,9 +984,19 @@ class Album extends database_object implements library_item
             Art::migrate('album', $this->id, $album_id);
             self::garbage_collection();
         } else {
+            debug_event('album.class', 'Found originalyear' . $originalyear . ' barcode' . $barcode . ' catalognumber' . $catalognumber ,5);
             self::update_year($year, $album_id);
             self::update_mbid_group($mbid_group, $album_id);
             self::update_release_type($release_type, $album_id);
+            if ($originalyear != $this->originalyear && (int) $originalyear != 0) {
+                self::update_field('originalyear', $originalyear, $album_id);
+            }
+            if ($barcode != $this->barcode && (string) $barcode != '') {
+                self::update_field('barcode', $barcode, $album_id);
+            }
+            if ($catalognumber != $this->catalognumber && (string) $catalognumber != '') {
+                self::update_field('catalognumber', $catalognumber, $album_id);
+            }
         }
         $this->year         = $year;
         $this->mbid_group   = $mbid_group;
