@@ -56,18 +56,19 @@ $catalogs = array();
 while ($r = Dba::fetch_row($db_results)) {
 
     $catalog = Catalog::create_from_id($r[0]);
-    $songs = $catalog->get_songs();
-
     printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
     echo "\n";
+    $songs = $catalog->get_songs();
+
+    echo T_('Loaded Catalog') . "\n";
 
     /* Foreach through each file and find it a home! */
     foreach ($songs as $song) {
         /* Find this poor song a home */
         $song->format();
-        $directory     = sort_find_home($song,$catalog->sort_pattern,$catalog->path);
-        $filename     = $song->f_file;
-        $fullpath = $directory . "/" . $filename;
+        $directory = sort_find_home($song,$catalog->sort_pattern,$catalog->path);
+        $filename  = sort_find_home($song,$catalog->rename_pattern,null);
+        $fullpath  = rtrim($directory,"\/") . "/" . ltrim($filename,"\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);;
 
         /* Check for Demo Mode */
         if ($test_mode) {
@@ -76,7 +77,7 @@ while ($r = Dba::fetch_row($db_results)) {
             echo "\n\t";
             printf (T_('Source: %s'), $song->file);
             echo "\n\t";
-            printf (T_('Dest: %s'), $fullpath);
+            printf (T_('Destin: %s'), $fullpath);
             echo "\n";
             flush();
         }
@@ -97,10 +98,13 @@ while ($r = Dba::fetch_row($db_results)) {
  * Get the directory for this file from the catalog and the song info using the sort_pattern
  * takes into account various artists and the alphabet_prefix
  */
-function sort_find_home($song,$sort_pattern,$base) {
+function sort_find_home($song,$sort_pattern,$base = null) {
 
-    $home = rtrim($base,"\/");
-    $home = rtrim($home,"\\");
+    $home = '';
+    if ($base) {
+        $home = rtrim($base,"\/");
+        $home = rtrim($home,"\\");
+    }
 
     /* Create the filename that this file should have */
     $album   = sort_clean_name($song->f_album_full);
