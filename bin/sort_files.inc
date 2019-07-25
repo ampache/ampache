@@ -116,8 +116,12 @@ function sort_find_home($song,$sort_pattern,$base) {
     if ($album_object->artist_count != 1) {
         $artist = "Various";
     }
-    $disk  = $album_object->disk;
-    $genre = implode("; ", $album_object->tags);
+    $disk           = $album_object->disk;
+    $catalog_number = $album_object->catalog_number;
+    $barcode        = $album_object->barcode;
+    $original_year  = $album_object->original_year;
+    $genre          = implode("; ", $album_object->tags);
+    $release_type   = $album_object->release_type;
 
     /* IF we want a,b,c,d we need to know the first element */
     if (Core::get_global('alphabet_prefix')) {
@@ -136,8 +140,8 @@ function sort_find_home($song,$sort_pattern,$base) {
     }
 
     /* Replace everything we can find */
-    $replace_array = array('%a','%A','%t','%T','%y','%c','%d','%g');
-    $content_array = array($artist,$album,$title,$track,$year,$comment,$disk,$genre);
+    $replace_array = array('%a','%A','%t','%T','%y','%Y','%c','%C','%r','%d','%g','%b');
+    $content_array = array($artist,$album,$title,$track,$year,$original_year,$comment,$catalog_number,$release_type,$disk,$genre,$barcode);
     $sort_pattern = str_replace($replace_array,$content_array,$sort_pattern);
 
     /* Remove non A-Z0-9 chars */
@@ -167,12 +171,20 @@ function sort_element_name($key) {
             return 'album';
         case '%y':
             return 'year';
+        case '%Y':
+            return 'original_year';
         case '%c':
             return 'comment';
+        case '%C':
+            return 'catalog_number';
+        case '%r':
+            return 'release_type';
         case '%d';
             return 'disk';
         case '%g';
             return 'genre';
+        case '%b';
+            return 'barcode';
         default:
             break;
     } // switch on key
