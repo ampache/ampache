@@ -1627,20 +1627,20 @@ abstract class Catalog extends database_object
                 $song->tags[] = $tag['name'];
             }
         }
-        $new_song->tags        = $results['genre'];
-        $artist                = $results['artist'];
-        $artist_mbid           = $results['mb_artistid'];
-        $albumartist           = $results['albumartist'] ?: $results['band'];
-        $albumartist           = $albumartist ?: null;
-        $albumartist_mbid      = $results['mb_albumartistid'];
-        $album                 = $results['album'];
-        $album_mbid            = $results['mb_albumid'];
-        $album_mbid_group      = $results['mb_albumid_group'];
-        $disk                  = $results['disk'];
-        $releasetype           = $results['releasetype'];
-        $original_year          = $results['original_year'];
-        $barcode               = $results['barcode'];
-        $catalog_number         = $results['catalog_number'];
+        $new_song->tags   = $results['genre'];
+        $artist           = $results['artist'];
+        $artist_mbid      = $results['mb_artistid'];
+        $albumartist      = $results['albumartist'] ?: $results['band'];
+        $albumartist      = $albumartist ?: null;
+        $albumartist_mbid = $results['mb_albumartistid'];
+        $album            = $results['album'];
+        $album_mbid       = $results['mb_albumid'];
+        $album_mbid_group = $results['mb_albumid_group'];
+        $disk             = $results['disk'];
+        $releasetype      = $results['releasetype'];
+        $original_year    = $results['original_year'];
+        $barcode          = $results['barcode'];
+        $catalog_number   = $results['catalog_number'];
 
         /*
         * We have the artist/genre/album name need to check it in the tables

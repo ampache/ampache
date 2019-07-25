@@ -937,16 +937,16 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $year          = isset($data['year']) ? $data['year'] : $this->year;
-        $artist        = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
-        $album_artist  = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
-        $name          = isset($data['name']) ? $data['name'] : $this->name;
-        $disk          = isset($data['disk']) ? $data['disk'] : $this->disk;
-        $mbid          = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
-        $mbid_group    = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
-        $release_type  = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
+        $year           = isset($data['year']) ? $data['year'] : $this->year;
+        $artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
+        $album_artist   = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
+        $name           = isset($data['name']) ? $data['name'] : $this->name;
+        $disk           = isset($data['disk']) ? $data['disk'] : $this->disk;
+        $mbid           = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
+        $mbid_group     = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
+        $release_type   = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
         $original_year  = isset($data['original_year']) ? $data['original_year'] : $this->original_year;
-        $barcode       = isset($data['barcode']) ? $data['barcode'] : $this->barcode;
+        $barcode        = isset($data['barcode']) ? $data['barcode'] : $this->barcode;
         $catalog_number = isset($data['catalog_number']) ? $data['catalog_number'] : $this->catalog_number;
 
         $current_id = $this->id;
