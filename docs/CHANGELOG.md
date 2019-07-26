@@ -49,6 +49,7 @@ CHANGELOG
 - API - New Method: playlist_edit alow editing name and type of playlist
 - Fix slideshow creating black screen when using web player
 - Add -u to bin/catalog_update.inc This function will update the artist table with bio, image, etc as well as update similar artists.
+- Add 'web' option to bin/write_playlists.inc This will allow you to generate stream playlists with the play url.
 
 3.9.1
 ----------
