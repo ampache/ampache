@@ -41,12 +41,16 @@ require_once $prefix . '/lib/init.php';
 // default various artist album name.
 $various_artist = "Various Artists";
 
-/* Don't do anything just tell me what you would do */
+// Don't do anything by default just tell me what you would do
 $test_mode = true;
 
-$options = getopt("xv");
+$options = getopt("xv:");
 if (array_key_exists('x', $options)) {
     $test_mode = false;
+}
+if (array_key_exists('v', $options)) {
+    $operations_string .= "\n\t- " . T_('Setting catalog name');
+    $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
 }
 
 /* m(__)m */
@@ -57,7 +61,7 @@ ob_end_clean();
 if ($test_mode) {
     echo "\n". T_('Running in Test Mode. Use -x to execute') . "\n\n";
 } else {
-    echo "\n***" . T_("WARNING") . "*** " . T_('Running in Write Mode. Make sure you\'ve tested first!') . "\n\n";
+    echo "\n***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!") . "\n\n";
 }
 
 /* First Clean the catalog to we don't try to write anything we shouldn't */
@@ -92,7 +96,7 @@ while ($r = Dba::fetch_row($db_results)) {
         /* Check for Demo Mode */
         if ($test_mode) {
             /* We're just talking here... no work */
-            echo T_("Moving File...");
+            echo T_("Examine File...");
             echo "\n\t";
             printf (T_('Source: %s'), $song->file);
             echo "\n\t";
@@ -132,7 +136,7 @@ function sort_find_home($song, $sort_pattern, $base = null) {
     if ((int) $track < 10 && (int) $track > 0) {
         $track = '0' . (string) $track;
     }
-    
+
     $title   = sort_clean_name($song->title) ?: '%t';
     $year    = sort_clean_name($song->year) ?: '%y';
     $comment = sort_clean_name($song->comment) ?: '%c';
