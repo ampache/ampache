@@ -30,19 +30,11 @@ $valid_exts = array ('m3u', 'xspf', 'pls');
 
 if (!Core::get_global('argv')[1] || Core::get_global('argv')[1] == '-h') { usage(); }
 else {
-    $dirname    = rtrim(Core::get_global('argv')[1], "\/");
+    $dirname    = Core::get_global('argv')[1];
     $type       = Core::get_global('argv')[2];
     $ext        = Core::get_global('argv')[3];
     if (!$ext || !in_array($ext, $valid_exts)) {
         $ext = 'm3u';
-    }
-    $url = Core::get_global('argv')[4];
-    if (!$url || !$url == 'web') {
-        $url = false;
-    }
-    $user = Core::get_global('argv')[5];
-    if (!$url || ! (int) $user > 0 ) {
-        $url = -1;
     }
 }
 
@@ -66,7 +58,7 @@ switch ($type) {
         $items = Catalog::get_artists();
     break;
     default:
-        $ids = Playlist::get_playlists(true, $user);
+        $ids = Playlist::get_playlists(false, -1);
         $items = array();
         foreach ($ids as $playlistid) {
             $items[] = new Playlist($playlistid);
@@ -86,15 +78,7 @@ foreach ($items as $item) {
     $pl = new Stream_Playlist(-1);
     $pl->title = $item->get_fullname();
     foreach ($medias as $media) {
-        if ($url) {
-            // use the play url
-            $web_array  = Stream_Playlist::media_to_url($media, null, 'web');
-            $pl->urls[] = $web_array;
-            echo $web_array;
-        } else {
-            // or the local file
-            $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, 'file');
-        }
+        $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, 'file');
     }
 
     $plstr = $pl->{'get_' . $ext . '_string'}();
@@ -110,24 +94,20 @@ echo "Playlist export completed.\n";
 /* FUNCTIONS */
 function usage() {
     $desc1 = T_("This will dump a collection of playlists files based on type");
-    $desc2 = T_("Types");
-    $desc3 = sprintf(T_('Dump all %s into individual files'), T_("Playlists"));
-    $desc4 = sprintf(T_('Dump all %s into individual files'), T_("Albums"));
-    $desc5 = sprintf(T_('Dump all %s into individual files'), T_("Artists"));
+    $desc2 = T_("Types:");
+    $desc3 = T_("Dumps all of your Playlists");
+    $desc4 = T_("Dumps all Albums as individual playlists");
+    $desc5 = T_("Dumps all Artists as individual playlists");
     $desc6 = T_("Extensions: m3u (default), xspf, pls");
-    $desc7 = T_("Local file or the play url: file (default), web");
-    $desc7 = T_('User ID');
 
-    $string = "write_playlists.php.inc [-h] <DIRNAME> <TYPE> [<EXT> <ITEM_TYPE> <USER_ID>]
+    $string = "write_playlists.php.inc [-h] <DIRNAME> <TYPE> [<EXT>]
 
         $desc1
         $desc2
             default       $desc3
             albums        $desc4
             artists       $desc5
-        $desc6
-        $desc7
-        $desc8\n\n";
+        $desc6\n\n";
 
         echo $string;
 
