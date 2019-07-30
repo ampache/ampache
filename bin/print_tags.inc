@@ -40,7 +40,7 @@ if(!file_exists($filename)) {
     return false;
 }
 
-printf(T_('Reading: %s'), $filename);
+printf(T_('Reading') . ': %s'), $filename);
 print "\n";
 
 /* Attempt to figure out what catalog it comes from */

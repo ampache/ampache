@@ -534,7 +534,7 @@ class Subsonic_Api
         }
 
         $response     = Subsonic_XML_Data::createSuccessResponse();
-        $errorOccured = false;
+        $errorOccurred = false;
         $albums       = array();
 
         switch ($type) {
@@ -598,7 +598,7 @@ class Subsonic_Api
                                                 }
                                             } else {
                                                 $response     = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type));
-                                                $errorOccured = true;
+                                                $errorOccurred = true;
                                             }
                                         }
                                     }
@@ -621,7 +621,7 @@ class Subsonic_Api
                 $errorOccured = true;
         }
 
-        if (!$errorOccured) {
+        if (!$errorOccurred) {
             Subsonic_XML_Data::addAlbumList($response, $albums, $elementName);
         }
         self::apiOutput($input, $response);

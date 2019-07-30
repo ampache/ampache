@@ -1350,7 +1350,7 @@ class Art extends database_object
             $handle = opendir($dir);
 
             if (!$handle) {
-                AmpError::add('general', T_('Error: Unable to open') . ' ' . $dir);
+                AmpError::add('general', T_('Unable to open') . ' ' . $dir);
                 debug_event('art.class', "gather_folder: Error: Unable to open $dir for album art read", 2);
                 continue;
             }
@@ -1375,7 +1375,7 @@ class Art extends database_object
                     continue;
                 }
 
-                // Regularise for mime type
+                // Regularize for mime type
                 if ($extension == 'jpg') {
                     $extension = 'jpeg';
                 }
@@ -1407,7 +1407,7 @@ class Art extends database_object
         } // end foreach dirs
 
         if (is_array($preferred)) {
-            // We found our favourite filename somewhere, so we need
+            // We found our favorite filename somewhere, so we need
             // to dump the other, less sexy ones.
             $results = $preferred;
         }

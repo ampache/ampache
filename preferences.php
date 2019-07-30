@@ -132,20 +132,20 @@ switch ($_REQUEST['action']) {
 
         $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
-            AmpError::add('fullname', T_("Error: Please fill in your full name (First name, last name)"));
+            AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
         }
         if (in_array('website', $mandatory_fields) && !$_POST['website']) {
-            AmpError::add('website', T_("Error: Please fill in your website"));
+            AmpError::add('website', T_("Please fill in your website"));
         }
         if (in_array('state', $mandatory_fields) && !$_POST['state']) {
-            AmpError::add('state', T_("Error: Please fill in your state"));
+            AmpError::add('state', T_("Please fill in your state"));
         }
         if (in_array('city', $mandatory_fields) && !$_POST['city']) {
-            AmpError::add('city', T_("Error: Please fill in your city"));
+            AmpError::add('city', T_("Please fill in your city"));
         }
 
         if (!Core::get_global('user')->update($_POST)) {
-            AmpError::add('general', T_('Error: Update failed'));
+            AmpError::add('general', T_('Update failed'));
         } else {
             Core::get_global('user')->upload_avatar();
 

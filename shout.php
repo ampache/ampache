@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
         $object = Shoutbox::get_object($_REQUEST['type'], Core::get_request('id'));
 
         if (!$object || !$object->id) {
-            AmpError::add('general', T_('Error: Invalid object selected'));
+            AmpError::add('general', T_('Invalid object selected'));
             AmpError::display('general');
             break;
         }

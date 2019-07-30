@@ -179,7 +179,7 @@ class Api
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < self::$auth_version) {
             debug_event('api.class', 'Login Failed: Version too old', 1);
-            AmpError::add('api', T_('Error: Login failed, version too old'));
+            AmpError::add('api', T_('Login failed, API version is too old'));
 
             return false;
         }
@@ -207,9 +207,9 @@ class Api
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
-                    debug_event('api.class', 'Login Failed: Timestamp out of range ' . $timestamp . '/' . time(), 1);
-                    AmpError::add('api', T_('Error: Login failed, timestamp out of range'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Error: Login failed, timestamp out of range'));
+                    debug_event('api.class', 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
+                    AmpError::add('api', T_('Login failed, timestamp is out of range'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login failed, timestamp is out of range'));
 
                     return false;
                 }
@@ -221,8 +221,8 @@ class Api
 
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
-                    AmpError::add('api', T_('Error: Invalid username/password'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Error: Invalid username/password'));
+                    AmpError::add('api', T_('Incorrect username or password'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Incorrect username or password'));
 
                     return false;
                 }
@@ -321,7 +321,7 @@ class Api
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid username/password'));
+        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Incorrect username or password'));
 
         return false;
     } // handshake
@@ -340,7 +340,7 @@ class Api
     {
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => self::$version, 'compatible' => '350001');
 
-        // Check and see if we should extend the api sessions (done if valid sess is passed)
+        // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
@@ -1156,7 +1156,7 @@ class Api
      */
     public static function stats($input)
     {
-        // moved type to filter and allowed multipe type selection
+        // moved type to filter and allowed multiple type selection
         $type   = $input['type'];
         $filter = $input['filter'];
         $offset = $input['offset'];
@@ -1692,339 +1692,9 @@ class Api
 
         if ($catalog && ((string) $input['task'] === 'add_to_catalog' || (string) $input['task'] === 'clean_catalog')) {
             $catalog->process_action($input['task'], (int) $input['catalog']);
-            echo XML_Data::success('successfully started: ' . (string) $input['task']);
-        }
-    }
-
-    /**
-     * stream
-     * MINIMUM_API_VERSION=400001
-     *
-     * Streams a given media file.
-     * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
-     *
-     * @param array $input
-     * $input = array(id      = (string) $song_id / $podcast_episode_id
-     *                type    = (string) 'song'|'podcast'
-     *                bitrate = (int) max bitrate for transcoding
-     *                format  = (string) 'mp3'|'ogg', etc
-     *                offset  = (int) time offset in seconds
-     *                length  = (string) 'true'|'false'
-     */
-    public static function stream($input)
-    {
-        if (!self::check_parameter($input, array('id', 'type'))) {
-            debug_event('api.class', "'id', 'type' required on stream function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'type'");
-
-            return false;
-        }
-        $fileid  = $input['id'];
-        $type    = $input['type'];
-        $user_id = User::get_from_username(Session::username($input['auth']))->id;
-
-        $maxBitRate    = $input['bitrate'];
-        $format        = $input['format']; // mp3, flv or raw
-        $timeOffset    = $input['offset'];
-        $contentLength = $input['length']; // Force content-length guessing if transcode
-
-        $params = '&client=api';
-        if ($contentLength == 'true') {
-            $params .= '&content_length=required';
-        }
-        if ($format && $format != "raw") {
-            $params .= '&transcode_to=' . $format;
-        }
-        if ($maxBitRate) {
-            $params .= '&bitrate=' . $maxBitRate;
-        }
-        if ($timeOffset) {
-            $params .= '&frame=' . $timeOffset;
-        }
-
-        $url = '';
-        if ($type == 'song') {
-            $url = Song::play_url($fileid, $params, 'api', function_exists('curl_version'), $user_id);
-        }
-        if ($type == 'podcast') {
-            $url = Podcast_Episode::play_url($fileid, $params, 'api', function_exists('curl_version'), $user_id);
-        }
-        if (!empty($url)) {
-            header("Location: " . str_replace(':443/play', '/play', $url));
-
-            return true;
-        }
-        echo XML_Data::error('400', 'failed to create: ' . $url);
-    }
-
-    /**
-     * download
-     * MINIMUM_API_VERSION=400001
-     *
-     * Downloads a given media file.
-     *
-     * @param array $input
-     * $input = array(id   = (string) $song_id / $podcast_episode_id
-     *                type = (string) 'song'|'podcast')
-     */
-    public static function download($input)
-    {
-        if (!self::check_parameter($input, array('id', 'type'))) {
-            debug_event('api.class', "'id', 'type' required on download function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'type'");
-
-            return false;
-        }
-        $fileid  = $input['id'];
-        $type    = $input['type'];
-        $user_id = User::get_from_username(Session::username($input['auth']))->id;
-
-        $url    = '';
-        $params = '&action=download' . '&client=api' . '&noscrobble=1';
-        if ($type == 'song') {
-            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
-        }
-        if ($type == 'podcast') {
-            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
-        }
-        if (!empty($url)) {
-            header("Location: " . str_replace(':443/play', '/play', $url));
-
-            return true;
-        }
-        echo XML_Data::error('400', 'failed to create: ' . $url);
-    }
-
-    /**
-     * get_art
-     * MINIMUM_API_VERSION=400001
-     *
-     * Get an art image.
-     *
-     * @param array $input
-     * $input = array(id   = (string) $object_id
-     *                type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast')
-     */
-    public static function get_art($input)
-    {
-        if (!self::check_parameter($input, array('id', 'type'))) {
-            debug_event('api.class', "'id', 'type' required on get_art function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'type'");
-
-            return false;
-        }
-        $object_id = $input['id'];
-        $type      = $input['type'];
-
-        $size = $input['size'];
-
-        $art = null;
-        if ($type == 'artist') {
-            $art = new Art($object_id, "artist");
-        } elseif ($type == 'album') {
-            $art = new Art($object_id, "album");
-        } elseif ($type == 'song') {
-            $art = new Art($object_id, "song");
-            if ($art != null && $art->id == null) {
-                // in most cases the song doesn't have a picture, but the album where it belongs to has
-                // if this is the case, we take the album art
-                $song = new Song(Subsonic_XML_Data::getAmpacheId($object_id));
-                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
-            }
-        } elseif ($type == 'podcast') {
-            $art = new Art($object_id, "podcast");
-        } elseif ($type == 'search') {
-            $smartlist = new Search($object_id);
-            $listitems = $smartlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
-                $song = new Song($item['object_id']);
-                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
-            }
-        } elseif ($type == 'playlist') {
-            $playlist  = new Playlist($object_id);
-            $listitems = $playlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
-                $song = new Song($item['object_id']);
-                $art  = new Art($song->album, "album");
-            }
-        }
-
-        header("Access-Control-Allow-Origin: *");
-        if ($art != null) {
-            if ($art->has_db_info() && $size && AmpConfig::get('resize_images')) {
-                $dim           = array();
-                $dim['width']  = $size;
-                $dim['height'] = $size;
-                $thumb         = $art->get_thumb($dim);
-                if (!empty($thumb)) {
-                    header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen($thumb['thumb']));
-                    echo $thumb['thumb'];
-
-                    return;
-                }
-            }
-
-            header('Content-type: ' . $art->raw_mime);
-            header('Content-Length: ' . strlen($art->raw));
-            echo $art->raw;
-        }
-    }
-
-    /**
-     * user_create
-     * MINIMUM_API_VERSION=400001
-     *
-     * Create a new user.
-     * Requires the username, password and email.
-     *
-     * @param array $input
-     * $input = array(username = (string) $username
-     *                fullname = (string) $fullname // optional
-     *                password = (string) hash('sha256', $password))
-     *                email    = (string) $email)
-     */
-    public static function user_create($input)
-    {
-        if (!self::check_parameter($input, array('username', 'password', 'email'))) {
-            debug_event('api.class', "'username', 'password', 'email' required on user_create function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username', 'password', 'email'");
-
-            return false;
-        }
-        $username = $input['username'];
-        $fullname = $input['fullname'] ?: $username;
-        $email    = $input['email'];
-        $password = $input['password'];
-        $disable  = ($input['disable'] == 'true');
-
-        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
-            $access  = 25;
-            $user_id = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
-            if ($user_id > 0) {
-                echo XML_Data::success('successfully created: ' . $username);
-
-                return true;
-            }
-        }
-        echo XML_Data::error('400', 'failed to create: ' . $username);
-    }
-
-    /**
-     * user_update
-     * MINIMUM_API_VERSION=400001
-     *
-     * Update an existing user.
-     * Takes the username with optional parameters.
-     *
-     * @param array $input
-     * $input = array(username   = (string) $username
-     *                password   = (string) hash('sha256', $password)) // optional
-     *                fullname   = (string) $fullname // optional
-     *                email      = (string) $email // optional
-     *                website    = (string) $website // optional
-     *                state      = (string) $state // optional
-     *                city       = (string) $city // optional
-     *                disable    = (string) 'true'|'false' // optional
-     *                maxbitrate = (int) $maxbitrate // optional
-     */
-    public static function user_update($input)
-    {
-        if (!self::check_parameter($input, array('username'))) {
-            debug_event('api.class', "'username' required on user_update function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
-
-            return false;
-        }
-        $username   = $input['username'];
-        $fullname   = $input['fullname'];
-        $email      = $input['email'];
-        $website    = $input['website'];
-        $password   = $input['password'];
-        $state      = $input['state'];
-        $city       = $input['city'];
-        $disable    = ($input['disable'] == 'true');
-        $maxbitrate = $input['maxbitrate'];
-
-        // if you didn't send anything to update don't do anything
-        if (!$fullname || !$email || !$website || !$password || !$state || !$city || !$disable || !$maxbitrate) {
-            echo XML_Data::error('401', T_('Nothing to update.'));
-
-            return false;
-        }
-        // identify the user to modify
-        $user_id = User::get_from_username($username);
-        $user    = new User($user_id);
-
-        if ($password && Access::check('interface', 100, $user_id)) {
-            echo XML_Data::error('400', 'Do not update passwords for admin users! ' . $username);
-
-            return false;
-        }
-
-        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id) && $user_id > 0) {
-            if ($password) {
-                $user->update_password('', $password);
-            }
-            if ($fullname) {
-                $user->update_fullname($fullname);
-            }
-            if (Mailer::validate_address($email)) {
-                $user->update_email($email);
-            }
-            if ($website) {
-                $user->update_website($website);
-            }
-            if ($state) {
-                $user->update_state($state);
-            }
-            if ($city) {
-                $user->update_city($city);
-            }
-            if ($disable) {
-                $user->disable();
-            } else {
-                $user->enable();
-            }
-            if ((int) $maxbitrate > 0) {
-                Preference::update('transcode_bitrate', $user_id, $maxbitrate);
-            }
-            echo XML_Data::success('successfully updated: ' . $username);
-
-            return true;
-        }
-        echo XML_Data::error('400', 'failed to update: ' . $username);
-    }
-
-    /**
-     * user_delete
-     * MINIMUM_API_VERSION=400001
-     *
-     * Delete an existing user.
-     * Takes the username in parameter.
-     */
-    public static function user_delete($input)
-    {
-        if (!self::check_parameter($input, array('username'))) {
-            debug_event('api.class', "'username' required on user_delete function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
-
-            return false;
-        }
-        $username = $input['username'];
-        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
-            $user = User::get_from_username($username);
-            // don't delete yourself or admins
-            if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
-                $user->delete();
-                echo XML_Data::success('successfully deleted: ' . $username);
-
-                return true;
-            }
+            echo XML_Data::single_string('successfully started: ' . (string) $input['task']);
+        } else {
+            echo XML_Data::error('401', T_('Bad information in the call to catalog_action.'));
         }
         echo XML_Data::error('400', 'failed to delete: ' . $username);
     }

@@ -97,7 +97,7 @@ class Query
             }
         }
 
-        AmpError::add('browse', T_('Error: Browse not found or expired, try reloading the page'));
+        AmpError::add('browse', T_('Browse was not found or expired, try reloading the page'));
 
         return false;
     }

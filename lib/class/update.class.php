@@ -149,12 +149,12 @@ class Update
 
         $update_string = '- Alter the Session.id to be VARCHAR(64) to account for all potential configs.<br />' .
                 '- Added new user_shout table for Sticky objects / shoutbox.<br />' .
-                '- Added new playlist preferences, and new preference catagory of playlist.<br />' .
+                '- Added new playlist preferences, and new preference category of playlist.<br />' .
                 '- Tweaked Now Playing Table.<br />';
         $version[] = array('version' => '340004', 'description' => $update_string);
 
         $update_string = '- Altered Ratings table so the fields make more sense.<br />' .
-                '- Moved Random Method to Playlist catagory.<br />' .
+                '- Moved Random Method to Playlist category.<br />' .
                 '- Added Transcode Method to Streaming.<br />';
         $version[] = array('version' => '340005', 'description' => $update_string);
 
@@ -168,7 +168,7 @@ class Update
         $update_string = '- Modified Playlist_Data table to account for multiple object types.<br />' .
                 '- Verified previous updates, adjusting as needed.<br />' .
                 '- Dropped Allow Downsampling pref, configured in cfg file.<br />' .
-                '- Renamed Downsample Rate --> Transcode Rate to reflect new terminiology.<br />';
+                '- Renamed Downsample Rate --> Transcode Rate to reflect new terminology.<br />';
         $version[] = array('version' => '340008', 'description' => $update_string);
 
         $update_string = '- Added disk to Album table.<br />' .
@@ -192,7 +192,7 @@ class Update
         $version[] = array('version' => '340013', 'description' => $update_string);
 
         $update_string = '- Removed API Session table, been a nice run....<br />' .
-                '- Alterted Session table to handle API sessions correctly.<br />';
+                '- Altered Session table to handle API sessions correctly.<br />';
         $version[] = array('version' => '340014', 'description' => $update_string);
 
         $update_string = '- Alter Playlist Date Field to fix issues with some MySQL configurations.<br />' .
@@ -208,7 +208,7 @@ class Update
         $version[]     = array('version' => '340017', 'description' => $update_string);
 
         $update_string = '- Modify the Tag tables so that they actually work.<br />' .
-                '- Alter the Prefix fields to allow for more prefixs.<br />';
+                '- Alter the Prefix fields to allow for more prefixes.<br />';
         $version[] = array('version' => '350001', 'description' => $update_string);
 
         $update_string = '- Remove Genre Field from song table.<br />' .
@@ -326,12 +326,12 @@ class Update
         $update_string = '- Added agent to `object_count` table.<br />';
         $version[]     = array('version' => '360026', 'description' => $update_string);
 
-        $update_string = '- Add option to allow/disallow showing personnal information to other users (now playing and Recently Played).<br />';
+        $update_string = '- Add option to allow/disallow showing personal information to other users (now playing and Recently Played).<br />';
         $version[]     = array('version' => '360027', 'description' => $update_string);
 
-        $update_string = '- Personnal information: allow/disallow to show in now playing.<br />' .
-                '- Personnal information: allow/disallow to show in Recently Played.<br />' .
-                '- Personnal information: allow/disallow to show time and/or agent in Recently Played.<br />';
+        $update_string = '- Personal information: allow/disallow to show in now playing.<br />' .
+                '- Personal information: allow/disallow to show in Recently Played.<br />' .
+                '- Personal information: allow/disallow to show time and/or agent in Recently Played.<br />';
         $version[] = array('version' => '360028', 'description' => $update_string);
 
         $update_string = '- Add new table to store wanted releases.<br />';
@@ -568,7 +568,7 @@ class Update
         $version[]     = array('version' => '400000', 'description' => $update_string);
 
         $update_string = "* Update preferences for older users to match current subcategory items<br />" .
-                         "  (~3.6 introduxed subcategories but didn't include updates for existing users.<br />" .
+                         "  (~3.6 introduced subcategories but didn't include updates for existing users.<br />" .
                          "  This is a cosmetic update and does not affect any operation)<br />";
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
@@ -811,7 +811,7 @@ class Update
             "VALUES ('playlist_add', 'append', 'Add Behavior', '5', 'string', 'playlist')";
         $retval &= Dba::write($sql);
 
-        // Switch the existing preferences over to this new catagory
+        // Switch the existing preferences over to this new category
         $sql = "UPDATE `preference` SET `catagory`='playlist' WHERE `name`='playlist_method' " .
             " OR `name`='playlist_type'";
         $retval &= Dba::write($sql);
@@ -1090,8 +1090,8 @@ class Update
     /**
      * update_340015
      *
-     * This update tweaks the playlist table responding to complaints from usres
-     * who say it doesn't work, unreproduceable. This also adds an index to the
+     * This update tweaks the playlist table responding to complaints from users
+     * who say it doesn't work, unreproducible. This also adds an index to the
      * album art table to try to make the random album art faster
      */
     public static function update_340015()
@@ -1221,7 +1221,7 @@ class Update
     /**
      * update_350003
      *
-     * This update tweakes the tag tables a little bit more, we're going to
+     * This update tweaks the tag tables a little bit more, we're going to
      * simplify things for the first little bit and then  if it all works out
      * we will worry about making it complex again. One thing at a time people...
      */
@@ -1535,7 +1535,7 @@ class Update
     /**
      * update_360002
      *
-     * This update makes changes to the cataloging to accomodate the new method
+     * This update makes changes to the cataloging to accommodate the new method
      * for syncing between Ampache instances.
      */
     public static function update_360002()
@@ -2670,14 +2670,14 @@ class Update
             $created = false;
             if (check_htaccess_play_writable()) {
                 if (!install_rewrite_rules($htaccess_play_file, AmpConfig::get('raw_web_path'), false)) {
-                    AmpError::add('general', T_('Error: File copy error.'));
+                    AmpError::add('general', T_('Error copying file'));
                 } else {
                     $created = true;
                 }
             }
 
             if (!$created) {
-                AmpError::add('general', T_('Error: Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_play_file . '.dist</b> to <b>' . $htaccess_play_file . '</b>.');
+                AmpError::add('general', T_('Can not copy the default .htaccess file.') . ' Please copy <b>' . $htaccess_play_file . '.dist</b> to <b>' . $htaccess_play_file . '</b>.');
                 $ret = false;
             }
         }
@@ -2686,14 +2686,14 @@ class Update
             $created = false;
             if (check_htaccess_rest_writable()) {
                 if (!install_rewrite_rules($htaccess_rest_file, AmpConfig::get('raw_web_path'), false)) {
-                    AmpError::add('general', T_('Error: File copy error.'));
+                    AmpError::add('general', T_('Error copying file'));
                 } else {
                     $created = true;
                 }
             }
 
             if (!$created) {
-                AmpError::add('general', T_('Error: Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_rest_file . '.dist</b> to <b>' . $htaccess_rest_file . '</b>.');
+                AmpError::add('general', T_('Error copying the default .htaccess file.') . ' Please copy <b>' . $htaccess_rest_file . '.dist</b> to <b>' . $htaccess_rest_file . '</b>.');
                 $ret = false;
             }
         }
@@ -2702,14 +2702,14 @@ class Update
             $created = false;
             if (check_htaccess_channel_writable()) {
                 if (!install_rewrite_rules($htaccess_channel_file, AmpConfig::get('raw_web_path'), false)) {
-                    AmpError::add('general', T_('Error: File copy error.'));
+                    AmpError::add('general', T_('Error copying file'));
                 } else {
                     $created = true;
                 }
             }
 
             if (!$created) {
-                AmpError::add('general', T_('Error: Cannot copy default .htaccess file.') . ' Please copy <b>' . $htaccess_channel_file . '.dist</b> to <b>' . $htaccess_channel_file . '</b>.');
+                AmpError::add('general', T_('Error copying the default .htaccess file.') . ' Please copy <b>' . $htaccess_channel_file . '.dist</b> to <b>' . $htaccess_channel_file . '</b>.');
                 $ret = false;
             }
         }

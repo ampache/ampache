@@ -143,13 +143,13 @@ class Catalog_subsonic extends Catalog
         $password = $data['password'];
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
-            AmpError::add('general', T_('Error: Subsonic selected, but path is not a URL'));
+            AmpError::add('general', T_('Remote Catalog type was selected, but the path is not a URL'));
 
             return false;
         }
 
         if (!strlen($username) || !strlen($password)) {
-            AmpError::add('general', T_('Error: Username and password required for Subsonic catalogs'));
+            AmpError::add('general', T_('No username or password was specified'));
 
             return false;
         }
@@ -160,7 +160,7 @@ class Catalog_subsonic extends Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('subsonic.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
-            AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
+            AmpError::add('general', sprintf(T_('A Catalog using "%s" already exists'), $uri));
 
             return false;
         }
@@ -251,7 +251,7 @@ class Catalog_subsonic extends Catalog
                                     $song_Id = Song::insert($data);
                                     if (!$song_Id) {
                                         debug_event('subsonic.catalog', 'Insert failed for ' . $song['path'], 1);
-                                        AmpError::add('general', T_('Error: Unable to Insert Song - %s'), $song['path']);
+                                        AmpError::add('general', T_('Unable to insert song - %s'), $song['path']);
                                     } else {
                                         if ($song['coverArt']) {
                                             $this->insertArt($song, $song_Id);
@@ -268,7 +268,7 @@ class Catalog_subsonic extends Catalog
             }
         }
 
-        UI::update_text('', T_('Completed updating Subsonic catalog(s).') . " " . $songsadded . " " . T_('Songs added.'));
+        UI::update_text('', T_('Completed updating Subsonic Catalog(s).') . " " . $songsadded . " " . T_('Songs added.'));
 
         // Update the last update value
         $this->update_last_update();

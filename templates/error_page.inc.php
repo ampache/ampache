@@ -48,7 +48,7 @@
     <div class="container" role="main">
         <div class="jumbotron">
             <h1><?php echo T_('Error'); ?></h1>
-            <p><?php echo(T_("The following error has occured, you will be automatically redirected in 10 seconds.")); ?></p>
+            <p><?php echo(T_("The following error has occurred, you will be automatically redirected in 10 seconds.")); ?></p>
         </div>
         <h2><?php echo(T_("Error Messages"));?>:</h2>
         <?php AmpError::display('general'); ?>

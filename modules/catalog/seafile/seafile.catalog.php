@@ -73,9 +73,9 @@ class Catalog_Seafile extends Catalog
     {
         $help = "<ul><li>" . T_("Install a Seafile server as described in its documentation on %s") . "</li>" .
                 "<li>" . T_("Enter URL to server (e.g. 'https://seafile.example.com') and library name (e.g. 'Music').") . "</li>" .
-                "<li>" . T_("'API Call Delay' is a delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accomodate Seafile's Rate Limiting. <br/>" .
+                "<li>" . T_("'API Call Delay' is a delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accommodate Seafile's Rate Limiting. <br/>" .
                 "The default is tuned towards Seafile's default rate limit settings; see %sthis forum post%s for more information.") . "</li>" .
-                "<li>" . T_("After creating the catalog, you must 'Make it ready' on the catalog table.") . "</li></ul>";
+                "<li>" . T_("After creating the Catalog, you must 'Make it ready' on the Catalog table.") . "</li></ul>";
 
         return sprintf($help, "<a target='_blank' href='https://www.seafile.com/'>https://www.seafile.com/</a>", "<a href='https://forum.syncwerk.com/t/too-many-requests-when-using-web-api-status-code-429/2330'>", "</a>");
     } // get_create_help
@@ -123,7 +123,7 @@ class Catalog_Seafile extends Catalog
         $fields['library_name']   = array('description' => T_('Library Name'), 'type' => 'text', 'value' => 'Music');
         $fields['api_call_delay'] = array('description' => T_('API Call Delay'), 'type' => 'number', 'value' => '250');
         $fields['username']       = array('description' => T_('Seafile Username/Email'), 'type' => 'text', 'value' => '' );
-        $fields['password']       = array('description' => T_('Seafile password'), 'type' => 'password', 'value' => '' );
+        $fields['password']       = array('description' => T_('Seafile Password'), 'type' => 'password', 'value' => '' );
 
         return $fields;
     }
@@ -152,31 +152,31 @@ class Catalog_Seafile extends Catalog
         $password       = trim($data['password']);
 
         if (!strlen($server_uri)) {
-            AmpError::add('general', T_('Error: Seafile server URL is required.'));
+            AmpError::add('general', T_('Seafile server URL is required.'));
 
             return false;
         }
 
         if (!strlen($library_name)) {
-            AmpError::add('general', T_('Error: Seafile server library name is required.'));
+            AmpError::add('general', T_('Seafile server library name is required.'));
 
             return false;
         }
 
         if (!strlen($username)) {
-            AmpError::add('general', T_('Error: Seafile username is required.'));
+            AmpError::add('general', T_('Seafile username is required.'));
 
             return false;
         }
 
         if (!strlen($password)) {
-            AmpError::add('general', T_('Error: Seafile password is required.'));
+            AmpError::add('general', T_('Seafile password is required.'));
 
             return false;
         }
 
         if (!is_numeric($api_call_delay)) {
-            AmpError::add('general', T_('Error: API Call Delay must have a numeric value.'));
+            AmpError::add('general', T_('API call delay must have a numeric value.'));
 
             return false;
         }
@@ -186,7 +186,7 @@ class Catalog_Seafile extends Catalog
 
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
         } catch (Exception $e) {
-            AmpError::add('general', sprintf(T_('Error: Error while authenticating against Seafile API: %s', $e->getMessage())));
+            AmpError::add('general', sprintf(T_('Error while authenticating using Seafile API: %s', $e->getMessage())));
             debug_event('seafile_catalog', 'Exception while Authenticating: ' . $e->getMessage(), 2);
         }
 
@@ -267,7 +267,7 @@ class Catalog_Seafile extends Catalog
             UI::update_text('', sprintf(T_('Catalog Update finished.  Total Media: [%s]'), $count));
 
             if ($count <= 0) {
-                AmpError::add('general', T_('Error: No media updated, did you respect the patterns?'));
+                AmpError::add('general', T_('No media was updated, did you respect the patterns?'));
             } else {
                 $success = true;
             }

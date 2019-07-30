@@ -49,7 +49,7 @@ switch ($_REQUEST['action']) {
             if (Access::check('interface', '100')) {
                 $catalogs = Catalog::get_catalogs();
                 if (count($catalogs) == 0) {
-                    $results['random_selection'] = sprintf(T_('No catalog configured yet. To start streaming your media, you now need to %s add a catalog %s'), '<a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">', '</a>.<br /><br />');
+                    $results['random_selection'] = sprintf(T_('No Catalog configured yet. To start streaming your media, you now need to %s add a Catalog %s'), '<a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">', '</a>.<br /><br />');
                 }
             }
         }

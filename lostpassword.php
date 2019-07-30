@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
         if ($result) {
             AmpError::add('general', T_('Password has been sent'));
         } else {
-            AmpError::add('general', T_('Error: Password has not been sent'));
+            AmpError::add('general', T_('Password was not sent'));
         }*/
 
         require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');

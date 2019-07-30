@@ -42,7 +42,7 @@ $catname = false;
 $options = getopt("hn:t:mvcaguio");
 
 if (count($options) == 0) {
-    $operations_string = "\n\t- ". T_('Doing all catalog operations');
+    $operations_string = "\n\t- ". T_('Doing all Catalog operations');
 } else {
 
         if (array_key_exists('h', $options)) {
@@ -50,27 +50,27 @@ if (count($options) == 0) {
             return false;
         }
         if (array_key_exists('m', $options)) {
-            $operations_string .= "\n\t- " . T_('Temporary deactivate PHP memory limit');
+            $operations_string .= "\n\t- " . T_('Temporarily deactivating PHP memory limit');
             $tmpmemlimoff = 1;
         }
         if (array_key_exists('n', $options)) {
-            $operations_string .= "\n\t- " . T_('Setting catalog name');
+            $operations_string .= "\n\t- " . T_('Setting Catalog name');
             $catname = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
         }
         if (array_key_exists('t', $options)) {
-            $operations_string .= "\n\t- " . T_('Setting catalog type');
+            $operations_string .= "\n\t- " . T_('Setting Catalog type');
             $cattype = strtolower($options['t']);
         }
         if (array_key_exists('c', $options)) {
-            $operations_string .= "\n\t- " . T_('Cleaning catalog/s');
+            $operations_string .= "\n\t- " . T_('Cleaning Catalog/s');
             $catclean = 1;
         }
         if (array_key_exists('v', $options)) {
-            $operations_string .= "\n\t- " . T_('Verifying catalog/s');
+            $operations_string .= "\n\t- " . T_('Verifying Catalog/s');
             $catverify = 1;
         }
         if (array_key_exists('a', $options)) {
-            $operations_string .= "\n\t- " . T_('Adding new media to catalog/s');
+            $operations_string .= "\n\t- " . T_('Adding new media to Catalog/s');
             $catadd = 1;
         }
         if (array_key_exists('g', $options)) {
@@ -99,10 +99,10 @@ if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimi
     $optimizetables = 1;
 }
 echo "\n----------------------------------------------------------\n";
-echo T_("Starting catalog operations...") . $operations_string . "\n";
+echo T_("Starting Catalog operations...") . $operations_string . "\n";
 echo "----------------------------------------------------------\n\n";
 
-// -------- Options before the catalog actions loop
+// -------- Options before the Catalog actions loop
 if ($tmpmemlimoff == 1) {
     // Temporarily deactivate PHP memory limit
     echo "\033[31m- " . T_("Deactivated PHP memory limit") . " -\033[0m\n";
@@ -127,7 +127,7 @@ if ($plimp == 1) {
 if ($catname !== false) {
     $where = " name = '$catname' ";
 }
-if ($cattype) {
+if ($cattype !== false) {
     $where .= "catalog_type='$cattype'";
 } elseif (!$where) {
     $where .= "catalog_type='local'";
@@ -143,7 +143,7 @@ ob_start("ob_html_strip",'1024',true);
 while ($row = Dba::fetch_row($db_results)) {
 
     $catalog = Catalog::create_from_id($row['0']);
-    printf(T_('Reading catalog: %s'), $catalog->name);
+    printf(T_('Reading Catalog: %s'), $catalog->name);
     ob_flush();
     echo "\n";
 
@@ -156,7 +156,7 @@ while ($row = Dba::fetch_row($db_results)) {
     }
     if ($catverify == 1) {
         // Verify Existing
-        echo "- " . T_("Start verifying media related to catalog entries") . " - \n";
+        echo "- " . T_("Start verifying media related to Catalog entries") . " - \n";
         echo "\n";
         $catalog->verify_catalog($row['0']);
         echo "-------------------\n\n";
@@ -222,17 +222,17 @@ function usage() {
     echo "\n-h\t";
     echo T_('This help message');
     echo "\n-n\t";
-    echo T_('Name of catalog (optional)');
+    echo T_('Name of Catalog (optional)');
     echo "\n-t\t";
-    echo T_('Type of catalog (optional)');
+    echo T_('Type of Catalog (optional)');
     echo "\n-m\t";
     echo T_('Temporarily deactivates PHP memory limit.') . " (\033[31m1\033[0m)";
     echo "\n-c\t";
-    echo T_('Cleans catalogs from orphaned entries.');
+    echo T_('Cleans Catalogs from orphaned entries.');
     echo "\n-v\t";
-    echo T_('Verifies catalog entries and updates them if related files have new information.');
+    echo T_('Verifies Catalog entries and updates them if related files have new information.');
     echo "\n-a\t";
-    echo T_('Adds new media to catalogs.');
+    echo T_('Adds new media to Catalogs.');
     echo "\n-g\t";
     echo T_('Gathers media Art.');
     echo "\n-u\t";
@@ -244,7 +244,7 @@ function usage() {
     echo "\n";
     echo "----------------------------------------------------------\033[31m\n";
     echo "1. " . T_('Use this option at your own risk! Your system could crash or become unresponsive due to huge memory consumption!') . "\n";
-    echo "2. " . T_('Depending on your systems performance, this option may need a long time to finish and could greatly slow down other database processes if you have big catalogs!') . "\n";
+    echo "2. " . T_('Depending on your systems performance, this option may need a long time to finish and could greatly slow down other database processes if you have big Catalogs!') . "\n";
     echo "!  " . T_('The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-a|-g] is used.');
     echo "\033[0m\n";
     echo "----------------------------------------------------------";
