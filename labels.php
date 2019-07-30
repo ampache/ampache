@@ -32,9 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $label_id = scrub_in($_REQUEST['label_id']);
-        show_confirmation(
-            T_('Are you sure?'),
-            sprintf(T_('Do you really want to delete this %s?'), T_('Label')),
+        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Label?'),
             AmpConfig::get('web_path') . "/labels.php?action=confirm_delete&label_id=" . $label_id,
             1,
             'delete_label'
@@ -54,9 +52,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($label->remove()) {
-            show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted.'), T_('Label')), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('Label has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Please don\'t be mad'), sprintf(T_('Couldn\'t delete this %s.'), T_('Label')), AmpConfig::get('web_path'));
+            show_confirmation(T_("Please don't be mad"), T_("Couldn't delete this Label."), AmpConfig::get('web_path'));
         }
     break;
     case 'add_label':

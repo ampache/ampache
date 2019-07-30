@@ -195,7 +195,7 @@ switch ($_REQUEST['action']) {
         if ($client->disable()) {
             show_confirmation(T_('User disabled'), $client->username . ' (' . $client->fullname . ')', AmpConfig::get('web_path') . '/admin/users.php');
         } else {
-            show_confirmation(T_('Please don\'t be mad'), T_('You need an active Administrator account.'), AmpConfig::get('web_path') . '/admin/users.php');
+            show_confirmation(T_("Please don't be mad"), T_('You need an active Administrator account.'), AmpConfig::get('web_path') . '/admin/users.php');
         }
     break;
     case 'show_edit':
@@ -218,7 +218,7 @@ switch ($_REQUEST['action']) {
         if ($client->delete()) {
             show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
         } else {
-            show_confirmation(T_('Please don\'t be mad'), T_('You need an active Administrator account'), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_("Please don't be mad"), T_('You need an active Administrator account'), AmpConfig::get('web_path') . "/admin/users.php");
         }
     break;
     case 'delete':
@@ -234,7 +234,7 @@ switch ($_REQUEST['action']) {
         $user_id = Core::get_request('user_id');
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php?action=delete_avatar&user_id=' . scrub_out($user_id);
-        show_confirmation(T_('Are you sure?'), sprintf(T_('Do you really want to delete this %s?'), T_('Avatar')), $next_url, 1, 'delete_avatar');
+        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Avatar?'), $next_url, 1, 'delete_avatar');
     break;
     case 'delete_avatar':
         if (AmpConfig::get('demo_mode')) {
@@ -251,13 +251,13 @@ switch ($_REQUEST['action']) {
         $client->delete_avatar();
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
-        show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted.'), T_('Avatar')), $next_url);
+        show_confirmation(T_('No Problem'), T_('Avatar has been deleted.'), $next_url);
     break;
     case 'show_generate_apikey':
         $user_id = Core::get_request('user_id');
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php?action=generate_apikey&user_id=' . scrub_out($user_id);
-        show_confirmation(T_('Are you sure?'), sprintf(T_('Do you really want to create a new %s?'), T_('API Key')), $next_url, 1, 'generate_apikey');
+        show_confirmation(T_('Are you sure?'), T_('Do you really want to create a new API Key?'), $next_url, 1, 'generate_apikey');
     break;
     case 'generate_apikey':
         if (AmpConfig::get('demo_mode')) {

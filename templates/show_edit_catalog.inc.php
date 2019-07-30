@@ -50,7 +50,7 @@ UI::show_box_top(sprintf(T_('Settings for %s'), $catalog->name . ' (' . $catalog
         </tr>
         <tr>
             <td>
-                <?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_('(no leading or ending \'/\')'); ?>
+                <?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?>
             </td>
             <td>
                 <input type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern);?>" />

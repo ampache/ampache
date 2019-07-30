@@ -61,7 +61,7 @@ switch ($_REQUEST['action']) {
         if (!$results) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_live_stream.inc.php');
         } else {
-            $body  = sprintf(T_('%s created'), T_('Radio Station'));
+            $body  = T_('Radio Station created');
             $title = '';
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=live_stream');
         }

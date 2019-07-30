@@ -62,7 +62,7 @@ $tag_types = array(
                     </a>
                 </li>
                 <li>
-                    <a class="tag_delete" href="<?php echo AmpConfig::get('ajax_url') ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo sprintf(T_('Do you really want to delete this %s?'), T_('Tag')); ?>');"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
+                    <a class="tag_delete" href="<?php echo AmpConfig::get('ajax_url') ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
                 </li>
             </ul>
         </div>
