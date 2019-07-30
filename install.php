@@ -126,7 +126,7 @@ switch ($_REQUEST['action']) {
             $new_pass = Core::get_post('db_password');
 
             if (!strlen($new_user) || !strlen($new_pass)) {
-                AmpError::add('general', T_('Error: Ampache SQL username or password missing'));
+                AmpError::add('general', T_('The Ampache database username or password is missing'));
                 require_once 'templates/show_install.inc.php';
                 break;
             }
@@ -180,7 +180,7 @@ switch ($_REQUEST['action']) {
 
         /* Make sure we've got a valid config file */
         if (!check_config_values($results) || !$created_config) {
-            AmpError::add('general', T_('Error: Config files not found or unreadable'));
+            AmpError::add('general', T_('Configuration files were either not found or unreadable'));
             require_once AmpConfig::get('prefix') . UI::find_template('show_install_config.inc.php');
             break;
         }

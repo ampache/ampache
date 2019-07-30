@@ -46,7 +46,7 @@
         </div>
         <div class="well">
             <p>
-                <?php echo T_('You may have reached this page because a configuration error has occured. Debug information is below.'); ?>
+                <?php echo T_('You may have reached this page because a configuration error has occurred. Debug information is below.'); ?>
                 <?php if (!is_readable($configfile)) {
     ?>
                 | <a href="install.php"><?php echo T_('Web Installation'); ?></a>

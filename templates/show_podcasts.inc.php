@@ -26,7 +26,7 @@ $thcount  = 5;
         <?php if (Access::check('interface', 75)) {
     ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Subscribe Podcast'); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Subscribe to Podcast'); ?></a>
         </li>
         <?php
 } ?>

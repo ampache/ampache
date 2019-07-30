@@ -79,56 +79,56 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('captcha_public_reg')) {
             $captcha         = captcha::solved();
             if (!isset($captcha)) {
-                AmpError::add('captcha', T_('Error: Captcha required'));
+                AmpError::add('captcha', T_('Captcha is required'));
             }
             if (isset($captcha)) {
                 if ($captcha) {
                     $msg="SUCCESS";
                 } else {
-                    AmpError::add('captcha', T_('Error: Captcha failed'));
+                    AmpError::add('captcha', T_('Captcha failed'));
                 }
             } // end if we've got captcha
         } // end if it's enabled
 
         if (AmpConfig::get('user_agreement')) {
             if (!$_POST['accept_agreement']) {
-                AmpError::add('user_agreement', T_("Error: You <U>must</U> accept the user agreement"));
+                AmpError::add('user_agreement', T_("You <U>must</U> accept the user agreement"));
             }
         } // if they have to agree to something
 
         if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
-            AmpError::add('username', T_("Error: You did not enter a username"));
+            AmpError::add('username', T_("Username is required"));
         }
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            AmpError::add('email', T_('Error: Invalid e-mail address'));
+            AmpError::add('email', T_('Invalid e-mail address'));
         }
 
         $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
         if (in_array('fullname', $mandatory_fields) && !$fullname) {
-            AmpError::add('fullname', T_("Error: Please fill in your full name (First name, last name)"));
+            AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
         }
         if (in_array('website', $mandatory_fields) && !$website) {
-            AmpError::add('website', T_("Error: Please fill in your website"));
+            AmpError::add('website', T_("Please fill in your website"));
         }
         if (in_array('state', $mandatory_fields) && !$state) {
-            AmpError::add('state', T_("Error: Please fill in your state"));
+            AmpError::add('state', T_("Please fill in your state"));
         }
         if (in_array('city', $mandatory_fields) && !$city) {
-            AmpError::add('city', T_("Error: Please fill in your city"));
+            AmpError::add('city', T_("Please fill in your city"));
         }
 
         if (!$pass1) {
-            AmpError::add('password', T_("Error: You must enter a password"));
+            AmpError::add('password', T_("You must enter a password"));
         }
 
         if ($pass1 != $pass2) {
-            AmpError::add('password', T_("Error: Your passwords do not match"));
+            AmpError::add('password', T_("Passwords do not match"));
         }
 
         if (!User::check_username((string) $username) || $username == null) {
-            AmpError::add('duplicate_user', T_("Error: Username already exists"));
+            AmpError::add('duplicate_user', T_("Username already exists"));
         }
 
         // If we've hit an error anywhere up there break!
@@ -155,7 +155,7 @@ switch ($_REQUEST['action']) {
         $new_user = User::create($username, $fullname, $email, (string) $website, $pass1, $access, (string) $state, (string) $city, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
-            AmpError::add('duplicate_user', T_("Error: Insert failed"));
+            AmpError::add('duplicate_user', T_("Failed to create user"));
             require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
             break;
         }

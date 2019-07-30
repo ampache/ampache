@@ -159,7 +159,7 @@ class Api
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < self::$auth_version) {
             debug_event('api.class', 'Login Failed: Version too old', 1);
-            AmpError::add('api', T_('Error: Login failed, version too old'));
+            AmpError::add('api', T_('Login failed, API version is too old'));
 
             return false;
         }
@@ -187,9 +187,9 @@ class Api
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
-                    debug_event('api.class', 'Login Failed: Timestamp out of range ' . $timestamp . '/' . time(), 1);
-                    AmpError::add('api', T_('Error: Login failed, timestamp out of range'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Error: Login failed, timestamp out of range'));
+                    debug_event('api.class', 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
+                    AmpError::add('api', T_('Login failed, timestamp is out of range'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login failed, timestamp is out of range'));
 
                     return false;
                 }
@@ -201,8 +201,8 @@ class Api
 
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
-                    AmpError::add('api', T_('Error: Invalid username/password'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Error: Invalid username/password'));
+                    AmpError::add('api', T_('Incorrect username or password'));
+                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Incorrect username or password'));
 
                     return false;
                 }
@@ -297,7 +297,7 @@ class Api
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid username/password'));
+        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Incorrect username or password'));
 
         return false;
     } // handshake
@@ -316,7 +316,7 @@ class Api
     {
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => self::$version, 'compatible' => '350001');
 
-        // Check and see if we should extend the api sessions (done if valid sess is passed)
+        // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
@@ -1039,7 +1039,7 @@ class Api
      */
     public static function stats($input)
     {
-        // moved type to filter and allowed multipe type selection
+        // moved type to filter and allowed multiple type selection
         $type   = $input['type'];
         $filter = $input['filter'];
         $offset = $input['offset'];
@@ -1525,7 +1525,7 @@ class Api
 
         if ($catalog && ((string) $input['task'] === 'add_to_catalog' || (string) $input['task'] === 'clean_catalog')) {
             $catalog->process_action($input['task'], (int) $input['catalog']);
-            echo XML_Data::single_string('successfull started: ' . (string) $input['task']);
+            echo XML_Data::single_string('successfully started: ' . (string) $input['task']);
         } else {
             echo XML_Data::error('401', T_('Bad information in the call to catalog_action.'));
         }

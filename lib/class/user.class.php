@@ -30,7 +30,7 @@
  */
 class User extends database_object
 {
-    //Basic Componets
+    //Basic Components
     /**
      * @var int $id
      */
@@ -120,9 +120,9 @@ class User extends database_object
      */
     public $f_link;
     /**
-     * @var string $f_useage
+     * @var string $f_usage
      */
-    public $f_useage;
+    public $f_usage;
     /**
      * @var string $ip_history
      */
@@ -383,7 +383,7 @@ class User extends database_object
         $db_results = Dba::read($sql);
         $results    = array();
         $type_array = array();
-        /* Ok this is crapy, need to clean this up or improve the code FIXME */
+        /* Ok this is crappy, need to clean this up or improve the code FIXME */
         while ($row = Dba::fetch_assoc($db_results)) {
             $type  = $row['catagory'];
             $admin = false;
@@ -551,7 +551,7 @@ class User extends database_object
 
     /**
      * has_access
-     * this function checkes to see if this user has access
+     * this function checks to see if this user has access
      * to the passed action (pass a level requirement)
      * @param integer $needed_level
      */
@@ -588,18 +588,18 @@ class User extends database_object
 
     /**
      * update
-     * This function is an all encompasing update function that
+     * This function is an all encompassing update function that
      * calls the mini ones does all the error checking and all that
      * good stuff
      */
     public function update(array $data)
     {
         if (empty($data['username'])) {
-            AmpError::add('username', T_('Error: Username required'));
+            AmpError::add('username', T_('Username is required'));
         }
 
         if ($data['password1'] != $data['password2'] && !empty($data['password1'])) {
-            AmpError::add('password', T_("Error: Passwords don't match"));
+            AmpError::add('password', T_("Passwords do not match"));
         }
 
         if (AmpError::occurred()) {
@@ -922,10 +922,10 @@ class User extends database_object
     {
         if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
             $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            debug_event('user.class', 'Login from ip adress: ' . $sip, 3);
+            debug_event('user.class', 'Login from IP address: ' . $sip, 3);
         } else {
             $sip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
-            debug_event('user.class', 'Login from ip adress: ' . $sip, 3);
+            debug_event('user.class', 'Login from IP address: ' . $sip, 3);
         }
 
         // Remove port information if any
@@ -1073,7 +1073,7 @@ class User extends database_object
             $result = Dba::fetch_assoc($db_results);
             $total  = $result['size'];
 
-            $this->f_useage = UI::format_bytes($total);
+            $this->f_usage = UI::format_bytes($total);
 
             /* Get Users Last ip */
             if (count($data = $this->get_ip_history(1))) {
@@ -1189,7 +1189,7 @@ class User extends database_object
     /**
      * delete
      * deletes this user and everything associated with it. This will affect
-     * ratings and tottal stats
+     * ratings and total stats
      */
     public function delete()
     {

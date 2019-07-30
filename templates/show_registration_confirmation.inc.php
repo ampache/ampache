@@ -44,7 +44,7 @@ $_SESSION['login'] = true;
             <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
             <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
             <div>
-                <?php echo T_('Your account has been created.'); ?>
+                <?php echo T_('Your account has been created'); ?>
                 <?php
                 if (AmpConfig::get('admin_enable_required')) {
                     echo T_('Please wait for an administrator to activate your account.');

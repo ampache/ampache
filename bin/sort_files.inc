@@ -177,7 +177,7 @@ function sort_element_name($key) {
  * sort_clean_name
  * We have to have some special rules here
  * This is run on every individual element of the search
- * Before it is put togeather, this removes / and \ and also
+ * Before it is put together, this removes / and \ and also
  * once I figure it out, it'll clean other stuff
  */
 function sort_clean_name($string) {
@@ -200,7 +200,7 @@ function sort_clean_name($string) {
  * current phase of the moon, the alignment of the planets and my current BAL
  * Instead we cheeseball it and walk through the new dir structure and make
  * sure that the directories exist, once the dirs exist then we do a copy
- * and unlink.. This is a little unsafe, and as such it verifys the copy
+ * and unlink.. This is a little unsafe, and as such it verifies the copy
  * worked by doing a filesize() before unlinking.
  */
 function sort_move_file($song,$fullname) {
@@ -222,18 +222,18 @@ function sort_move_file($song,$fullname) {
         $dir = sort_clean_name($dir);
         $path .= "/" . $dir;
 
-        /* We need to check for the existance of this directory */
+        /* We need to check for the existence of this directory */
         if (!is_dir($path)) {
             if (Core::get_global('test_mode')) {
                 echo "\t";
-                printf (T_('Making %s Directory'), $path);
+                printf (T_('Making "%s" directory'), $path);
                 echo "\n";
             }
             else {
                 debug_event('sort_files.inc', "Creating $path directory", 4);
                 $results = mkdir($path);
                 if (!$results) {
-                    printf (T_('Error: Unable to create %s move failed'), $path);
+                    printf (T_('Unable to create "%s", move failed'), $path);
                     echo "\n";
                     return false;
                 }
@@ -254,7 +254,7 @@ function sort_move_file($song,$fullname) {
     }
     else {
 
-        /* Check for file existance */
+        /* Check for file existence */
         if (file_exists($fullname)) {
             debug_event('sort_files.inc', 'Error: $fullname already exists', 1);
             printf (T_('Error: %s already exists'), $fullname);
