@@ -98,7 +98,7 @@
     <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Playlist edit') ?>', 'playlist_row_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
-    <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id, '', '', sprintf(T_('Do you really want to delete this %s?'), T_('Playlist')));
+    <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id, '', '', T_('Do you really want to delete this Playlist?'));
     }
 ?>
 </td>

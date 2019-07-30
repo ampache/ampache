@@ -105,14 +105,14 @@ switch ($_REQUEST['action']) {
         }
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php';
         if ($deleted) {
-            show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted.'), T_('Catalog')), $next_url);
+            show_confirmation(T_('No Problem'), T_('Catalog has been deleted.'), $next_url);
         } else {
-            show_confirmation(T_('Please don\'t be mad'), sprintf(T_('Couldn\'t delete this %s.'), T_('Catalog')), $next_url);
+            show_confirmation(T_("Please don't be mad"), T_("Couldn't delete this Catalog."), $next_url);
         }
     break;
     case 'show_delete_catalog':
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $catalogs);
-        show_confirmation(T_('Are you sure?'), sprintf(T_('Do you really want to delete this %s?'), T_('Catalog')), $next_url, 1, 'delete_catalog');
+        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Catalog?'), $next_url, 1, 'delete_catalog');
     break;
     case 'enable_disabled':
         if (AmpConfig::get('demo_mode')) {

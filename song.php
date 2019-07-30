@@ -32,9 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $song_id = scrub_in($_REQUEST['song_id']);
-        show_confirmation(
-            T_('Are you sure?'),
-            sprintf(T_('Do you really want to delete this %s?'), T_('Song')),
+        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Song?'),
             AmpConfig::get('web_path') . "/song.php?action=confirm_delete&song_id=" . $song_id,
             1,
             'delete_song'
@@ -54,9 +52,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($song->remove_from_disk()) {
-            show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted.'), T_('Song')), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('Song has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Please don\'t be mad'), sprintf(T_('Couldn\'t delete this %s.'), T_('Song')), AmpConfig::get('web_path'));
+            show_confirmation(T_("Please don't be mad"), T_("Couldn't delete this Song."), AmpConfig::get('web_path'));
         }
     break;
     case 'show_lyrics':

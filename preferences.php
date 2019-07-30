@@ -132,7 +132,7 @@ switch ($_REQUEST['action']) {
 
         $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
-            AmpError::add('fullname', T_("Error: Please fill in your full name (Firstname Lastname)"));
+            AmpError::add('fullname', T_("Error: Please fill in your full name (First name, last name)"));
         }
         if (in_array('website', $mandatory_fields) && !$_POST['website']) {
             AmpError::add('website', T_("Error: Please fill in your website"));
@@ -173,7 +173,7 @@ switch ($_REQUEST['action']) {
                     $text     = T_('Your account has been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 } else {
-                    $title    = T_('Please don\'t be mad');
+                    $title    = T_("Please don't be mad");
                     $text     = T_('Your account has not been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 }

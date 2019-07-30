@@ -87,7 +87,7 @@ if ($port <= 0) {
             if (is_resource($connection)) {
                 fclose($connection);
             } else {
-                echo T_("Found available port ") . $p . "\n";
+                echo T_("Found available port") . " " .$p . "\n";
                 $port = $p;
                 break;
             }
@@ -104,7 +104,7 @@ if ($server === false)
     die("Could not bind to socket: " . $errorMessage);
 }
 $channel->update_start($start_date, $address, $port, getmypid());
-echo T_("Listening on ") . $address . ':' . $port . "\n";
+echo T_("Listening on") . " " .$address . ':' . $port . "\n";
 
 $stream_clients = array();
 $client_socks = array();

@@ -32,9 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $artist_id = scrub_in($_REQUEST['artist_id']);
-        show_confirmation(
-            T_('Are you sure?'),
-            sprintf(T_('Do you really want to delete this %s?'), T_('Artist')),
+        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Artist?'),
             AmpConfig::get('web_path') . "/artists.php?action=confirm_delete&artist_id=" . $artist_id,
             1,
             'delete_artist'
@@ -54,9 +52,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($artist->remove_from_disk()) {
-            show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted.'), T_('Artist')), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('Artist has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Please don\'t be mad'), sprintf(T_('Couldn\'t delete this %s.'), T_('Artist')), AmpConfig::get('web_path'));
+            show_confirmation(T_("Please don't be mad"), T_("Couldn't delete this Artist."), AmpConfig::get('web_path'));
         }
     break;
     case 'show':

@@ -97,9 +97,7 @@ switch ($_REQUEST['action']) {
         }
 
         $msgs = scrub_out($_REQUEST['msgs']);
-        show_confirmation(
-                T_('Are you sure?'),
-                sprintf(T_('Do you really want to delete this %s?'), T_('Message')),
+        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Message?'),
                 AmpConfig::get('web_path') . "/pvmsg.php?action=confirm_delete&msgs=" . $msgs,
                 1,
                 'delete_message'
@@ -124,7 +122,7 @@ switch ($_REQUEST['action']) {
             }
         }
 
-        show_confirmation(T_('No Problem'), sprintf(T_('%s have been deleted.'), T_('Messages')), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
+        show_confirmation(T_('No Problem'), T_('Messages have been deleted.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
         break;
     case 'show':
     default:

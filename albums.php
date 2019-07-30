@@ -32,9 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $album_id = scrub_in($_REQUEST['album_id']);
-        show_confirmation(
-            T_('Are you sure?'),
-            sprintf(T_('Do you really want to delete this %s?'), T_('Album')),
+        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Album?'),
             AmpConfig::get('web_path') . "/albums.php?action=confirm_delete&album_id=" . $album_id,
             1,
             'delete_album'
@@ -54,9 +52,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($album->remove_from_disk()) {
-            show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted.'), T_('Album')), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('Album has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Please don\'t be mad'), sprintf(T_('Couldn\'t delete this %s.'), T_('Album')), AmpConfig::get('web_path'));
+            show_confirmation(T_("Please don't be mad"), T_("Couldn't delete this Album."), AmpConfig::get('web_path'));
         }
     break;
     case 'update_from_tags':

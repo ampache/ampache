@@ -60,7 +60,7 @@ require $prefix . '/templates/install_header.inc.php';
             </div>
             <?php AmpError::display('general'); ?>
 <form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" autocomplete="off">
-            <h2><?php echo T_('Generate Config File'); ?></h2>
+            <h2><?php echo T_('Generate Configuration File'); ?></h2>
             <h3><?php echo T_('Various'); ?></h3>
 <div class="form-group">
     <label for="web_path" class="col-sm-4 control-label"><?php echo T_('Web path'); ?></label>
