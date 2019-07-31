@@ -597,7 +597,7 @@ class Subsonic_Api
                                                     $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
                                                 }
                                             } else {
-                                                $response     = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type));
+                                                $response      = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type));
                                                 $errorOccurred = true;
                                             }
                                         }
