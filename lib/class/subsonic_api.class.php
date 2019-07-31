@@ -559,9 +559,9 @@ class Subsonic_Api
             $catalogs[] = $musicFolderId;
         }
 
-        $response     = Subsonic_XML_Data::createSuccessResponse();
+        $response      = Subsonic_XML_Data::createSuccessResponse();
         $errorOccurred = false;
-        $albums       = array();
+        $albums        = array();
 
         if ($type == "random") {
             $albums = Album::get_random($size);
