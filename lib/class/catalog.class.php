@@ -668,7 +668,7 @@ abstract class Catalog extends database_object
             $insert_id = Dba::insert_id();
 
             if (!$insert_id) {
-                AmpError::add('general', T_('Error: Catalog Insert failed, check debug logs'));
+                AmpError::add('general', T_('Failed to create the catalog, check the debug logs'));
                 debug_event('catalog.class', 'Insert failed: ' . json_encode($data), 2);
 
                 return 0;
@@ -1900,7 +1900,7 @@ abstract class Catalog extends database_object
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
         }
-        UI::update_text('', sprintf(T_('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']));
+        UI::update_text('', sprintf(T_('Catalog Verify done. %d of %d files updated.'), $verified['updated'], $verified['total']));
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }
@@ -2505,7 +2505,7 @@ abstract class Catalog extends database_object
                 } // end if update
 
                 if ($catalog_id <= 0) {
-                    AmpError::add('general', T_("Error: This subdirectory is not part of an existing catalog. Update cannot be processed."));
+                    AmpError::add('general', T_("This subdirectory is not inside an existing Catalog. The update can not be processed."));
                 }
                 break;
             case 'gather_media_art':
@@ -2513,7 +2513,7 @@ abstract class Catalog extends database_object
                     $catalogs = Catalog::get_catalogs();
                 }
 
-                // Iterate throught the catalogs and gather as needed
+                // Iterate throughout the catalogs and gather as needed
                 foreach ($catalogs as $catalog_id) {
                     $catalog = Catalog::create_from_id($catalog_id);
                     if ($catalog !== null) {

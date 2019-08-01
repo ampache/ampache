@@ -141,13 +141,13 @@ class Catalog_remote extends Catalog
         $password = $data['password'];
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
-            AmpError::add('general', T_('Error: Remote selected, but path is not a URL'));
+            AmpError::add('general', T_('Remote Catalog type was selected, but the path is not a URL'));
 
             return false;
         }
 
         if (!strlen($username) || !strlen($password)) {
-            AmpError::add('general', T_('Error: Username and password required for Remote catalogs'));
+            AmpError::add('general', T_('No username or password was specified'));
 
             return false;
         }
@@ -159,7 +159,8 @@ class Catalog_remote extends Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('remote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
-            AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
+            /* HINT: remote URI */
+            AmpError::add('general', sprintf(T_('A Catalog using "%s" already exists'), $uri));
 
             return false;
         }
@@ -214,7 +215,7 @@ class Catalog_remote extends Catalog
 
         if ($remote_handle->state() != 'CONNECTED') {
             debug_event('remote.catalog', 'API client failed to connect', 1);
-            AmpError::add('general', T_('Error: Failed to connect to remote server'));
+            AmpError::add('general', T_('Failed to connect to the remote server'));
             AmpError::display('general');
 
             return false;
@@ -242,7 +243,7 @@ class Catalog_remote extends Catalog
         $remote_catalog_info = $remote_handle->info();
 
         // Tell 'em what we've found, Johnny!
-        UI::update_text('', sprintf(T_('%u remote catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']));
+        UI::update_text('', sprintf(T_('%u remote Catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']));
 
         // Hardcoded for now
         $step    = 500;
@@ -270,7 +271,8 @@ class Catalog_remote extends Catalog
                     $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
                     if (!Song::insert($data['song'])) {
                         debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
-                        AmpError::add('general', T_('Error: Unable to insert song - %s'), $data['song']['title']);
+                        /* HINT: Song Title */
+                        AmpError::add('general', T_('Unable to insert song - %s'), $data['song']['title']);
                         AmpError::display('general');
                         flush();
                     }
@@ -278,7 +280,7 @@ class Catalog_remote extends Catalog
             }
         } // end while
 
-        UI::update_text('', T_('Completed updating remote catalog(s).'));
+        UI::update_text('', T_('Completed updating remote Catalog(s).'));
 
         // Update the last update value
         $this->update_last_update();

@@ -559,9 +559,9 @@ class Subsonic_Api
             $catalogs[] = $musicFolderId;
         }
 
-        $response     = Subsonic_XML_Data::createSuccessResponse();
-        $errorOccured = false;
-        $albums       = array();
+        $response      = Subsonic_XML_Data::createSuccessResponse();
+        $errorOccurred = false;
+        $albums        = array();
 
         if ($type == "random") {
             $albums = Album::get_random($size);
@@ -622,8 +622,8 @@ class Subsonic_Api
                                                     $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
                                                 }
                                             } else {
-                                                $response     = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type));
-                                                $errorOccured = true;
+                                                $response      = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type));
+                                                $errorOccurred = true;
                                             }
                                         }
                                     }
@@ -635,7 +635,7 @@ class Subsonic_Api
             }
         }
 
-        if (!$errorOccured) {
+        if (!$errorOccurred) {
             Subsonic_XML_Data::addAlbumList($response, $albums, $elementName);
         }
         self::apiOutput($input, $response);

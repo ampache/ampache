@@ -61,21 +61,21 @@ switch ($_REQUEST['action']) {
 
         /* Verify Input */
         if (empty($username)) {
-            AmpError::add('username', T_("Error: Username required"));
+            AmpError::add('username', T_("Username is required"));
         } else {
             if ($username != $client->username) {
                 if (!User::check_username($username)) {
-                    AmpError::add('username', T_("Error: Username already exists"));
+                    AmpError::add('username', T_("Username already exists"));
                 }
             }
         }
         if ($pass1 !== $pass2 && !empty($pass1)) {
-            AmpError::add('password', T_("Error: Passwords don't match"));
+            AmpError::add('password', T_("Passwords do not match"));
         }
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            AmpError::add('email', T_('Error: Invalid e-mail address'));
+            AmpError::add('email', T_('Invalid e-mail address'));
         }
 
         /* If we've got an error then show edit form! */
@@ -137,21 +137,21 @@ switch ($_REQUEST['action']) {
         $city           = (string) scrub_in(Core::get_get('city'));
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {
-            AmpError::add('password', T_("Error: Passwords don't match"));
+            AmpError::add('password', T_("Passwords do not match"));
         }
 
         if (empty($username)) {
-            AmpError::add('username', T_('Error: Username Required'));
+            AmpError::add('username', T_('Username is Required'));
         }
 
         /* make sure the username doesn't already exist */
         if (!User::check_username($username)) {
-            AmpError::add('username', T_('Error: Username already exists'));
+            AmpError::add('username', T_('Username already exists'));
         }
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            AmpError::add('email', T_('Error: Invalid e-mail address'));
+            AmpError::add('email', T_('Invalid e-mail address'));
         }
 
         /* If we've got an error then show add form! */
@@ -163,7 +163,7 @@ switch ($_REQUEST['action']) {
         /* Attempt to create the user */
         $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $state, $city);
         if (!$user_id) {
-            AmpError::add('general', T_("Error: Insert failed"));
+            AmpError::add('general', T_("User creation failed"));
         }
         $user = new User($user_id);
         $user->upload_avatar();
@@ -195,7 +195,7 @@ switch ($_REQUEST['action']) {
         if ($client->disable()) {
             show_confirmation(T_('User disabled'), $client->username . ' (' . $client->fullname . ')', AmpConfig::get('web_path') . '/admin/users.php');
         } else {
-            show_confirmation(T_("Please don't be mad"), T_('You need an active Administrator account.'), AmpConfig::get('web_path') . '/admin/users.php');
+            show_confirmation(T_("Please don't be mad"), T_('You need an active Administrator account'), AmpConfig::get('web_path') . '/admin/users.php');
         }
     break;
     case 'show_edit':
@@ -216,7 +216,9 @@ switch ($_REQUEST['action']) {
         }
         $client = new User(Core::get_request('user_id'));
         if ($client->delete()) {
-            show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_('No Problem'),
+                    /* HINT: Username (Short Name) */
+                    sprintf(T_('%s has been deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
         } else {
             show_confirmation(T_("Please don't be mad"), T_('You need an active Administrator account'), AmpConfig::get('web_path') . "/admin/users.php");
         }
@@ -227,7 +229,9 @@ switch ($_REQUEST['action']) {
         }
         $client = new User(Core::get_request('user_id'));
         show_confirmation(T_('Are you sure?'),
-            sprintf(T_('Do you really want to delete %s?'), $client->fullname),
+            sprintf(T_('Do you really want to delete %s?'),
+                    /* HINT: User Fullname */
+                    $client->fullname),
             AmpConfig::get('web_path') . "/admin/users.php?action=confirm_delete&amp;user_id=" . Core::get_request('user_id'), 1, 'delete_user');
     break;
     case 'show_delete_avatar':

@@ -53,7 +53,7 @@ if (is_array($catalogs) && count($catalogs) == 1 && $action !== 'delete_catalog'
 switch ($_REQUEST['action']) {
     case 'add_to_all_catalogs':
         catalog_worker('add_to_all_catalogs');
-        show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('Catalog Update Started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'add_to_catalog':
         if (AmpConfig::get('demo_mode')) {
@@ -61,11 +61,11 @@ switch ($_REQUEST['action']) {
         }
 
         catalog_worker('add_to_catalog', $catalogs);
-        show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('Catalog Update Started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'update_all_catalogs':
         catalog_worker('update_all_catalogs');
-        show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('Catalog Update Started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'update_catalog':
         if (AmpConfig::get('demo_mode')) {
@@ -73,7 +73,7 @@ switch ($_REQUEST['action']) {
         }
 
         catalog_worker('update_catalog', $catalogs);
-        show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('Catalog Update Started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'full_service':
         if (AmpConfig::get('demo_mode')) {
@@ -82,7 +82,7 @@ switch ($_REQUEST['action']) {
         }
 
         catalog_worker('full_service', $catalogs);
-        show_confirmation(T_('Catalog Update started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('Catalog Update Started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'delete_catalog':
         if (AmpConfig::get('demo_mode')) {
@@ -107,7 +107,7 @@ switch ($_REQUEST['action']) {
         if ($deleted) {
             show_confirmation(T_('No Problem'), T_('Catalog has been deleted.'), $next_url);
         } else {
-            show_confirmation(T_("Please don't be mad"), T_("Couldn't delete this Catalog."), $next_url);
+            show_confirmation(T_("Please Don't Be Mad"), T_("Couldn't delete this Catalog."), $next_url);
         }
     break;
     case 'show_delete_catalog':
@@ -172,11 +172,11 @@ switch ($_REQUEST['action']) {
         ob_end_flush();
 
         if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'none') {
-            AmpError::add('general', T_('Error: Please select a catalog type'));
+            AmpError::add('general', T_('Please select a Catalog type'));
         }
 
         if (!strlen(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) {
-            AmpError::add('general', T_('Error: Name not specified'));
+            AmpError::add('general', T_('Please enter a Catalog name'));
         }
 
         if (!Core::form_verify('add_catalog', 'post')) {
@@ -185,7 +185,7 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        // If an error hasn't occured
+        // If an error hasn't occurred
         if (!AmpError::occurred()) {
             $catalog_id = Catalog::create($_POST);
 
@@ -245,7 +245,9 @@ switch ($_REQUEST['action']) {
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
-        show_confirmation(T_('Are you sure?'), sprintf(T_('Do you really want to delete %s?'), $catalog->name), $nexturl, 1);
+        show_confirmation(T_('Are you sure?'),
+                /* HINT: Catalog Name */
+                sprintf(T_('Do you really want to delete %s?'), $catalog->name), $nexturl, 1);
     break;
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
@@ -254,7 +256,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'gather_media_art':
         catalog_worker('gather_media_art', $catalogs);
-        show_confirmation(T_('Media Art Search started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('Media Art Search Started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'show_catalogs':
     default:

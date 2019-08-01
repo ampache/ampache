@@ -23,14 +23,14 @@
 /**
  * Error class
  *
- * This is the baic error class, its better now that we can use php5
+ * This is the basic error class, its better now that we can use php5
  * hello static functions and variables
  *
  */
 class AmpError
 {
     private static $state  = false; // set to one when an error occurs
-    private static $errors = array(); // Errors array key'd array with errors that have occured
+    private static $errors = array(); // Errors array key'd array with errors that have occurred
 
     /**
      * __constructor
@@ -88,7 +88,7 @@ class AmpError
 
     /**
      * occurred
-     * This returns true / false if an error has occured anywhere
+     * This returns true / false if an error has occurred anywhere
      */
     public static function occurred()
     {

@@ -40,6 +40,7 @@ else {
 
 // Make sure the output dir is valid and writeable
 if (!is_writeable($dirname)) {
+    /* HINT: Directory (File path) */
     printf (T_('Error: Directory %s is not writable'), $dirname);
     echo "\n";
 }

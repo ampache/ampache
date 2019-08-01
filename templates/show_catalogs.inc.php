@@ -48,7 +48,7 @@
             <td colspan="6">
             <?php if (!count($object_ids)) {
                 ?>
-                <span class="nodata"><?php echo T_('No catalog found'); ?></span>
+                <span class="nodata"><?php echo T_('No Catalog found'); ?></span>
             <?php
             } ?>
             </td>

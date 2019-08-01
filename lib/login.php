@@ -79,7 +79,7 @@ if (empty($_REQUEST['step'])) {
                 return false;
             } else {
                 debug_event('login.class', scrub_out($username) . ' From ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' attempted to login and failed', 1);
-                AmpError::add('general', T_('Error: Username or password incorrect, please try again'));
+                AmpError::add('general', T_('Incorrect username or password'));
             }
         }
     }
@@ -99,7 +99,7 @@ if (!empty($username) && isset($auth)) {
 
     if ($user->disabled) {
         $auth['success'] = false;
-        AmpError::add('general', T_('Error: User disabled, please contact Admin'));
+        AmpError::add('general', T_('Account is disabled, please contact the administrator'));
         debug_event('login.class', scrub_out($username) . ' is disabled and attempted to login', 1);
     } // if user disabled
     elseif (AmpConfig::get('prevent_multiple_logins')) {
@@ -107,7 +107,7 @@ if (!empty($username) && isset($auth)) {
         $current_ip = inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
         if ($current_ip && ($current_ip != $session_ip)) {
             $auth['success'] = false;
-            AmpError::add('general', T_('Error: User already logged in'));
+            AmpError::add('general', T_('User is already logged in'));
             debug_event('login.class', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, 1);
         } // if logged in multiple times
     } // if prevent multiple logins
@@ -130,7 +130,7 @@ if (!empty($username) && isset($auth)) {
             }
         } else {
             $auth['success'] = false;
-            AmpError::add('general', T_('Error: Unable to create local account'));
+            AmpError::add('general', T_('Unable to create a local account'));
         }
     } // End if auto_create
 

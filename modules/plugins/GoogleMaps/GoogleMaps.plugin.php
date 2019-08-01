@@ -119,7 +119,7 @@ class AmpacheGoogleMaps
         echo 'var marker;' . "\n";
         foreach ($pts as $pt) {
             $ptdescr = T_("Hits") . ": " . $pt['hits'] . "\\n";
-            $ptdescr .= T_("Last activity:") . " " . date("r", $pt['last_date']);
+            $ptdescr .= T_("Last activity") . ": " . date("r", $pt['last_date']);
             if (!empty($pt['name'])) {
                 $ptdescr = $pt['name'] . "\\n" . $ptdescr;
             }

@@ -58,6 +58,7 @@ while ($row = Dba::fetch_row($db_results)) {
     $catalog = Catalog::create_from_id($row['id']);
     $songs = $catalog->get_songs();
 
+    /* HINT: Catalog Name */
     printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
     echo "\n";
 
@@ -74,8 +75,10 @@ while ($row = Dba::fetch_row($db_results)) {
             /* We're just talking here... no work */
             echo T_("Moving File...");
             echo "\n\t";
+            /* HINT: filename (File path) */
             printf (T_('Source: %s'), $song->file);
             echo "\n\t";
+            /* HINT: filename (File path) */
             printf (T_('Dest: %s'), $fullpath);
             echo "\n";
             flush();
@@ -177,7 +180,7 @@ function sort_element_name($key) {
  * sort_clean_name
  * We have to have some special rules here
  * This is run on every individual element of the search
- * Before it is put togeather, this removes / and \ and also
+ * Before it is put together, this removes / and \ and also
  * once I figure it out, it'll clean other stuff
  */
 function sort_clean_name($string) {
@@ -200,7 +203,7 @@ function sort_clean_name($string) {
  * current phase of the moon, the alignment of the planets and my current BAL
  * Instead we cheeseball it and walk through the new dir structure and make
  * sure that the directories exist, once the dirs exist then we do a copy
- * and unlink.. This is a little unsafe, and as such it verifys the copy
+ * and unlink.. This is a little unsafe, and as such it verifies the copy
  * worked by doing a filesize() before unlinking.
  */
 function sort_move_file($song,$fullname) {
@@ -222,18 +225,20 @@ function sort_move_file($song,$fullname) {
         $dir = sort_clean_name($dir);
         $path .= "/" . $dir;
 
-        /* We need to check for the existance of this directory */
+        /* We need to check for the existence of this directory */
         if (!is_dir($path)) {
             if (Core::get_global('test_mode')) {
                 echo "\t";
-                printf (T_('Making %s Directory'), $path);
+                /* HINT: Directory (File path) */
+                printf (T_('Making "%s" directory'), $path);
                 echo "\n";
             }
             else {
                 debug_event('sort_files.inc', "Creating $path directory", 4);
                 $results = mkdir($path);
                 if (!$results) {
-                    printf (T_('Error: Unable to create %s move failed'), $path);
+                    /* HINT: filename (File path) */
+                    printf (T_('Unable to create "%s", move failed'), $path);
                     echo "\n";
                     return false;
                 }
@@ -254,9 +259,10 @@ function sort_move_file($song,$fullname) {
     }
     else {
 
-        /* Check for file existance */
+        /* Check for file existence */
         if (file_exists($fullname)) {
             debug_event('sort_files.inc', 'Error: $fullname already exists', 1);
+            /* HINT: filename (File path) */
             printf (T_('Error: %s already exists'), $fullname);
             echo "\n";
             return false;
@@ -280,6 +286,7 @@ function sort_move_file($song,$fullname) {
             throw new \RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
         }
 
+        /* HINT: filename (File path) */
         if (!$results) { printf (T_('Error: Unable to copy file to %s'), $fullname); echo "\n"; return false; }
 
         /* Check the filesize */
@@ -287,6 +294,7 @@ function sort_move_file($song,$fullname) {
         $old_sum = Core::get_filesize($song->file);
 
         if ($new_sum != $old_sum || !$new_sum) {
+            /* HINT: filename (File path) */
             printf (T_('Error: Size inconsistency, not deleting %s'), $song->file);
             echo "\n";
             return false;
@@ -294,6 +302,7 @@ function sort_move_file($song,$fullname) {
 
         /* If we've made it this far it should be safe */
         $results = unlink($song->file);
+        /* HINT: filename (File path) */
         if (!$results) { printf (T_('Error: Unable to delete %s'), $song->file); echo "\n"; }
 
         /* Update the catalog */

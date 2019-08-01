@@ -28,7 +28,7 @@
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <th class="cel_id essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=id', T_('#'), 'channel_sort_id'); ?></th>
+            <th class="cel_id essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=id', '#', 'channel_sort_id'); ?></th>
             <th class="cel_name essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=name', T_('Name'), 'channel_sort_name'); ?></th>
             <th class="cel_interface essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=interface', T_('Interface'), 'channel_sort_interface'); ?></th>
             <th class="cel_port essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=port', T_('Port'), 'channel_sort_port'); ?></th>

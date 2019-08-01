@@ -91,7 +91,7 @@ if ($client->f_avatar) {
     ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
-        <?php echo $client->f_useage; ?>
+        <?php echo $client->f_usage; ?>
     </dd>
     <?php
 } ?>

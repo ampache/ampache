@@ -104,12 +104,14 @@ function charset_directory_correct($path) {
         $handle = opendir($path);
 
     if (!is_resource($handle)) {
+        /* HINT: directory (File path) */
         printf (T_('Error: Unable to open %s'), $path);
         echo "\n";
         return false;
     }
 
     if (!chdir($path)) {
+        /* HINT: directory (File path) */
         printf (T_('Error: Unable to chdir to %s'), $path);
         echo "\n";
         return false;
@@ -186,6 +188,7 @@ function charset_rename_file($full_file, $translated_filename) {
             echo "\tMaking $path directory\n";
             $results_mkdir = mkdir($path);
             if (!$results_mkdir) {
+                /* HINT: filename (File path) */
                 printf (T_('Error: Unable to create %s move failed, stopping'), $path);
                 echo "\n";
                 return false;
@@ -207,6 +210,7 @@ function charset_rename_file($full_file, $translated_filename) {
     $new_sum = Core::get_filesize($translated_filename);
 
     if ($old_sum != $new_sum || !$new_sum) {
+        /* HINT: filename (File path) */
         printf (T_('Error: Size inconsistency, not deleting %s'), $full_file);
         echo "\n";
         return false;

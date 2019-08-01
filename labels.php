@@ -83,9 +83,7 @@ switch ($_REQUEST['action']) {
         if (!$label_id) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
-            $body  = T_('Label Added');
-            $title = '';
-            show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=label');
+            show_confirmation('', T_('Label added'), AmpConfig::get('web_path') . '/browse.php?action=label');
         }
     break;
     case 'show':
