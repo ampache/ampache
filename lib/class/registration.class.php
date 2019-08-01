@@ -54,6 +54,7 @@ class Registration
         // We are the system
         $mailer->set_default_sender();
 
+        /* HINT: Ampache site_title */
         $mailer->subject = sprintf(T_("New User Registration at %s"), AmpConfig::get('site_title'));
 
         $mailer->message = sprintf(T_("Thank you for registering\n\n

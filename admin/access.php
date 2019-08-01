@@ -47,7 +47,9 @@ switch ($_REQUEST['action']) {
             break;
         }
         $access = new Access(Core::get_get('access_id'));
-        show_confirmation(T_('Are you sure?'), sprintf(T_('Do you really want to delete %s?'), $access->name),
+        show_confirmation(T_('Are you sure?'),
+                /* HINT: ACL Name */
+                sprintf(T_('Do you really want to delete %s?'), $access->name),
                 'admin/access.php?action=delete_record&amp;access_id=' . $access->id, 1, 'delete_access');
     break;
     case 'add_host':

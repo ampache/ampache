@@ -412,6 +412,7 @@ function create_preference_input($name, $value)
             $url         = $plugin->_plugin->url;
             $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
             $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
+            /* HINT: Plugin Name */
             echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
         break;
         default:

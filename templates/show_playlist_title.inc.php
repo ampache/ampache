@@ -20,4 +20,5 @@
  *
  */
 
-echo sprintf(T_('%s %s (Playlist)'), $playlist->f_type, $playlist->name);
+/* HINT: %1 Playlist Type, %2 Playlist Name */
+echo sprintf(T_('%1$s %2$s (Playlist)'), $playlist->f_type, $playlist->name);

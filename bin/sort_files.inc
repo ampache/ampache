@@ -73,6 +73,7 @@ while ($row = Dba::fetch_row($db_results)) {
     $catalog = Catalog::create_from_id($row['id']);
     $songs = $catalog->get_songs();
 
+    /* HINT: Catalog Name */
     printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
     echo "\n";
     $songs = $catalog->get_songs();
@@ -83,13 +84,22 @@ while ($row = Dba::fetch_row($db_results)) {
     foreach ($songs as $song) {
         /* Find this poor song a home */
         $song->format();
-        // sort_find_home will replace the % with the correct values.
-        $directory = sort_find_home($song, $catalog->sort_pattern, $catalog->path);
-        $filename  = sort_find_home($song, $catalog->rename_pattern, null);
-        if (!$directory || !$filename) {
-            $fullpath = $song->file;
-        } else {
-            $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);;
+        $directory     = sort_find_home($song,$catalog->sort_pattern,$catalog->path);
+        $filename     = $song->f_file;
+        $fullpath = $directory . "/" . $filename;
+
+        /* Check for Demo Mode */
+        if ($test_mode) {
+            /* We're just talking here... no work */
+            echo T_("Moving File...");
+            echo "\n\t";
+            /* HINT: filename (File path) */
+            printf (T_('Source: %s'), $song->file);
+            echo "\n\t";
+            /* HINT: filename (File path) */
+            printf (T_('Dest: %s'), $fullpath);
+            echo "\n";
+            flush();
         }
 
         /* We need to actually do the moving (fake it if we are testing)
@@ -226,6 +236,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         if (!is_dir($path)) {
             if ($test_mode) {
                 echo "\t";
+                /* HINT: Directory (File path) */
                 printf (T_('Making "%s" directory'), $path);
                 echo "\n";
             }
@@ -233,6 +244,7 @@ function sort_move_file($song, $fullname, $test_mode) {
                 debug_event('sort_files.inc', "Creating $path directory", 4);
                 $results = mkdir($path);
                 if (!$results) {
+                    /* HINT: filename (File path) */
                     printf (T_('Unable to create "%s", move failed'), $path);
                     echo "\n";
                     return false;
@@ -257,6 +269,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         /* Check for file existence */
         if (file_exists($fullname)) {
             debug_event('sort_files.inc', 'Error: $fullname already exists', 1);
+            /* HINT: filename (File path) */
             printf (T_('Error: %s already exists'), $fullname);
             echo "\n";
             return false;
@@ -280,6 +293,7 @@ function sort_move_file($song, $fullname, $test_mode) {
             throw new \RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
         }
 
+        /* HINT: filename (File path) */
         if (!$results) { printf (T_('Error: Unable to copy file to %s'), $fullname); echo "\n"; return false; }
 
         /* Check the filesize */
@@ -287,6 +301,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         $old_sum = Core::get_filesize($song->file);
 
         if ($new_sum != $old_sum || !$new_sum) {
+            /* HINT: filename (File path) */
             printf (T_('Error: Size inconsistency, not deleting %s'), $song->file);
             echo "\n";
             return false;
@@ -294,9 +309,8 @@ function sort_move_file($song, $fullname, $test_mode) {
 
         /* If we've made it this far it should be safe */
         $results = unlink($song->file);
-        if (!$results) {
-            printf (T_('Error: Unable to delete %s'), $song->file); echo "\n";
-        }
+        /* HINT: filename (File path) */
+        if (!$results) { printf (T_('Error: Unable to delete %s'), $song->file); echo "\n"; }
 
         /* Update the catalog */
         $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";

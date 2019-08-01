@@ -42,10 +42,12 @@ $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
     if ($debug) {
+        /* HINT: filename (File path) */
         printf (T_('Would Delete: %s'), $row['file']);
         echo "\n";
     }
     else {
+        /* HINT: filename (File path) */
         printf (T_('Deleting: %s'), $row['file']);
         echo "\n";
         unlink($row['file']);

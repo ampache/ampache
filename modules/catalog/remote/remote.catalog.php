@@ -159,6 +159,7 @@ class Catalog_remote extends Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('remote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
+            /* HINT: remote URI */
             AmpError::add('general', sprintf(T_('A Catalog using "%s" already exists'), $uri));
 
             return false;
@@ -270,6 +271,7 @@ class Catalog_remote extends Catalog
                     $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
                     if (!Song::insert($data['song'])) {
                         debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
+                        /* HINT: Song Title */
                         AmpError::add('general', T_('Unable to insert song - %s'), $data['song']['title']);
                         AmpError::display('general');
                         flush();

@@ -20,6 +20,7 @@
  *
  */
 
+/* HINT: Democratic Playlist Name */
 $string = $democratic->is_enabled() ? sprintf(T_('%s Playlist'), $democratic->name) : T_('Democratic Playlist');
 UI::show_box_top($string, 'info-box');
 ?>
