@@ -187,6 +187,7 @@ class Catalog_local extends Catalog
         // Make sure the path is readable/exists
         if (!Core::is_readable($path)) {
             debug_event('local.catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
+            /* HINT: directory (file path) */
             AmpError::add('general', sprintf(T_('"%s" is not readable or does not exist'), scrub_out($data['path'])));
 
             return false;
@@ -198,6 +199,7 @@ class Catalog_local extends Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('local.catalog', 'Cannot add catalog with duplicate path ' . $path, 1);
+            /* HINT: directory (file path) */
             AmpError::add('general', sprintf(T_('A Catalog using "%s" already exists'), $path));
 
             return false;
@@ -239,6 +241,7 @@ class Catalog_local extends Catalog
 
         if (!is_resource($handle)) {
             debug_event('local.catalog', "Unable to open $path", 3);
+            /* HINT: directory (file path) */
             AmpError::add('catalog_add', sprintf(T_('Unable to open "%s"'), $path));
 
             return false;
@@ -247,6 +250,7 @@ class Catalog_local extends Catalog
         /* Change the dir so is_dir works correctly */
         if (!chdir($path)) {
             debug_event('local.catalog', "Unable to chdir to $path", 2);
+            /* HINT: directory (file path) */
             AmpError::add('catalog_add', sprintf(T_('Unable to change directory to "%s"'), $path));
 
             return false;
@@ -311,6 +315,7 @@ class Catalog_local extends Catalog
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
                 debug_event('local.catalog', "Unable to chdir to $path", 2);
+                /* HINT: directory (file path) */
                 AmpError::add('catalog_add', sprintf(T_('Unable to change directory to %s'), $path));
             }
 
@@ -573,6 +578,7 @@ class Catalog_local extends Catalog
             }
 
             if (!Core::is_readable(Core::conv_lc_file($row['file']))) {
+                /* HINT: filename (file path) */
                 AmpError::add('general', sprintf(T_('"%s" does not exist or is not readable'), $row['file']));
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
@@ -672,6 +678,7 @@ class Catalog_local extends Catalog
             $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
             if (!file_exists(Core::conv_lc_file($results['file'])) || $file_info < 1) {
                 debug_event('local.catalog', 'File not found or empty: ' . $results['file'], 5);
+                /* HINT: filename (file path) */
                 AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $results['file']));
 
 

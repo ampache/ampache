@@ -160,6 +160,7 @@ class Catalog_subsonic extends Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('subsonic.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
+            /* HINT: subsonic catalog URI */
             AmpError::add('general', sprintf(T_('A Catalog using "%s" already exists'), $uri));
 
             return false;
@@ -251,6 +252,7 @@ class Catalog_subsonic extends Catalog
                                     $song_Id = Song::insert($data);
                                     if (!$song_Id) {
                                         debug_event('subsonic.catalog', 'Insert failed for ' . $song['path'], 1);
+                                        /* HINT: filename (file path) */
                                         AmpError::add('general', T_('Unable to insert song - %s'), $song['path']);
                                     } else {
                                         if ($song['coverArt']) {

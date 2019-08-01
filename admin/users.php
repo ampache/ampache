@@ -216,7 +216,9 @@ switch ($_REQUEST['action']) {
         }
         $client = new User(Core::get_request('user_id'));
         if ($client->delete()) {
-            show_confirmation(T_('No Problem'), sprintf(T_('%s has been deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_('No Problem'),
+                    /* HINT: Username (Short Name) */
+                    sprintf(T_('%s has been deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
         } else {
             show_confirmation(T_("Please don't be mad"), T_('You need an active Administrator account'), AmpConfig::get('web_path') . "/admin/users.php");
         }
@@ -227,7 +229,9 @@ switch ($_REQUEST['action']) {
         }
         $client = new User(Core::get_request('user_id'));
         show_confirmation(T_('Are you sure?'),
-            sprintf(T_('Do you really want to delete %s?'), $client->fullname),
+            sprintf(T_('Do you really want to delete %s?'),
+                    /* HINT: User Fullname */
+                    $client->fullname),
             AmpConfig::get('web_path') . "/admin/users.php?action=confirm_delete&amp;user_id=" . Core::get_request('user_id'), 1, 'delete_user');
     break;
     case 'show_delete_avatar':

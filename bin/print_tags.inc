@@ -39,8 +39,8 @@ if(!file_exists($filename)) {
     print_tags_usage();
     return false;
 }
-
-printf(T_('Reading') . ': %s'), $filename);
+/* HINT: filename (File path) */
+printf(T_('Reading: %s', $filename));
 print "\n";
 
 /* Attempt to figure out what catalog it comes from */
