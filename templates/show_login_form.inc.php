@@ -56,10 +56,10 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
 <body id="loginPage">
     <div id="maincontainer">
         <?php if (!$mobile_session) {
-            echo "<div id=\"header\"><!-- This is the header -->";
-            echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"></a>";
-            echo "</div>";
-        } ?>
+    echo "<div id=\"header\"><!-- This is the header -->";
+    echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"></a>";
+    echo "</div>";
+} ?>
         <div id="loginbox">
             <h2><?php echo AmpConfig::get('site_title'); ?></h2>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
@@ -87,22 +87,22 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
 
                 <div class="loginoptions">
                     <?php if (AmpConfig::get('allow_public_registration')) {
-                        ?>
+    ?>
                         <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
                     <?php
                     if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
                         echo "<a rel=\"nohtml\" class=\"button\" id=\"lostpasswordbutton\" href=\"" . $web_path . "/lostpassword.php\">Lost password</a>";
                     } ?>
                     <?php
-                    } // end if allow_public_registration
+} // end if allow_public_registration
                     ?>
                 </div>
             </form>
             <?php if ($mobile_session) {
-                echo "<div id=\"mobileheader\"><!-- This is the header -->";
-                echo "<h1 id=\"headerlogo\"></h1>";
-                echo "</div>";
-            } ?>
+                        echo "<div id=\"mobileheader\"><!-- This is the header -->";
+                        echo "<h1 id=\"headerlogo\"></h1>";
+                        echo "</div>";
+                    } ?>
             <?php
             UI::show_footer();
             ?>

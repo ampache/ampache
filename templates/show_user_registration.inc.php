@@ -92,8 +92,8 @@ $_SESSION['login'] = true;
                     <?php if (in_array('fullname', $display_fields)) {
                         ?>
                         <div class="registerfield <?php if (in_array('fullname', $mandatory_fields)) {
-                                                        echo 'require';
-                                                    } ?>">
+                            echo 'require';
+                        } ?>">
                             <label for="fullname"><?php echo T_('Full Name'); ?>:</label>
                             <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out((string) $fullname); ?>' />
                             <?php AmpError::display('fullname'); ?>
@@ -109,8 +109,8 @@ $_SESSION['login'] = true;
                     <?php if (in_array('website', $display_fields)) {
                         ?>
                         <div class="registerfield <?php if (in_array('website', $mandatory_fields)) {
-                                                        echo 'require';
-                                                    } ?>">
+                            echo 'require';
+                        } ?>">
                             <label for="website"><?php echo T_('Website'); ?>:</label>
                             <input type='text' name='website' id='website' value='<?php echo scrub_out((string) $website); ?>' />
                             <?php AmpError::display('website'); ?>
@@ -120,8 +120,8 @@ $_SESSION['login'] = true;
                     <?php if (in_array('state', $display_fields)) {
                         ?>
                         <div class="registerfield <?php if (in_array('state', $mandatory_fields)) {
-                                                        echo 'require';
-                                                    } ?>">
+                            echo 'require';
+                        } ?>">
                             <label for="state"><?php echo T_('State'); ?>:</label>
                             <input type='text' name='state' id='state' value='<?php echo scrub_out((string) $state); ?>' />
                             <?php AmpError::display('state'); ?>
@@ -131,8 +131,8 @@ $_SESSION['login'] = true;
                     <?php if (in_array('city', $display_fields)) {
                         ?>
                         <div class="registerfield <?php if (in_array('city', $mandatory_fields)) {
-                                                        echo 'require';
-                                                    } ?>">
+                            echo 'require';
+                        } ?>">
                             <label for="city"><?php echo T_('City'); ?>:</label>
                             <input type='text' name='city' id='city' value='<?php echo scrub_out((string) $city); ?>' />
                             <?php AmpError::display('city'); ?>
@@ -159,12 +159,12 @@ $_SESSION['login'] = true;
                     ?>
                     <div class="submit-registration">
                         <?php if (AmpConfig::get('user_agreement')) {
-                            ?>
+                        ?>
                             <div id="agreementCheckbox">
                                 <label for="accept_agreement"></span><?php echo T_('I Accept'); ?><span class=alert-danger> *</label>
                                 <input id="accept_agreement" type="checkbox" name="accept_agreement" />
                             </div><?php
-                                } ?>
+                    } ?>
                         <div id="submit-registration-button">
                             <input type="hidden" name="action" value="add_user" />
                             <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />

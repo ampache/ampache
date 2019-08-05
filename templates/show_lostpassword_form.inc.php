@@ -33,8 +33,8 @@ is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
 $web_path       = AmpConfig::get('web_path');
 
 $_SESSION['login'] = true;
-$mobile_session = false;
-$user_agent     = $_SERVER['HTTP_USER_AGENT'];
+$mobile_session    = false;
+$user_agent        = $_SERVER['HTTP_USER_AGENT'];
 
 if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'))) {
     $mobile_session = true;
@@ -55,10 +55,10 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
 <body id="loginPage">
     <div id="maincontainer">
         <?php if (!$mobile_session) {
-            echo "<div id=\"header\"><!-- This is the header -->";
-            echo "<a href=\"" . $web_path . "\"><h1 id=\"headerlogo\"></h1></a>";
-            echo "</div>";
-        } ?>
+    echo "<div id=\"header\"><!-- This is the header -->";
+    echo "<a href=\"" . $web_path . "\"><h1 id=\"headerlogo\"></h1></a>";
+    echo "</div>";
+} ?>
         <div id="loginbox">
             <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path ?>/lostpassword.php">
@@ -72,10 +72,10 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                 </div>
             </form>
             <?php if ($mobile_session) {
-                echo "<div id=\"mobileheader\"><!-- This is the header -->";
-                echo "<h1 id=\"headerlogo\"></h1>";
-                echo "</div>";
-            } ?>
+    echo "<div id=\"mobileheader\"><!-- This is the header -->";
+    echo "<h1 id=\"headerlogo\"></h1>";
+    echo "</div>";
+} ?>
         </div>
         <?php
         UI::show_footer();
