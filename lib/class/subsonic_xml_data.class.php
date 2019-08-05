@@ -404,7 +404,7 @@ class Subsonic_XML_Data
         $xartist->addAttribute('name', self::checkName($artist->f_full_name));
         $allalbums = array();
         if (($extra && !$albumsSet) || $albums) {
-            $allalbums = $artist->get_albums(null, true);
+            $allalbums = $artist->get_albums();
         }
 
         if ($extra) {
@@ -658,7 +658,7 @@ class Subsonic_XML_Data
                     $name .= " [" . $album->year . "]";
                 }
         */
-        if (($checkDisk || !AmpConfig::get('album_group')) && $album->disk) {
+        if (!AmpConfig::get('album_group') && $album->disk) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
 
