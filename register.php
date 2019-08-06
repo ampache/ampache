@@ -127,7 +127,7 @@ switch ($_REQUEST['action']) {
             AmpError::add('password', T_("Your passwords do not match"));
         }
 
-        if (!User::check_username((string) $username) || $username == null) {
+        if (!User::check_username((string) $username)) {
             AmpError::add('duplicate_user', T_("Error Username already exists"));
         }
 
