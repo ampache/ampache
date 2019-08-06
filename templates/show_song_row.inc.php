@@ -36,9 +36,9 @@ if ($libitem->enabled || Access::check('interface', '50')) {
         echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id, 'play', T_('Play'), 'play_song_' . $libitem->id);
         if (Stream_Playlist::check_autoplay_next()) {
             echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $libitem->id);
-            if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $libitem->id);
-            }
+        }
+        if (Stream_Playlist::check_autoplay_append()) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $libitem->id);
         }
     } ?>
     </div>
@@ -80,7 +80,7 @@ if ($libitem->enabled || Access::check('interface', '50')) {
         if (AmpConfig::get('ratings')) {
             ?>
             <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_song">
-                <?php Rating::show($libitem->id, 'song') ?>  
+                <?php Rating::show($libitem->id, 'song') ?>
             </td>
     <?php
         }
