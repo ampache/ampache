@@ -78,6 +78,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $song->id); ?>
             <?php
         } ?>
+
             <?php echo $song->show_custom_play_actions(); ?>
         <?php
     } ?>

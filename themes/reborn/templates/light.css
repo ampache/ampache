@@ -132,12 +132,13 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     background-image: url('../images/ampache-light.png');
 }
 
-#loginPage #loginbox, #registerPage #registerbox {
+#loginPage #loginbox {
     color: #000;
 }
 
 #loginPage #loginbox div, #registerPage #registerbox div {
     text-shadow: 0 1px 0 #eee;
+    color: #000;
 }
 
 #loginPage #loginbox #usernamefield input:focus,
