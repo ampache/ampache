@@ -86,11 +86,11 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                 </div>
 
                 <div class="loginoptions">
-                    <?php if (AmpConfig::get('allow_public_registration')) {
+                    <?php if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) {
     ?>
                         <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
                     <?php
-                    if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
+                    if (Mailer::is_mail_enabled()) {
                         echo "<a rel=\"nohtml\" class=\"button\" id=\"lostpasswordbutton\" href=\"" . $web_path . "/lostpassword.php\">Lost password</a>";
                     } ?>
                     <?php

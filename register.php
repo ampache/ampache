@@ -25,7 +25,7 @@ $_SESSION['login'] = true;
 require_once 'lib/init.php';
 
 /* Check Perms */
-if (!AmpConfig::get('allow_public_registration') || AmpConfig::get('demo_mode')) {
+if (!AmpConfig::get('allow_public_registration') && !Mailer::is_mail_enabled()) {
     debug_event('register', 'Error Attempted registration', 2);
     UI::access_denied();
 
