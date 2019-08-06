@@ -42,18 +42,20 @@ $_SESSION['login'] = true;
             <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
             <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
             <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
-            <div>
-                <?php echo T_('Your account has been created'); ?>
-                <?php
-                if (AmpConfig::get('admin_enable_required')) {
-                    echo T_('Please wait for an administrator to activate your account.');
-                } else {
-                    echo T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information.');
-                }
-                ?>
-                <br /><br />
-                <a href="<?php echo $web_path; ?>/login.php"><?php echo T_('Return to login page'); ?></a>
-                <p><?php echo AmpConfig::get('site_title'); ?></p>
+            <div id="content">
+                <div id="guts">
+                    <?php
+                    $url  = AmpConfig::get('web_path') . '/login.php';
+                    $text = T_('Return to Login Page');
+                    if (AmpConfig::get('admin_enable_required')) {
+                        $text = T_('Please wait for an administrator to activate your account.');
+                    }
+                    if (!AmpConfig::get('user_no_email_confirm')) {
+                        $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information.');
+                    }
+                    show_confirmation(T_('Your Account Has Been Created'), $text, $url);
+                    ?>
+                </div>
             </div>
         </div>
 <?php

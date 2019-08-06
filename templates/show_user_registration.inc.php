@@ -157,10 +157,19 @@ $_SESSION['login'] = true;
                         AmpError::display('captcha');
                     }
                     ?>
-
-                    <div class="registerButtons">
-                        <input type="hidden" name="action" value="add_user" />
-                        <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register'); ?>' />
+                    <div class="submit-registration">
+                        <?php if (AmpConfig::get('user_agreement')) {
+                        ?>
+                            <div id="agreementCheckbox">
+                                <label for="accept_agreement"></span><?php echo T_('I Accept'); ?><span class=alert-danger> *</label>
+                                <input id="accept_agreement" type="checkbox" name="accept_agreement" />
+                            </div><?php
+                    } ?>
+                        <div id="submit-registration-button">
+                            <input type="hidden" name="action" value="add_user" />
+                            <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />
+                        </div>
+                        <?php AmpError::display('user_agreement'); ?>
                     </div>
                 </form>
             </div>
