@@ -48,6 +48,7 @@ CHANGELOG
 - API - New Method: catalog_action allow running add_to_catalog|clean_catalog
 - API - New Method: playlist_edit alow editing name and type of playlist
 - Fix slideshow creating black screen when using web player
+- Add -u to bin/catalog_update.inc This function will update the artist table with bio, image, etc as well as update similar artists.
 
 3.9.1
 ----------

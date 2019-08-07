@@ -34,11 +34,12 @@ $catclean = 0;
 $catverify = 0;
 $catadd = 0;
 $artadd = 0;
+$infoupdate = 0;
 $plimp = 0;
 $optimizetables = 0;
 $cattype = false;
 $catname = false;
-$options = getopt("hn:t:mvcagio");
+$options = getopt("hn:t:mvcaguio");
 
 if (count($options) == 0) {
     $operations_string = "\n\t- ". T_('Doing all Catalog operations');
@@ -76,7 +77,11 @@ if (count($options) == 0) {
             $operations_string .= "\n\t- " . T_('Gathering new media art');
             $artadd = 1;
         }
-        if (array_key_exists('i', $options)) {
+        if (array_key_exists('u', $options)) { 
+            $operations_string .= "\n\t- " . T_('Update artist information and fetch similar artists from last.fm.');
+            $infoupdate = 1;
+        }
+        if (array_key_exists('i', $options)) { 
             $operations_string .= "\n\t- " . T_('Importing playlist/s');
             $plimp = 1;
         }
@@ -85,12 +90,12 @@ if (count($options) == 0) {
             $optimizetables = 1;
         }
 }
-if (count($_SERVER['argv']) != 1 && $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $plimp != 1) {
+if (count($_SERVER['argv']) != 1 && $artadd != 1 && $infoupdate != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $plimp != 1) {
     usage();
     return false;
 }
 
-if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0 && $plimp == 0) {    //didn't pass any clean/verify/add arguments
+if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0 && $plimp == 0 && $infoupdate != 1) {    //didn't pass any clean/verify/add arguments
     $catclean = 1;     //set them all to on
     $catverify = 1;
     $catadd = 1;
@@ -175,6 +180,13 @@ while ($row = Dba::fetch_row($db_results)) {
         $catalog->gather_art();
         echo "----------------\n\n";
     }
+    if ($infoupdate == 1) { 
+        // Look for updated artist information. (missing or < 6 months since last update)
+        echo "- " . T_('Update artist information and fetch similar artists from last.fm.') . " - \n";
+        echo "\n";
+        $catalog->gather_artist_info();
+        echo "----------------\n\n";
+    }
 }
     if ($optimizetables == 1) {
         // Optimize Database Tables
@@ -205,7 +217,7 @@ function usage() {
     echo "----------------------------------------------------------\n\t\t";
     echo T_("- Catalog Update Help -");
     echo "\n\033[32m";
-    echo T_("Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-i|-o]") . "\033[0m (\033[31m!\033[0m)";
+    echo T_("Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-u|-i|-o]") . "\033[0m (\033[31m!\033[0m)";
     echo "\033[0m\n";
     echo "----------------------------------------------------------";
     echo "\n";
@@ -228,6 +240,8 @@ function usage() {
     echo T_('Adds new media to Catalogs.');
     echo "\n-g\t";
     echo T_('Gathers media Art.');
+    echo "\n-u\t";
+    echo T_('Update artist information and fetch similar artists from last.fm.') . " " . T_('Make sure lastfm_api_key is set in your configuration file.');
     echo "\n-i\t";
     echo T_('Imports playlists.');
     echo "\n-o\t";
