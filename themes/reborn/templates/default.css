@@ -223,7 +223,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #header #headerlogo, #header #headerbox , #header .box_headerbox, #header .box-inside, #header .box-content {
     height: 100%;
     overflow: hidden;
-    display: inline-block;
 }
 
 #header #headerlogo {
