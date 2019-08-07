@@ -152,6 +152,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     margin-bottom: 10px;
 }
 
+.alert-danger{
+    color: #c33;
+}
+
 /***********************************************
            Main
 ***********************************************/
@@ -174,7 +178,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #ajax-loading {
     background-repeat: no-repeat;
-    background-position: right; 
+    background-position: right;
     display: none;
     font-size: 12px;
     left: 52px;
@@ -204,6 +208,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 97%;
 }
 
+#header a {
+    display: inline-block;
+}
+
 #header .box-top, #header .box-bottom {
     display: none;
 }
@@ -211,6 +219,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #header #headerlogo, #header #headerbox , #header .box_headerbox, #header .box-inside, #header .box-content {
     height: 100%;
     overflow: hidden;
+    display: inline-block;
 }
 
 #header #headerlogo {
@@ -282,9 +291,10 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 /***********************************************
-           Login
+           Login / Registration
 ***********************************************/
-#loginPage #maincontainer, #registerPage #maincontainer {
+#loginPage #maincontainer,
+#registerPage #maincontainer {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
@@ -293,19 +303,13 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -ms-box-sizing: border-box;
     box-sizing: border-box;
     display: block;
-    min-width: 350px;
+    min-width: 250px;
     margin: 0 auto 0 auto;
 }
 
-#loginPage #maincontainer {
-    height: 460px;
-}
-
-#registerPage #maincontainer {
-    height: auto;
-}
-
-#loginPage #header, #registerPage #header {
+#loginPage #header,
+#registerPage #header {
+    height: 128px;
     background-color: transparent;
     width: 128px;
     margin: auto;
@@ -313,44 +317,66 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     box-shadow: none;
 }
 
-#loginPage #header,
-#registerPage #header {
-    height: 128px;
-}
-
-#loginPage #headerlogo, #registerPage #headerlogo {
+#loginPage #headerlogo,
+#registerPage #headerlogo {
     width: 128px;
     height: 128px;
     background-repeat: no-repeat;
-    background-position: center; 
+    background-position: center;
     background-size: contain;
     margin: auto;
 }
 
-#loginPage #headerlogo a, #registerPage #headerlogo a {
-    display: none;
+#registerPage #content {
+    margin: 0 5px;
 }
 
-#loginPage #loginbox, #registerPage #registerbox {
-    margin: 0 auto 20px auto;
+.registerfield {
+    padding-bottom: 5px;
+}
+
+.agreementContent {
+    padding-bottom: 20px;
+}
+
+#loginbox,
+#registerbox {
+    margin: auto;
     max-width: 350px;
     min-width: 250px;
 }
 
-#loginPage #loginbox h2, #registerPage #registerbox h2{
+#loginbox h2{
     display: none;
 }
 
-#loginPage #loginbox div, #registerPage #registerbox div {
+#registerbox h2,
+#registerbox h3 {
+    padding-bottom: 10px;
+    margin-bottom: 0;
+}
+
+#loginbox div,
+#registerbox div {
     font-size: 18px;
     line-height: 1.5em;
     text-rendering: auto;
 }
 
-#loginPage #loginbox #usernamefield input,
-#loginPage #loginbox #emailfield input,
-#loginPage #loginbox #passwordfield input,
-#registerPage #registerbox input {
+#loginbox .alert,
+#registerbox .alert {
+    margin-top: 5px;
+}
+
+.loginfield {
+    margin-top: 20px;
+    overflow: auto;
+}
+
+.loginfield input[type=password],
+.loginfield input[type=text],
+.registerfield input[type=password],
+.registerfield input[type=text] {
     float: none;
     margin-left: 0;
     width: 100%;
@@ -362,26 +388,46 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     height: 32px;
 }
 
-#registerbox .require label::after {
+.submit-registration {
+    width: 100%;
+    overflow: auto;
+    padding-top: 10px;
+}
+
+#accept_agreement {
+    min-height: 0;
+    height: unset;
+    width: unset;
+    cursor: pointer;
+    width: 40px;
+}
+
+#registerPage #registerbox .submit-registration #agreementCheckbox {
+    font-size: 16px;
+    display: inline;
+}
+
+#submit-registration-button {
+    float: right;
+}
+
+.require,
+.require label::after {
+    color: #c33;
     content: " *";
 }
 
-#loginPage #loginbox #usernamefield input:focus,
-#loginPage #loginbox #emailfield input:focus,
-#loginPage #loginbox #passwordfield input:focus {
-    float: none;
-    outline: none;
+#remembermefield,
+#agreementCheckbox {
+    padding-top: 4px;
 }
 
-#loginPage #loginbox #usernamefield,
-#loginPage #loginbox #passwordfield,
-#loginPage #loginbox #emailfield,
+#loginPage #loginbox #agreementCheckbox,
 #loginPage #loginbox #remembermefield {
-    margin-top: 20px;
-}
-
-#loginPage #loginbox #remembermefield {
+    vertical-align: middle;
     font-size: 16px;
+    padding: auto 0;
+    float: left;
 }
 
 #loginPage #loginbox #remembermefield input {
@@ -389,25 +435,33 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 40px;
 }
 
-#lostpasswordbutton {
+.loginoptions {
     margin-top: 10px;
+    text-align: center;
 }
 
-.formValidation {
-    margin: 0;
-    padding: 0;
-    float: right !important;
-}
-
-.formValidation input {
-    border: none;
-    min-width: 150px;
-}
-
-.formValidation a {
+.loginoptions a {
     font-size: 15px;
-    vertical-align: bottom;
-    margin-right: 20px;
+}
+
+#registerbutton {
+    padding-right: 60px;
+}
+
+#lostpasswordbutton {
+    padding-top: 10px;
+    padding-left: 60px;
+}
+
+#submit-lostpassword {
+    padding-top: 20px;
+}
+
+#loginPage #footer,
+#registerPage #footer {
+    max-width: 1280px;
+    margin: 15px auto;
+    padding: 0 5px;
 }
 
 #loginPage span.error {
@@ -417,11 +471,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     padding: 10px;
     text-align: center;
     margin-bottom: 10px;
-}
-
-#loginPage #footer {
-    min-width: 350px;
-    margin: 10px auto;
 }
 
 /***********************************************
@@ -1624,4 +1673,21 @@ a.option-list:hover {
     text-decoration: none;
     min-width: 100px;
     background-color: #363F4A;
+}
+
+.formValidation {
+    margin: 0;
+    padding: 0;
+    float: right !important;
+}
+
+.formValidation input {
+    border: none;
+    min-width: 150px;
+}
+
+.formValidation a {
+    font-size: 15px;
+    vertical-align: bottom;
+    margin-right: 20px;
 }

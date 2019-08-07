@@ -1265,7 +1265,11 @@ class Search extends playlist_object
 
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                if (!empty($where_sql)) {
+                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                }
             }
         }
         if ($join['user_flag']) {
@@ -1411,7 +1415,11 @@ class Search extends playlist_object
 
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                if (!empty($where_sql)) {
+                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                }
             }
         }
         if ($join['rating']) {
@@ -1742,7 +1750,11 @@ class Search extends playlist_object
 
         if ($join['catalog']) {
             $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
-            $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+            } else {
+                $where_sql .= " `catalog_se`.`enabled` = '1'";
+            }
         }
 
         $table_sql  = implode(' ', $table);
@@ -1804,7 +1816,11 @@ class Search extends playlist_object
 
         if ($join['catalog']) {
             $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`video`.`catalog`";
-            $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+            } else {
+                $where_sql .= " `catalog_se`.`enabled` = '1'";
+            }
         }
 
         $table_sql  = implode(' ', $table);
@@ -1878,7 +1894,11 @@ class Search extends playlist_object
 
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                if (!empty($where_sql)) {
+                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                }
             }
         }
 
