@@ -479,9 +479,13 @@ class Subsonic_XML_Data
         self::setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
-            $allsongs = $album->get_songs();
-            foreach ($allsongs as $songid) {
-                self::addSong($xalbum, $songid, $addAmpacheInfo);
+            $disc_ids = $album->get_group_disks_ids();
+            foreach ($disc_ids as $discid) {
+                $disc     = new Album($discid);
+                $allsongs = $disc->get_songs();
+                foreach ($allsongs as $songid) {
+                    self::addSong($xalbum, $songid, $addAmpacheInfo);
+                }
             }
         }
     }
