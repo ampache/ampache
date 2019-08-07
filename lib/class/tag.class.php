@@ -164,6 +164,7 @@ class Tag extends database_object implements library_item
         if (!$tag_id = self::tag_exists($cleaned_value)) {
             debug_event('tag.class', 'Adding new tag {' . $cleaned_value . '}', 5);
             $tag_id = self::add_tag($cleaned_value);
+            debug_event('tag.class', 'Adding new tag {' . $cleaned_value . '}', 5);
         }
 
         if (!$tag_id) {
@@ -624,7 +625,7 @@ class Tag extends database_object implements library_item
         if (is_array($ctags)) {
             foreach ($ctags as $ctid => $ctv) {
                 if ($ctv['id'] != '') {
-                    $ctag  = new Tag($ctv['id']);
+                    $ctag = new Tag($ctv['id']);
                     $found = false;
 
                     foreach ($editedTags as  $tk => $tv) {
