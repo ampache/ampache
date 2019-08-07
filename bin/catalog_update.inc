@@ -77,7 +77,11 @@ if (count($options) == 0) {
             $operations_string .= "\n\t- " . T_('Gathering new media art');
             $artadd = 1;
         }
-        if (array_key_exists('i', $options)) {
+        if (array_key_exists('u', $options)) { 
+            $operations_string .= "\n\t- " . T_('Update artist information and fetch similar artists from last.fm.');
+            $infoupdate = 1;
+        }
+        if (array_key_exists('i', $options)) { 
             $operations_string .= "\n\t- " . T_('Importing playlist/s');
             $plimp = 1;
         }
