@@ -625,7 +625,7 @@ class Tag extends database_object implements library_item
         if (is_array($ctags)) {
             foreach ($ctags as $ctid => $ctv) {
                 if ($ctv['id'] != '') {
-                    $ctag = new Tag($ctv['id']);
+                    $ctag  = new Tag($ctv['id']);
                     $found = false;
 
                     foreach ($editedTags as  $tk => $tv) {
