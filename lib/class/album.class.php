@@ -985,16 +985,22 @@ class Album extends database_object implements library_item
             self::garbage_collection();
         } else {
             debug_event('album.class', 'Found original_year' . $original_year . ' barcode' . $barcode . ' catalog_number' . $catalog_number ,5);
-            self::update_year($year, $album_id);
-            self::update_mbid_group($mbid_group, $album_id);
-            self::update_release_type($release_type, $album_id);
-            if ($original_year != $this->original_year && (string) $original_year != '') {
+            if (!empty($year) && $year != $this->year) {
+                self::update_field('year', $year, $album_id);
+            }
+            if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
+                self::update_field('mbid_group', $mbid_group, $album_id);
+            }
+            if (!empty($release_type) && $release_type != $this->release_type) {
+                self::update_field('release_type', $release_type, $album_id);
+            }
+            if (!empty($original_year) && $original_year != $this->original_year) {
                 self::update_field('original_year', $original_year, $album_id);
             }
-            if ($barcode != $this->barcode && (string) $barcode != '') {
+            if (!empty($barcode) && $barcode != $this->barcode) {
                 self::update_field('barcode', $barcode, $album_id);
             }
-            if ($catalog_number != $this->catalog_number && (string) $catalog_number != '') {
+            if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
                 self::update_field('catalog_number', $catalog_number, $album_id);
             }
         }
@@ -1090,38 +1096,6 @@ class Album extends database_object implements library_item
         }
 
         return $deleted;
-    }
-
-    /**
-     * Update album year.
-     * @param integer $year
-     * @param integer $album_id
-     */
-    public static function update_year($year, $album_id)
-    {
-        self::update_field('year', $year, $album_id);
-    }
-
-    /**
-     * Update album mbid group.
-     * @param string $mbid_group
-     * @param integer $album_id
-     */
-    public static function update_mbid_group($mbid_group, $album_id)
-    {
-        $mbid_group = (!empty($mbid_group)) ? $mbid_group : null;
-        self::update_field('mbid_group', $mbid_group, $album_id);
-    }
-
-    /**
-     * Update album release type.
-     * @param string $release_type
-     * @param integer $album_id
-     */
-    public static function update_release_type($release_type, $album_id)
-    {
-        $release_type = (!empty($release_type)) ? $release_type : null;
-        self::update_field('release_type', $release_type, $album_id);
     }
 
     /**
