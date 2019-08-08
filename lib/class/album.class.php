@@ -988,7 +988,7 @@ class Album extends database_object implements library_item
             self::update_year($year, $album_id);
             self::update_mbid_group($mbid_group, $album_id);
             self::update_release_type($release_type, $album_id);
-            if ($original_year != $this->original_year && (int) $original_year != 0) {
+            if ($original_year != $this->original_year && (string) $original_year != '') {
                 self::update_field('original_year', $original_year, $album_id);
             }
             if ($barcode != $this->barcode && (string) $barcode != '') {
