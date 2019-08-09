@@ -78,12 +78,12 @@ class Album extends database_object implements library_item
     public $release_type;
 
     /**
-     *  @var string $mbid_group
+     *  @var string $catalog_number
      */
     public $catalog_number;
 
     /**
-     *  @var string $mbid_group
+     *  @var string $barcode
      */
     public $barcode;
 

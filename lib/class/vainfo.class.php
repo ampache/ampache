@@ -815,6 +815,15 @@ class vainfo
                 case 'lyrics':
                     $parsed['lyrics'] = $data[0];
                     break;
+                case 'original_year':
+                    $parsed['original_year'] = $data[0];
+                    break;
+                case 'barcode':
+                    $parsed['barcode'] = $data[0];
+                    break;
+                case 'catalog_number':
+                    $parsed['catalog_number'] = $data[0];
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
