@@ -1253,7 +1253,12 @@ abstract class Catalog extends database_object
         }
 
         $art     = new Art($id, $type);
-        $results = $art->gather($options);
+        // don't search for art when you already have it
+        if ($art->has_db_info() && explode(AmpConfig::get('art_order'), ',')[0] == 'db') {
+            $results = array();
+        } else {
+            $results = $art->gather($options);
+        }
 
         foreach ($results as $result) {
             // Pull the string representation from the source
