@@ -941,9 +941,6 @@ class vainfo
                         case 'musicbrainz album type':
                             $parsed['release_type'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'catalog_number':
-                            $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
-                        break;
                         case 'replaygain_track_gain':
                             $parsed['replaygain_track_gain'] = floatval($txxx['data']);
                         break;
@@ -962,7 +959,7 @@ class vainfo
                         case 'barcode':
                             $parsed['barcode'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'catalog_number':
+                        case 'catalognumber':
                             $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     }
