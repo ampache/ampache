@@ -983,10 +983,10 @@ class Album extends database_object implements library_item
             $current_id = $album_id;
             $updated    = true;
             Stats::migrate('album', $this->id, $album_id);
+            UserActivity::migrate('album', $this->id, $album_id);
             Art::migrate('album', $this->id, $album_id);
             self::garbage_collection();
         } else {
-            debug_event('album.class', 'Found original_year' . $original_year . ' barcode' . $barcode . ' catalog_number' . $catalog_number ,5);
             if (!empty($year) && $year != $this->year) {
                 self::update_field('year', $year, $album_id);
             }
@@ -1006,13 +1006,16 @@ class Album extends database_object implements library_item
                 self::update_field('catalog_number', $catalog_number, $album_id);
             }
         }
-        $this->year         = $year;
-        $this->mbid_group   = $mbid_group;
-        $this->release_type = $release_type;
-        $this->name         = $name;
-        $this->disk         = $disk;
-        $this->mbid         = $mbid;
-        $this->album_artist = $album_artist;
+        $this->year           = $year;
+        $this->mbid_group     = $mbid_group;
+        $this->release_type   = $release_type;
+        $this->name           = $name;
+        $this->disk           = $disk;
+        $this->mbid           = $mbid;
+        $this->album_artist   = $album_artist;
+        $this->original_year  = $original_year;
+        $this->barcode        = $barcode;
+        $this->catalog_number = $catalog_number;
 
         if ($updated && is_array($songs)) {
             foreach ($songs as $song_id) {
