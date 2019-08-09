@@ -1254,7 +1254,8 @@ abstract class Catalog extends database_object
 
         $art     = new Art($id, $type);
         // don't search for art when you already have it
-        if ($art->has_db_info() && explode(AmpConfig::get('art_order'), ',')[0] == 'db') {
+        if ($art->has_db_info() && AmpConfig::get('art_order')[0] == 'db') {
+            debug_event('catalog.class', 'Blocking art search, DB item exists', 5);
             $results = array();
         } else {
             $results = $art->gather($options);
