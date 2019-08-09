@@ -447,21 +447,25 @@ class Album extends database_object implements library_item
      * @param boolean $readonly
      * @return integer|null
      */
-    public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false, $original_year = null, $barcode = null, $catalog_number = null)
+    public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false, $original_year = 0, $barcode = null, $catalog_number = null)
     {
-        $trimmed      = Catalog::trim_prefix(trim($name));
-        $name         = $trimmed['string'];
-        $prefix       = $trimmed['prefix'];
-        $album_artist = (int) $album_artist;
-        $album_artist = ($album_artist <= 0) ? null : $album_artist;
-        $mbid         = empty($mbid) ? null : $mbid;
-        $mbid_group   = empty($mbid_group) ? null : $mbid_group;
-        $release_type = empty($release_type) ? null : $release_type;
+        $trimmed        = Catalog::trim_prefix(trim($name));
+        $name           = $trimmed['string'];
+        $prefix         = $trimmed['prefix'];
+        $album_artist   = (int) $album_artist;
+        $album_artist   = ($album_artist <= 0) ? null : $album_artist;
+        $mbid           = empty($mbid) ? null : $mbid;
+        $mbid_group     = empty($mbid_group) ? null : $mbid_group;
+        $release_type   = empty($release_type) ? null : $release_type;
+        $disk           = ((int) $disk <= 0) ? 1 : $disk;
+        $original_year  = ((int) $original_year <= 0) ? null : $original_year;
+        $barcode        = empty($barcode) ? null : $barcode;
+        $catalog_number = empty($catalog_number) ? null : $catalog_number;
 
         if (!$name) {
             $name         = T_('Unknown (Orphaned)');
             $year         = 0;
-            $disk         = 0;
+            $disk         = 1;
             $album_artist = null;
         }
         if (isset(self::$_mapcache[$name][$disk][$mbid][$album_artist])) {
@@ -487,7 +491,6 @@ class Album extends database_object implements library_item
             $params[] = $album_artist;
         }
 
-        debug_event('album.class', 'Checking for Album; ' . $name, 5);
         $db_results = Dba::read($sql, $params);
 
         if ($row = Dba::fetch_assoc($db_results)) {
@@ -501,7 +504,6 @@ class Album extends database_object implements library_item
             return null;
         }
 
-        debug_event('album.class', 'Inserting Album; ' . $name, 5);
         $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`, `original_year`, `barcode`, `catalog_number`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group, $release_type, $album_artist, $original_year, $barcode, $catalog_number));
@@ -970,7 +972,7 @@ class Album extends database_object implements library_item
             $album_artist = Artist::check($data['album_artist_name']);
         }
 
-        $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, null, $original_year, $barcode, $catalog_number);
+        $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type);
         if ($album_id != $this->id) {
             if (!is_array($songs)) {
                 $songs = $this->get_songs();
