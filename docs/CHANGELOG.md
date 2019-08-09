@@ -48,6 +48,10 @@ CHANGELOG
 - API - New Method: catalog_action allow running add_to_catalog|clean_catalog
 - API - New Method: playlist_edit alow editing name and type of playlist
 - Fix slideshow creating black screen when using web player
+- Default to disk 1 instead of 0 (db updates to handle existing albums)
+- Add Barcode, Original Year and Catalog Number to Album table
+- Extend bin/sort_files.inc & catalog patterns to handle new fields
+- Updated bin/sort_files.inc for a smoother experience that actually works
 
 3.9.1
 ----------
