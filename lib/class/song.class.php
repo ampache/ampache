@@ -387,7 +387,7 @@ class Song extends database_object implements media, library_item
         $original_year         = $results['original_year'];
         $barcode               = $results['barcode'];
 
-        if ($mode !== 'vbr' || $mode !== 'cbr' || $mode !== 'abr') {
+        if ($mode != 'vbr' || $mode != 'cbr' || $mode != 'abr') {
             debug_event('song.class', 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
             $mode = null;
         }

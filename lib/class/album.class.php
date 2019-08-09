@@ -487,6 +487,7 @@ class Album extends database_object implements library_item
             $params[] = $album_artist;
         }
 
+        debug_event('album.class', 'Checking for Album; ' . $name, 5);
         $db_results = Dba::read($sql, $params);
 
         if ($row = Dba::fetch_assoc($db_results)) {
@@ -500,6 +501,7 @@ class Album extends database_object implements library_item
             return null;
         }
 
+        debug_event('album.class', 'Inserting Album; ' . $name, 5);
         $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`, `original_year`, `barcode`, `catalog_number`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group, $release_type, $album_artist, $original_year, $barcode, $catalog_number));
