@@ -120,7 +120,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     background-color: #000;
 }
 
-#loginPage #maincontainer, #registerPage #maincontainer {
+#loginPage #maincontainer { /* , #registerPage #maincontainer */
     background-color: rgba(0,0,0,0.15);
     border: 2px solid rgba(0,0,0,0.15);
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -132,12 +132,13 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     background-image: url('../images/ampache-dark.png');
 }
 
-#loginPage #loginbox, #registerPage #registerbox {
+#loginPage #loginbox {
     color: #999;
 }
 
 #loginPage #loginbox div, #registerPage #registerbox div {
     text-shadow: 0 1px 0 #000;
+    color: #999;
 }
 
 #loginPage #loginbox #usernamefield input:focus,

@@ -90,17 +90,17 @@ foreach ($data as $row) {
             <?php if (AmpConfig::get('directplay')) {
         ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $nb . '_' . $song->id); ?>
-                <?php if (Stream_Playlist::check_autoplay_append()) {
-            ?>
-                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $nb . '_' . $song->id); ?>
-                <?php
-        } ?>
                 <?php if (Stream_Playlist::check_autoplay_next()) {
             ?>
                     <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $nb . '_' . $song->id); ?>
                 <?php
         } ?>
-        <?php
+                <?php if (Stream_Playlist::check_autoplay_append()) {
+            ?>
+                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $nb . '_' . $song->id); ?>
+                <?php
+        } ?>
+            <?php
     } ?>
             </div>
         </td>

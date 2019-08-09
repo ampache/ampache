@@ -1,5 +1,6 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
@@ -31,52 +32,57 @@ $_SESSION['login'] = true;
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
-    <head>
-        <!-- Propulsed by Ampache | ampache.org -->
-        <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
-        <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
-    </head>
-    <body id="registerPage">
-        <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
 
-        <div id="maincontainer">
-            <div id="header">
-                <a href="<?php echo $web_path ?>"><h1 id="headerlogo"></h1></a>
-                <span><?php echo T_('Registration'); ?>...</span>
-            </div>
-            <?php
-            $action          = scrub_in(Core::get_request('action'));
-            $fullname        = scrub_in(Core::get_request('fullname'));
-            $fullname_public = (Core::get_request('fullname_public') === "1");
-            $username        = scrub_in(Core::get_request('username'));
-            $email           = scrub_in(Core::get_request('email'));
-            $website         = scrub_in(Core::get_request('website'));
-            $state           = scrub_in(Core::get_request('state'));
-            $city            = scrub_in(Core::get_request('city'));
-            ?>
+<head>
+    <!-- Propulsed by Ampache | ampache.org -->
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
+    <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
+</head>
+
+<body id="registerPage">
+    <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
+    <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
+    <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
+
+    <div id="maincontainer">
+        <div id="header">
+            <a href="<?php echo $web_path ?>">
+                <h1 id="headerlogo"></h1>
+            </a>
+        </div>
+        <?php
+        $action          = scrub_in(Core::get_request('action'));
+        $fullname        = scrub_in(Core::get_request('fullname'));
+        $fullname_public = (Core::get_request('fullname_public') === "1");
+        $username        = scrub_in(Core::get_request('username'));
+        $email           = scrub_in(Core::get_request('email'));
+        $website         = scrub_in(Core::get_request('website'));
+        $state           = scrub_in(Core::get_request('state'));
+        $city            = scrub_in(Core::get_request('city'));
+        ?>
+        <div id="content">
             <div id="registerbox">
+                <h2><?php echo T_('Registration'); ?></h2>
                 <form name="update_user" method="post" action="<?php echo $web_path; ?>/register.php" enctype="multipart/form-data">
                     <?php
                     /*  If we should show the user agreement */
                     if (AmpConfig::get('user_agreement')) {
                         ?>
-                    <h3><?php echo T_('User Agreement'); ?></h3>
-                    <div class="registrationAgreement">
-                        <div class="agreementContent">
-                            <?php Registration::show_agreement(); ?>
+                        <h3><?php echo T_('User Agreement'); ?></h3>
+                        <div class="registrationAgreement">
+                            <div class="agreementContent">
+                                <?php Registration::show_agreement(); ?>
+                            </div>
                         </div>
-
-                        <div class="agreementCheckbox">
-                            <input type='checkbox' name='accept_agreement' /> <?php echo T_('I Accept'); ?>
-                            <?php AmpError::display('user_agreement'); ?>
-                        </div>
-                    </div>
                     <?php
-                    } // end if user_agreement?>
+                    } // end if user_agreement
+                    ?>
+
+                    <div class="registerInformation">
+                        <p><span class="require">* </span><?php echo T_('Required fields'); ?></p>
+                    </div>
                     <div class="registerfield require">
                         <label for="username"><?php echo T_('Username'); ?>:</label>
                         <input type='text' name='username' id='username' value='<?php echo scrub_out((string) $username); ?>' />
@@ -145,23 +151,29 @@ $_SESSION['login'] = true;
                         <input type='password' name='password_2' id='password_2' />
                     </div>
 
-                    <br />
-                    <div class="registerInformation">
-                        <span><?php echo T_('* Required fields'); ?></span>
-                    </div>
-
                     <?php
                     if (AmpConfig::get('captcha_public_reg')) {
                         echo captcha::form("&rarr;&nbsp;");
                         AmpError::display('captcha');
                     }
                     ?>
-
-                    <div class="registerButtons">
-                        <input type="hidden" name="action" value="add_user" />
-                        <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />
+                    <div class="submit-registration">
+                        <?php if (AmpConfig::get('user_agreement')) {
+                        ?>
+                            <div id="agreementCheckbox">
+                                <label for="accept_agreement"></span><?php echo T_('I Accept'); ?><span class=alert-danger> *</label>
+                                <input id="accept_agreement" type="checkbox" name="accept_agreement" />
+                            </div><?php
+                    } ?>
+                        <div id="submit-registration-button">
+                            <input type="hidden" name="action" value="add_user" />
+                            <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />
+                        </div>
+                        <?php AmpError::display('user_agreement'); ?>
                     </div>
                 </form>
-<?php
-UI::show_footer();
-?>
+            </div>
+
+            <?php
+            UI::show_footer();
+            ?>

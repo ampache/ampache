@@ -52,6 +52,7 @@ CHANGELOG
 - Add Barcode, Original Year and Catalog Number to Album table
 - Extend bin/sort_files.inc & catalog patterns to handle new fields
 - Updated bin/sort_files.inc for a smoother experience that actually works
+- Add -u to bin/catalog_update.inc This function will update the artist table with bio, image, etc as well as update similar artists.
 
 3.9.1
 ----------

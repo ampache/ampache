@@ -388,7 +388,7 @@ $_SESSION['login'] = false;
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/login.php" rel="nohtml"><?php echo T_('Login'); ?></a>
                         <?php
-                            if (AmpConfig::get('allow_public_registration')) {
+                            if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) {
                                 ?>
                                 / <a href="<?php echo $web_path; ?>/register.php" rel="nohtml"><?php echo T_('Register'); ?></a>
                         <?php
