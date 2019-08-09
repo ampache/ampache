@@ -776,6 +776,7 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
+            //debug_event('vainfo.class', 'Vorbis tag: ' . $tag . ' value: ' . $data[0], 5);
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
@@ -815,13 +816,13 @@ class vainfo
                 case 'lyrics':
                     $parsed['lyrics'] = $data[0];
                     break;
-                case 'original_year':
+                case 'originalyear':
                     $parsed['original_year'] = $data[0];
                     break;
                 case 'barcode':
                     $parsed['barcode'] = $data[0];
                     break;
-                case 'catalog_number':
+                case 'catalognumber':
                     $parsed['catalog_number'] = $data[0];
                     break;
                 default:
@@ -861,6 +862,7 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
+            //debug_event('vainfo.class', 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0], 5);
             switch ($tag) {
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
@@ -890,6 +892,15 @@ class vainfo
                     break;
                 case 'unsynchronised_lyric':
                     $parsed['lyrics'] = $data[0];
+                    break;
+                case 'originalyear':
+                    $parsed['original_year'] = $data[0];
+                    break;
+                case 'barcode':
+                    $parsed['barcode'] = $data[0];
+                    break;
+                case 'catalognumber':
+                    $parsed['catalog_number'] = $data[0];
                     break;
                 default:
                     $parsed[$tag] = $data[0];
