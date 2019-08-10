@@ -40,7 +40,7 @@
             <td>
                 <select name="from">
                     <option value="self" title="Self"><?php echo T_('Yourself'); ?></option>
-                    <option value="system" title="System"><?php echo T_('Ampache'); ?></option>
+                    <option value="system" title="System">Ampache</option>
                 </select>
             </td>
         </tr>

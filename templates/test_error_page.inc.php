@@ -31,7 +31,7 @@
 <title><?php echo("Ampache error page");?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-<link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body>
 <!-- rfc3514 implementation -->
@@ -40,14 +40,15 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
-                <?php echo 'Ampache'; ?> - For the love of Music
+                <?php echo 'Ampache :: ' . T_('For the Love of Music') . '- ' . T_('Installation'); ?>
             </a>
         </div>
     </div>
     <div class="container" role="main">
         <div class="jumbotron">
-            <h1><?php echo 'Error'; ?></h1>
-            <p><?php echo("Unable to load required dependencies. <a href=\"https://github.com/ampache/ampache/wiki/Installation\" rel=\"nofollow\">Please visit the wiki for installation help</a>"); ?></p>
+            <h1><?php echo T_('Error'); ?></h1>
+            <p><?php echo 'You may have reached this page because Ampache was unable to load the required dependencies.'; ?></p>
+            <p><a href="https://github.com/ampache/ampache/wiki/Installation#composer" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
         </div>
         <?php AmpError::display('general'); ?>
     </div>
