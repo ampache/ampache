@@ -29,14 +29,14 @@
         <title>Ampache -- Debug Page</title>
         <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <a class="navbar-brand" href="#">
                     <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
-                    <?php echo 'Ampache :: ' . T_('For the Love of Music'); ?>
+                    <?php echo T_('Ampache'); ?> - For the love of Music
                 </a>
             </div>
         </div>
