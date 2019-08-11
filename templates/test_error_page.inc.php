@@ -40,13 +40,13 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
-                <?php echo 'Ampache'; ?> - For the Love of Music
+                <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?>
             </a>
         </div>
     </div>
     <div class="container" role="main">
         <div class="jumbotron">
-            <h1><?php echo 'Error'; ?></h1>
+        <h1><?php echo T_('Error'); ?></h1>
             <p><?php echo("Unable to load required dependencies. <a href=\"https://github.com/ampache/ampache/wiki/Installation\" rel=\"nofollow\">Please visit the wiki for installation help</a>"); ?></p>
         </div>
         <?php AmpError::display('general'); ?>

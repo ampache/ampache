@@ -196,7 +196,7 @@ class Update
                 if (!defined('CLI')) {
                     echo '<li><b>';
                 }
-                echo 'Version: ', self::format_version($update['version']);
+                echo T_('Version') . ': ', self::format_version($update['version']);
                 if (defined('CLI')) {
                     echo "\n", str_replace('<br />', "\n", $update['description']), "\n";
                 } else {
