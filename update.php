@@ -72,7 +72,7 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
-                <?php echo T_('Ampache'); ?> - For the Love of Music
+                <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?>
             </a>
         </div>
     </div>
