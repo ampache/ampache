@@ -65,7 +65,7 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
     <title><?php echo AmpConfig::get('site_title'); ?> - Update</title>
     <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
