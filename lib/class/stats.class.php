@@ -331,9 +331,9 @@ class Stats
             $sql .= " GROUP BY object_id ";
         }
         if ($random) {
-            $sql .= " ORDER BY RAND() DESC";
+            $sql .= " ORDER BY RAND() DESC ";
         } else {
-            $sql .= " ORDER BY `count` DESC";
+            $sql .= " ORDER BY `count` DESC ";
         }
 
         return $sql;
