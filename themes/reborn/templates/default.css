@@ -52,6 +52,10 @@ body {
     height: 90%;
 }
 
+body#main-page {
+    min-width: 1024px;
+}
+
 blockquote,q {
     quotes: none;
 }
@@ -233,7 +237,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #mobileheader {
     height: 64px;
-    padding-top: 64px;
 }
 
 #header #headerbox {
