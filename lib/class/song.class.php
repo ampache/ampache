@@ -384,10 +384,10 @@ class Song extends database_object implements media, library_item
         $replaygain_track_peak = isset($results['replaygain_track_peak']) ? $results['replaygain_track_peak'] : null;
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
-        $original_year         = $results['original_year'];
+        $original_year         = Catalog::normalize_year($results['original_year'] ?: 0);
         $barcode               = $results['barcode'];
 
-        if ($mode != 'vbr' || $mode != 'cbr' || $mode != 'abr') {
+        if ($mode !== 'vbr' && $mode !== 'cbr' && $mode !== 'abr') {
             debug_event('song.class', 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
             $mode = null;
         }
