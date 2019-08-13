@@ -1744,8 +1744,7 @@ abstract class Catalog extends database_object
                 }
             }
 
-            //$song->update_song($song->id, $new_song);
-            $song->update($results);
+            $song->update_song($song->id, $new_song);
 
             if ($song->tags != $new_song->tags) {
                 Tag::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
