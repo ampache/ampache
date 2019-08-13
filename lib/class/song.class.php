@@ -1052,11 +1052,11 @@ class Song extends database_object implements media, library_item
                     $array['element'][$key] = 'OLD:' . $mediaData . ' --> ' . $newMediaData;
                 }
             } // end else
-
-            if ($array['change']) {
-                debug_event('song.class', 'media-diff ' . json_encode($array['element']), 5);
-            }
         } // end foreach
+
+        if ($array['change']) {
+            debug_event('song.class', 'media-diff ' . json_encode($array['element']), 5);
+        }
 
         return $array;
     }
