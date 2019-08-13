@@ -573,8 +573,9 @@ class Update
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
         $update_string = "IMPORTANT UPDATE NOTES" .
-                         "* Update album disk support to allow 1 instead of 0 by default<br />" .
-                         "* Add barcode catalog_number and original_year to albums<br />";
+                         "* Update album disk support to allow 1 instead of 0 by default.<br />" .
+                         "* Add barcode catalog_number and original_year to albums.<br />" .
+                         "* Drop catalog_number from song_data and use album instead.<br />";
         $version[]     = array('version' => '400002', 'description' => $update_string);
         
         return $version;
@@ -4305,6 +4306,7 @@ class Update
      *
      * Update disk to allow 1 instead of making it 0 by default
      * Add barcode catalog_number and original_year
+     * Drop catalog_number from song_data
      */
     public static function update_400002()
     {
@@ -4316,6 +4318,9 @@ class Update
         $sql = "ALTER TABLE `album` ADD `original_year` INT(4) NULL," .
                "ADD `barcode` VARCHAR(64) NULL," .
                "ADD `catalog_number` VARCHAR(64) NULL;";
+        $retval &= Dba::write($sql);
+        
+        $sql    = "ALTER TABLE `song_data`  DROP `catalog_number`";
         $retval &= Dba::write($sql);
 
         return $retval;
