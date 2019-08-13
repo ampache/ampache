@@ -957,15 +957,6 @@ class Album extends database_object implements library_item
 
         $updated = false;
         $songs   = null;
-        if ($artist != $this->artist_id && $artist) {
-            // Update every song
-            $songs = $this->get_songs();
-            foreach ($songs as $song_id) {
-                Song::update_artist($artist, $song_id);
-            }
-            $updated = true;
-            Artist::garbage_collection();
-        }
 
         if (!empty($data['album_artist_name'])) {
             // Need to create new artist according the name
