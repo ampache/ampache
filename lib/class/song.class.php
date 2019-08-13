@@ -987,8 +987,8 @@ class Song extends database_object implements media, library_item
     {
         // Remove some stuff we don't care about
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
-        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags');
-        $skip_array   = array('id', 'tag_id', 'mime', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'albumartist', 'mbid', 'mb_albumid_group', 'waveform', 'object_cnt');
+        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist_mbid', 'album_mbid', 'albumartist_mbid');
+        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'mb_albumid_group', 'waveform', 'object_cnt');
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
     } // compare_song_information
@@ -1052,11 +1052,11 @@ class Song extends database_object implements media, library_item
                     $array['element'][$key] = 'OLD:' . $mediaData . ' --> ' . $newMediaData;
                 }
             } // end else
-        } // end foreach
 
-        if ($array['change']) {
-            debug_event('song.class', 'media-diff ' . json_encode($array['element']), 5);
-        }
+            if ($array['change']) {
+                debug_event('song.class', 'media-diff ' . json_encode($array['element']), 5);
+            }
+        } // end foreach
 
         return $array;
     }
@@ -1195,7 +1195,6 @@ class Song extends database_object implements media, library_item
             "`title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, " .
             "`size` = ?, `time` = ?, `track` = ?, `mbid` = ?, " .
             "`update_time` = ? WHERE `id` = ?";
-
         Dba::write($sql, array($new_song->album, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer, $new_song->bitrate, $new_song->rate,
             $new_song->mode, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id));
 
