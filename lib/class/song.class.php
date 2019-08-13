@@ -455,9 +455,9 @@ class Song extends database_object implements media, library_item
             }
         }
 
-        $sql = 'INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`, `label`, `language`, `catalog_number`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`) ' .
-            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($song_id, $comment, $lyrics, $label, $language, $catalog_number, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak));
+        $sql = 'INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`) ' .
+            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        Dba::write($sql, array($song_id, $comment, $lyrics, $label, $language, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak));
 
         return $song_id;
     }
@@ -861,6 +861,54 @@ class Song extends database_object implements media, library_item
             return $album->name;
         }
     } // get_album_name
+
+    /**
+     * get_album_catalog_number
+     * gets the catalog_number of $this->album, allows passing of id
+     * @param integer $album_id
+     * @return string
+     */
+    public function get_album_catalog_number($album_id = null)
+    {
+        if (!$album_id) {
+            $album_id = $this->album;
+        }
+        $album = new Album($album_id);
+
+        return $album->catalog_number;
+    } // get_album_catalog_number
+
+    /**
+     * get_album_original_year
+     * gets the original_year of $this->album, allows passing of id
+     * @param integer $album_id
+     * @return string
+     */
+    public function get_album_original_year($album_id = null)
+    {
+        if (!$album_id) {
+            $album_id = $this->album;
+        }
+        $album = new Album($album_id);
+
+        return $album->original_year;
+    } // get_album_original_year
+
+    /**
+     * get_album_barcode
+     * gets the barcode of $this->album, allows passing of id
+     * @param integer $album_id
+     * @return string
+     */
+    public function get_album_barcode($album_id = null)
+    {
+        if (!$album_id) {
+            $album_id = $this->album;
+        }
+        $album = new Album($album_id);
+
+        return $album->barcode;
+    } // get_album_barcode
 
     /**
      * get_artist_name
@@ -1576,7 +1624,7 @@ class Song extends database_object implements media, library_item
     }
 
     /**
-     * Get item childrens.
+     * Get item children.
      * @return array
      */
     public function get_childrens()
