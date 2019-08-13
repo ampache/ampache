@@ -1697,6 +1697,18 @@ abstract class Catalog extends database_object
         }
         $new_song->title = self::check_title($new_song->title, $new_song->file);
 
+        if ($artist_mbid) {
+            $new_song->artist_mbid = $artist_mbid;
+        }
+
+        if ($album_mbid) {
+            $new_song->album_mbid = $album_mbid;
+        }
+
+        if ($albumartist_mbid) {
+            $new_song->albumartist_mbid = $albumartist_mbid;
+        }
+
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
 
