@@ -561,7 +561,7 @@ class Stats
             }
         }
         if (AmpConfig::get('album_group') && $type == 'album') {
-            $sql .= "GROUP BY `$sql_type`, `album`.`name`, `album`.`album_artist`, `album`.`mbid` ORDER BY `real_atime` DESC ";
+            $sql .= "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid` ORDER BY `real_atime` DESC ";
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
         }
