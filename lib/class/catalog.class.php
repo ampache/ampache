@@ -1693,8 +1693,11 @@ abstract class Catalog extends database_object
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
                                         $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
         if ($song->album != $new_song->album) {
-            $tmpalbum = new Album($song->album);
-            $tmpalbum->update($results);
+            Stats::migrate('album', $song->album, $new_song->album);
+            UserActivity::migrate('album', $song->album, $new_song->album);
+            Userflag::migrate('album', $song->album, $new_song->album);
+            Rating::migrate('album', $song->album, $new_song->album);
+            Art::migrate('album', $song->album, $new_song->album);
         }
         $new_song->title = self::check_title($new_song->title, $new_song->file);
 
