@@ -572,9 +572,9 @@ class Update
                          "  This is a cosmetic update and does not affect any operation)<br />";
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br />" .
-                         "This is part of a major update to how Ampache handles Albums,<br />" .
-                         "Artists and data migration during tag updates.<br />" .
+        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" .
+                         "This is part of a major update to how Ampache handles Albums," .
+                         "Artists and data migration during tag updates.<br /><br />" .
                          " * Update album disk support to allow 1 instead of 0 by default.<br />" .
                          " * Add barcode catalog_number and original_year to albums.<br />" .
                          " * Drop catalog_number from song_data and use album instead.<br />";
