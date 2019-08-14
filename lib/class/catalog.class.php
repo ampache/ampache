@@ -1214,7 +1214,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param integer $id
      */
-    public function gather_art_item($type, $id)
+    public function gather_art_item($type, $id, $db_art_first = false)
     {
         debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 4);
 
@@ -1252,8 +1252,14 @@ abstract class Catalog extends database_object
             }
         }
 
-        $art     = new Art($id, $type);
-        $results = $art->gather($options);
+        $art = new Art($id, $type);
+        // don't search for art when you already have it
+        if ($art->has_db_info() && $db_art_first) {
+            debug_event('catalog.class', 'Blocking art search, DB item exists', 5);
+            $results = array();
+        } else {
+            $results = $art->gather($options);
+        }
 
         foreach ($results as $result) {
             // Pull the string representation from the source
@@ -1299,7 +1305,8 @@ abstract class Catalog extends database_object
     public function gather_art($songs = null, $videos = null)
     {
         // Make sure they've actually got methods
-        $art_order = AmpConfig::get('art_order');
+        $art_order    = AmpConfig::get('art_order');
+        $db_art_first = $art_order[0] == 'db';
         if (!count($art_order)) {
             debug_event('catalog.class', 'art_order not set, Catalog::gather_art aborting', 3);
 
@@ -1339,7 +1346,7 @@ abstract class Catalog extends database_object
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $objectid) {
-                $this->gather_art_item($key, $objectid);
+                $this->gather_art_item($key, $objectid, $db_art_first);
 
                 // Stupid little cutesie thing
                 $search_count++;
@@ -1552,7 +1559,8 @@ abstract class Catalog extends database_object
         // Because single items are large numbers of things too
         set_time_limit(0);
 
-        $songs = array();
+        $songs  = array();
+        $result = $object_id;
 
         switch ($type) {
             case 'album':
@@ -1573,7 +1581,11 @@ abstract class Catalog extends database_object
             $info = self::update_media_from_tags($song);
 
             if ($info['change']) {
-                $file = scrub_out($song->file);
+                if ($info['element'][$type]) {
+                    $change = explode(' --> ', $info['element'][$type]);
+                    $result = $change[1];
+                }
+                $file   = scrub_out($song->file);
                 echo "<dl>\n\t<dd>";
                 echo "<strong>$file " . T_('Updated') . "</strong>\n";
                 echo $info['text'];
@@ -1587,6 +1599,8 @@ abstract class Catalog extends database_object
                 flush();
             }
         } // foreach songs
+
+        return $result;
     } // update_single_item
 
     /**
@@ -1602,8 +1616,7 @@ abstract class Catalog extends database_object
     {
         debug_event('catalog.class', 'Reading tags from ' . $media->file, 5);
 
-        $catalog        = Catalog::create_from_id($media->catalog);
-
+        $catalog = Catalog::create_from_id($media->catalog);
         $results = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
 
         // Figure out what type of object this is and call the right
@@ -1614,6 +1627,10 @@ abstract class Catalog extends database_object
 
         $return = call_user_func(array('Catalog', $function), $results, $media);
 
+        // Cleanup old objects that are no longer needed
+        Album::garbage_collection();
+        Artist::garbage_collection();
+        
         return $return;
     } // update_media_from_tags
 
@@ -1661,16 +1678,20 @@ abstract class Catalog extends database_object
                 $song->tags[] = $tag['name'];
             }
         }
-        $new_song->tags        = $results['genre'];
-        $artist                = $results['artist'];
-        $artist_mbid           = $results['mb_artistid'];
-        $albumartist           = $results['albumartist'] ?: $results['band'];
-        $albumartist           = $albumartist ?: null;
-        $albumartist_mbid      = $results['mb_albumartistid'];
-        $album                 = $results['album'];
-        $album_mbid            = $results['mb_albumid'];
-        $album_mbid_group      = $results['mb_albumid_group'];
-        $disk                  = $results['disk'];
+        $new_song->tags   = $results['genre'];
+        $artist           = $results['artist'];
+        $artist_mbid      = $results['mb_artistid'];
+        $albumartist      = $results['albumartist'] ?: $results['band'];
+        $albumartist      = $albumartist ?: null;
+        $albumartist_mbid = $results['mb_albumartistid'];
+        $album            = $results['album'];
+        $album_mbid       = $results['mb_albumid'];
+        $album_mbid_group = $results['mb_albumid_group'];
+        $disk             = $results['disk'];
+        $releasetype      = $results['releasetype'];
+        $original_year    = $results['original_year'];
+        $barcode          = $results['barcode'];
+        $catalog_number   = $results['catalog_number'];
 
         /*
         * We have the artist/genre/album name need to check it in the tables
@@ -1680,8 +1701,24 @@ abstract class Catalog extends database_object
         if ($albumartist) {
             $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
         }
-        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->albumartist);
+        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
+                                        $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
+        self::migrate('artist', $song->artist, $new_song->artist);
+        self::migrate('artist', $song->albumartist, $new_song->albumartist);
+        self::migrate('album', $song->album, $new_song->album);
         $new_song->title = self::check_title($new_song->title, $new_song->file);
+
+        if ($artist_mbid) {
+            $new_song->artist_mbid = $artist_mbid;
+        }
+
+        if ($album_mbid) {
+            $new_song->album_mbid = $album_mbid;
+        }
+
+        if ($albumartist_mbid) {
+            $new_song->albumartist_mbid = $albumartist_mbid;
+        }
 
         /* Since we're doing a full compare make sure we fill the extended information */
         $song->fill_ext_info();
@@ -1718,7 +1755,7 @@ abstract class Catalog extends database_object
                 }
             }
 
-            $song->update_song($song->id, $new_song);
+            Song::update_song($song->id, $new_song);
 
             if ($song->tags != $new_song->tags) {
                 Tag::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
@@ -2562,6 +2599,21 @@ abstract class Catalog extends database_object
         // Remove any orphaned artists/albums/etc.
         self::garbage_collection();
     }
-}
 
-// end of catalog class
+    /**
+     * Migrate an object associate images to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        if ($old_object_id != $new_object_id) {
+            Stats::migrate($object_type, $old_object_id, $new_object_id);
+            UserActivity::migrate($object_type, $old_object_id, $new_object_id);
+            Userflag::migrate($object_type, $old_object_id, $new_object_id);
+            Rating::migrate($object_type, $old_object_id, $new_object_id);
+            Art::migrate($object_type, $old_object_id, $new_object_id);
+        }
+    }
+}// end of catalog class

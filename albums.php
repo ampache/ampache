@@ -127,7 +127,8 @@ switch ($_REQUEST['action']) {
         if (!$album->id) {
             debug_event('albums', 'Requested an album that does not exist', 2);
             echo T_("Error: Requested an album that does not exist.");
-        } elseif (!count($album->album_suite)) {
+        // allow single disks to not be shown as multi's
+        } elseif (!count($album->album_suite) || count($album->album_suite) == 1) {
             require AmpConfig::get('prefix') . UI::find_template('show_album.inc.php');
         } else {
             require AmpConfig::get('prefix') . UI::find_template('show_album_group_disks.inc.php');

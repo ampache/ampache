@@ -78,6 +78,21 @@ class Album extends database_object implements library_item
     public $release_type;
 
     /**
+     *  @var string $catalog_number
+     */
+    public $catalog_number;
+
+    /**
+     *  @var string $barcode
+     */
+    public $barcode;
+
+    /**
+     *  @var int $original_year
+     */
+    public $original_year;
+
+    /**
      * @var int $catalog_id
      */
     public $catalog_id;
@@ -432,21 +447,25 @@ class Album extends database_object implements library_item
      * @param boolean $readonly
      * @return integer|null
      */
-    public static function check($name, $year = 0, $disk = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false)
+    public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false, $original_year = 0, $barcode = null, $catalog_number = null)
     {
-        $trimmed      = Catalog::trim_prefix(trim($name));
-        $name         = $trimmed['string'];
-        $prefix       = $trimmed['prefix'];
-        $album_artist = (int) $album_artist;
-        $album_artist = ($album_artist <= 0) ? null : $album_artist;
-        $mbid         = empty($mbid) ? null : $mbid;
-        $mbid_group   = empty($mbid_group) ? null : $mbid_group;
-        $release_type = empty($release_type) ? null : $release_type;
+        $trimmed        = Catalog::trim_prefix(trim($name));
+        $name           = $trimmed['string'];
+        $prefix         = $trimmed['prefix'];
+        $album_artist   = (int) $album_artist;
+        $album_artist   = ($album_artist <= 0) ? null : $album_artist;
+        $mbid           = empty($mbid) ? null : $mbid;
+        $mbid_group     = empty($mbid_group) ? null : $mbid_group;
+        $release_type   = empty($release_type) ? null : $release_type;
+        $disk           = ((int) $disk <= 0) ? 1 : $disk;
+        $original_year  = ((int) $original_year <= 0) ? null : $original_year;
+        $barcode        = empty($barcode) ? null : $barcode;
+        $catalog_number = empty($catalog_number) ? null : $catalog_number;
 
         if (!$name) {
             $name         = T_('Unknown (Orphaned)');
             $year         = 0;
-            $disk         = 0;
+            $disk         = 1;
             $album_artist = null;
         }
         if (isset(self::$_mapcache[$name][$disk][$mbid][$album_artist])) {
@@ -485,19 +504,19 @@ class Album extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`, `original_year`, `barcode`, `catalog_number`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group, $release_type, $album_artist));
+        $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group, $release_type, $album_artist, $original_year, $barcode, $catalog_number));
         if (!$db_results) {
             return null;
         }
 
         $album_id = Dba::insert_id();
-
+        debug_event('album.class', 'Inserted new album id ' . $album_id, 4);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             try {
-                Wanted::delete_wanted_release($mbid);
+                Wanted::delete_wanted_release((string) $mbid);
             } catch (Exception $e) {
                 debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), 2);
             }
@@ -680,7 +699,7 @@ class Album extends database_object implements library_item
         $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
 
         // Looking if we need to combine or display disks
-        if ($this->disk && (!$this->allow_group_disks || ($this->allow_group_disks && !AmpConfig::get('album_group')))) {
+        if ($this->disk && !AmpConfig::get('album_group')) {
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
 
@@ -922,28 +941,22 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $year         = isset($data['year']) ? $data['year'] : $this->year;
-        $artist       = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
-        $album_artist = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
-        $name         = isset($data['name']) ? $data['name'] : $this->name;
-        $disk         = isset($data['disk']) ? $data['disk'] : $this->disk;
-        $mbid         = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
-        $mbid_group   = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
-        $release_type = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
+        $year           = isset($data['year']) ? $data['year'] : $this->year;
+        $artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
+        $album_artist   = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
+        $name           = isset($data['name']) ? $data['name'] : $this->name;
+        $disk           = isset($data['disk']) ? $data['disk'] : $this->disk;
+        $mbid           = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
+        $mbid_group     = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
+        $release_type   = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
+        $original_year  = isset($data['original_year']) ? $data['original_year'] : $this->original_year;
+        $barcode        = isset($data['barcode']) ? $data['barcode'] : $this->barcode;
+        $catalog_number = isset($data['catalog_number']) ? $data['catalog_number'] : $this->catalog_number;
 
         $current_id = $this->id;
 
         $updated = false;
         $songs   = null;
-        if ($artist != $this->artist_id && $artist) {
-            // Update every song
-            $songs = $this->get_songs();
-            foreach ($songs as $song_id) {
-                Song::update_artist($artist, $song_id);
-            }
-            $updated = true;
-            Artist::garbage_collection();
-        }
 
         if (!empty($data['album_artist_name'])) {
             // Need to create new artist according the name
@@ -952,6 +965,7 @@ class Album extends database_object implements library_item
 
         $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type);
         if ($album_id != $this->id) {
+            debug_event('album.class', "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
             if (!is_array($songs)) {
                 $songs = $this->get_songs();
             }
@@ -963,20 +977,41 @@ class Album extends database_object implements library_item
             $current_id = $album_id;
             $updated    = true;
             Stats::migrate('album', $this->id, $album_id);
+            UserActivity::migrate('album', $this->id, $album_id);
+            Userflag::migrate('album', $this->id, $album_id);
+            Rating::migrate('album', $this->id, $album_id);
             Art::migrate('album', $this->id, $album_id);
             self::garbage_collection();
         } else {
-            self::update_year($year, $album_id);
-            self::update_mbid_group($mbid_group, $album_id);
-            self::update_release_type($release_type, $album_id);
+            if (!empty($year) && $year != $this->year) {
+                self::update_field('year', $year, $album_id);
+            }
+            if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
+                self::update_field('mbid_group', $mbid_group, $album_id);
+            }
+            if (!empty($release_type) && $release_type != $this->release_type) {
+                self::update_field('release_type', $release_type, $album_id);
+            }
+            if (!empty($original_year) && $original_year != $this->original_year) {
+                self::update_field('original_year', $original_year, $album_id);
+            }
+            if (!empty($barcode) && $barcode != $this->barcode) {
+                self::update_field('barcode', $barcode, $album_id);
+            }
+            if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
+                self::update_field('catalog_number', $catalog_number, $album_id);
+            }
         }
-        $this->year         = $year;
-        $this->mbid_group   = $mbid_group;
-        $this->release_type = $release_type;
-        $this->name         = $name;
-        $this->disk         = $disk;
-        $this->mbid         = $mbid;
-        $this->album_artist = $album_artist;
+        $this->year           = $year;
+        $this->mbid_group     = $mbid_group;
+        $this->release_type   = $release_type;
+        $this->name           = $name;
+        $this->disk           = $disk;
+        $this->mbid           = $mbid;
+        $this->album_artist   = $album_artist;
+        $this->original_year  = $original_year;
+        $this->barcode        = $barcode;
+        $this->catalog_number = $catalog_number;
 
         if ($updated && is_array($songs)) {
             foreach ($songs as $song_id) {
@@ -1062,38 +1097,6 @@ class Album extends database_object implements library_item
         }
 
         return $deleted;
-    }
-
-    /**
-     * Update album year.
-     * @param integer $year
-     * @param integer $album_id
-     */
-    public static function update_year($year, $album_id)
-    {
-        self::update_field('year', $year, $album_id);
-    }
-
-    /**
-     * Update album mbid group.
-     * @param string $mbid_group
-     * @param integer $album_id
-     */
-    public static function update_mbid_group($mbid_group, $album_id)
-    {
-        $mbid_group = (!empty($mbid_group)) ? $mbid_group : null;
-        self::update_field('mbid_group', $mbid_group, $album_id);
-    }
-
-    /**
-     * Update album release type.
-     * @param string $release_type
-     * @param integer $album_id
-     */
-    public static function update_release_type($release_type, $album_id)
-    {
-        $release_type = (!empty($release_type)) ? $release_type : null;
-        self::update_field('release_type', $release_type, $album_id);
     }
 
     /**

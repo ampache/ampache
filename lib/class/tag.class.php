@@ -162,8 +162,8 @@ class Tag extends database_object implements library_item
 
         // Check and see if the tag exists, if not create it, we need the tag id from this
         if (!$tag_id = self::tag_exists($cleaned_value)) {
-            $tag_id = self::add_tag($cleaned_value);
             debug_event('tag.class', 'Adding new tag {' . $cleaned_value . '}', 5);
+            $tag_id = self::add_tag($cleaned_value);
         }
 
         if (!$tag_id) {
@@ -491,6 +491,7 @@ class Tag extends database_object implements library_item
     /**
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
+     * @param string $type
      */
     public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
     {
