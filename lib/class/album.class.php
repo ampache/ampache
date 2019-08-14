@@ -965,6 +965,7 @@ class Album extends database_object implements library_item
 
         $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type);
         if ($album_id != $this->id) {
+            debug_event('album.class', "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
             if (!is_array($songs)) {
                 $songs = $this->get_songs();
             }

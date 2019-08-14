@@ -1692,8 +1692,8 @@ abstract class Catalog extends database_object
         }
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
                                         $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
-        if ($new_song->album) {
-            $tmpalbum = new Album($album);
+        if ($song->album != $new_song->album) {
+            $tmpalbum = new Album($song->album);
             $tmpalbum->update($results);
         }
         $new_song->title = self::check_title($new_song->title, $new_song->file);
