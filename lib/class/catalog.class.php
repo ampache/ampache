@@ -1214,7 +1214,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param integer $id
      */
-    public function gather_art_item($type, $id)
+    public function gather_art_item($type, $id, $db_art_first = false)
     {
         debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 4);
 
@@ -1252,9 +1252,9 @@ abstract class Catalog extends database_object
             }
         }
 
-        $art     = new Art($id, $type);
+        $art = new Art($id, $type);
         // don't search for art when you already have it
-        if ($art->has_db_info() && AmpConfig::get('art_order')[0] == 'db') {
+        if ($art->has_db_info() && $db_art_first) {
             debug_event('catalog.class', 'Blocking art search, DB item exists', 5);
             $results = array();
         } else {
@@ -1306,6 +1306,7 @@ abstract class Catalog extends database_object
     {
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');
+        $db_art_first = $art_order[0] == 'db';
         if (!count($art_order)) {
             debug_event('catalog.class', 'art_order not set, Catalog::gather_art aborting', 3);
 
@@ -1345,7 +1346,7 @@ abstract class Catalog extends database_object
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $objectid) {
-                $this->gather_art_item($key, $objectid);
+                $this->gather_art_item($key, $objectid, $db_art_first);
 
                 // Stupid little cutesie thing
                 $search_count++;
