@@ -512,11 +512,11 @@ class Album extends database_object implements library_item
         }
 
         $album_id = Dba::insert_id();
-
+        debug_event('album.class', 'Inserted new album ID ' . $album_id, 4);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             try {
-                Wanted::delete_wanted_release($mbid);
+                Wanted::delete_wanted_release((string) $mbid);
             } catch (Exception $e) {
                 debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), 2);
             }
