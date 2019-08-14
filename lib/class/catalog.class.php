@@ -1692,13 +1692,9 @@ abstract class Catalog extends database_object
         }
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
                                         $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
-        if ($song->album != $new_song->album) {
-            Stats::migrate('album', $song->album, $new_song->album);
-            UserActivity::migrate('album', $song->album, $new_song->album);
-            Userflag::migrate('album', $song->album, $new_song->album);
-            Rating::migrate('album', $song->album, $new_song->album);
-            Art::migrate('album', $song->album, $new_song->album);
-        }
+        self::migrate('artist', $song->artist, $new_song->artist);
+        self::migrate('artist', $song->albumartist, $new_song->albumartist);
+        self::migrate('album', $song->album, $new_song->album);
         $new_song->title = self::check_title($new_song->title, $new_song->file);
 
         if ($artist_mbid) {
@@ -2592,6 +2588,27 @@ abstract class Catalog extends database_object
         // Remove any orphaned artists/albums/etc.
         self::garbage_collection();
     }
-}
 
-// end of catalog class
+    /**
+     * Migrate an object associate images to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        if ($old_object_id != $new_object_id) {
+            Stats::migrate($object_type, $old_object_id, $new_object_id);
+            UserActivity::migrate($object_type, $old_object_id, $new_object_id);
+            Userflag::migrate($object_type, $old_object_id, $new_object_id);
+            Rating::migrate($object_type, $old_object_id, $new_object_id);
+            Art::migrate($object_type, $old_object_id, $new_object_id);
+            if ($object_type == 'album') {
+                Album::garbage_collection();
+            }
+            if ($object_type == 'artist') {
+                Artist::garbage_collection();
+            }
+        }
+    }
+}// end of catalog class
