@@ -1620,6 +1620,10 @@ abstract class Catalog extends database_object
 
         $return = call_user_func(array('Catalog', $function), $results, $media);
 
+        // Cleanup old objects that are no longer needed
+        Album::garbage_collection();
+        Artist::garbage_collection();
+        
         return $return;
     } // update_media_from_tags
 
@@ -2603,12 +2607,6 @@ abstract class Catalog extends database_object
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
             Rating::migrate($object_type, $old_object_id, $new_object_id);
             Art::migrate($object_type, $old_object_id, $new_object_id);
-            if ($object_type == 'album') {
-                Album::garbage_collection();
-            }
-            if ($object_type == 'artist') {
-                Artist::garbage_collection();
-            }
         }
     }
 }// end of catalog class
