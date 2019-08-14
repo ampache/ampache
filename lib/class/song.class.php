@@ -987,8 +987,8 @@ class Song extends database_object implements media, library_item
     {
         // Remove some stuff we don't care about
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
-        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist_mbid', 'album_mbid', 'albumartist_mbid');
-        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'mb_albumid_group', 'waveform', 'object_cnt');
+        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group');
+        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt');
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
     } // compare_song_information
