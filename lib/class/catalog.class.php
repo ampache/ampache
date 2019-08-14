@@ -1305,7 +1305,7 @@ abstract class Catalog extends database_object
     public function gather_art($songs = null, $videos = null)
     {
         // Make sure they've actually got methods
-        $art_order = AmpConfig::get('art_order');
+        $art_order    = AmpConfig::get('art_order');
         $db_art_first = $art_order[0] == 'db';
         if (!count($art_order)) {
             debug_event('catalog.class', 'art_order not set, Catalog::gather_art aborting', 3);
