@@ -1572,6 +1572,7 @@ abstract class Catalog extends database_object
                 break;
             case 'song':
                 $songs[] = $object_id;
+                $result  = $object_id;
                 break;
         } // end switch type
 
@@ -1593,7 +1594,17 @@ abstract class Catalog extends database_object
                 echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
                 flush();
             }
+            switch ($type) {
+                case 'album':
+                    $result = $song->album;
+                    break;
+                case 'artist':
+                    $result  = $song->artist;
+                    break;
+            } // end switch type
         } // foreach songs
+
+        return $result;
     } // update_single_item
 
     /**
