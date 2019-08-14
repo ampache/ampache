@@ -53,6 +53,8 @@ CHANGELOG
 - Extend bin/sort_files.inc & catalog patterns to handle new fields
 - Updated bin/sort_files.inc for a smoother experience that actually works
 - Add -u to bin/catalog_update.inc This function will update the artist table with bio, image, etc as well as update similar artists.
+- Numerous catalog updates to allow data migration when updating file tags. (UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate)
+- Faster tag updates/catalog verify! (Updating an album would update each file multiple times)
 
 3.9.1
 ----------
