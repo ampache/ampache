@@ -1401,6 +1401,14 @@ class Song extends database_object implements media, library_item
     public static function update_album($new_album, $song_id)
     {
         self::_update_item('album', $new_album, $song_id, 50, true);
+
+        $song = new Song($song_id);
+        //migrate stats for the old album
+        Stats::migrate('album', $song->album, $new_album);
+        UserActivity::migrate('album', $song->album, $new_album);
+        Userflag::migrate('album', $song->album, $new_album);
+        Rating::migrate('album', $song->album, $new_album);
+        Art::migrate('album', $song->album, $new_album);
     } // update_album
 
     /**
