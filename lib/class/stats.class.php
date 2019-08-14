@@ -310,7 +310,7 @@ class Stats
         }
         /* Select Top objects counting by # of rows for you only */
         $sql = "SELECT `object_id` as `id`, COUNT(*) AS `count` FROM `object_count`";
-        if ($allow_group_disks && $type == 'album') {
+        if (AmpConfig::get('album_group') && $type == 'album') {
             $sql .= " LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id`" .
                     " and `object_count`.`object_type` = 'album'";
         }
@@ -332,7 +332,7 @@ class Stats
                     " AND `rating`.`user` = " . $user_id . ")";
         }
         $sql .= " AND `count_type` = '" . $count_type . "'";
-        if ($allow_group_disks && $type == 'album') {
+        if (AmpConfig::get('album_group') && $type == 'album') {
             $sql .= " GROUP BY `object_count`.`object_id`, `album`.`name`, `album`.`album_artist`, `album`.`mbid` ";
         } else {
             $sql .= " GROUP BY object_id ";

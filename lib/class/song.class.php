@@ -890,7 +890,7 @@ class Song extends database_object implements media, library_item
      * get_album_original_year
      * gets the original_year of $this->album, allows passing of id
      * @param integer $album_id
-     * @return integer
+     * @return string
      */
     public function get_album_original_year($album_id = null)
     {
@@ -995,8 +995,8 @@ class Song extends database_object implements media, library_item
     {
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
-        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album');
-        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt', 'albumartist', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group');
+        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group');
+        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt');
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
     } // compare_song_information

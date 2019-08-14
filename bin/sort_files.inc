@@ -40,11 +40,14 @@ require_once $prefix . '/lib/init.php';
 
 // default various artist album name.
 $various_artist = "Various Artists";
-$options        = getopt("xv:");
 
-// Require -x to disable test mode
-$test_mode = !array_key_exists('x', $options);
+// Don't do anything by default just tell me what you would do
+$test_mode = true;
 
+$options = getopt("xv:");
+if (array_key_exists('x', $options)) {
+    $test_mode = false;
+}
 if (array_key_exists('v', $options)) {
     $operations_string .= "\n\t- " . T_('Setting catalog name');
     $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
@@ -70,10 +73,7 @@ $catalogs = array();
 
 while ($row = Dba::fetch_row($db_results)) {
 
-    $catalog = Catalog::create_from_id($row['id']);
-    $songs = $catalog->get_songs();
-
-    /* HINT: Catalog Name */
+    $catalog = Catalog::create_from_id($r[0]);
     printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
     echo "\n";
     $songs = $catalog->get_songs();
@@ -84,20 +84,24 @@ while ($row = Dba::fetch_row($db_results)) {
     foreach ($songs as $song) {
         /* Find this poor song a home */
         $song->format();
-        $directory     = sort_find_home($song,$catalog->sort_pattern,$catalog->path);
-        $filename     = $song->f_file;
-        $fullpath = $directory . "/" . $filename;
+        // sort_find_home will replace the % with the correct values.
+        $directory = sort_find_home($song, $catalog->sort_pattern, $catalog->path);
+        $filename  = sort_find_home($song, $catalog->rename_pattern, null);
+        if ($directory == false || $filename == false) {
+            $fullpath = $song->file;
+        } else {
+            $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);;
+        }
 
         /* Check for Demo Mode */
         if ($test_mode) {
             /* We're just talking here... no work */
-            echo T_("Moving File...");
+            echo T_("Examine File...");
             echo "\n\t";
             /* HINT: filename (File path) */
             printf (T_('Source: %s'), $song->file);
             echo "\n\t";
-            /* HINT: filename (File path) */
-            printf (T_('Dest: %s'), $fullpath);
+            printf (T_('Destin: %s'), $fullpath);
             echo "\n";
             flush();
         }
@@ -106,14 +110,7 @@ while ($row = Dba::fetch_row($db_results)) {
          * Don't try to move it, if it's already the same friggin thing!
          */
         if ($song->file != $fullpath && strlen($fullpath)) {
-            echo T_("Examine File...");
-            echo "\n\t";
-            printf (T_('Source: %s'), $song->file);
-            echo "\n\t";
-            printf (T_('Destin: %s'), $fullpath);
-            echo "\n";
-            flush();
-            sort_move_file($song, $fullpath, $test_mode);
+            sort_move_file($song, $fullpath);
         }
 
     } // end foreach song
@@ -215,14 +212,16 @@ function sort_clean_name($string) {
  * and unlink.. This is a little unsafe, and as such it verifies the copy
  * worked by doing a filesize() before unlinking.
  */
-function sort_move_file($song, $fullname, $test_mode) {
+function sort_move_file($song, $fullname) {
 
-    $old_dir   = dirname($song->file);
-    $info      = pathinfo($fullname);
-    $directory = $info['dirname'];
-    $file      = $info['basename'];
-    $data      = preg_split("/[\/\\\]/", $directory);
-    $path      = '';
+    $old_dir    = dirname($song->file);
+
+    $info = pathinfo($fullname);
+
+    $directory     = $info['dirname'];
+    $file        = $info['basename'];
+    $data = preg_split("/[\/\\\]/", $directory);
+    $path = '';
 
     /* We not need the leading / */
     unset($data[0]);
@@ -236,8 +235,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         if (!is_dir($path)) {
             if ($test_mode) {
                 echo "\t";
-                /* HINT: Directory (File path) */
-                printf (T_('Making "%s" directory'), $path);
+                printf (T_('Making: %s Directory'), $path);
                 echo "\n";
             }
             else {
