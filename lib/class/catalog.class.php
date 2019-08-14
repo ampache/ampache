@@ -1559,7 +1559,8 @@ abstract class Catalog extends database_object
         // Because single items are large numbers of things too
         set_time_limit(0);
 
-        $songs = array();
+        $songs  = array();
+        $result = $object_id;
 
         switch ($type) {
             case 'album':
@@ -1572,7 +1573,6 @@ abstract class Catalog extends database_object
                 break;
             case 'song':
                 $songs[] = $object_id;
-                $result  = $object_id;
                 break;
         } // end switch type
 
@@ -1581,7 +1581,11 @@ abstract class Catalog extends database_object
             $info = self::update_media_from_tags($song);
 
             if ($info['change']) {
-                $file = scrub_out($song->file);
+                if ($info['element'][$type]) {
+                    $change = explode(' --> ', $info['element'][$type]);
+                    $result = $change[1];
+                }
+                $file   = scrub_out($song->file);
                 echo "<dl>\n\t<dd>";
                 echo "<strong>$file " . T_('Updated') . "</strong>\n";
                 echo $info['text'];
@@ -1594,17 +1598,6 @@ abstract class Catalog extends database_object
                 echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
                 flush();
             }
-            // check that album / artist have been updated.
-            switch ($type) {
-                case 'album':
-                    $test   = new Song($song_id);
-                    $result = $test->album;
-                    break;
-                case 'artist':
-                    $test   = new Song($song_id);
-                    $result = $test->artist;
-                    break;
-            } // end switch type
         } // foreach songs
 
         return $result;
