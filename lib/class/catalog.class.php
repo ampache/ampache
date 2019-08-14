@@ -1594,12 +1594,15 @@ abstract class Catalog extends database_object
                 echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
                 flush();
             }
+            // check that album / artist have been updated.
             switch ($type) {
                 case 'album':
-                    $result = $song->album;
+                    $test   = new Song($song_id);
+                    $result = $test->album;
                     break;
                 case 'artist':
-                    $result  = $song->artist;
+                    $test   = new Song($song_id);
+                    $result = $test->artist;
                     break;
             } // end switch type
         } // foreach songs
