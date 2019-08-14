@@ -359,6 +359,7 @@ class TVShow extends database_object implements library_item
                 $current_id = $tvshow_id;
                 Stats::migrate('tvshow', $this->id, $tvshow_id);
                 UserActivity::migrate('tvshow', $this->id, $tvshow_id);
+                Userflag::migrate('tvshow', $this->id, $tvshow_id);
                 Rating::migrate('tvshow', $this->id, $tvshow_id);
                 Art::migrate('tvshow', $this->id, $tvshow_id);
                 self::garbage_collection();

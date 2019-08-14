@@ -977,6 +977,7 @@ class Album extends database_object implements library_item
             $updated    = true;
             Stats::migrate('album', $this->id, $album_id);
             UserActivity::migrate('album', $this->id, $album_id);
+            Userflag::migrate('album', $this->id, $album_id);
             Rating::migrate('album', $this->id, $album_id);
             Art::migrate('album', $this->id, $album_id);
             self::garbage_collection();

@@ -334,4 +334,18 @@ class Userflag extends database_object
         $userflag = new Userflag($object_id, $type);
         require AmpConfig::get('prefix') . UI::find_template('show_object_userflag.inc.php');
     } // show
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return boolean|PDOStatement
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "UPDATE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
 } //end rating class
