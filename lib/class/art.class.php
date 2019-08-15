@@ -206,15 +206,17 @@ class Art extends database_object
             return false;
         }
 
-        $test = true;
-        // Check to make sure PHP:GD exists.  If so, we can sanity check
-        // the image.
-        if (function_exists('ImageCreateFromString')) {
+        $test = false;
+        // Check to make sure PHP:GD exists.  If so, we can sanity check the image.
+        if (function_exists('ImageCreateFromString') && is_string($source)) {
+            $test  = true;
             $image = ImageCreateFromString($source);
             if ($image == false || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('art.class', 'Image failed PHP-GD test', 1);
                 $test = false;
             }
+        }
+        if ($test) {
             if (imagedestroy($image) === false) {
                 throw new \RuntimeException('The image handle ' . $image . ' could not be destroyed.');
             }
