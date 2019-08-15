@@ -342,7 +342,6 @@ class vainfo
     public static function clean_tag_info($results, $keys, $filename = null)
     {
         $info = array();
-        //debug_event('vainfo.class', 'Clean tag info: ' . print_r($results, true), 5);
 
         $info['file'] = $filename;
 
@@ -387,7 +386,13 @@ class vainfo
             $info['mb_albumid_group'] = $info['mb_albumid_group'] ?: trim($tags['mb_albumid_group']);
             $info['mb_artistid']      = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
             $info['mb_albumartistid'] = $info['mb_albumartistid'] ?: trim($tags['mb_albumartistid']);
-            $info['release_type']     = $info['release_type'] ?: trim($tags['release_type']);
+            if (trim($tags['release_type'] !== '')) {
+                $info['release_type'] = $info['release_type'] ?: trim($tags['release_type']);
+            }
+
+            $info['original_year']  = $info['original_year'] ?: trim($tags['original_year']);
+            $info['barcode']        = $info['barcode'] ?: trim($tags['barcode']);
+            $info['catalog_number'] = $info['catalog_number'] ?: trim($tags['catalog_number']);
 
             $info['language'] = $info['language'] ?: trim($tags['language']);
             $info['comment']  = $info['comment'] ?: trim($tags['comment']);
@@ -430,12 +435,6 @@ class vainfo
                     }
                 }
             }
-        }
-
-        // Some things set the disk number even though there aren't multiple
-        if ($info['totaldisks'] == 1 && $info['disk'] == 1) {
-            unset($info['disk']);
-            unset($info['totaldisks']);
         }
 
         // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
@@ -777,6 +776,7 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
+            //debug_event('vainfo.class', 'Vorbis tag: ' . $tag . ' value: ' . $data[0], 5);
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
@@ -816,6 +816,15 @@ class vainfo
                 case 'lyrics':
                     $parsed['lyrics'] = $data[0];
                     break;
+                case 'originalyear':
+                    $parsed['original_year'] = $data[0];
+                    break;
+                case 'barcode':
+                    $parsed['barcode'] = $data[0];
+                    break;
+                case 'catalognumber':
+                    $parsed['catalog_number'] = $data[0];
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
@@ -853,6 +862,7 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
+            //debug_event('vainfo.class', 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0], 5);
             switch ($tag) {
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
@@ -882,6 +892,15 @@ class vainfo
                     break;
                 case 'unsynchronised_lyric':
                     $parsed['lyrics'] = $data[0];
+                    break;
+                case 'originalyear':
+                    $parsed['original_year'] = $data[0];
+                    break;
+                case 'barcode':
+                    $parsed['barcode'] = $data[0];
+                    break;
+                case 'catalognumber':
+                    $parsed['catalog_number'] = $data[0];
                     break;
                 default:
                     $parsed[$tag] = $data[0];
@@ -922,9 +941,6 @@ class vainfo
                         case 'musicbrainz album type':
                             $parsed['release_type'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'catalognumber':
-                            $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
-                        break;
                         case 'replaygain_track_gain':
                             $parsed['replaygain_track_gain'] = floatval($txxx['data']);
                         break;
@@ -936,6 +952,15 @@ class vainfo
                         break;
                         case 'replaygain_album_peak':
                             $parsed['replaygain_album_peak'] = floatval($txxx['data']);
+                        break;
+                        case 'original_year':
+                            $parsed['original_year'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                        case 'barcode':
+                            $parsed['barcode'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                        case 'catalognumber':
+                            $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     }
                 }

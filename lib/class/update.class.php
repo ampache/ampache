@@ -166,8 +166,16 @@ class Update
                          "  This is a cosmetic update and does not affect any operation)<br />";
         $version[]     = array('version' => '400001', 'description' => $update_string);
 
-        $update_string = "* Make sure preference names are updated to current strings<br />";
+        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" .
+                         "This is part of a major update to how Ampache handles Albums, " .
+                         "Artists and data migration during tag updates.<br /><br />" .
+                         " * Update album disk support to allow 1 instead of 0 by default.<br />" .
+                         " * Add barcode catalog_number and original_year to albums.<br />" .
+                         " * Drop catalog_number from song_data and use album instead.<br />";
         $version[]     = array('version' => '400002', 'description' => $update_string);
+      
+        $update_string = "* Make sure preference names are updated to current strings<br />";
+        $version[]     = array('version' => '400003', 'description' => $update_string);
 
         return $version;
     }
@@ -746,9 +754,34 @@ class Update
     /**
      * update_400002
      *
-     * Make sure preference names are updated to current strings
+     * Update disk to allow 1 instead of making it 0 by default
+     * Add barcode catalog_number and original_year
+     * Drop catalog_number from song_data
      */
     public static function update_400002()
+    {
+        $retval = true;
+        $sql    = "UPDATE `album` SET `album`.`disk` = 1 " .
+                  "WHERE `album`.`disk` = 0;";
+        $retval &= Dba::write($sql);
+        
+        $sql = "ALTER TABLE `album` ADD `original_year` INT(4) NULL," .
+               "ADD `barcode` VARCHAR(64) NULL," .
+               "ADD `catalog_number` VARCHAR(64) NULL;";
+        $retval &= Dba::write($sql);
+        
+        $sql    = "ALTER TABLE `song_data`  DROP `catalog_number`";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400003
+     *
+     * Make sure preference names are updated to current strings
+     */
+    public static function update_400003()
     {
         $retval = true;
         $sql    = "UPDATE `preference` " .
@@ -949,8 +982,7 @@ class Update
         $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Custom metadata - Define field list' " .
                "WHERE `preference`.`name` = 'disabled_custom_metadata_fields_input' ";
-        $retval &= Dba::write($sql);
-
+ 
         return $retval;
     }
 }

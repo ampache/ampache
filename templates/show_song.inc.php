@@ -138,20 +138,22 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
   if (!empty($song->f_albumartist_link)) {
       $songprops[gettext_noop('Album Artist')]   = $song->f_albumartist_link;
   }
-  $songprops[gettext_noop('Album')]      = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year) . ")" : "");
-  $songprops[gettext_noop('Composer')]   = scrub_out($song->composer);
-  $songprops[gettext_noop('Genre')]      = $song->f_tags;
-  $songprops[gettext_noop('Year')]       = $song->year;
-  $songprops[gettext_noop('Links')]      = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
-  $songprops[gettext_noop('Links')]      = "<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+  $songprops[gettext_noop('Album')]         = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year) . ")" : "");
+  $songprops[gettext_noop('Composer')]      = scrub_out($song->composer);
+  $songprops[gettext_noop('Genre')]         = $song->f_tags;
+  $songprops[gettext_noop('Year')]          = $song->year;
+  $songprops[gettext_noop('Original Year')] = scrub_out($song->get_album_original_year($song->album));
+  $songprops[gettext_noop('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
+  $songprops[gettext_noop('Links')] .= "<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
   $songprops[gettext_noop('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
-  $songprops[gettext_noop('Length')]           = scrub_out($song->f_time);
-  $songprops[gettext_noop('Comment')]          = scrub_out($song->comment);
-  $songprops[gettext_noop('Label')]            = AmpConfig::get('label') ? "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($song->label) . "\">" . scrub_out($song->label) . "</a>" : scrub_out($song->label);
-  $songprops[gettext_noop('Song Language')]    = scrub_out($song->language);
-  $songprops[gettext_noop('Catalog Number')]   = scrub_out($song->catalog_number);
-  $songprops[gettext_noop('Bitrate')]          = scrub_out($song->f_bitrate);
-  $songprops[gettext_noop('Channels')]         = scrub_out($song->channels);
+  $songprops[gettext_noop('Length')]         = scrub_out($song->f_time);
+  $songprops[gettext_noop('Comment')]        = scrub_out($song->comment);
+  $songprops[gettext_noop('Label')]          = AmpConfig::get('label') ? "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($song->label) . "\">" . scrub_out($song->label) . "</a>" : scrub_out($song->label);
+  $songprops[gettext_noop('Song Language')]  = scrub_out($song->language);
+  $songprops[gettext_noop('Catalog Number')] = scrub_out($song->get_album_catalog_number($song->album));
+  $songprops[gettext_noop('Barcode')]        = scrub_out($song->get_album_barcode($song->album));
+  $songprops[gettext_noop('Bitrate')]        = scrub_out($song->f_bitrate);
+  $songprops[gettext_noop('Channels')]       = scrub_out($song->channels);
   if ($song->replaygain_track_gain != 0) {
       $songprops[gettext_noop('ReplayGain Track Gain')]   = scrub_out($song->replaygain_track_gain);
   }

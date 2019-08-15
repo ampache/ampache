@@ -967,6 +967,9 @@ class Artist extends database_object implements library_item
                 $updated    = true;
                 $current_id = $artist_id;
                 Stats::migrate('artist', $this->id, $artist_id);
+                UserActivity::migrate('artist', $this->id, $artist_id);
+                Userflag::migrate('artist', $this->id, $artist_id);
+                Rating::migrate('artist', $this->id, $artist_id);
                 Art::migrate('artist', $this->id, $artist_id);
                 self::garbage_collection();
             } // end if it changed

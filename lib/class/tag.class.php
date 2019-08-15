@@ -162,6 +162,7 @@ class Tag extends database_object implements library_item
 
         // Check and see if the tag exists, if not create it, we need the tag id from this
         if (!$tag_id = self::tag_exists($cleaned_value)) {
+            debug_event('tag.class', 'Adding new tag {' . $cleaned_value . '}', 5);
             $tag_id = self::add_tag($cleaned_value);
         }
 
@@ -623,8 +624,7 @@ class Tag extends database_object implements library_item
         if (is_array($ctags)) {
             foreach ($ctags as $ctid => $ctv) {
                 if ($ctv['id'] != '') {
-                    $ctag = new Tag($ctv['id']);
-                    debug_event('tag.class', 'Processing tag {' . $ctag->name . '}...', 5);
+                    $ctag  = new Tag($ctv['id']);
                     $found = false;
 
                     foreach ($editedTags as  $tk => $tv) {
@@ -635,11 +635,10 @@ class Tag extends database_object implements library_item
                     }
 
                     if ($found) {
-                        debug_event('tag.class', 'Already found. Do nothing.', 5);
                         unset($editedTags[$ctag->name]);
                     } else {
                         if ($overwrite) {
-                            debug_event('tag.class', 'Not found in the new list. Delete it.', 5);
+                            debug_event('tag.class', 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
                             $ctag->remove_map($type, $object_id, false);
                         }
                     }
@@ -650,7 +649,6 @@ class Tag extends database_object implements library_item
         // Look if we need to add some new tags
         foreach ($editedTags as  $tk => $tv) {
             if ($tv != '') {
-                debug_event('tag.class', 'Adding new tag {' . $tv . '}', 5);
                 self::add($type, $object_id, $tv, false);
             }
         }
