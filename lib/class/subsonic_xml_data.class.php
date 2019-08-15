@@ -200,9 +200,8 @@ class Subsonic_XML_Data
 
     public static function createFailedResponse($version = '')
     {
-        $response = self::createResponse($version);
-        $response->addAttribute('status', 'failed');
-        debug_event('subsonic_xml_data.class', 'API auth fail', 3);
+        $response = self::createResponse($version, 'failed');
+        debug_event('subsonic_xml_data.class', 'API auth fail ' . $version, 3);
 
         return $response;
     }
@@ -215,7 +214,7 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createResponse($version = '')
+    public static function createResponse($version = '', $status = 'ok')
     {
         if (empty($version)) {
             $version = self::API_VERSION;
@@ -223,7 +222,7 @@ class Subsonic_XML_Data
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         //       $response->addAttribute('type', 'ampache');
-        $response->addAttribute('status', 'ok');
+        $response->addAttribute('status', $status);
         $response->addAttribute('version', $version);
 
         return $response;
