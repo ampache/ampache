@@ -293,6 +293,7 @@ class Auth
     private static function ldap_auth($username, $password, $token = null, $salt = null)
     {
         unset($token, $salt);
+
         return LDAP::auth($username, $password);
     }
 
