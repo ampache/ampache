@@ -443,7 +443,7 @@ class Subsonic_XML_Data
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
         $xalbum->addAttribute('id', self::getAlbumId($album->id));
         $xalbum->addAttribute('album', self::checkName($album->full_name));
-        $xalbum->addAttribute('title', self::formatAlbum($album, $elementName === "album"));
+        $xalbum->addAttribute('title', self::formatAlbum($album));
         $xalbum->addAttribute('name', self::checkName($album->full_name));
         $xalbum->addAttribute('isDir', 'true');
         $xalbum->addAttribute('discNumber', $album->disk);
@@ -654,7 +654,7 @@ class Subsonic_XML_Data
      *
      * @return string|null
      */
-    private static function formatAlbum($album, $checkDisk = true)
+    private static function formatAlbum($album)
     {
         $name = $album->full_name;
         /*        if ($album->year > 0) {
@@ -713,7 +713,7 @@ class Subsonic_XML_Data
     {
         $xdir = $xml->addChild('directory');
         $xdir->addAttribute('id', self::getAlbumId($album->id));
-        $xdir->addAttribute('name', self::formatAlbum($album, false));
+        $xdir->addAttribute('name', self::formatAlbum($album));
         $album->format();
         if ($album->artist_id) {
             $xdir->addAttribute('parent', self::getArtistId($album->artist_id));
