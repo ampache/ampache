@@ -206,8 +206,7 @@ class Art extends database_object
             return false;
         }
 
-        $test  = false;
-        $image = false;
+        $test = false;
         // Check to make sure PHP:GD exists.  If so, we can sanity check the image.
         if (function_exists('ImageCreateFromString') && is_string($source)) {
             $test  = true;
