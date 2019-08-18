@@ -85,24 +85,25 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                     </div>
                 </div>
 
-                <div class="loginoptions">
-                    <?php if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) {
+                <?php if (Mailer::is_mail_enabled()) {
     ?>
-                        <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
-
-                    <?php
-} // end if allow_public_registration
-                    ?>                    <?php
-                    if (Mailer::is_mail_enabled()) {
-                        echo "<a rel=\"nohtml\" class=\"button\" id=\"lostpasswordbutton\" href=\"" . $web_path . "/lostpassword.php\">Lost password</a>";
-                    } ?>
-                </div>
+                    <div class="loginoptions">
+                        <?php if (AmpConfig::get('allow_public_registration')) {
+        ?>
+                            <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
+                        <?php
+    } // end if allow_public_registration
+                        ?>
+                        <a rel=\"nohtml\" class=\"button\" id=\"lostpasswordbutton\" href=\"" . $web_path . "/lostpassword.php\">Lost password</a>
+                    </div>
+                <?php
+} ?>
             </form>
             <?php if ($mobile_session) {
-                        echo "<div id=\"mobileheader\"><!-- This is the header -->";
-                        echo "<h1 id=\"headerlogo\"></h1>";
-                        echo "</div>";
-                    } ?>
+                            echo "<div id=\"mobileheader\"><!-- This is the header -->";
+                            echo "<h1 id=\"headerlogo\"></h1>";
+                            echo "</div>";
+                        } ?>
             <?php
             UI::show_footer();
             ?>
