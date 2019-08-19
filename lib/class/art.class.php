@@ -1564,6 +1564,9 @@ class Art extends database_object
 
             if (preg_match_all('/"ou":"(http.+?)"/', $html, $matches, PREG_PATTERN_ORDER)) {
                 foreach ($matches[1] as $match) {
+                    if (preg_match('/lookaside\.fbsbx\.com/', $match)) {
+                        break;
+                    }
                     $match = rawurldecode($match);
                     debug_event('art.class', 'Found image at: ' . $match, 5);
                     $results = pathinfo($match);
