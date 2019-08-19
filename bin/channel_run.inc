@@ -43,15 +43,15 @@ if ($cargv > 1) {
 
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
             $chanid = (int) $_SERVER['argv'][++$x];
-            $operations_string .= "\n\t" . T_('- Channel ' . $chanid);
+            $operations_string .= '\n\t' . T_('Channel') . ' ' . $chanid;
         }
         elseif ($_SERVER['argv'][$x] == "-v") {
-            $operations_string .= "\n\t" . T_('- Verbose');
+            $operations_string .= '\n\t' . T_('Verbose');
             $verbose = true;
         }
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
             $port = (int) $_SERVER['argv'][++$x];
-            $operations_string .= "\n\t" . T_('- Port ' . $port);
+            $operations_string .= '\n\t' . T_('Port') . ' ' . $port;
         }
     }
 }
@@ -307,9 +307,9 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
 
 function usage()
 {
-    echo T_("- Channel Listening -");
+    echo T_("Usage:");
     echo "\n";
-    echo T_("Usage: channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]");
+    echo T_("channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]");
     echo "\n\t";
     echo "\n-c {CHANNEL ID}\t";
     echo T_('Channel id to start');

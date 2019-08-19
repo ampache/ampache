@@ -381,6 +381,7 @@ class Search extends playlist_object
             if (AmpConfig::get('show_played_times')) {
                 $this->types[] = array(
                     'name' => 'played_times',
+                    /* HINT: Number of times object has been played */
                     'label' => T_('# Played'),
                     'type' => 'numeric',
                     'widget' => array('input', 'number')

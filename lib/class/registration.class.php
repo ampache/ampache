@@ -107,7 +107,9 @@ Website: %s
         $mailer->set_default_sender();
 
         $mailer->subject = sprintf(T_("Account enabled at %s"), AmpConfig::get('site_title'));
-        $mailer->message = sprintf(T_("Your account %s has been enabled\n\nPlease logon using %s"), $username, AmpConfig::get('web_path') . "/login.php");
+        /* HINT: %1 Username, %2 Ampache Login Page */
+        $mailer->message = sprintf(T_("Your account %1$s has been enabled\n\n
+            Please logon using %2$s"), $username, AmpConfig::get('web_path') . "/login.php");
 
         $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;

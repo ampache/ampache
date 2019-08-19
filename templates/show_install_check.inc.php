@@ -47,11 +47,13 @@ require $prefix . '/templates/install_header.inc.php';
     </tr>
     <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
     <tr>
+        /* HINT: Ampache config 'ampache.cfg.php.dist' */
         <td><?php echo sprintf(T_('%s is readable'), 'ampache.cfg.php.dist'); ?></td>
         <td><?php echo debug_result(is_readable($prefix . '/config/ampache.cfg.php.dist')); ?></td>
         <td><?php echo T_('This tests whether the configuration template can be read.'); ?></td>
     </tr>
     <tr>
+        /* HINT: Ampache sql 'ampache.sql' */
         <td><?php echo sprintf(T_('%s is readable'), 'ampache.sql'); ?></td>
         <td><?php echo debug_result(is_readable($prefix . '/sql/ampache.sql')); ?></td>
         <td><?php echo T_('This tests whether the file needed to initialize the database structure is available.'); ?></td>
