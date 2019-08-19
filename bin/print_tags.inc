@@ -55,7 +55,8 @@ $file_pattern = $catalog->rename_pattern;
 
 $info = new vainfo($filename, array('music'), '', '', '', $dir_pattern, $file_pattern);
 if(isset($dir_pattern) || isset($file_pattern)) {
-    printf(T_('Using: %s AND %s for file pattern matching'), $dir_pattern, $file_pattern);
+    /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
+    printf(T_('Using: %1$s AND %2$s for file pattern matching'), $dir_pattern, $file_pattern);
     print "\n";
 }
 $info->get_info();

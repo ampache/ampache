@@ -215,9 +215,9 @@ function ob_html_strip($string) {
 function usage() {
     echo "\n";
     echo "----------------------------------------------------------\n\t\t";
-    echo T_("- Catalog Update Help -");
+    echo T_("Usage:");
     echo "\n\033[32m";
-    echo T_("Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-u|-i|-o]") . "\033[0m (\033[31m!\033[0m)";
+    echo T_("catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-u|-i|-o]") . "\033[0m (\033[31m!\033[0m)";
     echo "\033[0m\n";
     echo "----------------------------------------------------------";
     echo "\n";
