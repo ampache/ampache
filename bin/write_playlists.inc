@@ -95,7 +95,7 @@ echo "Playlist export completed.\n";
 /* FUNCTIONS */
 function usage() {
     $desc1 = T_("This will dump a collection of playlists files based on type");
-    $desc2 = T_("Types:");
+    $desc2 = T_("Playlists");
     $desc3 = T_("Dumps all of your playlists");
     $desc4 = T_("Dumps all Albums as individual playlists");
     $desc5 = T_("Dumps all Artists as individual playlists");

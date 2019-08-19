@@ -61,9 +61,9 @@ $app->run();
 
 function usage()
 {
-    echo T_("- WebSocket server -");
+    echo T_("Usage:");
     echo "\n";
-    echo T_("Usage: websocket_run.inc [-p {PORT}|-v]");
+    echo T_("websocket_run.inc [-p {PORT}|-v]");
     echo "\n\t"; 
     echo "\n-p {PORT}\t";
     echo T_('Listening port, default 8100');

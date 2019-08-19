@@ -188,7 +188,7 @@ class Catalog_local extends Catalog
         if (!Core::is_readable($path)) {
             debug_event('local.catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
             /* HINT: directory (file path) */
-            AmpError::add('general', sprintf(T_('"%s" is not readable or does not exist'), scrub_out($data['path'])));
+            AmpError::add('general', sprintf(T_("I couldn't read this file; does it exist? %s"), scrub_out($data['path'])));
 
             return false;
         }
@@ -347,7 +347,7 @@ class Catalog_local extends Catalog
                 // not readable, warn user
                 debug_event('local.catalog', "$full_file is not readable by Ampache", 2);
                 /* HINT: FullFile */
-                AmpError::add('catalog_add', sprintf(T_('"%s" is not readable by Ampache'), $full_file));
+                AmpError::add('catalog_add', sprintf(T_("I couldn't read this file; does it exist? %s"), $full_file));
 
                 return false;
             }
@@ -579,7 +579,7 @@ class Catalog_local extends Catalog
 
             if (!Core::is_readable(Core::conv_lc_file($row['file']))) {
                 /* HINT: filename (file path) */
-                AmpError::add('general', sprintf(T_('"%s" does not exist or is not readable'), $row['file']));
+                AmpError::add('general', sprintf(T_("I couldn't read this file; does it exist? %s"), $row['file']));
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }

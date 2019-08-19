@@ -218,7 +218,7 @@ function ShowVisualizer()
             $('.jp-interface').css('background-color', '#000');
             $('.jp-playlist').css('background-color', '#000');
         } else {
-            alert("<?php echo T_('Your browser doesn\'t support this feature.'); ?>");
+            alert("<?php echo T_("Your browser doesn't support this feature."); ?>");
         }
     }
 }
