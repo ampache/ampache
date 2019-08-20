@@ -108,25 +108,26 @@ if (!install_create_config()) {
  * This just prints out the required params for this script
  **/
 function usage() {
-    echo "Usage: install_db.inc [options]";
+    echo T_("Usage:") . "\n";
+    echo "install_db.inc [" . T_('Options') . "]";
     echo "\n\t-U, --database-user\t\t\t";
-    echo 'MySQL Admin User';
+    echo T('MySQL Administrative Username');
     echo "\n\t-P, --database-password\t\t\t";
-    echo 'MySQL Admin Password';
+    echo T('MySQL Administrative Password');
     echo "\n\t-h, --database-host\t\t\t";
-    echo 'MySQL Hostname';
+    echo T('MySQL Hostname');
     echo "\n\t--database-port\t\t\t";
-    echo 'MySQL Database Port';
+    echo T('MySQL Port');
     echo "\n\t-d, --database-name\t\t\t";
-    echo "MySQL Database Name";
+    echo T("Database Name");
     echo "\n\t-u, --ampache-database-user\t";
-    echo 'MySQL Application Username';
+    echo T('MySQL Username');
     echo "\n\t-p, --ampache-database-password\t";
-    echo 'MySQL Application Password';
+    echo T('MySQL Password');
     echo "\n\t-w, --webpath\t\t\t\t";
-    echo 'Web path';
+    echo T('Web path');
     echo "\n\t-f, --force\t\t\t\t";
-    echo 'Force installation', "\n";
+    echo T_('Force installation'), "\n";
 
     exit(1);
 }

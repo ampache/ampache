@@ -251,7 +251,7 @@ class Catalog_local extends Catalog
         if (!chdir($path)) {
             debug_event('local.catalog', "Unable to chdir to $path", 2);
             /* HINT: directory (file path) */
-            AmpError::add('catalog_add', sprintf(T_('Unable to change directory to "%s"'), $path));
+            AmpError::add('catalog_add', sprintf(T_('Unable to change directory to %s'), $path));
 
             return false;
         }

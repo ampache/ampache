@@ -33,7 +33,13 @@ require_once $prefix . '/lib/init.php';
 
 $options = getopt('e:l:n:p:u:w:');
 if (empty($options) || !isset($options['u'])) {
-    echo "Usage: add_user.inc -u <username> [ -l <access level> ] [ -p <password ] [ -e <email> ] [ -w <website> ] [ -n <name> ]\n";
+    echo T_("Usage:") . "\n";
+    echo "add_user.inc -u <" . T_('Username') .
+        "> [ -l <" . T_('Access Level') .
+        "> ] [ -p <" . T_('Password') .
+        "> ] [ -e <" . T_('E-mail') .
+        "> ] [ -w <" . T_('Website') .
+        "> ] [ -n <" . T_('Name') . "> ]\n";
     exit(1);
 }
 

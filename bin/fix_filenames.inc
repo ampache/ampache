@@ -39,7 +39,7 @@ ob_end_clean();
 //Core::get_global('i_am_crazy') = true;
 
 if (!function_exists('iconv')) {
-    echo T_("ERROR: Iconv required for this functionality, quitting");
+    echo T_("Error: Iconv required for this functionality, quitting");
     echo "\n";
     return false;
 }
@@ -185,7 +185,8 @@ function charset_rename_file($full_file, $translated_filename) {
         $path .= "/" . $dir;
 
         if (!is_dir($path)) {
-            echo "\tMaking $path directory\n";
+            /* HINT: filename (Folder path) */
+            printf (T_('Making directory: %s'), $path);
             $results_mkdir = mkdir($path);
             if (!$results_mkdir) {
                 /* HINT: filename (File path) */

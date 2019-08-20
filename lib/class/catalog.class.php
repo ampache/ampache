@@ -1435,7 +1435,7 @@ abstract class Catalog extends database_object
         // Get all of the albums in this catalog
         $albums = $this->get_album_ids();
 
-        echo "Starting Dump Album Art...\n";
+        echo T_("Starting Album Art Dump") . "\n";
         $count = 0;
 
         // Run through them and get the art!
@@ -1485,18 +1485,22 @@ abstract class Catalog extends database_object
                     } // end metadata
                     $count++;
                     if (!($count % 100)) {
-                        echo "Written: $count. . .\n";
+                        /* HINT: count of files written */
+                        printf(T_("Art files written: %s"), $count);
+                        echo "\n";
                         debug_event('catalog.class', "$album->name Art written to $file", 5);
                     }
                 } else {
                     debug_event('catalog.class', "Unable to open $file for writing", 3);
-                    echo "Error: unable to open file for writing [$file]\n";
+                    /* HINT: filename (file path) */
+                    printf(T_("Error: Unable to write to art file [%s]"), $file);
+                    echo "\n";
                 }
             }
             fclose($file_handle);
         }
 
-        echo "Album Art Dump Complete\n";
+        echo T_("Album Art Dump Complete") . "\n";
     }
 
     /**

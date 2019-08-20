@@ -131,7 +131,7 @@ while(true)
                 $client_socks[] = $new_client;
                 $channel->update_listeners(count($client_socks), true);
                 debug_event('channel_run', 'Now there are total '. count($client_socks) . ' clients.', 4);
-                echo "New client connected.\n";
+                echo T_("Client connected") . "\n";
                 ob_flush();
             }
 
@@ -301,7 +301,7 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     }
     $channel->update_listeners(count($client_socks));
     debug_event('channel_run', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', 4);
-    echo "Client disconnected.\n";
+    echo T_("Client disconnected") . "\n";
     ob_flush();
 }
 
