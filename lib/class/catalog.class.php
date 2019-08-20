@@ -1743,26 +1743,26 @@ abstract class Catalog extends database_object
             }
         }
 
+        // Duplicate arts if required
+        if ($song->artist != $new_song->artist) {
+            if (!Art::has_db($new_song->artist, 'artist')) {
+                Art::duplicate('artist', $song->artist, $new_song->artist);
+            }
+        }
+        if ($song->albumartist != $new_song->albumartist) {
+            if (!Art::has_db($new_song->albumartist, 'artist')) {
+                Art::duplicate('artist', $song->albumartist, $new_song->albumartist);
+            }
+        }
+        if ($song->album != $new_song->album) {
+            if (!Art::has_db($new_song->album, 'album')) {
+                Art::duplicate('album', $song->album, $new_song->album);
+            }
+        }
+
         $info = Song::compare_song_information($song, $new_song);
         if ($info['change']) {
             debug_event('catalog.class', "$song->file : differences found, updating database", 4);
-
-            // Duplicate arts if required
-            if ($song->artist != $new_song->artist) {
-                if (!Art::has_db($new_song->artist, 'artist')) {
-                    Art::duplicate('artist', $song->artist, $new_song->artist);
-                }
-            }
-            if ($song->albumartist != $new_song->albumartist) {
-                if (!Art::has_db($new_song->albumartist, 'artist')) {
-                    Art::duplicate('artist', $song->albumartist, $new_song->albumartist);
-                }
-            }
-            if ($song->album != $new_song->album) {
-                if (!Art::has_db($new_song->album, 'album')) {
-                    Art::duplicate('album', $song->album, $new_song->album);
-                }
-            }
 
             Song::update_song($song->id, $new_song);
 
