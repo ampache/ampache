@@ -668,7 +668,7 @@ abstract class Catalog extends database_object
             $insert_id = Dba::insert_id();
 
             if (!$insert_id) {
-                AmpError::add('general', T_('Catalog Insert Failed check debug logs'));
+                AmpError::add('general', T_('Failed to create the catalog, check the debug logs'));
                 debug_event('catalog.class', 'Insert failed: ' . json_encode($data), 2);
 
                 return 0;
@@ -1435,7 +1435,7 @@ abstract class Catalog extends database_object
         // Get all of the albums in this catalog
         $albums = $this->get_album_ids();
 
-        echo "Starting Dump Album Art...\n";
+        echo T_("Starting Album Art Dump") . "\n";
         $count = 0;
 
         // Run through them and get the art!
@@ -1485,18 +1485,22 @@ abstract class Catalog extends database_object
                     } // end metadata
                     $count++;
                     if (!($count % 100)) {
-                        echo "Written: $count. . .\n";
+                        /* HINT: count of files written */
+                        printf(T_("Art files written: %s"), $count);
+                        echo "\n";
                         debug_event('catalog.class', "$album->name Art written to $file", 5);
                     }
                 } else {
                     debug_event('catalog.class', "Unable to open $file for writing", 3);
-                    echo "Error: unable to open file for writing [$file]\n";
+                    /* HINT: filename (file path) */
+                    printf(T_("Error: Unable to write to art file [%s]"), $file);
+                    echo "\n";
                 }
             }
             fclose($file_handle);
         }
 
-        echo "Album Art Dump Complete\n";
+        echo T_("Album Art Dump Complete") . "\n";
     }
 
     /**
@@ -1703,9 +1707,14 @@ abstract class Catalog extends database_object
         }
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
                                         $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
-        self::migrate('artist', $song->artist, $new_song->artist);
-        self::migrate('artist', $song->albumartist, $new_song->albumartist);
-        self::migrate('album', $song->album, $new_song->album);
+        $update_time = time();
+        // set `song`.`update_time` when artist or album details change
+        if (self::migrate('artist', $song->artist, $new_song->artist) ||
+                self::migrate('artist', $song->albumartist, $new_song->albumartist) ||
+                self::migrate('album', $song->album, $new_song->album)) {
+            debug_event('catalog.class', 'Set update_time for ' . $song->id . ' due to artist/album changes.', 5);
+            Song::update_utime($song->id, $update_time);
+        }
         $new_song->title = self::check_title($new_song->title, $new_song->file);
 
         if ($artist_mbid) {
@@ -1971,7 +1980,7 @@ abstract class Catalog extends database_object
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
         }
-        UI::update_text('', sprintf(T_('Catalog Verify Done. %d of %d files updated.'), $verified['updated'], $verified['total']));
+        UI::update_text('', sprintf(T_('Catalog Verify done. %d of %d files updated.'), $verified['updated'], $verified['total']));
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }
@@ -2576,7 +2585,7 @@ abstract class Catalog extends database_object
                 } // end if update
 
                 if ($catalog_id <= 0) {
-                    AmpError::add('general', T_("This subdirectory is not part of an existing catalog. Update cannot be processed."));
+                    AmpError::add('general', T_("This subdirectory is not inside an existing Catalog. The update can not be processed."));
                 }
                 break;
             case 'gather_media_art':
@@ -2584,7 +2593,7 @@ abstract class Catalog extends database_object
                     $catalogs = Catalog::get_catalogs();
                 }
 
-                // Iterate throught the catalogs and gather as needed
+                // Iterate throughout the catalogs and gather as needed
                 foreach ($catalogs as $catalog_id) {
                     $catalog = Catalog::create_from_id($catalog_id);
                     if ($catalog !== null) {
@@ -2605,6 +2614,7 @@ abstract class Catalog extends database_object
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
+     * @return boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
@@ -2614,6 +2624,10 @@ abstract class Catalog extends database_object
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
             Rating::migrate($object_type, $old_object_id, $new_object_id);
             Art::migrate($object_type, $old_object_id, $new_object_id);
+
+            return true;
         }
+
+        return false;
     }
 }// end of catalog class
