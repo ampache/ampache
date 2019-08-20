@@ -174,7 +174,9 @@ function sort_find_home($song, $sort_pattern, $base = null) {
     $home .= "/$sort_pattern";
     // dont send a mismatched file!
     if (strpos($sort_pattern, '%') !== false) {
-        echo "\tERROR with destination: " . $sort_pattern . "\n\n";
+        /* HINT: $sort_pattern after replacing %x values */
+        printf(T_('Error filtering the sort_pattern %s'), $sort_pattern);
+        echo "\n\n";
         return false;
     }
 
@@ -233,17 +235,16 @@ function sort_move_file($song, $fullname) {
 
         /* We need to check for the existence of this directory */
         if (!is_dir($path)) {
-            if ($test_mode) {
-                echo "\t";
-                printf (T_('Making: %s Directory'), $path);
-                echo "\n";
-            }
-            else {
+            echo "\t";
+            /* HINT: Directory (File path) */
+            printf (T_('Create directory %s'), $path);
+            echo "\n";
+            if (!Core::get_global('test_mode')) {
                 debug_event('sort_files.inc', "Creating $path directory", 4);
                 $results = mkdir($path);
                 if (!$results) {
                     /* HINT: filename (File path) */
-                    printf (T_('Unable to create "%s", move failed'), $path);
+                    printf (T_('Error: Directory %s is not writable'), $path);
                     echo "\n";
                     return false;
                 }

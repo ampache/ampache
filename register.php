@@ -92,12 +92,12 @@ switch ($_REQUEST['action']) {
 
         if (AmpConfig::get('user_agreement')) {
             if (!$_POST['accept_agreement']) {
-                AmpError::add('user_agreement', T_("You <U>must</U> accept the user agreement"));
+                AmpError::add('user_agreement', T_("You must accept the user agreement"));
             }
         } // if they have to agree to something
 
         if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
-            AmpError::add('username', T_("Username is required"));
+            AmpError::add('username', T_("You must enter a Username"));
         }
 
         // Check the mail for correct address formation.
@@ -128,7 +128,7 @@ switch ($_REQUEST['action']) {
         }
 
         if (!User::check_username((string) $username)) {
-            AmpError::add('duplicate_user', T_("Error Username already exists"));
+            AmpError::add('duplicate_user', T_("That Username already exists"));
         }
 
         // If we've hit an error anywhere up there break!

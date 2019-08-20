@@ -84,9 +84,13 @@ foreach ($items as $item) {
 
     $plstr = $pl->{'get_' . $ext . '_string'}();
     if (file_put_contents($filename, $plstr) === false) {
-        echo "Error: cannot write playlist file `" . $filename . "`.\n";
+        /* HINT: playlist (file path) */
+        sprintf(T_('Error: cannot write playlist file %s'), $path);
+        echo "\n";
     } else {
-        echo "Playlist file `" . $filename . "` created.\n";
+        /* HINT: playlist (file path) */
+        sprintf(T_('Playlist created %s'), $path);
+        echo "\n";
     }
 }
 
