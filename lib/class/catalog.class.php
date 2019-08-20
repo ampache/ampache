@@ -1618,7 +1618,7 @@ abstract class Catalog extends database_object
      */
     public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern = '', $rename_pattern = '')
     {
-        debug_event('catalog.class', 'Reading tags from ' . $media->file, 5);
+        debug_event('catalog.class', 'Reading tags from ' . $media->file, 4);
 
         $catalog = Catalog::create_from_id($media->catalog);
         $results = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
@@ -1745,7 +1745,7 @@ abstract class Catalog extends database_object
 
         $info = Song::compare_song_information($song, $new_song);
         if ($info['change']) {
-            debug_event('catalog.class', "$song->file : differences found, updating database", 5);
+            debug_event('catalog.class', "$song->file : differences found, updating database", 4);
 
             // Duplicate arts if required
             if ($song->artist != $new_song->artist) {
