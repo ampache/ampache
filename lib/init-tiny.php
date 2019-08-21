@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,8 @@
 // Do a check for PHP5.4 because nothing will work without it
 if (version_compare(phpversion(), '5.4.0', '<')) {
     echo "ERROR: Ampache requires PHP version >= 5.4";
-    exit;
+
+    return false;
 }
 
 error_reporting(E_ERROR); // Only show fatal errors in production
@@ -39,7 +40,7 @@ $configfile   = $prefix . '/config/ampache.cfg.php';
 // We still allow scripts to run (it could be the purpose of the maintenance)
 if (!defined('CLI')) {
     if (file_exists($prefix . '/.maintenance')) {
-        require_once($prefix . '/.maintenance');
+        require_once $prefix . '/.maintenance';
     }
 }
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,13 +31,9 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
             <th class="cel_add"></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+            <th class="cel_year"><?php echo T_('Year'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-            <?php if (Access::check('interface', 50)) {
-    ?>
-            <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-            <?php
-} ?>
         </tr>
     </thead>
     <tbody>
@@ -52,21 +48,14 @@ foreach ($data as $row) {
 
     $has_allowed_agent = true;
     $has_allowed_time  = true;
-    $is_allowed        = Access::check('interface', '100') || $GLOBALS['user']->id == $row_user->id;
+    $is_allowed        = Access::check('interface', '100') || Core::get_global('user')->id == $row_user->id;
     if (!$is_allowed) {
         $has_allowed_time  = Preference::get_by_user($row_user->id, 'allow_personal_info_time');
         $has_allowed_agent = Preference::get_by_user($row_user->id, 'allow_personal_info_agent');
     }
 
-    if ($is_allowed || $has_allowed_agent) {
-        $agent = $row['agent'];
-        if (!empty($row['geo_name'])) {
-            $agent .= ' - ' . $row['geo_name'];
-        }
-    }
-
     if ($is_allowed || $has_allowed_time) {
-        $interval = intval(time() - $row['date']);
+        $interval = (int) (time() - $row['date']);
 
         if ($interval < 60) {
             $time_string = sprintf(nT_('%d second ago', '%d seconds ago', $interval), $interval);
@@ -101,17 +90,17 @@ foreach ($data as $row) {
             <?php if (AmpConfig::get('directplay')) {
         ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $nb . '_' . $song->id); ?>
-                <?php if (Stream_Playlist::check_autoplay_append()) {
-            ?>
-                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $nb . '_' . $song->id); ?>
-                <?php
-        } ?>
                 <?php if (Stream_Playlist::check_autoplay_next()) {
             ?>
                     <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $nb . '_' . $song->id); ?>
                 <?php
         } ?>
-        <?php
+                <?php if (Stream_Playlist::check_autoplay_append()) {
+            ?>
+                    <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $nb . '_' . $song->id); ?>
+                <?php
+        } ?>
+            <?php
     } ?>
             </div>
         </td>
@@ -126,21 +115,14 @@ foreach ($data as $row) {
         </td>
         <td class="cel_album"><?php echo $song->f_album_link; ?></td>
         <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
+        <td class="cel_artist"><?php echo $song->year; ?></td>
         <td class="cel_username">
             <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
             <?php echo scrub_out($row_user->fullname); ?>
             </a>
         </td>
         <td class="cel_lastplayed"><?php echo $time_string; ?></td>
-        <?php if (Access::check('interface', 50)) {
-        ?>
-        <td class="cel_agent">
-            <?php if (!empty($agent)) {
-            echo UI::get_icon('info', $agent);
-        } ?>
         </td>
-        <?php
-    } ?>
     </tr>
 <?php
     ++$nb;
@@ -163,11 +145,6 @@ foreach ($data as $row) {
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
-            <?php if (Access::check('interface', 50)) {
-        ?>
-            <th class="cel_agent"><?php echo T_('Agent'); ?></th>
-            <?php
-    } ?>
         </tr>
     </tfoot>
 </table>

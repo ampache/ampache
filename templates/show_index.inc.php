@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,18 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+$user = Core::get_global('user');
 
-
-if (@is_readable(AmpConfig::get('prefix') . '/config/motd.php')) {
-    echo '<div id="motd">';
-    require_once AmpConfig::get('prefix') . '/config/motd.php';
-    echo '</div><br />';
-}
-
-foreach (Plugin::get_plugins('display_home') as $plugin_name) {
-    $plugin = new Plugin($plugin_name);
-    if ($plugin->load($GLOBALS['user'])) {
-        $plugin->_plugin->display_home();
+if ($user) {
+    foreach (Plugin::get_plugins('display_home') as $plugin_name) {
+        $plugin = new Plugin($plugin_name);
+        if ($plugin->load(Core::get_global('user'))) {
+            $plugin->_plugin->display_home();
+        }
     }
 }
 ?>

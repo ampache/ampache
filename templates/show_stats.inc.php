@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,12 @@ $catalogs = Catalog::get_catalogs();
             <th><?php echo T_('Albums'); ?></th>
             <th><?php echo T_('Artists'); ?></th>
             <th><?php echo T_('Songs'); ?></th>
-            <th><?php echo T_('Videos'); ?></th>
+            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
+    ?>
+                <th><?php echo T_('Videos'); ?></th>
+            <?php
+}
+    ?>
             <th><?php echo T_('Tags'); ?></th>
             <th><?php echo T_('Catalog Size'); ?></th>
             <th><?php echo T_('Catalog Time'); ?></th>
@@ -46,7 +51,12 @@ $catalogs = Catalog::get_catalogs();
             <td><?php echo $stats['albums']; ?></td>
             <td><?php echo $stats['artists']; ?></td>
             <td><?php echo $stats['songs']; ?></td>
-            <td><?php echo $stats['videos']; ?></td>
+            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
+        ?>
+                <td><?php echo $stats['videos']; ?></td>
+            <?php
+    }
+    ?>
             <td><?php echo $stats['tags']; ?></td>
             <td><?php echo $stats['formatted_size']; ?></td>
             <td><?php echo $stats['time_text']; ?></td>
@@ -73,33 +83,37 @@ $catalogs = Catalog::get_catalogs();
             <th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
             <th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
             <th class="cel_songs"><?php echo T_('Songs'); ?></th>
+            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
+        ?>
             <th class="cel_video"><?php echo T_('Videos'); ?></th>
+            <?php
+    }
+    ?>
             <th class="cel_total"><?php echo T_('Catalog Size'); ?></th>
         </tr>
     </thead>
     <tbody>
 <?php foreach ($catalogs as $catalog_id) {
-    $catalog = Catalog::create_from_id($catalog_id);
-    $catalog->format();
-    $stats = Catalog::get_stats($catalog_id); ?>
+        $catalog = Catalog::create_from_id($catalog_id);
+        $catalog->format();
+        $stats = Catalog::get_stats($catalog_id); ?>
     <tr>
         <td class="cel_catalog"><?php echo $catalog->name; ?></td>
-        <td class="cel_path"><?php echo scrub_out($catalog->f_path); ?></td>
+        <td class="cel_path"><?php echo scrub_out($catalog->f_full_info); ?></td>
         <td class="cel_lastverify"><?php echo scrub_out($catalog->f_update); ?></td>
         <td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
         <td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
         <td class="cel_songs"><?php echo scrub_out($stats['songs']); ?></td>
-        <td class="cel_video"><?php echo scrub_out($stats['videos']); ?></td>
+            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
+            ?>
+                <td class="cel_video"><?php echo scrub_out($stats['videos']); ?></td>
+            <?php
+        } ?>
         <td class="cel_total"><?php echo scrub_out($stats['formatted_size']); ?></td>
     </tr>
 <?php
-} ?>
+    } ?>
     </tbody>
 </table>
-<?php UI::show_box_bottom(); ?>
-
-<?php
-if (AmpConfig::get('statistical_graphs')) {
-        Graph::display_from_request();
-    }
+<?php UI::show_box_bottom();
 ?>

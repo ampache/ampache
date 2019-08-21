@@ -66,7 +66,7 @@ class UPnPFind
      *
      * Thanks to artheus (https://github.com/artheus/PHP-UPnP/blob/master/phpupnp.class.php)
      *
-     * @param int $timeout Timeout to wait for responses
+     * @param integer $timeout Timeout to wait for responses
      *
      * @return array  Response
      */
@@ -87,13 +87,15 @@ class UPnPFind
 
         $response = array();
         do {
-            $buf = null;
-            @socket_recvfrom($socket, $buf, 1024, MSG_WAITALL, $from, $port);
+            $buf  = null;
+            $from = null;
+            $port = null;
+            socket_recvfrom($socket, $buf, 1024, MSG_WAITALL, $from, $port);
 
-            if (!is_null($buf)) {
+            if ($buf !== null) {
                 $response[] = self::discoveryReponse2Array($buf);
             }
-        } while (!is_null($buf));
+        } while ($buf !== null);
         //socket_close($socket);
 
         return $response;

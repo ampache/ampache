@@ -1,26 +1,26 @@
 {
-	"name": "ampache/ampache-soundcloud",
-	"description": "SoundCloud catalog for Ampache.",
-	"homepage": "http://ampache.org",
-	"keywords": ["ampache", "soundcloud", "catalog"],
-	"type": "ampache-catalog",
-	"license": "GPL-2.0",
+    "name": "ampache/ampache-soundcloud",
+    "description": "SoundCloud catalog for Ampache.",
+    "homepage": "http://ampache.org",
+    "keywords": ["ampache", "soundcloud", "catalog"],
+    "type": "ampache-catalog",
+    "license": "GPL-2.0",
     "require": {
-		"mptre/php-soundcloud": "2.*"
+        "mptre/php-soundcloud": "2.*"
     },
-	"repositories":
-	[
-		{
-			"type": "package",
-			"package": {
-				"name": "mptre/php-soundcloud",
-				"version": "2.3.2",
-				"source": {
-					"url": "https://github.com/mptre/php-soundcloud.git",
-					"type": "git",
-					"reference": "v2.3.2"
-				}
-			}
-		}
-	]
+    "repositories":
+    [
+        {
+            "type": "package",
+            "package": {
+                "name": "mptre/php-soundcloud",
+                "version": "2.3.2",
+                "source": {
+                    "url": "https://github.com/mptre/php-soundcloud.git",
+                    "type": "git",
+                    "reference": "v2.3.2"
+                }
+            }
+        }
+    ]
 }

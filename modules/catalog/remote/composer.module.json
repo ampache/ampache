@@ -1,11 +1,11 @@
 {
-	"name": "ampache/ampache-remote",
-	"description": "Remote catalog for Ampache.",
-	"homepage": "http://ampache.org",
-	"keywords": ["ampache", "remote", "catalog"],
-	"type": "ampache-catalog",
-	"license": "GPL-2.0",
+    "name": "ampache/ampache-remote",
+    "description": "Remote catalog for Ampache.",
+    "homepage": "http://ampache.org",
+    "keywords": ["ampache", "remote", "catalog"],
+    "type": "ampache-catalog",
+    "license": "GPL-2.0",
     "require": {
-		"ampache/ampacheapi-php": "1.*"
+        "ampache/ampacheapi-php": "1.*"
     }
 }

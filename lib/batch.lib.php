@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,23 +25,23 @@
  *
  * Takes an array of media ids and returns an array of the actual filenames
  *
- * @param    array    $media_ids    Media IDs.
+ * @param array $media_ids Media IDs.
+ * @return array
  */
 function get_media_files($media_ids)
 {
     $media_files = array();
-
-    $total_size = 0;
+    $total_size  = 0;
     foreach ($media_ids as $element) {
         if (is_array($element)) {
             if (isset($element['object_type'])) {
-                $type = $element['object_type'];
-                $id   = $element['object_id'];
+                $type    = $element['object_type'];
+                $mediaid = $element['object_id'];
             } else {
-                $type = array_shift($element);
-                $id   = array_shift($element);
+                $type      = array_shift($element);
+                $mediaid   = array_shift($element);
             }
-            $media = new $type($id);
+            $media = new $type($mediaid);
         } else {
             $media = new Song($element);
         }
@@ -80,8 +80,9 @@ function send_zip($name, $media_files)
     if (!@include_once(AmpConfig::get('prefix') . '/lib/vendor/maennchen/zipstream-php/src/ZipStream.php')) {
         throw new Exception('Missing ZipStream dependency.');
     }
-    
-    $arc     = new ZipStream\ZipStream($name . ".zip");
+
+    $filter  = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+    $arc     = new ZipStream\ZipStream($filter . ".zip");
     $options = array(
         'comment' => AmpConfig::get('file_zip_comment'),
     );
@@ -91,6 +92,7 @@ function send_zip($name, $media_files)
             $arc->addFileFromPath($dir . "/" . basename($file), $file, $options);
         }
     }
+    debug_event('batch.lib', 'Sending Zip ' . $name, 5);
 
     $arc->finish();
 } // send_zip
@@ -101,6 +103,7 @@ function send_zip($name, $media_files)
  * Check that an object type is allowed to be zipped.
  *
  * @param string $object_type
+ * @return boolean
  */
 function check_can_zip($object_type)
 {

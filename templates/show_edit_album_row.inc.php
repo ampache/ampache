@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -95,6 +95,18 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Type') ?></td>
                 <td><input type="text" name="release_type" value="<?php echo $libitem->release_type; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>
+                <td><input type="text" name="catalog_number" value="<?php echo $libitem->catalog_number; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Barcode') ?></td>
+                <td><input type="text" name="barcode" value="<?php echo $libitem->barcode; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Original Year') ?></td>
+                <td><input type="text" name="original_year" value="<?php echo $libitem->original_year; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>

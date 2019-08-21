@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,7 @@ class Plugin
     public function __construct($name)
     {
         /* Load the plugin */
-        if (!$this->_get_info($name)) {
+        if (!$this->has_info($name)) {
             return false;
         }
 
@@ -45,11 +45,11 @@ class Plugin
 
 
     /**
-     * _get_info
+     * has_info
      * This actually loads the config file for the plugin the name of the
      * class contained within the config file must be Plugin[NAME OF FILE]
      */
-    public function _get_info($cname)
+    public function has_info($cname)
     {
         try {
             $basedir = AmpConfig::get('prefix') . '/modules/plugins';
@@ -58,10 +58,10 @@ class Plugin
             } else {
                 $name = 'ampache-' . strtolower($cname);
             }
-            
+
             /* Require the file we want */
-            if (!@include_once($basedir . '/' . $name . '/' . $cname . '.plugin.php')) {
-                debug_event('plugin', 'Cannot include plugin `' . $cname . '`.', 1);
+            if (!include_once($basedir . '/' . $name . '/' . $cname . '.plugin.php')) {
+                debug_event('plugin.class', 'Cannot include plugin `' . $cname . '`.', 1);
 
                 return false;
             }
@@ -73,19 +73,19 @@ class Plugin
                 return false;
             }
         } catch (Exception $ex) {
-            debug_event('plugin', 'Error when initializing plugin `' . $cname . '`: ' . $ex->getMessage(), 1);
+            debug_event('plugin.class', 'Error when initializing plugin `' . $cname . '`: ' . $ex->getMessage(), 1);
 
             return false;
         }
 
         return true;
-    } // _get_info
+    } // has_info
 
     /**
      * get_plugins
      * This returns an array of plugin names
      */
-    public static function get_plugins($type='')
+    public static function get_plugins($type = '')
     {
         // make static cache for optimization when multiple call
         static $plugins_list = array();
@@ -100,7 +100,7 @@ class Plugin
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
-            debug_event('Plugins', 'Unable to read plugins directory', '1');
+            debug_event('plugin.class', 'Unable to read plugins directory', 1);
         }
 
         // Recurse the directory
@@ -110,35 +110,35 @@ class Plugin
             }
             // Take care of directories only
             if (!is_dir($basedir . '/' . $file)) {
-                debug_event('Plugins', $file . ' is not a directory.', 3);
+                debug_event('plugin.class', $file . ' is not a directory.', 3);
                 continue;
             }
-            
+
             // If directory name start with ampache-, this is an external plugin and some parsing is required
             if (strpos($file, "ampache-") === 0) {
                 $cfile = ucfirst(substr($file, 8));
             } else {
                 $cfile = $file;
             }
-            
+
             // Make sure the plugin base file exists inside the plugin directory
             if (! file_exists($basedir . '/' . $file . '/' . $cfile . '.plugin.php')) {
-                debug_event('Plugins', 'Missing class for ' . $cfile, 3);
+                debug_event('plugin.class', 'Missing class for ' . $cfile, 3);
                 continue;
             }
-            
+
             if ($type != '') {
                 $plugin = new Plugin($cfile);
                 if (! Plugin::is_installed($plugin->_plugin->name)) {
-                    debug_event('Plugins', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
+                    debug_event('plugin.class', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (! $plugin->is_valid()) {
-                    debug_event('Plugins', 'Plugin ' . $cfile . ' is not valid, skipping', 6);
+                    debug_event('plugin.class', 'Plugin ' . $cfile . ' is not valid, skipping', 6);
                     continue;
                 }
                 if (! method_exists($plugin->_plugin, $type)) {
-                    debug_event('Plugins', 'Plugin ' . $cfile . ' does not support ' . $type . ', skipping', 6);
+                    debug_event('plugin.class', 'Plugin ' . $cfile . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }

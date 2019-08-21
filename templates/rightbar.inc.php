@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,11 +33,11 @@
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
                 </li>
             <?php
-                $playlists = Playlist::get_users($GLOBALS['user']->id);
+                $playlists = Playlist::get_users(Core::get_global('user')->id);
     Playlist::build_cache($playlists);
     foreach ($playlists as $playlist_id) {
         $playlist = new Playlist($playlist_id);
-        $playlist->format(); ?>
+        $playlist->format(false); ?>
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->f_name, 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
@@ -50,7 +50,7 @@
 <?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) {
         ?>
     <li>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
+        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
         </a>
     </li>
@@ -88,17 +88,17 @@
     $objects = array();
 
     //FIXME :: this is kludgy
-    if (!defined('NO_SONGS')) {
-        $objects = $GLOBALS['user']->playlist->get_items();
+    if (!defined('NO_SONGS') && Core::get_global('user')->playlist) {
+        $objects = Core::get_global('user')->playlist->get_items();
     }
 ?>
     <script type="text/javascript">
-        <?php if (count($objects) || (AmpConfig::get('play_type') == 'localplay')) {
+        <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) {
     ?>
-            $("#content").removeClass("content-right-wild", 500);
-            $("#footer").removeClass("footer-wild", 500);
-            $("#rightbar").removeClass("hidden");
-            $("#rightbar").show("slow");
+             $("#content").removeClass("content-right-wild", 500);
+             $("#footer").removeClass("footer-wild", 500);
+             $("#rightbar").removeClass("hidden");
+             $("#rightbar").show("slow");
         <?php
 } else {
         ?>

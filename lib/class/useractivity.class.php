@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,15 +40,16 @@ class Useractivity extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
+     * @param integer $useract_id
      */
-    public function __construct($id)
+    public function __construct($useract_id)
     {
-        if (!$id) {
+        if (!$useract_id) {
             return false;
         }
-        
+
         /* Get the information from the db */
-        $info = $this->get_info($id, 'user_activity');
+        $info = $this->get_info($useract_id, 'user_activity');
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -64,7 +65,7 @@ class Useractivity extends database_object
      */
     public static function build_cache($ids)
     {
-        if (!is_array($ids) or !count($ids)) {
+        if (!is_array($ids) || !count($ids)) {
             return false;
         }
 
@@ -76,22 +77,26 @@ class Useractivity extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('user_activity', $row['id'], $row);
         }
+
+        return true;
     }
     /**
-     * gc
+     * garbage_collection
      *
      * Remove activities for items that no longer exist.
+     * @param string $object_type
+     * @param integer $object_id
      */
-    public static function gc($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null)
     {
         $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season');
 
-        if ($object_type != null) {
+        if ($object_type !== null) {
             if (in_array($object_type, $types)) {
                 $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('userflag', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event('useractivity.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -99,39 +104,98 @@ class Useractivity extends database_object
             }
         }
     }
-    
+
     /**
      * post_activity
-     * @param int $user_id
-     * @param string $activity
+     * @param integer $user_id
+     * @param string $action
      * @param string $object_type
-     * @param int $object_id
+     * @param integer $object_id
      */
-    public static function post_activity($user_id, $action, $object_type, $object_id)
+    public static function post_activity($user_id, $action, $object_type, $object_id, $date = null)
     {
-        // Only save the activity if sociable
-        if (!AmpConfig::get('sociable')) {
-            return false;
+        if (!$date) {
+            $date = time();
         }
-        
+        if ($object_type === 'song') {
+            // insert fields to be more like last.fm activity stats
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`," .
+                    " `name_track`, `name_artist`, `name_album`,`mbid_track`, `mbid_artist`, `mbid_album`)" .
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $song = new Song($object_id);
+            $song->format();
+            $name_song   = $song->f_title;
+            $name_artist = $song->f_artist;
+            $name_album  = $song->f_album;
+            $mbid_song   = $song->mbid;
+            $mbid_artist = $song->artist_mbid;
+            $mbid_album  = $song->album_mbid;
+            debug_event('useractivity.class', 'Inserting details for ' . $name_song . ' - ' . $name_artist . ' - ' . $name_album . '.', 5);
+
+            if ($name_song && $name_artist && $name_album) {
+                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_song, $name_artist, $name_album, $mbid_song, $mbid_artist, $mbid_album));
+            }
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
+
+            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
+        }
+        if ($object_type === 'artist') {
+            // insert fields to be more like last.fm activity stats
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `mbid_artist`)" .
+                    " VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $artist = new Artist($object_id);
+            $artist->format();
+            $name_artist = $artist->f_name;
+            $mbid_artist = $artist->mbid;
+            debug_event('useractivity.class', 'Inserting details for ' . $name_artist . '.', 5);
+
+            if ($name_artist) {
+                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_artist, $mbid_artist));
+            }
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
+
+            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
+        }
+        if ($object_type === 'album') {
+            // insert fields to be more like last.fm activity stats
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `name_album`, `mbid_artist`, `mbid_album`)" .
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $album = new Album($object_id);
+            $album->format();
+            $name_artist  = $album->f_album_artist_name;
+            $name_album   = $album->f_title;
+            $mbid_album   = $album->mbid;
+            $mbid_artist  = $album->mbid_group;
+
+            if ($name_artist && $name_album) {
+                debug_event('useractivity.class', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
+
+                return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_artist, $name_album, $mbid_artist, $mbid_album));
+            }
+            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
+
+            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
+        }
+
+        // This is probably a good feature to keep by default
         $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($user_id, $action, $object_type, $object_id, time()));
+        return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
     }
-    
+
     /**
      * get_activities
-     * @param int $user_id
-     * @param int $limit
-     * @param int $since
-     * @return int[]
+     * @param integer $user_id
+     * @param integer $limit
+     * @param integer $since
+     * @return integer[]
      */
     public static function get_activities($user_id, $limit = 0, $since = 0)
     {
         if ($limit <= 0) {
             $limit = AmpConfig::get('popular_threshold');
         }
-        
+
         $params = array($user_id);
         $sql    = "SELECT `id` FROM `user_activity` WHERE `user` = ?";
         if ($since > 0) {
@@ -147,20 +211,20 @@ class Useractivity extends database_object
 
         return $results;
     }
-    
+
     /**
      * get_friends_activities
-     * @param int $user_id
-     * @param int $limit
-     * @param int $since
-     * @return int[]
+     * @param integer $user_id
+     * @param integer $limit
+     * @param integer $since
+     * @return integer[]
      */
     public static function get_friends_activities($user_id, $limit = 0, $since = 0)
     {
         if ($limit <= 0) {
             $limit = AmpConfig::get('popular_threshold');
         }
-        
+
         $params = array($user_id);
         $sql    = "SELECT `user_activity`.`id` FROM `user_activity`" .
                 " INNER JOIN `user_follower` ON `user_follower`.`follow_user` = `user_activity`.`user`"
@@ -189,21 +253,23 @@ class Useractivity extends database_object
         if (!AmpConfig::get('userflags') || !$this->id) {
             return false;
         }
-        
+
         $user = new User($this->user);
         $user->format();
         $libitem = new $this->object_type($this->object_id);
         $libitem->format();
-        
+
         echo '<div>';
-        $fdate = date('m/d/Y H:i:s', $this->activity_date);
+        $fdate = date('Y/m/d H:i:s', $this->activity_date);
+        /*
         echo '<div class="shoutbox-date">';
         if ($user->f_avatar_mini) {
             echo '<a href="' . $user->link . '">' . $user->f_avatar_mini . '</a> ';
         }
-        echo $fdate;
-        echo '</div>';
-                      
+         */
+        echo $fdate . ' ';
+        //echo '</div>';
+
         $descr = $user->f_link . ' ';
         switch ($this->action) {
             case 'shout':
@@ -226,15 +292,31 @@ class Useractivity extends database_object
                 break;
         }
         $descr .= ' ' . $libitem->f_link;
-        echo '<div>';
+        //echo '<div>';
         echo $descr;
-        
+
+        /*
         if (Core::is_library_item($this->object_type)) {
             echo ' ';
             $libitem->display_art(10);
         }
         echo '</div>';
-        
-        echo '</div><br />';
+         */
+
+        echo '</div>';//<br />';
     } // show
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return boolean|PDOStatement
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
 } //end useractivity class

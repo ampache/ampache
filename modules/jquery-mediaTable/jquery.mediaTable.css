@@ -25,146 +25,120 @@ WHERE TO FIND MEDIA TABLE:
 https://github.com/thepeg/MediaTable
 http://consulenza-web.com/jquery/MediaTable/
 http://www.consulenza-web.com/2012/01/mediatable-jquery-plugin/
-
 **/
 
-
-
-
-
-
-
-/* -----[[     S T R U C T U R E     ]]------------ */
-
+/*** Structure */
 
 /**
  * Structural Style
  */
 .mediaTable {
-	width:100%;
-	border-collapse:collapse;
+    width:100%;
+    border-collapse:collapse;
 }
 
 .mediaTableWrapper {
-	position: relative;
+    position: relative;
 }
 
 .mediaTableWrapperWithMenu {
-	padding-top:1.2em;
+    padding-top:1.2em;
 }
-
 
 .mediaTableMenuClosed ul {
-	display:none;
+    display:none;
 }
-
-
 
 /**
  * Active Media Table Rules
- * theese rules are applied to a table activated by the jQuery plugin.
+ * these rules are applied to a table activated by the jQuery plugin.
  */
 
 .activeMediaTable th, .activeMediaTable td {
-	display: none;
+    display: none;
 }
 
 .activeMediaTable th.essential, .activeMediaTable td.essential {
-	display: table-cell;
-	_display:block; /* IE6 Hack */
+    display: table-cell;
+    _display:block; /* IE6 Hack */
 }
 
 /* IE7 Hack */
 *+html .activeMediaTable th.essential, *+html .activeMediaTable td.essential { display:block }
 
+/*** Break Points */
 
-
-
-
-
-
-
-/* -----[[     B R E A C K      P O I N T S     ]]------------ */
-
-.mediaTableWrapper.gt500 th.optional, .mediaTableWrapper.gt500 td.optional {
+.mediaTableWrapper.gt300 th.optional, .mediaTableWrapper.gt300 td.optional {
     display: table-cell;
 }
-.mediaTableWrapper.gt700 th, .mediaTableWrapper.gt700 td {
+.mediaTableWrapper.gt300 th, .mediaTableWrapper.gt300 td {
     display: table-cell;
 }
 
-/* -----[[     T H E M I N G     ]]------------ */
+/*** Theming */
 
 /**
  * Table Style
  */
 table.mediaTable thead th {
-	white-space: nowrap;
-	border-bottom: 1px solid #ccc;
-	color: #888;
+    white-space: nowrap;
+    border-bottom: 1px solid #ccc;
+    color: #888;
 }
 
 table.mediaTable th, table.mediaTable td {
-	padding: .5em 1em;
-	text-align: right;
+    padding: .5em 1em;
+    text-align: right;
 }
 
 table.mediaTable th:first-child, table.mediaTable td:first-child {
-	text-align: left;
+    text-align: left;
 }
 
 table.mediaTable tbody th, table.mediaTable td {
-	border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
 }
-
 
 /**
  * Menu Style
  */
 
 .mediaTableMenu {
-	position:absolute;
+    position:absolute;
     top: 0;
-	right:0;
+    right:0;
     z-index: 9999;
 }
 
 .mediaTableMenu a {
-	display: inline-block;
-	cursor:pointer;
-	font-size: 0.8em;
-    
-	-webkit-border-top-right-radius: 5px;
-	-webkit-border-top-left-radius: 5px;
-	-moz-border-radius-topright: 5px;
-	-moz-border-radius-topleft: 5px;
-	border-top-right-radius: 5px;
-	border-top-left-radius: 5px;
-	
+    display: inline-block;
+    cursor:pointer;
+    font-size: 0.8em;
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-topleft: 5px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+
 }
 
 .mediaTableMenu ul {
-	list-style-position:outside;
-	list-style:none;
-	margin:0;
-	padding:0 0.5em;
+    list-style-position:outside;
+    list-style:none;
+    margin:0;
+    padding:0 0.5em;
     background-color: #444;
 }
 
 .mediaTableMenuClosed a {
-	border-radius:5px;
+    border-radius:5px;
 }
 
 .mediaTableMenu ul li {
-	line-height: 2em;
+    line-height: 2em;
 }
 
 .mediaTableMenu ul li label {
-	cursor:pointer;
+    cursor:pointer;
 }
-
-
-
-
-
-

@@ -3,9 +3,9 @@
 if [ -e "php-cs-fixer.phar" ]
 then
     PHPCSFIXER="php php-cs-fixer.phar"
-elif hash php-cs-fixer
+elif [ -e "php-cs-fixer" ]
 then
-    PHPCSFIXER="php-cs-fixer"
+    PHPCSFIXER="php php-cs-fixer"
 else
     echo -e "\e[1;31mPlease install or download latest stable php-cs-fixer\e[00m";
     echo -e "\e[1;31mhttp://cs.sensiolabs.org/\e[00m";
@@ -17,7 +17,7 @@ PHPCSFIXERARGS="fix -v"
 EXIT=0
 
 echo -e "\e[1;34mChecking mandatory formatting/coding standards\e[00m"
-$PHPCSFIXER $PHPCSFIXERARGS --dry-run --diff .
+$PHPCSFIXER $PHPCSFIXERARGS --dry-run --diff
 rc=$?
 if [[ $rc == 0 ]]
 then

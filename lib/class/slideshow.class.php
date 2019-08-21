@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@ class Slideshow
 {
     public static function get_current_slideshow()
     {
-        $songs  = Song::get_recently_played($GLOBALS['user']->id);
+        $songs  = Song::get_recently_played((int) Core::get_global('user')->id);
         $images = array();
         if (count($songs) > 0) {
             $last_song = new Song($songs[0]['object_id']);
@@ -45,13 +45,13 @@ class Slideshow
             try {
                 $images = $echonest->getArtistApi()->setName($artist_name)->getImages();
             } catch (Exception $e) {
-                debug_event('echonest', 'EchoNest artist images error: ' . $e->getMessage(), '1');
+                debug_event('slideshow.class', 'EchoNest artist images error: ' . $e->getMessage(), 1);
             }
         }
 
         foreach (Plugin::get_plugins('get_photos') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($GLOBALS['user'])) {
+            if ($plugin->load(Core::get_global('user'))) {
                 $images += $plugin->_plugin->get_photos($artist_name);
             }
         }

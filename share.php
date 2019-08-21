@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,48 +30,52 @@ require_once 'lib/init.php';
 Preference::init();
 
 if (!AmpConfig::get('share')) {
-    debug_event('UI::access_denied', 'Access Denied: sharing features are not enabled.', '3');
+    debug_event('share', 'Access Denied: sharing features are not enabled.', 3);
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
-switch ($action) {
+switch ($_REQUEST['action']) {
     case 'show_create':
         UI::show_header();
 
-        $type = Share::format_type($_REQUEST['type']);
+        $type = Share::format_type(Core::get_request('type'));
         if (!empty($type) && !empty($_REQUEST['id'])) {
-            $oid = $_REQUEST['id'];
-            if (is_array($oid)) {
-                $oid = $oid[0];
+            $object_id = Core::get_request('id');
+            if (is_array($object_id)) {
+                $object_id = $object_id[0];
             }
 
-            $object = new $type($oid);
+            $object = new $type($object_id);
             if ($object->id) {
                 $object->format();
                 require_once AmpConfig::get('prefix') . UI::find_template('show_add_share.inc.php');
             }
         }
         UI::show_footer();
-        exit;
+
+        return false;
     case 'create':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if (!Core::form_verify('add_share', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         UI::show_header();
-        $id = Share::create_share($_REQUEST['type'], $_REQUEST['id'], $_REQUEST['allow_stream'], $_REQUEST['allow_download'], $_REQUEST['expire'], $_REQUEST['secret'], $_REQUEST['max_counter']);
+        $share_id = Share::create_share($_REQUEST['type'], $_REQUEST['id'], $_REQUEST['allow_stream'], $_REQUEST['allow_download'], $_REQUEST['expire'], $_REQUEST['secret'], $_REQUEST['max_counter']);
 
-        if (!$id) {
+        if (!$share_id) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_share.inc.php');
         } else {
-            $share = new Share($id);
+            $share = new Share($share_id);
             $body  = T_('Share created.') . '<br />' .
                 T_('You can now start sharing the following url:') . '<br />' .
                 '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />' .
@@ -85,65 +89,74 @@ switch ($action) {
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/stats.php?action=share');
         }
         UI::show_footer();
-        exit;
+
+        return false;
     case 'show_delete':
         UI::show_header();
-        $id = $_REQUEST['id'];
+        $share_id = Core::get_request('id');
 
-        $next_url = AmpConfig::get('web_path') . '/share.php?action=delete&id=' . scrub_out($id);
-        show_confirmation(T_('Share Delete'), T_('Confirm Deletion Request'), $next_url, 1, 'delete_share');
+        $next_url = AmpConfig::get('web_path') . '/share.php?action=delete&id=' . scrub_out($share_id);
+        show_confirmation(T_('Confirm Action'), T_('Delete Share'), $next_url, 1, 'delete_share');
         UI::show_footer();
-        exit;
+
+        return false;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         UI::show_header();
-        $id = $_REQUEST['id'];
-        if (Share::delete_share($id)) {
+        $share_id = Core::get_request('id');
+        if (Share::delete_share($share_id)) {
             $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
-            show_confirmation(T_('Share Deleted'), T_('The Share has been deleted'), $next_url);
+            show_confirmation(T_('Deleted'), T_('Share has been deleted'), $next_url);
         }
         UI::show_footer();
-        exit;
+
+        return false;
     case 'clean':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         UI::show_header();
-        Share::gc();
+        Share::garbage_collection();
         $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
         show_confirmation(T_('Shared Objects cleaned'), T_('Expired shared objects have been cleaned.'), $next_url);
         UI::show_footer();
-        exit;
+
+        return false;
     case 'external_share':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
-        $plugin = new Plugin($_GET['plugin']);
+        $plugin = new Plugin(Core::get_get('plugin'));
         if (!$plugin) {
             UI::access_denied('Access Denied - Unkown external share plugin.');
-            exit;
-        }
-        $plugin->load($GLOBALS['user']);
 
-        $type           = $_REQUEST['type'];
-        $id             = $_REQUEST['id'];
+            return false;
+        }
+        $plugin->load(Core::get_global('user'));
+
+        $type           = Core::get_request('type');
+        $share_id       = Core::get_request('id');
         $allow_download = (($type == 'song' && Access::check_function('download')) || Access::check_function('batch_download'));
         $secret         = Share::generate_secret();
 
-        $share_id = Share::create_share($type, $id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
+        $share_id = Share::create_share($type, $share_id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
         $share    = new Share($share_id);
         $share->format(true);
 
         header("Location: " . $plugin->_plugin->external_share($share->public_url, $share->f_name));
-        exit;
+
+        return false;
 }
 
 /**
@@ -153,16 +166,17 @@ switch ($action) {
  */
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
-        debug_event('UI::access_denied', 'Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list', '3');
+        debug_event('share', 'Access Denied:' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', 3);
         UI::access_denied();
-        exit();
+
+        return false;
     }
 } // access_control is enabled
 
-$id     = $_REQUEST['id'];
-$secret = $_REQUEST['secret'];
+$share_id = Core::get_request('id');
+$secret   = $_REQUEST['secret'];
 
-$share = new Share($id);
+$share = new Share($share_id);
 if (empty($action) && $share->id) {
     if ($share->allow_stream) {
         $action = 'stream';
@@ -173,7 +187,8 @@ if (empty($action) && $share->id) {
 
 if (!$share->is_valid($secret, $action)) {
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 $share->format();
@@ -193,7 +208,8 @@ if ($action == 'download') {
 } elseif ($action == 'stream') {
     require AmpConfig::get('prefix') . UI::find_template('show_share.inc.php');
 } else {
-    debug_event('UI::access_denied', 'Access Denied: unknown action.', '3');
+    debug_event('share', 'Access Denied: unknown action.', 3);
     UI::access_denied();
-    exit();
+
+    return false;
 }

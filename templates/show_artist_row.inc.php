@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,11 +26,11 @@
     <?php
         if ($show_direct_play) {
             echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id, 'play', T_('Play'), 'play_artist_' . $libitem->id);
+            if (Stream_Playlist::check_autoplay_next()) {
+                echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_artist_' . $libitem->id);
+            }
             if (Stream_Playlist::check_autoplay_append()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_artist_' . $libitem->id);
-                if (Stream_Playlist::check_autoplay_next()) {
-                    echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_artist_' . $libitem->id);
-                }
             }
         }
     ?>
@@ -41,7 +41,7 @@ if (Art::is_enabled()) {
         $name = scrub_out($libitem->full_name); ?>
 <td class="cel_cover">
     <?php
-    $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 1;
+    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
         Art::display('artist', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
 <?php

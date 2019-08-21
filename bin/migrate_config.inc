@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,7 +58,7 @@ foreach ($data as $line) {
     }
 
     foreach ($unmigratable as $option=>$default) {
-        if (strstr($line,$option) AND !$migrated[$option]) {
+        if (strstr($line,$option) && !$migrated[$option]) {
             $line = $option . " = \"$default\"";
             $migrated[$option] = true;
         }
@@ -92,5 +92,3 @@ else {
     echo T_("Access Denied, config migration failed");
     echo "\n";
 }
-
-?>

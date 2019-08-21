@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 } ?>
 <div id="information_actions">
     <ul>
-    <?php if ($GLOBALS['user']->has_access('50')) {
+    <?php if (Core::get_global('user')->has_access('50')) {
         ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
@@ -106,7 +106,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id, 'random', T_('Random all to temporary playlist'), 'play_playlist_random'); ?>
             <?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id, T_('Random all to temporary playlist'), 'play_playlist_random_text'); ?>
         </li>
-    <?php if ($GLOBALS['user']->has_access('50') && AmpConfig::get('channel')) {
+    <?php if (Core::get_global('user')->has_access('50') && AmpConfig::get('channel')) {
         ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">

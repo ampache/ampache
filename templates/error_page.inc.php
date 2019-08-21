@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,7 +32,7 @@
 <title><?php echo(T_("Ampache error page"));?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-<link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body>
 <!-- rfc3514 implementation -->
@@ -40,7 +40,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
+                <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
                 <?php echo T_('Ampache'); ?> - For the love of Music
             </a>
         </div>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -116,6 +116,14 @@ class Video extends database_object implements media, library_item
      */
     public $tags;
     /**
+     * @var integer $f_release_date
+     */
+    public $update_time;
+    /**
+     * @var integer $f_release_date
+     */
+    public $addition_time;
+    /**
      * @var string $f_title
      */
     public $f_title;
@@ -123,6 +131,10 @@ class Video extends database_object implements media, library_item
      * @var string $f_full_title
      */
     public $f_full_title;
+    /**
+     * @var string $f_artist_full
+     */
+    public $f_artist_full;
     /**
      * @var string $f_time
      */
@@ -184,14 +196,14 @@ class Video extends database_object implements media, library_item
      * Constructor
      * This pulls the information from the database and returns
      * a constructed object
-     * @param int|null $id
+     * @param integer|null $id
      */
     public function __construct($id = null)
     {
-        if (!$id) {
+        if ($id === null) {
             return false;
         }
-        
+
         // Load the data from the database
         $info = $this->get_info($id, 'video');
         foreach ($info as $key => $value) {
@@ -206,7 +218,7 @@ class Video extends database_object implements media, library_item
 
     /**
      * Create a video strongly typed object from its id.
-     * @param int $video_id
+     * @param integer $video_id
      * @return \Video
      */
     public static function create_from_id($video_id)
@@ -215,10 +227,9 @@ class Video extends database_object implements media, library_item
         foreach ($dtypes as $dtype) {
             $sql        = "SELECT `id` FROM `" . strtolower($dtype) . "` WHERE `id` = ?";
             $db_results = Dba::read($sql, array($video_id));
-            if ($results = Dba::fetch_assoc($db_results)) {
-                if ($results['id']) {
-                    return new $dtype($video_id);
-                }
+            $results    = Dba::fetch_assoc($db_results);
+            if ($results['id']) {
+                return new $dtype($video_id);
             }
         }
 
@@ -230,9 +241,9 @@ class Video extends database_object implements media, library_item
      * Build a cache based on the array of ids passed, saves lots of little queries
      * @param int[] $ids
      */
-    public static function build_cache($ids=array())
+    public static function build_cache($ids = array())
     {
-        if (!is_array($ids) or !count($ids)) {
+        if (!count($ids)) {
             return false;
         }
 
@@ -252,10 +263,10 @@ class Video extends database_object implements media, library_item
      */
     public function format($details = true)
     {
-        $this->f_title      = scrub_out($this->title);
+        $this->f_title      = filter_var($this->title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $this->f_full_title = $this->f_title;
         $this->link         = AmpConfig::get('web_path') . "/video.php?action=show_video&video_id=" . $this->id;
-        $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->f_title) . "\"> " . scrub_out($this->f_title) . "</a>";
+        $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . $this->f_title . "\"> " . $this->f_title . "</a>";
         $this->f_codec      = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
@@ -265,8 +276,8 @@ class Video extends database_object implements media, library_item
         }
 
         // Format the Bitrate
-        $this->f_bitrate       = intval($this->bitrate / 1000) . "-" . strtoupper($this->mode);
-        $this->f_video_bitrate = (string) intval($this->video_bitrate / 1000);
+        $this->f_bitrate       = (int) ($this->bitrate / 1000) . "-" . strtoupper($this->mode);
+        $this->f_video_bitrate = (string) (int) ($this->video_bitrate / 1000);
         if ($this->frame_rate) {
             $this->f_frame_rate = $this->frame_rate . ' fps';
         }
@@ -340,6 +351,8 @@ class Video extends database_object implements media, library_item
      */
     public function search_childrens($name)
     {
+        debug_event('video.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
@@ -351,7 +364,7 @@ class Video extends database_object implements media, library_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'video') {
+        if ($filter_type === null || $filter_type == 'video') {
             $medias[] = array(
                 'object_type' => 'video',
                 'object_id' => $this->id
@@ -365,7 +378,7 @@ class Video extends database_object implements media, library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -403,18 +416,18 @@ class Video extends database_object implements media, library_item
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * Cleans up the inherited object tables
      */
-    public static function gc()
+    public static function garbage_collection()
     {
-        Movie::gc();
-        TVShow_Episode::gc();
-        TVShow_Season::gc();
-        TVShow::gc();
-        Personal_Video::gc();
-        Clip::gc();
+        Movie::garbage_collection();
+        TVShow_Episode::garbage_collection();
+        TVShow_Season::garbage_collection();
+        TVShow::garbage_collection();
+        Personal_Video::garbage_collection();
+        Clip::garbage_collection();
     }
 
     /**
@@ -430,13 +443,13 @@ class Video extends database_object implements media, library_item
      * play_url
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params='', $player=null, $local=false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false)
     {
         return Song::generic_play_url('video', $oid, $additional_params, $player, $local);
     }
@@ -456,14 +469,14 @@ class Video extends database_object implements media, library_item
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return Song::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
     }
 
     /**
      * Get derived video types.
-     * @return array
+     * @return string[]
      */
     private static function get_derived_types()
     {
@@ -541,21 +554,21 @@ class Video extends database_object implements media, library_item
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        $bitrate        = intval($data['bitrate']);
+        $bitrate        = (int) ($data['bitrate']);
         $mode           = $data['mode'];
-        $rezx           = intval($data['resolution_x']);
-        $rezy           = intval($data['resolution_y']);
-        $release_date   = intval($data['release_date']);
+        $rezx           = (int) ($data['resolution_x']);
+        $rezy           = (int) ($data['resolution_y']);
+        $release_date   = (int) ($data['release_date']);
         // No release date, then release date = production year
         if (!$release_date && $data['year']) {
             $release_date = strtotime(strval($data['year']) . '-01-01');
         }
         $tags           = $data['genre'];
-        $channels       = intval($data['channels']);
-        $disx           = intval($data['display_x']);
-        $disy           = intval($data['display_y']);
+        $channels       = (int) ($data['channels']);
+        $disx           = (int) ($data['display_x']);
+        $disy           = (int) ($data['display_y']);
         $frame_rate     = floatval($data['frame_rate']);
-        $video_bitrate  = intval($data['video_bitrate']);
+        $video_bitrate  = (int) ($data['video_bitrate']);
 
         $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`,`release_date`,`addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) " .
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -573,7 +586,7 @@ class Video extends database_object implements media, library_item
         }
 
         if ($data['art'] && $options['gather_art']) {
-            $art = new Art($vid, 'video');
+            $art = new Art((int) $vid, 'video');
             $art->insert_url($data['art']);
         }
 
@@ -640,6 +653,9 @@ class Video extends database_object implements media, library_item
         return $this->id;
     } // update
 
+    /**
+     * @param integer $video_id
+     */
     public static function update_video($video_id, Video $new_video)
     {
         $update_time = time();
@@ -667,7 +683,7 @@ class Video extends database_object implements media, library_item
     /*
      * generate_preview
      * Generate video preview image from a video file
-     * @param int $video_id
+     * @param integer $video_id
      * @param boolean $overwrite
      */
     public static function generate_preview($video_id, $overwrite = false)
@@ -684,8 +700,8 @@ class Video extends database_object implements media, library_item
      * get_random
      *
      * This returns a number of random videos.
-     * @param int $count
-     * @return int[]
+     * @param integer $count
+     * @return integer[]
      */
     public static function get_random($count = 1)
     {
@@ -703,7 +719,7 @@ class Video extends database_object implements media, library_item
         }
 
         $sql .= $where;
-        $sql .= "ORDER BY RAND() LIMIT " . intval($count);
+        $sql .= "ORDER BY RAND() LIMIT " . (string) ($count);
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -717,7 +733,7 @@ class Video extends database_object implements media, library_item
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user
+     * @param integer $user
      * @param string $agent
      * @param array $location
      * @return boolean
@@ -750,8 +766,8 @@ class Video extends database_object implements media, library_item
     {
         // Remove some stuff we don't care about
         unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);
-        $string_array = array('title','tags');
-        $skip_array   = array('id','tag_id','mime','object_cnt');
+        $string_array = array('title', 'tags');
+        $skip_array   = array('id', 'tag_id', 'mime', 'object_cnt');
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
     } // compare_video_information
@@ -1018,14 +1034,14 @@ class Video extends database_object implements media, library_item
             $sql     = "DELETE FROM `video` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
-                Art::gc('video', $this->id);
-                Userflag::gc('video', $this->id);
-                Rating::gc('video', $this->id);
-                Shoutbox::gc('video', $this->id);
-                Useractivity::gc('video', $this->id);
+                Art::garbage_collection('video', $this->id);
+                Userflag::garbage_collection('video', $this->id);
+                Rating::garbage_collection('video', $this->id);
+                Shoutbox::garbage_collection('video', $this->id);
+                Useractivity::garbage_collection('video', $this->id);
             }
         } else {
-            debug_event('video', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
+            debug_event('video.class', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
         }
 
         return $deleted;
@@ -1035,7 +1051,7 @@ class Video extends database_object implements media, library_item
      * update_played
      * sets the played flag
      * @param boolean $new_played
-     * @param int $song_id
+     * @param integer $song_id
      */
     public static function update_played($new_played, $song_id)
     {
@@ -1046,12 +1062,12 @@ class Video extends database_object implements media, library_item
      * _update_item
      * This is a private function that should only be called from within the video class.
      * It takes a field, value video id and level. first and foremost it checks the level
-     * against $GLOBALS['user'] to make sure they are allowed to update this record
+     * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param mixed $value
-     * @param int $song_id
-     * @param int $level
+     * @param integer $value
+     * @param integer $song_id
+     * @param integer $level
      * @return boolean
      */
     private static function _update_item($field, $value, $song_id, $level)
@@ -1071,4 +1087,23 @@ class Video extends database_object implements media, library_item
 
         return true;
     } // _update_item
+    /**
+     * get_item_count
+     * Return the number of entries in the database...
+     * @param string $type
+     * @return int
+     */
+    public static function get_item_count($type)
+    {
+        $type       = self::validate_type($type);
+        $sql        = 'SELECT count(*) as count from `' . strtolower($type) . '`;';
+        $db_results = Dba::read($sql,array());
+        if ($results = Dba::fetch_assoc($db_results)) {
+            if ($results['count']) {
+                return $results['count'];
+            }
+        }
+
+        return 0;
+    } // get_item_count
 } // end Video class

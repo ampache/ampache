@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,10 +25,11 @@ $_SESSION['login'] = true;
 require_once 'lib/init.php';
 
 /* Check Perms */
-if (!AmpConfig::get('allow_public_registration') || AmpConfig::get('demo_mode')) {
-    debug_event('DENIED', 'Error Attempted registration', '1');
+if (!AmpConfig::get('allow_public_registration') && !Mailer::is_mail_enabled()) {
+    debug_event('register', 'Error Attempted registration', 2);
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 /* Don't even include it if we aren't going to use it */
@@ -38,12 +39,11 @@ if (AmpConfig::get('captcha_public_reg')) {
     require_once AmpConfig::get('prefix') . '/modules/captcha/captcha.php';
 }
 
-
-/* Start switch based on action passed */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'validate':
-        $username      = scrub_in($_GET['username']);
-        $validation    = scrub_in($_GET['auth']);
+        $username      = scrub_in(Core::get_get('username'));
+        $validation    = scrub_in(Core::get_get('auth'));
         require_once AmpConfig::get('prefix') . UI::find_template('show_user_activate.inc.php');
     break;
     case 'add_user':
@@ -56,14 +56,24 @@ switch ($_REQUEST['action']) {
          * possibly by logging them in right then and there with their current info
          * and 'click here to login' would just be a link back to index.php
          */
-        $fullname       = scrub_in($_POST['fullname']);
-        $username       = scrub_in($_POST['username']);
-        $email          = scrub_in($_POST['email']);
-        $website        = scrub_in($_POST['website']);
-        $pass1          = $_POST['password_1'];
-        $pass2          = $_POST['password_2'];
-        $state          = (string) scrub_in($_POST['state']);
-        $city           = (string) scrub_in($_POST['city']);
+        $fullname       = (string) scrub_in(Core::get_post('fullname'));
+        $username       = (string) scrub_in(Core::get_post('username'));
+        $email          = scrub_in(Core::get_post('email'));
+        $pass1          = Core::get_post('password_1');
+        $pass2          = Core::get_post('password_2');
+        $website        = scrub_in(Core::get_post('website'));
+        $state          = scrub_in(Core::get_post('state'));
+        $city           = scrub_in(Core::get_post('city'));
+
+        if ($website === null) {
+            $website = '';
+        }
+        if ($state === null) {
+            $state = '';
+        }
+        if ($city === null) {
+            $city = '';
+        }
 
         /* If we're using the captcha stuff */
         if (AmpConfig::get('captcha_public_reg')) {
@@ -86,7 +96,7 @@ switch ($_REQUEST['action']) {
             }
         } // if they have to agree to something
 
-        if (!$_POST['username']) {
+        if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
             AmpError::add('username', T_("You did not enter a username"));
         }
 
@@ -117,7 +127,7 @@ switch ($_REQUEST['action']) {
             AmpError::add('password', T_("Your passwords do not match"));
         }
 
-        if (!User::check_username($username)) {
+        if (!User::check_username((string) $username)) {
             AmpError::add('duplicate_user', T_("Error Username already exists"));
         }
 
@@ -142,9 +152,7 @@ switch ($_REQUEST['action']) {
             break;
         } // auto-user level
 
-
-        $new_user = User::create($username, $fullname, $email, $website, $pass1,
-            $access, $state, $city, AmpConfig::get('admin_enable_required'));
+        $new_user = User::create($username, $fullname, $email, (string) $website, $pass1, $access, (string) $state, (string) $city, AmpConfig::get('admin_enable_required'));
 
         if (!$new_user) {
             AmpError::add('duplicate_user', T_("Error: Insert Failed"));
@@ -158,7 +166,7 @@ switch ($_REQUEST['action']) {
             $client->update_validation($validation);
 
             // Notify user and/or admins
-            Registration::send_confirmation($username, $fullname, $email, $website, $pass1, $validation);
+            Registration::send_confirmation($username, $fullname, $email, $website, $validation);
         }
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_registration_confirmation.inc.php');

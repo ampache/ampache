@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@ class WebPlayer
 {
     /**
      * Check if the playlist is a radio playlist.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return boolean
      */
     public static function is_playlist_radio($playlist)
@@ -42,7 +42,7 @@ class WebPlayer
 
     /**
      * Check if the playlist is a video playlist.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return boolean
      */
     public static function is_playlist_video($playlist)
@@ -56,7 +56,7 @@ class WebPlayer
      * @param string $force_type
      * @return array
      */
-    protected static function get_types($item, $force_type='')
+    protected static function get_types($item, $force_type= '')
     {
         $types = array('real' => 'mp3', 'player' => '');
 
@@ -91,7 +91,7 @@ class WebPlayer
                 if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                     // Transcode forced from client side
                     if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
-                        debug_event("webplayer.class.php", "Forcing type to {" . $force_type . "}", 5);
+                        debug_event("webplayer.class", "Forcing type to {" . $force_type . "}", 5);
                         // Transcode only if excepted type available
                         $transcode_settings = $media->get_transcode_settings($force_type, 'webplayer');
                         if ($transcode_settings) {
@@ -158,14 +158,14 @@ class WebPlayer
             $types['player'] = $types['real'];
         }
 
-        debug_event("webplayer.class.php", "Types {" . json_encode($types) . "}", 5);
+        debug_event("webplayer.class", "Types {" . json_encode($types) . "}", 5);
 
         return $types;
     }
 
     /**
      * Get all supplied types for a playlist.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return array
      */
     public static function get_supplied_types($playlist)
@@ -187,11 +187,11 @@ class WebPlayer
 
     /**
      * Get add_media javascript.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @param string $callback_container
      * @return string
      */
-    public static function add_media_js($playlist, $callback_container='')
+    public static function add_media_js($playlist, $callback_container = '')
     {
         $addjs = "";
         foreach ($playlist->urls as $item) {
@@ -208,11 +208,11 @@ class WebPlayer
 
     /**
      * Get play_next javascript.
-     * @param \Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @param string $callback_container
      * @return string
      */
-    public static function play_next_js($playlist, $callback_container='')
+    public static function play_next_js($playlist, $callback_container = '')
     {
         $addjs = "";
         foreach ($playlist->urls as $item) {
@@ -233,7 +233,7 @@ class WebPlayer
      * @param string $force_type
      * @return string
      */
-    public static function get_media_js_param($item, $force_type='')
+    public static function get_media_js_param($item, $force_type = '')
     {
         $js = array();
         foreach (array('title', 'author') as $member) {
@@ -245,13 +245,12 @@ class WebPlayer
 
             $js[$kmember] = $item->$member;
         }
-        $url = $item->url;
-
         $types = self::get_types($item, $force_type);
 
-        $media   = null;
-        $urlinfo = Stream_URL::parse($url);
-        $url     = $urlinfo['base_url'];
+        $media    = null;
+        $item_url = $item->url;
+        $urlinfo  = Stream_URL::parse($item_url);
+        $url      = $urlinfo['base_url'];
 
         if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
             $media = new $urlinfo['type']($urlinfo['id']);
@@ -296,7 +295,7 @@ class WebPlayer
             $js['poster'] = $item->image_url;
         }
 
-        debug_event("webplayer.class.php", "Return get_media_js_param {" . json_encode($js) . "}", 5);
+        debug_event("webplayer.class", "Return get_media_js_param {" . json_encode($js) . "}", 5);
 
         return json_encode($js);
     }

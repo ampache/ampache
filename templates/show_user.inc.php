@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,11 +66,19 @@ if ($client->f_avatar) {
             <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('preferences', T_('Preferences')); ?></a>
         <?php
-    } elseif ($client->id == $GLOBALS['user']->id) {
+    } elseif ($client->id == Core::get_global('user')->id) {
         ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?tab=account"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
+
         <?php
-    } ?>
+    }
+    if (AmpConfig::get('use_now_playing_embedded')) {
+        ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo UI::get_icon('play_preview', T_('Now Playing')); ?></a>
+ <?php
+    }
+?>
+
     </dd>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Member Since'); ?></dt>
@@ -80,22 +88,17 @@ if ($client->f_avatar) {
     <dd class="<?php echo $rowparity; ?>"><?php echo $last_seen; ?></dd>
     <?php $rowparity = UI::flip_class(); ?>
     <?php if (Access::check('interface', '50')) {
-        ?>
+    ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php echo $client->f_useage; ?>
-        <?php if (AmpConfig::get('statistical_graphs')) {
-            ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
-        <?php
-        } ?>
     </dd>
     <?php
-    } ?>
+} ?>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Status'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
-    <?php if ($client->is_logged_in() and $client->is_online()) {
+    <?php if ($client->is_logged_in() && $client->is_online()) {
         ?>
         <i style="color:green;"><?php echo T_('User is Online Now'); ?></i>
     <?php
@@ -217,3 +220,4 @@ if ($client->f_avatar) {
         } ?>
     </div>
 </div>
+

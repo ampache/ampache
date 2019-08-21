@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,16 +25,17 @@
     <head>
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ampache -- Debug Page</title>
         <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
+                    <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
                     <?php echo T_('Ampache'); ?> - For the love of Music
                 </a>
             </div>
@@ -56,9 +57,9 @@
         <div>
             <table class="table" cellpadding="3" cellspacing="0">
                 <tr>
-                    <th><?php echo T_('CHECK'); ?></th>
-                    <th><?php echo T_('STATUS'); ?></th>
-                    <th><?php echo T_('DESCRIPTION'); ?></th>
+                    <th><?php echo T_('Check'); ?></th>
+                    <th><?php echo T_('Status'); ?></th>
+                    <th><?php echo T_('Description'); ?></th>
                 </tr>
                 <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
             </table>

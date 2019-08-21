@@ -1,9 +1,10 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,31 +30,36 @@
 class PrivateMsg extends database_object
 {
     /* Variables from DB */
-
     /**
      *  @var int $id
      */
     public $id;
+
     /**
      *  @var string $subject
      */
     public $subject;
+
     /**
      *  @var string $message
      */
     public $message;
+
     /**
      *  @var integer $from_user
      */
     public $from_user;
+
     /**
      *  @var integer $to_user
      */
     public $to_user;
+
     /**
      *  @var integer $creation_date
      */
     public $creation_date;
+
     /**
      *  @var boolean $is_read
      */
@@ -63,26 +69,32 @@ class PrivateMsg extends database_object
      *  @var string $f_subject
      */
     public $f_subject;
+
     /**
      *  @var string $f_message
      */
     public $f_message;
+
     /**
      *  @var string $link
      */
     public $link;
+
     /**
      *  @var string $f_link
      */
     public $f_link;
+
     /**
      *  @var string $f_from_user_link
      */
     public $f_from_user_link;
+
     /**
      *  @var string $f_to_user_link
      */
     public $f_to_user_link;
+
     /**
      *  @var string $f_creation_date
      */
@@ -91,7 +103,7 @@ class PrivateMsg extends database_object
     /**
      * __construct
      */
-    public function __construct($id=null)
+    public function __construct($id = null)
     {
         if (!$id) {
             return false;
@@ -136,8 +148,8 @@ class PrivateMsg extends database_object
 
     public static function create(array $data)
     {
-        $subject = trim(strip_tags($data['subject']));
-        $message = trim(strip_tags($data['message']));
+        $subject = trim(strip_tags(filter_var($data['subject'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
+        $message = trim(strip_tags(filter_var($data['message'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
 
         if (empty($subject)) {
             AmpError::add('subject', T_('Error: Subject Required'));
@@ -149,18 +161,18 @@ class PrivateMsg extends database_object
         }
 
         if (!AmpError::occurred()) {
-            $from_user     = $data['from_user'] ?: $GLOBALS['user']->id;
+            $from_user     = $data['from_user'] ?: Core::get_global('user')->id;
             $creation_date = $data['creation_date'] ?: time();
             $is_read       = $data['is_read'] ?: 0;
             $sql           = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) " .
-                "VALUES (?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?, ?)";
             if (Dba::write($sql, array($subject, $message, $from_user, $to_user->id, $creation_date, $is_read))) {
                 $insert_id = Dba::insert_id();
 
                 // Never send email in case of user impersonation
                 if (!isset($data['from_user']) && $insert_id) {
                     if (Preference::get_by_user($to_user->id, 'notify_email')) {
-                        if (!empty($to_user->email)) {
+                        if (!empty($to_user->email) && Mailer::is_mail_enabled()) {
                             $mailer = new Mailer();
                             $mailer->set_default_sender();
                             $mailer->recipient      = $to_user->email;
@@ -172,7 +184,7 @@ class PrivateMsg extends database_object
         ----------------------
 
         %s
-        "), $GLOBALS['user']->fullname, $message, AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id);
+        "), Core::get_global('user')->fullname, $message, AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id);
                             $mailer->send();
                         }
                     }
@@ -191,7 +203,7 @@ class PrivateMsg extends database_object
      * @param integer $to_user
      * @param boolean $unread_only
      * @param integer $from_user
-     * @return int[]
+     * @return integer[]
      */
     public static function get_private_msgs($to_user, $unread_only = false, $from_user = 0)
     {

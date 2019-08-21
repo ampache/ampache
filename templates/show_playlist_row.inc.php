@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,9 +28,9 @@
             echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id, 'play', T_('Play'), 'play_playlist_' . $libitem->id);
             if (Stream_Playlist::check_autoplay_next()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_playlist_' . $libitem->id);
-                if (Stream_Playlist::check_autoplay_append()) {
-                    echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $libitem->id);
-                }
+            }
+            if (Stream_Playlist::check_autoplay_append()) {
+                echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $libitem->id);
             }
         }
     ?>
@@ -39,8 +39,10 @@
 <?php if (AmpConfig::get('playlist_art')) {
         ?>
 <td class="cel_cover">
+<div style="max-width: 128px;">
     <?php
-    $libitem->display_art(3); ?>
+    $libitem->display_art(2); ?>
+</div>
 </td>
 <?php
     } ?>

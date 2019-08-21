@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,11 +26,11 @@
         <?php
             if ($show_direct_play) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $libitem->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'play_album_' . $libitem->id);
+                if (Stream_Playlist::check_autoplay_next()) {
+                    echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $libitem->id);
+                }
                 if (Stream_Playlist::check_autoplay_append()) {
                     echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $libitem->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $libitem->id);
-                    if (Stream_Playlist::check_autoplay_next()) {
-                        echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $libitem->id);
-                    }
                 }
             }
         ?>
@@ -41,7 +41,7 @@ if (Art::is_enabled()) {
             $name = '[' . $libitem->f_artist . '] ' . scrub_out($libitem->full_name); ?>
 <td class="cel_cover">
     <?php
-    $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 1;
+    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
             Art::display('album', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $libitem->id); ?>
 </td>
 <?php
@@ -65,18 +65,18 @@ if (Art::is_enabled()) {
     </span>
 </td>
 <td class="cel_artist"><?php echo(!empty($libitem->f_album_artist_link) ? $libitem->f_album_artist_link : $libitem->f_artist_link); ?></td>
-<td class="cel_songs"><?php echo $libitem->song_count; ?></td>
+<td class="cel_songs optional"><?php echo $libitem->song_count; ?></td>
 <td class="cel_year"><?php if ($libitem->year > 0) {
                 echo $libitem->year;
             } ?></td>
 <?php
     if (AmpConfig::get('show_played_times')) {
         ?>
-        <td class="cel_counter"><?php echo $libitem->object_cnt; ?></td>
+        <td class="cel_counter optional"><?php echo $libitem->object_cnt; ?></td>
     <?php
     }
     ?>
-<td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
+<td class="cel_tags optional"><?php echo $libitem->f_tags; ?></td>
 <?php
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) {

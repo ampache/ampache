@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,124 +19,40 @@
  *
  */
 
+ .requirements {
+    padding-top: 20px;
+}
+
+.navbar-brand {
+    padding-top: 0px;
+}
+
+.navbar-brand img {
+    height: 48px;
+    width: 48px;
+    display: inline;
+}
+
+.panel-heading a:after {
+    font-family: 'Glyphicons Halflings';
+    content: "\e114";
+    float: right;
+    color: grey;
+}
+
+.panel-heading a.collapsed:after {
+    content: "\e080";
+}
+
 body {
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 1em;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    background: #FFFFFF url(../images/top_bg.jpg) repeat-x top left;
-}
-
-h3 { 
-    text-align:left; 
-    border-bottom: 1px dotted #cccccc;
-    padding-left: 10px;
-} 
-
-
-/* Header */
-#header {
-    width: 90%;
-    min-height: 85px;
-    height: 85px;
-    margin: 0 auto;
-    padding: 0;
-    text-align: left;
-    font-size: smaller;
-    display: block;
-}
-
-#header h1 {
-    margin: 0;
-    padding-top: 16px;
-    color: #000;
-    font-weight: bold;
-    font-size: large;
-}
-
-#header p {
-    font-size: smaller;
-    color: #000;
-    margin: 0px;
-}
-
-/* Content */
-#text-box {
-    width: 90%;
-    min-height: 85px;
-    height: 85px;
-    display: block;
-    margin: 0 auto;
-    padding: 0;
-    text-align: left;
-    font-size: smaller;
-}
-.error { 
-    color: #ff0033; 
-    font-weight: bold; 
-} 
-.notify {
-    border: 1px solid #cccccc;
-    background-color: #f4f4f4;
-    padding: 5px;
-    margin-top: 3px;
-}
-
-.content {
-    border: 1px solid #cccccc;
-    padding: 5px;
-    margin-top: 3px;
-}
-
-/* Table style */
-td{
-    padding:5px;
-    /*background-color: #D9E0E8;*/
-    font-size: smaller;
-}
-
-.align{
-    text-align:right;
-}
-
-/* Estilos para formas */
-input, radio, select, textarea {
-    border: 1px solid #ddd;
-    background: #f2f2f2;
-    font: 11px verdana, sans-serif;
-    color: #443;
-    padding: 2px;
-    outline: none;
-}
-input:hover,
-textarea:hover,
-input:focus,
-textarea:focus{ 
-    border: 1px solid #aaa; 
-}
-
-/* Extras  */
-.ok {
-    font-weight:bold;
-    color:#009900;
-    margin:10px 10px 10px 10px;
-}
-
-.notok {
-    font-weight:bold;
-    color:#FF3300;
-    margin:3px 3px 3px 3px;
-}
-
-/* Bottom */
-#bottom {
-    border-top: 1px dotted #cccccc;
-    margin-top: 10px;
     margin-bottom: 10px;
-    padding:5px;
 }
 
-#bottom p {
-    font-size:10px;
+body#install-page {
+    min-width: 720px;
+}
+
+.navbar-inverse {
+    background-color: #000;
+    background-image: none;
 }

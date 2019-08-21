@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 $logo_url = AmpConfig::get('custom_login_logo');
 if (empty($logo_url)) {
-    $logo_url = AmpConfig::get('web_path') . "/themes/reborn/images/ampache.png";
+    $logo_url = UI::get_logo_url('dark');
 }
 
 $web_path = AmpConfig::get('web_path');
@@ -32,11 +32,12 @@ $web_path = AmpConfig::get('web_path');
     <head>
         <!-- Propulsed by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ampache -- Debug Page</title>
         <?php UI::show_custom_style(); ?>
         <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('install-doped.css'); ?>" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('install.css'); ?>" type="text/css" media="screen" />
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">

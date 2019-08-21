@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,7 +37,7 @@ require_once $prefix . '/lib/init.php';
 if ($debug) { echo T_('DEBUG ENABLED WILL NOT DELETE FILES!'); echo "\n"; }
 
 /* Get a list of filenames */
-$sql = "SELECT `id`, `file` FROM song WHERE enabled='0'";
+$sql = "SELECT `id`, `file` FROM song WHERE enabled=0";
 $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
@@ -53,4 +53,3 @@ while ($row = Dba::fetch_assoc($db_results)) {
         $del_results = Dba::write($sql, array($row['id']));
     }
 }
-?>

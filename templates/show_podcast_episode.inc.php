@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,14 +56,14 @@
         <?php if (AmpConfig::get('directplay')) {
             ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id, 'play', T_('Play'), 'play_podcast_episode_' . $episode->id); ?>
-            <?php if (Stream_Playlist::check_autoplay_append()) {
-                ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&append=true', 'play_add', T_('Play last'), 'addplay_podcast_episode_' . $episode->id); ?>
-            <?php
-            } ?>
             <?php if (Stream_Playlist::check_autoplay_next()) {
                 ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_podcast_episode_' . $episode->id); ?>
+            <?php
+            } ?>
+            <?php if (Stream_Playlist::check_autoplay_append()) {
+                ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&append=true', 'play_add', T_('Play last'), 'addplay_podcast_episode_' . $episode->id); ?>
             <?php
             } ?>
         <?php
@@ -94,17 +94,12 @@
     } ?>
         <?php if (Access::check_function('download') && !empty($episode->file)) {
         ?>
-            <a rel="nohtml" href="<?php echo Podcast_Episode::play_url($episode->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
+            <a rel="nohtml" href="<?php echo print_r(Podcast_Episode::play_url($episode->id)); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
         <?php if (Access::check('interface', '50')) {
         ?>
-            <?php if (AmpConfig::get('statistical_graphs')) {
-            ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
-            <?php
-        } ?>
             <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo T_('Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
@@ -129,7 +124,7 @@
     if ($episode->time > 0) {
         $songprops[gettext_noop('Length')]           = $episode->f_time;
     }
-    
+
     if (!empty($episode->file)) {
         $songprops[gettext_noop('File')] = $episode->file;
         $songprops[gettext_noop('Size')] = $episode->f_size;
