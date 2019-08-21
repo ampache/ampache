@@ -611,8 +611,9 @@ class vainfo
     /**
      * _parse_general
      *
-     * Gather and return the general information about a file (vbr/cbr,
-     * sample rate, channels, etc.)
+     * Gather and return the general information about a file (vbr/cbr, sample rate, channels, etc.)
+     * @param array $tags
+     * @return array
      */
     private function _parse_general($tags)
     {
