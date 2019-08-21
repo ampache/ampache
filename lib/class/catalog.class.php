@@ -1629,7 +1629,7 @@ abstract class Catalog extends database_object
      */
     public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern = '', $rename_pattern = '')
     {
-        debug_event('catalog.class', 'Reading tags from ' . $media->file, 5);
+        debug_event('catalog.class', 'Reading tags from ' . $media->file, 4);
 
         $catalog = Catalog::create_from_id($media->catalog);
         $results = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
@@ -1718,9 +1718,14 @@ abstract class Catalog extends database_object
         }
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
                                         $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
-        self::migrate('artist', $song->artist, $new_song->artist);
-        self::migrate('artist', $song->albumartist, $new_song->albumartist);
-        self::migrate('album', $song->album, $new_song->album);
+        $update_time = time();
+        // set `song`.`update_time` when artist or album details change
+        if (self::migrate('artist', $song->artist, $new_song->artist) ||
+                self::migrate('artist', $song->albumartist, $new_song->albumartist) ||
+                self::migrate('album', $song->album, $new_song->album)) {
+            debug_event('catalog.class', 'Set update_time for ' . $song->id . ' due to artist/album changes.', 5);
+            Song::update_utime($song->id, $update_time);
+        }
         $new_song->title = self::check_title($new_song->title, $new_song->file);
 
         if ($artist_mbid) {
@@ -1765,6 +1770,10 @@ abstract class Catalog extends database_object
                 Art::duplicate('album', $song->album, $new_song->album);
             }
         }
+
+        $info = Song::compare_song_information($song, $new_song);
+        if ($info['change']) {
+            debug_event('catalog.class', "$song->file : differences found, updating database", 4);
 
             Song::update_song($song->id, $new_song);
 
@@ -2616,6 +2625,7 @@ abstract class Catalog extends database_object
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
+     * @return boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
@@ -2625,6 +2635,10 @@ abstract class Catalog extends database_object
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
             Rating::migrate($object_type, $old_object_id, $new_object_id);
             Art::migrate($object_type, $old_object_id, $new_object_id);
+
+            return true;
         }
+
+        return false;
     }
 }// end of catalog class
