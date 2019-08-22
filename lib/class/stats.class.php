@@ -525,8 +525,9 @@ class Stats
     {
         $type = self::validate_type($input_type);
 
-        $base_type = 'song';
-        $sql_type  = $base_type . "`.`" . $type;
+        $base_type   = 'song';
+        $sql_type    = $base_type . "`.`" . $type;
+        $rating_join = 'WHERE';
         if ($input_type === 'song' || $input_type === 'playlist') {
             $sql_type = $input_type . '`.`id';
         }
@@ -546,6 +547,8 @@ class Stats
             if (AmpConfig::get('catalog_disable')) {
                 $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
                 $sql .= "WHERE `catalog`.`enabled` = '1' ";
+                // can't have 2 where's
+                $rating_join = 'AND';
             }
             if ($catalog > 0) {
                 $sql .= "AND `catalog` = '" . (string) scrub_in($catalog) . "' ";
@@ -553,7 +556,7 @@ class Stats
             $rating_filter = AmpConfig::get_rating_filter();
             if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
                 $user_id = Core::get_global('user')->id;
-                $sql .= "WHERE `" . $sql_type . "` NOT IN" .
+                $sql .= $rating_join . " `" . $sql_type . "` NOT IN" .
                         " (SELECT `object_id` FROM `rating`" .
                         " WHERE `rating`.`object_type` = '" . $type . "'" .
                         " AND `rating`.`rating` <=" . $rating_filter .
@@ -573,7 +576,7 @@ class Stats
     /**
      * get_newest
      * This returns an array of the newest artists/albums/whatever
-     * in this ampache instance
+     * in this Ampache instance
      * @param string $type
      */
     public static function get_newest($type, $count = '', $offset = '', $catalog = 0)

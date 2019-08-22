@@ -146,6 +146,7 @@ class Userflag extends database_object
      * set_flag
      * This function sets the user flag for the current object.
      * If no user_id is passed in, we use the currently logged in user.
+     * @param integer $user_id
      */
     public function set_flag($flagged, $user_id = null)
     {
@@ -210,6 +211,7 @@ class Userflag extends database_object
     /**
      * set_flag_for_group
      * This function sets the user flag for an album group.
+     * @param integer $user_id
      */
     public function set_flag_for_group($flagged, $album, $user_id = null)
     {
