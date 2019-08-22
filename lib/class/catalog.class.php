@@ -2631,19 +2631,24 @@ abstract class Catalog extends database_object
         if ($old_object_id != $new_object_id) {
             debug_event('catalog.class', 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id, 4);
             if (!Stats::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id . ' stats migration failed!', 2);
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' STATS migration failed!', 2);
             }
             if (!UserActivity::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id . ' stats migration failed!', 2);
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' USERACTIVITY migration failed!', 2);
             }
             if (!Userflag::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id . ' stats migration failed!', 2);
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' USERFLAG migration failed!', 2);
             }
             if (!Rating::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id . ' stats migration failed!', 2);
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' RATING migration failed!', 2);
             }
             if (!Art::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id . ' stats migration failed!', 2);
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' ART migration failed!', 2);
             }
 
             return true;
