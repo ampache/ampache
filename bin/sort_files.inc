@@ -298,7 +298,7 @@ function sort_move_file($song, $fullname, $test_mode) {
 
         /* Update the catalog */
         $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
-        $db_results = Dba::write($sql);
+        Dba::write($sql);
 
     } // end else
 
