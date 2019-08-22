@@ -556,7 +556,7 @@ class Stats
             $rating_filter = AmpConfig::get_rating_filter();
             if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
                 $user_id = Core::get_global('user')->id;
-                $sql .= $rating_join ." `" . $sql_type . "` NOT IN" .
+                $sql .= $rating_join . " `" . $sql_type . "` NOT IN" .
                         " (SELECT `object_id` FROM `rating`" .
                         " WHERE `rating`.`object_type` = '" . $type . "'" .
                         " AND `rating`.`rating` <=" . $rating_filter .
