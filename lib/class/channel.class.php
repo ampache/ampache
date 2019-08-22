@@ -277,7 +277,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_parent
-     * @return boolean
+     * @return boolean|null
      */
     public function get_parent()
     {
@@ -325,7 +325,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_user_owner
-     * @return boolean
+     * @return boolean|null
      */
     public function get_user_owner()
     {
@@ -665,7 +665,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_stream_types
-     * @return array
+     * @return string[]
      */
     public function get_stream_types($player = null)
     {

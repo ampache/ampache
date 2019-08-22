@@ -211,6 +211,7 @@ class Userflag extends database_object
     /**
      * set_flag_for_group
      * This function sets the user flag for an album group.
+     * @param integer $user_id
      */
     public function set_flag_for_group($flagged, $album, $user_id = null)
     {

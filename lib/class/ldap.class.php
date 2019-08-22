@@ -196,7 +196,7 @@ class LDAP
 
     /**
      * Search for a DN in the LDAP
-     * @return string
+     * @return string|array
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true)
     {
