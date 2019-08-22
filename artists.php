@@ -80,7 +80,7 @@ switch ($_REQUEST['action']) {
         $artist->format();
         $year = (int) $_REQUEST['year'];
         if (AmpConfig::get('album_release_type')) {
-            $multi_object_ids = $artist->get_by_year($_REQUEST['catalog'],$year, false, true);
+            $multi_object_ids = $artist->get_by_year($_REQUEST['catalog'], $year, false, true);
         } else {
             $object_ids = $artist->get_by_year($_REQUEST['catalog'], $year);
         }
