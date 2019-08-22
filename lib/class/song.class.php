@@ -2001,6 +2001,7 @@ class Song extends database_object implements media, library_item
             $setting_target = 'encode_' . $media_type . '_target';
         }
         // webplayer / api transcode actions
+        $has_player_target = false;
         if ($player) {
             // encode target for songs in webplayer/api
             $player_setting_target = 'encode_player_' . $player . '_target';
@@ -2008,10 +2009,9 @@ class Song extends database_object implements media, library_item
                 // encode target for video in webplayer/api
                 $player_setting_target = 'encode_' . $media_type . '_player_' . $player . '_target';
             }
+            $has_player_target  = AmpConfig::get($player_setting_target);
         }
-        // get the default target for DEFAULT, PLAYER, SOURCE
         $has_default_target = AmpConfig::get($setting_target);
-        $has_player_target  = AmpConfig::get($player_setting_target);
         $has_codec_target   = AmpConfig::get('encode_target_' . $source);
 
         // Fall backwards from the specific transcode formats to default
