@@ -206,7 +206,8 @@ class Art extends database_object
             return false;
         }
 
-        $test = false;
+        $test  = false;
+        $image = false;
         // Check to make sure PHP:GD exists.  If so, we can sanity check the image.
         if (function_exists('ImageCreateFromString') && is_string($source)) {
             $test  = true;
@@ -487,7 +488,7 @@ class Art extends database_object
      * @param string $uid
      * @param string $kind
      * @param boolean $autocreate
-     * @return boolean|string
+     * @return false|string
      */
     public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
     {

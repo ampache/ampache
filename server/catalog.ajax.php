@@ -39,7 +39,7 @@ switch ($_REQUEST['action']) {
         $catalog     = Catalog::create_from_id($_REQUEST['catalog_id']);
         $new_enabled = $catalog->enabled ? '0' : '1';
         $catalog->update_enabled($new_enabled, $catalog->id);
-        $catalog->enabled = $new_enabled;
+        $catalog->enabled = (int) $new_enabled;
         $catalog->format();
 
         //Return the new Ajax::button
