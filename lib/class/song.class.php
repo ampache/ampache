@@ -890,7 +890,7 @@ class Song extends database_object implements media, library_item
      * get_album_original_year
      * gets the original_year of $this->album, allows passing of id
      * @param integer $album_id
-     * @return string
+     * @return integer
      */
     public function get_album_original_year($album_id = null)
     {

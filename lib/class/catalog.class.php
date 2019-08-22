@@ -1631,7 +1631,7 @@ abstract class Catalog extends database_object
     {
         debug_event('catalog.class', 'Reading tags from ' . $media->file, 4);
 
-        $catalog = Catalog::create_from_id($media->catalog);
+        $catalog = self::create_from_id($media->catalog);
         $results = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
 
         // Figure out what type of object this is and call the right
@@ -1723,7 +1723,6 @@ abstract class Catalog extends database_object
         if (self::migrate('artist', $song->artist, $new_song->artist) ||
                 self::migrate('artist', $song->albumartist, $new_song->albumartist) ||
                 self::migrate('album', $song->album, $new_song->album)) {
-            debug_event('catalog.class', 'Set update_time for ' . $song->id . ' due to artist/album changes.', 5);
             Song::update_utime($song->id, $update_time);
         }
         $new_song->title = self::check_title($new_song->title, $new_song->file);
@@ -2630,11 +2629,27 @@ abstract class Catalog extends database_object
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
         if ($old_object_id != $new_object_id) {
-            Stats::migrate($object_type, $old_object_id, $new_object_id);
-            UserActivity::migrate($object_type, $old_object_id, $new_object_id);
-            Userflag::migrate($object_type, $old_object_id, $new_object_id);
-            Rating::migrate($object_type, $old_object_id, $new_object_id);
-            Art::migrate($object_type, $old_object_id, $new_object_id);
+            debug_event('catalog.class', 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id, 4);
+            if (!Stats::migrate($object_type, $old_object_id, $new_object_id)) {
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' STATS migration failed!', 2);
+            }
+            if (!UserActivity::migrate($object_type, $old_object_id, $new_object_id)) {
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' USERACTIVITY migration failed!', 2);
+            }
+            if (!Userflag::migrate($object_type, $old_object_id, $new_object_id)) {
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' USERFLAG migration failed!', 2);
+            }
+            if (!Rating::migrate($object_type, $old_object_id, $new_object_id)) {
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' RATING migration failed!', 2);
+            }
+            if (!Art::migrate($object_type, $old_object_id, $new_object_id)) {
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' ART migration failed!', 2);
+            }
 
             return true;
         }

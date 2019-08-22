@@ -40,14 +40,11 @@ require_once $prefix . '/lib/init.php';
 
 // default various artist album name.
 $various_artist = "Various Artists";
+$options        = getopt("xv:");
 
-// Don't do anything by default just tell me what you would do
-$test_mode = true;
+// Require -x to disable test mode
+$test_mode = !array_key_exists('x', $options);
 
-$options = getopt("xv:");
-if (array_key_exists('x', $options)) {
-    $test_mode = false;
-}
 if (array_key_exists('v', $options)) {
     $operations_string .= "\n\t- " . T_('Setting catalog name');
     $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
@@ -87,15 +84,16 @@ while ($row = Dba::fetch_row($db_results)) {
         // sort_find_home will replace the % with the correct values.
         $directory = sort_find_home($song, $catalog->sort_pattern, $catalog->path);
         $filename  = sort_find_home($song, $catalog->rename_pattern, null);
-        if ($directory == false || $filename == false) {
+        if (!$directory || !$filename) {
             $fullpath = $song->file;
         } else {
             $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);;
         }
 
-        /* Check for Demo Mode */
-        if ($test_mode) {
-            /* We're just talking here... no work */
+        /* We need to actually do the moving (fake it if we are testing)
+         * Don't try to move it, if it's already the same friggin thing!
+         */
+        if ($song->file != $fullpath && strlen($fullpath)) {
             echo T_("Examine File...");
             echo "\n\t";
             /* HINT: filename (File path) */
@@ -104,13 +102,7 @@ while ($row = Dba::fetch_row($db_results)) {
             printf (T_('Destin: %s'), $fullpath);
             echo "\n";
             flush();
-        }
-
-        /* We need to actually do the moving (fake it if we are testing)
-         * Don't try to move it, if it's already the same friggin thing!
-         */
-        if ($song->file != $fullpath && strlen($fullpath)) {
-            sort_move_file($song, $fullpath);
+            sort_move_file($song, $fullpath, $test_mode);
         }
 
     } // end foreach song
@@ -214,16 +206,14 @@ function sort_clean_name($string) {
  * and unlink.. This is a little unsafe, and as such it verifies the copy
  * worked by doing a filesize() before unlinking.
  */
-function sort_move_file($song, $fullname) {
+function sort_move_file($song, $fullname, $test_mode) {
 
-    $old_dir    = dirname($song->file);
-
-    $info = pathinfo($fullname);
-
-    $directory     = $info['dirname'];
-    $file        = $info['basename'];
-    $data = preg_split("/[\/\\\]/", $directory);
-    $path = '';
+    $old_dir   = dirname($song->file);
+    $info      = pathinfo($fullname);
+    $directory = $info['dirname'];
+    $file      = $info['basename'];
+    $data      = preg_split("/[\/\\\]/", $directory);
+    $path      = '';
 
     /* We not need the leading / */
     unset($data[0]);
@@ -235,11 +225,12 @@ function sort_move_file($song, $fullname) {
 
         /* We need to check for the existence of this directory */
         if (!is_dir($path)) {
-            echo "\t";
-            /* HINT: Directory (File path) */
-            printf (T_('Create directory %s'), $path);
-            echo "\n";
-            if (!Core::get_global('test_mode')) {
+            if ($test_mode) {
+                echo "\t";
+                printf (T_('Making: %s Directory'), $path);
+                echo "\n";
+            }
+            else {
                 debug_event('sort_files.inc', "Creating $path directory", 4);
                 $results = mkdir($path);
                 if (!$results) {
@@ -308,8 +299,9 @@ function sort_move_file($song, $fullname) {
 
         /* If we've made it this far it should be safe */
         $results = unlink($song->file);
-        /* HINT: filename (File path) */
-        if (!$results) { printf (T_('Error: Unable to delete %s'), $song->file); echo "\n"; }
+        if (!$results) {
+            printf (T_('Error: Unable to delete %s'), $song->file); echo "\n";
+        }
 
         /* Update the catalog */
         $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
