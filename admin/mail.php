@@ -66,7 +66,7 @@ switch ($_REQUEST['action']) {
                 $title  = T_('No Problem');
                 $body   = T_('Your e-mail was sent.');
             } else {
-                $title     = T_("Please don't be mad");
+                $title     = T_("There Was A Problem");
                 $body      = T_('There was an error sending your e-mail.');
             }
             $url = AmpConfig::get('web_path') . '/admin/mail.php';

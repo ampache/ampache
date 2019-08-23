@@ -195,7 +195,7 @@ switch ($_REQUEST['action']) {
         if ($client->disable()) {
             show_confirmation(T_('User disabled'), $client->username . ' (' . $client->fullname . ')', AmpConfig::get('web_path') . '/admin/users.php');
         } else {
-            show_confirmation(T_("Please don't be mad"), T_('You need an active Administrator account'), AmpConfig::get('web_path') . '/admin/users.php');
+            show_confirmation(T_("There Was A Problem"), T_('You need an active Administrator account'), AmpConfig::get('web_path') . '/admin/users.php');
         }
     break;
     case 'show_edit':
@@ -220,7 +220,7 @@ switch ($_REQUEST['action']) {
                     /* HINT: Username (Short Name) */
                     sprintf(T_('%s has been deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
         } else {
-            show_confirmation(T_("Please don't be mad"), T_('You need an active Administrator account'), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_("There Was A Problem"), T_('You need an active Administrator account'), AmpConfig::get('web_path') . "/admin/users.php");
         }
     break;
     case 'delete':
