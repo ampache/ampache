@@ -519,6 +519,7 @@ class Catalog_local extends Catalog
             require_once AmpConfig::get('prefix') . UI::find_template('show_verify_catalog.inc.php');
             flush();
         }
+        $this->update_last_update();
 
         foreach (array('video', 'song') as $media_type) {
             $total = $stats[$media_type . 's']; // UGLY
@@ -536,8 +537,6 @@ class Catalog_local extends Catalog
         }
 
         debug_event('verify', "Finished, $total_updated updated in " . $this->name, 5);
-
-        $this->update_last_update();
 
         return array('total' => $number, 'updated' => $total_updated);
     } // verify_catalog_proc
