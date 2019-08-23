@@ -36,16 +36,16 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
-    <meta name="viewport" content="width=1024, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Ampache :: For the love of Music - Install</title>
     <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
     <script src="lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
     <script src="lib/components/bootstrap/js/bootstrap.min.js" language="javascript" type="text/javascript"></script>
 </head>
-<body>
+<body id="install-page">
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">

@@ -294,6 +294,7 @@ class Rating extends database_object
      * This function sets the rating for the current object.
      * This is currently only for grouped disk albums!
      * @param array $album
+     * @param string $rating
      * @return boolean
      */
     private static function set_rating_for_group($rating, $album, $user_id = null)
@@ -356,4 +357,18 @@ class Rating extends database_object
             require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
         }
     } // show
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return boolean|PDOStatement
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "UPDATE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
 } //end rating class

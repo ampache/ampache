@@ -206,15 +206,18 @@ class Art extends database_object
             return false;
         }
 
-        $test = true;
-        // Check to make sure PHP:GD exists.  If so, we can sanity check
-        // the image.
-        if (function_exists('ImageCreateFromString')) {
+        $test  = false;
+        $image = false;
+        // Check to make sure PHP:GD exists.  If so, we can sanity check the image.
+        if (function_exists('ImageCreateFromString') && is_string($source)) {
+            $test  = true;
             $image = ImageCreateFromString($source);
             if ($image == false || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event('art.class', 'Image failed PHP-GD test', 1);
                 $test = false;
             }
+        }
+        if ($test) {
             if (imagedestroy($image) === false) {
                 throw new \RuntimeException('The image handle ' . $image . ' could not be destroyed.');
             }
@@ -485,7 +488,7 @@ class Art extends database_object
      * @param string $uid
      * @param string $kind
      * @param boolean $autocreate
-     * @return boolean|string
+     * @return false|string
      */
     public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
     {
@@ -1562,6 +1565,9 @@ class Art extends database_object
 
             if (preg_match_all('/"ou":"(http.+?)"/', $html, $matches, PREG_PATTERN_ORDER)) {
                 foreach ($matches[1] as $match) {
+                    if (preg_match('/lookaside\.fbsbx\.com/', $match)) {
+                        break;
+                    }
                     $match = rawurldecode($match);
                     debug_event('art.class', 'Found image at: ' . $match, 5);
                     $results = pathinfo($match);

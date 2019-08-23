@@ -215,6 +215,9 @@ class Upload
         return false;
     }
 
+    /**
+     * @param Catalog $catalog
+     */
     public static function get_root($catalog = null, $username = null)
     {
         if ($catalog == null) {

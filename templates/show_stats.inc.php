@@ -33,7 +33,7 @@ $catalogs = Catalog::get_catalogs();
             <th><?php echo T_('Albums'); ?></th>
             <th><?php echo T_('Artists'); ?></th>
             <th><?php echo T_('Songs'); ?></th>
-            <?php if (AmpConfig::get('allow_video')) {
+            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
     ?>
                 <th><?php echo T_('Videos'); ?></th>
             <?php
@@ -51,7 +51,7 @@ $catalogs = Catalog::get_catalogs();
             <td><?php echo $stats['albums']; ?></td>
             <td><?php echo $stats['artists']; ?></td>
             <td><?php echo $stats['songs']; ?></td>
-            <?php if (AmpConfig::get('allow_video')) {
+            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
         ?>
                 <td><?php echo $stats['videos']; ?></td>
             <?php
@@ -83,7 +83,7 @@ $catalogs = Catalog::get_catalogs();
             <th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
             <th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
             <th class="cel_songs"><?php echo T_('Songs'); ?></th>
-            <?php if (AmpConfig::get('allow_video')) {
+            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
         ?>
             <th class="cel_video"><?php echo T_('Videos'); ?></th>
             <?php
@@ -104,7 +104,7 @@ $catalogs = Catalog::get_catalogs();
         <td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
         <td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
         <td class="cel_songs"><?php echo scrub_out($stats['songs']); ?></td>
-            <?php if (AmpConfig::get('allow_video')) {
+            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
             ?>
                 <td class="cel_video"><?php echo scrub_out($stats['videos']); ?></td>
             <?php

@@ -162,6 +162,7 @@ class Tag extends database_object implements library_item
 
         // Check and see if the tag exists, if not create it, we need the tag id from this
         if (!$tag_id = self::tag_exists($cleaned_value)) {
+            debug_event('tag.class', 'Adding new tag {' . $cleaned_value . '}', 5);
             $tag_id = self::add_tag($cleaned_value);
         }
 
@@ -231,7 +232,7 @@ class Tag extends database_object implements library_item
                 if ($data['merge_persist'] != '1') {
                     $this->delete();
                 } else {
-                    $sql = "UPDATE `tag` SET `is_hidden` = true WHERE `tag`.`tag` = ? ";
+                    $sql = "UPDATE `tag` SET `is_hidden` = true WHERE `tag`.`id` = ? ";
                     Dba::write($sql, array($this->id));
                 }
             }
@@ -250,17 +251,16 @@ class Tag extends database_object implements library_item
         if ($this->id != $merge_to) {
             debug_event('tag.class', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
 
-            $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
-                   "SELECT ?,`user`,`object_type`,`object_id` " .
-                   "FROM `tag_map` AS `tm`" .
-                   "WHERE `tm`.`tag_id` = ? AND NOT EXISTS ( " .
+            $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
+                   "SELECT " . $merge_to . ",`user`,`object_type`,`object_id` " .
+                   "FROM `tag_map` AS `tm` " .
+                   "WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (" .
                        "SELECT 1 FROM `tag_map` " .
-                       "WHERE `tag_map`.`tag_id` = ? " .
+                       "WHERE `tag_map`.`tag_id` = " . $merge_to . " " .
                          "AND `tag_map`.`object_id` = `tm`.`object_id` " .
                          "AND `tag_map`.`object_type` = `tm`.`object_type` " .
-                         "AND `tag_map`.`user` = `tm`.`user`" .
-                   ")";
-            Dba::write($sql, array($merge_to, $this->id, $merge_to));
+                         "AND `tag_map`.`user` = `tm`.`user`)";
+            Dba::write($sql);
             if ($is_persistent) {
                 $sql = 'INSERT INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)';
                 Dba::write($sql, array($this->id, $merge_to));
@@ -491,6 +491,7 @@ class Tag extends database_object implements library_item
     /**
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
+     * @param string $type
      */
     public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
     {
@@ -623,8 +624,7 @@ class Tag extends database_object implements library_item
         if (is_array($ctags)) {
             foreach ($ctags as $ctid => $ctv) {
                 if ($ctv['id'] != '') {
-                    $ctag = new Tag($ctv['id']);
-                    debug_event('tag.class', 'Processing tag {' . $ctag->name . '}...', 5);
+                    $ctag  = new Tag($ctv['id']);
                     $found = false;
 
                     foreach ($editedTags as  $tk => $tv) {
@@ -635,11 +635,10 @@ class Tag extends database_object implements library_item
                     }
 
                     if ($found) {
-                        debug_event('tag.class', 'Already found. Do nothing.', 5);
                         unset($editedTags[$ctag->name]);
                     } else {
                         if ($overwrite) {
-                            debug_event('tag.class', 'Not found in the new list. Delete it.', 5);
+                            debug_event('tag.class', 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
                             $ctag->remove_map($type, $object_id, false);
                         }
                     }
@@ -650,7 +649,6 @@ class Tag extends database_object implements library_item
         // Look if we need to add some new tags
         foreach ($editedTags as  $tk => $tv) {
             if ($tv != '') {
-                debug_event('tag.class', 'Adding new tag {' . $tv . '}', 5);
                 self::add($type, $object_id, $tv, false);
             }
         }

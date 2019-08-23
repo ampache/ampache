@@ -35,16 +35,18 @@ class Random
      */
     public static function artist()
     {
-        $sql = "SELECT `artist`.`id` FROM `artist` " .
+        $rating_join = 'WHERE';
+        $sql         = "SELECT `artist`.`id` FROM `artist` " .
                 "LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
                     "WHERE `catalog`.`enabled` = '1' ";
+            $rating_join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
             $user_id = Core::get_global('user')->id;
-            $sql .= " AND `artist`.`id` NOT IN" .
+            $sql .= " " . $rating_join . " `artist`.`id` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .
                     " AND `rating`.`rating` <=" . $rating_filter .
@@ -106,15 +108,17 @@ class Random
             $limit = AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25';
         }
 
-        $sql = "SELECT `song`.`id` FROM `song` ";
+        $rating_join = 'WHERE';
+        $sql         = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
                     "WHERE `catalog`.`enabled` = '1' ";
+            $rating_join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
             $user_id = Core::get_global('user')->id;
-            $sql .= " WHERE `song`.`artist` NOT IN" .
+            $sql .= " " . $rating_join . " `song`.`artist` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .
                     " AND `rating`.`rating` <=" . $rating_filter .
@@ -145,8 +149,9 @@ class Random
         $results = array();
 
         // Get the last album played by us
-        $data      = Core::get_global('user')->get_recently_played('1', 'album');
-        $where_sql = "";
+        $data        = Core::get_global('user')->get_recently_played('1', 'album');
+        $where_sql   = "";
+        $rating_join = 'WHERE';
         if ($data[0]) {
             $where_sql = " AND `song`.`album`='" . $data[0] . "' ";
         }
@@ -155,6 +160,7 @@ class Random
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
                     "WHERE `catalog`.`enabled` = '1' ";
+            $rating_join = 'AND';
         }
         if (AmpConfig::get('album_group')) {
             $sql .= " LEFT JOIN `album` on `rating`.`object_id` = `album`.`id` and `rating`.`object_type` = 'album'";
@@ -162,7 +168,7 @@ class Random
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
             $user_id = Core::get_global('user')->id;
-            $sql .= " WHERE `song`.`artist` NOT IN" .
+            $sql .= " " . $rating_join . " `song`.`artist` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .
                     " AND `rating`.`rating` <=" . $rating_filter .
@@ -195,8 +201,9 @@ class Random
     {
         $results = array();
 
-        $data      = Core::get_global('user')->get_recently_played('1', 'artist');
-        $where_sql = "";
+        $data        = Core::get_global('user')->get_recently_played('1', 'artist');
+        $where_sql   = "";
+        $rating_join = 'WHERE';
         if ($data[0]) {
             $where_sql = " AND `song`.`artist`='" . $data[0] . "' ";
         }
@@ -205,11 +212,12 @@ class Random
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
                     "WHERE `catalog`.`enabled` = '1' ";
+            $rating_join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
             $user_id = Core::get_global('user')->id;
-            $sql .= " WHERE `song`.`artist` NOT IN" .
+            $sql .= " " . $rating_join . " `song`.`artist` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .
                     " AND `rating`.`rating` <=" . $rating_filter .

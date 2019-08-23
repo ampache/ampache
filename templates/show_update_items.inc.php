@@ -21,12 +21,21 @@
  */
 UI::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
 
-Catalog::update_single_item($type, $object_id);
+$return_id = Catalog::update_single_item($type, $object_id);
+
+//The target URL has changed so it needs to be updated
+if ($object_id != $return_id) {
+    $object_id  = $return_id;
+    $target_url = AmpConfig::get('web_path') . '/' . $type . 's.php?action=show&amp;' . $type . '=' . $object_id;
+}
 
 //gather art for this item
-if (is_array($catalog_id) && $catalog_id[0] != '') {
-    $catalog = Catalog::create_from_id($catalog_id[0]);
-    $catalog->gather_art_item($type, $object_id);
+$art = new Art($object_id, $type);
+if (!$art->has_db_info() && !AmpConfig::get('art_order') == 'db') {
+    if (is_array($catalog_id) && $catalog_id[0] != '') {
+        $catalog = Catalog::create_from_id($catalog_id[0]);
+        $catalog->gather_art_item($type, $object_id);
+    }
 }
 
 ?>
