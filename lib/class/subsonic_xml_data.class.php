@@ -820,6 +820,7 @@ class Subsonic_XML_Data
         $xplaylist->addAttribute('owner', $user->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('created', date("c", $playlist->date));
+        $xplaylist->addAttribute('changed', date("c", $playlist->last_update));
         $xplaylist->addAttribute('songCount', $playlist->get_media_count('song'));
         $xplaylist->addAttribute('duration', $playlist->get_total_duration());
 
