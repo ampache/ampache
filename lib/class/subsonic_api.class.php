@@ -40,17 +40,6 @@ class Subsonic_Api
     {
     }
 
-    public static function check_version($input, $version = "1.0.0", $addheader = false)
-    {
-        // We cannot check client version unfortunately. Most Subsonic client sent a dummy client version...
-        /* if (version_compare($input['v'], $version) < 0) {
-          ob_end_clean();
-          if ($addheader) self::setHeader($input['f']);
-          self::apiOutput($input, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_CLIENT));
-          return false;
-          } */
-    }
-
     /**
      * @param string $parameter
      */
@@ -346,8 +335,6 @@ class Subsonic_Api
      */
     public static function getlicense($input)
     {
-        self::check_version($input);
-
         $response = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addLicense($response);
         self::apiOutput($input, $response);
@@ -360,8 +347,6 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
-        self::check_version($input);
-
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addMusicFolders($r, Catalog::get_catalogs());
         self::apiOutput($input, $r);
@@ -374,7 +359,6 @@ class Subsonic_Api
      */
     public static function getindexes($input)
     {
-        self::check_version($input);
         set_time_limit(300);
 
         $musicFolderId   = $input['musicFolderId'];
@@ -430,8 +414,6 @@ class Subsonic_Api
      */
     public static function getmusicdirectory($input)
     {
-        self::check_version($input);
-
         $id = self::check_parameter($input, 'id');
 
         $r = Subsonic_XML_Data::createSuccessResponse();
@@ -454,8 +436,6 @@ class Subsonic_Api
      */
     public static function getgenres($input)
     {
-        self::check_version($input, "1.9.0");
-
         $r = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addGenres($r, Tag::get_tags('song'));
         self::apiOutput($input, $r);
@@ -468,8 +448,6 @@ class Subsonic_Api
      */
     public static function getartists($input)
     {
-        self::check_version($input, "1.7.0");
-
         $r       = Subsonic_XML_Data::createSuccessResponse();
         $artists = Catalog::get_artists(Catalog::get_catalogs());
         Subsonic_XML_Data::addArtistsRoot($r, $artists, true);
@@ -483,8 +461,6 @@ class Subsonic_Api
      */
     public static function getartist($input)
     {
-        self::check_version($input, "1.7.0");
-
         $artistid = self::check_parameter($input, 'id');
 
         $artist = new Artist(Subsonic_XML_Data::getAmpacheId($artistid));
@@ -504,8 +480,6 @@ class Subsonic_Api
      */
     public static function getalbum($input)
     {
-        self::check_version($input, "1.7.0");
-
         $albumid = self::check_parameter($input, 'id');
 
         $addAmpacheInfo = ($input['ampache'] == "1");
@@ -528,8 +502,6 @@ class Subsonic_Api
      */
     public static function getvideos($input)
     {
-        self::check_version($input, "1.7.0");
-
         $response = Subsonic_XML_Data::createSuccessResponse();
         $videos   = Catalog::get_videos();
         Subsonic_XML_Data::addVideos($response, $videos);
@@ -543,8 +515,6 @@ class Subsonic_Api
      */
     public static function getalbumlist($input, $elementName = "albumList")
     {
-        self::check_version($input, "1.2.0");
-
         $type = self::check_parameter($input, 'type');
 
         $size          = $input['size'];
@@ -647,7 +617,6 @@ class Subsonic_Api
      */
     public static function getalbumlist2($input)
     {
-        self::check_version($input, "1.7.0");
         self::getAlbumList($input, "albumList2");
     }
 
@@ -658,8 +627,6 @@ class Subsonic_Api
      */
     public static function getrandomsongs($input)
     {
-        self::check_version($input, "1.2.0");
-
         $size = $input['size'];
         if (!$size) {
             $size = 10;
@@ -733,8 +700,6 @@ class Subsonic_Api
      */
     public static function getsong($input)
     {
-        self::check_version($input, "1.7.0");
-
         $songid = self::check_parameter($input, 'id');
         $r      = Subsonic_XML_Data::createSuccessResponse();
         $song   = Subsonic_XML_Data::getAmpacheId($songid);
@@ -749,8 +714,6 @@ class Subsonic_Api
      */
     public static function gettopsongs($input)
     {
-        self::check_version($input, "1.13.0");
-
         $artist_id = self::check_parameter($input, 'artist');
         $artist    = new Artist(Subsonic_XML_Data::getAmpacheId($artist_id));
         $count     = (int) $input['count'];
@@ -774,8 +737,6 @@ class Subsonic_Api
      */
     public static function getsongsbygenre($input)
     {
-        self::check_version($input, "1.9.0");
-
         $genre  = self::check_parameter($input, 'genre');
         $count  = $input['count'];
         $offset = $input['offset'];
@@ -798,8 +759,6 @@ class Subsonic_Api
      */
     public static function getnowplaying($input)
     {
-        self::check_version($input);
-
         $data = Stream::get_now_playing();
         $r    = Subsonic_XML_Data::createSuccessResponse();
         Subsonic_XML_Data::addNowPlaying($r, $data);
@@ -813,8 +772,6 @@ class Subsonic_Api
      */
     public static function search2($input, $elementName = "searchResult2")
     {
-        self::check_version($input, "1.2.0");
-
         $query    = self::check_parameter($input, 'query');
         $artists  = array();
         $albums   = array();
@@ -885,7 +842,6 @@ class Subsonic_Api
      */
     public static function search3($input)
     {
-        self::check_version($input, "1.7.0");
         self::search2($input, "searchResult3");
     }
 
@@ -896,8 +852,6 @@ class Subsonic_Api
      */
     public static function getplaylists($input)
     {
-        self::check_version($input);
-
         $r        = Subsonic_XML_Data::createSuccessResponse();
         $username = $input['username'];
 
@@ -922,8 +876,6 @@ class Subsonic_Api
      */
     public static function getplaylist($input)
     {
-        self::check_version($input);
-
         $playlistid = self::check_parameter($input, 'id');
 
         $r = Subsonic_XML_Data::createSuccessResponse();
@@ -944,8 +896,6 @@ class Subsonic_Api
      */
     public static function createplaylist($input)
     {
-        self::check_version($input, "1.2.0");
-
         $playlistId = $input['playlistId'];
         $name       = $input['name'];
         $songId     = $input['songId'];
@@ -1010,8 +960,6 @@ class Subsonic_Api
      */
     public static function updateplaylist($input)
     {
-        self::check_version($input, "1.7.0");
-
         $playlistId = self::check_parameter($input, 'playlistId');
 
         $name    = $input['name'];
@@ -1038,8 +986,6 @@ class Subsonic_Api
      */
     public static function deleteplaylist($input)
     {
-        self::check_version($input, "1.2.0");
-
         $playlistId = self::check_parameter($input, 'id');
 
         if (Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
@@ -1061,8 +1007,6 @@ class Subsonic_Api
      */
     public static function stream($input)
     {
-        self::check_version($input, "1.0.0", true);
-
         $fileid = self::check_parameter($input, 'id', true);
 
         $maxBitRate            = $input['maxBitRate'];
@@ -1103,8 +1047,6 @@ class Subsonic_Api
      */
     public static function download($input)
     {
-        self::check_version($input, "1.0.0", true);
-
         $fileid = self::check_parameter($input, 'id', true);
 
         $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
@@ -1118,8 +1060,6 @@ class Subsonic_Api
      */
     public static function hls($input)
     {
-        self::check_version($input, "1.7.0", true);
-
         $fileid = self::check_parameter($input, 'id', true);
 
         $bitRate = $input['bitRate'];
@@ -1149,8 +1089,6 @@ class Subsonic_Api
      */
     public static function getcoverart($input)
     {
-        self::check_version($input, "1.0.0", true);
-
         $id   = self::check_parameter($input, 'id', true);
         $size = $input['size'];
 
@@ -1201,8 +1139,6 @@ class Subsonic_Api
      */
     public static function setrating($input)
     {
-        self::check_version($input, "1.6.0");
-
         $object_id = self::check_parameter($input, 'id');
         $rating    = $input['rating'];
 
@@ -1238,8 +1174,6 @@ class Subsonic_Api
      */
     public static function getstarred($input, $elementName = "starred")
     {
-        self::check_version($input, "1.7.0");
-
         $user_id = Core::get_global('user')->id;
 
         $response = Subsonic_XML_Data::createSuccessResponse();
@@ -1264,8 +1198,6 @@ class Subsonic_Api
      */
     public static function star($input)
     {
-        self::check_version($input, "1.7.0");
-
         self::_setStar($input, true);
     }
 
@@ -1277,8 +1209,6 @@ class Subsonic_Api
      */
     public static function unstar($input)
     {
-        self::check_version($input, "1.7.0");
-
         self::_setStar($input, false);
     }
 
@@ -1355,8 +1285,6 @@ class Subsonic_Api
      */
     public static function getuser($input)
     {
-        self::check_version($input, "1.3.0");
-
         $username = self::check_parameter($input, 'username');
 
         if (Core::get_global('user')->access >= 100 || Core::get_global('user')->username == $username) {
@@ -1381,8 +1309,6 @@ class Subsonic_Api
      */
     public static function getusers($input)
     {
-        self::check_version($input, "1.7.0");
-
         if (Core::get_global('user')->access >= 100) {
             $response     = Subsonic_XML_Data::createSuccessResponse();
             $users        = User::get_valid_users();
@@ -1435,8 +1361,6 @@ class Subsonic_Api
      */
     public static function getinternetradiostations($input)
     {
-        self::check_version($input, "1.9.0");
-
         $response      = Subsonic_XML_Data::createSuccessResponse();
         $radios        = Live_Stream::get_all_radios();
         Subsonic_XML_Data::addRadios($response, $radios);
@@ -1450,8 +1374,6 @@ class Subsonic_Api
      */
     public static function getshares($input)
     {
-        self::check_version($input, "1.6.0");
-
         $response      = Subsonic_XML_Data::createSuccessResponse();
         $shares        = Share::get_share_list();
         Subsonic_XML_Data::addShares($response, $shares);
@@ -1465,8 +1387,6 @@ class Subsonic_Api
      */
     public static function createshare($input)
     {
-        self::check_version($input, "1.6.0");
-
         $id          = self::check_parameter($input, 'id');
         $description = $input['description'];
 
@@ -1512,8 +1432,6 @@ class Subsonic_Api
      */
     public static function deleteshare($input)
     {
-        self::check_version($input, "1.6.0");
-
         $id = self::check_parameter($input, 'id');
 
         if (AmpConfig::get('share')) {
@@ -1536,8 +1454,6 @@ class Subsonic_Api
      */
     public static function updateshare($input)
     {
-        self::check_version($input, "1.6.0");
-
         $id          = self::check_parameter($input, 'id');
         $description = $input['description'];
 
@@ -1586,8 +1502,6 @@ class Subsonic_Api
      */
     public static function createuser($input)
     {
-        self::check_version($input, "1.1.0");
-
         $username     = self::check_parameter($input, 'username');
         $password     = self::check_parameter($input, 'password');
         $email        = self::check_parameter($input, 'email');
@@ -1641,8 +1555,6 @@ class Subsonic_Api
      */
     public static function updateuser($input)
     {
-        self::check_version($input, "1.10.1");
-
         $username = self::check_parameter($input, 'username');
         $password = $input['password'];
         $email    = $input['email'];
@@ -1707,8 +1619,6 @@ class Subsonic_Api
      */
     public static function deleteuser($input)
     {
-        self::check_version($input, "1.3.0");
-
         $username = self::check_parameter($input, 'username');
         if (Access::check('interface', 100)) {
             $user = User::get_from_username($username);
@@ -1732,8 +1642,6 @@ class Subsonic_Api
      */
     public static function changepassword($input)
     {
-        self::check_version($input, "1.1.0");
-
         $username     = self::check_parameter($input, 'username');
         $inp_pass     = self::check_parameter($input, 'password');
         $password     = self::decrypt_password($inp_pass);
@@ -1760,7 +1668,6 @@ class Subsonic_Api
      */
     public static function jukeboxcontrol($input)
     {
-        self::check_version($input, "1.2.0");
         $action = self::check_parameter($input, 'action');
         $id     = $input['id'];
         $gain   = $input['gain'];
@@ -1857,8 +1764,6 @@ class Subsonic_Api
      */
     public static function scrobble($input)
     {
-        self::check_version($input, "1.5.0");
-
         $id         = self::check_parameter($input, 'id');
         $submission = $input['submission'];
         //$time = $input['time'];
@@ -1894,8 +1799,6 @@ class Subsonic_Api
      */
     public static function getlyrics($input)
     {
-        self::check_version($input, "1.2.0");
-
         $artist = $input['artist'];
         $title  = $input['title'];
 
@@ -2035,7 +1938,6 @@ class Subsonic_Api
      */
     public static function getpodcasts($input)
     {
-        self::check_version($input, "1.6.0");
         $id              = $input['id'];
         $includeEpisodes = isset($input['includeEpisodes']) ? $input['includeEpisodes'] : true;
 
@@ -2066,7 +1968,6 @@ class Subsonic_Api
      */
     public static function getnewestpodcasts($input)
     {
-        self::check_version($input, "1.13.0");
         //$count = $input['count'] ?: 20; // Seems to be useless code
 
         if (AmpConfig::get('podcast')) {
@@ -2086,8 +1987,6 @@ class Subsonic_Api
      */
     public static function refreshpodcasts($input)
     {
-        self::check_version($input, "1.9.0");
-
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
             $podcasts = Catalog::get_podcasts();
             foreach ($podcasts as $podcast) {
@@ -2107,7 +2006,6 @@ class Subsonic_Api
      */
     public static function createpodcastchannel($input)
     {
-        self::check_version($input, "1.9.0");
         $url = self::check_parameter($input, 'url');
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
@@ -2137,7 +2035,6 @@ class Subsonic_Api
      */
     public static function deletepodcastchannel($input)
     {
-        self::check_version($input, "1.9.0");
         $id = self::check_parameter($input, 'id');
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
@@ -2164,7 +2061,6 @@ class Subsonic_Api
      */
     public static function deletepodcastepisode($input)
     {
-        self::check_version($input, "1.9.0");
         $id = self::check_parameter($input, 'id');
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
@@ -2191,7 +2087,6 @@ class Subsonic_Api
      */
     public static function downloadpodcastepisode($input)
     {
-        self::check_version($input, "1.9.0");
         $id = self::check_parameter($input, 'id');
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
@@ -2216,8 +2111,6 @@ class Subsonic_Api
      */
     public static function getbookmarks($input)
     {
-        self::check_version($input, "1.9.0");
-
         $response         = Subsonic_XML_Data::createSuccessResponse();
         $bookmarks        = Bookmark::get_bookmarks();
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
@@ -2232,7 +2125,6 @@ class Subsonic_Api
      */
     public static function createbookmark($input)
     {
-        self::check_version($input, "1.9.0");
         $id       = self::check_parameter($input, 'id');
         $position = self::check_parameter($input, 'position');
         $comment  = $input['comment'];
@@ -2265,7 +2157,6 @@ class Subsonic_Api
      */
     public static function deletebookmark($input)
     {
-        self::check_version($input, "1.9.0");
         $id   = self::check_parameter($input, 'id');
         $type = Subsonic_XML_Data::getAmpacheType($id);
 
@@ -2288,8 +2179,6 @@ class Subsonic_Api
      */
     public static function getchatmessages($input)
     {
-        self::check_version($input, "1.2.0");
-
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $response);
     }
@@ -2302,8 +2191,6 @@ class Subsonic_Api
      */
     public static function addchatmessages($input)
     {
-        self::check_version($input, "1.2.0");
-
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $response);
     }
@@ -2316,8 +2203,6 @@ class Subsonic_Api
      */
     public static function getplayqueue($input)
     {
-        self::check_version($input, "1.12.0");
-
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $response);
     }
@@ -2330,8 +2215,6 @@ class Subsonic_Api
      */
     public static function saveplayqueue($input)
     {
-        self::check_version($input, "1.12.0");
-
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
         self::apiOutput($input, $response);
     }
