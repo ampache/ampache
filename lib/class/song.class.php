@@ -882,7 +882,7 @@ class Song extends database_object implements media, library_item
      * get_album_original_year
      * gets the original_year of $this->album, allows passing of id
      * @param integer $album_id
-     * @return string
+     * @return integer
      */
     public function get_album_original_year($album_id = null)
     {
@@ -985,10 +985,10 @@ class Song extends database_object implements media, library_item
      */
     public static function compare_song_information(Song $song, Song $new_song)
     {
-        // Remove some stuff we don't care about
+        // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
-        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group');
-        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt');
+        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags');
+        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt', 'artist', 'album', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group');
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
     } // compare_song_information
@@ -2001,6 +2001,7 @@ class Song extends database_object implements media, library_item
             $setting_target = 'encode_' . $media_type . '_target';
         }
         // webplayer / api transcode actions
+        $has_player_target = false;
         if ($player) {
             // encode target for songs in webplayer/api
             $player_setting_target = 'encode_player_' . $player . '_target';
@@ -2008,10 +2009,9 @@ class Song extends database_object implements media, library_item
                 // encode target for video in webplayer/api
                 $player_setting_target = 'encode_' . $media_type . '_player_' . $player . '_target';
             }
+            $has_player_target  = AmpConfig::get($player_setting_target);
         }
-        // get the default target for DEFAULT, PLAYER, SOURCE
         $has_default_target = AmpConfig::get($setting_target);
-        $has_player_target  = AmpConfig::get($player_setting_target);
         $has_codec_target   = AmpConfig::get('encode_target_' . $source);
 
         // Fall backwards from the specific transcode formats to default
