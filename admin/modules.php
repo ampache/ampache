@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
     case 'install_localplay':
         $localplay = new Localplay(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!$localplay->player_loaded()) {
-            AmpError::add('general', T_('Failed to enable the module due to a controller error'));
+            AmpError::add('general', T_('Failed to enable the Localplay module.'));
             AmpError::display('general');
             break;
         }
@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
         $type    = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            AmpError::add('general', T_('Failed to enable the module due to a Catalog error'));
+            AmpError::add('general', T_('Failed to enable the Catalog module.'));
             AmpError::display('general');
             break;
         }
@@ -76,14 +76,14 @@ switch ($_REQUEST['action']) {
     case 'confirm_uninstall_localplay':
         $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
-        $title = T_('Do you really want to disable this module?');
+        $title = T_('Do you really want to disable this Localplay module?');
         $body  = '';
         show_confirmation($title, $body, $url, 1);
     break;
     case 'confirm_uninstall_catalog_type':
         $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
-        $title = T_('Do you really want to disable this module?');
+        $title = T_('Do you really want to disable this Catalog module?');
         $body  = '';
         show_confirmation($title, $body, $url, 1);
     break;
@@ -104,7 +104,7 @@ switch ($_REQUEST['action']) {
 
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            AmpError::add('general', T_('Failed to disable the module due to a Catalog error'));
+            AmpError::add('general', T_("Unable to disable the Catalog module."));
             AmpError::display('general');
             break;
         }
@@ -127,7 +127,7 @@ switch ($_REQUEST['action']) {
         if (!$plugin->install()) {
             debug_event('modules', 'Error: Plugin Install Failed, ' . Core::get_request('plugin'), 1);
             $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-            $title  = T_('Unable to Install Plugin');
+            $title  = T_('Unable to install this Plugin');
             $body   = '';
             show_confirmation($title, $body, $url);
             break;

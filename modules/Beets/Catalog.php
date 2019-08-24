@@ -123,7 +123,7 @@ abstract class Catalog extends \Catalog
         }
         set_time_limit(0);
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Beets Update') . '. . .');
+            UI::show_box_top(T_('Running Beets Update'));
         }
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');

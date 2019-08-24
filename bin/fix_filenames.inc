@@ -48,7 +48,7 @@ if (!function_exists('iconv')) {
 $source_encoding = iconv_get_encoding('output_encoding');
 
 // Attempt a simple translation
-$string = sprintf(T_('%s'), iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset'), 'For the Love of Music'));
+$string = sprintf(T_('%s'), iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset'), T_('For the Love of Music')));
 echo T_('Testing basic translation, the two strings below should look the same');
 echo "\n";
 echo T_('Original: For the Love of Music');
@@ -69,7 +69,8 @@ $db_results = Dba::read($sql);
 while ($row = Dba::fetch_assoc($db_results)) {
 
     $catalog = Catalog::create_from_id($row['id']);
-    printf(T_('Checking %s (%s)'), $catalog->name, $catalog->path);
+    /* HINT: %1 Catalog Name, %2 Catalog Path */
+    printf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->path);
     echo "\n";
     charset_directory_correct($catalog->path);
 

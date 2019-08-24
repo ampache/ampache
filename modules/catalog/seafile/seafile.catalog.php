@@ -73,7 +73,7 @@ class Catalog_Seafile extends Catalog
     {
         $help = "<ul><li>" . T_("Install a Seafile server as described in its documentation on %s") . "</li>" .
                 "<li>" . T_("Enter URL to server (e.g. 'https://seafile.example.com') and library name (e.g. 'Music').") . "</li>" .
-                "<li>" . T_("'API Call Delay' is a delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accommodate Seafile's Rate Limiting. <br/>" .
+                "<li>" . T_("API Call Delay is the delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accommodate Seafile's Rate Limiting. <br/>" .
                 "The default is tuned towards Seafile's default rate limit settings; see %sthis forum post%s for more information.") . "</li>" .
                 "<li>" . T_("After creating the Catalog, you must 'Make it ready' on the Catalog table.") . "</li></ul>";
 
@@ -176,7 +176,7 @@ class Catalog_Seafile extends Catalog
         }
 
         if (!is_numeric($api_call_delay)) {
-            AmpError::add('general', T_('API call delay must have a numeric value.'));
+            AmpError::add('general', T_('API Call Delay must have a numeric value.'));
 
             return false;
         }
@@ -233,7 +233,7 @@ class Catalog_Seafile extends Catalog
         set_time_limit(0);
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Seafile Remote Update') . '. . .');
+            UI::show_box_top(T_('Running Seafile Remote Update'));
         }
 
         $success = false;
@@ -264,7 +264,7 @@ class Catalog_Seafile extends Catalog
                 return 0;
             });
 
-            UI::update_text('', sprintf(T_('Catalog Update finished.  Total Media: [%s]'), $count));
+            UI::update_text(T_('Catalog Updated.'), sprintf(T_('Total Media: [%s]'), $count));
 
             if ($count <= 0) {
                 AmpError::add('general', T_('No media was updated, did you respect the patterns?'));
@@ -291,12 +291,14 @@ class Catalog_Seafile extends Catalog
     {
         if ($this->check_remote_song($this->seafile->to_virtual_path($file))) {
             debug_event('seafile_catalog', 'Skipping existing song ' . $file->name, 5);
+            /* HINT: filename (File path) */
             UI::update_text('', sprintf(T_('Skipping existing song "%s"'), $file->name));
         } else {
             debug_event('seafile_catalog', 'Adding song ' . $file->name, 5);
             try {
                 $results = $this->download_metadata($file);
-                UI::update_text('', sprintf(T_('Adding song "%s"'), $file->name));
+                /* HINT: filename (File path) */
+                UI::update_text('', sprintf(T_('Adding a new song %s'), $file->name));
                 $added =  Song::insert($results);
 
                 if ($added) {
@@ -306,6 +308,7 @@ class Catalog_Seafile extends Catalog
                 return $added;
             } catch (Exception $e) {
                 debug_event('seafile_add', sprintf('Could not add song "%s": %s', $file->name, $e->getMessage()), 1);
+                /* HINT: filename (File path) */
                 UI::update_text('', sprintf(T_('Could not add song "%s"'), $file->name));
             }
         }
@@ -430,7 +433,9 @@ class Catalog_Seafile extends Catalog
                 try {
                     $exists = $this->seafile->get_file($file['path'], $file['filename']) !== null;
                 } catch (Exception $e) {
-                    UI::update_text('', sprintf(T_('Error checking song "%s": %s'), $file['filename'], $e->getMessage()));
+                    UI::update_text(T_("There Was A Problem"),
+                            /* HINT: %1 filename (File path), %2 Error Message */
+                            sprintf(T_('Error checking song "%1$s": %2$s'), $file['filename'], $e->getMessage()));
                     debug_event('seafile-clean', 'Exception: ' . $e->getMessage(), 2);
 
                     continue;
@@ -438,8 +443,10 @@ class Catalog_Seafile extends Catalog
 
                 if ($exists) {
                     debug_event('seafile-clean', 'keeping song', 5);
+                    /* HINT: filename (File path) */
                     UI::update_text('', sprintf(T_('Keeping song "%s"'), $file['filename']));
                 } else {
+                    /* HINT: filename (File path) */
                     UI::update_text('', sprintf(T_('Removing song "%s"'), $file['filename']));
                     debug_event('seafile-clean', 'removing song', 5);
                     $dead++;

@@ -160,7 +160,7 @@ class Catalog_remote extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('remote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             /* HINT: remote URI */
-            AmpError::add('general', sprintf(T_('A Catalog using "%s" already exists'), $uri));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog. %s'), $uri));
 
             return false;
         }
@@ -179,7 +179,7 @@ class Catalog_remote extends Catalog
     public function add_to_catalog($options = null)
     {
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Remote Update') . '. . .');
+            UI::show_box_top(T_('Running Remote Update'));
         }
         $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
@@ -242,8 +242,8 @@ class Catalog_remote extends Catalog
         // Get the song count, etc.
         $remote_catalog_info = $remote_handle->info();
 
-        // Tell 'em what we've found, Johnny!
-        UI::update_text('', sprintf(T_('%u remote Catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']));
+        /* HINT: count of songs found*/
+        UI::update_text(T_("Remote Catalog Updated"), sprintf(T_('%s songs were found'), $remote_catalog_info['songs']));
 
         // Hardcoded for now
         $step    = 500;
@@ -280,7 +280,7 @@ class Catalog_remote extends Catalog
             }
         } // end while
 
-        UI::update_text('', T_('Completed updating remote Catalog(s).'));
+        UI::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));
 
         // Update the last update value
         $this->update_last_update();
