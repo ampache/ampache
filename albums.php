@@ -124,7 +124,7 @@ switch ($_REQUEST['action']) {
         $album->format();
         if (!$album->id) {
             debug_event('albums', 'Requested an album that does not exist', 2);
-            echo T_("Error: Requested an album that does not exist.");
+            echo T_("You have requested an album that does not exist.");
         // allow single disks to not be shown as multi's
         } elseif (!count($album->album_suite) || count($album->album_suite) == 1) {
             require AmpConfig::get('prefix') . UI::find_template('show_album.inc.php');

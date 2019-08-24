@@ -186,7 +186,8 @@ class Catalog_Seafile extends Catalog
 
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
         } catch (Exception $e) {
-            AmpError::add('general', sprintf(T_('Error while authenticating using Seafile API: %s', $e->getMessage())));
+            /* HINT: exception error message */
+            AmpError::add('general', sprintf(T_('There was a problem authenticating against the Seafile API. %s', $e->getMessage())));
             debug_event('seafile_catalog', 'Exception while Authenticating: ' . $e->getMessage(), 2);
         }
 
@@ -435,7 +436,7 @@ class Catalog_Seafile extends Catalog
                 } catch (Exception $e) {
                     UI::update_text(T_("There Was A Problem"),
                             /* HINT: %1 filename (File path), %2 Error Message */
-                            sprintf(T_('Error checking song "%1$s": %2$s'), $file['filename'], $e->getMessage()));
+                            sprintf(T_('There was an error while checking this song "%1$s": %2$s'), $file['filename'], $e->getMessage()));
                     debug_event('seafile-clean', 'Exception: ' . $e->getMessage(), 2);
 
                     continue;

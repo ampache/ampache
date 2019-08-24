@@ -533,10 +533,10 @@ $_SESSION['login'] = false;
                         if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) {
                             ?>
                             <div class="fatalerror">
-                                <?php echo T_('Error: Your config file is out of date!'); ?>
+                                <?php echo T_('Your Ampache config file is out of date!'); ?>
                                 <br />
-                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate and download new config file'); ?></a> |
-                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write new config file to disk'); ?></a>
+                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a new config file to manually update'); ?></a> |
+                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write a new config file directly to disk'); ?></a>
                             </div>
                 <?php
                         }

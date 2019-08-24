@@ -41,7 +41,7 @@ else {
 // Make sure the output dir is valid and writeable
 if (!is_writeable($dirname)) {
     /* HINT: Directory (File path) */
-    printf (T_('Error: Directory %s is not writable'), $dirname);
+    printf (T_("There was a problem creating this directory. %s"), $dirname);
     echo "\n";
 }
 
@@ -85,7 +85,7 @@ foreach ($items as $item) {
     $plstr = $pl->{'get_' . $ext . '_string'}();
     if (file_put_contents($filename, $plstr) === false) {
         /* HINT: playlist (file path) */
-        sprintf(T_('Error: cannot write playlist file %s'), $path);
+        sprintf(T_("There was a problem creating the playlist file %s"), $path);
         echo "\n";
     } else {
         /* HINT: playlist (file path) */

@@ -1504,7 +1504,7 @@ abstract class Catalog extends database_object
                 } else {
                     debug_event('catalog.class', "Unable to open $file for writing", 3);
                     /* HINT: filename (file path) */
-                    printf(T_("Error: Unable to write to art file [%s]"), $file);
+                    printf(T_("Couldn't get write to create art file. %s"), $file);
                     echo "\n";
                 }
             }
