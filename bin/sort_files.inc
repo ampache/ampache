@@ -167,7 +167,7 @@ function sort_find_home($song, $sort_pattern, $base = null) {
     // dont send a mismatched file!
     if (strpos($sort_pattern, '%') !== false) {
         /* HINT: $sort_pattern after replacing %x values */
-        printf(T_('Error filtering the sort_pattern %s'), $sort_pattern);
+        printf(T_('The sort_pattern has left over variables. %s'), $sort_pattern);
         echo "\n\n";
         return false;
     }
@@ -235,7 +235,7 @@ function sort_move_file($song, $fullname, $test_mode) {
                 $results = mkdir($path);
                 if (!$results) {
                     /* HINT: filename (File path) */
-                    printf (T_('Error: Directory %s is not writable'), $path);
+                    printf (T_("There was a problem creating this directory. %s"), $path);
                     echo "\n";
                     return false;
                 }
@@ -260,7 +260,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         if (file_exists($fullname)) {
             debug_event('sort_files.inc', 'Error: $fullname already exists', 1);
             /* HINT: filename (File path) */
-            printf (T_('Error: %s already exists'), $fullname);
+            printf (T_("Don't overwrite an existing file. %s"), $fullname);
             echo "\n";
             return false;
         }
@@ -284,7 +284,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         }
 
         /* HINT: filename (File path) */
-        if (!$results) { printf (T_('Error: Unable to copy file to %s'), $fullname); echo "\n"; return false; }
+        if (!$results) { printf (T_("There was an error trying to copy file to %s"), $fullname); echo "\n"; return false; }
 
         /* Check the filesize */
         $new_sum = Core::get_filesize($fullname);
@@ -292,7 +292,7 @@ function sort_move_file($song, $fullname, $test_mode) {
 
         if ($new_sum != $old_sum || !$new_sum) {
             /* HINT: filename (File path) */
-            printf (T_('Error: Size inconsistency, not deleting %s'), $song->file);
+            printf (T_('Size comparison failed. Not deleting %s'), $song->file);
             echo "\n";
             return false;
         } // end if sum's don't match
@@ -300,7 +300,8 @@ function sort_move_file($song, $fullname, $test_mode) {
         /* If we've made it this far it should be safe */
         $results = unlink($song->file);
         if (!$results) {
-            printf (T_('Error: Unable to delete %s'), $song->file); echo "\n";
+            /* HINT: filename (File path) */
+            printf (T_("There was an error trying to delete %s"), $song->file); echo "\n";
         }
 
         /* Update the catalog */

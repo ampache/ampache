@@ -209,7 +209,7 @@ class Api
                     ($timestamp > (time() + 1800))) {
                     debug_event('api.class', 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login failed, timestamp is out of range'));
+                    echo XML_Data::error('401', T_('Received Invalid Handshake'). ' - ' . T_('Login failed, timestamp is out of range'));
 
                     return false;
                 }
@@ -222,7 +222,7 @@ class Api
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Incorrect username or password'));
+                    echo XML_Data::error('401', T_('Received Invalid Handshake'). ' - ' . T_('Incorrect username or password'));
 
                     return false;
                 }
@@ -321,7 +321,7 @@ class Api
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Incorrect username or password'));
+        echo XML_Data::error('401', T_('Received Invalid Handshake'). ' - ' . T_('Incorrect username or password'));
 
         return false;
     } // handshake

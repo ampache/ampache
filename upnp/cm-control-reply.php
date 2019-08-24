@@ -18,7 +18,7 @@ if ($requestRaw != '') {
     $upnpRequest = Upnp_Api::parseUPnPRequest($requestRaw);
     debug_event('cm-control-reply', 'Request: ' . $requestRaw, 5);
 } else {
-    echo T_('Error: Empty UPnP request.');
+    echo T_('Received an empty UPnP request.');
     debug_event('cm-control-reply', 'No request', 5);
 
     return false;
