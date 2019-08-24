@@ -61,21 +61,21 @@ switch ($_REQUEST['action']) {
 
         /* Verify Input */
         if (empty($username)) {
-            AmpError::add('username', T_("Username is required"));
+            AmpError::add('username', T_("A Username is required"));
         } else {
             if ($username != $client->username) {
                 if (!User::check_username($username)) {
-                    AmpError::add('username', T_("Username already exists"));
+                    AmpError::add('username', T_("That Username already exists"));
                 }
             }
         }
         if ($pass1 !== $pass2 && !empty($pass1)) {
-            AmpError::add('password', T_("Passwords do not match"));
+            AmpError::add('password', T_("Your Passwords don't match"));
         }
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            AmpError::add('email', T_('Invalid e-mail address'));
+            AmpError::add('email', T_('You entered an invalid e-mail address'));
         }
 
         /* If we've got an error then show edit form! */
@@ -137,21 +137,21 @@ switch ($_REQUEST['action']) {
         $city           = (string) scrub_in(Core::get_get('city'));
 
         if ($pass1 !== $pass2 || !strlen($pass1)) {
-            AmpError::add('password', T_("Passwords do not match"));
+            AmpError::add('password', T_("Your Passwords don't match"));
         }
 
         if (empty($username)) {
-            AmpError::add('username', T_('Username is Required'));
+            AmpError::add('username', T_('A Username is required'));
         }
 
         /* make sure the username doesn't already exist */
         if (!User::check_username($username)) {
-            AmpError::add('username', T_('Username already exists'));
+            AmpError::add('username', T_('That Username already exists'));
         }
 
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
-            AmpError::add('email', T_('Invalid e-mail address'));
+            AmpError::add('email', T_('You entered an invalid e-mail address'));
         }
 
         /* If we've got an error then show add form! */
@@ -163,7 +163,7 @@ switch ($_REQUEST['action']) {
         /* Attempt to create the user */
         $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $state, $city);
         if (!$user_id) {
-            AmpError::add('general', T_("User creation failed"));
+            AmpError::add('general', T_("The new User was not created"));
         }
         $user = new User($user_id);
         $user->upload_avatar();
@@ -179,7 +179,7 @@ switch ($_REQUEST['action']) {
                 $access = T_('Admin');
         }
 
-        /* HINT: %1 Username, %2 Access num */
+        /* HINT: %1 Username, %2 Access (Guest, User, Admin) */
         show_confirmation(T_('New User Added'), sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $access), AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'enable':
@@ -195,7 +195,7 @@ switch ($_REQUEST['action']) {
         if ($client->disable()) {
             show_confirmation(T_('User disabled'), $client->username . ' (' . $client->fullname . ')', AmpConfig::get('web_path') . '/admin/users.php');
         } else {
-            show_confirmation(T_("There Was A Problem"), T_('You need an active Administrator account'), AmpConfig::get('web_path') . '/admin/users.php');
+            show_confirmation(T_("There Was A Problem"), T_('You need at least one active Administrator account'), AmpConfig::get('web_path') . '/admin/users.php');
         }
     break;
     case 'show_edit':
@@ -220,7 +220,7 @@ switch ($_REQUEST['action']) {
                     /* HINT: Username (Short Name) */
                     sprintf(T_('%s has been deleted'), $client->username), AmpConfig::get('web_path') . "/admin/users.php");
         } else {
-            show_confirmation(T_("There Was A Problem"), T_('You need an active Administrator account'), AmpConfig::get('web_path') . "/admin/users.php");
+            show_confirmation(T_("There Was A Problem"), T_('You need at least one active Administrator account'), AmpConfig::get('web_path') . "/admin/users.php");
         }
     break;
     case 'delete':

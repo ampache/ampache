@@ -38,10 +38,10 @@ switch ($_REQUEST['action']) {
             if ($license->id) {
                 $license->update($_POST);
             }
-            $text = T_('License Updated');
+            $text = T_('The License was updated');
         } else {
             License::create($_POST);
-            $text = T_('License Created');
+            $text = T_('A new License was created');
         }
         show_confirmation($text, '', AmpConfig::get('web_path') . '/admin/license.php');
     break;

@@ -169,7 +169,7 @@ class Catalog_soundcloud extends Catalog
         $secret = $data['secret'];
 
         if (!strlen($userid) || !strlen($secret)) {
-            AmpError::add('general', T_('UserID and secret are required for SoundCloud Catalogs'));
+            AmpError::add('general', T_('User ID and secret are required for SoundCloud Catalogs'));
 
             return false;
         }
@@ -180,7 +180,7 @@ class Catalog_soundcloud extends Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('soundcloud.catalog', 'Cannot add catalog with duplicate user id ' . $userid, 1);
-            AmpError::add('general', sprintf(T_('A Catalog using "%s" already exists'), $userid));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog. %s'), $userid));
 
             return false;
         }
@@ -235,7 +235,7 @@ class Catalog_soundcloud extends Catalog
         }
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running SoundCloud Remote Update') . '. . .');
+            UI::show_box_top(T_('Running SoundCloud Remote Update'));
         }
         $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
@@ -305,17 +305,17 @@ class Catalog_soundcloud extends Catalog
                         }
                     }
 
-                    UI::update_text('', T_('Completed updating SoundCloud Catalog(s).') . " " . $songsadded . " " . T_('Songs added.'));
+                    UI::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s).') . " " . $songsadded . " " . T_('Songs added.'));
 
                     // Update the last update value
                     $this->update_last_update();
                 } else {
-                    AmpError::add('general', T_('API Error: Can not get song list.'));
-                    debug_event('soundcloud.catalog', 'API Error: Can not get song list.', 1);
+                    AmpError::add('general', T_("API Error: Couldn't get song list."));
+                    debug_event('soundcloud.catalog', "API Error: Couldn't get song list.", 1);
                 }
             } else {
-                AmpError::add('general', T_('API Error: Can not connect to SoundCloud.'));
-                debug_event('soundcloud.catalog', 'API Error: Can not connect to SoundCloud.', 1);
+                AmpError::add('general', T_("API Error: Couldn't connect to SoundCloud."));
+                debug_event('soundcloud.catalog', "API Error: Couldn't connect to SoundCloud.", 1);
             }
         } catch (Exception $ex) {
             AmpError::add('general', T_('SoundCloud exception') . ': ' . $ex->getMessage());
@@ -372,7 +372,7 @@ class Catalog_soundcloud extends Catalog
                     }
                 }
             } else {
-                echo "<p>" . T_('API Error: cannot connect to SoundCloud.') . "</p><hr />\n";
+                echo "<p>" . T_("API Error: Couldn't connect to SoundCloud.") . "</p><hr />\n";
                 flush();
             }
         } catch (Exception $ex) {
@@ -446,8 +446,8 @@ class Catalog_soundcloud extends Catalog
                     debug_event('soundcloud.catalog', 'Cannot get remote stream for song ' . $media->file, 3);
                 }
             } else {
-                debug_event('soundcloud.catalog', 'API Error: cannot connect to SoundCloud.', 1);
-                echo "<p>" . T_('API Error: cannot connect to SoundCloud.') . "</p><hr />\n";
+                debug_event('soundcloud.catalog', "API Error: Could't connect to SoundCloud.", 1);
+                echo "<p>" . T_("API Error: Couldn't connect to SoundCloud.") . "</p><hr />\n";
                 flush();
             }
         } catch (Exception $ex) {

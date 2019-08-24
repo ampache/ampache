@@ -196,7 +196,7 @@ switch ($_REQUEST['action']) {
 
             $catalogs[] = $catalog_id;
             catalog_worker('add_to_catalog', $catalogs, $_POST);
-            show_confirmation(T_('Catalog Creation started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+            show_confirmation(T_('Catalog creation process has started'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
         } else {
             require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
         }
@@ -208,7 +208,7 @@ switch ($_REQUEST['action']) {
         }
         Stats::clear();
         $url      = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = T_('Catalog Statistics cleared');
+        $title    = T_('Catalog statistics have been cleared');
         $body     = '';
         show_confirmation($title, $body, $url);
     break;
@@ -256,7 +256,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'gather_media_art':
         catalog_worker('gather_media_art', $catalogs);
-        show_confirmation(T_('Media Art Search Started...'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('Catalog art search has started'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'show_catalogs':
     default:

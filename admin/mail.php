@@ -67,7 +67,7 @@ switch ($_REQUEST['action']) {
                 $body   = T_('Your e-mail was sent.');
             } else {
                 $title     = T_("There Was A Problem");
-                $body      = T_('There was an error sending your e-mail.');
+                $body      = T_('Your e-mail was not sent.');
             }
             $url = AmpConfig::get('web_path') . '/admin/mail.php';
             show_confirmation($title, $body, $url);
