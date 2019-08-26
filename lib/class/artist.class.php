@@ -312,8 +312,8 @@ class Artist extends database_object implements library_item
                 $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
         }
 
-        if (!$ignoreAlbumGroups) {
-            $ignoreAlbumGroups = !AmpConfig::get('album_group');
+        if (AmpConfig::get('album_group')) {
+            $ignoreAlbumGroups = false;
         }
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
