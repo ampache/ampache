@@ -683,7 +683,7 @@ class Subsonic_Api
             ++$count;
         }
         if ($count > 0) {
-            $songs = Random::advanced("song", $search);
+            $songs = Random::advanced('song', $search);
         } else {
             $songs = Random::get_default($size);
         }

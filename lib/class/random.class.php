@@ -237,24 +237,23 @@ class Random
      * advanced
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
+     * @param string $type
+     * @param array $data
+     * @return array|false
      */
     public static function advanced($type, $data)
     {
         /* Figure out our object limit */
-        $limit = (int) ($data['random']);
-
-        // Generate our matchlist
+        $limit     = (int) ($data['random']);
+        $limit_sql = "LIMIT " . Dba::escape($limit);
 
         /* If they've passed -1 as limit then get everything */
-        $limit_sql = "";
         if ($data['random'] == "-1") {
             unset($data['random']);
-        } else {
-            $limit_sql = "LIMIT " . Dba::escape($limit);
+            $limit_sql = "";
         }
 
         $search_data = Search::clean_request($data);
-
         $search_info = false;
 
         if (count($search_data) > 1) {
@@ -328,8 +327,43 @@ class Random
         }
         $sql .= " ORDER BY RAND() $limit_sql";
 
-        // Run the query generated above so we can while it
-        $db_results = Dba::read($sql);
+        $results = self::advanced_results($sql, $data);
+
+        switch ($type) {
+            case 'song':
+                return $results;
+            case 'album':
+                $songs = array();
+                foreach ($results as $result) {
+                    $album = new Album($result);
+                    $songs = array_merge($songs, $album->get_songs());
+                }
+
+                return $songs;
+            case 'artist':
+                $songs = array();
+                foreach ($results as $result) {
+                    $artist = new Artist($result);
+                    $songs  = array_merge($songs, $artist->get_songs());
+                }
+
+                return $songs;
+            default:
+                return false;
+        }
+    } // advanced
+
+    /**
+     * advanced_results
+     * Run the query generated above by self::advanced so we can while it
+     * @param string $sql
+     * @param array $data
+     * @return array
+     */
+    private static function advanced_results($sql)
+     {
+                 // Run the query generated above so we can while it
+        $db_results = Dba::read($sql, $data);
         $results    = array();
 
         $size_total = 0;
@@ -392,27 +426,6 @@ class Random
             }
         } // end while results
 
-        switch ($type) {
-            case 'song':
-                return $results;
-            case 'album':
-                $songs = array();
-                foreach ($results as $result) {
-                    $album = new Album($result);
-                    $songs = array_merge($songs, $album->get_songs());
-                }
-
-                return $songs;
-            case 'artist':
-                $songs = array();
-                foreach ($results as $result) {
-                    $artist = new Artist($result);
-                    $songs  = array_merge($songs, $artist->get_songs());
-                }
-
-                return $songs;
-            default:
-                return false;
-        }
-    } // advanced
+        return $results;
+     }
 } //end of random class
