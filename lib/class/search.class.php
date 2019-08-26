@@ -2012,4 +2012,31 @@ class Search extends playlist_object
             'having_sql' => ''
         );
     }
+    /**
+     * year_search
+     *
+     * Build search rules for year -> year searching.
+     * @return array
+     */
+    public static function year_search($fromYear, $toYear)
+    {
+        $search           = array();
+        $search['limit']  = $size;
+        $search['offset'] = $offset;
+        $search['type']   = "album";
+        $count            = 0;
+        if ($fromYear) {
+            $search['rule_' . $count . '_input']    = $fromYear;
+            $search['rule_' . $count . '_operator'] = 0;
+            $search['rule_' . $count . '']          = "year";
+            ++$count;
+        }
+        if ($toYear) {
+            $search['rule_' . $count . '_input']    = $toYear;
+            $search['rule_' . $count . '_operator'] = 1;
+            $search['rule_' . $count . '']          = "year";
+            ++$count;
+        }
+        return $search;
+    }
 }

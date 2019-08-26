@@ -394,9 +394,6 @@ class XML_Data
      */
     public static function artists($artists, $include = [], $full_xml = true)
     {
-        if (null == $include) {
-            $include = array();
-        }
         $string = "<total_count>" . count($artists) . "</total_count>\n";
 
         if (count($artists) > self::$limit || self::$offset > 0) {
@@ -463,9 +460,6 @@ class XML_Data
      */
     public static function albums($albums, $include = [], $full_xml = true)
     {
-        if (null == $include) {
-            $include = array();
-        }
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
         if (count($albums) > self::$limit || self::$offset > 0) {

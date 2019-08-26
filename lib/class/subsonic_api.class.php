@@ -529,86 +529,62 @@ class Subsonic_Api
             $catalogs[] = $musicFolderId;
         }
 
-        $r            = Subsonic_XML_Data::createSuccessResponse();
+        $response     = Subsonic_XML_Data::createSuccessResponse();
         $errorOccured = false;
         $albums       = array();
 
-        if ($type == "random") {
-            $albums = Album::get_random($size);
-        } else {
-            if ($type == "newest") {
+        switch ($type) {
+            case "random":
+                $albums = Album::get_random($size);
+                break;
+            case "newest":
                 $albums = Stats::get_newest("album", $size, $offset, $musicFolderId);
-            } else {
-                if ($type == "highest") {
-                    $albums = Rating::get_highest("album", $size, $offset);
-                } else {
-                    if ($type == "frequent") {
-                        $albums = Stats::get_top("album", $size, '', $offset);
-                    } else {
-                        if ($type == "recent") {
-                            $albums = Stats::get_recent("album", $size, $offset);
-                        } else {
-                            if ($type == "starred") {
-                                $albums = Userflag::get_latest('album', null, $size);
-                            } else {
-                                if ($type == "alphabeticalByName") {
-                                    $albums = Catalog::get_albums($size, $offset, $catalogs);
-                                } else {
-                                    if ($type == "alphabeticalByArtist") {
-                                        $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
-                                    } else {
-                                        if ($type == "byYear") {
-                                            $fromYear = $input['fromYear'];
-                                            $toYear   = $input['toYear'];
+                break;
+            case "highest":
+                $albums = Rating::get_highest("album", $size, $offset);
+                break;
+            case "frequent":
+                $albums = Stats::get_top("album", $size, '', $offset);
+                break;
+            case "recent":
+                $albums = Stats::get_recent("album", $size, $offset);
+                break;
+            case "starred":
+                $albums = Userflag::get_latest('album', null, $size);
+                break;
+            case "alphabeticalByName":
+                $albums = Catalog::get_albums($size, $offset, $catalogs);
+                break;
+            case "alphabeticalByArtist":
+                $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
+                break;
+            case "byYear":
+                $fromYear = $input['fromYear'];
+                $toYear   = $input['toYear'];
 
-                                            if ($fromYear || $toYear) {
-                                                $search           = array();
-                                                $search['limit']  = $size;
-                                                $search['offset'] = $offset;
-                                                $search['type']   = "album";
-                                                $count            = 0;
-                                                if ($fromYear) {
-                                                    $search['rule_' . $count . '_input']    = $fromYear;
-                                                    $search['rule_' . $count . '_operator'] = 0;
-                                                    $search['rule_' . $count . '']          = "year";
-                                                    ++$count;
-                                                }
-                                                if ($toYear) {
-                                                    $search['rule_' . $count . '_input']    = $toYear;
-                                                    $search['rule_' . $count . '_operator'] = 1;
-                                                    $search['rule_' . $count . '']          = "year";
-                                                    ++$count;
-                                                }
-
-                                                $query  = new Search(null, 'album');
-                                                $albums = $query->run($search);
-                                            }
-                                        } else {
-                                            if ($type == "byGenre") {
-                                                $genre = self::check_parameter($input, 'genre');
-
-                                                $tag_id = Tag::tag_exists($genre);
-                                                if ($tag_id) {
-                                                    $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
-                                                }
-                                            } else {
-                                                $r            = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type));
-                                                $errorOccured = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                if ($fromYear || $toYear) {
+                    $search = Search::year_search($fromYear, $toYear);
+                    $query  = new Search(null, 'album');
+                    $albums = $query->run($search);
                 }
-            }
+                break;
+            case "byGenre":
+                $genre = self::check_parameter($input, 'genre');
+
+                $tag_id = Tag::tag_exists($genre);
+                if ($tag_id) {
+                    $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
+                }
+                break;
+            default:
+                $response     = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type));
+                $errorOccured = true;
         }
 
         if (!$errorOccured) {
-            Subsonic_XML_Data::addAlbumList($r, $albums, $elementName);
+            Subsonic_XML_Data::addAlbumList($response, $albums, $elementName);
         }
-        self::apiOutput($input, $r);
+        self::apiOutput($input, $response);
     }
 
     /**
