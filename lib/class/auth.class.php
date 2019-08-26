@@ -92,7 +92,14 @@ class Auth
      */
     public static function login($username, $password, $allow_ui = false, $token = null, $salt = null)
     {
+        // Check for token auth with apikey
+        $token_check = self::token_check($username, $token, $salt);
+        if (!empty($token_check)) {
+            return $token_check;
+        }
+
         $results = array();
+        // If no token check the regular methods
         foreach (AmpConfig::get('auth_methods') as $method) {
             $function_name = $method . '_auth';
 
@@ -100,7 +107,7 @@ class Auth
                 continue;
             }
 
-            $results = self::$function_name($username, $password, $token, $salt);
+            $results = self::$function_name($username, $password);
             if ($results['success'] || ($allow_ui && !empty($results['ui_required']))) {
                 break;
             }
@@ -137,13 +144,8 @@ class Auth
      * @param string $password
      * @return array
      */
-    private static function mysql_auth($username, $password, $token = null, $salt = null)
+    private static function mysql_auth($username, $password)
     {
-        // Check for token auth with apikey
-        $token_check = self::token_check($username, $token, $salt);
-        if (!empty($token_check)) {
-            return $token_check;
-        }
         if (strlen($password) && strlen($username)) {
             $sql        = 'SELECT `password` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
@@ -191,7 +193,7 @@ class Auth
      * @param string $password
      * @return array
      */
-    private static function pam_auth($username, $password, $token = null, $salt = null)
+    private static function pam_auth($username, $password)
     {
         unset($token, $salt);
         $results = array();
@@ -322,8 +324,9 @@ class Auth
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private static function openid_auth($username, $password, $token = null, $salt = null)
+    private static function openid_auth($username, $password)
     {
+        unset($password);
         $results = array();
         // Username contains the openid url. We don't care about password here.
         $website = $username;
