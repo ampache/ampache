@@ -139,22 +139,11 @@ class Auth
      */
     private static function mysql_auth($username, $password, $token = null, $salt = null)
     {
-        // subsonic token auth with apikey
-        if (strlen($token) && strlen($salt) && strlen($username)) {
-            $sql        = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
-            $db_results = Dba::read($sql, array($username));
+        // Check for token auth with apikey
+        $token_check = self::token_check($username, $token, $salt(;
+        if (!empty($token_check)) {
 
-            if ($row = Dba::fetch_assoc($db_results)) {
-                $hash_token = hash('md5', ($row['apikey'] . $salt));
-                debug_event('auth.class', 'attempting token auth ' . $hash_token, 5);
-                if ($token == $hash_token) {
-                    return array(
-                        'success' => true,
-                        'type' => 'mysql',
-                        'username' => $username
-                    );
-                }
-            }
+            return $token_check;
         }
         if (strlen($password) && strlen($username)) {
             $sql        = 'SELECT `password` FROM `user` WHERE `username` = ?';
@@ -481,4 +470,35 @@ class Auth
 
         return $results;
     }
-}
+    /**
+     * token_check
+     *
+     * Check if the supplied token and salt match this user.
+     * @param string $username
+     * @param string $token
+     * @param string $salt
+     * @return array
+     */
+    private static function token_check($username, $token, $salt)
+    {
+        // subsonic token auth with apikey
+        if (strlen($token) && strlen($salt) && strlen($username)) {
+            $sql        = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
+            $db_results = Dba::read($sql, array($username));
+
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $hash_token = hash('md5', ($row['apikey'] . $salt));
+                debug_event('auth.class', 'attempting token auth ' . $hash_token, 5);
+                if ($token == $hash_token) {
+                    return array(
+                        'success' => true,
+                        'type' => 'mysql',
+                        'username' => $username
+                    );
+                }
+            }
+        }
+
+        return array();
+    }
+}//end of auth class

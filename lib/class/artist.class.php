@@ -456,7 +456,6 @@ class Artist extends database_object implements library_item
     /**
      * get_songs
      * gets the songs for this artist
-     * @param integer $artist
      * @return integer[]
      */
     public function get_songs()
@@ -483,6 +482,7 @@ class Artist extends database_object implements library_item
     /**
      * get_top_songs
      * gets the songs for this artist
+     * @param integer $artist
      * @return integer[]
      */
     public static function get_top_songs($artist, $count = 50)
