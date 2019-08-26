@@ -361,8 +361,8 @@ class Random
      * @return array
      */
     private static function advanced_results($sql, $data)
-     {
-                 // Run the query generated above so we can while it
+    {
+        // Run the query generated above so we can while it
         $db_results = Dba::read($sql, $data);
         $results    = array();
 
@@ -427,5 +427,5 @@ class Random
         } // end while results
 
         return $results;
-     }
+    }
 } //end of random class
