@@ -2018,7 +2018,7 @@ class Search extends playlist_object
      * Build search rules for year -> year searching.
      * @return array
      */
-    public static function year_search($fromYear, $toYear)
+    public static function year_search($fromYear, $toYear, $size, $offset)
     {
         $search           = array();
         $search['limit']  = $size;
