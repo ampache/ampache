@@ -89,7 +89,7 @@ class Wanted extends database_object
 
     /**
      * Constructor
-     * @param integer $id
+     * @param integer $wanted_id
      */
     public function __construct($wanted_id)
     {

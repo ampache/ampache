@@ -56,6 +56,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * Constructor
+     * @param integer $channel_id
      */
     public function __construct($channel_id)
     {
