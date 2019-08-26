@@ -178,13 +178,11 @@ class PrivateMsg extends database_object
                             $mailer->recipient      = $to_user->email;
                             $mailer->recipient_name = $to_user->fullname;
                             $mailer->subject        = "[" . T_('Private Message') . "] " . $subject;
-                            $mailer->message        = sprintf(T_("You just received a new private message from %s.\n\n
-        ----------------------
-        %s
-        ----------------------
-
-        %s
-        "), Core::get_global('user')->fullname, $message, AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id);
+                            $mailer->message        = /* HINT: Sender's name */ sprintf(T_("You received a new private message from %s."), Core::get_global('user')->fullname);
+                            $mailer->message .= "\n\n----------------------\n\n";
+                            $mailer->message .= $message;
+                            $mailer->message .= "\n\n----------------------\n\n";
+                            $mailer->message .= AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id;
                             $mailer->send();
                         }
                     }

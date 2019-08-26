@@ -232,13 +232,12 @@ class Shoutbox
                         $mailer->recipient      = $item_owner->email;
                         $mailer->recipient_name = $item_owner->fullname;
                         $mailer->subject        = T_('New shout on your content');
-                        $mailer->message        = sprintf(T_("You just received a new shout from %s on your content `%s`.\n\n
-    ----------------------
-    %s
-    ----------------------
-
-    %s
-    "), Core::get_global('user')->fullname, $libitem->get_fullname(), $comment, AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $data['object_type'] . "&id=" . $data['object_id'] . "#shout" . $insert_id);
+                        /* HINT: first %s is username, second is the item commented on */
+                        $mailer->message        = sprintf(T_("You just received a new shout from %s on your content \"%s\".", Core::get_global('user')->fullname, $libitem->get_fullname())) . "\n\n";
+                        $mailer->message .= "----------------------\n\n";
+                        $mailer->message .= "$comment\n\n";
+                        $mailer->message .= "----------------------\n\n";
+                        $mailer->message .= AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $data['object_type'] . "&id=" . $data['object_id'] . "#shout" . $insert_id;
                         $mailer->send();
                     }
                 }
