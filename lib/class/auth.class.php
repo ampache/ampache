@@ -95,6 +95,7 @@ class Auth
         // Check for token auth with apikey
         $token_check = self::token_check($username, $token, $salt);
         if (!empty($token_check)) {
+            debug_event('auth.class', 'Logging in using token auth ' . $hash_token, 5);
             return $token_check;
         }
 
@@ -491,11 +492,10 @@ class Auth
 
             if ($row = Dba::fetch_assoc($db_results)) {
                 $hash_token = hash('md5', ($row['apikey'] . $salt));
-                debug_event('auth.class', 'attempting token auth ' . $hash_token, 5);
                 if ($token == $hash_token) {
                     return array(
                         'success' => true,
-                        'type' => 'mysql',
+                        'type' => 'token',
                         'username' => $username
                     );
                 }
