@@ -253,7 +253,7 @@ class Random
             $limit_sql = "";
         }
 
-        $sql     = self::advanced_results($data, $type);
+        $sql     = self::advanced_sql($data, $type, $limit_sql);
         $results = self::advanced_results($sql, $data);
 
         switch ($type) {
@@ -362,7 +362,7 @@ class Random
      * @param string $type
      * @return string
      */
-    private static function advanced_results($data, $type)
+    private static function advanced_sql($data, $type, $limit_sql)
     {
         $catalog_disable = AmpConfig::get('catalog_disable');
         $search_data     = Search::clean_request($data);
