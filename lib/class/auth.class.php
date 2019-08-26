@@ -402,9 +402,9 @@ class Auth
      */
     private static function openid_auth_2()
     {
-        $results            = array();
-        $results['type']    = 'openid';
-        $consumer           = Openid::get_consumer();
+        $results         = array();
+        $results['type'] = 'openid';
+        $consumer        = Openid::get_consumer();
         if ($consumer) {
             $response = $consumer->complete(Openid::get_return_url());
 

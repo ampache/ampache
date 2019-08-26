@@ -503,7 +503,17 @@ class XML_Data
             if (in_array("songs", $include)) {
                 $songs = self::songs($album->get_songs(), array(), false);
             } else {
-                $songs = $album->song_count;
+                if (AmpConfig::get('album_group')) {
+                    $song_count = 0;
+                    $disc_ids   = $album->get_group_disks_ids();
+                    foreach ($disc_ids as $discid) {
+                        $disc       = new Album($discid);
+                        $song_count = $song_count + $disc->song_count;
+                    }
+                    $songs = $song_count;
+                } else {
+                    $songs = $album->song_count;
+                }
             }
 
             $string .= "\t<year>" . $album->year . "</year>\n" .
