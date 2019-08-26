@@ -95,7 +95,7 @@ class Auth
         // Check for token auth with apikey
         $token_check = self::token_check($username, $token, $salt);
         if (!empty($token_check)) {
-            debug_event('auth.class', 'Logging in using token auth ' . $hash_token, 5);
+            debug_event('auth.class', 'Logging in using token auth ' . $token, 5);
 
             return $token_check;
         }
