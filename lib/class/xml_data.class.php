@@ -421,7 +421,7 @@ class XML_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums($artist->get_albums(null, true), $include, false);
+                $albums = self::albums($artist->get_albums(), $include, false);
             } else {
                 $albums = ($artist->albums ?: 0);
             }

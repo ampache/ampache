@@ -469,6 +469,7 @@ class Auth
 
         return $results;
     }
+
     /**
      * token_check
      *
