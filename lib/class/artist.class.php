@@ -600,6 +600,10 @@ class Artist extends database_object implements library_item
             // Calculation
             $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
             $sqlw = "WHERE `song`.`artist` = ? ";
+            if (AmpConfig::get('album_group')) {
+                $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT CONCAT(`album`.`name`, `album`.`mbid`)) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` ";
+                $sqlw = "WHERE `song`.`artist` = ? ";
+            }
             if ($catalog) {
                 $params[] = $catalog;
                 $sqlw .= "AND (`song`.`catalog` = ?) ";
