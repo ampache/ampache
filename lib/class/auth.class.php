@@ -283,7 +283,6 @@ class Auth
      */
     private static function ldap_auth($username, $password)
     {
-
         return LDAP::auth($username, $password);
     }
 
