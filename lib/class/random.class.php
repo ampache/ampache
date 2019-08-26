@@ -360,7 +360,7 @@ class Random
      * @param array $data
      * @return array
      */
-    private static function advanced_results($sql)
+    private static function advanced_results($sql, $data)
      {
                  // Run the query generated above so we can while it
         $db_results = Dba::read($sql, $data);
