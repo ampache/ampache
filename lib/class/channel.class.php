@@ -57,14 +57,10 @@ class Channel extends database_object implements media, library_item
     /**
      * Constructor
      */
-    public function __construct($id = 0)
+    public function __construct($channel_id)
     {
-        if (!$id) {
-            return true;
-        }
-
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($channel_id);
 
         // Foreach what we've got
         foreach ($info as $key => $value) {

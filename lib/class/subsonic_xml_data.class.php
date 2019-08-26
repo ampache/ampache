@@ -1074,8 +1074,8 @@ class Subsonic_XML_Data
     public static function addShares($xml, $shares)
     {
         $xshares = $xml->addChild('shares');
-        foreach ($shares as $shareid) {
-            $share = new Share($shareid);
+        foreach ($shares as $share_id) {
+            $share = new Share($share_id);
             // Don't add share with max counter already reached
             if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
                 self::addShare($xshares, $share);

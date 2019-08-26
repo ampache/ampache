@@ -50,13 +50,11 @@ class Democratic extends Tmp_Playlist
      * constructor
      * We need a constructor for this class. It does it's own thing now
      */
-    public function __construct($id = '')
+    public function __construct($democratic_id)
     {
-        if (!$id) {
-            return false;
-        }
+        parent::__construct($democratic_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($democratic_id);
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
