@@ -140,7 +140,7 @@ class Auth
     private static function mysql_auth($username, $password, $token = null, $salt = null)
     {
         // Check for token auth with apikey
-        $token_check = self::token_check($username, $token, $salt(;
+        $token_check = self::token_check($username, $token, $salt);
         if (!empty($token_check)) {
 
             return $token_check;

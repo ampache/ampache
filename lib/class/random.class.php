@@ -253,80 +253,7 @@ class Random
             $limit_sql = "";
         }
 
-        $search_data = Search::clean_request($data);
-        $search_info = false;
-
-        if (count($search_data) > 1) {
-            $search = new Search(null, $type);
-            $search->parse_rules($search_data);
-            $search_info = $search->to_sql();
-        }
-
-        $sql = "";
-        switch ($type) {
-            case 'song':
-                $sql = "SELECT `song`.`id`, `size`, `time` " .
-                        "FROM `song` ";
-                if ($search_info) {
-                    $sql .= $search_info['table_sql'];
-                }
-                if (AmpConfig::get('catalog_disable')) {
-                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                    $sql .= " WHERE `catalog`.`enabled` = '1'";
-                }
-                if ($search_info) {
-                    if (AmpConfig::get('catalog_disable')) {
-                        $sql .= ' AND ' . $search_info['where_sql'];
-                    } else {
-                        $sql .= ' WHERE ' . $search_info['where_sql'];
-                    }
-                }
-            break;
-            case 'album':
-                $sql = "SELECT `album`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `album` ";
-                if (!$search_info || !$search_info['join']['song']) {
-                    $sql .= "LEFT JOIN `song` ON `song`.`album`=`album`.`id` ";
-                }
-                if ($search_info) {
-                    $sql .= $search_info['table_sql'];
-                }
-                if (AmpConfig::get('catalog_disable')) {
-                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                    $sql .= " WHERE `catalog`.`enabled` = '1'";
-                }
-                if ($search_info) {
-                    if (AmpConfig::get('catalog_disable')) {
-                        $sql .= ' AND ' . $search_info['where_sql'];
-                    } else {
-                        $sql .= ' WHERE ' . $search_info['where_sql'];
-                    }
-                }
-                $sql .= ' GROUP BY `album`.`id`';
-            break;
-            case 'artist':
-                $sql = "SELECT `artist`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `artist` ";
-                if (!$search_info || !$search_info['join']['song']) {
-                    $sql .= "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` ";
-                }
-                if ($search_info) {
-                    $sql .= $search_info['table_sql'];
-                }
-                if (AmpConfig::get('catalog_disable')) {
-                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                    $sql .= " WHERE `catalog`.`enabled` = '1'";
-                }
-                if ($search_info) {
-                    if (AmpConfig::get('catalog_disable')) {
-                        $sql .= ' AND ' . $search_info['where_sql'];
-                    } else {
-                        $sql .= ' WHERE ' . $search_info['where_sql'];
-                    }
-                }
-                $sql .= ' GROUP BY `artist`.`id`';
-            break;
-        }
-        $sql .= " ORDER BY RAND() $limit_sql";
-
+        $sql     = self::advanced_results($data, $type);
         $results = self::advanced_results($sql, $data);
 
         switch ($type) {
@@ -427,5 +354,91 @@ class Random
         } // end while results
 
         return $results;
+    }
+    /**
+     * advanced_sql
+     * Generate the sql query for self::advanced
+     * @param array $data
+     * @param string $type
+     * @return string
+     */
+    private static function advanced_results($data, $type)
+    {
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $search_data     = Search::clean_request($data);
+        $search_info     = false;
+
+        if (count($search_data) > 1) {
+            $search = new Search(null, $type);
+            $search->parse_rules($search_data);
+            $search_info = $search->to_sql();
+        }
+
+        $sql = "";
+        switch ($type) {
+            case 'song':
+                $sql = "SELECT `song`.`id`, `size`, `time` " .
+                        "FROM `song` ";
+                if ($search_info) {
+                    $sql .= $search_info['table_sql'];
+                }
+                if ($catalog_disable) {
+                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+                    $sql .= " WHERE `catalog`.`enabled` = '1'";
+                }
+                if ($search_info) {
+                    if ($catalog_disable) {
+                        $sql .= ' AND ' . $search_info['where_sql'];
+                    } else {
+                        $sql .= ' WHERE ' . $search_info['where_sql'];
+                    }
+                }
+            break;
+            case 'album':
+                $sql = "SELECT `album`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `album` ";
+                if (!$search_info || !$search_info['join']['song']) {
+                    $sql .= "LEFT JOIN `song` ON `song`.`album`=`album`.`id` ";
+                }
+                if ($search_info) {
+                    $sql .= $search_info['table_sql'];
+                }
+                if ($catalog_disable) {
+                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+                    $sql .= " WHERE `catalog`.`enabled` = '1'";
+                }
+                if ($search_info) {
+                    if ($catalog_disable) {
+                        $sql .= ' AND ' . $search_info['where_sql'];
+                    } else {
+                        $sql .= ' WHERE ' . $search_info['where_sql'];
+                    }
+                }
+                $sql .= ' GROUP BY `album`.`id`';
+            break;
+            case 'artist':
+                $sql = "SELECT `artist`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `artist` ";
+                if (!$search_info || !$search_info['join']['song']) {
+                    $sql .= "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` ";
+                }
+                if ($search_info) {
+                    $sql .= $search_info['table_sql'];
+                }
+                if ($catalog_disable) {
+                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+                    $sql .= " WHERE `catalog`.`enabled` = '1'";
+                }
+                if ($search_info) {
+                    if ($catalog_disable) {
+                        $sql .= ' AND ' . $search_info['where_sql'];
+                    } else {
+                        $sql .= ' WHERE ' . $search_info['where_sql'];
+                    }
+                }
+                $sql .= ' GROUP BY `artist`.`id`';
+            break;
+        }
+        $sql .= " ORDER BY RAND() $limit_sql";
+
+        return $sql;
     }
 } //end of random class
