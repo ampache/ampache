@@ -507,7 +507,8 @@ class XML_Data
                     $song_count = 0;
                     $disc_ids   = $album->get_group_disks_ids();
                     foreach ($disc_ids as $discid) {
-                        $disc       = new Album($discid);
+                        $disc = new Album($discid);
+                        $disc->format();
                         $song_count = $song_count + $disc->song_count;
                     }
                     $songs = $song_count;
