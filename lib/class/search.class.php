@@ -2037,6 +2037,7 @@ class Search extends playlist_object
             $search['rule_' . $count . '']          = "year";
             ++$count;
         }
+
         return $search;
     }
 }
