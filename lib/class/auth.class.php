@@ -197,7 +197,6 @@ class Auth
      */
     private static function pam_auth($username, $password)
     {
-        unset($token, $salt);
         $results = array();
         if (!function_exists('pam_auth')) {
             $results['success']    = false;
@@ -282,9 +281,8 @@ class Auth
      * @param string $password
      * @return array
      */
-    private static function ldap_auth($username, $password, $token = null, $salt = null)
+    private static function ldap_auth($username, $password)
     {
-        unset($token, $salt);
 
         return LDAP::auth($username, $password);
     }
@@ -298,9 +296,9 @@ class Auth
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private static function http_auth($username, $password, $token = null, $salt = null)
+    private static function http_auth($username, $password)
     {
-        unset($token, $salt);
+        unset($password);
         $results = array();
         if (($_SERVER['REMOTE_USER'] == $username) ||
             ($_SERVER['HTTP_REMOTE_USER'] == $username)) {
