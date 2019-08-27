@@ -97,10 +97,7 @@ class Registration
 
         /* HINT: Ampache Site Title */
         $mailer->subject = sprintf(T_("Account enabled at %s"), AmpConfig::get('site_title'));
-        /* HINT: Username */
-        $mailer->message = sprintf(T_("A new user has been enabled. %s"), $username) .
-                /* HINT: Ampache Login Page */
-                "\n\n " . sprintf(T_("You can log in at the following address %s"), AmpConfig::get('web_path') . "/login.php");
+        $mailer->message = sprintf(T_("Your account %s has been enabled\n\nPlease logon using %s"), $username, AmpConfig::get('web_path') . "/login.php");
 
         $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;

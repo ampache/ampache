@@ -216,12 +216,8 @@ class Subsonic_XML_Data
 
     public static function createFailedResponse($version = '', $function = '')
     {
-        if ($version === '') {
-            $version = self::API_VERSION;
-        }
-        $response = self::createResponse($version);
-        $response->addAttribute('status', 'failed');
-        debug_event('subsonic_xml_data.class', 'API auth failure ' . $version, 3);
+        $response = self::createResponse($version, 'failed');
+        debug_event('subsonic_xml_data.class', 'API auth fail ' . $version, 3);
 
         return $response;
     }
@@ -232,7 +228,7 @@ class Subsonic_XML_Data
             $version = self::API_VERSION;
         }
         $response = self::createResponse($version);
-        debug_event('subsonic_xml_data.class', 'API auth success ' . $version, 5);
+        debug_event('subsonic_xml_data.class', 'API auth success', 5);
 
         return $response;
     }
@@ -684,7 +680,7 @@ class Subsonic_XML_Data
                     $name .= " [" . $album->year . "]";
                 }
         */
-        if ($album->disk && !$album->allow_group_disks && count($album->get_album_suite()) > 1) {
+        if (!AmpConfig::get('album_group') && $album->disk) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
 
@@ -735,7 +731,7 @@ class Subsonic_XML_Data
     public static function addAlbumDirectory($xml, $album)
     {
         $xdir = $xml->addChild('directory');
-        $xdir->addAttribute('id', (string) self::getAlbumId($album->id));
+        $xdir->addAttribute('id', self::getAlbumId($album->id));
         $xdir->addAttribute('name', self::formatAlbum($album));
         $album->format();
         if ($album->artist_id) {
