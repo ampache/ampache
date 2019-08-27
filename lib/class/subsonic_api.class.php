@@ -345,9 +345,9 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addMusicFolders($r, Catalog::get_catalogs());
-        self::apiOutput($input, $r);
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addMusicFolders($response, Catalog::get_catalogs());
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -434,9 +434,9 @@ class Subsonic_Api
      */
     public static function getgenres($input)
     {
-        $r = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addGenres($r, Tag::get_tags('song'));
-        self::apiOutput($input, $r);
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addGenres($response, Tag::get_tags('song'));
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -446,10 +446,10 @@ class Subsonic_Api
      */
     public static function getartists($input)
     {
-        $r       = Subsonic_XML_Data::createSuccessResponse();
-        $artists = Catalog::get_artists(Catalog::get_catalogs());
-        Subsonic_XML_Data::addArtistsRoot($r, $artists, true);
-        self::apiOutput($input, $r);
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        $artists  = Catalog::get_artists(Catalog::get_catalogs());
+        Subsonic_XML_Data::addArtistsRoot($response, $artists, true);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -674,11 +674,11 @@ class Subsonic_Api
      */
     public static function getsong($input)
     {
-        $songid = self::check_parameter($input, 'id');
-        $r      = Subsonic_XML_Data::createSuccessResponse();
-        $song   = Subsonic_XML_Data::getAmpacheId($songid);
-        Subsonic_XML_Data::addSong($r, $song);
-        self::apiOutput($input, $r, array('musicFolder', 'artist', 'child', 'playlist', 'album'));
+        $songid   = self::check_parameter($input, 'id');
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        $song     = Subsonic_XML_Data::getAmpacheId($songid);
+        Subsonic_XML_Data::addSong($response, $song);
+        self::apiOutput($input, $response, array('musicFolder', 'artist', 'child', 'playlist', 'album'));
     }
 
     /**
@@ -733,10 +733,10 @@ class Subsonic_Api
      */
     public static function getnowplaying($input)
     {
-        $data = Stream::get_now_playing();
-        $r    = Subsonic_XML_Data::createSuccessResponse();
-        Subsonic_XML_Data::addNowPlaying($r, $data);
-        self::apiOutput($input, $r);
+        $data     = Stream::get_now_playing();
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        Subsonic_XML_Data::addNowPlaying($response, $data);
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -1352,8 +1352,8 @@ class Subsonic_Api
      */
     public static function getinternetradiostations($input)
     {
-        $response      = Subsonic_XML_Data::createSuccessResponse();
-        $radios        = Live_Stream::get_all_radios();
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        $radios   = Live_Stream::get_all_radios();
         Subsonic_XML_Data::addRadios($response, $radios);
         self::apiOutput($input, $response);
     }
@@ -1365,8 +1365,8 @@ class Subsonic_Api
      */
     public static function getshares($input)
     {
-        $response      = Subsonic_XML_Data::createSuccessResponse();
-        $shares        = Share::get_share_list();
+        $response = Subsonic_XML_Data::createSuccessResponse();
+        $shares   = Share::get_share_list();
         Subsonic_XML_Data::addShares($response, $shares);
         self::apiOutput($input, $response);
     }
@@ -2166,8 +2166,8 @@ class Subsonic_Api
      */
     public static function getbookmarks($input)
     {
-        $response         = Subsonic_XML_Data::createSuccessResponse();
-        $bookmarks        = Bookmark::get_bookmarks();
+        $response  = Subsonic_XML_Data::createSuccessResponse();
+        $bookmarks = Bookmark::get_bookmarks();
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
         self::apiOutput($input, $response);
     }
