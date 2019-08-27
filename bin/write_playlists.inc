@@ -28,7 +28,7 @@ require_once($prefix . '/lib/init.php');
 
 $valid_exts = array ('m3u', 'xspf', 'pls');
 
-if (!Core::get_global('argv')[1] || Core::get_global('argv')[1] == '-h') { usage(); }
+if (!Core::get_global('argv')[1] || Core::get_global('argv')[1] == '-h') { write_plist_usage(); }
 else {
     $dirname    = Core::get_global('argv')[1];
     $type       = Core::get_global('argv')[2];
@@ -97,7 +97,7 @@ foreach ($items as $item) {
 echo "Playlist export completed.\n";
 
 /* FUNCTIONS */
-function usage() {
+function write_plist_usage() {
     $desc1 = T_("This will dump a collection of playlists files based on type");
     $desc2 = T_("Playlists");
     $desc3 = T_("Dumps all of your playlists");

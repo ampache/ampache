@@ -59,7 +59,7 @@ $app->route('/broadcast', $brserver);
 $app->route('/echo', new Ratchet\Server\EchoServer, array('*'));
 $app->run();
 
-function usage()
+function websocket_usage()
 {
     echo T_("Usage:");
     echo "\n";
