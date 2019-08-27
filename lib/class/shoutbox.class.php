@@ -232,8 +232,8 @@ class Shoutbox
                         $mailer->recipient      = $item_owner->email;
                         $mailer->recipient_name = $item_owner->fullname;
                         $mailer->subject        = T_('New shout on your content');
-                        /* HINT: first %s is username, second is the item commented on */
-                        $mailer->message        = sprintf(T_("You just received a new shout from %s on your content \"%s\".", Core::get_global('user')->fullname, $libitem->get_fullname())) . "\n\n";
+                        /* HINT: %1$s username %2$s item name being commented on */
+                        $mailer->message        = sprintf(T_("You just received a new shout from %1$s on your content %2$s", Core::get_global('user')->fullname, $libitem->get_fullname())) . "\n\n";
                         $mailer->message .= "----------------------\n\n";
                         $mailer->message .= "$comment\n\n";
                         $mailer->message .= "----------------------\n\n";
