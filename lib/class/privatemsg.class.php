@@ -178,7 +178,7 @@ class PrivateMsg extends database_object
                             $mailer->recipient      = $to_user->email;
                             $mailer->recipient_name = $to_user->fullname;
                             $mailer->subject        = "[" . T_('Private Message') . "] " . $subject;
-                            /* HINT: User fullname */ 
+                            /* HINT: User fullname */
                             $mailer->message = sprintf(T_("You received a new private message from %s."), Core::get_global('user')->fullname);
                             $mailer->message .= "\n\n----------------------\n\n";
                             $mailer->message .= $message;
