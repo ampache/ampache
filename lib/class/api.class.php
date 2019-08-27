@@ -383,14 +383,13 @@ class Api
     public static function artist_albums($input)
     {
         $artist = new Artist($input['filter']);
-
-        $albums = $artist->get_albums(null, true);
+        $albums = $artist->get_albums();
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::albums($albums);
+        echo XML_Data::albums($albums, array());
     } // artist_albums
 
     /**
@@ -465,13 +464,29 @@ class Api
     public static function album_songs($input)
     {
         $album = new Album($input['filter']);
-        $songs = $album->get_songs();
+        $songs = array();
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
+
+        // songs for all disks
+        if (AmpConfig::get('album_group')) {
+            $disc_ids = $album->get_group_disks_ids();
+            foreach ($disc_ids as $discid) {
+                $disc     = new Album($discid);
+                $allsongs = $disc->get_songs();
+                foreach ($allsongs as $songid) {
+                    $songs[] = $songid;
+                }
+            }
+        } else {
+            // songs for just this disk
+            $songs = $album->get_songs();
+        }
+
         echo XML_Data::songs($songs);
     } // album_songs
 
@@ -532,7 +547,7 @@ class Api
             XML_Data::set_limit($input['limit']);
 
             ob_end_clean();
-            echo XML_Data::artists($artists);
+            echo XML_Data::artists($artists, array());
         }
     } // tag_artists
 
@@ -552,7 +567,7 @@ class Api
             XML_Data::set_limit($input['limit']);
 
             ob_end_clean();
-            echo XML_Data::albums($albums);
+            echo XML_Data::albums($albums, array());
         }
     } // tag_albums
 
@@ -881,10 +896,10 @@ class Api
 
         switch ($type) {
             case 'artist':
-                echo XML_Data::artists($results);
+                echo XML_Data::artists($results, array());
                 break;
             case 'album':
-                echo XML_Data::albums($results);
+                echo XML_Data::albums($results, array());
                 break;
             default:
                 echo XML_Data::songs($results);
@@ -1110,10 +1125,10 @@ class Api
                 echo XML_Data::songs($results);
             }
             if ($type === 'artist') {
-                echo XML_Data::artists($results);
+                echo XML_Data::artists($results, array());
             }
             if ($type === 'album') {
-                echo XML_Data::albums($results);
+                echo XML_Data::albums($results, array());
             }
         }
     } // stats

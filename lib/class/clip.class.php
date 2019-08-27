@@ -34,11 +34,11 @@ class Clip extends Video
      * This pulls the clip information from the database and returns
      * a constructed object
      */
-    public function __construct($id)
+    public function __construct($clip_id)
     {
-        parent::__construct($id);
+        parent::__construct($clip_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($clip_id);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

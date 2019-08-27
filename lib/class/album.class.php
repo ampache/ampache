@@ -237,12 +237,8 @@ class Album extends database_object implements library_item
      * get any of the counts.
      * @param integer|null $album_id
      */
-    public function __construct($album_id = null)
+    public function __construct($album_id)
     {
-        if (!$album_id) {
-            return false;
-        }
-
         /* Get the information from the db */
         $info = $this->get_info($album_id);
 

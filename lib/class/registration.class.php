@@ -101,7 +101,6 @@ class Registration
         $mailer->message = sprintf(T_("A new user has been enabled. %s"), $username) .
                 /* HINT: Ampache Login Page */
                 "\n\n " . sprintf(T_("You can log in at the following address %s"), AmpConfig::get('web_path') . "/login.php");
-
         $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;
 

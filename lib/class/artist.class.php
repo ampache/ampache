@@ -312,8 +312,8 @@ class Artist extends database_object implements library_item
                 $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
         }
 
-        if (!$ignoreAlbumGroups) {
-            $ignoreAlbumGroups = !AmpConfig::get('album_group');
+        if (AmpConfig::get('album_group')) {
+            $ignoreAlbumGroups = false;
         }
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
@@ -480,6 +480,34 @@ class Artist extends database_object implements library_item
     } // get_songs
 
     /**
+     * get_top_songs
+     * gets the songs for this artist
+     * @param integer $artist
+     * @return integer[]
+     */
+    public static function get_top_songs($artist, $count = 50)
+    {
+        $sql = "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS counting FROM `song` ";
+        $sql .= "LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `song`.`artist` = " . $artist;
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . (string) $count;
+        $db_results = Dba::read($sql);
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    } // get_top_songs
+
+    /**
      * get_random_songs
      * Gets the songs from this artist in a random order
      * @return integer[]
@@ -572,6 +600,10 @@ class Artist extends database_object implements library_item
             // Calculation
             $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
             $sqlw = "WHERE `song`.`artist` = ? ";
+            if (AmpConfig::get('album_group')) {
+                $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT CONCAT(`album`.`name`, `album`.`mbid`)) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` ";
+                $sqlw = "WHERE `song`.`artist` = ? ";
+            }
             if ($catalog) {
                 $params[] = $catalog;
                 $sqlw .= "AND (`song`.`catalog` = ?) ";
@@ -1042,7 +1074,7 @@ class Artist extends database_object implements library_item
         Tag::update_tag_list($tags_comma, 'artist', $current_id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
-            $albums = $this->get_albums(null, true);
+            $albums = $this->get_albums();
             foreach ($albums as $album_id) {
                 $album = new Album($album_id);
                 $album->update_tags($tags_comma, $override_childs, $add_to_childs);

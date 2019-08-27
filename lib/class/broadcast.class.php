@@ -74,16 +74,12 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Constructor
-     * @param integer $id
+     * @param integer $broadcast_id
      */
-    public function __construct($id = 0)
+    public function __construct($broadcast_id)
     {
-        if (!$id) {
-            return true;
-        }
-
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($broadcast_id);
 
         // Foreach what we've got
         foreach ($info as $key => $value) {

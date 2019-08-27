@@ -102,12 +102,8 @@ class Access
      * Takes an ID of the access_id dealie :)
      * @param integer|null $access_id
      */
-    public function __construct($access_id = null)
+    public function __construct($access_id)
     {
-        if ($access_id === null) {
-            return false;
-        }
-
         /* Assign id for use in get_info() */
         $this->id = (int) $access_id;
 

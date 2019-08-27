@@ -90,9 +90,18 @@ class Auth
      * @param boolean $allow_ui
      * @return array
      */
-    public static function login($username, $password, $allow_ui = false)
+    public static function login($username, $password, $allow_ui = false, $token = null, $salt = null)
     {
+        // Check for token auth with apikey
+        $token_check = self::token_check($username, $token, $salt);
+        if (!empty($token_check)) {
+            debug_event('auth.class', 'Logging in using token auth ' . $token, 5);
+
+            return $token_check;
+        }
+
         $results = array();
+        // If no token check the regular methods
         foreach (AmpConfig::get('auth_methods') as $method) {
             $function_name = $method . '_auth';
 
@@ -288,6 +297,7 @@ class Auth
      */
     private static function http_auth($username, $password)
     {
+        unset($password);
         $results = array();
         if (($_SERVER['REMOTE_USER'] == $username) ||
             ($_SERVER['HTTP_REMOTE_USER'] == $username)) {
@@ -315,6 +325,7 @@ class Auth
      */
     private static function openid_auth($username, $password)
     {
+        unset($password);
         $results = array();
         // Username contains the openid url. We don't care about password here.
         $website = $username;
@@ -393,9 +404,9 @@ class Auth
      */
     private static function openid_auth_2()
     {
-        $results            = array();
-        $results['type']    = 'openid';
-        $consumer           = Openid::get_consumer();
+        $results         = array();
+        $results['type'] = 'openid';
+        $consumer        = Openid::get_consumer();
         if ($consumer) {
             $response = $consumer->complete(Openid::get_return_url());
 
@@ -460,4 +471,33 @@ class Auth
 
         return $results;
     }
-}
+
+    /**
+     * token_check
+     *
+     * Check if the supplied token and salt match this user.
+     * @param string $username
+     * @param string $token
+     * @param string $salt
+     * @return array
+     */
+    private static function token_check($username, $token, $salt)
+    {
+        // subsonic token auth with apikey
+        if (strlen($token) && strlen($salt) && strlen($username)) {
+            $sql        = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
+            $db_results = Dba::read($sql, array($username));
+            $row        = Dba::fetch_assoc($db_results);
+            $hash_token = hash('md5', ($row['apikey'] . $salt));
+            if ($token == $hash_token) {
+                return array(
+                    'success' => true,
+                    'type' => 'token',
+                    'username' => $username
+                );
+            }
+        }
+
+        return array();
+    }
+}//end of auth class
