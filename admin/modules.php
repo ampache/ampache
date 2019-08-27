@@ -137,16 +137,16 @@ switch ($_REQUEST['action']) {
         User::rebuild_all_preferences();
 
         /* Show Confirmation */
-        $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title    = T_('Plugin enabled');
-        $body     = '';
+        $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
+        $title = T_('Plugin enabled');
+        $body  = '';
         show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_plugin':
-        $plugin   = scrub_in($_REQUEST['plugin']);
-        $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
-        $title = T_('Are you sure?');
-        $body  = T_('This will disable the plugin and remove your settings');
+        $plugin = scrub_in($_REQUEST['plugin']);
+        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
+        $title  = T_('Are you sure?');
+        $body   = T_('This will disable the plugin and remove your settings');
         show_confirmation($title, $body, $url, 1);
     break;
     case 'uninstall_plugin':
