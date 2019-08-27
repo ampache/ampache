@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $tvshow_id = scrub_in($_REQUEST['tvshow_id']);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this TV Show?'),
+        show_confirmation(T_('Are you sure?'), T_("The TV Show will be removed and it's files will be deleted"),
             AmpConfig::get('web_path') . "/tvshows.php?action=confirm_delete&tvshow_id=" . $tvshow_id,
             1,
             'delete_tvshow'

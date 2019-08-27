@@ -97,7 +97,7 @@ switch ($_REQUEST['action']) {
         }
 
         $msgs = scrub_out($_REQUEST['msgs']);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Message?'),
+        show_confirmation(T_('Are you sure?'), T_('The Message will be deleted'),
                 AmpConfig::get('web_path') . "/pvmsg.php?action=confirm_delete&msgs=" . $msgs,
                 1,
                 'delete_message'

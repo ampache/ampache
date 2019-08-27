@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $album_id = scrub_in($_REQUEST['album_id']);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Album?'),
+        show_confirmation(T_('Are you sure?'), T_("The Album will be removed and it's files will be deleted"),
             AmpConfig::get('web_path') . "/albums.php?action=confirm_delete&album_id=" . $album_id,
             1,
             'delete_album'

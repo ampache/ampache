@@ -36,7 +36,7 @@ switch ($_REQUEST['action']) {
         $object_id = Core::get_request('id');
 
         $next_url = AmpConfig::get('web_path') . '/broadcast.php?action=delete&id=' . scrub_out($object_id);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Broadcast?'), $next_url, 1, 'delete_broadcast');
+        show_confirmation(T_('Are you sure?'), T_('This Broadcast will be deleted'), $next_url, 1, 'delete_broadcast');
         UI::show_footer();
 
         return false;

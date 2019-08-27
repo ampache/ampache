@@ -229,7 +229,7 @@ switch ($_REQUEST['action']) {
         }
         $client = new User(Core::get_request('user_id'));
         show_confirmation(T_('Are you sure?'),
-            sprintf(T_('Do you really want to delete %s?'),
+            sprintf(T_('This will permanently delete %s'),
                     /* HINT: User Fullname */
                     $client->fullname),
             AmpConfig::get('web_path') . "/admin/users.php?action=confirm_delete&amp;user_id=" . Core::get_request('user_id'), 1, 'delete_user');
@@ -238,7 +238,7 @@ switch ($_REQUEST['action']) {
         $user_id = Core::get_request('user_id');
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php?action=delete_avatar&user_id=' . scrub_out($user_id);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Avatar?'), $next_url, 1, 'delete_avatar');
+        show_confirmation(T_('Are you sure?'), T_('This Avatar will be deleted'), $next_url, 1, 'delete_avatar');
     break;
     case 'delete_avatar':
         if (AmpConfig::get('demo_mode')) {
@@ -261,7 +261,7 @@ switch ($_REQUEST['action']) {
         $user_id = Core::get_request('user_id');
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php?action=generate_apikey&user_id=' . scrub_out($user_id);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to create a new API Key?'), $next_url, 1, 'generate_apikey');
+        show_confirmation(T_('Are you sure?'), T_('This will replace your existing API Key'), $next_url, 1, 'generate_apikey');
     break;
     case 'generate_apikey':
         if (AmpConfig::get('demo_mode')) {
