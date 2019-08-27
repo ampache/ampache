@@ -112,7 +112,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_delete_catalog':
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $catalogs);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Catalog?'), $next_url, 1, 'delete_catalog');
+        show_confirmation(T_('Are you sure?'), T_('This will permanently delete your Catalog'), $next_url, 1, 'delete_catalog');
     break;
     case 'enable_disabled':
         if (AmpConfig::get('demo_mode')) {
@@ -247,7 +247,7 @@ switch ($_REQUEST['action']) {
         $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
         show_confirmation(T_('Are you sure?'),
                 /* HINT: Catalog Name */
-                sprintf(T_('Do you really want to delete %s?'), $catalog->name), $nexturl, 1);
+                sprintf(T_('This will permanently delete %s'), $catalog->name), $nexturl, 1);
     break;
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);

@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $episode_id = scrub_in($_REQUEST['podcast_episode_id']);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Podcast Episode?'),
+        show_confirmation(T_('Are you sure?'), T_("The Podcast Episode will be deleted"),
             AmpConfig::get('web_path') . "/podcast_episode.php?action=confirm_delete&podcast_episode_id=" . $episode_id,
             1,
             'delete_podcast_episode'

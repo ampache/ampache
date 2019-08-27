@@ -72,7 +72,7 @@ switch ($_REQUEST['action']) {
         $object_id = Core::get_request('id');
 
         $next_url = AmpConfig::get('web_path') . '/channel.php?action=delete&id=' . scrub_out($object_id);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Channel?'), $next_url, 1, 'delete_channel');
+        show_confirmation(T_('Are you sure?'), T_('This Channel will be deleted'), $next_url, 1, 'delete_channel');
         UI::show_footer();
 
         return false;

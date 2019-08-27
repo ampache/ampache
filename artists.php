@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $artist_id = scrub_in($_REQUEST['artist_id']);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Artist?'),
+        show_confirmation(T_('Are you sure?'), T_("The Artist will be removed and it's files will be deleted"),
             AmpConfig::get('web_path') . "/artists.php?action=confirm_delete&artist_id=" . $artist_id,
             1,
             'delete_artist'

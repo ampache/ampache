@@ -96,7 +96,7 @@ switch ($_REQUEST['action']) {
         $share_id = Core::get_request('id');
 
         $next_url = AmpConfig::get('web_path') . '/share.php?action=delete&id=' . scrub_out($share_id);
-        show_confirmation(T_('Are you sure?'), T_('Do you really want to delete this Share?'), $next_url, 1, 'delete_share');
+        show_confirmation(T_('Are you sure?'), T_('The Share will be deleted and no longer accessible to others'), $next_url, 1, 'delete_share');
         UI::show_footer();
 
         return false;
