@@ -52,13 +52,9 @@ class Song_Preview extends database_object implements media, playable_item
      *
      * Song Preview class
      */
-    public function __construct($id = null)
+    public function __construct($object_id)
     {
-        if (!$id) {
-            return false;
-        }
-
-        $this->id = (int) ($id);
+        $this->id = (int) ($object_id);
 
         if ($info = $this->has_info()) {
             foreach ($info as $key => $value) {

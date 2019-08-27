@@ -467,6 +467,7 @@ class Video extends database_object implements media, library_item
      * get_transcode_settings
      * @param string $target
      * @param array $options
+     * @param string $player
      * @return array
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())

@@ -29,7 +29,7 @@
  */
 class Subsonic_XML_Data
 {
-    const API_VERSION = "1.11.0";
+    const API_VERSION = "1.13.0";
 
     const SSERROR_GENERIC               = 0;
     const SSERROR_MISSINGPARAM          = 10;
@@ -200,8 +200,7 @@ class Subsonic_XML_Data
 
     public static function createFailedResponse($version = '')
     {
-        $response = self::createResponse($version);
-        $response->addAttribute('status', 'failed');
+        $response = self::createResponse($version, 'failed');
         debug_event('subsonic_xml_data.class', 'API auth fail ' . $version, 3);
 
         return $response;
@@ -210,12 +209,12 @@ class Subsonic_XML_Data
     public static function createSuccessResponse($version = '')
     {
         $response = self::createResponse($version);
-        debug_event('subsonic_xml_data.class', 'API auth success: ' . $version, 5);
+        debug_event('subsonic_xml_data.class', 'API auth success', 5);
 
         return $response;
     }
 
-    public static function createResponse($version = '')
+    public static function createResponse($version = '', $status = 'ok')
     {
         if (empty($version)) {
             $version = self::API_VERSION;
@@ -223,7 +222,7 @@ class Subsonic_XML_Data
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         //       $response->addAttribute('type', 'ampache');
-        $response->addAttribute('status', 'ok');
+        $response->addAttribute('status', $status);
         $response->addAttribute('version', $version);
 
         return $response;
@@ -404,7 +403,7 @@ class Subsonic_XML_Data
         $xartist->addAttribute('name', self::checkName($artist->f_full_name));
         $allalbums = array();
         if (($extra && !$albumsSet) || $albums) {
-            $allalbums = $artist->get_albums(null, true);
+            $allalbums = $artist->get_albums();
         }
 
         if ($extra) {
@@ -444,7 +443,7 @@ class Subsonic_XML_Data
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
         $xalbum->addAttribute('id', self::getAlbumId($album->id));
         $xalbum->addAttribute('album', self::checkName($album->full_name));
-        $xalbum->addAttribute('title', self::formatAlbum($album, $elementName === "album"));
+        $xalbum->addAttribute('title', self::formatAlbum($album));
         $xalbum->addAttribute('name', self::checkName($album->full_name));
         $xalbum->addAttribute('isDir', 'true');
         $xalbum->addAttribute('discNumber', $album->disk);
@@ -479,9 +478,13 @@ class Subsonic_XML_Data
         self::setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
-            $allsongs = $album->get_songs();
-            foreach ($allsongs as $songid) {
-                self::addSong($xalbum, $songid, $addAmpacheInfo);
+            $disc_ids = $album->get_group_disks_ids();
+            foreach ($disc_ids as $discid) {
+                $disc     = new Album($discid);
+                $allsongs = $disc->get_songs();
+                foreach ($allsongs as $songid) {
+                    self::addSong($xalbum, $songid, $addAmpacheInfo);
+                }
             }
         }
     }
@@ -651,14 +654,14 @@ class Subsonic_XML_Data
      *
      * @return string|null
      */
-    private static function formatAlbum($album, $checkDisk = true)
+    private static function formatAlbum($album)
     {
         $name = $album->full_name;
         /*        if ($album->year > 0) {
                     $name .= " [" . $album->year . "]";
                 }
         */
-        if (($checkDisk || !AmpConfig::get('album_group')) && $album->disk) {
+        if (!AmpConfig::get('album_group') && $album->disk) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
 
@@ -710,7 +713,7 @@ class Subsonic_XML_Data
     {
         $xdir = $xml->addChild('directory');
         $xdir->addAttribute('id', self::getAlbumId($album->id));
-        $xdir->addAttribute('name', self::formatAlbum($album, false));
+        $xdir->addAttribute('name', self::formatAlbum($album));
         $album->format();
         if ($album->artist_id) {
             $xdir->addAttribute('parent', self::getArtistId($album->artist_id));
@@ -826,6 +829,7 @@ class Subsonic_XML_Data
         $xplaylist->addAttribute('owner', $user->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('created', date("c", $playlist->date));
+        $xplaylist->addAttribute('changed', date("c", $playlist->last_update));
         $xplaylist->addAttribute('songCount', $playlist->get_media_count('song'));
         $xplaylist->addAttribute('duration', $playlist->get_total_duration());
 
@@ -881,6 +885,16 @@ class Subsonic_XML_Data
         }
     }
 
+    /**
+     * @param SimpleXMLElement $xml
+     */
+    public static function addTopSongs($xml, $songs)
+    {
+        $xsongs = $xml->addChild('topSongs');
+        foreach ($songs as $songid) {
+            self::addSong($xsongs, $songid);
+        }
+    }
     /**
      * @param SimpleXMLElement $xml
      */
@@ -1060,8 +1074,8 @@ class Subsonic_XML_Data
     public static function addShares($xml, $shares)
     {
         $xshares = $xml->addChild('shares');
-        foreach ($shares as $shareid) {
-            $share = new Share($shareid);
+        foreach ($shares as $share_id) {
+            $share = new Share($share_id);
             // Don't add share with max counter already reached
             if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
                 self::addShare($xshares, $share);
