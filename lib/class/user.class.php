@@ -1126,21 +1126,46 @@ class User extends database_object
      * access_name_to_level
      * This takes the access name for the user and returns the level
      */
-    public static function access_name_to_level($level)
+    public static function access_name_to_level($name)
     {
-        switch ($level) {
+        switch ($name) {
             case 'admin':
                 return '100';
             case 'user':
                 return '25';
             case 'manager':
                 return '75';
+            // FIXME why is content manager not here?
+            //case 'manager':
+            //    return '50';
             case 'guest':
                 return '5';
             default:
                 return '0';
         }
     } // access_name_to_level
+
+    /**
+     * access_level_to_name
+     * This takes the access level for the user and returns the name
+     */
+    public static function access_level_to_name($level)
+    {
+        switch ($level) {
+            case '100':
+                return T_('Admin');
+            case '75':
+                return T_('Catalog Manager');
+            case '50':
+                return T_('Content Manager');
+            case '25':
+                return T_('User');
+            case '5':
+                return T_('Guest');
+            default:
+                return T_('Unknown');
+        }
+    } // access_level_to_name
 
     /**
       * fix_preferences
