@@ -21,5 +21,4 @@
  */
 ?>
 
-/* HINT: %1 Playlist Type, %2 Playlist Name */
-<?php echo sprintf(T_('%1$s %2$s (Smart Playlist)'), $playlist->f_type, $playlist->name); ?>
+<?php /* HINT: %1 Playlist Type, %2 Playlist Name */ echo sprintf(T_('%1$s %2$s (Smart Playlist)'), $playlist->f_type, $playlist->name); ?>
