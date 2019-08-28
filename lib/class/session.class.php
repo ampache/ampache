@@ -168,7 +168,7 @@ class Session
     }
 
     /**
-     * username
+     * agent
      *
      * This returns the agent associated with a session ID, if any
      */
@@ -220,12 +220,10 @@ class Session
         }
         $agent = (!empty($data['agent'])) ? $data['agent'] : substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
 
+        $expire = time() + AmpConfig::get('session_length');
         if ($type == 'stream') {
             $expire = time() + AmpConfig::get('stream_length');
-        } else {
-            $expire = time() + AmpConfig::get('session_length');
         }
-
         $latitude = null;
         if (isset($data['geo_latitude'])) {
             $latitude = $data['geo_latitude'];
