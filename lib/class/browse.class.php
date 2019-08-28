@@ -39,14 +39,14 @@ class Browse extends Query
     /**
      * Constructor.
      *
-     * @param integer $browse_id
+     * @param integer|null $browse_id
      * @param boolean $cached
      */
-    public function __construct($browse_id = 0, $cached = true)
+    public function __construct($browse_id = null, $cached = true)
     {
         parent::__construct($browse_id, $cached);
 
-        if ($browse_id > 0) {
+        if ($browse_id !== null) {
             $this->set_use_pages(true);
             $this->set_use_alpha(false);
             $this->set_grid_view(true);
