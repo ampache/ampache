@@ -76,7 +76,7 @@ print_r($ampache_results);
 function print_tags_usage() {
     global $version;
 
-    $text  = sprintf(T_('%s Version %s'), 'print_tags.inc', $version);
+    $text  = 'print_tags.inc' . T_('Version') . ': ' . $version;
     $text .= "\n\n";
     $text .= T_('Usage:');
     $text .= "\n";

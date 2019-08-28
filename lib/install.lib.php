@@ -236,7 +236,9 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         }
         $sql .= "IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
         if (!Dba::write($sql)) {
-            AmpError::add('general', sprintf(T_('Unable to create the user "%1$s" with permissions to %2$s on %3$s: %4$s'), $db_user, $database, $db_host, Dba::error()));
+            AmpError::add('general', sprintf(
+                /* HINT: %1 user, %2 database, %3 host, %4 error message */
+                T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'), $db_user, $database, $db_host, Dba::error()));
 
             return false;
         }

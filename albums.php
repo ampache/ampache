@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $album_id = scrub_in($_REQUEST['album_id']);
-        show_confirmation(T_('Are you sure?'), T_("The Album will be removed and it's files will be deleted"),
+        show_confirmation(T_('Are You Sure?'), T_("The Album and all files will be deleted"),
             AmpConfig::get('web_path') . "/albums.php?action=confirm_delete&album_id=" . $album_id,
             1,
             'delete_album'
@@ -52,9 +52,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($album->remove_from_disk()) {
-            show_confirmation(T_('No Problem'), T_('Album has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('The Album has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_("There Was A Problem"), T_("Couldn't delete this Album."), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Album."), AmpConfig::get('web_path'));
         }
     break;
     case 'update_from_tags':
@@ -124,7 +124,7 @@ switch ($_REQUEST['action']) {
         $album->format();
         if (!$album->id) {
             debug_event('albums', 'Requested an album that does not exist', 2);
-            echo T_("You have requested an album that does not exist.");
+            echo T_("You have requested an Album that does not exist.");
         // allow single disks to not be shown as multi's
         } elseif (!count($album->album_suite) || count($album->album_suite) == 1) {
             require AmpConfig::get('prefix') . UI::find_template('show_album.inc.php');

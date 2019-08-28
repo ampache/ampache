@@ -77,11 +77,11 @@ if (count($options) == 0) {
             $operations_string .= "\n\t- " . T_('Gathering new media art');
             $artadd = 1;
         }
-        if (array_key_exists('u', $options)) { 
+        if (array_key_exists('u', $options)) {
             $operations_string .= "\n\t- " . T_('Update artist information and fetch similar artists from last.fm.');
             $infoupdate = 1;
         }
-        if (array_key_exists('i', $options)) { 
+        if (array_key_exists('i', $options)) {
             $operations_string .= "\n\t- " . T_('Importing playlist/s');
             $plimp = 1;
         }
@@ -148,7 +148,7 @@ while ($row = Dba::fetch_row($db_results)) {
 
     $catalog = Catalog::create_from_id($row['0']);
     /* HINT: Catalog Name */
-    printf(T_('Reading Catalog: %s'), $catalog->name);
+    printf(T_('Reading Catalog: "%s"'), $catalog->name);
     ob_flush();
     echo "\n";
 
@@ -180,7 +180,7 @@ while ($row = Dba::fetch_row($db_results)) {
         $catalog->gather_art();
         echo "----------------\n\n";
     }
-    if ($infoupdate == 1) { 
+    if ($infoupdate == 1) {
         // Look for updated artist information. (missing or < 6 months since last update)
         echo "- " . T_('Update artist information and fetch similar artists from last.fm.') . " - \n";
         echo "\n";
@@ -249,7 +249,7 @@ function usage() {
     echo "\n";
     echo "----------------------------------------------------------\033[31m\n";
     echo "1. " . T_('Use this option at your own risk! Your system could crash or become unresponsive due to huge memory consumption!') . "\n";
-    echo "2. " . T_('Depending on your systems performance, this option may need a long time to finish and could greatly slow down other database processes if you have big Catalogs!') . "\n";
+    echo "2. " . T_("Depending on your system's performance, this option may need a long time to finish and could greatly slow down other database processes if you have large Catalogs!") . "\n";
     echo "!  " . T_('The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-a|-g] is used.');
     echo "\033[0m\n";
     echo "----------------------------------------------------------";

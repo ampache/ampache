@@ -79,7 +79,9 @@ function send_newpassword($email, $current_ip)
         $mailer->recipient_name = $client->fullname;
         $mailer->recipient      = $client->email;
 
-        $message  = sprintf(T_("A user from %s has requested a password reset for '%s'."), $current_ip, $client->username);
+        $message  = sprintf(
+            /* HINT: %1 IP Address, %2 Username */
+            T_('A user from "%1$s" has requested a password reset for "%2$s".'), $current_ip, $client->username);
         $message .= "\n";
         $message .= sprintf(T_("The password has been set to: %s"), $newpassword);
         $mailer->message = $message;
