@@ -1234,47 +1234,23 @@ class User extends database_object
             }
         } // if this is an admin check for others
 
-        // Delete their playlists
-        $sql = "DELETE FROM `playlist` WHERE `user` = ?";
-        Dba::write($sql, array($this->id));
-
+        // simple deletion queries.
+        $user_tables = array('playlist', 'object_count', 'ip_history',
+            'access_list', 'rating', 'tag_map',
+            'user_preference', 'user_vote', '');
+        foreach ($user_tables as $table_id) {
+            $sql = "DELETE FROM `" . $table_id . "` WHERE `user` = ?";
+            Dba::write($sql, array($this->id));
+        }
         // Clean up the playlist data table
         $sql = "DELETE FROM `playlist_data` USING `playlist_data` " .
             "LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` " .
             "WHERE `playlist`.`id` IS NULL";
         Dba::write($sql);
 
-        // Delete any stats they have
-        $sql = "DELETE FROM `object_count` WHERE `user` = ?";
-        Dba::write($sql, array($this->id));
-
-        // Clear the IP history for this user
-        $sql = "DELETE FROM `ip_history` WHERE `user` = ?";
-        Dba::write($sql, array($this->id));
-
-        // Nuke any access lists that are specific to this user
-        $sql = "DELETE FROM `access_list` WHERE `user` = ?";
-        Dba::write($sql, array($this->id));
-
-        // Delete their ratings
-        $sql = "DELETE FROM `rating` WHERE `user` = ?";
-        Dba::write($sql, array($this->id));
-
-        // Delete their tags
-        $sql = "DELETE FROM `tag_map` WHERE `user` = ?";
-        Dba::write($sql, array($this->id));
-
         // Clean out the tags
         $sql = "DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`)";
         Dba::write($sql);
-
-        // Delete their preferences
-        $sql = "DELETE FROM `user_preference` WHERE `user` = ?";
-        Dba::write($sql, array($this->id));
-
-        // Delete their voted stuff in democratic play
-        $sql = "DELETE FROM `user_vote` WHERE `user` = ?";
-        Dba::write($sql, array($this->id));
 
         // Delete their following/followers
         $sql = "DELETE FROM `user_follower` WHERE `user` = ? OR `follow_user` = ?";
