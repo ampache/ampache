@@ -959,7 +959,7 @@ class User extends database_object
             $sip   = $sipar['host'];
         }
 
-        $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim($sip, "[]"))) : '';
+        $uip     = (!empty($sip)) ? Dba::escape(inet_ptont(rim($sip, "[]"))) : '';
         $date    = time();
         $user_id = $this->id;
         $agent   = Dba::escape($_SERVER['HTTP_USER_AGENT']);
@@ -1101,9 +1101,9 @@ class User extends database_object
 
             /* Get Users Last ip */
             if (count($data = $this->get_ip_history(1))) {
-                $userip = inet_ntop($data['0']['ip']);
-                if (!empty($userip) && filter_var($userip, FILTER_VALIDATE_IP)) {
-                    $this->ip_history = $userip;
+                $ip = inet_ntop($data['0']['ip']);
+                if (!empty($ip) && filter_var($ip, FILTER_VALIDATE_IP)) {
+                    $this->ip_history = $ip;
                 }
             } else {
                 $this->ip_history = T_('Not Enough Data');
