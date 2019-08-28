@@ -1157,7 +1157,7 @@ class User extends database_object
     {
         switch ($level) {
             case '100':
-                return T_('Administrator');
+                return T_('Admin');
             case '75':
                 return T_('Catalog Manager');
             case '50':
