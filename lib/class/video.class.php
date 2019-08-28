@@ -196,16 +196,16 @@ class Video extends database_object implements media, library_item
      * Constructor
      * This pulls the information from the database and returns
      * a constructed object
-     * @param integer|null $id
+     * @param integer|null $video_id
      */
-    public function __construct($id = null)
+    public function __construct($video_id = null)
     {
-        if ($id === null) {
+        if ($video_id === null) {
             return false;
         }
 
         // Load the data from the database
-        $info = $this->get_info($id, 'video');
+        $info = $this->get_info($video_id, 'video');
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
