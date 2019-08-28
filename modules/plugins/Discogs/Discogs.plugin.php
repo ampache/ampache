@@ -115,9 +115,9 @@ class AmpacheDiscogs
         return $this->query_discogs($query);
     }
 
-    protected function get_artist($id)
+    protected function get_artist($object_id)
     {
-        $query = "artists/" . $id;
+        $query = "artists/" . $object_id;
 
         return $this->query_discogs($query);
     }
@@ -129,9 +129,9 @@ class AmpacheDiscogs
         return $this->query_discogs($query);
     }
 
-    protected function get_album($id)
+    protected function get_album($object_id)
     {
-        $query = "masters/" . $id;
+        $query = "masters/" . $object_id;
 
         return $this->query_discogs($query);
     }

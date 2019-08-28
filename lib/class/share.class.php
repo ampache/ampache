@@ -159,9 +159,9 @@ class Share extends database_object
     /**
      * @param string $secret
      */
-    public static function get_url($id, $secret)
+    public static function get_url($share_id, $secret)
     {
-        $url = AmpConfig::get('web_path') . '/share.php?id=' . $id;
+        $url = AmpConfig::get('web_path') . '/share.php?id=' . $share_id;
         if (!empty($secret)) {
             $url .= '&secret=' . $secret;
         }

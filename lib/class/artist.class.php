@@ -160,19 +160,19 @@ class Artist extends database_object implements library_item
      * Artist
      * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
-     * @param integer|null $id
+     * @param integer|null $artist_id
      * @param integer $catalog_init
      */
-    public function __construct($id = null, $catalog_init = 0)
+    public function __construct($artist_id = null, $catalog_init = 0)
     {
         /* If they failed to pass in an id, just run for it */
-        if ($id === null) {
+        if ($artist_id === null) {
             return false;
         }
 
         $this->catalog_id = $catalog_init;
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($artist_id);
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
