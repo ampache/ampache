@@ -53,8 +53,8 @@ $website = isset($options['w']) ? $options['w'] : '';
 $name = isset($options['n']) ? $options['n'] : '';
 
 if (User::create($username, $name, $email, $website, $password, $access)) {
-    /* HINT: %1 Access Level, %2 Username, %3 password */
-    printf(T_('Created %1$s user %2$s with password %3$s'), T_($access), $username, $password);
+    /* HINT: %1 Access Level (Administrator/User/etc), %2 Username, %3 password */
+    printf(T_('Created %1$s user %2$s with password %3$s'), User::access_level_to_name($access), $username, $password);
     echo "\n";
 }
 else {

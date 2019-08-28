@@ -1147,7 +1147,7 @@ class User extends database_object
 
     /**
      * access_level_to_name
-     * This takes the access level for the user and returns the name
+     * This takes the access level for the user and returns the translated name for that level
      */
     public static function access_level_to_name($level)
     {

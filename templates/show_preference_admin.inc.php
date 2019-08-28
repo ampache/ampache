@@ -42,7 +42,7 @@ UI::show_box_top(T_('Preferences'));
         <select name="prefs[<?php echo scrub_out($preference['name']); ?>]">
             <option value="5" <?php echo $is_5; ?>><?php echo T_('Guest'); ?></option>
             <option value="25" <?php echo $is_25; ?>><?php echo T_('User'); ?></option>
-            <option value="100" <?php echo $is_100; ?>><?php echo T_('Admin'); ?></option>
+            <option value="100" <?php echo $is_100; ?>><?php echo T_('Administrator'); ?></option>
         </select>
     </td>
 </tr>
