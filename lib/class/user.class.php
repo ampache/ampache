@@ -939,7 +939,7 @@ class User extends database_object
             $sip   = $sipar['host'];
         }
 
-        $uip     = (!empty($sip)) ? Dba::escape(inet_ptont(rim($sip, "[]"))) : '';
+        $uip     = (!empty($sip)) ? Dba::escape(inet_pton(rim($sip, "[]"))) : '';
         $date    = time();
         $user_id = $this->id;
         $agent   = Dba::escape($_SERVER['HTTP_USER_AGENT']);
