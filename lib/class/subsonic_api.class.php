@@ -2173,7 +2173,7 @@ class Subsonic_Api
 
     /**
      * getPlayQueue
-     * Geturns the state of the play queue for the authenticated user.
+     * Returns the state of the play queue for the authenticated user.
      * Takes no parameter.
      * Not supported.
      */
@@ -2186,7 +2186,7 @@ class Subsonic_Api
     /**
      * savePlayQueue
      * Save the state of the play queue for the authenticated user.
-     * Takes multiple song id in parameter with optional current id playing sond and position.
+     * Takes multiple song id in parameter with optional current id playing song and position.
      * Not supported.
      */
     public static function saveplayqueue($input)
