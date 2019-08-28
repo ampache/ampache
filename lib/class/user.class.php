@@ -1101,6 +1101,8 @@ class User extends database_object
     /**
      * access_name_to_level
      * This takes the access name for the user and returns the level
+     * @param string $name
+     * @return string
      */
     public static function access_name_to_level($name)
     {
@@ -1124,12 +1126,14 @@ class User extends database_object
     /**
      * access_level_to_name
      * This takes the access level for the user and returns the translated name for that level
+     * @param string $level
+     * @return string
      */
     public static function access_level_to_name($level)
     {
         switch ($level) {
             case '100':
-                return T_('Admin');
+                return T_('Administrator');
             case '75':
                 return T_('Catalog Manager');
             case '50':
