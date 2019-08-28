@@ -46,7 +46,7 @@ class Browse extends Query
     {
         parent::__construct($browse_id, $cached);
 
-        if ($browse_id !== null) {
+        if (!$browse_id) {
             $this->set_use_pages(true);
             $this->set_use_alpha(false);
             $this->set_grid_view(true);
