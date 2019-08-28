@@ -57,7 +57,7 @@ if ($cargv > 1) {
 }
 
 if ($chanid <= 0) {
-    usage();
+    channel_usage();
     return false;
 }
 
@@ -305,7 +305,7 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     ob_flush();
 }
 
-function usage()
+function channel_usage()
 {
     echo T_("Usage:");
     echo "\n";

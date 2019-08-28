@@ -60,7 +60,7 @@ $web_path = $options['w'] ?: $options ['webpath'];
 
 // Make sure we have all the required information
 if (!$db_user || !$db_pass || !$db_host || !$db_name) {
-    usage();
+    install_usage();
 }
 
 // Now let's make sure it's not already installed
@@ -104,10 +104,10 @@ if (!install_create_config()) {
 }
 
 /**
- * usage
+ * install_usage
  * This just prints out the required params for this script
  **/
-function usage() {
+function install_usage() {
     echo T_("Usage:") . "\n";
     echo "install_db.inc [" . T_('Options') . "]";
     echo "\n\t-U, --database-user\t\t\t";
