@@ -216,7 +216,7 @@ abstract class Catalog extends database_object
     {
         $sql        = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($catalog_id));
-        $results = Dba::fetch_assoc($db_results);
+        $results    = Dba::fetch_assoc($db_results);
         if (!empty($results)) {
             return self::create_catalog_type($results['catalog_type'], $catalog_id);
         }
