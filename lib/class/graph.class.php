@@ -54,15 +54,13 @@ class Graph
 
     protected function get_user_sql_where($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null)
     {
-        if ($end_date == null) {
+        $start_date = (int) ($start_date);
+        $end_date   = (int) ($end_date);
+        if ($end_date == 0) {
             $end_date = time();
-        } else {
-            $end_date = (int) ($end_date);
         }
-        if ($start_date == null) {
+        if ($start_date == 0) {
             $start_date = $end_date - 864000;
-        } else {
-            $start_date = (int) ($start_date);
         }
 
         $sql = "WHERE `object_count`.`date` >= " . $start_date . " AND `object_count`.`date` <= " . $end_date;
@@ -84,15 +82,13 @@ class Graph
 
     protected function get_catalog_sql_where($object_type = 'song', $object_id = 0, $catalog = 0, $start_date = null, $end_date = null)
     {
-        if ($end_date == null) {
+        $start_date = (int) ($start_date);
+        $end_date   = (int) ($end_date);
+        if ($end_date == 0) {
             $end_date = time();
-        } else {
-            $end_date = (int) ($end_date);
         }
-        if ($start_date == null) {
+        if ($start_date == 0) {
             $start_date = $end_date - 864000;
-        } else {
-            $start_date = (int) ($start_date);
         }
 
         $sql = "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date;
@@ -114,17 +110,17 @@ class Graph
      */
     protected function get_all_type_pts($fct, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
+        $type = $object_type;
         if ($object_type == null) {
             $type = 'song';
-        } else {
-            $type = $object_type;
         }
-        $song_values = $this->$fct($id, $type, $object_id, $start_date, $end_date, $zoom);
+
+        $song_values  = $this->$fct($id, $type, $object_id, $start_date, $end_date, $zoom);
+        $video_values = array();
         if ($object_type == null && AmpConfig::get('allow_video')) {
             $video_values = $this->$fct($id, 'video', $object_id, $start_date, $end_date, $zoom);
-        } else {
-            $video_values = array();
         }
+
         $values = $song_values;
         foreach ($video_values as $date => $value) {
             if (array_key_exists($date, $values)) {
