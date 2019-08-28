@@ -426,7 +426,7 @@ class Broadcast_Server implements MessageComponentInterface
     private static function echo_message($message)
     {
         if ($this->verbose) {
-                echo $message;
+            echo $message;
         }
     }
 } // end of broadcast_server class
