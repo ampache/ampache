@@ -179,7 +179,6 @@ switch ($_REQUEST['action']) {
                 $access = T_('Admin');
         }
 
-        
         show_confirmation(T_('New User Added'),
                 /* HINT: %1 Username, %2 Access (Guest, User, Admin) */
                 sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $access), AmpConfig::get('web_path') . '/admin/users.php');

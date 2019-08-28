@@ -57,8 +57,8 @@ class AmpachePaypal
             return false;
         }
 
-        Preference::insert('paypal_business', 'PayPal ID', '', 25, 'string', 'plugins', $this->name);
-        Preference::insert('paypal_currency_code', 'PayPal Currency Code', 'USD', 25, 'string', 'plugins', $this->name);
+        Preference::insert('paypal_business', T_('PayPal ID'), '', 25, 'string', 'plugins', $this->name);
+        Preference::insert('paypal_currency_code', T_('PayPal Currency Code'), 'USD', 25, 'string', 'plugins', $this->name);
 
         return true;
     }

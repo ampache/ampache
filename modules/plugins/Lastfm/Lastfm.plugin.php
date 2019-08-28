@@ -64,8 +64,8 @@ class AmpacheLastfm
             return false;
         }
 
-        Preference::insert('lastfm_challenge', 'Last.FM Submit Challenge', '', '25', 'string', 'internal', $this->name);
-        Preference::insert('lastfm_grant_link', 'Last.FM Grant URL', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', '25', 'string', 'internal', $this->name);
+        Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', '25', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -97,7 +97,7 @@ class AmpacheLastfm
             Preference::delete('lastfm_url');
             Preference::delete('lastfm_host');
             Preference::delete('lastfm_port');
-            Preference::insert('lastfm_grant_link', 'Last.FM Grant URL', '', '25', 'string', 'plugins');
+            Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', '25', 'string', 'plugins');
         }
 
         return true;
