@@ -64,8 +64,8 @@ class Ampachelibrefm
             return false;
         }
 
-        Preference::insert('librefm_challenge', 'Libre.FM Submit Challenge', '', '25', 'string', 'internal', $this->name);
-        Preference::insert('librefm_grant_link', 'Libre.FM Grant URL', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', '25', 'string', 'internal', $this->name);
+        Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', '25', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -97,7 +97,7 @@ class Ampachelibrefm
             Preference::delete('librefm_url');
             Preference::delete('librefm_host');
             Preference::delete('librefm_port');
-            Preference::insert('librefm_grant_link', 'Libre.FM Grant URL', '', '25', 'string', 'plugins');
+            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', '25', 'string', 'plugins');
         }
 
         return true;

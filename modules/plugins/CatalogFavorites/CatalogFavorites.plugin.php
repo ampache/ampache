@@ -56,8 +56,8 @@ class AmpacheCatalogFavorites
             return false;
         }
 
-        Preference::insert('catalogfav_max_items', 'Catalog favorites max items', '5', '25', 'integer', 'plugins', $this->name);
-        Preference::insert('catalogfav_gridview', 'Catalog favorites grid view display', '0', '25', 'boolean', 'plugins', $this->name);
+        Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), '5', '25', 'integer', 'plugins', $this->name);
+        Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', '25', 'boolean', 'plugins', $this->name);
 
         return true;
     }
@@ -83,7 +83,7 @@ class AmpacheCatalogFavorites
     {
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version < 2) {
-            Preference::insert('catalogfav_gridview', 'Catalog favorites grid view display', '0', '25', 'boolean', 'plugins');
+            Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', '25', 'boolean', 'plugins');
         }
 
         return true;
