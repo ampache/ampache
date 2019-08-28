@@ -108,11 +108,11 @@ class Broadcast_Server implements MessageComponentInterface
                             $this->authSid($from, $cmdinfo[1]);
                         break;
                         default:
-                            Self::echo_message("[" . time() . "][warning]Unknown message code." . "\r\n");
+                            Self::echo_message($this->verbose, "[" . time() . "][warning]Unknown message code." . "\r\n");
                         break;
                     }
                 } else {
-                    Self::echo_message("[" . time() . "][error]Wrong message format (" . $command . ")." . "\r\n");
+                    Self::echo_message($this->verbose, "[" . time() . "][error]Wrong message format (" . $command . ")." . "\r\n");
                 }
             }
         }
@@ -423,9 +423,9 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      * echo_message
      */
-    private static function echo_message($message)
+    private static function echo_message($verbose, $message)
     {
-        if ($this->verbose) {
+        if ($verbose) {
             echo $message;
         }
     }
