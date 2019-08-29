@@ -232,7 +232,7 @@ class Live_Stream extends database_object implements media, library_item
             AmpError::add('name', T_('Name is required'));
         }
         if (!strlen($data['codec'])) {
-            AmpError::add('codec', T_('Codec is required (eg. MP3, OGG...)'));
+            AmpError::add('codec', T_('Codec is required (e.g. MP3, OGG...)'));
         }
 
         $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');

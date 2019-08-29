@@ -53,7 +53,9 @@ echo T_('Testing basic translation, the two strings below should look the same')
 echo "\n";
 echo T_('Original: For the Love of Music');
 echo "\n";
-printf (T_('Translated: %s'), $string);
+printf (
+    /* HINT: Translated version of 'For the Love of Music' */
+    T_('Translated: %s'), $string);
 echo "\n";
 echo "---------------------------------------------------------------------\n";
 printf (T_('Input Charset (%s):'), $source_encoding);
@@ -106,14 +108,14 @@ function charset_directory_correct($path) {
 
     if (!is_resource($handle)) {
         /* HINT: directory (File path) */
-        printf (T_("There was an error trying to open %s"), $path);
+        printf (T_('There was an error trying to open "%s"'), $path);
         echo "\n";
         return false;
     }
 
     if (!chdir($path)) {
         /* HINT: directory (File path) */
-        printf (T_("There was an error trying to chdir to %s"), $path);
+        printf (T_('There was an error trying to chdir to "%s"'), $path);
         echo "\n";
         return false;
     }
@@ -141,10 +143,10 @@ function charset_directory_correct($path) {
                 $translated_filename = iconv($source_encoding,AmpConfig::get('site_charset') . '//IGNORE',$full_file);
             }
 
-            printf (T_('Attempting to Transcode to %s'), AmpConfig::get('site_charset'));
+            printf (T_('Attempting to Transcode to "%s"'), AmpConfig::get('site_charset'));
             echo "\n";
             echo "--------------------------------------------------------------------------------------------\n";
-            printf (T_('OLD: %s has invalid chars'), $full_file);
+            printf (T_('OLD: "%s" has invalid chars'), $full_file);
             echo "\n";
             printf (T_('NEW: %s'), $translated_filename);
             echo "\n";
@@ -153,7 +155,7 @@ function charset_directory_correct($path) {
                 echo T_("Rename File (Y/N):");
                 $input = trim(fgets(STDIN));
                 if (strcasecmp($input,'Y') == 0) { charset_rename_file($full_file,$translated_filename); }
-                else { echo "\n\t"; echo T_('Not Renaming...'); echo "\n\n"; }
+                else { echo "\n\t"; echo T_('Not renaming...'); echo "\n\n"; }
             }
             else {
                 charset_rename_file($full_file,$translated_filename);
@@ -191,7 +193,7 @@ function charset_rename_file($full_file, $translated_filename) {
             $results_mkdir = mkdir($path);
             if (!$results_mkdir) {
                 /* HINT: filename (File path) */
-                printf (T_("There was an error trying to create %s move failed, stopping"), $path);
+                printf (T_('There was an error trying to create "%s": Move failed, stopping'), $path);
                 echo "\n";
                 return false;
             }
@@ -213,16 +215,16 @@ function charset_rename_file($full_file, $translated_filename) {
 
     if ($old_sum != $new_sum || !$new_sum) {
         /* HINT: filename (File path) */
-        printf (T_('Size comparison failed. Not deleting %s'), $full_file);
+        printf (T_('Size comparison failed. Not deleting "%s"'), $full_file);
         echo "\n";
         return false;
     }
 
     $results = unlink($full_file);
 
-    if (!$results) { printf (T_("There was an error trying to delete %s"), $full_file); echo "\n"; return false; }
+    if (!$results) { printf (T_('There was an error trying to delete "%s"'), $full_file); echo "\n"; return false; }
 
-    echo T_("File Moved...");
+    echo T_("File moved...");
     echo "\n\n";
 
     return true;

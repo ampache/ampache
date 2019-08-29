@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $artist_id = scrub_in($_REQUEST['artist_id']);
-        show_confirmation(T_('Are you sure?'), T_("The Artist will be removed and it's files will be deleted"),
+        show_confirmation(T_('Are You Sure?'), T_("The Artist and all files will be deleted"),
             AmpConfig::get('web_path') . "/artists.php?action=confirm_delete&artist_id=" . $artist_id,
             1,
             'delete_artist'
@@ -52,9 +52,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($artist->remove_from_disk()) {
-            show_confirmation(T_('No Problem'), T_('Artist has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('The Artist has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_("There Was A Problem"), T_("Couldn't delete this Artist."), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Artist."), AmpConfig::get('web_path'));
         }
     break;
     case 'show':
@@ -68,7 +68,7 @@ switch ($_REQUEST['action']) {
         $object_type = 'album';
         if (!$artist->id) {
             debug_event('artists', 'Requested an artist that does not exist', 2);
-            echo T_("You have requested an artist that does not exist.");
+            echo T_("You have requested an Artist that does not exist.");
         } else {
             require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
         }

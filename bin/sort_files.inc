@@ -46,7 +46,7 @@ $options        = getopt("xv:");
 $test_mode = !array_key_exists('x', $options);
 
 if (array_key_exists('v', $options)) {
-    $operations_string .= "\n\t- " . T_('Setting catalog name');
+    $operations_string .= "\n\t- " . T_('Setting Catalog name');
     $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
 }
 
@@ -227,7 +227,8 @@ function sort_move_file($song, $fullname, $test_mode) {
         if (!is_dir($path)) {
             if ($test_mode) {
                 echo "\t";
-                printf (T_('Making: %s Directory'), $path);
+                /* HINT: Directory (File path) */
+                printf (T_('Create directory "%s"'), $path);
                 echo "\n";
             }
             else {
@@ -235,7 +236,7 @@ function sort_move_file($song, $fullname, $test_mode) {
                 $results = mkdir($path);
                 if (!$results) {
                     /* HINT: filename (File path) */
-                    printf (T_("There was a problem creating this directory. %s"), $path);
+                    printf (T_("There was a problem creating this directory: %s"), $path);
                     echo "\n";
                     return false;
                 }
@@ -248,7 +249,7 @@ function sort_move_file($song, $fullname, $test_mode) {
     if ($test_mode) {
         echo "\t";
         // HINT: %1$s: file, %2$s: directory
-        printf (T_('Copying %1$s to %2$s'), $file, $directory);
+        printf (T_('Copying "%1$s" to "%2$s"'), $file, $directory);
         echo "\n";
         $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
         echo "\tSQL: $sql\n";
@@ -260,7 +261,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         if (file_exists($fullname)) {
             debug_event('sort_files.inc', 'Error: $fullname already exists', 1);
             /* HINT: filename (File path) */
-            printf (T_("Don't overwrite an existing file. %s"), $fullname);
+            printf (T_("Don't overwrite an existing file: %s"), $fullname);
             echo "\n";
             return false;
         }
@@ -284,7 +285,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         }
 
         /* HINT: filename (File path) */
-        if (!$results) { printf (T_("There was an error trying to copy file to %s"), $fullname); echo "\n"; return false; }
+        if (!$results) { printf (T_('There was an error trying to copy file to "%s"'), $fullname); echo "\n"; return false; }
 
         /* Check the filesize */
         $new_sum = Core::get_filesize($fullname);
@@ -292,7 +293,7 @@ function sort_move_file($song, $fullname, $test_mode) {
 
         if ($new_sum != $old_sum || !$new_sum) {
             /* HINT: filename (File path) */
-            printf (T_('Size comparison failed. Not deleting %s'), $song->file);
+            printf (T_('Size comparison failed. Not deleting: %s'), $song->file);
             echo "\n";
             return false;
         } // end if sum's don't match
@@ -301,7 +302,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         $results = unlink($song->file);
         if (!$results) {
             /* HINT: filename (File path) */
-            printf (T_("There was an error trying to delete %s"), $song->file); echo "\n";
+            printf (T_('There was an error trying to delete "%s"'), $song->file); echo "\n";
         }
 
         /* Update the catalog */

@@ -1505,7 +1505,7 @@ abstract class Catalog extends database_object
                 } else {
                     debug_event('catalog.class', "Unable to open $file for writing", 3);
                     /* HINT: filename (file path) */
-                    printf(T_("Couldn't get write to create art file. %s"), $file);
+                    printf(T_("Couldn't get write to create art file: %s"), $file);
                     echo "\n";
                 }
             }
@@ -1646,7 +1646,7 @@ abstract class Catalog extends database_object
         // Cleanup old objects that are no longer needed
         Album::garbage_collection();
         Artist::garbage_collection();
-        
+
         return $return;
     } // update_media_from_tags
 
@@ -1966,7 +1966,7 @@ abstract class Catalog extends database_object
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
         }
-        UI::update_text(T_("Catalog Cleaned"), sprintf(\nT_('%d file removed.', '%d files removed.', $dead_total), $dead_total));
+        UI::update_text(T_("Catalog Cleaned"), sprintf(nT_('%d file removed.', '%d files removed.', $dead_total), $dead_total));
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }
@@ -1991,7 +1991,7 @@ abstract class Catalog extends database_object
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
         }
-        UI::update_text(T_("Catalog Verified"), sprintf(T_('%d files updated.'), $verified['updated']));
+        UI::update_text(T_("Catalog Verified"), sprintf(nT_('%d file updated.', '%d files updated.', $verified['updated']), $verified['updated']));
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }

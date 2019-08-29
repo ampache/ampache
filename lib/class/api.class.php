@@ -1069,7 +1069,7 @@ class Api
             break;
             default:
                 // They are doing it wrong
-                echo XML_Data::error('405', T_('Invalid Request'));
+                echo XML_Data::error('405', T_('Invalid request'));
             break;
         } // end switch on command
     } // localplay
@@ -1093,7 +1093,7 @@ class Api
                 $type  = 'song';
                 $media = new $type($input['oid']);
                 if (!$media->id) {
-                    echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                    echo XML_Data::error('400', T_('Media object invalid or not specified'));
                     break;
                 }
                 $democratic->add_vote(array(
@@ -1111,7 +1111,7 @@ class Api
                 $type  = 'song';
                 $media = new $type($input['oid']);
                 if (!$media->id) {
-                    echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                    echo XML_Data::error('400', T_('Media object invalid or not specified'));
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id, $type);
@@ -1133,7 +1133,7 @@ class Api
                 echo XML_Data::keyed_array($xml_array);
             break;
             default:
-                echo XML_Data::error('405', T_('Invalid Request'));
+                echo XML_Data::error('405', T_('Invalid request'));
             break;
         } // switch on method
     } // democratic
@@ -1592,7 +1592,7 @@ class Api
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
 
         if ($scrobble_id === '') {
-            echo XML_Data::error('401', T_('failed to scrobble: no item found!'));
+            echo XML_Data::error('401', T_('Failed to scrobble: No item found!'));
         } else {
             $item = new Song($scrobble_id);
             if (!$item->id) {
