@@ -47,8 +47,7 @@ switch ($_REQUEST['action']) {
         if ($catalog->enabled) {
             $button     = 'disable';
             $buttontext = T_('Disable');
-        }
-        else {
+        } else {
             $button     = 'enable';
             $buttontext = T_('Enable');
         }
