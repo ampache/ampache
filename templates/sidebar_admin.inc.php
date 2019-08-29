@@ -77,8 +77,8 @@
     <ul class="sb3" id="sb_preferences_sc">
         <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
 <?php
-    $catagories = Preference::get_catagories();
-    foreach ($catagories as $name) {
+    $categories = Preference::get_categories();
+    foreach ($categories as $name) {
         $f_name = ucfirst($name); ?>
       <li id="sb_preferences_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
 <?php

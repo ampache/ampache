@@ -107,12 +107,12 @@ switch ($_REQUEST['action']) {
         if ($deleted) {
             show_confirmation(T_('No Problem'), T_('The Catalog has been deleted'), $next_url);
         } else {
-            show_confirmation(T_("There Was A Problem"), T_("There was an error deleting this Catalog"), $next_url);
+            show_confirmation(T_("There Was a Problem"), T_("There was an error deleting this Catalog"), $next_url);
         }
     break;
     case 'show_delete_catalog':
         $next_url = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&catalogs[]=' . implode(',', $catalogs);
-        show_confirmation(T_('Are you sure?'), T_('This will permanently delete your Catalog'), $next_url, 1, 'delete_catalog');
+        show_confirmation(T_('Are You Sure?'), T_('This will permanently delete your Catalog'), $next_url, 1, 'delete_catalog');
     break;
     case 'enable_disabled':
         if (AmpConfig::get('demo_mode')) {
@@ -125,21 +125,21 @@ switch ($_REQUEST['action']) {
             foreach ($songs as $song_id) {
                 Song::update_enabled(true, $song_id);
             }
-            $body = count($songs) . ' ' . nT_('The Song was enabled', 'All Songs have been enabled', count($songs));
+            $body = count($songs) . ' ' . nT_('Song has been enabled', 'Songs have been enabled', count($songs));
         } else {
             $body = T_("You didn't select any disabled Songs");
         }
         $url      = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = count($songs) . ' ' . nT_('The Song has been disabled', 'All Songs have been disabled', count($songs));
+        $title    = T_('Finished Processing Disabled Songs');
         show_confirmation($title, $body, $url);
     break;
     case 'clean_all_catalogs':
         catalog_worker('clean_all_catalogs');
-        show_confirmation(T_('Catalog cleaning process has started'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('No Problem'), T_('The Catalog cleaning process has started'), AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'clean_catalog':
         catalog_worker('clean_catalog', $catalogs);
-        show_confirmation(T_('Catalog cleaning process has started'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('No Problem'), T_('The Catalog cleaning process has started'), AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'update_catalog_settings':
         /* No Demo Here! */
@@ -151,8 +151,8 @@ switch ($_REQUEST['action']) {
         Catalog::update_settings($_POST);
 
         $url       = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title     = T_('Catalog Updated');
-        $body      = '';
+        $title     = T_('No Problem');
+        $body      = T_('The Catalog has been updated');
         show_confirmation($title, $body, $url);
     break;
     case 'update_from':
@@ -161,7 +161,7 @@ switch ($_REQUEST['action']) {
         }
 
         catalog_worker('update_from', null, $_POST);
-        show_confirmation(T_('Subdirectory update started'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('No Problem'), T_('The subdirectory update has started'), AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'add_catalog':
         /* Wah Demo! */
@@ -196,7 +196,7 @@ switch ($_REQUEST['action']) {
 
             $catalogs[] = $catalog_id;
             catalog_worker('add_to_catalog', $catalogs, $_POST);
-            show_confirmation(T_('Catalog creation process has started'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+            show_confirmation(T_('No Problem'), T_('The Catalog creation process has started'), AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
         } else {
             require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
         }
@@ -208,8 +208,8 @@ switch ($_REQUEST['action']) {
         }
         Stats::clear();
         $url      = AmpConfig::get('web_path') . '/admin/catalog.php';
-        $title    = T_('Catalog statistics have been cleared');
-        $body     = '';
+        $title    = T_('No Problem');
+        $body     = T_('Catalog statistics have been cleared');
         show_confirmation($title, $body, $url);
     break;
     case 'show_add_catalog':
@@ -233,7 +233,7 @@ switch ($_REQUEST['action']) {
         if (count($songs)) {
             require AmpConfig::get('prefix') . UI::find_template('show_disabled_songs.inc.php');
         } else {
-            echo "<div class=\"error\" align=\"center\">" . T_('No Disabled Songs found') . "</div>";
+            echo "<div class=\"error\" align=\"center\">" . T_('No disabled Songs found') . "</div>";
         }
     break;
     case 'show_delete_catalog':
@@ -245,9 +245,9 @@ switch ($_REQUEST['action']) {
 
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
         $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
-        show_confirmation(T_('Are you sure?'),
+        show_confirmation(T_('Are You Sure?'),
                 /* HINT: Catalog Name */
-                sprintf(T_('This will permanently delete %s'), $catalog->name), $nexturl, 1);
+                sprintf(T_('This will permanently delete "%s"'), $catalog->name), $nexturl, 1);
     break;
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
@@ -256,7 +256,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'gather_media_art':
         catalog_worker('gather_media_art', $catalogs);
-        show_confirmation(T_('Catalog art search has started'), '', AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        show_confirmation(T_('No Problem'), T_('The Catalog art search has started'), AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
     break;
     case 'show_catalogs':
     default:
