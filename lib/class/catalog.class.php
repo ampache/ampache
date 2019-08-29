@@ -1722,7 +1722,6 @@ abstract class Catalog extends database_object
         $update_time = time();
         // set `song`.`update_time` when artist or album details change
         if (self::migrate('artist', $song->artist, $new_song->artist) ||
-                self::migrate('artist', $song->albumartist, $new_song->albumartist) ||
                 self::migrate('album', $song->album, $new_song->album)) {
             Song::update_utime($song->id, $update_time);
         }
