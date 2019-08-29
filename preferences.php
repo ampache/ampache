@@ -173,7 +173,7 @@ switch ($_REQUEST['action']) {
                     $text     = T_('Your account has been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 } else {
-                    $title    = T_("There Was A Problem");
+                    $title    = T_("There Was a Problem");
                     $text     = T_('Your account has not been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 }

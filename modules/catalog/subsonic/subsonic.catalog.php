@@ -161,7 +161,7 @@ class Catalog_subsonic extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('subsonic.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             /* HINT: subsonic catalog URI */
-            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog. %s'), $uri));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $uri));
 
             return false;
         }
@@ -270,7 +270,9 @@ class Catalog_subsonic extends Catalog
             }
         }
 
-        UI::update_text(T_("Updated"), T_('Completed updating Subsonic Catalog(s).') . " " . $songsadded . " " . T_('Songs added.'));
+        UI::update_text(T_("Updated"), T_('Completed updating Subsonic Catalog(s).') . " " .
+            /* HINT: Number of songs */
+            sprintf(nT_('%s Song added.', '%s Songs added', $songsadded), $songsadded));
 
         // Update the last update value
         $this->update_last_update();

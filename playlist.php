@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
 
         $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
         $_SESSION['data']['playlist_id'] = $playlist_id;
-        /* HINT: %1 playlist name, %2 playlsist type */
+        /* HINT: %1 playlist name, %2 playlist type */
         show_confirmation(T_('Playlist created'), sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type), 'playlist.php');
     break;
     case 'delete_playlist':
@@ -79,14 +79,15 @@ switch ($_REQUEST['action']) {
 
         if ($result['success']) {
             $url   = 'show_playlist&amp;playlist_id=' . $result['id'];
-            $title = T_('Playlist Imported');
+            $title = T_('No Problem');
             $body  = basename($_FILES['filename']['name']);
             $body .= '<br />' .
+                /* HINT: Number of songs */
                 sprintf(nT_('Successfully imported playlist with %d song.', 'Successfully imported playlist with %d songs.', $result['count']), $result['count']);
         } else {
             $url   = 'show_import_playlist';
-            $title = T_('Playlist Not Imported');
-            $body  = T_($result['error']);
+            $title = T_('There Was a Problem');
+            $body  = T_('The Playlist could not be imported') . ': ' . $result['error'];
         }
         show_confirmation($title, $body, AmpConfig::get('web_path') . '/playlist.php?action=' . $url);
     break;
@@ -134,8 +135,8 @@ switch ($_REQUEST['action']) {
 
         prune_empty_playlists();
         $url   = AmpConfig::get('web_path') . '/playlist.php';
-        $title = T_('Empty Playlists have been deleted.');
-        $body  = '';
+        $title = T_('No Problem');
+        $body  = T_('Empty Playlists have been deleted');
         show_confirmation($title, $body, $url);
     break;
     case 'remove_duplicates':
