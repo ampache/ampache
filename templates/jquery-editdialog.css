@@ -29,7 +29,6 @@
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
     padding: 7px;
-    color: #eee;
 }
 
 .editdialogstyle.ui-dialog  .ui-dialog-title {
@@ -120,7 +119,6 @@
 .edit_dialog_content input[type=text] , .edit_dialog_content select {
     width: 430px;
     height: 30px;
-    color: #fff;
     background: #333;
     background: rgba(255,255,255,0.2);
     border-color: #222;
