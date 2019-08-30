@@ -37,7 +37,6 @@
             <li id="sb_home_browse_music_label"><a href="<?php echo $web_path ?>/browse.php?action=label"><?php echo T_('Labels') ?></a></li>
             <?php
         } ?>
-            <li id="sb_home_browse_music_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo T_('Tag Cloud'); ?></a></li>
             <?php if (AmpConfig::get('channel')) {
             ?>
             <li id="sb_home_browse_music_channel"><a href="<?php echo $web_path ?>/browse.php?action=channel"><?php echo T_('Channels') ?></a></li>
@@ -120,6 +119,7 @@
             <li id="sb_home_search_video"><a href="<?php echo $web_path ?>/search.php?type=video"><?php echo T_('Videos') ?></a></li>
           <?php
         } ?>
+        <li id="sb_home_browse_music_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo T_('Tag Cloud'); ?></a></li>
         </ul>
     </li>
         <li>
