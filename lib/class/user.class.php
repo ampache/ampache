@@ -1414,7 +1414,7 @@ class User extends database_object
     }
 
     /**
-     * 
+     *
      * @return boolean
      */
     public function upload_avatar()
