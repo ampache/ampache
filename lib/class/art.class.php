@@ -371,6 +371,15 @@ class Art extends database_object
             return false;
         }
 
+        $dimensions = Core::image_dimensions($source);
+        $width      = (int) ($dimensions['width']);
+        $height     = (int) ($dimensions['height']);
+        $sizetext   = 'original';
+
+        if (!self::check_dimensions($dimensions)) {
+            return false;
+        }
+
         // Default to image/jpeg if they don't pass anything
         $mime = $mime ? $mime : 'image/jpeg';
         // Blow it away!
@@ -402,15 +411,6 @@ class Art extends database_object
                     }
                 }
             }
-        }
-
-        $dimensions = Core::image_dimensions($source);
-        $width      = (int) ($dimensions['width']);
-        $height     = (int) ($dimensions['height']);
-        $sizetext   = 'original';
-
-        if (!self::check_dimensions($dimensions)) {
-            return false;
         }
 
         if (AmpConfig::get('album_art_store_disk')) {
