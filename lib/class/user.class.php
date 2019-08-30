@@ -1426,15 +1426,21 @@ class User extends database_object
 
     /**
      * @param string $data
+     * @return boolean
      */
     public function update_avatar($data, $mime = '')
     {
         debug_event('user.class', 'Updating avatar', 4);
 
         $art = new Art($this->id, 'user');
-        $art->insert($data, $mime);
+
+        return $art->insert($data, $mime);
     }
 
+    /**
+     * 
+     * @return boolean
+     */
     public function upload_avatar()
     {
         $upload = array();
@@ -1445,9 +1451,11 @@ class User extends database_object
             $image_data     = Art::get_from_source($upload, 'user');
 
             if ($image_data !== null) {
-                $this->update_avatar($image_data, $upload['mime']);
+                return $this->update_avatar($image_data, $upload['mime']);
             }
         }
+
+        return true; // only worry about failed uploads
     }
 
     public function delete_avatar()

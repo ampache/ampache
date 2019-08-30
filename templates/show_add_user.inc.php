@@ -60,7 +60,7 @@
         </tr>
         <tr>
             <td>
-                <?php echo  T_('Password'); ?> : *
+                <?php echo  T_('Password'); ?>: *
             </td>
             <td>
                 <input type="password" name="password_1" value="" />
