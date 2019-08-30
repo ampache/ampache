@@ -84,7 +84,7 @@
         </tr>
         <tr>
             <td>
-                <?php echo T_('Password'); ?> :
+                <?php echo T_('Password'); ?>:
             </td>
             <td>
                 <input type="password" name="password_1" value="" autocomplete="off" />
@@ -120,7 +120,14 @@
             </td>
             <td>
                 <input type="file" id="avatar" name="avatar" value="" />
+                <div class="user_avatar">
+                <?php
+                if ($client->f_avatar) {
+                    echo $client->f_avatar;
+                }
+                ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
+                </div>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
             </td>
         </tr>
