@@ -39,6 +39,11 @@ $categories = Preference::get_categories();
 <?php
     } ?>
       <li id="sb_preferences_sections_account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>
+      <?php if (Access::check('interface', '50')) {
+          ?>
+      <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import Playlist') ?></a></li>
+      <?php
+      } ?>
     </ul>
   </li>
 </ul>

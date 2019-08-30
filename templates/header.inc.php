@@ -380,7 +380,6 @@ $_SESSION['login'] = false;
                             <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs(Core::get_global('user')->id, true)); ?>)</a>
                         <?php
                             } ?>
-                            <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a>
                         </span>
                     <?php
                         } else {
