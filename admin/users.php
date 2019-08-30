@@ -111,9 +111,15 @@ switch ($_REQUEST['action']) {
         if ($city != $client->city) {
             $client->update_city($city);
         }
-        $client->upload_avatar();
-
-        show_confirmation(T_('No Problem'), $client->username . ' (' . $client->fullname . ') ' . T_('updated'), AmpConfig::get('web_path') . '/admin/users.php');
+        if (!$client->upload_avatar()) {
+            $mindimension = (int) AmpConfig::get('album_art_min_width') . "x" . (int) AmpConfig::get('album_art_min_height');
+            $maxdimension = (int) AmpConfig::get('album_art_max_width') . "x" . (int) AmpConfig::get('album_art_max_height');
+            show_confirmation(T_("There Was a Problem"),
+                    /* HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions (2000x3000) */
+                    sprintf(T_('Please check your image is within the minimum %1$s and maximum %2$s dimensions.'), $mindimension, $maxdimension), AmpConfig::get('web_path') . '/admin/users.php');
+        } else {
+            show_confirmation(T_('No Problem'), $client->username . ' (' . $client->fullname . ') ' . T_('updated'), AmpConfig::get('web_path') . '/admin/users.php');
+        }
     break;
     case 'add_user':
         if (AmpConfig::get('demo_mode')) {
@@ -207,7 +213,8 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('demo_mode')) {
             break;
         }
-        $client    = new User(Core::get_request('user_id'));
+        $client = new User(Core::get_request('user_id'));
+        $client->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_user.inc.php');
     break;
     case 'confirm_delete':
