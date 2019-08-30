@@ -160,7 +160,7 @@ class Catalog_remote extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('remote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             /* HINT: remote URI */
-            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog. %s'), $uri));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $uri));
 
             return false;
         }
@@ -243,7 +243,7 @@ class Catalog_remote extends Catalog
         $remote_catalog_info = $remote_handle->info();
 
         /* HINT: count of songs found*/
-        UI::update_text(T_("Remote Catalog Updated"), sprintf(T_('%s songs were found'), $remote_catalog_info['songs']));
+        UI::update_text(T_("Remote Catalog Updated"), sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']), $remote_catalog_info['songs']));
 
         // Hardcoded for now
         $step    = 500;

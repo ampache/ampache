@@ -85,7 +85,7 @@ switch ($_REQUEST['action']) {
                 T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
                 '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, $share->secret) . '&embed=true"></iframe>') . '</i><br />';
 
-            $title = T_('Share created.');
+            $title = T_('No Problem');
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/stats.php?action=share');
         }
         UI::show_footer();
@@ -96,7 +96,7 @@ switch ($_REQUEST['action']) {
         $share_id = Core::get_request('id');
 
         $next_url = AmpConfig::get('web_path') . '/share.php?action=delete&id=' . scrub_out($share_id);
-        show_confirmation(T_('Are you sure?'), T_('The Share will be deleted and no longer accessible to others'), $next_url, 1, 'delete_share');
+        show_confirmation(T_('Are You Sure?'), T_('The Share will be deleted and no longer accessible to others'), $next_url, 1, 'delete_share');
         UI::show_footer();
 
         return false;
