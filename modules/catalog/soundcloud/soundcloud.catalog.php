@@ -180,7 +180,7 @@ class Catalog_soundcloud extends Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('soundcloud.catalog', 'Cannot add catalog with duplicate user id ' . $userid, 1);
-            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog. %s'), $userid));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $userid));
 
             return false;
         }
@@ -305,7 +305,9 @@ class Catalog_soundcloud extends Catalog
                         }
                     }
 
-                    UI::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s).') . " " . $songsadded . " " . T_('Songs added.'));
+                    UI::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s).') . " " .
+                        /* HINT: Number of Songs added */
+                        sprintf(nT('%s Song added', '%s Songs added', $songsadded), $songsadded));
 
                     // Update the last update value
                     $this->update_last_update();
@@ -446,7 +448,7 @@ class Catalog_soundcloud extends Catalog
                     debug_event('soundcloud.catalog', 'Cannot get remote stream for song ' . $media->file, 3);
                 }
             } else {
-                debug_event('soundcloud.catalog', "API Error: Could't connect to SoundCloud.", 1);
+                debug_event('soundcloud.catalog', "API Error: Couldnt connect to SoundCloud.", 1);
                 echo "<p>" . T_("API Error: Couldn't connect to SoundCloud.") . "</p><hr />\n";
                 flush();
             }

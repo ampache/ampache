@@ -200,7 +200,7 @@ class Catalog_local extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('local.catalog', 'Cannot add catalog with duplicate path ' . $path, 1);
             /* HINT: directory (file path) */
-            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog. %s'), $path));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $path));
 
             return false;
         }
@@ -242,7 +242,7 @@ class Catalog_local extends Catalog
         if (!is_resource($handle)) {
             debug_event('local.catalog', "Unable to open $path", 3);
             /* HINT: directory (file path) */
-            AmpError::add('catalog_add', sprintf(T_('Unable to open "%s"'), $path));
+            AmpError::add('catalog_add', sprintf(T_('Unable to open: %s'), $path));
 
             return false;
         }
@@ -251,7 +251,7 @@ class Catalog_local extends Catalog
         if (!chdir($path)) {
             debug_event('local.catalog', "Unable to chdir to $path", 2);
             /* HINT: directory (file path) */
-            AmpError::add('catalog_add', sprintf(T_('Unable to change directory to %s'), $path));
+            AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $path));
 
             return false;
         }
@@ -316,7 +316,7 @@ class Catalog_local extends Catalog
             if (!chdir($full_file)) {
                 debug_event('local.catalog', "Unable to chdir to $path", 2);
                 /* HINT: directory (file path) */
-                AmpError::add('catalog_add', sprintf(T_('Unable to change directory to %s'), $path));
+                AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $path));
             }
 
             /* Skip to the next file */
@@ -340,7 +340,7 @@ class Catalog_local extends Catalog
             if (!$file_size) {
                 debug_event('local.catalog', "Unable to get filesize for $full_file", 2);
                 /* HINT: FullFile */
-                AmpError::add('catalog_add', sprintf(T_('Unable to get the filesize for %s'), $full_file));
+                AmpError::add('catalog_add', sprintf(T_('Unable to get the filesize for "%s"'), $full_file));
             } // file_size check
 
             if (!Core::is_readable($full_file)) {

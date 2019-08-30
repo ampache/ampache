@@ -50,7 +50,7 @@ switch ($_REQUEST['action']) {
         $playlist = new Search();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();
-        show_confirmation(T_('Search has been saved.'),
+        show_confirmation(T_('No Problem'),
                 /* HINT: playlist name */
                 sprintf(T_('Your search has been saved as a Smart Playlist with the name %s'), $playlist->name), AmpConfig::get('web_path') . "/browse.php?action=smartplaylist");
     break;

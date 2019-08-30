@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $song_id = scrub_in($_REQUEST['song_id']);
-        show_confirmation(T_('Are you sure?'), T_('The Song will be deleted'),
+        show_confirmation(T_('Are You Sure?'), T_('The Song will be deleted'),
             AmpConfig::get('web_path') . "/song.php?action=confirm_delete&song_id=" . $song_id,
             1,
             'delete_song'
@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
         if ($song->remove_from_disk()) {
             show_confirmation(T_('No Problem'), T_('Song has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_("There Was A Problem"), T_("Couldn't delete this Song."), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Song."), AmpConfig::get('web_path'));
         }
     break;
     case 'show_lyrics':
@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
         $song->fill_ext_info();
         if (!$song->id) {
             debug_event('song', 'Requested a song that does not exist', 2);
-            echo T_("You have requested a song that does not exist.");
+            echo T_("You have requested a Song that does not exist.");
         } else {
             require_once AmpConfig::get('prefix') . UI::find_template('show_song.inc.php');
         }
