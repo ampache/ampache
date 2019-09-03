@@ -139,7 +139,7 @@ switch ($_REQUEST['action']) {
 
         $plugin = new Plugin(Core::get_get('plugin'));
         if (!$plugin) {
-            UI::access_denied('Access Denied - Unkown external share plugin.');
+            UI::access_denied('Access Denied - Unknown external share plugin.');
 
             return false;
         }

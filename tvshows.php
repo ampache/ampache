@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $tvshow_id = scrub_in($_REQUEST['tvshow_id']);
-        show_confirmation(T_('Are you sure?'), T_("The TV Show will be removed and it's files will be deleted"),
+        show_confirmation(T_('Are You Sure?'), T_("The TV Show and its files will be deleted"),
             AmpConfig::get('web_path') . "/tvshows.php?action=confirm_delete&tvshow_id=" . $tvshow_id,
             1,
             'delete_tvshow'
@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
         if ($tvshow->remove_from_disk()) {
             show_confirmation(T_('No Problem'), T_('TV Show has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_("There Was A Problem"), T_("Couldn't delete this TV Show"), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this TV Show"), AmpConfig::get('web_path'));
         }
     break;
     case 'show':

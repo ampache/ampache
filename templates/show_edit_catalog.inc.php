@@ -21,7 +21,7 @@
  */
 
 /* HINT: Catalog Name */
-UI::show_box_top(sprintf(T_('Settings for %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog');
+UI::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog');
 ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">
@@ -50,7 +50,7 @@ UI::show_box_top(sprintf(T_('Settings for %s'), $catalog->name . ' (' . $catalog
             <td><?php echo scrub_out(ucfirst($catalog->catalog_type)); ?></td>
         </tr>
         <tr>
-            <td><?php echo T_('Filename pattern'); ?>:</td>
+            <td><?php echo T_('Filename Pattern'); ?>:</td>
             <td>
                 <input type="text" name="rename_pattern" value="<?php echo scrub_out($catalog->rename_pattern); ?>" />
             </td>

@@ -22,7 +22,14 @@
 
 $web_path = AmpConfig::get('web_path');
 
-$icon                 = $libitem->enabled ? 'disable' : 'enable';
+if ($libitem->enabled) {
+    $icon = 'disable';
+    $icontext = T_('Disable');
+}
+else {
+    $icon = 'enable';
+    $icontext = T_('Enable');
+}
 $button_flip_state_id = 'button_flip_state_' . $libitem->id;
 ?>
 <td class="cel_catalog"><?php echo $libitem->f_link; ?></td>
@@ -53,7 +60,7 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id;
     <?php if (AmpConfig::get('catalog_disable')) {
         ?>
         <span id="<?php echo($button_flip_state_id); ?>">
-            <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, T_(ucfirst($icon)), 'flip_state_' . $libitem->id); ?>
+            <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, $icontext, 'flip_state_' . $libitem->id); ?>
         </span>
     <?php
     } ?>

@@ -86,7 +86,7 @@
                 <td><?php echo print_bool(ini_get('safe_mode')); ?></td>
             </tr>
             <tr class="<?php echo UI::flip_class(); ?>">
-                <td>Open Basedir</td>
+                <td><?php T_('Open Basedir'); ?></td>
                 <td><?php echo ini_get('open_basedir'); ?></td>
             </tr>
             <tr class="<?php echo UI::flip_class(); ?>">

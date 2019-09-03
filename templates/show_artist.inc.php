@@ -75,7 +75,10 @@ if (AmpConfig::get('lastfm_api_key')) {
 if (AmpConfig::get('show_played_times')) {
         ?>
 <br />
-<div style="display:inline;"><?php echo T_('Played') . ' ' . $artist->object_cnt . ' ' . T_('times'); ?></div>
+<div style="display:inline;"><?php echo T_('Played') . ' ' .
+        /* HINT: Number of times an album has been played */
+        sprintf(nT_('%d time', '%d times', $album->object_cnt), $album->object_cnt); ?>
+</div>
 <?php
     }
 ?>
@@ -98,31 +101,31 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php if ($object_type == 'album') {
         ?>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-            <?php echo UI::get_icon('view', T_("Show all")); ?></a>
+            <?php echo UI::get_icon('view', T_("Show All")); ?></a>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-                <?php echo T_("Show all"); ?>
+                <?php echo T_("Show All"); ?>
             </a>
             <?php
     } else {
         ?>
             <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-            <?php echo UI::get_icon('view', T_("Show albums")); ?></a>
+            <?php echo UI::get_icon('view', T_("Show Albums")); ?></a>
             <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-            <?php echo T_("Show albums"); ?></a>
+            <?php echo T_("Show Albums"); ?></a>
             <?php
     } ?>
         </li>
         <?php if ($show_direct_play) {
         ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, 'play', T_('Play all'), 'directplay_full_' . $artist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, T_('Play all'), 'directplay_full_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, 'play', T_('Play All'), 'directplay_full_' . $artist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, T_('Play All'), 'directplay_full_text_' . $artist->id); ?>
         </li>
             <?php if (Stream_Playlist::check_autoplay_append()) {
             ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', 'play_add', T_('Play all last'), 'addplay_artist_' . $artist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', T_('Play all last'), 'addplay_artist_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_artist_' . $artist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', T_('Play All Last'), 'addplay_artist_text_' . $artist->id); ?>
         </li>
             <?php
         } ?>
@@ -132,13 +135,13 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         ?>
         <li>
             <?php /* HINT: Artist Fullname */ ?>
-            <?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id, 'add', T_('Add all to temporary playlist'), 'add_' . $artist->id); ?>
-            <?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id, T_('Add all to temporary playlist'), 'add_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?action=basket&type=artist&id=' . $artist->id, 'add', T_('Add All to Temporary Playlist'), 'add_' . $artist->id); ?>
+            <?php echo Ajax::text('?action=basket&type=artist&id=' . $artist->id, T_('Add All to Temporary Playlist'), 'add_text_' . $artist->id); ?>
         </li>
         <li>
             <?php /* HINT: Artist Fullname */ ?>
-            <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id, 'random', T_('Random all to temporary playlist'), 'random_' . $artist->id); ?>
-            <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, T_('Random all to temporary playlist'), 'random_text_' . $artist->id); ?>
+            <?php echo Ajax::button('?action=basket&type=artist_random&id=' . $artist->id, 'random', T_('Random All to Temporary Playlist'), 'random_' . $artist->id); ?>
+            <?php echo Ajax::text('?action=basket&type=artist_random&id=' . $artist->id, T_('Random All to Temporary Playlist'), 'random_text_' . $artist->id); ?>
         </li>
         <?php
     } ?>
@@ -180,10 +183,10 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php
         } ?>
                 <li>
-                    <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
+                    <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo T_('Artist Edit') ?>', '')">
                         <?php echo UI::get_icon('edit', T_('Edit')); ?>
                     </a>
-                    <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo T_('Artist edit') ?>', '')">
+                    <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo T_('Artist Edit') ?>', '')">
                         <?php echo T_('Edit Artist'); ?>
                     </a>
                 </li>

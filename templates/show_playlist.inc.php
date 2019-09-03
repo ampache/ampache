@@ -67,8 +67,8 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             &nbsp;&nbsp;<?php echo T_('Sort Tracks by Artist, Album, Song'); ?></a>
         </li>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('wand', T_('Remove duplicates')); ?>
-            &nbsp;&nbsp;<?php echo T_('Remove duplicates'); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('wand', T_('Remove Duplicates')); ?>
+            &nbsp;&nbsp;<?php echo T_('Remove Duplicates'); ?></a>
         </li>
     <?php
     } ?>
@@ -85,33 +85,33 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php if (AmpConfig::get('directplay')) {
         ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, 'play', T_('Play all'), 'directplay_full_' . $playlist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, T_('Play all'), 'directplay_full_text_' . $playlist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, 'play', T_('Play All'), 'directplay_full_' . $playlist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, T_('Play All'), 'directplay_full_text_' . $playlist->id); ?>
         </li>
     <?php
     } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) {
         ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'play_add', T_('Play all last'), 'addplay_playlist_' . $playlist->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', T_('Play all last'), 'addplay_playlist_text_' . $playlist->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', T_('Play All Last'), 'addplay_playlist_text_' . $playlist->id); ?>
         </li>
     <?php
     } ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id, 'add', T_('Add all to temporary playlist'), 'play_playlist'); ?>
-            <?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id, T_('Add all to temporary playlist'), 'play_playlist_text'); ?>
+            <?php echo Ajax::button('?action=basket&type=playlist&id=' . $playlist->id, 'add', T_('Add All to Temporary Playlist'), 'play_playlist'); ?>
+            <?php echo Ajax::text('?action=basket&type=playlist&id=' . $playlist->id, T_('Add All to Temporary Playlist'), 'play_playlist_text'); ?>
         </li>
         <li>
-            <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id, 'random', T_('Random all to temporary playlist'), 'play_playlist_random'); ?>
-            <?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id, T_('Random all to temporary playlist'), 'play_playlist_random_text'); ?>
+            <?php echo Ajax::button('?action=basket&type=playlist_random&id=' . $playlist->id, 'random', T_('Random All to Temporary Playlist'), 'play_playlist_random'); ?>
+            <?php echo Ajax::text('?action=basket&type=playlist_random&id=' . $playlist->id, T_('Random All to Temporary Playlist'), 'play_playlist_random_text'); ?>
         </li>
     <?php if (Core::get_global('user')->has_access('50') && AmpConfig::get('channel')) {
         ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
                 <?php echo UI::get_icon('flow'); ?>
-                &nbsp;&nbsp;<?php echo T_('Create Channel'); ?>
+                &nbsp;&nbsp;<?php echo T_('Create channel'); ?>
             </a>
         </li>
     <?php

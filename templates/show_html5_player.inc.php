@@ -493,7 +493,7 @@ if ($isVideo) {
             <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')) ?></a>
         </div>
         <div id="expandplaylistbtn" class="action_button">
-            <a href="javascript:TogglePlaylistExpand();"><?php echo UI::get_icon('multilines', T_('Expand/Collapse Playlist')) ?></a>
+            <a href="javascript:TogglePlaylistExpand();"><?php echo UI::get_icon('multilines', T_('Expand/collapse playlist')) ?></a>
         </div>
 <?php if (AmpConfig::get('webplayer_html5')) {
                 ?>
@@ -501,7 +501,7 @@ if ($isVideo) {
             <a href="javascript:ShowVisualizer();"><?php echo UI::get_icon('visualizer', T_('Visualizer')) ?></a>
         </div>
         <div class="action_button">
-            <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo UI::get_icon('fullscreen', T_('Visualizer Full-Screen')) ?></a>
+            <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo UI::get_icon('fullscreen', T_('Visualizer full-screen')) ?></a>
         </div>
         <div id="replaygainbtn" class="action_button">
             <a href="javascript:ToggleReplayGain();"><?php echo UI::get_icon('replaygain', T_('ReplayGain')) ?></a>

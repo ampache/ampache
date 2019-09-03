@@ -94,7 +94,7 @@ if (Art::is_enabled()) {
     }
     if ($libitem->can_edit()) {
         ?>
-        <a id="<?php echo 'edit_artist_' . $libitem->id ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_artist_' . $libitem->id ?>', '<?php echo T_('Artist edit') ?>', 'artist_')">
+        <a id="<?php echo 'edit_artist_' . $libitem->id ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_artist_' . $libitem->id ?>', '<?php echo T_('Artist Edit') ?>', 'artist_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
     <?php
