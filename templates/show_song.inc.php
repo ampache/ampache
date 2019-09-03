@@ -22,10 +22,10 @@
  */
 
 if ($song->enabled) {
-    $icon = 'disable';
+    $icon     = 'disable';
     $icontext = T_('Disable');
 } else {
-    $icon = 'enable';
+    $icon     = 'enable';
     $icontext = T_('Enable');
 }
 $button_flip_state_id = 'button_flip_state_' . $song->id;
@@ -34,9 +34,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
 <dl class="media_details">
 
     <?php if (User::is_registered()) {
-        ?>
+    ?>
     <?php if (AmpConfig::get('ratings')) {
-            ?>
+        ?>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
@@ -44,10 +44,10 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         </div>
     </dd>
     <?php
-        } ?>
+    } ?>
 
     <?php if (AmpConfig::get('userflags')) {
-            ?>
+        ?>
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
@@ -55,9 +55,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         </div>
     </dd>
     <?php
-        } ?>
-    <?php
     } ?>
+    <?php
+} ?>
     <?php if (AmpConfig::get('waveform')) {
         ?>
     <?php $rowparity = UI::flip_class(); ?>
@@ -73,34 +73,34 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) {
-            ?>
+        ?>
         <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $song->id); ?>
         <?php if (Stream_Playlist::check_autoplay_next()) {
-                ?>
+            ?>
         <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $song->id); ?>
         <?php
-            } ?>
+        } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) {
-                ?>
+            ?>
         <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $song->id); ?>
         <?php
-            } ?>
+        } ?>
 
         <?php echo $song->show_custom_play_actions(); ?>
         <?php
-        } ?>
+    } ?>
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to temporary playlist'), 'add_song_' . $song->id); ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
-            ?>
+        ?>
         <?php if (AmpConfig::get('sociable')) {
-                ?>
+            ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $song->id; ?>">
             <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
         </a>
         <?php
-            } ?>
+        } ?>
         <?php
-        }
+    }
         ?>
         <?php if (Access::check('interface', '25')) {
             ?>
@@ -126,7 +126,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id;
         } ?>
         <?php if (Access::check('interface', '75') || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) {
             ?>
-        <span id="<?php echo ($button_flip_state_id); ?>">
+        <span id="<?php echo($button_flip_state_id); ?>">
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $icon, $icontext, 'flip_song_' . $song->id); ?>
         </span>
         <?php

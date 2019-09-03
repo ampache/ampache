@@ -264,7 +264,7 @@ require $prefix . '/templates/install_header.inc.php';
                 <div class="col-sm-8">
                     <button type="submit" class="btn btn-warning" name="download"><?php echo T_('Download'); ?></button>
                     <button type="submit" class="btn btn-warning" name="write" <?php if (!check_config_writable()) {
-                        echo T_('Disabled');
+            echo T_('Disabled');
         } ?>>
                         <?php echo T_('Write'); ?>
                     </button>

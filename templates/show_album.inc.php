@@ -77,14 +77,16 @@ if ($directplay_limit > 0) {
 <?php
     } ?>
 <?php
-if (AmpConfig::get('show_played_times')) { ?>
+if (AmpConfig::get('show_played_times')) {
+        ?>
 <br />
 <div style="display:inline;">
     <?php echo T_('Played') . ' ' .
         /* HINT: Number of times an album is played */
         sprintf(nT_('%d time', '%d times', $album->object_cnt), $album->object_cnt); ?>
 </div>
-<?php } ?>
+<?php
+    } ?>
 
 <?php
 $owner_id = $album->get_user_owner();

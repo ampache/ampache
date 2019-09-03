@@ -23,11 +23,10 @@
 $web_path = AmpConfig::get('web_path');
 
 if ($libitem->enabled) {
-    $icon = 'disable';
+    $icon     = 'disable';
     $icontext = T_('Disable');
-}
-else {
-    $icon = 'enable';
+} else {
+    $icon     = 'enable';
     $icontext = T_('Enable');
 }
 $button_flip_state_id = 'button_flip_state_' . $libitem->id;

@@ -45,14 +45,12 @@
                     $button_flip_state_id = 'button_flip_state_' . $song_id;
                     $current_class        = ($key == '0') ? 'row-highlight' : UI::flip_class();
                     if ($button) {
-                        $button = 'disable';
+                        $button     = 'disable';
                         $buttontext = T_('Disable');
-                    }
-                    else {
-                        $button = 'enable';
+                    } else {
+                        $button     = 'enable';
                         $buttontext = T_('Enable');
-                    }
-        ?>
+                    } ?>
         <tr id="<?php echo $row_key; ?>" class="<?php echo $current_class; ?>">
             <td class="cel_disable" id="<?php echo($button_flip_state_id); ?>">
                 <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song_id, $button, $buttontext, 'flip_state_' . $song_id); ?>

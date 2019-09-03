@@ -121,10 +121,10 @@ if ($libitem->enabled || Access::check('interface', '50')) {
     if (Access::check('interface', '75') || ($libitem->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) {
         $icon                 = $libitem->enabled ? 'disable' : 'enable';
         if ($libitem->enabled) {
-            $icon = 'disable';
+            $icon       = 'disable';
             $buttontext = T_('Disable');
         } else {
-            $icon = 'enable';
+            $icon       = 'enable';
             $buttontext = T_('Enable');
         }
         $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
