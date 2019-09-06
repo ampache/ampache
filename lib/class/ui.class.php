@@ -243,8 +243,9 @@ class UI
     /**
      * get_icon
      *
-     * Returns an <img> tag for the specified icon
+     * Returns an <img> or <svg> tag for the specified icon
      * @param string $name
+     * @param string $title
      */
     public static function get_icon($name, $title = null, $object_id = null)
     {
@@ -258,33 +259,54 @@ class UI
         $title = $title ?: T_(ucfirst($name));
 
         $icon_url = self::_find_icon($name);
+        $icontype = pathinfo($icon_url, 4);
         if (isset($hover_name)) {
             $hover_url = self::_find_icon($hover_name);
         }
         if ($bUseSprite) {
             $tag = '<span class="sprite sprite-icon_' . $name . '" ';
+        } elseif ($icontype == 'svg') {
+            $svgicon = simplexml_load_file($icon_url);
         } else {
             $tag = '<img src="' . $icon_url . '" ';
         }
 
-        if ($object_id) {
+        if ($object_id && $icontype == 'png') {
             $tag .= 'id="' . $object_id . '" ';
         }
 
-        $tag .= 'alt="' . $title . '" ';
-        $tag .= 'title="' . $title . '" ';
+        if ($icontype == 'png') {
+            $tag .= 'alt="' . $title . '" ';
+            $tag .= 'title="' . $title . '" ';
+        } elseif ($icontype == 'svg') {
+            if (empty($svgicon->title)) {
+                $svgicon->addChild('title', $title);
+            } else {
+                $svgicon->title = $title;
+            }
+            if (empty($svgicon->desc)) {
+                $svgicon->addChild('desc', $title);
+            } else {
+                $svgicon->desc = $title;
+            }
+        }
 
-        if (isset($hover_name) && isset($hover_url)) {
+        if (isset($hover_name) && isset($hover_url) && $icontype == 'png') {
             $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
             $tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
         }
 
         if ($bUseSprite) {
             $tag .= '></span>';
-        } else {
+        } elseif ($icontype == 'png') {
             $tag .= '/>';
+        } elseif ($icontype == 'svg') {
+            $tag = explode("\n", $svgicon->asXML(), 2)[1];
         }
 
+        if ($icontype == 'svg') {
+            debug_event('ui.class', print_r(explode("\n", $svgicon->asXML(), 2)[1], true), 1);
+        }
         return $tag;
     }
 
@@ -295,16 +317,24 @@ class UI
      */
     private static function _find_icon($name)
     {
-        if (isset(self::$_icon_cache[$name]) && $url = self::$_icon_cache[$name]) {
-            return $url;
+//        if (isset(self::$_icon_cache[$name]) && $url = self::$_icon_cache[$name]) {
+//            return $url;
+//        }
+
+        $path       = AmpConfig::get('theme_path') . '/images/icons/';
+        $filesearch = glob(AmpConfig::get('prefix') . $path . 'icon_' . $name . '.{png,svg}', GLOB_BRACE);
+        if (!$filesearch) {
+            $filename = 'icon_' . $name . '.png';
+            $path     = '/images/';
+        } else {
+            $filename = pathinfo($filesearch[0], 2);
         }
 
-        $filename = 'icon_' . $name . '.png';
-        $path     = AmpConfig::get('theme_path') . '/images/icons/';
-        if (!file_exists(AmpConfig::get('prefix') . $path . $filename)) {
-            $path = '/images/';
+        if (pathinfo($filename, 4) == 'svg') {
+            $url      = AmpConfig::get('prefix') . $path . $filename;
+        } else {
+            $url      = AmpConfig::get('web_path') . $path . $filename;
         }
-        $url                      = AmpConfig::get('web_path') . $path . $filename;
         self::$_icon_cache[$name] = $url;
 
         return $url;
