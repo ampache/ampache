@@ -307,6 +307,7 @@ class UI
         if ($icontype == 'svg') {
             debug_event('ui.class', print_r(explode("\n", $svgicon->asXML(), 2)[1], true), 1);
         }
+
         return $tag;
     }
 
