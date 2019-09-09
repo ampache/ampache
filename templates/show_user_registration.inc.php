@@ -141,13 +141,13 @@ $_SESSION['login'] = true;
                     } ?>
 
                     <div class="registerfield require">
-                        <label for="password"><?php echo T_('Password'); ?>:</label>
+                        <label for="password_1"><?php echo T_('Password'); ?>:</label>
                         <input type='password' name='password_1' id='password_1' />
                         <?php AmpError::display('password'); ?>
                     </div>
 
                     <div class="registerfield require">
-                        <label for="confirm_passord"><?php echo T_('Confirm Password'); ?>:</label>
+                        <label for="password_2"><?php echo T_('Confirm Password'); ?>:</label>
                         <input type='password' name='password_2' id='password_2' />
                     </div>
 

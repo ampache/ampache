@@ -122,7 +122,7 @@ if (Access::check_function('download')) {
 }
     if (Access::check('interface', '50')) {
         ?>
-    <a id="<?php echo 'edit_video_' . $libitem->id ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_video_' . $libitem->id ?>', '<?php echo T_('Video edit') ?>', 'video_')">
+    <a id="<?php echo 'edit_video_' . $libitem->id ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_video_' . $libitem->id ?>', '<?php echo T_('Video Edit') ?>', 'video_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php

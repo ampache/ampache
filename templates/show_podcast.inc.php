@@ -63,16 +63,16 @@ UI::show_box_top($podcast->f_title, 'info-box');
         <?php if (AmpConfig::get('directplay')) {
         ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id, 'play', T_('Play all'), 'directplay_full_' . $podcast->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id, T_('Play all'), 'directplay_full_text_' . $podcast->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id, 'play', T_('Play All'), 'directplay_full_' . $podcast->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id, T_('Play All'), 'directplay_full_text_' . $podcast->id); ?>
         </li>
         <?php
     } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) {
         ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', 'play_add', T_('Play all last'), 'addplay_podcast_' . $podcast->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', T_('Play all last'), 'addplay_podcast_text_' . $podcast->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_podcast_' . $podcast->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', T_('Play All Last'), 'addplay_podcast_text_' . $podcast->id); ?>
         </li>
         <?php
     } ?>
@@ -85,10 +85,10 @@ UI::show_box_top($podcast->f_title, 'info-box');
         <?php
         } ?>
         <li>
-            <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo T_('Podcast edit') ?>', '')">
+            <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo T_('Podcast Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
-            <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo T_('Podcast edit') ?>', '')">
+            <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo T_('Podcast Edit') ?>', '')">
                 <?php echo T_('Edit Podcast'); ?>
             </a>
         </li>

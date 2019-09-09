@@ -65,7 +65,7 @@
 <?php
     if (Access::check('interface', '50')) {
         ?>
-    <a id="<?php echo 'edit_tvshow_season_' . $libitem->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_season_' . $libitem->id ?>', '<?php echo T_('Season edit') ?>', 'tvshow_season_')">
+    <a id="<?php echo 'edit_tvshow_season_' . $libitem->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_season_' . $libitem->id ?>', '<?php echo T_('Season Edit') ?>', 'tvshow_season_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php

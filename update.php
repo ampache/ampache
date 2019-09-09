@@ -81,7 +81,7 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
             <h1><?php echo T_('Ampache Update'); ?></h1>
         </div>
         <div class="well">
-             <p><?php printf(T_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with database version <strong>%s</strong>.'), AmpConfig::get('version'), $version); ?></p>
+             <p><?php /* HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows current database version */ printf(T_('This page handles all database updates to Ampache starting with %1$s. Your current version is %2$s with database version %3$s.'), '<strong>3.3.3.5</strong>', '<strong>' . AmpConfig::get('version') . '</strong>', '<strong>' . $version . '</strong>'); ?></p>
              <p><?php echo T_('The following updates need to be performed:'); ?></p>
         </div>
         <?php AmpError::display('general'); ?>

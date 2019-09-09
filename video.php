@@ -32,7 +32,7 @@ switch ($_REQUEST['action']) {
         }
 
         $video_id = scrub_in(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
-        show_confirmation(T_('Are you sure?'), T_("The Video will be deleted"),
+        show_confirmation(T_('Are You Sure?'), T_("The Video will be deleted"),
             AmpConfig::get('web_path') . "/video.php?action=confirm_delete&video_id=" . $video_id,
             1,
             'delete_video'
@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
         if ($video->remove_from_disk()) {
             show_confirmation(T_('No Problem'), T_('Video has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_("There Was A Problem"), T_("Couldn't delete this Video."), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Video."), AmpConfig::get('web_path'));
         }
     break;
     case 'show_video':
