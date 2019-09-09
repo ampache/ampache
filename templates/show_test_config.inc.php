@@ -24,7 +24,7 @@
 <html lang="en-US">
 
 <head>
-  <!-- Propulsed by Ampache | ampache.org -->
+  <!-- Propelled by Ampache | ampache.org -->
   <?php UI::show_custom_style(); ?>
   <title><?php echo T_('Ampache -- Config Debug Page') ?></title>
   <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">

@@ -34,7 +34,7 @@ $_SESSION['login'] = true;
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 
 <head>
-    <!-- Propulsed by Ampache | ampache.org -->
+    <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
