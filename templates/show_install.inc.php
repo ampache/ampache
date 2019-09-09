@@ -36,7 +36,7 @@ require $prefix . '/templates/install_header.inc.php';
     </div>
     <p><strong><?php echo T_('Step 1 - Create the Ampache database'); ?></strong></p>
     <dl>
-        <dd><?php echo T_('This step creates and inserts the Ampache database, so please provide a MySQL account with database creation rights. This step may take some time on slower computers.'); ?></dd>
+        <dd><?php echo T_('This step creates and inserts the Ampache database, so please provide a MySQL account with database creation rights. This may take some time on slower computers.'); ?></dd>
     </dl>
     <ul class="list-unstyled">
         <li><?php echo T_('Step 2 - Create configuration files (ampache.cfg.php ...)'); ?></li>

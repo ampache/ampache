@@ -20,5 +20,4 @@
  *
  */
 
-/* HINT: %1 Playlist Type, %2 Playlist Name */
-echo sprintf(T_('%1$s %2$s (Playlist)'), $playlist->f_type, $playlist->name);
+echo $playlist->f_type . ' ' . $playlist->name . ' (' . T_('Playlist') . ')';

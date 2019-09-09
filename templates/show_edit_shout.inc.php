@@ -25,7 +25,7 @@
 <input type="hidden" name="shout_id" value="<?php echo $shout->id; ?>" />
 <table class="tabledata" cellpadding="0" cellspacing="0">
 <tr>
-    <td><strong><?php /* HINT: Client link, Object link */ printf(T_('Created by: %s for %s'), $client->f_link, $object->f_link); ?></strong>
+    <td><strong><?php /* HINT: %1 Client link, %2 Object link */ printf(T_('Created by: %1$s for %2$s'), $client->f_link, $object->f_link); ?></strong>
 <tr>
 <tr>
     <td><strong><?php echo T_('Comment:'); ?></strong>
