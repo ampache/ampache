@@ -196,15 +196,15 @@ switch ($_REQUEST['action']) {
             Registration::send_account_enabled($client->username, $client->fullname, $client->email);
         }
         show_confirmation(T_('No Problem'),
-            /* HINT: Username and fullname */
-            T_('%s has been enabled', $client->username . ' (' . $client->fullname . ')'), AmpConfig::get('web_path') . '/admin/users.php');
+            /* HINT: Username and fullname together: Username (fullname) */
+            sprintf(T_('%s has been enabled'), $client->username . ' (' . $client->fullname . ')'), AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'disable':
         $client = new User(Core::get_request('user_id'));
         if ($client->disable()) {
             show_confirmation(T_('No Problem'),
-            /* HINT: Username and fullname */
-            T_('%s has been disabled', $client->username . ' (' . $client->fullname . ')'), AmpConfig::get('web_path') . '/admin/users.php');
+            /* HINT: Username and fullname together: Username (fullname) */
+            sprintf(T_('%s has been disabled'), $client->username . ' (' . $client->fullname . ')'), AmpConfig::get('web_path') . '/admin/users.php');
         } else {
             show_confirmation(T_("There Was a Problem"), T_('You need at least one active Administrator account'), AmpConfig::get('web_path') . '/admin/users.php');
         }
