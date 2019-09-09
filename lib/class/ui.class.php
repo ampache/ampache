@@ -318,7 +318,7 @@ class UI
 
         $path       = AmpConfig::get('theme_path') . '/images/icons/';
         $filesearch = glob(AmpConfig::get('prefix') . $path . 'icon_' . $name . '.{png,svg}', GLOB_BRACE);
-        if (!$filesearch) {
+        if (empty($filesearch)) {
             $filename = 'icon_' . $name . '.png';
             $path     = '/images/';
         } else {
