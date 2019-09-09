@@ -309,6 +309,7 @@ class UI
      * _find_icon
      *
      * Does the finding icon thing
+     * @return string
      */
     private static function _find_icon($name)
     {
