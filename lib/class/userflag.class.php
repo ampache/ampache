@@ -157,7 +157,7 @@ class Userflag extends database_object
             return false;
         }
         $results = array();
-        if ($this->type == 'album' && $this->allow_group_disks) {
+        if ($this->type == 'album' && AmpConfig::get('album_group')) {
             $sql = "SELECT `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
                     " WHERE `id` = ?";
             $db_results = Dba::read($sql, array($this->id));
