@@ -169,7 +169,7 @@ if ($directplay_limit > 0) {
             ?>
             <a onclick="submitNewItemsOrder('<?php echo $c_album->id ?>', 'reorder_songs_table_<?php echo $c_album->id ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
-                <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
+                <?php echo UI::get_icon('save', T_('Save Track Order')); ?>
             </a>
             <a href="javascript:NavigateTo('<?php echo $web_path ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?') ?>');">
                 <?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?>
