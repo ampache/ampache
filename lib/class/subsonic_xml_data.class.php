@@ -661,7 +661,7 @@ class Subsonic_XML_Data
                     $name .= " [" . $album->year . "]";
                 }
         */
-        if (!AmpConfig::get('album_group') && $album->disk) {
+        if (!AmpConfig::get('album_group') && $album->disk && count($album->album_suite) > 1) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
 
