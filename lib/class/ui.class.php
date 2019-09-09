@@ -264,8 +264,9 @@ class UI
             $hover_url = self::_find_icon($hover_name);
         }
         if ($bUseSprite) {
-            $tag = '<span class="sprite sprite-icon_' . $name . '" ';
+            $tag = '<span class="sprite sprite-icon_' . $name . '"></span>';
         } elseif ($icontype == 'svg') {
+            // load svg file
             $svgicon = simplexml_load_file($icon_url);
 
             $svgicon->addAttribute('class', 'icon');
@@ -280,35 +281,24 @@ class UI
             } else {
                 $svgicon->desc = $title;
             }
-        } else {
-            $tag = '<img src="' . $icon_url . '" ';
-
-            $tag .= 'alt="' . $title . '" ';
-            $tag .= 'title="' . $title . '" ';
-        }
-
-        if ($object_id) {
-            if ($icontype == 'svg') {
+            if ($object_id) {
                 $svgicon->addAttribute('id', $object_id);
             } else {
-                $tag .= 'id="' . $object_id . '" ';
-            }
-        } else {
-            if ($icontype == 'svg') {
                 $svgicon->addAttribute('id', $name);
             }
-        }
-
-        if (isset($hover_name) && isset($hover_url) && $icontype == 'png') {
-            $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
-            $tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
-        }
-
-        if ($bUseSprite) {
-            $tag .= '></span>';
-        } elseif ($icontype == 'svg') {
             $tag = explode("\n", $svgicon->asXML(), 2)[1];
         } else {
+            // fall back to png
+            $tag = '<img src="' . $icon_url . '" ';
+            $tag .= 'alt="' . $title . '" ';
+            $tag .= 'title="' . $title . '" ';
+            if ($object_id) {
+                $tag .= 'id="' . $object_id . '" ';
+            }
+            if (isset($hover_name) && isset($hover_url)) {
+                $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
+                $tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
+            }
             $tag .= '/>';
         }
 
