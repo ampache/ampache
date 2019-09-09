@@ -173,8 +173,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table_<?php echo $album->id; ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
-                <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
-                &nbsp;&nbsp;<?php echo T_('Save Tracks Order'); ?>
+                <?php echo UI::get_icon('save', T_('Save Track Order')); ?>
+                &nbsp;&nbsp;<?php echo T_('Save Track Order'); ?>
             </a>
         </li>
         <li>

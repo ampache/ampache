@@ -58,8 +58,8 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', 'refresh_playlist_medias')">
-                <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
-                &nbsp;&nbsp;<?php echo T_('Save Tracks Order'); ?>
+                <?php echo UI::get_icon('save', T_('Save Track Order')); ?>
+                &nbsp;&nbsp;<?php echo T_('Save Track Order'); ?>
             </a>
         </li>
         <li>
