@@ -1278,7 +1278,7 @@ class Query
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
-        //debug_event('query.class', "get_sql: " . $final_sql, 5);
+        debug_event('query.class', "get_sql: " . $final_sql, 5);
 
         return $final_sql;
     } // get_sql

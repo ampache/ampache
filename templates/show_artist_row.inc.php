@@ -85,7 +85,7 @@ if (Art::is_enabled()) {
 ?>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
-    if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
+    if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks &&  count($libitem->album_suite) <= 1))) {
         ?>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&amp;id=<?php echo $libitem->id; ?>">
         <?php echo UI::get_icon('comment', T_('Post Shout')); ?>

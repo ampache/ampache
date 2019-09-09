@@ -251,7 +251,8 @@ class Album extends database_object implements library_item
         $this->full_name = trim(trim($info['prefix']) . ' ' . trim($info['name']));
 
         // Looking for other albums with same mbid, ordering by disk ascending
-        if ($this->disk && !empty($this->mbid) && AmpConfig::get('album_group')) {
+        if (AmpConfig::get('album_group')) {
+            $this->allow_group_disks = true;
             $this->album_suite = $this->get_album_suite();
         }
 
@@ -356,7 +357,7 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= $sqlj . $sqlw;
-        if (!count($this->album_suite)) {
+        if (count($this->album_suite) <= 1) {
             $sql .= "GROUP BY `song`.`album` ";
         } else {
             $sql .= "GROUP BY `song`.`artist` ";
@@ -613,7 +614,7 @@ class Album extends database_object implements library_item
             $catalog_where .= " AND `catalog`.`enabled` = '1'";
         }
 
-        $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+        $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                 "WHERE `album`.`mbid`='$this->mbid' $catalog_where ORDER BY `album`.`disk` ASC";
 
         $db_results = Dba::read($sql);
@@ -695,7 +696,7 @@ class Album extends database_object implements library_item
         $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
 
         // Looking if we need to combine or display disks
-        if ($this->disk && !AmpConfig::get('album_group') && count($this->album_suite) > 1) {
+        if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
 

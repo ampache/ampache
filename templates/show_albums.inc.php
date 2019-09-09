@@ -79,8 +79,7 @@ $thcount  = 8;
 
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
-            $libitem                    = new Album($album_id);
-            $libitem->allow_group_disks = $allow_group_disks;
+            $libitem = new Album($album_id);
             $libitem->format(true, $limit_threshold);
             $show_direct_play  = $show_direct_play_cfg;
             $show_playlist_add = Access::check('interface', '25');

@@ -277,11 +277,10 @@ class Artist extends database_object implements library_item
      * gets the album ids that this artist is a part
      * of
      * @param integer|null $catalog
-     * @param boolean $ignoreAlbumGroups
      * @param boolean $group_release_type
      * @return integer[]
      */
-    public function get_albums($catalog = null, $ignoreAlbumGroups = false, $group_release_type = false)
+    public function get_albums($catalog = null, $group_release_type = false)
     {
         $catalog_where = "";
         $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
@@ -289,7 +288,7 @@ class Artist extends database_object implements library_item
             $catalog_where .= " AND `catalog`.`id` = '" . Dba::escape($catalog) . "'";
         }
         if (AmpConfig::get('catalog_disable')) {
-            $catalog_where .= " AND `catalog`.`enabled` = '1'";
+            $catalog_where .= "AND `catalog`.`enabled` = '1'";
         }
 
         $results = array();
@@ -312,22 +311,20 @@ class Artist extends database_object implements library_item
                 $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
         }
 
-        if (AmpConfig::get('album_group')) {
-            $ignoreAlbumGroups = false;
-        }
-
-        $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+        $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
-        if (!$ignoreAlbumGroups) {
-            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+
+        if (AmpConfig::get('album_group')) {
+            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                     "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
         }
+        debug_event('artist.class', 'get_albums ' . $sql, 5);
 
         $db_results = Dba::read($sql);
 
         $mbids = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            if ($ignoreAlbumGroups || empty($row['mbid']) || !in_array($row['mbid'], $mbids)) {
+            if (empty($row['mbid']) || !in_array($row['mbid'], $mbids)) {
                 if ($group_release_type) {
                     // We assume undefined release type is album
                     $rtype = $row['release_type'] ?: 'album';
@@ -368,11 +365,10 @@ class Artist extends database_object implements library_item
      * of
      * @param integer|null $catalog
      * @param integer|null $year
-     * @param boolean $ignoreAlbumGroups
      * @param boolean $group_release_type
      * @return integer[]
      */
-    public function get_by_year($catalog = null, $year = null, $ignoreAlbumGroups = false, $group_release_type = false)
+    public function get_by_year($catalog = null, $year = null, $group_release_type = false)
     {
         $catalog_where = "";
         $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
@@ -403,22 +399,20 @@ class Artist extends database_object implements library_item
                 $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
         }
 
-        if (!$ignoreAlbumGroups) {
-            $ignoreAlbumGroups = !AmpConfig::get('album_group');
-        }
-
-        $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+        $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
-        if (!$ignoreAlbumGroups) {
-            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+        if (AmpConfig::get('album_group')) {
+            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                     "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
         }
+
+        debug_event('artist.class', 'get_by_year ' . $sql, 5);
 
         $db_results = Dba::read($sql);
 
         $mbids = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            if ($ignoreAlbumGroups || empty($row['mbid']) || !in_array($row['mbid'], $mbids)) {
+            if (empty($row['mbid']) || !in_array($row['mbid'], $mbids)) {
                 if ($group_release_type) {
                     // We assume undefined release type is album
                     $rtype = $row['release_type'] ?: 'album';

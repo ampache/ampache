@@ -183,6 +183,7 @@ class Random
             "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid` ORDER BY `rating` DESC";
         }
         $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
+        debug_event('random.class', 'get_album ' . $sql, 5);
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
