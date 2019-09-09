@@ -19,5 +19,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-$videoprops[gettext_noop('Summary')]   = $video->summary;
-$videoprops[gettext_noop('Year')]      = $video->year;
+$videoprops[T_('Summary')]   = $video->summary;
+$videoprops[T_('Year')]      = $video->year;

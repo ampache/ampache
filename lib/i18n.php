@@ -64,14 +64,3 @@ function nT_($original, $plural, $value)
 
     return $plural;
 }
-
-/**
- * gettext_noop
- *
- * @param    string    $string
- * @return    string
- */
-function gettext_noop($string)
-{
-    return $string;
-}
