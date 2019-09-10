@@ -27,7 +27,8 @@ $title = scrub_out($album->name);
 if ($album->year > 0) {
     $title .= '&nbsp;(' . $album->year . ')';
 }
-if ($album->disk && !AmpConfig::get('album_group') && count($album->album_suite) > 1) {
+debug_event('show_album', 'count of album_suite ' . (string) count($album->get_album_suite()), 5);
+if ($album->disk && !AmpConfig::get('album_group') && count($album->get_album_suite()) > 1) {
     $title .= "<span class=\"discnb disc" . $album->disk . "\">, " . T_('Disk') . " " . $album->disk . "</span>";
 }
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
