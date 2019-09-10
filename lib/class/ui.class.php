@@ -324,6 +324,7 @@ class UI
         }
 
         $url = AmpConfig::get('web_path') . $path . $filename;
+
         self::$_icon_cache[$name] = $url;
 
         return $url;
