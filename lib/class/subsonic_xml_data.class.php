@@ -302,7 +302,7 @@ class Subsonic_XML_Data
             }
         }
 
-        $xerr->addAttribute("message", $message);
+        $xerr->addAttribute('message', $message);
     }
 
     /**
@@ -472,7 +472,7 @@ class Subsonic_XML_Data
         $xalbum->addAttribute('songCount', $album->song_count);
         //FIXME total_duration on Album doesn't exist
         $xalbum->addAttribute('duration', $album->total_duration);
-        $xalbum->addAttribute('artistId', self::getArtistId($album->artist_id));
+        $xalbum->addAttribute('artistId', (string) self::getArtistId($album->artist_id));
         $xalbum->addAttribute('parent', self::getArtistId($album->artist_id));
         $xalbum->addAttribute('artist', self::checkName($album->f_album_artist_name));
         if ($album->year > 0) {
@@ -612,13 +612,13 @@ class Subsonic_XML_Data
         $xsong->addAttribute('isVideo', 'false');
         $xsong->addAttribute('type', 'music');
         // $album = new Album(songData->album);
-        $xsong->addAttribute('albumId', self::getAlbumId($albumData['id']));
+        $xsong->addAttribute('albumId', (string) self::getAlbumId($albumData['id']));
         $albumData['full_name'] = trim(trim($albumData['prefix']) . ' ' . trim($albumData['name']));
 
         $xsong->addAttribute('album', self::checkName($albumData['full_name']));
         // $artist = new Artist($song->artist);
         // $artist->format();
-        $xsong->addAttribute('artistId', self::getArtistId($songData['artist']));
+        $xsong->addAttribute('artistId', (string) self::getArtistId($songData['artist']));
         $xsong->addAttribute('artist', self::checkName($artistData['f_full_name']));
         $xsong->addAttribute('coverArt', self::getAlbumId($albumData['id']));
         $xsong->addAttribute('duration', $songData['time']);
@@ -759,8 +759,8 @@ class Subsonic_XML_Data
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
             $counts = $otag->count('', Core::get_global('user')->id);
-            $xgenre->addAttribute("songCount", $counts['song']);
-            $xgenre->addAttribute("albumCount", $counts['album']);
+            $xgenre->addAttribute('songCount', (int) $counts['song']);
+            $xgenre->addAttribute('albumCount', (int) $counts['album']);
         }
     }
 
@@ -1145,12 +1145,12 @@ class Subsonic_XML_Data
         if (!empty($lyrics) && $lyrics['text']) {
             $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
             $text    = str_replace("\r", '', $text);
-            $xlyrics = $xml->addChild("lyrics", $text);
+            $xlyrics = $xml->addChild('lyrics', $text);
             if ($artist) {
-                $xlyrics->addAttribute("artist", $artist);
+                $xlyrics->addAttribute('artist', $artist);
             }
             if ($title) {
-                $xlyrics->addAttribute("title", $title);
+                $xlyrics->addAttribute('title', $title);
             }
         }
     }
@@ -1162,18 +1162,18 @@ class Subsonic_XML_Data
     {
         $artist = new Artist($info['id']);
 
-        $xartist = $xml->addChild("artistInfo");
-        $xartist->addChild("biography", trim($info['summary']));
-        $xartist->addChild("musicBrainzId", $artist->mbid);
-        //$xartist->addChild("lastFmUrl", "");
-        $xartist->addChild("smallImageUrl", htmlentities($info['smallphoto']));
-        $xartist->addChild("mediumImageUrl", htmlentities($info['mediumphoto']));
-        $xartist->addChild("largeImageUrl", htmlentities($info['largephoto']));
+        $xartist = $xml->addChild('artistInfo');
+        $xartist->addChild('biography', trim($info['summary']));
+        $xartist->addChild('musicBrainzId', $artist->mbid);
+        //$xartist->addChild('lastFmUrl', "");
+        $xartist->addChild('smallImageUrl', htmlentities($info['smallphoto']));
+        $xartist->addChild('mediumImageUrl', htmlentities($info['mediumphoto']));
+        $xartist->addChild('largeImageUrl', htmlentities($info['largephoto']));
 
         foreach ($similars as $similar) {
-            $xsimilar = $xartist->addChild("similarArtist");
-            $xsimilar->addAttribute("id", ($similar['id'] !== null ? self::getArtistId($similar['id']) : "-1"));
-            $xsimilar->addAttribute("name", self::checkName($similar['name']));
+            $xsimilar = $xartist->addChild('similarArtist');
+            $xsimilar->addAttribute('id', ($similar['id'] !== null ? self::getArtistId($similar['id']) : "-1"));
+            $xsimilar->addAttribute('name', self::checkName($similar['name']));
         }
     }
 
@@ -1182,7 +1182,7 @@ class Subsonic_XML_Data
      */
     public static function addSimilarSongs($xml, $similar_songs)
     {
-        $xsimilar = $xml->addChild("similarSongs");
+        $xsimilar = $xml->addChild('similarSongs');
         foreach ($similar_songs as $similar_song) {
             $song = new Song($similar_song['id']);
             $song->format();
@@ -1198,18 +1198,18 @@ class Subsonic_XML_Data
      */
     public static function addPodcasts($xml, $podcasts, $includeEpisodes = false)
     {
-        $xpodcasts = $xml->addChild("podcasts");
+        $xpodcasts = $xml->addChild('podcasts');
         foreach ($podcasts as $podcast) {
             $podcast->format();
-            $xchannel = $xpodcasts->addChild("channel");
-            $xchannel->addAttribute("id", self::getPodcastId($podcast->id));
-            $xchannel->addAttribute("url", $podcast->feed);
-            $xchannel->addAttribute("title", self::checkName($podcast->f_title));
-            $xchannel->addAttribute("description", $podcast->f_description);
+            $xchannel = $xpodcasts->addChild('channel');
+            $xchannel->addAttribute('id', self::getPodcastId($podcast->id));
+            $xchannel->addAttribute('url', $podcast->feed);
+            $xchannel->addAttribute('title', self::checkName($podcast->f_title));
+            $xchannel->addAttribute('description', $podcast->f_description);
             if (Art::has_db($podcast->id, 'podcast')) {
-                $xchannel->addAttribute("coverArt", "pod-" . self::getPodcastId($podcast->id));
+                $xchannel->addAttribute('coverArt', 'pod-' . self::getPodcastId($podcast->id));
             }
-            $xchannel->addAttribute("status", "completed");
+            $xchannel->addAttribute('status', 'completed');
             if ($includeEpisodes) {
                 $episodes = $podcast->get_episodes();
                 foreach ($episodes as $episode_id) {
@@ -1228,31 +1228,31 @@ class Subsonic_XML_Data
     {
         $episode->format();
         $xepisode = $xml->addChild($elementName);
-        $xepisode->addAttribute("id", self::getPodcastEpId($episode->id));
-        $xepisode->addAttribute("channelId", self::getPodcastId($episode->podcast));
-        $xepisode->addAttribute("title", self::checkName($episode->f_title));
-        $xepisode->addAttribute("album", $episode->f_podcast);
-        $xepisode->addAttribute("description", self::checkName($episode->f_description));
-        $xepisode->addAttribute("duration", $episode->time);
-        $xepisode->addAttribute("genre", "Podcast");
-        $xepisode->addAttribute("isDir", "false");
-        $xepisode->addAttribute("publishDate", date("c", $episode->pubdate));
-        $xepisode->addAttribute("status", $episode->state);
-        $xepisode->addAttribute("parent", self::getPodcastId($episode->podcast));
+        $xepisode->addAttribute('id', self::getPodcastEpId($episode->id));
+        $xepisode->addAttribute('channelId', self::getPodcastId($episode->podcast));
+        $xepisode->addAttribute('title', self::checkName($episode->f_title));
+        $xepisode->addAttribute('album', $episode->f_podcast);
+        $xepisode->addAttribute('description', self::checkName($episode->f_description));
+        $xepisode->addAttribute('duration', $episode->time);
+        $xepisode->addAttribute('genre', "Podcast");
+        $xepisode->addAttribute('isDir', "false");
+        $xepisode->addAttribute('publishDate', date("c", $episode->pubdate));
+        $xepisode->addAttribute('status', $episode->state);
+        $xepisode->addAttribute('parent', self::getPodcastId($episode->podcast));
         if (Art::has_db($episode->podcast, 'podcast')) {
-            $xepisode->addAttribute("coverArt", self::getPodcastId($episode->podcast));
+            $xepisode->addAttribute('coverArt', self::getPodcastId($episode->podcast));
         }
 
         self::setIfStarred($xepisode, 'episode', $episode->id);
 
         if ($episode->file) {
-            $xepisode->addAttribute("streamId", self::getPodcastEpId($episode->id));
-            $xepisode->addAttribute("size", $episode->size);
-            $xepisode->addAttribute("suffix", $episode->type);
-            $xepisode->addAttribute("contentType", $episode->mime);
+            $xepisode->addAttribute('streamId', self::getPodcastEpId($episode->id));
+            $xepisode->addAttribute('size', $episode->size);
+            $xepisode->addAttribute('suffix', $episode->type);
+            $xepisode->addAttribute('contentType', $episode->mime);
             // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
             $path = basename($episode->file);
-            $xepisode->addAttribute("path", $path);
+            $xepisode->addAttribute('path', $path);
         }
     }
 
@@ -1262,7 +1262,7 @@ class Subsonic_XML_Data
      */
     public static function addNewestPodcastEpisodes($xml, $episodes)
     {
-        $xpodcasts = $xml->addChild("newestPodcasts");
+        $xpodcasts = $xml->addChild('newestPodcasts');
         foreach ($episodes as $episode) {
             $episode->format();
             self::addPodcastEpisode($xpodcasts, $episode);
@@ -1274,7 +1274,7 @@ class Subsonic_XML_Data
      */
     public static function addBookmarks($xml, $bookmarks)
     {
-        $xbookmarks = $xml->addChild("bookmarks");
+        $xbookmarks = $xml->addChild('bookmarks');
         foreach ($bookmarks as $bookmark) {
             $bookmark->format();
             self::addBookmark($xbookmarks, $bookmark);
@@ -1286,12 +1286,12 @@ class Subsonic_XML_Data
      */
     private static function addBookmark($xml, $bookmark)
     {
-        $xbookmark = $xml->addChild("bookmark");
-        $xbookmark->addAttribute("position", $bookmark->position);
-        $xbookmark->addAttribute("username", $bookmark->f_user);
-        $xbookmark->addAttribute("comment", $bookmark->comment);
-        $xbookmark->addAttribute("created", date("c", $bookmark->creation_date));
-        $xbookmark->addAttribute("changed", date("c", $bookmark->update_date));
+        $xbookmark = $xml->addChild('bookmark');
+        $xbookmark->addAttribute('position', $bookmark->position);
+        $xbookmark->addAttribute('username', $bookmark->f_user);
+        $xbookmark->addAttribute('comment', $bookmark->comment);
+        $xbookmark->addAttribute('created', date("c", $bookmark->creation_date));
+        $xbookmark->addAttribute('changed', date("c", $bookmark->update_date));
         if ($bookmark->object_type == "song") {
             $song = new Song($bookmark->object_id);
             self::addSong($xbookmark, $song->id, false, 'entry');
