@@ -249,8 +249,6 @@ class UI
      */
     public static function get_icon($name, $title = null, $object_id = null)
     {
-        $bUseSprite = file_exists(AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/icons.sprite.png');
-
         if (is_array($name)) {
             $hover_name = $name[1];
             $name       = $name[0];
@@ -263,9 +261,7 @@ class UI
         if (isset($hover_name)) {
             $hover_url = self::_find_icon($hover_name);
         }
-        if ($bUseSprite) {
-            $tag = '<span class="sprite sprite-icon_' . $name . '"></span>';
-        } elseif ($icontype == 'svg') {
+        if ($icontype == 'svg') {
             // load svg file
             $svgicon = simplexml_load_file($icon_url);
 
