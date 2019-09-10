@@ -1633,6 +1633,11 @@ abstract class Catalog extends database_object
         debug_event('catalog.class', 'Reading tags from ' . $media->file, 4);
 
         $catalog = self::create_from_id($media->catalog);
+        if ($catalog === null) {
+            debug_event('catalog.class', 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
+
+            return array();
+        }
         $results = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
 
         // Figure out what type of object this is and call the right
