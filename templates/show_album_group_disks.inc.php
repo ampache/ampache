@@ -124,7 +124,7 @@ if ($directplay_limit > 0) {
     foreach ($album_suite as $album_id) {
         $c_album = new Album($album_id);
         $c_album->format();
-        $c_title           = scrub_out($c_album->name) . "&nbsp;<span class=\"discnb disc" . $c_album->disk . "\">, " . T_('Disk') . " " . $c_album->disk . "</span>";
+        $c_title           = scrub_out($c_album->name) . "<span class=\"discnb disc" . $c_album->disk . "\">, " . T_('Disk') . " " . $c_album->disk . "</span>";
         $show_direct_play  = $show_direct_play_cfg;
         $show_playlist_add = Access::check('interface', '25');
         if ($directplay_limit > 0) {
