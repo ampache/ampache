@@ -318,11 +318,10 @@ class Artist extends database_object implements library_item
             $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                     "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
         }
-        debug_event('artist.class', 'get_albums ' . $sql, 5);
+        //debug_event('artist.class', 'get_albums ' . $sql, 5);
 
         $db_results = Dba::read($sql);
-
-        $mbids = array();
+        $mbids      = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             if (empty($row['mbid']) || !in_array($row['mbid'], $mbids)) {
                 if ($group_release_type) {
@@ -405,12 +404,10 @@ class Artist extends database_object implements library_item
             $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                     "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
         }
-
-        debug_event('artist.class', 'get_by_year ' . $sql, 5);
+        //debug_event('artist.class', 'get_by_year ' . $sql, 5);
 
         $db_results = Dba::read($sql);
-
-        $mbids = array();
+        $mbids      = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             if (empty($row['mbid']) || !in_array($row['mbid'], $mbids)) {
                 if ($group_release_type) {

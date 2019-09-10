@@ -375,7 +375,7 @@ class Stats
             $sql = self::get_top_sql($type, $threshold);
             $sql .= "LIMIT $limit";
         }
-        debug_event('stats.class', 'get_top ' . $sql, 5);
+        //debug_event('stats.class', 'get_top ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -423,7 +423,7 @@ class Stats
             }
             $sql .= " ORDER BY `last_update` DESC";
         }
-        debug_event('stats.class', 'get_recent ' . $sql, 5);
+        //debug_event('stats.class', 'get_recent ' . $sql, 5);
 
         return $sql;
     }
@@ -576,7 +576,7 @@ class Stats
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
         }
-        debug_event('stats.class', 'get_newest_sql ' . $sql, 5);
+        //debug_event('stats.class', 'get_newest_sql ' . $sql, 5);
 
         return $sql;
     }
