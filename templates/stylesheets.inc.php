@@ -38,10 +38,10 @@ foreach ($theme_css_base as $css_base) {
 <?php
 if (is_rtl(AmpConfig::get('lang'))
     && is_file(AmpConfig::get('prefix') . $theme_path . '/rtl.css')) {
-    ?>
+        ?>
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen" />
 <?php
-}
+    }
 ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/prettyphoto/css/prettyPhoto.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-ui.custom.css'; ?>" type="text/css" media="screen" />
