@@ -246,8 +246,10 @@ class UI
      * Returns an <img> or <svg> tag for the specified icon
      * @param string $name
      * @param string $title
+     * @param string $id_attrib
+     * @param string $class_attrib
      */
-    public static function get_icon($name, $title = null, $object_id = null)
+    public static function get_icon($name, $title = null, $id_attrib = null, $class_attrib = null)
     {
         if (is_array($name)) {
             $hover_name = $name[1];
@@ -265,8 +267,6 @@ class UI
             // load svg file
             $svgicon = simplexml_load_file($icon_url);
 
-            $svgicon->addAttribute('class', 'icon');
-
             if (empty($svgicon->title)) {
                 $svgicon->addChild('title', $title);
             } else {
@@ -277,19 +277,24 @@ class UI
             } else {
                 $svgicon->desc = $title;
             }
-            if ($object_id) {
-                $svgicon->addAttribute('id', $object_id);
-            } else {
-                $svgicon->addAttribute('id', $name);
-            }
+
+            $id_attrib = ($id_attrib) ? $id_attrib : 'icon' ;
+            $svgicon->addAttribute('id', $id_attrib);
+
+            $class_attrib = ($class_attrib) ? $class_attrib : 'icon' ;
+            $svgicon->addAttribute('class', $class_attrib);
+
             $tag = explode("\n", $svgicon->asXML(), 2)[1];
         } else {
             // fall back to png
             $tag = '<img src="' . $icon_url . '" ';
             $tag .= 'alt="' . $title . '" ';
             $tag .= 'title="' . $title . '" ';
-            if ($object_id) {
-                $tag .= 'id="' . $object_id . '" ';
+            if ($id_attrib) {
+                $tag .= 'id="' . $id_attrib . '" ';
+            }
+            if ($class_attrib) {
+                $tag .= 'class="' . $class_attrib . '" ';
             }
             if (isset($hover_name) && isset($hover_url)) {
                 $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
@@ -323,9 +328,114 @@ class UI
             $filename = pathinfo($filesearch[0], 2);
         }
 
-        $url = AmpConfig::get('web_path') . $path . $filename;
+        if (pathinfo($filename, 4) == 'svg') {
+            $url      = AmpConfig::get('prefix') . $path . $filename;
+        } else {
+            $url      = AmpConfig::get('web_path') . $path . $filename;
+        }
 
         self::$_icon_cache[$name] = $url;
+
+        return $url;
+    }
+
+    /**
+     * get_image
+     *
+     * Returns an <img> or <svg> tag for the specified image
+     * @param string $name
+     * @param string $title
+     * @param string $id_attrib
+     * @param string $class_attrib
+     */
+    public static function get_image($name, $title = null, $id_attrib = null, $class_attrib = null)
+    {
+        if (is_array($name)) {
+            $hover_name = $name[1];
+            $name       = $name[0];
+        }
+
+        $title = $title ?: ucfirst($name);
+
+        $image_url = self::_find_image($name);
+        $imagetype = pathinfo($image_url, 4);
+        if (isset($hover_name)) {
+            $hover_url = self::_find_image($hover_name);
+        }
+        if ($imagetype == 'svg') {
+            // load svg file
+            $svgimage = simplexml_load_file($image_url);
+
+            $svgimage->addAttribute('class', 'image');
+
+            if (empty($svgimage->title)) {
+                $svgimage->addChild('title', $title);
+            } else {
+                $svgimage->title = $title;
+            }
+            if (empty($svgimage->desc)) {
+                $svgimage->addChild('desc', $title);
+            } else {
+                $svgimage->desc = $title;
+            }
+
+            $id_attrib = ($id_attrib) ? $id_attrib : 'icon' ;
+            $svgimage->addAttribute('id', $id_attrib);
+
+            $class_attrib = ($class_attrib) ? $class_attrib : 'icon' ;
+            $svgimage->addAttribute('class', $class_attrib);
+
+            $tag = explode("\n", $svgimage->asXML(), 2)[1];
+        } else {
+            // fall back to png
+            $tag = '<img src="' . $image_url . '" ';
+            $tag .= 'alt="' . $title . '" ';
+            $tag .= 'title="' . $title . '" ';
+            if ($id_attrib) {
+                $tag .= 'id="' . $id_attrib . '" ';
+            }
+            if ($class_attrib) {
+                $tag .= 'class="' . $class_attrib . '" ';
+            }
+            if (isset($hover_name) && isset($hover_url)) {
+                $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
+                $tag .= 'onmouseout="this.src=\'' . $image_url . '\'; return true;" ';
+            }
+            $tag .= '/>';
+        }
+
+        return $tag;
+    }
+
+    /**
+     * _find_image
+     *
+     * Does the finding image thing. match svg first over png
+     * @return string
+     */
+    private static function _find_image($name)
+    {
+        if (isset(self::$_image_cache[$name]) && $url = self::$_image_cache[$name]) {
+            return $url;
+        }
+
+        $path       = AmpConfig::get('theme_path') . '/images/';
+        $filesearch = glob(AmpConfig::get('prefix') . $path . $name . '.{svg,png}', GLOB_BRACE);
+        if (empty($filesearch)) {
+            // if the theme is missing an image. fall back to default images folder
+            $filename = $name . '.png';
+            $path     = '/images/';
+        } else {
+            $filename = pathinfo($filesearch[0], 2);
+        }
+
+        if (pathinfo($filename, 4) == 'svg') {
+            $url      = AmpConfig::get('prefix') . $path . $filename;
+        } else {
+            $url      = AmpConfig::get('web_path') . $path . $filename;
+        }
+
+        self::$_image_cache[$name] = $url;
 
         return $url;
     }
