@@ -62,7 +62,7 @@
         <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) {
             ?>
         <div id="webplayer-minimize">
-          <a href="javascript:TogglePlayerVisibility();"><?php UI::get_icon('minimize', T_('Show/Hide Player')); ?></a>
+          <a href="javascript:TogglePlayerVisibility();"><?php echo UI::get_icon('minimize', T_('Show/Hide Player')); ?></a>
         </div>
         <div id="webplayer"></div>
         <?php

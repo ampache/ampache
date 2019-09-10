@@ -27,7 +27,7 @@
 $catagories = Preference::get_catagories();
 ?>
 <ul class="sb2" id="sb_preferences">
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Preferences'); ?>"><?php echo T_('Preferences'); ?></span><?php UI::get_icon('all', T_('Expand/Collapse'), 'preferences', 'header-all ' . (filter_has_var(INPUT_COOKIE, 'sb_preferences')) ? $_COOKIE['sb_preferences'] : 'expanded'); ?></h4>
+  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Preferences'); ?>"><?php echo T_('Preferences'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'preferences', 'header-all ' . ((filter_has_var(INPUT_COOKIE, 'sb_preferences')) ? $_COOKIE['sb_preferences'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_preferences_sections">
 <?php
     foreach ($catagories as $name) {

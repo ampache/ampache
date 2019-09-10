@@ -28,6 +28,7 @@ class UI
     private static $_classes;
     private static $_ticker;
     private static $_icon_cache;
+    private static $_image_cache;
 
     public function __construct()
     {
@@ -251,6 +252,7 @@ class UI
      */
     public static function get_icon($name, $title = null, $id_attrib = null, $class_attrib = null)
     {
+        debug_event('ui.class', 'class_attrib: ' . $class_attrib, 1);
         if (is_array($name)) {
             $hover_name = $name[1];
             $name       = $name[0];

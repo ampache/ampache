@@ -358,7 +358,7 @@ $_SESSION['login'] = false;
 
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
-        <div id="notification" class="notification-out"><?php UI::get_icon('info', T('Information')); ?><span id="notification-content"></span></div>
+        <div id="notification" class="notification-out"><?php echo UI::get_icon('info', T_('Information')); ?><span id="notification-content"></span></div>
         <div id="maincontainer">
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
@@ -409,25 +409,25 @@ $_SESSION['login'] = false;
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/index.php">
-                        <?php UI::get_image('topmenu-home', T_('Home')); ?>
+                        <?php echo UI::get_image('topmenu-home', T_('Home')); ?>
                         <span><?php echo T_('Home') ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=artist">
-                        <?php UI::get_image('topmenu-artist', T_('Artists')); ?>
+                        <?php echo UI::get_image('topmenu-artist', T_('Artists')); ?>
                         <span><?php echo T_('Artists') ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=playlist">
-                        <?php UI::get_image('topmenu-playlist', T_('Playlists')); ?>
+                        <?php echo UI::get_image('topmenu-playlist', T_('Playlists')); ?>
                         <span><?php echo T_('Playlists') ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=tag">
-                        <?php UI::get_image('topmenu-tagcloud', T_('Tag Cloud')); ?>
+                        <?php echo UI::get_image('topmenu-tagcloud', T_('Tag Cloud')); ?>
                         <span><?php echo T_('Tag Cloud') ?></span>
                     </a>
                 </div>
@@ -438,7 +438,7 @@ $_SESSION['login'] = false;
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
-                        <?php UI::get_image('topmenu-favorite', T_('Favorites')); ?>
+                        <?php echo UI::get_image('topmenu-favorite', T_('Favorites')); ?>
                         <span><?php echo T_('Favorites') ?></span>
                     </a>
                 </div>
@@ -450,7 +450,7 @@ $_SESSION['login'] = false;
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/upload.php">
-                        <?php UI::get_image('topmenu-upload', T_('Upload')); ?>
+                        <?php echo UI::get_image('topmenu-upload', T_('Upload')); ?>
                         <span><?php echo T_('Upload') ?></span>
                     </a>
                 </div>
