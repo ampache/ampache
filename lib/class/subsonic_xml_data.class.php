@@ -402,7 +402,7 @@ class Subsonic_XML_Data
     {
         $artist->format();
         $xartist = $xml->addChild('artist');
-        $xartist->addAttribute('id', self::getArtistId($artist->id));
+        $xartist->addAttribute('id', (string) self::getArtistId($artist->id));
         $xartist->addAttribute('name', self::checkName($artist->f_full_name));
         $allalbums = array();
         if (($extra && !$albumsSet) || $albums) {
@@ -444,7 +444,7 @@ class Subsonic_XML_Data
     public static function addAlbum($xml, $album, $songs = false, $addAmpacheInfo = false, $elementName = "album")
     {
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
-        $xalbum->addAttribute('id', self::getAlbumId($album->id));
+        $xalbum->addAttribute('id', (string) self::getAlbumId($album->id));
         $xalbum->addAttribute('album', self::checkName($album->full_name));
         $xalbum->addAttribute('title', self::formatAlbum($album));
         $xalbum->addAttribute('name', self::checkName($album->full_name));
@@ -588,7 +588,7 @@ class Subsonic_XML_Data
         }
 
         $xsong = $xml->addChild(htmlspecialchars($elementName));
-        $xsong->addAttribute('id', self::getSongId($songData['id']));
+        $xsong->addAttribute('id', (string) self::getSongId($songData['id']));
         $xsong->addAttribute('parent', self::getAlbumId($songData['album']));
         //$xsong->addAttribute('created', );
         $xsong->addAttribute('title', self::checkName($songData['title']));
@@ -664,7 +664,7 @@ class Subsonic_XML_Data
                     $name .= " [" . $album->year . "]";
                 }
         */
-        if (!AmpConfig::get('album_group') && $album->disk) {
+        if ($album->disk && !$album->allow_group_disks && count($album->get_album_suite()) > 1) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
 
@@ -698,7 +698,7 @@ class Subsonic_XML_Data
     {
         $artist->format();
         $xdir = $xml->addChild('directory');
-        $xdir->addAttribute('id', self::getArtistId($artist->id));
+        $xdir->addAttribute('id', (string) self::getArtistId($artist->id));
         $xdir->addAttribute('name', $artist->f_full_name);
 
         $allalbums = $artist->get_albums();
@@ -715,7 +715,7 @@ class Subsonic_XML_Data
     public static function addAlbumDirectory($xml, $album)
     {
         $xdir = $xml->addChild('directory');
-        $xdir->addAttribute('id', self::getAlbumId($album->id));
+        $xdir->addAttribute('id', (string) self::getAlbumId($album->id));
         $xdir->addAttribute('name', self::formatAlbum($album));
         $album->format();
         if ($album->artist_id) {
@@ -768,7 +768,7 @@ class Subsonic_XML_Data
     public static function addVideo($xml, $video, $elementName = 'video')
     {
         $xvideo = $xml->addChild($elementName);
-        $xvideo->addAttribute('id', self::getVideoId($video->id));
+        $xvideo->addAttribute('id', (string) self::getVideoId($video->id));
         $xvideo->addAttribute('title', $video->f_full_title);
         $xvideo->addAttribute('isDir', 'false');
         $xvideo->addAttribute('coverArt', self::getVideoId($video->id));
@@ -826,7 +826,7 @@ class Subsonic_XML_Data
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        $xplaylist->addAttribute('id', $playlist->id);
+        $xplaylist->addAttribute('id', (string) $playlist->id);
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', $user->username);
@@ -851,7 +851,7 @@ class Subsonic_XML_Data
     public static function addSmartPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        $xplaylist->addAttribute('id', self::getSmartPlId($playlist->id));
+        $xplaylist->addAttribute('id', (string) self::getSmartPlId($playlist->id));
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', $user->username);
@@ -1014,7 +1014,7 @@ class Subsonic_XML_Data
     public static function addRadio($xml, $radio)
     {
         $xradio = $xml->addChild('internetRadioStation ');
-        $xradio->addAttribute('id', $radio->id);
+        $xradio->addAttribute('id', (string) $radio->id);
         $xradio->addAttribute('name', self::checkName($radio->name));
         $xradio->addAttribute('streamUrl', $radio->url);
         $xradio->addAttribute('homePageUrl', $radio->site_url);
@@ -1039,7 +1039,7 @@ class Subsonic_XML_Data
     public static function addShare($xml, $share)
     {
         $xshare = $xml->addChild('share');
-        $xshare->addAttribute('id', $share->id);
+        $xshare->addAttribute('id', (string) $share->id);
         $xshare->addAttribute('url', $share->public_url);
         $xshare->addAttribute('description', $share->description);
         $user = new User($share->user);

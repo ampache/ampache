@@ -84,7 +84,7 @@ switch ($_REQUEST['action']) {
                 $album = new Album($albumid);
                 $album->format(true);
                 $a_title = $album->f_title;
-                if ($album->disk && !AmpConfig::get('album_group')) {
+                if ($album->disk && !$album->allow_group_disks && count($album->get_album_suite()) > 1) {
                     $a_title .= " [" . T_('Disk') . " " . $album->disk . "]";
                 }
                 $results[] = array(

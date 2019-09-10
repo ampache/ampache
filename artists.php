@@ -61,7 +61,7 @@ switch ($_REQUEST['action']) {
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
         if (AmpConfig::get('album_release_type')) {
-            $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], false, true);
+            $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], true);
         } else {
             $object_ids = $artist->get_albums($_REQUEST['catalog']);
         }
@@ -78,7 +78,7 @@ switch ($_REQUEST['action']) {
         $artist->format();
         $year = (int) $_REQUEST['year'];
         if (AmpConfig::get('album_release_type')) {
-            $multi_object_ids = $artist->get_by_year($_REQUEST['catalog'], $year, false, true);
+            $multi_object_ids = $artist->get_by_year($_REQUEST['catalog'], $year, true);
         } else {
             $object_ids = $artist->get_by_year($_REQUEST['catalog'], $year);
         }
