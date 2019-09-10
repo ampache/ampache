@@ -1097,7 +1097,7 @@ class Video extends database_object implements media, library_item
     public static function get_item_count($type)
     {
         $type       = self::validate_type($type);
-        $sql        = 'SELECT count(*) as count from `' . strtolower($type) . '`;';
+        $sql        = 'SELECT COUNT(*) as count from `' . strtolower($type) . '`;';
         $db_results = Dba::read($sql,array());
         if ($results = Dba::fetch_assoc($db_results)) {
             if ($results['count']) {

@@ -136,7 +136,7 @@ if ($cattype !== false) {
 } elseif (!$where) {
     $where .= "catalog_type='local'";
 }
-$sql = "SELECT id FROM catalog";
+$sql = "SELECT `id` FROM `catalog`";
 if ($where) {
     $sql .= " WHERE $where";
 }

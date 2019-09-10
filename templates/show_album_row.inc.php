@@ -53,7 +53,7 @@ if (Art::is_enabled()) {
             if ($show_playlist_add) {
                 echo Ajax::button('?action=basket&type=album&' . $libitem->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'add_album_' . $libitem->id);
                 echo Ajax::button('?action=basket&type=album_random&' . $libitem->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'random_album_' . $libitem->id); ?>
-        <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php if (!count($libitem->album_suite)) {
+        <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php if (count($libitem->album_suite) <= 1) {
                     echo $libitem->id;
                 } else {
                     echo implode(',', $libitem->album_suite);
@@ -93,7 +93,7 @@ if (Art::is_enabled()) {
 ?>
 <td class="cel_action">
     <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
-    if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
+    if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) {
         ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
@@ -101,7 +101,7 @@ if (Art::is_enabled()) {
     <?php
     }
     if (Access::check('interface', '25')) {
-        if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
+        if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) {
             Share::display_ui('album', $libitem->id, false);
         }
     }
@@ -112,7 +112,7 @@ if (Art::is_enabled()) {
             </a>
     <?php
     }
-    if (Access::check('interface', '50') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
+    if (Access::check('interface', '50') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) {
         ?>
             <a id="<?php echo 'edit_album_' . $libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_' . $libitem->id ?>', '<?php echo T_('Album edit') ?>', 'album_')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
