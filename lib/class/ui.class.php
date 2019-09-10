@@ -304,7 +304,7 @@ class UI
     /**
      * _find_icon
      *
-     * Does the finding icon thing
+     * Does the finding icon thing. match svg first over png
      * @return string
      */
     private static function _find_icon($name)
@@ -314,19 +314,16 @@ class UI
         }
 
         $path       = AmpConfig::get('theme_path') . '/images/icons/';
-        $filesearch = glob(AmpConfig::get('prefix') . $path . 'icon_' . $name . '.{png,svg}', GLOB_BRACE);
+        $filesearch = glob(AmpConfig::get('prefix') . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
         if (empty($filesearch)) {
+            // if the theme is missing an icon. fall back to default images folder
             $filename = 'icon_' . $name . '.png';
             $path     = '/images/';
         } else {
             $filename = pathinfo($filesearch[0], 2);
         }
 
-        if (pathinfo($filename, 4) == 'svg') {
-            $url      = AmpConfig::get('prefix') . $path . $filename;
-        } else {
-            $url      = AmpConfig::get('web_path') . $path . $filename;
-        }
+        $url = AmpConfig::get('web_path') . $path . $filename;
         self::$_icon_cache[$name] = $url;
 
         return $url;
