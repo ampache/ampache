@@ -309,34 +309,38 @@ class Artist extends database_object implements library_item
                 $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
         }
 
-        if (AmpConfig::get('album_group')) {
-            $ignoreAlbumGroups = false;
-        }
-
-        $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM album LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+        $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
 
         if (AmpConfig::get('album_group')) {
             $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                    "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
+                    "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
         }
         //debug_event('artist.class', 'get_albums ' . $sql, 5);
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $mbids      = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            if ($group_release_type) {
-                // We assume undefined release type is album
-                $rtype = $row['release_type'] ?: 'album';
-                if (!isset($results[$rtype])) {
-                    $results[$rtype] = array();
-                }
-                $results[$rtype][] = $row['id'];
+            if (empty($row['mbid']) || !in_array($row['mbid'], $mbids)) {
+                if ($group_release_type) {
+                    // We assume undefined release type is album
+                    $rtype = $row['release_type'] ?: 'album';
+                    if (!isset($results[$rtype])) {
+                        $results[$rtype] = array();
+                    }
+                    $results[$rtype][] = $row['id'];
 
-                $sort = AmpConfig::get('album_release_type_sort');
-                if ($sort) {
-                    $results_sort = array();
-                    $asort        = explode(',', $sort);
+                    $sort = AmpConfig::get('album_release_type_sort');
+                    if ($sort) {
+                        $results_sort = array();
+                        $asort        = explode(',', $sort);
+
+                        foreach ($asort as $rtype) {
+                            if (array_key_exists($rtype, $results)) {
+                                $results_sort[$rtype] = $results[$rtype];
+                                unset($results[$rtype]);
+                            }
+                        }
 
                     foreach ($asort as $rtype) {
                         if (array_key_exists($rtype, $results)) {
@@ -359,11 +363,15 @@ class Artist extends database_object implements library_item
     } // get_albums
 
     /**
-     * get_songs
-     * gets the songs for this artist
+     * get_by_year
+     * gets the album ids of albums of the same year
+     * of
+     * @param integer|null $catalog
+     * @param integer|null $year
+     * @param boolean $group_release_type
      * @return integer[]
      */
-    public function get_songs()
+    public function get_by_year($catalog = null, $year = null, $group_release_type = false)
     {
         $sql = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
@@ -377,8 +385,66 @@ class Artist extends database_object implements library_item
         $db_results = Dba::read($sql, array($this->id));
 
         $results = array();
+
+        $sort_type = AmpConfig::get('album_sort');
+        switch ($sort_type) {
+            case 'year_asc':
+                $sql_sort = '`album`.`year` ASC,`album`.`disk`';
+                break;
+            case 'year_desc':
+                $sql_sort = '`album`.`year` DESC,`album`.`disk`';
+                break;
+            case 'name_asc':
+                $sql_sort = '`album`.`name` ASC,`album`.`disk`';
+                break;
+            case 'name_desc':
+                $sql_sort = '`album`.`name` DESC,`album`.`disk`';
+                break;
+            default:
+                $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
+        }
+
+        $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+            "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
+        if (AmpConfig::get('album_group')) {
+            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+                    "WHERE (`album`.`year`='$year') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ORDER BY $sql_sort";
+        }
+        //debug_event('artist.class', 'get_by_year ' . $sql, 5);
+
+        $db_results = Dba::read($sql);
+        $mbids      = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            if (empty($row['mbid']) || !in_array($row['mbid'], $mbids)) {
+                if ($group_release_type) {
+                    // We assume undefined release type is album
+                    $rtype = $row['release_type'] ?: 'album';
+                    if (!isset($results[$rtype])) {
+                        $results[$rtype] = array();
+                    }
+                    $results[$rtype][] = $row['id'];
+
+                    $sort = AmpConfig::get('album_release_type_sort');
+                    if ($sort) {
+                        $results_sort = array();
+                        $asort        = explode(',', $sort);
+
+                        foreach ($asort as $rtype) {
+                            if (array_key_exists($rtype, $results)) {
+                                $results_sort[$rtype] = $results[$rtype];
+                                unset($results[$rtype]);
+                            }
+                        }
+
+                        $results = array_merge($results_sort, $results);
+                    }
+                } else {
+                    $results[] = $row['id'];
+                }
+                if (!empty($row['mbid'])) {
+                    $mbids[] = $row['mbid'];
+                }
+            }
         }
 
         return $results;

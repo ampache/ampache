@@ -680,7 +680,7 @@ class Subsonic_XML_Data
                     $name .= " [" . $album->year . "]";
                 }
         */
-        if (!AmpConfig::get('album_group') && $album->disk) {
+        if ($album->disk && !$album->allow_group_disks && count($album->get_album_suite()) > 1) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
 
@@ -731,7 +731,7 @@ class Subsonic_XML_Data
     public static function addAlbumDirectory($xml, $album)
     {
         $xdir = $xml->addChild('directory');
-        $xdir->addAttribute('id', self::getAlbumId($album->id));
+        $xdir->addAttribute('id', (string) self::getAlbumId($album->id));
         $xdir->addAttribute('name', self::formatAlbum($album));
         $album->format();
         if ($album->artist_id) {
@@ -842,7 +842,7 @@ class Subsonic_XML_Data
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        $xplaylist->addAttribute('id', (string) self::getPlaylistId($playlist->id));
+        $xplaylist->addAttribute('id', (string) $playlist->id);
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', $user->username);

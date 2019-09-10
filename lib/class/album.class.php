@@ -372,8 +372,9 @@ class Album extends database_object implements library_item
             $sqlj .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
-        if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ";
+        $sql .= $sqlj . $sqlw;
+        if (count($this->album_suite) <= 1) {
+            $sql .= "GROUP BY `song`.`album` ";
         } else {
             $sqlw .= "GROUP BY `song`.`artist` ";
         }
@@ -648,7 +649,8 @@ class Album extends database_object implements library_item
         }
 
         $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                "$where $catalog_where ORDER BY `album`.`name`, `album`.`disk` ASC";
+                "WHERE `album`.`mbid`='$this->mbid' $catalog_where ORDER BY `album`.`disk` ASC";
+
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -730,7 +732,7 @@ class Album extends database_object implements library_item
         $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
 
         // Looking if we need to combine or display disks
-        if ($this->disk && !AmpConfig::get('album_group')) {
+        if ($this->disk && !$this->allow_group_disks && count($this->get_album_suite()) > 1) {
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
 
