@@ -247,7 +247,7 @@ if (!defined('INSTALL')) {
     <td valign="top">
     <?php
         if (check_config_values($results)) {
-            echo "&nbsp;&nbsp;&nbsp;<img src=\"" . AmpConfig::get('web_path') . "/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
+            echo "&nbsp;&nbsp;&nbsp;" . UI::get_icon('enable', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
         } else {
             echo debug_result(false, "SKIPPED");
         } ?>
