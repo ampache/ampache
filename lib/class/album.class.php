@@ -342,16 +342,9 @@ class Album extends database_object implements library_item
             $sqlj = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
 
-        $suite_array = array();
-        if ($this->allow_group_disks) {
-            $suite_array = $this->album_suite;
-        }
-        if (!count($suite_array)) {
-            $suite_array[] = $this->id;
-        }
-
-        $idlist = '(' . implode(',', $suite_array) . ')';
-        $sqlw   = "WHERE `song`.`album` IN $idlist ";
+        $suite_array = $this->album_suite;
+        $idlist      = '(' . implode(',', $suite_array) . ')';
+        $sqlw        = "WHERE `song`.`album` IN $idlist ";
 
         if (AmpConfig::get('catalog_disable')) {
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
@@ -718,7 +711,7 @@ class Album extends database_object implements library_item
             $this->f_year = "N/A";
         } else {
             $year              = $this->year;
-            $this->f_year_link = "<a href=\"$web_path/albums.php?action=showyear&year=" . $year . "\">" . $year . "</a>";
+            $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }
 
         $this->f_release_type = ucwords($this->release_type);
