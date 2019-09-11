@@ -40,7 +40,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
+                <img src="./images/ampache-dark.png" title="Ampache" alt="Ampache">
                 <?php echo T_('Ampache'); ?> - For the love of Music
             </a>
         </div>
