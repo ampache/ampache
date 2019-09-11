@@ -315,7 +315,6 @@ class UI
     private static function _find_icon($name)
     {
         if (isset(self::$_icon_cache[$name])) {
-            //debug_event('ui.class', '_icon_cache: ' . $name, 5);
             return self::$_icon_cache[$name];
         }
 
@@ -329,7 +328,7 @@ class UI
             $filename = pathinfo($filesearch[0], 2);
         }
         $url = AmpConfig::get('web_path') . $path . $filename;
-
+        // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
 
         return $url;
@@ -412,7 +411,6 @@ class UI
     private static function _find_image($name)
     {
         if (isset(self::$_image_cache[$name])) {
-            //debug_event('ui.class', '_image_cache: ' . $name, 5);
             return self::$_image_cache[$name];
         }
 
@@ -425,13 +423,8 @@ class UI
         } else {
             $filename = pathinfo($filesearch[0], 2);
         }
-
-        if (pathinfo($filename, 4) == 'svg') {
-            $url      = AmpConfig::get('prefix') . $path . $filename;
-        } else {
-            $url      = AmpConfig::get('web_path') . $path . $filename;
-        }
-
+        $url      = AmpConfig::get('web_path') . $path . $filename;
+        // cache the url so you don't need to keep searching
         self::$_image_cache[$name] = $url;
 
         return $url;
