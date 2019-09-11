@@ -349,12 +349,12 @@ class Album extends database_object implements library_item
         if (AmpConfig::get('catalog_disable')) {
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
-        $sql .= $sqlj . $sqlw;
         if (count($this->album_suite) <= 1) {
-            $sql .= "GROUP BY `song`.`album` ";
+            $sqlw .= "GROUP BY `song`.`album` ";
         } else {
-            $sql .= "GROUP BY `song`.`artist` ";
+            $sqlw .= "GROUP BY `song`.`artist` ";
         }
+        $sql .= $sqlj . $sqlw;
 
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
