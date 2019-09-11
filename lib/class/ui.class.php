@@ -252,14 +252,12 @@ class UI
      */
     public static function get_icon($name, $title = null, $id_attrib = null, $class_attrib = null)
     {
-        debug_event('ui.class', 'class_attrib: ' . $class_attrib, 1);
         if (is_array($name)) {
             $hover_name = $name[1];
             $name       = $name[0];
         }
 
-        $title = $title ?: T_(ucfirst($name));
-
+        $title    = $title ?: T_(ucfirst($name));
         $icon_url = self::_find_icon($name);
         $icontype = pathinfo($icon_url, 4);
         if (isset($hover_name)) {
@@ -316,8 +314,9 @@ class UI
      */
     private static function _find_icon($name)
     {
-        if (isset(self::$_icon_cache[$name]) && $url = self::$_icon_cache[$name]) {
-            return $url;
+        if (isset(self::$_icon_cache[$name])) {
+            //debug_event('ui.class', '_icon_cache: ' . $name, 5);
+            return self::$_icon_cache[$name];
         }
 
         $path       = AmpConfig::get('theme_path') . '/images/icons/';
@@ -329,12 +328,7 @@ class UI
         } else {
             $filename = pathinfo($filesearch[0], 2);
         }
-
-        if (pathinfo($filename, 4) == 'svg') {
-            $url      = AmpConfig::get('prefix') . $path . $filename;
-        } else {
-            $url      = AmpConfig::get('web_path') . $path . $filename;
-        }
+        $url = AmpConfig::get('web_path') . $path . $filename;
 
         self::$_icon_cache[$name] = $url;
 
@@ -417,8 +411,9 @@ class UI
      */
     private static function _find_image($name)
     {
-        if (isset(self::$_image_cache[$name]) && $url = self::$_image_cache[$name]) {
-            return $url;
+        if (isset(self::$_image_cache[$name])) {
+            //debug_event('ui.class', '_image_cache: ' . $name, 5);
+            return self::$_image_cache[$name];
         }
 
         $path       = AmpConfig::get('theme_path') . '/images/';
