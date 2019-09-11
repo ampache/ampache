@@ -1,0 +1,619 @@
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+/**
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * Copyright 2001 - 2019 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/***********************************************
+           General style rules
+***********************************************/
+
+body {
+    color: #000;
+    background-color: #fff;
+    height: 90%;
+}
+
+.error {
+    color: #c33;
+}
+
+a {
+    color: #1990db;
+}
+
+a:hover {
+    color: #52aae4;
+}
+
+hr {
+  border-top-color: #bbb;
+  border-top-color: #eee;
+}
+
+input[type=password], input[type=text], textarea {
+    background-color: #f5f5f5;
+    background-image: -moz-linear-gradient(top,#eee,#fff);
+    background-image: -ms-linear-gradient(top,#eee,#fff);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#eee),to(#fff));
+    background-image: -webkit-linear-gradient(top,#eee,#fff);
+    background-image: -o-linear-gradient(top,#eee,#fff);
+    background-image: linear-gradient(top,#eee,#fff);
+    border-color: #d8d8d8;
+}
+
+input[type=button], input[type=submit] {
+    background-image: -moz-linear-gradient(top,#1990DB,#1473AF);
+    background-image: -ms-linear-gradient(top,#1990DB,#1473AF);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#1990DB),to(#1473AF));
+    background-image: -webkit-linear-gradient(top,#1990DB,#1473AF);
+    background-image: -o-linear-gradient(top,#1990DB,#1473AF);
+    background-image: linear-gradient(top,#1990DB,#1473AF);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
+    color: #fff;
+}
+
+input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, input[type=submit]:focus {
+    background-color: #1473AF;
+}
+
+input[type=button]:focus:active, input[type=submit]:focus:active {
+    -webkit-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
+    -moz-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
+    box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
+}
+
+/***********************************************
+           Main
+***********************************************/
+#ajax-loading {
+    color: #1990db;
+    background-image: url(../images/ajax-loader-light.gif);
+}
+
+/***********************************************
+           Header
+***********************************************/
+#header {
+    background-color: #eee;
+    border-bottom: 2px solid #d8d8d8;
+    -webkit-box-shadow: 0 18px 18px rgba(30,30,30,0.7);
+    -moz-box-shadow: 0 18px 18px rgba(30,30,30,0.7);
+    box-shadow: 0 18px 18px rgba(30,30,30,0.7);
+}
+
+#sb_Subsearch input[type=text] {
+    border-color: #bbb;
+}
+
+#sb_Subsearch input[type=text]:focus {
+    color: #555;
+    background: rgba(255,255,255,0.9);
+    border-color: #1990db;
+}
+
+#headerbox  select {
+    color: #555;
+}
+
+/***********************************************
+           Login
+***********************************************/
+#loginPage {
+    background-color: #eee;
+}
+
+#loginPage #maincontainer, #registerPage #maincontainer {
+    background-color: #fff;
+    border: 2px solid rgba(0,0,0,0.15);
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+}
+
+#loginPage #headerlogo, #registerPage #headerlogo {
+    background-image: url('../images/ampache-light.png');
+}
+
+#loginPage #loginbox {
+    color: #000;
+}
+
+#loginPage #loginbox div, #registerPage #registerbox div {
+    text-shadow: 0 1px 0 #eee;
+    color: #000;
+}
+
+#loginPage #loginbox #usernamefield input:focus,
+#loginPage #loginbox #emailfield input:focus,
+#loginPage #loginbox #passwordfield input:focus {
+    border-color: #6AAFFA;
+    box-shadow: 0 0 10px #9ecaed;
+}
+
+#loginPage #loginbox #remembermefield {
+    color: #000;
+}
+
+.formValidation input {
+    color: #fff;
+}
+
+#loginPage span.error {
+    background: #ff9999;
+    border-color: #cc3333;
+    color: #990000;
+}
+
+#loginPage #footer {
+    color: #000;
+}
+
+#loginPage #footer a {
+    color: #000;
+}
+
+#loginPage #footer #donate {
+    color: #1990db;
+}
+
+/***********************************************
+           Sidebar
+***********************************************/
+#sidebar {
+    color: #000;
+}
+
+#sidebar-header {
+    background-color: #F8F8F8;
+    border-color: #d8d8d8;
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    color: #000;
+}
+
+#sidebar-header:hover {
+    color: #000;
+}
+
+#sidebar-content, #sidebar-content-light, #sidebar-light {
+    border-color: #d8d8d8;
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    background-color: #fcfcfc;
+}
+
+/* Tabs content */
+#sidebar-page {
+    background-color: #F8F8F8;
+    border-color: #d8d8d8;
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+}
+
+#sidebar-tabs .sb2 li h4 {
+    color: #111;
+    background-color: #e3e3e3;
+    border-bottom-color: #0f0f0f;
+    -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    -moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+}
+
+#sidebar-tabs .sb2 li ul li a {
+    color: #000;
+}
+
+#sidebar-tabs .sb2 li ul li a:hover {
+    color: #000;
+}
+
+#sidebar-tabs .sb2 #browse_filters #multi_alpha_filter {
+    border-color: #bbb;
+}
+
+/* Localplay */
+.active_instance {
+    border-color: #000;
+}
+
+/***********************************************
+                  Rightbar
+***********************************************/
+#rightbar {
+    background-color: #F8F8F8;
+    border-color: #d8d8d8;
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    color: #000;
+}
+
+#rightbar #rb_current_playlist li {
+    color: #000;
+}
+
+#rightbar #rb_current_playlist li a {
+    color: #000;
+}
+
+#rightbar #rb_current_playlist li a:hover, #rightbar #rb_current_playlist li a:focus {
+    color: #000;
+    background-color: #bfe1f6;
+    background-image: -moz-linear-gradient(top,#bfe1f6,#82caf8);
+    background-image: -ms-linear-gradient(top,#bfe1f6,#82caf8);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#bfe1f6),to(#82caf8));
+    background-image: -webkit-linear-gradient(top,#bfe1f6,#82caf8);
+    background-image: -o-linear-gradient(top,#bfe1f6,#82caf8);
+    background-image: linear-gradient(top,#bfe1f6,#82caf8);
+}
+
+#rightbar #rb_current_playlist li.odd {
+    background-color: rgba(0,0,0,0.1);
+}
+
+#rightbar .submenu {
+    background-color: #eee;
+    border-color: silver;
+}
+
+#rightbar .submenu a {
+    border-bottom-color: #eee;
+    color: #111;
+}
+
+#rightbar .submenu a:hover {
+    color: #1990db;
+}
+
+/***********************************************
+           Content
+***********************************************/
+#content {
+    background-color: #F8F8F8;
+    border-color: #d8d8d8;
+    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    color: #000;
+}
+
+.list-header, .list-header a {
+    color: #000;
+}
+
+.list-header a:hover, .list-header a:focus {
+    color: #52aae4;
+}
+
+span.page-nb {
+    color: #1990db;
+ }
+
+table.tabledata {
+    color: #000;
+}
+
+table.tabledata a {
+    color: #000;
+}
+
+#catalog_type_fields table.tabledata a {
+    color: #1990db;
+}
+
+table.tabledata a:hover, table.tabledata a:focus {
+    color: #52aae4;
+}
+
+table.tabledata thead .th-top, table.tabledata tfoot .th-bottom {
+    background-color: #e3e3e3;
+    -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    -moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+}
+
+table.tabledata thead .th-top {
+    border-bottom-color: #0f0f0f;
+}
+
+table.tabledata tfoot .th-bottom {
+    border-top-color: #0f0f0f;
+}
+
+table.tabledata th a {
+    color: #000;
+}
+
+table.tabledata tr:hover, table.tabledata tr:focus {
+    background-color: #bfe1f6;
+    background-image: -moz-linear-gradient(top,#bfe1f6,#82caf8);
+    background-image: -ms-linear-gradient(top,#bfe1f6,#82caf8);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#bfe1f6),to(#82caf8));
+    background-image: -webkit-linear-gradient(top,#bfe1f6,#82caf8);
+    background-image: -o-linear-gradient(top,#bfe1f6,#82caf8);
+    background-image: linear-gradient(top,#bfe1f6,#82caf8);
+}
+
+table.tabledata .th-top:hover,
+table.tabledata .th-bottom:hover,
+table.tabledata .th-top:focus,
+table.tabledata .th-bottom:focus {
+    color: #777;
+    background-color: #e9e9e9;
+}
+
+table.tabledata tbody .odd {
+    background-color: rgba(255,255,255,0.1);
+}
+
+table.tabledata tbody .cel_cover img {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+
+table.tabledata tbody .cel_cover img:hover {
+    border-color: #1990db;
+}
+
+/***********************************************
+           Content (info-box)
+***********************************************/
+.random_selection .random_album .art_album img {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+
+.random_selection .random_video .art_album img {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+
+.random_selection .random_album .art_album img:hover {
+    border-color: #1990db;
+}
+
+#content .missing {
+    background-image: url('../images/missing.png');
+}
+
+/***********************************************
+    Content (now playing)
+***********************************************/
+#now_playing .cel_albumart img {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+
+#now_playing .cel_lyrics a:hover {
+    color: #0099CC;
+}
+
+/***********************************************
+    Content (Tag cloud)
+***********************************************/
+span.fatalerror {
+    color: #c60;
+}
+
+.box-content #tag_filter .tag_button {
+    color: #fff;
+}
+
+.box-content #tag_filter .tag_button span {
+    background-color: #5f5f5f;
+    background-image: -moz-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -ms-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#6d6d6d),to(#4a4a4a));
+    background-image: -webkit-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -o-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: linear-gradient(top,#6d6d6d,#4a4a4a);
+    border-bottom-color: #b3b3b3;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
+}
+
+.box-content #tag_filter .tag_button span:hover {
+    background-color: #c85a00;
+    background-image: -moz-linear-gradient(top,#1473AF,#027ecc);
+    background-image: -ms-linear-gradient(top,#1473AF,#027ecc);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#1473AF),to(#027ecc));
+    background-image: -webkit-linear-gradient(top,#1473AF,#027ecc);
+    background-image: -o-linear-gradient(top,#1473AF,#027ecc);
+    background-image: linear-gradient(top,#1473AF,#027ecc);
+}
+
+/***********************************************
+    Content (information-actions)
+***********************************************/
+.item_properties {
+    color: #999;
+}
+
+.item_art .item_art_play .item_art_play_icon {
+    background-image: url('../images/videoplay.png');
+}
+
+.item_art .item_art_actions {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.item_art img {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+
+.item_art:hover {
+    border-color: #1990db;
+}
+
+#information_actions ul li{
+    color: #999;
+}
+
+#information_actions a:hover, #information_actions li:hover {
+    color: #000;/*#ffc466;*/
+}
+
+/************************************************/
+/*        Styles for user flags                 */
+/************************************************/
+.userflag a.userflag_true {
+    background: url(../../../images/icon_flag.png) left top;
+}
+
+.userflag a:hover.userflag_true {
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a.userflag_false {
+    background: url(../../../images/icon_flag_off.png) left top;
+}
+
+.userflag a:hover.userflag_false {
+    background: url(../../../images/icon_flag.png) left top;
+}
+
+/***********************************************
+        Content (Track view)
+***********************************************/
+dl.media_details dt {
+    color: #c60;
+}
+
+/***********************************************
+        Footer
+***********************************************/
+#footer a:hover {
+    color: #09c;
+}
+
+#ampache_link {
+    color: #000;
+}
+
+/***********************************************
+        Web Player
+***********************************************/
+div.jp-audio,
+div.jp-audio-stream,
+div.jp-video {
+    color: #000;
+    border: 1px solid #F8F8F8;
+}
+
+div.jp-video div.jp-interface {
+    border-top: 1px solid #F8F8F8;
+}
+
+div.jp-title,
+div.jp-playlist {
+    background-color: #D4D4D4;
+    border-top: 1px solid #F8F8F8;
+}
+
+.jp-no-solution {
+    background: #121112 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
+    border-top: 1px solid #F8F8F8;
+}
+
+#webplayer {
+    background-color: #F8F8F8 !important;
+}
+
+div.playing_title a {
+    color: #000;
+}
+
+div.playing_artist a {
+    color: #000;
+}
+
+div.jp-interface {
+    /*background: #F8F8F8 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;*/
+    background-color: #F8F8F8;
+}
+
+div.jp-playlist li {
+    border-bottom: 1px solid #BFBFBF;
+    /*background: #343433 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;*/
+}
+
+/***********************************************
+        Other
+***********************************************/
+.jscroll-next {
+    border-color: #ccc;
+    background-color: #eee;
+    color: #000;
+}
+
+.missing_album {
+    color: #bbb !important;
+}
+
+.user_online {
+    background: #0f0;
+}
+
+.user_offline {
+    background: #7f0000;
+}
+
+.user_disabled {
+    background: #ccc;
+}
+
+.list-header-navmenu-border {
+    border-color: #fff;
+}
+
+span.item-count {
+    color: #000;
+}
+
+a.option-list:hover {
+    border-color: #fff;
+}
+
+.editdialogstyle.ui-dialog {
+    background-image: url("../../../images/background.light.png") !important;
+}
+
+#tabs li a {
+  color: #1990db;
+}
+
+#tabs li a:hover {
+  color: #52aae4;
+}
+
+#tabs li.tab_active a {
+    color: #000;
+}
