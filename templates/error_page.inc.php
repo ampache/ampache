@@ -41,7 +41,7 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="./images/ampache-dark.png" title="Ampache" alt="Ampache">
-                <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music'); ?>
+                <?php echo T_('Ampache'); ?> - For the love of Music
             </a>
         </div>
     </div>
