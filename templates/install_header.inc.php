@@ -49,7 +49,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="<?php echo "./themes/reborn/images/ampache-dark.png"; ?>" title="Ampache" alt="Ampache">
+                <img src="./images/ampache-dark.png" title="Ampache" alt="Ampache">
                 <?php echo T_('Ampache Installation'); ?> - For the love of Music
             </a>
         </div>
