@@ -621,7 +621,6 @@ class Song extends database_object implements media, library_item
         return '';
     }
 
-    
     /**
      * _get_ext_info
      * This function gathers information from the song_ext_info table and adds it to the
@@ -1591,7 +1590,7 @@ class Song extends database_object implements media, library_item
         $this->f_composer  = $this->composer;
 
         $year              = (int) $this->year;
-        $this->f_year_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=showyear&year=" . $year . "\">" . $year . "</a>";
+        $this->f_year_link = "<a href=\"" . AmpConfig::get('web_path') . "/search.php?type=album&action=search&limit=0&rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
 
         if (AmpConfig::get('licensing') && $this->license !== null) {
             $license = new License($this->license);
