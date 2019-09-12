@@ -374,11 +374,9 @@ class Album extends database_object implements library_item
             $sqlw .= "GROUP BY `song`.`album` ";
         }
         $sql .= $sqlj . $sqlw;
-        debug_event('album.class', 'get_extra_info ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
-
 
         // Get associated information from first song only
         $sql = "SELECT " .
@@ -395,7 +393,6 @@ class Album extends database_object implements library_item
                 "ON `artist`.`id`=`song`.`artist` ";
         }
         $sql .= $sqlj . $sqlw . "LIMIT 1";
-        debug_event('album.class', 'get_extra_info2 ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array_merge($results, Dba::fetch_assoc($db_results));
@@ -623,19 +620,23 @@ class Album extends database_object implements library_item
      */
     public function get_album_suite($catalog = 0)
     {
-        $results = array();
-
+        $results       = array();
+        $mbid          = " is null";
         $catalog_where = "";
         $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+
         if ($catalog) {
             $catalog_where .= " AND `catalog`.`id` = '$catalog'";
         }
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= " AND `catalog`.`enabled` = '1'";
         }
+        if ($this->mbid) {
+            $mbid = "= '$this->mbid'";
+        }
 
         $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                "WHERE `album`.`mbid`='$this->mbid' $catalog_where ORDER BY `album`.`disk` ASC";
+                "WHERE `album`.`mbid`$mbid $catalog_where ORDER BY `album`.`disk` ASC";
 
         $db_results = Dba::read($sql);
 
