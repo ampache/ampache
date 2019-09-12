@@ -332,6 +332,7 @@ class Album extends database_object implements library_item
         $full_name    = Dba::escape($this->full_name);
         $release_type = " is null";
         $mbid         = " is null";
+        $artist       = " is null";
 
         if ($this->f_release_type) {
             $release_type = "= '$this->f_release_type'";
@@ -339,12 +340,15 @@ class Album extends database_object implements library_item
         if ($this->mbid) {
             $mbid = "= '$this->mbid'";
         }
+        if ($this->album_artist) {
+            $artist = "= '$this->album_artist'";
+        }
 
         // Calculation
         $sql = "SELECT " .
                 "COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
                 "COUNT(`song`.`id`) AS `song_count`, " .
-                "SUM(`song`.`time`) as `total_duration` ";
+                "SUM(`song`.`time`) AS `total_duration` ";
 
         $suite_array = $this->album_suite;
         if (!count($suite_array)) {
@@ -358,7 +362,9 @@ class Album extends database_object implements library_item
             $sqlj .= "LEFT JOIN `song` ON `song`.`album` = `album`.`id` ";
             $sqlw = "WHERE `song`.`album` IN (SELECT `id` FROM `album` WHERE LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name') AND " .
                 "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`release_type` $release_type) AND " .
-                "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`mbid` $mbid) ";
+                "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`mbid` $mbid) AND " .
+                "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`album_artist` $artist) AND " .
+                "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`year` = " . (string) $this->year . ") ";
         } else {
             $sql .= "FROM `song` ";
             $sqlw = "WHERE `song`.`album` IN $idlist ";
@@ -369,7 +375,7 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`,`album`.`mbid` ";
+            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ";
         } else {
             $sqlw .= "GROUP BY `song`.`artist` ";
         }
