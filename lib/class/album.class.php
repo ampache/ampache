@@ -329,9 +329,9 @@ class Album extends database_object implements library_item
             return parent::get_from_cache('album_extra', $this->id);
         }
 
-        $full_name = Dba::escape($this->full_name);
+        $full_name    = Dba::escape($this->full_name);
         $release_type = " is null";
-        $mbid = " is null";
+        $mbid         = " is null";
 
         if ($this->f_release_type) {
             $release_type = "= '$this->f_release_type'";
@@ -742,7 +742,6 @@ class Album extends database_object implements library_item
             $year              = $this->year;
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }
-
     } // format
 
     /**
