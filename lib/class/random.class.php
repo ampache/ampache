@@ -180,7 +180,7 @@ class Random
                     " AND `rating`.`user` = " . $user_id . ")";
         }
         if (AmpConfig::get('album_group')) {
-            "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid` ORDER BY `rating` DESC";
+            "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` ORDER BY `rating` DESC";
         }
         $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
         //debug_event('random.class', 'get_album ' . $sql, 5);
