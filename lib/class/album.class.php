@@ -329,9 +329,9 @@ class Album extends database_object implements library_item
             return parent::get_from_cache('album_extra', $this->id);
         }
 
-        $full_name    = Dba::escape($this->full_name);
+        $full_name = Dba::escape($this->full_name);
         $release_type = " is null";
-        $mbid         = " is null";
+        $mbid = " is null";
 
         if ($this->f_release_type) {
             $release_type = "= '$this->f_release_type'";
@@ -371,12 +371,12 @@ class Album extends database_object implements library_item
         if ($this->allow_group_disks) {
             $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`,`album`.`mbid` ";
         } else {
-            $sqlw .= "GROUP BY `song`.`album` ";
+            $sqlw .= "GROUP BY `song`.`artist` ";
         }
         $sql .= $sqlj . $sqlw;
-
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
+
 
         // Get associated information from first song only
         $sql = "SELECT " .
@@ -620,8 +620,18 @@ class Album extends database_object implements library_item
      */
     public function get_album_suite($catalog = 0)
     {
+        $full_name = Dba::escape($this->full_name);
+        $release_type = " is null";
+        $mbid = " is null";
+
+        if ($this->f_release_type) {
+            $release_type = "= '$this->f_release_type'";
+        }
+        if ($this->mbid) {
+            $mbid = "= '$this->mbid'";
+        }
         $results       = array();
-        $mbid          = " is null";
+        $where         = "WHERE `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`name` = '$full_name' ";
         $catalog_where = "";
         $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
 
@@ -629,15 +639,11 @@ class Album extends database_object implements library_item
             $catalog_where .= " AND `catalog`.`id` = '$catalog'";
         }
         if (AmpConfig::get('catalog_disable')) {
-            $catalog_where .= " AND `catalog`.`enabled` = '1'";
-        }
-        if ($this->mbid) {
-            $mbid = "= '$this->mbid'";
+            $catalog_where .= "AND `catalog`.`enabled` = '1'";
         }
 
         $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                "WHERE `album`.`mbid`$mbid $catalog_where ORDER BY `album`.`disk` ASC";
-
+                "$where $catalog_where ORDER BY `album`.`disk` ASC";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -743,6 +749,7 @@ class Album extends database_object implements library_item
             $year              = $this->year;
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }
+
     } // format
 
     /**

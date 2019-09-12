@@ -60,6 +60,7 @@ CHANGELOG
 - Subsonic - Don't ignore group settings with id3 browsing
 - Subsonic - New Method: updateUser
 - Subsonic - New Method: getTopSongs
+- Added SVG support to the theme engine.
 
 3.9.1
 ----------
