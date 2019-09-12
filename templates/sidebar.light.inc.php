@@ -44,5 +44,5 @@ $web_path = AmpConfig::get('web_path');
     <li><a href="<?php echo $web_path ?>/upload.php"><?php echo UI::get_image('topmenu-upload', T_('Upload')); ?><br /><?php echo T_('Upload') ?></a></li>
     <?php
     } ?>
-    <li><a href="<?php echo $web_path ?>/logout.php"><img src="<?php echo $web_path ?>/images/topmenu-logout.png" title="<?php echo T_('Log out') ?>" /><br /><?php echo T_('Log out') ?></a></li>
+    <li><a target="_top" href="<?php echo $web_path; ?>/logout.php" rel="nohtml"><img src="<?php echo $web_path ?>/images/topmenu-logout.png" title="<?php echo T_('Log out') ?>" /><br /><?php echo T_('Log out') ?></a></li>
 </ul>
