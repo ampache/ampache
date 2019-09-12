@@ -37,7 +37,7 @@
         <div id="footer" class="<?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
         <?php if (AmpConfig::get('show_donate')) {
             ?>
-            <a id="donate" href="//ampache.github.io/donate.html" title="Donate" target="_blank"><?php echo T_('Donate'); ?></a> |
+            <a id="donate" href="//ampache.github.io/donate.html" title="<?php echo T_('Donate'); ?>" target="_blank"><?php echo T_('Donate'); ?></a> |
         <?php
         } ?>
         <?php
@@ -45,7 +45,7 @@
             echo AmpConfig::get('custom_text_footer');
         } else {
             ?>
-            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="Copyright © 2001 - 2019 Ampache.org">Ampache <?php echo AmpConfig::get('version'); ?></a>
+            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © 2001 - 2019 Ampache.org"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
         <?php
         } ?>
         <?php if (AmpConfig::get('show_footer_statistics')) {

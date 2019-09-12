@@ -374,7 +374,7 @@ if (!$isVideo) {
 if ($isVideo) {
         ?>
         <div class="jp-video-play">
-            <a href="javascript:;" class="jp-video-play-icon" tabindex="1"><?php echo T_('Play'); ?></a>
+            <a href="javascript:;" class="jp-video-play-icon" tabindex="1" title="<?php echo T_('Play'); ?>"><?php echo T_('Play'); ?></a>
         </div>
 <?php
     } ?>
@@ -392,40 +392,40 @@ if ($isVideo) {
             <div class="jp-title"></div>
             <div class="jp-controls-holder">
                 <ul class="jp-controls">
-                    <li><a href="javascript:;" class="jp-previous" tabindex="1"><?php echo T_('Previous'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-play" tabindex="1"><?php echo T_('Play'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-pause" tabindex="1"><?php echo T_('Pause'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-next" tabindex="1"><?php echo T_('Next'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-stop" tabindex="1"><?php echo T_('Stop'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute"><?php echo T_('Mute'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute"><?php echo T_('Unmute'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume"><?php echo T_('Max Volume'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-previous" tabindex="1" title="<?php echo T_('Previous'); ?>"><?php echo T_('Previous'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-play" tabindex="1" title="<?php echo T_('Play'); ?>"><?php echo T_('Play'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-pause" tabindex="1" title="<?php echo T_('Pause'); ?>"><?php echo T_('Pause'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-next" tabindex="1" title="<?php echo T_('Next'); ?>"><?php echo T_('Next'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-stop" tabindex="1" title="<?php echo T_('Stop'); ?>"><?php echo T_('Stop'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-mute" tabindex="1" title="<?php echo T_('Mute'); ?>"><?php echo T_('Mute'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="<?php echo T_('Unmute'); ?>"><?php echo T_('Unmute'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="<?php echo T_('Max Volume'); ?>"><?php echo T_('Max Volume'); ?></a></li>
                 </ul>
                 <div class="jp-volume-bar">
                     <div class="jp-volume-bar-value"></div>
                 </div>
 
                 <ul class="jp-toggles">
-                    <li><a href="javascript:;" class="jp-full-screen" tabindex="1" title="full screen"><?php echo T_('Full Screen'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-restore-screen" tabindex="1" title="restore screen"><?php echo T_('Restore Screen'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle"><?php echo T_('Shuffle'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off"><?php echo T_('Shuffle Off'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat"><?php echo T_('Repeat'); ?></a></li>
-                    <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off"><?php echo T_('Repeat Off'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-full-screen" tabindex="1" title="<?php echo T_('Full Screen'); ?>"><?php echo T_('Full Screen'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-restore-screen" tabindex="1" title="<?php echo T_('Restore Screen'); ?>"><?php echo T_('Restore Screen'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="<?php echo T_('Shuffle'); ?>"><?php echo T_('Shuffle'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="<?php echo T_('Shuffle Off'); ?>"><?php echo T_('Shuffle Off'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="<?php echo T_('Repeat'); ?>"><?php echo T_('Repeat'); ?></a></li>
+                    <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="<?php echo T_('Repeat Off'); ?>"><?php echo T_('Repeat Off'); ?></a></li>
                 </ul>
             </div>
 <?php
     } else {
         ?>
             <ul class="jp-controls">
-              <li><a href="javascript:;" class="jp-previous" tabindex="1"><?php echo T_('Previous'); ?></a></li>
-              <li><a href="javascript:;" class="jp-play" tabindex="1"><?php echo T_('Play'); ?></a></li>
-              <li><a href="javascript:;" class="jp-pause" tabindex="1"><?php echo T_('Pause'); ?></a></li>
-              <li><a href="javascript:;" class="jp-next" tabindex="1"><?php echo T_('Next'); ?></a></li>
-              <li><a href="javascript:;" class="jp-stop" tabindex="1"><?php echo T_('Stop'); ?></a></li>
-              <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute"><?php echo T_('Mute'); ?></a></li>
-              <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute"><?php echo T_('Unmute'); ?></a></li>
-              <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume"><?php echo T_('Max Volume'); ?></a></li>
+              <li><a href="javascript:;" class="jp-previous" tabindex="1" title="<?php echo T_('Previous'); ?>"><?php echo T_('Previous'); ?></a></li>
+              <li><a href="javascript:;" class="jp-play" tabindex="1" title="<?php echo T_('Play'); ?>"><?php echo T_('Play'); ?></a></li>
+              <li><a href="javascript:;" class="jp-pause" tabindex="1" title="<?php echo T_('Pause'); ?>"><?php echo T_('Pause'); ?></a></li>
+              <li><a href="javascript:;" class="jp-next" tabindex="1" title="<?php echo T_('Next'); ?>"><?php echo T_('Next'); ?></a></li>
+              <li><a href="javascript:;" class="jp-stop" tabindex="1" title="<?php echo T_('Stop'); ?>"><?php echo T_('Stop'); ?></a></li>
+              <li><a href="javascript:;" class="jp-mute" tabindex="1" title="<?php echo T_('Mute'); ?>"><?php echo T_('Mute'); ?></a></li>
+              <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="<?php echo T_('Unmute'); ?>"><?php echo T_('Unmute'); ?></a></li>
+              <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="<?php echo T_('Max Volume'); ?>"><?php echo T_('Max Volume'); ?></a></li>
             </ul>
             <div class="jp-progress">
               <div class="jp-seek-bar">
@@ -438,10 +438,10 @@ if ($isVideo) {
             <div class="jp-current-time"></div>
             <div class="jp-duration"></div>
             <ul class="jp-toggles">
-                <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle"><?php echo T_('Shuffle'); ?></a></li>
-                <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off"><?php echo T_('Shuffle Off'); ?></a></li>
-                <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat"><?php echo T_('Repeat'); ?></a></li>
-                <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off"><?php echo T_('Repeat Off'); ?></a></li>
+                <li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="<?php echo T_('Shuffle'); ?>"><?php echo T_('Shuffle'); ?></a></li>
+                <li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="<?php echo T_('Shuffle Off'); ?>"><?php echo T_('Shuffle Off'); ?></a></li>
+                <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="<?php echo T_('Repeat'); ?>"><?php echo T_('Repeat'); ?></a></li>
+                <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="<?php echo T_('Repeat Off'); ?>"><?php echo T_('Repeat Off'); ?></a></li>
             </ul>
 <?php if (AmpConfig::get('waveform') && !$is_share) {
             ?>
