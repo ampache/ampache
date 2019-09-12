@@ -621,7 +621,6 @@ class Song extends database_object implements media, library_item
         return '';
     }
 
-
     /**
      * _get_ext_info
      * This function gathers information from the song_ext_info table and adds it to the
