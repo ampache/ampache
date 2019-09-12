@@ -1273,7 +1273,7 @@ class Query
 
         // filter albums when you have grouped disks!
         if ($this->get_type() == 'album' && !$this->_state['custom'] && AmpConfig::get('album_group')) {
-            $final_sql .= " GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid` ";
+            $final_sql .= " GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid`, `album`.`year` ";
         } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }

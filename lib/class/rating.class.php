@@ -197,7 +197,7 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('album_group') && $type === 'album') {
-            "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid` ORDER BY `rating` DESC";
+            "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` ORDER BY `rating` DESC";
         } else {
             $sql .= " GROUP BY object_id ORDER BY `rating` DESC ";
         }
