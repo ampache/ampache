@@ -237,6 +237,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #mobileheader {
     height: 64px;
+    padding-bottom: 64px;
+    padding-top: 24px;
 }
 
 #header #headerbox {
