@@ -28,10 +28,10 @@
             <td><?php echo T_('Mail to'); ?>:</td>
             <td>
                 <select name="to">
-                    <option value="all" title="Mail Everyone"><?php echo T_('All'); ?></option>
-                    <option value="users" title="Mail Users"><?php echo T_('User'); ?></option>
-                    <option value="admins" title="Mail Admins"><?php echo T_('Admin'); ?></option>
-                    <option value="inactive" title="Mail Inactive Users"><?php echo T_('Inactive Users'); ?>&nbsp;</option>
+                    <option value="all" title="<?php echo T_('Mail Everyone'); ?>"><?php echo T_('All'); ?></option>
+                    <option value="users" title="<?php echo T_('Mail Users'); ?>"><?php echo T_('User'); ?></option>
+                    <option value="admins" title="<?php echo T_('Mail Admins'); ?>"><?php echo T_('Admin'); ?></option>
+                    <option value="inactive" title="<?php echo T_('Mail Inactive Users'); ?>"><?php echo T_('Inactive Users'); ?>&nbsp;</option>
                 </select>
             </td>
         </tr>
@@ -39,8 +39,8 @@
             <td><?php echo T_('From'); ?>:</td>
             <td>
                 <select name="from">
-                    <option value="self" title="Self"><?php echo T_('Yourself'); ?></option>
-                    <option value="system" title="System"><?php echo T_('Ampache'); ?></option>
+                    <option value="self" title="<?php echo T_('Self'); ?>"><?php echo T_('Yourself'); ?></option>
+                    <option value="system" title="<?php echo T_('System'); ?>"><?php echo T_('Ampache'); ?></option>
                 </select>
             </td>
         </tr>

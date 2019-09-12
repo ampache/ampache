@@ -91,7 +91,7 @@ class AmpacheFlattr
         $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
         $link = ($libitem != null && $libitem->link) ? $libitem->link : $this->user->link;
 
-        echo "<a rel='nohtml' href='https://flattr.com/submit/auto?user_id=" . scrub_out($this->user_id) . "&url=" . rawurlencode($link) . "&category=audio&title=" . rawurlencode($name) . "' target='_blank'><img src='//button.flattr.com/flattr-badge-large.png' alt='Flattr this' title='Flattr this' border='0'></a>";
+        echo "<a rel='nohtml' href='https://flattr.com/submit/auto?user_id=" . scrub_out($this->user_id) . "&url=" . rawurlencode($link) . "&category=audio&title=" . rawurlencode($name) . "' target='_blank'><img src='//button.flattr.com/flattr-badge-large.png' alt='" . T_('Flattr this') . "' title='" . T_('Flattr this') . "' border='0'></a>";
     }
 
     /**
