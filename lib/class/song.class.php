@@ -367,7 +367,7 @@ class Song extends database_object implements media, library_item
         $album_mbid_group      = $results['mb_albumid_group'];
         $artist_mbid           = $results['mb_artistid'];
         $albumartist_mbid      = $results['mb_albumartistid'];
-        $disk                  = (self::sanitize_disk($results['disk']) > 0) ? self::sanitize_disk($results['disk']) : 1;
+        $disk                  = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $year                  = Catalog::normalize_year($results['year'] ?: 0);
         $comment               = $results['comment'];
         $tags                  = $results['genre']; // multiple genre support makes this an array
