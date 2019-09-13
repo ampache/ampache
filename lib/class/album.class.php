@@ -334,8 +334,8 @@ class Album extends database_object implements library_item
         $mbid         = " is null";
         $artist       = " is null";
 
-        if ($this->f_release_type) {
-            $release_type = "= '$this->f_release_type'";
+        if ($this->release_type) {
+            $release_type = "= '" . ucwords($this->release_type) . "'";
         }
         if ($this->mbid) {
             $mbid = "= '$this->mbid'";
@@ -629,8 +629,8 @@ class Album extends database_object implements library_item
         $mbid         = " is null";
         $year         = (string) $this->year;
 
-        if ($this->f_release_type) {
-            $release_type = "= '$this->f_release_type'";
+        if ($this->release_type) {
+            $release_type = "= '" . ucwords($this->release_type) . "'";
         }
         if ($this->mbid) {
             $mbid = "= '$this->mbid'";
@@ -648,7 +648,7 @@ class Album extends database_object implements library_item
         }
 
         $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                "$where $catalog_where ORDER BY `album`.`disk` ASC";
+                "$where $catalog_where ORDER BY `album`.`name`, `album`.`disk` ASC";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
