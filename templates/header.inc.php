@@ -28,8 +28,17 @@ $web_path          = AmpConfig::get('web_path');
 $htmllang          = str_replace("_", "-", AmpConfig::get('lang'));
 $location          = get_location();
 $_SESSION['login'] = false;
+// strings for the main page and templates
+$home      = T_('Home');
+$play      = T_('Play');
+$artists   = T_('Artists');
+$albums    = T_('Albums');
+$playlists = T_('Playlists');
+$tagcloud  = T_('Tag Cloud');
+$favorites = T_('Favorites');
+$upload    = T_('Upload');
+$logout    = T_('Log out');
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
     <head>
@@ -343,7 +352,7 @@ $_SESSION['login'] = false;
             $.contextMenu({
                 selector: ".libitem_menu",
                 items: {
-                    play: {name: "<?php echo T_('Play') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay'); }},
+                    play: {name: "<?php echo $play ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay'); }},
                     play_next: {name: "<?php echo T_('Play next') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay&playnext=true'); }},
                     play_last: {name: "<?php echo T_('Play last') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay&append=true'); }},
                     add_tmp_playlist: {name: "<?php echo T_('Add to temporary playlist') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?action=basket'); }},
@@ -408,26 +417,26 @@ $_SESSION['login'] = false;
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/index.php">
-                        <?php echo UI::get_image('topmenu-home', T_('Home')); ?>
-                        <span><?php echo T_('Home') ?></span>
+                        <?php echo UI::get_image('topmenu-home', $home); ?>
+                        <span><?php echo $home ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=artist">
-                        <?php echo UI::get_image('topmenu-artist', T_('Artists')); ?>
-                        <span><?php echo T_('Artists') ?></span>
+                        <?php echo UI::get_image('topmenu-artist', $artists); ?>
+                        <span><?php echo $artists ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=playlist">
-                        <?php echo UI::get_image('topmenu-playlist', T_('Playlists')); ?>
-                        <span><?php echo T_('Playlists') ?></span>
+                        <?php echo UI::get_image('topmenu-playlist', $playlists); ?>
+                        <span><?php echo $playlists ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=tag">
-                        <?php echo UI::get_image('topmenu-tagcloud', T_('Tag Cloud')); ?>
-                        <span><?php echo T_('Tag Cloud') ?></span>
+                        <?php echo UI::get_image('topmenu-tagcloud', $tagcloud); ?>
+                        <span><?php echo $tagcloud ?></span>
                     </a>
                 </div>
 
@@ -437,8 +446,8 @@ $_SESSION['login'] = false;
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
-                        <?php echo UI::get_image('topmenu-favorite', T_('Favorites')); ?>
-                        <span><?php echo T_('Favorites') ?></span>
+                        <?php echo UI::get_image('topmenu-favorite', $favorites); ?>
+                        <span><?php echo $favorites ?></span>
                     </a>
                 </div>
 
@@ -449,8 +458,8 @@ $_SESSION['login'] = false;
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/upload.php">
-                        <?php echo UI::get_image('topmenu-upload', T_('Upload')); ?>
-                        <span><?php echo T_('Upload') ?></span>
+                        <?php echo UI::get_image('topmenu-upload', $upload); ?>
+                        <span><?php echo $upload ?></span>
                     </a>
                 </div>
 

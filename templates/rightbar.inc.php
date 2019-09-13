@@ -22,7 +22,7 @@
 ?>
 <ul id="rb_action">
     <li>
-        <?php echo Ajax::button('?page=stream&action=basket', 'all', T_('Play'), 'rightbar_play'); ?>
+        <?php echo Ajax::button('?page=stream&action=basket', 'all', $play, 'rightbar_play'); ?>
     </li>
     <?php if (Access::check('interface', '25')) {
     ?>

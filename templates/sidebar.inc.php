@@ -30,7 +30,7 @@ if (User::is_registered()) {
     $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 
     // List of buttons ( id, title, icon, access level)
-    $sidebar_items[] = array('id' => 'home', 'title' => T_('Home'), 'icon' => 'home', 'access' => 5);
+    $sidebar_items[] = array('id' => 'home', 'title' => $home, 'icon' => 'home', 'access' => 5);
     if (AmpConfig::get('allow_localplay_playback')) {
         $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
     }
@@ -70,7 +70,7 @@ if (User::is_registered()) {
 ?>
         <li id="sb_tab_logout" class="sb1">
             <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" rel="nohtml" >
-            <?php echo UI::get_icon('logout', T_('Log out')); ?>
+            <?php echo UI::get_icon('logout', $logout); ?>
             </a>
 </li>
 </ul>
