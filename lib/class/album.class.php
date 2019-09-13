@@ -334,8 +334,8 @@ class Album extends database_object implements library_item
         $mbid         = " is null";
         $artist       = " is null";
 
-        if ($this->f_release_type) {
-            $release_type = "= '$this->f_release_type'";
+        if ($this->release_type) {
+            $release_type = "= '" . ucwords($this->release_type) . "'";
         }
         if ($this->mbid) {
             $mbid = "= '$this->mbid'";
@@ -361,10 +361,8 @@ class Album extends database_object implements library_item
             $sql .= "FROM `album` ";
             $sqlj .= "LEFT JOIN `song` ON `song`.`album` = `album`.`id` ";
             $sqlw = "WHERE `song`.`album` IN (SELECT `id` FROM `album` WHERE LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name') AND " .
-                "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`release_type` $release_type) AND " .
-                "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`mbid` $mbid) AND " .
-                "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`album_artist` $artist) AND " .
-                "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`year` = " . (string) $this->year . ") ";
+                "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`release_type` $release_type AND " .
+                "`album`.`mbid` $mbid AND `album`.`album_artist` $artist AND `album`.`year` = " . (string) $this->year . ") ";
         } else {
             $sql .= "FROM `song` ";
             $sqlw = "WHERE `song`.`album` IN $idlist ";
@@ -492,8 +490,8 @@ class Album extends database_object implements library_item
             return self::$_mapcache[$name][$disk][$mbid][$album_artist];
         }
 
-        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ? ";
-        $params = array($name, $name, $disk);
+        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ?  AND `album`.`year` = ? ";
+        $params = array($name, $name, $disk, $year);
 
         if ($mbid) {
             $sql .= 'AND `album`.`mbid` = ? ';
@@ -629,15 +627,16 @@ class Album extends database_object implements library_item
         $full_name    = Dba::escape($this->full_name);
         $release_type = " is null";
         $mbid         = " is null";
+        $year         = (string) $this->year;
 
-        if ($this->f_release_type) {
-            $release_type = "= '$this->f_release_type'";
+        if ($this->release_type) {
+            $release_type = "= '" . ucwords($this->release_type) . "'";
         }
         if ($this->mbid) {
             $mbid = "= '$this->mbid'";
         }
         $results       = array();
-        $where         = "WHERE `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`name` = '$full_name' ";
+        $where         = "WHERE `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`name` = '$full_name' AND `album`.`year` = $year ";
         $catalog_where = "";
         $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
 
@@ -649,7 +648,7 @@ class Album extends database_object implements library_item
         }
 
         $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                "$where $catalog_where ORDER BY `album`.`disk` ASC";
+                "$where $catalog_where ORDER BY `album`.`name`, `album`.`disk` ASC";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
