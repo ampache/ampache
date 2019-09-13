@@ -647,8 +647,8 @@ class Subsonic_XML_Data
             $xsong->addAttribute('genre', $tags[0]['name']);
         }
         $xsong->addAttribute('size', $songData['size']);
-        if ($albumData['disk'] > 0) {
-            $xsong->addAttribute('discNumber', $albumData['disk']);
+        if (self::sanitize_disk($albumData['disk']) > 0) {
+            $xsong->addAttribute('discNumber', self::sanitize_disk($albumData['disk']));
         }
         $xsong->addAttribute('suffix', $songData['type']);
         $xsong->addAttribute('contentType', $songData['mime']);
