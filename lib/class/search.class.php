@@ -1180,6 +1180,7 @@ class Search extends playlist_object
                 $group[] = "`album`.`name`";
                 $group[] = "`album`.`album_artist`";
                 $group[] = "`album`.`mbid`";
+                $group[] = "`album`.`year`";
             }
 
             switch ($rule[0]) {
