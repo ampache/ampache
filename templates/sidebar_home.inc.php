@@ -28,6 +28,7 @@ $albums    = T_('Albums');
 $playlists = T_('Playlists');
 $tagcloud  = T_('Tag Cloud');
 $expander  = T_('Expand/Collapse');
+$search    = T_('Search');
 ?>
 <ul class="sb2" id="sb_home">
     <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Browse Music'); ?>"><?php echo T_('Music'); ?></span><?php echo UI::get_icon('all', $expander, 'browse_music', 'header-img ' . (($_COOKIE['sb_browse_music'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
@@ -115,7 +116,7 @@ $expander  = T_('Expand/Collapse');
         </ul>
     </li>
     <li>
-        <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Search'); ?>"><?php echo T_('Search'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_search'] == 'expanded') ? 'expanded' : 'collapsed'; ?>" id="search" alt="<?php echo $expander; ?>" title="<?php echo $expander; ?>" /></h4>
+        <h4 class="header"><span class="sidebar-header-title" title="<?php echo $search; ?>"><?php echo $search; ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_search'] == 'expanded') ? 'expanded' : 'collapsed'; ?>" id="search" alt="<?php echo $expander; ?>" title="<?php echo $expander; ?>" /></h4>
         <ul class="sb3" id="sb_home_search" style="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_search'))) {
             echo 'display: none;';
         } ?>">
