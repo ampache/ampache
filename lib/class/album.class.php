@@ -475,7 +475,7 @@ class Album extends database_object implements library_item
         $mbid           = empty($mbid) ? null : $mbid;
         $mbid_group     = empty($mbid_group) ? null : $mbid_group;
         $release_type   = empty($release_type) ? null : $release_type;
-        $disk           = ((int) $disk <= 0) ? 1 : $disk;
+        $disk           = (self::sanitize_disk($disk) <= 0) ? 1 : self::sanitize_disk($disk);
         $original_year  = ((int) $original_year <= 0) ? null : $original_year;
         $barcode        = empty($barcode) ? null : $barcode;
         $catalog_number = empty($catalog_number) ? null : $catalog_number;
@@ -974,7 +974,7 @@ class Album extends database_object implements library_item
         $artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
         $album_artist   = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
         $name           = isset($data['name']) ? $data['name'] : $this->name;
-        $disk           = isset($data['disk']) ? $data['disk'] : $this->disk;
+        $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;
         $mbid           = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
         $mbid_group     = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
         $release_type   = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
@@ -1194,4 +1194,20 @@ class Album extends database_object implements library_item
 
         return $results;
     }
-} // end of album class
+
+    /**
+     * sanitize_disk
+     * Change letter disk numbers (like vinyl/cassette) to an integer
+     * @param string|integer $disk
+     * @return integer
+     */
+    public static function sanitize_disk($disk)
+    {
+        $alphabet = range('A', 'Z');
+        if ((int) $disk == 0) {
+            $disk = array_search(strtoupper($disk), $alphabet);
+        }
+
+        return (int) $disk;
+    }
+} //end of album class

@@ -442,7 +442,7 @@ class Wanted extends database_object
                     foreach ($release->media as $media) {
                         foreach ($media->tracks as $track) {
                             $song          = array();
-                            $song['disk']  = $media->position;
+                            $song['disk']  = Album::sanitize_disk($media->position);
                             $song['track'] = $track->number;
                             $song['title'] = $track->title;
                             $song['mbid']  = $track->id;
