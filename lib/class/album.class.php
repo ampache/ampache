@@ -648,7 +648,7 @@ class Album extends database_object implements library_item
         }
 
         $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                "$where $catalog_where ORDER BY `album`.`name`, `album`.`disk` ASC";
+                "$where $catalog_where ORDER BY `album`.`disk` ASC";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
