@@ -108,7 +108,7 @@ $search    = T_('Search');
         <ul class="sb3" id="sb_home_random" style="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_random'))) {
             echo 'display: none;';
         } ?>">
-            <li id="sb_home_random_album"><?php echo Ajax::text('?page=random&action=song', T_('Song'), 'home_random_song'); ?></li>
+            <li id="sb_home_random_album"><?php echo Ajax::text('?page=random&action=song', $songs, 'home_random_song'); ?></li>
             <li id="sb_home_random_album"><?php echo Ajax::text('?page=random&action=album', T_('Album'), 'home_random_album'); ?></li>
             <li id="sb_home_random_artist"><?php echo Ajax::text('?page=random&action=artist', T_('Artist'), 'home_random_artist'); ?></li>
             <li id="sb_home_random_playlist"><?php echo Ajax::text('?page=random&action=playlist', T_('Playlist'), 'home_random_playlist'); ?></li>
@@ -141,7 +141,7 @@ $search    = T_('Search');
     <?php if (Access::check('interface', '25')) {
         ?>
     <li>
-    <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo T_('Playlist'); ?></span><?php echo UI::get_icon('all', $expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+    <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo $playlists; ?></span><?php echo UI::get_icon('all', $expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <?php if (AmpConfig::get('home_now_playing') || AmpConfig::get('allow_democratic_playback') || Access::check('interface', '50')) {
             ?>
         <ul class="sb3" id="sb_home_playlist">
