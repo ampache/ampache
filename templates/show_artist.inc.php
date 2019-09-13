@@ -155,48 +155,53 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
         ?>
             <?php if (AmpConfig::get('sociable')) {
+                $postshout = T_('Post Shout');
             ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Post Shout'); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('comment', $postshout); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo $postshout; ?></a>
             <?php
         } ?>
         <?php
     } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('artist')) {
+            $download = T_('Download');
         ?>
         <li>
-            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
-            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo T_('Download'); ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', $download); ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo $download; ?></a>
         </li>
         <?php
     } ?>
         <?php if ($artist->can_edit()) {
+            $artistedit = T_('Artist Edit');
         ?>
             <?php if (AmpConfig::get('allow_upload')) {
+                $upload = T_('Upload');
             ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
-                        <?php echo UI::get_icon('upload', T_('Upload')); ?>
-                        &nbsp;&nbsp;<?php echo T_('Upload'); ?>
+                        <?php echo UI::get_icon('upload', $upload); ?>
+                        &nbsp;&nbsp;<?php echo $upload; ?>
                     </a>
                 </li>
             <?php
         } ?>
                 <li>
-                    <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo T_('Artist Edit') ?>', '')">
+                    <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo $artistedit ?>', '')">
                         <?php echo UI::get_icon('edit', T_('Edit')); ?>
                     </a>
-                    <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo T_('Artist Edit') ?>', '')">
+                    <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo $artistedit ?>', '')">
                         <?php echo T_('Edit Artist'); ?>
                     </a>
                 </li>
         <?php
     } ?>
         <?php if (Catalog::can_remove($artist)) {
+            $delete = T_('Delete');
         ?>
         <li>
             <a id="<?php echo 'delete_artist_' . $artist->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
-                <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
+                <?php echo UI::get_icon('delete', $delete); ?> <?php echo $delete; ?>
             </a>
         </li>
         <?php
