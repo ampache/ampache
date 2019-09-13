@@ -155,8 +155,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
         ?>
             <?php if (AmpConfig::get('sociable')) {
-                $postshout = T_('Post Shout');
-            ?>
+            $postshout = T_('Post Shout'); ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('comment', $postshout); ?></a>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo $postshout; ?></a>
             <?php
@@ -164,8 +163,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php
     } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('artist')) {
-            $download = T_('Download');
-        ?>
+        $download = T_('Download'); ?>
         <li>
             <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', $download); ?></a>
             <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo $download; ?></a>
@@ -173,11 +171,9 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php
     } ?>
         <?php if ($artist->can_edit()) {
-            $artistedit = T_('Artist Edit');
-        ?>
+        $artistedit = T_('Artist Edit'); ?>
             <?php if (AmpConfig::get('allow_upload')) {
-                $upload = T_('Upload');
-            ?>
+            $upload = T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
                         <?php echo UI::get_icon('upload', $upload); ?>
@@ -197,8 +193,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php
     } ?>
         <?php if (Catalog::can_remove($artist)) {
-            $delete = T_('Delete');
-        ?>
+        $delete = T_('Delete'); ?>
         <li>
             <a id="<?php echo 'delete_artist_' . $artist->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
                 <?php echo UI::get_icon('delete', $delete); ?> <?php echo $delete; ?>
