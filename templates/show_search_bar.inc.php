@@ -21,19 +21,19 @@
  */
 ?>
 <?php
-$search = T_('Search'); ?>
+$t_search = T_('Search'); ?>
 <div id="sb_Subsearch">
     <form name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=song" enctype="multipart/form-data" style="Display:inline">
-        <input type="text" name="rule_1_input" id="searchString" placeholder="<?php echo $search; ?>" />
+        <input type="text" name="rule_1_input" id="searchString" placeholder="<?php echo $t_search; ?>" />
         <input type="hidden" name="action" value="search" />
         <input type="hidden" name="rule_1_operator" value="0" />
         <input type="hidden" name="object_type" value="song" />
         <select name="rule_1" id="searchStringRule">
             <option value="anywhere"><?php echo T_('Anywhere')?></option>
             <option value="title"><?php echo T_('Titles')?></option>
-            <option value="album"><?php echo $albums?></option>
-            <option value="artist"><?php echo $artists?></option>
-            <option value="playlist_name"><?php echo $playlists?></option>
+            <option value="album"><?php echo $t_albums?></option>
+            <option value="artist"><?php echo $t_artists?></option>
+            <option value="playlist_name"><?php echo $t_playlists?></option>
             <option value="tag"><?php echo T_('Tags')?></option>
             <?php if (AmpConfig::get('label')) {
     ?>
@@ -47,9 +47,9 @@ $search = T_('Search'); ?>
     } ?>
         </select>
         <?php if ($_SESSION['mobile']) {
-        echo "<input class=\"button\" type=\"submit\" value=\"" . $search . "\"style=\"display: none;\" id=\"searchBtn\" />";
+        echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\"style=\"display: none;\" id=\"searchBtn\" />";
     } else {
-        echo "<input class=\"button\" type=\"submit\" value=\"" . $search . "\" id=\"searchBtn\" />";
+        echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\" id=\"searchBtn\" />";
     }
 ?>
     </form>
