@@ -173,11 +173,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if ($artist->can_edit()) {
         $artistedit = T_('Artist Edit'); ?>
             <?php if (AmpConfig::get('allow_upload')) {
-            $upload = T_('Upload'); ?>
+            $t_upload = T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
-                        <?php echo UI::get_icon('upload', $upload); ?>
-                        &nbsp;&nbsp;<?php echo $upload; ?>
+                        <?php echo UI::get_icon('upload', $t_upload); ?>
+                        &nbsp;&nbsp;<?php echo $t_upload; ?>
                     </a>
                 </li>
             <?php
