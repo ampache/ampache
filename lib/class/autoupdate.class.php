@@ -262,7 +262,7 @@ class AutoUpdate
     public static function show_new_version()
     {
         echo '<div id="autoupdate">';
-        echo '<font color="#ff0000">' . T_('Update available') . '</font>';
+        echo '<span>' . T_('Update available') . '</span>';
         echo ' (' . self::get_latest_version() . ').<br />';
 
         echo T_('See') . ' <a href="https://github.com/ampache/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('changes') . '</a> ';
