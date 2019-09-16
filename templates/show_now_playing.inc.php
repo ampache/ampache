@@ -55,6 +55,6 @@ if (strtolower(get_class($media)) == 'song') {
 <?php
     } // end foreach
 ?>
-<?php UI::show_box_bottom(false, 'false '); ?>
+<?php UI::show_box_bottom(false); ?>
 <?php
 } // end if count results?>

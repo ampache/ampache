@@ -47,7 +47,7 @@
         } ?>
     </tbody>
 </table>
-<?php UI::show_box_bottom(false, 'false '); ?>
+<?php UI::show_box_bottom(false); ?>
 <?php UI::show_box_top(T_('Past Events'), 'info-box'); ?>
 <table class="tabledata" cellpadding="0" cellspacing="0">
     <thead>
@@ -75,4 +75,4 @@
         } ?>
     </tbody>
 </table>
-<?php UI::show_box_bottom(false, 'false '); ?>
+<?php UI::show_box_bottom(false); ?>

@@ -116,7 +116,7 @@ class AmpacheRSSView
                 }
             }
             echo '</table></div>';
-            UI::show_box_bottom(false, 'false ');
+            UI::show_box_bottom(false);
         }
     }
 

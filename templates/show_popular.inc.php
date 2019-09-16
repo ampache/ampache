@@ -22,4 +22,4 @@
 
 UI::show_box_top(T_('Information'));
 require_once AmpConfig::get('prefix') . UI::find_template('show_stats_popular.inc.php');
-UI::show_box_bottom(false, 'false ');
+UI::show_box_bottom(false);

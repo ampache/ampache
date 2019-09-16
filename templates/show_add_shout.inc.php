@@ -58,7 +58,7 @@ $boxtitle = T_('Post to Shoutbox');
 </tr>
 </table>
 </form>
-<?php UI::show_box_bottom(false, 'false '); ?>
+<?php UI::show_box_bottom(false); ?>
 </div>
 <?php
 } ?>
@@ -73,6 +73,6 @@ if (count($shouts)) {
     require_once AmpConfig::get('prefix') . UI::find_template('show_shoutbox.inc.php');
 }
 ?>
-<?php UI::show_box_bottom(false, 'false '); ?>
+<?php UI::show_box_bottom(false); ?>
 </div>
 </div>

@@ -203,7 +203,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(false, 'false '); ?>
+<?php UI::show_box_bottom(false); ?>
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">
@@ -258,7 +258,7 @@ if (AmpConfig::get('wanted')) {
         <div id="missing_albums" class="tab_content">
         <?php UI::show_box_top(T_('Missing Albums'), 'info-box');
     echo T_('Loading...');
-    UI::show_box_bottom(false, 'false '); ?>
+    UI::show_box_bottom(false); ?>
         </div>
 <?php
 } ?>
@@ -268,7 +268,7 @@ if (AmpConfig::get('show_similar')) {
         <div id="similar_artist" class="tab_content">
         <?php UI::show_box_top(T_('Similar Artists'), 'info-box');
         echo T_('Loading...');
-        UI::show_box_bottom(false, 'false '); ?>
+        UI::show_box_bottom(false); ?>
         </div>
 <?php
     } ?>
@@ -278,7 +278,7 @@ if (AmpConfig::get('show_concerts')) {
         <div id="concerts" class="tab_content">
         <?php UI::show_box_top(T_('Events'), 'info-box');
         echo T_('Loading...');
-        UI::show_box_bottom(false, 'false '); ?>
+        UI::show_box_bottom(false); ?>
         </div>
 <?php
     } ?>
@@ -288,7 +288,7 @@ if (AmpConfig::get('label')) {
         <div id="labels" class="tab_content">
         <?php UI::show_box_top(T_('Labels'), 'info-box');
         echo T_('Loading...');
-        UI::show_box_bottom(false, 'false '); ?>
+        UI::show_box_bottom(false); ?>
         </div>
 <?php
     } ?>

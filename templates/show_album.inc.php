@@ -226,7 +226,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(false, 'false '); ?>
+<?php UI::show_box_bottom(false); ?>
 <div id="additional_information">
 &nbsp;
 </div>
