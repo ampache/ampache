@@ -135,4 +135,6 @@ switch ($_REQUEST['action']) {
     break;
 } // switch on view
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

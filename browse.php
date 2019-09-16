@@ -228,4 +228,5 @@ switch ($_REQUEST['action']) {
 $browse->store();
 
 /* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

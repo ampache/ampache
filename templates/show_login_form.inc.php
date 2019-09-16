@@ -103,6 +103,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
         echo "<h1 id=\"headerlogo\"></h1>";
         echo "</div>";
     } ?>
+            <?php echo UI::show_query_stats() ?>
             <?php
             UI::show_footer();
             ?>
