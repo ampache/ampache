@@ -36,7 +36,7 @@ if (empty($embed)) {
 }
 
 if (!empty($embed)) {
-    UI::show_box_bottom(false);
+    UI::show_box_bottom(false, 'false ');
 } else {
     ?>
 </body>

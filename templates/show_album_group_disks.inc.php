@@ -114,7 +114,7 @@ if ($directplay_limit > 0) {
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(false, 'false '); ?>
 <div id="additional_information">
 &nbsp;
 </div>

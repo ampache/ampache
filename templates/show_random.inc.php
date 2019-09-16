@@ -113,7 +113,7 @@
         <input type="submit" value="<?php echo T_('Enqueue'); ?>" />
 </div>
 </form>
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(false, 'false '); ?>
 <div id="browse">
 <?php
     if (is_array($object_ids)) {
