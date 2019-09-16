@@ -31,4 +31,7 @@ if (!Core::is_library_item($object_type)) {
 
 UI::show_header();
 require_once AmpConfig::get('prefix') . UI::find_template('show_mashup.inc.php');
+
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();
