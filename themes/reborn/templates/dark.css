@@ -582,6 +582,10 @@ div.jp-playlist li {
     color: #999;
 }
 
+.followbtn {
+   background-color: #363F4A;
+}
+
 .missing_album {
     color: #bbb !important;
 }
