@@ -73,4 +73,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();
