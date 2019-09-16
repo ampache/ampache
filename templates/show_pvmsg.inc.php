@@ -42,4 +42,4 @@ UI::show_box_top($pvmsg->f_subject, 'info-box');
     <?php echo nl2br($pvmsg->f_message); ?>
 </div>
 
-<?php UI::show_box_bottom(true); ?>
+<?php UI::show_box_bottom(); ?>
