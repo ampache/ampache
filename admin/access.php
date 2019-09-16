@@ -116,4 +116,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_access_list.inc.php');
     break;
 } // end switch on action
+
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();
