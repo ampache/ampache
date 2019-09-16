@@ -102,8 +102,5 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
         echo "<div id=\"mobileheader\"><!-- This is the header -->";
         echo "<h1 id=\"headerlogo\"></h1>";
         echo "</div>";
-    } ?>
-            <?php echo UI::show_query_stats() ?>
-            <?php
-            UI::show_footer();
-            ?>
+    }
+    UI::show_footer(); ?>
