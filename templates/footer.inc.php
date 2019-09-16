@@ -48,16 +48,6 @@
             <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © 2001 - 2019 Ampache.org"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
         <?php
         } ?>
-        <?php if (AmpConfig::get('show_footer_statistics')) {
-            ?>
-            <br />
-            <?php echo T_('Queries:'); ?><?php echo Dba::$stats['query']; ?> <?php echo T_('Cache Hits:'); ?><?php echo database_object::$cache_hit; ?>
-            <?php
-                $load_time_end         = microtime(true);
-            $load_time                 = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4); ?>
-            | <?php echo T_('Load Time:'); ?><?php echo $load_time; ?>
-        <?php
-        } ?>
         </div>
         <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) {
             ?>
