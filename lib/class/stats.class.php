@@ -302,6 +302,7 @@ class Stats
             $sql = "SELECT `id` as `id`, `last_update` FROM playlist" .
                     " WHERE `last_update` >= '" . $date . "' ";
             $sql .= " GROUP BY `id` ORDER BY `last_update` DESC ";
+            //debug_event('stats.class', 'get_top_sql ' . $sql, 5);
 
             return $sql;
         }
@@ -339,6 +340,7 @@ class Stats
         } else {
             $sql .= " ORDER BY `count` DESC ";
         }
+        //debug_event('stats.class', 'get_top_sql ' . $sql, 5);
 
         return $sql;
     }
@@ -543,9 +545,9 @@ class Stats
         // add playlists to mashup browsing
         if ($type == 'playlist') {
             $type = $type . '`.`id';
-            $sql  = "SELECT `$type` as `id`, `playlist`.`last_update` AS `real_atime` FROM `playlist` ";
+            $sql  = "SELECT `$type` as `id`, MAX(`playlist`.`last_update`) AS `real_atime` FROM `playlist` ";
         } else {
-            $sql = "SELECT DISTINCT(`$type`) as `id`, `song`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
+            $sql = "SELECT DISTINCT(`$type`) as `id`, MAX(`song`.`addition_time`) AS `real_atime` FROM `" . $base_type . "` ";
             if ($input_type === 'song') {
                 $sql = "SELECT DISTINCT(`$type`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
             }
