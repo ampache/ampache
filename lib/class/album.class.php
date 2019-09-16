@@ -373,7 +373,7 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ";
+            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
         } else {
             $sqlw .= "GROUP BY `song`.`artist` ";
         }
@@ -396,7 +396,8 @@ class Album extends database_object implements library_item
             $sql .= "FROM `song` INNER JOIN `artist` " .
                 "ON `artist`.`id`=`song`.`artist` ";
         }
-        $sql .= $sqlj . $sqlw . "LIMIT 1";
+        $sql .= $sqlj . $sqlw . ", `catalog_id` LIMIT 1";
+        //debug_event('album.class', 'sql ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array_merge($results, Dba::fetch_assoc($db_results));
