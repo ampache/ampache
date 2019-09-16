@@ -22,4 +22,4 @@
 ?>
 <?php UI::show_box_top(T_('Wanted')); ?>
 <?php require_once AmpConfig::get('prefix') . UI::find_template('show_stats_wanted.inc.php'); ?>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom(true); ?>

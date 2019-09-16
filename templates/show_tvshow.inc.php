@@ -101,7 +101,7 @@ UI::show_box_top($tvshow->f_name, 'info-box');
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom(true); ?>
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">
