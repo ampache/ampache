@@ -99,4 +99,4 @@ if (AmpConfig::get('geolocation')) {
         theme: 'dark'
     });
 </script>
-<?php UI::show_box_bottom(true); ?>
+<?php UI::show_box_bottom(); ?>
