@@ -606,7 +606,7 @@ div.jp-playlist li {
     border-color: #fff;
 }
 
-span.item-count {
+span.item-count, span.query-count {
     color: #000;
 }
 
