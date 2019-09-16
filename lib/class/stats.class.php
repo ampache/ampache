@@ -545,9 +545,9 @@ class Stats
             $type = $type . '`.`id';
             $sql  = "SELECT `$type` as `id`, `playlist`.`last_update` AS `real_atime` FROM `playlist` ";
         } else {
-            $sql = "SELECT DISTINCT(`$type`) as `id`, `addition_time` AS `real_atime` FROM `" . $base_type . "` ";
+            $sql = "SELECT DISTINCT(`$type`) as `id`, `song`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
             if ($input_type === 'song') {
-                $sql = "SELECT DISTINCT(`$type`.`id`) as `id`, `addition_time` AS `real_atime` FROM `" . $base_type . "` ";
+                $sql = "SELECT DISTINCT(`$type`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
             }
             if ($allow_group_disks && $type == 'album') {
                 $sql .= "LEFT JOIN `album` ON `album`.`id` = `" . $base_type . "`.`album` ";
@@ -572,7 +572,7 @@ class Stats
             }
         }
         if ($allow_group_disks && $type == 'album') {
-            $sql .= "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year`, song.catalog, `addition_time` ORDER BY `real_atime` DESC ";
+            $sql .= "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
         }
