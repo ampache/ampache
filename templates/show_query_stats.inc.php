@@ -23,7 +23,7 @@
 <?php if (AmpConfig::get('show_footer_statistics')) {
     ?>
     <br />
-    <span class="item-count">
+    <span class="query-count">
     <?php echo T_('Queries: '); ?><?php echo Dba::$stats['query']; ?>
     | <?php echo T_('Cache Hits: '); ?><?php echo database_object::$cache_hit;
     $load_time_end = microtime(true);

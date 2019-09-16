@@ -1660,6 +1660,11 @@ span.item-count {
     font-size: 11px;
 }
 
+span.query-count {
+    font-size: 11px;
+    float: inline-end;
+}
+
 a.option-list {
     border: solid 1px transparent;
     width: 100%;
