@@ -92,4 +92,4 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 <script type="text/javascript">
     document.getElementById('searchString').value = '';
 </script>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom(false); ?>

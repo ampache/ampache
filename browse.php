@@ -96,7 +96,7 @@ switch ($_REQUEST['action']) {
         $browse2->set_type($browse_type);
         $browse2->store();
         require_once AmpConfig::get('prefix') . UI::find_template('show_tagcloud.inc.php');
-        UI::show_box_bottom();
+        UI::show_box_bottom(false);
         $type = $browse2->get_type();
         require_once AmpConfig::get('prefix') . UI::find_template('browse_content.inc.php');
     break;

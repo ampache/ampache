@@ -30,7 +30,7 @@
 </li>
 </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom(false); ?>
 <?php
 } ?>
 <?php if ($browse->is_show_header()) {

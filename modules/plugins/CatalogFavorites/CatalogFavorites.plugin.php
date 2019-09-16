@@ -150,7 +150,7 @@ class AmpacheCatalogFavorites
                 }
             }
             echo '</table>';
-            UI::show_box_bottom();
+            UI::show_box_bottom(false);
             echo '</div>';
         }
     }

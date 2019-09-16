@@ -66,4 +66,4 @@ $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-UI::show_box_bottom();
+UI::show_box_bottom(false);

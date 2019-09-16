@@ -332,7 +332,7 @@ switch ($_REQUEST['action']) {
 
             UI::show_box_top(T_('Songs'), 'info-box');
             require_once AmpConfig::get('prefix') . UI::find_template('show_songs.inc.php');
-            UI::show_box_bottom();
+            UI::show_box_bottom(false);
         }
 
         $results['songs'] = ob_get_contents();
