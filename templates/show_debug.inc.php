@@ -131,7 +131,7 @@
                 foreach ($value as $setting) {
                     if (is_array($setting)) {
                         foreach ($setting as $array_value) {
-                        $string .= $array_value . '<br />';
+                            $string .= $array_value . '<br />';
                         }
                     } else {
                         $string .= $setting . '<br />';
