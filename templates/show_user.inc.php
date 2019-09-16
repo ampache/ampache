@@ -152,7 +152,7 @@ if ($client->f_avatar) {
                 </td>
             </tr>
         </table><br />
-        <?php UI::show_box_bottom(); ?>
+        <?php UI::show_box_bottom(true); ?>
         <?php
         } ?>
         <?php

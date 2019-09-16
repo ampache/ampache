@@ -61,4 +61,4 @@
         <input class="button" type="submit" value="<?php echo T_('Send e-mail'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom(true); ?>

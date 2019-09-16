@@ -489,8 +489,9 @@ class UI
      * show_box_bottom
      *
      * This shows the bottom of the box
+     * @param bool $stats
      */
-    public static function show_box_bottom()
+    public static function show_box_bottom($stats = false)
     {
         require AmpConfig::get('prefix') . self::find_template('show_box_bottom.inc.php');
     }

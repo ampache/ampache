@@ -33,7 +33,7 @@ if (AmpConfig::get('lastfm_api_key')) {
     </div>
 <?php
 } ?>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom(true); ?>
 
 <?php
 if (AmpConfig::get('wanted')) {

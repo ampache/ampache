@@ -35,4 +35,4 @@
         <input type="submit" value="<?php echo T_('Import Playlist'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom(true); ?>

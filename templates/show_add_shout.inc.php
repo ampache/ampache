@@ -73,6 +73,6 @@ if (count($shouts)) {
     require_once AmpConfig::get('prefix') . UI::find_template('show_shoutbox.inc.php');
 }
 ?>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom(true); ?>
 </div>
 </div>

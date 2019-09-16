@@ -53,4 +53,4 @@
 <?php
     } ?>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom(true); ?>
