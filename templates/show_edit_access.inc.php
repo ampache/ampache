@@ -78,4 +78,4 @@
         <input type="submit" value="<?php echo T_('Update'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(true); ?>
+<?php UI::show_box_bottom(true, 'show_edit_access'); ?>
