@@ -203,7 +203,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(true); ?>
+<?php UI::show_box_bottom(); ?>
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">
