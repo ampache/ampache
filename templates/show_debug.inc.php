@@ -129,7 +129,13 @@
             if (is_array($value)) {
                 $string = '';
                 foreach ($value as $setting) {
-                    $string .= $setting . '<br />';
+                    if (is_array($setting)) {
+                        foreach ($setting as $array_value) {
+                        $string .= $array_value . '<br />';
+                        }
+                    } else {
+                        $string .= $setting . '<br />';
+                    }
                 }
                 $value = $string;
             }
