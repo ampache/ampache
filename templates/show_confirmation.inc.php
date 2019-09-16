@@ -37,4 +37,4 @@ $confirmation = Core::form_register($form_name);
     </form>
 <?php
 } ?>
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(false, 'false '); ?>

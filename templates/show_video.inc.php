@@ -166,4 +166,4 @@ if (strtolower(get_class($video)) != 'video') {
     }
 ?>
 </dl>
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(false, 'false '); ?>

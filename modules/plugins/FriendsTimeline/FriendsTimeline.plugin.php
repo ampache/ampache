@@ -99,7 +99,7 @@ class AmpacheFriendsTimeline
                         $activity = new Useractivity($aid);
                         $activity->show();
                     }
-                    UI::show_box_bottom(false);
+                    UI::show_box_bottom(false, 'false ');
                 }
                 echo '</div>';
             }

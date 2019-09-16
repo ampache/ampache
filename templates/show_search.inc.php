@@ -61,7 +61,7 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
     </div>
 </form>
 
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(false, 'false '); ?>
 
 <div>
 <?php

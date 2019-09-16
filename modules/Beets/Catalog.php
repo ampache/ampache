@@ -132,7 +132,7 @@ abstract class Catalog extends \Catalog
         $this->update_last_add();
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom(false);
+            UI::show_box_bottom(false, 'false ');
         }
     }
 

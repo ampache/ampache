@@ -109,7 +109,7 @@ if ($client->f_avatar) {
     } ?>
     </dd>
 </dl><br />
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(false, 'false '); ?>
 
 <div class="tabs_wrapper">
     <div id="tabs_container">
@@ -152,7 +152,7 @@ if ($client->f_avatar) {
                 </td>
             </tr>
         </table><br />
-        <?php UI::show_box_bottom(false); ?>
+        <?php UI::show_box_bottom(false, 'false '); ?>
         <?php
         } ?>
         <?php
