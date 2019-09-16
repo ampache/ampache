@@ -45,7 +45,7 @@ if (Art::is_enabled()) {
 <div id="random_selection" class="random_selection">
     <?php UI::show_box_top(T_('Albums of the Moment'));
             echo T_('Loading...');
-            //UI::show_box_bottom(false);?>
+            //UI::show_box_bottom();?>
 </div>
 <?php
         }
@@ -54,7 +54,7 @@ if (Art::is_enabled()) {
 <div id="random_video_selection" class="random_selection">
     <?php UI::show_box_top(T_('Videos of the Moment'));
             echo T_('Loading...');
-            UI::show_box_bottom(false); ?>
+            UI::show_box_bottom(); ?>
 </div>
     <?php
         } ?>

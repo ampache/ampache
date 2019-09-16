@@ -138,4 +138,4 @@
     }
 ?>
 </dl>
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(); ?>

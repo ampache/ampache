@@ -58,7 +58,7 @@ if (count($images) > 0 && !empty($images[0]['url'])) {
     </li>
 </ul>
 </div>
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(); ?>
 <div id="additional_information">
 &nbsp;
 </div>
