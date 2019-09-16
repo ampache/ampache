@@ -45,4 +45,4 @@
 </tr>
 </table>
 </form>
-<?php UI::show_box_bottom(true, 'show_edit_shout'); ?>
+<?php UI::show_box_bottom(true); ?>

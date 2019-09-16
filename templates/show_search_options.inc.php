@@ -37,4 +37,4 @@
 } ?>
 </ul>
 </div>
-<?php UI::show_box_bottom(true, 'show_search_options'); ?>
+<?php UI::show_box_bottom(true); ?>

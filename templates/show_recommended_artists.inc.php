@@ -118,4 +118,4 @@ $thcount = 8;
         </tr>
     </tfoot>
 </table>
-<?php UI::show_box_bottom(true, 'show_recommended_artists'); ?>
+<?php UI::show_box_bottom(true); ?>

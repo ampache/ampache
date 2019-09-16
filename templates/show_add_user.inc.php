@@ -105,4 +105,4 @@
         <input type="submit" value="<?php echo T_('Add User'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(true, 'show_add_user'); ?>
+<?php UI::show_box_bottom(true); ?>

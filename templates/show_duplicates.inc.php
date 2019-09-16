@@ -79,4 +79,4 @@
         </tr>
     </table>
 </form>
-<?php UI::show_box_bottom(true, 'show_duplicates'); ?>
+<?php UI::show_box_bottom(true); ?>

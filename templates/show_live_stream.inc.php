@@ -59,4 +59,4 @@
     }
 ?>
 </dl>
-<?php UI::show_box_bottom(true, 'show_live_stream'); ?>
+<?php UI::show_box_bottom(true); ?>
