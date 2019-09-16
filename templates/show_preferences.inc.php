@@ -52,4 +52,4 @@ if (Core::get_request('tab') === 'account') {
 ?>
 </form>
 
-<?php UI::show_box_bottom(false, 'false '); ?>
+<?php UI::show_box_bottom(false); ?>

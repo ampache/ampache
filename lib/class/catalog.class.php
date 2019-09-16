@@ -1972,7 +1972,7 @@ abstract class Catalog extends database_object
         }
         UI::update_text(T_("Catalog Cleaned"), sprintf(nT_('%d file removed.', '%d files removed.', $dead_total), $dead_total));
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom(false, 'false ');
+            UI::show_box_bottom(false);
         }
 
         $this->update_last_clean();
@@ -1997,7 +1997,7 @@ abstract class Catalog extends database_object
         }
         UI::update_text(T_("Catalog Verified"), sprintf(nT_('%d file updated.', '%d files updated.', $verified['updated']), $verified['updated']));
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom(false, 'false ');
+            UI::show_box_bottom(false);
         }
 
         return true;

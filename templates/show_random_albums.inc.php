@@ -77,4 +77,4 @@ if ($albums) {
 <?php
 } ?>
 
-<?php UI::show_box_bottom(false, 'false '); ?>
+<?php UI::show_box_bottom(false); ?>

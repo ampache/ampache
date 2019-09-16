@@ -40,7 +40,7 @@ $addlocal   = T_('Add Local Network Definition');
     </li>
 </ul>
 </div>
-<?php UI::show_box_bottom(false, 'false '); ?>
+<?php UI::show_box_bottom(false); ?>
 <?php UI::show_box_top(T_('Access Control Entries'), 'box box_access_entries'); ?>
 <?php Ajax::start_container('browse_content', 'browse_content'); ?>
 <?php if (count($list)) {

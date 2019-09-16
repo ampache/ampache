@@ -54,7 +54,7 @@
         }
         ?>
         <br />
-    <?php UI::show_box_bottom(false, 'false '); ?>
+    <?php UI::show_box_bottom(false); ?>
 
     <?php UI::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
         <table class="tabledata" cellpadding="0" cellspacing="0">
@@ -107,7 +107,7 @@
             </tr>
             </tbody>
         </table>
-    <?php UI::show_box_bottom(false, 'false '); ?>
+    <?php UI::show_box_bottom(false); ?>
 
     <?php UI::show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
         <table class="tabledata" cellpadding="0" cellspacing="0">
@@ -150,6 +150,6 @@
 ?>
             </tbody>
         </table>
-    <?php UI::show_box_bottom(false, 'false '); ?>
+    <?php UI::show_box_bottom(false); ?>
 
 <?php UI::show_box_bottom(true, 'show_debug'); ?>
