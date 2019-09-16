@@ -495,6 +495,16 @@ class UI
         require AmpConfig::get('prefix') . self::find_template('show_box_bottom.inc.php');
     }
 
+    /**
+     * show_query_stats
+     *
+     * This shows the bottom of the box
+     */
+    public static function show_query_stats()
+    {
+        require AmpConfig::get('prefix') . self::find_template('show_query_stats.inc.php');
+    }
+
     public static function show_custom_style()
     {
         if (AmpConfig::get('custom_login_logo')) {
