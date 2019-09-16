@@ -94,7 +94,7 @@ UI::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box');
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(true); ?>
+<?php UI::show_box_bottom(); ?>
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">
