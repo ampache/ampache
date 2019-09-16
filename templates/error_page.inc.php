@@ -20,6 +20,9 @@
  *
  */
 ?>
+<?php
+$t_ampache = T_('Ampache');
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
     xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>"
@@ -40,8 +43,8 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="./images/ampache-dark.png" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
-                <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music'); ?>
+                <img src="./images/ampache-dark.png" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>">
+                <?php echo $t_ampache . ' :: ' . T_('For the Love of Music'); ?>
             </a>
         </div>
     </div>
