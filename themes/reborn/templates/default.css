@@ -161,7 +161,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 div#autoupdate > span {
-	color: FF0000;
+	color: #FF0000;
 }
 
 
@@ -521,6 +521,14 @@ div#autoupdate > span {
 
 #sidebar-header span {
     line-height: 15px;
+}
+
+span#sidebar-header-content::after {
+	content: "<<<";
+}
+
+#sidebar-header.sidebar-header-collapsed > span#sidebar-header-content::after {
+	content: ">>>";
 }
 
 .sidebar-header-collapsed {
