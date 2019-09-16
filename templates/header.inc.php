@@ -478,7 +478,8 @@ $t_logout    = T_('Log out');
                 <?php
                 // remove when reborn has an icon for this
                 $icon_expand = UI::get_icon('expand', T_('Expand/Collapse'));
-                if (strstr($icon_expand, AmpConfig::get('web_path') . '/images/icon_expand.png')) {?>
+                if (strstr($icon_expand, AmpConfig::get('web_path') . '/images/icon_expand.png')) {
+                    ?>
                     <span id="sidebar-header-content"></span>
                 <?php
                 } else {
