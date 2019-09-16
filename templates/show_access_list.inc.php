@@ -82,4 +82,4 @@ $addlocal   = T_('Add Local Network Definition');
 <?php
 } // end if count?>
 <?php Ajax::end_container(); ?>
-<?php UI::show_box_bottom(true); ?>
+<?php UI::show_box_bottom(); ?>
