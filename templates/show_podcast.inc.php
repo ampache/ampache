@@ -109,7 +109,7 @@ UI::show_box_top($podcast->f_title, 'info-box');
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(); ?>
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">

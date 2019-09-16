@@ -62,7 +62,7 @@
     </form>
 </div>
 <?php
-    UI::show_box_bottom(false);
+    UI::show_box_bottom();
     $catalog_ids = Catalog::get_catalogs();
     $browse      = new Browse();
     $browse->set_type('catalog');

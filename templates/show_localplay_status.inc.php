@@ -60,5 +60,5 @@ if (!empty($status['track_album'])) {
     $browse->show_objects($objects);
     $browse->store();
 ?>
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(); ?>
 <?php Ajax::end_container(); ?>

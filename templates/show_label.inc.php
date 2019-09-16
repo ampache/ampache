@@ -96,7 +96,7 @@ if ($label->website) {
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(); ?>
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">
@@ -116,7 +116,7 @@ if ($label->website) {
     echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs'));
 ?>
         <div id="songs" class="tab_content">
-        <?php UI::show_box_top(T_('Songs'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(false); ?>
+        <?php UI::show_box_top(T_('Songs'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
         </div>
     </div>
 </div>

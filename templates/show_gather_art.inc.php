@@ -25,4 +25,4 @@ echo "<strong>" . T_('Starting Art Search') . ". . .</strong><br />\n";
 echo T_('Searched') . ": <span id=\"count_art_" . $catalog_id . "\">" . T_('None') . "</span><br />";
 echo T_('Reading') . ":<span id=\"read_art_$catalog_id\"></span><br />";
 echo "<br />\n";
-UI::show_box_bottom(false);
+UI::show_box_bottom();

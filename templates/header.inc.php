@@ -406,7 +406,7 @@ $t_logout    = T_('Log out');
                         }
                     ?>
 
-                    <?php UI::show_box_bottom(false); ?>
+                    <?php UI::show_box_bottom(); ?>
                 </div> <!-- End headerbox -->
             </div><!-- End header -->
 

@@ -162,4 +162,4 @@ $(document).ready(function () {
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
 });
 </script>
-<?php UI::show_box_bottom(false); ?>
+<?php UI::show_box_bottom(); ?>
