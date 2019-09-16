@@ -246,7 +246,7 @@ class Browse extends Query
             case 'playlist_localplay':
                 $box_title = T_('Current Playlist');
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_localplay_playlist.inc.php');
-                UI::show_box_bottom();
+                UI::show_box_bottom(false);
             break;
             case 'smartplaylist':
                 $box_title = T_('Smart Playlists') . $match;
@@ -361,7 +361,7 @@ class Browse extends Query
 
         if ($this->is_show_header()) {
             if (isset($box_req)) {
-                UI::show_box_bottom();
+                UI::show_box_bottom(false);
             }
             echo '<script type="text/javascript">';
             echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');

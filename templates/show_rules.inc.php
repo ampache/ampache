@@ -57,7 +57,7 @@ $logic_operator = strtolower($logic_operator);
     </tr>
 </tbody>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php UI::show_box_bottom(false); ?>
 
 <?php
 if ($playlist) {

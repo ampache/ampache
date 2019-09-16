@@ -36,7 +36,7 @@ $browse->set_type($object_type);
 $browse->set_show_header(false);
 $browse->set_grid_view(false, false);
 $browse->show_objects($object_ids);
-UI::show_box_bottom();
+UI::show_box_bottom(false);
 
 ?>
 <a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=newest#browse_content_<?php echo $object_type ?>"><?php UI::show_box_top(T_('Newest')) ?></a>
@@ -47,7 +47,7 @@ $browse->set_type($object_type);
 $browse->set_show_header(false);
 $browse->set_grid_view(false, false);
 $browse->show_objects($object_ids);
-UI::show_box_bottom();
+UI::show_box_bottom(false);
 ?>
 <a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=popular"><?php UI::show_box_top(T_('Popular')) ?></a>
 <?php
@@ -59,4 +59,4 @@ $browse->set_type($object_type);
 $browse->set_show_header(false);
 $browse->set_grid_view(false, false);
 $browse->show_objects($object_ids);
-UI::show_box_bottom();
+UI::show_box_bottom(false);

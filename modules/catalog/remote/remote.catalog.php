@@ -183,7 +183,7 @@ class Catalog_remote extends Catalog
         }
         $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom();
+            UI::show_box_bottom(false);
         }
 
         return true;

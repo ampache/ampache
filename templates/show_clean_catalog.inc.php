@@ -26,4 +26,4 @@ printf(T_('Cleaning the "%s" Catalog'), "<strong>[ $this->name ]</strong>");
 echo "...<br />";
 echo T_('Checking') . ': <span id="clean_count_' . $this->id . '"></span><br />';
 echo T_('Reading') . ': <span id="clean_dir_' . $this->id . '"></span><br />';
-UI::show_box_bottom();
+UI::show_box_bottom(false);

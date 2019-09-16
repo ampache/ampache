@@ -277,7 +277,7 @@ class Catalog_Seafile extends Catalog
         }
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom();
+            UI::show_box_bottom(false);
         }
 
         $this->update_last_add();
