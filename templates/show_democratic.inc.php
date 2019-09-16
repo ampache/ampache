@@ -82,4 +82,4 @@ UI::show_box_top($string, 'info-box');
         echo "checked";
     } ?> /> <?php echo T_('Reload this page automatically'); ?>
 </div>
-<?php UI::show_box_bottom(true, 'show_democratic'); ?>
+<?php UI::show_box_bottom(true); ?>

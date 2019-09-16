@@ -50,4 +50,4 @@
         } ?>
     </tbody>
 </table>
-<?php UI::show_box_bottom(true, 'show_missing_artists'); ?>
+<?php UI::show_box_bottom(true); ?>

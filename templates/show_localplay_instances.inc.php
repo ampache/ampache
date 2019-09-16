@@ -53,4 +53,4 @@
 <?php
     } ?>
 </table>
-<?php UI::show_box_bottom(true, 'show_localplay_instances'); ?>
+<?php UI::show_box_bottom(true); ?>

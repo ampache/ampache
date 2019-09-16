@@ -82,4 +82,4 @@ $(function() {
     });
 });
 </script>
-<?php UI::show_box_bottom(true, 'show_add_pvmsg'); ?>
+<?php UI::show_box_bottom(true); ?>

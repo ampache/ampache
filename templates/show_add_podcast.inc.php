@@ -43,4 +43,4 @@
     <input class="button" type="submit" value="<?php echo T_('Subscribe'); ?>" />
 </div>
 </form>
-<?php UI::show_box_bottom(true, 'show_add_podcast'); ?>
+<?php UI::show_box_bottom(true); ?>

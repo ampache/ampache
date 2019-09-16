@@ -128,7 +128,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(true, 'show_playlist'); ?>
+<?php UI::show_box_bottom(true); ?>
 <div id='reordered_list_<?php echo $playlist->id; ?>'>
 <?php
     $browse = new Browse();

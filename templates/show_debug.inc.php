@@ -152,4 +152,4 @@
         </table>
     <?php UI::show_box_bottom(); ?>
 
-<?php UI::show_box_bottom(true, 'show_debug'); ?>
+<?php UI::show_box_bottom(true); ?>

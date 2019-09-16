@@ -22,4 +22,4 @@
 ?>
 <?php UI::show_box_top(T_('Information')); ?>
 <?php require_once AmpConfig::get('prefix') . UI::find_template('show_stats_recent.inc.php'); ?>
-<?php UI::show_box_bottom(true, 'show_recent'); ?>
+<?php UI::show_box_bottom(true); ?>

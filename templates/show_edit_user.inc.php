@@ -175,4 +175,4 @@
         <input type="hidden" name="user_id" value="<?php echo $client->id; ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(true, 'show_edit_user'); ?>
+<?php UI::show_box_bottom(true); ?>
