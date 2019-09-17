@@ -290,23 +290,14 @@ class User extends database_object
             if ($results['id']) {
                 return new User($results['id']);
             }
-            // check for api sessions
-            $sql        = "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND type = 'api'";
-            $db_results = Dba::read($sql, array($apikey, time()));
+            // check for sha256 hashed apikey
+            $sql        = "SELECT `id`, `apikey` FROM `user`";
+            $db_results = Dba::read($sql);
             $results    = Dba::fetch_assoc($db_results);
 
-            if ($results['username']) {
-                return new User($results['username']);
-            }
-            // check for sha256 hashed apikey fro client
-            // https://github.com/ampache/ampache/wiki/XML-API
-            $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
-            $db_results = Dba::read($sql);
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $key        = hash('sha256', $row['apikey']);
-                $passphrase = hash('sha256', $row['username'] . $key);
-                if ($passphrase == $apikey) {
-                    return new User($row['id']);
+            foreach ($results as $users) {
+                if (hash('sha256', $users['apikey']) == $apikey) {
+                    return new User($users['id']);
                 }
             }
         }
