@@ -350,9 +350,6 @@ class XML_Data
      */
     public static function indexes($objects, $object_type, $full_xml = true)
     {
-        if (null == $include) {
-            $include = array();
-        }
         $string = "<total_count>" . count($objects) . "</total_count>\n";
 
         if (count($objects) > self::$limit || self::$offset > 0) {
