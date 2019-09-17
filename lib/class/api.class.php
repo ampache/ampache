@@ -354,6 +354,39 @@ class Api
     } // goodbye
 
     /**
+     * get_indexes
+     * MINIMUM_API_VERSION=400001
+     *
+     * This takes a collection of inputs and returns ID + name for the object type
+     *
+     * @param array $input
+     */
+    public static function get_indexes($input)
+    {
+        self::$browse->reset_filters();
+        self::$browse->set_type($input['type']);
+        self::$browse->set_sort('name', 'ASC');
+
+        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        self::set_filter($method, $input['filter']);
+        self::set_filter('add', $input['add']);
+        self::set_filter('update', $input['update']);
+
+        // Set the offset
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
+
+        if  ($input['type'] == 'playlists') {
+            $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists());
+        } else {
+            $objects = self::$browse->get_objects();
+        }
+        // echo out the resulting xml document
+        ob_end_clean();
+        echo XML_Data::indexes($objects, $input['type']);
+    } // artists
+
+    /**
      * artists
      * MINIMUM_API_VERSION=380001
      *
