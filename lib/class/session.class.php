@@ -71,7 +71,7 @@ class Session
         $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
-        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 5);
+        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
 
         return true;
     }
@@ -169,7 +169,7 @@ class Session
     }
 
     /**
-     * agent
+     * username
      *
      * This returns the agent associated with a session ID, if any
      */
@@ -191,7 +191,7 @@ class Session
         switch ($data['type']) {
             case 'api':
                 $key = isset($data['apikey'])
-                    ? $data['apikey']
+                    ? md5(((string) $data['apikey'] . (string) time()))
                     : md5(uniqid(rand(), true));
                 break;
             case 'stream':
@@ -221,10 +221,12 @@ class Session
         }
         $agent = (!empty($data['agent'])) ? $data['agent'] : substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
 
-        $expire = time() + AmpConfig::get('session_length');
         if ($type == 'stream') {
             $expire = time() + AmpConfig::get('stream_length');
+        } else {
+            $expire = time() + AmpConfig::get('session_length');
         }
+
         $latitude = null;
         if (isset($data['geo_latitude'])) {
             $latitude = $data['geo_latitude'];
@@ -278,6 +280,7 @@ class Session
 
         // Set up the cookie params before we start the session.
         // This is vital
+        session_write_close();
         session_set_cookie_params(
             AmpConfig::get('cookie_life'),
             AmpConfig::get('cookie_path'),
@@ -307,10 +310,17 @@ class Session
         // Switch on the type they pass
         switch ($type) {
             case 'api':
-                return true;
+                $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
+                    "AND `type` = 'api'";
+                $db_results = Dba::read($sql, array($key, time()));
+
+                if (Dba::num_rows($db_results)) {
+                    return true;
+                }
+            break;
             case 'stream':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
-                    "AND `type` IN ('api', 'stream')";
+                    "AND `type` = 'stream'";
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
@@ -386,6 +396,8 @@ class Session
         if ($sid) {
             $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
             Dba::write($sql, array($latitude, $longitude, $name, $sid));
+        } else {
+            debug_event('session.class', 'Missing session id to update geolocation.', 3);
         }
     }
 
@@ -455,6 +467,7 @@ class Session
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
+        session_write_close();
         session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         session_name(AmpConfig::get('session_name'));
 
@@ -528,9 +541,9 @@ class Session
     public static function auth_remember()
     {
         $auth  = false;
-        $cname = AmpConfig::get('session_name') . '_remember';
-        if (isset($_COOKIE[$cname])) {
-            list($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
+        $name  = AmpConfig::get('session_name') . '_remember';
+        if ((filter_has_var(INPUT_COOKIE, $name))) {
+            list($username, $token, $mac) = explode(':', filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, array($username, $token, time()));

@@ -42,6 +42,7 @@ class AmpachePiwik
     public function __construct()
     {
         $this->description = T_('Piwik statistics');
+
         return true;
     }
 
