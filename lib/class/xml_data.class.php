@@ -362,43 +362,43 @@ class XML_Data
                 $objects = array_splice($objects, self::$offset);
             }
         }
-
-        Rating::build_cache($object_type, $objects);
-
+        
         foreach ($objects as $object_id) {
             // 'artist'|'album'|'song'|'playlist'
-            if (object_type == 'artist') {
+            if ($object_type == 'artist') {
                 $artist = new Artist($object_id);
                 $artist->format();
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                         "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
                         "</$object_type>\n";
             }
-            if (object_type == 'album') {
+            if ($object_type == 'album') {
                 $album = new Album($object_id);
                 $album->format();
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                         "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
                         "</$object_type>\n";
             }
-            if (object_type == 'song') {
+            if ($object_type == 'song') {
                 $song = new Song($object_id);
                 $song->format();
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                         "\t<name><![CDATA[" . $song->f_title . "]]></name>\n" .
                         "</$object_type>\n";
             }
-            if (object_type == 'playlist') {
+            if ($object_type == 'playlist') {
                 if (str_replace('smart_', '', (string) $object_id) === (string) $object_id) {
                     $playlist     = new Playlist($object_id);
                     $playlist->format();
 
                     $playlist_name  = $playlist->name;
+                    $playitem_total = $playlist->get_media_count('song');
                 } else {
                     $playlist     = new Search(str_replace('smart_', '', (string) $object_id));
                     $playlist->format();
 
                     $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
+                    $playitem_total = $playlist->limit;
                 }
                 // don't allow unlimited smartlists or empty playlists into xml
                 if ((int) $playitem_total > 0) {
