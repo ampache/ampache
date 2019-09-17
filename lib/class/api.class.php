@@ -329,6 +329,31 @@ class Api
     } // ping
 
     /**
+     * goodbye
+     * MINIMUM_API_VERSION=400001
+     *
+     * Destroy session for auth key.
+     *
+     * @param array $input
+     * $input = array(auth = (string))
+     */
+    public static function goodbye($input)
+    {
+        $xmldata = array('server' => AmpConfig::get('version'), 'version' => self::$version, 'compatible' => '350001');
+
+        // Check and see if we should destroy the api sessions (done if valid sess is passed)
+        if (Session::exists('api', $input['auth'])) {
+            Session::destroy($input['auth']);
+            $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
+        }
+
+        debug_event('api.class', 'Goodbye Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
+
+        ob_end_clean();
+        echo XML_Data::keyed_array($xmldata);
+    } // goodbye
+
+    /**
      * artists
      * MINIMUM_API_VERSION=380001
      *
