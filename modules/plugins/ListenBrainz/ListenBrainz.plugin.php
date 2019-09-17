@@ -62,7 +62,7 @@ class Ampachelistenbrainz
             return false;
         }
 
-        Preference::insert('listenbrainz_token', 'ListenBrainz User Token', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', '25', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -116,7 +116,7 @@ class Ampachelistenbrainz
             return false;
         }
 
-        $album = new Album($song->album);
+        $album  = new Album($song->album);
         $artist = new Artist($song->artist);
 
         $additional_info = array();
@@ -172,8 +172,9 @@ class Ampachelistenbrainz
         );
         debug_event('listenbrainz.plugin', 'Submission option: ' . json_encode($opts), 5);
         $context = stream_context_create($opts);
-        $target = $this->scheme . '://' . $this->api_host . $url;
-        $buffer = file_get_contents($target, false, $context);
+        $target  = $this->scheme . '://' . $this->api_host . $url;
+        $buffer  = file_get_contents($target, false, $context);
+
         return $buffer;
     } // call_url
 
@@ -208,4 +209,3 @@ class Ampachelistenbrainz
         return true;
     } // load
 } // end Ampachelibrefm
-;
