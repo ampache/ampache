@@ -161,7 +161,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 div#autoupdate > span {
-	color: FF0000;
+	color: #FF0000;
 }
 
 
