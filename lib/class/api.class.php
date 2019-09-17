@@ -271,9 +271,13 @@ class Api
                 $db_results = Dba::read($sql);
                 $vcounts    = Dba::fetch_assoc($db_results);
 
+                // We consider playlists and smartlists to be playlists
                 $sql        = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`";
                 $db_results = Dba::read($sql);
                 $playlist   = Dba::fetch_assoc($db_results);
+                $sql        = "SELECT COUNT(`id`) AS `smartlist` FROM `search` WHERE `limit` > 0";
+                $db_results = Dba::read($sql);
+                $smartlist  = Dba::fetch_assoc($db_results);
 
                 $sql        = "SELECT COUNT(`id`) AS `catalog` FROM `catalog` WHERE `catalog_type`='local'";
                 $db_results = Dba::read($sql);
@@ -288,7 +292,7 @@ class Api
                     'songs' => $song['song'],
                     'albums' => $album['album'],
                     'artists' => $artist['artist'],
-                    'playlists' => $playlist['playlist'],
+                    'playlists' => ($playlist['playlist'] + $smartlist['smartlist']),
                     'videos' => $vcounts['video'],
                     'catalogs' => $catalog['catalog']));
 
