@@ -475,16 +475,7 @@ $t_logout    = T_('Log out');
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >
-                <?php
-                // remove when reborn has an icon for this
-                $icon_expand = UI::get_icon('expand', T_('Expand/Collapse'));
-                if (strstr($icon_expand, AmpConfig::get('web_path') . '/images/icon_expand.png')) {
-                    ?>
                     <span id="sidebar-header-content"></span>
-                <?php
-                } else {
-                    echo $icon_expand;
-                } ?>
                 </div>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
                     <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php'); ?>
