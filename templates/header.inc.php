@@ -475,7 +475,7 @@ $t_logout    = T_('Log out');
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >
-                    <span id="sidebar-header-content"><?php echo $isCollapsed ? '>>>' : '<<<'; ?></span>
+                    <span id="sidebar-header-content"></span>
                 </div>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
                     <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php'); ?>
@@ -503,12 +503,10 @@ $t_logout    = T_('Log out');
                         $('#sidebar-content-light').removeClass("sidebar-content-light-collapsed");
                         $('#sidebar-content').removeClass("sidebar-content-collapsed");
                         $('#sidebar-header').removeClass("sidebar-header-collapsed");
-                        $('#sidebar-header-content').text('<<<');
                     } else {
                         $('#sidebar-content').addClass("sidebar-content-collapsed");
                         $('#sidebar-header').addClass("sidebar-header-collapsed");
                         $('#sidebar-content-light').addClass("sidebar-content-light-collapsed");
-                        $('#sidebar-header-content').text('>>>');
                     }
 
                     $('#sidebar').show(500);
@@ -523,7 +521,7 @@ $t_logout    = T_('Log out');
             </div>
 
             <!-- Tiny little div, used to cheat the system -->
-            <div id="ajax-loading">Loading . . .</div>
+            <div id="ajax-loading"><?php echo T_('Loading') . ' . . .'; ?></div>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
