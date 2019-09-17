@@ -1458,12 +1458,12 @@ class Api
     public static function scrobble($input)
     {
         ob_end_clean();
-        $song_name   = scrub_in($input['song']);
-        $artist_name = scrub_in($input['artist']);
-        $album_name  = scrub_in($input['album']);
-        $song_mbid   = scrub_in($input['song_mbid']); //optional
-        $artist_mbid = scrub_in($input['artist_mbid']); //optional
-        $album_mbid  = scrub_in($input['album_mbid']); //optional
+        $song_name   = (string) scrub_in($input['song']);
+        $artist_name = (string) scrub_in($input['artist']);
+        $album_name  = (string) scrub_in($input['album']);
+        $song_mbid   = (string) scrub_in($input['song_mbid']); //optional
+        $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
+        $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
         $date        = scrub_in($input['date']); //optional
         $user_id     = Core::get_global('user')->id;
         $user        = new User($user_id);
