@@ -376,7 +376,7 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
-        if  ($input['type'] == 'playlists') {
+        if  ($input['type'] == 'playlist') {
             $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists());
         } else {
             $objects = self::$browse->get_objects();
@@ -384,7 +384,7 @@ class Api
         // echo out the resulting xml document
         ob_end_clean();
         echo XML_Data::indexes($objects, $input['type']);
-    } // artists
+    } // get_indexes
 
     /**
      * artists
