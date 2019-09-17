@@ -338,83 +338,6 @@ class XML_Data
     // keyed_array
 
     /**
-     * indexes
-     *
-     * This takes an array of artists and then returns a pretty xml document with the information
-     * we want
-     *
-     * @param    array    $objects     (description here...)
-     * @param    string   $object_type 'artist'|'album'|'song'|'playlist'
-     * @param    bool     $full_xml    whether to return a full XML document or just the node.
-     * @return   string   return xml
-     */
-    public static function indexes($objects, $object_type, $full_xml = true)
-    {
-        if (null == $include) {
-            $include = array();
-        }
-        $string = "<total_count>" . count($objects) . "</total_count>\n";
-
-        if (count($objects) > self::$limit || self::$offset > 0) {
-            if (null !== self::$limit) {
-                $objects = array_splice($objects, self::$offset, self::$limit);
-            } else {
-                $objects = array_splice($objects, self::$offset);
-            }
-        }
-        
-        foreach ($objects as $object_id) {
-            // 'artist'|'album'|'song'|'playlist'
-            if ($object_type == 'artist') {
-                $artist = new Artist($object_id);
-                $artist->format();
-                $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                        "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
-                        "</$object_type>\n";
-            }
-            if ($object_type == 'album') {
-                $album = new Album($object_id);
-                $album->format();
-                $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                        "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
-                        "</$object_type>\n";
-            }
-            if ($object_type == 'song') {
-                $song = new Song($object_id);
-                $song->format();
-                $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                        "\t<name><![CDATA[" . $song->f_title . "]]></name>\n" .
-                        "</$object_type>\n";
-            }
-            if ($object_type == 'playlist') {
-                if (str_replace('smart_', '', (string) $object_id) === (string) $object_id) {
-                    $playlist     = new Playlist($object_id);
-                    $playlist->format();
-
-                    $playlist_name  = $playlist->name;
-                    $playitem_total = $playlist->get_media_count('song');
-                } else {
-                    $playlist     = new Search(str_replace('smart_', '', (string) $object_id));
-                    $playlist->format();
-
-                    $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
-                    $playitem_total = $playlist->limit;
-                    $object_id      = 'smart_' . $object_id;
-                }
-                // don't allow unlimited smartlists or empty playlists into xml
-                if ((int) $playitem_total > 0) {
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                            "\t<name><![CDATA[" . $playlist_name . "]]></name>\n" .
-                            "</$object_type>\n";
-                }
-            }
-        } // end foreach objects
-
-        return self::output_xml($string, $full_xml);
-    }
-    // indexes
-
-    /**
      * tags
      *
      * This returns tags to the user, in a pretty xml document with the information
@@ -492,7 +415,7 @@ class XML_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums($artist->get_albums(null, true), $include, false);
+                $albums = self::albums($artist->get_albums(), $include, false);
             } else {
                 $albums = ($artist->albums ?: 0);
             }
@@ -574,7 +497,18 @@ class XML_Data
             if (in_array("songs", $include)) {
                 $songs = self::songs($album->get_songs(), array(), false);
             } else {
-                $songs = $album->song_count;
+                if (AmpConfig::get('album_group')) {
+                    $song_count = 0;
+                    $disc_ids   = $album->get_group_disks_ids();
+                    foreach ($disc_ids as $discid) {
+                        $disc = new Album($discid);
+                        $disc->format();
+                        $song_count = $song_count + $disc->song_count;
+                    }
+                    $songs = $song_count;
+                } else {
+                    $songs = $album->song_count;
+                }
             }
 
             $string .= "\t<year>" . $album->year . "</year>\n" .

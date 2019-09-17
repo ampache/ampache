@@ -201,7 +201,7 @@ class Rating extends database_object
         } else {
             $sql .= " GROUP BY object_id ORDER BY `rating` DESC ";
         }
-        debug_event('rating.class', 'get_highest_sql ' . $sql, 5);
+        //debug_event('rating.class', 'get_highest_sql ' . $sql, 5);
 
         return $sql;
     }
