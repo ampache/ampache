@@ -42,6 +42,8 @@ class AmpacheYourls
      */
     public function __construct()
     {
+        $this->description = T_('URL shorteners on shared links with YOURLS');
+
         return true;
     } // constructor
 

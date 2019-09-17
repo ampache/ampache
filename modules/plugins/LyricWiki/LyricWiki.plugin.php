@@ -36,6 +36,8 @@ class Ampachelyricwiki
      */
     public function __construct()
     {
+        $this->description = T_('Get lyrics from LyricWiki');
+
         return true;
     } // constructor
 

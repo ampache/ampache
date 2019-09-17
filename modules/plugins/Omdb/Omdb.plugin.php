@@ -36,6 +36,8 @@ class AmpacheOmdb
      */
     public function __construct()
     {
+        $this->description = T_('OMDb metadata integration');
+
         return true;
     }
 

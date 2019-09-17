@@ -38,6 +38,8 @@ class Ampacheflickr
      */
     public function __construct()
     {
+        $this->description = T_('Artist photos from Flickr');
+
         return true;
     } // constructor
 

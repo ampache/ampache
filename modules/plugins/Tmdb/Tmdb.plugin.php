@@ -40,6 +40,8 @@ class AmpacheTmdb
      */
     public function __construct()
     {
+        $this->description = T_('TMDb metadata integration');
+
         return true;
     }
 

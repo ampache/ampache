@@ -36,6 +36,8 @@ class AmpacheFacebook
      */
     public function __construct()
     {
+        $this->description = T_('Facebook share');
+
         return true;
     } // constructor
 

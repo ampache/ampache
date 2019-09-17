@@ -36,6 +36,8 @@ class AmpacheGravatar
      */
     public function __construct()
     {
+        $this->description = T_("User's avatars from Gravatar");
+
         return true;
     } // constructor
 

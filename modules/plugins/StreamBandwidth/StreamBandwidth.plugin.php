@@ -40,6 +40,8 @@ class AmpacheStreamBandwidth
      */
     public function __construct()
     {
+        $this->description = T_('Control bandwidth per user');
+
         return true;
     } // constructor
 

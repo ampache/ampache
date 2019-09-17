@@ -42,6 +42,8 @@ class AmpacheAmazon
      */
     public function __construct()
     {
+        $this->description = T_('Amazon art search');
+
         return true;
     }
 

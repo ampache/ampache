@@ -41,6 +41,8 @@ class AmpacheHeadphones
      */
     public function __construct()
     {
+        $this->description = T_('Automatically download accepted Wanted List albums with Headphones');
+
         return true;
     } // constructor
 

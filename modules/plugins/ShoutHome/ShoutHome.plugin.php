@@ -40,6 +40,8 @@ class AmpacheShoutHome
      */
     public function __construct()
     {
+        $this->description = T_('Shoutbox on homepage');
+
         return true;
     }
 

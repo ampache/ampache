@@ -41,6 +41,8 @@ class AmpacheRSSView
      */
     public function __construct()
     {
+        $this->description = T_('RSS View');
+
         return true;
     }
 

@@ -42,6 +42,8 @@ class AmpachePaypal
      */
     public function __construct()
     {
+        $this->description = T_('PayPal donation button on user page');
+
         return true;
     }
 

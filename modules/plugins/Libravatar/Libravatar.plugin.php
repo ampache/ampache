@@ -36,6 +36,8 @@ class AmpacheLibravatar
      */
     public function __construct()
     {
+        $this->description = T_("Users avatar's with Libravatar");
+
         return true;
     } // constructor
 

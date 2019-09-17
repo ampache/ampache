@@ -40,6 +40,8 @@ class AmpacheFriendsTimeline
      */
     public function __construct()
     {
+        $this->description = T_("Friend's Timeline on homepage");
+
         return true;
     }
 
