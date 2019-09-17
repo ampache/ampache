@@ -282,16 +282,27 @@ class User extends database_object
         $user_id   = null;
         $apikey    = trim($apikey);
         if (!empty($apikey)) {
+            // check for legacy unencrypted apikey
             $sql        = "SELECT `id` FROM `user` WHERE `apikey` = ?";
             $db_results = Dba::read($sql, array($apikey));
             $results    = Dba::fetch_assoc($db_results);
 
             if ($results['id']) {
-                $user_id = new User($results['id']);
+                return new User($results['id']);
+            }
+            // check for sha256 hashed apikey
+            $sql        = "SELECT `id`, `apikey` FROM `user`";
+            $db_results = Dba::read($sql);
+            $results    = Dba::fetch_assoc($db_results);
+
+            foreach ($results as $users) {
+                if (hash('sha256', $users['apikey']) == $apikey) {
+                    return new User($users['id']);
+                }
             }
         }
 
-        return $user_id;
+        return null;
     } // get_from_apikey
 
     /**
