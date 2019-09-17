@@ -350,6 +350,9 @@ class XML_Data
      */
     public static function indexes($objects, $object_type, $full_xml = true)
     {
+        if (null == $include) {
+            $include = array();
+        }
         $string = "<total_count>" . count($objects) . "</total_count>\n";
 
         if (count($objects) > self::$limit || self::$offset > 0) {
@@ -365,40 +368,22 @@ class XML_Data
             if ($object_type == 'artist') {
                 $artist = new Artist($object_id);
                 $artist->format();
-                $albums = $artist->get_albums(null, true);
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                        "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
-                foreach ($albums as $album_id) {
-                    if ($album_id) {
-                        $album = new Album($album_id[0]);
-                        $album->format();
-                        $string .= "\t\t<album id=\"" . $album_id[0] .
-                                '"><![CDATA[' . $album->f_name .
-                                "]]></album>\n";
-                    }
-                }
-                $string .= "</$object_type>\n";
+                        "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
+                        "</$object_type>\n";
             }
             if ($object_type == 'album') {
                 $album = new Album($object_id);
                 $album->format();
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                         "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
-                        "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
                         "</$object_type>\n";
             }
             if ($object_type == 'song') {
                 $song = new Song($object_id);
                 $song->format();
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                        "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
                         "\t<name><![CDATA[" . $song->f_title . "]]></name>\n" .
-                        "\t\t<artist id=\"" . $song->artist .
-                        '"><![CDATA[' . $song->get_artist_name() .
-                        "]]></artist>\n" .
-                        "\t\t<album id=\"" . $song->album .
-                        '"><![CDATA[' . $song->get_album_name() .
-                        "]]></album>\n" .
                         "</$object_type>\n";
             }
             if ($object_type == 'playlist') {
@@ -414,18 +399,13 @@ class XML_Data
 
                     $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
                     $playitem_total = $playlist->limit;
+                    $object_id      = 'smart_' . $object_id;
                 }
                 // don't allow unlimited smartlists or empty playlists into xml
                 if ((int) $playitem_total > 0) {
-                    $songs = $playlist->get_items();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                            "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
-                    foreach ($songs as $song_id) {
-                        if ($song_id[object_type] == 'song') {
-                            $string .= "\t\t<playlisttrack>" . $song_id['object_id'] . "</playlisttrack>\n";
-                        }
-                    }
-                    $string .= "</$object_type>\n";
+                            "\t<name><![CDATA[" . $playlist_name . "]]></name>\n" .
+                            "</$object_type>\n";
                 }
             }
         } // end foreach objects
@@ -512,7 +492,7 @@ class XML_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums($artist->get_albums(), $include, false);
+                $albums = self::albums($artist->get_albums(null, true), $include, false);
             } else {
                 $albums = ($artist->albums ?: 0);
             }
@@ -594,18 +574,7 @@ class XML_Data
             if (in_array("songs", $include)) {
                 $songs = self::songs($album->get_songs(), array(), false);
             } else {
-                if (AmpConfig::get('album_group')) {
-                    $song_count = 0;
-                    $disc_ids   = $album->get_group_disks_ids();
-                    foreach ($disc_ids as $discid) {
-                        $disc = new Album($discid);
-                        $disc->format();
-                        $song_count = $song_count + $disc->song_count;
-                    }
-                    $songs = $song_count;
-                } else {
-                    $songs = $album->song_count;
-                }
+                $songs = $album->song_count;
             }
 
             $string .= "\t<year>" . $album->year . "</year>\n" .
