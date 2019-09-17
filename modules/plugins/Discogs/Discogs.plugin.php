@@ -39,6 +39,8 @@ class AmpacheDiscogs
      */
     public function __construct()
     {
+        $this->description = T_('Discogs metadata integration');
+
         return true;
     }
 

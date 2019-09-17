@@ -38,6 +38,8 @@ class AmpacheGoogleMaps
      */
     public function __construct()
     {
+        $this->description = T_("Show user's location with Google Maps");
+
         return true;
     } // constructor
 

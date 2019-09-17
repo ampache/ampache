@@ -40,6 +40,8 @@ class AmpacheTheaudiodb
      */
     public function __construct()
     {
+        $this->description = T_('TheAudioDb metadata integration');
+
         return true;
     }
 

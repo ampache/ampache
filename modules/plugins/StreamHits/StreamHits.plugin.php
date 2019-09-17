@@ -40,6 +40,8 @@ class AmpacheStreamHits
      */
     public function __construct()
     {
+        $this->description = T_('Control hits per user');
+
         return true;
     } // constructor
 

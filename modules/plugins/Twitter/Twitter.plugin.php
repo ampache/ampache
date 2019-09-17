@@ -36,6 +36,8 @@ class AmpacheTwitter
      */
     public function __construct()
     {
+        $this->description = T_('Twitter share');
+
         return true;
     } // constructor
 

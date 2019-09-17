@@ -40,6 +40,8 @@ class AmpacheGoogleAnalytics
      */
     public function __construct()
     {
+        $this->description = T_('Google Analytics statistics');
+
         return true;
     }
 

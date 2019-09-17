@@ -41,6 +41,8 @@ class AmpacheMatomo
      */
     public function __construct()
     {
+        $this->description = T_('Matomo statistics');
+
         return true;
     }
 

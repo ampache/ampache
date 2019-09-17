@@ -46,7 +46,8 @@ class AmpacheLastfm
      */
     public function __construct()
     {
-        $this->url = $this->scheme . '://' . $this->host;
+        $this->description = T_('Scrobble songs you play to your Last.FM account');
+        $this->url         = $this->scheme . '://' . $this->host;
 
         return true;
     } // constructor

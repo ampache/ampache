@@ -41,6 +41,8 @@ class AmpacheFlattr
      */
     public function __construct()
     {
+        $this->description = T_('Flattr donation button on user page');
+
         return true;
     }
 

@@ -41,6 +41,8 @@ class AmpacheCatalogFavorites
      */
     public function __construct()
     {
+        $this->description = T_('Catalog favorites on homepage');
+
         return true;
     }
 

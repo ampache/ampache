@@ -40,6 +40,8 @@ class AmpacheStreamTime
      */
     public function __construct()
     {
+        $this->description = T_('Control time per user');
+
         return true;
     } // constructor
 

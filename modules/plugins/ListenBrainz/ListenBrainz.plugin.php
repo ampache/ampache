@@ -44,7 +44,8 @@ class Ampachelistenbrainz
      */
     public function __construct()
     {
-        $this->url = $this->scheme . '://' . $this->host;
+        $this->description = T_('Scrobble songs you play to your ListenBrainz Account');
+        $this->url         = $this->scheme . '://' . $this->host;
 
         return true;
     } // constructor
@@ -87,8 +88,8 @@ class Ampachelistenbrainz
     } // upgrade
 
     /**
-     * save_songplay
-     * This takes care of queueing and then submitting the tracks.
+     * save_mediaplay
+     * This takes care of queuing and then submitting the tracks.
      */
     public function save_mediaplay($song)
     {

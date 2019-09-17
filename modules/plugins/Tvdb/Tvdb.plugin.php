@@ -40,6 +40,8 @@ class AmpacheTvdb
      */
     public function __construct()
     {
+        $this->description = T_('TVDb metadata integration');
+
         return true;
     }
 
