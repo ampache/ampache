@@ -396,7 +396,7 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
-        if  ($input['type'] == 'playlist') {
+        if ($input['type'] == 'playlist') {
             $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists());
         } else {
             $objects = self::$browse->get_objects();
