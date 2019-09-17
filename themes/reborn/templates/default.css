@@ -161,7 +161,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 div#autoupdate > span {
-	color: FF0000;
+	color: #FF0000;
 }
 
 
@@ -1658,6 +1658,11 @@ input.list-header-navmenu-input {
 
 span.item-count {
     font-size: 11px;
+}
+
+span.query-count {
+    font-size: 11px;
+    float: inline-end;
 }
 
 a.option-list {

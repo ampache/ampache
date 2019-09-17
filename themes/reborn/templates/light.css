@@ -245,6 +245,14 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     border-color: #000;
 }
 
+span#sidebar-header-content::after {
+	content: "<<<";
+}
+
+#sidebar-header.sidebar-header-collapsed > span#sidebar-header-content::after {
+	content: ">>>";
+}
+
 /***********************************************
                   Rightbar
 ***********************************************/
@@ -606,7 +614,7 @@ div.jp-playlist li {
     border-color: #fff;
 }
 
-span.item-count {
+span.item-count, span.query-count {
     color: #000;
 }
 

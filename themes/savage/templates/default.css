@@ -160,6 +160,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #c33;
 }
 
+div#autoupdate > span {
+	color: #FF0000;
+}
+
+
 /***********************************************
            Main
 ***********************************************/
@@ -237,6 +242,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #mobileheader {
     height: 64px;
+    padding-bottom: 64px;
+    padding-top: 24px;
 }
 
 #header #headerbox {
@@ -1653,6 +1660,11 @@ span.item-count {
     font-size: 11px;
 }
 
+span.query-count {
+    font-size: 11px;
+    float: inline-end;
+}
+
 a.option-list {
     border: solid 1px transparent;
     width: 100%;
@@ -1682,7 +1694,6 @@ a.option-list:hover {
     text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
     text-decoration: none;
     min-width: 100px;
-    background-color: #363F4A;
 }
 
 .formValidation {
