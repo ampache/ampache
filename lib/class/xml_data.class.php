@@ -365,22 +365,40 @@ class XML_Data
             if ($object_type == 'artist') {
                 $artist = new Artist($object_id);
                 $artist->format();
+                $albums = $artist->get_albums(null, true);
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                        "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
-                        "</$object_type>\n";
+                        "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
+                foreach ($albums as $album_id) {
+                    if ($album_id) {
+                        $album = new Album($album_id);
+                        $album->format();
+                        $string .= "\t<album id=\"" . $album_id .
+                                '"><![CDATA[' . $album->f_name .
+                                "]]></album>\n";
+                    }
+                }
+                $string .=  "</$object_type>\n";
             }
             if ($object_type == 'album') {
                 $album = new Album($object_id);
                 $album->format();
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                         "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
+                        "\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
                         "</$object_type>\n";
             }
             if ($object_type == 'song') {
                 $song = new Song($object_id);
                 $song->format();
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                        "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
                         "\t<name><![CDATA[" . $song->f_title . "]]></name>\n" .
+                        "\t<artist id=\"" . $song->artist .
+                        '"><![CDATA[' . $song->get_artist_name() .
+                        "]]></artist>\n" .
+                        "\t<album id=\"" . $song->album .
+                        '"><![CDATA[' . $song->get_album_name() .
+                        "]]></album>\n";
                         "</$object_type>\n";
             }
             if ($object_type == 'playlist') {
@@ -399,9 +417,15 @@ class XML_Data
                 }
                 // don't allow unlimited smartlists or empty playlists into xml
                 if ((int) $playitem_total > 0) {
+                    $songs = $playlist->get_items();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                            "\t<name><![CDATA[" . $playlist_name . "]]></name>\n" .
-                            "</$object_type>\n";
+                            "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
+                    foreach ($songs as $song_id) {
+                    if ($song_id) {
+                        $string .= "\t<playlisttrack>" . $song_id . "</playlisttrack>\n";
+                        }
+                    }
+                    $string .= "</$object_type>\n";
                 }
             }
         } // end foreach objects
