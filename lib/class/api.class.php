@@ -141,21 +141,18 @@ class Api
         // Log the attempt
         debug_event('API', "Destroy Auth Key Attempt, IP:$ip Key:$authKey", 5);
 
-        if(isset($authKey)){
-            if(Session::destroy($authKey)) {
+        if (isset($authKey)) {
+            if (Session::destroy($authKey)) {
                 if ($outputFormat == 'json') {
                     echo JSON_Data::single_string('success');
-                }
-                else {  // Defaults to XML
+                } else {  // Defaults to XML
                     echo XML_Data::single_string('success');
                 }
                 return true;
-            }
-            else { //This shouldn't really happen
+            } else { //This shouldn't really happen
                 if ($outputFormat == 'json') {
                     echo JSON_Data::error('401', T_('Something went wrong'));
-                }
-                else {  // Defaults to XML
+                } else {  // Defaults to XML
                     echo XML_Data::error('401', T_('Something went wrong'));
                 }
                 return false;
@@ -234,10 +231,9 @@ class Api
                     debug_event('api.class', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login Failed: timestamp out of range'));
                     if ($outputFormat == 'json') {
-                      echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
-                    }
-                    else {  // Defaults to XML
-                      echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                        echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    } else {  // Defaults to XML
+                        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
                     }
                     return false;
                 }
@@ -251,10 +247,9 @@ class Api
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Invalid Username/Password'));
                     if ($outputFormat == 'json') {
-                      echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
-                    }
-                    else {  // Defaults to XML
-                      echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                        echo JSON_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    } else {  // Defaults to XML
+                        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
                     }
                     return false;
                 }
@@ -1418,8 +1413,7 @@ class Api
                 if (!$media->id) {
                     if ($outputFormat == 'json') {
                         echo JSON_Data::error('400', T_('Media Object Invalid or Not Specified'));
-                    }
-                    else {  // Defaults to XML
+                    } else {  // Defaults to XML
                         echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
                     }
                 }
@@ -1643,8 +1637,7 @@ class Api
 
                     if ($outputFormat == 'json') {
                         echo JSON_Data::users($users);
-                    }
-                    else {  // Defaults to XML
+                    } else {  // Defaults to XML
                         echo XML_Data::users($users);
                     }
                 } else {
@@ -1683,8 +1676,7 @@ class Api
 
                     if ($outputFormat == 'json') {
                         echo JSON_Data::users($users);
-                    }
-                    else {  // Defaults to XML
+                    } else {  // Defaults to XML
                         echo XML_Data::users($users);
                     }
 
@@ -1723,8 +1715,7 @@ class Api
 
                     if ($outputFormat == 'json') {
                         echo JSON_Data::single_string('success');                    
-                    }
-                    else {  // Defaults to XML                
+                    } else {  // Defaults to XML                
                         echo XML_Data::single_string('success');
                     }
                 }
