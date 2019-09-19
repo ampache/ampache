@@ -49,6 +49,7 @@ class Subsonic_XML_Data
     const AMPACHEID_VIDEO     = 500000000;
     const AMPACHEID_PODCAST   = 600000000;
     const AMPACHEID_PODCASTEP = 700000000;
+    const AMPACHEID_PLAYLIST  = 800000000;
 
     public static $enable_json_checks = false;
 
@@ -114,6 +115,14 @@ class Subsonic_XML_Data
         return $episodeid + self::AMPACHEID_PODCASTEP;
     }
 
+    /**
+     * @param integer $plistid
+     */
+    public static function getPlaylistId($plistid)
+    {
+        return $plistid + self::AMPACHEID_PLAYLIST;
+    }
+
     private static function cleanId($objectid)
     {
         // Remove all al-, ar-, ... prefixs
@@ -174,7 +183,12 @@ class Subsonic_XML_Data
 
     public static function isPodcastEp($episodeid)
     {
-        return (self::cleanId($episodeid) >= self::AMPACHEID_PODCASTEP);
+        return (self::cleanId($episodeid) >= self::AMPACHEID_PODCASTEP && $episodeid < self::AMPACHEID_PLAYLIST);
+    }
+
+    public static function isPlaylist($plistid)
+    {
+        return (self::cleanId($plistid) >= self::AMPACHEID_PLAYLIST);
     }
 
     public static function getAmpacheType($objectid)
@@ -193,6 +207,8 @@ class Subsonic_XML_Data
             return "podcast";
         } elseif (self::isPodcastEp($objectid)) {
             return "podcast_episode";
+        } elseif (self::isPlaylist($objectid)) {
+            return "playlist";
         }
 
         return "";
@@ -823,7 +839,7 @@ class Subsonic_XML_Data
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        $xplaylist->addAttribute('id', (string) $playlist->id);
+        $xplaylist->addAttribute('id', (string) self::getPlaylistId($playlist->id));;
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', $user->username);

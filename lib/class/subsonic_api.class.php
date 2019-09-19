@@ -859,7 +859,7 @@ class Subsonic_Api
             $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistid), 'song');
             Subsonic_XML_Data::addSmartPlaylist($r, $playlist, true);
         } else {
-            $playlist = new Playlist($playlistid);
+            $playlist = new Playlist(Subsonic_XML_Data::getAmpacheId($playlistid));
             Subsonic_XML_Data::addPlaylist($r, $playlist, true);
         }
         self::apiOutput($input, $r);
@@ -937,10 +937,9 @@ class Subsonic_Api
     public static function updateplaylist($input)
     {
         $playlistId = self::check_parameter($input, 'playlistId');
-
-        $name    = $input['name'];
+        $name       = $input['name'];
         // Not supported. $comment = $input['comment'];
-        $public  = ($input['public'] === "true");
+        $public = ($input['public'] === "true");
 
         if (!Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
             $songIdToAdd       = $input['songIdToAdd'];
@@ -1066,6 +1065,7 @@ class Subsonic_Api
     public static function getcoverart($input)
     {
         $id   = str_replace('al-', '', self::check_parameter($input, 'id', true));
+        $id   = str_replace('pl-', '', $id);
         $size = $input['size'];
 
         $art = null;
