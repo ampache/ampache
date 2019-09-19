@@ -1027,8 +1027,6 @@ class Api
         else {  // Defaults to XML
             echo XML_Data::playlists(array($uid));
         }
-    }
-        echo XML_Data::playlists(array($uid);
     } // playlist_create
 
     /**
@@ -1572,9 +1570,9 @@ class Api
                     echo JSON_Data::artists($results, array());
                 }
                 if ($type === 'album') {
-                    echo JSON_Data::albums($results, array());              
-            }
-            else {  // Defaults to XML
+                    echo JSON_Data::albums($results, array());
+                }
+            } else {  // Defaults to XML
                 if ($type === 'song') {
                     echo XML_Data::songs($results);
                 }
@@ -1583,6 +1581,7 @@ class Api
                 }
                 if ($type === 'album') {
                     echo XML_Data::albums($results, array());
+                }
             }
         }
     } // stats
