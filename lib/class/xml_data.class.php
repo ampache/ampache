@@ -376,9 +376,9 @@ class XML_Data
                         "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
                 foreach ($albums as $album_id) {
                     if ($album_id) {
-                        $album = new Album($album_id);
+                        $album = new Album($album_id[0]);
                         $album->format();
-                        $string .= "\t<album id=\"" . $album_id .
+                        $string .= "\t<album id=\"" . $album_id[0] .
                                 '"><![CDATA[' . $album->f_name .
                                 "]]></album>\n";
                     }
@@ -427,8 +427,8 @@ class XML_Data
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
                     foreach ($songs as $song_id) {
-                        if ($song_id) {
-                            $string .= "\t<playlisttrack>" . $song_id . "</playlisttrack>\n";
+                        if ($song_id[0]) {
+                            $string .= "\t<playlisttrack>" . $song_id[0] . "</playlisttrack>\n";
                         }
                     }
                     $string .= "</$object_type>\n";
