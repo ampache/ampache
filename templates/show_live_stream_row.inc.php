@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,14 +25,14 @@
     <div class="cel_play_hover">
     <?php
         if (AmpConfig::get('directplay')) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id, 'play', T_('Play live stream'),'play_live_stream_' . $libitem->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id, 'play', T_('Play live stream'), 'play_live_stream_' . $libitem->id);
         }
     ?>
     </div>
 </td>
 <td class="cel_cover">
     <?php
-    $thumb = (isset($browse) && !$browse->get_grid_view()) ? 11 : 1;
+    $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     $libitem->display_art($thumb);
     ?>
 </td>
@@ -41,16 +41,15 @@
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <td class="cel_action">
     <?php
-        if (Access::check('interface','50')) {
+        if (Access::check('interface', '50')) {
             ?>
         <a id="<?php echo 'edit_live_stream_' . $libitem->id ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_live_stream_' . $libitem->id ?>', '<?php echo T_('Live Stream edit') ?>',  'live_stream_')">
-            <?php echo UI::get_icon('edit', T_('Edit'));
-            ?>
+            <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
-        <?php 
+        <?php
         }
-        if (Access::check('interface','75')) {
-            echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id,'delete', T_('Delete'),'delete_live_stream_' . $libitem->id);
+        if (Access::check('interface', '75')) {
+            echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_live_stream_' . $libitem->id);
         }
     ?>
 </td>

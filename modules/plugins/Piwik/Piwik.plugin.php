@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,8 +56,8 @@ class AmpachePiwik
             return false;
         }
 
-        Preference::insert('piwik_site_id','Piwik Site ID','1',100,'string','plugins','piwik');
-        Preference::insert('piwik_url','Piwik URL', AmpConfig::get('web_path') . '/piwik/',100,'string','plugins',$this->name);
+        Preference::insert('piwik_site_id', 'Piwik Site ID', '1', 100, 'string', 'plugins', 'piwik');
+        Preference::insert('piwik_url', 'Piwik URL', AmpConfig::get('web_path') . '/piwik/', 100, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -102,14 +102,14 @@ class AmpachePiwik
         echo "var u='" . scrub_out($this->piwik_url) . "';\n";
         echo "_paq.push(['setTrackerUrl', u+'piwik.php']);\n";
         echo "_paq.push(['setSiteId', " . scrub_out($this->site_id) . "]);\n";
-        if ($GLOBALS['user']->id > 0) {
-            echo "_paq.push(['setUserId', '" . $GLOBALS['user']->username . "']);\n";
+        if (Core::get_global('user')->id > 0) {
+            echo "_paq.push(['setUserId', '" . Core::get_global('user')->username . "']);\n";
         }
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
         echo "g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n";
         echo "})();\n";
         echo "</script>\n";
-        echo "<noscript><p><img src='" . scrub_out($this->piwik_url) . "piwik.php?idsite=" . scrub_out($this->site_id) . "' style='border:0;' alt='' /></p></noscript>\n";
+        echo "<noscript><p><img src='" . scrub_out($this->piwik_url) . "piwik.php?idsite=" . scrub_out($this->site_id) . "' style='border:0;' alt= '' /></p></noscript>\n";
         echo "<!-- End Piwik Code -->\n";
     }
 
@@ -125,13 +125,15 @@ class AmpachePiwik
 
         $this->site_id = trim($data['piwik_site_id']);
         if (!strlen($this->site_id)) {
-            debug_event($this->name,'No Piwik Site ID, user field plugin skipped','3');
+            debug_event('piwik.plugin', 'No Piwik Site ID, user field plugin skipped', 3);
+
             return false;
         }
 
         $this->piwik_url = trim($data['piwik_url']);
         if (!strlen($this->piwik_url)) {
-            debug_event($this->name,'No Piwik URL, user field plugin skipped','3');
+            debug_event('piwik.plugin', 'No Piwik URL, user field plugin skipped', 3);
+
             return false;
         }
 

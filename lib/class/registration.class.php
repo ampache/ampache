@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,8 +43,12 @@ class Registration
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function send_confirmation($username, $fullname, $email, $website, $password, $validation)
+    public static function send_confirmation($username, $fullname, $email, $website, $validation)
     {
+        if (!Mailer::is_mail_enabled()) {
+            return false;
+        }
+
         $mailer = new Mailer();
 
         // We are the system
@@ -102,8 +106,7 @@ Website: %s
         $mailer->set_default_sender();
 
         $mailer->subject = sprintf(T_("Account enabled at %s"), AmpConfig::get('site_title'));
-        $mailer->message = sprintf(T_("Your account %s has been enabled\n\n
-            Please logon using %s"), $username, AmpConfig::get('web_path') . "/login.php");
+        $mailer->message = sprintf(T_("Your account %s has been enabled\n\nPlease logon using %s"), $username, AmpConfig::get('web_path') . "/login.php");
 
         $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;
@@ -124,13 +127,13 @@ Website: %s
         }
 
         /* Check for existance */
-        $fp = fopen($filename,'r');
+        $filepointer = fopen($filename, 'r');
 
-        if (!$fp) {
+        if (!$filepointer) {
             return false;
         }
 
-        $data = fread($fp,filesize($filename));
+        $data = fread($filepointer, filesize($filename));
 
         /* Scrub and show */
         echo $data;

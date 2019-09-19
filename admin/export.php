@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,14 +22,15 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface','100')) {
+if (!Access::check('interface', '100')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 UI::show_header();
 
-/* Switch on Action */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'export':
 
@@ -47,7 +48,7 @@ switch ($_REQUEST['action']) {
         header("Content-Transfer-Encoding: binary");
         header("Cache-control: public");
 
-        $date = date("d/m/Y",time());
+        $date = date("d/m/Y", time());
 
         switch ($_REQUEST['export_format']) {
             case 'itunes':
@@ -63,7 +64,7 @@ switch ($_REQUEST['action']) {
         } // end switch on format
 
         // We don't want the footer so we're done here
-        exit;
+        return false;
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_export.inc.php');
     break;

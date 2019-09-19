@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,19 +26,15 @@
 <li>
 <?php if (isset($_REQUEST['all'])) {
     ?>
-    <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo UI::get_icon('disable');
-    ?></a>
-    <?php echo T_('Show Unique');
-    ?>
-<?php 
+    <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo UI::get_icon('disable'); ?></a>
+    <?php echo T_('Show Unique'); ?>
+<?php
 } else {
-    ?>
-    <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo UI::get_icon('add');
-    ?></a>
-    <?php echo T_('Show All');
-    ?>
-<?php 
-}?>
+        ?>
+    <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo UI::get_icon('add'); ?></a>
+    <?php echo T_('Show All'); ?>
+<?php
+    }?>
 </li>
 </ul>
 </div>
@@ -54,20 +50,17 @@
      <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 <?php foreach ($history as $data) {
-    ?>
-<tr class="<?php echo UI::flip_class();
-    ?>">
+        ?>
+<tr class="<?php echo UI::flip_class(); ?>">
     <td class="cel_date">
-        <?php echo date("d/m/Y H\hi",$data['date']);
-    ?>
+        <?php echo date("d/m/Y H\hi", $data['date']); ?>
     </td>
     <td class="cel_ipaddress">
-        <?php echo inet_ntop($data['ip']);
-    ?>
+        <?php echo inet_ntop($data['ip']); ?>
     </td>
 </tr>
-<?php 
-} ?>
+<?php
+    } ?>
 <tr class="th-bottom">
   <th class="cel_date"><?php echo T_('Date'); ?></th>
      <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>

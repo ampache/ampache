@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,12 +32,11 @@
                 <td>
                     <?php if (Access::check('interface', 50)) {
     ?>
-                    <input type="text" name="mbid" value="<?php echo $libitem->mbid;
-    ?>" />
-                    <?php 
+                    <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
+                    <?php
 } else {
-    echo $libitem->mbid;
-} ?>
+        echo $libitem->mbid;
+    } ?>
                 </td>
             </tr>
             <tr>
@@ -57,14 +56,13 @@
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
             <?php if (AmpConfig::get('label')) {
-    ?>
+        ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Labels') ?></td>
-                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo Label::get_display($libitem->labels);
-    ?>" /></td>
+                <td><input type="text" name="edit_labels" id="edit_labels" value="<?php echo Label::get_display($libitem->labels); ?>" /></td>
             </tr>
-            <?php 
-} ?>
+            <?php
+    } ?>
             <tr>
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="overwrite_childs" value="checked" />&nbsp;<?php echo T_('Overwrite tags of sub albums and sub songs') ?></td>

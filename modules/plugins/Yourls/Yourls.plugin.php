@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,9 +58,9 @@ class AmpacheYourls
             return false;
         }
 
-        Preference::insert('yourls_domain','YOURLS domain name','','75','string','plugins',$this->name);
-        Preference::insert('yourls_use_idn','YOURLS use IDN','0','75','boolean','plugins',$this->name);
-        Preference::insert('yourls_api_key','YOURLS api key','','75','string','plugins',$this->name);
+        Preference::insert('yourls_domain', 'YOURLS domain name', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('yourls_use_idn', 'YOURLS use IDN', '0', '75', 'boolean', 'plugins', $this->name);
+        Preference::insert('yourls_api_key', 'YOURLS api key', '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -89,15 +89,16 @@ class AmpacheYourls
     public function shortener($url)
     {
         if (empty($this->yourls_domain) || empty($this->yourls_api_key)) {
-            debug_event($this->name, 'YOURLS domain or api key missing', '3');
+            debug_event('yourls.plugin', 'YOURLS domain or api key missing', 3);
+
             return false;
         }
-        
+
         $shorturl = '';
-    
+
         $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api_key . '&action=shorturl&format=simple&url=' . urlencode($url);
         try {
-            debug_event($this->name, 'YOURLS api call: ' . $apiurl, '5');
+            debug_event('yourls.plugin', 'YOURLS api call: ' . $apiurl, 5);
             $request  = Requests::get($apiurl, array(), Core::requests_options());
             $shorturl = $request->body;
             if ($this->yourls_use_idn) {
@@ -108,16 +109,17 @@ class AmpacheYourls
                 $shorturl     = http_build_url($purl);
             }
         } catch (Exception $e) {
-            debug_event($this->name, 'YOURLS api http exception: ' . $e->getMessage(), '1');
+            debug_event('yourls.plugin', 'YOURLS api http exception: ' . $e->getMessage(), 1);
+
             return false;
         }
-        
+
         return $shorturl;
     }
-    
+
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
@@ -128,19 +130,21 @@ class AmpacheYourls
         if (strlen(trim($data['yourls_domain']))) {
             $this->yourls_domain = trim($data['yourls_domain']);
         } else {
-            debug_event($this->name,'No YOURLS domain, shortener skipped','3');
+            debug_event('yourls.plugin', 'No YOURLS domain, shortener skipped', 3);
+
             return false;
         }
         if (strlen(trim($data['yourls_api_key']))) {
             $this->yourls_api_key = trim($data['yourls_api_key']);
         } else {
-            debug_event($this->name,'No YOURLS api key, shortener skipped','3');
+            debug_event('yourls.plugin', 'No YOURLS api key, shortener skipped', 3);
+
             return false;
         }
-        
-        $this->yourls_use_idn = (intval($data['yourls_use_idn']) == 1);
+
+        $this->yourls_use_idn = ((int) ($data['yourls_use_idn']) == 1);
 
         return true;
     } // load
 } // end AmpacheYourls
-?>
+;

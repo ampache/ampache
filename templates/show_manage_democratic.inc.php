@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,39 +36,26 @@ UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
             $democratic = new Democratic($democratic_id);
             $democratic->format();
             $playlist = new Playlist($democratic->base_playlist);
-            $playlist->format();
-            ?>
-    <tr class="<?php echo UI::flip_class();
-            ?>">
-        <td><?php echo scrub_out($democratic->name);
-            ?></td>
-        <td><?php echo $playlist->f_link;
-            ?></td>
-        <td><?php echo $democratic->f_cooldown;
-            ?></td>
-        <td><?php echo $democratic->f_level;
-            ?></td>
-        <td><?php echo $democratic->f_primary;
-            ?></td>
-        <td><?php echo $democratic->count_items();
-            ?></td>
+            $playlist->format(); ?>
+    <tr class="<?php echo UI::flip_class(); ?>">
+        <td><?php echo scrub_out($democratic->name); ?></td>
+        <td><?php echo $playlist->f_link; ?></td>
+        <td><?php echo $democratic->f_cooldown; ?></td>
+        <td><?php echo $democratic->f_level; ?></td>
+        <td><?php echo $democratic->f_primary; ?></td>
+        <td><?php echo $democratic->count_items(); ?></td>
         <td>
-        <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id,'all', T_('Play'),'play_democratic');
-            ?>
-        <a href="<?php echo AmpConfig::get('web_path');
-            ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id);
-            ?>"><?php echo UI::get_icon('delete', T_('Delete'));
-            ?></a>
+        <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic'); ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id); ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
         </td>
     </tr>
-    <?php 
+    <?php
         } if (!count($playlists)) {
             ?>
     <tr>
-        <td colspan="7"><span class="nodata"><?php echo T_('No democratic found');
-            ?></span></td>
+        <td colspan="7"><span class="nodata"><?php echo T_('No democratic found'); ?></span></td>
     </tr>
-<?php 
+<?php
         } ?>
 </table>
 <br />

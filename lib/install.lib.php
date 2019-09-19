@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,7 @@
 /**
  * split_sql
  * splits up a standard SQL dump file into distinct sql queries
+ * @param string $sql
  */
 function split_sql($sql)
 {
@@ -31,26 +32,27 @@ function split_sql($sql)
     $buffer    = array();
     $ret       = array();
     $in_string = false;
-    for ($i=0; $i<strlen($sql)-1; $i++) {
-        if ($sql[$i] == ";" && !$in_string) {
-            $ret[] = substr($sql, 0, $i);
-            $sql   = substr($sql, $i + 1);
-            $i     = 0;
+    for ($count = 0; $count < strlen($sql) - 1; $count++) {
+        if ($sql[$count] == ";" && !$in_string) {
+            $ret[] = substr($sql, 0, $count);
+            $sql   = substr($sql, $count + 1);
+            $count = 0;
         }
-        if ($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
+        if ($in_string && ($sql[$count] == $in_string) && $buffer[1] != "\\") {
             $in_string = false;
-        } elseif (!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
-            $in_string = $sql[$i];
+        } elseif (!$in_string && ($sql[$count] == '"' || $sql[$count] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
+            $in_string = $sql[$count];
         }
         if (isset($buffer[1])) {
             $buffer[0] = $buffer[1];
         }
-        $buffer[1] = $sql[$i];
+        $buffer[1] = $sql[$count];
     }
     if (!empty($sql)) {
         $ret[] = $sql;
     }
-    return($ret);
+
+    return ($ret);
 } // split_sql
 
 /**
@@ -61,26 +63,27 @@ function split_sql($sql)
  */
 function install_check_status($configfile)
 {
-    /*
-      Check and see if the config file exists
-      if it does they can't use the web interface
-      to install ampache.
-    */
+    /**
+     * Check and see if the config file exists
+     * if it does they can't use the web interface
+     * to install ampache.
+     */
     if (!file_exists($configfile)) {
         return true;
     } else {
         //AmpError::add('general', T_('Config file already exists, install is probably completed'));
     }
 
-    /*
-      Check and see if they've got _any_ account
-      if they don't then they're cool
-    */
+    /**
+     * Check and see if they've got _any_ account
+     * if they don't then they're cool
+     */
     $results = parse_ini_file($configfile);
     AmpConfig::set_by_array($results, true);
 
     if (!Dba::check_database()) {
         AmpError::add('general', T_('Unable to connect to database, check your ampache config'));
+
         return false;
     }
 
@@ -89,6 +92,7 @@ function install_check_status($configfile)
 
     if (!$db_results) {
         AmpError::add('general', T_('Unable to query database, check your ampache config'));
+
         return false;
     }
 
@@ -96,6 +100,7 @@ function install_check_status($configfile)
         return true;
     } else {
         AmpError::add('general', T_('Existing Database detected, unable to continue installation'));
+
         return false;
     }
 } // install_check_status
@@ -105,6 +110,10 @@ function install_check_server_apache()
     return (strpos($_SERVER['SERVER_SOFTWARE'], "Apache/") === 0);
 }
 
+/**
+ * @param string $file
+ * @return boolean|string
+ */
 function install_check_rewrite_rules($file, $web_path, $fix = false)
 {
     if (!is_readable($file)) {
@@ -115,16 +124,17 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
     $new_lines = array();
     $lines     = explode("\n", $htaccess);
     foreach ($lines as $line) {
-        $parts = explode(' ', $line);
-        for ($i = 0; $i < count($parts); $i++) {
+        $parts   = explode(' ', $line);
+        $p_count = count($parts);
+        for ($count = 0; $count < $p_count; $count++) {
             // Matching url rewriting rule syntax
-            if ($parts[$i] == 'RewriteRule' && $i < (count($parts) - 2)) {
-                $reprule = $parts[$i + 2];
+            if ($parts[$count] === 'RewriteRule' && $count < ($p_count - 2)) {
+                $reprule = $parts[$count + 2];
                 if (!empty($web_path) && strpos($reprule, $web_path) !== 0) {
                     $reprule = $web_path . $reprule;
                     if ($fix) {
-                        $parts[$i + 2] = $reprule;
-                        $line          = implode(' ', $parts);
+                        $parts[$count + 2] = $reprule;
+                        $line              = implode(' ', $parts);
                     } else {
                         $valid = false;
                     }
@@ -145,19 +155,25 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
     return $valid;
 }
 
+/**
+ * @param string $file
+ * @param boolean $download
+ */
 function install_rewrite_rules($file, $web_path, $download)
 {
     $final = install_check_rewrite_rules($file, $web_path, true);
     if (!$download) {
         if (!file_put_contents($file, $final)) {
             AmpError::add('general', T_('Error writing config file'));
+
             return false;
         }
     } else {
         $browser = new Horde_Browser();
         $browser->downloadHeaders(basename($file), 'text/plain', false, strlen($final));
         echo $final;
-        exit();
+
+        return false;
     }
 
     return true;
@@ -176,11 +192,13 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
 
     if (count($matches)) {
         AmpError::add('general', T_('Error: Invalid database name.'));
+
         return false;
     }
 
     if (!Dba::check_database()) {
         AmpError::add('general', sprintf(T_('Error: Unable to make database connection: %s'), Dba::error()));
+
         return false;
     }
 
@@ -191,6 +209,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
             Dba::write('DROP DATABASE `' . $database . '`');
         } else {
             AmpError::add('general', T_('Error: Database already exists and overwrite not checked'));
+
             return false;
         }
     }
@@ -198,6 +217,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     if ($create_db) {
         if (!Dba::write('CREATE DATABASE `' . $database . '`')) {
             AmpError::add('general', sprintf(T_('Error: Unable to create database: %s'), Dba::error()));
+
             return false;
         }
     }
@@ -208,13 +228,14 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     if (strlen($db_user) && strlen($db_pass)) {
         $db_host = AmpConfig::get('database_hostname');
         $sql     = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .
-            "'" . Dba::escape($db_user) . "'";
+                    "'" . Dba::escape($db_user) . "'";
         if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
             $sql .= "@'localhost'";
         }
         $sql .= "IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
         if (!Dba::write($sql)) {
             AmpError::add('general', sprintf(T_('Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s'), $db_user, $database, $db_host, Dba::error()));
+
             return false;
         }
     } // end if we are creating a user
@@ -223,12 +244,13 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         $sql_file = AmpConfig::get('prefix') . '/sql/ampache.sql';
         $query    = fread(fopen($sql_file, 'r'), filesize($sql_file));
         $pieces   = split_sql($query);
+        $p_count  = count($pieces);
         $errors   = array();
-        for ($i=0; $i<count($pieces); $i++) {
-            $pieces[$i] = trim($pieces[$i]);
-            if (!empty($pieces[$i]) && $pieces[$i] != '#') {
-                if (!$result = Dba::write($pieces[$i])) {
-                    $errors[] = array ( Dba::error(), $pieces[$i] );
+        for ($count = 0; $count < $p_count; $count++) {
+            $pieces[$count] = trim($pieces[$count]);
+            if (!empty($pieces[$count]) && $pieces[$count] != '#') {
+                if (!$result = Dba::write($pieces[$count])) {
+                    $errors[] = array(Dba::error(), $pieces[$count]);
                 }
             }
         }
@@ -266,12 +288,14 @@ function install_create_config($download = false)
     $params = AmpConfig::get_all();
     if (empty($params['database_username']) || (empty($params['database_password']) && strpos($params['database_hostname'], '/') !== 0)) {
         AmpError::add('general', T_("Invalid configuration settings"));
+
         return false;
     }
 
     // Connect to the DB
     if (!Dba::check_database()) {
         AmpError::add('general', T_("Database Connection Failed Check Hostname, Username and Password"));
+
         return false;
     }
 
@@ -281,11 +305,13 @@ function install_create_config($download = false)
     if (!$download) {
         if (!check_config_writable()) {
             AmpError::add('general', T_('Config file is not writable'));
+
             return false;
         } else {
             // Given that $final is > 0, we can ignore lazy comparison problems
             if (!file_put_contents($config_file, $final)) {
                 AmpError::add('general', T_('Error writing config file'));
+
                 return false;
             }
         }
@@ -293,7 +319,8 @@ function install_create_config($download = false)
         $browser = new Horde_Browser();
         $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, strlen($final));
         echo $final;
-        exit();
+
+        return false;
     }
 
     return true;
@@ -305,33 +332,38 @@ function install_create_config($download = false)
  */
 function install_create_account($username, $password, $password2)
 {
-    if (!strlen($username) or !strlen($password)) {
+    if (!strlen($username) || !strlen($password)) {
         AmpError::add('general', T_('No Username/Password specified'));
+
         return false;
     }
 
     if ($password !== $password2) {
         AmpError::add('general', T_('Passwords do not match'));
+
         return false;
     }
 
     if (!Dba::check_database()) {
         AmpError::add('general', sprintf(T_('Database connection failed: %s'), Dba::error()));
+
         return false;
     }
 
     if (!Dba::check_database_inserted()) {
         AmpError::add('general', sprintf(T_('Database select failed: %s'), Dba::error()));
+
         return false;
     }
 
     $username = Dba::escape($username);
     $password = Dba::escape($password);
 
-    $insert_id = User::create($username,'Administrator','','',$password,'100');
+    $insert_id = User::create($username, 'Administrator', '', '', $password, '100');
 
     if (!$insert_id) {
         AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
+
         return false;
     }
 
@@ -341,6 +373,9 @@ function install_create_account($username, $password, $password2)
     return true;
 } // install_create_account
 
+/**
+ * @param string $command
+ */
 function command_exists($command)
 {
     if (!function_exists('proc_open')) {
@@ -421,8 +456,8 @@ function install_config_use_case($case)
         'userflags' => 'true',
         'sociable' => 'true',
         'licensing' => 'false',
-        'wanted' => 'true',
-        'channel' => 'true',
+        'wanted' => 'false',
+        'channel' => 'false',
         'live_stream' => 'true',
         'allow_public_registration' => 'false',
         'cookie_disclaimer' => 'false',
@@ -432,7 +467,7 @@ function install_config_use_case($case)
     $dbconfig = array(
         'download' => '1',
         'share' => '0',
-        'allow_video' => '1',
+        'allow_video' => '0',
         'home_now_playing' => '1',
         'home_recently_played' => '1'
     );
@@ -478,11 +513,10 @@ function install_config_use_case($case)
     }
 }
 
-function install_config_backends(Array $backends)
+function install_config_backends(array $backends)
 {
     $dbconfig = array(
         'subsonic_backend' => '0',
-        'plex_backend' => '0',
         'daap_backend' => '0',
         'upnp_backend' => '0',
         'webdav_backend' => '0',
@@ -493,9 +527,6 @@ function install_config_backends(Array $backends)
         switch ($backend) {
             case 'subsonic':
                 $dbconfig['subsonic_backend'] = '1';
-                break;
-            case 'plex':
-                $dbconfig['plex_backend'] = '1';
                 break;
             case 'upnp':
                 $dbconfig['upnp_backend']         = '1';

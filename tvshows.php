@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,9 +24,7 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-/**
- * Display Switch
- */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
@@ -49,9 +47,10 @@ switch ($_REQUEST['action']) {
 
         $tvshow = new TVShow($_REQUEST['tvshow_id']);
         if (!Catalog::can_remove($tvshow)) {
-            debug_event('tvshow', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
+            debug_event('tvshows', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if ($tvshow->remove_from_disk()) {
@@ -77,8 +76,8 @@ switch ($_REQUEST['action']) {
         }
         /* Enclose this in the purty box! */
         require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
-        show_alphabet_list('tvshows','tvshows.php',$match);
-        show_alphabet_form($chr, T_('Show TV Shows starting with'),"tvshows.php?action=match");
+        show_alphabet_list('tvshows', 'tvshows.php', $match);
+        show_alphabet_form($chr, T_('Show TV Shows starting with'), "tvshows.php?action=match");
         require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
 
         if ($match === "Browse") {

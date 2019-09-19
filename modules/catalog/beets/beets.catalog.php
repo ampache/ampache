@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,6 +50,7 @@ class Catalog_beets extends Beets\Catalog
         $help = "<ul>" .
                 "<li>Fetch songs from beets command over CLI.</li>" .
                 "<li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessable by the Webserver.</li></ul>";
+
         return $help;
     }
 
@@ -82,7 +83,7 @@ class Catalog_beets extends Beets\Catalog
 
     public function catalog_fields()
     {
-        $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'textbox');
+        $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'text');
 
         return $fields;
     }
@@ -100,6 +101,7 @@ class Catalog_beets extends Beets\Catalog
 
         if (preg_match('/^[\s]+$/', $beetsdb)) {
             AmpError::add('general', T_('Error: Beets selected, but no Beets DB File provided'));
+
             return false;
         }
 
@@ -110,11 +112,13 @@ class Catalog_beets extends Beets\Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $beetsdb, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $beetsdb));
+
             return false;
         }
 
         $insertSql = 'INSERT INTO `catalog_beets` (`beetsdb`, `catalog_id`) VALUES (?, ?)';
         Dba::write($insertSql, array($beetsdb, $catalog_id));
+
         return true;
     }
 
@@ -130,9 +134,11 @@ class Catalog_beets extends Beets\Catalog
      */
     public function checkSong($song)
     {
-        $date = new DateTime($song['added']);
-        if ($date->format('U') < $this->last_add) {
-            debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', '3');
+        $date       = new DateTime($song['added']);
+        $last_added = date("Y-m-d H:i:s", $this->last_add);
+        if (date_diff($date, $last_added) < 0) {
+            debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
+
             return true;
         }
 

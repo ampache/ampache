@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,17 +22,17 @@
 
 // Gotta do some math here!
 $total_images = count($images);
-$rows         = floor($total_images/4);
-$i            = 0;
+$rows         = floor($total_images / 4);
+$count        = 0;
 ?>
 <?php UI::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>
 <?php
-while ($i <= $rows) {
+while ($count <= $rows) {
     $j=0;
     while ($j < 4) {
-        $key        = $i*4+$j;
+        $key        = $count * 4 + $j;
         $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . mt_rand();
         $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
         if (!isset($images[$key]) || !Art::check_dimensions($dimensions)) {
@@ -40,46 +40,31 @@ while ($i <= $rows) {
         } else {
             ?>
             <td align="center">
-                <a href="<?php echo $image_url;
-            ?>" title="<?php echo $_SESSION['form']['images'][$key]['title'];
-            ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url;
-            ?>" alt="<?php echo T_('Art');
-            ?>" border="0" height="175" width="175" /></a>
+                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" border="0" height="175" width="175" /></a>
                 <br />
                 <p align="center">
                 <?php if (is_array($dimensions)) {
-    ?>
-                [<?php echo intval($dimensions['width']);
-    ?>x<?php echo intval($dimensions['height']);
-    ?>]
-                <?php 
-} else {
-    ?>
-                <span class="error"><?php echo T_('Invalid');
-    ?></span>
-                <?php 
-}
-            ?>
-                [<a href="<?php echo AmpConfig::get('web_path');
-            ?>/arts.php?action=select_art&image=<?php echo $key;
-            ?>&object_type=<?php echo $object_type;
-            ?>&object_id=<?php echo $object_id;
-            ?>&burl=<?php echo base64_encode($burl);
-            ?>"><?php echo T_('Select');
-            ?></a>]
+                ?>
+                [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
+                <?php
+            } else {
+                ?>
+                <span class="error"><?php echo T_('Invalid'); ?></span>
+                <?php
+            } ?>
+                [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 </p>
             </td>
 <?php
-
         } // end else
         $j++;
     } // end while cells
-    if ($i < $rows) {
+    if ($count < $rows) {
         echo "</tr>\n<tr>";
     } else {
         echo "</tr>";
     }
-    $i++;
+    $count++;
 } // end while
 ?>
 </table>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,12 +38,12 @@ class TVShow_Episode extends Video
      * This pulls the tv show episode information from the database and returns
      * a constructed object
      */
-    public function __construct($id)
+    public function __construct($episode_id)
     {
-        parent::__construct($id);
+        parent::__construct($episode_id);
 
-        $info = $this->get_info($id);
-        foreach ($info as $key=>$value) {
+        $info = $this->get_info($episode_id);
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
 
@@ -51,11 +51,11 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused tv shows episodes
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `tvshow_episode` USING `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
@@ -97,6 +97,7 @@ class TVShow_Episode extends Video
         // Replace relation name with db ids
         $sdata['tvshow']        = $tvshow;
         $sdata['tvshow_season'] = $tvshow_season;
+
         return self::create($sdata);
     }
 
@@ -210,6 +211,7 @@ class TVShow_Episode extends Video
         }
 
         $season = new TVShow_Season($this->season);
+
         return $season->get_description();
     }
 

@@ -14,14 +14,14 @@ var Layer3 = require('./layer3');
 
 var MP3Decoder = AV.Decoder.extend(function() {
     AV.Decoder.register('mp3', this);
-    
+
     this.prototype.init = function() {
         this.mp3_stream = new MP3Stream(this.bitstream);
         this.frame = new MP3Frame();
         this.synth = new MP3Synth();
         this.seeking = false;
     };
-    
+
     this.prototype.readChunk = function() {
         var stream = this.mp3_stream;
         var frame = this.frame;
@@ -39,33 +39,33 @@ var MP3Decoder = AV.Decoder.extend(function() {
                         throw err;
                 }
             }
-            
+
             this.seeking = false;
         } else {
             frame.decode(stream);
         }
-        
+
         synth.frame(frame);
-        
+
         // interleave samples
         var data = synth.pcm.samples,
             channels = synth.pcm.channels,
             len = synth.pcm.length,
             output = new Float32Array(len * channels),
             j = 0;
-        
+
         for (var k = 0; k < len; k++) {
             for (var i = 0; i < channels; i++) {
                 output[j++] = data[i][k];
             }
         }
-        
+
         return output;
     };
-    
+
     this.prototype.seek = function(timestamp) {
         var offset;
-        
+
         // if there was a Xing or VBRI tag with a seek table, use that
         // otherwise guesstimate based on CBR bitrate
         if (this.demuxer.seekPoints.length > 0) {
@@ -74,44 +74,44 @@ var MP3Decoder = AV.Decoder.extend(function() {
         } else {
             offset = timestamp * this.format.bitrate / 8 / this.format.sampleRate;
         }
-        
+
         this.mp3_stream.reset(offset);
-        
+
         // try to find 3 consecutive valid frame headers in a row
         for (var i = 0; i < 4096; i++) {
             var pos = offset + i;
             for (var j = 0; j < 3; j++) {
                 this.mp3_stream.reset(pos);
-                
+
                 try {
                     var header = MP3FrameHeader.decode(this.mp3_stream);
                 } catch (e) {
                     break;
                 }
-                
+
                 // skip the rest of the frame
                 var size = header.framesize();
                 if (size == null)
                     break;
-                        
+
                 pos += size;
             }
-            
+
             // check if we're done
             if (j === 3)
                 break;
         }
-        
+
         // if we didn't find 3 frames, just try the first one and hope for the best
         if (j !== 3)
             i = 0;
-            
+
         this.mp3_stream.reset(offset + i);
-        
+
         // if we guesstimated, update the timestamp to another estimate of where we actually seeked to
         if (this.demuxer.seekPoints.length === 0)
             timestamp = this.stream.offset / (this.format.bitrate / 8) * this.format.sampleRate;
-        
+
         this.seeking = true;
         return timestamp;
     };
@@ -128,29 +128,29 @@ var MP3Stream = require('./stream');
 
 var MP3Demuxer = AV.Demuxer.extend(function() {
     AV.Demuxer.register(this);
-    
+
     this.probe = function(stream) {
         var off = stream.offset;
-        
+
         // skip id3 metadata if it exists
         var id3header = MP3Demuxer.getID3v2Header(stream);
         if (id3header)
             stream.advance(10 + id3header.length);
-        
+
         // attempt to read the header of the first audio frame
         var s = new MP3Stream(new AV.Bitstream(stream));
         var header = null;
-        
+
         try {
             header = MP3FrameHeader.decode(s);
         } catch (e) {};
-        
+
         // go back to the beginning, for other probes
         stream.seek(off);
-        
+
         return !!header;
     };
-    
+
     this.getID3v2Header = function(stream) {
         if (stream.peekString(0, 3) == 'ID3') {
             stream = AV.Stream.fromBuffer(stream.peekBuffer(0, 10));
@@ -170,19 +170,19 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
                 length: length 
             };
         }
-        
+
         return null;
     };
-    
+
     const XING_OFFSETS = [[32, 17], [17, 9]];
     this.prototype.parseDuration = function(header) {
         var stream = this.stream;
         var frames;
-                
+
         var offset = stream.offset;
         if (!header || header.layer !== 3)
             return false;
-        
+
         // Check for Xing/Info tag
         stream.advance(XING_OFFSETS[header.flags & MP3FrameHeader.FLAGS.LSF_EXT ? 1 : 0][header.nchannels() === 1 ? 1 : 0]);
         var tag = stream.readString(4);
@@ -190,10 +190,10 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
             var flags = stream.readUInt32();
             if (flags & 1) 
                 frames = stream.readUInt32();
-                
+
             if (flags & 2)
                 var size = stream.readUInt32();
-                
+
             if (flags & 4 && frames && size) {
                 for (var i = 0; i < 100; i++) {
                     var b = stream.readUInt8();
@@ -202,10 +202,10 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
                     this.addSeekPoint(pos, time);
                 }
             }
-                
+
             if (flags & 8)
                 stream.advance(4);
-                
+
         } else {
             // Check for VBRI tag (always 32 bytes after end of mpegaudio header)
             stream.seek(offset + 4 + 32);
@@ -214,13 +214,13 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
                 stream.advance(4); // skip delay and quality
                 stream.advance(4); // skip size
                 frames = stream.readUInt32();
-                
+
                 var entries = stream.readUInt16();
                 var scale = stream.readUInt16();
                 var bytesPerEntry = stream.readUInt16();
                 var framesPerEntry = stream.readUInt16();
                 var fn = 'readUInt' + (bytesPerEntry * 8);
-                
+
                 var pos = 0;
                 for (var i = 0; i < entries; i++) {
                     this.addSeekPoint(pos, framesPerEntry * i);
@@ -228,40 +228,40 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
                 }
             }
         }
-        
+
         if (!frames)
             return false;
-            
+
         this.emit('duration', (frames * header.nbsamples() * 32) / header.samplerate * 1000 | 0);
         return true;
     };
-    
+
     this.prototype.readChunk = function() {
         var stream = this.stream;
-        
+
         if (!this.sentInfo) {
             // read id3 metadata if it exists
             var id3header = MP3Demuxer.getID3v2Header(stream);
             if (id3header) {
                 stream.advance(10);
-                
+
                 if (id3header.major > 2) {
                     var id3 = new ID3v23Stream(id3header, stream);
                 } else {
                     var id3 = new ID3v22Stream(id3header, stream);
                 }
-                
+
                 this.emit('metadata', id3.read());
             }
-            
+
             // read the header of the first audio frame
             var off = stream.offset;
             var s = new MP3Stream(new AV.Bitstream(stream));
-            
+
             var header = MP3FrameHeader.decode(s);
             if (!header)
                 return this.emit('error', 'Could not find first frame.');
-            
+
             this.emit('format', {
                 formatID: 'mp3',
                 sampleRate: header.samplerate,
@@ -269,10 +269,10 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
                 bitrate: header.bitrate,
                 floatingPoint: true
             });
-            
+
             var sentDuration = this.parseDuration(header);
             stream.advance(off - stream.offset);
-            
+
             // if there were no Xing/VBRI tags, guesstimate the duration based on data size and bitrate
             this.dataSize = 0;
             if (!sentDuration) {
@@ -280,10 +280,10 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
                     this.emit('duration', this.dataSize * 8 / header.bitrate * 1000 | 0);
                 });
             }
-            
+
             this.sentInfo = true;
         }
-        
+
         while (stream.available(1)) {
             var buffer = stream.readSingleBuffer(stream.remainingBytes());
             this.dataSize += buffer.length;
@@ -314,17 +314,17 @@ MP3Frame.prototype.decode = function(stream) {
         this.header = MP3FrameHeader.decode(stream);
 
     this.header.flags &= ~MP3FrameHeader.FLAGS.INCOMPLETE;
-    
+
     // make an instance of the decoder for this layer if needed
     var decoder = this.decoders[this.header.layer - 1];
     if (!decoder) {
         var Layer = MP3Frame.layers[this.header.layer];
         if (!Layer)
             throw new Error("Layer " + this.header.layer + " is not supported.");
-            
+
         decoder = this.decoders[this.header.layer - 1] = new Layer();
     }
-    
+
     decoder.decode(stream, this);
 };
 
@@ -412,11 +412,11 @@ MP3FrameHeader.BUFFER_MDLEN = (511 + 2048 + MP3FrameHeader.BUFFER_GUARD);
 MP3FrameHeader.prototype.copy = function() {
     var clone = new MP3FrameHeader();
     var keys = Object.keys(this);
-    
+
     for (var key in keys) {
         clone[key] = this[key];
     }
-    
+
     return clone;
 }
 
@@ -431,17 +431,17 @@ MP3FrameHeader.prototype.nbsamples = function() {
 MP3FrameHeader.prototype.framesize = function() {
     if (this.bitrate === 0)
         return null;
-    
+
     var padding = (this.flags & MP3FrameHeader.FLAGS.PADDING ? 1 : 0);
     switch (this.layer) {
         case 1:
             var size = (this.bitrate * 12) / this.samplerate | 0;
             return (size + padding) * 4;
-            
+
         case 2:
             var size = (this.bitrate * 144) / this.samplerate | 0;
             return size + padding;
-            
+
         case 3:
         default:
             var lsf = this.flags & MP3FrameHeader.FLAGS.LSF_EXT ? 1 : 0;
@@ -453,7 +453,7 @@ MP3FrameHeader.prototype.framesize = function() {
 MP3FrameHeader.prototype.decode = function(stream) {
     this.flags        = 0;
     this.private_bits = 0;
-    
+
     // syncword 
     stream.advance(11);
 
@@ -538,10 +538,10 @@ MP3FrameHeader.decode = function(stream) {
     var ptr = stream.next_frame;
     var syncing = true;
     var header = null;
-    
+
     while (syncing) {
         syncing = false;
-        
+
         if (stream.sync) {
             if (!stream.available(MP3FrameHeader.BUFFER_GUARD)) {
                 stream.next_frame = ptr;
@@ -556,49 +556,49 @@ MP3FrameHeader.decode = function(stream) {
             stream.seek(ptr * 8);
             if (!stream.doSync())
                 throw new AV.UnderflowError();
-                
+
             ptr = stream.nextByte();
         }
-        
+
         // begin processing
         stream.this_frame = ptr;
         stream.next_frame = ptr + 1; // possibly bogus sync word
-        
+
         stream.seek(stream.this_frame * 8);
-        
+
         header = new MP3FrameHeader();
         header.decode(stream);
-        
+
         if (header.bitrate === 0) {
             if (stream.freerate === 0 || !stream.sync || (header.layer === 3 && stream.freerate > 640000))
                 MP3FrameHeader.free_bitrate(stream, header);
-            
+
             header.bitrate = stream.freerate;
             header.flags |= MP3FrameHeader.FLAGS.FREEFORMAT;
         }
-        
+
         // calculate beginning of next frame
         var pad_slot = (header.flags & MP3FrameHeader.FLAGS.PADDING) ? 1 : 0;
-        
+
         if (header.layer === 1) {
             var N = (((12 * header.bitrate / header.samplerate) << 0) + pad_slot) * 4;
         } else {
             var slots_per_frame = (header.layer === 3 && (header.flags & MP3FrameHeader.FLAGS.LSF_EXT)) ? 72 : 144;
             var N = ((slots_per_frame * header.bitrate / header.samplerate) << 0) + pad_slot;
         }
-        
+
         // verify there is enough data left in buffer to decode this frame
         if (!stream.available(N + MP3FrameHeader.BUFFER_GUARD)) {
             stream.next_frame = stream.this_frame;
             throw new AV.UnderflowError();
         }
-        
+
         stream.next_frame = stream.this_frame + N;
-        
+
         if (!stream.sync) {
             // check that a valid frame header follows this frame
             ptr = stream.next_frame;
-            
+
             if (!(stream.getU8(ptr) === 0xff && (stream.getU8(ptr + 1) & 0xe0) === 0xe0)) {
                 ptr = stream.next_frame = stream.this_frame + 1;
 
@@ -606,11 +606,11 @@ MP3FrameHeader.decode = function(stream) {
                 syncing = true;
                 continue;
             }
-            
+
             stream.sync = true;
         }
     }
-    
+
     header.flags |= MP3FrameHeader.FLAGS.INCOMPLETE;
     return header;
 };
@@ -618,35 +618,35 @@ MP3FrameHeader.decode = function(stream) {
 MP3FrameHeader.free_bitrate = function(stream, header) {
     var pad_slot = header.flags & MP3FrameHeader.FLAGS.PADDING ? 1 : 0,
         slots_per_frame = header.layer === 3 && header.flags & MP3FrameHeader.FLAGS.LSF_EXT ? 72 : 144;
-    
+
     var start = stream.offset();
     var rate = 0;
-        
+
     while (stream.doSync()) {
         var peek_header = header.copy();
         var peek_stream = stream.copy();
-        
+
         if (peek_header.decode(peek_stream) && peek_header.layer === header.layer && peek_header.samplerate === header.samplerate) {
             var N = stream.nextByte() - stream.this_frame;
-            
+
             if (header.layer === 1) {
                 rate = header.samplerate * (N - 4 * pad_slot + 4) / 48 / 1000 | 0;
             } else {
                 rate = header.samplerate * (N - pad_slot + 1) / slots_per_frame / 1000 | 0;
             }
-            
+
             if (rate >= 8)
                 break;
         }
-        
+
         stream.advance(8);
     }
-    
+
     stream.seek(start);
-    
+
     if (rate < 8 || (header.layer === 3 && rate > 640))
         throw new AV.UnderflowError(); // LOSTSYNC
-    
+
     stream.freerate = rate * 1000;
 };
 
@@ -702,23 +702,23 @@ const hufftabA = [
   /* 1111 */ huffquad_V(0, 0, 0, 0, 1),
 
   /* 0000 ... */
-  /* 00   */ huffquad_V(1, 0, 1, 1, 2),	/* 16 */
+  /* 00   */ huffquad_V(1, 0, 1, 1, 2),    /* 16 */
   /* 01   */ huffquad_V(1, 1, 1, 1, 2),
   /* 10   */ huffquad_V(1, 1, 0, 1, 2),
   /* 11   */ huffquad_V(1, 1, 1, 0, 2),
 
   /* 0001 ... */
-  /* 00   */ huffquad_V(0, 1, 1, 1, 2),	/* 20 */
+  /* 00   */ huffquad_V(0, 1, 1, 1, 2),    /* 20 */
   /* 01   */ huffquad_V(0, 1, 0, 1, 2),
   /* 10   */ huffquad_V(1, 0, 0, 1, 1),
   /* 11   */ huffquad_V(1, 0, 0, 1, 1),
 
   /* 0010 ... */
-  /* 0    */ huffquad_V(0, 1, 1, 0, 1),	/* 24 */
+  /* 0    */ huffquad_V(0, 1, 1, 0, 1),    /* 24 */
   /* 1    */ huffquad_V(0, 0, 1, 1, 1),
 
   /* 0011 ... */
-  /* 0    */ huffquad_V(1, 0, 1, 0, 1),	/* 26 */
+  /* 0    */ huffquad_V(1, 0, 1, 0, 1),    /* 26 */
   /* 1    */ huffquad_V(1, 1, 0, 0, 1)
 ];
 
@@ -778,7 +778,7 @@ const hufftab2 = [
   /* 111  */ V(0, 0, 1),
 
   /* 000 ... */
-  /* 000  */ V(2, 2, 3),	/* 8 */
+  /* 000  */ V(2, 2, 3),    /* 8 */
   /* 001  */ V(0, 2, 3),
   /* 010  */ V(1, 2, 2),
   /* 011  */ V(1, 2, 2),
@@ -799,7 +799,7 @@ const hufftab3 = [
   /* 111  */ V(0, 0, 2),
 
   /* 000 ... */
-  /* 000  */ V(2, 2, 3),	/* 8 */
+  /* 000  */ V(2, 2, 3),    /* 8 */
   /* 001  */ V(0, 2, 3),
   /* 010  */ V(1, 2, 2),
   /* 011  */ V(1, 2, 2),
@@ -820,7 +820,7 @@ const hufftab5 = [
   /* 111  */ V(0, 0, 1),
 
   /* 000 ... */
-  /* 0000 */ PTR(24, 1),	/* 8 */
+  /* 0000 */ PTR(24, 1),    /* 8 */
   /* 0001 */ V(3, 2, 4),
   /* 0010 */ V(3, 1, 3),
   /* 0011 */ V(3, 1, 3),
@@ -838,7 +838,7 @@ const hufftab5 = [
   /* 1111 */ V(2, 0, 3),
 
   /* 000 0000 ... */
-  /* 0    */ V(3, 3, 1),	/* 24 */
+  /* 0    */ V(3, 3, 1),    /* 24 */
   /* 1    */ V(2, 3, 1)
 ];
 
@@ -861,7 +861,7 @@ const hufftab6 = [
   /* 1111 */ V(0, 0, 3),
 
   /* 0000 ... */
-  /* 000  */ V(3, 3, 3),	/* 16 */
+  /* 000  */ V(3, 3, 3),    /* 16 */
   /* 001  */ V(0, 3, 3),
   /* 010  */ V(2, 3, 2),
   /* 011  */ V(2, 3, 2),
@@ -871,11 +871,11 @@ const hufftab6 = [
   /* 111  */ V(3, 0, 2),
 
   /* 0001 ... */
-  /* 0    */ V(1, 3, 1),	/* 24 */
+  /* 0    */ V(1, 3, 1),    /* 24 */
   /* 1    */ V(3, 1, 1),
 
   /* 0010 ... */
-  /* 0    */ V(2, 2, 1),	/* 26 */
+  /* 0    */ V(2, 2, 1),    /* 26 */
   /* 1    */ V(0, 2, 1)
 ];
 
@@ -898,7 +898,7 @@ const hufftab7 = [
   /* 1111 */ V(0, 0, 1),
 
   /* 0000 ... */
-  /* 0000 */ PTR(52, 2),	/* 16 */
+  /* 0000 */ PTR(52, 2),    /* 16 */
   /* 0001 */ PTR(56, 1),
   /* 0010 */ PTR(58, 1),
   /* 0011 */ V(1, 5, 4),
@@ -916,7 +916,7 @@ const hufftab7 = [
   /* 1111 */ V(4, 0, 3),
 
   /* 0001 ... */
-  /* 0000 */ V(0, 4, 4),	/* 32 */
+  /* 0000 */ V(0, 4, 4),    /* 32 */
   /* 0001 */ V(2, 3, 4),
   /* 0010 */ V(3, 2, 4),
   /* 0011 */ V(0, 3, 4),
@@ -934,31 +934,31 @@ const hufftab7 = [
   /* 1111 */ V(1, 2, 2),
 
   /* 0010 ... */
-  /* 00   */ V(2, 1, 1),	/* 48 */
+  /* 00   */ V(2, 1, 1),    /* 48 */
   /* 01   */ V(2, 1, 1),
   /* 10   */ V(0, 2, 2),
   /* 11   */ V(2, 0, 2),
 
   /* 0000 0000 ... */
-  /* 00   */ V(5, 5, 2),	/* 52 */
+  /* 00   */ V(5, 5, 2),    /* 52 */
   /* 01   */ V(4, 5, 2),
   /* 10   */ V(5, 4, 2),
   /* 11   */ V(5, 3, 2),
 
   /* 0000 0001 ... */
-  /* 0    */ V(3, 5, 1),	/* 56 */
+  /* 0    */ V(3, 5, 1),    /* 56 */
   /* 1    */ V(4, 4, 1),
 
   /* 0000 0010 ... */
-  /* 0    */ V(2, 5, 1),	/* 58 */
+  /* 0    */ V(2, 5, 1),    /* 58 */
   /* 1    */ V(5, 2, 1),
 
   /* 0000 0101 ... */
-  /* 0    */ V(0, 5, 1),	/* 60 */
+  /* 0    */ V(0, 5, 1),    /* 60 */
   /* 1    */ V(3, 4, 1),
 
   /* 0000 0111 ... */
-  /* 0    */ V(4, 3, 1),	/* 62 */
+  /* 0    */ V(4, 3, 1),    /* 62 */
   /* 1    */ V(3, 3, 1)
 ];
 
@@ -981,7 +981,7 @@ const hufftab8 = [
   /* 1111 */ V(0, 0, 2),
 
   /* 0000 ... */
-  /* 0000 */ PTR(48, 3),	/* 16 */
+  /* 0000 */ PTR(48, 3),    /* 16 */
   /* 0001 */ PTR(56, 2),
   /* 0010 */ PTR(60, 1),
   /* 0011 */ V(1, 5, 4),
@@ -999,7 +999,7 @@ const hufftab8 = [
   /* 1111 */ V(3, 2, 4),
 
   /* 0001 ... */
-  /* 0000 */ V(1, 3, 4),	/* 32 */
+  /* 0000 */ V(1, 3, 4),    /* 32 */
   /* 0001 */ V(3, 1, 4),
   /* 0010 */ V(0, 3, 4),
   /* 0011 */ V(3, 0, 4),
@@ -1017,7 +1017,7 @@ const hufftab8 = [
   /* 1111 */ V(2, 0, 2),
 
   /* 0000 0000 ... */
-  /* 000  */ V(5, 5, 3),	/* 48 */
+  /* 000  */ V(5, 5, 3),    /* 48 */
   /* 001  */ V(5, 4, 3),
   /* 010  */ V(4, 5, 2),
   /* 011  */ V(4, 5, 2),
@@ -1027,21 +1027,21 @@ const hufftab8 = [
   /* 111  */ V(5, 3, 1),
 
   /* 0000 0001 ... */
-  /* 00   */ V(3, 5, 2),	/* 56 */
+  /* 00   */ V(3, 5, 2),    /* 56 */
   /* 01   */ V(4, 4, 2),
   /* 10   */ V(2, 5, 1),
   /* 11   */ V(2, 5, 1),
 
   /* 0000 0010 ... */
-  /* 0    */ V(5, 2, 1),	/* 60 */
+  /* 0    */ V(5, 2, 1),    /* 60 */
   /* 1    */ V(0, 5, 1),
 
   /* 0000 0101 ... */
-  /* 0    */ V(3, 4, 1),	/* 62 */
+  /* 0    */ V(3, 4, 1),    /* 62 */
   /* 1    */ V(4, 3, 1),
 
   /* 0000 0110 ... */
-  /* 0    */ V(5, 0, 1),	/* 64 */
+  /* 0    */ V(5, 0, 1),    /* 64 */
   /* 1    */ V(3, 3, 1)
 ];
 
@@ -1064,7 +1064,7 @@ const hufftab9 = [
   /* 1111 */ V(0, 0, 3),
 
   /* 0000 ... */
-  /* 0000 */ PTR(50, 1),	/* 16 */
+  /* 0000 */ PTR(50, 1),    /* 16 */
   /* 0001 */ V(3, 5, 4),
   /* 0010 */ V(5, 3, 4),
   /* 0011 */ PTR(52, 1),
@@ -1082,7 +1082,7 @@ const hufftab9 = [
   /* 1111 */ V(0, 4, 4),
 
   /* 0001 ... */
-  /* 000  */ V(2, 4, 3),	/* 32 */
+  /* 000  */ V(2, 4, 3),    /* 32 */
   /* 001  */ V(4, 2, 3),
   /* 010  */ V(3, 3, 3),
   /* 011  */ V(4, 0, 3),
@@ -1092,27 +1092,27 @@ const hufftab9 = [
   /* 111  */ V(4, 1, 2),
 
   /* 0010 ... */
-  /* 00   */ V(2, 3, 2),	/* 40 */
+  /* 00   */ V(2, 3, 2),    /* 40 */
   /* 01   */ V(3, 2, 2),
   /* 10   */ V(1, 3, 1),
   /* 11   */ V(1, 3, 1),
 
   /* 0011 ... */
-  /* 00   */ V(3, 1, 1),	/* 44 */
+  /* 00   */ V(3, 1, 1),    /* 44 */
   /* 01   */ V(3, 1, 1),
   /* 10   */ V(0, 3, 2),
   /* 11   */ V(3, 0, 2),
 
   /* 0100 ... */
-  /* 0    */ V(2, 2, 1),	/* 48 */
+  /* 0    */ V(2, 2, 1),    /* 48 */
   /* 1    */ V(0, 2, 1),
 
   /* 0000 0000 ... */
-  /* 0    */ V(5, 5, 1),	/* 50 */
+  /* 0    */ V(5, 5, 1),    /* 50 */
   /* 1    */ V(4, 5, 1),
 
   /* 0000 0011 ... */
-  /* 0    */ V(5, 4, 1),	/* 52 */
+  /* 0    */ V(5, 4, 1),    /* 52 */
   /* 1    */ V(0, 5, 1)
 ];
 
@@ -1135,7 +1135,7 @@ const hufftab10 = [
   /* 1111 */ V(0, 0, 1),
 
   /* 0000 ... */
-  /* 0000 */ PTR(52, 3),	/* 16 */
+  /* 0000 */ PTR(52, 3),    /* 16 */
   /* 0001 */ PTR(60, 2),
   /* 0010 */ PTR(64, 3),
   /* 0011 */ PTR(72, 1),
@@ -1153,7 +1153,7 @@ const hufftab10 = [
   /* 1111 */ PTR(96, 1),
 
   /* 0001 ... */
-  /* 0000 */ PTR(98, 1),	/* 32 */
+  /* 0000 */ PTR(98, 1),    /* 32 */
   /* 0001 */ PTR(100, 1),
   /* 0010 */ V(1, 4, 4),
   /* 0011 */ V(4, 1, 4),
@@ -1171,13 +1171,13 @@ const hufftab10 = [
   /* 1111 */ V(2, 2, 3),
 
   /* 0010 ... */
-  /* 00   */ V(1, 2, 2),	/* 48 */
+  /* 00   */ V(1, 2, 2),    /* 48 */
   /* 01   */ V(2, 1, 2),
   /* 10   */ V(0, 2, 2),
   /* 11   */ V(2, 0, 2),
 
   /* 0000 0000 ... */
-  /* 000  */ V(7, 7, 3),	/* 52 */
+  /* 000  */ V(7, 7, 3),    /* 52 */
   /* 001  */ V(6, 7, 3),
   /* 010  */ V(7, 6, 3),
   /* 011  */ V(5, 7, 3),
@@ -1187,13 +1187,13 @@ const hufftab10 = [
   /* 111  */ V(4, 7, 2),
 
   /* 0000 0001 ... */
-  /* 00   */ V(7, 4, 2),	/* 60 */
+  /* 00   */ V(7, 4, 2),    /* 60 */
   /* 01   */ V(5, 6, 2),
   /* 10   */ V(6, 5, 2),
   /* 11   */ V(3, 7, 2),
 
   /* 0000 0010 ... */
-  /* 000  */ V(7, 3, 2),	/* 64 */
+  /* 000  */ V(7, 3, 2),    /* 64 */
   /* 001  */ V(7, 3, 2),
   /* 010  */ V(4, 6, 2),
   /* 011  */ V(4, 6, 2),
@@ -1203,53 +1203,53 @@ const hufftab10 = [
   /* 111  */ V(6, 3, 2),
 
   /* 0000 0011 ... */
-  /* 0    */ V(2, 7, 1),	/* 72 */
+  /* 0    */ V(2, 7, 1),    /* 72 */
   /* 1    */ V(7, 2, 1),
 
   /* 0000 0100 ... */
-  /* 00   */ V(6, 4, 2),	/* 74 */
+  /* 00   */ V(6, 4, 2),    /* 74 */
   /* 01   */ V(0, 7, 2),
   /* 10   */ V(7, 0, 1),
   /* 11   */ V(7, 0, 1),
 
   /* 0000 0101 ... */
-  /* 00   */ V(6, 2, 1),	/* 78 */
+  /* 00   */ V(6, 2, 1),    /* 78 */
   /* 01   */ V(6, 2, 1),
   /* 10   */ V(4, 5, 2),
   /* 11   */ V(3, 5, 2),
 
   /* 0000 0110 ... */
-  /* 00   */ V(0, 6, 1),	/* 82 */
+  /* 00   */ V(0, 6, 1),    /* 82 */
   /* 01   */ V(0, 6, 1),
   /* 10   */ V(5, 3, 2),
   /* 11   */ V(4, 4, 2),
 
   /* 0000 1001 ... */
-  /* 0    */ V(3, 6, 1),	/* 86 */
+  /* 0    */ V(3, 6, 1),    /* 86 */
   /* 1    */ V(2, 6, 1),
 
   /* 0000 1010 ... */
-  /* 00   */ V(2, 5, 2),	/* 88 */
+  /* 00   */ V(2, 5, 2),    /* 88 */
   /* 01   */ V(5, 2, 2),
   /* 10   */ V(1, 5, 1),
   /* 11   */ V(1, 5, 1),
 
   /* 0000 1011 ... */
-  /* 00   */ V(5, 1, 1),	/* 92 */
+  /* 00   */ V(5, 1, 1),    /* 92 */
   /* 01   */ V(5, 1, 1),
   /* 10   */ V(3, 4, 2),
   /* 11   */ V(4, 3, 2),
 
   /* 0000 1111 ... */
-  /* 0    */ V(0, 5, 1),	/* 96 */
+  /* 0    */ V(0, 5, 1),    /* 96 */
   /* 1    */ V(5, 0, 1),
 
   /* 0001 0000 ... */
-  /* 0    */ V(2, 4, 1),	/* 98 */
+  /* 0    */ V(2, 4, 1),    /* 98 */
   /* 1    */ V(4, 2, 1),
 
   /* 0001 0001 ... */
-  /* 0    */ V(3, 3, 1),	/* 100 */
+  /* 0    */ V(3, 3, 1),    /* 100 */
   /* 1    */ V(0, 4, 1)
 ];
 
@@ -1272,7 +1272,7 @@ const hufftab11 = [
   /* 1111 */ V(0, 0, 2),
 
   /* 0000 ... */
-  /* 0000 */ PTR(74, 2),	/* 16 */
+  /* 0000 */ PTR(74, 2),    /* 16 */
   /* 0001 */ PTR(78, 3),
   /* 0010 */ PTR(86, 2),
   /* 0011 */ PTR(90, 1),
@@ -1290,7 +1290,7 @@ const hufftab11 = [
   /* 1111 */ PTR(98, 1),
 
   /* 0001 ... */
-  /* 0000 */ PTR(100, 1),	/* 32 */
+  /* 0000 */ PTR(100, 1),    /* 32 */
   /* 0001 */ V(1, 5, 4),
   /* 0010 */ V(6, 2, 3),
   /* 0011 */ V(6, 2, 3),
@@ -1308,7 +1308,7 @@ const hufftab11 = [
   /* 1111 */ V(4, 2, 4),
 
   /* 0010 ... */
-  /* 0000 */ V(1, 4, 4),	/* 48 */
+  /* 0000 */ V(1, 4, 4),    /* 48 */
   /* 0001 */ V(4, 1, 4),
   /* 0010 */ V(0, 4, 4),
   /* 0011 */ V(4, 0, 4),
@@ -1326,7 +1326,7 @@ const hufftab11 = [
   /* 1111 */ V(3, 1, 2),
 
   /* 0011 ... */
-  /* 000  */ V(0, 3, 3),	/* 64 */
+  /* 000  */ V(0, 3, 3),    /* 64 */
   /* 001  */ V(3, 0, 3),
   /* 010  */ V(2, 2, 2),
   /* 011  */ V(2, 2, 2),
@@ -1336,17 +1336,17 @@ const hufftab11 = [
   /* 111  */ V(2, 1, 1),
 
   /* 0101 ... */
-  /* 0    */ V(0, 2, 1),	/* 72 */
+  /* 0    */ V(0, 2, 1),    /* 72 */
   /* 1    */ V(2, 0, 1),
 
   /* 0000 0000 ... */
-  /* 00   */ V(7, 7, 2),	/* 74 */
+  /* 00   */ V(7, 7, 2),    /* 74 */
   /* 01   */ V(6, 7, 2),
   /* 10   */ V(7, 6, 2),
   /* 11   */ V(7, 5, 2),
 
   /* 0000 0001 ... */
-  /* 000  */ V(6, 6, 2),	/* 78 */
+  /* 000  */ V(6, 6, 2),    /* 78 */
   /* 001  */ V(6, 6, 2),
   /* 010  */ V(4, 7, 2),
   /* 011  */ V(4, 7, 2),
@@ -1356,35 +1356,35 @@ const hufftab11 = [
   /* 111  */ V(5, 5, 3),
 
   /* 0000 0010 ... */
-  /* 00   */ V(5, 6, 2),	/* 86 */
+  /* 00   */ V(5, 6, 2),    /* 86 */
   /* 01   */ V(6, 5, 2),
   /* 10   */ V(3, 7, 1),
   /* 11   */ V(3, 7, 1),
 
   /* 0000 0011 ... */
-  /* 0    */ V(7, 3, 1),	/* 90 */
+  /* 0    */ V(7, 3, 1),    /* 90 */
   /* 1    */ V(4, 6, 1),
 
   /* 0000 0100 ... */
-  /* 00   */ V(4, 5, 2),	/* 92 */
+  /* 00   */ V(4, 5, 2),    /* 92 */
   /* 01   */ V(5, 4, 2),
   /* 10   */ V(3, 5, 2),
   /* 11   */ V(5, 3, 2),
 
   /* 0000 0111 ... */
-  /* 0    */ V(6, 4, 1),	/* 96 */
+  /* 0    */ V(6, 4, 1),    /* 96 */
   /* 1    */ V(0, 7, 1),
 
   /* 0000 1111 ... */
-  /* 0    */ V(4, 4, 1),	/* 98 */
+  /* 0    */ V(4, 4, 1),    /* 98 */
   /* 1    */ V(2, 5, 1),
 
   /* 0001 0000 ... */
-  /* 0    */ V(5, 2, 1),	/* 100 */
+  /* 0    */ V(5, 2, 1),    /* 100 */
   /* 1    */ V(0, 5, 1),
 
   /* 0001 1101 ... */
-  /* 0    */ V(4, 3, 1),	/* 102 */
+  /* 0    */ V(4, 3, 1),    /* 102 */
   /* 1    */ V(3, 3, 1)
 ];
 
@@ -1407,7 +1407,7 @@ const hufftab12 = [
   /* 1111 */ V(1, 0, 3),
 
   /* 0000 ... */
-  /* 0000 */ PTR(80, 2),	/* 16 */
+  /* 0000 */ PTR(80, 2),    /* 16 */
   /* 0001 */ PTR(84, 1),
   /* 0010 */ PTR(86, 1),
   /* 0011 */ PTR(88, 1),
@@ -1425,7 +1425,7 @@ const hufftab12 = [
   /* 1111 */ V(6, 3, 4),
 
   /* 0001 ... */
-  /* 0000 */ V(4, 5, 4),	/* 32 */
+  /* 0000 */ V(4, 5, 4),    /* 32 */
   /* 0001 */ V(5, 4, 4),
   /* 0010 */ V(4, 4, 4),
   /* 0011 */ PTR(94, 1),
@@ -1443,7 +1443,7 @@ const hufftab12 = [
   /* 1111 */ V(5, 2, 4),
 
   /* 0010 ... */
-  /* 0000 */ V(1, 5, 3),	/* 48 */
+  /* 0000 */ V(1, 5, 3),    /* 48 */
   /* 0001 */ V(1, 5, 3),
   /* 0010 */ V(5, 1, 3),
   /* 0011 */ V(5, 1, 3),
@@ -1461,13 +1461,13 @@ const hufftab12 = [
   /* 1111 */ V(1, 4, 3),
 
   /* 0011 ... */
-  /* 00   */ V(3, 3, 2),	/* 64 */
+  /* 00   */ V(3, 3, 2),    /* 64 */
   /* 01   */ V(4, 1, 2),
   /* 10   */ V(2, 3, 2),
   /* 11   */ V(3, 2, 2),
 
   /* 0100 ... */
-  /* 000  */ V(4, 0, 3),	/* 68 */
+  /* 000  */ V(4, 0, 3),    /* 68 */
   /* 001  */ V(0, 3, 3),
   /* 010  */ V(3, 0, 2),
   /* 011  */ V(3, 0, 2),
@@ -1477,41 +1477,41 @@ const hufftab12 = [
   /* 111  */ V(1, 3, 1),
 
   /* 0101 ... */
-  /* 0    */ V(3, 1, 1),	/* 76 */
+  /* 0    */ V(3, 1, 1),    /* 76 */
   /* 1    */ V(2, 2, 1),
 
   /* 1000 ... */
-  /* 0    */ V(0, 2, 1),	/* 78 */
+  /* 0    */ V(0, 2, 1),    /* 78 */
   /* 1    */ V(2, 0, 1),
 
   /* 0000 0000 ... */
-  /* 00   */ V(7, 7, 2),	/* 80 */
+  /* 00   */ V(7, 7, 2),    /* 80 */
   /* 01   */ V(6, 7, 2),
   /* 10   */ V(7, 6, 1),
   /* 11   */ V(7, 6, 1),
 
   /* 0000 0001 ... */
-  /* 0    */ V(5, 7, 1),	/* 84 */
+  /* 0    */ V(5, 7, 1),    /* 84 */
   /* 1    */ V(7, 5, 1),
 
   /* 0000 0010 ... */
-  /* 0    */ V(6, 6, 1),	/* 86 */
+  /* 0    */ V(6, 6, 1),    /* 86 */
   /* 1    */ V(4, 7, 1),
 
   /* 0000 0011 ... */
-  /* 0    */ V(7, 4, 1),	/* 88 */
+  /* 0    */ V(7, 4, 1),    /* 88 */
   /* 1    */ V(6, 5, 1),
 
   /* 0000 0110 ... */
-  /* 0    */ V(7, 3, 1),	/* 90 */
+  /* 0    */ V(7, 3, 1),    /* 90 */
   /* 1    */ V(5, 5, 1),
 
   /* 0000 1101 ... */
-  /* 0    */ V(0, 7, 1),	/* 92 */
+  /* 0    */ V(0, 7, 1),    /* 92 */
   /* 1    */ V(7, 0, 1),
 
   /* 0001 0011 ... */
-  /* 0    */ V(0, 6, 1),	/* 94 */
+  /* 0    */ V(0, 6, 1),    /* 94 */
   /* 1    */ V(0, 5, 1)
 ];
 
@@ -1534,7 +1534,7 @@ const hufftab13 = [
   /* 1111 */ V(0, 0, 1),
 
   /* 0000 ... */
-  /* 0000 */ PTR(68, 4),	/* 16 */
+  /* 0000 */ PTR(68, 4),    /* 16 */
   /* 0001 */ PTR(84, 4),
   /* 0010 */ PTR(100, 4),
   /* 0011 */ PTR(116, 4),
@@ -1552,7 +1552,7 @@ const hufftab13 = [
   /* 1111 */ PTR(226, 1),
 
   /* 0001 ... */
-  /* 0000 */ PTR(228, 2),	/* 32 */
+  /* 0000 */ PTR(228, 2),    /* 32 */
   /* 0001 */ PTR(232, 2),
   /* 0010 */ PTR(236, 2),
   /* 0011 */ PTR(240, 2),
@@ -1570,7 +1570,7 @@ const hufftab13 = [
   /* 1111 */ V(1, 4, 4),
 
   /* 0010 ... */
-  /* 0000 */ V(4, 1, 3),	/* 48 */
+  /* 0000 */ V(4, 1, 3),    /* 48 */
   /* 0001 */ V(4, 1, 3),
   /* 0010 */ V(0, 4, 4),
   /* 0011 */ V(4, 0, 4),
@@ -1588,13 +1588,13 @@ const hufftab13 = [
   /* 1111 */ V(2, 2, 3),
 
   /* 0011 ... */
-  /* 00   */ V(1, 2, 2),	/* 64 */
+  /* 00   */ V(1, 2, 2),    /* 64 */
   /* 01   */ V(2, 1, 2),
   /* 10   */ V(0, 2, 2),
   /* 11   */ V(2, 0, 2),
 
   /* 0000 0000 ... */
-  /* 0000 */ PTR(262, 4),	/* 68 */
+  /* 0000 */ PTR(262, 4),    /* 68 */
   /* 0001 */ PTR(278, 4),
   /* 0010 */ PTR(294, 4),
   /* 0011 */ PTR(310, 3),
@@ -1612,7 +1612,7 @@ const hufftab13 = [
   /* 1111 */ V(15, 1, 4),
 
   /* 0000 0001 ... */
-  /* 0000 */ V(15, 0, 4),	/* 84 */
+  /* 0000 */ V(15, 0, 4),    /* 84 */
   /* 0001 */ PTR(360, 1),
   /* 0010 */ PTR(362, 1),
   /* 0011 */ PTR(364, 1),
@@ -1630,7 +1630,7 @@ const hufftab13 = [
   /* 1111 */ V(3, 13, 4),
 
   /* 0000 0010 ... */
-  /* 0000 */ PTR(380, 1),	/* 100 */
+  /* 0000 */ PTR(380, 1),    /* 100 */
   /* 0001 */ V(2, 13, 4),
   /* 0010 */ V(13, 2, 4),
   /* 0011 */ V(1, 13, 4),
@@ -1648,7 +1648,7 @@ const hufftab13 = [
   /* 1111 */ V(10, 8, 4),
 
   /* 0000 0011 ... */
-  /* 0000 */ V(4, 12, 4),	/* 116 */
+  /* 0000 */ V(4, 12, 4),    /* 116 */
   /* 0001 */ V(12, 4, 4),
   /* 0010 */ V(6, 11, 4),
   /* 0011 */ V(11, 6, 4),
@@ -1666,7 +1666,7 @@ const hufftab13 = [
   /* 1111 */ V(1, 12, 3),
 
   /* 0000 0100 ... */
-  /* 0000 */ V(12, 1, 3),	/* 132 */
+  /* 0000 */ V(12, 1, 3),    /* 132 */
   /* 0001 */ V(12, 1, 3),
   /* 0010 */ V(9, 8, 4),
   /* 0011 */ V(0, 12, 4),
@@ -1684,7 +1684,7 @@ const hufftab13 = [
   /* 1111 */ V(5, 10, 4),
 
   /* 0000 0101 ... */
-  /* 0000 */ V(2, 11, 3),	/* 148 */
+  /* 0000 */ V(2, 11, 3),    /* 148 */
   /* 0001 */ V(2, 11, 3),
   /* 0010 */ V(10, 5, 4),
   /* 0011 */ V(6, 9, 4),
@@ -1702,7 +1702,7 @@ const hufftab13 = [
   /* 1111 */ V(11, 2, 2),
 
   /* 0000 0110 ... */
-  /* 000  */ V(1, 11, 2),	/* 164 */
+  /* 000  */ V(1, 11, 2),    /* 164 */
   /* 001  */ V(1, 11, 2),
   /* 010  */ V(11, 1, 2),
   /* 011  */ V(11, 1, 2),
@@ -1712,7 +1712,7 @@ const hufftab13 = [
   /* 111  */ V(4, 10, 3),
 
   /* 0000 0111 ... */
-  /* 000  */ V(3, 10, 3),	/* 172 */
+  /* 000  */ V(3, 10, 3),    /* 172 */
   /* 001  */ V(10, 3, 3),
   /* 010  */ V(5, 9, 3),
   /* 011  */ V(9, 5, 3),
@@ -1722,7 +1722,7 @@ const hufftab13 = [
   /* 111  */ V(10, 2, 2),
 
   /* 0000 1000 ... */
-  /* 000  */ V(1, 10, 2),	/* 180 */
+  /* 000  */ V(1, 10, 2),    /* 180 */
   /* 001  */ V(1, 10, 2),
   /* 010  */ V(10, 1, 2),
   /* 011  */ V(10, 1, 2),
@@ -1732,7 +1732,7 @@ const hufftab13 = [
   /* 111  */ V(10, 0, 2),
 
   /* 0000 1001 ... */
-  /* 000  */ V(8, 6, 3),	/* 188 */
+  /* 000  */ V(8, 6, 3),    /* 188 */
   /* 001  */ V(4, 9, 3),
   /* 010  */ V(9, 3, 2),
   /* 011  */ V(9, 3, 2),
@@ -1742,7 +1742,7 @@ const hufftab13 = [
   /* 111  */ V(6, 7, 3),
 
   /* 0000 1010 ... */
-  /* 000  */ V(2, 9, 2),	/* 196 */
+  /* 000  */ V(2, 9, 2),    /* 196 */
   /* 001  */ V(2, 9, 2),
   /* 010  */ V(9, 2, 2),
   /* 011  */ V(9, 2, 2),
@@ -1752,7 +1752,7 @@ const hufftab13 = [
   /* 111  */ V(3, 8, 2),
 
   /* 0000 1011 ... */
-  /* 000  */ V(8, 3, 2),	/* 204 */
+  /* 000  */ V(8, 3, 2),    /* 204 */
   /* 001  */ V(8, 3, 2),
   /* 010  */ V(6, 6, 3),
   /* 011  */ V(4, 7, 3),
@@ -1762,17 +1762,17 @@ const hufftab13 = [
   /* 111  */ V(7, 3, 3),
 
   /* 0000 1100 ... */
-  /* 0    */ V(1, 9, 1),	/* 212 */
+  /* 0    */ V(1, 9, 1),    /* 212 */
   /* 1    */ V(9, 1, 1),
 
   /* 0000 1101 ... */
-  /* 00   */ V(0, 9, 2),	/* 214 */
+  /* 00   */ V(0, 9, 2),    /* 214 */
   /* 01   */ V(9, 0, 2),
   /* 10   */ V(4, 8, 2),
   /* 11   */ V(8, 4, 2),
 
   /* 0000 1110 ... */
-  /* 000  */ V(7, 2, 2),	/* 218 */
+  /* 000  */ V(7, 2, 2),    /* 218 */
   /* 001  */ V(7, 2, 2),
   /* 010  */ V(4, 6, 3),
   /* 011  */ V(6, 4, 3),
@@ -1782,69 +1782,69 @@ const hufftab13 = [
   /* 111  */ V(2, 8, 1),
 
   /* 0000 1111 ... */
-  /* 0    */ V(8, 2, 1),	/* 226 */
+  /* 0    */ V(8, 2, 1),    /* 226 */
   /* 1    */ V(1, 8, 1),
 
   /* 0001 0000 ... */
-  /* 00   */ V(3, 7, 2),	/* 228 */
+  /* 00   */ V(3, 7, 2),    /* 228 */
   /* 01   */ V(2, 7, 2),
   /* 10   */ V(1, 7, 1),
   /* 11   */ V(1, 7, 1),
 
   /* 0001 0001 ... */
-  /* 00   */ V(7, 1, 1),	/* 232 */
+  /* 00   */ V(7, 1, 1),    /* 232 */
   /* 01   */ V(7, 1, 1),
   /* 10   */ V(5, 5, 2),
   /* 11   */ V(0, 7, 2),
 
   /* 0001 0010 ... */
-  /* 00   */ V(7, 0, 2),	/* 236 */
+  /* 00   */ V(7, 0, 2),    /* 236 */
   /* 01   */ V(3, 6, 2),
   /* 10   */ V(6, 3, 2),
   /* 11   */ V(4, 5, 2),
 
   /* 0001 0011 ... */
-  /* 00   */ V(5, 4, 2),	/* 240 */
+  /* 00   */ V(5, 4, 2),    /* 240 */
   /* 01   */ V(2, 6, 2),
   /* 10   */ V(6, 2, 2),
   /* 11   */ V(3, 5, 2),
 
   /* 0001 0101 ... */
-  /* 0    */ V(0, 8, 1),	/* 244 */
+  /* 0    */ V(0, 8, 1),    /* 244 */
   /* 1    */ V(8, 0, 1),
 
   /* 0001 0110 ... */
-  /* 0    */ V(1, 6, 1),	/* 246 */
+  /* 0    */ V(1, 6, 1),    /* 246 */
   /* 1    */ V(6, 1, 1),
 
   /* 0001 0111 ... */
-  /* 0    */ V(0, 6, 1),	/* 248 */
+  /* 0    */ V(0, 6, 1),    /* 248 */
   /* 1    */ V(6, 0, 1),
 
   /* 0001 1000 ... */
-  /* 00   */ V(5, 3, 2),	/* 250 */
+  /* 00   */ V(5, 3, 2),    /* 250 */
   /* 01   */ V(4, 4, 2),
   /* 10   */ V(2, 5, 1),
   /* 11   */ V(2, 5, 1),
 
   /* 0001 1001 ... */
-  /* 0    */ V(5, 2, 1),	/* 254 */
+  /* 0    */ V(5, 2, 1),    /* 254 */
   /* 1    */ V(0, 5, 1),
 
   /* 0001 1100 ... */
-  /* 0    */ V(3, 4, 1),	/* 256 */
+  /* 0    */ V(3, 4, 1),    /* 256 */
   /* 1    */ V(4, 3, 1),
 
   /* 0001 1101 ... */
-  /* 0    */ V(5, 0, 1),	/* 258 */
+  /* 0    */ V(5, 0, 1),    /* 258 */
   /* 1    */ V(2, 4, 1),
 
   /* 0001 1110 ... */
-  /* 0    */ V(4, 2, 1),	/* 260 */
+  /* 0    */ V(4, 2, 1),    /* 260 */
   /* 1    */ V(3, 3, 1),
 
   /* 0000 0000 0000 ... */
-  /* 0000 */ PTR(388, 3),	/* 262 */
+  /* 0000 */ PTR(388, 3),    /* 262 */
   /* 0001 */ V(15, 15, 4),
   /* 0010 */ V(14, 15, 4),
   /* 0011 */ V(13, 15, 4),
@@ -1862,7 +1862,7 @@ const hufftab13 = [
   /* 1111 */ V(13, 13, 3),
 
   /* 0000 0000 0001 ... */
-  /* 0000 */ V(15, 10, 4),	/* 278 */
+  /* 0000 */ V(15, 10, 4),    /* 278 */
   /* 0001 */ V(12, 13, 4),
   /* 0010 */ V(11, 14, 3),
   /* 0011 */ V(11, 14, 3),
@@ -1880,7 +1880,7 @@ const hufftab13 = [
   /* 1111 */ V(13, 11, 3),
 
   /* 0000 0000 0010 ... */
-  /* 0000 */ V(8, 15, 3),	/* 294 */
+  /* 0000 */ V(8, 15, 3),    /* 294 */
   /* 0001 */ V(8, 15, 3),
   /* 0010 */ V(15, 8, 3),
   /* 0011 */ V(15, 8, 3),
@@ -1898,7 +1898,7 @@ const hufftab13 = [
   /* 1111 */ V(15, 7, 2),
 
   /* 0000 0000 0011 ... */
-  /* 000  */ V(13, 10, 2),	/* 310 */
+  /* 000  */ V(13, 10, 2),    /* 310 */
   /* 001  */ V(13, 10, 2),
   /* 010  */ V(10, 13, 3),
   /* 011  */ V(11, 12, 3),
@@ -1908,19 +1908,19 @@ const hufftab13 = [
   /* 111  */ V(6, 15, 2),
 
   /* 0000 0000 0100 ... */
-  /* 00   */ V(14, 8, 2),	/* 318 */
+  /* 00   */ V(14, 8, 2),    /* 318 */
   /* 01   */ V(5, 15, 2),
   /* 10   */ V(9, 13, 2),
   /* 11   */ V(13, 9, 2),
 
   /* 0000 0000 0101 ... */
-  /* 00   */ V(15, 5, 2),	/* 322 */
+  /* 00   */ V(15, 5, 2),    /* 322 */
   /* 01   */ V(14, 7, 2),
   /* 10   */ V(10, 12, 2),
   /* 11   */ V(11, 11, 2),
 
   /* 0000 0000 0110 ... */
-  /* 000  */ V(4, 15, 2),	/* 326 */
+  /* 000  */ V(4, 15, 2),    /* 326 */
   /* 001  */ V(4, 15, 2),
   /* 010  */ V(15, 4, 2),
   /* 011  */ V(15, 4, 2),
@@ -1930,103 +1930,103 @@ const hufftab13 = [
   /* 111  */ V(15, 3, 2),
 
   /* 0000 0000 0111 ... */
-  /* 00   */ V(3, 15, 1),	/* 334 */
+  /* 00   */ V(3, 15, 1),    /* 334 */
   /* 01   */ V(3, 15, 1),
   /* 10   */ V(8, 13, 2),
   /* 11   */ V(13, 8, 2),
 
   /* 0000 0000 1000 ... */
-  /* 0    */ V(2, 15, 1),	/* 338 */
+  /* 0    */ V(2, 15, 1),    /* 338 */
   /* 1    */ V(15, 2, 1),
 
   /* 0000 0000 1001 ... */
-  /* 00   */ V(6, 14, 2),	/* 340 */
+  /* 00   */ V(6, 14, 2),    /* 340 */
   /* 01   */ V(9, 12, 2),
   /* 10   */ V(0, 15, 1),
   /* 11   */ V(0, 15, 1),
 
   /* 0000 0000 1010 ... */
-  /* 00   */ V(12, 9, 2),	/* 344 */
+  /* 00   */ V(12, 9, 2),    /* 344 */
   /* 01   */ V(5, 14, 2),
   /* 10   */ V(10, 11, 1),
   /* 11   */ V(10, 11, 1),
 
   /* 0000 0000 1011 ... */
-  /* 00   */ V(7, 13, 2),	/* 348 */
+  /* 00   */ V(7, 13, 2),    /* 348 */
   /* 01   */ V(13, 7, 2),
   /* 10   */ V(4, 14, 1),
   /* 11   */ V(4, 14, 1),
 
   /* 0000 0000 1100 ... */
-  /* 00   */ V(12, 8, 2),	/* 352 */
+  /* 00   */ V(12, 8, 2),    /* 352 */
   /* 01   */ V(13, 6, 2),
   /* 10   */ V(3, 14, 1),
   /* 11   */ V(3, 14, 1),
 
   /* 0000 0000 1101 ... */
-  /* 00   */ V(11, 9, 1),	/* 356 */
+  /* 00   */ V(11, 9, 1),    /* 356 */
   /* 01   */ V(11, 9, 1),
   /* 10   */ V(9, 11, 2),
   /* 11   */ V(10, 10, 2),
 
   /* 0000 0001 0001 ... */
-  /* 0    */ V(11, 10, 1),	/* 360 */
+  /* 0    */ V(11, 10, 1),    /* 360 */
   /* 1    */ V(14, 5, 1),
 
   /* 0000 0001 0010 ... */
-  /* 0    */ V(14, 4, 1),	/* 362 */
+  /* 0    */ V(14, 4, 1),    /* 362 */
   /* 1    */ V(8, 12, 1),
 
   /* 0000 0001 0011 ... */
-  /* 0    */ V(6, 13, 1),	/* 364 */
+  /* 0    */ V(6, 13, 1),    /* 364 */
   /* 1    */ V(14, 3, 1),
 
   /* 0000 0001 0101 ... */
-  /* 0    */ V(2, 14, 1),	/* 366 */
+  /* 0    */ V(2, 14, 1),    /* 366 */
   /* 1    */ V(0, 14, 1),
 
   /* 0000 0001 1000 ... */
-  /* 0    */ V(14, 0, 1),	/* 368 */
+  /* 0    */ V(14, 0, 1),    /* 368 */
   /* 1    */ V(5, 13, 1),
 
   /* 0000 0001 1001 ... */
-  /* 0    */ V(13, 5, 1),	/* 370 */
+  /* 0    */ V(13, 5, 1),    /* 370 */
   /* 1    */ V(7, 12, 1),
 
   /* 0000 0001 1010 ... */
-  /* 0    */ V(12, 7, 1),	/* 372 */
+  /* 0    */ V(12, 7, 1),    /* 372 */
   /* 1    */ V(4, 13, 1),
 
   /* 0000 0001 1011 ... */
-  /* 0    */ V(8, 11, 1),	/* 374 */
+  /* 0    */ V(8, 11, 1),    /* 374 */
   /* 1    */ V(11, 8, 1),
 
   /* 0000 0001 1100 ... */
-  /* 0    */ V(13, 4, 1),	/* 376 */
+  /* 0    */ V(13, 4, 1),    /* 376 */
   /* 1    */ V(9, 10, 1),
 
   /* 0000 0001 1101 ... */
-  /* 0    */ V(10, 9, 1),	/* 378 */
+  /* 0    */ V(10, 9, 1),    /* 378 */
   /* 1    */ V(6, 12, 1),
 
   /* 0000 0010 0000 ... */
-  /* 0    */ V(13, 3, 1),	/* 380 */
+  /* 0    */ V(13, 3, 1),    /* 380 */
   /* 1    */ V(7, 11, 1),
 
   /* 0000 0010 0101 ... */
-  /* 0    */ V(5, 12, 1),	/* 382 */
+  /* 0    */ V(5, 12, 1),    /* 382 */
   /* 1    */ V(12, 5, 1),
 
   /* 0000 0010 0110 ... */
-  /* 0    */ V(9, 9, 1),	/* 384 */
+  /* 0    */ V(9, 9, 1),    /* 384 */
   /* 1    */ V(7, 10, 1),
 
   /* 0000 0010 1000 ... */
-  /* 0    */ V(10, 7, 1),	/* 386 */
+  /* 0    */ V(10, 7, 1),    /* 386 */
   /* 1    */ V(9, 7, 1),
 
   /* 0000 0000 0000 0000 ... */
-  /* 000  */ V(15, 14, 3),	/* 388 */
+  /* 000  */ V(15, 14, 3),    /* 388 */
   /* 001  */ V(15, 12, 3),
   /* 010  */ V(15, 13, 2),
   /* 011  */ V(15, 13, 2),
@@ -2036,7 +2036,7 @@ const hufftab13 = [
   /* 111  */ V(14, 13, 1),
 
   /* 0000 0000 0000 1011 ... */
-  /* 0    */ V(10, 15, 1),	/* 396 */
+  /* 0    */ V(10, 15, 1),    /* 396 */
   /* 1    */ V(14, 9, 1)
 ];
 
@@ -2059,7 +2059,7 @@ const hufftab15 = [
   /* 1111 */ V(0, 0, 3),
 
   /* 0000 ... */
-  /* 0000 */ PTR(120, 4),	/* 16 */
+  /* 0000 */ PTR(120, 4),    /* 16 */
   /* 0001 */ PTR(136, 4),
   /* 0010 */ PTR(152, 4),
   /* 0011 */ PTR(168, 4),
@@ -2077,7 +2077,7 @@ const hufftab15 = [
   /* 1111 */ PTR(284, 2),
 
   /* 0001 ... */
-  /* 0000 */ PTR(288, 2),	/* 32 */
+  /* 0000 */ PTR(288, 2),    /* 32 */
   /* 0001 */ PTR(292, 2),
   /* 0010 */ PTR(296, 2),
   /* 0011 */ PTR(300, 2),
@@ -2095,7 +2095,7 @@ const hufftab15 = [
   /* 1111 */ PTR(338, 1),
 
   /* 0010 ... */
-  /* 0000 */ PTR(340, 1),	/* 48 */
+  /* 0000 */ PTR(340, 1),    /* 48 */
   /* 0001 */ PTR(342, 1),
   /* 0010 */ V(9, 1, 4),
   /* 0011 */ PTR(344, 1),
@@ -2113,7 +2113,7 @@ const hufftab15 = [
   /* 1111 */ PTR(360, 1),
 
   /* 0011 ... */
-  /* 0000 */ V(2, 7, 4),	/* 64 */
+  /* 0000 */ V(2, 7, 4),    /* 64 */
   /* 0001 */ V(7, 2, 4),
   /* 0010 */ V(6, 4, 4),
   /* 0011 */ V(1, 7, 4),
@@ -2131,7 +2131,7 @@ const hufftab15 = [
   /* 1111 */ V(3, 5, 4),
 
   /* 0100 ... */
-  /* 0000 */ V(6, 1, 3),	/* 80 */
+  /* 0000 */ V(6, 1, 3),    /* 80 */
   /* 0001 */ V(6, 1, 3),
   /* 0010 */ V(5, 3, 4),
   /* 0011 */ V(4, 4, 4),
@@ -2149,7 +2149,7 @@ const hufftab15 = [
   /* 1111 */ V(3, 4, 3),
 
   /* 0101 ... */
-  /* 000  */ V(4, 3, 3),	/* 96 */
+  /* 000  */ V(4, 3, 3),    /* 96 */
   /* 001  */ V(2, 4, 3),
   /* 010  */ V(4, 2, 3),
   /* 011  */ V(3, 3, 3),
@@ -2159,7 +2159,7 @@ const hufftab15 = [
   /* 111  */ V(0, 4, 3),
 
   /* 0110 ... */
-  /* 000  */ V(2, 3, 2),	/* 104 */
+  /* 000  */ V(2, 3, 2),    /* 104 */
   /* 001  */ V(2, 3, 2),
   /* 010  */ V(3, 2, 2),
   /* 011  */ V(3, 2, 2),
@@ -2169,21 +2169,21 @@ const hufftab15 = [
   /* 111  */ V(1, 3, 2),
 
   /* 0111 ... */
-  /* 00   */ V(3, 1, 2),	/* 112 */
+  /* 00   */ V(3, 1, 2),    /* 112 */
   /* 01   */ V(3, 0, 2),
   /* 10   */ V(2, 2, 1),
   /* 11   */ V(2, 2, 1),
 
   /* 1000 ... */
-  /* 0    */ V(1, 2, 1),	/* 116 */
+  /* 0    */ V(1, 2, 1),    /* 116 */
   /* 1    */ V(2, 1, 1),
 
   /* 1001 ... */
-  /* 0    */ V(0, 2, 1),	/* 118 */
+  /* 0    */ V(0, 2, 1),    /* 118 */
   /* 1    */ V(2, 0, 1),
 
   /* 0000 0000 ... */
-  /* 0000 */ PTR(366, 1),	/* 120 */
+  /* 0000 */ PTR(366, 1),    /* 120 */
   /* 0001 */ PTR(368, 1),
   /* 0010 */ V(14, 14, 4),
   /* 0011 */ PTR(370, 1),
@@ -2201,7 +2201,7 @@ const hufftab15 = [
   /* 1111 */ V(9, 15, 4),
 
   /* 0000 0001 ... */
-  /* 0000 */ V(15, 9, 4),	/* 136 */
+  /* 0000 */ V(15, 9, 4),    /* 136 */
   /* 0001 */ V(14, 10, 4),
   /* 0010 */ V(11, 13, 4),
   /* 0011 */ V(13, 11, 4),
@@ -2219,7 +2219,7 @@ const hufftab15 = [
   /* 1111 */ PTR(378, 1),
 
   /* 0000 0010 ... */
-  /* 0000 */ V(12, 11, 3),	/* 152 */
+  /* 0000 */ V(12, 11, 3),    /* 152 */
   /* 0001 */ V(12, 11, 3),
   /* 0010 */ V(15, 6, 3),
   /* 0011 */ V(15, 6, 3),
@@ -2237,7 +2237,7 @@ const hufftab15 = [
   /* 1111 */ V(10, 12, 3),
 
   /* 0000 0011 ... */
-  /* 0000 */ V(12, 10, 3),	/* 168 */
+  /* 0000 */ V(12, 10, 3),    /* 168 */
   /* 0001 */ V(12, 10, 3),
   /* 0010 */ V(11, 11, 3),
   /* 0011 */ V(11, 11, 3),
@@ -2255,7 +2255,7 @@ const hufftab15 = [
   /* 1111 */ V(13, 8, 3),
 
   /* 0000 0100 ... */
-  /* 0000 */ V(14, 6, 3),	/* 184 */
+  /* 0000 */ V(14, 6, 3),    /* 184 */
   /* 0001 */ V(14, 6, 3),
   /* 0010 */ V(2, 15, 3),
   /* 0011 */ V(2, 15, 3),
@@ -2273,7 +2273,7 @@ const hufftab15 = [
   /* 1111 */ V(12, 9, 3),
 
   /* 0000 0101 ... */
-  /* 000  */ V(5, 14, 3),	/* 200 */
+  /* 000  */ V(5, 14, 3),    /* 200 */
   /* 001  */ V(10, 11, 3),
   /* 010  */ V(11, 10, 3),
   /* 011  */ V(14, 5, 3),
@@ -2283,7 +2283,7 @@ const hufftab15 = [
   /* 111  */ V(14, 4, 3),
 
   /* 0000 0110 ... */
-  /* 000  */ V(8, 12, 3),	/* 208 */
+  /* 000  */ V(8, 12, 3),    /* 208 */
   /* 001  */ V(12, 8, 3),
   /* 010  */ V(3, 14, 3),
   /* 011  */ V(6, 13, 3),
@@ -2293,7 +2293,7 @@ const hufftab15 = [
   /* 111  */ V(11, 9, 3),
 
   /* 0000 0111 ... */
-  /* 0000 */ V(2, 14, 3),	/* 216 */
+  /* 0000 */ V(2, 14, 3),    /* 216 */
   /* 0001 */ V(2, 14, 3),
   /* 0010 */ V(10, 10, 3),
   /* 0011 */ V(10, 10, 3),
@@ -2311,7 +2311,7 @@ const hufftab15 = [
   /* 1111 */ V(13, 5, 3),
 
   /* 0000 1000 ... */
-  /* 000  */ V(7, 12, 3),	/* 232 */
+  /* 000  */ V(7, 12, 3),    /* 232 */
   /* 001  */ V(12, 7, 3),
   /* 010  */ V(4, 13, 3),
   /* 011  */ V(8, 11, 3),
@@ -2321,7 +2321,7 @@ const hufftab15 = [
   /* 111  */ V(9, 10, 3),
 
   /* 0000 1001 ... */
-  /* 000  */ V(10, 9, 3),	/* 240 */
+  /* 000  */ V(10, 9, 3),    /* 240 */
   /* 001  */ V(6, 12, 3),
   /* 010  */ V(12, 6, 3),
   /* 011  */ V(3, 13, 3),
@@ -2331,7 +2331,7 @@ const hufftab15 = [
   /* 111  */ V(13, 2, 2),
 
   /* 0000 1010 ... */
-  /* 000  */ V(2, 13, 3),	/* 248 */
+  /* 000  */ V(2, 13, 3),    /* 248 */
   /* 001  */ V(0, 13, 3),
   /* 010  */ V(1, 13, 2),
   /* 011  */ V(1, 13, 2),
@@ -2341,7 +2341,7 @@ const hufftab15 = [
   /* 111  */ V(11, 7, 2),
 
   /* 0000 1011 ... */
-  /* 000  */ V(13, 1, 2),	/* 256 */
+  /* 000  */ V(13, 1, 2),    /* 256 */
   /* 001  */ V(13, 1, 2),
   /* 010  */ V(5, 12, 3),
   /* 011  */ V(13, 0, 3),
@@ -2351,13 +2351,13 @@ const hufftab15 = [
   /* 111  */ V(8, 10, 2),
 
   /* 0000 1100 ... */
-  /* 00   */ V(10, 8, 2),	/* 264 */
+  /* 00   */ V(10, 8, 2),    /* 264 */
   /* 01   */ V(4, 12, 2),
   /* 10   */ V(12, 4, 2),
   /* 11   */ V(6, 11, 2),
 
   /* 0000 1101 ... */
-  /* 000  */ V(11, 6, 2),	/* 268 */
+  /* 000  */ V(11, 6, 2),    /* 268 */
   /* 001  */ V(11, 6, 2),
   /* 010  */ V(9, 9, 3),
   /* 011  */ V(0, 12, 3),
@@ -2367,7 +2367,7 @@ const hufftab15 = [
   /* 111  */ V(12, 3, 2),
 
   /* 0000 1110 ... */
-  /* 000  */ V(7, 10, 2),	/* 276 */
+  /* 000  */ V(7, 10, 2),    /* 276 */
   /* 001  */ V(7, 10, 2),
   /* 010  */ V(10, 7, 2),
   /* 011  */ V(10, 7, 2),
@@ -2377,173 +2377,173 @@ const hufftab15 = [
   /* 111  */ V(0, 11, 3),
 
   /* 0000 1111 ... */
-  /* 00   */ V(12, 2, 1),	/* 284 */
+  /* 00   */ V(12, 2, 1),    /* 284 */
   /* 01   */ V(12, 2, 1),
   /* 10   */ V(2, 12, 2),
   /* 11   */ V(5, 11, 2),
 
   /* 0001 0000 ... */
-  /* 00   */ V(11, 5, 2),	/* 288 */
+  /* 00   */ V(11, 5, 2),    /* 288 */
   /* 01   */ V(1, 12, 2),
   /* 10   */ V(8, 9, 2),
   /* 11   */ V(9, 8, 2),
 
   /* 0001 0001 ... */
-  /* 00   */ V(12, 1, 2),	/* 292 */
+  /* 00   */ V(12, 1, 2),    /* 292 */
   /* 01   */ V(4, 11, 2),
   /* 10   */ V(11, 4, 2),
   /* 11   */ V(6, 10, 2),
 
   /* 0001 0010 ... */
-  /* 00   */ V(3, 11, 2),	/* 296 */
+  /* 00   */ V(3, 11, 2),    /* 296 */
   /* 01   */ V(7, 9, 2),
   /* 10   */ V(11, 3, 1),
   /* 11   */ V(11, 3, 1),
 
   /* 0001 0011 ... */
-  /* 00   */ V(9, 7, 2),	/* 300 */
+  /* 00   */ V(9, 7, 2),    /* 300 */
   /* 01   */ V(8, 8, 2),
   /* 10   */ V(2, 11, 2),
   /* 11   */ V(5, 10, 2),
 
   /* 0001 0100 ... */
-  /* 00   */ V(11, 2, 1),	/* 304 */
+  /* 00   */ V(11, 2, 1),    /* 304 */
   /* 01   */ V(11, 2, 1),
   /* 10   */ V(10, 5, 2),
   /* 11   */ V(1, 11, 2),
 
   /* 0001 0101 ... */
-  /* 00   */ V(11, 1, 1),	/* 308 */
+  /* 00   */ V(11, 1, 1),    /* 308 */
   /* 01   */ V(11, 1, 1),
   /* 10   */ V(11, 0, 2),
   /* 11   */ V(6, 9, 2),
 
   /* 0001 0110 ... */
-  /* 00   */ V(9, 6, 2),	/* 312 */
+  /* 00   */ V(9, 6, 2),    /* 312 */
   /* 01   */ V(4, 10, 2),
   /* 10   */ V(10, 4, 2),
   /* 11   */ V(7, 8, 2),
 
   /* 0001 0111 ... */
-  /* 00   */ V(8, 7, 2),	/* 316 */
+  /* 00   */ V(8, 7, 2),    /* 316 */
   /* 01   */ V(3, 10, 2),
   /* 10   */ V(10, 3, 1),
   /* 11   */ V(10, 3, 1),
 
   /* 0001 1000 ... */
-  /* 0    */ V(5, 9, 1),	/* 320 */
+  /* 0    */ V(5, 9, 1),    /* 320 */
   /* 1    */ V(9, 5, 1),
 
   /* 0001 1001 ... */
-  /* 0    */ V(2, 10, 1),	/* 322 */
+  /* 0    */ V(2, 10, 1),    /* 322 */
   /* 1    */ V(10, 2, 1),
 
   /* 0001 1010 ... */
-  /* 0    */ V(1, 10, 1),	/* 324 */
+  /* 0    */ V(1, 10, 1),    /* 324 */
   /* 1    */ V(10, 1, 1),
 
   /* 0001 1011 ... */
-  /* 00   */ V(0, 10, 2),	/* 326 */
+  /* 00   */ V(0, 10, 2),    /* 326 */
   /* 01   */ V(10, 0, 2),
   /* 10   */ V(6, 8, 1),
   /* 11   */ V(6, 8, 1),
 
   /* 0001 1100 ... */
-  /* 0    */ V(8, 6, 1),	/* 330 */
+  /* 0    */ V(8, 6, 1),    /* 330 */
   /* 1    */ V(4, 9, 1),
 
   /* 0001 1101 ... */
-  /* 0    */ V(9, 4, 1),	/* 332 */
+  /* 0    */ V(9, 4, 1),    /* 332 */
   /* 1    */ V(3, 9, 1),
 
   /* 0001 1110 ... */
-  /* 00   */ V(9, 3, 1),	/* 334 */
+  /* 00   */ V(9, 3, 1),    /* 334 */
   /* 01   */ V(9, 3, 1),
   /* 10   */ V(7, 7, 2),
   /* 11   */ V(0, 9, 2),
 
   /* 0001 1111 ... */
-  /* 0    */ V(5, 8, 1),	/* 338 */
+  /* 0    */ V(5, 8, 1),    /* 338 */
   /* 1    */ V(8, 5, 1),
 
   /* 0010 0000 ... */
-  /* 0    */ V(2, 9, 1),	/* 340 */
+  /* 0    */ V(2, 9, 1),    /* 340 */
   /* 1    */ V(6, 7, 1),
 
   /* 0010 0001 ... */
-  /* 0    */ V(7, 6, 1),	/* 342 */
+  /* 0    */ V(7, 6, 1),    /* 342 */
   /* 1    */ V(9, 2, 1),
 
   /* 0010 0011 ... */
-  /* 0    */ V(1, 9, 1),	/* 344 */
+  /* 0    */ V(1, 9, 1),    /* 344 */
   /* 1    */ V(9, 0, 1),
 
   /* 0010 0100 ... */
-  /* 0    */ V(4, 8, 1),	/* 346 */
+  /* 0    */ V(4, 8, 1),    /* 346 */
   /* 1    */ V(8, 4, 1),
 
   /* 0010 0101 ... */
-  /* 0    */ V(5, 7, 1),	/* 348 */
+  /* 0    */ V(5, 7, 1),    /* 348 */
   /* 1    */ V(7, 5, 1),
 
   /* 0010 0110 ... */
-  /* 0    */ V(3, 8, 1),	/* 350 */
+  /* 0    */ V(3, 8, 1),    /* 350 */
   /* 1    */ V(8, 3, 1),
 
   /* 0010 0111 ... */
-  /* 0    */ V(6, 6, 1),	/* 352 */
+  /* 0    */ V(6, 6, 1),    /* 352 */
   /* 1    */ V(4, 7, 1),
 
   /* 0010 1100 ... */
-  /* 0    */ V(7, 4, 1),	/* 354 */
+  /* 0    */ V(7, 4, 1),    /* 354 */
   /* 1    */ V(0, 8, 1),
 
   /* 0010 1101 ... */
-  /* 0    */ V(8, 0, 1),	/* 356 */
+  /* 0    */ V(8, 0, 1),    /* 356 */
   /* 1    */ V(5, 6, 1),
 
   /* 0010 1110 ... */
-  /* 0    */ V(6, 5, 1),	/* 358 */
+  /* 0    */ V(6, 5, 1),    /* 358 */
   /* 1    */ V(3, 7, 1),
 
   /* 0010 1111 ... */
-  /* 0    */ V(7, 3, 1),	/* 360 */
+  /* 0    */ V(7, 3, 1),    /* 360 */
   /* 1    */ V(4, 6, 1),
 
   /* 0011 0110 ... */
-  /* 0    */ V(0, 7, 1),	/* 362 */
+  /* 0    */ V(0, 7, 1),    /* 362 */
   /* 1    */ V(7, 0, 1),
 
   /* 0011 1110 ... */
-  /* 0    */ V(0, 6, 1),	/* 364 */
+  /* 0    */ V(0, 6, 1),    /* 364 */
   /* 1    */ V(6, 0, 1),
 
   /* 0000 0000 0000 ... */
-  /* 0    */ V(15, 15, 1),	/* 366 */
+  /* 0    */ V(15, 15, 1),    /* 366 */
   /* 1    */ V(14, 15, 1),
 
   /* 0000 0000 0001 ... */
-  /* 0    */ V(15, 14, 1),	/* 368 */
+  /* 0    */ V(15, 14, 1),    /* 368 */
   /* 1    */ V(13, 15, 1),
 
   /* 0000 0000 0011 ... */
-  /* 0    */ V(15, 13, 1),	/* 370 */
+  /* 0    */ V(15, 13, 1),    /* 370 */
   /* 1    */ V(12, 15, 1),
 
   /* 0000 0000 0100 ... */
-  /* 0    */ V(15, 12, 1),	/* 372 */
+  /* 0    */ V(15, 12, 1),    /* 372 */
   /* 1    */ V(13, 14, 1),
 
   /* 0000 0000 0101 ... */
-  /* 0    */ V(14, 13, 1),	/* 374 */
+  /* 0    */ V(14, 13, 1),    /* 374 */
   /* 1    */ V(11, 15, 1),
 
   /* 0000 0000 0111 ... */
-  /* 0    */ V(12, 14, 1),	/* 376 */
+  /* 0    */ V(12, 14, 1),    /* 376 */
   /* 1    */ V(14, 12, 1),
 
   /* 0000 0001 1111 ... */
-  /* 0    */ V(10, 14, 1),	/* 378 */
+  /* 0    */ V(10, 14, 1),    /* 378 */
   /* 1    */ V(0, 15, 1)
 ];
 
@@ -2566,7 +2566,7 @@ const hufftab16 = [
   /* 1111 */ V(0, 0, 1),
 
   /* 0000 ... */
-  /* 0000 */ PTR(68, 3),	/* 16 */
+  /* 0000 */ PTR(68, 3),    /* 16 */
   /* 0001 */ PTR(76, 3),
   /* 0010 */ PTR(84, 2),
   /* 0011 */ V(15, 15, 4),
@@ -2584,7 +2584,7 @@ const hufftab16 = [
   /* 1111 */ PTR(176, 4),
 
   /* 0001 ... */
-  /* 0000 */ PTR(192, 4),	/* 32 */
+  /* 0000 */ PTR(192, 4),    /* 32 */
   /* 0001 */ PTR(208, 3),
   /* 0010 */ PTR(216, 3),
   /* 0011 */ PTR(224, 3),
@@ -2602,7 +2602,7 @@ const hufftab16 = [
   /* 1111 */ PTR(284, 1),
 
   /* 0010 ... */
-  /* 0000 */ PTR(286, 1),	/* 48 */
+  /* 0000 */ PTR(286, 1),    /* 48 */
   /* 0001 */ PTR(288, 1),
   /* 0010 */ PTR(290, 1),
   /* 0011 */ V(1, 4, 4),
@@ -2620,13 +2620,13 @@ const hufftab16 = [
   /* 1111 */ V(2, 2, 3),
 
   /* 0011 ... */
-  /* 00   */ V(1, 2, 2),	/* 64 */
+  /* 00   */ V(1, 2, 2),    /* 64 */
   /* 01   */ V(2, 1, 2),
   /* 10   */ V(0, 2, 2),
   /* 11   */ V(2, 0, 2),
 
   /* 0000 0000 ... */
-  /* 000  */ V(14, 15, 3),	/* 68 */
+  /* 000  */ V(14, 15, 3),    /* 68 */
   /* 001  */ V(15, 14, 3),
   /* 010  */ V(13, 15, 3),
   /* 011  */ V(15, 13, 3),
@@ -2636,7 +2636,7 @@ const hufftab16 = [
   /* 111  */ V(15, 11, 3),
 
   /* 0000 0001 ... */
-  /* 000  */ V(10, 15, 2),	/* 76 */
+  /* 000  */ V(10, 15, 2),    /* 76 */
   /* 001  */ V(10, 15, 2),
   /* 010  */ V(15, 10, 3),
   /* 011  */ V(9, 15, 3),
@@ -2646,23 +2646,23 @@ const hufftab16 = [
   /* 111  */ V(8, 15, 2),
 
   /* 0000 0010 ... */
-  /* 00   */ V(7, 15, 2),	/* 84 */
+  /* 00   */ V(7, 15, 2),    /* 84 */
   /* 01   */ V(15, 7, 2),
   /* 10   */ V(6, 15, 2),
   /* 11   */ V(15, 6, 2),
 
   /* 0000 0100 ... */
-  /* 00   */ V(5, 15, 2),	/* 88 */
+  /* 00   */ V(5, 15, 2),    /* 88 */
   /* 01   */ V(15, 5, 2),
   /* 10   */ V(4, 15, 1),
   /* 11   */ V(4, 15, 1),
 
   /* 0000 0101 ... */
-  /* 0    */ V(15, 4, 1),	/* 92 */
+  /* 0    */ V(15, 4, 1),    /* 92 */
   /* 1    */ V(15, 3, 1),
 
   /* 0000 0110 ... */
-  /* 0000 */ V(15, 0, 1),	/* 94 */
+  /* 0000 */ V(15, 0, 1),    /* 94 */
   /* 0001 */ V(15, 0, 1),
   /* 0010 */ V(15, 0, 1),
   /* 0011 */ V(15, 0, 1),
@@ -2680,11 +2680,11 @@ const hufftab16 = [
   /* 1111 */ PTR(326, 3),
 
   /* 0000 1000 ... */
-  /* 0    */ V(2, 15, 1),	/* 110 */
+  /* 0    */ V(2, 15, 1),    /* 110 */
   /* 1    */ V(0, 15, 1),
 
   /* 0000 1011 ... */
-  /* 0000 */ PTR(334, 2),	/* 112 */
+  /* 0000 */ PTR(334, 2),    /* 112 */
   /* 0001 */ PTR(338, 2),
   /* 0010 */ PTR(342, 2),
   /* 0011 */ PTR(346, 1),
@@ -2702,7 +2702,7 @@ const hufftab16 = [
   /* 1111 */ PTR(380, 1),
 
   /* 0000 1100 ... */
-  /* 0000 */ PTR(382, 1),	/* 128 */
+  /* 0000 */ PTR(382, 1),    /* 128 */
   /* 0001 */ PTR(384, 1),
   /* 0010 */ PTR(386, 1),
   /* 0011 */ V(0, 13, 4),
@@ -2720,7 +2720,7 @@ const hufftab16 = [
   /* 1111 */ V(1, 14, 4),
 
   /* 0000 1101 ... */
-  /* 0000 */ V(13, 3, 4),	/* 144 */
+  /* 0000 */ V(13, 3, 4),    /* 144 */
   /* 0001 */ V(2, 13, 4),
   /* 0010 */ V(13, 2, 4),
   /* 0011 */ V(13, 1, 4),
@@ -2738,7 +2738,7 @@ const hufftab16 = [
   /* 1111 */ V(11, 5, 4),
 
   /* 0000 1110 ... */
-  /* 0000 */ V(12, 1, 4),	/* 160 */
+  /* 0000 */ V(12, 1, 4),    /* 160 */
   /* 0001 */ V(0, 12, 4),
   /* 0010 */ V(4, 11, 4),
   /* 0011 */ V(11, 4, 4),
@@ -2756,7 +2756,7 @@ const hufftab16 = [
   /* 1111 */ V(1, 11, 3),
 
   /* 0000 1111 ... */
-  /* 0000 */ V(11, 1, 3),	/* 176 */
+  /* 0000 */ V(11, 1, 3),    /* 176 */
   /* 0001 */ V(11, 1, 3),
   /* 0010 */ V(0, 11, 4),
   /* 0011 */ V(11, 0, 4),
@@ -2774,7 +2774,7 @@ const hufftab16 = [
   /* 1111 */ V(2, 10, 3),
 
   /* 0001 0000 ... */
-  /* 0000 */ V(9, 5, 4),	/* 192 */
+  /* 0000 */ V(9, 5, 4),    /* 192 */
   /* 0001 */ V(6, 8, 4),
   /* 0010 */ V(10, 1, 3),
   /* 0011 */ V(10, 1, 3),
@@ -2792,7 +2792,7 @@ const hufftab16 = [
   /* 1111 */ V(10, 2, 2),
 
   /* 0001 0001 ... */
-  /* 000  */ V(1, 10, 2),	/* 208 */
+  /* 000  */ V(1, 10, 2),    /* 208 */
   /* 001  */ V(1, 10, 2),
   /* 010  */ V(0, 10, 3),
   /* 011  */ V(10, 0, 3),
@@ -2802,7 +2802,7 @@ const hufftab16 = [
   /* 111  */ V(8, 5, 3),
 
   /* 0001 0010 ... */
-  /* 000  */ V(2, 9, 2),	/* 216 */
+  /* 000  */ V(2, 9, 2),    /* 216 */
   /* 001  */ V(2, 9, 2),
   /* 010  */ V(9, 2, 2),
   /* 011  */ V(9, 2, 2),
@@ -2812,7 +2812,7 @@ const hufftab16 = [
   /* 111  */ V(1, 9, 2),
 
   /* 0001 0011 ... */
-  /* 000  */ V(9, 1, 2),	/* 224 */
+  /* 000  */ V(9, 1, 2),    /* 224 */
   /* 001  */ V(9, 1, 2),
   /* 010  */ V(9, 0, 3),
   /* 011  */ V(4, 8, 3),
@@ -2822,7 +2822,7 @@ const hufftab16 = [
   /* 111  */ V(8, 3, 3),
 
   /* 0001 0100 ... */
-  /* 000  */ V(6, 6, 3),	/* 232 */
+  /* 000  */ V(6, 6, 3),    /* 232 */
   /* 001  */ V(2, 8, 3),
   /* 010  */ V(8, 2, 2),
   /* 011  */ V(8, 2, 2),
@@ -2832,7 +2832,7 @@ const hufftab16 = [
   /* 111  */ V(1, 8, 2),
 
   /* 0001 0101 ... */
-  /* 000  */ V(8, 1, 2),	/* 240 */
+  /* 000  */ V(8, 1, 2),    /* 240 */
   /* 001  */ V(8, 1, 2),
   /* 010  */ V(8, 0, 2),
   /* 011  */ V(8, 0, 2),
@@ -2842,7 +2842,7 @@ const hufftab16 = [
   /* 111  */ V(3, 7, 2),
 
   /* 0001 0110 ... */
-  /* 000  */ V(7, 3, 2),	/* 248 */
+  /* 000  */ V(7, 3, 2),    /* 248 */
   /* 001  */ V(7, 3, 2),
   /* 010  */ V(6, 5, 3),
   /* 011  */ V(4, 6, 3),
@@ -2852,7 +2852,7 @@ const hufftab16 = [
   /* 111  */ V(7, 2, 2),
 
   /* 0001 0111 ... */
-  /* 000  */ V(6, 4, 3),	/* 256 */
+  /* 000  */ V(6, 4, 3),    /* 256 */
   /* 001  */ V(5, 5, 3),
   /* 010  */ V(0, 7, 2),
   /* 011  */ V(0, 7, 2),
@@ -2862,59 +2862,59 @@ const hufftab16 = [
   /* 111  */ V(1, 7, 1),
 
   /* 0001 1000 ... */
-  /* 00   */ V(7, 1, 1),	/* 264  */
+  /* 00   */ V(7, 1, 1),    /* 264  */
   /* 01   */ V(7, 1, 1),
   /* 10   */ V(7, 0, 2),
   /* 11   */ V(3, 6, 2),
 
   /* 0001 1001 ... */
-  /* 00   */ V(6, 3, 2),	/* 268 */
+  /* 00   */ V(6, 3, 2),    /* 268 */
   /* 01   */ V(4, 5, 2),
   /* 10   */ V(5, 4, 2),
   /* 11   */ V(2, 6, 2),
 
   /* 0001 1010 ... */
-  /* 0    */ V(6, 2, 1),	/* 272 */
+  /* 0    */ V(6, 2, 1),    /* 272 */
   /* 1    */ V(1, 6, 1),
 
   /* 0001 1011 ... */
-  /* 00   */ V(6, 1, 1),	/* 274 */
+  /* 00   */ V(6, 1, 1),    /* 274 */
   /* 01   */ V(6, 1, 1),
   /* 10   */ V(0, 6, 2),
   /* 11   */ V(6, 0, 2),
 
   /* 0001 1100 ... */
-  /* 00   */ V(5, 3, 1),	/* 278 */
+  /* 00   */ V(5, 3, 1),    /* 278 */
   /* 01   */ V(5, 3, 1),
   /* 10   */ V(3, 5, 2),
   /* 11   */ V(4, 4, 2),
 
   /* 0001 1101 ... */
-  /* 0    */ V(2, 5, 1),	/* 282 */
+  /* 0    */ V(2, 5, 1),    /* 282 */
   /* 1    */ V(5, 2, 1),
 
   /* 0001 1111 ... */
-  /* 0    */ V(1, 5, 1),	/* 284 */
+  /* 0    */ V(1, 5, 1),    /* 284 */
   /* 1    */ V(0, 5, 1),
 
   /* 0010 0000 ... */
-  /* 0    */ V(3, 4, 1),	/* 286 */
+  /* 0    */ V(3, 4, 1),    /* 286 */
   /* 1    */ V(4, 3, 1),
 
   /* 0010 0001 ... */
-  /* 0    */ V(5, 0, 1),	/* 288 */
+  /* 0    */ V(5, 0, 1),    /* 288 */
   /* 1    */ V(2, 4, 1),
 
   /* 0010 0010 ... */
-  /* 0    */ V(4, 2, 1),	/* 290 */
+  /* 0    */ V(4, 2, 1),    /* 290 */
   /* 1    */ V(3, 3, 1),
 
   /* 0010 0101 ... */
-  /* 0    */ V(0, 4, 1),	/* 292 */
+  /* 0    */ V(0, 4, 1),    /* 292 */
   /* 1    */ V(4, 0, 1),
 
   /* 0000 0110 1100 ... */
-  /* 0000 */ V(12, 14, 4),	/* 294 */
+  /* 0000 */ V(12, 14, 4),    /* 294 */
   /* 0001 */ PTR(400, 1),
   /* 0010 */ V(13, 14, 3),
   /* 0011 */ V(13, 14, 3),
@@ -2932,7 +2932,7 @@ const hufftab16 = [
   /* 1111 */ V(14, 11, 3),
 
   /* 0000 0110 1101 ... */
-  /* 000  */ V(11, 14, 2),	/* 310 */
+  /* 000  */ V(11, 14, 2),    /* 310 */
   /* 001  */ V(11, 14, 2),
   /* 010  */ V(12, 13, 2),
   /* 011  */ V(12, 13, 2),
@@ -2942,7 +2942,7 @@ const hufftab16 = [
   /* 111  */ V(10, 14, 2),
 
   /* 0000 0110 1110 ... */
-  /* 000  */ V(12, 12, 2),	/* 318 */
+  /* 000  */ V(12, 12, 2),    /* 318 */
   /* 001  */ V(12, 12, 2),
   /* 010  */ V(10, 13, 3),
   /* 011  */ V(13, 10, 3),
@@ -2952,7 +2952,7 @@ const hufftab16 = [
   /* 111  */ V(12, 10, 2),
 
   /* 0000 0110 1111 ... */
-  /* 000  */ V(12, 9, 3),	/* 326 */
+  /* 000  */ V(12, 9, 3),    /* 326 */
   /* 001  */ V(7, 13, 3),
   /* 010  */ V(5, 14, 2),
   /* 011  */ V(5, 14, 2),
@@ -2962,121 +2962,121 @@ const hufftab16 = [
   /* 111  */ V(11, 13, 1),
 
   /* 0000 1011 0000 ... */
-  /* 00   */ V(9, 14, 1),	/* 334 */
+  /* 00   */ V(9, 14, 1),    /* 334 */
   /* 01   */ V(9, 14, 1),
   /* 10   */ V(11, 12, 2),
   /* 11   */ V(12, 11, 2),
 
   /* 0000 1011 0001 ... */
-  /* 00   */ V(8, 14, 2),	/* 338 */
+  /* 00   */ V(8, 14, 2),    /* 338 */
   /* 01   */ V(14, 8, 2),
   /* 10   */ V(9, 13, 2),
   /* 11   */ V(14, 7, 2),
 
   /* 0000 1011 0010 ... */
-  /* 00   */ V(11, 11, 2),	/* 342 */
+  /* 00   */ V(11, 11, 2),    /* 342 */
   /* 01   */ V(8, 13, 2),
   /* 10   */ V(13, 8, 2),
   /* 11   */ V(6, 14, 2),
 
   /* 0000 1011 0011 ... */
-  /* 0    */ V(14, 6, 1),	/* 346 */
+  /* 0    */ V(14, 6, 1),    /* 346 */
   /* 1    */ V(9, 12, 1),
 
   /* 0000 1011 0100 ... */
-  /* 00   */ V(10, 11, 2),	/* 348 */
+  /* 00   */ V(10, 11, 2),    /* 348 */
   /* 01   */ V(11, 10, 2),
   /* 10   */ V(14, 5, 2),
   /* 11   */ V(13, 7, 2),
 
   /* 0000 1011 0101 ... */
-  /* 00   */ V(4, 14, 1),	/* 352 */
+  /* 00   */ V(4, 14, 1),    /* 352 */
   /* 01   */ V(4, 14, 1),
   /* 10   */ V(14, 4, 2),
   /* 11   */ V(8, 12, 2),
 
   /* 0000 1011 0110 ... */
-  /* 0    */ V(12, 8, 1),	/* 356 */
+  /* 0    */ V(12, 8, 1),    /* 356 */
   /* 1    */ V(3, 14, 1),
 
   /* 0000 1011 0111 ... */
-  /* 00   */ V(6, 13, 1),	/* 358 */
+  /* 00   */ V(6, 13, 1),    /* 358 */
   /* 01   */ V(6, 13, 1),
   /* 10   */ V(13, 6, 2),
   /* 11   */ V(9, 11, 2),
 
   /* 0000 1011 1000 ... */
-  /* 00   */ V(11, 9, 2),	/* 362 */
+  /* 00   */ V(11, 9, 2),    /* 362 */
   /* 01   */ V(10, 10, 2),
   /* 10   */ V(14, 1, 1),
   /* 11   */ V(14, 1, 1),
 
   /* 0000 1011 1001 ... */
-  /* 00   */ V(13, 4, 1),	/* 366 */
+  /* 00   */ V(13, 4, 1),    /* 366 */
   /* 01   */ V(13, 4, 1),
   /* 10   */ V(11, 8, 2),
   /* 11   */ V(10, 9, 2),
 
   /* 0000 1011 1010 ... */
-  /* 00   */ V(7, 11, 1),	/* 370 */
+  /* 00   */ V(7, 11, 1),    /* 370 */
   /* 01   */ V(7, 11, 1),
   /* 10   */ V(11, 7, 2),
   /* 11   */ V(13, 0, 2),
 
   /* 0000 1011 1100 ... */
-  /* 0    */ V(0, 14, 1),	/* 374 */
+  /* 0    */ V(0, 14, 1),    /* 374 */
   /* 1    */ V(14, 0, 1),
 
   /* 0000 1011 1101 ... */
-  /* 0    */ V(5, 13, 1),	/* 376 */
+  /* 0    */ V(5, 13, 1),    /* 376 */
   /* 1    */ V(13, 5, 1),
 
   /* 0000 1011 1110 ... */
-  /* 0    */ V(7, 12, 1),	/* 378 */
+  /* 0    */ V(7, 12, 1),    /* 378 */
   /* 1    */ V(12, 7, 1),
 
   /* 0000 1011 1111 ... */
-  /* 0    */ V(4, 13, 1),	/* 380 */
+  /* 0    */ V(4, 13, 1),    /* 380 */
   /* 1    */ V(8, 11, 1),
 
   /* 0000 1100 0000 ... */
-  /* 0    */ V(9, 10, 1),	/* 382 */
+  /* 0    */ V(9, 10, 1),    /* 382 */
   /* 1    */ V(6, 12, 1),
 
   /* 0000 1100 0001 ... */
-  /* 0    */ V(12, 6, 1),	/* 384 */
+  /* 0    */ V(12, 6, 1),    /* 384 */
   /* 1    */ V(3, 13, 1),
 
   /* 0000 1100 0010 ... */
-  /* 0    */ V(5, 12, 1),	/* 386 */
+  /* 0    */ V(5, 12, 1),    /* 386 */
   /* 1    */ V(12, 5, 1),
 
   /* 0000 1100 0100 ... */
-  /* 0    */ V(8, 10, 1),	/* 388 */
+  /* 0    */ V(8, 10, 1),    /* 388 */
   /* 1    */ V(10, 8, 1),
 
   /* 0000 1100 0101 ... */
-  /* 0    */ V(9, 9, 1),	/* 390 */
+  /* 0    */ V(9, 9, 1),    /* 390 */
   /* 1    */ V(4, 12, 1),
 
   /* 0000 1100 0110 ... */
-  /* 0    */ V(11, 6, 1),	/* 392 */
+  /* 0    */ V(11, 6, 1),    /* 392 */
   /* 1    */ V(7, 10, 1),
 
   /* 0000 1100 1000 ... */
-  /* 0    */ V(5, 11, 1),	/* 394 */
+  /* 0    */ V(5, 11, 1),    /* 394 */
   /* 1    */ V(8, 9, 1),
 
   /* 0000 1100 1011 ... */
-  /* 0    */ V(9, 8, 1),	/* 396 */
+  /* 0    */ V(9, 8, 1),    /* 396 */
   /* 1    */ V(7, 9, 1),
 
   /* 0000 1101 0101 ... */
-  /* 0    */ V(9, 7, 1),	/* 398 */
+  /* 0    */ V(9, 7, 1),    /* 398 */
   /* 1    */ V(8, 8, 1),
 
   /* 0000 0110 1100 0001 ... */
-  /* 0    */ V(14, 12, 1),	/* 400 */
+  /* 0    */ V(14, 12, 1),    /* 400 */
   /* 1    */ V(13, 13, 1)
 ];
 
@@ -3099,7 +3099,7 @@ const hufftab24 = [
   /* 1111 */ V(0, 0, 4),
 
   /* 0000 ... */
-  /* 0000 */ V(14, 15, 4),	/* 16 */
+  /* 0000 */ V(14, 15, 4),    /* 16 */
   /* 0001 */ V(15, 14, 4),
   /* 0010 */ V(13, 15, 4),
   /* 0011 */ V(15, 13, 4),
@@ -3117,7 +3117,7 @@ const hufftab24 = [
   /* 1111 */ V(15, 8, 3),
 
   /* 0001 ... */
-  /* 0000 */ V(8, 15, 4),	/* 32 */
+  /* 0000 */ V(8, 15, 4),    /* 32 */
   /* 0001 */ V(7, 15, 4),
   /* 0010 */ V(15, 7, 3),
   /* 0011 */ V(15, 7, 3),
@@ -3135,7 +3135,7 @@ const hufftab24 = [
   /* 1111 */ V(15, 4, 3),
 
   /* 0010 ... */
-  /* 0000 */ V(3, 15, 3),	/* 48 */
+  /* 0000 */ V(3, 15, 3),    /* 48 */
   /* 0001 */ V(3, 15, 3),
   /* 0010 */ V(15, 3, 3),
   /* 0011 */ V(15, 3, 3),
@@ -3153,7 +3153,7 @@ const hufftab24 = [
   /* 1111 */ PTR(196, 3),
 
   /* 0100 ... */
-  /* 0000 */ PTR(204, 4),	/* 64 */
+  /* 0000 */ PTR(204, 4),    /* 64 */
   /* 0001 */ PTR(220, 3),
   /* 0010 */ PTR(228, 3),
   /* 0011 */ PTR(236, 3),
@@ -3171,7 +3171,7 @@ const hufftab24 = [
   /* 1111 */ PTR(292, 2),
 
   /* 0101 ... */
-  /* 0000 */ PTR(296, 2),	/* 80 */
+  /* 0000 */ PTR(296, 2),    /* 80 */
   /* 0001 */ PTR(300, 3),
   /* 0010 */ PTR(308, 2),
   /* 0011 */ PTR(312, 3),
@@ -3189,7 +3189,7 @@ const hufftab24 = [
   /* 1111 */ PTR(348, 1),
 
   /* 0110 ... */
-  /* 0000 */ PTR(350, 1),	/* 96 */
+  /* 0000 */ PTR(350, 1),    /* 96 */
   /* 0001 */ PTR(352, 1),
   /* 0010 */ PTR(354, 1),
   /* 0011 */ PTR(356, 1),
@@ -3207,7 +3207,7 @@ const hufftab24 = [
   /* 1111 */ V(7, 2, 4),
 
   /* 0111 ... */
-  /* 0000 */ V(4, 6, 4),	/* 112 */
+  /* 0000 */ V(4, 6, 4),    /* 112 */
   /* 0001 */ V(6, 4, 4),
   /* 0010 */ V(5, 5, 4),
   /* 0011 */ V(7, 1, 4),
@@ -3225,7 +3225,7 @@ const hufftab24 = [
   /* 1111 */ V(4, 4, 4),
 
   /* 1000 ... */
-  /* 0000 */ V(2, 5, 4),	/* 128 */
+  /* 0000 */ V(2, 5, 4),    /* 128 */
   /* 0001 */ V(5, 2, 4),
   /* 0010 */ V(1, 5, 4),
   /* 0011 */ PTR(384, 1),
@@ -3243,7 +3243,7 @@ const hufftab24 = [
   /* 1111 */ V(1, 4, 3),
 
   /* 1001 ... */
-  /* 0000 */ V(4, 1, 3),	/* 144 */
+  /* 0000 */ V(4, 1, 3),    /* 144 */
   /* 0001 */ V(4, 1, 3),
   /* 0010 */ V(0, 4, 4),
   /* 0011 */ V(4, 0, 4),
@@ -3261,7 +3261,7 @@ const hufftab24 = [
   /* 1111 */ V(3, 1, 2),
 
   /* 1010 ... */
-  /* 000  */ V(0, 3, 3),	/* 160 */
+  /* 000  */ V(0, 3, 3),    /* 160 */
   /* 001  */ V(3, 0, 3),
   /* 010  */ V(2, 2, 2),
   /* 011  */ V(2, 2, 2),
@@ -3271,13 +3271,13 @@ const hufftab24 = [
   /* 111  */ V(1, 2, 1),
 
   /* 1011 ... */
-  /* 00   */ V(2, 1, 1),	/* 168 */
+  /* 00   */ V(2, 1, 1),    /* 168 */
   /* 01   */ V(2, 1, 1),
   /* 10   */ V(0, 2, 2),
   /* 11   */ V(2, 0, 2),
 
   /* 0010 1100 ... */
-  /* 000  */ V(0, 15, 1),	/* 172 */
+  /* 000  */ V(0, 15, 1),    /* 172 */
   /* 001  */ V(0, 15, 1),
   /* 010  */ V(0, 15, 1),
   /* 011  */ V(0, 15, 1),
@@ -3287,7 +3287,7 @@ const hufftab24 = [
   /* 111  */ V(12, 14, 3),
 
   /* 0010 1101 ... */
-  /* 000  */ V(14, 12, 3),	/* 180 */
+  /* 000  */ V(14, 12, 3),    /* 180 */
   /* 001  */ V(13, 13, 3),
   /* 010  */ V(11, 14, 3),
   /* 011  */ V(14, 11, 3),
@@ -3297,7 +3297,7 @@ const hufftab24 = [
   /* 111  */ V(14, 10, 3),
 
   /* 0010 1110 ... */
-  /* 000  */ V(11, 13, 3),	/* 188 */
+  /* 000  */ V(11, 13, 3),    /* 188 */
   /* 001  */ V(13, 11, 3),
   /* 010  */ V(12, 12, 3),
   /* 011  */ V(9, 14, 3),
@@ -3307,7 +3307,7 @@ const hufftab24 = [
   /* 111  */ V(11, 12, 3),
 
   /* 0010 1111 ... */
-  /* 000  */ V(12, 11, 3),	/* 196 */
+  /* 000  */ V(12, 11, 3),    /* 196 */
   /* 001  */ V(8, 14, 3),
   /* 010  */ V(14, 8, 3),
   /* 011  */ V(9, 13, 3),
@@ -3317,7 +3317,7 @@ const hufftab24 = [
   /* 111  */ V(10, 12, 3),
 
   /* 0100 0000 ... */
-  /* 0000 */ V(12, 10, 3),	/* 204 */
+  /* 0000 */ V(12, 10, 3),    /* 204 */
   /* 0001 */ V(12, 10, 3),
   /* 0010 */ V(11, 11, 3),
   /* 0011 */ V(11, 11, 3),
@@ -3335,7 +3335,7 @@ const hufftab24 = [
   /* 1111 */ V(14, 6, 2),
 
   /* 0100 0001 ... */
-  /* 000  */ V(6, 14, 3),	/* 220 */
+  /* 000  */ V(6, 14, 3),    /* 220 */
   /* 001  */ V(9, 12, 3),
   /* 010  */ V(12, 9, 2),
   /* 011  */ V(12, 9, 2),
@@ -3345,7 +3345,7 @@ const hufftab24 = [
   /* 111  */ V(11, 10, 2),
 
   /* 0100 0010 ... */
-  /* 000  */ V(14, 5, 2),	/* 228 */
+  /* 000  */ V(14, 5, 2),    /* 228 */
   /* 001  */ V(14, 5, 2),
   /* 010  */ V(10, 11, 3),
   /* 011  */ V(7, 13, 3),
@@ -3355,7 +3355,7 @@ const hufftab24 = [
   /* 111  */ V(14, 4, 2),
 
   /* 0100 0011 ... */
-  /* 000  */ V(8, 12, 2),	/* 236 */
+  /* 000  */ V(8, 12, 2),    /* 236 */
   /* 001  */ V(8, 12, 2),
   /* 010  */ V(12, 8, 2),
   /* 011  */ V(12, 8, 2),
@@ -3365,61 +3365,61 @@ const hufftab24 = [
   /* 111  */ V(3, 14, 2),
 
   /* 0100 0100 ... */
-  /* 00   */ V(6, 13, 2),	/* 244 */
+  /* 00   */ V(6, 13, 2),    /* 244 */
   /* 01   */ V(13, 6, 2),
   /* 10   */ V(14, 3, 2),
   /* 11   */ V(9, 11, 2),
 
   /* 0100 0101 ... */
-  /* 00   */ V(11, 9, 2),	/* 248 */
+  /* 00   */ V(11, 9, 2),    /* 248 */
   /* 01   */ V(10, 10, 2),
   /* 10   */ V(14, 2, 2),
   /* 11   */ V(1, 14, 2),
 
   /* 0100 0110 ... */
-  /* 00   */ V(14, 1, 2),	/* 252 */
+  /* 00   */ V(14, 1, 2),    /* 252 */
   /* 01   */ V(5, 13, 2),
   /* 10   */ V(13, 5, 2),
   /* 11   */ V(7, 12, 2),
 
   /* 0100 0111 ... */
-  /* 00   */ V(12, 7, 2),	/* 256 */
+  /* 00   */ V(12, 7, 2),    /* 256 */
   /* 01   */ V(4, 13, 2),
   /* 10   */ V(8, 11, 2),
   /* 11   */ V(11, 8, 2),
 
   /* 0100 1000 ... */
-  /* 00   */ V(13, 4, 2),	/* 260 */
+  /* 00   */ V(13, 4, 2),    /* 260 */
   /* 01   */ V(9, 10, 2),
   /* 10   */ V(10, 9, 2),
   /* 11   */ V(6, 12, 2),
 
   /* 0100 1001 ... */
-  /* 00   */ V(12, 6, 2),	/* 264 */
+  /* 00   */ V(12, 6, 2),    /* 264 */
   /* 01   */ V(3, 13, 2),
   /* 10   */ V(13, 3, 2),
   /* 11   */ V(2, 13, 2),
 
   /* 0100 1010 ... */
-  /* 00   */ V(13, 2, 2),	/* 268 */
+  /* 00   */ V(13, 2, 2),    /* 268 */
   /* 01   */ V(1, 13, 2),
   /* 10   */ V(7, 11, 2),
   /* 11   */ V(11, 7, 2),
 
   /* 0100 1011 ... */
-  /* 00   */ V(13, 1, 2),	/* 272 */
+  /* 00   */ V(13, 1, 2),    /* 272 */
   /* 01   */ V(5, 12, 2),
   /* 10   */ V(12, 5, 2),
   /* 11   */ V(8, 10, 2),
 
   /* 0100 1100 ... */
-  /* 00   */ V(10, 8, 2),	/* 276 */
+  /* 00   */ V(10, 8, 2),    /* 276 */
   /* 01   */ V(9, 9, 2),
   /* 10   */ V(4, 12, 2),
   /* 11   */ V(12, 4, 2),
 
   /* 0100 1101 ... */
-  /* 000  */ V(6, 11, 2),	/* 280 */
+  /* 000  */ V(6, 11, 2),    /* 280 */
   /* 001  */ V(6, 11, 2),
   /* 010  */ V(11, 6, 2),
   /* 011  */ V(11, 6, 2),
@@ -3429,25 +3429,25 @@ const hufftab24 = [
   /* 111  */ V(3, 12, 2),
 
   /* 0100 1110 ... */
-  /* 00   */ V(12, 3, 2),	/* 288 */
+  /* 00   */ V(12, 3, 2),    /* 288 */
   /* 01   */ V(7, 10, 2),
   /* 10   */ V(10, 7, 2),
   /* 11   */ V(2, 12, 2),
 
   /* 0100 1111 ... */
-  /* 00   */ V(12, 2, 2),	/* 292 */
+  /* 00   */ V(12, 2, 2),    /* 292 */
   /* 01   */ V(5, 11, 2),
   /* 10   */ V(11, 5, 2),
   /* 11   */ V(1, 12, 2),
 
   /* 0101 0000 ... */
-  /* 00   */ V(8, 9, 2),	/* 296 */
+  /* 00   */ V(8, 9, 2),    /* 296 */
   /* 01   */ V(9, 8, 2),
   /* 10   */ V(12, 1, 2),
   /* 11   */ V(4, 11, 2),
 
   /* 0101 0001 ... */
-  /* 000  */ V(12, 0, 3),	/* 300 */
+  /* 000  */ V(12, 0, 3),    /* 300 */
   /* 001  */ V(0, 11, 3),
   /* 010  */ V(3, 11, 2),
   /* 011  */ V(3, 11, 2),
@@ -3457,13 +3457,13 @@ const hufftab24 = [
   /* 111  */ V(1, 10, 2),
 
   /* 0101 0010 ... */
-  /* 00   */ V(11, 4, 1),	/* 308 */
+  /* 00   */ V(11, 4, 1),    /* 308 */
   /* 01   */ V(11, 4, 1),
   /* 10   */ V(6, 10, 2),
   /* 11   */ V(10, 6, 2),
 
   /* 0101 0011 ... */
-  /* 000  */ V(7, 9, 2),	/* 312 */
+  /* 000  */ V(7, 9, 2),    /* 312 */
   /* 001  */ V(7, 9, 2),
   /* 010  */ V(9, 7, 2),
   /* 011  */ V(9, 7, 2),
@@ -3473,125 +3473,125 @@ const hufftab24 = [
   /* 111  */ V(9, 0, 2),
 
   /* 0101 0100 ... */
-  /* 0    */ V(11, 3, 1),	/* 320 */
+  /* 0    */ V(11, 3, 1),    /* 320 */
   /* 1    */ V(8, 8, 1),
 
   /* 0101 0101 ... */
-  /* 00   */ V(2, 11, 2),	/* 322 */
+  /* 00   */ V(2, 11, 2),    /* 322 */
   /* 01   */ V(5, 10, 2),
   /* 10   */ V(11, 2, 1),
   /* 11   */ V(11, 2, 1),
 
   /* 0101 0110 ... */
-  /* 00   */ V(10, 5, 2),	/* 326 */
+  /* 00   */ V(10, 5, 2),    /* 326 */
   /* 01   */ V(1, 11, 2),
   /* 10   */ V(11, 1, 2),
   /* 11   */ V(6, 9, 2),
 
   /* 0101 0111 ... */
-  /* 0    */ V(9, 6, 1),	/* 330 */
+  /* 0    */ V(9, 6, 1),    /* 330 */
   /* 1    */ V(10, 4, 1),
 
   /* 0101 1000 ... */
-  /* 00   */ V(4, 10, 2),	/* 332 */
+  /* 00   */ V(4, 10, 2),    /* 332 */
   /* 01   */ V(7, 8, 2),
   /* 10   */ V(8, 7, 1),
   /* 11   */ V(8, 7, 1),
 
   /* 0101 1001 ... */
-  /* 0    */ V(3, 10, 1),	/* 336 */
+  /* 0    */ V(3, 10, 1),    /* 336 */
   /* 1    */ V(10, 3, 1),
 
   /* 0101 1010 ... */
-  /* 0    */ V(5, 9, 1),	/* 338 */
+  /* 0    */ V(5, 9, 1),    /* 338 */
   /* 1    */ V(9, 5, 1),
 
   /* 0101 1011 ... */
-  /* 0    */ V(2, 10, 1),	/* 340 */
+  /* 0    */ V(2, 10, 1),    /* 340 */
   /* 1    */ V(10, 2, 1),
 
   /* 0101 1100 ... */
-  /* 0    */ V(10, 1, 1),	/* 342 */
+  /* 0    */ V(10, 1, 1),    /* 342 */
   /* 1    */ V(6, 8, 1),
 
   /* 0101 1101 ... */
-  /* 0    */ V(8, 6, 1),	/* 344 */
+  /* 0    */ V(8, 6, 1),    /* 344 */
   /* 1    */ V(7, 7, 1),
 
   /* 0101 1110 ... */
-  /* 0    */ V(4, 9, 1),	/* 346 */
+  /* 0    */ V(4, 9, 1),    /* 346 */
   /* 1    */ V(9, 4, 1),
 
   /* 0101 1111 ... */
-  /* 0    */ V(3, 9, 1),	/* 348 */
+  /* 0    */ V(3, 9, 1),    /* 348 */
   /* 1    */ V(9, 3, 1),
 
   /* 0110 0000 ... */
-  /* 0    */ V(5, 8, 1),	/* 350 */
+  /* 0    */ V(5, 8, 1),    /* 350 */
   /* 1    */ V(8, 5, 1),
 
   /* 0110 0001 ... */
-  /* 0    */ V(2, 9, 1),	/* 352 */
+  /* 0    */ V(2, 9, 1),    /* 352 */
   /* 1    */ V(6, 7, 1),
 
   /* 0110 0010 ... */
-  /* 0    */ V(7, 6, 1),	/* 354 */
+  /* 0    */ V(7, 6, 1),    /* 354 */
   /* 1    */ V(9, 2, 1),
 
   /* 0110 0011 ... */
-  /* 0    */ V(1, 9, 1),	/* 356 */
+  /* 0    */ V(1, 9, 1),    /* 356 */
   /* 1    */ V(9, 1, 1),
 
   /* 0110 0100 ... */
-  /* 0    */ V(4, 8, 1),	/* 358 */
+  /* 0    */ V(4, 8, 1),    /* 358 */
   /* 1    */ V(8, 4, 1),
 
   /* 0110 0101 ... */
-  /* 0    */ V(5, 7, 1),	/* 360 */
+  /* 0    */ V(5, 7, 1),    /* 360 */
   /* 1    */ V(7, 5, 1),
 
   /* 0110 0110 ... */
-  /* 0    */ V(3, 8, 1),	/* 362 */
+  /* 0    */ V(3, 8, 1),    /* 362 */
   /* 1    */ V(8, 3, 1),
 
   /* 0110 0111 ... */
-  /* 0    */ V(6, 6, 1),	/* 364 */
+  /* 0    */ V(6, 6, 1),    /* 364 */
   /* 1    */ V(2, 8, 1),
 
   /* 0110 1000 ... */
-  /* 0    */ V(8, 2, 1),	/* 366 */
+  /* 0    */ V(8, 2, 1),    /* 366 */
   /* 1    */ V(1, 8, 1),
 
   /* 0110 1001 ... */
-  /* 0    */ V(4, 7, 1),	/* 368 */
+  /* 0    */ V(4, 7, 1),    /* 368 */
   /* 1    */ V(7, 4, 1),
 
   /* 0110 1010 ... */
-  /* 00   */ V(8, 1, 1),	/* 370 */
+  /* 00   */ V(8, 1, 1),    /* 370 */
   /* 01   */ V(8, 1, 1),
   /* 10   */ V(0, 8, 2),
   /* 11   */ V(8, 0, 2),
 
   /* 0110 1011 ... */
-  /* 0    */ V(5, 6, 1),	/* 374 */
+  /* 0    */ V(5, 6, 1),    /* 374 */
   /* 1    */ V(6, 5, 1),
 
   /* 0110 1100 ... */
-  /* 00   */ V(1, 7, 1),	/* 376 */
+  /* 00   */ V(1, 7, 1),    /* 376 */
   /* 01   */ V(1, 7, 1),
   /* 10   */ V(0, 7, 2),
   /* 11   */ V(7, 0, 2),
 
   /* 0110 1110 ... */
-  /* 0    */ V(3, 7, 1),	/* 380  */
+  /* 0    */ V(3, 7, 1),    /* 380  */
   /* 1    */ V(2, 7, 1),
 
   /* 0111 1100 ... */
-  /* 0    */ V(0, 6, 1),	/* 382 */
+  /* 0    */ V(0, 6, 1),    /* 382 */
   /* 1    */ V(6, 0, 1),
 
   /* 1000 0011 ... */
-  /* 0    */ V(0, 5, 1),	/* 384 */
+  /* 0    */ V(0, 5, 1),    /* 384 */
   /* 1    */ V(5, 0, 1)
 ];
 
@@ -3650,11 +3650,11 @@ var ID3Stream = AV.Base.extend({
         this.stream = stream;
         this.offset = 0;
     },
-    
+
     read: function() {
         if (!this.data) {
             this.data = {};
-            
+
             // read all frames
             var frame;
             while (frame = this.readFrame()) {
@@ -3662,7 +3662,7 @@ var ID3Stream = AV.Base.extend({
                 if (frame.key in this.data) {
                     if (!Array.isArray(this.data[frame.key]))
                         this.data[frame.key] = [this.data[frame.key]];
-                        
+
                     this.data[frame.key].push(frame.value);
                 } else {
                     this.data[frame.key] = frame.value;
@@ -3672,20 +3672,20 @@ var ID3Stream = AV.Base.extend({
 
         return this.data;
     },
-    
+
     readFrame: function() {
         if (this.offset >= this.header.length)
             return null;
-        
+
         // get the header    
         var header = this.readHeader();
         var decoder = header.identifier;
-        
+
         if (header.identifier.charCodeAt(0) === 0) {
             this.offset += this.header.length + 1;
             return null;
         }
-        
+
         // map common frame names to a single type
         if (!this.frameTypes[decoder]) {
             for (var key in this.map) {
@@ -3700,15 +3700,15 @@ var ID3Stream = AV.Base.extend({
             // decode the frame
             var frame = this.decodeFrame(header, this.frameTypes[decoder]),
                 keys = Object.keys(frame);
-            
+
             // if it only returned one key, use that as the value    
             if (keys.length === 1)
                 frame = frame[keys[0]];
-            
+
             var result = {
                 value: frame
             };
-            
+
         } else {
             // No frame type found, treat it as binary
             var result = {
@@ -3717,7 +3717,7 @@ var ID3Stream = AV.Base.extend({
         }
 
         result.key = this.names[header.identifier] ? this.names[header.identifier] : header.identifier;
-        
+
         // special sauce for cover art, which should just be a buffer
         if (result.key === 'coverArt')
             result.value = result.value.data;
@@ -3729,82 +3729,82 @@ var ID3Stream = AV.Base.extend({
     decodeFrame: function(header, fields) {
         var stream = this.stream,
             start = stream.offset;
-            
+
         var encoding = 0, ret = {};
         var len = Object.keys(fields).length, i = 0;
-        
+
         for (var key in fields) {
             var type = fields[key];
             var rest = header.length - (stream.offset - start);
             i++;
-            
+
             // check for special field names
             switch (key) {
                 case 'encoding':
                     encoding = stream.readUInt8();
                     continue;
-                
+
                 case 'language':
                     ret.language = stream.readString(3);
                     continue;
             }
-            
+
             // check types
             switch (type) {                    
                 case 'latin1':
                     ret[key] = stream.readString(i === len ? rest : null, 'latin1');
                     break;
-                    
+
                 case 'string':
                     ret[key] = stream.readString(i === len ? rest : null, ENCODINGS[encoding]);
                     break;
-                    
+
                 case 'binary':
                     ret[key] = stream.readBuffer(rest)
                     break;
-                    
+
                 case 'int16':
                     ret[key] = stream.readInt16();
                     break;
-                    
+
                 case 'int8':
                     ret[key] = stream.readInt8();
                     break;
-                    
+
                 case 'int24':
                     ret[key] = stream.readInt24();
                     break;
-                    
+
                 case 'int32':
                     ret[key] = stream.readInt32();
                     break;
-                    
+
                 case 'int32+':
                     ret[key] = stream.readInt32();
                     if (rest > 4)
                         throw new Error('Seriously dude? Stop playing this song and get a life!');
-                        
+
                     break;
-                    
+
                 case 'date':
                     var val = stream.readString(8);
                     ret[key] = new Date(val.slice(0, 4), val.slice(4, 6) - 1, val.slice(6, 8));
                     break;
-                    
+
                 case 'frame_id':
                     ret[key] = stream.readString(4);
                     break;
-                    
+
                 default:
                     throw new Error('Unknown key type ' + type);
             }
         }
-        
+
         // Just in case something went wrong...
         var rest = header.length - (stream.offset - start);
         if (rest > 0)
             stream.advance(rest);
-        
+
         return ret;
     }
 });
@@ -3814,21 +3814,21 @@ exports.ID3v23Stream = ID3Stream.extend({
     readHeader: function() {
         var identifier = this.stream.readString(4);        
         var length = 0;
-        
+
         if (this.header.major === 4) {
             for (var i = 0; i < 4; i++)
                 length = (length << 7) + (this.stream.readUInt8() & 0x7f);
         } else {
             length = this.stream.readUInt32();
         }
-        
+
         return {
             identifier: identifier,
             length: length,
             flags: this.stream.readUInt16()
         };
     },
-    
+
     map: {
         text: [
             // Identification Frames
@@ -3845,55 +3845,55 @@ exports.ID3v23Stream = ID3Stream.extend({
 
             // Other Text Frames
             'TOFN', 'TDLY', 'TDEN', 'TDOR', 'TDRC', 'TDRL', 'TDTG', 'TSSE', 'TSOA', 'TSOP', 'TSOT',
-            
+
             // Deprecated Text Frames
             'TDAT', 'TIME', 'TORY', 'TRDA', 'TSIZ', 'TYER',
-            
+
             // Non-standard iTunes Frames
             'TCMP', 'TSO2', 'TSOC'
         ],
-        
+
         url: [
             'WCOM', 'WCOP', 'WOAF', 'WOAR', 'WOAS', 'WORS', 'WPAY', 'WPUB'
         ]
     },
-    
+
     frameTypes: {        
         text: {
             encoding: 1,
             value: 'string'
         },
-        
+
         url: {
             value: 'latin1'
         },
-        
+
         TXXX: {
             encoding: 1,
             description: 'string',
             value: 'string'
         },
-        
+
         WXXX: {
             encoding: 1,
             description: 'string',
             value: 'latin1',
         },
-        
+
         USLT: {
             encoding: 1,
             language: 1,
             description: 'string',
             value: 'string'
         },
-        
+
         COMM: {
             encoding: 1,
             language: 1,
             description: 'string',
             value: 'string'
         },
-        
+
         APIC: {
             encoding: 1,
             mime: 'latin1',
@@ -3901,7 +3901,7 @@ exports.ID3v23Stream = ID3Stream.extend({
             description: 'string',
             data: 'binary'
         },
-        
+
         UFID: {
             owner: 'latin1',
             identifier: 'binary'
@@ -3910,12 +3910,12 @@ exports.ID3v23Stream = ID3Stream.extend({
         MCDI: {
             value: 'binary'
         },
-        
+
         PRIV: {
             owner: 'latin1',
             value: 'binary'
         },
-        
+
         GEOB: {
             encoding: 1,
             mime: 'latin1',
@@ -3923,29 +3923,29 @@ exports.ID3v23Stream = ID3Stream.extend({
             description: 'string',
             data: 'binary'
         },
-        
+
         PCNT: {
             value: 'int32+'
         },
-        
+
         POPM: {
             email: 'latin1',
             rating: 'int8',
             counter: 'int32+'
         },
-        
+
         AENC: {
             owner: 'latin1',
             previewStart: 'int16',
             previewLength: 'int16',
             encryptionInfo: 'binary'
         },
-        
+
         ETCO: {
             format: 'int8',
             data: 'binary'  // TODO
         },
-        
+
         MLLT: {
             framesBetweenReference: 'int16',
             bytesBetweenReference: 'int24',
@@ -3954,12 +3954,12 @@ exports.ID3v23Stream = ID3Stream.extend({
             bitsForMillisecondsDev: 'int8',
             data: 'binary' // TODO
         },
-        
+
         SYTC: {
             format: 'int8',
             tempoData: 'binary' // TODO
         },
-        
+
         SYLT: {
             encoding: 1,
             language: 1,
@@ -3968,18 +3968,18 @@ exports.ID3v23Stream = ID3Stream.extend({
             description: 'string',
             data: 'binary' // TODO
         },
-        
+
         RVA2: {
             identification: 'latin1',
             data: 'binary' // TODO
         },
-        
+
         EQU2: {
             interpolationMethod: 'int8',
             identification: 'latin1',
             data: 'binary' // TODO
         },
-        
+
         RVRB: {
             left: 'int16',
             right: 'int16',
@@ -3992,37 +3992,37 @@ exports.ID3v23Stream = ID3Stream.extend({
             premixLR: 'int8',
             premixRL: 'int8'
         },
-        
+
         RBUF: {
             size: 'int24',
             flag: 'int8',
             offset: 'int32'
         },
-        
+
         LINK: {
             identifier: 'frame_id',
             url: 'latin1',
             data: 'binary' // TODO stringlist?
         },
-        
+
         POSS: {
             format: 'int8',
             position: 'binary' // TODO
         },
-        
+
         USER: {
             encoding: 1,
             language: 1,
             value: 'string'
         },
-        
+
         OWNE: {
             encoding: 1,
             price: 'latin1',
             purchaseDate: 'date',
             seller: 'string'
         },
-        
+
         COMR: {
             encoding: 1,
             price: 'latin1',
@@ -4034,28 +4034,28 @@ exports.ID3v23Stream = ID3Stream.extend({
             logoMime: 'latin1',
             logo: 'binary'
         },
-        
+
         ENCR: {
             owner: 'latin1',
             methodSymbol: 'int8',
             data: 'binary'
         },
-        
+
         GRID: {
             owner: 'latin1',
             groupSymbol: 'int8',
             data: 'binary'
         },
-        
+
         SIGN: {
             groupSymbol: 'int8',
             signature: 'binary'
         },
-        
+
         SEEK: {
             value: 'int32'
         },
-        
+
         ASPI: {
             dataStart: 'int32',
             dataLength: 'int32',
@@ -4063,25 +4063,25 @@ exports.ID3v23Stream = ID3Stream.extend({
             bitsPerPoint: 'int8',
             data: 'binary' // TODO
         },
-        
+
         // Deprecated ID3 v2.3 frames
         IPLS: {
             encoding: 1,
             value: 'string' // list?
         },
-        
+
         RVAD: {
             adjustment: 'int8',
             bits: 'int8',
             data: 'binary' // TODO
         },
-        
+
         EQUA: {
             adjustmentBits: 'int8',
             data: 'binary' // TODO
         }
     },
-    
+
     names: {
         // Identification Frames
         'TIT1': 'grouping',
@@ -4137,10 +4137,10 @@ exports.ID3v23Stream = ID3Stream.extend({
         'TSOA': 'albumSortOrder',
         'TSOP': 'performerSortOrder',
         'TSOT': 'titleSortOrder',
-        
+
         // User defined text information
         'TXXX': 'userText',
-        
+
         // Unsynchronised lyrics/text transcription
         'USLT': 'lyrics',
 
@@ -4155,7 +4155,7 @@ exports.ID3v23Stream = ID3Stream.extend({
 
         // Comment Frame
         'COMM': 'comments',
-        
+
         // URL link frames
         'WCOM': 'commercialInformation',
         'WCOP': 'copyrightInformation',
@@ -4203,7 +4203,7 @@ exports.ID3v23Stream = ID3Stream.extend({
         'IPLS': 'involvedPeopleList',
         'RVAD': 'volumeAdjustment',
         'EQUA': 'equalization',
-        
+
         // Non-standard iTunes frames
         'TCMP': 'compilation',
         'TSO2': 'albumArtistSortOrder',
@@ -4215,16 +4215,16 @@ exports.ID3v23Stream = ID3Stream.extend({
 exports.ID3v22Stream = exports.ID3v23Stream.extend({    
     readHeader: function() {
         var id = this.stream.readString(3);
-        
+
         if (this.frameReplacements[id] && !this.frameTypes[id])
             this.frameTypes[id] = this.frameReplacements[id];
-        
+
         return {
             identifier: this.replacements[id] || id,
             length: this.stream.readUInt24()
         };
     },
-    
+
     // map 3 char ID3 v2.2 names to 4 char ID3 v2.3/4 names
     replacements: {
         'UFI': 'UFID',
@@ -4264,7 +4264,7 @@ exports.ID3v22Stream = exports.ID3v23Stream.extend({
         'TOL': 'TOLY',
         'TOR': 'TORY',
         'TXX': 'TXXX',
-        
+
         'WAF': 'WOAF',
         'WAR': 'WOAR',
         'WAS': 'WOAS',
@@ -4272,7 +4272,7 @@ exports.ID3v22Stream = exports.ID3v23Stream.extend({
         'WCP': 'WCOP',
         'WPB': 'WPUB',
         'WXX': 'WXXX',
-        
+
         'IPL': 'IPLS',
         'MCI': 'MCDI',
         'ETC': 'ETCO',
@@ -4284,14 +4284,14 @@ exports.ID3v22Stream = exports.ID3v23Stream.extend({
         'RVA': 'RVAD',
         'EQU': 'EQUA',
         'REV': 'RVRB',
-        
+
         'GEO': 'GEOB',
         'CNT': 'PCNT',
         'POP': 'POPM',
         'BUF': 'RBUF',
         'CRA': 'AENC',
         'LNK': 'LINK',
-        
+
         // iTunes stuff
         'TST': 'TSOT',
         'TSP': 'TSOP',
@@ -4300,7 +4300,7 @@ exports.ID3v22Stream = exports.ID3v23Stream.extend({
         'TS2': 'TSO2',
         'TSC': 'TSOC'
     },
-    
+
     // replacements for ID3 v2.3/4 frames
     frameReplacements: {
         PIC: {
@@ -4310,7 +4310,7 @@ exports.ID3v22Stream = exports.ID3v23Stream.extend({
             description: 'string',
             data: 'binary'
         },
-        
+
         CRM: {
             owner: 'latin1',
             description: 'latin1',
@@ -4530,17 +4530,17 @@ const LINEAR_TABLE = new Float32Array([
 Layer1.prototype.decode = function(stream, frame) {
     var header = frame.header;
     var nch = header.nchannels();
-    
+
     var bound = 32;
     if (header.mode === MP3FrameHeader.MODE.JOINT_STEREO) {
         header.flags |= MP3FrameHeader.FLAGS.I_STEREO;
         bound = 4 + header.mode_extension * 4;
     }
-    
+
     if (header.flags & MP3FrameHeader.FLAGS.PROTECTION) {
         // TODO: crc check
     }
-    
+
     // decode bit allocations
     var allocation = this.allocation;
     for (var sb = 0; sb < bound; sb++) {
@@ -4548,36 +4548,36 @@ Layer1.prototype.decode = function(stream, frame) {
             var nb = stream.read(4);
             if (nb === 15)
                 throw new Error("forbidden bit allocation value");
-                
+
             allocation[ch][sb] = nb ? nb + 1 : 0;
         }
     }
-    
+
     for (var sb = bound; sb < 32; sb++) {
         var nb = stream.read(4);
         if (nb === 15)
             throw new Error("forbidden bit allocation value");
-            
+
         allocation[0][sb] =
         allocation[1][sb] = nb ? nb + 1 : 0;
     }
-    
+
     // decode scalefactors
     var scalefactor = this.scalefactor;
     for (var sb = 0; sb < 32; sb++) {
         for (var ch = 0; ch < nch; ch++) {
             if (allocation[ch][sb]) {
                 scalefactor[ch][sb] = stream.read(6);
-                
-            	/*
-            	 * Scalefactor index 63 does not appear in Table B.1 of
-            	 * ISO/IEC 11172-3. Nonetheless, other implementations accept it,
+
+                /*
+                 * Scalefactor index 63 does not appear in Table B.1 of
+                 * ISO/IEC 11172-3. Nonetheless, other implementations accept it,
                  * so we do as well 
                  */
             }
         }
     }
-    
+
     // decode samples
     for (var s = 0; s < 12; s++) {
         for (var sb = 0; sb < bound; sb++) {
@@ -4586,12 +4586,12 @@ Layer1.prototype.decode = function(stream, frame) {
                 frame.sbsample[ch][s][sb] = nb ? this.sample(stream, nb) * tables.SF_TABLE[scalefactor[ch][sb]] : 0;
             }
         }
-        
+
         for (var sb = bound; sb < 32; sb++) {
             var nb = allocation[0][sb];
             if (nb) {
                 var sample = this.sample(stream, nb);
-                
+
                 for (var ch = 0; ch < nch; ch++) {
                     frame.sbsample[ch][s][sb] = sample * tables.SF_TABLE[scalefactor[ch][sb]];
                 }
@@ -4606,12 +4606,12 @@ Layer1.prototype.decode = function(stream, frame) {
 
 Layer1.prototype.sample = function(stream, nb) {
     var sample = stream.read(nb);
-    
+
     // invert most significant bit, and form a 2's complement sample
     sample ^= 1 << (nb - 1);
     sample |= -(sample & (1 << (nb - 1)));
     sample /= (1 << (nb - 1));
-        
+
     // requantize the sample
     // s'' = (2^nb / (2^nb - 1)) * (s''' + 2^(-nb + 1))
     sample += 1 >> (nb - 1);
@@ -4640,19 +4640,19 @@ const SBQUANT = [
   // ISO/IEC 11172-3 Table B.2a
   { sblimit: 27, offsets:
       [ 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0 ] },
-      
+
   // ISO/IEC 11172-3 Table B.2b
   { sblimit: 30, offsets:
       [ 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0 ] },
-      
+
   // ISO/IEC 11172-3 Table B.2c
   {  sblimit: 8, offsets:
       [ 5, 5, 2, 2, 2, 2, 2, 2 ] },
-      
+
   // ISO/IEC 11172-3 Table B.2d
   { sblimit: 12, offsets:
       [ 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ] },
-      
+
   // ISO/IEC 13818-3 Table B.1
   { sblimit: 30, offsets:
       [ 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ] }
@@ -4679,8 +4679,6 @@ const OFFSETS = [
     [ 0, 1,  2, 3, 4, 5,  6, 7,  8,  9, 10, 11, 12, 13, 16 ],  // 4
     [ 0, 2,  4, 5, 6, 7,  8, 9, 10, 11, 12, 13, 14, 15, 16 ]   // 5
 ];
-
-
 
 /*
  * These are the Layer II classes of quantization.
@@ -4710,17 +4708,17 @@ Layer2.prototype.decode = function(stream, frame) {
     var header = frame.header;
     var nch = header.nchannels();
     var index;
-    
+
     if (header.flags & MP3FrameHeader.FLAGS.LSF_EXT) {
         index = 4;
     } else if (header.flags & MP3FrameHeader.FLAGS.FREEFORMAT) {
         index = header.samplerate === 48000 ? 0 : 1;
     } else {
         var bitrate_per_channel = header.bitrate;
-        
+
         if (nch === 2) {
             bitrate_per_channel /= 2;
-            
+
             /*
              * ISO/IEC 11172-3 allows only single channel mode for 32, 48, 56, and
              * 80 kbps bitrates in Layer II, but some encoders ignore this
@@ -4728,13 +4726,13 @@ Layer2.prototype.decode = function(stream, frame) {
              */
         } else {
             /*
-        	 * ISO/IEC 11172-3 does not allow single channel mode for 224, 256,
-        	 * 320, or 384 kbps bitrates in Layer II.
-        	 */
+             * ISO/IEC 11172-3 does not allow single channel mode for 224, 256,
+             * 320, or 384 kbps bitrates in Layer II.
+             */
             if (bitrate_per_channel > 192000)
                 throw new Error('bad bitrate/mode combination');
         }
-        
+
         if (bitrate_per_channel <= 48000)
             index = header.samplerate === 32000 ? 3 : 2;
         else if (bitrate_per_channel <= 80000)
@@ -4742,35 +4740,35 @@ Layer2.prototype.decode = function(stream, frame) {
         else
             index = header.samplerate === 48000 ? 0 : 1;
     }
-    
+
     var sblimit = SBQUANT[index].sblimit;
     var offsets = SBQUANT[index].offsets;
-    
+
     var bound = 32;
     if (header.mode === MP3FrameHeader.MODE.JOINT_STEREO) {
         header.flags |= MP3FrameHeader.FLAGS.I_STEREO;
         bound = 4 + header.mode_extension * 4;
     }
-    
+
     if (bound > sblimit)
         bound = sblimit;
-    
+
     // decode bit allocations
     var allocation = this.allocation;
     for (var sb = 0; sb < bound; sb++) {
         var nbal = BITALLOC[offsets[sb]].nbal;
-        
+
         for (var ch = 0; ch < nch; ch++)
             allocation[ch][sb] = stream.read(nbal);
     }
-    
+
     for (var sb = bound; sb < sblimit; sb++) {
         var nbal = BITALLOC[offsets[sb]].nbal;
-        
+
         allocation[0][sb] =
         allocation[1][sb] = stream.read(nbal);
     }
-    
+
     // decode scalefactor selection info
     var scfsi = this.scfsi;
     for (var sb = 0; sb < sblimit; sb++) {
@@ -4779,45 +4777,45 @@ Layer2.prototype.decode = function(stream, frame) {
                 scfsi[ch][sb] = stream.read(2);
         }
     }
-    
+
     if (header.flags & MP3FrameHeader.FLAGS.PROTECTION) {
         // TODO: crc check
     }
-    
+
     // decode scalefactors
     var scalefactor = this.scalefactor;
     for (var sb = 0; sb < sblimit; sb++) {
         for (var ch = 0; ch < nch; ch++) {
             if (allocation[ch][sb]) {
                 scalefactor[ch][sb][0] = stream.read(6);
-                
+
                 switch (scfsi[ch][sb]) {
-            	    case 2:
-            	        scalefactor[ch][sb][2] =
+                    case 2:
+                        scalefactor[ch][sb][2] =
                         scalefactor[ch][sb][1] = scalefactor[ch][sb][0];
                         break;
-                        
+
                     case 0:
                         scalefactor[ch][sb][1] = stream.read(6);
-                    	// fall through
-                    	
+                        // fall through
+
                     case 1:
                     case 3:
                         scalefactor[ch][sb][2] = stream.read(6);
                 }
-                
+
                 if (scfsi[ch][sb] & 1)
                     scalefactor[ch][sb][1] = scalefactor[ch][sb][scfsi[ch][sb] - 1];
-                    
+
                 /*
-            	 * Scalefactor index 63 does not appear in Table B.1 of
-            	 * ISO/IEC 11172-3. Nonetheless, other implementations accept it,
-            	 * so we do as well.
-            	 */
+                 * Scalefactor index 63 does not appear in Table B.1 of
+                 * ISO/IEC 11172-3. Nonetheless, other implementations accept it,
+                 * so we do as well.
+                 */
             }
         }
     }
-    
+
     // decode samples
     for (var gr = 0; gr < 12; gr++) {
         // normal
@@ -4826,7 +4824,7 @@ Layer2.prototype.decode = function(stream, frame) {
                 if (index = allocation[ch][sb]) {
                     index = OFFSETS[BITALLOC[offsets[sb]].offset][index - 1];
                     this.decodeSamples(stream, QC_TABLE[index]);
-                    
+
                     var scale = tables.SF_TABLE[scalefactor[ch][sb][gr >> 2]];
                     for (var s = 0; s < 3; s++) {
                         frame.sbsample[ch][3 * gr + s][sb] = this.samples[s] * scale;
@@ -4838,13 +4836,13 @@ Layer2.prototype.decode = function(stream, frame) {
                 }
             }
         }
-        
+
         // joint stereo
         for (var sb = bound; sb < sblimit; sb++) {
             if (index = allocation[0][sb]) {
                 index = OFFSETS[BITALLOC[offsets[sb]].offset][index - 1];
                 this.decodeSamples(stream, QC_TABLE[index]);
-                
+
                 for (var ch = 0; ch < nch; ch++) {
                     var scale = tables.SF_TABLE[scalefactor[ch][sb][gr >> 2]];
                     for (var s = 0; s < 3; s++) {
@@ -4859,7 +4857,7 @@ Layer2.prototype.decode = function(stream, frame) {
                 }
             }
         }
-        
+
         // the rest
         for (var ch = 0; ch < nch; ch++) {
             for (var s = 0; s < 3; s++) {
@@ -4874,12 +4872,12 @@ Layer2.prototype.decode = function(stream, frame) {
 Layer2.prototype.decodeSamples = function(stream, quantclass) {
     var sample = this.samples;
     var nb = quantclass.group;
-    
+
     if (nb) {
         // degrouping
         var c = stream.read(quantclass.bits);
         var nlevels = quantclass.nlevels;
-        
+
         for (var s = 0; s < 3; s++) {
             sample[s] = c % nlevels;
             c = c / nlevels | 0;
@@ -4890,13 +4888,13 @@ Layer2.prototype.decodeSamples = function(stream, quantclass) {
             sample[s] = stream.read(nb);
         }
     }
-    
+
     for (var s = 0; s < 3; s++) {
         // invert most significant bit, and form a 2's complement sample
         var requantized = sample[s] ^ (1 << (nb - 1));
         requantized |= -(requantized & (1 << (nb - 1)));
         requantized /= (1 << (nb - 1));
-        
+
         // requantize the sample
         sample[s] = (requantized + quantclass.D) * quantclass.C;
     }
@@ -4930,14 +4928,14 @@ function MP3Channel() {
     this.big_values        = null;
     this.global_gain       = null;
     this.scalefac_compress = null;
-    
+
     this.flags         = null;
     this.block_type    = null;
     this.table_select  = new Uint8Array(3);
     this.subblock_gain = new Uint8Array(3);
     this.region0_count = null;
     this.region1_count = null;
-    
+
     // from main_data
     this.scalefac = new Uint8Array(39);
 }
@@ -4945,14 +4943,14 @@ function MP3Channel() {
 function Layer3() {
     this.imdct = new IMDCT();
     this.si = new MP3SideInfo();
-    
+
     // preallocate reusable typed arrays for performance
     this.xr = [new Float64Array(576), new Float64Array(576)];
     this._exponents = new Int32Array(39);
     this.reqcache = new Float64Array(16);
     this.modes = new Int16Array(39);
     this.output = new Float64Array(36);
-    
+
     this.tmp = utils.makeArray([32, 3, 6]);
     this.tmp2 = new Float64Array(32 * 3 * 6);
 }
@@ -4963,53 +4961,53 @@ Layer3.prototype.decode = function(stream, frame) {
     var header = frame.header;
     var next_md_begin = 0;
     var md_len = 0;
-    
+
     var nch = header.nchannels();
     var si_len = (header.flags & MP3FrameHeader.FLAGS.LSF_EXT) ? (nch === 1 ? 9 : 17) : (nch === 1 ? 17 : 32);
-        
+
     // check frame sanity
     if (stream.next_frame - stream.nextByte() < si_len) {
         stream.md_len = 0;
         throw new Error('Bad frame length');
     }
-    
+
     // check CRC word
     if (header.flags & MP3FrameHeader.FLAGS.PROTECTION) {
         // TODO: crc check
     }
-    
+
     // decode frame side information
     var sideInfo = this.sideInfo(stream, nch, header.flags & MP3FrameHeader.FLAGS.LSF_EXT);        
     var si = sideInfo.si;
     var data_bitlen = sideInfo.data_bitlen;
     var priv_bitlen = sideInfo.priv_bitlen;
-    
+
     header.flags        |= priv_bitlen;
     header.private_bits |= si.private_bits;
-    
+
     // find main_data of next frame
     var peek = stream.copy();
     peek.seek(stream.next_frame * 8);
-    
+
     var nextHeader = peek.read(16);    
     if ((nextHeader & 0xffe6) === 0xffe2) { // syncword | layer
         if ((nextHeader & 1) === 0) // protection bit
             peek.advance(16); // crc check
-            
+
         peek.advance(16); // skip the rest of the header
         next_md_begin = peek.read((nextHeader & 8) ? 9 : 8);
     }
-    
+
     // find main_data of this frame
     var frame_space = stream.next_frame - stream.nextByte();
-    
+
     if (next_md_begin > si.main_data_begin + frame_space)
         next_md_begin = 0;
-        
+
     var md_len = si.main_data_begin + frame_space - next_md_begin;
     var frame_used = 0;
     var ptr;
-    
+
     if (si.main_data_begin === 0) {
         ptr = stream.stream;
         stream.md_len = 0;
@@ -5019,27 +5017,27 @@ Layer3.prototype.decode = function(stream, frame) {
             throw new Error('bad main_data_begin pointer');
         } else {
             var old_md_len = stream.md_len;
-            
+
             if (md_len > si.main_data_begin) {
                 if (stream.md_len + md_len - si.main_data_begin > MP3FrameHeader.BUFFER_MDLEN) {
                     throw new Error("Assertion failed: (stream.md_len + md_len - si.main_data_begin <= MAD_MP3FrameHeader.BUFFER_MDLEN)");
                 }
-                
+
                 frame_used = md_len - si.main_data_begin;
                 this.memcpy(stream.main_data, stream.md_len, stream.stream.stream, stream.nextByte(), frame_used);
                 stream.md_len += frame_used;
             }
-            
+
             ptr = new AV.Bitstream(AV.Stream.fromBuffer(new AV.Buffer(stream.main_data)));
             ptr.advance((old_md_len - si.main_data_begin) * 8);
         }
     }
-    
+
     var frame_free = frame_space - frame_used;
-    
+
     // decode main_data
     this.decodeMainData(ptr, frame, si, nch);
-    
+
     // preload main_data buffer with up to 511 bytes for next frame(s)
     if (frame_free >= next_md_begin) {
         this.memcpy(stream.main_data, 0, stream.stream.stream, stream.next_frame - next_md_begin, next_md_begin);
@@ -5057,7 +5055,7 @@ Layer3.prototype.decode = function(stream, frame) {
         } else {
             stream.md_len = 0;
         }
-        
+
         this.memcpy(stream.main_data, stream.md_len, stream.stream.stream, stream.next_frame - frame_free, frame_free);
         stream.md_len += frame_free;
     }
@@ -5079,7 +5077,7 @@ Layer3.prototype.sideInfo = function(stream, nch, lsf) {
     var si = this.si;
     var data_bitlen = 0;
     var priv_bitlen = lsf ? ((nch === 1) ? 1 : 2) : ((nch === 1) ? 5 : 3);
-    
+
     si.main_data_begin = stream.read(lsf ? 8 : 9);
     si.private_bits    = stream.read(priv_bitlen);
 
@@ -5089,13 +5087,13 @@ Layer3.prototype.sideInfo = function(stream, nch, lsf) {
         for (var ch = 0; ch < nch; ++ch)
             si.scfsi[ch] = stream.read(4);
     }
-    
+
     for (var gr = 0; gr < ngr; gr++) {
         var granule = si.gr[gr];
-        
+
         for (var ch = 0; ch < nch; ch++) {
             var channel = granule.ch[ch];
-            
+
             channel.part2_3_length    = stream.read(12);
             channel.big_values        = stream.read(9);
             channel.global_gain       = stream.read(8);
@@ -5145,7 +5143,7 @@ Layer3.prototype.sideInfo = function(stream, nch, lsf) {
             channel.flags |= stream.read(lsf ? 2 : 3);
         }
     }
-    
+
     return {
         si: si,
         data_bitlen: data_bitlen,
@@ -5166,20 +5164,20 @@ Layer3.prototype.decodeMainData = function(stream, frame, si, nch) {
 
     if (header.flags & MP3FrameHeader.FLAGS.MPEG_2_5_EXT)
         sfreqi += 3;
-        
+
     // scalefactors, Huffman decoding, requantization
     var ngr = (header.flags & MP3FrameHeader.FLAGS.LSF_EXT) ? 1 : 2;
     var xr = this.xr;
-    
+
     for (var gr = 0; gr < ngr; ++gr) {
         var granule = si.gr[gr];
         var sfbwidth = [];
         var l = 0;
-        
+
         for (var ch = 0; ch < nch; ++ch) {
             var channel = granule.ch[ch];
             var part2_length;
-            
+
             sfbwidth[ch] = tables.SFBWIDTH_TABLE[sfreqi].l;
             if (channel.block_type === 2) {
                 sfbwidth[ch] = (channel.flags & tables.MIXED_BLOCK_FLAG) ? tables.SFBWIDTH_TABLE[sfreqi].m : tables.SFBWIDTH_TABLE[sfreqi].s;
@@ -5193,19 +5191,19 @@ Layer3.prototype.decodeMainData = function(stream, frame, si, nch) {
 
             this.huffmanDecode(stream, xr[ch], channel, sfbwidth[ch], part2_length);
         }
-        
+
         // joint stereo processing
         if (header.mode === MP3FrameHeader.MODE.JOINT_STEREO && header.mode_extension !== 0)
             this.stereo(xr, si.gr, gr, header, sfbwidth[0]);
-        
+
         // reordering, alias reduction, IMDCT, overlap-add, frequency inversion
         for (var ch = 0; ch < nch; ch++) {
             var channel = granule.ch[ch];
             var sample = frame.sbsample[ch].slice(18 * gr);
-            
+
             var sb, l = 0, i, sblimit;
             var output = this.output;
-            
+
             if (channel.block_type === 2) {
                 this.reorder(xr[ch], channel, sfbwidth[ch]);
 
@@ -5221,7 +5219,7 @@ Layer3.prototype.decodeMainData = function(stream, frame, si, nch) {
             } else {
                 this.aliasreduce(xr[ch], 576);
             }
-            
+
             // subbands 0-1
             if (channel.block_type !== 2 || (channel.flags & tables.MIXED_BLOCK_FLAG)) {
                 var block_type = channel.block_type;
@@ -5240,7 +5238,7 @@ Layer3.prototype.decodeMainData = function(stream, frame, si, nch) {
                     this.overlap(output, frame.overlap[ch][sb], sample, sb);
                 }
             }
-            
+
             this.freqinver(sample, 1);
 
             // (nonzero) subbands 2-31
@@ -5248,7 +5246,7 @@ Layer3.prototype.decodeMainData = function(stream, frame, si, nch) {
             while (i > 36 && xr[ch][i - 1] === 0) {
                 --i;
             }
-            
+
             sblimit = 32 - (((576 - i) / 18) << 0);
 
             if (channel.block_type !== 2) {
@@ -5270,7 +5268,7 @@ Layer3.prototype.decodeMainData = function(stream, frame, si, nch) {
                         this.freqinver(sample, sb);
                 }
             }
-            
+
             // remaining (zero) subbands
             for (var sb = sblimit; sb < 32; ++sb) {
                 this.overlap_z(frame.overlap[ch][sb], sample, sb);
@@ -5287,7 +5285,7 @@ Layer3.prototype.scalefactors = function(stream, channel, gr0ch, scfsi) {
     var slen1 = tables.SFLEN_TABLE[channel.scalefac_compress].slen1;
     var slen2 = tables.SFLEN_TABLE[channel.scalefac_compress].slen2;
     var sfbi;
-    
+
     if (channel.block_type === 2) {
         sfbi = 0;
 
@@ -5337,7 +5335,7 @@ Layer3.prototype.scalefactors = function(stream, channel, gr0ch, scfsi) {
 
         channel.scalefac[21] = 0;
     }
-    
+
     return stream.offset() - start;
 };
 
@@ -5347,14 +5345,14 @@ Layer3.prototype.scalefactors_lsf = function(stream, channel, gr1ch, mode_extens
     var index = channel.block_type === 2 ? (channel.flags & tables.MIXED_BLOCK_FLAG ? 2 : 1) : 0;
     var slen = new Int32Array(4);
     var nsfb;
-    
+
     if (!((mode_extension & tables.I_STEREO) && gr1ch)) {
         if (scalefac_compress < 400) {
             slen[0] = (scalefac_compress >>> 4) / 5;
             slen[1] = (scalefac_compress >>> 4) % 5;
             slen[2] = (scalefac_compress % 16) >>> 2;
             slen[3] =  scalefac_compress %  4;
-        
+
             nsfb = tables.NSFB_TABLE[0][index];
         } else if (scalefac_compress < 500) {
             scalefac_compress -= 400;
@@ -5376,20 +5374,20 @@ Layer3.prototype.scalefactors_lsf = function(stream, channel, gr1ch, mode_extens
             channel.flags |= tables.PREFLAG;
             nsfb = tables.NSFB_TABLE[2][index];
         }
-        
+
         var n = 0;
         for (var part = 0; part < 4; part++) {
             for (var i = 0; i < nsfb[part]; i++) {
                 channel.scalefac[n++] = stream.read(slen[part]);
             }
         }
-        
+
         while (n < 39) {
             channel.scalefac[n++] = 0;
         }
     } else {  // (mode_extension & tables.I_STEREO) && gr1ch (i.e. ch == 1)
         scalefac_compress >>>= 1;
-        
+
         if (scalefac_compress < 180) {
             slen[0] =  scalefac_compress / 36;
             slen[1] = (scalefac_compress % 36) / 6;
@@ -5416,7 +5414,7 @@ Layer3.prototype.scalefactors_lsf = function(stream, channel, gr1ch, mode_extens
 
             nsfb = tables.NSFB_TABLE[5][index];
         }
-        
+
         var n = 0;
         for (var part = 0; part < 4; ++part) {
             var max = (1 << slen[part]) - 1;
@@ -5427,58 +5425,58 @@ Layer3.prototype.scalefactors_lsf = function(stream, channel, gr1ch, mode_extens
                 gr1ch.scalefac[n++] = is_pos === max ? 1 : 0;
             }
         }
-        
+
         while (n < 39) {
             channel.scalefac[n] = 0;
             gr1ch.scalefac[n++] = 0;  // apparently not illegal
         }
     }
-    
+
     return stream.offset() - start;
 };
 
 Layer3.prototype.huffmanDecode = function(stream, xr, channel, sfbwidth, part2_length) {
     var exponents = this._exponents;
     var sfbwidthptr = 0;
-    
+
     var bits_left = channel.part2_3_length - part2_length;    
     if (bits_left < 0)
         throw new Error('bad audio data length');
-    
+
     this.exponents(channel, sfbwidth, exponents);
-    
+
     var peek = stream.copy();
     stream.advance(bits_left);
-    
+
     /* align bit reads to byte boundaries */
     var cachesz  = 8 - peek.bitPosition;
     cachesz += ((32 - 1 - 24) + (24 - cachesz)) & ~7;
-    
+
     var bitcache = peek.read(cachesz);
     bits_left -= cachesz;
 
     var xrptr = 0;
-    
+
     // big_values
     var region = 0;
     var reqcache = this.reqcache;
-    
+
     var sfbound = xrptr + sfbwidth[sfbwidthptr++];
     var rcount  = channel.region0_count + 1;
-    
+
     var entry = huffman.huff_pair_table[channel.table_select[region]];
     var table     = entry.table;
     var linbits   = entry.linbits;
     var startbits = entry.startbits;
-    
+
     if (typeof table === 'undefined')
         throw new Error('bad Huffman table select');
-        
+
     var expptr = 0;
     var exp = exponents[expptr++];
     var reqhits = 0;
     var big_values = channel.big_values;
-    
+
     while (big_values-- && cachesz + bits_left > 0) {
          if (xrptr === sfbound) {
              sfbound += sfbwidth[sfbwidthptr++];
@@ -5506,29 +5504,29 @@ Layer3.prototype.huffmanDecode = function(stream, xr, channel, sfbwidth, part2_l
 
              ++expptr;
          }
-         
+
          if (cachesz < 21) {
              var bits   = ((32 - 1 - 21) + (21 - cachesz)) & ~7;
              bitcache   = (bitcache << bits) | peek.read(bits);
              cachesz   += bits;
              bits_left -= bits;
          }
-         
+
          var clumpsz = startbits;
          var pair = table[ (((bitcache) >> ((cachesz) - (clumpsz))) & ((1 << (clumpsz)) - 1))];
-         
+
          while (!pair.final) {
              cachesz -= clumpsz;
              clumpsz = pair.ptr.bits;
              pair    = table[pair.ptr.offset + (((bitcache) >> ((cachesz) - (clumpsz))) & ((1 << (clumpsz)) - 1))];
          }
-         
+
          cachesz -= pair.value.hlen;
-         
+
          if (linbits) {
              var value = pair.value.x;
              var x_final = false;
-             
+
              switch (value) {
                  case 0:
                      xr[xrptr] = 0;
@@ -5555,17 +5553,17 @@ Layer3.prototype.huffmanDecode = function(stream, xr, channel, sfbwidth, part2_l
                          reqhits |= (1 << value);
                          requantized = reqcache[value] = this.requantize(value, exp);
                      }
-                     
+
                      x_final = true;
              }
-             
+
              if(x_final) {
                  xr[xrptr] = ((bitcache) & (1 << ((cachesz--) - 1))) ? -requantized : requantized;
              }
-             
+
              value = pair.value.y;
              var y_final = false;
-             
+
              switch (value) {
                  case 0:
                      xr[xrptr + 1] = 0;
@@ -5593,14 +5591,14 @@ Layer3.prototype.huffmanDecode = function(stream, xr, channel, sfbwidth, part2_l
                          reqcache[value] = this.requantize(value, exp);
                          requantized = reqcache[value];
                      }
-                     
+
                      y_final = true;
              }
-             
+
              if(y_final) {
                  xr[xrptr + 1] = ((bitcache) & (1 << ((cachesz--) - 1))) ? -requantized : requantized;
              }
-             
+
          } else {
              var value = pair.value.x;
 
@@ -5635,29 +5633,29 @@ Layer3.prototype.huffmanDecode = function(stream, xr, channel, sfbwidth, part2_l
 
          xrptr += 2;
     }
-    
+
     if (cachesz + bits_left < 0)
         throw new Error('Huffman data overrun');
-    
+
     // count1    
     var table = huffman.huff_quad_table[channel.flags & tables.COUNT1TABLE_SELECT];
     var requantized = this.requantize(1, exp);
-    
+
     while (cachesz + bits_left > 0 && xrptr <= 572) {
         if (cachesz < 10) {
             bitcache   = (bitcache << 16) | peek.read(16);
             cachesz   += 16;
             bits_left -= 16;
         }
-        
+
         var quad = table[(((bitcache) >> ((cachesz) - (4))) & ((1 << (4)) - 1))];
-        
+
         // quad tables guaranteed to have at most one extra lookup
         if (!quad.final) {
             cachesz -= 4;
             quad = table[quad.ptr.offset + (((bitcache) >> ((cachesz) - (quad.ptr.bits))) & ((1 << (quad.ptr.bits)) - 1))];
         }
-        
+
         cachesz -= quad.value.hlen;
 
         if (xrptr === sfbound) {
@@ -5670,7 +5668,7 @@ Layer3.prototype.huffmanDecode = function(stream, xr, channel, sfbwidth, part2_l
 
             ++expptr;
         }
-        
+
         // v (0..1)
         xr[xrptr] = quad.value.v ? (((bitcache) & (1 << ((cachesz--) - 1))) ? -requantized : requantized) : 0;
 
@@ -5688,7 +5686,7 @@ Layer3.prototype.huffmanDecode = function(stream, xr, channel, sfbwidth, part2_l
 
             ++expptr;
         }
-        
+
         // x (0..1)
         xr[xrptr] = quad.value.x ? (((bitcache) & (1 << ((cachesz--) - 1))) ? -requantized : requantized) : 0;
 
@@ -5696,18 +5694,18 @@ Layer3.prototype.huffmanDecode = function(stream, xr, channel, sfbwidth, part2_l
         xr[xrptr + 1] = quad.value.y ? (((bitcache) & (1 << ((cachesz--) - 1))) ? -requantized : requantized) : 0;
 
         xrptr += 2;
-        
+
         if (cachesz + bits_left < 0) {
             // technically the bitstream is misformatted, but apparently
             // some encoders are just a bit sloppy with stuffing bits
             xrptr -= 4;
         }
     }
-    
+
     if (-bits_left > MP3FrameHeader.BUFFER_GUARD * 8) {
         throw new Error("assertion failed: (-bits_left <= MP3FrameHeader.BUFFER_GUARD * CHAR_BIT)");
     }
-    
+
     // rzero
     while (xrptr < 576) {
         xr[xrptr]     = 0;
@@ -5723,11 +5721,11 @@ Layer3.prototype.requantize = function(value, exp) {
 
     var requantized = Math.pow(value, 4.0 / 3.0);
     requantized *= Math.pow(2.0, (exp / 4.0));
-    
+
     if (frac) {
         requantized *= Math.pow(2.0, (frac / 4.0));
     }
-    
+
     if (exp < 0) {
         requantized /= Math.pow(2.0, -exp * (3.0 / 4.0));
     }
@@ -5738,30 +5736,30 @@ Layer3.prototype.requantize = function(value, exp) {
 Layer3.prototype.exponents = function(channel, sfbwidth, exponents) {
     var gain = channel.global_gain - 210;
     var scalefac_multiplier = (channel.flags & tables.SCALEFAC_SCALE) ? 2 : 1;
-    
+
     if (channel.block_type === 2) {
         var sfbi = 0, l = 0;
-        
+
         if (channel.flags & tables.MIXED_BLOCK_FLAG) {
             var premask = (channel.flags & tables.PREFLAG) ? ~0 : 0;
-            
+
             // long block subbands 0-1
             while (l < 36) {
                 exponents[sfbi] = gain - ((channel.scalefac[sfbi] + (tables.PRETAB[sfbi] & premask)) << scalefac_multiplier);
                 l += sfbwidth[sfbi++];
             }
         }
-        
+
         // this is probably wrong for 8000 Hz short/mixed blocks
         var gain0 = gain - 8 * channel.subblock_gain[0];
         var gain1 = gain - 8 * channel.subblock_gain[1];
         var gain2 = gain - 8 * channel.subblock_gain[2];
-        
+
         while (l < 576) {
             exponents[sfbi + 0] = gain0 - (channel.scalefac[sfbi + 0] << scalefac_multiplier);
             exponents[sfbi + 1] = gain1 - (channel.scalefac[sfbi + 1] << scalefac_multiplier);
             exponents[sfbi + 2] = gain2 - (channel.scalefac[sfbi + 2] << scalefac_multiplier);
-            
+
             l += 3 * sfbwidth[sfbi];
             sfbi += 3;
         }
@@ -5782,27 +5780,27 @@ Layer3.prototype.stereo = function(xr, granules, gr, header, sfbwidth) {
     var granule = granules[gr];
     var modes = this.modes;
     var sfbi, l, n, i;
-    
+
     if (granule.ch[0].block_type !== granule.ch[1].block_type || (granule.ch[0].flags & tables.MIXED_BLOCK_FLAG) !== (granule.ch[1].flags & tables.MIXED_BLOCK_FLAG))
         throw new Error('incompatible stereo block_type');
-        
+
     for (var i = 0; i < 39; i++)
         modes[i] = header.mode_extension;
-        
+
     // intensity stereo
     if (header.mode_extension & tables.I_STEREO) {
         var right_ch = granule.ch[1];
         var right_xr = xr[1];
-        
+
         header.flags |= MP3FrameHeader.FLAGS.tables.I_STEREO;
-         
+
         // first determine which scalefactor bands are to be processed
         if (right_ch.block_type === 2) {
             var lower, start, max, bound = new Uint32Array(3), w;
 
             lower = start = max = bound[0] = bound[1] = bound[2] = 0;
             sfbi = l = 0;
-            
+
             if (right_ch.flags & tables.MIXED_BLOCK_FLAG) {
                 while (l < 36) {
                     n = sfbwidth[sfbi++];
@@ -5820,7 +5818,7 @@ Layer3.prototype.stereo = function(xr, granules, gr, header, sfbwidth) {
 
                 start = sfbi;
             }
-            
+
             var w = 0;
             while (l < 576) {
                 n = sfbwidth[sfbi++];
@@ -5836,7 +5834,7 @@ Layer3.prototype.stereo = function(xr, granules, gr, header, sfbwidth) {
                 l += n;
                 w = (w + 1) % 3;
             }
-            
+
             if (max)
                 lower = start;
 
@@ -5870,14 +5868,14 @@ Layer3.prototype.stereo = function(xr, granules, gr, header, sfbwidth) {
             for (i = 0; i < bound; ++i)
                 modes[i] = header.mode_extension & ~tables.I_STEREO;
         }
-        
+
         // now do the actual processing
         if (header.flags & MP3FrameHeader.FLAGS.LSF_EXT) {
             var illegal_pos = granules[gr + 1].ch[1].scalefac;
 
             // intensity_scale
             var lsf_scale = IS_Ltables.SF_TABLE[right_ch.scalefac_compress & 0x1];
-            
+
             for (sfbi = l = 0; l < 576; ++sfbi, l += n) {
                 n = sfbwidth[sfbi];
 
@@ -5890,7 +5888,7 @@ Layer3.prototype.stereo = function(xr, granules, gr, header, sfbwidth) {
                 }
 
                 is_pos = right_ch.scalefac[sfbi];
-                
+
                 for (i = 0; i < n; ++i) {
                     var left = xr[0][l + i];
 
@@ -5931,7 +5929,7 @@ Layer3.prototype.stereo = function(xr, granules, gr, header, sfbwidth) {
             }
         }
     }
-    
+
     // middle/side stereo
     if (header.mode_extension & tables.MS_STEREO) {
         header.flags |= tables.MS_STEREO;
@@ -5999,7 +5997,7 @@ Layer3.prototype.imdct_s = function (X, z) {
     var yptr = 0;
     var wptr;
     var Xptr = 0;
-    
+
     var y = new Float64Array(36);
     var hi, lo;
 
@@ -6087,7 +6085,7 @@ Layer3.prototype.reorder = function (xr, channel, sfbwidth) {
     var tmp = this.tmp;
     var sbw = new Uint32Array(3);
     var sw  = new Uint32Array(3);
-    
+
     // this is probably wrong for 8000 Hz mixed blocks
 
     var sb = 0;
@@ -6112,7 +6110,7 @@ Layer3.prototype.reorder = function (xr, channel, sfbwidth) {
             f = sfbwidth[sfbwidthPointer++] - 1;
             w = (w + 1) % 3;
         }
-        
+
         tmp[sbw[w]][w][sw[w]++] = xr[l];
 
         if (sw[w] === 6) {
@@ -6123,7 +6121,7 @@ Layer3.prototype.reorder = function (xr, channel, sfbwidth) {
 
     var tmp2 = this.tmp2;
     var ptr = 0;
-    
+
     for (var i = 0; i < 32; i++) {
         for (var j = 0; j < 3; j++) {
             for (var k = 0; k < 6; k++) {
@@ -6131,7 +6129,7 @@ Layer3.prototype.reorder = function (xr, channel, sfbwidth) {
             }
         }
     }
-    
+
     var len = (576 - 18 * sb); 
     for (var i = 0; i < len; i++) {
         xr[18 * sb + i] = tmp2[sb + i];
@@ -6150,10 +6148,10 @@ function MP3Stream(stream) {
     this.freerate = 0;                        // free bitrate (fixed)
     this.this_frame = stream.stream.offset;   // start of current frame
     this.next_frame = stream.stream.offset;   // start of next frame
-    
+
     this.main_data = new Uint8Array(MP3FrameHeader.BUFFER_MDLEN); // actual audio data
     this.md_len = 0;                               // length of main data
-    
+
     // copy methods from actual stream
     for (var key in stream) {
         if (typeof stream[key] === 'function')
@@ -6174,14 +6172,14 @@ MP3Stream.prototype.nextByte = function() {
 MP3Stream.prototype.doSync = function() {
     var stream = this.stream.stream;
     this.align();
-    
+
     while (this.available(16) && !(stream.peekUInt8(0) === 0xff && (stream.peekUInt8(1) & 0xe0) === 0xe0)) {
         this.advance(8);
     }
 
     if (!this.available(MP3FrameHeader.BUFFER_GUARD))
         return false;
-        
+
     return true;
 };
 
@@ -6199,7 +6197,7 @@ var utils = require('./utils');
 function MP3Synth() {
     this.filter = utils.makeArray([2, 2, 2, 16, 8]); // polyphase filterbank outputs
     this.phase = 0;
-    
+
     this.pcm = {
         samplerate: 0,
         channels: 0,
@@ -7149,7 +7147,7 @@ const D = [
  */
 MP3Synth.prototype.full = function(frame, nch, ns) {
     var Dptr, hi, lo, ptr;
-    
+
     for (var ch = 0; ch < nch; ++ch) {
         var sbsample = frame.sbsample[ch];
         var filter  = this.filter[ch];
@@ -7172,7 +7170,7 @@ MP3Synth.prototype.full = function(frame, nch, ns) {
             var fePtr = 0;
             var fxPtr = 0;
             var foPtr = 0;
-            
+
             Dptr = 0;
 
             ptr = D[Dptr];
@@ -7188,7 +7186,7 @@ MP3Synth.prototype.full = function(frame, nch, ns) {
             lo += _fx[6] * ptr[po +  4];
             lo += _fx[7] * ptr[po +  2];
             lo = -lo;                      
-            
+
             lo += _fe[0] * ptr[pe +  0];
             lo += _fe[1] * ptr[pe + 14];
             lo += _fe[2] * ptr[pe + 12];
@@ -7678,25 +7676,25 @@ exports.NSFB_TABLE = [
       [ 15, 12,  9, 0 ],
       [  6, 18,  9, 0 ] ]
 ];
- 
+
 },{}],15:[function(require,module,exports){
 /**
  * Makes a multidimensional array
  */
 exports.makeArray = function(lengths, Type) {
     if (!Type) Type = Float64Array;
-    
+
     if (lengths.length === 1) {
         return new Type(lengths[0]);
     }
-    
+
     var ret = [],
         len = lengths[0];
-        
+
     for (var j = 0; j < len; j++) {
         ret[j] = exports.makeArray(lengths.slice(1), Type);
     }
-    
+
     return ret;
 };
 

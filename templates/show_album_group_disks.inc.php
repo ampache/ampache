@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,6 +43,7 @@ if ($directplay_limit > 0) {
 <div class="item_right_info">
     <div class="external_links">
         <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/s?q=%22<?php echo rawurlencode($label->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
         <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($album->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
         <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22&type=album" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     </div>
@@ -54,60 +55,63 @@ if ($directplay_limit > 0) {
     }
     ?>
 </div>
+<?php if (User::is_registered()) {
+        ?>
+    <?php if (AmpConfig::get('ratings')) {
+            ?>
+    <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
+            <?php Rating::show($album->id, 'album'); ?>
+    </div>
+    <?php
+        } ?>
+    <?php if (AmpConfig::get('userflags')) {
+            ?>
+    <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
+            <?php Userflag::show($album->id, 'album'); ?>
+    </div>
+    <?php
+        } ?>
+<?php
+    } ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
         <?php if ($show_direct_play) {
-    ?>
+        ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'directplay_full_');
-    ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), T_('Play'), 'directplay_full_text_');
-    ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'directplay_full_'); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), T_('Play'), 'directplay_full_text_'); ?>
         </li>
             <?php if (Stream_Playlist::check_autoplay_append()) {
-    ?>
+            ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_');
-    ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', T_('Play last'), 'addplay_album_text_');
-    ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_'); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', T_('Play last'), 'addplay_album_text_'); ?>
         </li>
-            <?php 
-}
-    ?>
-        <?php 
-} ?>
+            <?php
+        } ?>
+        <?php
+    } ?>
         <?php if ($show_playlist_add) {
-    ?>
+        ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_');
-    ?>
-            <?php echo Ajax::text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), T_('Add to temporary playlist'), 'play_full_text_');
-    ?>
+            <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_'); ?>
+            <?php echo Ajax::text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), T_('Add to temporary playlist'), 'play_full_text_'); ?>
         </li>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_');
-    ?>
-            <?php echo Ajax::text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), T_('Random to temporary playlist'), 'play_random_text_');
-    ?>
+            <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_'); ?>
+            <?php echo Ajax::text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), T_('Random to temporary playlist'), 'play_random_text_'); ?>
         </li>
-        <?php 
-} ?>
+        <?php
+    } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) {
-    ?>
+        ?>
         <li>
-            <a rel="nohtml" href="<?php echo $web_path;
-    ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id');
-    ?>"><?php echo UI::get_icon('batch_download', T_('Download'));
-    ?></a>
-            <a rel="nohtml" href="<?php echo $web_path;
-    ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id');
-    ?>"><?php echo T_('Download');
-    ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo T_('Download'); ?></a>
         </li>
-        <?php 
-} ?>
+        <?php
+    } ?>
     </ul>
 </div>
 <?php UI::show_box_bottom(); ?>
@@ -128,10 +132,8 @@ if ($directplay_limit > 0) {
             if ($show_direct_play) {
                 $show_direct_play = $show_playlist_add;
             }
-        }
-        ?>
-    <div class="album_group_disks_title"><span> <?php echo $c_title;
-        ?></span></div>
+        } ?>
+    <div class="album_group_disks_title"><span> <?php echo $c_title; ?></span></div>
     <div class="album_group_disks_actions">
         <?php
             if ($show_direct_play) {
@@ -143,56 +145,42 @@ if ($directplay_limit > 0) {
         if ($show_playlist_add) {
             echo Ajax::button('?action=basket&type=album&' . $c_album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $c_album->id);
             echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_' . $c_album->id);
-        }
-        ?>
-        <?php if (Access::check('interface','25')) {
-    ?>
+        } ?>
+        <?php if (Access::check('interface', '25')) {
+            ?>
             <?php if (AmpConfig::get('sociable')) {
-    ?>
+                ?>
                 <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo UI::get_icon('comment', T_('Post Shout')) ?></a>
-            <?php 
-}
-    ?>
+            <?php
+            } ?>
             <?php if (AmpConfig::get('share')) {
-    ?>
-                <?php Share::display_ui('album', $c_album->id, false);
-    ?>
-            <?php 
-}
-    ?>
-        <?php 
-}
-        ?>
+                ?>
+                <?php Share::display_ui('album', $c_album->id, false); ?>
+            <?php
+            } ?>
+        <?php
+        } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) {
-    ?>
-            <a rel="nohtml" href="<?php echo $web_path;
-    ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id');
-    ?>"><?php echo UI::get_icon('batch_download', T_('Download'));
-    ?></a>
-        <?php 
-}
-        ?>
-        <?php if (Access::check('interface','50')) {
-    ?>
+            ?>
+            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+        <?php
+        } ?>
+        <?php if (Access::check('interface', '50')) {
+            ?>
             <a onclick="submitNewItemsOrder('<?php echo $c_album->id ?>', 'reorder_songs_table_<?php echo $c_album->id ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
-                <?php echo UI::get_icon('save', T_('Save Tracks Order'));
-    ?>
+                <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
             </a>
             <a href="javascript:NavigateTo('<?php echo $web_path ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?') ?>');">
-                <?php echo UI::get_icon('file_refresh', T_('Update from tags'));
-    ?>
+                <?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?>
             </a>
             <a id="<?php echo 'edit_album_' . $c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_' . $c_album->id ?>', '<?php echo T_('Album edit') ?>', '')">
-                <?php echo UI::get_icon('edit', T_('Edit'));
-    ?>
+                <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
-        <?php 
-}
-        ?>
+        <?php
+        } ?>
     </div>
-    <div id='reordered_list_<?php echo $album_id;
-        ?>'>
+    <div id='reordered_list_<?php echo $album_id; ?>'>
     <?php
         $browse = new Browse();
         $browse->set_show_header(false);
@@ -202,8 +190,7 @@ if ($directplay_limit > 0) {
         $browse->set_sort('track', 'ASC');
         $browse->get_objects();
         $browse->show_objects(null, true); // true argument is set to show the reorder column
-        $browse->store();
-        ?>
+        $browse->store(); ?>
     </div><br />
-<?php 
+<?php
     } ?>

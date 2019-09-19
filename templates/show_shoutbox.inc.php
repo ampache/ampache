@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,15 +25,11 @@
 <?php
   foreach ($shouts as $shout_id) {
       $shout = new Shoutbox($shout_id);
-      $shout->format();
-      ?>
-<div id="shout<?php echo $shout->id;
-      ?>" class="shout <?php echo UI::flip_class();
-      ?>">
-    <?php echo $shout->get_display(true, true);
-      ?>
+      $shout->format(); ?>
+<div id="shout<?php echo $shout->id; ?>" class="shout <?php echo UI::flip_class(); ?>">
+    <?php echo $shout->get_display(true, true); ?>
 </div>
-<?php 
+<?php
   } ?>
 </div>
 <?php UI::show_box_bottom(); ?>

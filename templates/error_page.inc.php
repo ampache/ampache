@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,10 +29,10 @@
 <!-- Propulsed by Ampache | ampache.org -->
 <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
 <?php UI::show_custom_style(); ?>
-<title><?php echo( T_("Ampache error page"));?></title>
+<title><?php echo(T_("Ampache error page"));?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-<link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body>
 <!-- rfc3514 implementation -->
@@ -40,7 +40,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
+                <img src="./images/ampache-dark.png" title="Ampache" alt="Ampache">
                 <?php echo T_('Ampache'); ?> - For the love of Music
             </a>
         </div>
@@ -48,7 +48,7 @@
     <div class="container" role="main">
         <div class="jumbotron">
             <h1><?php echo T_('Error'); ?></h1>
-            <p><?php echo (T_("The folowing error has occured, you will automaticly be redirected after 10 seconds.") ); ?></p>
+            <p><?php echo(T_("The following error has occured, you will automaticly be redirected after 10 seconds.")); ?></p>
         </div>
         <h2><?php echo(T_("Error messages"));?>:</h2>
         <?php AmpError::display('general'); ?>

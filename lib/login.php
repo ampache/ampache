@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,9 +33,10 @@ Preference::init();
  */
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
-        debug_event('UI::access_denied', 'Access Denied:' . $_SERVER['REMOTE_ADDR'] . ' is not in the Interface Access list', '3');
+        debug_event('login.class', 'UI::access_denied:' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', 3);
         UI::access_denied();
-        exit();
+
+        return false;
     }
 } // access_control is enabled
 
@@ -55,9 +56,9 @@ if (empty($_REQUEST['step'])) {
             $auth['info']['fullname']        = 'Administrative User';
             $auth['info']['offset_limit']    = 25;
         } else {
-            if ($_POST['username']) {
-                $username = scrub_in($_POST['username']);
-                $password = $_POST['password'];
+            if (Core::get_post('username') !== '') {
+                $username = scrub_in(Core::get_post('username'));
+                $password = Core::get_post('password');
             } else {
                 if ($_SERVER['REMOTE_USER']) {
                     $username = $_SERVER['REMOTE_USER'];
@@ -74,20 +75,21 @@ if (empty($_REQUEST['step'])) {
                 $username = $auth['username'];
             } elseif ($auth['ui_required']) {
                 echo $auth['ui_required'];
-                exit();
+
+                return false;
             } else {
-                debug_event('Login', scrub_out($username) . ' From ' . $_SERVER['REMOTE_ADDR'] . ' attempted to login and failed', '1');
+                debug_event('login.class', scrub_out($username) . ' From ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' attempted to login and failed', 1);
                 AmpError::add('general', T_('Error Username or Password incorrect, please try again'));
             }
         }
     }
-} elseif ($_REQUEST['step'] == '2') {
+} elseif (Core::get_request('step') == '2') {
     $auth_mod = $_REQUEST['auth_mod'];
     $auth     = Auth::login_step2($auth_mod);
     if ($auth['success']) {
         $username = $auth['username'];
     } else {
-        debug_event('Login', 'Second step authentication failed', '1');
+        debug_event('login.class', 'Second step authentication failed', 1);
         AmpError::add('general', $auth['error']);
     }
 }
@@ -98,26 +100,26 @@ if (!empty($username) && isset($auth)) {
     if ($user->disabled) {
         $auth['success'] = false;
         AmpError::add('general', T_('User Disabled please contact Admin'));
-        debug_event('Login', scrub_out($username) . ' is disabled and attempted to login', '1');
+        debug_event('login.class', scrub_out($username) . ' is disabled and attempted to login', 1);
     } // if user disabled
     elseif (AmpConfig::get('prevent_multiple_logins')) {
         $session_ip = $user->is_logged_in();
-        $current_ip = inet_pton($_SERVER['REMOTE_ADDR']);
+        $current_ip = inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
         if ($current_ip && ($current_ip != $session_ip)) {
             $auth['success'] = false;
             AmpError::add('general', T_('User Already Logged in'));
-            debug_event('Login', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, '1');
+            debug_event('login.class', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, 1);
         } // if logged in multiple times
     } // if prevent multiple logins
     elseif (AmpConfig::get('auto_create') && $auth['success'] && ! $user->username) {
         /* This is run if we want to autocreate users who don't
         exist (useful for non-mysql auth) */
         $access     = User::access_name_to_level(AmpConfig::get('auto_user', 'guest'));
-        $fullname   = array_key_exists('name',    $auth) ? $auth['name']    : '';
-        $email      = array_key_exists('email',   $auth) ? $auth['email']   : '';
+        $fullname   = array_key_exists('name', $auth) ? $auth['name']    : '';
+        $email      = array_key_exists('email', $auth) ? $auth['email']   : '';
         $website    = array_key_exists('website', $auth) ? $auth['website'] : '';
-        $state      = array_key_exists('state',   $auth) ? $auth['state']   : '';
-        $city       = array_key_exists('city',    $auth) ? $auth['city']    : '';
+        $state      = array_key_exists('state', $auth) ? $auth['state']   : '';
+        $city       = array_key_exists('city', $auth) ? $auth['city']    : '';
 
         /* Attempt to create the user */
         if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city)) {
@@ -152,7 +154,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     // You really don't want to store the avatar
     //   in the SESSION.
     unset($_SESSION['userdata']['avatar']);
-    
+
     // Record the IP of this person!
     if (AmpConfig::get('track_user_ip')) {
         $user->insert_ip_history();
@@ -171,16 +173,16 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     if (($external_auto_update || empty($user->fullname)) && !empty($auth['name'])) {
         $user->update_fullname($auth['name']);
     }
-    if (($external_auto_update || empty($user->email))    && !empty($auth['email'])) {
+    if (($external_auto_update || empty($user->email)) && !empty($auth['email'])) {
         $user->update_email($auth['email']);
     }
-    if (($external_auto_update || empty($user->website))  && !empty($auth['website'])) {
+    if (($external_auto_update || empty($user->website)) && !empty($auth['website'])) {
         $user->update_website($auth['website']);
     }
-    if (($external_auto_update || empty($user->state))    && !empty($auth['state'])) {
+    if (($external_auto_update || empty($user->state)) && !empty($auth['state'])) {
         $user->update_state($auth['state']);
     }
-    if (($external_auto_update || empty($user->city))     && !empty($auth['city'])) {
+    if (($external_auto_update || empty($user->city)) && !empty($auth['city'])) {
         $user->update_city($auth['city']);
     }
     if (($external_auto_update || empty($user->f_avatar)) && !empty($auth['avatar'])) {
@@ -189,7 +191,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
 
     $GLOBALS['user'] = $user;
     // If an admin, check for update
-    if (AmpConfig::get('autoupdate') && Access::check('interface','100')) {
+    if (AmpConfig::get('autoupdate') && Access::check('interface', '100')) {
         AutoUpdate::is_update_available(true);
     }
 
@@ -198,15 +200,17 @@ if (isset($auth) && $auth['success'] && isset($user)) {
      */
     $web_path = AmpConfig::get('web_path');
     if ((substr($_POST['referrer'], 0, strlen($web_path)) == $web_path) &&
-        strpos($_POST['referrer'], 'install.php')    === false &&
-        strpos($_POST['referrer'], 'login.php')        === false &&
-        strpos($_POST['referrer'], 'logout.php')    === false &&
-        strpos($_POST['referrer'], 'update.php')    === false &&
-        strpos($_POST['referrer'], 'activate.php')    === false &&
-        strpos($_POST['referrer'], 'admin')        === false ) {
+        strpos($_POST['referrer'], 'install.php') === false &&
+        strpos($_POST['referrer'], 'login.php') === false &&
+        strpos($_POST['referrer'], 'logout.php') === false &&
+        strpos($_POST['referrer'], 'update.php') === false &&
+        strpos($_POST['referrer'], 'activate.php') === false &&
+        strpos($_POST['referrer'], 'admin') === false) {
         header('Location: ' . $_POST['referrer']);
-        exit();
+
+        return false;
     } // if we've got a referrer
     header('Location: ' . AmpConfig::get('web_path') . '/index.php');
-    exit();
+
+    return false;
 } // auth success

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,7 @@ class Auth
      * @param string $key
      * @param boolean $relogin
      */
-    public static function logout($key='', $relogin = true)
+    public static function logout($key = '', $relogin = true)
     {
         // If no key is passed try to find the session id
         $key = $key ? $key : session_id();
@@ -77,7 +77,7 @@ class Auth
             header('Location: ' . $target);
         }
 
-        exit;
+        return false;
     }
 
     /**
@@ -90,9 +90,18 @@ class Auth
      * @param boolean $allow_ui
      * @return array
      */
-    public static function login($username, $password, $allow_ui = false)
+    public static function login($username, $password, $allow_ui = false, $token = null, $salt = null)
     {
+        // Check for token auth with apikey
+        $token_check = self::token_check($username, $token, $salt);
+        if (!empty($token_check)) {
+            debug_event('auth.class', 'Logging in using token auth ' . $token, 5);
+
+            return $token_check;
+        }
+
         $results = array();
+        // If no token check the regular methods
         foreach (AmpConfig::get('auth_methods') as $method) {
             $function_name = $method . '_auth';
 
@@ -192,6 +201,7 @@ class Auth
         if (!function_exists('pam_auth')) {
             $results['success']    = false;
             $results['error']      = 'The PAM PHP module is not installed';
+
             return $results;
         }
 
@@ -241,7 +251,7 @@ class Auth
             fclose($pipes[0]);
             fclose($pipes[1]);
             if ($stderr = fread($pipes[2], 8192)) {
-                debug_event('external_auth', "fread error: " . $stderr, 5);
+                debug_event('auth.class', "external_auth fread error: " . $stderr, 3);
             }
             fclose($pipes[2]);
         } else {
@@ -287,6 +297,7 @@ class Auth
      */
     private static function http_auth($username, $password)
     {
+        unset($password);
         $results = array();
         if (($_SERVER['REMOTE_USER'] == $username) ||
             ($_SERVER['HTTP_REMOTE_USER'] == $username)) {
@@ -299,6 +310,7 @@ class Auth
             $results['success'] = false;
             $results['error']   = 'HTTP auth login attempt failed';
         }
+
         return $results;
     } // http_auth
 
@@ -313,6 +325,7 @@ class Auth
      */
     private static function openid_auth($username, $password)
     {
+        unset($password);
         $results = array();
         // Username contains the openid url. We don't care about password here.
         $website = $username;
@@ -347,7 +360,7 @@ class Auth
                             $results['error']   = 'Could not redirect to server: ' . $redirect_url->message;
                         } else {
                             // Send redirect.
-                            debug_event('auth', 'OpenID 1: redirecting to ' . $redirect_url, '5');
+                            debug_event('auth.class', 'OpenID 1: redirecting to ' . $redirect_url, 5);
                             header("Location: " . $redirect_url);
                         }
                     } else {
@@ -359,24 +372,24 @@ class Auth
                             $results['success'] = false;
                             $results['error']   = 'Could not render authentication form.';
                         } else {
-                            debug_event('auth', 'OpenID 2: javascript redirection code to OpenID form.', '5');
+                            debug_event('auth.class', 'OpenID 2: javascript redirection code to OpenID form.', 5);
                             // First step is a success, UI interaction required.
                             $results['success']     = false;
                             $results['ui_required'] = $form_html;
                         }
                     }
                 } else {
-                    debug_event('auth', $website . ' is not a valid OpenID.', '3');
+                    debug_event('auth.class', $website . ' is not a valid OpenID.', 3);
                     $results['success'] = false;
                     $results['error']   = 'Not a valid OpenID.';
                 }
             } else {
-                debug_event('auth', 'Cannot initialize OpenID resources.', '3');
+                debug_event('auth.class', 'Cannot initialize OpenID resources.', 3);
                 $results['success'] = false;
                 $results['error']   = 'Cannot initialize OpenID resources.';
             }
         } else {
-            debug_event('auth', 'Skipped OpenID authentication: missing scheme in ' . $website . '.', '3');
+            debug_event('auth.class', 'Skipped OpenID authentication: missing scheme in ' . $website . '.', 3);
             $results['success'] = false;
             $results['error']   = 'Missing scheme in OpenID.';
         }
@@ -391,9 +404,9 @@ class Auth
      */
     private static function openid_auth_2()
     {
-        $results            = array();
-        $results['type']    = 'openid';
-        $consumer           = Openid::get_consumer();
+        $results         = array();
+        $results['type'] = 'openid';
+        $consumer        = Openid::get_consumer();
         if ($consumer) {
             $response = $consumer->complete(Openid::get_return_url());
 
@@ -407,8 +420,8 @@ class Auth
                 } else {
                     if ($response->status == Auth_OpenID_SUCCESS) {
                         // Extract the identity URL and Simple Registration data (if it was returned).
-                $sreg_resp    = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
-                        $sreg = $sreg_resp->contents();
+                        $sreg_resp    = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
+                        $sreg         = $sreg_resp->contents();
 
                         $results['website'] = $response->getDisplayIdentifier();
                         if (@$sreg['email']) {
@@ -431,18 +444,18 @@ class Auth
                                 $results['username'] = $user->username;
                             } else {
                                 // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
-                        // Should we make website field unique?
-                        foreach ($users as $id) {
-                            $user = new User($id);
-                            if ($user->username == $results['username']) {
-                                $results['success']  = true;
-                                $results['username'] = $user->username;
-                            }
-                        }
+                                // Should we make website field unique?
+                                foreach ($users as $userid) {
+                                    $user = new User($userid);
+                                    if ($user->username == $results['username']) {
+                                        $results['success']  = true;
+                                        $results['username'] = $user->username;
+                                    }
+                                }
                             }
                         } else {
                             // Don't return success if an user already exists for this username but don't have this openid identity as website
-                    $user = User::get_from_username($results['username']);
+                            $user = User::get_from_username($results['username']);
                             if ($user->id) {
                                 $results['success'] = false;
                                 $results['error']   = 'No user associated to this OpenID and username already taken.';
@@ -458,4 +471,33 @@ class Auth
 
         return $results;
     }
-}
+
+    /**
+     * token_check
+     *
+     * Check if the supplied token and salt match this user.
+     * @param string $username
+     * @param string $token
+     * @param string $salt
+     * @return array
+     */
+    private static function token_check($username, $token, $salt)
+    {
+        // subsonic token auth with apikey
+        if (strlen($token) && strlen($salt) && strlen($username)) {
+            $sql        = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
+            $db_results = Dba::read($sql, array($username));
+            $row        = Dba::fetch_assoc($db_results);
+            $hash_token = hash('md5', ($row['apikey'] . $salt));
+            if ($token == $hash_token) {
+                return array(
+                    'success' => true,
+                    'type' => 'token',
+                    'username' => $username
+                );
+            }
+        }
+
+        return array();
+    }
+}//end of auth class

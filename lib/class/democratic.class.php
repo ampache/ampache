@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,15 +50,13 @@ class Democratic extends Tmp_Playlist
      * constructor
      * We need a constructor for this class. It does it's own thing now
      */
-    public function __construct($id='')
+    public function __construct($democratic_id)
     {
-        if (!$id) {
-            return false;
-        }
+        parent::__construct($democratic_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($democratic_id);
 
-        foreach ($info as $key=>$value) {
+        foreach ($info as $key => $value) {
             $this->$key = $value;
         }
     } // constructor
@@ -127,28 +125,28 @@ class Democratic extends Tmp_Playlist
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function set_user_preferences($user = null)
+    public static function set_user_preferences()
     {
         //FIXME: Code in single user stuff
 
         $preference_id = Preference::id_from_name('play_type');
-        Preference::update_level($preference_id,'75');
-        Preference::update_all($preference_id,'democratic');
+        Preference::update_level($preference_id, '75');
+        Preference::update_all($preference_id, 'democratic');
 
         $allow_demo = Preference::id_from_name('allow_democratic_playback');
-        Preference::update_all($allow_demo,'1');
+        Preference::update_all($allow_demo, '1');
 
         $play_method = Preference::id_from_name('playlist_method');
-        Preference::update_all($play_method,'clear');
+        Preference::update_all($play_method, 'clear');
 
         return true;
     } // set_user_preferences
 
     /**
      * format
-     * This makes the variables all purrty so that they can be displayed
+     * This makes the variables pretty so that they can be displayed
      */
-    public function format($details = true)
+    public function format()
     {
         $this->f_cooldown    = $this->cooldown . ' ' . T_('minutes');
         $this->f_primary     = $this->primary ? T_('Primary') : '';
@@ -193,7 +191,7 @@ class Democratic extends Tmp_Playlist
 
     /**
      * get_current_playlist
-     * This returns the curren users current playlist, or if specified
+     * This returns the current users current playlist, or if specified
      * this current playlist of the user
      */
     public static function get_current_playlist()
@@ -201,7 +199,7 @@ class Democratic extends Tmp_Playlist
         $democratic_id = AmpConfig::get('democratic_id');
 
         if (!$democratic_id) {
-            $level = Dba::escape($GLOBALS['user']->access);
+            $level = Dba::escape(Core::get_global('user')->access);
             $sql   = "SELECT `id` FROM `democratic` WHERE `level` <= '$level' " .
                 " ORDER BY `level` DESC,`primary` DESC";
             $db_results    = Dba::read($sql);
@@ -222,6 +220,8 @@ class Democratic extends Tmp_Playlist
      *
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
+     * @param integer $limit
+     * @return array
      */
     public function get_items($limit = null)
     {
@@ -241,8 +241,8 @@ class Democratic extends Tmp_Playlist
             'GROUP BY 1, 2 ' .
             'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`), `tmp_playlist_data`.`id` ';
 
-        if ($limit) {
-            $sql .= 'LIMIT ' . intval($limit);
+        if ($limit !== null) {
+            $sql .= 'LIMIT ' . (string) ($limit);
         }
 
         $db_results = Dba::read($sql);
@@ -264,7 +264,7 @@ class Democratic extends Tmp_Playlist
      */
     public function play_url()
     {
-        $link = Stream::get_base_url() . 'uid=' . scrub_out($GLOBALS['user']->id) . '&demo_id=' . scrub_out($this->id);
+        $link = Stream::get_base_url() . 'uid=' . scrub_out(Core::get_global('user')->id) . '&demo_id=' . scrub_out($this->id);
 
         return Stream_URL::format($link);
     } // play_url
@@ -275,12 +275,13 @@ class Democratic extends Tmp_Playlist
      * Most of the time this will just be the top entry, but if there is a
      * base_playlist and no items in the playlist then it returns a random
      * entry from the base_playlist
+     * @return integer|null
      */
     public function get_next_object($offset = 0)
     {
         // FIXME: Shouldn't this return object_type?
 
-        $offset = intval($offset);
+        $offset = (int) ($offset);
 
         $items = $this->get_items($offset + 1);
 
@@ -294,11 +295,13 @@ class Democratic extends Tmp_Playlist
         if ($this->base_playlist) {
             $base_playlist = new Playlist($this->base_playlist);
             $data          = $base_playlist->get_random_items(1);
+
             return $data[0]['object_id'];
         } else {
             $sql        = "SELECT `id` FROM `song` WHERE `enabled`='1' ORDER BY RAND() LIMIT 1";
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_assoc($db_results);
+
             return $results['id'];
         }
     } // get_next_object
@@ -333,7 +336,7 @@ class Democratic extends Tmp_Playlist
         // Convert cooldown time to a timestamp in the past
         $cool_time = time() - ($this->cooldown * 60);
 
-        $song_ids = Stats::get_object_history($GLOBALS['user']->id, $cool_time);
+        $song_ids = Stats::get_object_history(Core::get_global('user')->id, $cool_time);
 
         return $song_ids;
     } // get_cool_songs
@@ -372,9 +375,9 @@ class Democratic extends Tmp_Playlist
             "WHERE `tmp_playlist_data`.`object_type` = ? " .
             "AND `tmp_playlist_data`.`object_id` = ? " .
             "AND `tmp_playlist_data`.`tmp_playlist` = ? ";
-        if ($GLOBALS['user']->id > 0) {
+        if (Core::get_global('user')->id > 0) {
             $sql .= "AND `user_vote`.`user` = ? ";
-            $params[] = $GLOBALS['user']->id;
+            $params[] = Core::get_global('user')->id;
         } else {
             $sql .= "AND `user_vote`.`sid` = ? ";
             $params[] = session_id();
@@ -400,7 +403,7 @@ class Democratic extends Tmp_Playlist
         }
 
         $media = new $object_type($object_id);
-        $track = isset($media->track) ? intval($media->track) : null;
+        $track = isset($media->track) ? (int) ($media->track) : null;
 
         /* If it's on the playlist just vote */
         $sql = "SELECT `id` FROM `tmp_playlist_data` " .
@@ -419,7 +422,7 @@ class Democratic extends Tmp_Playlist
         $time = time();
         $sql  = "INSERT INTO user_vote (`user`,`object_id`,`date`,`sid`) " .
             "VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array($GLOBALS['user']->id, $results['id'], $time, session_id()));
+        Dba::write($sql, array(Core::get_global('user')->id, $results['id'], $time, session_id()));
 
         return true;
     }
@@ -434,9 +437,9 @@ class Democratic extends Tmp_Playlist
     {
         $sql    = "DELETE FROM `user_vote` WHERE `object_id` = ? ";
         $params = array($row_id);
-        if ($GLOBALS['user']->id > 0) {
+        if (Core::get_global('user')->id > 0) {
             $sql .= "AND `user` = ?";
-            $params[] = $GLOBALS['user']->id;
+            $params[] = Core::get_global('user')->id;
         } else {
             $sql .= "AND `user_vote`.`sid` = ? ";
             $params[] = session_id();
@@ -470,14 +473,14 @@ class Democratic extends Tmp_Playlist
      * delete_from_oid
      * This takes an OID and type and removes the object from the democratic playlist
      */
-    public function delete_from_oid($oid,$object_type)
+    public function delete_from_oid($oid, $object_type)
     {
-        $row_id = $this->get_uid_from_object_id($oid,$object_type);
+        $row_id = $this->get_uid_from_object_id($oid, $object_type);
         if ($row_id) {
-            debug_event('Democratic','Removing Votes for ' . $oid . ' of type ' . $object_type,'5');
+            debug_event('democratic.class', 'Removing Votes for ' . $oid . ' of type ' . $object_type, 5);
             $this->delete_votes($row_id);
         } else {
-            debug_event('Democratic','Unable to find Votes for ' . $oid . ' of type ' . $object_type,'3');
+            debug_event('democratic.class', 'Unable to find Votes for ' . $oid . ' of type ' . $object_type, 3);
         }
 
         return true;
@@ -533,17 +536,17 @@ class Democratic extends Tmp_Playlist
         $cool     = Dba::escape($data['cooldown']);
         $level    = Dba::escape($data['level']);
         $default  = Dba::escape($data['make_default']);
-        $user     = Dba::escape($GLOBALS['user']->id);
+        $user     = Dba::escape(Core::get_global('user')->id);
 
         $sql = "INSERT INTO `democratic` (`name`,`base_playlist`,`cooldown`,`level`,`user`,`primary`) " .
-            "VALUES ('$name','$base','$cool','$level','$user','$default')";
+            "VALUES ('$name', '$base', '$cool', '$level', '$user', '$default')";
         $db_results = Dba::write($sql);
 
         if ($db_results) {
             $insert_id = Dba::insert_id();
             parent::create(array(
-                'session_id'  => $insert_id,
-                'type'        => 'vote',
+                'session_id' => $insert_id,
+                'type' => 'vote',
                 'object_type' => 'song'
             ));
         }
@@ -577,7 +580,7 @@ class Democratic extends Tmp_Playlist
     {
         $tmp_id = Dba::escape($this->tmp_playlist);
 
-        if ($tmp_id) {
+        if ($tmp_id !== false) {
             /* Clear all votes then prune */
             $sql = "DELETE FROM `user_vote` USING `user_vote` " .
                 "LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` " .
@@ -624,6 +627,7 @@ class Democratic extends Tmp_Playlist
 
         $results = Dba::fetch_assoc($db_results);
         parent::add_to_cache('democratic_vote', $id, $results['count']);
+
         return $results['count'];
     } // get_vote
 
@@ -646,6 +650,7 @@ class Democratic extends Tmp_Playlist
             $voters[] = $results['user'];
         }
         parent::add_to_cache('democratic_vote', $object_id, $voters);
+
         return $voters;
     } // get_voters
 } // Democratic class

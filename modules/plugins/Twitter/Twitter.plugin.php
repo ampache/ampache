@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,7 @@ class AmpacheTwitter
     public $version     = '000001';
     public $min_ampache = '370027';
     public $max_ampache = '999999';
-    
+
     /**
      * Constructor
      * This function does nothing...
@@ -75,20 +75,20 @@ class AmpacheTwitter
         if (!empty($text)) {
             $share .= "&text=" . rawurlencode($text);
         }
-        
+
         return $share;
     }
-    
+
     /**
      * load
-     * This loads up the data we need into this object, this stuff comes 
+     * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
-        
+
         return true;
     } // load
 }

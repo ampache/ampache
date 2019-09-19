@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,7 @@
  */
 
 ?>
-<?php /* HINT: Editing Username preferences */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $client->fullname),'box box_preferences'); ?>
+<?php /* HINT: Editing Username preferences */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $client->fullname), 'box box_preferences'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
 <table class="tabledata" cellspacing="0">
 <colgroup>
@@ -39,23 +39,20 @@
 </tr>
 <?php foreach ($preferences as $pref) {
     ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-                <td class="cel_preference"><?php echo T_($pref['description']);
-    ?></td>
+        <tr class="<?php echo UI::flip_class(); ?>">
+                <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
                 <td class="cel_value">
-                        <?php create_preference_input($pref['name'], $pref['value']);
-    ?>
+                        <?php create_preference_input($pref['name'], $pref['value']); ?>
                 </td>
         </tr>
-<?php 
-} // End foreach ($preferences['prefs'] as $pref) ?>
+<?php
+} // End foreach ($preferences['prefs'] as $pref)?>
 <tr>
     <td>
     <div class="formValidation">
     <input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
     <?php echo Core::form_register('update_preference'); ?>
-    <input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
+    <input type="hidden" name="user_id" value="<?php echo scrub_out(Core::get_request('user_id')); ?>" />
     </div>
     </td>
     <td>&nbsp;</td>

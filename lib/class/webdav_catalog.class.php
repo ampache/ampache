@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,9 +56,9 @@ class WebDAV_Catalog extends DAV\Collection
 
     public function getChild($name)
     {
-        debug_event('webdav', 'Catalog getChild for `' . $name . '`', 5);
+        debug_event('webdav_catalog.class', 'Catalog getChild for `' . $name . '`', 5);
         $matches = Catalog::search_childrens($name, $this->catalog_id);
-        debug_event('webdav', 'Found ' . count($matches) . ' childs.', 5);
+        debug_event('webdav_catalog.class', 'Found ' . count($matches) . ' childs.', 5);
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
         if (count($matches) > 0) {
@@ -71,6 +71,7 @@ class WebDAV_Catalog extends DAV\Collection
     public function childExists($name)
     {
         $matches = Catalog::search_childrens($name, $this->catalog_id);
+
         return (count($matches) > 0);
     }
 
@@ -78,6 +79,7 @@ class WebDAV_Catalog extends DAV\Collection
     {
         if ($this->catalog_id > 0) {
             $catalog = Catalog::create_from_id($this->catalog_id);
+
             return $catalog->name;
         }
 

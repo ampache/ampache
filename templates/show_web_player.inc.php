@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
-header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
+header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
@@ -31,12 +31,15 @@ header('Expires: ' . gmdate(DATE_RFC1123, time()-1));
 <!-- Propulsed by Ampache | ampache.org -->
 <title><?php echo AmpConfig::get('site_title'); ?></title>
 <meta property="og:title" content="<?php echo AmpConfig::get('site_title'); ?>" />
-<meta property="og:image" content="<?php echo AmpConfig::get('web_path'); ?>/themes/reborn/images/ampache.png"/>
+<meta property="og:image" content="<?php echo UI::get_logo_url(); ?>"/>
 <meta property="og:description" content="A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device." />
 <meta property="og:site_name" content="Ampache"/>
 <?php
 if (!$is_share) {
-    $playlist = new Stream_Playlist(scrub_in($_REQUEST['playlist_id']));
+    $stream_id = $_REQUEST['playlist_id'];
+    if (is_string($stream_id) || is_integer($stream_id)) {
+        $playlist = new Stream_Playlist($stream_id);
+    }
 }
 
 $isRadio = false;

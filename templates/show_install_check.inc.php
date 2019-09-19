@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 require $prefix . '/templates/install_header.inc.php';
 ?>
 <?php if (!defined('INSTALL')) {
-    exit;
+    return false;
 } ?>
         <div class="page-header requirements">
             <h1><?php echo T_('Requirements'); ?></h1>
@@ -33,7 +33,7 @@ require $prefix . '/templates/install_header.inc.php';
             </p>
             <ul>
                 <li><?php echo T_('A MySQL server with a username and password that can create/modify databases'); ?></li>
-                <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'),$prefix . '/sql/ampache.sql',$prefix . '/config/ampache.cfg.php.dist'); ?></li>
+                <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'), $prefix . '/sql/ampache.sql', $prefix . '/config/ampache.cfg.php.dist'); ?></li>
             </ul>
             <p>
                 <?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $prefix . '/config/ampache.cfg.php'); ?>
@@ -41,9 +41,9 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
 <table class="table" cellspacing="0" cellpadding="0">
     <tr>
-        <th><?php echo T_('CHECK'); ?></th>
-        <th><?php echo T_('STATUS'); ?></th>
-        <th><?php echo T_('DESCRIPTION'); ?></th>
+        <th><?php echo T_('Check'); ?></th>
+        <th><?php echo T_('Status'); ?></th>
+        <th><?php echo T_('Description'); ?></th>
     </tr>
     <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
     <tr>

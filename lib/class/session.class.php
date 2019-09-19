@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,7 +71,7 @@ class Session
         $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
-        debug_event('session', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
+        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
 
         return true;
     }
@@ -91,7 +91,7 @@ class Session
         $sql = 'DELETE FROM `session` WHERE `id` = ?';
         Dba::write($sql, array($key));
 
-        debug_event('SESSION', 'Deleting Session with key:' . $key, 6);
+        debug_event('session.class', 'Deleting Session with key:' . $key, 6);
 
         $session_name  = AmpConfig::get('session_name');
         $cookie_path   = AmpConfig::get('cookie_path');
@@ -101,16 +101,17 @@ class Session
         // Destroy our cookie!
         setcookie($session_name, null, -1, $cookie_path, $cookie_domain, $cookie_secure);
         setcookie($session_name . '_user', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_lang', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
 
         return true;
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * This function is randomly called and it cleans up the spoo
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
         Dba::write($sql, array(time()));
@@ -119,10 +120,10 @@ class Session
         Dba::write($sql, array(time()));
 
         // Also clean up things that use sessions as keys
-        Query::gc();
-        Tmp_Playlist::gc();
-        Stream_Playlist::gc();
-        Song_Preview::gc();
+        Query::garbage_collection();
+        Tmp_Playlist::garbage_collection();
+        Stream_Playlist::garbage_collection();
+        Song_Preview::garbage_collection();
 
         return true;
     }
@@ -141,6 +142,7 @@ class Session
      * _read
      *
      * This returns the specified column from the session row.
+     * @param string $column
      */
     private static function _read($key, $column)
     {
@@ -151,7 +153,7 @@ class Session
             return $results[$column];
         }
 
-        debug_event('session', 'Unable to read session from key ' . $key . ' no data found', 5);
+        debug_event('session.class', 'Unable to read session from key ' . $key . ' no data found', 3);
 
         return '';
     }
@@ -181,12 +183,17 @@ class Session
      * This is called when you want to create a new session
      * it takes care of setting the initial cookie, and inserting the first
      * chunk of data, nifty ain't it!
+     * @return string
      */
     public static function create($data)
     {
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
+                $key = isset($data['apikey'])
+                    ? $data['apikey']
+                    : md5(uniqid(rand(), true));
+                break;
             case 'stream':
                 $key = isset($data['sid'])
                     ? $data['sid']
@@ -206,7 +213,7 @@ class Session
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $ip    = $_SERVER['REMOTE_ADDR'] ? inet_pton($_SERVER['REMOTE_ADDR']) : '0';
+        $s_ip  = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ? inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP)) : '0';
         $type  = $data['type'];
         $value = '';
         if (isset($data['value'])) {
@@ -240,14 +247,15 @@ class Session
         /* Insert the row */
         $sql = 'INSERT INTO `session` (`id`,`username`,`ip`,`type`,`agent`,`value`,`expire`,`geo_latitude`,`geo_longitude`, `geo_name`) ' .
             'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        $db_results = Dba::write($sql, array($key, $username, $ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
+        $db_results = Dba::write($sql, array($key, $username, $s_ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
 
         if (!$db_results) {
-            debug_event('session', 'Session creation failed', '1');
-            return false;
+            debug_event('session.class', 'Session creation failed', 1);
+
+            return '';
         }
 
-        debug_event('session', 'Session created: ' . $key, '5');
+        debug_event('session.class', 'Session created: ' . $key, 5);
 
         return $key;
     }
@@ -264,8 +272,11 @@ class Session
 
         // No cookie no go!
         if (!isset($_COOKIE[$session_name])) {
+            debug_event('session.class', 'Existing session NOT found', 5);
+
             return false;
         }
+        debug_event('session.class', 'Existing session found', 4);
 
         // Set up the cookie params before we start the session.
         // This is vital
@@ -291,12 +302,14 @@ class Session
      * This checks to see if the specified session of the specified type
      * exists
      * based on the type.
+     * @param string $type
      */
     public static function exists($type, $key)
     {
         // Switch on the type they pass
         switch ($type) {
             case 'api':
+                return true;
             case 'stream':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
                     "AND `type` IN ('api', 'stream')";
@@ -311,7 +324,7 @@ class Session
                 if (AmpConfig::get('use_auth')) {
                     // Build a list of enabled authentication types
                     $types         = AmpConfig::get('auth_methods');
-                    $enabled_types = implode("','", $types);
+                    $enabled_types = implode("', '", $types);
                     $sql .= " AND `type` IN('$enabled_types')";
                 }
                 $db_results = Dba::read($sql, array($key, time()));
@@ -332,6 +345,7 @@ class Session
      * extend
      *
      * This takes a SID and extends its expiration.
+     * @param string $type
      */
     public static function extend($sid, $type = null)
     {
@@ -344,7 +358,7 @@ class Session
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
-            debug_event('session', $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            debug_event('session.class', $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
         }
 
         return $db_results;
@@ -358,6 +372,7 @@ class Session
     public static function update_username($sid, $username)
     {
         $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
+
         return Dba::write($sql, array($username, $sid));
     }
 
@@ -374,7 +389,7 @@ class Session
             $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
             Dba::write($sql, array($latitude, $longitude, $name, $sid));
         } else {
-            debug_event('session', 'Missing session id to update geolocation.', 3);
+            debug_event('session.class', 'Missing session id to update geolocation.', 3);
         }
     }
 
@@ -411,7 +426,8 @@ class Session
     {
         if (!function_exists('session_start')) {
             header("Location:" . AmpConfig::get('web_path') . "/test.php");
-            exit;
+
+            return false;
         }
 
         session_set_save_handler(
@@ -444,7 +460,6 @@ class Session
         $cookie_secure = AmpConfig::get('cookie_secure');
 
         session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
-
         session_name(AmpConfig::get('session_name'));
 
         /* Start the session */
@@ -457,6 +472,8 @@ class Session
      *
      * This function just creates the user cookie wich contains current username.
      * It must be used for information only.
+     *
+     * It also creates a cookie to store used language.
      */
     public static function create_user_cookie($username)
     {
@@ -467,6 +484,7 @@ class Session
         $cookie_secure = AmpConfig::get('cookie_secure');
 
         setcookie($session_name . '_user', $username, $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
     }
 
     /**
@@ -497,18 +515,26 @@ class Session
         return md5(uniqid(mt_rand(), true));
     }
 
+    /**
+     * @param string $token
+     */
     public static function storeTokenForUser($username, $token, $remember_length)
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
+
         return Dba::write($sql, array($username, $token, time() + $remember_length));
     }
 
+    /**
+     * auth_remember
+     * @return boolean
+     */
     public static function auth_remember()
     {
         $auth  = false;
-        $cname = AmpConfig::get('session_name') . '_remember';
-        if (isset($_COOKIE[$cname])) {
-            list ($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
+        $name  = AmpConfig::get('session_name') . '_remember';
+        if ((filter_has_var(INPUT_COOKIE, $name))) {
+            list($username, $token, $mac) = explode(':', filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, array($username, $token, time()));
@@ -536,7 +562,7 @@ class Session
     public static function ungimp_ie()
     {
         // If no https, no ungimpage required
-        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'on') {
+        if (filter_has_var(INPUT_SERVER, 'HTTPS') && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) != 'on') {
             return true;
         }
 

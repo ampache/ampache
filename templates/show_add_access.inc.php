@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,7 @@
         <tr>
             <td><?php echo T_('Name'); ?>:</td>
             <td colspan="3">
-                <input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
+                <input type="text" name="name" value="<?php echo scrub_out(Core::get_request('name')); ?>" />
             </td>
         </tr>
         <tr>
@@ -53,39 +53,29 @@
     ?>
                 <input type="hidden" name="type" value="rpc" />
                 <select name="addtype">
-                    <option value="rpc"><?php echo T_('API/RPC');
-    ?></option>
-                    <option selected="selected" value="stream"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('Stream Access'));
-    ?></option>
-                    <option value="all"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('All'));
-    ?></option>
-        <?php 
+                    <option value="rpc"><?php echo T_('API/RPC'); ?></option>
+                    <option selected="selected" value="stream"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('Stream Access')); ?></option>
+                    <option value="all"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('All')); ?></option>
+        <?php
 } else {
-    if ($action == 'show_add_local') {
-        ?>
+        if ($action == 'show_add_local') {
+            ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
-                    <option value="network"><?php echo T_('Local Network Definition');
-        ?></option>
-                    <option value="stream"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('Stream Access'));
-        ?></option>
-                    <option selected="selected" value="all"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('All'));
-        ?></option>
-        <?php 
-    } else {
-        ?>
+                    <option value="network"><?php echo T_('Local Network Definition'); ?></option>
+                    <option value="stream"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('Stream Access')); ?></option>
+                    <option selected="selected" value="all"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('All')); ?></option>
+        <?php
+        } else {
+            ?>
                 <select name="type">
-                    <option selected="selected" value="stream"><?php echo T_('Stream Access');
-        ?></option>
-                    <option value="interface"><?php echo T_('Web Interface');
-        ?></option>
-                    <option value="network"><?php echo T_('Local Network Definition');
-        ?></option>
-                    <option value="rpc"><?php echo T_('API/RPC');
-        ?></option>
-        <?php 
-    }
-} ?>
+                    <option selected="selected" value="stream"><?php echo T_('Stream Access'); ?></option>
+                    <option value="interface"><?php echo T_('Web Interface'); ?></option>
+                    <option value="network"><?php echo T_('Local Network Definition'); ?></option>
+                    <option value="rpc"><?php echo T_('API/RPC'); ?></option>
+        <?php
+        }
+    } ?>
                 </select>
             </td>
         </tr>
@@ -103,9 +93,9 @@
                     <?php AmpError::display('start'); ?>
                     <input type="text" name="start" value="<?php
                 if ($action == 'show_add_current') {
-                    echo scrub_out($_SERVER['REMOTE_ADDR']);
+                    echo scrub_out(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
                 } else {
-                    echo scrub_out($_REQUEST['start']);
+                    echo scrub_out(Core::get_request('start'));
                 } ?>" />
             </td>
             <td>
@@ -113,9 +103,9 @@
                     <?php AmpError::display('end'); ?>
                     <input type="text" name="end" value="<?php
                     if ($action == 'show_add_current') {
-                        echo scrub_out($_SERVER['REMOTE_ADDR']);
+                        echo scrub_out(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
                     } else {
-                        echo scrub_out($_REQUEST['end']);
+                        echo scrub_out(Core::get_request('end'));
                     } ?>" />
             </td>
         </tr>

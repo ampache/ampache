@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,31 +32,22 @@
         if ($wartists) {
             foreach ($wartists as $libitem) {
                 ?>
-        <tr id="wartist_<?php echo $libitem['mbid'];
-                ?>" class="<?php echo UI::flip_class();
-                ?>">
+        <tr id="wartist_<?php echo $libitem['mbid']; ?>" class="<?php echo UI::flip_class(); ?>">
             <td class="cel_artist">
-                <a href="<?php echo AmpConfig::get('web_path');
-                ?>/artists.php?action=show_missing&amp;mbid=<?php echo $libitem['mbid'];
-                ?>"><?php echo $libitem['name'];
-                ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=show_missing&amp;mbid=<?php echo $libitem['mbid']; ?>"><?php echo $libitem['name']; ?></a>
             </td>
         </tr>
         <?php
-
             }
         }
         ?>
         <?php if (!$wartists || !count($wartists)) {
-    ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="<?php echo $thcount;
-    ?>"><span class="nodata"><?php echo T_('No missing artists found');
-    ?></span></td>
+            ?>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
 </table>
 <?php UI::show_box_bottom(); ?>

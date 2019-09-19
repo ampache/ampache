@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -93,7 +93,7 @@ class AmpacheUPnP extends localplay_controller
         $db_results = Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('upnp_active', 'UPnP Active Instance', '0', '25', 'integer', 'internal','upnp');
+        Preference::insert('upnp_active', 'UPnP Active Instance', '0', '25', 'integer', 'internal', 'upnp');
 
         return true;
     }
@@ -121,7 +121,7 @@ class AmpacheUPnP extends localplay_controller
     {
         $sql = "INSERT INTO `localplay_upnp` (`name`,`url`, `owner`) " .
             "VALUES (?, ?, ?)";
-        $db_results = Dba::query($sql, array($data['name'], $data['url'], $GLOBALS['user']->id));
+        $db_results = Dba::query($sql, array($data['name'], $data['url'], Core::get_global('user')->id));
 
         return $db_results;
     }
@@ -176,8 +176,8 @@ class AmpacheUPnP extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields['name'] = array('description' => T_('Instance Name'), 'type'=>'textbox');
-        $fields['url']  = array('description' => T_('URL'), 'type'=>'textbox');
+        $fields['name'] = array('description' => T_('Instance Name'), 'type' => 'text');
+        $fields['url']  = array('description' => T_('URL'), 'type' => 'url');
 
         return $fields;
     }
@@ -186,7 +186,7 @@ class AmpacheUPnP extends localplay_controller
     * get_instance
     * This returns a single instance and all it's variables
     */
-    public function get_instance($instance='')
+    public function get_instance($instance = '')
     {
         $instance = $instance ? $instance : AmpConfig::get('upnp_active');
 
@@ -201,17 +201,17 @@ class AmpacheUPnP extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      */
-    public function set_active_instance($uid, $user_id='')
+    public function set_active_instance($uid, $user_id = '')
     {
         // Not an admin? bubkiss!
-        if (!$GLOBALS['user']->has_access('100')) {
-            $user_id = $GLOBALS['user']->id;
+        if (!Core::get_global('user')->has_access('100')) {
+            $user_id = Core::get_global('user')->id;
         }
-        $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
-        debug_event('upnp', 'set_active_instance userid: ' . $user_id, 5);
+        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
+        debug_event('upnp.controller', 'set_active_instance userid: ' . $user_id, 5);
 
-        Preference::update('upnp_active', $user_id, intval($uid));
-        AmpConfig::set('upnp_active', intval($uid), true);
+        Preference::update('upnp_active', $user_id, (int) ($uid));
+        AmpConfig::set('upnp_active', (int) ($uid), true);
 
         return true;
     }
@@ -228,13 +228,14 @@ class AmpacheUPnP extends localplay_controller
 
     public function add_url(Stream_URL $url)
     {
-        debug_event('upnp', 'add_url: ' . $url->title . " | " . $url->url, 5);
+        debug_event('upnp.controller', 'add_url: ' . $url->title . " | " . $url->url, 5);
 
         if (!$this->_upnp) {
             return false;
         }
 
         $this->_upnp->PlaylistAdd($url->title, $url->url);
+
         return true;
     }
 
@@ -249,6 +250,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->PlaylistRemove($track);
+
         return true;
     }
 
@@ -263,6 +265,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->PlaylistClear();
+
         return true;
     }
 
@@ -318,6 +321,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->Skip($pos);
+
         return true;
     }
 
@@ -332,6 +336,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->Next();
+
         return true;
     }
 
@@ -346,6 +351,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->Prev();
+
         return true;
     }
 
@@ -360,6 +366,7 @@ class AmpacheUPnP extends localplay_controller
         }
 
         $this->_upnp->SetVolume($volume);
+
         return true;
     }
 
@@ -393,7 +400,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function repeat($state)
     {
-        debug_event('upnp', 'repeat: ' . $state, 5);
+        debug_event('upnp.controller', 'repeat: ' . $state, 5);
 
         if (!$this->_upnp) {
             return false;
@@ -402,6 +409,7 @@ class AmpacheUPnP extends localplay_controller
         $this->_upnp->Repeat(array(
             'repeat' => ($state ? 'all' : 'off')
         ));
+
         return true;
     }
 
@@ -411,13 +419,14 @@ class AmpacheUPnP extends localplay_controller
      */
     public function random($onoff)
     {
-        debug_event('upnp', 'random: ' . $onoff, 5);
+        debug_event('upnp.controller', 'random: ' . $onoff, 5);
 
         if (!$this->_upnp) {
             return false;
         }
 
         $this->_upnp->PlayShuffle($onoff);
+
         return true;
     }
 
@@ -429,7 +438,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function get()
     {
-        debug_event('upnp', 'get', 5);
+        debug_event('upnp.controller', 'get', 5);
 
         if (!$this->_upnp) {
             return false;
@@ -471,7 +480,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function status()
     {
-        debug_event('upnp', 'status', 5);
+        debug_event('upnp.controller', 'status', 5);
 
         if (!$this->_upnp) {
             return false;
@@ -509,9 +518,10 @@ class AmpacheUPnP extends localplay_controller
     public function connect()
     {
         $options = self::get_instance();
-        debug_event('upnp', 'Trying to connect upnp instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', '5');
+        debug_event('upnp.controller', 'Trying to connect upnp instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
         $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
-        debug_event('upnp', 'Connected.', '5');
+        debug_event('upnp.controller', 'Connected.', 5);
+
         return true;
     }
 }

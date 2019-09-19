@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,12 +22,12 @@
 
  // jsTree file system browser
 
-define('AJAX_INCLUDE','1');
+define('AJAX_INCLUDE', '1');
 
 require_once '../lib/init.php';
 $rootdir = Upload::get_root();
 if (empty($rootdir)) {
-    exit;
+    return false;
 }
 $rootdir .= DIRECTORY_SEPARATOR;
 ini_set('open_basedir', $rootdir);
@@ -47,6 +47,7 @@ class fs
                 throw new Exception('Path is not inside base (' . $this->base . '): ' . $temp);
             }
         }
+
         return $temp;
     }
     protected function path($id)
@@ -54,14 +55,20 @@ class fs
         $id = str_replace('/', DIRECTORY_SEPARATOR, $id);
         $id = trim($id, DIRECTORY_SEPARATOR);
         $id = $this->real($this->base . DIRECTORY_SEPARATOR . $id);
+
         return $id;
     }
+
+    /**
+     * @param string $path
+     */
     protected function id($path)
     {
         $path = $this->real($path);
         $path = substr($path, strlen($this->base));
         $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
         $path = trim($path, '/');
+
         return strlen($path) ? $path : '/';
     }
 
@@ -92,12 +99,13 @@ class fs
             if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
                 $res[] = array('text' => $item, 'children' => true,  'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'icon' => 'folder');
             } else {
-                //$res[] = array('text' => $item, 'children' => false, 'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'type' => 'file', 'icon' => 'file file-'.substr($item, strrpos($item,'.') + 1));
+                //$res[] = array('text' => $item, 'children' => false, 'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'type' => 'file', 'icon' => 'file file-'.substr($item, strrpos($item, '.') + 1));
             }
         }
         if ($with_root && $this->id($dir) === '/') {
-            $res = array(array('text' => basename($this->base), 'children' => $res, 'id' => '/', 'icon'=>'folder', 'state' => array('opened' => true, 'disabled' => true)));
+            $res = array(array('text' => basename($this->base), 'children' => $res, 'id' => '/', 'icon' => 'folder', 'state' => array('opened' => true, 'disabled' => true)));
         }
+
         return $res;
     }
 
@@ -105,11 +113,12 @@ class fs
     {
         if (strpos($id, ":")) {
             $id = array_map(array($this, 'id'), explode(':', $id));
-            return array('type'=>'multiple', 'content'=> 'Multiple selected: ' . implode(' ', $id));
+
+            return array('type' => 'multiple', 'content' => 'Multiple selected: ' . implode(' ', $id));
         }
         $dir = $this->path($id);
         if (is_dir($dir)) {
-            return array('type'=>'folder', 'content'=> $id);
+            return array('type' => 'folder', 'content' => $id);
         }
         if (is_file($dir)) {
             $ext = strpos($dir, '.') !== false ? substr($dir, strrpos($dir, '.') + 1) : '';
@@ -140,12 +149,13 @@ class fs
                 case 'gif':
                 case 'png':
                 case 'bmp':
-                    $dat['content'] = 'data:'.finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dir).';base64,'.base64_encode(file_get_contents($dir));
+                    $dat['content'] = 'data:'.finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dir).';base64, '.base64_encode(file_get_contents($dir));
                     break;*/
                 default:
                     $dat['content'] = 'File not recognized: ' . $this->id($dir);
                     break;
             }
+
             return $dat;
         }
         throw new Exception('Not a valid selection: ' . $dir);
@@ -161,6 +171,7 @@ class fs
         } else {
             file_put_contents($dir . DIRECTORY_SEPARATOR . $name, '');
         }
+
         return array('id' => $this->id($dir . DIRECTORY_SEPARATOR . $name));
     }
     public function rename($id, $name)
@@ -180,6 +191,7 @@ class fs
             throw new Exception('Path already exists: ' . $new);
         }
         rename($dir, $new);
+
         return array('id' => $this->id($new));
     }
     public function remove($id)
@@ -197,6 +209,7 @@ class fs
         if (is_file($dir)) {
             unlink($dir);
         }
+
         return array('status' => 'OK');
     }
     public function move($id, $par)
@@ -207,6 +220,7 @@ class fs
         $new = array_pop($new);
         $new = $par . DIRECTORY_SEPARATOR . $new;
         rename($dir, $new);
+
         return array('id' => $this->id($new));
     }
     public function copy($id, $par)
@@ -229,6 +243,7 @@ class fs
         if (is_file($dir)) {
             copy($dir, $new);
         }
+
         return array('id' => $this->id($new));
     }
 }
@@ -237,7 +252,7 @@ if (isset($_GET['operation'])) {
     $fs = new fs($rootdir);
     try {
         $rslt = null;
-        switch ($_GET['operation']) {
+        switch (Core::get_get('operation')) {
             case 'get_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
                 $rslt = $fs->lst($node, (isset($_GET['id']) && $_GET['id'] === '#'));
@@ -248,7 +263,7 @@ if (isset($_GET['operation'])) {
                 break;
             case 'create_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
-                $rslt = $fs->create($node, isset($_GET['text']) ? $_GET['text'] : '', (!isset($_GET['type']) || $_GET['type'] !== 'file'));
+                $rslt = $fs->create($node, isset($_GET['text']) ? $_GET['text'] : '', (!isset($_GET['type']) || filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'file'));
                 break;
             case 'rename_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
@@ -269,7 +284,7 @@ if (isset($_GET['operation'])) {
                 $rslt = $fs->copy($node, $parn);
                 break;
             default:
-                throw new Exception('Unsupported operation: ' . $_GET['operation']);
+                throw new Exception('Unsupported operation: ' . Core::get_get('operation'));
         }
         header('Content-Type: application/json; charset=utf8');
         echo json_encode($rslt);

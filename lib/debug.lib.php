@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,6 +20,11 @@
  *
  */
 
+/*
+ * check_php
+ * check for required modules
+ * @return boolean
+ */
 function check_php()
 {
     if (
@@ -38,60 +43,109 @@ function check_php()
     return false;
 }
 
+/*
+ * check_php_version
+ * check for required php version
+ * @return boolean
+ */
 function check_php_version()
 {
     if (floatval(phpversion()) < 5.3) {
         return false;
     }
+
     return true;
 }
 
+/*
+ * check_php_hash
+ * check for required function exists
+ * @return boolean
+ */
 function check_php_hash()
 {
     return function_exists('hash_algos');
 }
 
+/*
+ * check_php_hash_algo
+ * check for required function exists
+ * @return boolean
+ */
 function check_php_hash_algo()
 {
     return function_exists('hash_algos') ? in_array('sha256', hash_algos()) : false;
 }
 
+/*
+ * check_php_json
+ * check for required function exists
+ * @return boolean
+ */
 function check_php_json()
 {
     return function_exists('json_encode');
 }
 
+/*
+ * check_php_curl
+ * check for required function exists
+ * @return boolean
+ */
 function check_php_curl()
 {
     return function_exists('curl_version');
 }
 
+/*
+ * check_php_session
+ * check for required function exists
+ * @return boolean
+ */
 function check_php_session()
 {
     return function_exists('session_set_save_handler');
 }
 
+/*
+ * check_php_pdo
+ * check for required function exists
+ * @return boolean
+ */
 function check_php_pdo()
 {
     return class_exists('PDO');
 }
 
+/*
+ * check_php_pdo_mysql
+ * check for required function exists
+ * @return boolean
+ */
 function check_php_pdo_mysql()
 {
     return class_exists('PDO') ? in_array('mysql', PDO::getAvailableDrivers()) : false;
 }
 
+/*
+ * check_mbstring_func_overload
+ * check for required function exists
+ * @return boolean
+ */
 function check_mbstring_func_overload()
 {
-    if ( ini_get('mbstring.func_overload') > 0) {
+    if (ini_get('mbstring.func_overload') > 0) {
         return false;
     }
+
     return true;
 }
 
 /**
  * check_config_values
  * checks to make sure that they have at least set the needed variables
+ * @param array $conf
+ * @return boolean
  */
 function check_config_values($conf)
 {
@@ -134,13 +188,14 @@ function check_config_values($conf)
  * This checks to make sure that the php memory limit is withing the
  * recommended range, this doesn't take into account the size of your
  * catalog.
+ * @return boolean
  */
 function check_php_memory()
 {
     $current_memory = ini_get('memory_limit');
-    $current_memory = substr($current_memory,0,strlen($current_memory)-1);
+    $current_memory = substr($current_memory, 0, strlen($current_memory) - 1);
 
-    if (intval($current_memory) < 48) {
+    if ((int) ($current_memory) < 48) {
         return false;
     }
 
@@ -151,38 +206,43 @@ function check_php_memory()
  * check_php_timelimit
  * This checks to make sure that the php timelimit is set to some
  * semi-sane limit, IE greater then 60 seconds
+ * @return boolean
  */
 function check_php_timelimit()
 {
-    $current = intval(ini_get('max_execution_time'));
+    $current = (int) (ini_get('max_execution_time'));
+
     return ($current >= 60 || $current == 0);
 } // check_php_timelimit
 
 /**
  * check_safe_mode
  * Checks to make sure we aren't in safe mode
+ * @return boolean
  */
 function check_php_safemode()
 {
     if (ini_get('safe_mode')) {
         return false;
     }
+
     return true;
 }
 
 /**
  * check_override_memory
  * This checks to see if we can manually override the memory limit
+ * @return boolean
  */
 function check_override_memory()
 {
     /* Check memory */
     $current_memory = ini_get('memory_limit');
-    $current_memory = substr($current_memory,0,strlen($current_memory)-1);
-    $new_limit      = ($current_memory+16) . "M";
+    $current_memory = substr($current_memory, 0, strlen($current_memory) - 1);
+    $new_limit      = ($current_memory + 16) . "M";
 
     /* Bump it by 16 megs (for getid3)*/
-    if (!ini_set('memory_limit',$new_limit)) {
+    if (!ini_set('memory_limit', $new_limit)) {
         return false;
     }
 
@@ -199,11 +259,12 @@ function check_override_memory()
 /**
  * check_override_exec_time
  * This checks to see if we can manually override the max execution time
+ * @return boolean
  */
 function check_override_exec_time()
 {
     $current = ini_get('max_execution_time');
-    set_time_limit($current+60);
+    set_time_limit($current + 60);
 
     if ($current == ini_get('max_execution_time')) {
         return false;
@@ -245,16 +306,21 @@ function check_php_gd()
     return (extension_loaded('gd') || extension_loaded('gd2'));
 }
 
+/**
+ * @param string $val
+ */
 function return_bytes($val)
 {
     $val  = trim($val);
-    $last = strtolower($val[strlen($val)-1]);
+    $last = strtolower($val[strlen($val) - 1]);
     switch ($last) {
         // The 'G' modifier is available since PHP 5.1.0
         case 'g':
             $val *= 1024;
+            // intentional fall through
         case 'm':
             $val *= 1024;
+            // intentional fall through
         case 'k':
             $val *= 1024;
             break;
@@ -271,6 +337,7 @@ function check_dependencies_folder()
 /**
  * check_config_writable
  * This checks whether we can write the config file
+ * @return boolean
  */
 function check_config_writable()
 {
@@ -299,15 +366,15 @@ function check_htaccess_play_writable()
 
 /**
  * debug_result
- *
  * Convenience function to format the output.
+ * @param string|boolean $status
  */
 function debug_result($status = false, $value = null, $comment = '')
 {
     $class = $status ? 'success' : 'danger';
 
     if (!$value) {
-        $value = $status ? T_('OK') : T_('ERROR');
+        $value = $status ? T_('OK') : T_('Error');
     }
 
     return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .

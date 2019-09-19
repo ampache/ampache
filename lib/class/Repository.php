@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,7 +32,7 @@ use Lib\Interfaces\Model;
 class Repository
 {
     protected $modelClassName;
-    
+
     /**
      *
      * @var array Stores relation between SQL field name and class name so we
@@ -43,6 +43,7 @@ class Repository
     protected function findBy($fields, $values)
     {
         $table = $this->getTableName();
+
         return $this->getRecords($table, $fields, $values);
     }
 
@@ -53,20 +54,25 @@ class Repository
     public function findAll()
     {
         $table = $this->getTableName();
+
         return $this->getRecords($table);
     }
 
     /**
      *
-     * @param type $id
+     * @param type $object_id
      * @return DatabaseObject
      */
-    public function findById($id)
+    public function findById($object_id)
     {
-        $rows = $this->findBy(array('id'), array($id));
+        $rows = $this->findBy(array('id'), array($object_id));
+
         return count($rows) ? reset($rows) : null;
     }
 
+    /**
+     * @param string $table
+     */
     private function getRecords($table, $field = null, $value = null)
     {
         $data = array();
@@ -76,6 +82,7 @@ class Repository
         while ($object = \Dba::fetch_object($statement, $this->modelClassName)) {
             $data[$object->getId()] = $object;
         }
+
         return $data;
     }
 
@@ -89,6 +96,7 @@ class Repository
     {
         if (preg_match('/^findBy(.*)$/', $name, $matches)) {
             $parts = explode('And', $matches[1]);
+
             return $this->findBy(
                     $parts,
                     $this->resolveObjects($arguments)
@@ -102,9 +110,10 @@ class Repository
         $nameParts = explode('\\', $className);
         $tableName = preg_replace_callback(
                 '/(?<=.)([A-Z])/',
-                function($m) {
-                    return '_' . strtolower($m[0]);
+                function ($name) {
+                    return '_' . strtolower($name[0]);
                 }, end($nameParts));
+
         return lcfirst($tableName);
     }
 
@@ -141,6 +150,7 @@ class Repository
                 $sql,
                 array_values($this->resolveObjects($properties))
         );
+
         return \Dba::insert_id();
     }
 
@@ -156,11 +166,11 @@ class Repository
         );
     }
 
-    protected function deleteRecord($id)
+    protected function deleteRecord($object_id)
     {
         $sql = 'DELETE FROM ' . $this->getTableName()
                 . ' WHERE id = ?';
-        \Dba::write($sql, array($id));
+        \Dba::write($sql, array($object_id));
     }
 
     protected function getKeyValuePairs($properties)
@@ -169,13 +179,14 @@ class Repository
         foreach ($properties as $property => $value) {
             $pairs[] = $property . '= ?';
         }
+
         return $pairs;
     }
 
     /**
      * Set a private or protected variable.
      * Only used in case where a property should not publicly writable
-     * @param Object $object
+     * @param Model $object
      * @param string $property
      * @param mixed $value
      */
@@ -199,6 +210,7 @@ class Repository
                 $properties[$property] = $value->getId();
             }
         }
+
         return $properties;
     }
 
@@ -219,12 +231,12 @@ class Repository
             }
             $sql .= implode(' and ', $sqlParts);
         }
-        
+
         return $sql;
     }
 
     public function camelCaseToUnderscore($string)
     {
-        return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/','_$1', $string));
+        return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', '_$1', $string));
     }
 }

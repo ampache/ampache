@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,11 +23,11 @@
 $thcount = 5;
 ?>
 <script language="javascript" type="text/javascript">
-    public function getSelectionArray()
+    function getSelectionArray()
     {
         var checked = []
         $("input[name='pvmsg_select[]']:checked").each(function () {
-            checked.push(parseInt($(this).val()));
+            checked.push(parseInt($(this).val(), 10));
         });
         return checked.join(",");
     }
@@ -40,17 +40,17 @@ $thcount = 5;
         <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=' + getSelectionArray());"><?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?></a></li>
     </ul>
 </div>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="label">
     <thead>
         <tr class="th-top">
             <th class="cel_select essential persist"></th>
-            <th class="cel_subject essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=subject', T_('Subject'),'pvmsg_sort_subject'); ?></th>
-            <th class="cel_from_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=from_user', T_('Sender'),'pvmsg_sort_from_user'); ?></th>
-            <th class="cel_to_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=to_user', T_('Recipient'),'pvmsg_sort_to_user'); ?></th>
-            <th class="cel_creation_date essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=creation_date', T_('Date'),'pvmsg_sort_creation_date'); ?></th>
+            <th class="cel_subject essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=subject', T_('Subject'), 'pvmsg_sort_subject'); ?></th>
+            <th class="cel_from_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=from_user', T_('Sender'), 'pvmsg_sort_from_user'); ?></th>
+            <th class="cel_to_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=to_user', T_('Recipient'), 'pvmsg_sort_to_user'); ?></th>
+            <th class="cel_creation_date essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=creation_date', T_('Date'), 'pvmsg_sort_creation_date'); ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
@@ -59,40 +59,33 @@ $thcount = 5;
         /* Foreach through every label that has been passed to us */
         foreach ($object_ids as $pvmg_id) {
             $libitem = new PrivateMsg($pvmg_id);
-            $libitem->format();
-            ?>
-        <tr id="label_<?php echo $libitem->id;
-            ?>" class="<?php echo UI::flip_class();
-            ?> <?php echo (!$libitem->is_read) ? "unread" : "" ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_pvmsg_row.inc.php');
-            ?>
+            $libitem->format(); ?>
+        <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?> <?php echo (!$libitem->is_read) ? "unread" : "" ?>">
+            <?php require AmpConfig::get('prefix') . UI::find_template('show_pvmsg_row.inc.php'); ?>
         </tr>
-        <?php 
+        <?php
         } ?>
         <?php if (!count($object_ids)) {
-    ?>
-        <tr class="<?php echo UI::flip_class();
-    ?>">
-            <td colspan="<?php echo $thcount;
-    ?>"><span class="nodata"><?php echo T_('No message found');
-    ?></span></td>
+            ?>
+        <tr class="<?php echo UI::flip_class(); ?>">
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No message found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_select essential persist"></th>
-            <th class="cel_subject essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=subject', T_('Subject'),'pvmsg_sort_subject'); ?></th>
-            <th class="cel_from_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=from_user', T_('Sender'),'pvmsg_sort_from_user'); ?></th>
-            <th class="cel_to_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=to_user', T_('Recipient'),'pvmsg_sort_to_user'); ?></th>
-            <th class="cel_creation_date essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=creation_date', T_('Date'),'pvmsg_sort_creation_date'); ?></th>
+            <th class="cel_subject essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=subject', T_('Subject'), 'pvmsg_sort_subject'); ?></th>
+            <th class="cel_from_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=from_user', T_('Sender'), 'pvmsg_sort_from_user'); ?></th>
+            <th class="cel_to_user essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=to_user', T_('Recipient'), 'pvmsg_sort_to_user'); ?></th>
+            <th class="cel_creation_date essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=pvmsg&sort=creation_date', T_('Date'), 'pvmsg_sort_creation_date'); ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </tfoot>
 </table>
 
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+<?php if ($browse->is_show_header()) {
+            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        } ?>

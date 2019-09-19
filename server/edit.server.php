@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,49 +25,52 @@
  */
 
 // Set that this is an ajax include
-define('AJAX_INCLUDE','1');
+define('AJAX_INCLUDE', '1');
 
 require_once '../lib/init.php';
 
 $results = '';
 
-debug_event('edit.server.php', 'Called for action: {' . $_REQUEST['action'] . '}', '5');
+debug_event('edit.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
 // Post first
 $type = $_POST['type'];
 if (empty($type)) {
-    $type = $_GET['type'];
+    $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 }
 $object_id = $_GET['id'];
 
 if (empty($type)) {
-    $object_type = $_GET['object_type'];
+    $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 } else {
     $object_type = implode('_', explode('_', $type, -1));
 }
 
 if (!Core::is_library_item($object_type) && $object_type != 'share') {
-    debug_event('edit.server.php', 'Type `' . $type . '` is not based on an item library.', '3');
-    exit();
+    debug_event('edit.server', 'Type `' . $type . '` is not based on an item library.', 3);
+
+    return false;
 }
 
 $libitem = new $object_type($object_id);
 $libitem->format();
 
 $level = '50';
-if ($libitem->get_user_owner() == $GLOBALS['user']->id) {
+if ($libitem->get_user_owner() == Core::get_global('user')->id) {
     $level = '25';
 }
-if ($_REQUEST['action'] == 'show_edit_playlist') {
+if (Core::get_request('action') == 'show_edit_playlist') {
     $level = '25';
 }
 
 // Make sure they got them rights
 if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
     echo xoutput_from_array(array('rfc3514' => '0x1'));
-    exit;
+
+    return false;
 }
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'show_edit_object':
         ob_start();
@@ -86,16 +89,17 @@ switch ($_REQUEST['action']) {
     break;
     case 'edit_object':
         // Scrub the data, walk recursive through array
-        $entities = function(&$data) use (&$entities) {
+        $entities = function (&$data) use (&$entities) {
             foreach ($data as $key => $value) {
-                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities(scrub_in($value));
+                $data[$key] = is_array($value) ? $entities($value) : unhtmlentities((string) scrub_in($value));
             }
+
             return $data;
         };
         $entities($_POST);
 
         $libitem = new $object_type($_POST['id']);
-        if ($libitem->get_user_owner() == $GLOBALS['user']->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
+        if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
             // TODO: improve this uniqueless check
             if (isset($_POST['user'])) {
                 unset($_POST['user']);
@@ -139,11 +143,12 @@ switch ($_REQUEST['action']) {
         $libitem->format();
 
         xoutput_headers();
-        $results['id'] = $new_id;
+        $results = array('id' => $new_id);
         echo xoutput_from_array($results);
-        exit;
+
+        return false;
     default:
-        exit;
+        return false;
 } // end switch action
 
 ob_end_clean();

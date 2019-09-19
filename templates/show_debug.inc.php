@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -122,35 +122,31 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($configuration as $key=>$value) {
-    if ($key == 'database_password' || $key == 'mysql_password') {
-        $value = '*********';
-    }
-    if (is_array($value)) {
-        $string = '';
-        foreach ($value as $setting) {
-            $string .= $setting . '<br />';
-        }
-        $value = $string;
-    }
-    if (Preference::is_boolean($key)) {
-        $value = print_bool($value);
-    }
-    
-    // Be sure to print only scalar values
-    if ($value === null || is_scalar($value)) {
-        ?>
-            <tr class="<?php echo UI::flip_class();
-        ?>">
-                <td valign="top"><strong><?php echo $key;
-        ?></strong></td>
-                <td><?php echo $value;
-        ?></td>
+            <?php foreach ($configuration as $key => $value) {
+            if ($key == 'database_password' || $key == 'mysql_password') {
+                $value = '*********';
+            }
+            if (is_array($value)) {
+                $string = '';
+                foreach ($value as $setting) {
+                    $string .= $setting . '<br />';
+                }
+                $value = $string;
+            }
+            if (Preference::is_boolean($key)) {
+                $value = print_bool($value);
+            }
+
+            // Be sure to print only scalar values
+            if ($value === null || is_scalar($value)) {
+                ?>
+            <tr class="<?php echo UI::flip_class(); ?>">
+                <td valign="top"><strong><?php echo $key; ?></strong></td>
+                <td><?php echo $value; ?></td>
             </tr>
 <?php
-
-    }
-}
+            }
+        }
 ?>
             </tbody>
         </table>

@@ -1,4 +1,4 @@
--- Copyright 2001 - 2015 Ampache.org
+-- Copyright 2001 - 2019 Ampache.org
 -- All rights reserved.
 --
 -- This program is free software; you can redistribute it and/or
@@ -13,10 +13,10 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program; if not, write to the Free Software
 -- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
--- 
+--
 -- Host: localhost    Database: ampache_clean
 -- ------------------------------------------------------
--- Server version	5.4.16-log
+-- Server version    5.4.16-log
 
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -575,7 +575,7 @@ CREATE TABLE IF NOT EXISTS `podcast` (
   `website` varchar(255) NULL,
   `description` varchar(4096) CHARACTER SET utf8 NULL,
   `language` varchar(5) NULL,
-  `copyright` varchar(64) NULL,
+  `copyright` varchar(255) NULL,
   `generator` varchar(64) NULL,
   `lastbuilddate` int(11) unsigned DEFAULT '0' NOT NULL,
   `lastsync` int(11) unsigned DEFAULT '0' NOT NULL,
@@ -688,7 +688,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'),
 (106, 'concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface', 'query'),
 (107, 'concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface', 'query'),
-(108, 'album_group', '0', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'),
+(108, 'album_group', '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'),
 (109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'),
 (110, 'demo_clear_sessions', '0', 'Clear democratic votes of expired user sessions', 25, 'boolean', 'playlist', null),
 (111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', null),
@@ -701,11 +701,11 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'),
 (119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'),
 (120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'),
-(121, 'allow_video', '1', 'Allow video features', 75, 'integer', 'options', 'feature'),
+(121, 'allow_video', '0', 'Allow video features', 75, 'integer', 'options', 'feature'),
 (122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'),
 (124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'),
 (125, 'home_moment_albums', '1', 'Show Albums of the moment at home page', 25, 'integer', 'interface', 'home'),
-(126, 'home_moment_videos', '1', 'Show Videos of the moment at home page', 25, 'integer', 'interface', 'home'),
+(126, 'home_moment_videos', '0', 'Show Videos of the moment at home page', 25, 'integer', 'interface', 'home'),
 (127, 'home_recently_played', '1', 'Show Recently Played at home page', 25, 'integer', 'interface', 'home'),
 (128, 'home_now_playing', '1', 'Show Now Playing at home page', 25, 'integer', 'interface', 'home'),
 (129, 'custom_logo', '', 'Custom logo url', 25, 'string', 'interface', 'custom'),
@@ -723,8 +723,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'),
 (142, 'disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)', 100, 'string', 'system', 'metadata'),
 (143, 'disabled_custom_metadata_fields_input', '', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', 100, 'string', 'system', 'metadata'),
-(144, 'podcast_keep', '10', 'Podcast: # latest episodes to keep', 100, 'integer', 'system', 'podcast'),
-(145, 'podcast_new_download', '1', 'Podcast: # episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast');
+(144, 'podcast_keep', '0', 'Podcast: # latest episodes to keep', 100, 'integer', 'system', 'podcast'),
+(145, 'podcast_new_download', '0', 'Podcast: # episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast');
 
 -- --------------------------------------------------------
 
@@ -804,7 +804,7 @@ CREATE TABLE IF NOT EXISTS `search` (
 DROP TABLE IF EXISTS `session`;
 CREATE TABLE IF NOT EXISTS `session` (
   `id` varchar(256) CHARACTER SET utf8 NOT NULL DEFAULT '',
-  `username` varchar(16) CHARACTER SET utf8 DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `expire` int(11) unsigned NOT NULL DEFAULT '0',
   `value` longtext COLLATE utf8_unicode_ci NOT NULL,
   `ip` varbinary(255) DEFAULT NULL,
@@ -826,7 +826,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 
 DROP TABLE IF EXISTS `session_remember`;
 CREATE TABLE IF NOT EXISTS `session_remember` (
-  `username` varchar(16) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `username` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `token` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `expire` int(11) DEFAULT NULL,
   PRIMARY KEY (`username`,`token`)
@@ -1153,8 +1153,8 @@ INSERT INTO `update_info` (`key`, `value`) VALUES
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
-  `fullname` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `fullname` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `email` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
   `website` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `apikey` varchar(255) CHARACTER SET utf8 DEFAULT NULL,

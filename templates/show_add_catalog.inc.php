@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,15 +32,21 @@ $default_sort   = "%a/%A";
     <table class="tabledata" cellpadding="0" cellspacing="0">
         <tr>
             <td style="width: 25%;"><?php echo T_('Catalog Name'); ?>: </td>
-            <td><input type="text" name="name" value="<?php echo scrub_out($_POST['name']); ?>" /></td>
+            <td><input type="text" name="name" value="<?php echo scrub_out(Core::get_post('name')); ?>" /></td>
             <td style="vertical-align:top; font-family: monospace;" rowspan="6" id="patterns_example">
                 <strong><?php echo T_('Auto-inserted Fields'); ?>:</strong><br />
-                <span class="format-specifier">%A</span> = <?php echo T_('album name'); ?><br />
-                <span class="format-specifier">%a</span> = <?php echo T_('artist name'); ?><br />
-                <span class="format-specifier">%c</span> = <?php echo T_('id3 comment'); ?><br />
-                <span class="format-specifier">%T</span> = <?php echo T_('track number (padded with leading 0)'); ?><br />
-                <span class="format-specifier">%t</span> = <?php echo T_('song title'); ?><br />
-                <span class="format-specifier">%y</span> = <?php echo T_('year'); ?><br />
+                <span class="format-specifier">%A</span> = <?php echo T_('Album'); ?><br />
+                <span class="format-specifier">%a</span> = <?php echo T_('Artist'); ?><br />
+                <span class="format-specifier">%c</span> = <?php echo T_('Comment'); ?><br />
+                <span class="format-specifier">%C</span> = <?php echo T_('Catalog Number'); ?><br />
+                <span class="format-specifier">%T</span> = <?php echo T_('Track Number (padded with leading 0)'); ?><br />
+                <span class="format-specifier">%d</span> = <?php echo T_('Disk'); ?><br />
+                <span class="format-specifier">%g</span> = <?php echo T_('Genre'); ?><br />
+                <span class="format-specifier">%t</span> = <?php echo T_('Song Title'); ?><br />
+                <span class="format-specifier">%y</span> = <?php echo T_('Year'); ?><br />
+                <span class="format-specifier">%Y</span> = <?php echo T_('Original Year'); ?><br />
+                <span class="format-specifier">%r</span> = <?php echo T_('Release Type'); ?><br />
+                <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
                 <span class="format-specifier">%o</span> = <?php echo T_('other'); ?><br />
             </td>
         </tr>
@@ -72,23 +78,16 @@ $default_sort   = "%a/%A";
                     <option value="music"><?php echo T_('Music'); ?></option>
             <?php if (AmpConfig::get('allow_video')) {
     ?>
-                    <option value="clip"><?php echo T_('Music Clip');
-    ?></option>
-                    <option value="tvshow"><?php echo T_('TV Show');
-    ?></option>
-                    <option value="movie"><?php echo T_('Movie');
-    ?></option>
-                    <option value="personal_video"><?php echo T_('Personal Video');
-    ?></option>
+                    <option value="clip"><?php echo T_('Music Clip'); ?></option>
+                    <option value="tvshow"><?php echo T_('TV Show'); ?></option>
+                    <option value="movie"><?php echo T_('Movie'); ?></option>
+                    <option value="personal_video"><?php echo T_('Personal Video'); ?></option>
             <?php
-
 }
             if (AmpConfig::get('podcast')) {
                 ?>
-                    <option value="podcast"><?php echo T_('Podcast');
-                ?></option>
+                    <option value="podcast"><?php echo T_('Podcast'); ?></option>
             <?php
-
             }
             ?>
                 </select>

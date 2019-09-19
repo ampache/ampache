@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,9 +24,7 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-/**
- * Display Switch
- */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
@@ -49,9 +47,10 @@ switch ($_REQUEST['action']) {
 
         $artist = new Artist($_REQUEST['artist_id']);
         if (!Catalog::can_remove($artist)) {
-            debug_event('artist', 'Unauthorized to remove the artist `.' . $artist->id . '`.', 1);
+            debug_event('artists', 'Unauthorized to remove the artist `.' . $artist->id . '`.', 2);
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if ($artist->remove_from_disk()) {
@@ -64,13 +63,18 @@ switch ($_REQUEST['action']) {
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
         if (AmpConfig::get('album_release_type')) {
-            $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], false, true);
+            $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], true);
         } else {
             $object_ids = $artist->get_albums($_REQUEST['catalog']);
         }
         $object_type = 'album';
-        require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
-        break;
+        if (!$artist->id) {
+            debug_event('artists', 'Requested an artist that does not exist', 2);
+            echo T_("Error: Requested an artist that does not exist.");
+        } else {
+            require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
+        }
+    break;
     case 'show_all_songs':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
@@ -80,7 +84,7 @@ switch ($_REQUEST['action']) {
         break;
     case 'update_from_tags':
         $type       = 'artist';
-        $object_id  = intval($_REQUEST['artist']);
+        $object_id  = (int) filter_input(INPUT_GET, 'artist', FILTER_SANITIZE_NUMBER_INT);
         $target_url = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
         require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
     break;
@@ -94,8 +98,8 @@ switch ($_REQUEST['action']) {
         }
         /* Enclose this in the purty box! */
         require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
-        show_alphabet_list('artists','artists.php',$match);
-        show_alphabet_form($chr, T_('Show Artists starting with'),"artists.php?action=match");
+        show_alphabet_list('artists', 'artists.php', $match);
+        show_alphabet_form($chr, T_('Show Artists starting with'), "artists.php?action=match");
         require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
 
         if ($match === "Browse") {

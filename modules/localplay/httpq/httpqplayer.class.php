@@ -1,9 +1,9 @@
-<?php 
+<?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,11 +37,11 @@ class HttpQPlayer
      * This is the constructor, it defaults to localhost
      * with port 4800
      */
-    public function __construct($h = "localhost", $pw = "", $p = 4800)
+    public function __construct($host = "localhost", $password = '', $port = 4800)
     {
-        $this->host     = $h;
-        $this->port     = $p;
-        $this->password = $pw;
+        $this->host     = $host;
+        $this->port     = $port;
+        $this->password = $password;
     } // HttpQPlayer
 
     /**
@@ -50,19 +50,19 @@ class HttpQPlayer
      * $name    Name to be shown in the playlist
      * $url        URL of the song
      */
-      public function add($name, $url)
-      {
-          $args['name'] = urlencode($name);
-          $args['url']  = urlencode($url);
-        
-          $results = $this->sendCommand('playurl', $args);
-        
-          if ($results == '0') {
-              $results = null;
-          }
+    public function add($name, $url)
+    {
+        $args['name'] = urlencode($name);
+        $args['url']  = urlencode($url);
 
-          return $results;
-      } // add
+        $results = $this->sendCommand('playurl', $args);
+
+        if ($results == '0') {
+            $results = null;
+        }
+
+        return $results;
+    } // add
 
     /**
      * version
@@ -72,8 +72,8 @@ class HttpQPlayer
     public function version()
     {
         $args    = array();
-        $results = $this->sendCommand('getversion',$args);
-        
+        $results = $this->sendCommand('getversion', $args);
+
         // a return of 0 is a bad value
         if ($results == '0') {
             $results = null;
@@ -113,7 +113,7 @@ class HttpQPlayer
         }
 
         return true;
-    } // next        
+    } // next
 
     /**
      * prev
@@ -127,9 +127,9 @@ class HttpQPlayer
         if ($results == '0') {
             return null;
         }
-    
+
         return true;
-    } // prev    
+    } // prev
 
     /**
      * skip
@@ -137,8 +137,8 @@ class HttpQPlayer
      */
     public function skip($pos)
     {
-        $args    = array('index'=>$pos);
-        $results = $this->sendCommand('setplaylistpos',$args);
+        $args    = array('index' => $pos);
+        $results = $this->sendCommand('setplaylistpos', $args);
 
         if ($results == '0') {
             return null;
@@ -151,7 +151,7 @@ class HttpQPlayer
         return true;
     } // skip
 
-    /** 
+    /**
      * play
      * play the current song
      */
@@ -165,9 +165,9 @@ class HttpQPlayer
         }
 
         return $results;
-    } // play    
+    } // play
 
-    /** 
+    /**
      * pause
      * toggle pause mode on current song
      */
@@ -183,7 +183,7 @@ class HttpQPlayer
         return $results;
     } // pause
 
-    /** 
+    /**
      * stop
      * stops the current song amazing!
      */
@@ -197,17 +197,17 @@ class HttpQPlayer
         }
 
         return $results;
-    } // stop            
+    } // stop
 
-    /** 
+    /**
       * repeat
      * This toggles the repeat state of HttpQ
      */
     public function repeat($value)
     {
-        $args    = array('enable'=>$value);
-        $results = $this->sendCommand('repeat',$args);
-        
+        $args    = array('enable' => $value);
+        $results = $this->sendCommand('repeat', $args);
+
         if ($results == '0') {
             $results = null;
         }
@@ -215,14 +215,14 @@ class HttpQPlayer
         return $results;
     } // repeat
 
-    /** 
+    /**
      * random
      * this toggles the random state of HttpQ
      */
     public function random($value)
     {
-        $args    = array('enable'=>$value);
-        $results = $this->sendCommand('shuffle',$args);
+        $args    = array('enable' => $value);
+        $results = $this->sendCommand('shuffle', $args);
 
         if ($results == '0') {
             $results = null;
@@ -237,9 +237,9 @@ class HttpQPlayer
      */
     public function delete_pos($track)
     {
-        $args    = array('index'=>$track);
-        $results = $this->sendCommand('deletepos',$args);
-        
+        $args    = array('index' => $track);
+        $results = $this->sendCommand('deletepos', $args);
+
         if ($results == '0') {
             $results = null;
         }
@@ -254,7 +254,7 @@ class HttpQPlayer
     public function state()
     {
         $args    = array();
-        $results = $this->sendCommand('isplaying',$args);
+        $results = $this->sendCommand('isplaying', $args);
 
         if ($results == '1') {
             $state = 'play';
@@ -265,24 +265,24 @@ class HttpQPlayer
         if ($results == '3') {
             $state = 'pause';
         }
-        
+
         return $state;
     } // state
 
     /**
      * get_volume
-     * This returns the current volume 
+     * This returns the current volume
      */
     public function get_volume()
     {
         $args    = array();
-        $results = $this->sendCommand('getvolume',$args);
+        $results = $this->sendCommand('getvolume', $args);
 
         if ($results == '0') {
             $results = null;
         } else {
             /* Need to make this out of 100 */
-            $results = round((($results / 255) * 100),2);
+            $results = round((($results / 255) * 100), 2);
         }
 
         return $results;
@@ -295,8 +295,8 @@ class HttpQPlayer
     public function volume_up()
     {
         $args    = array();
-        $results = $this->sendCommand('volumeup',$args);
-        
+        $results = $this->sendCommand('volumeup', $args);
+
         if ($results == '0') {
             return null;
         }
@@ -311,8 +311,8 @@ class HttpQPlayer
     public function volume_down()
     {
         $args    = array();
-        $results = $this->sendCommand('volumedown',$args);
-        
+        $results = $this->sendCommand('volumedown', $args);
+
         if ($results == '0') {
             return null;
         }
@@ -329,9 +329,9 @@ class HttpQPlayer
     {
 
         // Convert it to base 255
-        $value   = $value*2.55;
-        $args    = array('level'=>$value);
-        $results = $this->sendCommand('setvolume',$args);
+        $volume  = $value * 2.55;
+        $args    = array('level' => $volume);
+        $results = $this->sendCommand('setvolume', $args);
 
         if ($results == '0') {
             return null;
@@ -347,8 +347,8 @@ class HttpQPlayer
     public function clear_playlist()
     {
         $args    = array();
-        $results = $this->sendcommand('flushplaylist',$args);
-        
+        $results = $this->sendcommand('flushplaylist', $args);
+
         if ($results == '0') {
             return null;
         }
@@ -356,14 +356,14 @@ class HttpQPlayer
         return true;
     } // clear_playlist
 
-    /** 
+    /**
      * get_repeat
-     * This returns the current state of the repeat 
+     * This returns the current state of the repeat
      */
     public function get_repeat()
     {
         $args    = array();
-        $results = $this->sendCommand('repeat_status',$args);
+        $results = $this->sendCommand('repeat_status', $args);
 
         return $results;
     } // get_repeat
@@ -375,8 +375,8 @@ class HttpQPlayer
     public function get_random()
     {
         $args    = array();
-        $results = $this->sendCommand('shuffle_status',$args);
-        
+        $results = $this->sendCommand('shuffle_status', $args);
+
         return $results;
     } // get_random
 
@@ -389,10 +389,10 @@ class HttpQPlayer
     {
 
         // First get the current POS
-        $pos = $this->sendCommand('getlistpos',array());
-        
+        $pos = $this->sendCommand('getlistpos', array());
+
         // Now get the filename
-        $file = $this->sendCommand('getplaylistfile',array('index'=>$pos));
+        $file = $this->sendCommand('getplaylistfile', array('index' => $pos));
 
         return $file;
     } // get_now_playing
@@ -406,52 +406,52 @@ class HttpQPlayer
     {
 
         // Pull a delimited list of all tracks
-        $results = $this->sendCommand('getplaylistfile',array('delim'=>'::'));
-        
+        $results = $this->sendCommand('getplaylistfile', array('delim' => '::'));
+
         if ($results == '0') {
             $results = null;
         }
-    
+
         return $results;
     } // get_tracks
 
-    /** 
+    /**
       * sendCommand
      * This is the core of this library it takes care of sending the HTTP
-     * request to the HttpQ server and getting the response 
+     * request to the HttpQ server and getting the response
      */
     private function sendCommand($cmd, $args)
     {
-        $fp = fsockopen($this->host, $this->port, $errno, $errstr);
+        $fsock = fsockopen($this->host, $this->port, $errno, $errstr);
 
-        if (!$fp) {
-            debug_event('httpq',"HttpQPlayer: $errstr ($errno)",'1');
+        if (!$fsock) {
+            debug_event('httpqplayer.class', "HttpQPlayer: $errstr ($errno)", 1);
+
             return null;
         }
 
-        // Define the base message  
+        // Define the base message
         $msg = "GET /$cmd?p=$this->password";
 
-        // Foreach our arguments 
+        // Foreach our arguments
         foreach ($args as $key => $val) {
             $msg = $msg . "&$key=$val";
         }
 
         $msg = $msg . " HTTP/1.0\r\n\r\n";
-        fputs($fp, $msg);
+        fputs($fsock, $msg);
         $data = '';
 
-        while (!feof($fp)) {
-            $data .= fgets($fp);
+        while (!feof($fsock)) {
+            $data .= fgets($fsock);
         }
-        fclose($fp);
+        fclose($fsock);
 
         // Explode the results by line break and take 4th line (results)
-        $data = explode("\n",$data);
-        
+        $data = explode("\n", $data);
+
         $result = $data['4'];
-        
+
         return $result;
     } // sendCommand
 } // End HttpQPlayer Class
-?>

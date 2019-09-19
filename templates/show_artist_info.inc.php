@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,20 +29,16 @@
     ?>
         <div class="item_art">
             <?php if ($biography && is_array($biography)) {
-    ?>
-                <a href="<?php echo $biography['megaphoto'];
-    ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto'];
-    ?>" alt="<?php echo $artist->f_name;
-    ?>" width="128"></a>
-            <?php 
-}
-    ?>
+        ?>
+                <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
+            <?php
+    } ?>
         </div>
-    <?php 
+    <?php
 } ?>
     <div class="item_properties">
         <?php
-        if ($biography && is_array($biography)) {
+        if (! empty($biography) && is_array($biography)) {
             $dcol = array();
             if ($biography['placeformed']) {
                 $dcol[] = $biography['placeformed'];
@@ -51,19 +47,18 @@
                 $dcol[] = $biography['yearformed'];
             }
             if (count($dcol) > 0) {
-                echo implode(', ', $dcol);
+                echo implode(',', $dcol);
             }
         }
         ?>
     </div>
 </div>
 <div id="item_summary">
-    <?php if ($biography && is_array($biography)) {
-    ?>
-        <?php echo $biography['summary'];
-    ?>
-    <?php 
-}?>
+    <?php if (! empty($biography) && is_array($biography)) {
+            ?>
+        <?php echo nl2br($biography['summary'], true); ?>
+    <?php
+        }?>
 </div>
 <script language="javascript" type="text/javascript">
 $(document).ready(function(){

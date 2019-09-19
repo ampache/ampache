@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,44 +43,45 @@ class Shoutbox
     public function __construct($shout_id)
     {
         // Load the data from the database
-        $this->_get_info($shout_id);
+        $this->has_info($shout_id);
 
         return true;
     } // Constructor
 
     /**
-     * _get_info
+     * has_info
      * does the db call, reads from the user_shout table
      */
-    private function _get_info($shout_id)
+    private function has_info($shout_id)
     {
         $sql        = "SELECT * FROM `user_shout` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($shout_id));
 
         $data = Dba::fetch_assoc($db_results);
 
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             $this->$key = $value;
         }
 
         return true;
-    } // _get_info
+    } // has_info
 
     /**
-     * gc
+     * garbage_collection
      *
      * Cleans out orphaned shoutbox items
+     * @param string $object_type
      */
-    public static function gc($object_type = null, $object_id = null)
+    public static function garbage_collection($object_type = null, $object_id = null)
     {
         $types = array('song', 'album', 'artist', 'label');
 
-        if ($object_type != null) {
+        if ($object_type !== null) {
             if (in_array($object_type, $types)) {
                 $sql = "DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('shoutbox', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event('shoutbox.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -100,12 +101,13 @@ class Shoutbox
 
         // If we've already got too many stop here
         if (count($shouts) > $limit) {
-            $shouts = array_slice($shouts,0,$limit);
+            $shouts = array_slice($shouts, 0, $limit);
+
             return $shouts;
         }
 
         // Only get as many as we need
-        $limit  = intval($limit) - count($shouts);
+        $limit  = (int) ($limit) - count($shouts);
         $params = array();
         $sql    = "SELECT `user_shout`.`id` AS `id` FROM `user_shout` LEFT JOIN `user` ON `user`.`id` = `user_shout`.`user` WHERE `user_shout`.`sticky`='0' ";
         if ($username !== null) {
@@ -157,14 +159,14 @@ class Shoutbox
      * get_object
      * This takes a type and an ID and returns a created object
      */
-    public static function get_object($type,$object_id)
+    public static function get_object($type, $object_id)
     {
         if (!Core::is_library_item($type)) {
             return false;
         }
 
         $object = new $type($object_id);
-        
+
         if ($object->id > 0) {
             if (strtolower($type) === 'song') {
                 if (!$object->enabled) {
@@ -204,14 +206,14 @@ class Shoutbox
         }
 
         $sticky     = isset($data['sticky']) ? 1 : 0;
-        $user       = intval($data['user'] ?: $GLOBALS['user']->id);
-        $date       = intval($data['date'] ?: time());
+        $user       = (int) ($data['user'] ?: Core::get_global('user')->id);
+        $date       = (int) ($data['date'] ?: time());
         $comment    = strip_tags($data['comment']);
 
         $sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`, `data`) " .
             "VALUES (? , ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
-        
+
         Useractivity::post_activity($user, 'shout', $data['object_type'], $data['object_id']);
 
         $insert_id = Dba::insert_id();
@@ -223,7 +225,7 @@ class Shoutbox
             if ($item_owner_id) {
                 if (Preference::get_by_user($item_owner_id, 'notify_email')) {
                     $item_owner = new User($item_owner_id);
-                    if (!empty($item_owner->email)) {
+                    if (!empty($item_owner->email) && Mailer::is_mail_enabled()) {
                         $libitem->format();
                         $mailer = new Mailer();
                         $mailer->set_default_sender();
@@ -236,7 +238,7 @@ class Shoutbox
     ----------------------
 
     %s
-    "), $GLOBALS['user']->fullname, $libitem->get_fullname(), $comment, AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $data['object_type'] . "&id=" . $data['object_id'] . "#shout" . $insert_id);
+    "), Core::get_global('user')->fullname, $libitem->get_fullname(), $comment, AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $data['object_type'] . "&id=" . $data['object_id'] . "#shout" . $insert_id);
                         $mailer->send();
                     }
                 }
@@ -268,6 +270,7 @@ class Shoutbox
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
         $this->f_date = date("m\/d\/Y - H:i", $this->date);
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
+
         return true;
     } //format
 
@@ -276,7 +279,7 @@ class Shoutbox
      * this function deletes a specific shoutbox entry
      */
 
-    public function delete($shout_id)
+    public static function delete($shout_id)
     {
         // Delete the shoutbox post
         $shout_id = Dba::escape($shout_id);
@@ -306,10 +309,10 @@ class Shoutbox
         if ($details) {
             $html .= "<div class='shoutbox-actions'>";
             if ($jsbuttons) {
-                $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type . '&' . $this->object_type . '_id=' . $this->object_id,'play', T_('Play'),'play_' . $this->object_type . '_' . $this->object_id);
-                $html .= Ajax::button('?action=basket&type=' . $this->object_type . '&id=' . $this->object_id,'add', T_('Add'),'add_' . $this->object_type . '_' . $this->object_id);
+                $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type . '&' . $this->object_type . '_id=' . $this->object_id, 'play', T_('Play'), 'play_' . $this->object_type . '_' . $this->object_id);
+                $html .= Ajax::button('?action=basket&type=' . $this->object_type . '&id=' . $this->object_id, 'add', T_('Add'), 'add_' . $this->object_type . '_' . $this->object_id);
             }
-            if (Access::check('interface','25')) {
+            if (Access::check('interface', '25')) {
                 $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>";
             }
             $html .= "</div>";

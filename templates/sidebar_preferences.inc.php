@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2015 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,21 +27,16 @@
 $catagories = Preference::get_catagories();
 ?>
 <ul class="sb2" id="sb_preferences">
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Preferences'); ?>"><?php echo T_('Preferences'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-all <?php echo isset($_COOKIE['sb_preferences']) ? $_COOKIE['sb_preferences'] : 'expanded'; ?>" id="preferences" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
+  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Preferences'); ?>"><?php echo T_('Preferences'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'preferences', 'header-all ' . ((filter_has_var(INPUT_COOKIE, 'sb_preferences')) ? $_COOKIE['sb_preferences'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_preferences_sections">
 <?php
     foreach ($catagories as $name) {
         if ($name == 'system') {
             continue;
         }
-        $f_name = ucfirst($name);
-        ?>
-      <li id="sb_preferences_sections_<?php echo $f_name;
-        ?>"><a href="<?php echo $web_path;
-        ?>/preferences.php?tab=<?php echo $name;
-        ?>"><?php echo T_($f_name);
-        ?></a></li>
-<?php 
+        $f_name = ucfirst($name); ?>
+      <li id="sb_preferences_sections_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
+<?php
     } ?>
       <li id="sb_preferences_sections_account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>
     </ul>
