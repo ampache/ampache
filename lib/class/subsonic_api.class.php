@@ -857,8 +857,8 @@ class Subsonic_Api
             $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistid), 'song');
             Subsonic_XML_Data::addSmartPlaylist($response, $playlist, true);
         } else {
-            $playlist = new Playlist($playlistid);
-            Subsonic_XML_Data::addPlaylist($response, $playlist, true);
+            $playlist = new Playlist(Subsonic_XML_Data::getAmpacheId($playlistid));
+            Subsonic_XML_Data::addPlaylist($r, $playlist, true);
         }
         self::apiOutput($input, $response);
     }
@@ -1063,6 +1063,7 @@ class Subsonic_Api
     public static function getcoverart($input)
     {
         $id   = str_replace('al-', '', self::check_parameter($input, 'id', true));
+        $id   = str_replace('pl-', '', $id);
         $size = $input['size'];
 
         $art = null;
