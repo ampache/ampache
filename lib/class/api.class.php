@@ -1028,7 +1028,7 @@ class Api
             echo XML_Data::playlists(array($uid));
         }
     }
-        echo XML_Data::playlists(array($uid));
+        echo XML_Data::playlists(array($uid);
     } // playlist_create
 
     /**

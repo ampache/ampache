@@ -69,6 +69,7 @@ class JSON_Data
     public static function set_limit($limit)
     {
         if (!$limit) {
+
             return false;
         }
 
@@ -89,6 +90,7 @@ class JSON_Data
     public static function error($code,$string)
     {
         $JSON = json_encode(array("error" => array("code" => $code, "message" => $string)), JSON_PRETTY_PRINT);
+
         return $JSON;
     } // error
 
@@ -162,6 +164,7 @@ class JSON_Data
                 return $playlist["track"];
             }
         }
+
         return "";
     } // playlist_song_tracks_string
 
@@ -393,30 +396,30 @@ class JSON_Data
                 );
             }
 
-            $ourSong['filename'] = $song->file;
-            $ourSong['track'] = $song->track;
-            $ourSong['playlisttrack'] = $playlist_track_string;
-            $ourSong['time'] = $song->time;
-            $ourSong['year'] = $song->year;
-            $ourSong['bitrate'] = $song->bitrate;
-            $ourSong['rate'] = $song->rate;
-            $ourSong['mode'] = $song->mode;
-            $ourSong['mime'] = $song->mime;
-            $ourSong['url'] = Song::play_url($song->id, '', 'api');
-            $ourSong['size'] = $song->size;
-            $ourSong['mbid'] = $song->mbid;
-            $ourSong['album_mbid'] = $song->album_mbid;
-            $ourSong['artist_mbid'] = $song->artist_mbid;
-            $ourSong['albumartist_mbid'] = $song->albumartist_mbid;
-            $ourSong['art'] = $song->art_url;
-            $ourSong['preciserating'] = ($rating->get_user_rating() ?: 0);
-            $ourSong['rating'] = ($rating->get_user_rating() ?: 0);
-            $ourSong['averagerating'] = ($rating->get_average_rating() ?: 0);
-            $ourSong['composer'] = $song->composer;
-            $ourSong['channels'] = $song->channels;
-            $ourSong['comment'] = $song->comment;
-            $ourSong['publisher'] = $song->label;
-            $ourSong['language'] = $song->language;
+            $ourSong['filename']              = $song->file;
+            $ourSong['track']                 = $song->track;
+            $ourSong['playlisttrack']         = $playlist_track_string;
+            $ourSong['time']                  = $song->time;
+            $ourSong['year']                  = $song->year;
+            $ourSong['bitrate']               = $song->bitrate;
+            $ourSong['rate']                  = $song->rate;
+            $ourSong['mode']                  = $song->mode;
+            $ourSong['mime']                  = $song->mime;
+            $ourSong['url']                   = Song::play_url($song->id, '', 'api');
+            $ourSong['size']                  = $song->size;
+            $ourSong['mbid']                  = $song->mbid;
+            $ourSong['album_mbid']            = $song->album_mbid;
+            $ourSong['artist_mbid']           = $song->artist_mbid;
+            $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
+            $ourSong['art']                   = $song->art_url;
+            $ourSong['preciserating']         = ($rating->get_user_rating() ?: 0);
+            $ourSong['rating']                = ($rating->get_user_rating() ?: 0);
+            $ourSong['averagerating']         = ($rating->get_average_rating() ?: 0);
+            $ourSong['composer']              = $song->composer;
+            $ourSong['channels']              = $song->channels;
+            $ourSong['comment']               = $song->comment;
+            $ourSong['publisher']             = $song->label;
+            $ourSong['language']              = $song->language;
             $ourSong['replaygain_album_gain'] = $song->replaygain_album_gain;
             $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;
             $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
@@ -429,8 +432,6 @@ class JSON_Data
             $ourSong['tags'] = $tags;
 
             array_push($JSON, array("song" => $ourSong));
-
-
         } // end foreach
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
