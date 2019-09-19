@@ -134,9 +134,9 @@ class JSON_Data
             }
 
             foreach ($atags as $id => $data) {
-                $JSON['id'] = $id;
+                $JSON['id']    = $id;
                 $JSON['count'] = $data['count'];
-                $JSON['name'] = $data['name'];
+                $JSON['name']  = $data['name'];
             }
         }
 
@@ -294,15 +294,15 @@ class JSON_Data
 
             }
 
-            $theArray['album']['year'] = $album->year;
-            $theArray['album']['tracks'] = $album->song_count;
-            $theArray['album']['disk'] = $album->disk;
-            $theArray['album']['tags'] = self::tags_string($album->tags);
-            $theArray['album']['art'] = $art_url;
+            $theArray['album']['year']          = $album->year;
+            $theArray['album']['tracks']        = $album->song_count;
+            $theArray['album']['disk']          = $album->disk;
+            $theArray['album']['tags']          = self::tags_string($album->tags);
+            $theArray['album']['art']           = $art_url;
             $theArray['album']['preciserating'] = $rating->get_user_rating();
-            $theArray['album']['rating'] = $rating->get_user_rating();
+            $theArray['album']['rating']        = $rating->get_user_rating();
             $theArray['album']['averagerating'] = $rating->get_average_rating();
-            $theArray['album']['mbid'] = $album->mbid;
+            $theArray['album']['mbid']          = $album->mbid;
 
 
             array_push($JSON, $theArray);
@@ -386,47 +386,47 @@ class JSON_Data
                     id => $song->album,
                     name => $song->get_album_name()),
             );
-                if ($song->albumartist) {
-                    $ourSong['albumartist'] = array(
-                        id => $song->albumartist,
-                        name => $song->get_album_artist_name()
-                    );
-                }
+            if ($song->albumartist) {
+                $ourSong['albumartist'] = array(
+                    id => $song->albumartist,
+                    name => $song->get_album_artist_name()
+                );
+            }
 
-                    $ourSong['filename'] = $song->file;
-                    $ourSong['track'] = $song->track;
-                    $ourSong['playlisttrack'] = $playlist_track_string;
-                    $ourSong['time'] = $song->time;
-                    $ourSong['year'] = $song->year;
-                    $ourSong['bitrate'] = $song->bitrate;
-                    $ourSong['rate'] = $song->rate;
-                    $ourSong['mode'] = $song->mode;
-                    $ourSong['mime'] = $song->mime;
-                    $ourSong['url'] = Song::play_url($song->id, '', 'api');
-                    $ourSong['size'] = $song->size;
-                    $ourSong['mbid'] = $song->mbid;
-                    $ourSong['album_mbid'] = $song->album_mbid;
-                    $ourSong['artist_mbid'] = $song->artist_mbid;
-                    $ourSong['albumartist_mbid'] = $song->albumartist_mbid;
-                    $ourSong['art'] = $song->art_url;
-                    $ourSong['preciserating'] = ($rating->get_user_rating() ?: 0);
-                    $ourSong['rating'] = ($rating->get_user_rating() ?: 0);
-                    $ourSong['averagerating'] = ($rating->get_average_rating() ?: 0);
-                    $ourSong['composer'] = $song->composer;
-                    $ourSong['channels'] = $song->channels;
-                    $ourSong['comment'] = $song->comment;
-                    $ourSong['publisher'] = $song->label;
-                    $ourSong['language'] = $song->language;
-                    $ourSong['replaygain_album_gain'] = $song->replaygain_album_gain;
-                    $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;
-                    $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
-                    $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
+            $ourSong['filename'] = $song->file;
+            $ourSong['track'] = $song->track;
+            $ourSong['playlisttrack'] = $playlist_track_string;
+            $ourSong['time'] = $song->time;
+            $ourSong['year'] = $song->year;
+            $ourSong['bitrate'] = $song->bitrate;
+            $ourSong['rate'] = $song->rate;
+            $ourSong['mode'] = $song->mode;
+            $ourSong['mime'] = $song->mime;
+            $ourSong['url'] = Song::play_url($song->id, '', 'api');
+            $ourSong['size'] = $song->size;
+            $ourSong['mbid'] = $song->mbid;
+            $ourSong['album_mbid'] = $song->album_mbid;
+            $ourSong['artist_mbid'] = $song->artist_mbid;
+            $ourSong['albumartist_mbid'] = $song->albumartist_mbid;
+            $ourSong['art'] = $song->art_url;
+            $ourSong['preciserating'] = ($rating->get_user_rating() ?: 0);
+            $ourSong['rating'] = ($rating->get_user_rating() ?: 0);
+            $ourSong['averagerating'] = ($rating->get_average_rating() ?: 0);
+            $ourSong['composer'] = $song->composer;
+            $ourSong['channels'] = $song->channels;
+            $ourSong['comment'] = $song->comment;
+            $ourSong['publisher'] = $song->label;
+            $ourSong['language'] = $song->language;
+            $ourSong['replaygain_album_gain'] = $song->replaygain_album_gain;
+            $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;
+            $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
+            $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
 
-                    $tags = [];
-                    foreach ($song->tags as $tag) {
-                        array_push($tags, $tag['name']);
-                    }
-                    $ourSong['tags'] = $tags;
+            $tags = [];
+            foreach ($song->tags as $tag) {
+                array_push($tags, $tag['name']);
+            }
+            $ourSong['tags'] = $tags;
 
             array_push($JSON, array("song" => $ourSong));
 
@@ -451,7 +451,7 @@ class JSON_Data
         }
 
         $string = '';
-        $JSON = [];
+        $JSON   = [];
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
             $video->format();
@@ -463,12 +463,9 @@ class JSON_Data
                 size => $video->size,
                 tags => self::tags_string($video->tags),
                 url => Video::play_url($video->id, '', 'api')
-
-
             );
-
         } // end foreach
-        
+
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // videos
 
@@ -491,7 +488,7 @@ class JSON_Data
 
         $JSON = [];
 
-        foreach ($object_ids as $row_id=>$data) {
+        foreach ($object_ids as $row_id => $data) {
             $song = new $data['object_type']($data['object_id']);
             $song->format();
 
@@ -572,6 +569,7 @@ class JSON_Data
             $user = new User($user_id);
             array_push($JSON, $user->username);
         }
+
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // users
 
@@ -589,7 +587,7 @@ class JSON_Data
         foreach ($shouts as $shout_id) {
             $shout = new Shoutbox($shout_id);
             $shout->format();
-            $user = new User($shout->user);
+            $user     = new User($shout->user);
             $ourArray = array(
                 id => $shout_id,
                 date => $shout->date,
@@ -617,7 +615,7 @@ class JSON_Data
         $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss
         foreach ($activities as $aid) {
             $activity = new Useractivity($aid);
-            $user = new User($activity->user);
+            $user     = new User($activity->user);
             $ourArray = array(
                 id => $aid,
                 data => $activity->activity_date,
@@ -634,5 +632,4 @@ class JSON_Data
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // timeline
-
 } // JSON_Data
