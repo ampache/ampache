@@ -1082,23 +1082,9 @@ class Subsonic_Api
         } elseif (Subsonic_XML_Data::isPodcast($id)) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "podcast");
         } elseif (Subsonic_XML_Data::isSmartPlaylist($id)) {
-            $smartlist = new Search(Subsonic_XML_Data::getAmpacheId($id));
-            $listitems = $smartlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
-                $song = new Song($item['object_id']);
-                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
-            }
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "search");
         } elseif (Subsonic_XML_Data::isPlaylist($id)) {
-            $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($id));
-            $listitems = $playlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
-                $song = new Song($item['object_id']);
-                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
-            }
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "playlist");
         }
 
         header("Access-Control-Allow-Origin: *");

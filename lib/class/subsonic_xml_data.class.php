@@ -842,7 +842,7 @@ class Subsonic_XML_Data
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        $xplaylist->addAttribute('id', (string) self::getPlaylistId($playlist->id));;
+        $xplaylist->addAttribute('id', (string) self::getPlaylistId($playlist->id));
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', $user->username);
