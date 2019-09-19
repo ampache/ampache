@@ -185,7 +185,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_plugins':
         $plugins = Plugin::get_plugins();
-        UI::show_box_top(T_('Plugins'), 'box box_localplay_plugins');
+        UI::show_box_top(T_('Manage Plugins'), 'box box_localplay_plugins');
         require_once AmpConfig::get('prefix') . UI::find_template('show_plugins.inc.php');
         UI::show_box_bottom();
     break;
