@@ -69,7 +69,6 @@ class JSON_Data
     public static function set_limit($limit)
     {
         if (!$limit) {
-
             return false;
         }
 
@@ -243,8 +242,6 @@ class JSON_Data
                     yearformed => $artist->yearformed,
                     placeformed => $artist->placeformed
             )));
-
-
         } // end foreach artists
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
@@ -294,7 +291,6 @@ class JSON_Data
                     id => $album->artist_id,
                     name => $album->artist_name
                 );
-
             }
 
             $theArray['album']['year']          = $album->year;
@@ -306,7 +302,6 @@ class JSON_Data
             $theArray['album']['rating']        = $rating->get_user_rating();
             $theArray['album']['averagerating'] = $rating->get_average_rating();
             $theArray['album']['mbid']          = $album->mbid;
-
 
             array_push($JSON, $theArray);
         } // end foreach
