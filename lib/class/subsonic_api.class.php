@@ -1083,6 +1083,10 @@ class Subsonic_Api
             }
         } elseif (Subsonic_XML_Data::isPodcast($id)) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "podcast");
+        } elseif (Subsonic_XML_Data::isSmartPlaylist($id)) {
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "search");
+        } elseif (Subsonic_XML_Data::isPlaylist($id)) {
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "playlist");
         }
 
         header("Access-Control-Allow-Origin: *");
