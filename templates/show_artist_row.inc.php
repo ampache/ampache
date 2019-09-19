@@ -26,11 +26,11 @@
     <?php
         if ($show_direct_play) {
             echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id, 'play', T_('Play'), 'play_artist_' . $libitem->id);
+            if (Stream_Playlist::check_autoplay_next()) {
+                echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_artist_' . $libitem->id);
+            }
             if (Stream_Playlist::check_autoplay_append()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_artist_' . $libitem->id);
-                if (Stream_Playlist::check_autoplay_next()) {
-                    echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_artist_' . $libitem->id);
-                }
             }
         }
     ?>
@@ -85,7 +85,7 @@ if (Art::is_enabled()) {
 ?>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
-    if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && !count($libitem->album_suite)))) {
+    if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) {
         ?>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&amp;id=<?php echo $libitem->id; ?>">
         <?php echo UI::get_icon('comment', T_('Post Shout')); ?>

@@ -35,11 +35,11 @@ class Movie extends Video
      * This pulls the movie information from the database and returns
      * a constructed object
      */
-    public function __construct($id)
+    public function __construct($movie_id)
     {
-        parent::__construct($id);
+        parent::__construct($movie_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($movie_id);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

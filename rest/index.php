@@ -76,27 +76,10 @@ if (empty($user) || (empty($password) && (empty($token) || empty($salt))) || emp
     return false;
 }
 
-if (isset($token) && isset($salt)) {
-    //We can't support token authentication.
-    //No external authentication modules will support this since we can't extract password from salted hash
-    //Can't support with mysql because password is stored as a hash (not salted and using different encryption)
-    //so no comparisons are possible
-
-    //tell client we don't support token authentication
-    //hopefully they will fall back to earlier authentication method
-    //( pre api 1.13 using the p parameter with the password)
-
-    debug_event('rest/index', 'Token authentication not supported in Subsonic API for user [' . $user . ']', 3);
-    ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_TOKENAUTHNOTSUPPORTED), $callback);
-
-    return false;
-}
-
 $password = Subsonic_Api::decrypt_password($password);
 
 // Check user authentication
-$auth = Auth::login($user, $password, true);
+$auth = Auth::login($user, $password, true, $token, $salt);
 if (!$auth['success']) {
     debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', 3);
     ob_end_clean();

@@ -1247,7 +1247,7 @@ class User extends database_object
         Dba::write($sql, array($this->id));
 
         // Clean out the tags
-        $sql = "DELETE FROM `tags` USING `tag_map` LEFT JOIN `tag_map` ON tag_map.id=tags.map_id AND tag_map.id IS NULL";
+        $sql = "DELETE FROM `tag` WHERE `tag`.`id` NOT IN (SELECT `tag_id` FROM `tag_map`)";
         Dba::write($sql);
 
         // Delete their preferences
@@ -1259,7 +1259,7 @@ class User extends database_object
         Dba::write($sql, array($this->id));
 
         // Delete their following/followers
-        $sql = "DELETE FROM `user_follow` WHERE `user` = ? OR `follow_user` = ?";
+        $sql = "DELETE FROM `user_follower` WHERE `user` = ? OR `follow_user` = ?";
         Dba::write($sql, array($this->id, $this->id));
 
         // Delete the user itself

@@ -929,7 +929,7 @@ class Search extends playlist_object
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string) ($this->limit);
         }
-        debug_event('search.class', 'SQL get_items: ' . $sql, 5);
+        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -980,7 +980,7 @@ class Search extends playlist_object
 
         $sql .= ' ORDER BY RAND()';
         $sql .= $limit ? ' LIMIT ' . (string) ($limit) : '';
-        debug_event('search.sql', 'SQL get_random_items: ' . $sql, 5);
+        //debug_event('search.sql', 'SQL get_random_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
 
@@ -1180,6 +1180,7 @@ class Search extends playlist_object
                 $group[] = "`album`.`name`";
                 $group[] = "`album`.`album_artist`";
                 $group[] = "`album`.`mbid`";
+                $group[] = "`album`.`year`";
             }
 
             switch ($rule[0]) {
@@ -1265,7 +1266,11 @@ class Search extends playlist_object
 
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                if (!empty($where_sql)) {
+                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                }
             }
         }
         if ($join['user_flag']) {
@@ -1411,7 +1416,11 @@ class Search extends playlist_object
 
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                if (!empty($where_sql)) {
+                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                }
             }
         }
         if ($join['rating']) {
@@ -1736,7 +1745,11 @@ class Search extends playlist_object
 
         if ($join['catalog']) {
             $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
-            $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+            } else {
+                $where_sql .= " `catalog_se`.`enabled` = '1'";
+            }
         }
 
         $table_sql  = implode(' ', $table);
@@ -1798,7 +1811,11 @@ class Search extends playlist_object
 
         if ($join['catalog']) {
             $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`video`.`catalog`";
-            $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+            if (!empty($where_sql)) {
+                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+            } else {
+                $where_sql .= " `catalog_se`.`enabled` = '1'";
+            }
         }
 
         $table_sql  = implode(' ', $table);
@@ -1872,7 +1889,11 @@ class Search extends playlist_object
 
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                if (!empty($where_sql)) {
+                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                }
             }
         }
 
@@ -1991,5 +2012,33 @@ class Search extends playlist_object
             'group_sql' => '',
             'having_sql' => ''
         );
+    }
+    /**
+     * year_search
+     *
+     * Build search rules for year -> year searching.
+     * @return array
+     */
+    public static function year_search($fromYear, $toYear, $size, $offset)
+    {
+        $search           = array();
+        $search['limit']  = $size;
+        $search['offset'] = $offset;
+        $search['type']   = "album";
+        $count            = 0;
+        if ($fromYear) {
+            $search['rule_' . $count . '_input']    = $fromYear;
+            $search['rule_' . $count . '_operator'] = 0;
+            $search['rule_' . $count . '']          = "year";
+            ++$count;
+        }
+        if ($toYear) {
+            $search['rule_' . $count . '_input']    = $toYear;
+            $search['rule_' . $count . '_operator'] = 1;
+            $search['rule_' . $count . '']          = "year";
+            ++$count;
+        }
+
+        return $search;
     }
 }

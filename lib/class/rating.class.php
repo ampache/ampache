@@ -197,10 +197,11 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('album_group') && $type === 'album') {
-            "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid` ORDER BY `rating` DESC";
+            "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` ORDER BY `rating` DESC";
         } else {
             $sql .= " GROUP BY object_id ORDER BY `rating` DESC ";
         }
+        //debug_event('rating.class', 'get_highest_sql ' . $sql, 5);
 
         return $sql;
     }
@@ -294,6 +295,7 @@ class Rating extends database_object
      * This function sets the rating for the current object.
      * This is currently only for grouped disk albums!
      * @param array $album
+     * @param string $rating
      * @return boolean
      */
     private static function set_rating_for_group($rating, $album, $user_id = null)
@@ -356,4 +358,18 @@ class Rating extends database_object
             require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
         }
     } // show
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return boolean|PDOStatement
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "UPDATE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
 } //end rating class

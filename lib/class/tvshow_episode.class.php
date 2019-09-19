@@ -38,11 +38,11 @@ class TVShow_Episode extends Video
      * This pulls the tv show episode information from the database and returns
      * a constructed object
      */
-    public function __construct($id)
+    public function __construct($episode_id)
     {
-        parent::__construct($id);
+        parent::__construct($episode_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($episode_id);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

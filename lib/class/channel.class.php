@@ -56,15 +56,12 @@ class Channel extends database_object implements media, library_item
 
     /**
      * Constructor
+     * @param integer $channel_id
      */
-    public function __construct($id = 0)
+    public function __construct($channel_id)
     {
-        if (!$id) {
-            return true;
-        }
-
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($channel_id);
 
         // Foreach what we've got
         foreach ($info as $key => $value) {
@@ -277,7 +274,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_parent
-     * @return boolean
+     * @return boolean|null
      */
     public function get_parent()
     {
@@ -325,7 +322,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_user_owner
-     * @return boolean
+     * @return boolean|null
      */
     public function get_user_owner()
     {
@@ -665,7 +662,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_stream_types
-     * @return array
+     * @return string[]
      */
     public function get_stream_types($player = null)
     {
