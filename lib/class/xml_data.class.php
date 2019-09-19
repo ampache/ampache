@@ -383,7 +383,7 @@ class XML_Data
                                 "]]></album>\n";
                     }
                 }
-                $string .=  "</$object_type>\n";
+                $string .= "</$object_type>\n";
             }
             if ($object_type == 'album') {
                 $album = new Album($object_id);
@@ -404,7 +404,7 @@ class XML_Data
                         "]]></artist>\n" .
                         "\t<album id=\"" . $song->album .
                         '"><![CDATA[' . $song->get_album_name() .
-                        "]]></album>\n";
+                        "]]></album>\n" .
                         "</$object_type>\n";
             }
             if ($object_type == 'playlist') {
@@ -427,8 +427,8 @@ class XML_Data
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
                     foreach ($songs as $song_id) {
-                    if ($song_id) {
-                        $string .= "\t<playlisttrack>" . $song_id . "</playlisttrack>\n";
+                        if ($song_id) {
+                            $string .= "\t<playlisttrack>" . $song_id . "</playlisttrack>\n";
                         }
                     }
                     $string .= "</$object_type>\n";
