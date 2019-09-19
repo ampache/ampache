@@ -372,7 +372,7 @@ class XML_Data
                     if ($album_id) {
                         $album = new Album($album_id[0]);
                         $album->format();
-                        $string .= "\t<album id=\"" . $album_id[0] .
+                        $string .= "\t\t<album id=\"" . $album_id[0] .
                                 '"><![CDATA[' . $album->f_name .
                                 "]]></album>\n";
                     }
@@ -384,7 +384,7 @@ class XML_Data
                 $album->format();
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                         "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
-                        "\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
+                        "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
                         "</$object_type>\n";
             }
             if ($object_type == 'song') {
@@ -393,10 +393,10 @@ class XML_Data
                 $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                         "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
                         "\t<name><![CDATA[" . $song->f_title . "]]></name>\n" .
-                        "\t<artist id=\"" . $song->artist .
+                        "\t\t<artist id=\"" . $song->artist .
                         '"><![CDATA[' . $song->get_artist_name() .
                         "]]></artist>\n" .
-                        "\t<album id=\"" . $song->album .
+                        "\t\t<album id=\"" . $song->album .
                         '"><![CDATA[' . $song->get_album_name() .
                         "]]></album>\n" .
                         "</$object_type>\n";
@@ -421,8 +421,8 @@ class XML_Data
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
                     foreach ($songs as $song_id) {
-                        if ($song_id[0]) {
-                            $string .= "\t<playlisttrack>" . $song_id[0] . "</playlisttrack>\n";
+                        if ($song_id[object_type] == 'song') {
+                            $string .= "\t\t<playlisttrack>" . $song_id['object_id'] . "</playlisttrack>\n";
                         }
                     }
                     $string .= "</$object_type>\n";
