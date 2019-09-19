@@ -1062,7 +1062,7 @@ class Subsonic_Api
      */
     public static function getcoverart($input)
     {
-        $id   = self::check_parameter($input, 'id', true);
+        $id   = str_replace('al-', '', self::check_parameter($input, 'id', true));
         $size = $input['size'];
 
         $art = null;
