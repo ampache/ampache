@@ -148,6 +148,7 @@ class Ampachelistenbrainz
 
         if (!strpos($response, "ok")) {
             debug_event('listenbrainz.plugin', "Submission Failed", 5);
+
             return false;
         }
         debug_event('listenbrainz.plugin', "Submission Successful", 5);
