@@ -129,7 +129,7 @@ class Api
      * Paramete must be an array of required elements as a string
      *
      * @param array $input
-     * @param array $parameters e.g. array('auth','type')
+     * @param string[] $parameters e.g. array('auth','type')
      */
     private static function check_parameter($input, $parameters)
     {
