@@ -1136,8 +1136,9 @@ class Api
      */
     public static function stats($input)
     {
-        if (!self::check_parameter(input, array('type'))) {
+        if (!self::check_parameter($input, array('type'))) {
             echo XML_Data::error('401', T_("Missing mandatory parameter 'type'."));
+
             return false;
         }
         // moved type to filter and allowed multipe type selection
@@ -1229,9 +1230,10 @@ class Api
      */
     public static function user($input)
     {
-        if (!self::check_parameter(input, array('username'))) {
+        if (!self::check_parameter($input, array('username'))) {
             debug_event('api.class', 'Username required on user function call.', 2);
             echo XML_Data::error('401', T_("Missing mandatory parameter 'username'."));
+
             return false;
         }
         $username = $input['username'];
@@ -1257,9 +1259,10 @@ class Api
     public static function followers($input)
     {
         if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter(input, array('username'))) {
+            if (!self::check_parameter($input, array('username'))) {
                 debug_event('api.class', 'Username required on followers function call.', 2);
                 echo XML_Data::error('401', T_("Missing mandatory parameter 'username'."));
+
                 return false;
             }
             $username = $input['username'];
@@ -1289,9 +1292,10 @@ class Api
     public static function following($input)
     {
         if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter(input, array('username'))) {
+            if (!self::check_parameter($input, array('username'))) {
                 debug_event('api.class', 'Username required on following function call.', 2);
                 echo XML_Data::error('401', T_("Missing mandatory parameter 'username'."));
+
                 return false;
             }
             $username = $input['username'];
@@ -1322,9 +1326,10 @@ class Api
     public static function toggle_follow($input)
     {
         if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter(input, array('username'))) {
+            if (!self::check_parameter($input, array('username'))) {
                 debug_event('api.class', 'Username required on toggle_follow function call.', 2);
                 echo XML_Data::error('401', T_("Missing mandatory parameter 'username'."));
+
                 return false;
             }
             $username = $input['username'];
