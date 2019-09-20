@@ -129,12 +129,16 @@ class Api
      * Paramete must be an array of required elements as a string
      *
      * @param array $input
-     * @param string[] $parameters e.g. array('auth','type')
+     * @param array $parameters e.g. array('auth','type')
      */
     private static function check_parameter($input, $parameters)
     {
         foreach ($parameters as $parameter) {
             if (empty($input[$parameter])) {
+
+                return false;
+            } elseif ($parameter == 'auth' && !(Session::exists('api', $parameter['auth']))) {
+
                 return false;
             }
         }
