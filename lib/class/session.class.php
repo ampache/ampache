@@ -306,6 +306,12 @@ class Session
      */
     public static function exists($type, $key)
     {
+        // didn't pass an auth key so don't let them in!
+        if (!$key) {
+            debug_event('session.class', 'no auth key sent in the request!', 5);
+
+            return false;
+        }
         // Switch on the type they pass
         switch ($type) {
             case 'api':

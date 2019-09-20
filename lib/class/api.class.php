@@ -123,6 +123,30 @@ class Api
     } // set_filter
 
     /**
+     * check_parameter
+     *
+     * This function checks the $input actually has the parameter.
+     * Paramete must be an array of required elements as a string
+     *
+     * @param array $input
+     * @param array $parameters e.g. array('auth','type')
+     */
+    private static function check_parameter($input, $parameters)
+    {
+        foreach ($parameters as $parameter) {
+            if (empty($input[$parameter])) {
+
+                return false;
+            } elseif ($parameter == 'auth' && !(Session::exists('api', $parameter['auth']))) {
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * handshake
      * MINIMUM_API_VERSION=380001
      *
