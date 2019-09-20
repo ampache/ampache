@@ -135,10 +135,8 @@ class Api
     {
         foreach ($parameters as $parameter) {
             if (empty($input[$parameter])) {
-
                 return false;
             } elseif ($parameter == 'auth' && !(Session::exists('api', $parameter['auth']))) {
-
                 return false;
             }
         }
