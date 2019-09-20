@@ -1385,6 +1385,12 @@ class Api
      */
     public static function rate($input)
     {
+        if (!self::check_parameter($input, array('type', 'id', 'rating'))) {
+            debug_event('api.class', "'type', 'id', 'rating' required on rate function call.", 2);
+            echo XML_Data::error('401', T_("Missing a mandatory parameter 'type', 'id', 'rating'."));
+
+            return false;
+        }
         ob_end_clean();
         $type      = $input['type'];
         $object_id = $input['id'];
@@ -1419,6 +1425,12 @@ class Api
      */
     public static function flag($input)
     {
+        if (!self::check_parameter($input, array('type', 'id', 'flag'))) {
+            debug_event('api.class', "'type', 'id', 'flag' required on flag function call.", 2);
+            echo XML_Data::error('401', T_("Missing a mandatory parameter 'type', 'id', 'flag'."));
+
+            return false;
+        }
         ob_end_clean();
         $type      = $input['type'];
         $object_id = $input['id'];
@@ -1460,6 +1472,12 @@ class Api
      */
     public static function record_play($input)
     {
+        if (!self::check_parameter($input, array('id', 'user'))) {
+            debug_event('api.class', "'id', 'user' required on record_play function call.", 2);
+            echo XML_Data::error('401', T_("Missing a mandatory parameter 'id', 'user'."));
+
+            return false;
+        }
         ob_end_clean();
         $object_id = $input['id'];
         $user_id   = (int) $input['user'];
@@ -1513,6 +1531,12 @@ class Api
      */
     public static function scrobble($input)
     {
+        if (!self::check_parameter($input, array('song', 'artist', 'album'))) {
+            debug_event('api.class', "'song', 'artist', 'album' required on scrobble function call.", 2);
+            echo XML_Data::error('401', T_("Missing a mandatory parameter 'song', 'artist', 'album'."));
+
+            return false;
+        }
         ob_end_clean();
         $song_name   = (string) scrub_in($input['song']);
         $artist_name = (string) scrub_in($input['artist']);
@@ -1579,6 +1603,12 @@ class Api
     public static function timeline($input)
     {
         if (AmpConfig::get('sociable')) {
+            if (!self::check_parameter($input, array('username'))) {
+                debug_event('api.class', 'username required on timeline function call.', 2);
+                echo XML_Data::error('401', T_("Missing mandatory parameter 'username'."));
+
+                return false;
+            }
             $username = $input['username'];
             $limit    = (int) ($input['limit']);
             $since    = (int) ($input['since']);
@@ -1592,8 +1622,6 @@ class Api
                         echo XML_Data::timeline($activities);
                     }
                 }
-            } else {
-                debug_event('api.class', 'Username required on timeline function call.', 1);
             }
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
@@ -1639,13 +1667,17 @@ class Api
      */
     public static function catalog_action($input)
     {
+        if (!self::check_parameter($input, array('catalog'))) {
+            debug_event('api.class', 'catalog required on catalog_action function call.', 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter 'catalog'."));
+
+            return false;
+        }
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog && ((string) $input['task'] === 'add_to_catalog' || (string) $input['task'] === 'clean_catalog')) {
             $catalog->process_action($input['task'], (int) $input['catalog']);
             echo XML_Data::single_string('successfull started: ' . (string) $input['task']);
-        } else {
-            echo XML_Data::error('401', T_('Bad information in the call to catalog_action.'));
         }
     }
 } // API class
