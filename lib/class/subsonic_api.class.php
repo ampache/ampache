@@ -1084,9 +1084,13 @@ class Subsonic_Api
         } elseif (Subsonic_XML_Data::isPodcast($id)) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "podcast");
         } elseif (Subsonic_XML_Data::isSmartPlaylist($id)) {
-            $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "search");
+            $smartlist = new Search(Subsonic_XML_Data::getAmpacheId($id));
+            $item = $smartlist->get_items();
+            $art = new Art(array_rand($item), "song");
         } elseif (Subsonic_XML_Data::isPlaylist($id)) {
-            $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "playlist");
+            $playlist = new Playlist(Subsonic_XML_Data::getAmpacheId($id), "playlist");
+            $item = $playlist->get_items();
+            $art = new Art(array_rand($item), "song");
         }
 
         header("Access-Control-Allow-Origin: *");
