@@ -1096,7 +1096,7 @@ class Subsonic_Api
             $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($id), "playlist");
             $listitems = $playlist->get_items();
             $item      = $listitems[array_rand($listitems)];
-            $art      = new Art($item['object_id'], $item['object_type']);
+            $art       = new Art($item['object_id'], $item['object_type']);
             if ($art != null && $art->id == null) {
                 $song = new Song($item['object_id']);
                 $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
