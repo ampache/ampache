@@ -146,7 +146,7 @@ class Ampachelistenbrainz
         debug_event('listenbrainz.plugin', 'Submission content: ' . $json, 5);
         $response = $this->post_json_url('/1/submit-listens', $json);
 
-        if (strpos($response, "ok")) {
+        if (!strpos($response, "ok")) {
             debug_event('listenbrainz.plugin', "Submission Failed", 5);
             return false;
         }
