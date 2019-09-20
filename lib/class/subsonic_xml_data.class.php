@@ -250,12 +250,12 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createError($code, $message = '', $version = '')
+    public static function createError($code, $message = '', $version = '', $function = '')
     {
         if (empty($version)) {
             $version = self::API_VERSION;
         }
-        $response = self::createFailedResponse($version);
+        $response = self::createFailedResponse($version, $function);
         self::setError($response, $code, $message);
 
         return $response;
