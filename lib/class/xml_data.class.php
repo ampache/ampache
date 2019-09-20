@@ -119,28 +119,22 @@ class XML_Data
     // error
 
     /**
-     * single_string
+     * success
      *
-     * This takes two values, first the key second the string
+     * This generates a standard XML Success message
+     * nothing fancy here...
      *
-     * @param    string    $key    (description here...)
-     * @param    string    $string    xml data
-     * @return    string    return xml
+     * @param    string    $string    success message
+     * @return    string    return success message xml
      */
-    public static function single_string($key, $string = '')
+    public static function success($string)
     {
-        $final = self::_header();
-        if (!empty($string)) {
-            $final .= "\t<$key><![CDATA[$string]]></$key>";
-        } else {
-            $final .= "\t<$key />";
-        }
-        $final .= self::_footer();
+        $xml_string = "\t<success code=\"1\"><![CDATA[$string]]></success>";
 
-        return $final;
+        return self::output_xml($xml_string);
     }
-    // single_string
-
+    // success
+ 
     /**
      * header
      *
