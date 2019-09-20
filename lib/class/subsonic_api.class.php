@@ -1083,12 +1083,12 @@ class Subsonic_Api
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "podcast");
         } elseif (Subsonic_XML_Data::isSmartPlaylist($id)) {
             $smartlist = new Search(Subsonic_XML_Data::getAmpacheId($id));
-            $item = $smartlist->get_items();
-            $art = new Art(array_rand($item), "song");
+            $item      = $smartlist->get_items();
+            $art       = new Art(array_rand($item['object_id']), $item['object_type']);
         } elseif (Subsonic_XML_Data::isPlaylist($id)) {
             $playlist = new Playlist(Subsonic_XML_Data::getAmpacheId($id), "playlist");
-            $item = $playlist->get_items();
-            $art = new Art(array_rand($item), "song");
+            $item     = $playlist->get_items();
+            $art      = new Art(array_rand($item['object_id']), $item['object_type']);
         }
 
         header("Access-Control-Allow-Origin: *");
