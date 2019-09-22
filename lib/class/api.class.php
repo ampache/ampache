@@ -1691,7 +1691,7 @@ class Api
     /**
      * stream
      * MINIMUM_API_VERSION=400001
-     * 
+     *
      * Streams a given media file.
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
      *
@@ -1736,7 +1736,7 @@ class Api
         $url = '';
         if ($type == 'song') {
             $url = Song::play_url($fileid, $params, 'api', function_exists('curl_version'));
-        } 
+        }
         if ($type == 'podcast') {
             $url = Podcast_Episode::play_url($fileid, $params, 'api', function_exists('curl_version'));
         }
@@ -1749,7 +1749,7 @@ class Api
     /**
      * download
      * MINIMUM_API_VERSION=400001
-     * 
+     *
      * Downloads a given media file.
      *
      * @param array $input
@@ -1770,7 +1770,7 @@ class Api
         $url = '';
         if ($type == 'song') {
             $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
-        } 
+        }
         if ($type == 'podcast') {
             $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
         }
