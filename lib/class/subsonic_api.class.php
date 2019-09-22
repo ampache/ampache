@@ -938,7 +938,7 @@ class Subsonic_Api
         $contentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
 
         $params = '&client=' . rawurlencode($input['c']);
-        if ($contentLength == 'true') {
+        if ($estimateContentLength == 'true') {
             $params .= '&content_length=required';
         }
         if ($format && $format != "raw") {
