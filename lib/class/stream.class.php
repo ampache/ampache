@@ -502,4 +502,58 @@ class Stream
 
         return $url;
     } // get_base_url
+
+    /**
+     * follow_stream
+     * @param string $url
+     * @param string $curltitle
+     */
+    public static function follow_stream($url, $curltitle)
+    {
+        set_time_limit(0);
+        ob_end_clean();
+
+        header("Access-Control-Allow-Origin: *");
+        if (function_exists('curl_version')) {
+            // Here, we use curl from the ampache server to download data from
+            // the ampache server, which can be a bit counter-intuitive.
+            // We use the curl `writefunction` and `headerfunction` callbacks
+            // to write the fetched data back to the open stream from the
+            // client.
+            $headers      = apache_request_headers();
+            $reqheaders   = array();
+            $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            if (isset($headers['Range'])) {
+                $reqheaders[] = "Range: " . $headers['Range'];
+            }
+            // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
+            debug_event('subsonic_api.class', 'Stream proxy: ' . $url, 5);
+
+            $curl = curl_init($url);
+            curl_setopt_array($curl, array(
+                CURLOPT_FAILONERROR => true,
+                CURLOPT_HTTPHEADER => $reqheaders,
+                CURLOPT_HEADER => false,
+                CURLOPT_RETURNTRANSFER => false,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_WRITEFUNCTION => array($curltitle, 'output_body'),
+                CURLOPT_HEADERFUNCTION => array($curltitle, 'output_header'),
+                // Ignore invalid certificate
+                // Default trusted chain is crap anyway and currently no custom CA option
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false,
+                CURLOPT_TIMEOUT => 0
+            ));
+            if (curl_exec($curl) === false) {
+                debug_event('stream.class', 'Stream error: ' . curl_error($curl), 1);
+            }
+            curl_close($curl);
+        } else {
+            // Stream media using http redirect if no curl support
+            // Bug fix for android clients looking for /rest/ in destination url
+            // Warning: external catalogs will not work!
+            $url = str_replace('/play/', '/rest/fake/', $url);
+            header("Location: " . $url);
+        }
+    }
 } //end of stream class

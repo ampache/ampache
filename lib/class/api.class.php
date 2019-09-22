@@ -1680,4 +1680,94 @@ class Api
             echo XML_Data::success('successfully started: ' . (string) $input['task']);
         }
     }
+
+    /**
+     * stream
+     * MINIMUM_API_VERSION=400001
+     * 
+     * Streams a given media file.
+     * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
+     *
+     * @param array $input
+     * $input = array(id      = (string) $song_id / $podcast_episode_id
+     *                type    = (string) 'song'|'podcast'
+     *                bitrate = (int) max bitrate for transcoding
+     *                format  = (string) 'mp3'|'ogg', etc
+     *                offset  = (int) time offset in seconds
+     *                length  = (string) 'true'|'false'
+     */
+    public static function stream($input)
+    {
+        if (!self::check_parameter($input, array('id', 'type'))) {
+            debug_event('api.class', 'id required on stream function call.', 2);
+            echo XML_Data::error('401', T_('Missing mandatory parameter'));
+
+            return false;
+        }
+        $fileid = $input['id'];
+        $type   = $input['type'];
+
+        $maxBitRate            = $input['bitrate'];
+        $format                = $input['format']; // mp3, flv or raw
+        $timeOffset            = $input['offset'];
+        $estimateContentLength = $input['length']; // Force content-length guessing if transcode
+
+        $params = '&client=' . rawurlencode($input['c']);
+        if ($estimateContentLength == 'true') {
+            $params .= '&content_length=required';
+        }
+        if ($format && $format != "raw") {
+            $params .= '&transcode_to=' . $format;
+        }
+        if ($maxBitRate) {
+            $params .= '&bitrate=' . $maxBitRate;
+        }
+        if ($timeOffset) {
+            $params .= '&frame=' . $timeOffset;
+        }
+
+        $url = '';
+        if ($type == 'song') {
+            $url = Song::play_url($fileid, $params, 'api', function_exists('curl_version'));
+        } 
+        if ($type == 'podcast') {
+            $url = Podcast_Episode::play_url($fileid, $params, 'api', function_exists('curl_version'));
+        }
+
+        if (!empty($url)) {
+            Stream::follow_stream($url, 'Ampache_Api');
+        }
+    }
+
+    /**
+     * download
+     * MINIMUM_API_VERSION=400001
+     * 
+     * Downloads a given media file.
+     *
+     * @param array $input
+     * $input = array(id   = (string) $song_id / $podcast_episode_id
+     *                type = (string) 'song'|'podcast')
+     */
+    public static function download($input)
+    {
+        if (!self::check_parameter($input, array('id', 'type'))) {
+            debug_event('api.class', 'id required on stream function call.', 2);
+            echo XML_Data::error('401', T_('Missing mandatory parameter'));
+
+            return false;
+        }
+        $fileid = $input['id'];
+        $type   = $input['type'];
+
+        $url = '';
+        if ($type == 'song') {
+            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
+        } 
+        if ($type == 'podcast') {
+            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
+        }
+
+        Stream::follow_stream($url, 'Ampache_Api');
+    }
 } // API class
