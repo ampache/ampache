@@ -789,8 +789,16 @@ class Song extends database_object implements media, library_item
             $where .= " AND `song`.`track` = ?";
             $params[] = $data['track'];
         }
-
+        $sql .= " INNER JOIN `artist` ON `artist`.`id` = `song`.`artist`";
         $sql .= " INNER JOIN `album` ON `album`.`id` = `song`.`album`";
+        
+        if ($data['mb_artistid']) {
+            $where .= " AND `artist`.`mbid` = ?";
+            $params[] = $data['mb_albumid'];
+        } else {
+            $where .= " AND `artist`.`name` = ?";
+            $params[] = $data['artist'];
+        }
         if ($data['mb_albumid']) {
             $where .= " AND `album`.`mbid` = ?";
             $params[] = $data['mb_albumid'];
