@@ -1777,4 +1777,84 @@ class Api
 
         Stream::follow_stream($url, 'Ampache_Api');
     }
+
+    /**
+     * get_art
+     * MINIMUM_API_VERSION=400001
+     *
+     * Get an art image.
+     *
+     * @param array $input
+     * $input = array(id   = (string) $object_id
+     *                type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast')
+     */
+    public static function get_art($input)
+    {
+        if (!self::check_parameter($input, array('id', 'type'))) {
+            debug_event('api.class', 'id required on stream function call.', 2);
+            echo XML_Data::error('401', T_('Missing mandatory parameter'));
+
+            return false;
+        }
+        $object_id = $input['id'];
+        $type      = $input['type'];
+
+        $size = $input['size'];
+
+        $art = null;
+        if ($type == 'artist') {
+            $art = new Art($object_id, "artist");
+        } elseif ($type == 'album') {
+            $art = new Art($object_id, "album");
+        } elseif ($type == 'song') {
+            $art = new Art($object_id, "song");
+            if ($art != null && $art->id == null) {
+                // in most cases the song doesn't have a picture, but the album where it belongs to has
+                // if this is the case, we take the album art
+                $song = new Song(Subsonic_XML_Data::getAmpacheId($object_id));
+                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
+            }
+        } elseif ($type == 'podcast') {
+            $art = new Art($object_id, "podcast");
+        } elseif ($type == 'search') {
+            $smartlist = new Search($object_id);
+            $listitems = $smartlist->get_items();
+            $item      = $listitems[array_rand($listitems)];
+            $art       = new Art($item['object_id'], $item['object_type']);
+            if ($art != null && $art->id == null) {
+                $song = new Song($item['object_id']);
+                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
+            }
+        } elseif ($type == 'playlist') {
+            $playlist  = new Playlist($object_id);
+            $listitems = $playlist->get_items();
+            $item      = $listitems[array_rand($listitems)];
+            $art       = new Art($item['object_id'], $item['object_type']);
+            if ($art != null && $art->id == null) {
+                $song = new Song($item['object_id']);
+                $art  = new Art($song->album, "album");
+            }
+        }
+
+        header("Access-Control-Allow-Origin: *");
+        if ($art != null) {
+            if ($art->has_db_info() && $size && AmpConfig::get('resize_images')) {
+                $dim           = array();
+                $dim['width']  = $size;
+                $dim['height'] = $size;
+                $thumb         = $art->get_thumb($dim);
+                if (!empty($thumb)) {
+                    header('Content-type: ' . $thumb['thumb_mime']);
+                    header('Content-Length: ' . strlen($thumb['thumb']));
+                    echo $thumb['thumb'];
+
+                    return;
+                }
+            }
+
+            header('Content-type: ' . $art->raw_mime);
+            header('Content-Length: ' . strlen($art->raw));
+            echo $art->raw;
+        }
+    }
 } // API class
