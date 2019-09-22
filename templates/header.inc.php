@@ -309,7 +309,7 @@ $t_logout    = T_('Log out');
         </script>
 
         <?php
-            if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) {
+            if (AmpConfig::get('cookie_disclaimer') && !filter_has_var(INPUT_COOKIE, 'cookie_disclaimer')) {
                 ?>
 
         <script type="text/javascript" language="javascript">
