@@ -937,7 +937,7 @@ class Subsonic_Api
         $timeOffset            = $input['timeOffset'];
         $estimateContentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
 
-        $params = '&client=' . rawurlencode($input['c']) . '&noscrobble=1';
+        $params = '&client=' . rawurlencode($input['c']);
         if ($estimateContentLength == 'true') {
             $params .= '&content_length=required';
         }
