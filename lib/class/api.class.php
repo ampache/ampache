@@ -1714,13 +1714,13 @@ class Api
         $fileid = $input['id'];
         $type   = $input['type'];
 
-        $maxBitRate            = $input['bitrate'];
-        $format                = $input['format']; // mp3, flv or raw
-        $timeOffset            = $input['offset'];
-        $estimateContentLength = $input['length']; // Force content-length guessing if transcode
+        $maxBitRate    = $input['bitrate'];
+        $format        = $input['format']; // mp3, flv or raw
+        $timeOffset    = $input['offset'];
+        $contentLength = $input['length']; // Force content-length guessing if transcode
 
         $params = '&client=' . rawurlencode($input['c']);
-        if ($estimateContentLength == 'true') {
+        if ($contentLength == 'true') {
             $params .= '&content_length=required';
         }
         if ($format && $format != "raw") {
