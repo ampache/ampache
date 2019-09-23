@@ -91,6 +91,8 @@ class Session
         if ($type) {
             $sql .= ' and `type` = ?';
             Dba::write($sql, array($key, $type));
+
+            return true;
         } else {
             Dba::write($sql, array($key));
         }
