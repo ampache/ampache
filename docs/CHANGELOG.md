@@ -42,7 +42,7 @@ CHANGELOG
 - Make test.php, init.php & install.php show an error page instead of blank screen. (gettext)
 - Filter zip names in batch so they are named correctly by the download
 - API - Authentication: Require a handshake and generate unique sessions
-- API - Authentication: allow sha256 encrypted auth key for auth key
+- API - Authentication: allow sha256 encrypted apikey for auth
   * You must send an encrypted api key in the following fashion. (Hash key joined with username)
   * $passphrase = hash('sha256', $username . hash('sha256', $apikey));
 - API - Extended Method: stats allow songs|artists|albums (instead of just albums)
@@ -57,9 +57,9 @@ CHANGELOG
 - API - New Method: stream (Raw stream of song_id)
 - API - New Method: download (Download, not recorded as a play)
 - API - New Method: get_art (Raw art file like subsonic getCoverArt)
-- API - New Method: user_create
-- API - New Method: user_update
-- API - New Method: user_delete
+- API - New Method: user_create ('user' access level only!)
+- API - New Method: user_update (update user details and passwords for non-admins)
+- API - New Method: user_delete (you can't delete yourself or and admin account!)
 - Fix slideshow creating black screen when using web player
 - Default to disk 1 instead of 0 (db updates to handle existing albums)
 - Add Barcode, Original Year and Catalog Number to Album table
