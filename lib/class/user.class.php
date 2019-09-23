@@ -120,9 +120,9 @@ class User extends database_object
      */
     public $f_link;
     /**
-     * @var string $f_useage
+     * @var string $f_usage
      */
-    public $f_useage;
+    public $f_usage;
     /**
      * @var string $ip_history
      */
@@ -1097,7 +1097,7 @@ class User extends database_object
             $result = Dba::fetch_assoc($db_results);
             $total  = $result['size'];
 
-            $this->f_useage = UI::format_bytes($total);
+            $this->f_usage = UI::format_bytes($total);
 
             /* Get Users Last ip */
             if (count($data = $this->get_ip_history(1))) {
