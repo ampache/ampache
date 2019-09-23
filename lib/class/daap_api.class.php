@@ -78,6 +78,49 @@ class Daap_Api
     {
     }
 
+    /**
+     * @param string $url
+     */
+    public static function follow_stream($url)
+    {
+        set_time_limit(0);
+        ob_end_clean();
+        if (function_exists('curl_version')) {
+            $headers      = apache_request_headers();
+            $reqheaders   = array();
+            $reqheaders[] = "User-Agent: " . urlencode(preg_replace('/[\s\/]+/', '_', $headers['User-Agent']));
+            if (isset($headers['Range'])) {
+                $reqheaders[] = "Range: " . $headers['Range'];
+            }
+            // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
+            $curl = curl_init($url);
+            curl_setopt_array($curl, array(
+                CURLOPT_HTTPHEADER => $reqheaders,
+                CURLOPT_HEADER => false,
+                CURLOPT_RETURNTRANSFER => false,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_WRITEFUNCTION => array(
+                    'Daap_Api',
+                    'output_body'
+                ),
+                CURLOPT_HEADERFUNCTION => array(
+                    'Daap_Api',
+                    'output_header'
+                ),
+                // Ignore invalid certificate
+                // Default trusted chain is crap anyway and currently no custom CA option
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false,
+                CURLOPT_TIMEOUT => 0
+            ));
+            curl_exec($curl);
+            curl_close($curl);
+        } else {
+            // Stream media using http redirect if no curl support
+            header("Location: " . $url);
+        }
+    }
+
     public static function output_body($curl, $data)
     {
         echo $data;
@@ -361,7 +404,7 @@ class Daap_Api
                     }
                     $params .= '&transcode_to=' . $type;
                     $url = Song::play_url($object_id, $params, 'api', true);
-                    Stream::follow_stream($url, 'Daap_Api');
+                    self::follow_stream($url);
 
                     return false;
                 }

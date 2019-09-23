@@ -67,6 +67,56 @@ class Api
     }
 
     /**
+     * @param string $url
+     */
+    public static function follow_stream($url)
+    {
+        set_time_limit(0);
+        ob_end_clean();
+        header("Access-Control-Allow-Origin: *");
+        if (function_exists('curl_version')) {
+            // Here, we use curl from the ampache server to download data from
+            // the ampache server, which can be a bit counter-intuitive.
+            // We use the curl `writefunction` and `headerfunction` callbacks
+            // to write the fetched data back to the open stream from the
+            // client.
+            $headers      = apache_request_headers();
+            $reqheaders   = array();
+            $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
+            if (isset($headers['Range'])) {
+                $reqheaders[] = "Range: " . $headers['Range'];
+            }
+            // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
+            debug_event('api.class', 'Stream proxy: ' . $url, 5);
+            $curl = curl_init($url);
+            curl_setopt_array($curl, array(
+                CURLOPT_FAILONERROR => true,
+                CURLOPT_HTTPHEADER => $reqheaders,
+                CURLOPT_HEADER => false,
+                CURLOPT_RETURNTRANSFER => false,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_WRITEFUNCTION => array('Api', 'output_body'),
+                CURLOPT_HEADERFUNCTION => array('Api', 'output_header'),
+                // Ignore invalid certificate
+                // Default trusted chain is crap anyway and currently no custom CA option
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false,
+                CURLOPT_TIMEOUT => 0
+            ));
+            if (curl_exec($curl) === false) {
+                debug_event('api.class', 'Stream error: ' . curl_error($curl), 1);
+            }
+            curl_close($curl);
+        } else {
+            // Stream media using http redirect if no curl support
+            // Bug fix for android clients looking for /rest/ in destination url
+            // Warning: external catalogs will not work!
+            $url = str_replace('/play/', '/rest/fake/', $url);
+            header("Location: " . $url);
+        }
+    }
+
+    /**
      * set_filter
      * MINIMUM_API_VERSION=380001
      *
@@ -386,9 +436,21 @@ class Api
      * This takes a collection of inputs and returns ID + name for the object type
      *
      * @param array $input
+     * $input = array(type   = (string) 'song'|'album'|'artist'|'playlist'
+     *                filter = (string) //optional
+     *                add
+     *                update
+     *                offset = (integer) //optional
+     *                limit  = (integer) //optional)
      */
     public static function get_indexes($input)
     {
+        if (!self::check_parameter($input, array('type'))) {
+            debug_event('api.class', 'type required on get_indexes function call.', 2);
+            echo XML_Data::error('401', T_('Missing mandatory parameter'));
+
+            return false;
+        }
         self::$browse->reset_filters();
         self::$browse->set_type($input['type']);
         self::$browse->set_sort('name', 'ASC');
@@ -1713,15 +1775,16 @@ class Api
 
             return false;
         }
-        $fileid = $input['id'];
-        $type   = $input['type'];
+        $fileid  = $input['id'];
+        $type    = $input['type'];
+        $user_id = User::get_from_username(Session::username($input['auth']))->id;
 
         $maxBitRate    = $input['bitrate'];
         $format        = $input['format']; // mp3, flv or raw
         $timeOffset    = $input['offset'];
         $contentLength = $input['length']; // Force content-length guessing if transcode
 
-        $params = '&client=' . rawurlencode($input['c']);
+        $params = '&client=api';
         if ($contentLength == 'true') {
             $params .= '&content_length=required';
         }
@@ -1737,14 +1800,14 @@ class Api
 
         $url = '';
         if ($type == 'song') {
-            $url = Song::play_url($fileid, $params, 'api', function_exists('curl_version'));
+            $url = Song::play_url($fileid, $params, 'api', function_exists('curl_version'), $user_id);
         }
         if ($type == 'podcast') {
-            $url = Podcast_Episode::play_url($fileid, $params, 'api', function_exists('curl_version'));
+            $url = Podcast_Episode::play_url($fileid, $params, 'api', function_exists('curl_version'), $user_id);
         }
 
         if (!empty($url)) {
-            Stream::follow_stream($url, 'Ampache_Api');
+            self::follow_stream(str_replace(':443/play', '/play', $url));
         }
     }
 
@@ -1766,18 +1829,20 @@ class Api
 
             return false;
         }
-        $fileid = $input['id'];
-        $type   = $input['type'];
+        $fileid  = $input['id'];
+        $type    = $input['type'];
+        $user_id = User::get_from_username(Session::username($input['auth']))->id;
 
-        $url = '';
+        $url    = '';
+        $params = '&action=download' . '&client=api' . '&noscrobble=1';
         if ($type == 'song') {
-            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
+            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         }
         if ($type == 'podcast') {
-            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
+            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         }
 
-        Stream::follow_stream($url, 'Ampache_Api');
+        self::follow_stream(str_replace(':443/play', '/play', $url));
     }
 
     /**
