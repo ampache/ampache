@@ -1857,4 +1857,151 @@ class Api
             echo $art->raw;
         }
     }
+
+    /**
+     * user_create
+     * MINIMUM_API_VERSION=400001
+     *
+     * Create a new user.
+     * Requires the username, password and email.
+     *
+     * @param array $input
+     * $input = array(username = (string) $username
+     *                fullname = (string) $fullname // optional
+     *                password = (string) hash('sha256', $password))
+     *                email    = (string) $email)
+     * 
+     */
+    public static function user_create($input)
+    {
+        if (!self::check_parameter($input, array('username', 'password', 'email'))) {
+            debug_event('api.class', 'username required on user_update function call.', 2);
+            echo XML_Data::error('401', T_('Missing mandatory parameter'));
+
+            return false;
+        }
+        $username = $input['username'];
+        $fullname = $input['fullname'] ?: $username;
+        $email    = $input['email'];
+        $password = $input['password'];
+        $disable  = ($input['disable'] == 'true');
+
+        if (Access::check('interface', 100)) {
+            $access  = 25;
+            $user_id = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
+            if ($user_id > 0) {
+                echo XML_Data::success('successfully created: ' . $username);
+
+                return true;
+            }
+        }
+        echo XML_Data::error('400', 'failed to create: ' . $username);
+    }
+
+    /**
+     * user_update
+     * MINIMUM_API_VERSION=400001
+     *
+     * Update an existing user.
+     * Takes the username with optional parameters.
+     *
+     * @param array $input
+     * $input = array(username   = (string) $username
+     *                password   = (string) hash('sha256', $password)) // optional
+     *                fullname   = (string) $fullname // optional
+     *                email      = (string) $email // optional
+     *                website    = (string) $website // optional
+     *                state      = (string) $state // optional
+     *                city       = (string) $city // optional
+     *                disable    = (string) 'true'|'false' // optional
+     *                maxbitrate = (int) $maxbitrate // optional
+     */
+    public static function user_update($input)
+    {
+        if (!self::check_parameter($input, array('username'))) {
+            debug_event('api.class', 'username required on user_update function call.', 2);
+            echo XML_Data::error('401', T_('Missing mandatory parameter'));
+
+            return false;
+        }
+        $username   = $input['username'];
+        $fullname   = $input['fullname'];
+        $email      = $input['email'];
+        $website    = $input['website'];
+        $password   = $input['password'];
+        $state      = $input['state'];
+        $city       = $input['city'];
+        $disable    = ($input['disable'] == 'true');
+        $maxbitrate = $input['maxbitrate'];
+        // identify the user to modify
+        $user_id = User::get_from_username($username);
+        $user    = new User($user_id);
+
+        if (Access::check('interface', 100) && $user_id > 0) {
+            if ($password && Access::check('interface', 100, $user_id)) {
+                echo XML_Data::error('400', 'Do not update passwords for admin users! ' . $username);
+
+                return false;
+            }
+            if ($password) {
+                $user->update_password('', $password);
+            } 
+            if ($fullname) {
+                $user->update_fullname($fullname);
+            }
+            if (Mailer::validate_address($email)) {
+                $user->update_email($email);
+            }
+            if ($website) {
+                $user->update_website($website);
+            }
+            if ($state) {
+                $user->update_state($state);
+            }
+            if ($city) {
+                $user->update_city($city);
+            }
+            if ($disable) {
+                $user->disable();
+            } else {
+                $user->enable();
+            }
+            if ((int) $maxbitrate > 0) {
+                Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+            }
+            echo XML_Data::success('successfully updated: ' . $username);
+
+            return true;
+        }
+        echo XML_Data::error('400', 'failed to update: ' . $username);
+    }
+
+    /**
+     * user_delete
+     * MINIMUM_API_VERSION=400001
+     *
+     * Delete an existing user.
+     * Takes the username in parameter.
+     */
+    public static function user_delete($input)
+    {
+        if (!self::check_parameter($input, array('username'))) {
+            debug_event('api.class', 'username required on user_delete function call.', 2);
+            echo XML_Data::error('401', T_('Missing mandatory parameter'));
+
+            return false;
+        }
+        $username = $input['username'];
+        if (Access::check('interface', 100)) {
+            $user = User::get_from_username($username);
+            // don't delete yourself
+            if ($user->id && Core::get_global('user')->username != $username) {
+                $user->delete();
+                echo XML_Data::success('successfully deleted: ' . $username);
+
+                return true;
+            }
+        }
+        echo XML_Data::error('400', 'failed to delete: ' . $username);
+    }
 } // API class

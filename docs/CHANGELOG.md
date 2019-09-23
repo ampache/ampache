@@ -56,6 +56,9 @@
 - API - New Method: stream (Raw stream of song_id)
 - API - New Method: download (Download, not recorded as a play)
 - API - New Method: get_art (Raw art file like subsonic getCoverArt)
+- API - New Method: user_create
+- API - New Method: user_update
+- API - New Method: user_delete
 - Fix slideshow creating black screen when using web player
 - Default to disk 1 instead of 0 (db updates to handle existing albums)
 - Add Barcode, Original Year and Catalog Number to Album table
