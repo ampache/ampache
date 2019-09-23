@@ -58,6 +58,7 @@ class UI
      * access_denied
      *
      * Throw an error when they try to do something naughty.
+     * @return false
      */
     public static function access_denied($error = 'Access Denied')
     {
@@ -89,6 +90,7 @@ class UI
      * check_iconv
      *
      * Checks to see whether iconv is available;
+     * @return boolean
      */
     public static function check_iconv()
     {
@@ -104,6 +106,7 @@ class UI
      *
      * Stupid little cutesie thing to ratelimit output of long-running
      * operations.
+     * @return boolean
      */
     public static function check_ticker()
     {
@@ -172,6 +175,7 @@ class UI
      * format_bytes
      *
      * Turns a size in bytes into the best human-readable value
+     * @return string
      */
     public static function format_bytes($value, $precision = 2)
     {
@@ -202,7 +206,7 @@ class UI
                 break;
         }
 
-        return round($value, $precision) . ' ' . $unit;
+        return ((string) round($value, $precision)) . ' ' . $unit;
     }
 
     /**
