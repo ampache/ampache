@@ -558,9 +558,9 @@ class User extends database_object
         $db_results = Dba::read($sql);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            $ip = $row['ip'] ? $row['ip'] : null;
+            $userip = $row['ip'] ? $row['ip'] : null;
 
-            return $ip;
+            return $userip;
         }
 
         return false;
