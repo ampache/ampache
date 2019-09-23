@@ -1067,7 +1067,7 @@ class User extends database_object
         if ($details) {
             /* Calculate their total Bandwidth Usage */
             $sql = "SELECT sum(`song`.`size`) as size FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " .
-                "WHERE `object_count`.`user`='$this->id' AND `object_count`.`object_type`='song'";
+                "WHERE `object_count`.`user`=" . $this->id . " AND `object_count`.`object_type`='song'";
             $db_results = Dba::read($sql);
 
             $result = Dba::fetch_assoc($db_results);
@@ -1219,6 +1219,7 @@ class User extends database_object
      * delete
      * deletes this user and everything associated with it. This will affect
      * ratings and total stats
+     * @return boolean
      */
     public function delete()
     {
