@@ -367,7 +367,11 @@ class Api
 
         // Check and see if we should destroy the api sessions (done if valid sess is passed)
         if (Session::exists('api', $input['auth'])) {
-            Session::destroy($input['auth']);
+            $sql = 'DELETE FROM `session` WHERE `id` = ?';
+            $sql .= " and `type` = 'api'";
+            Dba::write($sql, array($input['auth']));
+
+            return true;
         }
 
         debug_event('api.class', 'Goodbye Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
