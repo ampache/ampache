@@ -938,7 +938,7 @@ class Subsonic_Api
         $contentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
 
         $params = '&client=' . rawurlencode($input['c']);
-        if ($estimateContentLength == 'true') {
+        if ($contentLength == 'true') {
             $params .= '&content_length=required';
         }
         if ($format && $format != "raw") {
@@ -1303,8 +1303,8 @@ class Subsonic_Api
      */
     public static function getinternetradiostations($input)
     {
-        $response      = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getinternetradiostations');
-        $radios        = Live_Stream::get_all_radios();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getinternetradiostations');
+        $radios   = Live_Stream::get_all_radios();
         Subsonic_XML_Data::addRadios($response, $radios);
         self::apiOutput($input, $response);
     }
@@ -1316,8 +1316,8 @@ class Subsonic_Api
      */
     public static function getshares($input)
     {
-        $response      = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getshares');
-        $shares        = Share::get_share_list();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getshares');
+        $shares   = Share::get_share_list();
         Subsonic_XML_Data::addShares($response, $shares);
         self::apiOutput($input, $response);
     }
