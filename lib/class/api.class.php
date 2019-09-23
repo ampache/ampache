@@ -368,7 +368,6 @@ class Api
         // Check and see if we should destroy the api sessions (done if valid sess is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::destroy($input['auth']);
-            $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
         debug_event('api.class', 'Goodbye Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);

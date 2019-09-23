@@ -87,11 +87,12 @@ class Session
             return false;
         }
 
-        // Remove anything and EVERYTHING
         $sql = 'DELETE FROM `session` WHERE `id` = ?';
         if ($type) {
             $sql .= ' and `type` = ?';
             Dba::write($sql, array($key, $type));
+
+            return true;
         } else {
             Dba::write($sql, array($key));
         }
