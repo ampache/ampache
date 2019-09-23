@@ -1101,9 +1101,9 @@ class User extends database_object
 
             /* Get Users Last ip */
             if (count($data = $this->get_ip_history(1))) {
-                $ip = inet_ntop($data['0']['ip']);
-                if (!empty($ip) && filter_var($ip, FILTER_VALIDATE_IP)) {
-                    $this->ip_history = $ip;
+                $userip = inet_ntop($data['0']['ip']);
+                if (!empty($userip) && filter_var($userip, FILTER_VALIDATE_IP)) {
+                    $this->ip_history = $userip;
                 }
             } else {
                 $this->ip_history = T_('Not Enough Data');
