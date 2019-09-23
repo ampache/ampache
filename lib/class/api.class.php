@@ -363,21 +363,19 @@ class Api
      */
     public static function goodbye($input)
     {
-        $xmldata = array('server' => AmpConfig::get('version'), 'version' => self::$version, 'compatible' => '350001');
-
-        // Check and see if we should destroy the api sessions (done if valid sess is passed)
+        // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             $sql = 'DELETE FROM `session` WHERE `id` = ?';
             $sql .= " and `type` = 'api'";
             Dba::write($sql, array($input['auth']));
 
+            debug_event('api.class', 'Goodbye Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
+            echo XML_Data::success('goodbye: ' . $input['auth']);
+            ob_end_clean();
+
             return true;
         }
-
-        debug_event('api.class', 'Goodbye Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
-
-        ob_end_clean();
-        echo XML_Data::keyed_array($xmldata);
+        echo XML_Data::error('400', 'failed to session: ' . $input['auth']);
     } // goodbye
 
     /**
