@@ -1870,7 +1870,6 @@ class Api
      *                fullname = (string) $fullname // optional
      *                password = (string) hash('sha256', $password))
      *                email    = (string) $email)
-     * 
      */
     public static function user_create($input)
     {
@@ -1933,19 +1932,27 @@ class Api
         $city       = $input['city'];
         $disable    = ($input['disable'] == 'true');
         $maxbitrate = $input['maxbitrate'];
+
+        // if you didn't send anything to update don't do anything
+        if (!$fullname || !$email || !$website || !$password || !$state || !$city || !$disable || !$maxbitrate) {
+            echo XML_Data::error('401', T_('Nothing to update.'));
+
+            return false;
+        }
         // identify the user to modify
         $user_id = User::get_from_username($username);
         $user    = new User($user_id);
 
-        if (Access::check('interface', 100) && $user_id > 0) {
-            if ($password && Access::check('interface', 100, $user_id)) {
-                echo XML_Data::error('400', 'Do not update passwords for admin users! ' . $username);
+        if ($password && Access::check('interface', 100, $user_id)) {
+            echo XML_Data::error('400', 'Do not update passwords for admin users! ' . $username);
 
-                return false;
-            }
+            return false;
+        }
+
+        if (Access::check('interface', 100) && $user_id > 0) {
             if ($password) {
                 $user->update_password('', $password);
-            } 
+            }
             if ($fullname) {
                 $user->update_fullname($fullname);
             }
