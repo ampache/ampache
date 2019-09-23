@@ -1,6 +1,76 @@
 # CHANGELOG
 
-## 4.0.0-DEVELOP
+4.0.0-DEVELOP
+----------
+- Resolve CVE-2019-12385 for the SQL Injection
+- Resolve CVE-2019-12386 for the persistent XSS
+- Remove charts/graphs that use non-free graph library pchart
+- Update the CSS theme colors and structure.
+- Light theme updated.
+- Remove plex, dropbox, googleplus plugins
+- Remove all plex code
+- Remove message of the day
+- Don't allow lost password reset for Admin users
+- Don't allow emails until mail_enable is true
+- No video, no channels in new installs
+- Include smartlists in the API playlist calls.
+- Default fallback user avatar when none found
+- Added a $_SESSION['mobile'] variable to allow changing pages for mobile devices.
+- Viewport settings for mobile devices
+- Format the input fields. (you get a datetime picker on mobile!)
+- Login/lostpassword moves the logo to the bottom on mobile like cockpit does! (makes typing easier on a touch screen)
+- Load webplayer hidden to stop popup preferences hiding the window
+- Hide video in search/stats if not enabled
+- Use a random cover for playlist art
+- Move some $_GET, POST, $_REQUEST calls to Core
+- JavaScript and Ajax updates
+- Code documentation and bug hunting
+- Fixed setting button requiring two single clicks to open. (Thanks for this 2016 pull @AshotN)
+- Fixed import_playlist code. Do not recreate existing playlists and don't imports existing songs.
+- Stop trying to insert art when present during catalog update
+- Don't allow last.fm queries to overwrite existing art
+- Lots of code tweaks to make things more uniform and readable.
+- Add now_playing.php to allow badges for currently playing tracks. (Fall back to last played if none.)
+- Add Now Playing icon to each user page if enabled.
+- Add year information and links to the data rows and interface
+- Default to mashup for artists and albums
+- Add rating_browse_filter, rating_browse_minimum_stars to filter based on a star rating.
+- Add send_full_stream to config, to allow pushing the full track instead of segmenting
+- Add debugging in song.class.php when the file may be corrupt
+- Remove '[Disk x]' when grouped from all UI areas by enforcing the group setting.
+- Make test.php, init.php & install.php show an error page instead of blank screen. (gettext)
+- Filter zip names in batch so they are named correctly by the download
+- API - Authentication: Require a handshake and generate unique sessions
+- API - Authentication: allow sha256 encrypted auth key for auth key
+  * You must send an encrypted api key in the following fashion. (Hash key joined with username)
+  * $passphrase = hash('sha256', $username . hash('sha256', $apikey));
+- API - Extended Method: stats allow songs|artists|albums (instead of just albums)
+- API - Extended Method: playlists allow return of smartlists as well as regular playlists (Only allow smartlists with an item limit)
+- API - New Method: flag allows flagging object by id & type
+- API - New Method: record_play allows recording play of object without streaming
+- API - New Method: catalog_action allow running add_to_catalog|clean_catalog
+- API - New Method: playlist_edit alow editing name and type of playlist
+- API - New Method: goodbye (Destroy session)
+- API - New Method: get_indexes (return simple index lists to allow a quicker library fill.)
+- API - New Method: check_parameter (error when mandatory inputs are missing)
+- API - New Method: stream (Raw stream of song_id)
+- API - New Method: download (Download, not recorded as a play)
+- API - New Method: get_art (Raw art file like subsonic getCoverArt)
+- Fix slideshow creating black screen when using web player
+- Default to disk 1 instead of 0 (db updates to handle existing albums)
+- Add Barcode, Original Year and Catalog Number to Album table
+- Extend bin/sort_files.inc & catalog patterns to handle new fields
+- Updated bin/sort_files.inc for a smoother experience that actually works
+- Add -u to bin/catalog_update.inc This function will update the artist table with bio, image, etc as well as update similar artists.
+- Numerous catalog updates to allow data migration when updating file tags. (UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate)
+- Faster tag updates/catalog verify! (Updating an album would update each file multiple times)
+- Subsonic - Update api to 1.13.0 [http://www.subsonic.org/pages/api.jsp]
+- Subsonic - Allow token auth using API Key instead of password.
+- Subsonic - Don't ignore group settings with id3 browsing
+- Subsonic - New Method: updateUser
+- Subsonic - New Method: getTopSongs
+- Subsonic - Fix cover art for playlists and albums
+- Added SVG support to the theme engine.
 
 * Resolve CVE-2019-12385 for the SQL Injection
 * Resolve CVE-2019-12386 for the persistent XSS
