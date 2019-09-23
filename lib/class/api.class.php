@@ -1808,7 +1808,10 @@ class Api
 
         if (!empty($url)) {
             self::follow_stream(str_replace(':443/play', '/play', $url));
+
+            return true;
         }
+        echo XML_Data::error('400', 'failed to create: ' . $url);
     }
 
     /**
@@ -1842,7 +1845,12 @@ class Api
             $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         }
 
-        self::follow_stream(str_replace(':443/play', '/play', $url));
+        if (!empty($url)) {
+            self::follow_stream(str_replace(':443/play', '/play', $url));
+
+            return true;
+        }
+        echo XML_Data::error('400', 'failed to create: ' . $url);
     }
 
     /**
