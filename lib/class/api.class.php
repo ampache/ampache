@@ -1885,7 +1885,7 @@ class Api
         $password = $input['password'];
         $disable  = ($input['disable'] == 'true');
 
-        if (Access::check('interface', 100)) {
+        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
             $access  = 25;
             $user_id = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
             if ($user_id > 0) {
@@ -1949,7 +1949,7 @@ class Api
             return false;
         }
 
-        if (Access::check('interface', 100) && $user_id > 0) {
+        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id) && $user_id > 0) {
             if ($password) {
                 $user->update_password('', $password);
             }
@@ -1999,10 +1999,10 @@ class Api
             return false;
         }
         $username = $input['username'];
-        if (Access::check('interface', 100)) {
+        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
             $user = User::get_from_username($username);
             // don't delete yourself or admins
-            if ($user->id && Core::get_global('user')->username != $username && !Access::check('interface', 100, $user->id)) {
+            if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
                 $user->delete();
                 echo XML_Data::success('successfully deleted: ' . $username);
 
