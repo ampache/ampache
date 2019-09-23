@@ -370,11 +370,12 @@ class Api
             Dba::write($sql, array($input['auth']));
 
             debug_event('api.class', 'Goodbye Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
-            echo XML_Data::success('goodbye: ' . $input['auth']);
             ob_end_clean();
+            echo XML_Data::success('goodbye: ' . $input['auth']);
 
             return true;
         }
+        ob_end_clean();
         echo XML_Data::error('400', 'failed to session: ' . $input['auth']);
     } // goodbye
 
