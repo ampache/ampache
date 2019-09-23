@@ -527,7 +527,7 @@ class Stream
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
-            debug_event('subsonic_api.class', 'Stream proxy: ' . $url, 5);
+            debug_event('stream.class', 'Stream proxy: ' . $url, 5);
 
             $curl = curl_init($url);
             curl_setopt_array($curl, array(

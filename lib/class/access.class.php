@@ -410,7 +410,6 @@ class Access
             $user = new User($user_id);
         }
         $level = (int) $level;
-        debug_event('access.class', 'Checking access for the user_id ' . $user->id, 5);
 
         // Switch on the type
         switch ($type) {
