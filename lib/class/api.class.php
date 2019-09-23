@@ -1994,8 +1994,8 @@ class Api
         $username = $input['username'];
         if (Access::check('interface', 100)) {
             $user = User::get_from_username($username);
-            // don't delete yourself
-            if ($user->id && Core::get_global('user')->username != $username) {
+            // don't delete yourself or admins
+            if ($user->id && Core::get_global('user')->username != $username && !Access::check('interface', 100, $user->id)) {
                 $user->delete();
                 echo XML_Data::success('successfully deleted: ' . $username);
 
