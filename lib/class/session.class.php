@@ -81,21 +81,14 @@ class Session
      *
      * This removes the specified session from the database.
      */
-    public static function destroy($key, $type = null)
+    public static function destroy($key)
     {
         if (!strlen($key)) {
             return false;
         }
 
         $sql = 'DELETE FROM `session` WHERE `id` = ?';
-        if ($type) {
-            $sql .= ' and `type` = ?';
-            Dba::write($sql, array($key, $type));
-
-            return true;
-        } else {
-            Dba::write($sql, array($key));
-        }
+        Dba::write($sql, array($key));
 
         debug_event('session.class', 'Deleting Session with key:' . $key, 6);
 
