@@ -1336,7 +1336,7 @@ class Api
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
-                    Core::get_global('user')->toggle_follow($user->id);
+                    User::get_from_username(Session::username($input['auth']))->toggle_follow($user->id);
                     ob_end_clean();
                     echo XML_Data::success('follow toggled for: ' . $user->id);
                 }
@@ -1545,7 +1545,7 @@ class Api
         $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
         $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
         $date        = scrub_in($input['date']); //optional
-        $user_id     = Core::get_global('user')->id;
+        $user_id     = User::get_from_username(Session::username($input['auth']))->id;
         $user        = new User($user_id);
         $valid       = in_array($user->id, User::get_valid_users());
 
@@ -1643,7 +1643,7 @@ class Api
         if (AmpConfig::get('sociable')) {
             $limit = (int) ($input['limit']);
             $since = (int) ($input['since']);
-            $user  = Core::get_global('user')->id;
+            $user  = User::get_from_username(Session::username($input['auth']))->id;
 
             if ($user > 0) {
                 $activities = Useractivity::get_friends_activities($user, $limit, $since);
@@ -1878,7 +1878,7 @@ class Api
         $password = $input['password'];
         $disable  = ($input['disable'] == 'true');
 
-        if (Access::check('interface', 100)) {
+        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
             $access  = 25;
             $user_id = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
             if ($user_id > 0) {
@@ -1942,7 +1942,7 @@ class Api
             return false;
         }
 
-        if (Access::check('interface', 100) && $user_id > 0) {
+        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id) && $user_id > 0) {
             if ($password) {
                 $user->update_password('', $password);
             }
@@ -1992,10 +1992,10 @@ class Api
             return false;
         }
         $username = $input['username'];
-        if (Access::check('interface', 100)) {
+        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
             $user = User::get_from_username($username);
             // don't delete yourself or admins
-            if ($user->id && Core::get_global('user')->username != $username && !Access::check('interface', 100, $user->id)) {
+            if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
                 $user->delete();
                 echo XML_Data::success('successfully deleted: ' . $username);
 
