@@ -982,11 +982,13 @@ class User extends database_object
      * inserts a new user into ampache
      * @param null|string $website
      */
-    public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false)
+    public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false, $encrypted = false)
     {
-        $website     = rtrim($website, "/");
-        $password    = hash('sha256', $password);
-        $disabled    = $disabled ? 1 : 0;
+        $website = rtrim($website, "/");
+        if (!$encrypted) {
+            $password = hash('sha256', $password);
+        }
+        $disabled = $disabled ? 1 : 0;
 
         /* Now Insert this new user */
         $sql = "INSERT INTO `user` (`username`, `disabled`, " .
@@ -1038,10 +1040,12 @@ class User extends database_object
      * update_password
      * updates a users password
      */
-    public function update_password($new_password)
+    public function update_password($new_password, $hashed_password = null)
     {
         //$salt             = AmpConfig::get('secret_key');
-        $hashed_password  = hash('sha256', $new_password);
+        if (!$hashed_password) {
+            $hashed_password = hash('sha256', $new_password);
+        }
         $escaped_password = Dba::escape($hashed_password);
 
         debug_event('user.class', 'Updating password', 4);
