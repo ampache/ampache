@@ -307,7 +307,6 @@ class Session
     {
         // didn't pass an auth key so don't let them in!
         if (!$key) {
-
             return false;
         }
         // Switch on the type they pass
