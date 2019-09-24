@@ -37,6 +37,7 @@ class Podcast extends database_object implements library_item
 
     public $episodes;
     public $f_title;
+    public $f_website;
     public $f_description;
     public $f_language;
     public $f_copyright;
