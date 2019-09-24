@@ -149,6 +149,7 @@ class Session
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
+            //debug_event('session.class', 'Read session from key ' . $key . ' ' . $results[$column], 3);
             return $results[$column];
         }
 
@@ -310,17 +311,9 @@ class Session
         // Switch on the type they pass
         switch ($type) {
             case 'api':
-                $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
-                    "AND `type` = 'api'";
-                $db_results = Dba::read($sql, array($key, time()));
-
-                if (Dba::num_rows($db_results)) {
-                    return true;
-                }
-            break;
             case 'stream':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
-                    "AND `type` = 'stream'";
+                    "AND `type` in ('stream', 'api')";
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {

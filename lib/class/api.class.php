@@ -500,12 +500,13 @@ class Api
     {
         $artist = new Artist($input['filter']);
         $songs  = $artist->get_songs();
+        $user   = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::songs($songs);
+        echo XML_Data::songs($songs, array(), true, $user->id);
     } // artist_songs
 
     /**
@@ -561,6 +562,7 @@ class Api
     {
         $album = new Album($input['filter']);
         $songs = array();
+        $user  = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
@@ -583,7 +585,7 @@ class Api
             $songs = $album->get_songs();
         }
 
-        echo XML_Data::songs($songs);
+        echo XML_Data::songs($songs, array(), true, $user->id);
     } // album_songs
 
     /**
@@ -678,12 +680,13 @@ class Api
     public static function tag_songs($input)
     {
         $songs = Tag::get_tag_objects('song', $input['filter']);
+        $user  = User::get_from_username(Session::username($input['auth']));
 
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo XML_Data::songs($songs);
+        echo XML_Data::songs($songs, array(), true, $user->id);
     } // tag_songs
 
     /**
@@ -708,13 +711,14 @@ class Api
         self::set_filter('enabled', '1');
 
         $songs = self::$browse->get_objects();
+        $user  = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo XML_Data::songs($songs);
+        echo XML_Data::songs($songs, array(), true, $user->id);
     } // songs
 
     /**
@@ -727,10 +731,11 @@ class Api
      */
     public static function song($input)
     {
-        $uid = scrub_in($input['filter']);
+        $song_id = scrub_in($input['filter']);
+        $user    = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
-        echo XML_Data::songs(array($uid));
+        echo XML_Data::songs(array($song_id), array(), true, $user->id);
     } // song
 
     /**
@@ -745,8 +750,9 @@ class Api
     {
         // Don't scrub, the function needs her raw and juicy
         $data = Stream_URL::parse($input['url']);
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        echo XML_Data::songs(array($data['id']));
+        echo XML_Data::songs(array($data['id']), array(), true, $user->id);
     }
 
     /**
@@ -801,8 +807,8 @@ class Api
      */
     public static function playlist_songs($input)
     {
-        debug_event('api.class', 'Loading playlist: ' . $input['filter'] . ' ' .
-                    (str_replace('smart_', '', (string) $input['filter']) === (string) $input['filter']), '5');
+        $user = User::get_from_username(Session::username($input['auth']));
+        debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], '5');
         if (str_replace('smart_', '', (string) $input['filter']) === (string) $input['filter']) {
             // Playlists
             $playlist = new Playlist($input['filter']);
@@ -823,7 +829,7 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::songs($songs, $items);
+        echo XML_Data::songs($songs, $items, true, $user->id);
     } // playlist_songs
 
     /**
@@ -970,8 +976,9 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         $results = Search::run($array);
+        $user    = User::get_from_username(Session::username($input['auth']));
 
-        echo XML_Data::songs($results);
+        echo XML_Data::songs($results, array(), true, $user->id);
     } // search_songs
 
     /**
@@ -990,6 +997,7 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         $results = Search::run($input);
+        $user    = User::get_from_username(Session::username($input['auth']));
 
         $type = 'song';
         if (isset($input['type'])) {
@@ -1004,7 +1012,7 @@ class Api
                 echo XML_Data::albums($results, array());
                 break;
             default:
-                echo XML_Data::songs($results);
+                echo XML_Data::songs($results, array(), true, $user->id);
                 break;
         }
     } // advanced_search
@@ -1025,11 +1033,12 @@ class Api
         Api::set_filter($method, $input['filter']);
 
         $video_ids = self::$browse->get_objects();
+        $user      = User::get_from_username(Session::username($input['auth']));
 
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
-        echo XML_Data::videos($video_ids);
+        echo XML_Data::videos($video_ids, $user->id);
     } // videos
 
     /**
@@ -1040,8 +1049,9 @@ class Api
     public static function video($input)
     {
         $video_id = scrub_in($input['filter']);
+        $user     = User::get_from_username(Session::username($input['auth']));
 
-        echo XML_Data::videos(array($video_id));
+        echo XML_Data::videos(array($video_id), $user->id);
     } // video
 
     /**
@@ -1123,9 +1133,10 @@ class Api
             break;
             case 'playlist':
                 $objects = $democratic->get_items();
+                $user    = User::get_from_username(Session::username($input['auth']));
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                echo XML_Data::democratic($objects);
+                echo XML_Data::democratic($objects, $user_id);
             break;
             case 'play':
                 $url       = $democratic->play_url();
@@ -1162,6 +1173,7 @@ class Api
 
             return false;
         }
+        $user   = User::get_from_username(Session::username($input['auth']));
         // moved type to filter and allowed multipe type selection
         $type   = $input['type'];
         $filter = $input['filter'];
@@ -1230,7 +1242,7 @@ class Api
             ob_end_clean();
             debug_event('api.class', 'stats found results searching for ' . $type, 5);
             if ($type === 'song') {
-                echo XML_Data::songs($results);
+                echo XML_Data::songs($results, array(), true, $user->id);
             }
             if ($type === 'artist') {
                 echo XML_Data::artists($results, array());
