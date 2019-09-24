@@ -1559,9 +1559,10 @@ class Api
             return false;
         }
         ob_end_clean();
-        $song_name   = (string) scrub_in($input['song']);
-        $artist_name = (string) scrub_in($input['artist']);
-        $album_name  = (string) scrub_in($input['album']);
+        $charset     = AmpConfig::get('site_charset');
+        $song_name   = (string) html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
+        $artist_name = (string) html_entity_decode(scrub_in($input['artist']), ENT_QUOTES, $charset);
+        $album_name  = (string) html_entity_decode(scrub_in($input['album']), ENT_QUOTES, $charset);
         $song_mbid   = (string) scrub_in($input['song_mbid']); //optional
         $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
         $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
