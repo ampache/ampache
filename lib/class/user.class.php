@@ -395,10 +395,10 @@ class User extends database_object
         }
 
 
-        $sql = "SELECT preference.name, preference.description, preference.catagory, preference.subcatagory, preference.level, user_preference.value " .
-            "FROM preference INNER JOIN user_preference ON user_preference.preference=preference.id " .
-            "WHERE user_preference.user='$user_id' " . $user_limit .
-            " ORDER BY preference.catagory, preference.subcatagory, preference.description";
+        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value " .
+            "FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` " .
+            "WHERE `user_preference`.`user` = '$user_id' " . $user_limit .
+            " ORDER BY `preference`.`catagory`, `preference`.`subcatagory`, `preference`.`description`";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -425,8 +425,9 @@ class User extends database_object
     {
         $user_id = Dba::escape($this->id);
 
-        $sql = "SELECT preference.name,user_preference.value FROM preference,user_preference WHERE user_preference.user='$user_id' " .
-            "AND user_preference.preference=preference.id AND preference.type != 'system'";
+        $sql = "SELECT `preference`.`name`, `user_preference`.`value` " .
+                " FROM `preference`, `user_preference` WHERE `user_preference`.`user` = '$user_id' " .
+            "AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system'";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -490,8 +491,8 @@ class User extends database_object
     public function get_recommendations($type)
     {
         /* First pull all of your ratings of this type */
-        $sql = "SELECT object_id,user_rating FROM ratings " .
-            "WHERE object_type='" . Dba::escape($type) . "' AND user='" . Dba::escape($this->id) . "'";
+        $sql = "SELECT `object_id`, `user_rating` FROM `ratings` " .
+            "WHERE `object_type` = '" . Dba::escape($type) . "' AND `user` = '" . Dba::escape($this->id) . "'";
         $db_results = Dba::read($sql);
 
         // Incase they only have one user
@@ -503,9 +504,9 @@ class User extends database_object
             $ratings[$key] = true;
 
             /* Build a key'd array of users with this same rating */
-            $sql = "SELECT user FROM ratings WHERE object_type='" . Dba::escape($type) . "' " .
-                "AND user !='" . Dba::escape($this->id) . "' AND object_id='" . Dba::escape($row['object_id']) . "' " .
-                "AND user_rating ='" . Dba::escape($row['user_rating']) . "'";
+            $sql = "SELECT `user` FROM `ratings` WHERE `object_type` = '" . Dba::escape($type) . "' " .
+                "AND `user` !='" . Dba::escape($this->id) . "' AND `object_id` = '" . Dba::escape($row['object_id']) . "' " .
+                "AND `user_rating` ='" . Dba::escape($row['user_rating']) . "'";
             $user_results = Dba::read($sql);
 
             while ($user_info = Dba::fetch_assoc($user_results)) {
@@ -524,9 +525,9 @@ class User extends database_object
         foreach ($users as $user_id => $score) {
 
             /* Find everything they've rated at 4+ */
-            $sql = "SELECT object_id,user_rating FROM ratings " .
-                "WHERE user='" . Dba::escape($user_id) . "' AND user_rating >='4' AND " .
-                "object_type = '" . Dba::escape($type) . "' ORDER BY user_rating DESC";
+            $sql = "SELECT `object_id`, `user_rating` FROM `ratings` " .
+                "WHERE `user` = '" . Dba::escape($user_id) . "' AND `user_rating` >='4' AND " .
+                "`object_type` = '" . Dba::escape($type) . "' ORDER BY `user_rating` DESC";
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -853,7 +854,7 @@ class User extends database_object
     {
         /* Prevent Only User accounts */
         if ($new_access < '100') {
-            $sql        = "SELECT `id` FROM user WHERE `access`='100' AND `id` != '$this->id'";
+            $sql        = "SELECT `id` FROM `user` WHERE `access`='100' AND `id` != '$this->id'";
             $db_results = Dba::read($sql);
             if (!Dba::num_rows($db_results)) {
                 return false;

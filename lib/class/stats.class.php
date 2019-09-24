@@ -302,7 +302,7 @@ class Stats
         $date = time() - (86400 * (int) $threshold);
 
         if ($type == 'playlist') {
-            $sql = "SELECT `id` as `id`, `last_update` FROM playlist" .
+            $sql = "SELECT `id` as `id`, `last_update` FROM `playlist`" .
                     " WHERE `last_update` >= '" . $date . "' ";
             $sql .= " GROUP BY `id` ORDER BY `last_update` DESC ";
             //debug_event('stats.class', 'get_top_sql ' . $sql, 5);
@@ -485,9 +485,9 @@ class Stats
 
         /* Select Objects based on user */
         //FIXME:: Requires table scan, look at improving
-        $sql = "SELECT object_id,COUNT(id) AS `count` FROM object_count" .
-                " WHERE object_type = ? AND date >= ? AND user = ?" .
-                " GROUP BY object_id ORDER BY `count` DESC LIMIT $input_count";
+        $sql = "SELECT `object_id`, COUNT(`id`) AS `count` FROM `object_count`" .
+                " WHERE `object_type` = ? AND `date` >= ? AND `user` = ?" .
+                " GROUP BY `object_id` ORDER BY `count` DESC LIMIT $input_count";
         $db_results = Dba::read($sql, array($type, $date, $user));
 
         $results = array();
