@@ -223,7 +223,7 @@ class Repository
     public function assembleQuery($table, $fields)
     {
         $sql = 'SELECT * FROM ' . $table;
-        if ($fields) {
+        if (!empty($fields)) {
             $sql .= ' WHERE ';
             $sqlParts = array();
             foreach ($fields as $field) {
