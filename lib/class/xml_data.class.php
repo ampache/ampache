@@ -695,7 +695,7 @@ class XML_Data
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
      */
-    public static function songs($songs, $playlist_data = array(), $full_xml = true)
+    public static function songs($songs, $playlist_data = array(), $full_xml = true, $user_id = false)
     {
         $string = "<total_count>" . count($songs) . "</total_count>\n";
 
@@ -749,7 +749,7 @@ class XML_Data
                     "\t<rate>" . $song->rate . "</rate>\n" .
                     "\t<mode>" . $song->mode . "</mode>\n" .
                     "\t<mime>" . $song->mime . "</mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api') . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<mbid>" . $song->mbid . "</mbid>\n" .
                     "\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n" .
@@ -788,7 +788,7 @@ class XML_Data
      * @param    array    $videos    (description here...)
      * @return    string    return xml
      */
-    public static function videos($videos)
+    public static function videos($videos, $user_id = false)
     {
         $string = '<total_count>' . count($videos) . "</total_count>\n";
 
@@ -812,7 +812,7 @@ class XML_Data
                     "\t<resolution>" . $video->f_resolution . "</resolution>\n" .
                     "\t<size>" . $video->size . "</size>\n" .
                     self::tags_string($video->tags) .
-                    "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api') . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api', false, $user_id) . "]]></url>\n" .
                     "</video>\n";
         } // end foreach
 
@@ -829,7 +829,7 @@ class XML_Data
      * @param    array    $object_ids    Object IDs
      * @return    string    return xml
      */
-    public static function democratic($object_ids = array())
+    public static function democratic($object_ids = array(), $user_id = false)
     {
         $democratic = Democratic::get_current_playlist();
         $string     = '';
@@ -860,7 +860,7 @@ class XML_Data
                     "\t<track>" . $song->track . "</track>\n" .
                     "\t<time>" . $song->time . "</time>\n" .
                     "\t<mime>" . $song->mime . "</mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api') . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                     "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
@@ -1107,7 +1107,7 @@ class XML_Data
 
     // _footer
 
-    public static function podcast(library_item $libitem)
+    public static function podcast(library_item $libitem, $user_id = false)
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><rss />');
         $xml->addAttribute("xmlns:xmlns:atom", "http://www.w3.org/2005/Atom");
@@ -1156,7 +1156,7 @@ class XML_Data
             }
             $xitem->addChild("xmlns:itunes:duration", $media->f_time);
             if ($media->mime) {
-                $surl  = $media_info['object_type']::play_url($media_info['object_id']);
+                $surl  = $media_info['object_type']::play_url($media_info['object_id'], '', 'api', false, $user_id);
                 $xencl = $xitem->addChild("enclosure");
                 $xencl->addAttribute("type", $media->mime);
                 $xencl->addAttribute("length", $media->size);

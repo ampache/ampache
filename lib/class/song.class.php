@@ -1892,7 +1892,7 @@ class Song extends database_object implements media, library_item
      * @param string $player
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = -1)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
     {
         return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid);
     }
