@@ -830,7 +830,7 @@ class Subsonic_Api
         $username = $input['username'];
 
         // Don't allow playlist listing for another user
-        if (empty($username) || $username == Core::get_global('user')->username) {
+        if (empty($username) || $username == $input['u']) {
             Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists(), Search::get_searches());
         } else {
             $user = User::get_from_username($username);
@@ -986,6 +986,7 @@ class Subsonic_Api
         $format        = $input['format']; // mp3, flv or raw
         $timeOffset    = $input['timeOffset'];
         $contentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
+        $user_id       = User::get_from_username($input['u'])->id;
 
         $params = '&client=' . rawurlencode($input['c']);
         if ($contentLength == 'true') {
@@ -1003,9 +1004,9 @@ class Subsonic_Api
 
         $url = '';
         if (Subsonic_XML_Data::isSong($fileid)) {
-            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'));
+            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
-            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'));
+            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         }
 
         if (!empty($url)) {
@@ -1166,7 +1167,7 @@ class Subsonic_Api
      */
     public static function getstarred($input, $elementName = "starred")
     {
-        $user_id = Core::get_global('user')->id;
+        $user_id = User::get_from_username($input['u'])->id;
 
         $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getstarred');
         Subsonic_XML_Data::addStarred($response, Userflag::get_latest('artist', $user_id, 10000), Userflag::get_latest('album', $user_id, 10000), Userflag::get_latest('song', $user_id, 10000), $elementName);
@@ -1278,17 +1279,18 @@ class Subsonic_Api
     public static function getuser($input)
     {
         $username = self::check_parameter($input, 'username');
+        $myuser   = User::get_from_username($input['u']);
 
-        if (Core::get_global('user')->access >= 100 || Core::get_global('user')->username == $username) {
+        if ($myuser->access >= 100 || $myuser->username == $username) {
             $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getuser');
-            if (Core::get_global('user')->username == $username) {
-                $user = Core::get_global('user');
+            if ($myuser->username == $username) {
+                $user = $myuser;
             } else {
                 $user = User::get_from_username($username);
             }
             Subsonic_XML_Data::addUser($response, $user);
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get details for other users.', $input['v'], 'getuser');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, $input['u'] . ' is not authorized to get details for other users.', $input['v'], 'getuser');
         }
         self::apiOutput($input, $response);
     }
@@ -1301,12 +1303,13 @@ class Subsonic_Api
      */
     public static function getusers($input)
     {
-        if (Core::get_global('user')->access >= 100) {
-            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getusers');
-            $users    = User::get_valid_users();
+        $myuser = User::get_from_username($input['u']);
+        if ($myuser->access >= 100) {
+            $response     = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getusers');
+            $users        = User::get_valid_users();
             Subsonic_XML_Data::addUsers($response, $users);
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get details for other users.', $input['v'], 'getusers');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, $input['u'] . ' is not authorized to get details for other users.', $input['v'], 'getusers');
         }
         self::apiOutput($input, $response);
     }
@@ -1318,11 +1321,12 @@ class Subsonic_Api
     public static function getavatar($input)
     {
         $username = self::check_parameter($input, 'username');
+        $myuser   = User::get_from_username($input['u']);
 
         $response = null;
-        if (Core::get_global('user')->access >= 100 || Core::get_global('user')->username == $username) {
-            if (Core::get_global('user')->username == $username) {
-                $user = Core::get_global('user');
+        if ($myuser->access >= 100 || $myuser->username == $username) {
+            if ($myuser->username == $username) {
+                $user = $myuser;
             } else {
                 $user = User::get_from_username($username);
             }
@@ -1338,7 +1342,7 @@ class Subsonic_Api
                 $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'getavatar');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get avatar for other users.', $input['v'], 'getavatar');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, $input['u'] . ' is not authorized to get avatar for other users.', $input['v'], 'getavatar');
         }
 
         if ($response != null) {
@@ -1637,8 +1641,9 @@ class Subsonic_Api
         $username     = self::check_parameter($input, 'username');
         $inp_pass     = self::check_parameter($input, 'password');
         $password     = self::decrypt_password($inp_pass);
+        $myuser       = User::get_from_username($input['u']);
 
-        if (Core::get_global('user')->username == $username || Access::check('interface', 100)) {
+        if ($myuser->username == $username || Access::check('interface', 100)) {
             $user = User::get_from_username($username);
             if ($user->id) {
                 $user->update_password($password);
@@ -1776,7 +1781,7 @@ class Subsonic_Api
 
                 $media = new $type($aid);
                 $media->format();
-                User::save_mediaplay(Core::get_global('user'), $media);
+                User::save_mediaplay(User::get_from_username($input['u'])->id, $media);
             }
 
             $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'scrobble');
