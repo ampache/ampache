@@ -986,6 +986,7 @@ class Subsonic_Api
         $format        = $input['format']; // mp3, flv or raw
         $timeOffset    = $input['timeOffset'];
         $contentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
+        $user_id       = User::get_from_username($input['u'])->id;
 
         $params = '&client=' . rawurlencode($input['c']);
         if ($contentLength == 'true') {
@@ -1003,9 +1004,9 @@ class Subsonic_Api
 
         $url = '';
         if (Subsonic_XML_Data::isSong($fileid)) {
-            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'));
+            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
-            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'));
+            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         }
 
         if (!empty($url)) {
