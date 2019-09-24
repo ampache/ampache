@@ -72,8 +72,8 @@
     </li>
   </li>
 <?php if (Access::check('interface', '100')) {
-        ?>
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Server Config'); ?>"><?php echo T_('Server Config'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'server_config', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_server_config')) ? $_COOKIE['sb_server_config'] : 'expanded')); ?></h4>
+    ?>
+  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Server Config'); ?>"><?php echo T_('Server Config'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_server_config')) ? $_COOKIE['sb_server_config'] : 'expanded'; ?>" id="server_config" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
     <ul class="sb3" id="sb_preferences_sc">
         <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
 <?php

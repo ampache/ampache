@@ -227,7 +227,7 @@ class Subsonic_XML_Data
 
     public static function createSuccessResponse($version = '', $function = '')
     {
-        if (empty($version)) {
+        if ($version === '') {
             $version = self::API_VERSION;
         }
         $response = self::createResponse($version);

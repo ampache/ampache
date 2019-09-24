@@ -1700,7 +1700,6 @@ class Api
             $catalog->process_action($input['task'], (int) $input['catalog']);
             echo XML_Data::success('successfully started: ' . (string) $input['task']);
         }
-        echo XML_Data::error('400', 'failed to delete: ' . $username);
     }
 
     /**

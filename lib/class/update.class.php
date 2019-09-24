@@ -173,6 +173,9 @@ class Update
                          " * Add barcode catalog_number and original_year to albums.<br />" .
                          " * Drop catalog_number from song_data and use album instead.<br />";
         $version[]     = array('version' => '400002', 'description' => $update_string);
+      
+        $update_string = "* Make sure preference names are updated to current strings<br />";
+        $version[]     = array('version' => '400003', 'description' => $update_string);
 
         return $version;
     }
@@ -747,6 +750,7 @@ class Update
 
         return $retval;
     }
+
     /**
      * update_400002
      *
@@ -769,6 +773,216 @@ class Update
         $sql    = "ALTER TABLE `song_data`  DROP `catalog_number`";
         $retval &= Dba::write($sql);
 
+        return $retval;
+    }
+
+    /**
+     * update_400003
+     *
+     * Make sure preference names are updated to current strings
+     */
+    public static function update_400003()
+    {
+        $retval = true;
+        $sql    = "UPDATE `preference` " .
+                  "SET `preference`.`description` = 'Force HTTP playback regardless of port' " .
+                  "WHERE `preference`.`name` = 'force_http_play' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Playback Type' " .
+               "WHERE `preference`.`name` = 'play_type' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'httpQ Active Instance' " .
+               "WHERE `preference`.`name` = 'httpq_active' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Now Playing filtered per user' " .
+               "WHERE `preference`.`name` = 'now_playing_per_user' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Use Subsonic backend' " .
+               "WHERE `preference`.`name` = 'subsonic_backend' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Share Now Playing information' " .
+               "WHERE `preference`.`name` = 'allow_personal_info_now' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Share Recently Played information' " .
+               "WHERE `preference`.`name` = 'allow_personal_info_recent' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Share Recently Played information - Allow access to streaming date/time' " .
+               "WHERE `preference`.`name` = 'allow_personal_info_time' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Share Recently Played information - Allow access to streaming agent' " .
+               "WHERE `preference`.`name` = 'allow_personal_info_agent' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Enable URL Rewriting' " .
+               "WHERE `preference`.`name` = 'stream_beautiful_url' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Destination catalog' " .
+               "WHERE `preference`.`name` = 'upload_catalog' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow user uploads' " .
+               "WHERE `preference`.`name` = 'allow_upload' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Create a subdirectory per user' " .
+               "WHERE `preference`.`name` = 'upload_subdir' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Consider the user sender as the track''s artist' " .
+               "WHERE `preference`.`name` = 'upload_user_artist' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Post-upload script (current directory = upload target directory)' " .
+               "WHERE `preference`.`name` = 'upload_script' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow users to edit uploaded songs' " .
+               "WHERE `preference`.`name` = 'upload_allow_edit' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow users to remove uploaded songs' " .
+               "WHERE `preference`.`name` = 'upload_allow_remove' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Show Albums of the Moment' " .
+               "WHERE `preference`.`name` = 'home_moment_albums' ";
+        $retval &= Dba::write($sql);
+
+        $sql    = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Show Videos of the Moment' " .
+               "WHERE `preference`.`name` = 'home_moment_videos' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Custom URL - Logo' " .
+               "WHERE `preference`.`name` = 'custom_logo' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Custom URL - Login page logo' " .
+               "WHERE `preference`.`name` = 'custom_login_logo' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Custom URL - Favicon' " .
+               "WHERE `preference`.`name` = 'custom_favicon' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Album - Default sort' " .
+               "WHERE `preference`.`name` = 'album_sort' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow Geolocation' " .
+               "WHERE `preference`.`name` = 'Geolocation' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow Video Features' " .
+               "WHERE `preference`.`name` = 'allow_video' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Democratic - Clear votes for expired user sessions' " .
+               "WHERE `preference`.`name` = 'demo_clear_sessions' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow Transcoding' " .
+               "WHERE `preference`.`name` = 'transcoding' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Authorize Flash Web Player' " .
+               "WHERE `preference`.`name` = 'webplayer_flash' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Authorize HTML5 Web Player' " .
+               "WHERE `preference`.`name` = 'webplayer_html5' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Web Player browser notifications' " .
+               "WHERE `preference`.`name` = 'browser_notify' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Web Player browser notifications timeout (seconds)' " .
+               "WHERE `preference`.`name` = 'browser_notify_timeout' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Authorize JavaScript decoder (Aurora.js) in Web Player' " .
+               "WHERE `preference`.`name` = 'webplayer_aurora' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Show Now Playing' " .
+               "WHERE `preference`.`name` = 'home_now_playing' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Show Recently Played' " .
+               "WHERE `preference`.`name` = 'home_recently_played' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = '# latest episodes to keep' " .
+               "WHERE `preference`.`name` = 'podcast_keep' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = '# episodes to download when new episodes are available' " .
+               "WHERE `preference`.`name` = 'podcast_new_download' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow Transcoding' " .
+               "WHERE `preference`.`name` = 'transcode' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Allow E-mail notifications' " .
+               "WHERE `preference`.`name` = 'notify_email' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Custom metadata - Disable these fields' " .
+               "WHERE `preference`.`name` = 'disabled_custom_metadata_fields' ";
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Custom metadata - Define field list' " .
+               "WHERE `preference`.`name` = 'disabled_custom_metadata_fields_input' ";
+ 
         return $retval;
     }
 }

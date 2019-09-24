@@ -70,7 +70,8 @@ $catalogs = array();
 
 while ($row = Dba::fetch_row($db_results)) {
 
-    $catalog = Catalog::create_from_id($r[0]);
+    $catalog = Catalog::create_from_id($row['id']);
+    /* HINT: Catalog Name */
     printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
     echo "\n";
     $songs = $catalog->get_songs();
@@ -99,6 +100,7 @@ while ($row = Dba::fetch_row($db_results)) {
             /* HINT: filename (File path) */
             printf (T_('Source: %s'), $song->file);
             echo "\n\t";
+            /* HINT: filename (File path) */
             printf (T_('Destin: %s'), $fullpath);
             echo "\n";
             flush();

@@ -167,7 +167,7 @@ $_SESSION['login'] = true;
                     } ?>
                         <div id="submit-registration-button">
                             <input type="hidden" name="action" value="add_user" />
-                            <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />
+                            <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register'); ?>' />
                         </div>
                         <?php AmpError::display('user_agreement'); ?>
                     </div>
