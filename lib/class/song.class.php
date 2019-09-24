@@ -592,6 +592,9 @@ class Song extends database_object implements media, library_item
      * can_scrobble
      *
      * return a song id based on a last.fm-style search in the database
+     * @param string $song_name
+     * @param string $artist_name
+     * @param string $album_name
      * @return string
      */
     public static function can_scrobble($song_name, $artist_name, $album_name, $song_mbid = '', $artist_mbid = '', $album_mbid = '')
