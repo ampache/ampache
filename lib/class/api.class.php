@@ -1136,7 +1136,7 @@ class Api
                 $user    = User::get_from_username(Session::username($input['auth']));
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                echo XML_Data::democratic($objects, $user_id);
+                echo XML_Data::democratic($objects, $user->id);
             break;
             case 'play':
                 $url       = $democratic->play_url();
