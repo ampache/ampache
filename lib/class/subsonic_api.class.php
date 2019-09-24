@@ -50,7 +50,7 @@ class Subsonic_Api
             if ($addheader) {
                 self::setHeader($input['f']);
             }
-            self::apiOutput($input, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM));
+            self::apiOutput($input, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM, '', $input['v'], 'check_parameter'));
 
             return false;
         }
@@ -107,7 +107,6 @@ class Subsonic_Api
     {
         set_time_limit(0);
         ob_end_clean();
-
         header("Access-Control-Allow-Origin: *");
         if (function_exists('curl_version')) {
             // Here, we use curl from the Ampache server to download data from
@@ -123,7 +122,6 @@ class Subsonic_Api
             }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             debug_event('subsonic_api.class', 'Stream proxy: ' . $url, 5);
-
             $curl = curl_init($url);
             curl_setopt_array($curl, array(
                 CURLOPT_FAILONERROR => true,
@@ -325,7 +323,7 @@ class Subsonic_Api
     {
         // Don't check client API version here. Some client give version 0.0.0 for ping command
 
-        self::apiOutput($input, Subsonic_XML_Data::createSuccessResponse());
+        self::apiOutput($input, Subsonic_XML_Data::createSuccessResponse($input['v'], 'ping'));
     }
 
     /**
@@ -335,7 +333,7 @@ class Subsonic_Api
      */
     public static function getlicense($input)
     {
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getlicense');
         Subsonic_XML_Data::addLicense($response);
         self::apiOutput($input, $response);
     }
@@ -347,7 +345,7 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getmusicfolders');
         Subsonic_XML_Data::addMusicFolders($response, Catalog::get_catalogs());
         self::apiOutput($input, $response);
     }
@@ -399,7 +397,7 @@ class Subsonic_Api
             $fcatalogs = $catalogs;
         }
 
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getindexes');
         if (count($fcatalogs) > 0) {
             $artists = Catalog::get_artists($fcatalogs);
             Subsonic_XML_Data::addArtistsIndexes($response, $artists, $lastmodified);
@@ -416,7 +414,7 @@ class Subsonic_Api
     {
         $id = self::check_parameter($input, 'id');
 
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getmusicdirectory');
         if (Subsonic_XML_Data::isArtist($id)) {
             $artist = new Artist(Subsonic_XML_Data::getAmpacheId($id));
             Subsonic_XML_Data::addArtistDirectory($response, $artist);
@@ -436,7 +434,7 @@ class Subsonic_Api
      */
     public static function getgenres($input)
     {
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getgenres');
         Subsonic_XML_Data::addGenres($response, Tag::get_tags('song'));
         self::apiOutput($input, $response);
     }
@@ -448,7 +446,7 @@ class Subsonic_Api
      */
     public static function getartists($input)
     {
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getartists');
         $artists  = Catalog::get_artists(Catalog::get_catalogs());
         Subsonic_XML_Data::addArtistsRoot($response, $artists, true);
         self::apiOutput($input, $response);
@@ -465,9 +463,9 @@ class Subsonic_Api
 
         $artist = new Artist(Subsonic_XML_Data::getAmpacheId($artistid));
         if (empty($artist->name)) {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Artist not found.");
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Artist not found.", $input['v'], 'getartist');
         } else {
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getartist');
             Subsonic_XML_Data::addArtist($response, $artist, true, true);
         }
         self::apiOutput($input, $response, array('musicFolder', 'child', 'playlist', 'song', 'album'));
@@ -486,9 +484,9 @@ class Subsonic_Api
 
         $album = new Album(Subsonic_XML_Data::getAmpacheId($albumid));
         if (empty($album->name)) {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Album not found.");
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Album not found.", $input['v'], 'getalbum');
         } else {
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getalbum');
             Subsonic_XML_Data::addAlbum($response, $album, true, $addAmpacheInfo);
         }
 
@@ -502,7 +500,7 @@ class Subsonic_Api
      */
     public static function getvideos($input)
     {
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getvideos');
         $videos   = Catalog::get_videos();
         Subsonic_XML_Data::addVideos($response, $videos);
         self::apiOutput($input, $response);
@@ -529,7 +527,7 @@ class Subsonic_Api
             $catalogs[] = $musicFolderId;
         }
 
-        $response     = Subsonic_XML_Data::createSuccessResponse();
+        $response     = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getalbumlist');
         $errorOccured = false;
         $albums       = array();
 
@@ -577,7 +575,7 @@ class Subsonic_Api
                 }
                 break;
             default:
-                $response     = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type));
+                $response     = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, "Invalid list type: " . scrub_out($type), $input['v'], 'getalbumlist');
                 $errorOccured = true;
         }
 
@@ -664,7 +662,7 @@ class Subsonic_Api
             $songs = Random::get_default($size);
         }
 
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getrandomsongs');
         Subsonic_XML_Data::addRandomSongs($response, $songs);
         self::apiOutput($input, $response);
     }
@@ -677,7 +675,7 @@ class Subsonic_Api
     public static function getsong($input)
     {
         $songid   = self::check_parameter($input, 'id');
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getsong');
         $song     = Subsonic_XML_Data::getAmpacheId($songid);
         Subsonic_XML_Data::addSong($response, $song);
         self::apiOutput($input, $response, array('musicFolder', 'artist', 'child', 'playlist', 'album'));
@@ -701,7 +699,7 @@ class Subsonic_Api
         } else {
             $songs = array();
         }
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'gettopsongs');
         Subsonic_XML_Data::addTopSongs($response, $songs);
         self::apiOutput($input, $response);
     }
@@ -723,7 +721,7 @@ class Subsonic_Api
         } else {
             $songs = array();
         }
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getsongsbygenre');
         Subsonic_XML_Data::addSongsByGenre($response, $songs);
         self::apiOutput($input, $response);
     }
@@ -736,7 +734,7 @@ class Subsonic_Api
     public static function getnowplaying($input)
     {
         $data     = Stream::get_now_playing();
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getnowplaying');
         Subsonic_XML_Data::addNowPlaying($response, $data);
         self::apiOutput($input, $response);
     }
@@ -807,7 +805,7 @@ class Subsonic_Api
             $songs = Search::run($ssong);
         }
 
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'search2');
         Subsonic_XML_Data::addSearchResult($response, $artists, $albums, $songs, $elementName);
         self::apiOutput($input, $response);
     }
@@ -828,7 +826,7 @@ class Subsonic_Api
      */
     public static function getplaylists($input)
     {
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getplaylists');
         $username = $input['username'];
 
         // Don't allow playlist listing for another user
@@ -854,12 +852,12 @@ class Subsonic_Api
     {
         $playlistid = self::check_parameter($input, 'id');
 
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getplaylist');
         if (Subsonic_XML_Data::isSmartPlaylist($playlistid)) {
             $playlist = new Search(Subsonic_XML_Data::getAmpacheId($playlistid), 'song');
             Subsonic_XML_Data::addSmartPlaylist($response, $playlist, true);
         } else {
-            $playlist = new Playlist($playlistid);
+            $playlist = new Playlist(Subsonic_XML_Data::getAmpacheId($playlistid));
             Subsonic_XML_Data::addPlaylist($response, $playlist, true);
         }
         self::apiOutput($input, $response);
@@ -878,16 +876,16 @@ class Subsonic_Api
 
         if ($playlistId) {
             self::_updatePlaylist($playlistId, $name, $songId);
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'createplaylist');
         } else {
             if (!empty($name)) {
                 $playlistId = Playlist::create($name, 'private');
                 if (count($songId) > 0) {
                     self::_updatePlaylist($playlistId, "", $songId);
                 }
-                $response = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'createplaylist');
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM, '', $input['v'], 'createplaylist');
             }
         }
         self::apiOutput($input, $response);
@@ -937,10 +935,9 @@ class Subsonic_Api
     public static function updateplaylist($input)
     {
         $playlistId = self::check_parameter($input, 'playlistId');
-
-        $name    = $input['name'];
+        $name       = $input['name'];
         // Not supported. $comment = $input['comment'];
-        $public  = ($input['public'] === "true");
+        $public = ($input['public'] === "true");
 
         if (!Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
             $songIdToAdd       = $input['songIdToAdd'];
@@ -948,9 +945,9 @@ class Subsonic_Api
 
             self::_updatePlaylist(Subsonic_XML_Data::getAmpacheId($playlistId), $name, $songIdToAdd, $songIndexToRemove, $public);
 
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'updateplaylist');
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Cannot edit a smart playlist.');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Cannot edit a smart playlist.', $input['v'], 'updateplaylist');
         }
         self::apiOutput($input, $response);
     }
@@ -972,7 +969,7 @@ class Subsonic_Api
             $playlist->delete();
         }
 
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'deleteplaylist');
         self::apiOutput($input, $response);
     }
 
@@ -985,13 +982,13 @@ class Subsonic_Api
     {
         $fileid = self::check_parameter($input, 'id', true);
 
-        $maxBitRate            = $input['maxBitRate'];
-        $format                = $input['format']; // mp3, flv or raw
-        $timeOffset            = $input['timeOffset'];
-        $estimateContentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
+        $maxBitRate    = $input['maxBitRate'];
+        $format        = $input['format']; // mp3, flv or raw
+        $timeOffset    = $input['timeOffset'];
+        $contentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
 
-        $params = '&client=' . rawurlencode($input['c']) . '&noscrobble=1';
-        if ($estimateContentLength == 'true') {
+        $params = '&client=' . rawurlencode($input['c']);
+        if ($contentLength == 'true') {
             $params .= '&content_length=required';
         }
         if ($format && $format != "raw") {
@@ -1066,6 +1063,7 @@ class Subsonic_Api
     public static function getcoverart($input)
     {
         $id   = str_replace('al-', '', self::check_parameter($input, 'id', true));
+        $id   = str_replace('pl-', '', $id);
         $size = $input['size'];
 
         $art = null;
@@ -1083,6 +1081,24 @@ class Subsonic_Api
             }
         } elseif (Subsonic_XML_Data::isPodcast($id)) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "podcast");
+        } elseif (Subsonic_XML_Data::isSmartPlaylist($id)) {
+            $smartlist = new Search(Subsonic_XML_Data::getAmpacheId($id));
+            $listitems = $smartlist->get_items();
+            $item      = $listitems[array_rand($listitems)];
+            $art       = new Art($item['object_id'], $item['object_type']);
+            if ($art != null && $art->id == null) {
+                $song = new Song($item['object_id']);
+                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
+            }
+        } elseif (Subsonic_XML_Data::isPlaylist($id)) {
+            $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($id));
+            $listitems = $playlist->get_items();
+            $item      = $listitems[array_rand($listitems)];
+            $art       = new Art($item['object_id'], $item['object_type']);
+            if ($art != null && $art->id == null) {
+                $song = new Song($item['object_id']);
+                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
+            }
         }
 
         header("Access-Control-Allow-Origin: *");
@@ -1134,9 +1150,9 @@ class Subsonic_Api
         if ($robj != null) {
             $robj->set_rating($rating);
 
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'setrating');
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.");
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", $input['v'], 'setrating');
         }
 
         self::apiOutput($input, $response);
@@ -1152,7 +1168,7 @@ class Subsonic_Api
     {
         $user_id = Core::get_global('user')->id;
 
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getstarred');
         Subsonic_XML_Data::addStarred($response, Userflag::get_latest('artist', $user_id, 10000), Userflag::get_latest('album', $user_id, 10000), Userflag::get_latest('song', $user_id, 10000), $elementName);
         self::apiOutput($input, $response);
     }
@@ -1200,7 +1216,7 @@ class Subsonic_Api
         // Normalize all in one array
         $ids = array();
 
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], '_setStar');
         if ($object_id) {
             if (!is_array($object_id)) {
                 $object_id = array($object_id);
@@ -1241,7 +1257,7 @@ class Subsonic_Api
                         $ids[] = array('id' => $aid, 'type' => 'artist');
                     }
                 } else {
-                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM, 'Missing parameter', $input['v'], '_setStar');
                 }
             }
         }
@@ -1264,7 +1280,7 @@ class Subsonic_Api
         $username = self::check_parameter($input, 'username');
 
         if (Core::get_global('user')->access >= 100 || Core::get_global('user')->username == $username) {
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getuser');
             if (Core::get_global('user')->username == $username) {
                 $user = Core::get_global('user');
             } else {
@@ -1272,7 +1288,7 @@ class Subsonic_Api
             }
             Subsonic_XML_Data::addUser($response, $user);
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get details for other users.');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get details for other users.', $input['v'], 'getuser');
         }
         self::apiOutput($input, $response);
     }
@@ -1286,11 +1302,11 @@ class Subsonic_Api
     public static function getusers($input)
     {
         if (Core::get_global('user')->access >= 100) {
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getusers');
             $users    = User::get_valid_users();
             Subsonic_XML_Data::addUsers($response, $users);
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get details for other users.');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get details for other users.', $input['v'], 'getusers');
         }
         self::apiOutput($input, $response);
     }
@@ -1319,10 +1335,10 @@ class Subsonic_Api
                     echo $request->body;
                 }
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'getavatar');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get avatar for other users.');
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, Core::get_global('user')->username . ' is not authorized to get avatar for other users.', $input['v'], 'getavatar');
         }
 
         if ($response != null) {
@@ -1337,7 +1353,7 @@ class Subsonic_Api
      */
     public static function getinternetradiostations($input)
     {
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getinternetradiostations');
         $radios   = Live_Stream::get_all_radios();
         Subsonic_XML_Data::addRadios($response, $radios);
         self::apiOutput($input, $response);
@@ -1350,7 +1366,7 @@ class Subsonic_Api
      */
     public static function getshares($input)
     {
-        $response = Subsonic_XML_Data::createSuccessResponse();
+        $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getshares');
         $shares   = Share::get_share_list();
         Subsonic_XML_Data::addShares($response, $shares);
         self::apiOutput($input, $response);
@@ -1388,15 +1404,15 @@ class Subsonic_Api
             }
 
             if (!empty($object_type)) {
-                $response = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'createshare');
                 $shares   = array();
                 $shares[] = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, Share::generate_secret(), 0, $description);
                 Subsonic_XML_Data::addShares($response, $shares);
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'createshare');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'createshare');
         }
         self::apiOutput($input, $response);
     }
@@ -1412,12 +1428,12 @@ class Subsonic_Api
 
         if (AmpConfig::get('share')) {
             if (Share::delete_share($id)) {
-                $response = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'deleteshare');
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'deleteshare');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'deleteshare');
         }
         self::apiOutput($input, $response);
     }
@@ -1457,15 +1473,15 @@ class Subsonic_Api
                     'description' => $description ?: $share->description,
                 );
                 if ($share->update($data)) {
-                    $response = Subsonic_XML_Data::createSuccessResponse();
+                    $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'updateshare');
                 } else {
-                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'updateshare');
                 }
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'updateshare');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'updateshare');
         }
 
         self::apiOutput($input, $response);
@@ -1513,12 +1529,12 @@ class Subsonic_Api
                 if ($shareRole) {
                     Preference::update('share', $user_id, 1);
                 }
-                $response = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'createuser');
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'createuser');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'createuser');
         }
 
         self::apiOutput($input, $response);
@@ -1577,12 +1593,12 @@ class Subsonic_Api
                 if ((int) $maxbitrate > 0) {
                     Preference::update('transcode_bitrate', $user_id, $maxbitrate);
                 }
-                $response = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'updateuser');
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'updateuser');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'updateuser');
         }
 
         self::apiOutput($input, $response);
@@ -1600,12 +1616,12 @@ class Subsonic_Api
             $user = User::get_from_username($username);
             if ($user->id) {
                 $user->delete();
-                $response = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'deleteuser');
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'deleteuser');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'deleteuser');
         }
 
         self::apiOutput($input, $response);
@@ -1626,12 +1642,12 @@ class Subsonic_Api
             $user = User::get_from_username($username);
             if ($user->id) {
                 $user->update_password($password);
-                $response = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'changepassword');
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'changepassword');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'changepassword');
         }
         self::apiOutput($input, $response);
     }
@@ -1648,7 +1664,7 @@ class Subsonic_Api
         $id     = $input['id'];
         $gain   = $input['gain'];
 
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'jukeboxcontrol');
         debug_event('subsonic_api.class', 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
 
@@ -1673,7 +1689,7 @@ class Subsonic_Api
                     } elseif (isset($input['offset'])) {
                         debug_event('subsonic_api.class', 'Skip with offset is not supported on JukeboxControl.', 5);
                     } else {
-                        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+                        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM, '', $input['v'], 'jukeboxcontrol');
                     }
                     break;
                 case 'set':
@@ -1709,7 +1725,7 @@ class Subsonic_Api
                     if (isset($input['index'])) {
                         $ret = $localplay->delete_track($input['index']);
                     } else {
-                        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+                        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM, '', $input['v'], 'jukeboxcontrol');
                     }
                     break;
                 case 'shuffle':
@@ -1721,7 +1737,7 @@ class Subsonic_Api
             }
 
             if ($ret) {
-                $response = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'jukeboxcontrol');
                 if ($action == 'get') {
                     Subsonic_XML_Data::addJukeboxPlaylist($response, $localplay);
                 } else {
@@ -1745,7 +1761,7 @@ class Subsonic_Api
         //$time = $input['time'];
 
         if ($submission === 'false' || $submission === '0') {
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'scrobble');
             self::apiOutput($input, $response);
         } else {
             if (!is_array($id)) {
@@ -1763,7 +1779,7 @@ class Subsonic_Api
                 User::save_mediaplay(Core::get_global('user'), $media);
             }
 
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'scrobble');
             self::apiOutput($input, $response);
         }
     }
@@ -1779,7 +1795,7 @@ class Subsonic_Api
         $title  = $input['title'];
 
         if (!$artist && !$title) {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM, '', $input['v'], 'getlyrics');
         } else {
             $search           = array();
             $search['limit']  = 1;
@@ -1803,7 +1819,7 @@ class Subsonic_Api
             $query = new Search(null, 'song');
             $songs = $query->run($search);
 
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getlyrics');
             if (count($songs) > 0) {
                 Subsonic_XML_Data::addLyrics($response, $artist, $title, $songs[0]);
             }
@@ -1827,10 +1843,10 @@ class Subsonic_Api
             $artist_id = Subsonic_XML_Data::getAmpacheId($id);
             $info      = Recommendation::get_artist_info($artist_id);
             $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
-            $response  = Subsonic_XML_Data::createSuccessResponse();
+            $response  = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getartistinfo');
             Subsonic_XML_Data::addArtistInfo($response, $info, $similars);
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'getartistinfo');
         }
 
         self::apiOutput($input, $response);
@@ -1853,7 +1869,7 @@ class Subsonic_Api
     public static function getsimilarsongs($input)
     {
         if (!AmpConfig::get('show_similar')) {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Show similar must be enabled");
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Show similar must be enabled", $input['v'], 'getsimilarsongs');
             self::apiOutput($input, $response);
 
             return;
@@ -1889,9 +1905,9 @@ class Subsonic_Api
         }
 
         if (count($songs) == 0) {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'getsimilarsongs');
         } else {
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getsimilarsongs');
             Subsonic_XML_Data::addSimilarSongs($response, $songs);
         }
 
@@ -1921,18 +1937,18 @@ class Subsonic_Api
             if ($id) {
                 $podcast = new Podcast(Subsonic_XML_Data::getAmpacheId($id));
                 if ($podcast->id) {
-                    $response = Subsonic_XML_Data::createSuccessResponse();
+                    $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getpodcasts');
                     Subsonic_XML_Data::addPodcasts($response, array($podcast), $includeEpisodes);
                 } else {
-                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'getpodcasts');
                 }
             } else {
                 $podcasts = Catalog::get_podcasts();
-                $response = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getpodcasts');
                 Subsonic_XML_Data::addPodcasts($response, $podcasts, $includeEpisodes);
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'getpodcasts');
         }
         self::apiOutput($input, $response);
     }
@@ -1947,11 +1963,11 @@ class Subsonic_Api
         //$count = $input['count'] ?: 20; // Seems to be useless code
 
         if (AmpConfig::get('podcast')) {
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getnewestpodcasts');
             $episodes = Catalog::get_newest_podcasts(null);
             Subsonic_XML_Data::addNewestPodcastEpisodes($response, $episodes);
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'getnewestpodcasts');
         }
         self::apiOutput($input, $response);
     }
@@ -1968,9 +1984,9 @@ class Subsonic_Api
             foreach ($podcasts as $podcast) {
                 $podcast->sync_episodes(true);
             }
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'refreshpodcasts');
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'refreshpodcasts');
         }
         self::apiOutput($input, $response);
     }
@@ -1991,15 +2007,15 @@ class Subsonic_Api
                 $data['feed']    = $url;
                 $data['catalog'] = $catalogs[0];
                 if (Podcast::create($data)) {
-                    $response = Subsonic_XML_Data::createSuccessResponse();
+                    $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'createpodcastchannel');
                 } else {
-                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC);
+                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, '', $input['v'], 'createpodcastchannel');
                 }
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'createpodcastchannel');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'createpodcastchannel');
         }
         self::apiOutput($input, $response);
     }
@@ -2017,15 +2033,15 @@ class Subsonic_Api
             $podcast = new Podcast(Subsonic_XML_Data::getAmpacheId($id));
             if ($podcast->id) {
                 if ($podcast->remove()) {
-                    $response = Subsonic_XML_Data::createSuccessResponse();
+                    $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'deletepodcastchannel');
                 } else {
-                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC);
+                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, '', $input['v'], 'deletepodcastchannel');
                 }
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'deletepodcastchannel');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'deletepodcastchannel');
         }
         self::apiOutput($input, $response);
     }
@@ -2043,15 +2059,15 @@ class Subsonic_Api
             $episode = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($id));
             if ($episode->id !== null) {
                 if ($episode->remove()) {
-                    $response = Subsonic_XML_Data::createSuccessResponse();
+                    $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'deletepodcastepisode');
                 } else {
-                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC);
+                    $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_GENERIC, '', $input['v'], 'deletepodcastepisode');
                 }
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'deletepodcastepisode');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'deletepodcastepisode');
         }
         self::apiOutput($input, $response);
     }
@@ -2069,12 +2085,12 @@ class Subsonic_Api
             $episode = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($id));
             if ($episode->id) {
                 $episode->gather();
-                $response = Subsonic_XML_Data::createSuccessResponse();
+                $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'downloadpodcastepisode');
             } else {
-                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+                $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'downloadpodcastepisode');
             }
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', $input['v'], 'downloadpodcastepisode');
         }
         self::apiOutput($input, $response);
     }
@@ -2087,7 +2103,7 @@ class Subsonic_Api
      */
     public static function getbookmarks($input)
     {
-        $response  = Subsonic_XML_Data::createSuccessResponse();
+        $response  = Subsonic_XML_Data::createSuccessResponse($input['v'], 'getbookmarks');
         $bookmarks = Bookmark::get_bookmarks();
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
         self::apiOutput($input, $response);
@@ -2118,9 +2134,9 @@ class Subsonic_Api
                     'position' => $position
                 ));
             }
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'createbookmark');
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'createbookmark');
         }
         self::apiOutput($input, $response);
     }
@@ -2139,9 +2155,9 @@ class Subsonic_Api
         $bookmark = new Bookmark(Subsonic_XML_Data::getAmpacheId($id), $type);
         if ($bookmark->id) {
             $bookmark->remove();
-            $response = Subsonic_XML_Data::createSuccessResponse();
+            $response = Subsonic_XML_Data::createSuccessResponse($input['v'], 'deletebookmark');
         } else {
-            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'deletebookmark');
         }
         self::apiOutput($input, $response);
     }
@@ -2155,7 +2171,7 @@ class Subsonic_Api
      */
     public static function getchatmessages($input)
     {
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'getchatmessages');
         self::apiOutput($input, $response);
     }
 
@@ -2167,7 +2183,7 @@ class Subsonic_Api
      */
     public static function addchatmessages($input)
     {
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'addchatmessages');
         self::apiOutput($input, $response);
     }
 
@@ -2179,7 +2195,7 @@ class Subsonic_Api
      */
     public static function getplayqueue($input)
     {
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'getplayqueue');
         self::apiOutput($input, $response);
     }
 
@@ -2191,7 +2207,7 @@ class Subsonic_Api
      */
     public static function saveplayqueue($input)
     {
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND);
+        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', $input['v'], 'saveplayqueue');
         self::apiOutput($input, $response);
     }
 }

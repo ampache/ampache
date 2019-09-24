@@ -49,6 +49,7 @@ class Subsonic_XML_Data
     const AMPACHEID_VIDEO     = 500000000;
     const AMPACHEID_PODCAST   = 600000000;
     const AMPACHEID_PODCASTEP = 700000000;
+    const AMPACHEID_PLAYLIST  = 800000000;
 
     public static $enable_json_checks = false;
 
@@ -114,6 +115,14 @@ class Subsonic_XML_Data
         return $episodeid + self::AMPACHEID_PODCASTEP;
     }
 
+    /**
+     * @param integer $plistid
+     */
+    public static function getPlaylistId($plistid)
+    {
+        return $plistid + self::AMPACHEID_PLAYLIST;
+    }
+
     private static function cleanId($objectid)
     {
         // Remove all al-, ar-, ... prefixs
@@ -174,7 +183,12 @@ class Subsonic_XML_Data
 
     public static function isPodcastEp($episodeid)
     {
-        return (self::cleanId($episodeid) >= self::AMPACHEID_PODCASTEP);
+        return (self::cleanId($episodeid) >= self::AMPACHEID_PODCASTEP && $episodeid < self::AMPACHEID_PLAYLIST);
+    }
+
+    public static function isPlaylist($plistid)
+    {
+        return (self::cleanId($plistid) >= self::AMPACHEID_PLAYLIST);
     }
 
     public static function getAmpacheType($objectid)
@@ -193,26 +207,31 @@ class Subsonic_XML_Data
             return "podcast";
         } elseif (self::isPodcastEp($objectid)) {
             return "podcast_episode";
+        } elseif (self::isPlaylist($objectid)) {
+            return "playlist";
         }
 
         return "";
     }
 
-    public static function createFailedResponse($version = '')
+    public static function createFailedResponse($version = '', $function = '')
     {
+        if (empty($version)) {
+            $version = self::API_VERSION;
+        }
         $response = self::createResponse($version, 'failed');
-        debug_event('subsonic_xml_data.class', 'API auth failure ' . $version, 3);
+        debug_event('subsonic_xml_data.class', 'API fail in function ' . $function . '-' . $version, 3);
 
         return $response;
     }
 
-    public static function createSuccessResponse($version = '')
+    public static function createSuccessResponse($version = '', $function = '')
     {
         if ($version === '') {
             $version = self::API_VERSION;
         }
         $response = self::createResponse($version);
-        debug_event('subsonic_xml_data.class', 'API auth success ' . $version, 5);
+        debug_event('subsonic_xml_data.class', 'API success in function ' . $function . '-' . $version, 5);
 
         return $response;
     }
@@ -231,12 +250,12 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createError($code, $message = '', $version = '')
+    public static function createError($code, $message = '', $version = '', $function = '')
     {
         if (empty($version)) {
             $version = self::API_VERSION;
         }
-        $response = self::createFailedResponse($version);
+        $response = self::createFailedResponse($version, $function);
         self::setError($response, $code, $message);
 
         return $response;
@@ -826,7 +845,7 @@ class Subsonic_XML_Data
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        $xplaylist->addAttribute('id', (string) $playlist->id);
+        $xplaylist->addAttribute('id', (string) self::getPlaylistId($playlist->id));
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', $user->username);

@@ -1842,14 +1842,16 @@ class Song extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false)
+    public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = false)
     {
         $media = new $object_type($object_id);
         if (!$media->id) {
             return '';
         }
 
-        $uid  = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
+        if (!$uid) {
+            $uid  = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
+        }
         $type = $media->type;
 
         // Checking if the media is gonna be transcoded into another type
@@ -1890,9 +1892,9 @@ class Song extends database_object implements media, library_item
      * @param string $player
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = -1)
     {
-        return self::generic_play_url('song', $oid, $additional_params, $player, $local);
+        return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid);
     }
 
     /**

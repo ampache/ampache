@@ -384,9 +384,9 @@ class Access
     }
 
     /**
-     * check_access
+     * check
      *
-     * This is the global 'has_access' function.(t can check for any 'type'
+     * This is the global 'has_access' function. it can check for any 'type'
      * of object.
      *
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is

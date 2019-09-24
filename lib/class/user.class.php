@@ -282,16 +282,36 @@ class User extends database_object
         $user_id   = null;
         $apikey    = trim($apikey);
         if (!empty($apikey)) {
+            // check for legacy unencrypted apikey
             $sql        = "SELECT `id` FROM `user` WHERE `apikey` = ?";
             $db_results = Dba::read($sql, array($apikey));
             $results    = Dba::fetch_assoc($db_results);
 
             if ($results['id']) {
-                $user_id = new User($results['id']);
+                return new User($results['id']);
+            }
+            // check for api sessions
+            $sql        = "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND type = 'api'";
+            $db_results = Dba::read($sql, array($apikey, time()));
+            $results    = Dba::fetch_assoc($db_results);
+
+            if ($results['username']) {
+                return new User($results['username']);
+            }
+            // check for sha256 hashed apikey fro client
+            // https://github.com/ampache/ampache/wiki/XML-API
+            $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
+            $db_results = Dba::read($sql);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $key        = hash('sha256', $row['apikey']);
+                $passphrase = hash('sha256', $row['username'] . $key);
+                if ($passphrase == $apikey) {
+                    return new User($row['id']);
+                }
             }
         }
 
-        return $user_id;
+        return null;
     } // get_from_apikey
 
     /**
@@ -541,9 +561,9 @@ class User extends database_object
         $db_results = Dba::read($sql);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            $ip = $row['ip'] ? $row['ip'] : null;
+            $userip = $row['ip'] ? $row['ip'] : null;
 
-            return $ip;
+            return $userip;
         }
 
         return false;
@@ -962,11 +982,13 @@ class User extends database_object
      * inserts a new user into Ampache
      * @param null|string $website
      */
-    public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false)
+    public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false, $encrypted = false)
     {
-        $website     = rtrim($website, "/");
-        $password    = hash('sha256', $password);
-        $disabled    = $disabled ? 1 : 0;
+        $website = rtrim($website, "/");
+        if (!$encrypted) {
+            $password = hash('sha256', $password);
+        }
+        $disabled = $disabled ? 1 : 0;
 
         /* Now Insert this new user */
         $sql = "INSERT INTO `user` (`username`, `disabled`, " .
@@ -1018,10 +1040,12 @@ class User extends database_object
      * update_password
      * updates a users password
      */
-    public function update_password($new_password)
+    public function update_password($new_password, $hashed_password = null)
     {
         //$salt             = AmpConfig::get('secret_key');
-        $hashed_password  = hash('sha256', $new_password);
+        if (!$hashed_password) {
+            $hashed_password = hash('sha256', $new_password);
+        }
         $escaped_password = Dba::escape($hashed_password);
 
         debug_event('user.class', 'Updating password', 4);
@@ -1077,9 +1101,9 @@ class User extends database_object
 
             /* Get Users Last ip */
             if (count($data = $this->get_ip_history(1))) {
-                $ip = inet_ntop($data['0']['ip']);
-                if (!empty($ip) && filter_var($ip, FILTER_VALIDATE_IP)) {
-                    $this->ip_history = $ip;
+                $userip = inet_ntop($data['0']['ip']);
+                if (!empty($userip) && filter_var($userip, FILTER_VALIDATE_IP)) {
+                    $this->ip_history = $userip;
                 }
             } else {
                 $this->ip_history = T_('Not Enough Data');

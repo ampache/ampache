@@ -147,7 +147,7 @@ class UI
               $clean = preg_replace($regex, '$1', $string); */
 
             if ($clean) {
-                return $clean;
+                return rtrim($clean);
             }
 
             debug_event('ui.class', 'Charset cleanup failed, something might break', 1);
