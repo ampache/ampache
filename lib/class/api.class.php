@@ -123,6 +123,26 @@ class Api
     } // set_filter
 
     /**
+     * check_parameter
+     *
+     * This function checks the $input actually has the parameter.
+     * Paramete must be an array of required elements as a string
+     *
+     * @param array $input
+     * @param string[] $parameters e.g. array('auth','type')
+     */
+    private static function check_parameter($input, $parameters)
+    {
+        foreach ($parameters as $parameter) {
+            if (empty($input[$parameter])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * handshake
      * MINIMUM_API_VERSION=380001
      *
@@ -271,9 +291,13 @@ class Api
                 $db_results = Dba::read($sql);
                 $vcounts    = Dba::fetch_assoc($db_results);
 
+                // We consider playlists and smartlists to be playlists
                 $sql        = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`";
                 $db_results = Dba::read($sql);
                 $playlist   = Dba::fetch_assoc($db_results);
+                $sql        = "SELECT COUNT(`id`) AS `smartlist` FROM `search` WHERE `limit` > 0";
+                $db_results = Dba::read($sql);
+                $smartlist  = Dba::fetch_assoc($db_results);
 
                 $sql        = "SELECT COUNT(`id`) AS `catalog` FROM `catalog` WHERE `catalog_type`='local'";
                 $db_results = Dba::read($sql);
@@ -288,7 +312,7 @@ class Api
                     'songs' => $song['song'],
                     'albums' => $album['album'],
                     'artists' => $artist['artist'],
-                    'playlists' => $playlist['playlist'],
+                    'playlists' => ($playlist['playlist'] + $smartlist['smartlist']),
                     'videos' => $vcounts['video'],
                     'catalogs' => $catalog['catalog']));
 
@@ -327,6 +351,78 @@ class Api
         ob_end_clean();
         echo XML_Data::keyed_array($xmldata);
     } // ping
+
+    /**
+     * goodbye
+     * MINIMUM_API_VERSION=400001
+     *
+     * Destroy session for auth key.
+     *
+     * @param array $input
+     * $input = array(auth = (string))
+     */
+    public static function goodbye($input)
+    {
+        // Check and see if we should destroy the api session (done if valid session is passed)
+        if (Session::exists('api', $input['auth'])) {
+            $sql = 'DELETE FROM `session` WHERE `id` = ?';
+            $sql .= " and `type` = 'api'";
+            Dba::write($sql, array($input['auth']));
+
+            debug_event('api.class', 'Goodbye Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
+            ob_end_clean();
+            echo XML_Data::success('goodbye: ' . $input['auth']);
+
+            return true;
+        }
+        ob_end_clean();
+        echo XML_Data::error('400', 'failed to session: ' . $input['auth']);
+    } // goodbye
+
+    /**
+     * get_indexes
+     * MINIMUM_API_VERSION=400001
+     *
+     * This takes a collection of inputs and returns ID + name for the object type
+     *
+     * @param array $input
+     * $input = array(type   = (string) 'song'|'album'|'artist'|'playlist'
+     *                filter = (string) //optional
+     *                add
+     *                update
+     *                offset = (integer) //optional
+     *                limit  = (integer) //optional)
+     */
+    public static function get_indexes($input)
+    {
+        if (!self::check_parameter($input, array('type'))) {
+            debug_event('api.class', "'type' required on get_indexes function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type'");
+
+            return false;
+        }
+        self::$browse->reset_filters();
+        self::$browse->set_type($input['type']);
+        self::$browse->set_sort('name', 'ASC');
+
+        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        self::set_filter($method, $input['filter']);
+        self::set_filter('add', $input['add']);
+        self::set_filter('update', $input['update']);
+
+        // Set the offset
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
+
+        if ($input['type'] == 'playlist') {
+            $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists());
+        } else {
+            $objects = self::$browse->get_objects();
+        }
+        // echo out the resulting xml document
+        ob_end_clean();
+        echo XML_Data::indexes($objects, $input['type']);
+    } // get_indexes
 
     /**
      * artists
@@ -760,6 +856,12 @@ class Api
      */
     public static function playlist_edit($input)
     {
+        if (!self::check_parameter($input, array('name', 'type'))) {
+            debug_event('api.class', "'name', 'type' required on playlist_edit function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'name', 'type'");
+
+            return false;
+        }
         $name = $input['name'];
         $type = $input['type'];
         ob_end_clean();
@@ -773,7 +875,7 @@ class Api
                 "pl_type" => $type,
             ];
             $playlist->update($array);
-            echo XML_Data::single_string('success');
+            echo XML_Data::success('playlist changes saved');
         }
     } // playlist_edit
 
@@ -793,7 +895,7 @@ class Api
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {
             $playlist->delete();
-            echo XML_Data::single_string('success');
+            echo XML_Data::success('playlist deleted');
         }
     } // playlist_delete
 
@@ -814,7 +916,7 @@ class Api
             echo XML_Data::error('401', T_('Access denied to this playlist.'));
         } else {
             $playlist->add_songs(array($song), true);
-            echo XML_Data::single_string('success');
+            echo XML_Data::success('song added to playlist');
         }
     } // playlist_add_song
 
@@ -842,7 +944,7 @@ class Api
         } else {
             $playlist->delete_track_number($track);
             $playlist->regenerate_track_numbers();
-            echo XML_Data::single_string('success');
+            echo XML_Data::success('song removed from playlist');
         }
     } // playlist_remove_song
 
@@ -1046,7 +1148,7 @@ class Api
      *
      * @param array $input
      * $input = array(type     = (string) 'song'|'album'|'artist'
-     *                filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'|null
+     *                filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'|null //optional
      *                offset   = (integer) //optional
      *                limit    = (integer) //optional
      *                user_id  = (integer) //optional
@@ -1054,6 +1156,12 @@ class Api
      */
     public static function stats($input)
     {
+        if (!self::check_parameter($input, array('type'))) {
+            debug_event('api.class', "'type' required on stats function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type'");
+
+            return false;
+        }
         // moved type to filter and allowed multipe type selection
         $type   = $input['type'];
         $filter = $input['filter'];
@@ -1143,6 +1251,12 @@ class Api
      */
     public static function user($input)
     {
+        if (!self::check_parameter($input, array('username'))) {
+            debug_event('api.class', "'username' required on user function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
+
+            return false;
+        }
         $username = $input['username'];
         if (!empty($username)) {
             $user = User::get_from_username($username);
@@ -1152,8 +1266,6 @@ class Api
             } else {
                 debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
             }
-        } else {
-            debug_event('api.class', 'Username required on user function call.', 1);
         }
     } // user
 
@@ -1168,6 +1280,12 @@ class Api
     public static function followers($input)
     {
         if (AmpConfig::get('sociable')) {
+            if (!self::check_parameter($input, array('username'))) {
+                debug_event('api.class', "'username' required on followers function call.", 2);
+                echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
+
+                return false;
+            }
             $username = $input['username'];
             if (!empty($username)) {
                 $user = User::get_from_username($username);
@@ -1178,8 +1296,6 @@ class Api
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 }
-            } else {
-                debug_event('api.class', 'Username required on followers function call.', 1);
             }
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
@@ -1197,6 +1313,12 @@ class Api
     public static function following($input)
     {
         if (AmpConfig::get('sociable')) {
+            if (!self::check_parameter($input, array('username'))) {
+                debug_event('api.class', "'username' required on following function call.", 2);
+                echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
+
+                return false;
+            }
             $username = $input['username'];
             if (!empty($username)) {
                 $user = User::get_from_username($username);
@@ -1208,8 +1330,6 @@ class Api
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 }
-            } else {
-                debug_event('api.class', 'Username required on following function call.', 1);
             }
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
@@ -1220,23 +1340,27 @@ class Api
      * toggle_follow
      * MINIMUM_API_VERSION=380001
      *
-     * This follow/unfollow an user
+     * This will follow/unfollow a user
      *
      * @param array $input
      */
     public static function toggle_follow($input)
     {
         if (AmpConfig::get('sociable')) {
+            if (!self::check_parameter($input, array('username'))) {
+                debug_event('api.class', "'username' required on toggle_follow function call.", 2);
+                echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
+
+                return false;
+            }
             $username = $input['username'];
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
-                    Core::get_global('user')->toggle_follow($user->id);
+                    User::get_from_username(Session::username($input['auth']))->toggle_follow($user->id);
                     ob_end_clean();
-                    echo XML_Data::single_string('success');
+                    echo XML_Data::success('follow toggled for: ' . $user->id);
                 }
-            } else {
-                debug_event('api.class', 'Username to toggle required on follow function call.', 1);
             }
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
@@ -1282,6 +1406,12 @@ class Api
      */
     public static function rate($input)
     {
+        if (!self::check_parameter($input, array('type', 'id', 'rating'))) {
+            debug_event('api.class', "'type', 'id', 'rating' required on rate function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type', 'id', 'rating'");
+
+            return false;
+        }
         ob_end_clean();
         $type      = $input['type'];
         $object_id = $input['id'];
@@ -1296,7 +1426,7 @@ class Api
             } else {
                 $rate = new Rating($object_id, $type);
                 $rate->set_rating($rating);
-                echo XML_Data::single_string('success');
+                echo XML_Data::success('rating set ' . $object_id);
             }
         }
     } // rate
@@ -1316,6 +1446,12 @@ class Api
      */
     public static function flag($input)
     {
+        if (!self::check_parameter($input, array('type', 'id', 'flag'))) {
+            debug_event('api.class', "'type', 'id', 'flag' required on flag function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type', 'id', 'flag'");
+
+            return false;
+        }
         ob_end_clean();
         $type      = $input['type'];
         $object_id = $input['id'];
@@ -1335,9 +1471,9 @@ class Api
             } else {
                 $userflag = new Userflag($object_id, $type);
                 if ($userflag->set_flag($flag, $user_id)) {
-                    echo XML_Data::single_string('success');
+                    echo XML_Data::success('flag set ' . $object_id);
                 } else {
-                    echo XML_Data::single_string('failure');
+                    echo XML_Data::error('400', 'flag failed ' . $object_id);
                 }
             }
         }
@@ -1357,6 +1493,12 @@ class Api
      */
     public static function record_play($input)
     {
+        if (!self::check_parameter($input, array('id', 'user'))) {
+            debug_event('api.class', "'id', 'user' required on record_play function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'user'");
+
+            return false;
+        }
         ob_end_clean();
         $object_id = $input['id'];
         $user_id   = (int) $input['user'];
@@ -1386,7 +1528,7 @@ class Api
                 echo XML_Data::error('404', T_('Library item not found.'));
             } elseif ($valid) {
                 $user->update_stats($type, $object_id, $agent);
-                echo XML_Data::single_string('success');
+                echo XML_Data::success('successfully recorded play: ' . $object_id);
             }
         }
     } // record_play
@@ -1410,15 +1552,21 @@ class Api
      */
     public static function scrobble($input)
     {
+        if (!self::check_parameter($input, array('song', 'artist', 'album'))) {
+            debug_event('api.class', "'song', 'artist', 'album' required on scrobble function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'song', 'artist', 'album'");
+
+            return false;
+        }
         ob_end_clean();
-        $song_name   = scrub_in($input['song']);
-        $artist_name = scrub_in($input['artist']);
-        $album_name  = scrub_in($input['album']);
-        $song_mbid   = scrub_in($input['song_mbid']); //optional
-        $artist_mbid = scrub_in($input['artist_mbid']); //optional
-        $album_mbid  = scrub_in($input['album_mbid']); //optional
+        $song_name   = (string) scrub_in($input['song']);
+        $artist_name = (string) scrub_in($input['artist']);
+        $album_name  = (string) scrub_in($input['album']);
+        $song_mbid   = (string) scrub_in($input['song_mbid']); //optional
+        $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
+        $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
         $date        = scrub_in($input['date']); //optional
-        $user_id     = Core::get_global('user')->id;
+        $user_id     = User::get_from_username(Session::username($input['auth']))->id;
         $user        = new User($user_id);
         $valid       = in_array($user->id, User::get_valid_users());
 
@@ -1457,7 +1605,7 @@ class Api
                 echo XML_Data::error('404', T_('Library item not found.'));
             } elseif ($valid) {
                 $user->update_stats('song', $scrobble_id, $agent, array(), false, $date);
-                echo XML_Data::single_string('successfully scrobbled: ' . $scrobble_id);
+                echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
             }
         }
     } // scrobble
@@ -1476,6 +1624,12 @@ class Api
     public static function timeline($input)
     {
         if (AmpConfig::get('sociable')) {
+            if (!self::check_parameter($input, array('username'))) {
+                debug_event('api.class', "'username' required on timeline function call.", 2);
+                echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
+
+                return false;
+            }
             $username = $input['username'];
             $limit    = (int) ($input['limit']);
             $since    = (int) ($input['since']);
@@ -1489,8 +1643,6 @@ class Api
                         echo XML_Data::timeline($activities);
                     }
                 }
-            } else {
-                debug_event('api.class', 'Username required on timeline function call.', 1);
             }
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
@@ -1512,7 +1664,7 @@ class Api
         if (AmpConfig::get('sociable')) {
             $limit = (int) ($input['limit']);
             $since = (int) ($input['since']);
-            $user  = Core::get_global('user')->id;
+            $user  = User::get_from_username(Session::username($input['auth']))->id;
 
             if ($user > 0) {
                 $activities = Useractivity::get_friends_activities($user, $limit, $since);
@@ -1536,13 +1688,350 @@ class Api
      */
     public static function catalog_action($input)
     {
+        if (!self::check_parameter($input, array('catalog'))) {
+            debug_event('api.class', "'catalog' required on catalog_action function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'catalog'");
+
+            return false;
+        }
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog && ((string) $input['task'] === 'add_to_catalog' || (string) $input['task'] === 'clean_catalog')) {
             $catalog->process_action($input['task'], (int) $input['catalog']);
-            echo XML_Data::single_string('successfull started: ' . (string) $input['task']);
-        } else {
-            echo XML_Data::error('401', T_('Bad information in the call to catalog_action.'));
+            echo XML_Data::success('successfully started: ' . (string) $input['task']);
         }
+    }
+
+    /**
+     * stream
+     * MINIMUM_API_VERSION=400001
+     *
+     * Streams a given media file.
+     * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
+     *
+     * @param array $input
+     * $input = array(id      = (string) $song_id / $podcast_episode_id
+     *                type    = (string) 'song'|'podcast'
+     *                bitrate = (int) max bitrate for transcoding
+     *                format  = (string) 'mp3'|'ogg', etc
+     *                offset  = (int) time offset in seconds
+     *                length  = (string) 'true'|'false'
+     */
+    public static function stream($input)
+    {
+        if (!self::check_parameter($input, array('id', 'type'))) {
+            debug_event('api.class', "'id', 'type' required on stream function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'type'");
+
+            return false;
+        }
+        $fileid  = $input['id'];
+        $type    = $input['type'];
+        $user_id = User::get_from_username(Session::username($input['auth']))->id;
+
+        $maxBitRate    = $input['bitrate'];
+        $format        = $input['format']; // mp3, flv or raw
+        $timeOffset    = $input['offset'];
+        $contentLength = $input['length']; // Force content-length guessing if transcode
+
+        $params = '&client=api';
+        if ($contentLength == 'true') {
+            $params .= '&content_length=required';
+        }
+        if ($format && $format != "raw") {
+            $params .= '&transcode_to=' . $format;
+        }
+        if ($maxBitRate) {
+            $params .= '&bitrate=' . $maxBitRate;
+        }
+        if ($timeOffset) {
+            $params .= '&frame=' . $timeOffset;
+        }
+
+        $url = '';
+        if ($type == 'song') {
+            $url = Song::play_url($fileid, $params, 'api', function_exists('curl_version'), $user_id);
+        }
+        if ($type == 'podcast') {
+            $url = Podcast_Episode::play_url($fileid, $params, 'api', function_exists('curl_version'), $user_id);
+        }
+        if (!empty($url)) {
+            header("Location: " . str_replace(':443/play', '/play', $url));
+
+            return true;
+        }
+        echo XML_Data::error('400', 'failed to create: ' . $url);
+    }
+
+    /**
+     * download
+     * MINIMUM_API_VERSION=400001
+     *
+     * Downloads a given media file.
+     *
+     * @param array $input
+     * $input = array(id   = (string) $song_id / $podcast_episode_id
+     *                type = (string) 'song'|'podcast')
+     */
+    public static function download($input)
+    {
+        if (!self::check_parameter($input, array('id', 'type'))) {
+            debug_event('api.class', "'id', 'type' required on download function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'type'");
+
+            return false;
+        }
+        $fileid  = $input['id'];
+        $type    = $input['type'];
+        $user_id = User::get_from_username(Session::username($input['auth']))->id;
+
+        $url    = '';
+        $params = '&action=download' . '&client=api' . '&noscrobble=1';
+        if ($type == 'song') {
+            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
+        }
+        if ($type == 'podcast') {
+            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
+        }
+        if (!empty($url)) {
+            header("Location: " . str_replace(':443/play', '/play', $url));
+
+            return true;
+        }
+        echo XML_Data::error('400', 'failed to create: ' . $url);
+    }
+
+    /**
+     * get_art
+     * MINIMUM_API_VERSION=400001
+     *
+     * Get an art image.
+     *
+     * @param array $input
+     * $input = array(id   = (string) $object_id
+     *                type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast')
+     */
+    public static function get_art($input)
+    {
+        if (!self::check_parameter($input, array('id', 'type'))) {
+            debug_event('api.class', "'id', 'type' required on get_art function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'type'");
+
+            return false;
+        }
+        $object_id = $input['id'];
+        $type      = $input['type'];
+
+        $size = $input['size'];
+
+        $art = null;
+        if ($type == 'artist') {
+            $art = new Art($object_id, "artist");
+        } elseif ($type == 'album') {
+            $art = new Art($object_id, "album");
+        } elseif ($type == 'song') {
+            $art = new Art($object_id, "song");
+            if ($art != null && $art->id == null) {
+                // in most cases the song doesn't have a picture, but the album where it belongs to has
+                // if this is the case, we take the album art
+                $song = new Song(Subsonic_XML_Data::getAmpacheId($object_id));
+                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
+            }
+        } elseif ($type == 'podcast') {
+            $art = new Art($object_id, "podcast");
+        } elseif ($type == 'search') {
+            $smartlist = new Search($object_id);
+            $listitems = $smartlist->get_items();
+            $item      = $listitems[array_rand($listitems)];
+            $art       = new Art($item['object_id'], $item['object_type']);
+            if ($art != null && $art->id == null) {
+                $song = new Song($item['object_id']);
+                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
+            }
+        } elseif ($type == 'playlist') {
+            $playlist  = new Playlist($object_id);
+            $listitems = $playlist->get_items();
+            $item      = $listitems[array_rand($listitems)];
+            $art       = new Art($item['object_id'], $item['object_type']);
+            if ($art != null && $art->id == null) {
+                $song = new Song($item['object_id']);
+                $art  = new Art($song->album, "album");
+            }
+        }
+
+        header("Access-Control-Allow-Origin: *");
+        if ($art != null) {
+            if ($art->has_db_info() && $size && AmpConfig::get('resize_images')) {
+                $dim           = array();
+                $dim['width']  = $size;
+                $dim['height'] = $size;
+                $thumb         = $art->get_thumb($dim);
+                if (!empty($thumb)) {
+                    header('Content-type: ' . $thumb['thumb_mime']);
+                    header('Content-Length: ' . strlen($thumb['thumb']));
+                    echo $thumb['thumb'];
+
+                    return;
+                }
+            }
+
+            header('Content-type: ' . $art->raw_mime);
+            header('Content-Length: ' . strlen($art->raw));
+            echo $art->raw;
+        }
+    }
+
+    /**
+     * user_create
+     * MINIMUM_API_VERSION=400001
+     *
+     * Create a new user.
+     * Requires the username, password and email.
+     *
+     * @param array $input
+     * $input = array(username = (string) $username
+     *                fullname = (string) $fullname // optional
+     *                password = (string) hash('sha256', $password))
+     *                email    = (string) $email)
+     */
+    public static function user_create($input)
+    {
+        if (!self::check_parameter($input, array('username', 'password', 'email'))) {
+            debug_event('api.class', "'username', 'password', 'email' required on user_create function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username', 'password', 'email'");
+
+            return false;
+        }
+        $username = $input['username'];
+        $fullname = $input['fullname'] ?: $username;
+        $email    = $input['email'];
+        $password = $input['password'];
+        $disable  = ($input['disable'] == 'true');
+
+        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
+            $access  = 25;
+            $user_id = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
+            if ($user_id > 0) {
+                echo XML_Data::success('successfully created: ' . $username);
+
+                return true;
+            }
+        }
+        echo XML_Data::error('400', 'failed to create: ' . $username);
+    }
+
+    /**
+     * user_update
+     * MINIMUM_API_VERSION=400001
+     *
+     * Update an existing user.
+     * Takes the username with optional parameters.
+     *
+     * @param array $input
+     * $input = array(username   = (string) $username
+     *                password   = (string) hash('sha256', $password)) // optional
+     *                fullname   = (string) $fullname // optional
+     *                email      = (string) $email // optional
+     *                website    = (string) $website // optional
+     *                state      = (string) $state // optional
+     *                city       = (string) $city // optional
+     *                disable    = (string) 'true'|'false' // optional
+     *                maxbitrate = (int) $maxbitrate // optional
+     */
+    public static function user_update($input)
+    {
+        if (!self::check_parameter($input, array('username'))) {
+            debug_event('api.class', "'username' required on user_update function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
+
+            return false;
+        }
+        $username   = $input['username'];
+        $fullname   = $input['fullname'];
+        $email      = $input['email'];
+        $website    = $input['website'];
+        $password   = $input['password'];
+        $state      = $input['state'];
+        $city       = $input['city'];
+        $disable    = ($input['disable'] == 'true');
+        $maxbitrate = $input['maxbitrate'];
+
+        // if you didn't send anything to update don't do anything
+        if (!$fullname || !$email || !$website || !$password || !$state || !$city || !$disable || !$maxbitrate) {
+            echo XML_Data::error('401', T_('Nothing to update.'));
+
+            return false;
+        }
+        // identify the user to modify
+        $user_id = User::get_from_username($username);
+        $user    = new User($user_id);
+
+        if ($password && Access::check('interface', 100, $user_id)) {
+            echo XML_Data::error('400', 'Do not update passwords for admin users! ' . $username);
+
+            return false;
+        }
+
+        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id) && $user_id > 0) {
+            if ($password) {
+                $user->update_password('', $password);
+            }
+            if ($fullname) {
+                $user->update_fullname($fullname);
+            }
+            if (Mailer::validate_address($email)) {
+                $user->update_email($email);
+            }
+            if ($website) {
+                $user->update_website($website);
+            }
+            if ($state) {
+                $user->update_state($state);
+            }
+            if ($city) {
+                $user->update_city($city);
+            }
+            if ($disable) {
+                $user->disable();
+            } else {
+                $user->enable();
+            }
+            if ((int) $maxbitrate > 0) {
+                Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+            }
+            echo XML_Data::success('successfully updated: ' . $username);
+
+            return true;
+        }
+        echo XML_Data::error('400', 'failed to update: ' . $username);
+    }
+
+    /**
+     * user_delete
+     * MINIMUM_API_VERSION=400001
+     *
+     * Delete an existing user.
+     * Takes the username in parameter.
+     */
+    public static function user_delete($input)
+    {
+        if (!self::check_parameter($input, array('username'))) {
+            debug_event('api.class', "'username' required on user_delete function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
+
+            return false;
+        }
+        $username = $input['username'];
+        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
+            $user = User::get_from_username($username);
+            // don't delete yourself or admins
+            if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
+                $user->delete();
+                echo XML_Data::success('successfully deleted: ' . $username);
+
+                return true;
+            }
+        }
+        echo XML_Data::error('400', 'failed to delete: ' . $username);
     }
 } // API class

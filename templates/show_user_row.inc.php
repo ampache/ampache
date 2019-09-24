@@ -38,7 +38,7 @@
     <?php
         if (Access::check('interface', 50)) {
             ?>
-            <td class="cel_activity"><?php echo $libitem->f_useage; ?></td>
+            <td class="cel_activity"><?php echo $libitem->f_usage; ?></td>
         <?php
             if (AmpConfig::get('track_user_ip')) {
                 ?>

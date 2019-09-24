@@ -119,28 +119,22 @@ class XML_Data
     // error
 
     /**
-     * single_string
+     * success
      *
-     * This takes two values, first the key second the string
+     * This generates a standard XML Success message
+     * nothing fancy here...
      *
-     * @param    string    $key    (description here...)
-     * @param    string    $string    xml data
-     * @return    string    return xml
+     * @param    string    $string    success message
+     * @return    string    return success message xml
      */
-    public static function single_string($key, $string = '')
+    public static function success($string)
     {
-        $final = self::_header();
-        if (!empty($string)) {
-            $final .= "\t<$key><![CDATA[$string]]></$key>";
-        } else {
-            $final .= "\t<$key />";
-        }
-        $final .= self::_footer();
+        $xml_string = "\t<success code=\"1\"><![CDATA[$string]]></success>";
 
-        return $final;
+        return self::output_xml($xml_string);
     }
-    // single_string
-
+    // success
+ 
     /**
      * header
      *
@@ -342,6 +336,103 @@ class XML_Data
         return $string;
     }
     // keyed_array
+
+    /**
+     * indexes
+     *
+     * This takes an array of artists and then returns a pretty xml document with the information
+     * we want
+     *
+     * @param    array    $objects     (description here...)
+     * @param    string   $object_type 'artist'|'album'|'song'|'playlist'
+     * @param    bool     $full_xml    whether to return a full XML document or just the node.
+     * @return   string   return xml
+     */
+    public static function indexes($objects, $object_type, $full_xml = true)
+    {
+        $string = "<total_count>" . count($objects) . "</total_count>\n";
+
+        if (count($objects) > self::$limit || self::$offset > 0) {
+            if (null !== self::$limit) {
+                $objects = array_splice($objects, self::$offset, self::$limit);
+            } else {
+                $objects = array_splice($objects, self::$offset);
+            }
+        }
+        
+        foreach ($objects as $object_id) {
+            // 'artist'|'album'|'song'|'playlist'
+            if ($object_type == 'artist') {
+                $artist = new Artist($object_id);
+                $artist->format();
+                $albums = $artist->get_albums(null, true);
+                $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                        "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
+                foreach ($albums as $album_id) {
+                    if ($album_id) {
+                        $album = new Album($album_id[0]);
+                        $album->format();
+                        $string .= "\t\t<album id=\"" . $album_id[0] .
+                                '"><![CDATA[' . $album->f_name .
+                                "]]></album>\n";
+                    }
+                }
+                $string .= "</$object_type>\n";
+            }
+            if ($object_type == 'album') {
+                $album = new Album($object_id);
+                $album->format();
+                $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                        "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
+                        "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
+                        "</$object_type>\n";
+            }
+            if ($object_type == 'song') {
+                $song = new Song($object_id);
+                $song->format();
+                $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                        "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
+                        "\t<name><![CDATA[" . $song->f_title . "]]></name>\n" .
+                        "\t\t<artist id=\"" . $song->artist .
+                        '"><![CDATA[' . $song->get_artist_name() .
+                        "]]></artist>\n" .
+                        "\t\t<album id=\"" . $song->album .
+                        '"><![CDATA[' . $song->get_album_name() .
+                        "]]></album>\n" .
+                        "</$object_type>\n";
+            }
+            if ($object_type == 'playlist') {
+                if (str_replace('smart_', '', (string) $object_id) === (string) $object_id) {
+                    $playlist     = new Playlist($object_id);
+                    $playlist->format();
+
+                    $playlist_name  = $playlist->name;
+                    $playitem_total = $playlist->get_media_count('song');
+                } else {
+                    $playlist     = new Search(str_replace('smart_', '', (string) $object_id));
+                    $playlist->format();
+
+                    $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
+                    $playitem_total = $playlist->limit;
+                }
+                // don't allow unlimited smartlists or empty playlists into xml
+                if ((int) $playitem_total > 0) {
+                    $songs = $playlist->get_items();
+                    $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                            "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
+                    foreach ($songs as $song_id) {
+                        if ($song_id[object_type] == 'song') {
+                            $string .= "\t\t<playlisttrack>" . $song_id['object_id'] . "</playlisttrack>\n";
+                        }
+                    }
+                    $string .= "</$object_type>\n";
+                }
+            }
+        } // end foreach objects
+
+        return self::output_xml($string, $full_xml);
+    }
+    // indexes
 
     /**
      * tags
