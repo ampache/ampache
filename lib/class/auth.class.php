@@ -500,4 +500,4 @@ class Auth
 
         return array();
     }
-}//end of auth class
+} // end of auth class

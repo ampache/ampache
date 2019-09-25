@@ -2637,6 +2637,22 @@ abstract class Catalog extends database_object
                 debug_event('catalog.class', 'migrate ' . $object_type .
                         ' from ' . $old_object_id . ' to ' . $new_object_id . ' USERACTIVITY migration failed!', 2);
             }
+            if (!Recommendation::migrate($object_type, $old_object_id, $new_object_id)) {
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' RECOMMENDATION migration failed!', 2);
+            }
+            if (!Share::migrate($object_type, $old_object_id, $new_object_id)) {
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' SHARE migration failed!', 2);
+            }
+            if (!Shoutbox::migrate($object_type, $old_object_id, $new_object_id)) {
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' SHOUTBOX migration failed!', 2);
+            }
+            if (!Tag::migrate($object_type, $old_object_id, $new_object_id)) {
+                debug_event('catalog.class', 'migrate ' . $object_type .
+                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' TAG_MAP migration failed!', 2);
+            }
             if (!Userflag::migrate($object_type, $old_object_id, $new_object_id)) {
                 debug_event('catalog.class', 'migrate ' . $object_type .
                         ' from ' . $old_object_id . ' to ' . $new_object_id . ' USERFLAG migration failed!', 2);
@@ -2655,4 +2671,4 @@ abstract class Catalog extends database_object
 
         return false;
     }
-}// end of catalog class
+} // end of catalog class
