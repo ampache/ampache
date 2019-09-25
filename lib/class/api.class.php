@@ -1509,7 +1509,7 @@ class Api
                 Democratic::build_vote_cache($democratic->vote_ids);
                 
                 if ($outputFormat == 'json') {
-                    echo JSON_Data::democratic($objects);
+                    echo JSON_Data::democratic($objects, $user->id);
                 } else {  // Defaults to XML
                     echo XML_Data::democratic($objects, $user->id);
                 }
@@ -1876,7 +1876,7 @@ class Api
         //Whatever format the user wants
         $outputFormat = $input['format'];
 
-        if (!Core::is_library_item($type) || !$id) {
+        if (!Core::is_library_item($type) || !$object_id) {
             if ($outputFormat == 'json') {
                 echo JSON_Data::error('401', T_('Wrong library item type.'));
             } else {  // Defaults to XML

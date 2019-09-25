@@ -476,7 +476,7 @@ class JSON_Data
      * @param    array    $object_ids    Object IDs
      * @return    string    return JSON
      */
-    public static function democratic($object_ids=array())
+    public static function democratic($object_ids=array(), $user_id)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
