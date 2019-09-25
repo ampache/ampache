@@ -1574,7 +1574,6 @@ dl.media_details dd {
 #footer {
     bottom: 0;
     margin: 15px 250px 0px 0px;
-    position: fixed;
     right: 0;
     text-align: right;
     width: auto;

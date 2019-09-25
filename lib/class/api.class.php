@@ -376,7 +376,7 @@ class Api
             return true;
         }
         ob_end_clean();
-        echo XML_Data::error('400', 'failed to session: ' . $input['auth']);
+        echo XML_Data::error('400', 'failed to end session: ' . $input['auth']);
     } // goodbye
 
     /**
