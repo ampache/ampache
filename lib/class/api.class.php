@@ -139,7 +139,7 @@ class Api
         $outputFormat = $input['format'];
 
         // Log the attempt
-        debug_event('API', "Destroy Auth Key Attempt, IP:$ip Key:$authKey", 5);
+        debug_event('api.class', 'gogout received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
 
         if (isset($authKey)) {
             if (Session::destroy($authKey)) {
@@ -161,6 +161,7 @@ class Api
             }
         }
     }
+
     /**
      * check_parameter
      *
@@ -934,9 +935,9 @@ class Api
         $outputFormat = $input['format'];
 
         if ($outputFormat == 'json') {
-            echo JSON_Data::songs(array($uid));
+            echo JSON_Data::songs(array($song_id));
         } else { // Defaults to XML
-            echo XML_Data::songs(array($uid));
+            echo XML_Data::songs(array($song_id));
         }
     } // song
 
@@ -1868,9 +1869,9 @@ class Api
             return false;
         }
         ob_end_clean();
-        $type   = $input['type'];
-        $id     = $input['id'];
-        $rating = $input['rating'];
+        $type      = $input['type'];
+        $object_id = $input['id'];
+        $rating    = $input['rating'];
 
         //Whatever format the user wants
         $outputFormat = $input['format'];
@@ -1890,7 +1891,7 @@ class Api
                     echo XML_Data::error('404', T_('Library item not found.'));
                 }
             } else {
-                $rate = new Rating($id, $type);
+                $rate = new Rating($object_id, $type);
                 $rate->set_rating($rating);
                 if ($outputFormat == 'json') {
                     echo JSON_Data::single_string('success');

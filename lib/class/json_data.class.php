@@ -121,7 +121,7 @@ class JSON_Data
      */
     private static function tags_string($tags)
     {
-        $JSON = null;
+        $JSON = array();
 
         if (is_array($tags)) {
             $atags = array();
@@ -141,7 +141,7 @@ class JSON_Data
             }
         }
 
-        return $JSON;
+        return json_encode($JSON, JSON_PRETTY_PRINT);
     } // tags_string
 
 
@@ -210,7 +210,7 @@ class JSON_Data
      * @param    array    $artists    (description here...)
      * @return    string    return JSON
      */
-    public static function artists($artists)
+    public static function artists($artists, $include = [])
     {
         if (count($artists) > self::$limit or self::$offset > 0) {
             $artists = array_splice($artists,self::$offset,self::$limit);
@@ -255,7 +255,7 @@ class JSON_Data
      * @param    array    $albums    (description here...)
      * @return    string    return JSON
      */
-    public static function albums($albums)
+    public static function albums($albums, $include = [])
     {
         if (count($albums) > self::$limit or self::$offset > 0) {
             $albums = array_splice($albums,self::$offset,self::$limit);
@@ -349,7 +349,7 @@ class JSON_Data
      * This returns a JSON document from an array of song ids.
      * (Spiffy isn't it!)
      */
-    public static function songs($songs, $playlist_data='')
+    public static function songs($songs, $playlist_data='', $user_id = false)
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -400,7 +400,7 @@ class JSON_Data
             $ourSong['rate']                  = $song->rate;
             $ourSong['mode']                  = $song->mode;
             $ourSong['mime']                  = $song->mime;
-            $ourSong['url']                   = Song::play_url($song->id, '', 'api');
+            $ourSong['url']                   = Song::play_url($song->id, '', 'api', false, $user_id);
             $ourSong['size']                  = $song->size;
             $ourSong['mbid']                  = $song->mbid;
             $ourSong['album_mbid']            = $song->album_mbid;
@@ -458,7 +458,7 @@ class JSON_Data
                 resolution => $video->f_resolution,
                 size => $video->size,
                 tags => self::tags_string($video->tags),
-                url => Video::play_url($video->id, '', 'api')
+                url => Video::play_url($video->id, '', 'api', false, $user_id)
             );
         } // end foreach
 
@@ -508,7 +508,7 @@ class JSON_Data
                 track => $song->track,
                 time => $song->time,
                 mime => $song->mime,
-                url => Song::play_url($song->id, '', 'api'),
+                url => Song::play_url($song->id, '', 'api', false, $user_id),
                 size => $song->size,
                 art => $art_url,
                 preciserating => $rating->get_user_rating(),
@@ -531,6 +531,7 @@ class JSON_Data
      */
     public static function user(User $user)
     {
+        $JSON = array();
         $user->format();
 
         $JSON['user'] = array(
@@ -608,6 +609,7 @@ class JSON_Data
      */
     public static function timeline($activities)
     {
+        $JSON = array();
         $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss
         foreach ($activities as $aid) {
             $activity = new Useractivity($aid);
