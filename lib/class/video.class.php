@@ -449,9 +449,9 @@ class Video extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
     {
-        return Song::generic_play_url('video', $oid, $additional_params, $player, $local);
+        return Song::generic_play_url('video', $oid, $additional_params, $player, $local, $uid);
     }
 
     /**
