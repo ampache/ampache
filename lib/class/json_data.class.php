@@ -64,7 +64,7 @@ class JSON_Data
      * This sets the limit for any ampache transactions
      *
      * @param    integer    $limit    (description here...)
-     * @return    void
+     * @return    false|null
      */
     public static function set_limit($limit)
     {
@@ -150,6 +150,8 @@ class JSON_Data
      *
      * This returns the formatted 'playlistTrack' string for an JSON document
      *
+     * @param Song $song
+     * @param string $playlist_data
      */
     private static function playlist_song_tracks_string($song, $playlist_data)
     {

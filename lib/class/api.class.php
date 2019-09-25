@@ -129,7 +129,7 @@ class Api
      * This function allows the user to destroy the auth key
      * Takes auth key
      * @param array
-     * @return boolean
+     * @return boolean|null
      */
     public static function logout($input)
     {
