@@ -611,7 +611,7 @@ class JSON_Data
      */
     public static function timeline($activities)
     {
-        $JSON = array();
+        $JSON             = array();
         $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss
         foreach ($activities as $aid) {
             $activity = new Useractivity($aid);
