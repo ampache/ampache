@@ -87,7 +87,6 @@ class Session
             return false;
         }
 
-        // Remove anything and EVERYTHING
         $sql = 'DELETE FROM `session` WHERE `id` = ?';
         Dba::write($sql, array($key));
 
@@ -150,6 +149,7 @@ class Session
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
+            //debug_event('session.class', 'Read session from key ' . $key . ' ' . $results[$column], 3);
             return $results[$column];
         }
 
@@ -191,7 +191,7 @@ class Session
         switch ($data['type']) {
             case 'api':
                 $key = isset($data['apikey'])
-                    ? $data['apikey']
+                    ? md5(((string) $data['apikey'] . (string) time()))
                     : md5(uniqid(rand(), true));
                 break;
             case 'stream':
@@ -306,13 +306,16 @@ class Session
      */
     public static function exists($type, $key)
     {
+        // didn't pass an auth key so don't let them in!
+        if (!$key) {
+            return false;
+        }
         // Switch on the type they pass
         switch ($type) {
             case 'api':
-                return true;
             case 'stream':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
-                    "AND `type` IN ('api', 'stream')";
+                    "AND `type` in ('stream', 'api')";
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
