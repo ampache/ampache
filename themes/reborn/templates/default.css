@@ -174,16 +174,6 @@ div#autoupdate > span {
     padding-bottom: 40px;
 }
 
-#footer {
-    width: auto;
-    z-index: 5;
-    margin: 15px 250px 0px 0px;
-}
-
-.footer-wild {
-    margin-right: 20px !important;
-}
-
 #ajax-loading {
     background-repeat: no-repeat;
     background-position: right;
@@ -1581,7 +1571,16 @@ dl.media_details dd {
         Footer
 ***********************************************/
 #footer {
+    bottom: 0;
+    margin: 15px 250px 0px 0px;
+    right: 0;
     text-align: right;
+    width: auto;
+    z-index: 5;
+}
+
+.footer-wild {
+    margin-right: 20px !important;
 }
 
 #footer a:hover {
@@ -1693,23 +1692,6 @@ a.option-list:hover {
     text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
     text-decoration: none;
     min-width: 100px;
-}
-
-.formValidation {
-    margin: 0;
-    padding: 0;
-    float: right !important;
-}
-
-.formValidation input {
-    border: none;
-    min-width: 150px;
-}
-
-.formValidation a {
-    font-size: 15px;
-    vertical-align: bottom;
-    margin-right: 20px;
 }
 
 .formValidation {
