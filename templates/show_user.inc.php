@@ -90,9 +90,7 @@ if ($client->f_avatar) {
     <?php if (Access::check('interface', '50')) {
     ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
-        <?php echo $client->f_useage; ?>
-    </dd>
+    <dd class="<?php echo $rowparity; ?>"><?php echo $client->f_usage; ?></dd>
     <?php
 } ?>
     <?php $rowparity = UI::flip_class(); ?>
