@@ -474,6 +474,7 @@ class JSON_Data
      * due to the votes and all of that
      *
      * @param    array    $object_ids    Object IDs
+     * @param integer $user_id
      * @return    string    return JSON
      */
     public static function democratic($object_ids=array(), $user_id)
