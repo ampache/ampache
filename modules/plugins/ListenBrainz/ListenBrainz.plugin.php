@@ -147,7 +147,12 @@ class Ampachelistenbrainz
         debug_event('listenbrainz.plugin', 'Submission content: ' . $json, 5);
         $response = $this->post_json_url('/1/submit-listens', $json);
 
-        debug_event('listenbrainz.plugin', 'Submission Successful: ' . $response, 5);
+        if (!strpos($response, "ok")) {
+            debug_event('listenbrainz.plugin', "Submission Failed", 5);
+
+            return false;
+        }
+        debug_event('listenbrainz.plugin', "Submission Successful", 5);
 
         return true;
     } // submit
