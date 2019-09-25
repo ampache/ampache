@@ -347,4 +347,4 @@ class Live_Stream extends database_object implements media, library_item
     {
         // Do nothing
     }
-} //end of radio class
+} // end of live_stream class

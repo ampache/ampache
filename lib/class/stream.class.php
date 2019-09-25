@@ -502,4 +502,4 @@ class Stream
 
         return $url;
     } // get_base_url
-} //end of stream class
+} // end of stream class

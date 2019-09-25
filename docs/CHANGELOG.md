@@ -65,8 +65,9 @@
 * Extend bin/sort_files.inc & catalog patterns to handle new fields
 * Updated bin/sort_files.inc for a smoother experience that actually works
 * Add -u to bin/catalog_update.inc This function will update the artist table with bio, image, etc as well as update similar artists.
-* Numerous catalog updates to allow data migration when updating file tags. (UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate)
-* Faster tag updates/catalog verify! (Updating an album would update each file multiple times)
+* Numerous catalog updates to allow data migration when updating file tags. 
+  * UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate,
+  * Shoutbox::migrate, Recommendation::migrate, Tag::migrate, Share::migrate* Faster tag updates/catalog verify! (Updating an album would update each file multiple times)
 * Subsonic - Update api to 1.13.0 [<http://www.subsonic.org/pages/api.jsp>]
 * Subsonic - Allow token auth using API Key instead of password.
 * Subsonic - Don't ignore group settings with id3 browsing

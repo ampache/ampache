@@ -1008,6 +1008,10 @@ class Album extends database_object implements library_item
             $updated    = true;
             Stats::migrate('album', $this->id, $album_id);
             UserActivity::migrate('album', $this->id, $album_id);
+            Recommendation::migrate('album', $this->id, $album_id);
+            Share::migrate('album', $this->id, $album_id);
+            Shoutbox::migrate('album', $this->id, $album_id);
+            Tag::migrate('album', $this->id, $album_id);
             Userflag::migrate('album', $this->id, $album_id);
             Rating::migrate('album', $this->id, $album_id);
             Art::migrate('album', $this->id, $album_id);
@@ -1208,4 +1212,4 @@ class Album extends database_object implements library_item
 
         return (int) $disk;
     }
-} //end of album class
+} // end of album class
