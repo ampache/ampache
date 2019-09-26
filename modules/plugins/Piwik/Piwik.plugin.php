@@ -122,6 +122,12 @@ class AmpachePiwik
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['piwik_site_id'])) || !strlen(trim($data['piwik_url']))) {
+            $data                  = array();
+            $data['piwik_site_id'] = Preference::get_by_user(-1, 'piwik_site_id');
+            $data['piwik_url']     = Preference::get_by_user(-1, 'piwik_url');
+        }
 
         $this->site_id = trim($data['piwik_site_id']);
         if (!strlen($this->site_id)) {

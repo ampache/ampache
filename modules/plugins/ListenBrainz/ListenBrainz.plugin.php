@@ -206,7 +206,7 @@ class Ampachelistenbrainz
         if (strlen(trim($data['listenbrainz_token']))) {
             $this->token = trim($data['listenbrainz_token']);
         } else {
-            debug_event('listenbrainz.plugin', 'No token, not scrobbling (need to grant Ampache to ListenBrainz)', 4);
+            debug_event('listenbrainz.plugin', 'No token, not scrobbling (need to add your ListenBrainz api key to ampache)', 4);
 
             return false;
         }

@@ -122,6 +122,12 @@ class AmpacheMatomo
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['matomo_site_id'])) || !strlen(trim($data['matomo_url']))) {
+            $data                   = array();
+            $data['matomo_site_id'] = Preference::get_by_user(-1, 'matomo_site_id');
+            $data['matomo_url']     = Preference::get_by_user(-1, 'matomo_url');
+        }
 
         $this->site_id = trim($data['matomo_site_id']);
         if (!strlen($this->site_id)) {
