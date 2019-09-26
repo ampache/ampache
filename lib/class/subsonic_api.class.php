@@ -557,8 +557,8 @@ class Subsonic_Api
                 $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
             case "byYear":
-                $fromYear = $input['fromYear'];
-                $toYear   = $input['toYear'];
+                $fromYear = $input['fromYear'] < $input['toYear'] ? $input['fromYear']: $input['toYear'] ;
+                $toYear   = $input['toYear'] > $input['fromYear'] ? $input['toYear'] : $input['fromYear'];
 
                 if ($fromYear || $toYear) {
                     $search = Search::year_search($fromYear, $toYear, $size, $offset);

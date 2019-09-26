@@ -40,3 +40,4 @@ vendor/
 core/
 develop/
 master/
+*.swp

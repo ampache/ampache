@@ -501,7 +501,7 @@ class Tag extends database_object implements library_item
 
         $limit_sql = "";
         if ($count) {
-            $limit_sql = "LIMIT ";
+            $limit_sql = " LIMIT ";
             if ($offset) {
                 $limit_sql .= (string) ($offset) . ', ';
             }
@@ -509,9 +509,9 @@ class Tag extends database_object implements library_item
         }
 
         $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " .
-            "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? $limit_sql ";
+            "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? ";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
+            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`') . $limit_sql;
         }
         $db_results = Dba::read($sql, array($tag_id, $type));
 
