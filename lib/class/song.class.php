@@ -1405,6 +1405,10 @@ class Song extends database_object implements media, library_item
         //migrate stats for the old album
         Stats::migrate('artist', $song->artist, $new_artist);
         UserActivity::migrate('artist', $song->artist, $new_artist);
+        Recommendation::migrate('artist', $this->artist, $new_artist);
+        Share::migrate('artist', $this->artist, $new_artist);
+        Shoutbox::migrate('artist', $this->artist, $new_artist);
+        Tag::migrate('artist', $this->artist, $new_artist);
         Userflag::migrate('artist', $song->artist, $new_artist);
         Rating::migrate('artist', $song->artist, $new_artist);
         Art::migrate('artist', $song->artist, $new_artist);
@@ -1424,6 +1428,10 @@ class Song extends database_object implements media, library_item
         //migrate stats for the old album
         Stats::migrate('album', $song->album, $new_album);
         UserActivity::migrate('album', $song->album, $new_album);
+        Recommendation::migrate('album', $song->album, $new_album);
+        Share::migrate('album', $song->album, $new_album);
+        Shoutbox::migrate('album', $song->album, $new_album);
+        Tag::migrate('album', $song->album, $new_album);
         Userflag::migrate('album', $song->album, $new_album);
         Rating::migrate('album', $song->album, $new_album);
         Art::migrate('album', $song->album, $new_album);

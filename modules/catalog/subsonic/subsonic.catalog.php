@@ -399,4 +399,4 @@ class Catalog_subsonic extends Catalog
 
         return null;
     }
-} // end of catalog class
+} // end of subsonic.catalog class

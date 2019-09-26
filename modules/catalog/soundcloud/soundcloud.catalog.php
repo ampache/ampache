@@ -459,4 +459,4 @@ class Catalog_soundcloud extends Catalog
 
         return null;
     }
-} // end of catalog class
+} // end of soundcloud.catalog class

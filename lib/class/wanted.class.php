@@ -540,4 +540,4 @@ class Wanted extends database_object
 
         return $results;
     }
-} // end of recommendation class
+} // end of wanted class
