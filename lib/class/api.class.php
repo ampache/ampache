@@ -1173,7 +1173,16 @@ class Api
 
             return false;
         }
-        $user   = User::get_from_username(Session::username($input['auth']));
+        // set a default user
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $user_id = $user->id;
+        // override your user if you're looking at others
+        if ($input['username']) {
+            $username = $input['username'];
+            $user_id  = User::get_from_username($username);
+        } elseif ($input['user_id']) {
+            $user_id  = $input['user_id'];
+        }
         // moved type to filter and allowed multipe type selection
         $type   = $input['type'];
         $filter = $input['filter'];
@@ -1183,12 +1192,6 @@ class Api
         if (in_array($input['type'], array('newest', 'highest', 'frequent', 'recent', 'flagged'))) {
             $type   = 'album';
             $filter = $input['type'];
-        }
-        if ($input['username']) {
-            $username = $input['username'];
-            $user_id  = User::get_from_username($username);
-        } else {
-            $user_id  = $input['user_id'];
         }
         if (!$limit) {
             $limit = AmpConfig::get('popular_threshold');
