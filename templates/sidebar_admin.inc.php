@@ -35,7 +35,7 @@
    </ul>
   </li>
 <?php if (Access::check('interface', '100')) {
-    ?>
+        ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('User Tools'); ?>"><?php echo T_('User Tools'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'user_tools', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_user_tools')) ? $_COOKIE['sb_user_tools'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_admin_ut">
       <li id="sb_admin_ut_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
