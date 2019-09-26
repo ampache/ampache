@@ -81,6 +81,11 @@ class AmpacheTheaudiodb
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['tadb_api_key']))) {
+            $data                 = array();
+            $data['tadb_api_key'] = Preference::get_by_user(-1, 'tadb_api_key');
+        }
 
         if (strlen(trim($data['tadb_api_key']))) {
             $this->api_key = trim($data['tadb_api_key']);

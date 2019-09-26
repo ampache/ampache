@@ -155,6 +155,12 @@ class AmpacheHeadphones
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['headphones_api_url'])) || !strlen(trim($data['headphones_api_key']))) {
+            $data                       = array();
+            $data['headphones_api_url'] = Preference::get_by_user(-1, 'headphones_api_url');
+            $data['headphones_api_key'] = Preference::get_by_user(-1, 'headphones_api_key');
+        }
 
         if (strlen(trim($data['headphones_api_url']))) {
             $this->api_url = trim($data['headphones_api_url']);

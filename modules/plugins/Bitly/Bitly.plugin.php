@@ -118,6 +118,12 @@ class AmpacheBitly
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['bitly_username'])) || !strlen(trim($data['bitly_api_key']))) {
+            $data                   = array();
+            $data['bitly_username'] = Preference::get_by_user(-1, 'bitly_username');
+            $data['bitly_api_key']  = Preference::get_by_user(-1, 'bitly_api_key');
+        }
 
         if (strlen(trim($data['bitly_username']))) {
             $this->bitly_username = trim($data['bitly_username']);

@@ -80,6 +80,11 @@ class AmpacheTvdb
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['tvdb_api_key']))) {
+            $data                 = array();
+            $data['tvdb_api_key'] = Preference::get_by_user(-1, 'tvdb_api_key');
+        }
 
         if (strlen(trim($data['tvdb_api_key']))) {
             $this->api_key = trim($data['tvdb_api_key']);

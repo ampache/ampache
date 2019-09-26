@@ -128,6 +128,12 @@ class AmpacheYourls
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['yourls_domain'])) || !strlen(trim($data['yourls_api_key']))) {
+            $data                   = array();
+            $data['yourls_domain']  = Preference::get_by_user(-1, 'yourls_domain');
+            $data['yourls_api_key'] = Preference::get_by_user(-1, 'yourls_api_key');
+        }
 
         if (strlen(trim($data['yourls_domain']))) {
             $this->yourls_domain = trim($data['yourls_domain']);
