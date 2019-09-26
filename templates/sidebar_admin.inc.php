@@ -46,12 +46,11 @@
         <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('E-mail Users'); ?></a></li>
     <?php
     }
-       if (AmpConfig::get('sociable')) {
-           ?>
+        if (AmpConfig::get('sociable')) {
+            ?>
       <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
       <?php
-       }
-?>
+        } ?>
       <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a></li>
     </ul>
   </li>
@@ -77,15 +76,15 @@
         <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
 <?php
     $categories = Preference::get_categories();
-    foreach ($categories as $name) {
-        $f_name = ucfirst($name); ?>
+        foreach ($categories as $name) {
+            $f_name = ucfirst($name); ?>
       <li id="sb_preferences_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
 <?php
-    } ?>
+        } ?>
     </ul>
   </li>
 </ul>
 <?php
-} ?>
+    } ?>
 </ul>
 

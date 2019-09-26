@@ -58,7 +58,7 @@ if (Art::is_enabled()) {
                 } else {
                     echo implode(',', $libitem->album_suite);
                 } ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
             <?php
             } ?>

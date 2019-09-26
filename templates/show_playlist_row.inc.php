@@ -54,7 +54,7 @@
             if (Access::check('interface', '25')) {
                 echo Ajax::button('?action=basket&type=playlist_random&id=' . $libitem->id, 'random', T_('Random to temporary playlist'), 'random_playlist_' . $libitem->id); ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'playlist', '<?php echo $libitem->id ?>')">
-                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php
             }

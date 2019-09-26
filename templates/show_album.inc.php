@@ -123,7 +123,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if ($show_playlist_add) {
         $addtotemp  = T_('Add to Temporary Playlist');
         $randtotemp = T_('Random to Temporary Playlist');
-        $addtoexist = T_('Add to Existing Playlist'); ?>
+        $addtoexist = T_('Add to playlist'); ?>
         <li>
             <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', $addtotemp, 'play_full_' . $album->id); ?>
             <?php echo Ajax::text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), $addtotemp, 'play_full_text_' . $album->id); ?>
