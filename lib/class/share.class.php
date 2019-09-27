@@ -130,7 +130,7 @@ class Share extends database_object
         if ($description == '') {
             if ($object_type == 'song') {
                 $song        = new Song($object_id);
-                $description = 'Playlist - ' . $song->title;
+                $description = $song->title;
             } elseif ($object_type == 'playlist') {
                 $playlist    = new Playlist($object_id);
                 $description = 'Playlist - ' . $playlist->name;
