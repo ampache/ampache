@@ -625,9 +625,12 @@ class Album extends database_object implements library_item
      */
     public function get_album_suite($catalog = 0)
     {
-        $full_name    = Dba::escape($this->full_name);
-        $release_type = " is null";
-        $mbid         = " is null";
+        $full_name = Dba::escape($this->full_name);
+        if ($full_name == '') {
+            return array();
+        }
+        $release_type = "is null";
+        $mbid         = "is null";
         $year         = (string) $this->year;
 
         if ($this->release_type) {
