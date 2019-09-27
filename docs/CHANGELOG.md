@@ -77,6 +77,7 @@
 * Added SVG support to the theme engine.
 * New Plugin - Matomo.plugin. [<https://matomo.org/>]
 * New Plugin - ListenBrainz.plugin [<https://listenbrainz.org/>]
+* Allow any official Ampache git branch with github_force_branch in config
 
 ## 3.9.1
 
