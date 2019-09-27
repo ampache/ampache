@@ -80,7 +80,7 @@ UI::show_box_top($podcast->f_title, 'info-box');
         if (AmpConfig::get('use_rss')) {
             ?>
         <li>
-            <?php echo Ampache_RSS::get_display('podcast', T_('Podcast'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
+            <?php echo Ampache_RSS::get_display('podcast', T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
         </li>
         <?php
         } ?>

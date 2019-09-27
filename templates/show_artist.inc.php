@@ -148,7 +148,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (AmpConfig::get('use_rss')) {
         ?>
         <li>
-            <?php echo Ampache_RSS::get_display('podcast', T_('Podcast'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
+            <?php echo Ampache_RSS::get_display('podcast', T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
         </li>
         <?php
     } ?>
