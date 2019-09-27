@@ -70,11 +70,8 @@ class AutoUpdate
     protected static function is_force_git_branch()
     {
         $git_branch = (string) AmpConfig::get('github_force_branch');
-        if ($git_branch == 'master' || $git_branch == 'develop' || $git_branch == 'core') {
-            return $git_branch;
-        }
 
-        return '';
+        return $git_branch;
     }
 
     /**
@@ -145,11 +142,11 @@ class AutoUpdate
             AmpConfig::set('autoupdate_lastcheck', $time, true);
 
             // Development version, get latest commit on develop branch
-            if (self::is_develop() || $git_branch == 'core') {
-                if ($git_branch == 'core') {
-                    $commits = self::github_request('/commits/core');
-                } else {
+            if (self::is_develop() || $git_branch !== '') {
+                if (self::is_develop() || $git_branch == 'develop') {
                     $commits = self::github_request('/commits/develop');
+                } else {
+                    $commits = self::github_request('/commits/' . $git_branch);
                 }
                 if (!empty($commits)) {
                     $lastversion = $commits->sha;
@@ -188,8 +185,9 @@ class AutoUpdate
      */
     public static function get_current_version()
     {
-        if (self::is_develop() || self::is_force_git_branch() == 'core') {
-            debug_event('autoupdate.class', 'get_current_version develop/core branch', 5);
+        $git_branch = self::is_force_git_branch();
+        if (self::is_develop() || $git_branch !== '') {
+            debug_event('autoupdate.class', 'get_current_version development branch', 5);
 
             return self::get_current_commit();
         } else {
@@ -206,8 +204,8 @@ class AutoUpdate
     public static function get_current_commit()
     {
         $git_branch = self::is_force_git_branch();
-        if ($git_branch === 'core' && is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/core')) {
-            return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/core'));
+        if ($git_branch !== '' && is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/' . $git_branch)) {
+            return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/' . $git_branch));
         }
         if (self::is_branch_develop_exists()) {
             return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/develop'));
