@@ -497,7 +497,7 @@ if ($isVideo) {
                 ?>
             <div class="action_button">
                 <a onclick="javascript:SaveToExistingPlaylist(event);">
-                    <?php echo UI::get_icon('playlist_add', T_('Add to playlist')) ?>
+                    <?php echo UI::get_icon('playlist_add_all', T_('Add All to playlist')) ?>
                 </a>
             </div>
 
