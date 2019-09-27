@@ -47,7 +47,7 @@ class AutoUpdate
         $version         = AmpConfig::get('version');
         $vspart          = explode('-', $version);
 
-        if (self::is_force_git_branch() == 'develop' || self::is_force_git_branch() == 'core') {
+        if (self::is_force_git_branch() == 'develop' && self::is_force_git_branch() == 'develop') {
             return true;
         }
 
@@ -143,7 +143,7 @@ class AutoUpdate
 
             // Development version, get latest commit on develop branch
             if (self::is_develop() || $git_branch !== '') {
-                if (self::is_develop() || $git_branch == 'develop') {
+                if (self::is_develop() && $git_branch == 'develop') {
                     $commits = self::github_request('/commits/develop');
                 } else {
                     $commits = self::github_request('/commits/' . $git_branch);
@@ -232,7 +232,7 @@ class AutoUpdate
         $latest    = self::get_latest_version();
 
         if ($current != $latest && !empty($current)) {
-            if (self::is_develop()) {
+            if (self::is_develop() || $git_branch !== '') {
                 $ccommit = self::github_request('/commits/' . $current);
                 $lcommit = self::github_request('/commits/' . $latest);
 
