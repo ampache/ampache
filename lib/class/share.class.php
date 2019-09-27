@@ -123,11 +123,23 @@ class Share extends database_object
         if (empty($object_type)) {
             return '';
         }
-
         if (!$allow_stream && !$allow_download) {
             return '';
         }
 
+        if ($description == '') {
+            if ($object_type == 'song') {
+                $song        = new Song($object_id);
+                $description = $song->title;
+            } elseif ($object_type == 'playlist') {
+                $playlist    = new Playlist($object_id);
+                $description = 'Playlist - ' . $playlist->name;
+            } elseif ($object_type == 'album') {
+                $album = new Album($object_id);
+                $album->format();
+                $description = $album->f_name . ' ('. $album->f_album_artist_name . ')';
+            }
+        }
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array(Core::get_global('user')->id, $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
         Dba::write($sql, $params);

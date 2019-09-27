@@ -1777,7 +1777,7 @@ class Subsonic_Api
 
             foreach ($id as $i) {
                 $aid  = Subsonic_XML_Data::getAmpacheId($i);
-                $type = 'song';
+                $type = Subsonic_XML_Data::getAmpacheType($i);
 
                 $media = new $type($aid);
                 $media->format();
