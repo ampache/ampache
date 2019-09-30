@@ -1,4 +1,11 @@
-# Issue Template
+---
+name: Bug report
+about: Help Ampache improve by submitting an issue.
+title: ''
+labels: ''
+assignees: ''
+
+---
 
 <!--
 1. Delete any section that is not relevant in this template.
@@ -26,7 +33,7 @@ Steps to reproduce the behavior:
 
 ## Environment
 
-* Ampache version:
+* Ampache version: 
 * Web server + version:
 * Server operating system:
 * Client operating system:
