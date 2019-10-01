@@ -104,6 +104,11 @@ class AmpacheFlattr
         $this->user = $user;
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['flattr_user_id']))) {
+            $data                   = array();
+            $data['flattr_user_id'] = Preference::get_by_user(-1, 'flattr_user_id');
+        }
 
         $this->user_id = trim($data['flattr_user_id']);
         if (!strlen($this->user_id)) {

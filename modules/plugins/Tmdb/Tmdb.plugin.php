@@ -78,6 +78,11 @@ class AmpacheTmdb
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['tmdb_api_key']))) {
+            $data                 = array();
+            $data['tmdb_api_key'] = Preference::get_by_user(-1, 'tmdb_api_key');
+        }
 
         if (strlen(trim($data['tmdb_api_key']))) {
             $this->api_key = trim($data['tmdb_api_key']);
