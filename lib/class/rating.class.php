@@ -302,22 +302,21 @@ class Rating extends database_object
     {
         $sql = "SELECT `album`.`id` FROM `album`" .
                 " WHERE `album`.`name` = '" . Dba::escape($album['name']) . "'";
-        if ((string) $album['album_artist'] != '') {
+        if ($album['album_artist']) {
             $sql .= " AND `album`.`album_artist` = " . $album['album_artist'];
         } else {
             $sql .= " AND `album`.`album_artist` IS NULL";
         }
-        if ((string) $album['mbid'] != '') {
+        if ($album['mbid']) {
             $sql .= " AND `album`.`mbid` = '" . $album['mbid'] . "'";
         } else {
             $sql .= " AND `album`.`mbid` IS NULL";
         }
-        if ((string) $album['prefix'] != '') {
+        if ($album['prefix']) {
             $sql .= " AND `album`.`prefix` = '" . $album['prefix'] . "'";
         } else {
             $sql .= " AND `album`.`prefix` IS NULL";
         }
-
         $results    = array();
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
