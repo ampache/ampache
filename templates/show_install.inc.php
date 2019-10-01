@@ -86,6 +86,15 @@ require $prefix . '/templates/install_header.inc.php';
             />
         </div>
     </div>
+    <div class="form-group">
+        <label for="mysql8" class="col-sm-4 control-label"><?php echo T_('MySQL 8 host?'); ?></label>
+        <div class="col-sm-8">
+            <input
+                type="checkbox" value="1"
+                id="mysql8" name="mysql8"
+            />
+        </div>
+    </div>
     <div class="form-group" id="overwrite_db_div">
         <label for="overwrite_db" class="col-sm-4 control-label"><?php echo T_('Overwrite if Database Already Exists'); ?></label>
         <div class="col-sm-8">

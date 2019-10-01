@@ -133,7 +133,7 @@ switch ($_REQUEST['action']) {
         }
 
         if (!$skip_admin) {
-            if (!install_insert_db($new_user, $new_pass, $_REQUEST['create_db'], $_REQUEST['overwrite_db'], $_REQUEST['create_tables'])) {
+            if (!install_insert_db($new_user, $new_pass, $_REQUEST['create_db'], $_REQUEST['overwrite_db'], $_REQUEST['create_tables'], $_REQUEST['mysql8'])) {
                 require_once 'templates/show_install.inc.php';
                 break;
             }
