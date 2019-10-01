@@ -216,9 +216,7 @@ class Subsonic_XML_Data
 
     public static function createFailedResponse($version = '', $function = '')
     {
-        if (empty($version)) {
-            $version = self::API_VERSION;
-        }
+        $version  = self::API_VERSION;
         $response = self::createResponse($version, 'failed');
         debug_event('subsonic_xml_data.class', 'API fail in function ' . $function . '-' . $version, 3);
 
@@ -227,9 +225,7 @@ class Subsonic_XML_Data
 
     public static function createSuccessResponse($version = '', $function = '')
     {
-        if (empty($version)) {
-            $version = self::API_VERSION;
-        }
+        $version  = self::API_VERSION;
         $response = self::createResponse($version);
         debug_event('subsonic_xml_data.class', 'API success in function ' . $function . '-' . $version, 5);
 
@@ -761,7 +757,7 @@ class Subsonic_XML_Data
         foreach ($tags as $tag) {
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
-            $counts = $otag->count('', Core::get_global('user')->id);
+            $counts = $otag->count('', 0);
             $xgenre->addAttribute("songCount", $counts['song']);
             $xgenre->addAttribute("albumCount", $counts['album']);
         }

@@ -894,4 +894,4 @@ class Catalog_local extends Catalog
         // Do nothing, it's just file...
         return $media;
     }
-} // end of local catalog class
+} // end of local.catalog class

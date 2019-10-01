@@ -108,6 +108,11 @@ class AmpacheGoogleAnalytics
         $this->user = $user;
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['googleanalytics_tracking_id']))) {
+            $data                                = array();
+            $data['googleanalytics_tracking_id'] = Preference::get_by_user(-1, 'googleanalytics_tracking_id');
+        }
 
         $this->tracking_id = trim($data['googleanalytics_tracking_id']);
         if (!strlen($this->tracking_id)) {

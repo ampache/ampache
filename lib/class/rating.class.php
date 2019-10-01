@@ -269,16 +269,16 @@ class Rating extends database_object
                     "`object_id` = ? AND " .
                     "`object_type` = ? AND " .
                     "`user` = ?";
-            $params = array($this->id, $this->type, (int) $user_id);
+            $params = array($this->id, $this->type, $user_id);
         } else {
             $sql = "REPLACE INTO `rating` " .
                     "(`object_id`, `object_type`, `rating`, `user`) " .
                     "VALUES (?, ?, ?, ?)";
-            $params = array($this->id, $this->type, $rating, (int) $user_id);
+            $params = array($this->id, $this->type, $rating, $user_id);
         }
         Dba::write($sql, $params);
 
-        parent::add_to_cache('rating_' . $this->type . '_user' . (int) $user_id, $this->id, $rating);
+        parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, $rating);
 
         foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
             $plugin = new Plugin($plugin_name);

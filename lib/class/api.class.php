@@ -688,6 +688,7 @@ class Api
     {
         $album = new Album($input['filter']);
         $songs = array();
+        $user  = User::get_from_username(Session::username($input['auth']));
 
         //Whatever format the user wants
         $outputFormat = $input['format'];
@@ -720,7 +721,7 @@ class Api
             XML_Data::set_limit($input['limit']);
 
             ob_end_clean();
-            echo XML_Data::songs($songs);
+            echo XML_Data::songs($songs, true, $user->id);
         }
     } // album_songs
 

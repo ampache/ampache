@@ -154,6 +154,11 @@ class AmpacheGoogleMaps
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['gmaps_api_key']))) {
+            $data                  = array();
+            $data['gmaps_api_key'] = Preference::get_by_user(-1, 'gmaps_api_key');
+        }
 
         if (strlen(trim($data['gmaps_api_key']))) {
             $this->api_key = trim($data['gmaps_api_key']);
