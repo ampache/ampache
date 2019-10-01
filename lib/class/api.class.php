@@ -1757,7 +1757,7 @@ class Api
         if ($format && $format != "raw") {
             $params .= '&transcode_to=' . $format;
         }
-        if ($maxBitRate) {
+        if ((int) $maxBitRate > 0) {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {
