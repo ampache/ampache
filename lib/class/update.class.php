@@ -982,7 +982,12 @@ class Update
         $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Custom metadata - Define field list' " .
                "WHERE `preference`.`name` = 'disabled_custom_metadata_fields_input' ";
- 
+        $retval &= Dba::write($sql);
+
+        $sql = "UPDATE `preference` " .
+               "SET `preference`.`description` = 'Auto-pause between tabs' " .
+               "WHERE `preference`.`name` = 'webplayer_pausetabs' ";
+        $retval &= Dba::write($sql);
         return $retval;
     }
 }
