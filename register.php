@@ -58,7 +58,7 @@ switch ($_REQUEST['action']) {
          */
         $fullname       = (string) scrub_in(Core::get_post('fullname'));
         $username       = (string) scrub_in(Core::get_post('username'));
-        $email          = scrub_in(Core::get_post('email'));
+        $email          = (string) scrub_in(Core::get_post('email'));
         $pass1          = Core::get_post('password_1');
         $pass2          = Core::get_post('password_2');
         $website        = scrub_in(Core::get_post('website'));

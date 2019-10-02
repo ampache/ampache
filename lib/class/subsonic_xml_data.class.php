@@ -232,6 +232,10 @@ class Subsonic_XML_Data
         return $response;
     }
 
+    /**
+     * createResponse
+     * @param string $version
+     */
     public static function createResponse($version, $status = 'ok')
     {
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
@@ -243,6 +247,10 @@ class Subsonic_XML_Data
         return $response;
     }
 
+    /**
+     * createError
+     * @param string $message
+     */
     public static function createError($code, $message, $function = '')
     {
         $response = self::createFailedResponse($function);
