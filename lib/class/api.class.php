@@ -1524,7 +1524,7 @@ class Api
         $valid     = in_array($user->id, User::get_valid_users());
 
         // validate supplied user
-        if ($valid == false) {
+        if ($valid === false) {
             echo XML_Data::error('404', T_('User_id not found.'));
 
             return;
@@ -1594,7 +1594,7 @@ class Api
             $date = time();
         }
         // validate supplied user
-        if ($valid == false) {
+        if ($valid === false) {
             echo XML_Data::error('404', T_('User_id not found.'));
 
             return;
