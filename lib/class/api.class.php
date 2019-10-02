@@ -1440,11 +1440,12 @@ class Api
             $item = new $type($object_id);
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
-            } else {
-                $rate = new Rating($object_id, $type);
-                $rate->set_rating($rating);
-                echo XML_Data::success('rating set ' . $object_id);
+
+                return;
             }
+            $rate = new Rating($object_id, $type);
+            $rate->set_rating($rating);
+            echo XML_Data::success('rating set ' . $object_id);
         }
     } // rate
 
@@ -1485,14 +1486,16 @@ class Api
             $item = new $type($object_id);
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
-            } else {
-                $userflag = new Userflag($object_id, $type);
-                if ($userflag->set_flag($flag, $user_id)) {
-                    echo XML_Data::success('flag set ' . $object_id);
-                } else {
-                    echo XML_Data::error('400', 'flag failed ' . $object_id);
-                }
+
+                return;
             }
+            $userflag = new Userflag($object_id, $type);
+            if ($userflag->set_flag($flag, $user_id)) {
+                echo XML_Data::success('flag set ' . $object_id);
+
+                return;
+            }
+            echo XML_Data::error('400', 'flag failed ' . $object_id);
         }
     } // flag
 
@@ -1622,10 +1625,11 @@ class Api
             $item = new Song((int) $scrobble_id);
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
-            } else {
-                $user->update_stats('song', $scrobble_id, $agent, array(), false, $date);
-                echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
+
+                return;
             }
+            $user->update_stats('song', $scrobble_id, $agent, array(), false, $date);
+            echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
         }
     } // scrobble
 
