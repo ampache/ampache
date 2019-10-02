@@ -1538,10 +1538,11 @@ class Api
             $item = new $type($object_id);
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
-            } elseif ($valid) {
-                $user->update_stats($type, $object_id, $agent);
-                echo XML_Data::success('successfully recorded play: ' . $object_id);
+
+                return;
             }
+            $user->update_stats($type, $object_id, $agent);
+            echo XML_Data::success('successfully recorded play: ' . $object_id);
         }
     } // record_play
 
@@ -1970,7 +1971,7 @@ class Api
         $maxbitrate = $input['maxbitrate'];
 
         // if you didn't send anything to update don't do anything
-        if (!$fullname || !$email || !$website || !$password || !$state || !$city || !$disable || !$maxbitrate) {
+        if (!$fullname || !$email || !$website || !$password || !$state || !$city || !$disable || $disable || !$maxbitrate) {
             echo XML_Data::error('401', T_('Nothing to update.'));
 
             return false;
