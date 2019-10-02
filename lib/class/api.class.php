@@ -1573,7 +1573,7 @@ class Api
         ob_end_clean();
         $charset     = AmpConfig::get('site_charset');
         $song_name   = (string) html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
-        $artist_name = (string) html_entity_decode(scrub_in($input['artist']), ENT_QUOTES, $charset);
+        $artist_name = (string) html_entity_decode(scrub_in((string) $input['artist']), ENT_QUOTES, $charset);
         $album_name  = (string) html_entity_decode(scrub_in($input['album']), ENT_QUOTES, $charset);
         $song_mbid   = (string) scrub_in($input['song_mbid']); //optional
         $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
@@ -1966,7 +1966,7 @@ class Api
         $password   = $input['password'];
         $state      = $input['state'];
         $city       = $input['city'];
-        $disable    = ($input['disable'] == 'true');
+        $disable    = ($input['disable'] == 'true' ? true : false;
         $maxbitrate = $input['maxbitrate'];
 
         // if you didn't send anything to update don't do anything
@@ -1976,8 +1976,8 @@ class Api
             return false;
         }
         // identify the user to modify
-        $user_id = User::get_from_username($username);
-        $user    = new User($user_id);
+        $user    = User::get_from_username($username);
+        $user_id = $user->id;
 
         if ($password && Access::check('interface', 100, $user_id)) {
             echo XML_Data::error('400', 'Do not update passwords for admin users! ' . $username);

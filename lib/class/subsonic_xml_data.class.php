@@ -214,7 +214,7 @@ class Subsonic_XML_Data
         return "";
     }
 
-    public static function createFailedResponse($version = '', $function = '')
+    public static function createFailedResponse($function = '')
     {
         $version  = self::API_VERSION;
         $response = self::createResponse($version, 'failed');
@@ -223,7 +223,7 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createSuccessResponse($version = '', $function = '')
+    public static function createSuccessResponse($function = '')
     {
         $version  = self::API_VERSION;
         $response = self::createResponse($version);
@@ -251,7 +251,7 @@ class Subsonic_XML_Data
         if (empty($version)) {
             $version = self::API_VERSION;
         }
-        $response = self::createFailedResponse($version, $function);
+        $response = self::createFailedResponse($function);
         self::setError($response, $code, $message);
 
         return $response;

@@ -279,7 +279,6 @@ class User extends database_object
      */
     public static function get_from_apikey($apikey)
     {
-        $user_id   = null;
         $apikey    = trim($apikey);
         if (!empty($apikey)) {
             // check for legacy unencrypted apikey

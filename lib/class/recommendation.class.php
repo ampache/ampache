@@ -398,7 +398,7 @@ class Recommendation
      * Migrate an object associate stats to a new object
      * @param string $object_type
      * @param integer $old_object_id
-     * @param integer $new_object_id
+     * @param string $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

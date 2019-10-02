@@ -421,7 +421,7 @@ class XML_Data
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
                     foreach ($songs as $song_id) {
-                        if ($song_id[object_type] == 'song') {
+                        if ($song_id['object_type'] == 'song') {
                             $string .= "\t\t<playlisttrack>" . $song_id['object_id'] . "</playlisttrack>\n";
                         }
                     }
