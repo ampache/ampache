@@ -101,9 +101,7 @@ if (Core::is_playable_item(Core::get_request('action'))) {
                     break;
                 } // switch on type
             } // foreach media_id
-            if ($name === $default_name) {
-                $name = 'Batch-' . date("dmY", time());
-            }
+            $name = 'Batch-' . date("dmY", time());
         default:
             // Rien a faire
         break;

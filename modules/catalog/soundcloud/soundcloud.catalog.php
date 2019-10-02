@@ -307,7 +307,7 @@ class Catalog_soundcloud extends Catalog
 
                     UI::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s).') . " " .
                         /* HINT: Number of Songs added */
-                        sprintf(nT('%s Song added', '%s Songs added', $songsadded), $songsadded));
+                        sprintf(nT_('%s Song added', '%s Songs added', $songsadded), $songsadded));
 
                     // Update the last update value
                     $this->update_last_update();

@@ -289,7 +289,8 @@ class Preference extends database_object
      * @param string $default
      * @param string $level
      * @param string $type
-     * @param string $
+     * @param string $category
+     * @param string $subcategory
      */
     public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null)
     {

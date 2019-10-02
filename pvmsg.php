@@ -40,7 +40,7 @@ switch ($_REQUEST['action']) {
                 $to_user             = new User($pvmsg->from_user);
                 $_REQUEST['to_user'] = $to_user->username;
                 /* HINT: Shorthand for e-mail reply */
-                $_REQUEST['subject'] = T('RE') . ": " . $pvmsg->subject;
+                $_REQUEST['subject'] = T_('RE') . ": " . $pvmsg->subject;
                 $_REQUEST['message'] = "\n\n\n---\n> " . str_replace("\n", "\n> ", $pvmsg->message);
             }
         }
