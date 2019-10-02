@@ -988,6 +988,7 @@ class Update
                "SET `preference`.`description` = 'Auto-pause between tabs' " .
                "WHERE `preference`.`name` = 'webplayer_pausetabs' ";
         $retval &= Dba::write($sql);
+
         return $retval;
     }
 }
