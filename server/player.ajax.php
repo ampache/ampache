@@ -57,7 +57,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'unbroadcast':
         $broadcast_id = Core::get_get('broadcast_id');
-        $broadcast    = new Broadcast($broadcast_id);
+        $broadcast    = new Broadcast((int) $broadcast_id);
         if ($broadcast->id) {
             $broadcast->update_state(false);
             $results['broadcast'] = Broadcast::get_broadcast_link() . '' .
