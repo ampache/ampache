@@ -227,9 +227,10 @@ class AutoUpdate
 
         debug_event('autoupdate.class', 'Checking latest version online...', 5);
 
-        $available = false;
-        $current   = self::get_current_version();
-        $latest    = self::get_latest_version();
+        $available  = false;
+        $git_branch = self::is_force_git_branch();
+        $current    = self::get_current_version();
+        $latest     = self::get_latest_version();
 
         if ($current != $latest && !empty($current)) {
             if (self::is_develop() || $git_branch !== '') {
