@@ -46,14 +46,13 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('demo_mode')) {
             break;
         }
-        $access = new Access(Core::get_get('access_id'));
+        $access = new Access((int) Core::get_get('access_id'));
         show_confirmation(T_('Are you sure?'),
                 /* HINT: ACL Name */
                 sprintf(T_('This will permanently delete "%s"'), $access->name),
                 'admin/access.php?action=delete_record&amp;access_id=' . $access->id, 1, 'delete_access');
     break;
     case 'add_host':
-
         // Make sure we've got a valid form submission
         if (!Core::form_verify('add_acl', 'post')) {
             UI::access_denied();

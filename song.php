@@ -31,7 +31,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $song_id = scrub_in($_REQUEST['song_id']);
+        $song_id = (string) scrub_in($_REQUEST['song_id']);
         show_confirmation(T_('Are You Sure?'), T_('The Song will be deleted'),
             AmpConfig::get('web_path') . "/song.php?action=confirm_delete&song_id=" . $song_id,
             1,

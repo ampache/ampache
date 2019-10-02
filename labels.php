@@ -31,7 +31,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $label_id = scrub_in($_REQUEST['label_id']);
+        $label_id = (string) scrub_in($_REQUEST['label_id']);
         show_confirmation(T_('Are You Sure?'), T_('This Label will be deleted'),
             AmpConfig::get('web_path') . "/labels.php?action=confirm_delete&label_id=" . $label_id,
             1,

@@ -31,7 +31,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $album_id = scrub_in($_REQUEST['album_id']);
+        $album_id = (string) scrub_in($_REQUEST['album_id']);
         show_confirmation(T_('Are You Sure?'), T_("The Album and all files will be deleted"),
             AmpConfig::get('web_path') . "/albums.php?action=confirm_delete&album_id=" . $album_id,
             1,
@@ -92,7 +92,7 @@ switch ($_REQUEST['action']) {
             $track = filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT) ? ((filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
-                    Song::update_track($track, $song_id);
+                    Song::update_track($track, (int) $song_id);
                     ++$track;
                 }
             }
