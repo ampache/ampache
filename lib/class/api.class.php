@@ -1966,7 +1966,7 @@ class Api
         $password   = $input['password'];
         $state      = $input['state'];
         $city       = $input['city'];
-        $disable    = ($input['disable'] == 'true' ? true : false;
+        $disable    = $input['disable'] == 'true' ? true : false;
         $maxbitrate = $input['maxbitrate'];
 
         // if you didn't send anything to update don't do anything

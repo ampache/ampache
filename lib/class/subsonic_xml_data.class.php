@@ -232,11 +232,8 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createResponse($version = '', $status = 'ok')
+    public static function createResponse($version, $status = 'ok')
     {
-        if (empty($version)) {
-            $version = self::API_VERSION;
-        }
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         //       $response->addAttribute('type', 'ampache');
@@ -246,11 +243,8 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createError($code, $message = '', $version = '', $function = '')
+    public static function createError($code, $message, $version, $function = '')
     {
-        if (empty($version)) {
-            $version = self::API_VERSION;
-        }
         $response = self::createFailedResponse($function);
         self::setError($response, $code, $message);
 
