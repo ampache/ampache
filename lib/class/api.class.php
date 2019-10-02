@@ -506,7 +506,9 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::songs($songs, array(), true, $user->id);
+        if (!empty($songs)) {
+            echo XML_Data::songs($songs, array(), true, $user->id);
+        }
     } // artist_songs
 
     /**
@@ -735,7 +737,7 @@ class Api
         $user    = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
-        echo XML_Data::songs(array($song_id), array(), true, $user->id);
+        echo XML_Data::songs(array((int) $song_id), array(), true, $user->id);
     } // song
 
     /**
