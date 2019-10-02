@@ -252,7 +252,7 @@ class Rating extends database_object
 
         $results = array();
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $sql = "SELECT `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
+            $sql = "SELECT `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
                     " WHERE `id` = ?";
             $db_results = Dba::read($sql, array($this->id));
             $results    = Dba::fetch_assoc($db_results);
@@ -301,11 +301,24 @@ class Rating extends database_object
     private static function set_rating_for_group($rating, $album, $user_id = null)
     {
         $sql = "SELECT `album`.`id` FROM `album`" .
-                " WHERE `album`.`name` = '" . str_replace("'", "\'", $album['name']) . "' AND" .
-                " `album`.`album_artist` = " . $album['album_artist'] . " AND" .
-                " `album`.`mbid` = '" . $album['mbid'] . "'";
-        $db_results = Dba::read($sql);
+                " WHERE `album`.`name` = '" . Dba::escape($album['name']) . "'";
+        if ($album['album_artist']) {
+            $sql .= " AND `album`.`album_artist` = " . $album['album_artist'];
+        } else {
+            $sql .= " AND `album`.`album_artist` IS NULL";
+        }
+        if ($album['mbid']) {
+            $sql .= " AND `album`.`mbid` = '" . $album['mbid'] . "'";
+        } else {
+            $sql .= " AND `album`.`mbid` IS NULL";
+        }
+        if ($album['prefix']) {
+            $sql .= " AND `album`.`prefix` = '" . $album['prefix'] . "'";
+        } else {
+            $sql .= " AND `album`.`prefix` IS NULL";
+        }
         $results    = array();
+        $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }

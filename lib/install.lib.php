@@ -184,7 +184,7 @@ function install_rewrite_rules($file, $web_path, $download)
  *
  * Inserts the database using the values from Config.
  */
-function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true)
+function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $mysql8 = false)
 {
     $database = AmpConfig::get('database_name');
     // Make sure that the database name is valid
@@ -226,15 +226,32 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
 
     // Check to see if we should create a user here
     if (strlen($db_user) && strlen($db_pass)) {
-        $db_host = AmpConfig::get('database_hostname');
-        $sql     = 'GRANT ALL PRIVILEGES ON `' . Dba::escape($database) . '`.* TO ' .
-                    "'" . Dba::escape($db_user) . "'";
+        $db_host  = AmpConfig::get('database_hostname');
+        // create the user account
+        $sql_user = "CREATE USER '" . Dba::escape($db_user) . "'";
         if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
-            $sql .= "@'localhost'";
+            $sql_user .= "@'localhost'";
         }
-        $sql .= "IDENTIFIED BY '" . Dba::escape($db_pass) . "' WITH GRANT OPTION";
-        if (!Dba::write($sql)) {
-            AmpError::add('general', sprintf(T_('Error: Unable to create user %1$s with permissions to %2$s on %3$s: %4$s'), $db_user, $database, $db_host, Dba::error()));
+        // force native password if using mysql 8+
+        if ($mysql8) {
+            $sql_user .= " IDENTIFIED WITH mysql_native_password BY '" . Dba::escape($db_pass) . "'";
+        } else {
+            $sql_user .= " IDENTIFIED BY '" . Dba::escape($db_pass) . "'";
+        }
+        if (!Dba::write($sql_user)) {
+            AmpError::add('general', sprintf(T_('Error: Unable to create user %1$s@%2$s on %3$s: %4$s'), $db_user, $database, $db_host, Dba::error()));
+
+            return false;
+        }
+        // grant database access to that account
+        $sql_grant = "GRANT ALL PRIVILEGES ON `" . Dba::escape($database) . "`.* TO '" . Dba::escape($db_user) . "'";
+        if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
+            $sql_grant .= "@'localhost'";
+        }
+        $sql_grant .= "  WITH GRANT OPTION";
+
+        if (!Dba::write($sql_grant)) {
+            AmpError::add('general', sprintf(T_('Error: Unable to grant privileges to user %1$s with permissions to %2$s on %3$s: %4$s'), $db_user, $database, $db_host, Dba::error()));
 
             return false;
         }
