@@ -373,7 +373,7 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ";
+            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
         } else {
             $sqlw .= "GROUP BY `song`.`artist` ";
         }
@@ -396,7 +396,8 @@ class Album extends database_object implements library_item
             $sql .= "FROM `song` INNER JOIN `artist` " .
                 "ON `artist`.`id`=`song`.`artist` ";
         }
-        $sql .= $sqlj . $sqlw . "LIMIT 1";
+        $sql .= $sqlj . $sqlw . ", `catalog_id` LIMIT 1";
+        //debug_event('album.class', 'sql ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array_merge($results, Dba::fetch_assoc($db_results));
@@ -624,7 +625,10 @@ class Album extends database_object implements library_item
      */
     public function get_album_suite($catalog = 0)
     {
-        $full_name    = Dba::escape($this->full_name);
+        $full_name = Dba::escape($this->full_name);
+        if ($full_name == '') {
+            return array();
+        }
         $release_type = "is null";
         $mbid         = "is null";
         $year         = (string) $this->year;
@@ -638,14 +642,13 @@ class Album extends database_object implements library_item
         $results       = array();
         $where         = "WHERE `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`name` = '$full_name' AND `album`.`year` = $year ";
         $catalog_where = "";
-        $catalog_join  = "";
+        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
 
         if ($catalog) {
-            $catalog_where .= "AND `catalog`.`id` = '$catalog'";
-            $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+            $catalog_where .= " AND `catalog`.`id` = '$catalog'";
         }
         if (AmpConfig::get('catalog_disable')) {
-            $catalog_where .= " AND `catalog`.`enabled` = '1'";
+            $catalog_where .= "AND `catalog`.`enabled` = '1'";
         }
 
         $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
