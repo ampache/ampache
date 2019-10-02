@@ -57,12 +57,12 @@ $tag_types = array(
         <div class="tag_actions">
             <ul>
                 <li>
-                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id'] ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_' . $data['id'] ?>', '<?php echo T_('Tag edit') ?>', 'click_tag_')">
+                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id'] ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_' . $data['id'] ?>', '<?php echo T_('Tag Edit') ?>', 'click_tag_')">
                         <?php echo UI::get_icon('edit', T_('Edit')); ?>
                     </a>
                 </li>
                 <li>
-                    <a class="tag_delete" href="<?php echo AmpConfig::get('ajax_url') ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete the tag?'); ?>');"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
+                    <a class="tag_delete" href="<?php echo AmpConfig::get('ajax_url') ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
                 </li>
             </ul>
         </div>

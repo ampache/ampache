@@ -27,7 +27,7 @@
             <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=gather_media_art"><?php echo T_('Gather All Art'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show disabled songs'); ?></a>
+            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show Disabled Songs'); ?></a>
         </li>
         <li>
             <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=add_to_all_catalogs"><?php echo T_('Add to All'); ?></a>
@@ -48,11 +48,11 @@
     <form style="padding-left: 250px;" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update_from">
         <table class="tabledata2" cellspacing="0" cellpadding="0">
             <tr>
-                <td><?php /* HINT: /data/myNewMusic */ ?><?php printf(T_('Add from [%s]'), '<span class="information">/data/myNewMusic</span>'); ?></td>
+                <td><?php /* HINT: /data/myNewMusic */ ?><?php printf(T_('Add new files from: %s'), '<span class="information">/data/myNewMusic</span>'); ?></td>
                 <td><input type="text" name="add_path" value="/" /></td>
             </tr>
             <tr>
-                <td><?php /* HINT: /data/myUpdatedMusic */ ?><?php printf(T_('Update from [%s]'), '<span class="information">/data/myUpdatedMusic</span>'); ?></td>
+                <td><?php /* HINT: /data/myUpdatedMusic */ ?><?php printf(T_('Update existing files in: %s'), '<span class="information">/data/myUpdatedMusic</span>'); ?></td>
                 <td><input type="text" name="update_path" value="/" /></td>
             </tr>
             <tr>

@@ -189,12 +189,12 @@ switch ($_REQUEST['action']) {
         if ($target == 'missing_artist' && AmpConfig::get('wanted')) {
             $sres     = Wanted::search_missing_artists($search);
             $count    = 0;
-            foreach ($sres as $r) {
+            foreach ($sres as $artist) {
                 $results[] = array(
                     'type' => T_('Missing Artists'),
-                    'link' => AmpConfig::get('web_path') . '/artists.php?action=show_missing&mbid=' . $r['mbid'],
-                    'label' => $r['name'],
-                    'value' => $r['name'],
+                    'link' => AmpConfig::get('web_path') . '/artists.php?action=show_missing&mbid=' . $artist['mbid'],
+                    'label' => $artist['name'],
+                    'value' => $artist['name'],
                     'rels' => '',
                     'image' => '',
                 );

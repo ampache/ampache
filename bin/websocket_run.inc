@@ -36,12 +36,12 @@ if ($cargv > 1) {
     for ($x = 1; $x < $cargv; $x++) {
 
         if ($_SERVER['argv'][$x] == "-v") {
-            $operations_string .= "\n\t" . T_('- Verbose');
+            $operations_string .= "\n\t- " . T_('Verbose');
             $verbose = true;
         } 
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
             $port = (int) $_SERVER['argv'][++$x];
-            $operations_string .= "\n\t" . T_('- Port ' . $port);
+            $operations_string .= "\n\t- " . T_('Port') . ' ' . $port;
         }
     }
 }
@@ -59,11 +59,11 @@ $app->route('/broadcast', $brserver);
 $app->route('/echo', new Ratchet\Server\EchoServer, array('*'));
 $app->run();
 
-function usage()
+function websocket_usage()
 {
-    echo T_("- WebSocket server -");
+    echo T_("Usage:");
     echo "\n";
-    echo T_("Usage: websocket_run.inc [-p {PORT}|-v]");
+    echo T_("websocket_run.inc [-p {PORT}|-v]");
     echo "\n\t"; 
     echo "\n-p {PORT}\t";
     echo T_('Listening port, default 8100');

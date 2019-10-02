@@ -128,13 +128,15 @@ class Recommendation
      */
     protected static function update_recommendation_cache($type, $id, $recommendations)
     {
-        self::delete_recommendation_cache($type, $id);
-        $sql = "INSERT INTO `recommendation` (`object_type`, `object_id`, `last_update`) VALUES (?, ?, ?)";
-        Dba::write($sql, array($type, $id, time()));
-        $insertid = Dba::insert_id();
-        foreach ($recommendations as $recommendation) {
-            $sql = "INSERT INTO `recommendation_item` (`recommendation`, `recommendation_id`, `name`, `rel`, `mbid`) VALUES (?, ?, ?, ?, ?)";
-            Dba::write($sql, array($insertid, $recommendation['id'], $recommendation['name'], $recommendation['rel'], $recommendation['mbid']));
+        if (count($recommendations) > 0) {
+            self::delete_recommendation_cache($type, $id);
+            $sql = "INSERT INTO `recommendation` (`object_type`, `object_id`, `last_update`) VALUES (?, ?, ?)";
+            Dba::write($sql, array($type, $id, time()));
+            $insertid = Dba::insert_id();
+            foreach ($recommendations as $recommendation) {
+                $sql = "INSERT INTO `recommendation_item` (`recommendation`, `recommendation_id`, `name`, `rel`, `mbid`) VALUES (?, ?, ?, ?, ?)";
+                Dba::write($sql, array($insertid, $recommendation['id'], $recommendation['name'], $recommendation['rel'], $recommendation['mbid']));
+            }
         }
     }
 
@@ -151,11 +153,9 @@ class Recommendation
 
         $song   = new Song($song_id);
         $artist = new Artist($song->artist);
-
+        $query  = 'artist=' . rawurlencode($artist->name) . '&track=' . rawurlencode($song->title);
         if (isset($song->mbid)) {
             $query = 'mbid=' . rawurlencode($song->mbid);
-        } else {
-            $query = 'artist=' . rawurlencode($artist->name) . '&track=' . rawurlencode($song->title) ;
         }
 
         $cache = self::get_recommendation_cache('song', $song_id, true);
@@ -187,27 +187,22 @@ class Recommendation
 
                     if ($result = Dba::fetch_assoc($db_result)) {
                         $local_id = $result['id'];
-                    }
-
-                    if ($local_id === null) {
+                        debug_event('recommendation.class', "$name matched local song $local_id", 5);
+                        $similars[] = array(
+                            'id' => $local_id,
+                            'name' => $name,
+                            'rel' => $artist_name
+                        );
+                    } else {
                         debug_event('recommendation.class', "$name did not match any local song", 5);
                         $similars[] = array(
                             'id' => null,
                             'name' => $name,
                             'rel' => $artist_name
                         );
-                    } else {
-                        debug_event('recommendation.class', "$name matched local song $local_id", 5);
-                        $similars[] = array(
-                            'id' => $local_id,
-                            'name' => $name
-                        );
                     }
                 }
-
-                if (count($similars) > 0) {
-                    self::update_recommendation_cache('song', $song_id, $similars);
-                }
+                self::update_recommendation_cache('song', $song_id, $similars);
             }
         }
 
@@ -398,7 +393,7 @@ class Recommendation
      * Migrate an object associate stats to a new object
      * @param string $object_type
      * @param integer $old_object_id
-     * @param integer $new_object_id
+     * @param string $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

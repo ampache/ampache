@@ -23,7 +23,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html lang="en-US">
     <head>
-        <!-- Propulsed by Ampache | ampache.org -->
+        <!-- Propelled by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ampache -- Debug Page</title>
@@ -35,8 +35,8 @@
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
-                    <?php echo T_('Ampache'); ?> - For the love of Music
+                    <img src="<?php echo UI::get_logo_url('dark'); ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
+                    <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music'); ?>
                 </a>
             </div>
         </div>
@@ -46,7 +46,7 @@
         </div>
         <div class="well">
             <p>
-                <?php echo T_('You may have reached this page because a configuration error has occured. Debug information is below.'); ?>
+                <?php echo T_('You may have reached this page because a configuration error has occurred. Debug information is below.'); ?>
                 <?php if (!is_readable($configfile)) {
     ?>
                 | <a href="install.php"><?php echo T_('Web Installation'); ?></a>

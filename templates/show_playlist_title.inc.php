@@ -20,4 +20,4 @@
  *
  */
 
-echo sprintf(T_('%s %s (Playlist)'), $playlist->f_type, $playlist->name);
+echo $playlist->f_type . ' ' . $playlist->name . ' (' . T_('Playlist') . ')';

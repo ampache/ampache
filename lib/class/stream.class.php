@@ -320,12 +320,12 @@ class Stream
     /**
      * gc_now_playing
      *
-     * This will garbage collect the now playing data,
+     * This will garbage collect the Now Playing data,
      * this is done on every play start.
      */
     public static function gc_now_playing()
     {
-        // Remove any now playing entries for sessions that have been GC'd
+        // Remove any Now Playing entries for sessions that have been GC'd
         $sql = "DELETE FROM `now_playing` USING `now_playing` " .
             "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
             "WHERE `session`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
@@ -335,7 +335,7 @@ class Stream
     /**
      * insert_now_playing
      *
-     * This will insert the now playing data.
+     * This will insert the Now Playing data.
      */
     public static function insert_now_playing($oid, $uid, $length, $sid, $type)
     {
@@ -363,7 +363,7 @@ class Stream
     /**
      * get_now_playing
      *
-     * This returns the now playing information
+     * This returns the Now Playing information
      */
     public static function get_now_playing()
     {
@@ -379,13 +379,14 @@ class Stream
                 'ON `np`.`user` = `np2`.`user` ' .
                 'AND `np`.`insertion` = `np2`.`max_insertion` ';
         }
+        $sql .= "WHERE `np`.`object_type` IN ('song', 'video')";
 
         if (!Access::check('interface', '100')) {
             // We need to check only for users which have allowed view of personnal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id) {
                 $current_user = Core::get_global('user')->id;
-                $sql .= "WHERE (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
+                $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
 

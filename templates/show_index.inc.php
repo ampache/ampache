@@ -37,7 +37,7 @@ if ($user) {
 </div> <!-- Close Now Playing Div -->
 <?php
 } ?>
-<!-- Randomly selected albums of the moment -->
+<!-- Randomly selected Albums of the Moment -->
 <?php
 if (Art::is_enabled()) {
         if (AmpConfig::get('home_moment_albums')) {

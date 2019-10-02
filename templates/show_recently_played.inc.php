@@ -109,7 +109,7 @@ foreach ($data as $row) {
             <span class="cel_item_add">
                 <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to temporary playlist'), 'add_' . $nb . '_' . $song->id); ?>
                 <a id="<?php echo 'add_playlist_' . $nb . '_' . $song->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id ?>')">
-                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                    <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
                 </a>
             </span>
         </td>

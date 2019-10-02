@@ -51,7 +51,7 @@ if ($libitem->enabled || Access::check('interface', '50')) {
     if (Access::check('interface', '25')) {
         ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
     <?php
         if (AmpConfig::get('directplay')) {
@@ -113,16 +113,23 @@ if ($libitem->enabled || Access::check('interface', '50')) {
     }
     if (Access::check('interface', '50') || ($libitem->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) {
         ?>
-        <a id="<?php echo 'edit_song_' . $libitem->id ?>" onclick="showEditDialog('song_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_song_' . $libitem->id ?>', '<?php echo T_('Song edit') ?>', 'song_')">
+        <a id="<?php echo 'edit_song_' . $libitem->id ?>" onclick="showEditDialog('song_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_song_' . $libitem->id ?>', '<?php echo T_('Song Edit') ?>', 'song_')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
 <?php
     }
     if (Access::check('interface', '75') || ($libitem->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) {
         $icon                 = $libitem->enabled ? 'disable' : 'enable';
+        if ($libitem->enabled) {
+            $icon       = 'disable';
+            $buttontext = T_('Disable');
+        } else {
+            $icon       = 'enable';
+            $buttontext = T_('Enable');
+        }
         $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
         <span id="<?php echo($button_flip_state_id); ?>">
-            <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $libitem->id, $icon, T_(ucfirst($icon)), 'flip_song_' . $libitem->id); ?>
+            <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $libitem->id, $icon, $buttontext, 'flip_song_' . $libitem->id); ?>
         </span>
 <?php
     }

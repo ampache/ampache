@@ -192,7 +192,7 @@ class Live_Stream extends database_object implements media, library_item
     public function update(array $data)
     {
         if (!$data['name']) {
-            AmpError::add('general', T_('Name Required'));
+            AmpError::add('general', T_('Name is required'));
         }
 
         $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
@@ -200,13 +200,13 @@ class Live_Stream extends database_object implements media, library_item
         $elements = explode(":", $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
-            AmpError::add('general', T_('Invalid URL must be mms:// , https:// or http://'));
+            AmpError::add('general', T_('URL is invalid, must be mms:// , https:// or http://'));
         }
 
         if (!empty($data['site_url'])) {
             $elements = explode(":", $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
-                AmpError::add('site_url', T_('Invalid URL must be http:// or https://'));
+                AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
             }
         }
 
@@ -229,10 +229,10 @@ class Live_Stream extends database_object implements media, library_item
     {
         // Make sure we've got a name and codec
         if (!strlen($data['name'])) {
-            AmpError::add('name', T_('Name Required'));
+            AmpError::add('name', T_('Name is required'));
         }
         if (!strlen($data['codec'])) {
-            AmpError::add('codec', T_('Codec (eg. MP3, OGG...) Required'));
+            AmpError::add('codec', T_('Codec is required (e.g. MP3, OGG...)'));
         }
 
         $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
@@ -240,20 +240,20 @@ class Live_Stream extends database_object implements media, library_item
         $elements = explode(":", $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
-            AmpError::add('url', T_('Invalid URL must be http:// or https://'));
+            AmpError::add('url', T_('URL is invalid, must be http:// or https://'));
         }
 
         if (!empty($data['site_url'])) {
             $elements = explode(":", $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
-                AmpError::add('site_url', T_('Invalid URL must be http:// or https://'));
+                AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
             }
         }
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($data['catalog']);
         if (!$catalog->name) {
-            AmpError::add('catalog', T_('Invalid Catalog'));
+            AmpError::add('catalog', T_('Catalog is invalid'));
         }
 
         if (AmpError::occurred()) {

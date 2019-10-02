@@ -167,7 +167,7 @@ if (!$share_id) {
         /* If the user has been disabled (true value) */
         if (make_bool(Core::get_global('user')->disabled)) {
             debug_event('play/index', Core::get_global('user')->username . " is currently disabled, stream access denied", 3);
-            header('HTTP/1.1 403 User Disabled');
+            header('HTTP/1.1 403 User disabled');
 
             return false;
         }
@@ -340,7 +340,7 @@ if ($media->catalog) {
         if ($demo_id !== '' && isset($democratic)) {
             $democratic->delete_from_oid($oid, $type);
         }
-        header('HTTP/1.1 404 File Disabled');
+        header('HTTP/1.1 404 File disabled');
 
         return false;
     }

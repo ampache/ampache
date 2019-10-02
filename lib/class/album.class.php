@@ -373,7 +373,7 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ";
+            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
         } else {
             $sqlw .= "GROUP BY `song`.`artist` ";
         }
@@ -396,7 +396,8 @@ class Album extends database_object implements library_item
             $sql .= "FROM `song` INNER JOIN `artist` " .
                 "ON `artist`.`id`=`song`.`artist` ";
         }
-        $sql .= $sqlj . $sqlw . "LIMIT 1";
+        $sql .= $sqlj . $sqlw . ", `catalog_id` LIMIT 1";
+        //debug_event('album.class', 'sql ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array_merge($results, Dba::fetch_assoc($db_results));
@@ -428,10 +429,6 @@ class Album extends database_object implements library_item
 
         if (!$user) {
             return false;
-        }
-
-        if ($this->user !== null && $user == $this->user) {
-            return true;
         }
 
         if (Access::check('interface', 50, $user)) {
@@ -475,7 +472,7 @@ class Album extends database_object implements library_item
         $mbid           = empty($mbid) ? null : $mbid;
         $mbid_group     = empty($mbid_group) ? null : $mbid_group;
         $release_type   = empty($release_type) ? null : $release_type;
-        $disk           = ((int) $disk <= 0) ? 1 : $disk;
+        $disk           = (self::sanitize_disk($disk) <= 0) ? 1 : self::sanitize_disk($disk);
         $original_year  = ((int) $original_year <= 0) ? null : $original_year;
         $barcode        = empty($barcode) ? null : $barcode;
         $catalog_number = empty($catalog_number) ? null : $catalog_number;
@@ -624,9 +621,12 @@ class Album extends database_object implements library_item
      */
     public function get_album_suite($catalog = 0)
     {
-        $full_name    = Dba::escape($this->full_name);
-        $release_type = " is null";
-        $mbid         = " is null";
+        $full_name = Dba::escape($this->full_name);
+        if ($full_name == '') {
+            return array();
+        }
+        $release_type = "is null";
+        $mbid         = "is null";
         $year         = (string) $this->year;
 
         if ($this->release_type) {
@@ -648,7 +648,7 @@ class Album extends database_object implements library_item
         }
 
         $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                "$where $catalog_where ORDER BY `album`.`name`, `album`.`disk` ASC";
+                "$where $catalog_where ORDER BY `album`.`disk` ASC";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -974,7 +974,7 @@ class Album extends database_object implements library_item
         $artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
         $album_artist   = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
         $name           = isset($data['name']) ? $data['name'] : $this->name;
-        $disk           = isset($data['disk']) ? $data['disk'] : $this->disk;
+        $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;
         $mbid           = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
         $mbid_group     = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
         $release_type   = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
@@ -1193,5 +1193,22 @@ class Album extends database_object implements library_item
         }
 
         return $results;
+    }
+
+    /**
+     * sanitize_disk
+     * Change letter disk numbers (like vinyl/cassette) to an integer
+     * @param string|integer $disk
+     * @return integer
+     */
+    public static function sanitize_disk($disk)
+    {
+        $alphabet = range('A', 'Z');
+        if ((int) $disk == 0) {
+            // A is 0 but we want to start at disk 1
+            $disk = (int) array_search(strtoupper($disk), $alphabet) + 1;
+        }
+
+        return (int) $disk;
     }
 } // end of album class

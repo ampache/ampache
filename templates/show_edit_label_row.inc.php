@@ -52,7 +52,7 @@
                 <td><input type="text" name="address" value="<?php echo scrub_out($libitem->address); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Email') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('E-mail') ?></td>
                 <td><input type="text" name="email" value="<?php echo scrub_out($libitem->email); ?>" /></td>
             </tr>
             <tr>

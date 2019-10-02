@@ -48,6 +48,7 @@ if (!$rate) {
     if ($rate <= 0) {
         echo T_('not rated yet') . "</li>\n";
     } else {
+        /* HINT: object rating */
         printf(T_('%s of 5'), $rate);
     } echo "</li>\n";
 

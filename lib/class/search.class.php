@@ -381,6 +381,7 @@ class Search extends playlist_object
             if (AmpConfig::get('show_played_times')) {
                 $this->types[] = array(
                     'name' => 'played_times',
+                    /* HINT: Number of times object has been played */
                     'label' => T_('# Played'),
                     'type' => 'numeric',
                     'widget' => array('input', 'number')
@@ -1233,7 +1234,7 @@ class Search extends playlist_object
                     $join['image'] = true;
                 break;
                 case 'artist':
-                    $where[]        = "`artist`.`name` $sql_match_operator '$input'";
+                    $where[]        = "`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input'";
                     $join['artist'] = true;
                 break;
                 default:
@@ -1492,7 +1493,9 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'anywhere':
-                    $where[]           = "(`artist`.`name` $sql_match_operator '$input' OR `album`.`name` $sql_match_operator '$input' OR `song_data`.`comment` $sql_match_operator '$input' OR `song_data`.`label` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input')";
+                    $where[]           = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input' OR " .
+                                         "`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input' OR " .
+                                         " `song_data`.`comment` $sql_match_operator '$input' OR `song_data`.`label` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input')";
                     $join['album']     = true;
                     $join['artist']    = true;
                     $join['song_data'] = true;
@@ -1512,11 +1515,15 @@ class Search extends playlist_object
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
                 break;
                 case 'album':
-                    $where[]       = "`album`.`name` $sql_match_operator '$input'";
+                    $where[]       = "`album`.`name` $sql_match_operator '$input' " .
+                                     " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
+                                     "' ', `album`.`name`)) $sql_match_operator '$input'";
                     $join['album'] = true;
                 break;
                 case 'artist':
-                    $where[]        = "`artist`.`name` $sql_match_operator '$input'";
+                    $where[]        = "`artist`.`name` $sql_match_operator '$input' " .
+                                      " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
+                                      "' ', `artist`.`name`)) $sql_match_operator '$input'";
                     $join['artist'] = true;
                 break;
                 case 'composer':

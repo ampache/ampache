@@ -48,7 +48,7 @@
 } if (!count($songs)) {
         ?>
                 <tr class="<?php echo UI::flip_class(); ?>">
-                    <td colspan="6"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
+                    <td colspan="6"><span class="error"><?php echo T_('No records found'); ?></span></td>
                 </tr>
             <?php
     } ?>

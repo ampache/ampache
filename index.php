@@ -45,4 +45,6 @@ if (AmpConfig::get('refresh_limit') > 5 && AmpConfig::get('home_now_playing')) {
 
 require_once AmpConfig::get('prefix') . UI::find_template('show_index.inc.php');
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

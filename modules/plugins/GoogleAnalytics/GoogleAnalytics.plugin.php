@@ -40,6 +40,8 @@ class AmpacheGoogleAnalytics
      */
     public function __construct()
     {
+        $this->description = T_('Google Analytics statistics');
+
         return true;
     }
 
@@ -55,7 +57,7 @@ class AmpacheGoogleAnalytics
             return false;
         }
 
-        Preference::insert('googleanalytics_tracking_id', 'Google Analytics Tracking ID', '', 100, 'string', 'plugins', $this->name);
+        Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', 100, 'string', 'plugins', $this->name);
 
         return true;
     }

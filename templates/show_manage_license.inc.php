@@ -25,7 +25,7 @@ $web_path = AmpConfig::get('web_path');
 <div id="information_actions">
     <ul>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=show_create"><?php echo T_('Create new license'); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=show_create"><?php echo T_('Create License'); ?></a>
         </li>
     </ul>
 </div>
@@ -48,7 +48,7 @@ $web_path = AmpConfig::get('web_path');
         } if (!count($object_ids)) {
             ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="6" class="error"><?php echo T_('No Licenses Found'); ?></td>
+            <td colspan="6" class="error"><?php echo T_('No licenses found'); ?></td>
         </tr>
         <?php
         } ?>

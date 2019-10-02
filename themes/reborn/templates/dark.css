@@ -80,6 +80,14 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
 }
 
+.edit_dialog_content input[type=text] , .edit_dialog_content select {
+    color: #fff;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-titlebar {
+    color: #fff;
+}
+
 /***********************************************
            Main
 ***********************************************/
@@ -235,6 +243,14 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 /* Localplay */
 .active_instance {
     border-color: #fff;
+}
+
+span#sidebar-header-content::after {
+	content: "<<<";
+}
+
+#sidebar-header.sidebar-header-collapsed > span#sidebar-header-content::after {
+	content: ">>>";
 }
 
 /***********************************************
@@ -574,6 +590,10 @@ div.jp-playlist li {
     color: #999;
 }
 
+.followbtn {
+   background-color: #363F4A;
+}
+
 .missing_album {
     color: #bbb !important;
 }
@@ -594,7 +614,7 @@ div.jp-playlist li {
     border-color: #1d1d1d;
 }
 
-span.item-count {
+span.item-count, span.query-count {
     color: #999;
 }
 

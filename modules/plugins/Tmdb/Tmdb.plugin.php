@@ -24,7 +24,7 @@ class AmpacheTmdb
 {
     public $name           = 'Tmdb';
     public $categories     = 'metadata';
-    public $description    = 'Tmdb metadata integration';
+    public $description    = 'TMDb metadata integration';
     public $url            = 'https://www.themoviedb.org';
     public $version        = '000003';
     public $min_ampache    = '370009';
@@ -40,6 +40,8 @@ class AmpacheTmdb
      */
     public function __construct()
     {
+        $this->description = T_('TMDb metadata integration');
+
         return true;
     }
 
@@ -53,7 +55,7 @@ class AmpacheTmdb
             return false;
         }
 
-        Preference::insert('tmdb_api_key', 'Tmdb api key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('tmdb_api_key', T_('TMDb API key'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -87,7 +89,7 @@ class AmpacheTmdb
         if (strlen(trim($data['tmdb_api_key']))) {
             $this->api_key = trim($data['tmdb_api_key']);
         } else {
-            debug_event('tmdb.plugin', 'No Tmdb api key, metadata plugin skipped', 3);
+            debug_event('tmdb.plugin', 'No TMDb API key, metadata plugin skipped', 3);
 
             return false;
         }
@@ -101,7 +103,7 @@ class AmpacheTmdb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('tmdb.plugin', 'Getting metadata from Tmdb...', 5);
+        debug_event('tmdb.plugin', 'Getting metadata from TMDb...', 5);
 
         // TVShow / Movie metadata only
         if (!in_array('tvshow', $gather_types) && !in_array('movie', $gather_types)) {

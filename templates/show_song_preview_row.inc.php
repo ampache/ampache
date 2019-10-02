@@ -44,7 +44,7 @@
                 if (Access::check('interface', '25')) {
                     ?>
                     <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'song_preview', '<?php echo $libitem->id ?>')">
-                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                    <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
                     </a>
             <?php
                 }

@@ -40,6 +40,6 @@ if (!$art->has_db_info() && !AmpConfig::get('art_order') == 'db') {
 
 ?>
 <br />
-<strong><?php echo T_('Update from Tags Complete'); ?></strong>&nbsp;&nbsp;
+<strong><?php echo T_('Update from tags complete'); ?></strong>&nbsp;&nbsp;
 <a class="button" href="<?php echo $target_url; ?>"><?php echo T_('Continue'); ?></a>
 <?php UI::show_box_bottom(); ?>
