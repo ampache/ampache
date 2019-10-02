@@ -94,6 +94,7 @@ class Shoutbox
      * get_top
      * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
      * number of objects shown
+     * @param integer $limit
      */
     public static function get_top($limit, $username = null)
     {

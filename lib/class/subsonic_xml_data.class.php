@@ -214,7 +214,7 @@ class Subsonic_XML_Data
         return "";
     }
 
-    public static function createFailedResponse($version = '', $function = '')
+    public static function createFailedResponse($function = '')
     {
         $version  = self::API_VERSION;
         $response = self::createResponse($version, 'failed');
@@ -223,7 +223,7 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createSuccessResponse($version = '', $function = '')
+    public static function createSuccessResponse($function = '')
     {
         $version  = self::API_VERSION;
         $response = self::createResponse($version);
@@ -232,11 +232,12 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createResponse($version = '', $status = 'ok')
+    /**
+     * createResponse
+     * @param string $version
+     */
+    public static function createResponse($version, $status = 'ok')
     {
-        if ($version === '') {
-            $version = self::API_VERSION;
-        }
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         //       $response->addAttribute('type', 'ampache');
@@ -246,12 +247,13 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createError($code, $message = '', $version = '', $function = '')
+    /**
+     * createError
+     * @param string $message
+     */
+    public static function createError($code, $message, $function = '')
     {
-        if (empty($version)) {
-            $version = self::API_VERSION;
-        }
-        $response = self::createFailedResponse($version, $function);
+        $response = self::createFailedResponse($function);
         self::setError($response, $code, $message);
 
         return $response;
@@ -989,6 +991,7 @@ class Subsonic_XML_Data
 
     /**
      * @param SimpleXMLElement $xml
+     * @param User $user
      */
     public static function addUser($xml, $user)
     {

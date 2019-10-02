@@ -492,6 +492,7 @@ class Tag extends database_object implements library_item
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      * @param string $type
+     * @return integer[]|false
      */
     public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
     {
@@ -518,7 +519,7 @@ class Tag extends database_object implements library_item
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int) $row['object_id'];
         }
 
         return $results;

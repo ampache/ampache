@@ -80,6 +80,7 @@ class Session
      * destroy
      *
      * This removes the specified session from the database.
+     * @param string $key
      */
     public static function destroy($key)
     {

@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
         }
 
         $playlist_name = scrub_in($_REQUEST['playlist_name']);
-        $playlist_type = scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $playlist_type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
         $_SESSION['data']['playlist_id'] = $playlist_id;

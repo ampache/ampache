@@ -279,7 +279,6 @@ class User extends database_object
      */
     public static function get_from_apikey($apikey)
     {
-        $user_id   = null;
         $apikey    = trim($apikey);
         if (!empty($apikey)) {
             // check for legacy unencrypted apikey
@@ -723,6 +722,7 @@ class User extends database_object
     /**
      * update_email
      * updates their email address
+     * @param string $new_email
      */
     public function update_email($new_email)
     {
@@ -982,6 +982,7 @@ class User extends database_object
      * create
      * inserts a new user into Ampache
      * @param null|string $website
+     * @param string $email
      */
     public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false, $encrypted = false)
     {

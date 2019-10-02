@@ -45,9 +45,9 @@ switch ($_REQUEST['action']) {
 
         /* Clean up the variables */
         $user_id         = (int) filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
-        $username        = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $fullname        = scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $email           = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+        $username        = (string) scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $fullname        = (string) scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $email           = (string) scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $website         = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $access          = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $pass1           = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -132,11 +132,11 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        $username       = scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $fullname       = scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $email          = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+        $username       = (string) scrub_in(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $fullname       = (string) scrub_in(filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $email          = (string) scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $website        = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $access         = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $access         = (int) scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $pass1          = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $pass2          = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $state          = (string) scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
@@ -167,7 +167,7 @@ switch ($_REQUEST['action']) {
         }
 
         /* Attempt to create the user */
-        $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $state, $city);
+        $user_id = User::create($username, $fullname, $email, $website, $pass1, (string) $access, $state, $city);
         if (!$user_id) {
             AmpError::add('general', T_("The new User was not created"));
         }
@@ -176,18 +176,25 @@ switch ($_REQUEST['action']) {
 
         switch ($access) {
             case 5:
-                $access = T_('Guest');
+                $useraccess = T_('Guest');
                 break;
             case 25:
-                $access = T_('User');
+                $useraccess = T_('User');
+                break;
+            case 50:
+                $useraccess = T_('Content Manager');
+                break;
+            case 75:
+                $useraccess = T_('Catalog Manager');
                 break;
             case 100:
-                $access = T_('Admin');
+                $useraccess = T_('Admin');
         }
 
         show_confirmation(T_('New User Added'),
                 /* HINT: %1 Username, %2 Access (Guest, User, Admin) */
-                sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $access), AmpConfig::get('web_path') . '/admin/users.php');
+                sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $useraccess), AmpConfig::get('web_path') . '/admin/users.php');
+
     break;
     case 'enable':
         $client = new User(Core::get_request('user_id'));

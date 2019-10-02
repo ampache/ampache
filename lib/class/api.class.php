@@ -506,7 +506,9 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::songs($songs, array(), true, $user->id);
+        if (!empty($songs)) {
+            echo XML_Data::songs($songs, array(), true, $user->id);
+        }
     } // artist_songs
 
     /**
@@ -546,7 +548,7 @@ class Api
      */
     public static function album($input)
     {
-        $uid = scrub_in($input['filter']);
+        $uid = (int) scrub_in($input['filter']);
         echo XML_Data::albums(array($uid), $input['include']);
     } // album
 
@@ -584,8 +586,9 @@ class Api
             // songs for just this disk
             $songs = $album->get_songs();
         }
-
-        echo XML_Data::songs($songs, array(), true, $user->id);
+        if (!empty($songs)) {
+            echo XML_Data::songs($songs, array(), true, $user->id);
+        }
     } // album_songs
 
     /**
@@ -686,7 +689,9 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo XML_Data::songs($songs, array(), true, $user->id);
+        if ($songs) {
+            echo XML_Data::songs($songs, array(), true, $user->id);
+        }
     } // tag_songs
 
     /**
@@ -735,7 +740,7 @@ class Api
         $user    = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
-        echo XML_Data::songs(array($song_id), array(), true, $user->id);
+        echo XML_Data::songs(array((int) $song_id), array(), true, $user->id);
     } // song
 
     /**
@@ -1438,11 +1443,12 @@ class Api
             $item = new $type($object_id);
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
-            } else {
-                $rate = new Rating($object_id, $type);
-                $rate->set_rating($rating);
-                echo XML_Data::success('rating set ' . $object_id);
+
+                return;
             }
+            $rate = new Rating($object_id, $type);
+            $rate->set_rating($rating);
+            echo XML_Data::success('rating set ' . $object_id);
         }
     } // rate
 
@@ -1483,14 +1489,16 @@ class Api
             $item = new $type($object_id);
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
-            } else {
-                $userflag = new Userflag($object_id, $type);
-                if ($userflag->set_flag($flag, $user_id)) {
-                    echo XML_Data::success('flag set ' . $object_id);
-                } else {
-                    echo XML_Data::error('400', 'flag failed ' . $object_id);
-                }
+
+                return;
             }
+            $userflag = new Userflag($object_id, $type);
+            if ($userflag->set_flag($flag, $user_id)) {
+                echo XML_Data::success('flag set ' . $object_id);
+
+                return;
+            }
+            echo XML_Data::error('400', 'flag failed ' . $object_id);
         }
     } // flag
 
@@ -1522,7 +1530,7 @@ class Api
         $valid     = in_array($user->id, User::get_valid_users());
 
         // validate supplied user
-        if (!$valid) {
+        if ($valid === false) {
             echo XML_Data::error('404', T_('User_id not found.'));
 
             return;
@@ -1541,10 +1549,11 @@ class Api
             $item = new $type($object_id);
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
-            } elseif ($valid) {
-                $user->update_stats($type, $object_id, $agent);
-                echo XML_Data::success('successfully recorded play: ' . $object_id);
+
+                return;
             }
+            $user->update_stats($type, $object_id, $agent);
+            echo XML_Data::success('successfully recorded play: ' . $object_id);
         }
     } // record_play
 
@@ -1576,8 +1585,8 @@ class Api
         ob_end_clean();
         $charset     = AmpConfig::get('site_charset');
         $song_name   = (string) html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
-        $artist_name = (string) html_entity_decode(scrub_in($input['artist']), ENT_QUOTES, $charset);
-        $album_name  = (string) html_entity_decode(scrub_in($input['album']), ENT_QUOTES, $charset);
+        $artist_name = (string) html_entity_decode(scrub_in((string) $input['artist']), ENT_QUOTES, $charset);
+        $album_name  = (string) html_entity_decode(scrub_in((string) $input['album']), ENT_QUOTES, $charset);
         $song_mbid   = (string) scrub_in($input['song_mbid']); //optional
         $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
         $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
@@ -1591,7 +1600,7 @@ class Api
             $date = time();
         }
         // validate supplied user
-        if (!$valid) {
+        if ($valid === false) {
             echo XML_Data::error('404', T_('User_id not found.'));
 
             return;
@@ -1616,13 +1625,14 @@ class Api
         if ($scrobble_id === '') {
             echo XML_Data::error('401', T_('Failed to scrobble: No item found!'));
         } else {
-            $item = new Song($scrobble_id);
+            $item = new Song((int) $scrobble_id);
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
-            } elseif ($valid) {
-                $user->update_stats('song', $scrobble_id, $agent, array(), false, $date);
-                echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
+
+                return;
             }
+            $user->update_stats('song', $scrobble_id, $agent, array(), false, $date);
+            echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
         }
     } // scrobble
 
@@ -1969,7 +1979,7 @@ class Api
         $password   = $input['password'];
         $state      = $input['state'];
         $city       = $input['city'];
-        $disable    = ($input['disable'] == 'true');
+        $disable    = $input['disable'];
         $maxbitrate = $input['maxbitrate'];
 
         // if you didn't send anything to update don't do anything
@@ -1979,8 +1989,8 @@ class Api
             return false;
         }
         // identify the user to modify
-        $user_id = User::get_from_username($username);
-        $user    = new User($user_id);
+        $user    = User::get_from_username($username);
+        $user_id = $user->id;
 
         if ($password && Access::check('interface', 100, $user_id)) {
             echo XML_Data::error('400', 'Do not update passwords for admin users! ' . $username);
@@ -2007,9 +2017,9 @@ class Api
             if ($city) {
                 $user->update_city($city);
             }
-            if ($disable) {
+            if ($disable == 'true') {
                 $user->disable();
-            } else {
+            } elseif ($disable == 'false') {
                 $user->enable();
             }
             if ((int) $maxbitrate > 0) {
