@@ -983,6 +983,7 @@ class Subsonic_XML_Data
 
     /**
      * @param SimpleXMLElement $xml
+     * @param User $user
      */
     public static function addUser($xml, $user)
     {

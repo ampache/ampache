@@ -547,7 +547,7 @@ class XML_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param    array    $albums    (description here...)
+     * @param    integer[]    $albums    (description here...)
      * @param    array    $include    Array of other items to include.
      * @param    bool     $full_xml  whether to return a full XML document or just the node.
      * @return    string    return xml
@@ -694,6 +694,7 @@ class XML_Data
      *
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
+     * @param integer[] $songs
      */
     public static function songs($songs, $playlist_data = array(), $full_xml = true, $user_id = false)
     {

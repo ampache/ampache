@@ -147,6 +147,7 @@ class Userflag extends database_object
      * This function sets the user flag for the current object.
      * If no user_id is passed in, we use the currently logged in user.
      * @param integer $user_id
+     * @param boolean $flagged
      */
     public function set_flag($flagged, $user_id = null)
     {
