@@ -431,10 +431,6 @@ class Album extends database_object implements library_item
             return false;
         }
 
-        if ($this->user !== null && $user == $this->user) {
-            return true;
-        }
-
         if (Access::check('interface', 50, $user)) {
             return true;
         }
