@@ -78,6 +78,9 @@
 * New Plugin - Matomo.plugin. [<https://matomo.org/>]
 * New Plugin - ListenBrainz.plugin [<https://listenbrainz.org/>]
 * Allow any official Ampache git branch with github_force_branch in config
+* Fix MySQL8 installation using mysql_native_password
+* Fix Catalog Manager can now access catalog areas correctly
+* Fix allow cli tools to use system settings for plugins.
 
 ## 3.9.1
 
