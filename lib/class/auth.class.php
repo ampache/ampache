@@ -178,6 +178,18 @@ class Auth
                     );
                 }
             }
+            // subsonic password fallback for auth with apikey
+            $sub_sql = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
+            $results = Dba::read($sub_sql, array($username));
+            $row     = Dba::fetch_assoc($results);
+            $api_key = $row['apikey'];
+            if ($password == $api_key) {
+                return array(
+                    'success' => true,
+                    'type' => 'mysql',
+                    'username' => $username
+                );
+            }
         }
 
         return array(
