@@ -121,7 +121,7 @@ class SeafileAdapter
         }));
 
         if (count($matches) == 0) {
-            AmpError::add('general', sprintf(T_('No media updated: could not find Seafile library called "%s"'), $this->library_name));
+            AmpError::add('general', sprintf(T_('Could not find the Seafile library called "%s", no media was updated'), $this->library_name));
 
             return false;
         }

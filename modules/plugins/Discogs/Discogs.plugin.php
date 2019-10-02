@@ -39,6 +39,8 @@ class AmpacheDiscogs
      */
     public function __construct()
     {
+        $this->description = T_('Discogs metadata integration');
+
         return true;
     }
 
@@ -51,8 +53,8 @@ class AmpacheDiscogs
         if (Preference::exists('discogs_api_key')) {
             return false;
         }
-        Preference::insert('discogs_api_key', 'Discogs consumer key', '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('discogs_secret_api_key', 'Discogs secret', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -121,9 +123,9 @@ class AmpacheDiscogs
         return $this->query_discogs($query);
     }
 
-    protected function get_artist($id)
+    protected function get_artist($object_id)
     {
-        $query = "artists/" . $id;
+        $query = "artists/" . $object_id;
 
         return $this->query_discogs($query);
     }
@@ -135,9 +137,9 @@ class AmpacheDiscogs
         return $this->query_discogs($query);
     }
 
-    protected function get_album($id)
+    protected function get_album($object_id)
     {
-        $query = "masters/" . $id;
+        $query = "masters/" . $object_id;
 
         return $this->query_discogs($query);
     }

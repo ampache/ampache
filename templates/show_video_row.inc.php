@@ -65,7 +65,7 @@ if (Art::is_enabled()) {
     if (Access::check('interface', '25')) {
         ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'video', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
     <?php
     }
@@ -122,7 +122,7 @@ if (Access::check_function('download')) {
 }
     if (Access::check('interface', '50')) {
         ?>
-    <a id="<?php echo 'edit_video_' . $libitem->id ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_video_' . $libitem->id ?>', '<?php echo T_('Video edit') ?>', 'video_')">
+    <a id="<?php echo 'edit_video_' . $libitem->id ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_video_' . $libitem->id ?>', '<?php echo T_('Video Edit') ?>', 'video_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
 <?php

@@ -23,7 +23,7 @@
 /**
  * AmpacheXbmc Class
  *
- * This is the class for the xbmc localplay method to remote control
+ * This is the class for the XBMC Localplay method to remote control
  * a XBMC Instance
  *
  */
@@ -43,7 +43,7 @@ class AmpacheXbmc extends localplay_controller
 
     /**
      * Constructor
-     * This returns the array map for the localplay object
+     * This returns the array map for the Localplay object
      * REQUIRED for Localplay
      */
     public function __construct()
@@ -56,7 +56,7 @@ class AmpacheXbmc extends localplay_controller
 
     /**
      * get_description
-     * This returns the description of this localplay method
+     * This returns the description of this Localplay method
      */
     public function get_description()
     {
@@ -86,7 +86,7 @@ class AmpacheXbmc extends localplay_controller
 
     /**
      * install
-     * This function installs the xbmc localplay controller
+     * This function installs the XBMC Localplay controller
      */
     public function install()
     {
@@ -101,14 +101,14 @@ class AmpacheXbmc extends localplay_controller
         $db_results = Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('xbmc_active', 'XBMC Active Instance', '0', '25', 'integer', 'internal', 'xbmc');
+        Preference::insert('xbmc_active', T_('XBMC Active Instance'), '0', '25', 'integer', 'internal', 'xbmc');
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This removes the localplay controller
+     * This removes the Localplay controller
      */
     public function uninstall()
     {
@@ -340,7 +340,7 @@ class AmpacheXbmc extends localplay_controller
 
     /**
      * pause
-     * This tells xbmc to pause the current song
+     * This tells XBMC to pause the current song
      */
     public function pause()
     {
@@ -364,7 +364,7 @@ class AmpacheXbmc extends localplay_controller
 
     /**
      * stop
-     * This just tells xbmc to stop playing, it does not take
+     * This just tells XBMC to stop playing, it does not take
      * any arguments
      */
     public function stop()
@@ -388,7 +388,7 @@ class AmpacheXbmc extends localplay_controller
 
     /**
      * skip
-     * This tells xbmc to skip to the specified song
+     * This tells XBMC to skip to the specified song
      */
     public function skip($song)
     {
@@ -411,7 +411,7 @@ class AmpacheXbmc extends localplay_controller
     } // skip
 
     /**
-     * This tells xbmc to increase the volume
+     * This tells XBMC to increase the volume
      */
     public function volume_up()
     {
@@ -433,7 +433,7 @@ class AmpacheXbmc extends localplay_controller
     } // volume_up
 
     /**
-     * This tells xbmc to decrease the volume
+     * This tells XBMC to decrease the volume
      */
     public function volume_down()
     {
@@ -504,7 +504,7 @@ class AmpacheXbmc extends localplay_controller
 
     /**
      * volume
-     * This tells xbmc to set the volume to the specified amount
+     * This tells XBMC to set the volume to the specified amount
      */
     public function volume($volume)
     {
@@ -527,7 +527,7 @@ class AmpacheXbmc extends localplay_controller
 
     /**
      * repeat
-     * This tells xbmc to set the repeating the playlist (i.e. loop) to either on or off
+     * This tells XBMC to set the repeating the playlist (i.e. loop) to either on or off
      */
     public function repeat($state)
     {
@@ -551,7 +551,7 @@ class AmpacheXbmc extends localplay_controller
 
     /**
      * random
-     * This tells xbmc to turn on or off the playing of songs from the playlist in random order
+     * This tells XBMC to turn on or off the playing of songs from the playlist in random order
      */
     public function random($onoff)
     {
@@ -576,7 +576,7 @@ class AmpacheXbmc extends localplay_controller
     /**
      * get
      * This functions returns an array containing information about
-     * The songs that xbmc currently has in it's playlist. This must be
+     * The songs that XBMC currently has in it's playlist. This must be
      * done in a standardized fashion
      */
     public function get()
@@ -624,7 +624,7 @@ class AmpacheXbmc extends localplay_controller
     /**
      * status
      * This returns bool/int values for features, loop, repeat and any other features
-     * that this localplay method supports.
+     * that this Localplay method supports.
      * This works as in requesting the xbmc properties
      */
     public function status()
@@ -676,7 +676,7 @@ class AmpacheXbmc extends localplay_controller
 
     /**
      * connect
-     * This functions creates the connection to xbmc and returns
+     * This functions creates the connection to XBMC and returns
      * a boolean value for the status, to save time this handle
      * is stored in this class
      */

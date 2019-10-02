@@ -23,7 +23,7 @@
 
 <ul>
     <li>
-        <a href="javascript:void(0);" id="rb_append_dplaylist_new" onclick="createNewPlaylist('<?php echo T_('Playlist name'); ?>', '<?php echo AmpConfig::get('ajax_url') . '?page=playlist&action=append_item&item_type=' . $object_type . '&item_id=' . $object_id; ?>', 'rb_append_dplaylist_new');">
+        <a href="javascript:void(0);" id="rb_append_dplaylist_new" onclick="createNewPlaylist('<?php echo T_('Playlist Name'); ?>', '<?php echo AmpConfig::get('ajax_url') . '?page=playlist&action=append_item&item_type=' . $object_type . '&item_id=' . $object_id; ?>', 'rb_append_dplaylist_new');">
             <?php echo T_('Add to New Playlist'); ?>
         </a>
     </li>

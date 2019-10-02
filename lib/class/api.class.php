@@ -24,7 +24,7 @@
 /**
  * API Class
  *
- * This handles functions relating to the API written for ampache, initially
+ * This handles functions relating to the API written for Ampache, initially
  * this is very focused on providing functionality for Amarok so it can
  * integrate with Ampache.
  *
@@ -178,8 +178,8 @@ class Api
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < self::$auth_version) {
-            debug_event('api.class', 'Login Failed: version too old', 1);
-            AmpError::add('api', T_('Login Failed: version too old'));
+            debug_event('api.class', 'Login Failed: Version too old', 1);
+            AmpError::add('api', T_('Login failed, API version is too old'));
 
             return false;
         }
@@ -207,9 +207,9 @@ class Api
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
-                    debug_event('api.class', 'Login Failed: timestamp out of range ' . $timestamp . '/' . time(), 1);
-                    AmpError::add('api', T_('Login Failed: timestamp out of range'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Login Failed: timestamp out of range'));
+                    debug_event('api.class', 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
+                    AmpError::add('api', T_('Login failed, timestamp is out of range'));
+                    echo XML_Data::error('401', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'));
 
                     return false;
                 }
@@ -221,8 +221,8 @@ class Api
 
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
-                    AmpError::add('api', T_('Invalid Username/Password'));
-                    echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+                    AmpError::add('api', T_('Incorrect username or password'));
+                    echo XML_Data::error('401', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'));
 
                     return false;
                 }
@@ -321,7 +321,7 @@ class Api
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        echo XML_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
+        echo XML_Data::error('401', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'));
 
         return false;
     } // handshake
@@ -340,7 +340,7 @@ class Api
     {
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => self::$version, 'compatible' => '350001');
 
-        // Check and see if we should extend the api sessions (done if valid sess is passed)
+        // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
@@ -376,7 +376,7 @@ class Api
             return true;
         }
         ob_end_clean();
-        echo XML_Data::error('400', 'failed to session: ' . $input['auth']);
+        echo XML_Data::error('400', 'failed to end session: ' . $input['auth']);
     } // goodbye
 
     /**
@@ -1063,13 +1063,13 @@ class Api
      * localplay
      * MINIMUM_API_VERSION=380001
      *
-     * This is for controlling localplay
+     * This is for controlling Localplay
      *
      * @param array $input
      */
     public static function localplay($input)
     {
-        // Load their localplay instance
+        // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
@@ -1084,7 +1084,7 @@ class Api
             break;
             default:
                 // They are doing it wrong
-                echo XML_Data::error('405', T_('Invalid Request'));
+                echo XML_Data::error('405', T_('Invalid request'));
             break;
         } // end switch on command
     } // localplay
@@ -1108,7 +1108,7 @@ class Api
                 $type  = 'song';
                 $media = new $type($input['oid']);
                 if (!$media->id) {
-                    echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                    echo XML_Data::error('400', T_('Media object invalid or not specified'));
                     break;
                 }
                 $democratic->add_vote(array(
@@ -1126,7 +1126,7 @@ class Api
                 $type  = 'song';
                 $media = new $type($input['oid']);
                 if (!$media->id) {
-                    echo XML_Data::error('400', T_('Media Object Invalid or Not Specified'));
+                    echo XML_Data::error('400', T_('Media object invalid or not specified'));
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id, $type);
@@ -1149,7 +1149,7 @@ class Api
                 echo XML_Data::keyed_array($xml_array);
             break;
             default:
-                echo XML_Data::error('405', T_('Invalid Request'));
+                echo XML_Data::error('405', T_('Invalid request'));
             break;
         } // switch on method
     } // democratic
@@ -1178,7 +1178,16 @@ class Api
 
             return false;
         }
-        $user   = User::get_from_username(Session::username($input['auth']));
+        // set a default user
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $user_id = $user->id;
+        // override your user if you're looking at others
+        if ($input['username']) {
+            $username = $input['username'];
+            $user_id  = User::get_from_username($username);
+        } elseif ($input['user_id']) {
+            $user_id  = $input['user_id'];
+        }
         // moved type to filter and allowed multipe type selection
         $type   = $input['type'];
         $filter = $input['filter'];
@@ -1188,12 +1197,6 @@ class Api
         if (in_array($input['type'], array('newest', 'highest', 'frequent', 'recent', 'flagged'))) {
             $type   = 'album';
             $filter = $input['type'];
-        }
-        if ($input['username']) {
-            $username = $input['username'];
-            $user_id  = User::get_from_username($username);
-        } else {
-            $user_id  = $input['user_id'];
         }
         if (!$limit) {
             $limit = AmpConfig::get('popular_threshold');
@@ -1504,7 +1507,7 @@ class Api
      * MINIMUM_API_VERSION=400001
      *
      * Take a song_id and update the object_count and user_activity table with a play
-     * This allows other sources to record play history to ampache
+     * This allows other sources to record play history to Ampache
      *
      * @param array $input
      * $input = array(id     = (int) $object_id
@@ -1559,7 +1562,7 @@ class Api
      * MINIMUM_API_VERSION=400001
      *
      * Search for a song using text info and then record a play if found.
-     * This allows other sources to record play history to ampache
+     * This allows other sources to record play history to Ampache
      *
      * @param array $input
      * $input = array(song       = (string) $song_name
@@ -1602,7 +1605,7 @@ class Api
 
             return;
         }
-        
+
         //validate minimum required options
         debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
@@ -1617,10 +1620,10 @@ class Api
         } else {
             $agent = 'api';
         }
-        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
+        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
 
         if ($scrobble_id === '') {
-            echo XML_Data::error('401', T_('failed to scrobble: no item found!'));
+            echo XML_Data::error('401', T_('Failed to scrobble: No item found!'));
         } else {
             $item = new Song((int) $scrobble_id);
             if (!$item->id) {

@@ -109,8 +109,8 @@ class Subsonic_Api
         ob_end_clean();
         header("Access-Control-Allow-Origin: *");
         if (function_exists('curl_version')) {
-            // Here, we use curl from the ampache server to download data from
-            // the ampache server, which can be a bit counter-intuitive.
+            // Here, we use curl from the Ampache server to download data from
+            // the Ampache server, which can be a bit counter-intuitive.
             // We use the curl `writefunction` and `headerfunction` callbacks
             // to write the fetched data back to the open stream from the
             // client.
@@ -340,7 +340,7 @@ class Subsonic_Api
 
     /**
      * getMusicFolders
-     * Get all configured top-level music folders (= ampache catalogs).
+     * Get all configured top-level music folders (= Ampache catalogs).
      * Takes no parameter.
      */
     public static function getmusicfolders($input)
@@ -1408,9 +1408,9 @@ class Subsonic_Api
             }
 
             if (!empty($object_type)) {
-                $response        = Subsonic_XML_Data::createSuccessResponse('createshare');
-                $shares          = array();
-                $shares[]        = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, Share::generate_secret(), 0, $description);
+                $response = Subsonic_XML_Data::createSuccessResponse('createshare');
+                $shares   = array();
+                $shares[] = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, Share::generate_secret(), 0, $description);
                 Subsonic_XML_Data::addShares($response, $shares);
             } else {
                 $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'createshare');
@@ -1635,7 +1635,7 @@ class Subsonic_Api
     }
 
     /**
-     * changePassword
+     * change password
      * Change the password of an existing user.
      * Takes the username with new password in parameters.
      */
@@ -1848,10 +1848,10 @@ class Subsonic_Api
         $includeNotPresent = ($input['includeNotPresent'] === "true");
 
         if (Subsonic_XML_Data::isArtist($id)) {
-            $artist_id        = Subsonic_XML_Data::getAmpacheId($id);
-            $info             = Recommendation::get_artist_info($artist_id);
-            $similars         = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
-            $response         = Subsonic_XML_Data::createSuccessResponse('getartistinfo');
+            $artist_id = Subsonic_XML_Data::getAmpacheId($id);
+            $info      = Recommendation::get_artist_info($artist_id);
+            $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
+            $response  = Subsonic_XML_Data::createSuccessResponse('getartistinfo');
             Subsonic_XML_Data::addArtistInfo($response, $info, $similars);
         } else {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'getartistinfo');
@@ -1951,8 +1951,8 @@ class Subsonic_Api
                     $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'getpodcasts');
                 }
             } else {
-                $podcasts        = Catalog::get_podcasts();
-                $response        = Subsonic_XML_Data::createSuccessResponse('getpodcasts');
+                $podcasts = Catalog::get_podcasts();
+                $response = Subsonic_XML_Data::createSuccessResponse('getpodcasts');
                 Subsonic_XML_Data::addPodcasts($response, $podcasts, $includeEpisodes);
             }
         } else {
@@ -2111,8 +2111,8 @@ class Subsonic_Api
      */
     public static function getbookmarks($input)
     {
-        $response         = Subsonic_XML_Data::createSuccessResponse('getbookmarks');
-        $bookmarks        = Bookmark::get_bookmarks();
+        $response  = Subsonic_XML_Data::createSuccessResponse('getbookmarks');
+        $bookmarks = Bookmark::get_bookmarks();
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
         self::apiOutput($input, $response);
     }
@@ -2197,7 +2197,7 @@ class Subsonic_Api
 
     /**
      * getPlayQueue
-     * Geturns the state of the play queue for the authenticated user.
+     * Returns the state of the play queue for the authenticated user.
      * Takes no parameter.
      * Not supported.
      */
@@ -2210,7 +2210,7 @@ class Subsonic_Api
     /**
      * savePlayQueue
      * Save the state of the play queue for the authenticated user.
-     * Takes multiple song id in parameter with optional current id playing sond and position.
+     * Takes multiple song id in parameter with optional current id playing song and position.
      * Not supported.
      */
     public static function saveplayqueue($input)

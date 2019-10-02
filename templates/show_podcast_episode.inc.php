@@ -100,7 +100,7 @@
     } ?>
         <?php if (Access::check('interface', '50')) {
         ?>
-            <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo T_('Edit') ?>', '')">
+            <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo T_('Podcast Episode Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
@@ -114,20 +114,20 @@
     } ?>
     </dd>
 <?php
-    $songprops[gettext_noop('Title')]                  = $episode->f_title;
-    $songprops[gettext_noop('Description')]            = $episode->f_description;
-    $songprops[gettext_noop('Category')]               = $episode->f_category;
-    $songprops[gettext_noop('Author')]                 = $episode->f_author;
-    $songprops[gettext_noop('Publication Date')]       = $episode->f_pubdate;
-    $songprops[gettext_noop('State')]                  = $episode->f_state;
-    $songprops[gettext_noop('Website')]                = $episode->f_website;
+    $songprops[T_('Title')]                  = $episode->f_title;
+    $songprops[T_('Description')]            = $episode->f_description;
+    $songprops[T_('Category')]               = $episode->f_category;
+    $songprops[T_('Author')]                 = $episode->f_author;
+    $songprops[T_('Publication Date')]       = $episode->f_pubdate;
+    $songprops[T_('State')]                  = $episode->f_state;
+    $songprops[T_('Website')]                = $episode->f_website;
     if ($episode->time > 0) {
-        $songprops[gettext_noop('Length')]           = $episode->f_time;
+        $songprops[T_('Length')]           = $episode->f_time;
     }
 
     if (!empty($episode->file)) {
-        $songprops[gettext_noop('File')] = $episode->file;
-        $songprops[gettext_noop('Size')] = $episode->f_size;
+        $songprops[T_('File')] = $episode->file;
+        $songprops[T_('Size')] = $episode->f_size;
     }
 
     foreach ($songprops as $key => $value) {

@@ -85,8 +85,8 @@ if ($directplay_limit > 0) {
             <?php if (Stream_Playlist::check_autoplay_append()) {
             ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_'); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', T_('Play last'), 'addplay_album_text_'); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play Last'), 'addplay_album_'); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', T_('Play Last'), 'addplay_album_text_'); ?>
         </li>
             <?php
         } ?>
@@ -95,12 +95,12 @@ if ($directplay_limit > 0) {
         <?php if ($show_playlist_add) {
         ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_'); ?>
-            <?php echo Ajax::text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), T_('Add to temporary playlist'), 'play_full_text_'); ?>
+            <?php echo Ajax::button('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to Temporary Playlist'), 'play_full_'); ?>
+            <?php echo Ajax::text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), T_('Add to Temporary Playlist'), 'play_full_text_'); ?>
         </li>
         <li>
-            <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_'); ?>
-            <?php echo Ajax::text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), T_('Random to temporary playlist'), 'play_random_text_'); ?>
+            <?php echo Ajax::button('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', T_('Random to Temporary Playlist'), 'play_random_'); ?>
+            <?php echo Ajax::text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), T_('Random to Temporary Playlist'), 'play_random_text_'); ?>
         </li>
         <?php
     } ?>
@@ -124,7 +124,7 @@ if ($directplay_limit > 0) {
     foreach ($album_suite as $album_id) {
         $c_album = new Album($album_id);
         $c_album->format();
-        $c_title           = scrub_out($c_album->name) . "&nbsp;<span class=\"discnb disc" . $c_album->disk . "\">, " . T_('Disk') . " " . $c_album->disk . "</span>";
+        $c_title           = scrub_out($c_album->name) . "<span class=\"discnb disc" . $c_album->disk . "\">, " . T_('Disk') . " " . $c_album->disk . "</span>";
         $show_direct_play  = $show_direct_play_cfg;
         $show_playlist_add = Access::check('interface', '25');
         if ($directplay_limit > 0) {
@@ -150,7 +150,7 @@ if ($directplay_limit > 0) {
             ?>
             <?php if (AmpConfig::get('sociable')) {
                 ?>
-                <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo UI::get_icon('comment', T_('Post Shout')) ?></a>
+                <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo UI::get_icon('comment', T_('Post shout')) ?></a>
             <?php
             } ?>
             <?php if (AmpConfig::get('share')) {
@@ -169,12 +169,12 @@ if ($directplay_limit > 0) {
             ?>
             <a onclick="submitNewItemsOrder('<?php echo $c_album->id ?>', 'reorder_songs_table_<?php echo $c_album->id ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
-                <?php echo UI::get_icon('save', T_('Save Tracks Order')); ?>
+                <?php echo UI::get_icon('save', T_('Save Track Order')); ?>
             </a>
             <a href="javascript:NavigateTo('<?php echo $web_path ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?') ?>');">
                 <?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?>
             </a>
-            <a id="<?php echo 'edit_album_' . $c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_' . $c_album->id ?>', '<?php echo T_('Album edit') ?>', '')">
+            <a id="<?php echo 'edit_album_' . $c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_' . $c_album->id ?>', '<?php echo T_('Album Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php

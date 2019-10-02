@@ -23,15 +23,35 @@
 <ul class="sb2" id="sb_admin">
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Catalogs'); ?>"><?php echo T_('Catalogs'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'catalogs', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_catalogs')) ? $_COOKIE['sb_catalogs'] : 'expanded')); ?></h4>
    <ul class="sb3" id="sb_admin_catalogs">
-    <li id="sb_admin_catalogs_Add"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo T_('Add a Catalog'); ?></a></li>
+    <li id="sb_admin_catalogs_Add"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo T_('Add Catalog'); ?></a></li>
     <li id="sb_admin_catalogs_Show"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_catalogs"><?php echo T_('Show Catalogs'); ?></a></li>
+    <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo T_('Export Catalog'); ?></a></li>
+    <li id="sb_admin_ot_Duplicates"><a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo T_('Find Duplicates'); ?></a></li>
+      <?php if (AmpConfig::get('licensing')) {
+    ?>
+      <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path; ?>/admin/license.php"><?php echo T_('Manage Licenses'); ?></a></li>
+      <?php
+} ?>
    </ul>
   </li>
-
+<?php if (Access::check('interface', '100')) {
+        ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('User Tools'); ?>"><?php echo T_('User Tools'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'user_tools', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_user_tools')) ? $_COOKIE['sb_user_tools'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_admin_ut">
       <li id="sb_admin_ut_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
       <li id="sb_admin_ut_BrowseUsers"><a href="<?php echo $web_path; ?>/admin/users.php"><?php echo T_('Browse Users'); ?></a></li>
+        <?php
+    if (Mailer::is_mail_enabled()) {
+        ?>
+        <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('E-mail Users'); ?></a></li>
+    <?php
+    }
+        if (AmpConfig::get('sociable')) {
+            ?>
+      <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
+      <?php
+        } ?>
+      <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a></li>
     </ul>
   </li>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Access Control'); ?>"><?php echo T_('Access Control'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'access_control', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_access_control')) ? $_COOKIE['sb_access_control'] : 'expanded')); ?></h4>
@@ -42,36 +62,29 @@
   </li>
   <?php Ajax::start_container('browse_filters'); ?>
   <?php Ajax::end_container(); ?>
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Other Tools'); ?>"><?php echo T_('Other Tools'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'ad_other_tools', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_ad_other_tools')) ? $_COOKIE['sb_ad_other_tools'] : 'expanded')); ?></h4>
-    <ul class="sb3" id="sb_admin_ot">
-      <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
-      <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a></li>
-      <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo T_('Export Catalog'); ?></a></li>
-      <?php if (AmpConfig::get('sociable')) {
-    ?>
-      <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
-      <?php
-} ?>
-      <?php if (AmpConfig::get('licensing')) {
-        ?>
-      <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path; ?>/admin/license.php"><?php echo T_('Manage Licenses'); ?></a></li>
-      <?php
-    } ?>
-    </ul>
+<ul class="sb2" id="sb_modules">
+    <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Modules'); ?>"><?php echo T_('Modules'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_modules')) ? $_COOKIE['sb_modules'] : 'expanded'; ?>" id="modules" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
+      <ul class="sb3" id="sb_Modules">
+        <li id="sb_preferences_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Controllers'); ?></a></li>
+        <li id="sb_preferences_mo_catalog_types"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_catalog_types"><?php echo T_('Catalog Types'); ?></a></li>
+        <li id="sb_preferences_mo_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo T_('Manage Plugins'); ?></a></li>
+      </ul>
+    </li>
   </li>
-<?php if (Access::check('interface', '100')) {
-        ?>
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Server Config'); ?>"><?php echo T_('Server Config'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'server_config', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_server_config')) ? $_COOKIE['sb_server_config'] : 'expanded')); ?></h4>
+  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Server Config'); ?>"><?php echo T_('Server Config'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (filter_has_var(INPUT_COOKIE, 'sb_server_config')) ? $_COOKIE['sb_server_config'] : 'expanded'; ?>" id="server_config" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
     <ul class="sb3" id="sb_preferences_sc">
+        <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
 <?php
-    $catagories = Preference::get_catagories();
-        foreach ($catagories as $name) {
+    $categories = Preference::get_categories();
+        foreach ($categories as $name) {
             $f_name = ucfirst($name); ?>
       <li id="sb_preferences_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
 <?php
         } ?>
     </ul>
   </li>
+</ul>
 <?php
     } ?>
 </ul>
+

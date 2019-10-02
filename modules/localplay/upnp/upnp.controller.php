@@ -23,7 +23,7 @@
 /**
  * AmpacheUPnp Class
  *
- * This is the class for the UPnP localplay method to remote control
+ * This is the class for the UPnP Localplay method to remote control
  * a UPnP player Instance
  *
  */
@@ -40,7 +40,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * Constructor
-     * This returns the array map for the localplay object
+     * This returns the array map for the Localplay object
      * REQUIRED for Localplay
      */
     public function __construct()
@@ -51,7 +51,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * get_description
-     * This returns the description of this localplay method
+     * This returns the description of this Localplay method
      */
     public function get_description()
     {
@@ -69,7 +69,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * is_installed
-     * This returns true or false if upnp controller is installed
+     * This returns true or false if UPnP controller is installed
      */
     public function is_installed()
     {
@@ -81,7 +81,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * install
-     * This function installs the upnp localplay controller
+     * This function installs the UPnP Localplay controller
      */
     public function install()
     {
@@ -93,14 +93,14 @@ class AmpacheUPnP extends localplay_controller
         $db_results = Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('upnp_active', 'UPnP Active Instance', '0', '25', 'integer', 'internal', 'upnp');
+        Preference::insert('upnp_active', T_('UPnP Active Instance'), '0', '25', 'integer', 'internal', 'upnp');
 
         return true;
     }
 
     /**
      * uninstall
-     * This removes the localplay controller
+     * This removes the Localplay controller
      */
     public function uninstall()
     {
@@ -115,7 +115,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * add_instance
-     * This takes key'd data and inserts a new upnp instance
+     * This takes key'd data and inserts a new UPnP instance
      */
     public function add_instance($data)
     {
@@ -241,7 +241,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * delete_track
-     * Delete a track from the upnp playlist
+     * Delete a track from the UPnP playlist
      */
     public function delete_track($track)
     {
@@ -256,7 +256,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * clear_playlist
-     * This deletes the entire upnp playlist.
+     * This deletes the entire UPnP playlist.
      */
     public function clear_playlist()
     {
@@ -271,7 +271,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * play
-     * This just tells upnp to start playing, it does not
+     * This just tells UPnP to start playing, it does not
      * take any arguments
      */
     public function play()
@@ -285,7 +285,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * pause
-     * This tells upnp to pause the current song
+     * This tells UPnP to pause the current song
      */
     public function pause()
     {
@@ -298,7 +298,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * stop
-     * This just tells upnp to stop playing, it does not take
+     * This just tells UPnP to stop playing, it does not take
      * any arguments
      */
     public function stop()
@@ -312,7 +312,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * skip
-     * This tells upnp to skip to the specified song
+     * This tells UPnP to skip to the specified song
      */
     public function skip($pos)
     {
@@ -327,7 +327,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * next
-     * This just tells upnp to skip to the next song
+     * This just tells UPnP to skip to the next song
      */
     public function next()
     {
@@ -342,7 +342,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * prev
-     * This just tells upnp to skip to the prev song
+     * This just tells UPnP to skip to the prev song
      */
     public function prev()
     {
@@ -357,7 +357,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * volume
-     * This tells upnp to set the volume to the specified amount
+     * This tells UPnP to set the volume to the specified amount
      */
     public function volume($volume)
     {
@@ -371,7 +371,7 @@ class AmpacheUPnP extends localplay_controller
     }
 
     /**
-     * This tells upnp to increase the volume
+     * This tells UPnP to increase the volume
      */
     public function volume_up()
     {
@@ -383,7 +383,7 @@ class AmpacheUPnP extends localplay_controller
     }
 
     /**
-     * This tells upnp to decrease the volume
+     * This tells UPnP to decrease the volume
      */
     public function volume_down()
     {
@@ -396,7 +396,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * repeat
-     * This tells upnp to set the repeating the playlist (i.e. loop) to either on or off
+     * This tells UPnP to set the repeating the playlist (i.e. loop) to either on or off
      */
     public function repeat($state)
     {
@@ -415,7 +415,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * random
-     * This tells upnp to turn on or off the playing of songs from the playlist in random order
+     * This tells UPnP to turn on or off the playing of songs from the playlist in random order
      */
     public function random($onoff)
     {
@@ -433,7 +433,7 @@ class AmpacheUPnP extends localplay_controller
     /**
      * get
      * This functions returns an array containing information about
-     * The songs that upnp currently has in it's playlist. This must be
+     * The songs that UPnP currently has in it's playlist. This must be
      * done in a standardized fashion
      */
     public function get()
@@ -475,8 +475,8 @@ class AmpacheUPnP extends localplay_controller
     /**
      * status
      * This returns bool/int values for features, loop, repeat and any other features
-     * that this localplay method supports.
-     * This works as in requesting the upnp properties
+     * that this Localplay method supports.
+     * This works as in requesting the UPnP properties
      */
     public function status()
     {
@@ -511,14 +511,14 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * connect
-     * This functions creates the connection to upnp and returns
+     * This functions creates the connection to UPnP and returns
      * a boolean value for the status, to save time this handle
      * is stored in this class
      */
     public function connect()
     {
         $options = self::get_instance();
-        debug_event('upnp.controller', 'Trying to connect upnp instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
+        debug_event('upnp.controller', 'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
         $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
         debug_event('upnp.controller', 'Connected.', 5);
 

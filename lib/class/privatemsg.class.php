@@ -148,12 +148,12 @@ class PrivateMsg extends database_object
         $message = trim(strip_tags(filter_var($data['message'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
 
         if (empty($subject)) {
-            AmpError::add('subject', T_('Error: Subject Required'));
+            AmpError::add('subject', T_('Subject is required'));
         }
 
         $to_user = User::get_from_username($data['to_user']);
         if (!$to_user->id) {
-            AmpError::add('to_user', T_('Error: Unknown user'));
+            AmpError::add('to_user', T_('Unknown user'));
         }
 
         if (!AmpError::occurred()) {
@@ -174,13 +174,12 @@ class PrivateMsg extends database_object
                             $mailer->recipient      = $to_user->email;
                             $mailer->recipient_name = $to_user->fullname;
                             $mailer->subject        = "[" . T_('Private Message') . "] " . $subject;
-                            $mailer->message        = sprintf(T_("You just received a new private message from %s.\n\n
-        ----------------------
-        %s
-        ----------------------
-
-        %s
-        "), Core::get_global('user')->fullname, $message, AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id);
+                            /* HINT: User fullname */
+                            $mailer->message = sprintf(T_("You received a new private message from %s."), Core::get_global('user')->fullname);
+                            $mailer->message .= "\n\n----------------------\n\n";
+                            $mailer->message .= $message;
+                            $mailer->message .= "\n\n----------------------\n\n";
+                            $mailer->message .= AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id;
                             $mailer->send();
                         }
                     }

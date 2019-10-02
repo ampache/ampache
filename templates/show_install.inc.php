@@ -23,7 +23,7 @@
 require $prefix . '/templates/install_header.inc.php';
 ?>
 <div class="jumbotron">
-    <h1><?php echo T_('Install progress'); ?></h1>
+    <h1><?php echo T_('Install Progress'); ?></h1>
     <div class="progress">
         <div class="progress-bar progress-bar-warning"
             role="progressbar"
@@ -36,7 +36,7 @@ require $prefix . '/templates/install_header.inc.php';
     </div>
     <p><strong><?php echo T_('Step 1 - Create the Ampache database'); ?></strong></p>
     <dl>
-        <dd><?php echo T_('This step creates and inserts the Ampache database, so please provide a MySQL account with database creation rights. This step may take some time on slower computers.'); ?></dd>
+        <dd><?php echo T_('This step creates and inserts the Ampache database, so please provide a MySQL account with database creation rights. This may take some time on slower computers.'); ?></dd>
     </dl>
     <ul class="list-unstyled">
         <li><?php echo T_('Step 2 - Create configuration files (ampache.cfg.php ...)'); ?></li>
@@ -59,7 +59,7 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
     </div>
     <div class="form-group">
-        <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL port (optional)'); ?></label>
+        <label for="local_port" class="col-sm-4 control-label"><?php echo T_('MySQL Port (optional)'); ?></label>
         <div class="col-sm-8">
             <input type="text" class="form-control" id="local_port" name="local_port"/>
        </div>
@@ -96,7 +96,7 @@ require $prefix . '/templates/install_header.inc.php';
         </div>
     </div>
     <div class="form-group" id="overwrite_db_div">
-        <label for="overwrite_db" class="col-sm-4 control-label"><?php echo T_('Overwrite if database already exists'); ?></label>
+        <label for="overwrite_db" class="col-sm-4 control-label"><?php echo T_('Overwrite if Database Already Exists'); ?></label>
         <div class="col-sm-8">
             <input
                 type="checkbox" value="1"

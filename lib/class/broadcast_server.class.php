@@ -108,15 +108,11 @@ class Broadcast_Server implements MessageComponentInterface
                             $this->authSid($from, $cmdinfo[1]);
                         break;
                         default:
-                            if ($this->verbose) {
-                                echo "[" . time() . "][warning]Unknown message code." . "\r\n";
-                            }
+                            self::echo_message($this->verbose, "[" . time() . "][warning]Unknown message code." . "\r\n");
                         break;
                     }
                 } else {
-                    if ($this->verbose) {
-                        echo "[" . time() . "][error]Wrong message format (" . $command . ")." . "\r\n";
-                    }
+                    self::echo_message($this->verbose, "[" . time() . "][error]Wrong message format (" . $command . ")." . "\r\n");
                 }
             }
         }
@@ -155,9 +151,7 @@ class Broadcast_Server implements MessageComponentInterface
             $broadcast->update_song($song_id);
             $this->broadcastMessage($clients, self::BROADCAST_SONG, base64_encode($this->getSongJS($song_id)));
 
-            if ($this->verbose) {
-                echo "[" . time() . "][info]Broadcast " . $broadcast->id . " now playing song " . $song_id . "." . "\r\n";
-            }
+            self::echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " now playing song " . $song_id . "." . "\r\n");
         } else {
             debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
@@ -179,9 +173,7 @@ class Broadcast_Server implements MessageComponentInterface
             }
             $broadcast->song_position = $song_position;
 
-            if ($this->verbose) {
-                echo "[" . time() . "][info]Broadcast " . $broadcast->id . " has song position to " . $song_position . "." . "\r\n";
-            }
+            self::echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " has song position to " . $song_position . "." . "\r\n");
         } else {
             debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
@@ -199,9 +191,7 @@ class Broadcast_Server implements MessageComponentInterface
             $clients   = $this->getListeners($broadcast);
             $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play ? 'true' : 'false');
 
-            if ($this->verbose) {
-                echo "[" . time() . "][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n";
-            }
+            self::echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n");
         } else {
             debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
@@ -218,9 +208,7 @@ class Broadcast_Server implements MessageComponentInterface
             $clients   = $this->getListeners($broadcast);
             $this->broadcastMessage($clients, self::BROADCAST_ENDED);
 
-            if ($this->verbose) {
-                echo "[" . time() . "][info]Broadcast " . $broadcast->id . " ended." . "\r\n";
-            }
+            self::echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " ended." . "\r\n");
         } else {
             debug_event('broadcast.class', 'Action unauthorized.', 3);
         }
@@ -238,9 +226,7 @@ class Broadcast_Server implements MessageComponentInterface
             $this->broadcasters[$from->resourceId] = $broadcast;
             $this->listeners[$broadcast->id]       = array();
 
-            if ($this->verbose) {
-                echo "[info]Broadcast " . $broadcast->id . " registered." . "\r\n";
-            }
+            self::echo_message($this->verbose, "[info]Broadcast " . $broadcast->id . " registered." . "\r\n");
         }
     }
 
@@ -258,9 +244,7 @@ class Broadcast_Server implements MessageComponentInterface
         unset($this->listeners[$broadcast->id]);
         unset($this->broadcasters[$conn->resourceId]);
 
-        if ($this->verbose) {
-            echo "[" . time() . "][info]Broadcast " . $broadcast->id . " unregistered." . "\r\n";
-        }
+        self::echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " unregistered." . "\r\n");
     }
 
     /**
@@ -298,9 +282,7 @@ class Broadcast_Server implements MessageComponentInterface
             $this->broadcastMessage(array($from), self::BROADCAST_SONG_POSITION, $broadcast->song_position);
             $this->notifyNbListeners($broadcast);
 
-            if ($this->verbose) {
-                echo "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n";
-            }
+            self::echo_message($this->verbose, "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n");
         } else {
             debug_event('broadcast.class', 'Listener unauthorized.', 3);
         }
@@ -316,9 +298,7 @@ class Broadcast_Server implements MessageComponentInterface
         if (Session::exists('stream', $sid)) {
             $this->sids[$conn->resourceId] = $sid;
         } else {
-            if ($this->verbose) {
-                echo "Wrong listener session " . $sid . "\r\n";
-            }
+            self::echo_message($this->verbose, "Wrong listener session " . $sid . "\r\n");
         }
     }
 
@@ -427,7 +407,7 @@ class Broadcast_Server implements MessageComponentInterface
     }
 
     /**
-     *
+     * get_address
      * @return string
      */
     public static function get_address()
@@ -438,5 +418,17 @@ class Broadcast_Server implements MessageComponentInterface
         }
 
         return $websocket_address . '/broadcast';
+    }
+
+    /**
+     * echo_message
+     * @param boolean $verbose
+     * @param string $message
+     */
+    private static function echo_message($verbose, $message)
+    {
+        if ($verbose) {
+            echo $message;
+        }
     }
 } // end of broadcast_server class

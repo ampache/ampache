@@ -38,7 +38,7 @@
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_playlist_' . $libitem->id); ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
     </span>
 </td>
@@ -51,13 +51,13 @@
             if (Access::check_function('batch_download') && check_can_zip('search')) {
                 ?>
                 <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
-                    <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
+                    <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
                 </a>
         <?php
             }
             if ($libitem->has_access()) {
                 ?>
-                <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Smart Playlist edit') ?>', 'smartplaylist_row_')">
+                <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Smart Playlist Edit') ?>', 'smartplaylist_row_')">
                     <?php echo UI::get_icon('edit', T_('Edit')); ?>
                 </a>
                 <?php

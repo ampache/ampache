@@ -835,11 +835,12 @@ a.jp-shuffle-off:hover {
 }
 
 #webplayer-minimize {
-    font-size: 0.67em;
-    text-align: left;
-    position: fixed;
     bottom: 0;
+    display: none;
+    font-size: 0.67em;
     left: 0;
+    position: fixed;
+    text-align: left;
     z-index: 10000;
 }
 

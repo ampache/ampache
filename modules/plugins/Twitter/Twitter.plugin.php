@@ -24,7 +24,7 @@ class AmpacheTwitter
 {
     public $name        = 'Twitter';
     public $categories  = 'share';
-    public $description = 'Twitter Share';
+    public $description = 'Twitter share';
     public $url         = 'https://twitter.com';
     public $version     = '000001';
     public $min_ampache = '370027';
@@ -36,6 +36,8 @@ class AmpacheTwitter
      */
     public function __construct()
     {
+        $this->description = T_('Twitter share');
+
         return true;
     } // constructor
 

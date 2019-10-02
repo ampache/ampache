@@ -371,6 +371,15 @@ class Art extends database_object
             return false;
         }
 
+        $dimensions = Core::image_dimensions($source);
+        $width      = (int) ($dimensions['width']);
+        $height     = (int) ($dimensions['height']);
+        $sizetext   = 'original';
+
+        if (!self::check_dimensions($dimensions)) {
+            return false;
+        }
+
         // Default to image/jpeg if they don't pass anything
         $mime = $mime ? $mime : 'image/jpeg';
         // Blow it away!
@@ -402,15 +411,6 @@ class Art extends database_object
                     }
                 }
             }
-        }
-
-        $dimensions = Core::image_dimensions($source);
-        $width      = (int) ($dimensions['width']);
-        $height     = (int) ($dimensions['height']);
-        $sizetext   = 'original';
-
-        if (!self::check_dimensions($dimensions)) {
-            return false;
         }
 
         if (AmpConfig::get('album_art_store_disk')) {
@@ -494,7 +494,7 @@ class Art extends database_object
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
-            debug_event('art.class', 'local_metadata_dir setting is required to store arts on disk.', 1);
+            debug_event('art.class', 'local_metadata_dir setting is required to store art on disk.', 1);
 
             return false;
         }
@@ -1350,7 +1350,7 @@ class Art extends database_object
             $handle = opendir($dir);
 
             if (!$handle) {
-                AmpError::add('general', T_('Error: Unable to open') . ' ' . $dir);
+                AmpError::add('general', T_('Unable to open') . ' ' . $dir);
                 debug_event('art.class', "gather_folder: Error: Unable to open $dir for album art read", 2);
                 continue;
             }
@@ -1375,7 +1375,7 @@ class Art extends database_object
                     continue;
                 }
 
-                // Regularise for mime type
+                // Regularize for mime type
                 if ($extension == 'jpg') {
                     $extension = 'jpeg';
                 }
@@ -1407,7 +1407,7 @@ class Art extends database_object
         } // end foreach dirs
 
         if (is_array($preferred)) {
-            // We found our favourite filename somewhere, so we need
+            // We found our favorite filename somewhere, so we need
             // to dump the other, less sexy ones.
             $results = $preferred;
         }

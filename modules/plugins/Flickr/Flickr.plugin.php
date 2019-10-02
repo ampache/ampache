@@ -38,6 +38,8 @@ class Ampacheflickr
      */
     public function __construct()
     {
+        $this->description = T_('Artist photos from Flickr');
+
         return true;
     } // constructor
 
@@ -51,7 +53,7 @@ class Ampacheflickr
         if (Preference::exists('flickr_api_key')) {
             return false;
         }
-        Preference::insert('flickr_api_key', 'Flickr api key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('flickr_api_key', T_('Flickr API key'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install

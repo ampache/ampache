@@ -43,21 +43,21 @@ if ($cargv > 1) {
 
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
             $chanid = (int) $_SERVER['argv'][++$x];
-            $operations_string .= "\n\t" . T_('- Channel ' . $chanid);
+            $operations_string .= '\n\t' . T_('Channel') . ' ' . $chanid;
         }
         elseif ($_SERVER['argv'][$x] == "-v") {
-            $operations_string .= "\n\t" . T_('- Verbose');
+            $operations_string .= '\n\t' . T_('Verbose');
             $verbose = true;
         }
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
             $port = (int) $_SERVER['argv'][++$x];
-            $operations_string .= "\n\t" . T_('- Port ' . $port);
+            $operations_string .= '\n\t' . T_('Port') . ' ' . $port;
         }
     }
 }
 
 if ($chanid <= 0) {
-    usage();
+    channel_usage();
     return false;
 }
 
@@ -87,7 +87,7 @@ if ($port <= 0) {
             if (is_resource($connection)) {
                 fclose($connection);
             } else {
-                echo T_("Found available port ") . $p . "\n";
+                echo T_("Found available port") . " " .$p . "\n";
                 $port = $p;
                 break;
             }
@@ -104,7 +104,7 @@ if ($server === false)
     die("Could not bind to socket: " . $errorMessage);
 }
 $channel->update_start($start_date, $address, $port, getmypid());
-echo T_("Listening on ") . $address . ':' . $port . "\n";
+echo T_("Listening on") . " " .$address . ':' . $port . "\n";
 
 $stream_clients = array();
 $client_socks = array();
@@ -131,7 +131,7 @@ while(true)
                 $client_socks[] = $new_client;
                 $channel->update_listeners(count($client_socks), true);
                 debug_event('channel_run', 'Now there are total '. count($client_socks) . ' clients.', 4);
-                echo "New client connected.\n";
+                echo T_("Client connected") . "\n";
                 ob_flush();
             }
 
@@ -301,15 +301,15 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     }
     $channel->update_listeners(count($client_socks));
     debug_event('channel_run', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', 4);
-    echo "Client disconnected.\n";
+    echo T_("Client disconnected") . "\n";
     ob_flush();
 }
 
-function usage()
+function channel_usage()
 {
-    echo T_("- Channel Listening -");
+    echo T_("Usage:");
     echo "\n";
-    echo T_("Usage: channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]");
+    echo T_("channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]");
     echo "\n\t";
     echo "\n-c {CHANNEL ID}\t";
     echo T_('Channel id to start');

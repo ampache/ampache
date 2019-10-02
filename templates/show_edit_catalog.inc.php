@@ -20,7 +20,8 @@
  *
  */
 
-UI::show_box_top(sprintf(T_('Settings for %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog');
+/* HINT: Catalog Name */
+UI::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog');
 ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
     <table class="tabledata" cellspacing="0" cellpadding="0">
@@ -33,7 +34,7 @@ UI::show_box_top(sprintf(T_('Settings for %s'), $catalog->name . ' (' . $catalog
                 <span class="format-specifier">%a</span> = <?php echo T_('Artist'); ?><br />
                 <span class="format-specifier">%c</span> = <?php echo T_('Comment'); ?><br />
                 <span class="format-specifier">%C</span> = <?php echo T_('Catalog Number'); ?><br />
-                <span class="format-specifier">%T</span> = <?php echo T_('Track Number (padded with leading 0)'); ?><br />
+                <span class="format-specifier">%T</span> = <?php echo T_('Track (0 padded)'); ?><br />
                 <span class="format-specifier">%d</span> = <?php echo T_('Disk'); ?><br />
                 <span class="format-specifier">%g</span> = <?php echo T_('Genre'); ?><br />
                 <span class="format-specifier">%t</span> = <?php echo T_('Song Title'); ?><br />
@@ -41,7 +42,7 @@ UI::show_box_top(sprintf(T_('Settings for %s'), $catalog->name . ' (' . $catalog
                 <span class="format-specifier">%Y</span> = <?php echo T_('Original Year'); ?><br />
                 <span class="format-specifier">%r</span> = <?php echo T_('Release Type'); ?><br />
                 <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
-                <span class="format-specifier">%o</span> = <?php echo T_('other'); ?><br />
+                <strong><a id="video-help" href="https://github.com/ampache/ampache/wiki/TV-Shows-and-Movies" title="<?php echo T_('Refer to the wiki for TV Shows and Movies'); ?>" target="_blank"><?php echo T_('Refer to the wiki for TV Shows and Movies'); ?></a></strong><br />
             </td>
         </tr>
         <tr>
@@ -49,14 +50,14 @@ UI::show_box_top(sprintf(T_('Settings for %s'), $catalog->name . ' (' . $catalog
             <td><?php echo scrub_out(ucfirst($catalog->catalog_type)); ?></td>
         </tr>
         <tr>
-            <td><?php echo T_('Filename pattern'); ?>:</td>
+            <td><?php echo T_('Filename Pattern'); ?>:</td>
             <td>
                 <input type="text" name="rename_pattern" value="<?php echo scrub_out($catalog->rename_pattern); ?>" />
             </td>
         </tr>
         <tr>
             <td>
-                <?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_('(no leading or ending \'/\')'); ?>
+                <?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?>
             </td>
             <td>
                 <input type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern);?>" />
