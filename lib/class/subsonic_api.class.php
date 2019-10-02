@@ -1500,7 +1500,7 @@ class Subsonic_Api
     {
         $username     = self::check_parameter($input, 'username');
         $password     = self::check_parameter($input, 'password');
-        $email        = self::check_parameter($input, 'email');
+        $email        = urldecode(self::check_parameter($input, 'email'));
         $adminRole    = ($input['adminRole'] == 'true');
         $downloadRole = ($input['downloadRole'] == 'true');
         $uploadRole   = ($input['uploadRole'] == 'true');
@@ -1553,7 +1553,7 @@ class Subsonic_Api
     {
         $username = self::check_parameter($input, 'username');
         $password = $input['password'];
-        $email    = $input['email'];
+        $email    = urldecode($input['email']);
         //$ldapAuthenticated = $input['ldapAuthenticated'];
         $adminRole    = ($input['adminRole'] == 'true');
         $downloadRole = ($input['downloadRole'] == 'true');
@@ -1571,8 +1571,9 @@ class Subsonic_Api
                 $access = 75;
             }
             // identify the user to modify
-            $user_id  = User::get_from_username($username);
-            $user     = new User($user_id);
+            $user     = User::get_from_username($username);
+            $user_id  = $user->id;
+            debug_event('user.class', 'Updating ' . (string) $username . ' - ' . $user_id, 4);
 
             if ($user_id > 0) {
                 // update password
