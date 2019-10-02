@@ -737,7 +737,7 @@ class Catalog_local extends Catalog
         if (count($this->get_gather_types('music')) > 0) {
             if (AmpConfig::get('catalog_check_duplicate')) {
                 if (Song::find($results)) {
-                    debug_event('local.catalog', 'Song already found, skipped to avoid duplicate', 5);
+                    debug_event('local.catalog', 'skipping_duplicate ' . $file, 5);
 
                     return false;
                 }
