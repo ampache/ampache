@@ -243,7 +243,7 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createError($code, $message, $version, $function = '')
+    public static function createError($code, $message, $function = '')
     {
         $response = self::createFailedResponse($function);
         self::setError($response, $code, $message);

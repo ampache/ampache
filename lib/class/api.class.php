@@ -548,7 +548,7 @@ class Api
      */
     public static function album($input)
     {
-        $uid = scrub_in($input['filter']);
+        $uid = (int) scrub_in($input['filter']);
         echo XML_Data::albums(array($uid), $input['include']);
     } // album
 
@@ -586,8 +586,9 @@ class Api
             // songs for just this disk
             $songs = $album->get_songs();
         }
-
-        echo XML_Data::songs($songs, array(), true, $user->id);
+        if (!empty($songs)) {
+            echo XML_Data::songs($songs, array(), true, $user->id);
+        }
     } // album_songs
 
     /**
@@ -688,7 +689,9 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo XML_Data::songs($songs, array(), true, $user->id);
+        if ($songs) {
+            echo XML_Data::songs($songs, array(), true, $user->id);
+        }
     } // tag_songs
 
     /**
@@ -1521,7 +1524,7 @@ class Api
         $valid     = in_array($user->id, User::get_valid_users());
 
         // validate supplied user
-        if (!$valid) {
+        if ($valid == false) {
             echo XML_Data::error('404', T_('User_id not found.'));
 
             return;
@@ -1577,7 +1580,7 @@ class Api
         $charset     = AmpConfig::get('site_charset');
         $song_name   = (string) html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
         $artist_name = (string) html_entity_decode(scrub_in((string) $input['artist']), ENT_QUOTES, $charset);
-        $album_name  = (string) html_entity_decode(scrub_in($input['album']), ENT_QUOTES, $charset);
+        $album_name  = (string) html_entity_decode(scrub_in((string) $input['album']), ENT_QUOTES, $charset);
         $song_mbid   = (string) scrub_in($input['song_mbid']); //optional
         $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
         $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
@@ -1591,7 +1594,7 @@ class Api
             $date = time();
         }
         // validate supplied user
-        if (!$valid) {
+        if ($valid == false) {
             echo XML_Data::error('404', T_('User_id not found.'));
 
             return;
@@ -1616,10 +1619,10 @@ class Api
         if ($scrobble_id === '') {
             echo XML_Data::error('401', T_('failed to scrobble: no item found!'));
         } else {
-            $item = new Song($scrobble_id);
+            $item = new Song((int) $scrobble_id);
             if (!$item->id) {
                 echo XML_Data::error('404', T_('Library item not found.'));
-            } elseif ($valid) {
+            } else {
                 $user->update_stats('song', $scrobble_id, $agent, array(), false, $date);
                 echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
             }
@@ -1969,11 +1972,11 @@ class Api
         $password   = $input['password'];
         $state      = $input['state'];
         $city       = $input['city'];
-        $disable    = $input['disable'] == 'true' ? true : false;
+        $disable    = $input['disable'];
         $maxbitrate = $input['maxbitrate'];
 
         // if you didn't send anything to update don't do anything
-        if (!$fullname || !$email || !$website || !$password || !$state || !$city || !$disable || $disable || !$maxbitrate) {
+        if (!$fullname || !$email || !$website || !$password || !$state || !$city || !$disable || !$maxbitrate) {
             echo XML_Data::error('401', T_('Nothing to update.'));
 
             return false;
@@ -2007,9 +2010,9 @@ class Api
             if ($city) {
                 $user->update_city($city);
             }
-            if ($disable) {
+            if ($disable == 'true') {
                 $user->disable();
-            } else {
+            } elseif ($disable == 'false') {
                 $user->enable();
             }
             if ((int) $maxbitrate > 0) {
