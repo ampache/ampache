@@ -85,7 +85,6 @@ class Daap_Api
     {
         set_time_limit(0);
         ob_end_clean();
-
         if (function_exists('curl_version')) {
             $headers      = apache_request_headers();
             $reqheaders   = array();

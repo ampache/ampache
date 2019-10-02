@@ -49,6 +49,7 @@ class Subsonic_XML_Data
     const AMPACHEID_VIDEO     = 500000000;
     const AMPACHEID_PODCAST   = 600000000;
     const AMPACHEID_PODCASTEP = 700000000;
+    const AMPACHEID_PLAYLIST  = 800000000;
 
     public static $enable_json_checks = false;
 
@@ -114,6 +115,14 @@ class Subsonic_XML_Data
         return $episodeid + self::AMPACHEID_PODCASTEP;
     }
 
+    /**
+     * @param integer $plistid
+     */
+    public static function getPlaylistId($plistid)
+    {
+        return $plistid + self::AMPACHEID_PLAYLIST;
+    }
+
     private static function cleanId($objectid)
     {
         // Remove all al-, ar-, ... prefixs
@@ -174,7 +183,12 @@ class Subsonic_XML_Data
 
     public static function isPodcastEp($episodeid)
     {
-        return (self::cleanId($episodeid) >= self::AMPACHEID_PODCASTEP);
+        return (self::cleanId($episodeid) >= self::AMPACHEID_PODCASTEP && $episodeid < self::AMPACHEID_PLAYLIST);
+    }
+
+    public static function isPlaylist($plistid)
+    {
+        return (self::cleanId($plistid) >= self::AMPACHEID_PLAYLIST);
     }
 
     public static function getAmpacheType($objectid)
@@ -193,32 +207,37 @@ class Subsonic_XML_Data
             return "podcast";
         } elseif (self::isPodcastEp($objectid)) {
             return "podcast_episode";
+        } elseif (self::isPlaylist($objectid)) {
+            return "playlist";
         }
 
         return "";
     }
 
-    public static function createFailedResponse($version = '')
+    public static function createFailedResponse($function = '')
     {
+        $version  = self::API_VERSION;
         $response = self::createResponse($version, 'failed');
-        debug_event('subsonic_xml_data.class', 'API auth fail ' . $version, 3);
+        debug_event('subsonic_xml_data.class', 'API fail in function ' . $function . '-' . $version, 3);
 
         return $response;
     }
 
-    public static function createSuccessResponse($version = '')
+    public static function createSuccessResponse($function = '')
     {
+        $version  = self::API_VERSION;
         $response = self::createResponse($version);
-        debug_event('subsonic_xml_data.class', 'API auth success', 5);
+        debug_event('subsonic_xml_data.class', 'API success in function ' . $function . '-' . $version, 5);
 
         return $response;
     }
 
-    public static function createResponse($version = '', $status = 'ok')
+    /**
+     * createResponse
+     * @param string $version
+     */
+    public static function createResponse($version, $status = 'ok')
     {
-        if (empty($version)) {
-            $version = self::API_VERSION;
-        }
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         //       $response->addAttribute('type', 'ampache');
@@ -228,12 +247,13 @@ class Subsonic_XML_Data
         return $response;
     }
 
-    public static function createError($code, $message = '', $version = '')
+    /**
+     * createError
+     * @param string $message
+     */
+    public static function createError($code, $message, $function = '')
     {
-        if (empty($version)) {
-            $version = self::API_VERSION;
-        }
-        $response = self::createFailedResponse($version);
+        $response = self::createFailedResponse($function);
         self::setError($response, $code, $message);
 
         return $response;
@@ -739,7 +759,7 @@ class Subsonic_XML_Data
         foreach ($tags as $tag) {
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
-            $counts = $otag->count('', Core::get_global('user')->id);
+            $counts = $otag->count('', 0);
             $xgenre->addAttribute("songCount", $counts['song']);
             $xgenre->addAttribute("albumCount", $counts['album']);
         }
@@ -823,7 +843,7 @@ class Subsonic_XML_Data
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        $xplaylist->addAttribute('id', (string) $playlist->id);
+        $xplaylist->addAttribute('id', (string) self::getPlaylistId($playlist->id));
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', $user->username);
@@ -971,6 +991,7 @@ class Subsonic_XML_Data
 
     /**
      * @param SimpleXMLElement $xml
+     * @param User $user
      */
     public static function addUser($xml, $user)
     {

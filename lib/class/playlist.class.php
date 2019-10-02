@@ -480,6 +480,7 @@ class Playlist extends playlist_object
     /**
      * create
      * This function creates an empty playlist, gives it a name and type
+     * @param string $type
      */
     public static function create($name, $type, $user_id = null, $date = null)
     {

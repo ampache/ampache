@@ -160,7 +160,7 @@ class Stream
         }
 
         // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate) {
+        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
             debug_event('stream.class', 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
             $bit_rate = self::validate_bitrate($media->bitrate / 1000);
         }
@@ -502,4 +502,4 @@ class Stream
 
         return $url;
     } // get_base_url
-} //end of stream class
+} // end of stream class

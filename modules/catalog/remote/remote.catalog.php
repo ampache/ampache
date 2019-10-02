@@ -388,4 +388,4 @@ class Catalog_remote extends Catalog
 
         return null;
     }
-} // end of catalog class
+} // end of remote.catalog class

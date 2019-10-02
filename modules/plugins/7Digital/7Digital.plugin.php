@@ -150,6 +150,12 @@ class Ampache7digital
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['7digital_api_key'])) || !strlen(trim($data['7digital_secret_api_key']))) {
+            $data                            = array();
+            $data['7digital_api_key']        = Preference::get_by_user(-1, '7digital_api_key');
+            $data['7digital_secret_api_key'] = Preference::get_by_user(-1, '7digital_secret_api_key');
+        }
 
         if (strlen(trim($data['7digital_api_key']))) {
             $this->api_key = trim($data['7digital_api_key']);
