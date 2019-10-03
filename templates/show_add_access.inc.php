@@ -22,7 +22,11 @@
 
 ?>
 <?php UI::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
-<?php AmpError::display('general'); ?>
+<?php AmpError::display('general');
+$apirpc       = T_('API/RPC');
+$localnetwork = T_('Local Network Definition');
+$streamaccess = T_('Stream Access');
+$all          = T_('All'); ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
     <table class="option-tabledata" cellpadding="5" cellspacing="0">
         <tr>
@@ -37,7 +41,7 @@
                 <input name="level" type="radio" checked="checked" value="5" /> <?php echo T_('View'); ?>
                 <input name="level" type="radio" value="25" /> <?php echo T_('Read'); ?>
                 <input name="level" type="radio" value="50" /> <?php echo T_('Read/Write'); ?>
-                <input name="level" type="radio" value="75" /> <?php echo T_('All'); ?>
+                <input name="level" type="radio" value="75" /> <?php echo $all; ?>
             </td>
         </tr>
         <tr>
@@ -47,32 +51,32 @@
             </td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('ACL Type'); ?>:</td>
+            <td valign="top"><?php echo T_('Type'); ?>:</td>
             <td colspan="3">
         <?php if ($action == 'show_add_rpc') {
     ?>
                 <input type="hidden" name="type" value="rpc" />
                 <select name="addtype">
-                    <option value="rpc"><?php echo T_('API/RPC'); ?></option>
-                    <option selected="selected" value="stream"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('Stream Access')); ?></option>
-                    <option value="all"><?php printf(T_('%s + %s'), T_('API/RPC'), T_('All')); ?></option>
+                    <option value="rpc"><?php echo $apirpc; ?></option>
+                    <option selected="selected" value="stream"><?php $apirpc . ' + ' . $streamaccess; ?></option>
+                    <option value="all"><?php $apirpc . ' + ' . $all; ?></option>
         <?php
 } else {
         if ($action == 'show_add_local') {
             ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
-                    <option value="network"><?php echo T_('Local Network Definition'); ?></option>
-                    <option value="stream"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('Stream Access')); ?></option>
-                    <option selected="selected" value="all"><?php printf(T_('%s + %s'), T_('Local Network Definition'), T_('All')); ?></option>
+                    <option value="network"><?php echo $localnetwork; ?></option>
+                    <option value="stream"><?php $localnetwork . ' + ' . $streamaccess; ?></option>
+                    <option selected="selected" value="all"><?php $localnetwork . ' + ' . $all; ?></option>
         <?php
         } else {
             ?>
                 <select name="type">
-                    <option selected="selected" value="stream"><?php echo T_('Stream Access'); ?></option>
+                    <option selected="selected" value="stream"><?php echo $streamaccess; ?></option>
                     <option value="interface"><?php echo T_('Web Interface'); ?></option>
-                    <option value="network"><?php echo T_('Local Network Definition'); ?></option>
-                    <option value="rpc"><?php echo T_('API/RPC'); ?></option>
+                    <option value="network"><?php echo $localnetwork; ?></option>
+                    <option value="rpc"><?php echo $apirpc; ?></option>
         <?php
         }
     } ?>

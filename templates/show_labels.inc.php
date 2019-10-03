@@ -26,7 +26,7 @@ $thcount = 6;
     ?>
 <div id="information_actions">
     <ul>
-        <li><?php echo UI::get_icon('add', T_('Add')); ?> <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label"><?php echo T_('Create a new label'); ?></a></li>
+        <li><?php echo UI::get_icon('add', T_('Add')); ?> <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label"><?php echo T_('Create Label'); ?></a></li>
     </ul>
 </div>
 <?php

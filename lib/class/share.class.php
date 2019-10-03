@@ -171,9 +171,9 @@ class Share extends database_object
     /**
      * @param string $secret
      */
-    public static function get_url($id, $secret)
+    public static function get_url($share_id, $secret)
     {
-        $url = AmpConfig::get('web_path') . '/share.php?id=' . $id;
+        $url = AmpConfig::get('web_path') . '/share.php?id=' . $share_id;
         if (!empty($secret)) {
             $url .= '&secret=' . $secret;
         }
@@ -221,7 +221,7 @@ class Share extends database_object
     {
         if ($this->id) {
             if (Core::get_global('user')->has_access('75') || $this->user == (int) Core::get_global('user')->id) {
-                echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
+                echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
@@ -248,8 +248,8 @@ class Share extends database_object
     {
         $this->max_counter    = (int) ($data['max_counter']);
         $this->expire_days    = (int) ($data['expire']);
-        $this->allow_stream   = $data['allow_stream'] == '1';
-        $this->allow_download = $data['allow_download'] == '1';
+        $this->allow_stream   = ($data['allow_stream'] == '1');
+        $this->allow_download = ($data['allow_download'] == '1');
         $this->description    = isset($data['description']) ? $data['description'] : $this->description;
 
         $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " .

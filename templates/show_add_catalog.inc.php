@@ -23,7 +23,7 @@
 $default_rename = "%T - %t";
 $default_sort   = "%a/%A";
 ?>
-<?php UI::show_box_top(T_('Add a Catalog'), 'box box_add_catalog'); ?>
+<?php UI::show_box_top(T_('Add Catalog'), 'box box_add_catalog'); ?>
 <p><?php echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
 &nbsp;
 <?php AmpError::display('general'); ?>
@@ -39,7 +39,7 @@ $default_sort   = "%a/%A";
                 <span class="format-specifier">%a</span> = <?php echo T_('Artist'); ?><br />
                 <span class="format-specifier">%c</span> = <?php echo T_('Comment'); ?><br />
                 <span class="format-specifier">%C</span> = <?php echo T_('Catalog Number'); ?><br />
-                <span class="format-specifier">%T</span> = <?php echo T_('Track Number (padded with leading 0)'); ?><br />
+                <span class="format-specifier">%T</span> = <?php echo T_('Track (0 padded)'); ?><br />
                 <span class="format-specifier">%d</span> = <?php echo T_('Disk'); ?><br />
                 <span class="format-specifier">%g</span> = <?php echo T_('Genre'); ?><br />
                 <span class="format-specifier">%t</span> = <?php echo T_('Song Title'); ?><br />
@@ -47,7 +47,7 @@ $default_sort   = "%a/%A";
                 <span class="format-specifier">%Y</span> = <?php echo T_('Original Year'); ?><br />
                 <span class="format-specifier">%r</span> = <?php echo T_('Release Type'); ?><br />
                 <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
-                <span class="format-specifier">%o</span> = <?php echo T_('other'); ?><br />
+                <strong><a id="video-help" href="https://github.com/ampache/ampache/wiki/TV-Shows-and-Movies" title="<?php echo T_('Refer to the wiki for TV Shows and Movies'); ?>" target="_blank"><?php echo T_('Refer to the wiki for TV Shows and Movies'); ?></a></strong><br />
             </td>
         </tr>
         <tr>
@@ -67,11 +67,11 @@ $default_sort   = "%a/%A";
             <td><input type="checkbox" name="gather_art" value="1" checked /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Build Playlists from playlist Files'); ?> (m3u, m3u8, asx, pls, xspf):</td>
+            <td valign="top"><?php echo T_('Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)'); ?>:</td>
             <td><input type="checkbox" name="parse_playlist" value="1" /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Gather media types'); ?>:</td>
+            <td valign="top"><?php echo T_('Catalog Media Type'); ?>:</td>
             <td>
 
                 <select name="gather_media">

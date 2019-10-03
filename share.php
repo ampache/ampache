@@ -77,15 +77,15 @@ switch ($_REQUEST['action']) {
         } else {
             $share = new Share($share_id);
             $body  = T_('Share created.') . '<br />' .
-                T_('You can now start sharing the following url:') . '<br />' .
+                T_('You can now start sharing the following URL:') . '<br />' .
                 '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />' .
                 '<div id="share_qrcode" style="text-align: center"></div>' .
                 '<script language="javascript" type="text/javascript">$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
                 '<br /><br />' .
-                T_('You can also embed this share as a web player into your website, with the following html code:') . '<br />' .
+                T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
                 '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, $share->secret) . '&embed=true"></iframe>') . '</i><br />';
 
-            $title = T_('Object Shared');
+            $title = T_('No Problem');
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/stats.php?action=share');
         }
         UI::show_footer();
@@ -96,7 +96,7 @@ switch ($_REQUEST['action']) {
         $share_id = Core::get_request('id');
 
         $next_url = AmpConfig::get('web_path') . '/share.php?action=delete&id=' . scrub_out($share_id);
-        show_confirmation(T_('Confirm Action'), T_('Delete Share'), $next_url, 1, 'delete_share');
+        show_confirmation(T_('Are You Sure?'), T_('The Share will be deleted and no longer accessible to others'), $next_url, 1, 'delete_share');
         UI::show_footer();
 
         return false;
@@ -111,7 +111,7 @@ switch ($_REQUEST['action']) {
         $share_id = Core::get_request('id');
         if (Share::delete_share($share_id)) {
             $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
-            show_confirmation(T_('Deleted'), T_('Share has been deleted'), $next_url);
+            show_confirmation(T_('No Problem'), T_('Share has been deleted.'), $next_url);
         }
         UI::show_footer();
 
@@ -126,7 +126,7 @@ switch ($_REQUEST['action']) {
         UI::show_header();
         Share::garbage_collection();
         $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
-        show_confirmation(T_('Shared Objects cleaned'), T_('Expired shared objects have been cleaned.'), $next_url);
+        show_confirmation(T_('No Problem'), T_('Expired shares have been cleaned.'), $next_url);
         UI::show_footer();
 
         return false;
@@ -139,7 +139,7 @@ switch ($_REQUEST['action']) {
 
         $plugin = new Plugin(Core::get_get('plugin'));
         if (!$plugin) {
-            UI::access_denied('Access Denied - Unkown external share plugin.');
+            UI::access_denied('Access Denied - Unknown external share plugin.');
 
             return false;
         }

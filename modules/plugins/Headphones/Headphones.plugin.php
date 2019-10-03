@@ -41,6 +41,8 @@ class AmpacheHeadphones
      */
     public function __construct()
     {
+        $this->description = T_('Automatically download accepted Wanted List albums with Headphones');
+
         return true;
     } // constructor
 
@@ -57,8 +59,8 @@ class AmpacheHeadphones
             return false;
         }
 
-        Preference::insert('headphones_api_url', 'Headphones url', '', '25', 'string', 'plugins', $this->name);
-        Preference::insert('headphones_api_key', 'Headphones api key', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('headphones_api_url', T_('Headphones URL'), '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('headphones_api_key', T_('Headphones API key'), '', '25', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -105,7 +107,7 @@ class AmpacheHeadphones
         )));
 
         // No artist info, need to add artist to Headphones first. Can be long!
-        if (count($headartist->artist) == 0) {
+        if (!$headartist->artist) {
             $this->headphones_call('addArtist', array(
                 'id' => $artist->mbid
             ));

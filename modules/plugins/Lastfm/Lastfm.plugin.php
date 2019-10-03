@@ -24,7 +24,7 @@ class AmpacheLastfm
 {
     public $name        = 'Last.FM';
     public $categories  = 'scrobbling';
-    public $description = 'Records your played songs to your Last.FM Account';
+    public $description = 'Records your played songs to your Last.FM account';
     public $url;
     public $version     = '000005';
     public $min_ampache = '360003';
@@ -46,7 +46,8 @@ class AmpacheLastfm
      */
     public function __construct()
     {
-        $this->url = $this->scheme . '://' . $this->host;
+        $this->description = T_('Scrobble songs you play to your Last.FM account');
+        $this->url         = $this->scheme . '://' . $this->host;
 
         return true;
     } // constructor
@@ -64,8 +65,8 @@ class AmpacheLastfm
             return false;
         }
 
-        Preference::insert('lastfm_challenge', 'Last.FM Submit Challenge', '', '25', 'string', 'internal', $this->name);
-        Preference::insert('lastfm_grant_link', 'Last.FM Grant URL', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', '25', 'string', 'internal', $this->name);
+        Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', '25', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -97,7 +98,7 @@ class AmpacheLastfm
             Preference::delete('lastfm_url');
             Preference::delete('lastfm_host');
             Preference::delete('lastfm_port');
-            Preference::insert('lastfm_grant_link', 'Last.FM Grant URL', '', '25', 'string', 'plugins');
+            Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', '25', 'string', 'plugins');
         }
 
         return true;

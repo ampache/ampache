@@ -23,7 +23,7 @@
 require $prefix . '/templates/install_header.inc.php';
 ?>
 <div class="jumbotron">
-    <h1><?php echo T_('Install progress'); ?></h1>
+    <h1><?php echo T_('Install Progress'); ?></h1>
     <div class="progress">
         <div class="progress-bar progress-bar-warning"
             role="progressbar"

@@ -24,7 +24,7 @@ class AmpacheGoogleMaps
 {
     public $name        = 'GoogleMaps';
     public $categories  = 'geolocation';
-    public $description = 'Geolocation analyze with GoogleMaps';
+    public $description = 'Show user\'s location with Google Maps';
     public $url         = 'http://maps.google.com';
     public $version     = '000001';
     public $min_ampache = '370022';
@@ -38,6 +38,8 @@ class AmpacheGoogleMaps
      */
     public function __construct()
     {
+        $this->description = T_("Show user's location with Google Maps");
+
         return true;
     } // constructor
 
@@ -51,7 +53,7 @@ class AmpacheGoogleMaps
         if (Preference::exists('gmaps_api_key')) {
             return false;
         }
-        Preference::insert('gmaps_api_key', 'GoogleMaps api key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -98,7 +100,7 @@ class AmpacheGoogleMaps
     public function display_map($pts)
     {
         if (!$this->api_key) {
-            debug_event('googlemaps.plugin', 'Missing api key, display map plugin skipped.', 3);
+            debug_event('googlemaps.plugin', 'Missing API key, display map plugin skipped.', 3);
 
             return false;
         }
@@ -118,8 +120,8 @@ class AmpacheGoogleMaps
         echo 'mapOptions);' . "\n";
         echo 'var marker;' . "\n";
         foreach ($pts as $pt) {
-            $ptdescr = T_("Hits:") . " " . $pt['hits'] . "\\n";
-            $ptdescr .= T_("Last activity:") . " " . date("r", $pt['last_date']);
+            $ptdescr = T_("Hits") . ": " . $pt['hits'] . "\\n";
+            $ptdescr .= T_("Last activity") . ": " . date("r", $pt['last_date']);
             if (!empty($pt['name'])) {
                 $ptdescr = $pt['name'] . "\\n" . $ptdescr;
             }

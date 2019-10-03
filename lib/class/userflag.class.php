@@ -37,9 +37,9 @@ class Userflag extends database_object
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
      */
-    public function __construct($id, $type)
+    public function __construct($object_id, $type)
     {
-        $this->id   = (int) ($id);
+        $this->id   = (int) ($object_id);
         $this->type = $type;
 
         return true;
@@ -146,6 +146,7 @@ class Userflag extends database_object
      * set_flag
      * This function sets the user flag for the current object.
      * If no user_id is passed in, we use the currently logged in user.
+     * @param boolean $flagged
      * @param integer $user_id
      */
     public function set_flag($flagged, $user_id = null)
@@ -211,6 +212,7 @@ class Userflag extends database_object
     /**
      * set_flag_for_group
      * This function sets the user flag for an album group.
+     * @param boolean $flagged
      * @param integer $user_id
      */
     public function set_flag_for_group($flagged, $album, $user_id = null)

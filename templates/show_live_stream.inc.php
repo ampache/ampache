@@ -46,10 +46,10 @@
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'add', T_('Add to temporary playlist'), 'add_live_stream_' . $radio->id); ?>
     </dd>
 <?php
-    $itemprops[gettext_noop('Name')]     = $radio->f_name;
-    $itemprops[gettext_noop('Website')]  = scrub_out($radio->site_url);
-    $itemprops[gettext_noop('Stream')]   = $radio->f_url_link;
-    $itemprops[gettext_noop('Codec')]    = scrub_out($video->codec);
+    $itemprops[T_('Name')]     = $radio->f_name;
+    $itemprops[T_('Website')]  = scrub_out($radio->site_url);
+    $itemprops[T_('Stream')]   = $radio->f_url_link;
+    $itemprops[T_('Codec')]    = scrub_out($video->codec);
 
     foreach ($itemprops as $key => $value) {
         if (trim($value)) {

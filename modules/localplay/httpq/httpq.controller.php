@@ -23,7 +23,7 @@
 /**
  * AmpacheHttpq Class
  *
- * This is the class for the httpQ localplay method to remotely control
+ * This is the class for the httpQ Localplay method to remotely control
  * a WinAmp Instance
  *
  */
@@ -39,7 +39,7 @@ class AmpacheHttpq extends localplay_controller
 
     /**
      * Constructor
-     * This returns the array map for the localplay object
+     * This returns the array map for the Localplay object
      * REQUIRED for Localplay
      */
     public function __construct()
@@ -50,7 +50,7 @@ class AmpacheHttpq extends localplay_controller
 
     /**
      * get_description
-     * This returns the description of this localplay method
+     * This returns the description of this Localplay method
      */
     public function get_description()
     {
@@ -95,14 +95,14 @@ class AmpacheHttpq extends localplay_controller
         $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('httpq_active', 'HTTPQ Active Instance', '0', '25', 'integer', 'internal', 'httpq');
+        Preference::insert('httpq_active', T_('HTTPQ Active Instance'), '0', '25', 'integer', 'internal', 'httpq');
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This removes the localplay controller
+     * This removes the Localplay controller
      */
     public function uninstall()
     {
@@ -340,7 +340,7 @@ class AmpacheHttpq extends localplay_controller
     } // skip
 
     /**
-     * This tells Httpq to increase the volume by WinAmps default amount
+     * This tells httpQ to increase the volume by WinAmps default amount
      */
     public function volume_up()
     {
@@ -529,7 +529,7 @@ class AmpacheHttpq extends localplay_controller
     /**
      * status
      * This returns bool/int values for features, loop, repeat and any other features
-     * That this localplay method supports. required function
+     * That this Localplay method supports. required function
      */
     public function status()
     {

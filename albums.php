@@ -31,10 +31,8 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $album_id = scrub_in($_REQUEST['album_id']);
-        show_confirmation(
-            T_('Album Deletion'),
-            T_('Are you sure you want to permanently delete this album?'),
+        $album_id = (string) scrub_in($_REQUEST['album_id']);
+        show_confirmation(T_('Are You Sure?'), T_("The Album and all files will be deleted"),
             AmpConfig::get('web_path') . "/albums.php?action=confirm_delete&album_id=" . $album_id,
             1,
             'delete_album'
@@ -54,9 +52,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($album->remove_from_disk()) {
-            show_confirmation(T_('Album Deletion'), T_('Album has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('The Album has been deleted.'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Album Deletion'), T_('Cannot delete this album.'), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Album."), AmpConfig::get('web_path'));
         }
     break;
     case 'update_from_tags':
@@ -94,7 +92,7 @@ switch ($_REQUEST['action']) {
             $track = filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT) ? ((filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
-                    Song::update_track($track, $song_id);
+                    Song::update_track($track, (int) $song_id);
                     ++$track;
                 }
             }
@@ -126,7 +124,7 @@ switch ($_REQUEST['action']) {
         $album->format();
         if (!$album->id) {
             debug_event('albums', 'Requested an album that does not exist', 2);
-            echo T_("Error: Requested an album that does not exist.");
+            echo T_("You have requested an Album that does not exist.");
         // allow single disks to not be shown as multi's
         } elseif (count($album->album_suite) <= 1) {
             require AmpConfig::get('prefix') . UI::find_template('show_album.inc.php');
@@ -137,4 +135,6 @@ switch ($_REQUEST['action']) {
     break;
 } // switch on view
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

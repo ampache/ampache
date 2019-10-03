@@ -39,6 +39,8 @@ class AmpacheMusicBrainz
      */
     public function __construct()
     {
+        $this->description = T_('MusicBrainz metadata integration');
+
         return true;
     }
 

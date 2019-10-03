@@ -44,10 +44,16 @@
                     $row_key              = 'duplicate_' . $song_id;
                     $button_flip_state_id = 'button_flip_state_' . $song_id;
                     $current_class        = ($key == '0') ? 'row-highlight' : UI::flip_class();
-                    $button               = $song->enabled ? 'disable' : 'enable'; ?>
+                    if ($button) {
+                        $button     = 'disable';
+                        $buttontext = T_('Disable');
+                    } else {
+                        $button     = 'enable';
+                        $buttontext = T_('Enable');
+                    } ?>
         <tr id="<?php echo $row_key; ?>" class="<?php echo $current_class; ?>">
             <td class="cel_disable" id="<?php echo($button_flip_state_id); ?>">
-                <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song_id, $button, T_(ucfirst($button)), 'flip_state_' . $song_id); ?>
+                <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song_id, $button, $buttontext, 'flip_state_' . $song_id); ?>
             </td>
             <td class="cel_song"><?php echo $song->f_link; ?></td>
             <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>

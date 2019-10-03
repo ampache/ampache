@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
         $object = Shoutbox::get_object($_REQUEST['type'], Core::get_request('id'));
 
         if (!$object || !$object->id) {
-            AmpError::add('general', T_('Invalid Object Selected'));
+            AmpError::add('general', T_('Invalid object selected'));
             AmpError::display('general');
             break;
         }
@@ -81,4 +81,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch on action
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

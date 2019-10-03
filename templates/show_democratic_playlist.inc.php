@@ -44,7 +44,7 @@ if (!count($object_ids)) {
         $playlist = new Playlist($democratic->base_playlist); ?>
 <tr>
 <td>
-    <?php echo T_('Playing from base Playlist'); ?>.
+    <?php echo T_('Playing from base playlist'); ?>.
     </a>
 </td>
 </tr>

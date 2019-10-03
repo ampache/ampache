@@ -31,10 +31,8 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $episode_id = scrub_in($_REQUEST['podcast_episode_id']);
-        show_confirmation(
-            T_('Podcast Episode Deletion'),
-            T_('Are you sure you want to permanently delete this episode?'),
+        $episode_id = (string) scrub_in($_REQUEST['podcast_episode_id']);
+        show_confirmation(T_('Are You Sure?'), T_("The Podcast Episode will be deleted"),
             AmpConfig::get('web_path') . "/podcast_episode.php?action=confirm_delete&podcast_episode_id=" . $episode_id,
             1,
             'delete_podcast_episode'
@@ -54,9 +52,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($episode->remove()) {
-            show_confirmation(T_('Podcast Episode Deletion'), T_('Episode has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('Podcast Episode has been deleted'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Podcast Episode Deletion'), T_('Cannot delete this episode.'), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Podcast Episode"), AmpConfig::get('web_path'));
         }
     break;
     case 'show':
@@ -67,4 +65,6 @@ switch ($_REQUEST['action']) {
     break;
 }
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

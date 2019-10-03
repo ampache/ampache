@@ -39,7 +39,8 @@ switch ($_REQUEST['action']) {
             if ($pvmsg->id && ($pvmsg->from_user === Core::get_global('user')->id || $pvmsg->to_user === Core::get_global('user')->id)) {
                 $to_user             = new User($pvmsg->from_user);
                 $_REQUEST['to_user'] = $to_user->username;
-                $_REQUEST['subject'] = "RE: " . $pvmsg->subject;
+                /* HINT: Shorthand for e-mail reply */
+                $_REQUEST['subject'] = T_('RE') . ": " . $pvmsg->subject;
                 $_REQUEST['message'] = "\n\n\n---\n> " . str_replace("\n", "\n> ", $pvmsg->message);
             }
         }
@@ -65,9 +66,7 @@ switch ($_REQUEST['action']) {
         if (!$pvmsg_id) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_pvmsg.inc.php');
         } else {
-            $body  = T_('Message Sent');
-            $title = '';
-            show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=pvmsg');
+            show_confirmation(T_('No Problem'), T_('Message has been sent'), AmpConfig::get('web_path') . '/browse.php?action=pvmsg');
         }
         break;
     case 'set_is_read':
@@ -89,7 +88,7 @@ switch ($_REQUEST['action']) {
             }
         }
 
-        show_confirmation(T_('Messages State Changed'), T_('Messages state have been changed.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
+        show_confirmation(T_('No Problem'), T_("Message's state has been changed"), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
         break;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
@@ -97,9 +96,7 @@ switch ($_REQUEST['action']) {
         }
 
         $msgs = scrub_out($_REQUEST['msgs']);
-        show_confirmation(
-                T_('Message Deletion'),
-                T_('Are you sure you want to permanently delete the selected messages?'),
+        show_confirmation(T_('Are You Sure?'), T_('The Message will be deleted'),
                 AmpConfig::get('web_path') . "/pvmsg.php?action=confirm_delete&msgs=" . $msgs,
                 1,
                 'delete_message'
@@ -124,7 +121,7 @@ switch ($_REQUEST['action']) {
             }
         }
 
-        show_confirmation(T_('Messages Deletion'), T_('Messages have been deleted.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
+        show_confirmation(T_('No Problem'), T_('Messages have been deleted.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
         break;
     case 'show':
     default:
@@ -145,4 +142,6 @@ switch ($_REQUEST['action']) {
         break;
 }
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

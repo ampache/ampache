@@ -36,6 +36,8 @@ class Ampachechartlyrics
      */
     public function __construct()
     {
+        $this->description = T_('Get lyrics from ChartLyrics');
+
         return true;
     } // constructor
 
