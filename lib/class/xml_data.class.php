@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -43,8 +42,7 @@ class XML_Data
     private function __construct()
     {
         // Rien a faire
-    }
-    // constructor
+    } // constructor
 
     /**
      * set_offset
@@ -57,8 +55,7 @@ class XML_Data
     public static function set_offset($offset)
     {
         self::$offset = (int) $offset;
-    }
-    // set_offset
+    } // set_offset
 
     /**
      * set_limit
@@ -79,8 +76,7 @@ class XML_Data
         } else {
             self::$limit = (int) ($limit);
         }
-    }
-    // set_limit
+    } // set_limit
 
     /**
      * set_type
@@ -97,8 +93,7 @@ class XML_Data
         }
 
         self::$type = $type;
-    }
-    // set_type
+    } // set_type
 
     /**
      * error
@@ -115,8 +110,7 @@ class XML_Data
         $xml_string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
 
         return self::output_xml($xml_string);
-    }
-    // error
+    } // error
 
     /**
      * success
@@ -132,8 +126,7 @@ class XML_Data
         $xml_string = "\t<success code=\"1\"><![CDATA[$string]]></success>";
 
         return self::output_xml($xml_string);
-    }
-    // success
+    } // success
  
     /**
      * header
@@ -146,8 +139,7 @@ class XML_Data
     public static function header($title = null)
     {
         return self::_header($title);
-    }
-    // header
+    } // header
 
     /**
      * footer
@@ -160,8 +152,7 @@ class XML_Data
     public static function footer()
     {
         return self::_footer();
-    }
-    // footer
+    } // footer
 
     /**
      * tags_string
@@ -192,8 +183,7 @@ class XML_Data
         }
 
         return $string;
-    }
-    // tags_string
+    } // tags_string
 
     /**
      * playlist_song_tracks_string
@@ -215,8 +205,7 @@ class XML_Data
         }
 
         return "";
-    }
-    // playlist_song_tracks_string
+    } // playlist_song_tracks_string
 
     /**
      * output_xml_from_array
@@ -333,8 +322,7 @@ class XML_Data
         }
 
         return $string;
-    }
-    // keyed_array
+    } // keyed_array
 
     /**
      * indexes
@@ -430,8 +418,7 @@ class XML_Data
         } // end foreach objects
 
         return self::output_xml($string, $full_xml);
-    }
-    // indexes
+    } // indexes
 
     /**
      * tags
@@ -468,8 +455,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // tags
+    } // tags
 
     /**
      * artists
@@ -538,8 +524,7 @@ class XML_Data
         } // end foreach artists
 
         return self::output_xml($string, $full_xml);
-    }
-    // artists
+    } // artists
 
     /**
      * albums
@@ -620,8 +605,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string, $full_xml);
-    }
-    // albums
+    } // albums
 
     /**
      * playlists
@@ -685,8 +669,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // playlists
+    } // playlists
 
     /**
      * songs
@@ -777,8 +760,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string, $full_xml);
-    }
-    // songs
+    } // songs
 
     /**
      * videos
@@ -817,8 +799,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // videos
+    } // videos
 
     /**
      * democratic
@@ -871,8 +852,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // democratic
+    } // democratic
 
     /**
      * user
@@ -899,8 +879,7 @@ class XML_Data
         $string .= "</user>\n";
 
         return self::output_xml($string);
-    }
-    // user
+    } // user
 
     /**
      * users
@@ -920,8 +899,7 @@ class XML_Data
         $string .= "</users>\n";
 
         return self::output_xml($string);
-    }
-    // users
+    } // users
 
     /**
      * shouts
@@ -994,8 +972,7 @@ class XML_Data
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-    }
-    // timeline
+    } // timeline
 
     /**
      * rss_feed
@@ -1025,8 +1002,7 @@ class XML_Data
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-    }
-    // rss_feed
+    } // rss_feed
 
     /**
      * _header
@@ -1074,8 +1050,7 @@ class XML_Data
         } // end switch
 
         return $header;
-    }
-    // _header
+    } // _header
 
     /**
      * _footer

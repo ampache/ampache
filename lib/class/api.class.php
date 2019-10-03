@@ -144,7 +144,7 @@ class Api
         if (isset($authKey)) {
             if (Session::destroy($authKey)) {
                 if ($outputFormat == 'json') {
-                    echo JSON_Data::single_string('success');
+                    echo JSON_Data::success('success');
                 } else {  // Defaults to XML
                     echo XML_Data::success('success');
                 }
@@ -1160,7 +1160,7 @@ class Api
         } else {
             $playlist->delete();
             if ($outputFormat == 'json') {
-                echo JSON_Data::single_string('success');
+                echo JSON_Data::success('success');
             } else {  // Defaults to XML
                 echo XML_Data::success('success');
             }
@@ -1189,7 +1189,7 @@ class Api
                 echo JSON_Data::error('401', T_('Access denied to this playlist.'));
             } else {
                 $playlist->add_songs(array($song));
-                echo JSON_Data::single_string('success');
+                echo JSON_Data::success('success');
             }
         } else {  // Defaults to XML
             if (!$playlist->has_access()) {
@@ -1226,7 +1226,7 @@ class Api
             } else {
                 $playlist->delete_track_number($track);
                 $playlist->regenerate_track_numbers();
-                echo JSON_Data::single_string('success');
+                echo JSON_Data::success('success');
             }
         } else {  // Defaults to XML
             if (!$playlist->has_access()) {
@@ -1809,7 +1809,7 @@ class Api
                     ob_end_clean();
 
                     if ($outputFormat == 'json') {
-                        echo JSON_Data::single_string('success');
+                        echo JSON_Data::success('success');
                     } else {  // Defaults to XML
                         echo XML_Data::success('follow toggled for: ' . $user->id);
                     }
@@ -1898,7 +1898,7 @@ class Api
                 $rate = new Rating($object_id, $type);
                 $rate->set_rating($rating);
                 if ($outputFormat == 'json') {
-                    echo JSON_Data::single_string('success');
+                    echo JSON_Data::success('success');
                 } else {  // Defaults to XML
                     echo XML_Data::success('rating set ' . $object_id);
                 }

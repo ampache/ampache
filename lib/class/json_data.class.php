@@ -54,8 +54,7 @@ class JSON_Data
      */
     public static function set_offset($offset)
     {
-        $offset       = intval($offset);
-        self::$offset = $offset;
+        self::$offset = (int) $offset;
     } // set_offset
 
     /**
@@ -72,8 +71,11 @@ class JSON_Data
             return false;
         }
 
-        $limit       = intval($limit);
-        self::$limit = $limit;
+        if (strtolower($limit) == "none") {
+            self::$limit = null;
+        } else {
+            self::$limit = (int) ($limit);
+        }
     } // set_limit
 
     /**
@@ -86,7 +88,7 @@ class JSON_Data
      * @param    string    $string    Error message
      * @return    string    return error message JSON
      */
-    public static function error($code,$string)
+    public static function error($code, $string)
     {
         $JSON = json_encode(array("error" => array("code" => $code, "message" => $string)), JSON_PRETTY_PRINT);
 
@@ -94,7 +96,7 @@ class JSON_Data
     } // error
 
     /**
-     * single_string
+     * success
      *
      * This takes two values, first the key second the string
      *
@@ -102,12 +104,12 @@ class JSON_Data
      * @param    string    $string    JSON data
      * @return    string    return JSON
      */
-    public static function single_string($key, $string='')
+    public static function success($key, $string='')
     {
         if (!empty($string)) {
-            $JSON = json_encode(array($key => $string), JSON_PRETTY_PRINT);
+            $JSON = json_encode(array("success" => array($key => $string)), JSON_PRETTY_PRINT);
         } else {
-            $JSON = json_encode(array("message" => $key), JSON_PRETTY_PRINT);
+            $JSON = json_encode(array("success" => array("message" => $key)), JSON_PRETTY_PRINT);
         }
 
         return $JSON;
@@ -180,7 +182,7 @@ class JSON_Data
     public static function tags($tags)
     {
         if (count($tags) > self::$limit or self::$offset > 0) {
-            $tags = array_splice($tags,self::$offset,self::$limit);
+            $tags = array_splice($tags, self::$offset, self::$limit);
         }
 
         $JSON = [];
@@ -191,12 +193,12 @@ class JSON_Data
             array_push($JSON, array("tag" => array(
                 id => $tag_id,
                 name => $tag->name,
-                albums => intval($counts['album']),
-                artists => intval($counts['artist']),
-                songs => intval($counts['song']),
-                videos => intval($counts['video']),
-                playlists => intval($counts['playlist']),
-                stream => intval($counts['live_stream'])
+                albums => (int) $counts['album'],
+                artists => (int) $counts['artist'],
+                songs => (int) $counts['song'],
+                videos => (int) $counts['video'],
+                playlists => (int) $counts['playlist'],
+                stream => (int) $counts['live_stream']
             )));
         } // end foreach
 
@@ -215,18 +217,18 @@ class JSON_Data
     public static function artists($artists, $include = [])
     {
         if (count($artists) > self::$limit or self::$offset > 0) {
-            $artists = array_splice($artists,self::$offset,self::$limit);
+            $artists = array_splice($artists, self::$offset, self::$limit);
         }
 
         $JSON = [];
 
-        Rating::build_cache('artist',$artists);
+        Rating::build_cache('artist', $artists);
 
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             $artist->format();
 
-            $rating     = new Rating($artist_id,'artist');
+            $rating     = new Rating($artist_id, 'artist');
             $tag_string = self::tags_string($artist->tags);
 
             array_push($JSON, array(
@@ -260,17 +262,17 @@ class JSON_Data
     public static function albums($albums, $include = [])
     {
         if (count($albums) > self::$limit or self::$offset > 0) {
-            $albums = array_splice($albums,self::$offset,self::$limit);
+            $albums = array_splice($albums, self::$offset, self::$limit);
         }
 
-        Rating::build_cache('album',$albums);
+        Rating::build_cache('album', $albums);
 
         $JSON = [];
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             $album->format();
 
-            $rating = new Rating($album_id,'album');
+            $rating = new Rating($album_id, 'album');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
@@ -322,7 +324,7 @@ class JSON_Data
     public static function playlists($playlists)
     {
         if (count($playlists) > self::$limit or self::$offset > 0) {
-            $playlists = array_slice($playlists,self::$offset,self::$limit);
+            $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
 
         $allPlaylists = [];
@@ -445,7 +447,7 @@ class JSON_Data
     public static function videos($videos)
     {
         if (count($videos) > self::$limit or self::$offset > 0) {
-            $videos = array_slice($videos,self::$offset,self::$limit);
+            $videos = array_slice($videos, self::$offset, self::$limit);
         }
 
         $string = '';
@@ -498,7 +500,7 @@ class JSON_Data
 
             $tag_string = self::tags_string($song->tags);
 
-            $rating = new Rating($song->id,'song');
+            $rating = new Rating($song->id, 'song');
 
             $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
 
