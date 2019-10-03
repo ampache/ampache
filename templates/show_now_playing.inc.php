@@ -21,7 +21,7 @@
  */
 
 /**
- * This is the now playing container, it holds the master div for now playing
+ * This is the Now Playing container, it holds the master div for Now Playing
  * and loops through what's current playing as passed and includes
  * the now_playing_row's This will display regardless, but potentially
  * goes all ajaxie if you've got javascript on
@@ -48,7 +48,7 @@ foreach ($results as $item) {
 <?php
 if (strtolower(get_class($media)) == 'song') {
             require AmpConfig::get('prefix') . UI::find_template('show_now_playing_row.inc.php');
-        } else {
+        } elseif (strtolower(get_class($media)) == 'video') {
             require AmpConfig::get('prefix') . UI::find_template('show_now_playing_video_row.inc.php');
         } ?>
 </div>

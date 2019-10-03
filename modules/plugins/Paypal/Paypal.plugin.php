@@ -24,7 +24,7 @@ class AmpachePaypal
 {
     public $name           = 'Paypal';
     public $categories     = 'user';
-    public $description    = 'Paypal donation button on user page';
+    public $description    = 'PayPal donation button on user page';
     public $url            = '';
     public $version        = '000001';
     public $min_ampache    = '370034';
@@ -42,6 +42,8 @@ class AmpachePaypal
      */
     public function __construct()
     {
+        $this->description = T_('PayPal donation button on user page');
+
         return true;
     }
 
@@ -57,8 +59,8 @@ class AmpachePaypal
             return false;
         }
 
-        Preference::insert('paypal_business', 'Paypal ID', '', 25, 'string', 'plugins', $this->name);
-        Preference::insert('paypal_currency_code', 'Paypal Currency Code', 'USD', 25, 'string', 'plugins', $this->name);
+        Preference::insert('paypal_business', T_('PayPal ID'), '', 25, 'string', 'plugins', $this->name);
+        Preference::insert('paypal_currency_code', T_('PayPal Currency Code'), 'USD', 25, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -105,7 +107,7 @@ class AmpachePaypal
         echo "<input type='hidden' name='no_note' value='0'>\n";
         echo "<input type='hidden' name='currency_code' value='" . scrub_out($this->currency_code) . "'>\n";
         echo "<input type='hidden' name='bn' value='PP-DonationsBF:btn_donate_SM.gif:NonHostedGuest'>\n";
-        echo "<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif' border='0' name='submit' alt='PayPal - The safer, easier way to pay online!'>\n";
+        echo "<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif' border='0' name='submit' alt='" . T_('PayPal - The safer, easier way to pay online!') . "'>\n";
         echo "<img alt= '' border='0' src='https://www.paypalobjects.com/fr_XC/i/scr/pixel.gif' width='1' height='1'>\n";
         echo "</form>\n";
     }
@@ -123,7 +125,7 @@ class AmpachePaypal
 
         $this->business = trim($data['paypal_business']);
         if (!strlen($this->business)) {
-            debug_event('paypal.plugin', 'No Paypal ID, user field plugin skipped', 3);
+            debug_event('paypal.plugin', 'No PayPal ID, user field plugin skipped', 3);
 
             return false;
         }

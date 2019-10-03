@@ -66,7 +66,7 @@ abstract class Catalog extends \Catalog
      * Catalog class constructor, pulls catalog information
      */
     public function __construct($catalog_id = null)
-    { // TODO: Basic constructer should be provided from parent
+    { // TODO: Basic constructor should be provided from parent
         if ($catalog_id) {
             $this->id = (int) ($catalog_id);
             $info     = $this->get_info($catalog_id);
@@ -123,7 +123,7 @@ abstract class Catalog extends \Catalog
         }
         set_time_limit(0);
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Beets Update') . '. . .');
+            UI::show_box_top(T_('Running Beets Update'));
         }
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
@@ -202,7 +202,8 @@ abstract class Catalog extends \Catalog
             debug_event('beets_catalog', 'Adding song ' . $song['file'], 5, 'ampache-catalog');
         } else {
             debug_event('beets_catalog', 'Insert failed for ' . $song['file'], 1);
-            AmpError::add('general', T_('Unable to Insert Song - %s'), $song['file']);
+            /* HINT: filename (file path) */
+            AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
             AmpError::display('general');
         }
         flush();
@@ -372,7 +373,7 @@ abstract class Catalog extends \Catalog
     }
 
     /**
-     * Doesent seems like we need this...
+     * Doesn't seems like we need this...
      * @param string $file_path
      */
     public function get_rel_path($file_path)

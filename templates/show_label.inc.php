@@ -68,18 +68,18 @@ if ($label->website) {
         <?php if ($label->email) {
         ?>
         <li>
-            <a href="mailto:<?php echo scrub_out($label->email); ?>"><?php echo UI::get_icon('mail', T_('Send e-mail')); ?></a>
-            <a href="mailto:<?php echo scrub_out($label->email); ?>"><?php echo T_('Send e-mail'); ?></a>
+            <a href="mailto:<?php echo scrub_out($label->email); ?>"><?php echo UI::get_icon('mail', T_('Send E-mail')); ?></a>
+            <a href="mailto:<?php echo scrub_out($label->email); ?>"><?php echo T_('Send E-mail'); ?></a>
         </li>
         <?php
     } ?>
         <?php if ($label->can_edit()) {
         ?>
         <li>
-            <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label edit') ?>', '')">
+            <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
-            <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label edit') ?>', '')">
+            <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label Edit') ?>', '')">
                 <?php echo T_('Edit Label'); ?>
             </a>
         </li>

@@ -61,7 +61,7 @@
     </td>
 </tr>
 <tr>
-    <td><?php echo T_('Email'); ?></td>
+    <td><?php echo T_('E-mail'); ?></td>
     <td>
         <input type="text" name="email" value="<?php echo scrub_out($_REQUEST['email']); ?>" />
         <?php AmpError::display('email'); ?>

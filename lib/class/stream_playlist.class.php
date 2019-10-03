@@ -24,7 +24,7 @@
  * Stream_Playlist Class
  *
  * This class is used to generate the Playlists and pass them on
- * For localplay this actually just sends the commands to the localplay
+ * For Localplay this actually just sends the commands to the Localplay
  * module in question.
  */
 
@@ -39,13 +39,13 @@ class Stream_Playlist
     /**
      * Stream_Playlist constructor
      * If an ID is passed, it should be a stream session ID.
-     * @param integer $id
+     * @param integer $session_id
      */
-    public function __construct($id = null)
+    public function __construct($session_id = null)
     {
-        if ($id != -1) {
-            if ($id !== null) {
-                Stream::set_session($id);
+        if ($session_id != -1) {
+            if ($session_id !== null) {
+                Stream::set_session($session_id);
             }
 
             $this->id = Stream::get_session();
@@ -586,7 +586,7 @@ class Stream_Playlist
                 $furl = $this->urls[0];
                 if (strpos($furl->url, "&demo_id=1") !== false && $furl->time == -1) {
                     // If democratic, repeat the song to get the next voted one.
-                    debug_event('stream_playlist.class', 'Playing democratic on localplay, enabling repeat...', 5);
+                    debug_event('stream_playlist.class', 'Playing democratic on Localplay, enabling repeat...', 5);
                     $localplay->repeat(true);
                 }
             }

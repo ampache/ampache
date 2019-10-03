@@ -24,7 +24,7 @@ class AmpacheFacebook
 {
     public $name        = 'Facebook';
     public $categories  = 'share';
-    public $description = 'Facebook Share';
+    public $description = 'Facebook share';
     public $url         = 'https://facebook.com';
     public $version     = '000001';
     public $min_ampache = '370027';
@@ -36,6 +36,8 @@ class AmpacheFacebook
      */
     public function __construct()
     {
+        $this->description = T_('Facebook share');
+
         return true;
     } // constructor
 

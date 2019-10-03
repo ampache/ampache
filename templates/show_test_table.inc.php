@@ -39,7 +39,7 @@
     <?php if (!check_dependencies_folder()) {
     ?>
         <br />
-        <b><?php echo T_('Please download and install Composer from http://getcomposer.org and install it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer install --prefer-source --no-interaction` on Ampache directory.'); ?></b>
+        <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --prefer-source --no-interaction` on the Ampache directory.'); ?></b>
     <?php
 } ?>
     </td>
@@ -108,12 +108,12 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP curl extension'); ?></td>
+    <td valign="top"><?php echo T_('PHP cURL extension'); ?></td>
     <td valign="top">
     <?php echo debug_wresult(check_php_curl()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether you have the curl extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
+    <?php echo T_('This tests whether you have the cURL extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
     </td>
 </tr>
 <tr>
@@ -126,12 +126,12 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP simplexml extension'); ?></td>
+    <td valign="top"><?php echo T_('PHP SimpleXML extension'); ?></td>
     <td valign="top">
     <?php echo debug_wresult(check_php_simplexml()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether you have the simplexml extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
+    <?php echo T_('This tests whether you have the SimpleXML extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
     </td>
 </tr>
 <tr>
@@ -180,12 +180,12 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP Integer Size'); ?></td>
+    <td valign="top"><?php echo T_('PHP integer size'); ?></td>
     <td valign="top">
     <?php echo debug_wresult(check_php_int_size()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether Ampache can manage large files (> 2GB). This is not strictly necessary, but may result in a better experience. This generally requires 64-bit operating system.'); ?>
+    <?php echo T_('This tests whether Ampache can manage large files (> 2GB). This is not strictly necessary, but may result in a better experience. This generally requires a 64-bit operating system.'); ?>
     </td>
 </tr>
 <tr>
@@ -194,7 +194,7 @@
     <?php echo debug_result(check_mbstring_func_overload()); ?>
     </td>
     <td>
-    <?php printf(T_('This tests whether PHP %s is set as it may break the ID3 tag support. This is not stricly necessary, but enabling Ampache ID3 tag write support (disabled by default) along with mbstring.func_overload may result in irreversible corruption of your music files.'), '<a href="http://php.net/manual/en/mbstring.overload.php">mbstring.func_overload</a>'); ?>
+    <?php /* HINT: Shows mbstring.func_overload */ printf(T_('This tests whether PHP %s is set as it may break the ID3 tag support. This is not strictly necessary, but enabling Ampache ID3 tag write support (disabled by default) along with mbstring.func_overload may result in irreversible corruption of your music files.'), '<a href="http://php.net/manual/en/mbstring.overload.php">mbstring.func_overload</a>'); ?>
     </td>
 </tr>
 <?php
@@ -206,7 +206,7 @@ if (!defined('INSTALL')) {
     <?php echo debug_result(is_readable($configfile)); ?>
     </td>
     <td width="350px">
-    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file either is not in the correct location or is not currently readable.'); ?>
+    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?>
     </td>
 </tr>
 <tr>
@@ -220,7 +220,7 @@ if (!defined('INSTALL')) {
         echo debug_result(check_config_values($results)); ?>
     </td>
     <td>
-    <?php echo T_("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file."); ?>
+    <?php echo T_("This test makes sure that you have set all of the required configuration variables and that Ampache is able to completely parse your config file."); ?>
     </td>
 </tr>
 <tr>
@@ -238,7 +238,7 @@ if (!defined('INSTALL')) {
     <?php echo debug_result(check_php_pdo() && Dba::check_database_inserted()); ?>
     </td>
     <td>
-    <?php echo T_('This checks a few key tables to make sure that you have successfully inserted the Ampache database and that the user has access to the database'); ?>
+    <?php echo T_('This checks a few key tables to make sure that the Ampache database exists, and the user has access to the database'); ?>
     </td>
 </tr>
 <tr>

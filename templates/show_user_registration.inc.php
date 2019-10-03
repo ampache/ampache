@@ -34,7 +34,7 @@ $_SESSION['login'] = true;
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 
 <head>
-    <!-- Propulsed by Ampache | ampache.org -->
+    <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
@@ -141,13 +141,13 @@ $_SESSION['login'] = true;
                     } ?>
 
                     <div class="registerfield require">
-                        <label for="password"><?php echo T_('Password'); ?>:</label>
+                        <label for="password_1"><?php echo T_('Password'); ?>:</label>
                         <input type='password' name='password_1' id='password_1' />
                         <?php AmpError::display('password'); ?>
                     </div>
 
                     <div class="registerfield require">
-                        <label for="confirm_passord"><?php echo T_('Confirm Password'); ?>:</label>
+                        <label for="password_2"><?php echo T_('Confirm Password'); ?>:</label>
                         <input type='password' name='password_2' id='password_2' />
                     </div>
 
@@ -167,7 +167,7 @@ $_SESSION['login'] = true;
                     } ?>
                         <div id="submit-registration-button">
                             <input type="hidden" name="action" value="add_user" />
-                            <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register User'); ?>' />
+                            <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register'); ?>' />
                         </div>
                         <?php AmpError::display('user_agreement'); ?>
                     </div>

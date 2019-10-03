@@ -132,7 +132,7 @@ switch ($_REQUEST['action']) {
 
         $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
-            AmpError::add('fullname', T_("Please fill in your full name (Firstname Lastname)"));
+            AmpError::add('fullname', T_("Please fill in your full name (first name, last name)"));
         }
         if (in_array('website', $mandatory_fields) && !$_POST['website']) {
             AmpError::add('website', T_("Please fill in your website"));
@@ -145,13 +145,13 @@ switch ($_REQUEST['action']) {
         }
 
         if (!Core::get_global('user')->update($_POST)) {
-            AmpError::add('general', T_('Error Update Failed'));
+            AmpError::add('general', T_('Update failed'));
         } else {
             Core::get_global('user')->upload_avatar();
 
             //$_REQUEST['action'] = 'confirm';
-            $title    = T_('Updated');
-            $text     = T_('Your Account has been updated');
+            $title    = T_('No Problem');
+            $text     = T_('Your account has been updated');
             $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=account';
         }
 
@@ -169,12 +169,12 @@ switch ($_REQUEST['action']) {
             if ($plugin = new Plugin(Core::get_request('plugin'))) {
                 $plugin->load(Core::get_global('user'));
                 if ($plugin->_plugin->get_session(Core::get_global('user')->id, Core::get_request('token'))) {
-                    $title    = T_('Updated');
-                    $text     = T_('Your Account has been updated') . ' : ' . Core::get_request('plugin');
+                    $title    = T_('No Problem');
+                    $text     = T_('Your account has been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 } else {
-                    $title    = T_('Error');
-                    $text     = T_('Your Account has not been updated') . ' : ' . Core::get_request('plugin');
+                    $title    = T_("There Was a Problem");
+                    $text     = T_('Your account has not been updated') . ' : ' . Core::get_request('plugin');
                     $next_url = AmpConfig::get('web_path') . '/preferences.php?tab=plugins';
                 }
             }
@@ -208,4 +208,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch on action
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

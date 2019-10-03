@@ -58,7 +58,7 @@ if (Art::is_enabled()) {
                 } else {
                     echo implode(',', $libitem->album_suite);
                 } ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
             <?php
             } ?>
@@ -108,13 +108,13 @@ if (Art::is_enabled()) {
     if (Access::check_function('batch_download') && check_can_zip('album')) {
         ?>
             <a rel="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id') ?>">
-                <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
+                <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
             </a>
     <?php
     }
     if (Access::check('interface', '50') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) {
         ?>
-            <a id="<?php echo 'edit_album_' . $libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_' . $libitem->id ?>', '<?php echo T_('Album edit') ?>', 'album_')">
+            <a id="<?php echo 'edit_album_' . $libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_' . $libitem->id ?>', '<?php echo T_('Album Edit') ?>', 'album_')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
     <?php

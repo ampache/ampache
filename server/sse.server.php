@@ -23,7 +23,7 @@
 require_once '../lib/init.php';
 require_once AmpConfig::get('prefix') . '/modules/catalog/local/local.catalog.php';
 
-if (!Access::check('interface', '100')) {
+if (!Access::check('interface', '75')) {
     UI::access_denied();
 
     return false;

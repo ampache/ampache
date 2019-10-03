@@ -309,7 +309,9 @@ function get_languages()
                     $name = '&#1601;&#1575;&#1585;&#1587;&#1610;';
                     break; /* Farsi */
                 default:
-                    $name = sprintf(T_('Unknown %s'), ' (' . $file . ')');
+                    $name = sprintf(
+                        /* HINT: File */
+                        T_('Unknown %s'), '(' . $file . ')');
                     break;
             } // end switch
 

@@ -35,34 +35,32 @@ class Graph
     {
         switch ($zoom) {
             case 'hour':
-                $df = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d %H:00:00')";
+                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d %H:00:00')";
                 break;
             case 'year':
-                $df = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-01-01')";
+                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-01-01')";
                 break;
             case 'month':
-                $df = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-01')";
+                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-01')";
                 break;
             case 'day':
             default:
-                $df = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d')";
+                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d')";
                 break;
         }
 
-        return "UNIX_TIMESTAMP(" . $df . ")";
+        return "UNIX_TIMESTAMP(" . $dateformat . ")";
     }
 
     protected function get_user_sql_where($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null)
     {
-        if ($end_date == null) {
+        $start_date = (int) ($start_date);
+        $end_date   = (int) ($end_date);
+        if ($end_date == 0) {
             $end_date = time();
-        } else {
-            $end_date = (int) ($end_date);
         }
-        if ($start_date == null) {
+        if ($start_date == 0) {
             $start_date = $end_date - 864000;
-        } else {
-            $start_date = (int) ($start_date);
         }
 
         $sql = "WHERE `object_count`.`date` >= " . $start_date . " AND `object_count`.`date` <= " . $end_date;
@@ -84,15 +82,13 @@ class Graph
 
     protected function get_catalog_sql_where($object_type = 'song', $object_id = 0, $catalog = 0, $start_date = null, $end_date = null)
     {
-        if ($end_date == null) {
+        $start_date = (int) ($start_date);
+        $end_date   = (int) ($end_date);
+        if ($end_date == 0) {
             $end_date = time();
-        } else {
-            $end_date = (int) ($end_date);
         }
-        if ($start_date == null) {
+        if ($start_date == 0) {
             $start_date = $end_date - 864000;
-        } else {
-            $start_date = (int) ($start_date);
         }
 
         $sql = "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date;
@@ -114,17 +110,17 @@ class Graph
      */
     protected function get_all_type_pts($fct, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
+        $type = $object_type;
         if ($object_type == null) {
             $type = 'song';
-        } else {
-            $type = $object_type;
         }
-        $song_values = $this->$fct($id, $type, $object_id, $start_date, $end_date, $zoom);
+
+        $song_values  = $this->$fct($id, $type, $object_id, $start_date, $end_date, $zoom);
+        $video_values = array();
         if ($object_type == null && AmpConfig::get('allow_video')) {
             $video_values = $this->$fct($id, 'video', $object_id, $start_date, $end_date, $zoom);
-        } else {
-            $video_values = array();
         }
+
         $values = $song_values;
         foreach ($video_values as $date => $value) {
             if (array_key_exists($date, $values)) {
@@ -140,10 +136,10 @@ class Graph
 
     protected function get_user_hits_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
-        $df    = $this->get_sql_date_format("`object_count`.`date`", $zoom);
-        $where = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
-        $sql   = "SELECT " . $df . " AS `zoom_date`, COUNT(`object_count`.`id`) AS `hits` FROM `object_count` " . $where .
-                " GROUP BY " . $df;
+        $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
+        $where      = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
+        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, COUNT(`object_count`.`id`) AS `hits` FROM `object_count` " . $where .
+                      " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
         $values = array();
@@ -156,11 +152,11 @@ class Graph
 
     protected function get_user_object_count_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $column = 'size')
     {
-        $df    = $this->get_sql_date_format("`object_count`.`date`", $zoom);
-        $where = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
-        $sql   = "SELECT " . $df . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` " .
-                " JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where .
-                " GROUP BY " . $df;
+        $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
+        $where      = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
+        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` " .
+                      " JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where .
+                      " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
         $values = array();
@@ -184,10 +180,10 @@ class Graph
     protected function get_catalog_files_pts($catalog = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $start_date = $start_date ?: ($end_date ?: time()) - 864000;
-        $df         = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
+        $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog, $start_date, $end_date);
-        $sql        = "SELECT " . $df . " AS `zoom_date`,  ((SELECT COUNT(`t2`.`id`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $object_type . "`.`id`)) AS `files` FROM `" . $object_type . "` " . $where .
-                " GROUP BY " . $df;
+        $sql        = "SELECT " . $dateformat . " AS `zoom_date`,  ((SELECT COUNT(`t2`.`id`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $object_type . "`.`id`)) AS `files` FROM `" . $object_type . "` " . $where .
+                " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
         $values = array();
@@ -201,10 +197,10 @@ class Graph
     protected function get_catalog_size_pts($catalog = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $start_date = $start_date ?: ($end_date ?: time()) - 864000;
-        $df         = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
+        $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog, $start_date, $end_date);
-        $sql        = "SELECT " . $df . " AS `zoom_date`,  ((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where .
-                " GROUP BY " . $df;
+        $sql        = "SELECT " . $dateformat . " AS `zoom_date`,  ((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where .
+                      " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
         $values = array();
@@ -329,9 +325,9 @@ class Graph
                 }
             } else {
                 if ($user_id) {
-                    $u = new User($user_id);
-                    $u->format();
-                    $blink = $u->f_link;
+                    $user = new User($user_id);
+                    $user->format();
+                    $blink = $user->f_link;
                 }
             }
 

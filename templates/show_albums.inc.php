@@ -97,7 +97,7 @@ $thcount  = 8;
         <?php if (!count($object_ids)) {
             ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No album found'); ?></span></td>
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Album found'); ?></span></td>
         </tr>
         <?php
         } ?>

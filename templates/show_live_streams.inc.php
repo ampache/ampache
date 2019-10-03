@@ -22,7 +22,7 @@
 ?>
 <?php if (Access::check('interface', '50')) {
     ?>
-<?php UI::show_box_top(T_('Manage Radio Stations'), 'info-box'); ?>
+<?php UI::show_box_top(T_('Manage'), 'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>

@@ -34,9 +34,9 @@ $thcount = 5;
 </script>
 <div id="information_actions">
     <ul>
-        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message"><?php echo UI::get_icon('mail', T_('Compose')); ?> <?php echo T_('Compose a new message'); ?></a></li>
-        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=set_is_read&read=1&msgs=' + getSelectionArray());"><?php echo T_('Set as read'); ?></a></li>
-        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=set_is_read&read=0&msgs=' + getSelectionArray());"><?php echo T_('Set as unread'); ?></a></li>
+        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message"><?php echo UI::get_icon('mail', T_('Compose')); ?> <?php echo T_('Compose a New Message'); ?></a></li>
+        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=set_is_read&read=1&msgs=' + getSelectionArray());"><?php echo T_('Mark as Read'); ?></a></li>
+        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=set_is_read&read=0&msgs=' + getSelectionArray());"><?php echo T_('Mark as Unread'); ?></a></li>
         <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=' + getSelectionArray());"><?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?></a></li>
     </ul>
 </div>

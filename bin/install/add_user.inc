@@ -33,7 +33,13 @@ require_once $prefix . '/lib/init.php';
 
 $options = getopt('e:l:n:p:u:w:');
 if (empty($options) || !isset($options['u'])) {
-    echo "Usage: add_user.inc -u <username> [ -l <access level> ] [ -p <password ] [ -e <email> ] [ -w <website> ] [ -n <name> ]\n";
+    echo T_("Usage:") . "\n";
+    echo "add_user.inc -u <" . T_('Username') .
+        "> [ -l <" . T_('Access Level') .
+        "> ] [ -p <" . T_('Password') .
+        "> ] [ -e <" . T_('E-mail') .
+        "> ] [ -w <" . T_('Website') .
+        "> ] [ -n <" . T_('Name') . "> ]\n";
     exit(1);
 }
 
@@ -47,7 +53,8 @@ $website = isset($options['w']) ? $options['w'] : '';
 $name = isset($options['n']) ? $options['n'] : '';
 
 if (User::create($username, $name, $email, $website, $password, $access)) {
-    printf(T_('Created %s user %s with password %s'), T_($access), $username, $password);
+    /* HINT: %1 Access Level (Administrator/User/etc), %2 Username, %3 password */
+    printf(T_('Created %1$s user %2$s with password %3$s'), User::access_level_to_name((string) $access), $username, $password);
     echo "\n";
 }
 else {

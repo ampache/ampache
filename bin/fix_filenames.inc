@@ -39,7 +39,7 @@ ob_end_clean();
 //Core::get_global('i_am_crazy') = true;
 
 if (!function_exists('iconv')) {
-    echo T_("ERROR: Iconv required for this functionality, quitting");
+    echo T_("php-iconv is required for this functionality, quitting");
     echo "\n";
     return false;
 }
@@ -48,12 +48,14 @@ if (!function_exists('iconv')) {
 $source_encoding = iconv_get_encoding('output_encoding');
 
 // Attempt a simple translation
-$string = sprintf(T_('%s'), iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset'), 'For the Love of Music'));
-echo T_('Testing Basic Translation, the two strings below should look the same');
+$string = sprintf(T_('%s'), iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset'), T_('For the Love of Music')));
+echo T_('Testing basic translation, the two strings below should look the same');
 echo "\n";
 echo T_('Original: For the Love of Music');
 echo "\n";
-printf (T_('Translated: %s'), $string);
+printf (
+    /* HINT: Translated version of 'For the Love of Music' */
+    T_('Translated: %s'), $string);
 echo "\n";
 echo "---------------------------------------------------------------------\n";
 printf (T_('Input Charset (%s):'), $source_encoding);
@@ -69,7 +71,8 @@ $db_results = Dba::read($sql);
 while ($row = Dba::fetch_assoc($db_results)) {
 
     $catalog = Catalog::create_from_id($row['id']);
-    printf(T_('Checking %s (%s)'), $catalog->name, $catalog->path);
+    /* HINT: %1 Catalog Name, %2 Catalog Path */
+    printf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->path);
     echo "\n";
     charset_directory_correct($catalog->path);
 
@@ -104,13 +107,15 @@ function charset_directory_correct($path) {
         $handle = opendir($path);
 
     if (!is_resource($handle)) {
-        printf (T_('Error: Unable to open %s'), $path);
+        /* HINT: directory (File path) */
+        printf (T_('There was an error trying to open "%s"'), $path);
         echo "\n";
         return false;
     }
 
     if (!chdir($path)) {
-        printf (T_('Error: Unable to chdir to %s'), $path);
+        /* HINT: directory (File path) */
+        printf (T_('There was an error trying to chdir to "%s"'), $path);
         echo "\n";
         return false;
     }
@@ -138,10 +143,10 @@ function charset_directory_correct($path) {
                 $translated_filename = iconv($source_encoding,AmpConfig::get('site_charset') . '//IGNORE',$full_file);
             }
 
-            printf (T_('Attempting to Transcode to %s'), AmpConfig::get('site_charset'));
+            printf (T_('Attempting to Transcode to "%s"'), AmpConfig::get('site_charset'));
             echo "\n";
             echo "--------------------------------------------------------------------------------------------\n";
-            printf (T_('OLD: %s has invalid chars'), $full_file);
+            printf (T_('OLD: "%s" has invalid chars'), $full_file);
             echo "\n";
             printf (T_('NEW: %s'), $translated_filename);
             echo "\n";
@@ -150,7 +155,7 @@ function charset_directory_correct($path) {
                 echo T_("Rename File (Y/N):");
                 $input = trim(fgets(STDIN));
                 if (strcasecmp($input,'Y') == 0) { charset_rename_file($full_file,$translated_filename); }
-                else { echo "\n\t"; echo T_('Not Renaming...'); echo "\n\n"; }
+                else { echo "\n\t"; echo T_('Not renaming...'); echo "\n\n"; }
             }
             else {
                 charset_rename_file($full_file,$translated_filename);
@@ -183,10 +188,12 @@ function charset_rename_file($full_file, $translated_filename) {
         $path .= "/" . $dir;
 
         if (!is_dir($path)) {
-            echo "\tMaking $path directory\n";
+            /* HINT: filename (Folder path) */
+            printf (T_('Making directory: %s'), $path);
             $results_mkdir = mkdir($path);
             if (!$results_mkdir) {
-                printf (T_('Error: Unable to create %s move failed, stopping'), $path);
+                /* HINT: filename (File path) */
+                printf (T_('There was an error trying to create "%s": Move failed, stopping'), $path);
                 echo "\n";
                 return false;
             }
@@ -198,7 +205,7 @@ function charset_rename_file($full_file, $translated_filename) {
     $results_copy = copy($full_file,$translated_filename);
 
     if (!$results_copy) {
-        echo T_('Error: Copy Failed, not deleting old file');
+        echo T_('File copy failed. Not deleting source file');
         echo "\n";
         return false;
     }
@@ -207,16 +214,17 @@ function charset_rename_file($full_file, $translated_filename) {
     $new_sum = Core::get_filesize($translated_filename);
 
     if ($old_sum != $new_sum || !$new_sum) {
-        printf (T_('Error: Size Inconsistency, not deleting %s'), $full_file);
+        /* HINT: filename (File path) */
+        printf (T_('Size comparison failed. Not deleting "%s"'), $full_file);
         echo "\n";
         return false;
     }
 
     $results = unlink($full_file);
 
-    if (!$results) { printf (T_('Error: Unable to delete %s'), $full_file); echo "\n"; return false; }
+    if (!$results) { printf (T_('There was an error trying to delete "%s"'), $full_file); echo "\n"; return false; }
 
-    echo T_("File Moved...");
+    echo T_("File moved...");
     echo "\n\n";
 
     return true;

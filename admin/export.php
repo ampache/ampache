@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface', '100')) {
+if (!Access::check('interface', '75')) {
     UI::access_denied();
 
     return false;
@@ -33,7 +33,6 @@ UI::show_header();
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'export':
-
         // This may take a while
         set_time_limit(0);
 
@@ -43,7 +42,7 @@ switch ($_REQUEST['action']) {
         // This will disable buffering so contents are sent immediately to browser.
         // This is very useful for large catalogs because it will immediately display the download dialog to user,
         // instead of waiting until contents are generated, which could take a long time.
-        ob_implicit_flush(true);
+        ob_implicit_flush(1);
 
         header("Content-Transfer-Encoding: binary");
         header("Cache-control: public");
@@ -70,4 +69,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch on action
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

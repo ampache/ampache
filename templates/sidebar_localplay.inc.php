@@ -40,7 +40,7 @@ if ($server_allow && $controller && $access_check) {
 <?php if (Access::check('localplay', '75')) {
             ?>
     <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
-    <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show instances'); ?></a></li>
+    <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show Instances'); ?></a></li>
 <?php
         } ?>
     <li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo T_('Show Playlist'); ?></a></li>
@@ -71,7 +71,7 @@ if ($server_allow && $controller && $access_check) {
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay Disabled'); ?>"><?php echo T_('Localplay Disabled'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'localplay_disabled', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_localplay_disabled')) ? $_COOKIE['sb_localplay_disabled'] : 'expanded')); ?></h4></li>
   <?php if (!$server_allow) {
             ?>
-    <li><?php echo T_('Allow Localplay set to False'); ?></li>
+    <li><?php echo T_('Allow Localplay Set to False'); ?></li>
   <?php
         } elseif (!$controller) {
             ?>

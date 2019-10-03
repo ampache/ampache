@@ -37,15 +37,17 @@ require_once $prefix . '/lib/init.php';
 if ($debug) { echo T_('DEBUG ENABLED WILL NOT DELETE FILES!'); echo "\n"; }
 
 /* Get a list of filenames */
-$sql = "SELECT `id`, `file` FROM song WHERE enabled=0";
+$sql = "SELECT `id`, `file` FROM `song` WHERE `enabled` = 0";
 $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
     if ($debug) {
-        printf (T_('Would Delete: %s'), $row['file']);
+        /* HINT: filename (File path) */
+        printf (T_('Would delete: %s'), $row['file']);
         echo "\n";
     }
     else {
+        /* HINT: filename (File path) */
         printf (T_('Deleting: %s'), $row['file']);
         echo "\n";
         unlink($row['file']);

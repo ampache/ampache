@@ -20,11 +20,11 @@
  *
  */
 ?>
-<?php UI::show_box_top(T_('Debug Tools'), 'box box_debug_tools'); ?>
+<?php UI::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo UI::get_icon('cog', T_('Generate Configuration')) . ' ' . T_('Generate Configuration'); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo UI::get_icon('cog', T_('Generate Configuration File')) . ' ' . T_('Generate Configuration File'); ?></a>
             </li>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=write_config"><?php echo UI::get_icon('cog', T_('Write New Config')) . ' ' . T_('Write New Config'); ?></a>
@@ -47,6 +47,9 @@
     <?php UI::show_box_top(T_('Ampache Update'), 'box'); ?>
         <div><?php echo T_('Installed Ampache version'); ?>: <?php echo AutoUpdate::get_current_version(); ?>.</div>
         <div><?php echo T_('Latest Ampache version'); ?>: <?php echo AutoUpdate::get_latest_version(); ?>.</div>
+        <?php if ((string) AmpConfig::get('github_force_branch') !== '') {
+    ?><?php echo "<div>" . T_('GitHub Branch') . ': "' . (string) AmpConfig::get('github_force_branch') . '"</div>';
+} ?>
         <div><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
         <?php
         if (AutoUpdate::is_update_available()) {
@@ -86,7 +89,7 @@
                 <td><?php echo print_bool(ini_get('safe_mode')); ?></td>
             </tr>
             <tr class="<?php echo UI::flip_class(); ?>">
-                <td>Open Basedir</td>
+                <td><?php T_('Open Basedir'); ?></td>
                 <td><?php echo ini_get('open_basedir'); ?></td>
             </tr>
             <tr class="<?php echo UI::flip_class(); ?>">
@@ -129,7 +132,13 @@
             if (is_array($value)) {
                 $string = '';
                 foreach ($value as $setting) {
-                    $string .= $setting . '<br />';
+                    if (is_array($setting)) {
+                        foreach ($setting as $array_value) {
+                            $string .= $array_value . '<br />';
+                        }
+                    } else {
+                        $string .= $setting . '<br />';
+                    }
                 }
                 $value = $string;
             }

@@ -30,7 +30,7 @@ if (!defined('AJAX_INCLUDE')) {
 $results = array();
 $action  = Core::get_request('action');
 $moment  = (int) AmpConfig::get('of_the_moment');
-// filter album and video of the moment instead of hardcoding
+// filter album and video of the Moment instead of hardcoding
 if (!$moment > 0) {
     $moment = 6;
 }
@@ -46,10 +46,11 @@ switch ($_REQUEST['action']) {
         } else {
             $results['random_selection'] = '<!-- None found -->';
 
-            if (Access::check('interface', '100')) {
+            if (Access::check('interface', '75')) {
                 $catalogs = Catalog::get_catalogs();
                 if (count($catalogs) == 0) {
-                    $results['random_selection'] = sprintf(T_('No catalog configured yet. To start streaming your media, you now need to %s add a catalog %s'), '<a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">', '</a>.<br /><br />');
+                    /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
+                    $results['random_selection'] = sprintf(T_('No Catalog configured yet. To start streaming your media, you now need to %1$s add a Catalog %2$s'), '<a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">', '</a>.<br /><br />');
                 }
             }
         }
@@ -244,7 +245,7 @@ switch ($_REQUEST['action']) {
                 $button = $_REQUEST['button'];
             break;
             case 'admin':
-                if (Access::check('interface', '100')) {
+                if (Access::check('interface', '75')) {
                     $button = $_REQUEST['button'];
                 } else {
                     return false;
