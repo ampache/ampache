@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
         }
 
         $object_id = Core::get_request('id');
-        $broadcast = new Broadcast($object_id);
+        $broadcast = new Broadcast((int) $object_id);
         if ($broadcast->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=broadcast';
             show_confirmation(T_('No Problem'), T_('Broadcast has been deleted'), $next_url);

@@ -64,7 +64,7 @@ if (Core::get_request('action') == 'show_edit_playlist') {
 }
 
 // Make sure they got them rights
-if (!Access::check('interface', $level) || AmpConfig::get('demo_mode')) {
+if (!Access::check('interface', (int) $level) || AmpConfig::get('demo_mode')) {
     echo xoutput_from_array(array('rfc3514' => '0x1'));
 
     return false;

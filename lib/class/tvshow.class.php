@@ -284,27 +284,22 @@ class TVShow extends database_object implements library_item
             return self::$_mapcache[$name]['null'];
         }
 
-        $id     = 0;
-        $exists = false;
+        $id         = 0;
+        $exists     = false;
+        $trimmed    = Catalog::trim_prefix(trim($name));
+        $name       = $trimmed['string'];
+        $prefix     = $trimmed['prefix'];
+        $sql        = 'SELECT `id` FROM `tvshow` WHERE `name` LIKE ? AND `year` = ?';
+        $db_results = Dba::read($sql, array($name, $year));
+        $id_array   = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $key            = 'null';
+            $id_array[$key] = $row['id'];
+        }
 
-        $trimmed = Catalog::trim_prefix(trim($name));
-        $name    = $trimmed['string'];
-        $prefix  = $trimmed['prefix'];
-
-        if (!$exists) {
-            $sql        = 'SELECT `id` FROM `tvshow` WHERE `name` LIKE ? AND `year` = ?';
-            $db_results = Dba::read($sql, array($name, $year));
-
-            $id_array = array();
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $key            = 'null';
-                $id_array[$key] = $row['id'];
-            }
-
-            if (count($id_array)) {
-                $id     = array_shift($id_array);
-                $exists = true;
-            }
+        if (count($id_array)) {
+            $id     = array_shift($id_array);
+            $exists = true;
         }
 
         if ($exists) {

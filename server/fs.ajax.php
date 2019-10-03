@@ -98,8 +98,6 @@ class fs
             }
             if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
                 $res[] = array('text' => $item, 'children' => true,  'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'icon' => 'folder');
-            } else {
-                //$res[] = array('text' => $item, 'children' => false, 'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'type' => 'file', 'icon' => 'file file-'.substr($item, strrpos($item, '.') + 1));
             }
         }
         if ($with_root && $this->id($dir) === '/') {

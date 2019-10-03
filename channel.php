@@ -83,7 +83,7 @@ switch ($_REQUEST['action']) {
         }
 
         $object_id = Core::get_request('id');
-        $channel   = new Channel($object_id);
+        $channel   = new Channel((int) $object_id);
         if ($channel->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=channel';
             show_confirmation(T_('No Problem'), T_('The Channel has been deleted'), $next_url);

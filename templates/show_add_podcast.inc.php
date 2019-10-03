@@ -33,7 +33,7 @@
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
     <td>
-        <?php show_catalog_select('catalog', scrub_out($_REQUEST['catalog']), '', false, 'podcast'); ?>
+        <?php show_catalog_select('catalog', (int) scrub_out($_REQUEST['catalog']), '', false, 'podcast'); ?>
         <?php AmpError::display('catalog'); ?>
     </td>
 </tr>

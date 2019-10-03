@@ -259,23 +259,19 @@ class TVShow_Season extends database_object implements library_item
             return self::$_mapcache[$name]['null'];
         }
 
-        $object_id = 0;
-        $exists    = false;
+        $object_id  = 0;
+        $exists     = false;
+        $sql        = 'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? AND `season_number` = ?';
+        $db_results = Dba::read($sql, array($tvshow, $season_number));
+        $id_array   = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $key            = 'null';
+            $id_array[$key] = $row['id'];
+        }
 
-        if (!$exists) {
-            $sql        = 'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? AND `season_number` = ?';
-            $db_results = Dba::read($sql, array($tvshow, $season_number));
-
-            $id_array = array();
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $key            = 'null';
-                $id_array[$key] = $row['id'];
-            }
-
-            if (count($id_array)) {
-                $object_id = array_shift($id_array);
-                $exists    = true;
-            }
+        if (count($id_array)) {
+            $object_id = array_shift($id_array);
+            $exists    = true;
         }
 
         if ($exists) {

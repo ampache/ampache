@@ -108,7 +108,7 @@ if (!empty($username) && isset($auth)) {
         if ($current_ip && ($current_ip != $session_ip)) {
             $auth['success'] = false;
             AmpError::add('general', T_('User is already logged in'));
-            debug_event('login.class', scrub_out($username) . ' is already logged in from ' . $session_ip . ' and attempted to login from ' . $current_ip, 1);
+            debug_event('login.class', scrub_out($username) . ' is already logged in from ' . (string) $session_ip . ' and attempted to login from ' . $current_ip, 1);
         } // if logged in multiple times
     } // if prevent multiple logins
     elseif (AmpConfig::get('auto_create') && $auth['success'] && ! $user->username) {

@@ -481,7 +481,7 @@ if ($isVideo) {
                 $broadcast_id = $broadcasts[0];
             }
 
-            $broadcast = new Broadcast($broadcast_id);
+            $broadcast = new Broadcast((int) $broadcast_id);
             $key       = Broadcast::generate_key();
             $broadcast->update_state(true, $key);
             echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script type="text/javascript">startBroadcast(\'' . $key . '\');</script>';

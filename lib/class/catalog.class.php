@@ -495,7 +495,7 @@ abstract class Catalog extends database_object
     /**
      * update_enabled
      * sets the enabled flag
-     * @param boolean $new_enabled
+     * @param string $new_enabled
      * @param integer $catalog_id
      */
     public static function update_enabled($new_enabled, $catalog_id)

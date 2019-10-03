@@ -1,6 +1,5 @@
-;;;;;;;;;;;;;;;;;;
-;<?php exit(); ?>;
-;;;;;;;;;;;;;;;;;;
+<?php exit(); ?>
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Copyright 2001 - 2019 Ampache.org
 ;
 ; This program is free software; you can redistribute it and/or

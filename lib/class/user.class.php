@@ -470,12 +470,11 @@ class User extends database_object
                 $items[]      = $data;
             }
             /* If it's a genre */
-            elseif ($type == 'genre') {
-                $data = new Genre($row['object_id']);
+            elseif (($type == 'genre' || $type == 'tag')) {
+                $data = new Tag($row['object_id']);
                 //$data->count = $row['count'];
-                $data->format();
-                $data->f_name = $data->f_link;
-                $items[]      = $data;
+                $data->f_name = $data->name;
+                $items[]    = $data;
             }
         } // end foreach
 

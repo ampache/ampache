@@ -215,7 +215,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
 else {
     if (isset($_REQUEST['sid'])) {
         session_name(AmpConfig::get('session_name'));
-        session_id(scrub_in($_REQUEST['sid']));
+        session_id(scrub_in((string) $_REQUEST['sid']));
         session_start();
         $GLOBALS['user'] = new User($_SESSION['userdata']['uid']);
     } else {
