@@ -474,7 +474,7 @@ class User extends database_object
                 $data = new Tag($row['object_id']);
                 //$data->count = $row['count'];
                 $data->f_name = $data->name;
-                $items[]    = $data;
+                $items[]      = $data;
             }
         } // end foreach
 
