@@ -24,7 +24,7 @@ class AmpacheBitly
 {
     public $name        = 'Bit.ly';
     public $categories  = 'shortener';
-    public $description = 'Url shorteners on shared links with Bit.ly';
+    public $description = 'URL shorteners on shared links with Bit.ly';
     public $url         = 'http://bitly.com';
     public $version     = '000002';
     public $min_ampache = '360037';
@@ -41,6 +41,8 @@ class AmpacheBitly
      */
     public function __construct()
     {
+        $this->description = T_('URL shorteners on shared links with Bit.ly');
+
         return true;
     } // constructor
 
@@ -57,8 +59,8 @@ class AmpacheBitly
             return false;
         }
 
-        Preference::insert('bitly_username', 'Bit.ly username', '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('bitly_api_key', 'Bit.ly api key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('bitly_username', T_('Bit.ly Username'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('bitly_api_key', T_('Bit.ly API key'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install

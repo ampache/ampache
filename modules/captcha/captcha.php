@@ -142,11 +142,11 @@ class easy_captcha
 
 
    #-- init data
-    public function __construct($id = null, $ignore_expiration = 0)
+    public function __construct($captcha_id = null, $ignore_expiration = 0)
     {
 
       #-- load
-        if (($this->id = $id) || ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[CAPTCHA_PARAM_ID]))) {
+        if (($this->id = $captcha_id) || ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[CAPTCHA_PARAM_ID]))) {
             $this->load();
         }
 
@@ -410,9 +410,9 @@ class easy_captcha
     }
 
     #-- where's the storage?
-    public function data_file($id = null)
+    public function data_file($object_id = null)
     {
-        return CAPTCHA_TEMP_DIR . "/" . preg_replace("/[^-,.\w]/", "", ($id?$id:$this->id)) . ".a()";
+        return CAPTCHA_TEMP_DIR . "/" . preg_replace("/[^-,.\w]/", "", ($object_id?$object_id:$this->id)) . ".a()";
     }
 
 

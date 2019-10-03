@@ -23,7 +23,7 @@
 /*
  * localplay_controller Class
  *
- * This is the abstract class for any localplay controller
+ * This is the abstract class for any Localplay controller
  *
  */
 abstract class localplay_controller
@@ -44,8 +44,8 @@ abstract class localplay_controller
 
     // For display we need the following 'instance' functions
     abstract public function add_instance($data);
-    abstract public function delete_instance($id);
-    abstract public function update_instance($id, $post);
+    abstract public function delete_instance($uid);
+    abstract public function update_instance($uid, $post);
     abstract public function get_instances();
     abstract public function instance_fields();
     abstract public function set_active_instance($uid);
@@ -84,7 +84,7 @@ abstract class localplay_controller
     /**
      * parse_url
      * This takes an Ampache URL and then returns the 'primary' part of it
-     * So that it's easier for localplay modules to return valid song information
+     * So that it's easier for Localplay modules to return valid song information
      */
     public function parse_url($url)
     {

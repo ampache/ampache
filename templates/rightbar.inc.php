@@ -22,15 +22,15 @@
 ?>
 <ul id="rb_action">
     <li>
-        <?php echo Ajax::button('?page=stream&action=basket', 'all', T_('Play'), 'rightbar_play'); ?>
+        <?php echo Ajax::button('?page=stream&action=basket', 'all', $t_play, 'rightbar_play'); ?>
     </li>
     <?php if (Access::check('interface', '25')) {
     ?>
         <li id="pl_add">
-            <?php echo UI::get_icon('playlist_add', T_('Add to Playlist')); ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
             <ul id="pl_action_additems" class="submenu">
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to new playlist'), 'rb_create_playlist'); ?>
                 </li>
             <?php
                 $playlists = Playlist::get_users(Core::get_global('user')->id);
@@ -51,28 +51,28 @@
         ?>
     <li>
         <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
-            <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
+            <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
         </a>
     </li>
 <?php
     } ?>
     <li>
-    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
+    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear playlist'), 'rb_clear_playlist'); ?>
     </li>
     <li id="rb_add">
-      <?php echo UI::get_icon('add', T_('Add Dynamic Items')); ?>
+      <?php echo UI::get_icon('add', T_('Add dynamic items')); ?>
         <ul id="rb_action_additems" class="submenu">
             <li>
-                <?php echo Ajax::text('?page=random&action=song', T_('Random Song'), 'rb_add_random_song'); ?>
+                <?php echo Ajax::text('?page=random&action=song', T_('Random song'), 'rb_add_random_song'); ?>
             </li>
             <li>
-                <?php echo Ajax::text('?page=random&action=artist', T_('Random Artist'), 'rb_add_random_artist'); ?>
+                <?php echo Ajax::text('?page=random&action=artist', T_('Random artist'), 'rb_add_random_artist'); ?>
             </li>
             <li>
-                <?php echo Ajax::text('?page=random&action=album', T_('Random Album'), 'rb_add_random_album'); ?>
+                <?php echo Ajax::text('?page=random&action=album', T_('Random album'), 'rb_add_random_album'); ?>
             </li>
             <li>
-                <?php echo Ajax::text('?page=random&action=playlist', T_('Random Playlist'), 'rb_add_random_playlist'); ?>
+                <?php echo Ajax::text('?page=random&action=playlist', T_('Random playlist'), 'rb_add_random_playlist'); ?>
             </li>
         </ul>
     </li>

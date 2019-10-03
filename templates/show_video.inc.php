@@ -120,7 +120,7 @@ $subtitles = $video->get_subtitles();
     } ?>
         <?php if (Access::check('interface', '50')) {
         ?>
-            <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo T_('Edit') ?>', '')">
+            <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo T_('Video Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
@@ -134,28 +134,28 @@ $subtitles = $video->get_subtitles();
     } ?>
     </dd>
 <?php
-  $videoprops[gettext_noop('Title')]   = scrub_out($video->f_title);
-  $videoprops[gettext_noop('Length')]  = scrub_out($video->f_time);
+  $videoprops[T_('Title')]   = scrub_out($video->f_title);
+  $videoprops[T_('Length')]  = scrub_out($video->f_time);
 if (strtolower(get_class($video)) != 'video') {
     require AmpConfig::get('prefix') . UI::find_template('show_partial_' . strtolower(get_class($video)) . '.inc.php');
 }
-  $videoprops[gettext_noop('Release Date')]    = scrub_out($video->f_release_date);
-  $videoprops[gettext_noop('Codec')]           = scrub_out($video->f_codec);
-  $videoprops[gettext_noop('Resolution')]      = scrub_out($video->f_resolution);
-  $videoprops[gettext_noop('Display')]         = scrub_out($video->f_display);
-  $videoprops[gettext_noop('Audio Bitrate')]   = scrub_out($video->f_bitrate);
-  $videoprops[gettext_noop('Video Bitrate')]   = scrub_out($video->f_video_bitrate);
-  $videoprops[gettext_noop('Frame Rate')]      = scrub_out($video->f_frame_rate);
-  $videoprops[gettext_noop('Channels')]        = scrub_out($video->channels);
+  $videoprops[T_('Release Date')]    = scrub_out($video->f_release_date);
+  $videoprops[T_('Codec')]           = scrub_out($video->f_codec);
+  $videoprops[T_('Resolution')]      = scrub_out($video->f_resolution);
+  $videoprops[T_('Display')]         = scrub_out($video->f_display);
+  $videoprops[T_('Audio Bitrate')]   = scrub_out($video->f_bitrate);
+  $videoprops[T_('Video Bitrate')]   = scrub_out($video->f_video_bitrate);
+  $videoprops[T_('Frame Rate')]      = scrub_out($video->f_frame_rate);
+  $videoprops[T_('Channels')]        = scrub_out($video->channels);
   if (Access::check('interface', '75')) {
-      $videoprops[gettext_noop('Filename')]   = scrub_out($video->file) . " " . $video->f_size;
+      $videoprops[T_('Filename')]   = scrub_out($video->file) . " " . $video->f_size;
   }
   if ($video->update_time) {
-      $videoprops[gettext_noop('Last Updated')]   = date("d/m/Y H:i", $video->update_time);
+      $videoprops[T_('Last Updated')]   = date("d/m/Y H:i", $video->update_time);
   }
-  $videoprops[gettext_noop('Added')]   = date("d/m/Y H:i", $video->addition_time);
+  $videoprops[T_('Added')]   = date("d/m/Y H:i", $video->addition_time);
   if (AmpConfig::get('show_played_times')) {
-      $videoprops[gettext_noop('# Played')]   = scrub_out($video->object_cnt);
+      $videoprops[T_('# Played')]   = scrub_out($video->object_cnt);
   }
 
     foreach ($videoprops as $key => $value) {

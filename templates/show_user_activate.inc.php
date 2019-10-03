@@ -26,7 +26,7 @@ $web_path = AmpConfig::get('web_path');
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
     <head>
-        <!-- Propulsed by Ampache | ampache.org -->
+        <!-- Propelled by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
@@ -47,9 +47,7 @@ $web_path = AmpConfig::get('web_path');
         User::activate_user($username); ?>
 <h3><?php echo T_('User Activated'); ?></h3>
 <p>
-    <?php
-    /* HINT: Start A tag, End A tag */
-     printf(T_('This User ID is activated and can be used %sLogin%s'), '<a href="' . AmpConfig::get('web_path') . '/login.php">', '</a>'); ?>
+    <?php echo(T_('This User ID is activated and can be used.') . ' <a href="' . AmpConfig::get('web_path') . '/login.php">' . T_('Login') . '</a>'); ?>
 </p>
 <?php
     } else {

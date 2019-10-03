@@ -49,7 +49,7 @@ class Catalog_beets extends Beets\Catalog
     {
         $help = "<ul>" .
                 "<li>Fetch songs from beets command over CLI.</li>" .
-                "<li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessable by the Webserver.</li></ul>";
+                "<li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessible by the Webserver.</li></ul>";
 
         return $help;
     }
@@ -100,7 +100,7 @@ class Catalog_beets extends Beets\Catalog
         $beetsdb = $data['beetsdb'];
 
         if (preg_match('/^[\s]+$/', $beetsdb)) {
-            AmpError::add('general', T_('Error: Beets selected, but no Beets DB File provided'));
+            AmpError::add('general', T_('Beets Catalog was selected, but no Beets DB file was provided'));
 
             return false;
         }
@@ -111,7 +111,7 @@ class Catalog_beets extends Beets\Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $beetsdb, 1);
-            AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $beetsdb));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $beetsdb));
 
             return false;
         }

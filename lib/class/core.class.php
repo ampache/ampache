@@ -130,6 +130,25 @@ class Core
     }
 
     /**
+     * get_cookie
+     * Return a $COOKIE variable instead of calling directly
+     *
+     * @param string $variable
+     * @return string
+     */
+    public static function get_cookie($variable)
+    {
+        if (filter_has_var(INPUT_COOKIE, $variable)) {
+            return filter_input(INPUT_COOKIE, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if ($_COOKIE[$variable] === null) {
+            return '';
+        }
+
+        return $_COOKIE[$variable];
+    }
+
+    /**
      * get_post
      * Return a $POST variable instead of calling directly
      *

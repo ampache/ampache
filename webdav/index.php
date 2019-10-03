@@ -24,7 +24,7 @@ define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 if (!AmpConfig::get('webdav_backend')) {
-    echo "Disabled.";
+    echo T_("Disabled");
 
     return false;
 }

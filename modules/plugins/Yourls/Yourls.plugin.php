@@ -24,7 +24,7 @@ class AmpacheYourls
 {
     public $name        = 'YOURLS';
     public $categories  = 'shortener';
-    public $description = 'Url shorteners on shared links with YOURLS';
+    public $description = 'URL shorteners on shared links with YOURLS';
     public $url         = 'http://yourls.org';
     public $version     = '000002';
     public $min_ampache = '360037';
@@ -42,6 +42,8 @@ class AmpacheYourls
      */
     public function __construct()
     {
+        $this->description = T_('URL shorteners on shared links with YOURLS');
+
         return true;
     } // constructor
 
@@ -58,9 +60,9 @@ class AmpacheYourls
             return false;
         }
 
-        Preference::insert('yourls_domain', 'YOURLS domain name', '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('yourls_use_idn', 'YOURLS use IDN', '0', '75', 'boolean', 'plugins', $this->name);
-        Preference::insert('yourls_api_key', 'YOURLS api key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('yourls_domain', T_('YOURLS domain name'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('yourls_use_idn', T_('YOURLS use IDN'), '0', '75', 'boolean', 'plugins', $this->name);
+        Preference::insert('yourls_api_key', T_('YOURLS API key'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install

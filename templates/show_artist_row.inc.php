@@ -54,7 +54,7 @@ if (Art::is_enabled()) {
             echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_artist_' . $libitem->id);
             echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id, 'random', T_('Random to temporary playlist'), 'random_artist_' . $libitem->id); ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id ?>')">
-                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php
         } ?>
@@ -94,7 +94,7 @@ if (Art::is_enabled()) {
     }
     if ($libitem->can_edit()) {
         ?>
-        <a id="<?php echo 'edit_artist_' . $libitem->id ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_artist_' . $libitem->id ?>', '<?php echo T_('Artist edit') ?>', 'artist_')">
+        <a id="<?php echo 'edit_artist_' . $libitem->id ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_artist_' . $libitem->id ?>', '<?php echo T_('Artist Edit') ?>', 'artist_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
     <?php

@@ -28,12 +28,21 @@ $web_path          = AmpConfig::get('web_path');
 $htmllang          = str_replace("_", "-", AmpConfig::get('lang'));
 $location          = get_location();
 $_SESSION['login'] = false;
+// strings for the main page and templates
+$t_home      = T_('Home');
+$t_play      = T_('Play');
+$t_artists   = T_('Artists');
+$t_albums    = T_('Albums');
+$t_playlists = T_('Playlists');
+$t_tagcloud  = T_('Tag Cloud');
+$t_favorites = T_('Favorites');
+$t_upload    = T_('Upload');
+$t_logout    = T_('Log out');
 ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
     <head>
-        <!-- Propulsed by Ampache | ampache.org -->
+        <!-- Propelled by Ampache | ampache.org -->
         <link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
         <?php
             if (AmpConfig::get('use_rss')) {
@@ -343,11 +352,11 @@ $_SESSION['login'] = false;
             $.contextMenu({
                 selector: ".libitem_menu",
                 items: {
-                    play: {name: "<?php echo T_('Play') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay'); }},
+                    play: {name: "<?php echo $t_play ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay'); }},
                     play_next: {name: "<?php echo T_('Play next') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay&playnext=true'); }},
                     play_last: {name: "<?php echo T_('Play last') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?page=stream&action=directplay&append=true'); }},
                     add_tmp_playlist: {name: "<?php echo T_('Add to temporary playlist') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, '?action=basket'); }},
-                    add_playlist: {name: "<?php echo T_('Add to existing playlist') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, ''); }}
+                    add_playlist: {name: "<?php echo T_('Add to playlist') ?>", callback: function(key, opt){ libitem_action(opt.$trigger, ''); }}
                 }
             });
         </script>
@@ -380,7 +389,6 @@ $_SESSION['login'] = false;
                             <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs(Core::get_global('user')->id, true)); ?>)</a>
                         <?php
                             } ?>
-                            <a rel="nohtml" href="<?php echo $web_path; ?>/logout.php">[<?php echo T_('Log out'); ?>]</a>
                         </span>
                     <?php
                         } else {
@@ -409,26 +417,26 @@ $_SESSION['login'] = false;
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/index.php">
-                        <?php echo UI::get_image('topmenu-home', T_('Home')); ?>
-                        <span><?php echo T_('Home') ?></span>
+                        <?php echo UI::get_image('topmenu-home', $t_home); ?>
+                        <span><?php echo $t_home ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=artist">
-                        <?php echo UI::get_image('topmenu-artist', T_('Artists')); ?>
-                        <span><?php echo T_('Artists') ?></span>
+                        <?php echo UI::get_image('topmenu-artist', $t_artists); ?>
+                        <span><?php echo $t_artists ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=playlist">
-                        <?php echo UI::get_image('topmenu-playlist', T_('Playlists')); ?>
-                        <span><?php echo T_('Playlists') ?></span>
+                        <?php echo UI::get_image('topmenu-playlist', $t_playlists); ?>
+                        <span><?php echo $t_playlists ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=tag">
-                        <?php echo UI::get_image('topmenu-tagcloud', T_('Tag Cloud')); ?>
-                        <span><?php echo T_('Tag Cloud') ?></span>
+                        <?php echo UI::get_image('topmenu-tagcloud', $t_tagcloud); ?>
+                        <span><?php echo $t_tagcloud ?></span>
                     </a>
                 </div>
 
@@ -438,8 +446,8 @@ $_SESSION['login'] = false;
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
-                        <?php echo UI::get_image('topmenu-favorite', T_('Favorites')); ?>
-                        <span><?php echo T_('Favorites') ?></span>
+                        <?php echo UI::get_image('topmenu-favorite', $t_favorites); ?>
+                        <span><?php echo $t_favorites ?></span>
                     </a>
                 </div>
 
@@ -450,8 +458,8 @@ $_SESSION['login'] = false;
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/upload.php">
-                        <?php echo UI::get_image('topmenu-upload', T_('Upload')); ?>
-                        <span><?php echo T_('Upload') ?></span>
+                        <?php echo UI::get_image('topmenu-upload', $t_upload); ?>
+                        <span><?php echo $t_upload ?></span>
                     </a>
                 </div>
 
@@ -467,7 +475,7 @@ $_SESSION['login'] = false;
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >
-                    <span id="sidebar-header-content"><?php echo $isCollapsed ? '>>>' : '<<<'; ?></span>
+                    <span id="sidebar-header-content"></span>
                 </div>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
                     <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php'); ?>
@@ -495,12 +503,10 @@ $_SESSION['login'] = false;
                         $('#sidebar-content-light').removeClass("sidebar-content-light-collapsed");
                         $('#sidebar-content').removeClass("sidebar-content-collapsed");
                         $('#sidebar-header').removeClass("sidebar-header-collapsed");
-                        $('#sidebar-header-content').text('<<<');
                     } else {
                         $('#sidebar-content').addClass("sidebar-content-collapsed");
                         $('#sidebar-header').addClass("sidebar-header-collapsed");
                         $('#sidebar-content-light').addClass("sidebar-content-light-collapsed");
-                        $('#sidebar-header-content').text('>>>');
                     }
 
                     $('#sidebar').show(500);
@@ -515,7 +521,7 @@ $_SESSION['login'] = false;
             </div>
 
             <!-- Tiny little div, used to cheat the system -->
-            <div id="ajax-loading">Loading . . .</div>
+            <div id="ajax-loading"><?php echo T_('Loading') . ' . . .'; ?></div>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
@@ -533,10 +539,10 @@ $_SESSION['login'] = false;
                         if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) {
                             ?>
                             <div class="fatalerror">
-                                <?php echo T_('Error: Your config file is out of date!'); ?>
+                                <?php echo T_('Your Ampache config file is out of date!'); ?>
                                 <br />
-                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Generate and download new config file'); ?></a> |
-                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write new config file to disk'); ?></a>
+                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a new config file to manually update'); ?></a> |
+                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write a new config file directly to disk'); ?></a>
                             </div>
                 <?php
                         }

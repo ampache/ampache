@@ -39,8 +39,8 @@ if(!file_exists($filename)) {
     print_tags_usage();
     return false;
 }
-
-printf(T_('Reading: %s'), $filename);
+/* HINT: filename (File path) */
+sprintf(T_('Reading: %s'), $filename);
 print "\n";
 
 /* Attempt to figure out what catalog it comes from */
@@ -55,7 +55,8 @@ $file_pattern = $catalog->rename_pattern;
 
 $info = new vainfo($filename, array('music'), '', '', '', $dir_pattern, $file_pattern);
 if(isset($dir_pattern) || isset($file_pattern)) {
-    printf(T_('Using: %s AND %s for file pattern matching'), $dir_pattern, $file_pattern);
+    /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
+    printf(T_('Using: %1$s AND %2$s for file pattern matching'), $dir_pattern, $file_pattern);
     print "\n";
 }
 $info->get_info();
@@ -75,7 +76,7 @@ print_r($ampache_results);
 function print_tags_usage() {
     global $version;
 
-    $text  = sprintf(T_('%s Version %s'), 'print_tags.inc', $version);
+    $text  = 'print_tags.inc' . T_('Version') . ': ' . $version;
     $text .= "\n\n";
     $text .= T_('Usage:');
     $text .= "\n";

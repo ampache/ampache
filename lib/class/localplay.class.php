@@ -34,7 +34,7 @@ class Localplay
 
     /**
      * Constructor
-     * This must be called with a localplay type, it then loads the config
+     * This must be called with a Localplay type, it then loads the config
      * file for the specified type and attempts to load in the function
      * map, the preferences and the template
      */
@@ -73,7 +73,7 @@ class Localplay
 
     /**
       * format
-     * This makes the localplay/plugin information
+     * This makes the Localplay/plugin information
      * human readable
      */
     public function format()
@@ -89,8 +89,8 @@ class Localplay
 
     /**
      * _load_player
-     * This function attempts to load the player class that localplay
-     * Will interface with in order to make all this magical stuf work
+     * This function attempts to load the player class that Localplay
+     * Will interface with in order to make all this magical stuff work
      * all LocalPlay modules should be located in /modules/<name>/<name>.class.php
      */
     private function _load_player()
@@ -193,7 +193,7 @@ class Localplay
 
     /**
      * install
-     * This runs the install for the localplay controller we've
+     * This runs the install for the Localplay controller we've
      * currently got pimped out
      */
     public function install()
@@ -206,7 +206,7 @@ class Localplay
 
     /**
      * uninstall
-     * This runs the uninstall for the localplay controller we've
+     * This runs the uninstall for the Localplay controller we've
      * currently pimped out
      */
     public function uninstall()
@@ -224,7 +224,7 @@ class Localplay
 
     /**
      * connect
-     * This function attempts to connect to the localplay
+     * This function attempts to connect to the Localplay
      * player that we are using
      */
     public function connect()
@@ -282,7 +282,7 @@ class Localplay
 
     /**
      * add_url
-     * This directly adds an URL to the localplay module.  Is more betterer.
+     * This directly adds an URL to the Localplay module.  Is more betterer.
      */
     public function add_url(Stream_URL $url)
     {
@@ -297,7 +297,7 @@ class Localplay
 
     /**
      * repeat
-     * This turns the repeat feature of a localplay method on or
+     * This turns the repeat feature of a Localplay method on or
      * off, takes a 0/1 value
      * @param boolean $state
      */
@@ -314,7 +314,7 @@ class Localplay
 
     /**
       * random
-     * This turns on the random feature of a localplay method
+     * This turns on the random feature of a Localplay method
      * It takes a 0/1 value
      * @param boolean $state
      */
@@ -566,7 +566,7 @@ class Localplay
 
     /**
      * set_active_instance
-     * This sets the active instance of the localplay controller
+     * This sets the active instance of the Localplay controller
      */
     public function set_active_instance($instance)
     {
@@ -608,7 +608,7 @@ class Localplay
 
     /**
      * get_instance_fields
-     * This loads the fields from the localplay
+     * This loads the fields from the Localplay
      * player and returns them
      */
     public function get_instance_fields()

@@ -26,7 +26,7 @@
 <input type="hidden" name="id" value="<?php echo scrub_out(Core::get_request('id')); ?>" />
 <table class="tabledata" cellspacing="0" cellpadding="0">
 <tr>
-    <td><?php echo T_('Shared Object'); ?></td>
+    <td><?php echo T_('Share'); ?></td>
     <td>
         <?php echo $object->f_link; ?>
     </td>

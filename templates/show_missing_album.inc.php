@@ -51,7 +51,7 @@ if (count($images) > 0 && !empty($images[0]['url'])) {
 <h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
     <li>
-        <?php echo T_('Wanted actions'); ?>:
+        <?php echo T_('Actions'); ?>:
         <div id="wanted_action_<?php echo $walbum->mbid; ?>">
         <?php $walbum->show_action_buttons(); ?>
         </div>

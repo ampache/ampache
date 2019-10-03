@@ -71,7 +71,7 @@ class Session
         $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
-        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
+        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 5);
 
         return true;
     }
@@ -80,6 +80,7 @@ class Session
      * destroy
      *
      * This removes the specified session from the database.
+     * @param string $key
      */
     public static function destroy($key)
     {
@@ -169,7 +170,7 @@ class Session
     }
 
     /**
-     * username
+     * agent
      *
      * This returns the agent associated with a session ID, if any
      */
@@ -221,12 +222,10 @@ class Session
         }
         $agent = (!empty($data['agent'])) ? $data['agent'] : substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
 
+        $expire = time() + AmpConfig::get('session_length');
         if ($type == 'stream') {
             $expire = time() + AmpConfig::get('stream_length');
-        } else {
-            $expire = time() + AmpConfig::get('session_length');
         }
-
         $latitude = null;
         if (isset($data['geo_latitude'])) {
             $latitude = $data['geo_latitude'];
@@ -391,8 +390,6 @@ class Session
         if ($sid) {
             $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
             Dba::write($sql, array($latitude, $longitude, $name, $sid));
-        } else {
-            debug_event('session.class', 'Missing session id to update geolocation.', 3);
         }
     }
 
@@ -535,9 +532,9 @@ class Session
     public static function auth_remember()
     {
         $auth  = false;
-        $name  = AmpConfig::get('session_name') . '_remember';
-        if ((filter_has_var(INPUT_COOKIE, $name))) {
-            list($username, $token, $mac) = explode(':', filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $cname = AmpConfig::get('session_name') . '_remember';
+        if (isset($_COOKIE[$cname])) {
+            list($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, array($username, $token, time()));

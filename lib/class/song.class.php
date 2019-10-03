@@ -367,7 +367,7 @@ class Song extends database_object implements media, library_item
         $album_mbid_group      = $results['mb_albumid_group'];
         $artist_mbid           = $results['mb_artistid'];
         $albumartist_mbid      = $results['mb_albumartistid'];
-        $disk                  = $results['disk'] ?: 1;
+        $disk                  = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $year                  = Catalog::normalize_year($results['year'] ?: 0);
         $comment               = $results['comment'];
         $tags                  = $results['genre']; // multiple genre support makes this an array
@@ -638,7 +638,7 @@ class Song extends database_object implements media, library_item
             return parent::get_from_cache('song_data', $song_id);
         }
 
-        $sql        = "SELECT * FROM song_data WHERE `song_id` = ?";
+        $sql        = "SELECT * FROM `song_data` WHERE `song_id` = ?";
         $db_results = Dba::read($sql, array($song_id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -2176,15 +2176,15 @@ class Song extends database_object implements media, library_item
     public static function get_custom_play_actions()
     {
         $actions = array();
-        $i       = 0;
-        while (AmpConfig::get('custom_play_action_title_' . $i)) {
+        $count   = 0;
+        while (AmpConfig::get('custom_play_action_title_' . $count)) {
             $actions[] = array(
-                'index' => ($i + 1),
-                'title' => AmpConfig::get('custom_play_action_title_' . $i),
-                'icon' => AmpConfig::get('custom_play_action_icon_' . $i),
-                'run' => AmpConfig::get('custom_play_action_run_' . $i),
+                'index' => ($count + 1),
+                'title' => AmpConfig::get('custom_play_action_title_' . $count),
+                'icon' => AmpConfig::get('custom_play_action_icon_' . $count),
+                'run' => AmpConfig::get('custom_play_action_run_' . $count),
             );
-            ++$i;
+            ++$count;
         }
 
         return $actions;
