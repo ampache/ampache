@@ -65,7 +65,7 @@ if ($chanid <= 0) {
 $transcode_cfg = AmpConfig::get('transcode');
 
 if ($transcode_cfg == 'never') {
-    die('Cannot start channel, transcoding is mandatory to work.');
+    die('Cannot start channel, transcoding is mandatory to work');
 }
 
 echo T_("Starting Channel...") . $operations_string . "\n";
@@ -283,7 +283,7 @@ while(true)
         } else {
             $channel->update_listeners(0);
             debug_event('channel_run', 'No more data, stream ended.', 4);
-            die('No more data, stream ended.');
+            die('No more data, stream ended');
         }
     }
 }
@@ -297,7 +297,7 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     unset($client_socks[$key]);
     unset($stream_clients[$key]);
     if (fclose($sock) === false) {
-        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed.');
+        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed');
     }
     $channel->update_listeners(count($client_socks));
     debug_event('channel_run', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', 4);

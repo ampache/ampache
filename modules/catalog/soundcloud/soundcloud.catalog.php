@@ -147,7 +147,7 @@ class Catalog_soundcloud extends Catalog
         }
 
         if (!@include_once(AmpConfig::get('prefix') . '/lib/vendor/mptre/php-soundcloud/Services/Soundcloud.php')) {
-            throw new Exception('Missing php-soundcloud dependency.');
+            throw new Exception('Missing php-soundcloud dependency');
         }
     }
 
@@ -305,7 +305,7 @@ class Catalog_soundcloud extends Catalog
                         }
                     }
 
-                    UI::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s).') . " " .
+                    UI::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s)') . " " .
                         /* HINT: Number of Songs added */
                         sprintf(nT_('%s Song added', '%s Songs added', $songsadded), $songsadded));
 

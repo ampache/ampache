@@ -270,7 +270,7 @@ class Catalog_subsonic extends Catalog
             }
         }
 
-        UI::update_text(T_("Updated"), T_('Completed updating Subsonic Catalog(s).') . " " .
+        UI::update_text(T_("Updated"), T_('Completed updating Subsonic Catalog(s)') . " " .
             /* HINT: Number of songs */
             sprintf(nT_('%s Song added.', '%s Songs added', $songsadded), $songsadded));
 

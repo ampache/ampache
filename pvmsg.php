@@ -121,7 +121,7 @@ switch ($_REQUEST['action']) {
             }
         }
 
-        show_confirmation(T_('No Problem'), T_('Messages have been deleted.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
+        show_confirmation(T_('No Problem'), T_('Messages have been deleted'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
         break;
     case 'show':
     default:

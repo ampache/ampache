@@ -51,14 +51,14 @@ $web_path = AmpConfig::get('web_path');
         <div id="guts" class="container" role="main">
             <div class="jumbotron">
                 <h1><?php echo T_('Access Denied'); ?></h1>
-                <p><?php echo T_('This event has been logged.'); ?></p>
+                <p><?php echo T_('This event has been logged'); ?></p>
             </div>
             <div class="alert alert-danger">
                 <?php if (!AmpConfig::get('demo_mode')) {
     ?>
-                <p><?php echo T_('You have been redirected to this page because you do not have access to this function.'); ?></p>
-                <p><?php echo T_('If you believe this is an error please contact an Ampache administrator.'); ?></p>
-                <p><?php echo T_('This event has been logged.'); ?></p>
+                <p><?php echo T_('You have been redirected to this page because you do not have access to this function'); ?></p>
+                <p><?php echo T_('If you believe this is an error please contact an Ampache administrator'); ?></p>
+                <p><?php echo T_('This event has been logged'); ?></p>
                 <?php
 } else {
         ?>

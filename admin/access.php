@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
             break;
         }
         $access = new Access((int) Core::get_get('access_id'));
-        show_confirmation(T_('Are you sure?'),
+        show_confirmation(T_('Are You Sure?'),
                 /* HINT: ACL Name */
                 sprintf(T_('This will permanently delete "%s"'), $access->name),
                 'admin/access.php?action=delete_record&amp;access_id=' . $access->id, 1, 'delete_access');

@@ -50,7 +50,7 @@ $t_ampache = T_('Ampache');
     <div class="container" role="main">
         <div class="jumbotron">
         <h1><?php echo T_('Error'); ?></h1>
-            <p><?php echo T_('You may have reached this page because Ampache was unable to load the required dependencies.'); ?></p>
+            <p><?php echo T_('You may have reached this page because Ampache was unable to load the required dependencies'); ?></p>
             <p><a href="https://github.com/ampache/ampache/wiki/Installation" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
         </div>
         <?php AmpError::display('general'); ?>

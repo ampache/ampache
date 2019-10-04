@@ -219,7 +219,7 @@ class Art extends database_object
         }
         if ($test) {
             if (imagedestroy($image) === false) {
-                throw new \RuntimeException('The image handle ' . $image . ' could not be destroyed.');
+                throw new \RuntimeException('The image handle ' . $image . ' could not be destroyed');
             }
         }
 

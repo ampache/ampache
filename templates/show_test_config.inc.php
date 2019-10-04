@@ -43,7 +43,7 @@
   <div class="container" role="main">
     <div class="jumbotron">
       <h1><?php echo T_('Ampache Configuration Parse Error'); ?></h1>
-      <p><?php /* HINT: ampache config file path */ echo sprintf(T_('You may have reached this page because your %s configuration file was not parsable.'), '<strong>/config/ampache.cfg.php</strong>'); ?></p>
+      <p><?php /* HINT: ampache config file path */ echo sprintf(T_('You may have reached this page because your %s configuration file was not parsable'), '<strong>/config/ampache.cfg.php</strong>'); ?></p>
       <p><a href="https://github.com/ampache/ampache/wiki/FAQ#im-getting-ampache-configuration-parse-error" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
     </div>
   </div>

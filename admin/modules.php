@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
     case 'install_localplay':
         $localplay = new Localplay(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!$localplay->player_loaded()) {
-            AmpError::add('general', T_('Failed to enable the Localplay module.'));
+            AmpError::add('general', T_('Failed to enable the Localplay module'));
             AmpError::display('general');
             break;
         }
@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
         $type    = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            AmpError::add('general', T_('Failed to enable the Catalog module.'));
+            AmpError::add('general', T_('Failed to enable the Catalog module'));
             AmpError::display('general');
             break;
         }
@@ -83,7 +83,7 @@ switch ($_REQUEST['action']) {
     case 'confirm_uninstall_catalog_type':
         $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
-        $title = T_('Are you sure?');
+        $title = T_('Are You Sure?');
         $body  = T_('This will disable the Catalog module');
         show_confirmation($title, $body, $url, 1);
     break;

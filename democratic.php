@@ -55,7 +55,7 @@ switch ($_REQUEST['action']) {
 
         Democratic::delete($_REQUEST['democratic_id']);
 
-        show_confirmation(T_('No Problem'), T_('The Playlist has been deleted.'), AmpConfig::get('web_path') . '/democratic.php?action=manage_playlists');
+        show_confirmation(T_('No Problem'), T_('The Playlist has been deleted'), AmpConfig::get('web_path') . '/democratic.php?action=manage_playlists');
     break;
     case 'create':
         // Only power users here

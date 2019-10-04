@@ -75,7 +75,7 @@ if ($channel->is_private) {
     if (!$is_auth) {
         header('WWW-Authenticate: Basic realm="Ampache Channel Authentication"');
         header('HTTP/1.0 401 Unauthorized');
-        echo T_('Unauthorized.');
+        echo T_('Unauthorized');
 
         return false;
     }

@@ -237,7 +237,7 @@ function ShowVisualizerFullScreen()
     } else if (element.mozRequestFullScreen) {
         element.mozRequestFullScreen();
     } else {
-        alert('Full-Screen not supported by your browser.');
+        alert('Full-Screen not supported by your browser');
     }
 }
 
@@ -486,7 +486,7 @@ function receiveBroadcastMessage(e)
                 break;
 
                 default:
-                    alert('Unknown message code.');
+                    alert('Unknown message code');
                 break;
             }
         }

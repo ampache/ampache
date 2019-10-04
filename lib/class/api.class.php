@@ -879,7 +879,7 @@ class Api
         $playlist = new Playlist($input['filter']);
 
         if (!$playlist->has_access()) {
-            echo XML_Data::error('401', T_('Access denied to this playlist.'));
+            echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             $array = [
                 "name" => $name,
@@ -903,7 +903,7 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access()) {
-            echo XML_Data::error('401', T_('Access denied to this playlist.'));
+            echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             $playlist->delete();
             echo XML_Data::success('playlist deleted');
@@ -924,7 +924,7 @@ class Api
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
         if (!$playlist->has_access()) {
-            echo XML_Data::error('401', T_('Access denied to this playlist.'));
+            echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             $playlist->add_songs(array($song), true);
             echo XML_Data::success('song added to playlist');
@@ -951,7 +951,7 @@ class Api
             $track = scrub_in($input['track']);
         }
         if (!$playlist->has_access()) {
-            echo XML_Data::error('401', T_('Access denied to this playlist.'));
+            echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             $playlist->delete_track_number($track);
             $playlist->regenerate_track_numbers();
@@ -1438,11 +1438,11 @@ class Api
         $rating    = $input['rating'];
 
         if (!Core::is_library_item($type) || !$object_id) {
-            echo XML_Data::error('401', T_('Wrong library item type.'));
+            echo XML_Data::error('401', T_('Wrong library item type'));
         } else {
             $item = new $type($object_id);
             if (!$item->id) {
-                echo XML_Data::error('404', T_('Library item not found.'));
+                echo XML_Data::error('404', T_('Library item not found'));
 
                 return;
             }
@@ -1484,11 +1484,11 @@ class Api
         }
 
         if (!Core::is_library_item($type) || !$object_id) {
-            echo XML_Data::error('401', T_('Wrong library item type.'));
+            echo XML_Data::error('401', T_('Wrong library item type'));
         } else {
             $item = new $type($object_id);
             if (!$item->id) {
-                echo XML_Data::error('404', T_('Library item not found.'));
+                echo XML_Data::error('404', T_('Library item not found'));
 
                 return;
             }
@@ -1531,7 +1531,7 @@ class Api
 
         // validate supplied user
         if ($valid === false) {
-            echo XML_Data::error('404', T_('User_id not found.'));
+            echo XML_Data::error('404', T_('User_id not found'));
 
             return;
         }
@@ -1544,11 +1544,11 @@ class Api
         }
 
         if (!Core::is_library_item($type) || !$object_id) {
-            echo XML_Data::error('401', T_('Wrong library item type.'));
+            echo XML_Data::error('401', T_('Wrong library item type'));
         } else {
             $item = new $type($object_id);
             if (!$item->id) {
-                echo XML_Data::error('404', T_('Library item not found.'));
+                echo XML_Data::error('404', T_('Library item not found'));
 
                 return;
             }
@@ -1601,7 +1601,7 @@ class Api
         }
         // validate supplied user
         if ($valid === false) {
-            echo XML_Data::error('404', T_('User_id not found.'));
+            echo XML_Data::error('404', T_('User_id not found'));
 
             return;
         }
@@ -1609,7 +1609,7 @@ class Api
         //validate minimum required options
         debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
-            echo XML_Data::error('401', T_('Invalid input options.'));
+            echo XML_Data::error('401', T_('Invalid input options'));
 
             return;
         }
@@ -1627,7 +1627,7 @@ class Api
         } else {
             $item = new Song((int) $scrobble_id);
             if (!$item->id) {
-                echo XML_Data::error('404', T_('Library item not found.'));
+                echo XML_Data::error('404', T_('Library item not found'));
 
                 return;
             }
@@ -1984,7 +1984,7 @@ class Api
 
         // if you didn't send anything to update don't do anything
         if (!$fullname || !$email || !$website || !$password || !$state || !$city || !$disable || !$maxbitrate) {
-            echo XML_Data::error('401', T_('Nothing to update.'));
+            echo XML_Data::error('401', T_('Nothing to update'));
 
             return false;
         }

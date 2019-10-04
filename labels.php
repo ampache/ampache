@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
         }
 
         if ($label->remove()) {
-            show_confirmation(T_('No Problem'), T_('The Label has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('The Label has been deleted'), AmpConfig::get('web_path'));
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Unable to delete this Label."), AmpConfig::get('web_path'));
         }
@@ -108,7 +108,7 @@ switch ($_REQUEST['action']) {
         if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
-            echo T_('The Label cannot be found.');
+            echo T_('The Label cannot be found');
         }
     break;
 } // end switch

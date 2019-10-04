@@ -152,31 +152,31 @@ class Catalog_Seafile extends Catalog
         $password       = trim($data['password']);
 
         if (!strlen($server_uri)) {
-            AmpError::add('general', T_('Seafile server URL is required.'));
+            AmpError::add('general', T_('Seafile server URL is required'));
 
             return false;
         }
 
         if (!strlen($library_name)) {
-            AmpError::add('general', T_('Seafile server library name is required.'));
+            AmpError::add('general', T_('Seafile server library name is required'));
 
             return false;
         }
 
         if (!strlen($username)) {
-            AmpError::add('general', T_('Seafile username is required.'));
+            AmpError::add('general', T_('Seafile username is required'));
 
             return false;
         }
 
         if (!strlen($password)) {
-            AmpError::add('general', T_('Seafile password is required.'));
+            AmpError::add('general', T_('Seafile password is required'));
 
             return false;
         }
 
         if (!is_numeric($api_call_delay)) {
-            AmpError::add('general', T_('API call delay must have a numeric value.'));
+            AmpError::add('general', T_('API call delay must have a numeric value'));
 
             return false;
         }
@@ -265,7 +265,7 @@ class Catalog_Seafile extends Catalog
                 return 0;
             });
 
-            UI::update_text(T_('Catalog Updated.'),
+            UI::update_text(T_('Catalog Updated'),
                     /* HINT: count of songs updated */
                     sprintf(T_('Total Media: [%s]'), $count));
 

@@ -48,10 +48,10 @@ $_SESSION['login'] = true;
                     $url  = AmpConfig::get('web_path') . '/login.php';
                     $text = T_('Return to Login Page');
                     if (AmpConfig::get('admin_enable_required')) {
-                        $text = T_('Please wait for an administrator to activate your account.');
+                        $text = T_('Please wait for an administrator to activate your account');
                     }
                     if (!AmpConfig::get('user_no_email_confirm')) {
-                        $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information.');
+                        $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information');
                     }
                     show_confirmation(T_('Your Account Has Been Created'), $text, $url);
                     ?>

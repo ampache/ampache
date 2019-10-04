@@ -204,7 +204,7 @@ class Upload
     {
         if ($file !== null) {
             if (unlink($file) === false) {
-                throw new \RuntimeException('The file handle ' . $file . ' could not be unlinked.');
+                throw new \RuntimeException('The file handle ' . $file . ' could not be unlinked');
             }
         }
         header($_SERVER['SERVER_PROTOCOL'] . ' 500 File Upload Error', true, 500);

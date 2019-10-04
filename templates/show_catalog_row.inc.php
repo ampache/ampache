@@ -39,7 +39,7 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id;
 <td class="cel_action cel_action_text">
 <?php if (!$libitem->isReady()) {
     ?>
-    <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $libitem->id; ?>"><b><?php echo T_('Make it ready ...'); ?></b></a><br />
+    <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $libitem->id; ?>"><b><?php echo T_('Make it ready ..'); ?></b></a><br />
 <?php
 } ?>
 <form>

@@ -2220,7 +2220,7 @@ abstract class Catalog extends database_object
             if (!$playlist_id) {
                 return array(
                     'success' => false,
-                    'error' => T_('Failed to create playlist.'),
+                    'error' => T_('Failed to create playlist'),
                 );
             }
 
@@ -2241,7 +2241,7 @@ abstract class Catalog extends database_object
 
         return array(
             'success' => false,
-            'error' => T_('No valid songs found in playlist file.')
+            'error' => T_('No valid songs found in playlist file')
         );
     }
 

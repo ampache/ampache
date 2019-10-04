@@ -191,7 +191,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     preg_match('/([^\d\w\_\-])/', $database, $matches);
 
     if (count($matches)) {
-        AmpError::add('general', T_('Database name is invalid.'));
+        AmpError::add('general', T_('Database name is invalid'));
 
         return false;
     }
