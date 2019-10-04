@@ -1683,7 +1683,7 @@ class User extends database_object
      * stream_control
      * Check all stream control plugins
      * @param array $media_ids
-     * @param User $user_id
+     * @param User $user
      * @return boolean
      */
     public static function stream_control($media_ids, User $user = null)
