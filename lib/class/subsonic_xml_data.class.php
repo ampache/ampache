@@ -1324,7 +1324,7 @@ class Subsonic_XML_Data
      */
     private static function addMessage($xml, $message)
     {
-        $user = new User($message->from_user);
+        $user      = new User($message->from_user);
         $xbookmark = $xml->addChild('chatMessage');
         if ($user->fullname_public) {
             $xbookmark->addAttribute('username', $user->fullname);
