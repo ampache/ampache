@@ -226,10 +226,13 @@ class PrivateMsg extends database_object
      * Get the subsonic chat messages.
      * @param string message
      * @param integer $user_id
-     * @return integer[]
+     * @return integer[]|false
      */
     public static function send_chat_msg($message, $user_id)
     {
+        if (!AmpConfig::get('sociable')) {
+            return array();
+        }
         $message = trim(strip_tags(filter_var($message, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
 
         $sql = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) ";
@@ -239,8 +242,6 @@ class PrivateMsg extends database_object
 
             return $insert_id;
         }
-
-        return false;
     }
 
     /**
@@ -251,6 +252,9 @@ class PrivateMsg extends database_object
      */
     public static function get_chat_msgs($since = 0)
     {
+        if (!AmpConfig::get('sociable')) {
+            return array();
+        }
         self::clean_chat_msgs();
 
         $sql = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0 ";
