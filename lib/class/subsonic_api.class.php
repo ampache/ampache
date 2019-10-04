@@ -1784,7 +1784,7 @@ class Subsonic_Api
 
                 $media = new $type($aid);
                 $media->format();
-                User::save_mediaplay(User::get_from_username($input['u'])->id, $media);
+                User::save_mediaplay(User::get_from_username($input['u']), $media);
             }
 
             $response = Subsonic_XML_Data::createSuccessResponse('scrobble');

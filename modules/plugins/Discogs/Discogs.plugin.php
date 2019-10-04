@@ -75,6 +75,7 @@ class AmpacheDiscogs
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {

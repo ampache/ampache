@@ -260,6 +260,8 @@ class User extends database_object
      * get_from_username
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
+     * @param string $username
+     * @return User $user
      */
     public static function get_from_username($username)
     {
@@ -267,9 +269,9 @@ class User extends database_object
         $db_results = Dba::read($sql, array($username));
         $results    = Dba::fetch_assoc($db_results);
 
-        $user_id = new User($results['id']);
+        $user = new User($results['id']);
 
-        return $user_id;
+        return $user;
     } // get_from_username
 
     /**
@@ -919,13 +921,18 @@ class User extends database_object
         return true;
     } // update_stats
 
-    public static function save_mediaplay($user_id, $media)
+    /*
+     * save_mediaplay
+     * @param User $user
+     * @param Song $media
+     */
+    public static function save_mediaplay($user, $media)
     {
         debug_event('user.class', 'save_mediaplay...', 5);
         foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load($user_id)) {
+                if ($plugin->load($user)) {
                     $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $e) {
@@ -1677,15 +1684,15 @@ class User extends database_object
      * @param User $user_id
      * @return boolean
      */
-    public static function stream_control($media_ids, User $user_id = null)
+    public static function stream_control($media_ids, User $user = null)
     {
-        if ($user_id === null) {
-            $user_id = Core::get_global('user');
+        if ($user === null) {
+            $user = Core::get_global('user');
         }
 
         foreach (Plugin::get_plugins('stream_control') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($user_id)) {
+            if ($plugin->load($user)) {
                 if (!$plugin->_plugin->stream_control($media_ids)) {
                     return false;
                 }
