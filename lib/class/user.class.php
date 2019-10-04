@@ -1076,6 +1076,9 @@ class User extends database_object
      */
     public function format($details = true)
     {
+        if (!$this->id) {
+            return;
+        }
         /* If they have a last seen date */
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');

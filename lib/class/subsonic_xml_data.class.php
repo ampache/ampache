@@ -1326,7 +1326,7 @@ class Subsonic_XML_Data
     {
         $xbookmark = $xml->addChild('chatMessage');
         $xbookmark->addAttribute('username', $message->from_user);
-        $xbookmark->addAttribute('time', $message->f_message);
+        $xbookmark->addAttribute('time', $message->creation_date);
         $xbookmark->addAttribute('message', $message->message);
     }
 } // end of subsonic_xml_data class
