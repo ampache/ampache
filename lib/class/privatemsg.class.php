@@ -231,7 +231,6 @@ class PrivateMsg extends database_object
     public static function send_chat_msg($message, $user_id)
     {
         if (!AmpConfig::get('sociable')) {
-
             return array();
         }
         $message = trim(strip_tags(filter_var($message, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
@@ -254,7 +253,6 @@ class PrivateMsg extends database_object
     public static function get_chat_msgs($since = 0)
     {
         if (!AmpConfig::get('sociable')) {
-
             return array();
         }
         self::clean_chat_msgs();
