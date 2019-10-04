@@ -2169,7 +2169,6 @@ class Subsonic_Api
         }
         self::apiOutput($input, $response);
     }
-    /*     * **   CURRENT UNSUPPORTED FUNCTIONS   *** */
 
     /**
      * getChatMessages
@@ -2179,7 +2178,9 @@ class Subsonic_Api
      */
     public static function getchatmessages($input)
     {
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'getchatmessages');
+        $response  = Subsonic_XML_Data::createSuccessResponse('getchatmessages');
+        $messages  = PrivateMsg::get_chat_msgs();
+        Subsonic_XML_Data::addMessages($response, $messages);
         self::apiOutput($input, $response);
     }
 
@@ -2191,9 +2192,18 @@ class Subsonic_Api
      */
     public static function addchatmessages($input)
     {
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'addchatmessages');
+        $message = self::check_parameter($input, 'message');
+
+        if (!empty($message)) {
+            PrivateMsg::send_chat_msg($message, 0);
+            $response = Subsonic_XML_Data::createSuccessResponse('addchatmessage');
+        } else {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'addChatMessage');
+        }
         self::apiOutput($input, $response);
     }
+
+    /*     * **   CURRENT UNSUPPORTED FUNCTIONS   *** */
 
     /**
      * getPlayQueue

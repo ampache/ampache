@@ -1303,4 +1303,31 @@ class Subsonic_XML_Data
             self::addPodcastEpisode($xbookmark, new Podcast_Episode($bookmark->object_id), 'entry');
         }
     }
+
+    /**
+     * addMessages
+     * @param SimpleXMLElement $xml
+     */
+    public static function addMessages($xml, $messages)
+    {
+        $xmessages = $xml->addChild('chatMessages');
+        foreach ($messages as $message) {
+            $chat = new PrivateMsg($message);
+            $chat->format();
+            self::addMessage($xmessages, $chat);
+        }
+    }
+
+    /**
+     * addMessage
+     * @param SimpleXMLElement $xml
+     */
+    private static function addMessage($xml, $message)
+    {
+        $xbookmark = $xml->addChild('chatMessage');
+        $xbookmark->addAttribute('username', $message->from_user);
+        $xbookmark->addAttribute('time', $message->f_message);
+        $xbookmark->addAttribute('message', $message->message);
+    }
+} // end of subsonic_xml_data class
 }

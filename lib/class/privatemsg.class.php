@@ -220,4 +220,42 @@ class PrivateMsg extends database_object
 
         return $results;
     }
-}
+    /**
+     * send_chat_msgs
+     * Get the subsonic chat messages.
+     * @param string message
+     * @return integer[]
+     */
+    public static function send_chat_msg($message, $user_id)
+    {
+        $message = trim(strip_tags(filter_var($message, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
+
+        $sql = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) ";
+        $sql .= "VALUES (?, ?, ?, ?, ?, ?)";
+        if (Dba::write($sql, array(null, $message, $user_id, 0, time(), 0))) {
+            $insert_id = Dba::insert_id();
+
+            return $insert_id;
+        }
+
+        return false;
+    }
+
+    /**
+     * get_chat_msgs
+     * Get the subsonic chat messages.
+     * @return integer[]
+     */
+    public static function get_chat_msgs()
+    {
+        $sql    = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0";
+
+        $db_results = Dba::read($sql);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    }
+} // end of privatemsg class
