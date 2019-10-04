@@ -163,7 +163,7 @@ while ($row = Dba::fetch_row($db_results)) {
         // Verify Existing
         echo "- " . T_("Start verifying media related to Catalog entries") . " - \n";
         echo "\n";
-        $catalog->verify_catalog($row['0']);
+        $catalog->verify_catalog();
         echo "-------------------\n\n";
     }
     if ($catadd == 1) {

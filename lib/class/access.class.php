@@ -352,6 +352,7 @@ class Access
             // Intentional break fall-through
             case 'api':
                 $type = 'rpc';
+            // Intentional break fall-through
             case 'network':
             case 'interface':
             case 'stream':

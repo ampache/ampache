@@ -23,14 +23,14 @@
 require_once 'lib/init.php';
 
  if (isset($_REQUEST['param_name'])) {
-     $name = scrub_in($_REQUEST['param_name']);
+     $name = (string) scrub_in($_REQUEST['param_name']);
      if (isset($_REQUEST[$name])) {
-         echo $name . ": " . scrub_in($_REQUEST[$name]);
+         echo $name . ": " . (string) scrub_in($_REQUEST[$name]);
      }
  }
 
  if (isset($_REQUEST['error'])) {
-     $error             = scrub_in($_REQUEST['error']);
-     $error_description = scrub_in($_REQUEST['error_description']);
+     $error             = (string) scrub_in($_REQUEST['error']);
+     $error_description = (string) scrub_in($_REQUEST['error_description']);
      echo $error . " error: " . $error_description;
  }

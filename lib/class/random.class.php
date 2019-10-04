@@ -240,7 +240,7 @@ class Random
      * array of song items that were returned from said randomness
      * @param string $type
      * @param array $data
-     * @return array|false
+     * @return array
      */
     public static function advanced($type, $data)
     {
@@ -277,7 +277,7 @@ class Random
 
                 return $songs;
             default:
-                return false;
+                return array();
         }
     } // advanced
 

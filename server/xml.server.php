@@ -49,7 +49,7 @@ if (!AmpConfig::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Session::exists('api', $_REQUEST['auth']) && Core::get_request('action') != 'handshake' and Core::get_request('action') != 'ping') {
+if (!Session::exists('api', $_REQUEST['auth']) && Core::get_request('action') != 'handshake' && Core::get_request('action') != 'ping') {
     debug_event('Access Denied', 'Invalid Session attempt to API [' . Core::get_request('action') . ']', 3);
     ob_end_clean();
     echo XML_Data::error('401', T_('Session Expired'));

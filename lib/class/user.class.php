@@ -472,11 +472,10 @@ class User extends database_object
                 $items[]      = $data;
             }
             /* If it's a genre */
-            elseif ($type == 'genre') {
-                $data = new Genre($row['object_id']);
+            elseif (($type == 'genre' || $type == 'tag')) {
+                $data = new Tag($row['object_id']);
                 //$data->count = $row['count'];
-                $data->format();
-                $data->f_name = $data->f_link;
+                $data->f_name = $data->name;
                 $items[]      = $data;
             }
         } // end foreach
@@ -1077,6 +1076,9 @@ class User extends database_object
      */
     public function format($details = true)
     {
+        if (!$this->id) {
+            return;
+        }
         /* If they have a last seen date */
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
@@ -1681,7 +1683,7 @@ class User extends database_object
      * stream_control
      * Check all stream control plugins
      * @param array $media_ids
-     * @param User $user_id
+     * @param User $user
      * @return boolean
      */
     public static function stream_control($media_ids, User $user = null)

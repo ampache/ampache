@@ -215,7 +215,7 @@ class Userflag extends database_object
      * @param boolean $flagged
      * @param integer $user_id
      */
-    public function set_flag_for_group($flagged, $album, $user_id = null)
+    public static function set_flag_for_group($flagged, $album, $user_id = null)
     {
         $sql = "SELECT `album`.`id` FROM `album`" .
                 " WHERE `album`.`name` = '" . Dba::escape($album['name']) . "'";

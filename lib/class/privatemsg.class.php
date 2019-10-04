@@ -102,6 +102,7 @@ class PrivateMsg extends database_object
 
     /**
      * __construct
+     * @param integer $pm_id
      */
     public function __construct($pm_id)
     {
@@ -220,4 +221,59 @@ class PrivateMsg extends database_object
 
         return $results;
     }
-}
+    /**
+     * send_chat_msgs
+     * Get the subsonic chat messages.
+     * @param string message
+     * @param integer $user_id
+     * @return integer[]
+     */
+    public static function send_chat_msg($message, $user_id)
+    {
+        $message = trim(strip_tags(filter_var($message, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
+
+        $sql = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) ";
+        $sql .= "VALUES (?, ?, ?, ?, ?, ?)";
+        if (Dba::write($sql, array(null, $message, $user_id, 0, time(), 0))) {
+            $insert_id = Dba::insert_id();
+
+            return $insert_id;
+        }
+
+        return false;
+    }
+
+    /**
+     * get_chat_msgs
+     * Get the subsonic chat messages.
+     * @param integer $since
+     * @return integer[]
+     */
+    public static function get_chat_msgs($since = 0)
+    {
+        self::clean_chat_msgs();
+
+        $sql = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0 ";
+        $sql .= " AND `user_pvmsg`.`creation_date` > " . (string) $since;
+        $sql .= " ORDER BY `user_pvmsg`.`creation_date` DESC";
+
+        $db_results = Dba::read($sql);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * clean_chat_msgs
+     * Clear old messages from the subsonic chat message list.
+     */
+    public static function clean_chat_msgs($days = 30)
+    {
+        $sql = "DELETE FROM `user_pvmsg` WHERE `to_user` = 0 AND ";
+        $sql .= "`creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL " . (string) $days . " day))";
+        Dba::write($sql);
+    }
+} // end of privatemsg class

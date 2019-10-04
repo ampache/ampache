@@ -364,7 +364,7 @@ class Podcast_Episode extends database_object implements media, library_item
 
     /**
      * Get stream types.
-     * @return string
+     * @return array
      */
     public function get_stream_types($player = null)
     {

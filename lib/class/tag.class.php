@@ -154,8 +154,6 @@ class Tag extends database_object implements library_item
 
         if ($user === true) {
             $uid = (int) (Core::get_global('user')->id);
-        } elseif ($user === false) {
-            $uid = 0;
         } else {
             $uid = (int) ($user);
         }
@@ -302,8 +300,6 @@ class Tag extends database_object implements library_item
     {
         if ($user === true) {
             $uid = (int) (Core::get_global('user')->id);
-        } elseif ($user === false) {
-            $uid = 0;
         } else {
             $uid = (int) ($user);
         }
@@ -730,8 +726,6 @@ class Tag extends database_object implements library_item
 
         if ($user === true) {
             $uid = (int) (Core::get_global('user')->id);
-        } elseif ($user === false) {
-            $uid = 0;
         } else {
             $uid = (int) ($user);
         }
@@ -871,8 +865,6 @@ class Tag extends database_object implements library_item
     {
         if ($user === true) {
             $uid = (int) (Core::get_global('user')->id);
-        } elseif ($user === false) {
-            $uid = 0;
         } else {
             $uid = (int) ($user);
         }

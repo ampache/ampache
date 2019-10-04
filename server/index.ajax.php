@@ -265,7 +265,7 @@ switch ($_REQUEST['action']) {
     case 'start_channel':
         if (Access::check('interface', '75')) {
             ob_start();
-            $channel = new Channel(Core::get_request('id'));
+            $channel = new Channel((int) Core::get_request('id'));
             if ($channel->id) {
                 if ($channel->check_channel()) {
                     $channel->stop_channel();
@@ -280,7 +280,7 @@ switch ($_REQUEST['action']) {
     case 'stop_channel':
         if (Access::check('interface', '75')) {
             ob_start();
-            $channel = new Channel(Core::get_request('id'));
+            $channel = new Channel((int) Core::get_request('id'));
             if ($channel->id) {
                 $channel->stop_channel();
                 sleep(1);

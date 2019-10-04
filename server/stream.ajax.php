@@ -76,7 +76,6 @@ switch ($_REQUEST['action']) {
         $results['rfc3514'] = '0x0';
     break;
     case 'directplay':
-
         $object_type = Core::get_request('object_type');
         $object_id   = $_GET['object_id'];
         if (is_array($object_id)) {

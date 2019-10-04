@@ -163,6 +163,7 @@ class Session
      * username
      *
      * This returns the username associated with a session ID, if any
+     * @return string
      */
     public static function username($key)
     {

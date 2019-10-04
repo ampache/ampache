@@ -172,7 +172,7 @@ switch ($_REQUEST['action']) {
     case 'sort_tracks':
         $playlist = new Playlist($_REQUEST['playlist_id']);
         if (!$playlist->has_access()) {
-            access_denied();
+            UI::access_denied();
             break;
         }
 

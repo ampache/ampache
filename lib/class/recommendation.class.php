@@ -372,7 +372,7 @@ class Recommendation
         if ($artist) {
             $results['id'] = $artist->id;
             if (!empty($results['summary'])) {
-                $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
+                $artist->update_artist_info($results['summary'], $results['placeformed'], (int) $results['yearformed']);
             }
             if (!empty($results['megaphoto']) && !Art::has_db($artist_id, 'artist')) {
                 $image = Art::get_from_source(array('url' => $results['megaphoto']), 'artist');

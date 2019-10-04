@@ -74,6 +74,7 @@
 * Subsonic - New Method: updateUser
 * Subsonic - New Method: getTopSongs
 * Subsonic - Fix cover art for playlists and albums
+* Subsonic - Enable getChatMessages, addMessage allowing server chat
 * Added SVG support to the theme engine.
 * New Plugin - Matomo.plugin. [<https://matomo.org/>]
 * New Plugin - ListenBrainz.plugin [<https://listenbrainz.org/>]
