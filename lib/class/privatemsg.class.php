@@ -251,7 +251,7 @@ class PrivateMsg extends database_object
      */
     public static function get_chat_msgs($since = 0)
     {
-		self::clean_chat_msgs();
+        self::clean_chat_msgs();
 
         $sql = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0 ";
         $sql .= " AND `user_pvmsg`.`creation_date` > " . (string) $since;
@@ -273,7 +273,7 @@ class PrivateMsg extends database_object
     public static function clean_chat_msgs($days = 30)
     {
         $sql = "DELETE FROM `user_pvmsg` WHERE `to_user` = 0 AND ";
-		$sql .= "`creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL " . (string) $days . " day))";
+        $sql .= "`creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL " . (string) $days . " day))";
         Dba::write($sql);
     }
 } // end of privatemsg class
