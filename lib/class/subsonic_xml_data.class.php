@@ -1333,7 +1333,7 @@ class Subsonic_XML_Data
         } else {
             $xbookmark->addAttribute('username', $user->username);
         }
-        $xbookmark->addAttribute('time', $message->creation_date);
+        $xbookmark->addAttribute('time', $message->creation_date * 1000);
         $xbookmark->addAttribute('message', $message->message);
     }
 } // end of subsonic_xml_data class
