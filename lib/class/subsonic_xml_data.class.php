@@ -1330,4 +1330,3 @@ class Subsonic_XML_Data
         $xbookmark->addAttribute('message', $message->message);
     }
 } // end of subsonic_xml_data class
-}
