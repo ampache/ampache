@@ -247,10 +247,11 @@ class PrivateMsg extends database_object
      * @param integer $since
      * @return integer[]
      */
-    public static function get_chat_msgs($since)
+    public static function get_chat_msgs($since = 0)
     {
         $sql = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0 ";
         $sql .= " AND `user_pvmsg`.`creation_date` > " . (string) $since;
+        $sql .= " ORDER BY `user_pvmsg`.`creation_date` ASC";
 
         $db_results = Dba::read($sql);
         $results    = array();
