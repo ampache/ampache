@@ -244,11 +244,13 @@ class PrivateMsg extends database_object
     /**
      * get_chat_msgs
      * Get the subsonic chat messages.
+     * @param integer $since
      * @return integer[]
      */
-    public static function get_chat_msgs()
+    public static function get_chat_msgs($since)
     {
-        $sql    = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0";
+        $sql = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0 ";
+        $sql .= " AND `user_pvmsg`.`creation_date` > " . (string) $since;
 
         $db_results = Dba::read($sql);
         $results    = array();

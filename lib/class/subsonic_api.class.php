@@ -2178,8 +2178,9 @@ class Subsonic_Api
      */
     public static function getchatmessages($input)
     {
+        $since     = (int) $input['since'];;
+        $messages  = PrivateMsg::get_chat_msgs($since);
         $response  = Subsonic_XML_Data::createSuccessResponse('getchatmessages');
-        $messages  = PrivateMsg::get_chat_msgs();
         Subsonic_XML_Data::addMessages($response, $messages);
         self::apiOutput($input, $response);
     }
