@@ -252,7 +252,7 @@ class PrivateMsg extends database_object
     {
         $sql = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0 ";
         $sql .= " AND `user_pvmsg`.`creation_date` > " . (string) $since;
-        $sql .= " ORDER BY `user_pvmsg`.`creation_date` ASC";
+        $sql .= " ORDER BY `user_pvmsg`.`creation_date` DESC";
 
         $db_results = Dba::read($sql);
         $results    = array();
