@@ -92,14 +92,17 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
             </td>
             <td>
                 <input type="file" id="avatar" name="avatar" value="" />
-                <div class="user_avatar">
-                <?php
+        </tr>
+        <tr>
+            <td>
+        </td>
+        <td>
+	      <?php
                 if ($client->f_avatar) {
                     echo $client->f_avatar;
                 }
                 ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
-                </div>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
             </td>
         </tr>
@@ -111,15 +114,15 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
             <td>
                 <span>
                     <?php if ($client->apikey) {
-        $urlinfo       = parse_url(AmpConfig::get('web_path'));
-        $apikey_qrcode = "ampache://" . $client->apikey . "@" . $urlinfo['host'];
-        if ($urlinfo['port'] && $urlinfo['port'] != 80) {
-            $apikey_qrcode .= ":" . $urlinfo['port'];
-        }
-        $apikey_qrcode .= $urlinfo['path'];
-        if ($urlinfo['scheme'] == "https" || AmpConfig::get('force_ssl')) {
-            $apikey_qrcode .= "#ssl=true";
-        } ?>
+                    $urlinfo       = parse_url(AmpConfig::get('web_path'));
+                    $apikey_qrcode = "ampache://" . $client->apikey . "@" . $urlinfo['host'];
+                    if ($urlinfo['port'] && $urlinfo['port'] != 80) {
+                        $apikey_qrcode .= ":" . $urlinfo['port'];
+                    }
+                    $apikey_qrcode .= $urlinfo['path'];
+                    if ($urlinfo['scheme'] == "https" || AmpConfig::get('force_ssl')) {
+                        $apikey_qrcode .= "#ssl=true";
+                    } ?>
                     <br />
                     <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
                         <a href="<?php echo $apikey_qrcode; ?>" rel="nohtml"><div id="apikey_qrcode"></div></a>
@@ -128,7 +131,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
                     <script language="javascript" type="text/javascript">$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>', background: '#ffffff', foreground: '#000000'});</script>
                     <?php echo $client->apikey; ?>
                     <?php
-    } ?>
+                } ?>
                 </span>
             </td>
         </tr>
