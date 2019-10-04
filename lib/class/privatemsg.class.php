@@ -239,8 +239,6 @@ class PrivateMsg extends database_object
 
             return $insert_id;
         }
-
-        return false;
     }
 
     /**
