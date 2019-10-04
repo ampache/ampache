@@ -224,6 +224,7 @@ class PrivateMsg extends database_object
      * send_chat_msgs
      * Get the subsonic chat messages.
      * @param string message
+     * @param integer $user_id
      * @return integer[]
      */
     public static function send_chat_msg($message, $user_id)

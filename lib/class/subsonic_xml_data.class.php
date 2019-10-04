@@ -1307,6 +1307,7 @@ class Subsonic_XML_Data
     /**
      * addMessages
      * @param SimpleXMLElement $xml
+     * @param integer[] $messages
      */
     public static function addMessages($xml, $messages)
     {
@@ -1321,6 +1322,7 @@ class Subsonic_XML_Data
     /**
      * addMessage
      * @param SimpleXMLElement $xml
+     * @param PrivateMsg $message
      */
     private static function addMessage($xml, $message)
     {
