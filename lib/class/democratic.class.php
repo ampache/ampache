@@ -597,7 +597,7 @@ class Democratic extends Tmp_Playlist
     /**
      * get_vote
      * This returns the current count for a specific song
-	 * @param integer $id
+     * @param integer $id
      */
     public function get_vote($id)
     {

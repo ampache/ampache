@@ -102,7 +102,7 @@ class PrivateMsg extends database_object
 
     /**
      * __construct
-	 * @param integer $pm_id
+     * @param integer $pm_id
      */
     public function __construct($pm_id)
     {
