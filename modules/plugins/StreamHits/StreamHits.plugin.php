@@ -112,6 +112,7 @@ class AmpacheStreamHits
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
