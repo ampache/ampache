@@ -504,7 +504,7 @@ class Auth
             if ($token == $hash_token) {
                 return array(
                     'success' => true,
-                    'type' => 'token',
+                    'type' => 'api',
                     'username' => $username
                 );
             }
