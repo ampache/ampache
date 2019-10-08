@@ -493,7 +493,7 @@ class Auth
      * @param string $salt
      * @return array
      */
-    private static function token_check($username, $token, $salt)
+    public static function token_check($username, $token, $salt)
     {
         // subsonic token auth with apikey
         if (strlen($token) && strlen($salt) && strlen($username)) {
