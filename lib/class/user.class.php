@@ -1418,7 +1418,6 @@ class User extends database_object
             $avatar['url'] .= '&thumb=4';
             $avatar['url_mini'] .= '&thumb=5';
             $avatar['url_medium'] .= '&thumb=3';
-            debug_event('user.class', 'get_avatar ' . $avatar['url'], 5);
         } else {
             foreach (Plugin::get_plugins('get_avatar_url') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
