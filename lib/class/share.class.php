@@ -169,7 +169,9 @@ class Share extends database_object
     }
 
     /**
+     * get_url
      * @param string $secret
+     * @param string|null $share_id
      */
     public static function get_url($share_id, $secret)
     {
@@ -181,6 +183,10 @@ class Share extends database_object
         return $url;
     }
 
+    /**
+     * get_share_list_sql
+     * @return string
+     */
     public static function get_share_list_sql()
     {
         $sql = "SELECT `id` FROM `share` ";
@@ -192,6 +198,10 @@ class Share extends database_object
         return $sql;
     }
 
+    /**
+     * get_share_list
+     * @return array
+     */
     public static function get_share_list()
     {
         $sql        = self::get_share_list_sql();
@@ -205,6 +215,10 @@ class Share extends database_object
         return $results;
     }
 
+    /**
+     * get_shares
+     * @return array
+     */
     public static function get_shares($object_type, $object_id)
     {
         $sql        = "SELECT `id` FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
