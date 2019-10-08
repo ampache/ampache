@@ -1404,7 +1404,7 @@ class User extends database_object
         $avatar = array();
         $auth   = '';
         if ($session['t'] && $session['s']) {
-            $auth = '&t=' . $session['s'] . '&s=' . $session['s'];
+            $auth = '&t=' . $session['t'] . '&s=' . $session['s'];
         } elseif ($session['auth']) {
             $auth = '&auth=' . $session['auth'];
         }
