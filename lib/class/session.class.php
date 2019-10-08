@@ -285,7 +285,7 @@ class Session
             AmpConfig::get('cookie_path'),
             AmpConfig::get('cookie_domain'),
             AmpConfig::get('cookie_secure'));
-        session_write_close();
+
         // Set name
         session_name($session_name);
 
@@ -461,7 +461,6 @@ class Session
         $cookie_secure = AmpConfig::get('cookie_secure');
 
         session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
-        session_write_close();
         session_name(AmpConfig::get('session_name'));
 
         /* Start the session */
