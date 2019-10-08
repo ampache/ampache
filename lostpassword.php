@@ -41,12 +41,13 @@ switch ($action) {
 			$current_ip =(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['HTTP_X_FORWARDED_FOR'] :$_SERVER['REMOTE_ADDR'];
 			$result = send_newpassword($email, $current_ip);
 		}
+		/* Do not acknowledge a password has been sent or failed
 		if ($result) {
-			Error::add('general', T_('Password has been sent'));
+			AmpError::add('general', T_('Password has been sent'));
 		} else {
-			Error::add('general', T_('Password has not been sent'));
+			AmpError::add('general', T_('Password has not been sent'));
 		}
-
+		}*/
 		require Config::get('prefix') . '/templates/show_login_form.inc.php';
 		break;
 	default:
@@ -56,8 +57,16 @@ switch ($action) {
 function send_newpassword($email,$current_ip){
 	/* get the Client and set the new password */
 	$client = User::get_from_email($email);
+
+	if (!client) {
+		return false;
+	}
+	if ($client->has_access(100)) {
+		return false;
+	}
+
 	if ($client->email == $email) {
-		$newpassword = generate_password(6);
+		$newpassword = generate_password();
 		$client->update_password($newpassword);
 
 		$mailer = new AmpacheMail();

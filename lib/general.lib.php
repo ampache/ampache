@@ -46,25 +46,22 @@ function set_memory_limit($new_limit) {
 /**
  * generate_password
  * This generates a random password of the specified length
+ * or will use a random length between 14-20
+ *
+ * @param integer $length (optional)
+ * @return string $password
  */
-function generate_password($length) {
+function generate_password($length = null) {
 
-	$vowels = 'aAeEuUyY12345';
-	$consonants = 'bBdDgGhHjJmMnNpPqQrRsStTvVwWxXzZ6789';
-	$password = '';
-
-	$alt = time() % 2;
-
-	for ($i = 0; $i < $length; $i++) {
-		if ($alt == 1) {
-			$password .= $consonants[(rand(0,strlen($consonants)-1))];
-		$alt = 0;
-		}
-		else {
-			$password .= $vowels[(rand(0,strlen($vowels)-1))];
-			$alt = 1;
-		}
+	// set a random password length so it's not as easy to guess
+	if ($length === null) {
+		$length = rand(14,20);
 	}
+	$strong   = true;
+	$string   = openssl_random_pseudo_bytes(ceil($length * 0.67), $strong);
+	$encode   = str_replace('=', '', base64_encode($string));
+	$password = strtr($encode, '+/', '^*');
+
 
 	return $password;
 
@@ -148,7 +145,7 @@ function format_bytes($value, $precision = 2) {
 		case 4: $unit = 'TB'; break;
 		case 5: $unit = 'PB'; break;
 		default: $unit = 'B'; break;
-        } // end switch
+	} // end switch
 
 	return round($value, $precision) . ' ' . $unit;
 }
