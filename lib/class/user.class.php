@@ -265,8 +265,8 @@ class User extends database_object
      */
     public static function get_from_username($username)
     {
-        $sql        = "SELECT `id` FROM `user` WHERE `username` = ?";
-        $db_results = Dba::read($sql, array($username));
+        $sql        = "SELECT `id` FROM `user` WHERE `username` = ? OR `fullname` = ?";
+        $db_results = Dba::read($sql, array($username, $username));
         $results    = Dba::fetch_assoc($db_results);
 
         $user = new User($results['id']);
@@ -299,7 +299,7 @@ class User extends database_object
             if ($results['username']) {
                 return new User($results['username']);
             }
-            // check for sha256 hashed apikey fro client
+            // check for sha256 hashed apikey for client
             // https://github.com/ampache/ampache/wiki/XML-API
             $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
             $db_results = Dba::read($sql);
@@ -1399,14 +1399,20 @@ class User extends database_object
      * get_avatar
      * Get the user avatar
      */
-    public function get_avatar($local = false)
+    public function get_avatar($local = false, $session = array())
     {
         $avatar = array();
+        $auth   = '';
+        if ($session['t'] && $session['s']) {
+            $auth = '&t=' . $session['t'] . '&s=' . $session['s'];
+        } elseif ($session['auth']) {
+            $auth = '&auth=' . $session['auth'];
+        }
 
         $avatar['title'] = T_('User avatar');
         $upavatar        = new Art($this->id, 'user');
         if ($upavatar->has_db_info()) {
-            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id;
+            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id . $auth;
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
             $avatar['url'] .= '&thumb=4';
