@@ -97,6 +97,7 @@ class Live_Stream extends database_object implements media, library_item
      * format
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
+     * @return true
      */
     public function format($details = true)
     {
@@ -110,26 +111,41 @@ class Live_Stream extends database_object implements media, library_item
         return true;
     } // format
 
+    /**
+     * @return array
+     */
     public function get_keywords()
     {
         return array();
     }
 
+    /**
+     * @return string
+     */
     public function get_fullname()
     {
         return $this->name;
     }
 
+    /**
+     * @return null
+     */
     public function get_parent()
     {
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function get_childrens()
     {
         return array();
     }
 
+    /**
+     * @return array
+     */
     public function search_childrens($name)
     {
         debug_event('live_stream.class', 'search_childrens ' . $name, 5);
@@ -137,6 +153,9 @@ class Live_Stream extends database_object implements media, library_item
         return array();
     }
 
+    /**
+     * @return array
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -161,16 +180,25 @@ class Live_Stream extends database_object implements media, library_item
         return array($this->catalog);
     }
 
+    /**
+     * @return null
+     */
     public function get_user_owner()
     {
         return null;
     }
 
+    /**
+     * @return string
+     */
     public function get_default_art_kind()
     {
         return 'default';
     }
 
+    /**
+     * @return null
+     */
     public function get_description()
     {
         return null;
@@ -271,6 +299,7 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * delete
      * This deletes the current object from the database
+     * @return true
      */
     public function delete()
     {
@@ -283,6 +312,7 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * get_stream_types
      * This is needed by the media interface
+     * @return array
      */
     public function get_stream_types($player = null)
     {
@@ -292,6 +322,7 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * play_url
      * This is needed by the media interface
+     * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
     {
@@ -300,6 +331,9 @@ class Live_Stream extends database_object implements media, library_item
         return $radio->url . $additional_params;
     } // play_url
 
+    /**
+     * @return string
+     */
     public function get_stream_name()
     {
         return $this->get_fullname();
@@ -309,6 +343,7 @@ class Live_Stream extends database_object implements media, library_item
      * get_transcode_settings
      *
      * This will probably never be implemented
+     * @return false
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
@@ -341,6 +376,7 @@ class Live_Stream extends database_object implements media, library_item
 
     public static function garbage_collection()
     {
+        // Do nothing
     }
 
     public function set_played($user, $agent, $location)
