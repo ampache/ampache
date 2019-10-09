@@ -215,7 +215,7 @@ class Session
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip  = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ? inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP)) : '0';
+        $s_ip  = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ? filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : '0';
         $type  = $data['type'];
         $value = '';
         if (isset($data['value'])) {
