@@ -461,11 +461,7 @@ class Session
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
-        if(isset($_SESSION)) {
-            setcookie(session_name(), session_id(), $cookie_life);
-        } else {
-            session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
-        }
+        session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         session_write_close();
         session_name(AmpConfig::get('session_name'));
 
