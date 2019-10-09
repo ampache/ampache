@@ -68,7 +68,7 @@ if ((Core::get_request('action') == 'handshake') && isset($_REQUEST['timestamp']
 }
 
 if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
-    debug_event('Access Denied', 'Unauthorized access attempt to API [' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', 3);
+    debug_event('Access Denied', 'Unauthorized access attempt to API [' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ']', 3);
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
 

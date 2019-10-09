@@ -33,7 +33,7 @@ Preference::init();
  */
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
-        debug_event('login.class', 'UI::access_denied:' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', 3);
+        debug_event('login.class', 'UI::access_denied:' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ' is not in the Interface Access list', 3);
         UI::access_denied();
 
         return false;
@@ -78,7 +78,7 @@ if (empty($_REQUEST['step'])) {
 
                 return false;
             } else {
-                debug_event('login.class', scrub_out($username) . ' From ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' attempted to login and failed', 1);
+                debug_event('login.class', scrub_out($username) . ' From ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ' attempted to login and failed', 1);
                 AmpError::add('general', T_('Incorrect username or password'));
             }
         }
@@ -104,7 +104,7 @@ if (!empty($username) && isset($auth)) {
     } // if user disabled
     elseif (AmpConfig::get('prevent_multiple_logins')) {
         $session_ip = $user->is_logged_in();
-        $current_ip = inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
+        $current_ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         if ($current_ip && ($current_ip != $session_ip)) {
             $auth['success'] = false;
             AmpError::add('general', T_('User is already logged in'));
