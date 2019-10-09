@@ -42,7 +42,7 @@ $cache          = scrub_in($_REQUEST['cache']);
 $record_stats   = true;
 
 // allow disabling stat recording from the play url
-if ($cache === '1') {
+if ($cache === '1' || $type == 'podcast_episode') {
     debug_event('play/index', 'record_stats disabled: cache {' . $cache . "}", 5);
     $record_stats = false;
 }
