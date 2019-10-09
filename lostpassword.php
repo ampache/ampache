@@ -39,7 +39,7 @@ switch ($_REQUEST['action']) {
         if (isset($_POST['email']) && Core::get_post('email')) {
             /* Get the email address and the current ip*/
             $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-            $current_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') ? filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR', FILTER_VALIDATE_IP) : filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $current_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') ? filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $result     = send_newpassword($email, $current_ip);
         }
         /* Do not acknowledge a password has been sent or failed
