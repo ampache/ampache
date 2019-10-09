@@ -142,7 +142,7 @@ class Broadcast extends database_object implements library_item
      * Create a broadcast
      * @param string $name
      * @param string $description
-     * @return int
+     * @return integer
      */
     public static function create($name, $description =  '')
     {
@@ -160,7 +160,7 @@ class Broadcast extends database_object implements library_item
     /**
      * Update a broadcast from data array.
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {

@@ -1497,6 +1497,7 @@ class User extends database_object
     /**
      * get_artists
      * Get artists associated with the user
+     * @return array
      */
     public function get_artists()
     {
@@ -1514,6 +1515,7 @@ class User extends database_object
     /**
      * is_xmlrpc
      * checks to see if this is a valid xmlrpc user
+     * @return boolean
      */
     public function is_xmlrpc()
     {

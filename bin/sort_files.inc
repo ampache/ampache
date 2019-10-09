@@ -126,9 +126,9 @@ function sort_find_home($song, $sort_pattern, $base = null) {
     }
 
     /* Create the filename that this file should have */
-    $album   = sort_clean_name($song->f_album_full) ?: '%A';
-    $artist  = sort_clean_name($song->f_artist_full) ?: '%a';
-    $track   = sort_clean_name($song->track) ?: '%T';
+    $album  = sort_clean_name($song->f_album_full) ?: '%A';
+    $artist = sort_clean_name($song->f_artist_full) ?: '%a';
+    $track  = sort_clean_name($song->track) ?: '%T';
     if ((int) $track < 10 && (int) $track > 0) {
         $track = '0' . (string) $track;
     }
@@ -189,9 +189,7 @@ function sort_clean_name($string) {
 
     /* First remove any / or \ chars */
     $string = preg_replace('/[\/\\\]/', '-', $string);
-
     $string = str_replace(':', ' ', $string);
-
     $string = preg_replace('/[\!\:\*]/', '_', $string);
 
     return $string;
@@ -273,11 +271,11 @@ function sort_move_file($song, $fullname, $test_mode) {
 
         /* Look for the folder art and copy that as well */
         if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'), "%")) {
-            $folder_art     = $directory . DIRECTORY_SEPARATOR . 'folder.jpg';
+            $folder_art  = $directory . DIRECTORY_SEPARATOR . 'folder.jpg';
             $old_art     = $old_dir . DIRECTORY_SEPARATOR . 'folder.jpg';
         }
         else {
-            $folder_art     = $directory . DIRECTORY_SEPARATOR . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
+            $folder_art  = $directory . DIRECTORY_SEPARATOR . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
             $old_art     = $old_dir . DIRECTORY_SEPARATOR . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
         }
 

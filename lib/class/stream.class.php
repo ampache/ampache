@@ -75,7 +75,7 @@ class Stream
     }
 
     /**
-     *
+     * get_allowed_bitrate
      * @return integer
      */
     public static function get_allowed_bitrate()
@@ -137,6 +137,7 @@ class Stream
      *
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
+     * @return array|false
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
@@ -216,7 +217,9 @@ class Stream
     }
 
     /**
+     * get_image_preview
      * @param Video $media
+     * @return string
      */
     public static function get_image_preview($media)
     {
@@ -252,6 +255,10 @@ class Stream
         return $image;
     }
 
+    /**
+     * start_process
+     * @return array
+     */
     private static function start_process($command, $settings = array())
     {
         debug_event('stream.class', "Transcode command: " . $command, 3);
@@ -308,6 +315,7 @@ class Stream
     /**
      * validate_bitrate
      * this function takes a bitrate and returns a valid one
+     * @return integer
      */
     public static function validate_bitrate($bitrate)
     {
@@ -364,6 +372,7 @@ class Stream
      * get_now_playing
      *
      * This returns the Now Playing information
+     * @return array
      */
     public static function get_now_playing()
     {
@@ -418,6 +427,7 @@ class Stream
      * This checks to see if the media is already being played.
      * @param integer $media_id
      * @param string $type
+     * @return boolean
      */
     public static function check_lock_media($media_id, $type)
     {

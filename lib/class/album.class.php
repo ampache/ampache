@@ -677,7 +677,7 @@ class Album extends database_object implements library_item
     /**
      * get_addtime_first_song
      * Get the add date of first added song.
-     * @return int
+     * @return integer
      */
     public function get_addtime_first_song()
     {

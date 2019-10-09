@@ -53,6 +53,7 @@ class Update
      * This checks to see what version you are currently running.
      * Because we may not have the update_info table we have to check
      * for its existence first.
+     * @return string
      */
     public static function get_version()
     {
@@ -85,6 +86,7 @@ class Update
      * format_version
      *
      * Make the version number pretty.
+     * @return string
      */
     public static function format_version($data)
     {
@@ -100,6 +102,7 @@ class Update
      * need_update
      *
      * Checks to see if we need to update ampache at all.
+     * @return boolean
      */
     public static function need_update()
     {
@@ -123,6 +126,7 @@ class Update
      * populate_version
      * just sets an array the current differences
      * that require an update
+     * @return array
      */
     public static function populate_version()
     {

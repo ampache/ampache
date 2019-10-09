@@ -1093,7 +1093,7 @@ class Song extends database_object implements media, library_item
      * This takes a key'd array of data does any cleaning it needs to
      * do and then calls the helper functions as needed.
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {

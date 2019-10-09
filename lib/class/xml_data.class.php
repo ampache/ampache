@@ -167,6 +167,7 @@ class XML_Data
      * tags_string
      *
      * This returns the formatted 'tags' string for an xml document
+     * @input array $tags
      * @return string
      */
     private static function tags_string($tags)

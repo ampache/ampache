@@ -586,7 +586,7 @@ abstract class Catalog extends database_object
     /**
      * Get last catalogs update.
      * @param int[]|null $catalogs
-     * @return int
+     * @return integer
      */
     public static function getLastUpdate($catalogs = null)
     {
@@ -647,7 +647,7 @@ abstract class Catalog extends database_object
      *
      * This creates a new catalog entry and associate it to current instance
      * @param array $data
-     * @return int
+     * @return integer
      */
     public static function create($data)
     {
@@ -701,7 +701,7 @@ abstract class Catalog extends database_object
      * count_tags
      *
      * This returns the current number of unique tags in the database.
-     * @return int
+     * @return integer
      */
     public static function count_tags()
     {
@@ -894,7 +894,7 @@ abstract class Catalog extends database_object
      *
      * @param integer|null $catalog_id
      * @param string $type
-     * @return int
+     * @return integer
      */
     public static function get_videos_count($catalog_id = null, $type = '')
     {
