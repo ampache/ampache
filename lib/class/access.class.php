@@ -337,8 +337,10 @@ class Access
         }
 
         // Clean incoming variables
-        $user_ip = $user_ip ?: filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
+        $user_ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $user_ip = inet_pton($user_ip);
+        debug_event('access.class', 'unfiltered ' . $_SERVER['REMOTE_ADDR'], 2);
+        debug_event('access.class', 'filtered   ' . $user_ip, 2);
 
         switch ($type) {
             case 'init-api':
