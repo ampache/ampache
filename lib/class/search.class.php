@@ -442,6 +442,7 @@ class Search extends playlist_object {
 	 * Sanitizes raw search data
 	 */
 	public static function clean_request($data) {
+		$request = array();
 		foreach ($data as $key => $value) {
 			$prefix = substr($key, 0, 4);
 			$value = trim($value);
@@ -739,7 +740,7 @@ class Search extends playlist_object {
 					break;
 				}
 			}
-			$raw_input          = $this->_mangle_data($rule[2], $type, $operator);
+			$raw_input          = $this->mangle_data($rule[2], $type, $operator);
 			$input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 			$sql_match_operator = $operator['sql'];
 
@@ -822,7 +823,7 @@ class Search extends playlist_object {
 					break;
 				}
 			}
-			$raw_input          = $this->_mangle_data($rule[2], $type, $operator);
+			$raw_input          = $this->mangle_data($rule[2], $type, $operator);
 			$input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 			$sql_match_operator = $operator['sql'];
 
@@ -879,7 +880,7 @@ class Search extends playlist_object {
 					break;
 				}
 			}
-			$raw_input          = $this->_mangle_data($rule[2], $type, $operator);
+			$raw_input          = $this->mangle_data($rule[2], $type, $operator);
 			$input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 			$sql_match_operator = $operator['sql'];
 
@@ -1024,7 +1025,7 @@ class Search extends playlist_object {
 					break;
 				}
 			}
-			$raw_input          = $this->_mangle_data($rule[2], $type, $operator);
+			$raw_input          = $this->mangle_data($rule[2], $type, $operator);
 			$input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 			$sql_match_operator = $operator['sql'];
 
