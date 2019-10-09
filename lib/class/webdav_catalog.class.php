@@ -60,7 +60,7 @@ class WebDAV_Catalog extends DAV\Collection
 
     /**
      * getChild
-     * @return \WebDAV_File, \WebDAV_Directory
+     * @return \WebDAV_File|\WebDAV_Directory
      */
     public function getChild($name)
     {

@@ -50,7 +50,7 @@ class WebDAV_File extends DAV\File
 
     /**
      * get
-     * @return null
+     * @return resource|null
      */
     public function get()
     {

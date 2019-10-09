@@ -63,7 +63,7 @@ class WebDAV_Directory extends DAV\Collection
 
     /**
      * getChild
-     * @return \WebDAV_File, \WebDAV_Directory
+     * @return \WebDAV_File|\WebDAV_Directory
      */
     public function getChild($name)
     {
@@ -87,7 +87,7 @@ class WebDAV_Directory extends DAV\Collection
 
     /**
      * getChildFromArray
-     * @return \WebDAV_File, \WebDAV_Directory
+     * @return \WebDAV_File|\WebDAV_Directory
      */
     public static function getChildFromArray($array)
     {
