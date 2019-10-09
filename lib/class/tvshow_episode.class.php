@@ -166,8 +166,8 @@ class TVShow_Episode extends Video
         return true;
     }
 
-    /**
-     * Get item keywords for metadata searches.
+    /*
+     * get_keywords
      * @return array
      */
     public function get_keywords()

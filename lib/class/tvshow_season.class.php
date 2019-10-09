@@ -142,6 +142,10 @@ class TVShow_Season extends database_object implements library_item
         return true;
     }
 
+    /*
+     * get_keywords
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords           = array();
