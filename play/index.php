@@ -42,7 +42,7 @@ $cache          = scrub_in($_REQUEST['cache']);
 $record_stats   = true;
 
 // allow disabling stat recording from the play url
-if ($cache === '1') {
+if ($cache === '1' || $type == 'podcast_episode') {
     debug_event('play/index', 'record_stats disabled: cache {' . $cache . "}", 5);
     $record_stats = false;
 }
@@ -487,7 +487,7 @@ if (!$cpaction) {
     if (!is_array($valid_types)) {
         $valid_types = array($valid_types);
     }
-    if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
+    if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'podcast_episode') {
         if ($transcode_to) {
             $transcode = true;
             debug_event('play/index', 'Transcoding due to explicit request for ' . $transcode_to, 5);
