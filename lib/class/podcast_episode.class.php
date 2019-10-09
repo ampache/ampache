@@ -371,6 +371,10 @@ class Podcast_Episode extends database_object implements media, library_item
         return Song::get_stream_types_for_type($this->type, $player);
     }
 
+    /**
+     * remove
+     * @return PDOStatement|boolean
+     */
     public function remove()
     {
         debug_event('podcast_episode.class', 'Removing podcast episode ' . $this->id, 5);
@@ -387,7 +391,9 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
+     * change_state
      * @param string $state
+     * @return PDOStatement|boolean
      */
     public function change_state($state)
     {

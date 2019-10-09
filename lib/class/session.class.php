@@ -372,6 +372,7 @@ class Session
      * update_username
      *
      * This takes a SID and update associated username.
+     * @return PDOStatement|boolean
      */
     public static function update_username($sid, $username)
     {
@@ -514,6 +515,7 @@ class Session
     }
 
     /**
+     * generateRandomToken
      * Generate a random token.
      * @return string
      */
@@ -523,7 +525,9 @@ class Session
     }
 
     /**
+     * storeTokenForUser
      * @param string $token
+     * @return PDOStatement|boolean
      */
     public static function storeTokenForUser($username, $token, $remember_length)
     {

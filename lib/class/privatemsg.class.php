@@ -129,6 +129,10 @@ class PrivateMsg extends database_object
         $this->f_link         = "<a href=\"" . $this->link . "\">" . $this->f_subject . "</a>";
     }
 
+    /**
+     * set_is_read
+     * @return PDOStatement|boolean
+     */
     public function set_is_read($read)
     {
         $sql = "UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?";
@@ -136,6 +140,10 @@ class PrivateMsg extends database_object
         return Dba::write($sql, array($read ? 1 : 0, $this->id));
     }
 
+    /**
+     * delete
+     * @return PDOStatement|boolean
+     */
     public function delete()
     {
         $sql = "DELETE FROM `user_pvmsg` WHERE `id` = ?";

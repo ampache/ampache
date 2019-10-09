@@ -327,7 +327,9 @@ class Label extends database_object implements library_item
     }
 
     /**
+     * add_artist_assoc
      * @param integer $artist_id
+     * @return boolean|PDOStatement
      */
     public function add_artist_assoc($artist_id)
     {
@@ -337,7 +339,9 @@ class Label extends database_object implements library_item
     }
 
     /**
+     * remove_artist_assoc
      * @param integer $artist_id
+     * @return boolean|PDOStatement
      */
     public function remove_artist_assoc($artist_id)
     {
