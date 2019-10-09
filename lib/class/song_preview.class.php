@@ -199,7 +199,7 @@ class Song_Preview extends database_object implements media, playable_item
      * This takes the current song object
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
-     * @return true
+     * @return boolean
      */
     public function format($details = true)
     {
