@@ -1312,6 +1312,9 @@ class Subsonic_XML_Data
     public static function addMessages($xml, $messages)
     {
         $xmessages = $xml->addChild('chatMessages');
+        if (empty($messages)) {
+            return;
+        }
         foreach ($messages as $message) {
             $chat = new PrivateMsg($message);
             $chat->format();

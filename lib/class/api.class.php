@@ -1268,6 +1268,7 @@ class Api
      * This get an user public information
      *
      * @param array $input
+     * $input = array(username = (string) $username)
      */
     public static function user($input)
     {
@@ -1296,6 +1297,7 @@ class Api
      * This get an user followers
      *
      * @param array $input
+     * $input = array(username = (string) $username)
      */
     public static function followers($input)
     {
@@ -1329,6 +1331,7 @@ class Api
      * This get the user list followed by an user
      *
      * @param array $input
+     * $input = array(username = (string) $username)
      */
     public static function following($input)
     {
@@ -1363,6 +1366,7 @@ class Api
      * This will follow/unfollow a user
      *
      * @param array $input
+     * $input = array(username = (string) $username)
      */
     public static function toggle_follow($input)
     {
@@ -1394,6 +1398,7 @@ class Api
      * This get the latest posted shouts
      *
      * @param array $input
+     * $input = array(limit = (int) $limit //optional)
      */
     public static function last_shouts($input)
     {
@@ -1423,6 +1428,9 @@ class Api
      * This rates a library item
      *
      * @param array $input
+     * $input = array(type   = (string) 'song'|'album'|'artist' $type
+     *                id     = (int) $object_id
+     *                rating = (int) 0|1|2|3|4|5 $rating)
      */
     public static function rate($input)
     {
@@ -1461,9 +1469,9 @@ class Api
      * Setting flag to false (0) will remove the flag
      *
      * @param array $input
-     * $input = array(type = (string) 'song'|'album'|'artist'
+     * $input = array(type = (string) 'song'|'album'|'artist' $type
      *                id   = (int) $object_id
-     *                flag = (bool) 0|1)
+     *                flag = (bool) 0|1 $flag)
      */
     public static function flag($input)
     {
@@ -1512,7 +1520,7 @@ class Api
      * @param array $input
      * $input = array(id     = (int) $object_id
      *                user   = (int) $user_id
-     *                client = (string) $agent (optional))
+     *                client = (string) $agent //optional)
      */
     public static function record_play($input)
     {
@@ -1644,8 +1652,8 @@ class Api
      *
      * @param array $input
      * $input = array(username = (string)
-     *                limit    = (int)
-     *                since    = (int) UNIXTIME())
+     *                limit    = (int) //optional
+     *                since    = (int) UNIXTIME() //optional)
      */
     public static function timeline($input)
     {
@@ -1682,8 +1690,8 @@ class Api
      * This get current user friends timeline
      *
      * @param array $input
-     * $input = array(limit = (int)
-     *                since = (int) UNIXTIME())
+     * $input = array(limit = (int) //optional
+     *                since = (int) UNIXTIME() //optional)
      */
     public static function friends_timeline($input)
     {
@@ -2038,6 +2046,9 @@ class Api
      *
      * Delete an existing user.
      * Takes the username in parameter.
+     *
+     * @param array $input
+     * $input = array(username = (string) $username)
      */
     public static function user_delete($input)
     {

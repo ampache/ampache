@@ -167,7 +167,7 @@ class XML_Data
      * tags_string
      *
      * This returns the formatted 'tags' string for an xml document
-     *
+     * @return string
      */
     private static function tags_string($tags)
     {
@@ -202,6 +202,7 @@ class XML_Data
      *
      * @param Song $song
      * @param int[] $playlist_data
+     * @return string
      */
     private static function playlist_song_tracks_string($song, $playlist_data)
     {
@@ -222,6 +223,7 @@ class XML_Data
      * output_xml_from_array
      * This takes a one dimensional array and creates a XML document from it. For
      * use primarily by the ajax mojo.
+     * @return string
      */
     public static function output_xml_from_array($array, $callback = false, $type = '')
     {
@@ -694,7 +696,8 @@ class XML_Data
      *
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
-     * @param integer[] $songs
+     * @param  integer[] $songs
+     * @return string    return xml
      */
     public static function songs($songs, $playlist_data = array(), $full_xml = true, $user_id = false)
     {
@@ -787,7 +790,7 @@ class XML_Data
      * This builds the xml document for displaying video objects
      *
      * @param    array    $videos    (description here...)
-     * @return    string    return xml
+     * @return   string   return xml
      */
     public static function videos($videos, $user_id = false)
     {
@@ -827,8 +830,8 @@ class XML_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param    integer[]    $object_ids    Object IDs
-     * @return    string    return xml
+     * @param    integer[]  $object_ids    Object IDs
+     * @return   string     return xml
      */
     public static function democratic($object_ids = array(), $user_id = false)
     {
@@ -1007,8 +1010,6 @@ class XML_Data
      * @param    string    $title    RSS feed title
      * @param    string    $date    publish date
      * @return    string    RSS feed xml
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function rss_feed($data, $title, $date = null)
     {

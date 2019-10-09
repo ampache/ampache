@@ -243,6 +243,7 @@ class Tmp_Playlist extends database_object
      * session_clean
      * This deletes any other tmp_playlists associated with this
      * session
+     * @param string|null $id
      */
     public static function session_clean($sessid, $id)
     {

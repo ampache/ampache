@@ -76,6 +76,7 @@ class Song_Preview extends database_object implements media, playable_item
      * insert
      *
      * This inserts the song preview described by the passed array
+     * @return string|null
      */
     public static function insert($results)
     {
@@ -109,6 +110,7 @@ class Song_Preview extends database_object implements media, playable_item
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
+     * @return boolean
      */
     public static function build_cache($song_ids)
     {
@@ -177,6 +179,7 @@ class Song_Preview extends database_object implements media, playable_item
     /**
      * get_artist_name
      * gets the name of $this->artist, allows passing of id
+     * @return string
      */
     public function get_artist_name($artist_id = 0)
     {
@@ -196,6 +199,7 @@ class Song_Preview extends database_object implements media, playable_item
      * This takes the current song object
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
+     * @return boolean
      */
     public function format($details = true)
     {

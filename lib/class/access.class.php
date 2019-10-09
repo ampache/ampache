@@ -337,8 +337,7 @@ class Access
         }
 
         // Clean incoming variables
-        $user_ip = $user_ip ?: filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
-        $user_ip = inet_pton($user_ip);
+        $user_ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         switch ($type) {
             case 'init-api':

@@ -166,8 +166,8 @@ class TVShow_Episode extends Video
         return true;
     }
 
-    /**
-     * Get item keywords for metadata searches.
+    /*
+     * get_keywords
      * @return array
      */
     public function get_keywords()
@@ -192,11 +192,19 @@ class TVShow_Episode extends Video
         return $keywords;
     }
 
+    /**
+     * get_parent
+     * @return array
+     */
     public function get_parent()
     {
         return array('object_type' => 'tvshow_season', 'object_id' => $this->season);
     }
 
+    /**
+     * get_release_item_art
+     * @return array
+     */
     public function get_release_item_art()
     {
         return array('object_type' => 'tvshow_season',
