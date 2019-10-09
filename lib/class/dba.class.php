@@ -127,9 +127,10 @@ class Dba {
 	 */
 	public static function escape($var) {
 
-		$string = mysql_real_escape_string($var,self::dbh());
+            $filter_var = filter_var($var, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $string     = mysql_real_escape_string($filter_var,self::dbh());
 
-		return $string;
+            return $string;
 
 	} // escape
 
