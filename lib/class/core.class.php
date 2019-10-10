@@ -149,6 +149,32 @@ class Core
     }
 
     /**
+     * get_server
+     * Return a $SERVER variable instead of calling directly
+     *
+     * @param string $variable
+     * @return string
+     */
+    public static function get_server($variable)
+    {
+        if (filter_has_var(INPUT_SERVER, $variable)) {
+            return filter_input(INPUT_SERVER, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        // filter can sometimes fail
+        if (filter_has_var(INPUT_ENV, $variable)) {
+            return filter_input(INPUT_ENV, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if (isset($_SERVER[$variable])) {
+            return filter_var($_SERVER[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if ($_SERVER[$variable] === null) {
+            return '';
+        }
+
+        return $_SERVER[$variable];
+    }
+
+    /**
      * get_post
      * Return a $POST variable instead of calling directly
      *
