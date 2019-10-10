@@ -337,7 +337,7 @@ class Access
         }
 
         // Clean incoming variables
-        $user_ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $user_ip = Core::get_server('REMOTE_ADDR');
 
         switch ($type) {
             case 'init-api':

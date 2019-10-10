@@ -103,6 +103,9 @@ class Core
         if (filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== null) {
             return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
+        if (isset($_REQUEST[$variable])) {
+            return filter_var($_REQUEST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
         if ($_REQUEST[$variable] === null) {
             return '';
         }
@@ -121,6 +124,9 @@ class Core
     {
         if (filter_has_var(INPUT_GET, $variable)) {
             return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if (isset($_GET[$variable])) {
+            return filter_var($_GET[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
         if ($_GET[$variable] === null) {
             return '';
@@ -141,6 +147,9 @@ class Core
         if (filter_has_var(INPUT_COOKIE, $variable)) {
             return filter_input(INPUT_COOKIE, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
+        if (isset($_COOKIE[$variable])) {
+            return filter_var($_COOKIE[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
         if ($_COOKIE[$variable] === null) {
             return '';
         }
@@ -160,7 +169,7 @@ class Core
         if (filter_has_var(INPUT_SERVER, $variable)) {
             return filter_input(INPUT_SERVER, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
-        // filter can sometimes fail
+        // INPUT_SERVER can sometimes fail
         if (filter_has_var(INPUT_ENV, $variable)) {
             return filter_input(INPUT_ENV, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
@@ -185,6 +194,9 @@ class Core
     {
         if (filter_has_var(INPUT_POST, $variable)) {
             return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if (isset($_POST[$variable])) {
+            return filter_var($_POST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
         if ($_POST[$variable] === null) {
             return '';

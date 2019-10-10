@@ -164,7 +164,7 @@ class Api
             $passphrase = Core::get_post('auth');
         }
         $username = trim($input['user']);
-        $user_ip  = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $user_ip  = Core::get_server('REMOTE_ADDR');
         if (isset($input['version'])) {
             // If version is provided, use it
             $version = $input['version'];
@@ -346,7 +346,7 @@ class Api
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
-        debug_event('api.class', 'Ping Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ' :: ' . $input['auth'], 5);
+        debug_event('api.class', 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
 
         ob_end_clean();
         echo XML_Data::keyed_array($xmldata);
@@ -369,7 +369,7 @@ class Api
             $sql .= " and `type` = 'api'";
             Dba::write($sql, array($input['auth']));
 
-            debug_event('api.class', 'Goodbye Received from ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ' :: ' . $input['auth'], 5);
+            debug_event('api.class', 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
             ob_end_clean();
             echo XML_Data::success('goodbye: ' . $input['auth']);
 
