@@ -215,7 +215,7 @@ class Session
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip  = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ? inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP)) : '0';
+        $s_ip  = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ? Core::get_server('REMOTE_ADDR') : '0';
         $type  = $data['type'];
         $value = '';
         if (isset($data['value'])) {
@@ -372,6 +372,7 @@ class Session
      * update_username
      *
      * This takes a SID and update associated username.
+     * @return PDOStatement|boolean
      */
     public static function update_username($sid, $username)
     {
@@ -461,7 +462,11 @@ class Session
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
-        session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+        if (isset($_SESSION)) {
+            setcookie(session_name(), session_id(), $cookie_life);
+        } else {
+            session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+        }
         session_write_close();
         session_name(AmpConfig::get('session_name'));
 
@@ -510,6 +515,7 @@ class Session
     }
 
     /**
+     * generateRandomToken
      * Generate a random token.
      * @return string
      */
@@ -519,7 +525,9 @@ class Session
     }
 
     /**
+     * storeTokenForUser
      * @param string $token
+     * @return PDOStatement|boolean
      */
     public static function storeTokenForUser($username, $token, $remember_length)
     {

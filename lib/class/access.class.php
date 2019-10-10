@@ -337,7 +337,7 @@ class Access
         }
 
         // Clean incoming variables
-        $user_ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $user_ip = Core::get_server('REMOTE_ADDR');
 
         switch ($type) {
             case 'init-api':
@@ -376,9 +376,11 @@ class Access
         $db_results = Dba::read($sql, $params);
 
         if (Dba::fetch_row($db_results)) {
-            // Yah they have access they can use the mojo
+            debug_event('access.class', 'check_network valid ip ' . $user_ip, 5);
+
             return true;
         }
+        debug_event('access.class', 'check_network invalid ip ' . $user_ip, 3);
 
         return false;
     }

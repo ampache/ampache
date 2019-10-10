@@ -469,6 +469,7 @@ class Podcast extends database_object implements library_item
     /**
      * update_lastsync
      * @param integer $time
+     * @return PDOStatement|boolean
      */
     private function update_lastsync($time)
     {
@@ -506,6 +507,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * remove
+     * @return PDOStatement|boolean
      */
     public function remove()
     {

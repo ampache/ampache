@@ -86,6 +86,7 @@ class Useractivity extends database_object
      * Remove activities for items that no longer exist.
      * @param string $object_type
      * @param integer $object_id
+     * @return PDOStatement|boolean
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -111,6 +112,7 @@ class Useractivity extends database_object
      * @param string $action
      * @param string $object_type
      * @param integer $object_id
+     * @return PDOStatement|boolean
      */
     public static function post_activity($user_id, $action, $object_type, $object_id, $date = null)
     {

@@ -38,6 +38,10 @@ class WebDAV_Catalog extends DAV\Collection
         $this->catalog_id = $catalog_id;
     }
 
+    /**
+     * getChildren
+     * @return array
+     */
     public function getChildren()
     {
         $children = array();
@@ -54,6 +58,10 @@ class WebDAV_Catalog extends DAV\Collection
         return $children;
     }
 
+    /**
+     * getChild
+     * @return \WebDAV_File|\WebDAV_Directory
+     */
     public function getChild($name)
     {
         debug_event('webdav_catalog.class', 'Catalog getChild for `' . $name . '`', 5);
@@ -68,6 +76,10 @@ class WebDAV_Catalog extends DAV\Collection
         throw new DAV\Exception\NotFound('The artist with name: ' . $name . ' could not be found');
     }
 
+    /**
+     * childExists
+     * @return boolean
+     */
     public function childExists($name)
     {
         $matches = Catalog::search_childrens($name, $this->catalog_id);
@@ -75,6 +87,10 @@ class WebDAV_Catalog extends DAV\Collection
         return (count($matches) > 0);
     }
 
+    /**
+     * getName
+     * @return string
+     */
     public function getName()
     {
         if ($this->catalog_id > 0) {

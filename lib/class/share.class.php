@@ -61,6 +61,10 @@ class Share extends database_object
         return true;
     } //constructor
 
+    /**
+     * delete_share
+     * @return PDOStatement|boolean
+     */
     public static function delete_share($id)
     {
         $sql    = "DELETE FROM `share` WHERE `id` = ?";
@@ -73,12 +77,20 @@ class Share extends database_object
         return Dba::write($sql, $params);
     }
 
+    /**
+     * garbage_collection
+     * @return PDOStatement|boolean
+     */
     public static function garbage_collection()
     {
         $sql = "DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < " . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)";
         Dba::write($sql);
     }
 
+    /**
+     * delete_shares
+     * @return PDOStatement|boolean
+     */
     public static function delete_shares($object_type, $object_id)
     {
         $sql = "DELETE FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
@@ -99,6 +111,7 @@ class Share extends database_object
 
     /**
      * @param string $type
+     * @return string
      */
     public static function format_type($type)
     {
@@ -258,6 +271,10 @@ class Share extends database_object
         $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", $this->creation_date) : '';
     }
 
+    /**
+     * update
+     * @return PDOStatement|boolean
+     */
     public function update(array $data)
     {
         $this->max_counter    = (int) ($data['max_counter']);
@@ -277,6 +294,10 @@ class Share extends database_object
         return Dba::write($sql, $params);
     }
 
+    /**
+     * save_access
+     * @return PDOStatement|boolean
+     */
     public function save_access()
     {
         $sql = "UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?";
@@ -284,6 +305,10 @@ class Share extends database_object
         return Dba::write($sql, array(time(), $this->id));
     }
 
+    /**
+     * is_valid
+     * @return boolean
+     */
     public function is_valid($secret, $action)
     {
         if (!$this->id) {

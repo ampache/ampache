@@ -50,6 +50,7 @@ class Userflag extends database_object
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
      * @param string $type
+     * @return boolean
      */
     public static function build_cache($type, $ids, $user_id = null)
     {
@@ -112,6 +113,7 @@ class Userflag extends database_object
     /**
      * get_flag
      * @param boolean $get_date
+     * @return boolean|array
      */
     public function get_flag($user_id = null, $get_date = null)
     {
@@ -267,6 +269,7 @@ class Userflag extends database_object
      * Get the latest sql
      * @param string|null $type
      * @param string $user_id
+     * @return string
      */
     public static function get_latest_sql($type, $user_id = null)
     {
@@ -305,6 +308,7 @@ class Userflag extends database_object
      * Get the latest user flagged objects
      * @param string $type
      * @param string $user_id
+     * @return array
      */
     public static function get_latest($type = null, $user_id = null, $count = '', $offset = '')
     {

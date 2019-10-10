@@ -70,6 +70,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * get_songs
      * gets all episodes for this tv show season
+     * @return array
      */
     public function get_episodes()
     {
@@ -96,6 +97,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the tv show season, this means totals etc
+     * @return array
      */
     private function _get_extra_info()
     {
@@ -185,6 +187,10 @@ class TVShow_Season extends database_object implements library_item
         return array();
     }
 
+    /**
+     * get_medias
+     * @return array
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -254,6 +260,7 @@ class TVShow_Season extends database_object implements library_item
      * check
      *
      * Checks for an existing tv show season; if none exists, insert one.
+     * @return string|null
      */
     public static function check($tvshow, $season_number, $readonly = false)
     {

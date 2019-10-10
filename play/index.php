@@ -175,7 +175,7 @@ if (!$share_id) {
         // If require session is set then we need to make sure we're legit
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, '5')) {
-                debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP), 4);
+                debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
             } else {
                 if (!Session::exists('stream', $sid)) {
                     // No valid session id given, try with cookie session from web interface
@@ -234,7 +234,7 @@ if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
         !Access::check_network('network', Core::get_global('user')->id, '25')) {
-        debug_event('play/index', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", 3);
+        debug_event('play/index', "Streaming Access Denied: " . Core::get_server('REMOTE_ADDR') . " does not have stream level access", 3);
         UI::access_denied();
 
         return false;
@@ -460,7 +460,7 @@ if (AmpConfig::get('track_user_ip')) {
 $force_downsample = false;
 if (AmpConfig::get('downsample_remote')) {
     if (!Access::check_network('network', Core::get_global('user')->id, '0')) {
-        debug_event('play/index', 'Downsampling enabled for non-local address ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP), 5);
+        debug_event('play/index', 'Downsampling enabled for non-local address ' . Core::get_server('REMOTE_ADDR'), 5);
         $force_downsample = true;
     }
 }

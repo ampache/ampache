@@ -951,7 +951,7 @@ class User extends database_object
             $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
             debug_event('user.class', 'Login from IP address: ' . $sip, 3);
         } else {
-            $sip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
+            $sip = Core::get_server('REMOTE_ADDR');
             debug_event('user.class', 'Login from IP address: ' . $sip, 3);
         }
 
@@ -1497,6 +1497,7 @@ class User extends database_object
     /**
      * get_artists
      * Get artists associated with the user
+     * @return array
      */
     public function get_artists()
     {
@@ -1514,6 +1515,7 @@ class User extends database_object
     /**
      * is_xmlrpc
      * checks to see if this is a valid xmlrpc user
+     * @return boolean
      */
     public function is_xmlrpc()
     {
