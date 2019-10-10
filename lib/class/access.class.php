@@ -364,7 +364,7 @@ class Access
                 'WHERE `start` <= ? AND `end` >= ? ' .
                 'AND `level` >= ? AND `type` = ?';
 
-        $params = array($user_ip, $user_ip, $level, $type);
+        $params = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
 
         if (strlen($user) && $user != '-1') {
             $sql .= " AND `user` IN(?, '-1')";
@@ -376,11 +376,11 @@ class Access
         $db_results = Dba::read($sql, $params);
 
         if (Dba::fetch_row($db_results)) {
-            debug_event('access.class', 'check_network valid ip ' . $user_ip, 5);
+            debug_event('access.class', 'check_network valid ip ' . $user_ip . ' / ' . inet_pton($user_ip), 5);
 
             return true;
         }
-        debug_event('access.class', 'check_network invalid ip ' . $user_ip, 3);
+        debug_event('access.class', 'check_network invalid ip ' . $user_ip . ' / ' . inet_pton($user_ip), 3);
 
         return false;
     }
