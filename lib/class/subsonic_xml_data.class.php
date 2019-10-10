@@ -1245,7 +1245,7 @@ class Subsonic_XML_Data
             $xepisode->addAttribute('coverArt', self::getPodcastId($episode->podcast));
         }
 
-        self::setIfStarred($xepisode, 'episode', $episode->id);
+        self::setIfStarred($xepisode, 'podcast_episode', $episode->id);
 
         if ($episode->file) {
             $xepisode->addAttribute('streamId', self::getPodcastEpId($episode->id));
