@@ -376,11 +376,11 @@ class Access
         $db_results = Dba::read($sql, $params);
 
         if (Dba::fetch_row($db_results)) {
-            debug_event('access.class', 'check_network valid ip ' . $user_ip . ' / ' . inet_pton($user_ip), 5);
+            debug_event('access.class', 'check_network ' . $type . ': ip matched ACL ' . $user_ip, 5);
 
             return true;
         }
-        debug_event('access.class', 'check_network invalid ip ' . $user_ip . ' / ' . inet_pton($user_ip), 3);
+        debug_event('access.class', 'check_network ' . $type . ': ip not found in ACL ' . $user_ip, 3);
 
         return false;
     }
