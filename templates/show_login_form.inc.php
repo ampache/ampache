@@ -90,7 +90,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                     <div class="loginoptions">
                         <?php if (AmpConfig::get('allow_public_registration')) {
         ?>
-                            <aclass="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
+                            <a class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
                         <?php
     } // end if allow_public_registration?>
                         <a rel=\"nohtml\" class=\"button\" id=\"lostpasswordbutton\" href=<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php>Lost password</a>
