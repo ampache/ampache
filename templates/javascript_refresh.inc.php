@@ -22,7 +22,7 @@
 
 ?>
 
-<script type="text/javascript" language="javascript">
+<script type="text/javascript">
 // Set refresh interval (in seconds)
 var refreshInterval=<?php echo $refresh_limit ?>;
 

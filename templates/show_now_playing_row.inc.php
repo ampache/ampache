@@ -94,7 +94,7 @@
         </div>
     </div>
 </div>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 $(document).ready(function(){
     <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id=' . $media->id . '&media_artist=' . $media->artist, 'similar_now_playing'); ?>
 });

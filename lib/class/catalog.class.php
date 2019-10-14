@@ -277,7 +277,7 @@ abstract class Catalog extends database_object
      */
     public static function show_catalog_types($divback = 'catalog_type_fields')
     {
-        echo "<script language=\"javascript\" type=\"text/javascript\">" .
+        echo '<script type="text/javascript">' .
             "var type_fields = new Array();" .
             "type_fields['none'] = '';";
         $seltypes = '<option value="none">[Select]</option>';

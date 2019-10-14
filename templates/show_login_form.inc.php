@@ -92,15 +92,15 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
         ?>
                             <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
                         <?php
-    } // end if allow_public_registration?>
-                        <a rel=\"nohtml\" class=\"button\" id=\"lostpasswordbutton\" href=<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php>Lost password</a>
+    } // end if allow_public_registration ?>
+                        <a rel="nohtml" class="button" id="lostpasswordbutton" href="<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
                     </div>
                 <?php
 } ?>
             </form>
             <?php if ($mobile_session) {
-        echo "<div id=\"mobileheader\"><!-- This is the header -->";
-        echo "<h1 id=\"headerlogo\"></h1>";
-        echo "</div>";
+        echo '<div id="mobileheader"><!-- This is the header -->';
+        echo '<h1 id="headerlogo"></h1>';
+        echo '</div>';
     }
     UI::show_footer(); ?>
