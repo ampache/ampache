@@ -53,7 +53,7 @@ class AutoUpdate
         }
         // if you are using a non-develop branch
         if ($git_branch !== '') {
-            return false
+            return false;
         }
 
         return ($vspart[count($vspart) - 1] == 'develop');
