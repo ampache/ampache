@@ -1026,7 +1026,7 @@ class Horde_Browser
      */
     public function usingSSLConnection()
     {
-        return ((filter_has_var(INPUT_SERVER, 'HTTPS')) &&
+        return ((filter_has_var(INPUT_SERVER, 'HTTPS') &&
                  (Core::get_server('HTTPS') == 'on')) ||
                 getenv('SSL_PROTOCOL_VERSION'));
     }
