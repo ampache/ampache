@@ -24,7 +24,7 @@
 <html>
 <head>
 <title><?php echo AmpConfig::get('site_title'); ?></title>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 function PlayerFrame()
 {
     var appendmedia = false;

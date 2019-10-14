@@ -143,6 +143,7 @@ foreach ($data as $row) {
             <th class="cel_add"></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+            <th class="cel_year"><?php echo T_('Year'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
         </tr>
@@ -157,7 +158,7 @@ foreach ($data as $row) {
 ?>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=recent<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 $(document).ready(function () {
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
 });

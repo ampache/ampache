@@ -312,12 +312,12 @@ class easy_captcha
         $new_urls   = CAPTCHA_NEW_URLS ? 0 : 1;
         $onClick    = CAPTCHA_ONCLICK_HIRES ? 'onClick="this.src += this.src.match(/hires/) ? \'.\' : \'hires=1&\';"' : 'onClick="this.src += \'.\';"';
         $onKeyDown  = CAPTCHA_AJAX ? 'onKeyUp="captcha_check_solution()"' : '';
-        $javascript = CAPTCHA_AJAX ? '<script src="' . $base_url . 'base.js&captcha_new_urls=' . $new_urls . '" type="text/javascript" language="JavaScript" id="captcha_ajax_1"></script>' : '';
+        $javascript = CAPTCHA_AJAX ? '<script src="' . $base_url . 'base.js&captcha_new_urls=' . $new_urls . '" type="text/javascript" id="captcha_ajax_1"></script>' : '';
         $error      = function_exists('imagecreatetruecolor') ? '' : '<div class="error">PHP setup lacks GD. No image drawing possible</div>';
 
         #-- assemble
         $HTML =
-         //'<script type="text/javascript" language="JavaScript">if (document.getElementById("captcha")) { document.getElementById("captcha").parentNode.removeChild(document.getElementById("captcha")); }</script>' .   // workaround for double instantiations
+         //'<script type="text/javascript" >if (document.getElementById("captcha")) { document.getElementById("captcha").parentNode.removeChild(document.getElementById("captcha")); }</script>' .   // workaround for double instantiations
          '<div id="captcha" class="captcha">' .
          $error .
          '<input type="hidden" id="' . $p_id . '" name="' . $p_id . '" value="' . $id . '" />' .
@@ -1109,7 +1109,7 @@ class easy_captcha_utility
 /* easy_captcha utility code */
 
 // global vars
-captcha_url_rx = /(https?:\/\/\w[^\/,\]\[=#]+)/ig;  //   
+captcha_url_rx = /(https?:\/\/\w[^\/,\]\[=#]+)/ig;  //
 captcha_form_urls = new Array();
 captcha_sol_cb = "";
 captcha_rpc = 0;
