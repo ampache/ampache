@@ -80,7 +80,7 @@ switch ($_REQUEST['action']) {
                 T_('You can now start sharing the following URL:') . '<br />' .
                 '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />' .
                 '<div id="share_qrcode" style="text-align: center"></div>' .
-                '<script language="javascript" type="text/javascript">$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
+                '<script type="text/javascript">$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
                 '<br /><br />' .
                 T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
                 '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, $share->secret) . '&embed=true"></iframe>') . '</i><br />';

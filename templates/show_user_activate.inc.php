@@ -38,9 +38,9 @@ $web_path = AmpConfig::get('web_path');
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
                 <span><?php echo T_('Registration Validation'); ?>.</span>
             </div>
-            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
+            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" type="text/javascript"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/base.js" type="text/javascript"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" type="text/javascript"></script>
             <div>
 <?php
     if ($validation == User::get_validation($username) && strlen($validation)) {

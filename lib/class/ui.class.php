@@ -286,10 +286,11 @@ class UI
                 $svgicon->desc = $title;
             }
 
-            $id_attrib = ($id_attrib) ?: 'icon-' . $name ;
-            $svgicon->addAttribute('id', $id_attrib);
+            if (!empty($id_attrib)) {
+                $svgicon->addAttribute('id', $id_attrib);
+            }
 
-            $class_attrib = ($class_attrib) ?: 'icon' ;
+            $class_attrib = ($class_attrib) ?: 'icon icon-' . $name ;
             $svgicon->addAttribute('class', $class_attrib);
 
             $tag = explode("\n", $svgicon->asXML(), 2)[1];
@@ -383,10 +384,11 @@ class UI
                 $svgimage->desc = $title;
             }
 
-            $id_attrib = ($id_attrib) ?: 'image-' . $name ;
-            $svgimage->addAttribute('id', $id_attrib);
+            if (!empty($id_attrib)) {
+                $svgimage->addAttribute('id', $id_attrib);
+            }
 
-            $class_attrib = ($class_attrib) ?: 'image' ;
+            $class_attrib = ($class_attrib) ?: 'image image-' . $name ;
             $svgimage->addAttribute('class', $class_attrib);
 
             $tag = explode("\n", $svgimage->asXML(), 2)[1];

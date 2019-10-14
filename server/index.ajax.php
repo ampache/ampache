@@ -301,7 +301,7 @@ switch ($_REQUEST['action']) {
             echo "</div>";
             $results['fslider'] = ob_get_clean();
             ob_start();
-            echo "<script language='javascript' type='text/javascript'>";
+            echo '<script type="text/javascript">';
             echo "$('#" . $fsname . "').rhinoslider({
                     showTime: 15000,
                     effectTime: 2000,

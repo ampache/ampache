@@ -74,7 +74,7 @@ class AmpacheGravatar
     {
         $url = "";
         if (!empty($user->email)) {
-            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+            if (filter_has_var(INPUT_SERVER, 'HTTPS') && Core::get_server('HTTPS') !== 'off') {
                 $url = "https://secure.gravatar.com";
             } else {
                 $url = "http://www.gravatar.com";

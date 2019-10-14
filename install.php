@@ -112,7 +112,7 @@ header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
 // Correct potential \ or / in the dirname
 $safe_dirname = get_web_path();
 
-$web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
+$web_path = $http_type . Core::get_server('HTTP_HOST') . $safe_dirname;
 
 unset($safe_dirname);
 

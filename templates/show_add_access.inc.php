@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 ?>
 <?php UI::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
 <?php AmpError::display('general');
@@ -28,15 +27,15 @@ $localnetwork = T_('Local Network Definition');
 $streamaccess = T_('Stream Access');
 $all          = T_('All'); ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
-    <table class="option-tabledata" cellpadding="5" cellspacing="0">
+    <table class="tabledata" cellpadding="5" cellspacing="0">
         <tr>
-            <td><?php echo T_('Name'); ?>:</td>
+            <td><?php echo T_('Name') . ':'; ?></td>
             <td colspan="3">
                 <input type="text" name="name" value="<?php echo scrub_out(Core::get_request('name')); ?>" />
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Level'); ?>:</td>
+            <td><?php echo T_('Level') . ':'; ?></td>
             <td colspan="3">
                 <input name="level" type="radio" checked="checked" value="5" /> <?php echo T_('View'); ?>
                 <input name="level" type="radio" value="25" /> <?php echo T_('Read'); ?>
@@ -45,13 +44,13 @@ $all          = T_('All'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('User'); ?>:</td>
+            <td><?php echo T_('User') . ':'; ?></td>
             <td colspan="3">
                 <?php show_user_select('user'); ?>
             </td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Type'); ?>:</td>
+            <td valign="top"><?php echo T_('Type') . ':'; ?></td>
             <td colspan="3">
         <?php if ($action == 'show_add_rpc') {
     ?>
@@ -85,7 +84,7 @@ $all          = T_('All'); ?>
         </tr>
     </table>
     &nbsp;
-    <table class="option-tabledata" cellpadding="5" cellspacing="0">
+    <table class="tabledata" cellpadding="5" cellspacing="0">
         <tr>
             <td colspan="4"><h3><?php echo T_('IPv4 or IPv6 Addresses'); ?></h3>
                 <span class="information">(255.255.255.255) / (ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff)</span>

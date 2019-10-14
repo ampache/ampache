@@ -42,9 +42,9 @@ $_SESSION['login'] = true;
 </head>
 
 <body id="registerPage">
-    <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
+    <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" type="text/javascript"></script>
+    <script src="<?php echo $web_path; ?>/lib/javascript/base.js" type="text/javascript"></script>
+    <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" type="text/javascript"></script>
 
     <div id="maincontainer">
         <div id="header">

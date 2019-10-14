@@ -13,14 +13,14 @@ if (!$iframed) {
     require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jquery-editdialog.css'); ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/needim/noty/js/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery-cookie/jquery.cookie.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
-<script type="text/javascript" charset="utf-8">
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery/jquery.min.js" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/needim/noty/js/noty/packaged/jquery.noty.packaged.min.js" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery-cookie/jquery.cookie.js" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/base.js" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/ajax.js" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tools.js" type="text/javascript"></script>
+<script type="text/javascript">
 var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
 var jsAjaxUrl = "<?php echo AmpConfig::get('ajax_url') ?>";
 
@@ -35,14 +35,14 @@ function update_action()
 <link href="<?php echo AmpConfig::get('web_path'); ?>/modules/UberViz/style.css" rel="stylesheet" type="text/css">
 <?php if (AmpConfig::get('webplayer_aurora')) {
     ?>
-    <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/aurora.js/aurora.js" language="javascript" type="text/javascript"></script>
+    <script src="<?php echo AmpConfig::get('web_path'); ?>/modules/aurora.js/aurora.js" type="text/javascript"></script>
 <?php
 } ?>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/happyworm/jplayer/dist/jplayer/jquery.jplayer.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/happyworm/jplayer/dist/add-on/jplayer.playlist.min.js" language="javascript" type="text/javascript"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/jplayer.playlist.ext.js" language="javascript" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/happyworm/jplayer/dist/jplayer/jquery.jplayer.min.js" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/happyworm/jplayer/dist/add-on/jplayer.playlist.min.js" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/jplayer.playlist.ext.js" type="text/javascript"></script>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 var jplaylist = new Array();
 var jtypes = new Array();
 
@@ -77,7 +77,7 @@ function playNext(media)
     jplaylist.addAfter(jpmedia, jplaylist.current);
 }
 </script>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 function ExitPlayer()
 {
     $("#webplayer").text('');
