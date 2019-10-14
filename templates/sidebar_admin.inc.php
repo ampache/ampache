@@ -30,14 +30,14 @@
       <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo T_('Export Catalog'); ?></a></li>
       <li id="sb_admin_ot_Duplicates"><a href="<?php echo $web_path; ?>/admin/duplicates.php"><?php echo T_('Find Duplicates'); ?></a></li>
       <?php if (AmpConfig::get('licensing')) {
-        ?>
+    ?>
         <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path; ?>/admin/license.php"><?php echo T_('Manage Licenses'); ?></a></li>
       <?php
-      } ?>
+} ?>
     </ul>
   </li>
   <?php if (Access::check('interface', '100')) {
-    ?>
+        ?>
     <li>
       <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('User Tools'); ?>"><?php echo T_('User Tools'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'user_tools', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_user_tools')) ? $_COOKIE['sb_user_tools'] : 'expanded')); ?></h4>
       <ul class="sb3" id="sb_admin_ut">
@@ -45,15 +45,15 @@
         <li id="sb_admin_ut_BrowseUsers"><a href="<?php echo $web_path; ?>/admin/users.php"><?php echo T_('Browse Users'); ?></a></li>
         <?php
           if (Mailer::is_mail_enabled()) {
-            ?>
+              ?>
           <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('E-mail Users'); ?></a></li>
         <?php
           }
-          if (AmpConfig::get('sociable')) {
+        if (AmpConfig::get('sociable')) {
             ?>
           <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
         <?php
-          } ?>
+        } ?>
         <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a></li>
       </ul>
     </li>
@@ -85,14 +85,14 @@
         <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
         <?php
           $categories = Preference::get_categories();
-          foreach ($categories as $name) {
+        foreach ($categories as $name) {
             $f_name = ucfirst($name); ?>
           <li id="sb_preferences_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
         <?php
-          } ?>
+        } ?>
       </ul>
     </li>
 </ul>
 <?php
-} ?>
+    } ?>
 </ul>
