@@ -75,7 +75,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
 <td class="cel_action">
     <?php if (AmpConfig::get('download')) {
         ?>
-    <ahref="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&amp;<?php echo $object_type ?>_id=<?php echo $libitem->id ?>">
+    <a href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&amp;<?php echo $object_type ?>_id=<?php echo $libitem->id ?>">
         <?php echo UI::get_icon('download', T_('Download')) ?>
     </a>
     <?php

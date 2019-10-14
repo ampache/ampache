@@ -94,8 +94,8 @@
     } ?>
         <?php if (Access::check_function('download') && !empty($episode->file)) {
         ?>
-            <ahref="<?php echo print_r(Podcast_Episode::play_url($episode->id)); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-            <ahref="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+            <a href="<?php echo print_r(Podcast_Episode::play_url($episode->id)); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
         <?php if (Access::check('interface', '50')) {
