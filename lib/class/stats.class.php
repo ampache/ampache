@@ -310,15 +310,15 @@ class Stats
             return $sql;
         }
         /* Select Top objects counting by # of rows for you only */
-        $sql = "SELECT `object_id` as `id`, COUNT(*) AS `count` FROM `object_count`";
+        $sql = "SELECT MAX(`object_id`) as `id`, COUNT(*) AS `count` FROM `object_count`";
         if ($allow_group_disks && $type == 'album') {
             $sql .= " LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id`" .
                     " and `object_count`.`object_type` = 'album'";
         }
         if ($user_id !== null) {
-            $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . $user_id . " ";
+            $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . $user_id;
         } else {
-            $sql .= " WHERE `object_type` = '" . $type . "' AND `date` >= '" . $date . "' ";
+            $sql .= " WHERE `object_type` = '" . $type . "' AND `date` >= '" . $date . "'";
         }
         if (AmpConfig::get('catalog_disable')) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
@@ -334,9 +334,9 @@ class Stats
         }
         $sql .= " AND `count_type` = '" . $count_type . "'";
         if ($allow_group_disks && $type == 'album') {
-            $sql .= " GROUP BY `object_count`.`object_id`, `album`.`name`, `album`.`album_artist`, `album`.`mbid` ";
+            $sql .= " GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`";
         } else {
-            $sql .= " GROUP BY object_id ";
+            $sql .= " GROUP BY `object_count`.`object_id`";
         }
         if ($random) {
             $sql .= " ORDER BY RAND() DESC ";
