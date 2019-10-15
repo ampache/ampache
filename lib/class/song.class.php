@@ -972,6 +972,13 @@ class Song extends database_object implements media, library_item
         $previous = Stats::get_last_song($user);
         $diff     = time() - $previous['date'];
 
+        // this song was your last play and the length between plays is too short.
+        if ($previous['object_id'] == $this->id && $diff <= ($this->time - 10)) {
+            debug_event('song.class', 'Repeated the same song too quickly, not recording stats', 3);
+
+            return false
+        }
+
         // try to keep a difference between recording stats but also allowing short songs
         if ($diff < 10 && !$this->time < 10) {
             debug_event('song.class', 'Last song played within ' . $diff . ' seconds, not recording stats', 3);
