@@ -47,17 +47,17 @@ require $prefix . '/templates/install_header.inc.php';
     </tr>
     <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
     <tr>
-        <td><?php /* HINT: Ampache config 'ampache.cfg.php.dist' */ echo sprintf(T_('"%s" is readable'), 'ampache.cfg.php.dist'); ?></td>
+        <td><?php echo T_('"ampache.cfg.php.dist" is readable'); ?></td>
         <td><?php echo debug_result(is_readable($prefix . '/config/ampache.cfg.php.dist')); ?></td>
         <td><?php echo T_('This tests whether the configuration template can be read.'); ?></td>
     </tr>
     <tr>
-        <td><?php /* HINT: Ampache SQL 'ampache.sql' */ echo sprintf(T_('"%s" is readable'), 'ampache.sql'); ?></td>
+        <td><?php echo T_('"ampache.sql" is readable'); ?></td>
         <td><?php echo debug_result(is_readable($prefix . '/sql/ampache.sql')); ?></td>
         <td><?php echo T_('This tests whether the file needed to initialize the database structure is available.'); ?></td>
     </tr>
     <tr>
-        <td><?php /* HINT: Ampache config 'ampache.chf.php' */ echo sprintf(T_('"%s" is writable'), 'ampache.cfg.php'); ?></td>
+        <td><?php echo T_('"ampache.cfg.php" is writable'); ?></td>
         <td><?php echo debug_result(check_config_writable()); ?></td>
         <td><?php echo T_('This tests whether PHP can write to config/. This is not strictly necessary, but will help streamline the installation process.'); ?></td>
     </tr>

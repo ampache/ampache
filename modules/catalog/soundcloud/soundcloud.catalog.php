@@ -180,7 +180,7 @@ class Catalog_soundcloud extends Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('soundcloud.catalog', 'Cannot add catalog with duplicate user id ' . $userid, 1);
-            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $userid));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing SoundCloud Catalog: %s'), $userid));
 
             return false;
         }

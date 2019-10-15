@@ -249,7 +249,7 @@ switch ($_REQUEST['action']) {
         $client = new User(Core::get_request('user_id'));
         show_confirmation(T_('Are You Sure?'),
             /* HINT: User Fullname */
-            sprintf(T_('This will permanently delete %s'), $client->fullname),
+            sprintf(T_('This will permanently delete the user "%s"'), $client->fullname),
             AmpConfig::get('web_path') . "/admin/users.php?action=confirm_delete&amp;user_id=" . Core::get_request('user_id'), 1, 'delete_user');
     break;
     case 'show_delete_avatar':

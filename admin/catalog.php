@@ -247,7 +247,7 @@ switch ($_REQUEST['action']) {
         $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
         show_confirmation(T_('Are You Sure?'),
                 /* HINT: Catalog Name */
-                sprintf(T_('This will permanently delete "%s"'), $catalog->name), $nexturl, 1);
+                sprintf(T_('This will permanently delete the catalog "%s"'), $catalog->name), $nexturl, 1);
     break;
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
