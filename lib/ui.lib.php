@@ -258,7 +258,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
     echo "</select>\n";
 
     if ($count === 0) {
-        echo "<script type='text/javascript'>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
+        echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
     }
 } // show_album_select
 
@@ -311,7 +311,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
     echo "</select>\n";
 
     if ($count === 0) {
-        echo "<script type='text/javascript'>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
+        echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
     }
 } // show_artist_select
 
@@ -650,7 +650,7 @@ function toggle_visible($element)
  */
 function display_notification($message, $timeout = 5000)
 {
-    echo "<script type='text/javascript'>";
+    echo "<script";
     echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE)) . "', " . $timeout . ");";
     echo "</script>\n";
 }

@@ -1162,8 +1162,6 @@ function captcha_check_solution() {
       }
       // create new <script> node, initiate JS-RPC call thereby
       scr = document.createElement("script");
-      scr.setAttribute("language", "JavaScript");
-      scr.setAttribute("type", "text/javascript");
       var url = "$BASE_URL" + "?$PARAM_ID=" + cid.value + "&$PARAM_INPUT=" + inf.value;
       scr.setAttribute("src", url);
       scr.setAttribute("id", "captcha_ajax_1");

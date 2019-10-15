@@ -95,7 +95,7 @@ class AmpachePiwik
         $currentUrl = scrub_out("http" . (filter_has_var(INPUT_SERVER, 'HTTPS') ? 's' : '') . '://' . Core::get_server('HTTP_HOST') . $_SERVER['REQUEST_URI']);
 
         echo "<!-- Piwik -->\n";
-        echo "<script type='text/javascript'>\n";
+        echo "<script>\n";
         echo "var _paq = _paq || [];\n";
         //echo "_paq.push(['trackPageView']);\n";   // Doesn't work when using Ajax page loading
         echo "_paq.push(['trackLink', '" . $currentUrl . "', 'link']);\n";
@@ -108,7 +108,7 @@ class AmpachePiwik
             echo "_paq.push(['setUserId', '" . Core::get_global('user')->username . "']);\n";
         }
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
-        echo "g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n";
+        echo "g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n";
         echo "})();\n";
         echo "</script>\n";
         echo "<noscript><p><img src='" . scrub_out($this->piwik_url) . "piwik.php?idsite=" . scrub_out($this->site_id) . "' style='border:0;' alt= '' /></p></noscript>\n";
