@@ -29,7 +29,7 @@ $default_sort   = "%a/%A";
 <?php AmpError::display('general'); ?>
 
 <form name="update_catalog" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
-    <table class="tabledata" cellpadding="0" cellspacing="0">
+    <table class="tabledata">
         <tr>
             <td style="width: 25%;"><?php echo T_('Catalog Name'); ?>: </td>
             <td><input type="text" name="name" value="<?php echo scrub_out(Core::get_post('name')); ?>" /></td>

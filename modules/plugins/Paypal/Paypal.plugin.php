@@ -108,7 +108,7 @@ class AmpachePaypal
         echo "<input type='hidden' name='currency_code' value='" . scrub_out($this->currency_code) . "'>\n";
         echo "<input type='hidden' name='bn' value='PP-DonationsBF:btn_donate_SM.gif:NonHostedGuest'>\n";
         echo "<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif' border='0' name='submit' alt='" . T_('PayPal - The safer, easier way to pay online!') . "'>\n";
-        echo "<img alt= '' border='0' src='https://www.paypalobjects.com/fr_XC/i/scr/pixel.gif' width='1' height='1'>\n";
+        echo "<img alt= '' src='https://www.paypalobjects.com/fr_XC/i/scr/pixel.gif' width='1' height='1'>\n";
         echo "</form>\n";
     }
 

@@ -22,7 +22,7 @@
 ?>
 <?php UI::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo Core::get_request('type') ? scrub_out(Core::get_request('type')) : 'song'; ?>">
-<table class="tabledata" cellpadding="3" cellspacing="0">
+<table class="tabledata">
 <tr id="search_location">
     <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'song') {
     ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php
@@ -41,7 +41,7 @@
     } ?></td>
 </tr>
 </table>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <tr id="search_item_count">
         <td><?php echo T_('Item Count'); ?></td>
         <td>

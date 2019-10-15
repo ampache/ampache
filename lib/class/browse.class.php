@@ -363,7 +363,7 @@ class Browse extends Query
             if (isset($box_req)) {
                 UI::show_box_bottom();
             }
-            echo '<script type="text/javascript">';
+            echo '<script>';
             echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
         } else {

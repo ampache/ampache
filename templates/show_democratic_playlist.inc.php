@@ -25,7 +25,7 @@ $web_path = AmpConfig::get('web_path');
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <colgroup>
   <col id="col_action" />
   <col id="col_votes" />

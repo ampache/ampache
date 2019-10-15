@@ -50,7 +50,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
-    <title> <?php echo AmpConfig::get('site_title'); ?> </title>
+    <title><?php echo AmpConfig::get('site_title'); ?></title>
 </head>
 
 <body id="loginPage">

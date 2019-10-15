@@ -57,7 +57,7 @@ UI::show_box_top($string, 'info-box');
 </ul>
 </div>
 <div style="text-align: right;">
-    <script type="text/javascript">
+    <script>
         function reloadPageChanged(obj)
         {
             if (obj.checked) {

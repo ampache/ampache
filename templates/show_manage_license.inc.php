@@ -29,7 +29,7 @@ $web_path = AmpConfig::get('web_path');
         </li>
     </ul>
 </div>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>

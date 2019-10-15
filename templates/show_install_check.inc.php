@@ -39,7 +39,7 @@ require $prefix . '/templates/install_header.inc.php';
                 <?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $prefix . '/config/ampache.cfg.php'); ?>
             </p>
         </div>
-<table class="table" cellspacing="0" cellpadding="0">
+<table class="table">
     <tr>
         <th><?php echo T_('Check'); ?></th>
         <th><?php echo T_('Status'); ?></th>

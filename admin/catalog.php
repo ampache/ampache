@@ -233,7 +233,7 @@ switch ($_REQUEST['action']) {
         if (count($songs)) {
             require AmpConfig::get('prefix') . UI::find_template('show_disabled_songs.inc.php');
         } else {
-            echo "<div class=\"error\" align=\"center\">" . T_('No disabled Songs found') . "</div>";
+            echo '<div class="error show-disabled">' . T_('No disabled Songs found') . '</div>';
         }
     break;
     case 'show_delete_catalog':

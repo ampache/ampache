@@ -46,7 +46,7 @@
         </li>
     </ul>
     <form style="padding-left: 250px;" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update_from">
-        <table class="tabledata2" cellspacing="0" cellpadding="0">
+        <table class="tabledata2">
             <tr>
                 <td><?php /* HINT: /data/myNewMusic */ ?><?php printf(T_('Add new files from: %s'), '<span class="information">/data/myNewMusic</span>'); ?></td>
                 <td><input type="text" name="add_path" value="/" /></td>

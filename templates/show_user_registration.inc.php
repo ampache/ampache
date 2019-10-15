@@ -37,14 +37,14 @@ $_SESSION['login'] = true;
     <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
+    <title><?php echo AmpConfig::get('site_title') . ' - ' . T_('Registration'); ?></title>
     <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
 </head>
 
 <body id="registerPage">
-    <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" type="text/javascript"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/base.js" type="text/javascript"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" type="text/javascript"></script>
+    <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
+    <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
+    <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
 
     <div id="maincontainer">
         <div id="header">

@@ -26,7 +26,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
 ?>
 <?php AmpError::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
-    <table class="tabledata" cellspacing="0" cellpadding="0">
+    <table class="tabledata">
         <?php if (in_array('fullname', $display_fields)) {
     ?>
             <tr>
@@ -128,7 +128,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
                         <a href="<?php echo $apikey_qrcode; ?>" rel="nohtml"><div id="apikey_qrcode"></div></a>
                     </div>
                     <br />
-                    <script type="text/javascript">$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>', background: '#ffffff', foreground: '#000000'});</script>
+                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>', background: '#ffffff', foreground: '#000000'});</script>
                     <?php echo $client->apikey; ?>
                     <?php
                 } ?>

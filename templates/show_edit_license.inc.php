@@ -27,7 +27,7 @@
 <input type="hidden" name="license_id" value="<?php echo $license->id; ?>" />
 <?php
 } ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
     <td><input type="text" name="name" value="<?php if (isset($license)) {

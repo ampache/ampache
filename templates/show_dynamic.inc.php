@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Advanced Random Rules')); ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <tr class="th-top">
         <th class="col_field"><?php echo T_('Field'); ?></th>
         <th class="col_operator"><?php echo T_('Operator'); ?></th>

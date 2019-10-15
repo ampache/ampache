@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
-<table cellpadding="3" cellspacing="0" class="tabledata">
+<table class="tabledata">
 <tr>
     <?php foreach ($fields as $key => $field) {
     ?>

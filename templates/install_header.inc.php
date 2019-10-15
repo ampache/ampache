@@ -42,8 +42,8 @@
     <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
-    <script src="lib/components/jquery/jquery.min.js" type="text/javascript"></script>
-    <script src="lib/components/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="lib/components/jquery/jquery.min.js"></script>
+    <script src="lib/components/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body id="install-page">
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">

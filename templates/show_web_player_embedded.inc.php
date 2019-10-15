@@ -21,7 +21,7 @@
  */
 
 ?>
-<script type="text/javascript">
+<script>
 function PlayerFrame()
 {
     var appendmedia = false;

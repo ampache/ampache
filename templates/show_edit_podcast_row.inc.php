@@ -22,7 +22,7 @@
 ?>
 <div>
     <form method="post" id="edit_podcast_<?php echo $libitem->id; ?>" class="edit_dialog_content">
-        <table class="tabledata" cellspacing="0" cellpadding="0">
+        <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Feed') ?></td>
                 <td><input type="text" name="feed" value="<?php echo scrub_out($libitem->feed); ?>" autofocus /></td>

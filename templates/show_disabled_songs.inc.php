@@ -22,7 +22,7 @@
 ?>
 <br />
 <form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">
-    <table class="tabledata" cellpadding="0" cellspacing="0">
+    <table class="tabledata">
         <thead>
             <tr class="th-top">
                 <th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo T_('Select'); ?></a></th>

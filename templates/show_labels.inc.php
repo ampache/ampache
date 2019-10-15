@@ -34,7 +34,7 @@ $thcount = 6;
 <?php if ($browse->is_show_header()) {
         require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
     } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="label">
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="label">
     <thead>
         <tr class="th-top">
             <?php if (Art::is_enabled()) {

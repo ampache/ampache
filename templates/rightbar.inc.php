@@ -92,7 +92,7 @@
         $objects = Core::get_global('user')->playlist->get_items();
     }
 ?>
-    <script type="text/javascript">
+    <script>
         <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) {
     ?>
              $("#content").removeClass("content-right-wild", 500);
