@@ -976,7 +976,7 @@ class Song extends database_object implements media, library_item
         if ($previous['object_id'] == $this->id && $diff <= ($this->time - 10)) {
             debug_event('song.class', 'Repeated the same song too quickly, not recording stats', 3);
 
-            return false
+            return false;
         }
 
         // try to keep a difference between recording stats but also allowing short songs
