@@ -35,7 +35,7 @@ if (!AmpConfig::get('use_now_playing_embedded') || AmpConfig::get('demo_mode')) 
 <head>
     <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-    <title><?php echo AmpConfig::get('site_title'); ?> - Now Playing</title>
+    <title><?php echo AmpConfig::get('site_title') . ' - ' . T_("Now Playing"); ?></title>
 <?php
 if (AmpConfig::get('now_playing_css_file')) {
     ?>

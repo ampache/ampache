@@ -56,13 +56,13 @@ require $prefix . '/templates/install_header.inc.php';
 <div class="form-group">
     <label for="local_pass" class="col-sm-3 control-label"><?php echo T_('Password'); ?></label>
     <div class="col-sm-9">
-        <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="Password">
+        <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="<?php echo T_("Password"); ?>">
     </div>
 </div>
 <div class="form-group">
     <label for="local_pass2" class="col-sm-3 control-label"><?php echo T_('Confirm Password'); ?></label>
     <div class="col-sm-9">
-        <input type="password" class="form-control" id="local_pass2" name="local_pass2" placeholder="Confirm Password">
+        <input type="password" class="form-control" id="local_pass2" name="local_pass2" placeholder="<?php echo T_("Confirm Password"); ?>">
     </div>
 </div>
 <div class="col-sm-9">

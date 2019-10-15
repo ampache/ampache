@@ -28,7 +28,7 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 <!-- Propelled by Ampache | ampache.org -->
 <?php UI::show_custom_style(); ?>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-<title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_("Album Art"); ?></title>
+<title><?php echo AmpConfig::get('site_title') . " - " . T_("Album Art"); ?></title>
 </head>
 <body onload="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php

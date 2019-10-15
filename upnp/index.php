@@ -23,7 +23,7 @@ if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
         echo '<meta http-equiv="refresh" content="1">';
     }
 ?>
-<title>Ampache UPnP</title>
+<title><?php echo T_("Ampache") . " " . T_("UPnP"); ?></title>
 <style type="text/css" media="screen">
 body {
     color:black;

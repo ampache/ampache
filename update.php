@@ -62,7 +62,7 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo AmpConfig::get('site_title'); ?> - Update</title>
+    <title><?php echo AmpConfig::get('site_title') . ' - ' . T_('Update'); ?></title>
     <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
