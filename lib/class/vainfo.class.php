@@ -223,7 +223,7 @@ class vainfo
         }
 
         /* Figure out what type of file we are dealing with */
-        $this->type = $this->_get_type();
+        $this->type = $this->_get_type() ?: '';
 
         if (in_array('filename', $enabled_sources)) {
             $this->tags['filename'] = $this->_parse_filename($this->filename);

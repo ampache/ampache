@@ -54,6 +54,7 @@ class Dba
 
     /**
      * query
+     * @return PDOStatement|boolean
      */
     public static function query($sql, $params = array())
     {
@@ -125,6 +126,7 @@ class Dba
 
     /**
      * write
+     * @return PDOStatement|boolean
      */
     public static function write($sql, $params = null)
     {
