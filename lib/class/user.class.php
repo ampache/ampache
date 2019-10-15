@@ -899,7 +899,7 @@ class User extends database_object
 
         if (!$noscrobble) {
             $this->set_preferences();
-            // If pthreads available, we call save_songplay in a new thread to quickly return
+            // If pthreads available, we call save_mediaplay in a new thread to quickly return
             if (class_exists("Thread", false)) {
                 debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
                 $thread = new scrobbler_async(Core::get_global('user'), $media);
