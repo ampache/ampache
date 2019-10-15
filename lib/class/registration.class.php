@@ -95,7 +95,7 @@ class Registration
         $mailer = new Mailer();
         $mailer->set_default_sender();
 
-        /* HINT: Ampache Site Title */
+        /* HINT: Ampache site_title */
         $mailer->subject = sprintf(T_("Account enabled at %s"), AmpConfig::get('site_title'));
         /* HINT: Username */
         $mailer->message = sprintf(T_("A new user has been enabled. %s"), $username) .

@@ -27,7 +27,7 @@ if (empty($logo_url)) {
 
 $web_path = AmpConfig::get('web_path');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html lang="en-US">
     <head>
         <!-- Propelled by Ampache | ampache.org -->

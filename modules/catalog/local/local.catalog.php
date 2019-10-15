@@ -188,7 +188,7 @@ class Catalog_local extends Catalog
         if (!Core::is_readable($path)) {
             debug_event('local.catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
             /* HINT: directory (file path) */
-            AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), scrub_out($data['path'])));
+            AmpError::add('general', sprintf(T_("The folder couldn't be read. Does it exist? %s"), scrub_out($data['path'])));
 
             return false;
         }
@@ -200,7 +200,7 @@ class Catalog_local extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('local.catalog', 'Cannot add catalog with duplicate path ' . $path, 1);
             /* HINT: directory (file path) */
-            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $path));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing local Catalog: %s'), $path));
 
             return false;
         }
@@ -346,7 +346,7 @@ class Catalog_local extends Catalog
             if (!Core::is_readable($full_file)) {
                 // not readable, warn user
                 debug_event('local.catalog', "$full_file is not readable by Ampache", 2);
-                /* HINT: FullFile */
+                /* HINT: filename (file path) */
                 AmpError::add('catalog_add', sprintf(T_("The file couldn't be read. Does it exist? %s"), $full_file));
 
                 return false;

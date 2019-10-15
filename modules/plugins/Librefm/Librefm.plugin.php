@@ -105,7 +105,7 @@ class Ampachelibrefm
     } // upgrade
 
     /**
-     * save_songplay
+     * save_mediaplay
      * This takes care of queueing and then submitting the tracks.
      */
     public function save_mediaplay($song)

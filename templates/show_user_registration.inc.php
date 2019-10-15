@@ -30,7 +30,7 @@ $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
 $_SESSION['login'] = true;
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 
 <head>

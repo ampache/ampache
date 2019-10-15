@@ -235,7 +235,7 @@ function sort_move_file($song, $fullname, $test_mode) {
                 debug_event('sort_files.inc', "Creating $path directory", 4);
                 $results = mkdir($path);
                 if (!$results) {
-                    /* HINT: filename (File path) */
+                    /* HINT: Directory (File path) */
                     printf (T_("There was a problem creating this directory: %s"), $path);
                     echo "\n";
                     return false;

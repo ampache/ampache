@@ -112,7 +112,7 @@ class Catalog_beetsremote extends Beets\Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('beetsremote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
-            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $uri));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing Beets Catalog: %s'), $uri));
 
             return false;
         }

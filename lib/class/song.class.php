@@ -969,16 +969,24 @@ class Song extends database_object implements media, library_item
      */
     public function set_played($user, $agent, $location, $date = null)
     {
+        $previous = Stats::get_last_song($user);
+        $diff     = time() - $previous['date'];
+
+        // try to keep a difference between recording stats but also allowing short songs
+        if ($diff < 10 && !$this->time < 10) {
+            debug_event('song.class', 'Last song played within ' . $diff . ' seconds, not recording stats', 3);
+
+            return false;
+        }
+
         Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date);
         Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date);
         Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date);
 
-        if ($this->played) {
-            return true;
+        if (!$this->played) {
+            /* If it hasn't been played, set it! */
+            self::update_played(true, $this->id);
         }
-
-        /* If it hasn't been played, set it! */
-        self::update_played(true, $this->id);
 
         return true;
     } // set_played
