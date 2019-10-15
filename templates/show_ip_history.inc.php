@@ -40,7 +40,7 @@
 </div>
 <br />
 <br />
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <colgroup>
   <col id="col_date" />
   <col id="col_ipaddress" />

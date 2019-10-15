@@ -22,7 +22,7 @@
 ?>
 <?php UI::show_box_top(T_('Add Radio Station'), 'box box_add_live_stream'); ?>
 <form name="radio" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=create">
-<table class="tabledata" cellspacing="0" cellpadding="0">
+<table class="tabledata">
 <tr>
     <td><?php echo T_('Name'); ?></td>
     <td>

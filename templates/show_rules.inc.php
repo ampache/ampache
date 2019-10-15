@@ -27,11 +27,11 @@ if ($playlist) {
 }
 $logic_operator = strtolower($logic_operator);
 ?>
-<script type="text/javascript" src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
-<script type="text/javascript" src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>"></script>
 
 <?php UI::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
-<table class="tabledata" cellpadding="3" cellspacing="0">
+<table class="tabledata">
 <tbody id="searchtable">
     <tr id="rules_operator">
     <td><?php echo T_('Match'); ?></td>
@@ -52,7 +52,7 @@ $logic_operator = strtolower($logic_operator);
             <?php echo UI::get_icon('add'); ?>
         <?php echo T_('Add Another Rule'); ?>
         </a>
-        <script type="text/javascript">$('#addrowbutton').on('click', SearchRow.add);</script>
+        <script>$('#addrowbutton').on('click', SearchRow.add);</script>
     </td>
     </tr>
 </tbody>
@@ -70,6 +70,6 @@ if ($playlist) {
 if ($out) {
     echo $out;
 } else {
-    echo '<script type="text/javascript">SearchRow.add();</script>';
+    echo '<script>SearchRow.add();</script>';
 }
 ?>

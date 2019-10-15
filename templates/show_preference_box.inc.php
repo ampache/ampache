@@ -28,7 +28,7 @@ if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
 }
 ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <colgroup>
   <col id="col_preference" />
   <col id="col_value" />

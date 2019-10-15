@@ -105,7 +105,7 @@ class AmpacheGoogleMaps
             return false;
         }
 
-        echo '<script type="text/javascript">' . "\n";
+        echo '<script>' . "\n";
         echo 'function map_ready() {' . "\n";
         echo 'var mapOptions = {' . "\n";
         if (count($pts) > 0) {

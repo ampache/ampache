@@ -436,7 +436,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "</div>" . "\n";
                     $xsl .= "<div class=\"newscontent\">" . "\n";
                     $xsl .= "<div class=\"streamheader\">" . "\n";
-                    $xsl .= "<table cellspacing=\"0\" cellpadding=\"0\">" . "\n";
+                    $xsl .= "<table>" . "\n";
                     $xsl .= "<colgroup align=\"left\"></colgroup>" . "\n";
                     $xsl .= "<colgroup align=\"right\" width=\"300\"></colgroup>" . "\n";
                     $xsl .= "<tr>" . "\n";
@@ -447,7 +447,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "</table>" . "\n";
                     $xsl .= "</div>" . "\n";
-                    $xsl .= "<table border=\"0\" cellpadding=\"4\">" . "\n";
+                    $xsl .= "<table>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Stream Title:</td>" . "\n";
                     $xsl .= "<td class=\"streamdata\">" . $channel->name . "</td>" . "\n";

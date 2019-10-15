@@ -56,3 +56,7 @@ body#install-page {
     background-color: #000;
     background-image: none;
 }
+
+.database-update {
+    text-align: center;
+}

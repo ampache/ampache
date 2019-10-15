@@ -24,7 +24,7 @@ if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
     }
 ?>
 <title><?php echo T_("Ampache") . " " . T_("UPnP"); ?></title>
-<style type="text/css" media="screen">
+<style media="screen">
 body {
     color:black;
     background-color:white;

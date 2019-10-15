@@ -75,7 +75,7 @@ if (User::is_registered()) {
 </li>
 </ul>
 
-<script type="text/javascript">
+<script>
 $(function() {
     $(".header").click(function () {
 

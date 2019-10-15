@@ -24,7 +24,7 @@
 UI::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog');
 ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
-    <table class="tabledata" cellspacing="0" cellpadding="0">
+    <table class="tabledata">
         <tr>
             <td><?php echo T_('Name'); ?>:</td>
             <td><input type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>" autofocus></input></td>

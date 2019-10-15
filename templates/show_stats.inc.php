@@ -25,7 +25,7 @@ $catalogs = Catalog::get_catalogs();
 ?>
 <?php UI::show_box_top(T_('Statistics'), 'box box_stats'); ?>
 <em><?php echo T_('Catalogs'); ?></em>
-<table class="tabledata" cellpadding="3" cellspacing="1">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th><?php echo T_('Connected Users'); ?></th>
@@ -64,7 +64,7 @@ $catalogs = Catalog::get_catalogs();
     </tbody>
 </table>
 <hr />
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <colgroup>
       <col id="col_catalog" />
       <col id="col_path" />

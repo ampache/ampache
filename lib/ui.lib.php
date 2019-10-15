@@ -67,7 +67,7 @@ function catalog_worker($action, $catalogs = null, $options = null)
  */
 function sse_worker($url)
 {
-    echo '<script type="text/javascript">';
+    echo '<script>';
     echo "sse_worker('$url');";
     echo "</script>\n";
 }
@@ -638,7 +638,7 @@ function xml_get_footer($type)
  */
 function toggle_visible($element)
 {
-    echo '<script type="text/javascript">';
+    echo '<script>';
     echo "toggleVisible('$element');";
     echo "</script>\n";
 } // toggle_visible
@@ -691,10 +691,10 @@ function show_table_render($render = false, $force = false)
     // Include table render javascript only once
     if ($force || !defined('TABLE_RENDERED')) {
         define('TABLE_RENDERED', 1); ?>
-        <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" type="text/javascript"></script>
+        <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js"></script>
         <?php if (isset($render) && $render) {
             ?>
-            <script type="text/javascript">sortPlaylistRender();</script>
+            <script>sortPlaylistRender();</script>
         <?php
         }
     }

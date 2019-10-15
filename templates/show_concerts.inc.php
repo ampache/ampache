@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Coming Events'), 'info-box'); ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th class="cel_date"><?php echo T_('Date'); ?></th>
@@ -49,7 +49,7 @@
 </table>
 <?php UI::show_box_bottom(); ?>
 <?php UI::show_box_top(T_('Past Events'), 'info-box'); ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th class="cel_date"><?php echo T_('Date'); ?></th>

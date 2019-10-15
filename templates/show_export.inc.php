@@ -27,7 +27,7 @@ ${$name} = ' selected="selected"';
 
 UI::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
 <form name="export" action="<?php echo AmpConfig::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data" >
-<table class="tableform" cellspacing="0" cellpadding="3">
+<table class="tableform">
 <tr>
     <td valign="top"><strong><?php echo T_('Catalog'); ?>:</strong></td>
     <td>

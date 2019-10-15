@@ -21,7 +21,7 @@
  */
 
 UI::show_box_top(T_('Manage'));  ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <tr class="th-top">
         <th class="cel_number"><?php echo T_('Playlist'); ?></th>
         <th class="cel_base_playlist"><?php echo T_('Base Playlist'); ?></th>

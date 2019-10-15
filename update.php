@@ -41,7 +41,7 @@ if (Core::get_request('action') == 'update') {
         set_time_limit(300);
         AutoUpdate::update_files();
         AutoUpdate::update_dependencies();
-        echo '<script type="text/javascript">window.location="' . AmpConfig::get('web_path') . '";</script>';
+        echo '<script>window.location="' . AmpConfig::get('web_path') . '";</script>';
 
         return false;
     } else {

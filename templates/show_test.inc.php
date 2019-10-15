@@ -55,7 +55,7 @@
             </p>
         </div>
         <div>
-            <table class="table" cellpadding="3" cellspacing="0">
+            <table class="table">
                 <tr>
                     <th><?php echo T_('Check'); ?></th>
                     <th><?php echo T_('Status'); ?></th>

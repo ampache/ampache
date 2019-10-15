@@ -45,7 +45,7 @@ if (AmpConfig::get('now_playing_css_file')) {
 }
 if (AmpConfig::get('now_playing_refresh_limit') > 1) {
     $refresh_limit = AmpConfig::get('now_playing_refresh_limit'); ?>
-    <script type="text/javascript" >
+    <script>
         reload = window.setInterval(function(){ window.location.reload(); }, <?php echo $refresh_limit ?> * 1000);
     </script>
 <?php

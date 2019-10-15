@@ -277,7 +277,7 @@ abstract class Catalog extends database_object
      */
     public static function show_catalog_types($divback = 'catalog_type_fields')
     {
-        echo '<script type="text/javascript">' .
+        echo '<script>' .
             "var type_fields = new Array();" .
             "type_fields['none'] = '';";
         $seltypes = '<option value="none">[Select]</option>';
@@ -313,7 +313,7 @@ abstract class Catalog extends database_object
             "var sel = document.getElementById('catalog_type');" .
             "var seltype = sel.options[sel.selectedIndex].value;" .
             "var ftbl = document.getElementById('" . $divback . "');" .
-            "ftbl.innerHTML = '<table class=\"tabledata\" cellpadding=\"0\" cellspacing=\"0\">' + type_fields[seltype] + '</table>';" .
+            "ftbl.innerHTML = '<table class=\"tabledata\">' + type_fields[seltype] + '</table>';" .
             "} </script>" .
             "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
     }

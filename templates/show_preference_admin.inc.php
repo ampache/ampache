@@ -23,7 +23,7 @@
 UI::show_box_top(T_('Preferences'));
 ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/preferences.php" enctype="multipart/form-data">
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <colgroup>
   <col id="col_preference" />
   <col id="col_level" />

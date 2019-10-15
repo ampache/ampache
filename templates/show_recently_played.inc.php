@@ -23,7 +23,7 @@
 $link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played') :  '';
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
 ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th class="cel_play"></th>
@@ -158,7 +158,7 @@ foreach ($data as $row) {
 ?>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=recent<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>
-<script type="text/javascript">
+<script>
 $(document).ready(function () {
     $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
 });

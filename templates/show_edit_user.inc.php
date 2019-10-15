@@ -23,7 +23,7 @@
 <?php UI::show_box_top(T_('Editing Existing User')); ?>
 <?php AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php"; ?>">
-    <table class="tabledata" cellspacing="0" cellpadding="0">
+    <table class="tabledata">
         <tr>
             <th colspan="2"><?php echo T_('User Properties'); ?></th>
         </tr>

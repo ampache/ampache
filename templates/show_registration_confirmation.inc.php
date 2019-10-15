@@ -39,9 +39,9 @@ $_SESSION['login'] = true;
             <div id="header">
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
             </div>
-            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" type="text/javascript"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/base.js" type="text/javascript"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" type="text/javascript"></script>
+            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
             <div id="content">
                 <div id="guts">
                     <?php

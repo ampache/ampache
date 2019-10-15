@@ -26,7 +26,7 @@ $video_type = strtolower(get_class($libitem));
 ?>
 <div>
     <form method="post" id="edit_video_<?php echo $libitem->id; ?>" class="edit_dialog_content">
-        <table class="tabledata" cellspacing="0" cellpadding="0">
+        <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>

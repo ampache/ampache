@@ -170,7 +170,7 @@ if ($upload_max > 0) {
 <?php
 }
 ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <?php if (!AmpConfig::get('upload_user_artist')) {
     ?>
 <tr>
