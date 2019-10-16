@@ -117,7 +117,7 @@ if ($video_type != 'video') {
      }
 if (Access::check_function('download')) {
     ?>
-    <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+    <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
 <?php
 }
     if (Access::check('interface', '50')) {

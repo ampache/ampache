@@ -147,7 +147,7 @@ class Ampache_RSS
             }
         }
 
-        $string = '<a rel="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $strparams . '">' . UI::get_icon('feed', T_('RSS Feed'));
+        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $strparams . '">' . UI::get_icon('feed', T_('RSS Feed'));
         if (!empty($title)) {
             $string .= ' &nbsp;' . $title;
         }

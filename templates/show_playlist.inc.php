@@ -75,7 +75,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php if (Access::check_function('batch_download') && check_can_zip('playlist')) {
         ?>
         <li>
-            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
+            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
                 <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
                 &nbsp;&nbsp;<?php echo T_('Batch Download'); ?>
             </a>
