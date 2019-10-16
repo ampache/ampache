@@ -49,5 +49,4 @@
     } ?>
     </tbody>
 </table>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js"></script>
 <?php UI::show_box_bottom(); ?>
