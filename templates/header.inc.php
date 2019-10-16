@@ -71,7 +71,6 @@ $t_logout    = T_('Log out');
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jstree/dist/themes/default/style.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.min.css" type="text/css" media="screen" />
 
@@ -85,7 +84,6 @@ $t_logout    = T_('Log out');
         <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/src/jquery.qrcode.js"></script>
         <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/responsive-elements/responsive-elements.js"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-Knob/js/jquery.knob.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.iframe-transport.js"></script>
