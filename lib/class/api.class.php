@@ -164,7 +164,7 @@ class Api
             $passphrase = Core::get_post('auth');
         }
         $username = trim($input['user']);
-        $user_ip  = Core::get_server('REMOTE_ADDR');
+        $user_ip  = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
         if (isset($input['version'])) {
             // If version is provided, use it
             $version = $input['version'];

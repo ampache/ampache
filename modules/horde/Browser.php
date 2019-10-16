@@ -1050,9 +1050,9 @@ class Horde_Browser
      */
     public function getIPAddress()
     {
-        return empty($_SERVER['HTTP_X_FORWARDED_FOR'])
-            ? filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP)
-            : $_SERVER['HTTP_X_FORWARDED_FOR'];
+        return filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')
+            ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+            : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
     }
 
     /**

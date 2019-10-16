@@ -4,6 +4,7 @@
 
 * Resolve CVE-2019-12385 for the SQL Injection
 * Resolve CVE-2019-12386 for the persistent XSS
+* Resolve NS-18-046 Multiple Reflected Cross-site Scripting Vulnerabilities in Ampache 3.9.0
 * Remove charts/graphs that use non-free graph library pchart
 * Update the CSS theme colors and structure.
 * Light theme updated.
@@ -75,6 +76,7 @@
 * Subsonic - New Method: getTopSongs
 * Subsonic - Fix cover art for playlists and albums
 * Subsonic - Enable getChatMessages, addMessage allowing server chat
+* Subsonic - Api fixes for podcast playback, Ultrasonic/Dsub workarounds
 * Added SVG support to the theme engine.
 * New Plugin - Matomo.plugin. [<https://matomo.org/>]
 * New Plugin - ListenBrainz.plugin [<https://listenbrainz.org/>]
@@ -82,6 +84,7 @@
 * Fix MySQL8 installation using mysql_native_password
 * Fix Catalog Manager can now access catalog areas correctly
 * Fix allow cli tools to use system settings for plugins.
+* HTML5 doctype across the board. (<!DOCTYPE html>)
 
 ## 3.9.1
 

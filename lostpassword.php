@@ -36,19 +36,13 @@ switch ($_REQUEST['action']) {
     case 'send':
         /* Check for posted email */
         $result = false;
-        if (isset($_POST['email']) && Core::get_post('email')) {
+        if (filter_has_var(INPUT_POST, 'email') && Core::get_post('email')) {
             /* Get the email address and the current ip*/
             $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
             $current_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') ? Core::get_server('HTTP_X_FORWARDED_FOR') : Core::get_server('REMOTE_ADDR');
             $result     = send_newpassword($email, $current_ip);
         }
-        /* Do not acknowledge a password has been sent or failed
-        if ($result) {
-            AmpError::add('general', T_('Password has been sent'));
-        } else {
-            AmpError::add('general', T_('Password was not sent'));
-        }*/
-
+        // Do not acknowledge a password has been sent or failed and go back to login
         require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');
         break;
     default:
