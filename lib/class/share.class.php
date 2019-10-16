@@ -438,7 +438,7 @@ class Share extends database_object
                     // Add session information to the link to avoid authentication
                     $dllink .= "&ssid=" . Stream::get_session();
                 }
-                echo "<li><a rel=\"nohtml\" href=\"" . $dllink . "\">" . UI::get_icon('download', T_('Temporary direct link')) . " &nbsp;" . T_('Temporary direct link') . "</a></li>";
+                echo "<li><a class=\"nohtml\" href=\"" . $dllink . "\">" . UI::get_icon('download', T_('Temporary direct link')) . " &nbsp;" . T_('Temporary direct link') . "</a></li>";
             }
         }
         echo "<li style='padding-top: 8px; text-align: right;'>";
