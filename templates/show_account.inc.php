@@ -125,7 +125,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
                     } ?>
                     <br />
                     <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
-                        <a href="<?php echo $apikey_qrcode; ?>" rel="nohtml"><div id="apikey_qrcode"></div></a>
+                        <a href="<?php echo $apikey_qrcode; ?>" class="nohtml"><div id="apikey_qrcode"></div></a>
                     </div>
                     <br />
                     <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>', background: '#ffffff', foreground: '#000000'});</script>

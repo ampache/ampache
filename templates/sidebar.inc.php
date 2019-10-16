@@ -69,7 +69,7 @@ if (User::is_registered()) {
 }
 ?>
         <li id="sb_tab_logout" class="sb1">
-            <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" rel="nohtml" >
+            <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" class="nohtml" >
             <?php echo UI::get_icon('logout', $t_logout); ?>
             </a>
 </li>

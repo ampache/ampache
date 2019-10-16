@@ -83,7 +83,7 @@
 <?php
     if (Access::check_function('batch_download') && check_can_zip('playlist')) {
         ?>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id; ?>">
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
         </a>
 <?php
