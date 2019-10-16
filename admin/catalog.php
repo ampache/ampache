@@ -31,7 +31,7 @@ if (!Access::check('interface', '75')) {
 
 UI::show_header();
 
-$catalogs = $_REQUEST['catalogs'];
+$catalogs = filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_STRING);
 $action   = Core::get_request('action');
 // If only one catalog, check it is ready.
 if (is_array($catalogs) && count($catalogs) == 1 && $action !== 'delete_catalog' && $action !== 'show_delete_catalog') {
