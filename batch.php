@@ -44,12 +44,12 @@ switch ($_REQUEST['action']) {
 		$name = $GLOBALS['user']->username . ' - Playlist';
 	break;
 	case 'playlist':
-		$playlist = new Playlist($_REQUEST['id']);
+		$playlist = new Playlist(scrub_in($_REQUEST['id']));
 		$media_ids = $playlist->get_songs();
 		$name = $playlist->name;
 	break;
 	case 'smartplaylist':
-		$search = new Search('song', $_REQUEST['id']);
+		$search = new Search('song', scrub_in($_REQUEST['id']));
 		$sql = $search->to_sql();
 		$sql = $sql['base'] . ' ' . $sql['table_sql'] . ' WHERE ' . 
 			$sql['where_sql'];
@@ -61,17 +61,17 @@ switch ($_REQUEST['action']) {
 		$name = $search->name;
 	break;
 	case 'album':
-		$album = new Album($_REQUEST['id']);
+		$album = new Album(scrub_in($_REQUEST['id']));
 		$media_ids = $album->get_songs();
 		$name = $album->name;
 	break;
 	case 'artist':
-		$artist = new Artist($_REQUEST['id']);
+		$artist = new Artist(scrub_in($_REQUEST['id']));
 		$media_ids = $artist->get_songs();
 		$name = $artist->name;
 	break;
 	case 'browse':
-		$id = scrub_in($_REQUEST['browse_id']);
+		$id = scrub_in(scrub_in($_REQUEST['browse_id']));
 		$browse = new Browse($id);
 		$browse_media_ids = $browse->get_saved();
 		$media_ids = array();

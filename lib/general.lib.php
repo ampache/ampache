@@ -70,17 +70,19 @@ function generate_password($length = null) {
 /**
  * scrub_in
  * Run on inputs, stuff that might get stuck in our db
+ * @param string|array $input
+ * @return string|array
  */
 function scrub_in($input) {
-
 	if (!is_array($input)) {
-		return stripslashes(htmlspecialchars(strip_tags($input)));
+		return stripslashes(htmlspecialchars(strip_tags($input), ENT_NOQUOTES, AmpConfig::get('site_charset')));
 	}
 	else {
 		$results = array();
-		foreach($input as $item) {
+		foreach ($input as $item) {
 			$results[] = scrub_in($item);
 		}
+
 		return $results;
 	}
 } // scrub_in

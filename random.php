@@ -32,7 +32,7 @@ show_header();
 
 switch ($_REQUEST['action']) {
 	case 'get_advanced':
-		$object_ids = Random::advanced($_REQUEST['type'], $_POST);
+		$object_ids = Random::advanced(scrub_in($_REQUEST['type']), $_POST);
 
 		// We need to add them to the active playlist
 		foreach ($object_ids as $object_id) {

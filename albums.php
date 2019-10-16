@@ -84,7 +84,7 @@ switch ($_REQUEST['action']) {
 
 			if ($image_data) {
 				$art->insert($image_data,$upload['0']['mime']);
-				show_confirmation(T_('Album Art Inserted'),'',"/albums.php?action=show&amp;album=" . $_REQUEST['album_id']);
+				show_confirmation(T_('Album Art Inserted'),'',"/albums.php?action=show&amp;album=" . scrub_in($_REQUEST['album_id']));
 				break;
 
 			} // if image data

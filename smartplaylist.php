@@ -26,7 +26,7 @@ require_once 'lib/init.php';
 // We special-case this so we can send a 302 if the delete succeeded
 if ($_REQUEST['action'] == 'delete_playlist') {
 	// Check rights
-	$playlist = new Search('song', $_REQUEST['playlist_id']);
+	$playlist = new Search('song', scrub_in($_REQUEST['playlist_id']));
 	if ($playlist->has_access()) {
 		$playlist->delete();
 		// Go elsewhere
@@ -46,8 +46,8 @@ switch ($_REQUEST['action']) {
 		}
 
 		foreach ($_REQUEST as $key => $value) {
-			$prefix = substr($key, 0, 4);
-			$value = trim($value);
+			$prefix = substr(scrub_in($key), 0, 4);
+			$value = trim(scrub_in($value));
 
 			if ($prefix == 'rule' && strlen($value)) {
 				$rules[$key] = Dba::escape($value);
@@ -77,12 +77,12 @@ switch ($_REQUEST['action']) {
 		access_denied();
 	break;
 	case 'show_playlist':
-		$playlist = new Search('song', $_REQUEST['playlist_id']);
+		$playlist = new Search('song', scrub_in($_REQUEST['playlist_id']));
 		$playlist->format();
 		require_once Config::get('prefix') . '/templates/show_smartplaylist.inc.php';
 	break;
 	case 'update_playlist':
-		$playlist = new Search('song', $_REQUEST['playlist_id']);
+		$playlist = new Search('song', scrub_in($_REQUEST['playlist_id']));
 		if ($playlist->has_access()) {
 			$playlist->parse_rules(Search::clean_request($_REQUEST));
 			$playlist->update();

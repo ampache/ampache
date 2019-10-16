@@ -35,9 +35,9 @@ show_header();
  */
 switch($_REQUEST['action']) {
 	case 'show':
-		$artist = new Artist($_REQUEST['artist']);
+		$artist = new Artist(scrub_in($_REQUEST['artist']));
 		$artist->format();
-		$object_ids = $artist->get_albums($_REQUEST['catalog']);
+		$object_ids = $artist->get_albums(scrub_in($_REQUEST['catalog']));
 		$object_type = 'album';
 		require_once Config::get('prefix') . '/templates/show_artist.inc.php';
 		if (Config::get('show_similar')) {
@@ -50,7 +50,7 @@ switch($_REQUEST['action']) {
 		}
 		break;
 	case 'show_all_songs':
-		$artist = new Artist($_REQUEST['artist']);
+		$artist = new Artist(scrub_in($_REQUEST['artist']));
 		$artist->format();
 		$object_type = 'song';
 		$object_ids = $artist->get_songs();
@@ -58,19 +58,19 @@ switch($_REQUEST['action']) {
         break;
 	case 'update_from_tags':
 		$type		= 'artist';
-		$object_id	= intval($_REQUEST['artist']);
+		$object_id	= intval(scrub_in($_REQUEST['artist']));
 		$target_url	= Config::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
 		require_once Config::get('prefix') . '/templates/show_update_items.inc.php';
 	break;
 	case 'rename_similar':
 		if (!$user->has_access('100')) { access_denied(); }
 		$count = 0;
-		if (isset($_REQUEST['artist']) && is_numeric($_REQUEST['artist']) && isset($_REQUEST['artists']) && is_array($_REQUEST['artists'])) {
-			$artist = new Artist($_REQUEST['artist']);
+		if (isset(scrub_in($_REQUEST['artist'])) && is_numeric(scrub_in($_REQUEST['artist'])) && isset($_REQUEST['artists']) && is_array($_REQUEST['artists'])) {
+			$artist = new Artist(scrub_in($_REQUEST['artist']));
 			if ($artist->id)
 			foreach ($_REQUEST['artists'] as $artist_id) {
 				if (is_numeric($artist_id)) {
-					$that_artist = new Artist($artist_id);
+					$that_artist = new Artist(scrub_in($artist_id));
 					if ($that_artist->id) {
 						$that_artist->merge($artist->id);
 						$count++;
@@ -81,7 +81,7 @@ switch($_REQUEST['action']) {
 				}
 			}
 			else
-				$GLOBALS['error']->add_error('general', sprintf(T_('Error: No such artist \'%s\''), $_REQUEST['artist']));
+				$GLOBALS['error']->add_error('general', sprintf(T_('Error: No such artist \'%s\''), scrub_in($_REQUEST['artist'])));
 		} else {
 			$GLOBALS['error']->add_error('general', T_("Error: Errenous request"));
 		}
@@ -102,7 +102,7 @@ switch($_REQUEST['action']) {
 			exit;
 		}
 
-		$artist = new Artist($_REQUEST['artist']);
+		$artist = new Artist(scrub_in($_REQUEST['artist']));
 		//options
 		$similar_artists = $artist->get_similar_artists(
 						make_bool($_POST['n_rep_uml']),
@@ -123,7 +123,7 @@ switch($_REQUEST['action']) {
 		if (!$user->has_access('100')) { access_denied(); }
 
 		/* Get the artist */
-		$artist = new Artist($_REQUEST['artist']);
+		$artist = new Artist(scrub_in($_REQUEST['artist']));
 		$catalog = new Catalog();
 
 		//check if we've been given a target
@@ -181,7 +181,7 @@ switch($_REQUEST['action']) {
 		}
     	break;
 	case 'show_rename':
-		$artist = new Artist($_REQUEST['artist']);
+		$artist = new Artist(scrub_in($_REQUEST['artist']));
 		require (conf('prefix') . '/templates/show_rename_artist.inc.php');
 	break;
 	case 'match':
