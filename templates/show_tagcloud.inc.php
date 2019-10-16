@@ -74,7 +74,7 @@ $tag_types = array(
 
 <br /><br /><br />
 <?php
-if (isset($_GET['show_tag'])) {
+if (filter_has_var(INPUT_GET, 'show_tag')) {
             $show_tag = (int) (Core::get_get('show_tag')); ?>
 <script>
 $(document).ready(function () {

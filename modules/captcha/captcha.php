@@ -615,7 +615,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
       $dest         = $this->create();
 
         #-- URL param ?hires=1 influences used drawing scheme
-        if (isset($_GET["hires"])) {
+        if (filter_has_var(INPUT_GET, 'hires')) {
             $single_pixel = 0;
         }
 
@@ -965,7 +965,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     #-- give ok, if captach had already been solved recently
     public function solved($ignore = 0)
     {
-        if (CAPTCHA_PERSISTENT && isset($_COOKIE[$this->cookie()])) {
+        if (CAPTCHA_PERSISTENT && filter_has_var(INPUT_COOKIE, $this->cookie())) {
             return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
         }
     }

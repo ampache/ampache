@@ -32,7 +32,7 @@ if (!Core::is_library_item($object_type)) {
     return false;
 }
 $burl = '';
-if (isset($_GET['burl'])) {
+if (filter_has_var(INPUT_GET, 'burl')) {
     $burl = base64_decode(Core::get_get('burl'));
 }
 $item = new $object_type($object_id);

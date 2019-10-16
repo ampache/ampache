@@ -101,38 +101,38 @@ switch ($_REQUEST['action']) {
         $libitem = new $object_type($_POST['id']);
         if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
             // TODO: improve this uniqueless check
-            if (isset($_POST['user'])) {
+            if (filter_has_var(INPUT_POST, 'user')) {
                 unset($_POST['user']);
             }
-            if (isset($_POST['artist'])) {
+            if (filter_has_var(INPUT_POST, 'artist')) {
                 unset($_POST['artist']);
             }
-            if (isset($_POST['artist_name'])) {
+            if (filter_has_var(INPUT_POST, 'artist_name')) {
                 unset($_POST['artist_name']);
             }
-            if (isset($_POST['album'])) {
+            if (filter_has_var(INPUT_POST, 'album')) {
                 unset($_POST['album']);
             }
-            if (isset($_POST['album_name'])) {
+            if (filter_has_var(INPUT_POST, 'album_name')) {
                 unset($_POST['album_name']);
             }
-            if (isset($_POST['album_artist'])) {
+            if (filter_has_var(INPUT_POST, 'album_artist')) {
                 unset($_POST['album_artist']);
             }
-            if (isset($_POST['album_artist_name'])) {
+            if (filter_has_var(INPUT_POST, 'album_artist_name')) {
                 unset($_POST['album_artist_name']);
             }
-            if (isset($_POST['edit_tags'])) {
+            if (filter_has_var(INPUT_POST, 'edit_tags')) {
                 $_POST['edit_tags'] = Tag::clean_to_existing($_POST['edit_tags']);
             }
-            if (isset($_POST['edit_labels'])) {
+            if (filter_has_var(INPUT_POST, 'edit_labels')) {
                 $_POST['edit_labels'] = Label::clean_to_existing($_POST['edit_labels']);
             }
             // Check mbid and *_mbid match as it is used as identifier
-            if (isset($_POST['mbid'])) {
+            if (filter_has_var(INPUT_POST, 'mbid')) {
                 $_POST['mbid'] = $libitem->mbid;
             }
-            if (isset($_POST['mbid_group'])) {
+            if (filter_has_var(INPUT_POST, 'mbid_group')) {
                 $_POST['mbid_group'] = $libitem->mbid_group;
             }
         }

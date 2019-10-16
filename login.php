@@ -23,7 +23,7 @@
 define('NO_SESSION', '1');
 require_once 'lib/init.php';
 // Avoid form login if still connected
-if (AmpConfig::get('use_auth') && !isset($_GET['force_display'])) {
+if (AmpConfig::get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
     $auth = false;
     if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         $auth = true;

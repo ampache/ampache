@@ -194,10 +194,11 @@ switch ($action) {
     case 'set_userflag':
         if (User::is_registered()) {
             ob_start();
-            $userflag = new Userflag(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['userflag_type']);
+            $flagtype = Core::get_get('userflag_type');
+            $userflag = new Userflag(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $flagtype);
             $userflag->set_flag($_GET['userflag']);
-            Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['userflag_type']);
-            $key           = "userflag_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . $_GET['userflag_type'];
+            Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $flagtype);
+            $key           = "userflag_" . Core::get_get('object_id') . "_" . $flagtype;
             $results[$key] = ob_get_contents();
             ob_end_clean();
         } else {

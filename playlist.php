@@ -109,7 +109,7 @@ switch ($_REQUEST['action']) {
             debug_event('playlist', $key . '=' . Core::get_get($key), 5);
         }
 
-        if (isset($_GET['order'])) {
+        if (filter_has_var(INPUT_GET, 'order')) {
             $songs = explode(";", $_GET['order']);
             $track = $_GET['offset'] ? ((int) ($_GET['offset']) + 1) : 1;
             foreach ($songs as $song_id) {

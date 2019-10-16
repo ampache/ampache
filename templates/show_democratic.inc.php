@@ -63,14 +63,14 @@ UI::show_box_top($string, 'info-box');
             if (obj.checked) {
                 setTimeout(function() {
                     if (obj.checked) {
-                        window.location.href = window.location.href<?php echo " + '&dummy=" . time() . "'"; if (!isset($_GET['reloadpage'])) {
+                        window.location.href = window.location.href<?php echo " + '&dummy=" . time() . "'"; if (!filter_has_var(INPUT_GET, 'reloadpage')) {
         echo " + '&reloadpage=1'";
     } ?>;
                     }
                 }, <?php echo(AmpConfig::get('refresh_limit') * 1000); ?>);
             }
         }
-        <?php if (isset($_GET['reloadpage'])) {
+        <?php if (filter_has_var(INPUT_GET, 'reloadpage')) {
         ?>
         $(document).ready(function() {
             reloadPageChanged(document.getElementById('chkreloadpage'));
@@ -78,7 +78,7 @@ UI::show_box_top($string, 'info-box');
         <?php
     } ?>
     </script>
-    <input type="checkbox" id='chkreloadpage' onClick="reloadPageChanged(this);" <?php if (isset($_GET['reloadpage'])) {
+    <input type="checkbox" id='chkreloadpage' onClick="reloadPageChanged(this);" <?php if (filter_has_var(INPUT_GET, 'reloadpage')) {
         echo "checked";
     } ?> /> <?php echo T_('Reload this page automatically'); ?>
 </div>
