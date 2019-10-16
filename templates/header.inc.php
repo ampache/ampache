@@ -392,11 +392,11 @@ $t_logout    = T_('Log out');
                         } else {
                             ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/login.php" rel="nohtml"><?php echo T_('Login'); ?></a>
+                            <a href="<?php echo $web_path; ?>/login.php" class="nohtml"><?php echo T_('Login'); ?></a>
                         <?php
                             if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) {
                                 ?>
-                                / <a href="<?php echo $web_path; ?>/register.php" rel="nohtml"><?php echo T_('Register'); ?></a>
+                                / <a href="<?php echo $web_path; ?>/register.php" class="nohtml"><?php echo T_('Register'); ?></a>
                         <?php
                             } ?>
                         </span>
@@ -539,8 +539,8 @@ $t_logout    = T_('Log out');
                             <div class="fatalerror">
                                 <?php echo T_('Your Ampache config file is out of date!'); ?>
                                 <br />
-                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a new config file to manually update'); ?></a> |
-                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write a new config file directly to disk'); ?></a>
+                                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a new config file to manually update'); ?></a> |
+                                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write a new config file directly to disk'); ?></a>
                             </div>
                 <?php
                         }

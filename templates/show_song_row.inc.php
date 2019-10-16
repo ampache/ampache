@@ -108,7 +108,7 @@ if ($libitem->enabled || Access::check('interface', '50')) {
     }
     if (Access::check_function('download')) {
         ?>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&song_id=<?php echo $libitem->id ?>"><?php echo UI::get_icon('download', T_('Download')) ?></a>
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&song_id=<?php echo $libitem->id ?>"><?php echo UI::get_icon('download', T_('Download')) ?></a>
 <?php
     }
     if (Access::check('interface', '50') || ($libitem->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) {
