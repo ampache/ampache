@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
             $key  = Broadcast::generate_key();
             $broadcast->update_state(true, $key);
             $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '' .
-                '<script type="text/javascript">startBroadcast(\'' . $key . '\');</script>';
+                '<script>startBroadcast(\'' . $key . '\');</script>';
         }
     break;
     case 'unbroadcast':
@@ -61,7 +61,7 @@ switch ($_REQUEST['action']) {
         if ($broadcast->id) {
             $broadcast->update_state(false);
             $results['broadcast'] = Broadcast::get_broadcast_link() . '' .
-                '<script type="text/javascript">stopBroadcast();</script>';
+                '<script>stopBroadcast();</script>';
         }
     break;
     default:

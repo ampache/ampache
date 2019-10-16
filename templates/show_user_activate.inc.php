@@ -29,7 +29,7 @@ $web_path = AmpConfig::get('web_path');
         <!-- Propelled by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
+        <title><?php echo AmpConfig::get('site_title') . ' - ' . T_('Registration'); ?></title>
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
     </head>
     <body id="registerPage">
@@ -38,9 +38,9 @@ $web_path = AmpConfig::get('web_path');
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
                 <span><?php echo T_('Registration Validation'); ?>.</span>
             </div>
-            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" type="text/javascript"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/base.js" type="text/javascript"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" type="text/javascript"></script>
+            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
             <div>
 <?php
     if ($validation == User::get_validation($username) && strlen($validation)) {

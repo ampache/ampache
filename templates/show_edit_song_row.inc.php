@@ -22,7 +22,7 @@
 ?>
 <div>
     <form method="post" id="edit_song_<?php echo $libitem->id; ?>" class="edit_dialog_content">
-        <table class="tabledata" cellspacing="0" cellpadding="0">
+        <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
@@ -110,7 +110,7 @@
         <?php if (Song::isCustomMetadataEnabled()): ?>
             <button class="metadataAccordionButton"><?php echo T_('More Metadata') ?></button>
                     <div class="metadataAccordion">
-                    <table class="tabledata" cellspacing="0" cellpadding="0">
+                    <table class="tabledata">
                         <?php
                         $dismetas = $libitem->getDisabledMetadataFields();
                         foreach ($libitem->getMetadata() as $metadata) {

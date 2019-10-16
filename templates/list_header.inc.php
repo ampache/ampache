@@ -51,7 +51,7 @@ $sides  = 0;
 <?php $this->show_next_link(); ?>
 </p>
 </div>
-<script type="text/javascript">
+<script>
 $('#browse_<?php echo $browse->id; ?>_scroll').jscroll({
     autoTrigger: true,
     nextSelector: 'a.jscroll-next:last',

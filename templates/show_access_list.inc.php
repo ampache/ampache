@@ -45,7 +45,7 @@ $addlocal   = T_('Add Local Network Definition');
 <?php Ajax::start_container('browse_content', 'browse_content'); ?>
 <?php if (count($list)) {
     ?>
-<table cellspacing="1" cellpadding="3" class="tabledata">
+<table class="tabledata">
 <thead>
     <tr class="th-top">
         <th><?php echo T_('Name'); ?></th>

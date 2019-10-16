@@ -28,7 +28,7 @@
 ?>
 <?php /* HINT: Username FullName */ UI::show_box_top(sprintf(T_('Editing %s Preferences'), $client->fullname), 'box box_preferences'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
-<table class="tabledata" cellspacing="0">
+<table class="tabledata">
 <colgroup>
     <col id="col_preference" />
     <col id="col_value" />

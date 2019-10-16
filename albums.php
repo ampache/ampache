@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
             debug_event('albums', $key . '=' . Core::get_get($key), 5);
         }
 
-        if (isset($_GET['order'])) {
+        if (filter_has_var(INPUT_GET, 'order')) {
             $songs = explode(";", Core::get_get('order'));
             $track = filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT) ? ((filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1) : 1;
             foreach ($songs as $song_id) {

@@ -60,7 +60,7 @@
     <?php UI::show_box_bottom(); ?>
 
     <?php UI::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
-        <table class="tabledata" cellpadding="0" cellspacing="0">
+        <table class="tabledata">
             <colgroup>
                 <col id="col_php_setting">
                 <col id="col_php_value">
@@ -113,7 +113,7 @@
     <?php UI::show_box_bottom(); ?>
 
     <?php UI::show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
-        <table class="tabledata" cellpadding="0" cellspacing="0">
+        <table class="tabledata">
             <colgroup>
                <col id="col_configuration">
                <col id="col_value">

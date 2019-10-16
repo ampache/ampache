@@ -948,11 +948,11 @@ class User extends database_object
     public function insert_ip_history()
     {
         if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-            $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            debug_event('user.class', 'Login from IP address: ' . $sip, 3);
+            $sip = filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
+            debug_event('user.class', 'Login from IP address: ' . (string) $sip, 3);
         } else {
-            $sip = Core::get_server('REMOTE_ADDR');
-            debug_event('user.class', 'Login from IP address: ' . $sip, 3);
+            $sip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+            debug_event('user.class', 'Login from IP address: ' . (string) $sip, 3);
         }
 
         // Remove port information if any

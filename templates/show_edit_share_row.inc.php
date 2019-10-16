@@ -22,7 +22,7 @@
 ?>
 <div>
     <form method="post" id="edit_share_<?php echo $libitem->id; ?>" class="edit_dialog_content">
-        <table class="tabledata" cellspacing="0" cellpadding="0">
+        <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Share') ?></td>
                 <td><?php echo $libitem->f_object_link; ?></td>

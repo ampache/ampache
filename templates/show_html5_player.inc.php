@@ -22,7 +22,7 @@ $shuffleoff = T_('Shuffle Off');
 $repeaton   = T_('Repeat');
 $repeatoff  = T_('Repeat Off');
 ?>
-<script type="text/javascript">
+<script>
 // The web player identifier. We currently use current date milliseconds as unique identifier.
 var jpuqid = (new Date()).getMilliseconds();
 var jplaylist = null;
@@ -332,7 +332,7 @@ if (AmpConfig::get('webplayer_aurora')) {
     foreach ($atypes as $atype) {
         $spath = '/modules/aurora.js/' . $atype . '.js';
         if (Core::is_readable(AmpConfig::get('prefix') . $spath)) {
-            echo '<script src="' . AmpConfig::get('web_path') . $spath . '" type="text/javascript"></script>' . "\n";
+            echo '<script src="' . AmpConfig::get('web_path') . $spath . '"></script>' . "\n";
         }
     }
 }
@@ -484,7 +484,7 @@ if ($isVideo) {
             $broadcast = new Broadcast((int) $broadcast_id);
             $key       = Broadcast::generate_key();
             $broadcast->update_state(true, $key);
-            echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script type="text/javascript">startBroadcast(\'' . $key . '\');</script>';
+            echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
         } else {
             echo Broadcast::get_broadcast_link();
         } ?>

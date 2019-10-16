@@ -24,7 +24,7 @@
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=create">
 <input type="hidden" name="type" value="<?php echo scrub_out(Core::get_request('type')); ?>" />
 <input type="hidden" name="id" value="<?php echo scrub_out(Core::get_request('id')); ?>" />
-<table class="tabledata" cellspacing="0" cellpadding="0">
+<table class="tabledata">
 <tr>
     <td><?php echo T_('Stream Source'); ?></td>
     <td>

@@ -26,7 +26,7 @@ $web_path = AmpConfig::get('web_path');
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="user">
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="user">
 <colgroup>
   <col id="col_username" />
   <col id="col_lastseen" />
@@ -106,7 +106,7 @@ foreach ($object_ids as $user_id) {
     </tr>
 </tfoot>
 </table>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" type="text/javascript"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js"></script>
 <?php if ($browse->is_show_header()) {
         require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
     } ?>

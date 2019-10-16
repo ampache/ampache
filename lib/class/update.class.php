@@ -177,7 +177,7 @@ class Update
                          " * Add barcode catalog_number and original_year to albums.<br />" .
                          " * Drop catalog_number from song_data and use album instead.<br />";
         $version[]     = array('version' => '400002', 'description' => $update_string);
-      
+
         $update_string = "* Make sure preference names are updated to current strings<br />";
         $version[]     = array('version' => '400003', 'description' => $update_string);
 
@@ -223,7 +223,7 @@ class Update
 
         if (!$update_needed) {
             if (!defined('CLI')) {
-                echo '<p align="center">';
+                echo '<p class="database-update">';
             }
             echo T_('No Update Needed');
             if (!defined('CLI')) {
@@ -255,7 +255,7 @@ class Update
         // Run a check to make sure that they don't try to upgrade from a version that
         // won't work.
         if ($current_version < '340002') {
-            echo "<p align=\"center\">Database version too old, please upgrade to <a href=\"http://ampache.org/downloads/ampache-3.3.3.5.tar.gz\">Ampache-3.3.3.5</a> first</p>";
+            echo '<p class="database-update">Database version too old, please upgrade to <a href="http://ampache.org/downloads/ampache-3.3.3.5.tar.gz">Ampache-3.3.3.5</a> first</p>';
 
             return false;
         }
@@ -768,12 +768,12 @@ class Update
         $sql    = "UPDATE `album` SET `album`.`disk` = 1 " .
                   "WHERE `album`.`disk` = 0;";
         $retval &= Dba::write($sql);
-        
+
         $sql = "ALTER TABLE `album` ADD `original_year` INT(4) NULL," .
                "ADD `barcode` VARCHAR(64) NULL," .
                "ADD `catalog_number` VARCHAR(64) NULL;";
         $retval &= Dba::write($sql);
-        
+
         $sql    = "ALTER TABLE `song_data`  DROP `catalog_number`";
         $retval &= Dba::write($sql);
 

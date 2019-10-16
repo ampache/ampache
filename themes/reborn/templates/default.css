@@ -1711,3 +1711,7 @@ a.option-list:hover {
     vertical-align: bottom;
     margin-right: 20px;
 }
+
+.error.show-disabled {
+    text-align: center;
+}

@@ -27,7 +27,7 @@ $localnetwork = T_('Local Network Definition');
 $streamaccess = T_('Stream Access');
 $all          = T_('All'); ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
-    <table class="tabledata" cellpadding="5" cellspacing="0">
+    <table class="tabledata">
         <tr>
             <td><?php echo T_('Name') . ':'; ?></td>
             <td colspan="3">
@@ -84,7 +84,7 @@ $all          = T_('All'); ?>
         </tr>
     </table>
     &nbsp;
-    <table class="tabledata" cellpadding="5" cellspacing="0">
+    <table class="tabledata">
         <tr>
             <td colspan="4"><h3><?php echo T_('IPv4 or IPv6 Addresses'); ?></h3>
                 <span class="information">(255.255.255.255) / (ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff)</span>

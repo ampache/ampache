@@ -22,7 +22,7 @@
 ?>
 <?php UI::show_box_top(T_('Find Duplicates'), 'box box_duplicate'); ?>
 <form name="duplicates" action="<?php echo AmpConfig::get('web_path'); ?>/admin/duplicates.php?action=find_duplicates" method="post" enctype="multipart/form-data" >
-    <table cellspacing="0" cellpadding="3">
+    <table>
         <tr>
             <td valign="top"><strong><?php echo T_('Search Type'); ?>:</strong></td>
             <td>

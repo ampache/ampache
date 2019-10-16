@@ -20,7 +20,7 @@
  *
  */
 ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <?php if (AmpConfig::get('echonest_api_key')) {

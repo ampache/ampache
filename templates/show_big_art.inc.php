@@ -28,12 +28,12 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 <!-- Propelled by Ampache | ampache.org -->
 <?php UI::show_custom_style(); ?>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-<title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_("Album Art"); ?></title>
+<title><?php echo AmpConfig::get('site_title') . " - " . T_("Album Art"); ?></title>
 </head>
 <body onload="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php
-echo "<a href=\"javascript:window.close()\" title=\"" . T_('Click to close window') . "\">";
-echo "<img src=\"" . AmpConfig::get('web_path') . "/image.php?object_id=" . scrub_out($_GET['id']) . "&object_type=album&auth=" . session_id() . "\" border=\"0\" alt=\"\" />";
+echo '<a href="javascript:window.close()" title="' . T_('Click to close window') . '">';
+echo '<img src="' . AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out($_GET['id']) . '&object_type=album&auth=' . session_id() . '" alt="" />';
 echo "</a>";
 ?>
 </body>

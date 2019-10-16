@@ -510,6 +510,7 @@ class Democratic extends Tmp_Playlist
     /**
      * create
      * This is the democratic play create function it inserts this into the democratic table
+     * @return PDOStatement|boolean
      */
     public static function create($data)
     {

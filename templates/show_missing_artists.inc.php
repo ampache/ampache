@@ -21,7 +21,7 @@
  */
 ?>
 <?php UI::show_box_top(T_('Missing Artists'), 'info-box'); ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>

@@ -22,7 +22,7 @@
 ?>
 <?php UI::show_box_top(T_('Duplicate Songs')); ?>
 <form method="post" enctype="multipart/form-data">
-    <table class="tabledata" cellpadding="0" cellspacing="0">
+    <table class="tabledata">
         <tr class="th-top">
             <th class="cel_disable"><?php echo T_('Disable'); ?></th>
             <th class="cel_song"><?php echo T_('Song'); ?></th>

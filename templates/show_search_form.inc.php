@@ -23,7 +23,7 @@
 UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
 ?>
 <form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
-<table class="tabledata" cellpadding="3" cellspacing="0">
+<table class="tabledata">
     <tr id="search_location">
         <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'song') {
     ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php
@@ -54,7 +54,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
     }?>
     </tr>
 </table>
-<table class="tabledata" cellpadding="3" cellspacing="0">
+<table class="tabledata">
     <tr id="search_max_results">
     <td><?php echo T_('Maximum Results'); ?></td>
         <td>
@@ -89,7 +89,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search');
             <input type="hidden" id="hiddenaction" name="action" value="search" />
 </div>
 </form>
-<script type="text/javascript">
+<script>
     document.getElementById('searchString').value = '';
 </script>
 <?php UI::show_box_bottom(); ?>

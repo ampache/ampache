@@ -93,7 +93,7 @@ class Upload
 
                         $options                = array();
                         $options['user_upload'] = Core::get_global('user')->id;
-                        if (isset($_POST['license'])) {
+                        if (filter_has_var(INPUT_POST, 'license')) {
                             $options['license'] = Core::get_post('license');
                         }
                         $artist_id = (int) (Core::get_request('artist'));

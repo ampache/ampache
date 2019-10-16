@@ -134,7 +134,7 @@ class XML_Data
         return self::output_xml($xml_string);
     }
     // success
- 
+
     /**
      * header
      *
@@ -362,7 +362,7 @@ class XML_Data
                 $objects = array_splice($objects, self::$offset);
             }
         }
-        
+
         foreach ($objects as $object_id) {
             // 'artist'|'album'|'song'|'playlist'
             if ($object_type == 'artist') {
@@ -1045,7 +1045,7 @@ class XML_Data
             case 'xspf':
                 $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
                         "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n" .
-                        "<title>" . ($title ?: "ampache XSPF Playlist") . "</title>\n" .
+                        "<title>" . ($title ?: T_("Ampache XSPF Playlist")) . "</title>\n" .
                         "<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n" .
                         "<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n" .
                         "<info>" . AmpConfig::get('web_path') . "</info>\n" .

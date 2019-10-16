@@ -474,7 +474,7 @@ class Stream
         } // end switch on method
 
         // Load our javascript
-        echo "<script type=\"text/javascript\">";
+        echo "<script>";
         echo Core::get_reloadutil() . "('" . $_SESSION['iframe']['target'] . "');";
         echo "</script>";
     } // run_playlist_method

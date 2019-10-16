@@ -22,7 +22,7 @@
 ?>
 <?php UI::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
 <form name="podcast" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=create">
-<table class="tabledata" cellspacing="0" cellpadding="0">
+<table class="tabledata">
 <tr>
     <td><?php echo T_('Podcast Feed URL'); ?></td>
     <td>
