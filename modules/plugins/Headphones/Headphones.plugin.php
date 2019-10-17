@@ -137,8 +137,8 @@ class AmpacheHeadphones
             $request = Requests::get($url, array(), array(
                 'timeout' => 600
             ));
-        } catch (Exception $e) {
-            debug_event('headphones.plugin', 'Headphones api http exception: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('headphones.plugin', 'Headphones api http exception: ' . $error->getMessage(), 1);
 
             return false;
         }

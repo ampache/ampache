@@ -121,7 +121,7 @@ class Wanted extends database_object
 
         try {
             $martist = $mb->lookup('artist', $artist ? $artist->mbid : $mbid, $includes);
-        } catch (Exception $e) {
+        } catch (Exception $error) {
             return null;
         }
 
@@ -220,7 +220,7 @@ class Wanted extends database_object
 
             try {
                 $martist = $mb->lookup('artist', $mbid);
-            } catch (Exception $e) {
+            } catch (Exception $error) {
                 return $wartist;
             }
 
@@ -483,7 +483,7 @@ class Wanted extends database_object
                     }
                 }
             }
-        } catch (Exception $e) {
+        } catch (Exception $error) {
             $this->songs = array();
         }
 

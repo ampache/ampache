@@ -185,10 +185,10 @@ class Catalog_Seafile extends Catalog
             $api_key = SeafileAdapter::request_api_key($server_uri, $username, $password);
 
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
-        } catch (Exception $e) {
+        } catch (Exception $error) {
             /* HINT: exception error message */
-            AmpError::add('general', sprintf(T_('There was a problem authenticating against the Seafile API: %s', $e->getMessage())));
-            debug_event('seafile_catalog', 'Exception while Authenticating: ' . $e->getMessage(), 2);
+            AmpError::add('general', sprintf(T_('There was a problem authenticating against the Seafile API: %s', $error->getMessage())));
+            debug_event('seafile_catalog', 'Exception while Authenticating: ' . $error->getMessage(), 2);
         }
 
         if ($api_key == null) {
@@ -309,9 +309,9 @@ class Catalog_Seafile extends Catalog
                 }
 
                 return $added;
-            } catch (Exception $e) {
+            } catch (Exception $error) {
                 /* HINT: %1 filename (File path), %2 error message */
-                debug_event('seafile_add', sprintf('Could not add song "%1$s": %2$s', $file->name, $e->getMessage()), 1);
+                debug_event('seafile_add', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
                 /* HINT: filename (File path) */
                 UI::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
             }
@@ -436,11 +436,11 @@ class Catalog_Seafile extends Catalog
 
                 try {
                     $exists = $this->seafile->get_file($file['path'], $file['filename']) !== null;
-                } catch (Exception $e) {
+                } catch (Exception $error) {
                     UI::update_text(T_("There Was a Problem"),
                             /* HINT: %1 filename (File path), %2 Error Message */
-                            sprintf(T_('There was an error while checking this song "%1$s": %2$s'), $file['filename'], $e->getMessage()));
-                    debug_event('seafile-clean', 'Exception: ' . $e->getMessage(), 2);
+                            sprintf(T_('There was an error while checking this song "%1$s": %2$s'), $file['filename'], $error->getMessage()));
+                    debug_event('seafile-clean', 'Exception: ' . $error->getMessage(), 2);
 
                     continue;
                 }

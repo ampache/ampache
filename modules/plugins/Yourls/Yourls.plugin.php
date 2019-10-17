@@ -110,8 +110,8 @@ class AmpacheYourls
                 $purl['host'] = idn_to_utf8($purl['host']);
                 $shorturl     = http_build_url($purl);
             }
-        } catch (Exception $e) {
-            debug_event('yourls.plugin', 'YOURLS api http exception: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('yourls.plugin', 'YOURLS api http exception: ' . $error->getMessage(), 1);
 
             return false;
         }

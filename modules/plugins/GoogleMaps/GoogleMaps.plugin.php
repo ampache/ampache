@@ -90,8 +90,8 @@ class AmpacheGoogleMaps
             if (count($place['results']) > 0) {
                 $name = $place['results'][0]['formatted_address'];
             }
-        } catch (Exception $e) {
-            debug_event('googlemaps.plugin', 'Error getting location name: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('googlemaps.plugin', 'Error getting location name: ' . $error->getMessage(), 1);
         }
 
         return $name;

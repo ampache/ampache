@@ -171,8 +171,8 @@ class Share extends database_object
                         break;
                     }
                 }
-            } catch (Exception $e) {
-                debug_event('share.class', 'Share plugin error: ' . $e->getMessage(), 1);
+            } catch (Exception $error) {
+                debug_event('share.class', 'Share plugin error: ' . $error->getMessage(), 1);
             }
         }
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";

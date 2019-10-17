@@ -99,8 +99,8 @@ class Ampache7digital
         try {
             $enProfile = $echonest->getTrackApi()->profile('musicbrainz:track:' . $track_mbid);
             $enSong    = $echonest->getSongApi()->profile($enProfile['song_id'], array( 'id:7digital-US', 'audio_summary', 'tracks'));
-        } catch (Exception $e) {
-            debug_event('7digital.plugin', 'EchoNest track error on `' . $track_mbid . '` (' . $title . '): ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('7digital.plugin', 'EchoNest track error on `' . $track_mbid . '` (' . $title . '): ' . $error->getMessage(), 1);
         }
 
         // Wans't able to get the song with MusicBrainz ID, try a search
@@ -112,8 +112,8 @@ class Ampache7digital
                     'title' => $title,
                     'bucket' => array( 'id:7digital-US', 'audio_summary', 'tracks'),
                 ));
-            } catch (Exception $e) {
-                debug_event('7digital.plugin', 'EchoNest song search error: ' . $e->getMessage(), 1);
+            } catch (Exception $error) {
+                debug_event('7digital.plugin', 'EchoNest song search error: ' . $error->getMessage(), 1);
             }
         }
 

@@ -934,8 +934,8 @@ class User extends database_object
                 if ($plugin->load($user)) {
                     $plugin->_plugin->save_mediaplay($media);
                 }
-            } catch (Exception $e) {
-                debug_event('user.class', 'Stats plugin error: ' . $e->getMessage(), 1);
+            } catch (Exception $error) {
+                debug_event('user.class', 'Stats plugin error: ' . $error->getMessage(), 1);
             }
         }
     }
@@ -969,7 +969,7 @@ class User extends database_object
         $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim($sip, "[]"))) : '';
         $date    = time();
         $user_id = $this->id;
-        $agent   = Dba::escape($_SERVER['HTTP_USER_AGENT']);
+        $agent   = Dba::escape(Core::get_server('HTTP_USER_AGENT'));
 
         $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
         Dba::write($sql);

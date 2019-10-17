@@ -163,8 +163,8 @@ class AmpacheTheaudiodb
                     $results['title']            = $track->strTrack;
                 }
             }
-        } catch (Exception $e) {
-            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
         }
 
         return $results;

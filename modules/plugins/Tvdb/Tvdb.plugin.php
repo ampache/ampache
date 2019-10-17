@@ -178,8 +178,8 @@ class AmpacheTvdb
                     }
                 }
             }
-        } catch (Exception $e) {
-            debug_event('tvdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('tvdb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
         }
 
         return $results;

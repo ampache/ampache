@@ -323,8 +323,8 @@ class Catalog_subsonic extends Catalog
                 if (!$song['success']) {
                     $remove = true;
                 }
-            } catch (Exception $e) {
-                debug_event('subsonic.catalog', 'Clean error: ' . $e->getMessage(), 5, 'ampache-catalog');
+            } catch (Exception $error) {
+                debug_event('subsonic.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
             }
 
             if (!$remove) {
