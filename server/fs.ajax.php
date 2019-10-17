@@ -286,10 +286,10 @@ if (isset($_GET['operation'])) {
         }
         header('Content-Type: application/json; charset=utf8');
         echo json_encode($rslt);
-    } catch (Exception $e) {
-        header($_SERVER["SERVER_PROTOCOL"] . ' 500 Server Error');
+    } catch (Exception $error) {
+        header(Core::get_server('SERVER_PROTOCOL') . ' 500 Server Error');
         header('Status:  500 Server Error');
-        echo $e->getMessage();
+        echo $error->getMessage();
     }
     die();
 }

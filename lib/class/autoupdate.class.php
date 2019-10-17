@@ -108,8 +108,8 @@ class AutoUpdate
             }
 
             return json_decode($request->body);
-        } catch (Exception $e) {
-            debug_event('autoupdate.class', 'Request error: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('autoupdate.class', 'Request error: ' . $error->getMessage(), 1);
 
             return null;
         }

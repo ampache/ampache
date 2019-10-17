@@ -51,11 +51,11 @@ if (!AmpConfig::get('access_control')) {
 }
 
 // Authenticate the user with preemptive HTTP Basic authentication first
-$user = $_SERVER['PHP_AUTH_USER'];
+$user = Core::get_server('PHP_AUTH_USER');
 if (empty($user)) {
     $user = $_REQUEST['u'];
 }
-$password = $_SERVER['PHP_AUTH_PW'];
+$password = Core::get_server('PHP_AUTH_PW');
 if (empty($password)) {
     $password = $_REQUEST['p'];
     $token    = $_REQUEST['t'];
@@ -64,7 +64,7 @@ if (empty($password)) {
 $version   = $_REQUEST['v'];
 $clientapp = $_REQUEST['c'];
 
-if (empty($_SERVER['HTTP_USER_AGENT'])) {
+if (!filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT')) {
     $_SERVER['HTTP_USER_AGENT'] = $clientapp;
 }
 
@@ -114,7 +114,7 @@ $methods = get_class_methods('subsonic_api');
 $internal_functions = array('check_version', 'check_parameter', 'decrypt_password', 'follow_stream', '_updatePlaylist', '_setStar', 'setHeader', 'apiOutput', 'apiOutput2', 'xml2json');
 
 // We do not use $_GET because of multiple parameters with the same name
-$query_string = $_SERVER['QUERY_STRING'];
+$query_string = Core::get_server('QUERY_STRING');
 // Trick to avoid $HTTP_RAW_POST_DATA
 $postdata = file_get_contents("php://input");
 if (!empty($postdata)) {

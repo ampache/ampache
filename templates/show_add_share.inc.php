@@ -54,7 +54,7 @@
 <tr>
     <td><?php echo T_('Allow Stream'); ?></td>
     <td>
-        <input type="checkbox" name="allow_stream" value="1" <?php echo ($_REQUEST['allow_stream'] || $_SERVER['REQUEST_METHOD'] === 'GET') ? 'checked' : ''; ?> />
+        <input type="checkbox" name="allow_stream" value="1" <?php echo ($_REQUEST['allow_stream'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> />
     </td>
 </tr>
 <?php if (((Core::get_request('type') == 'song' || Core::get_request('type') == 'video') && Access::check_function('download')) || Access::check_function('batch_download')) {
@@ -62,7 +62,7 @@
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
     <td>
-        <input type="checkbox" name="allow_download" value="1" <?php echo ($_REQUEST['allow_download'] || $_SERVER['REQUEST_METHOD'] === 'GET') ? 'checked' : ''; ?> />
+        <input type="checkbox" name="allow_download" value="1" <?php echo ($_REQUEST['allow_download'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> />
     </td>
 </tr>
 <?php

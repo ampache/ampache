@@ -311,8 +311,8 @@ class Auth
     {
         unset($password);
         $results = array();
-        if (($_SERVER['REMOTE_USER'] == $username) ||
-            ($_SERVER['HTTP_REMOTE_USER'] == $username)) {
+        if ((Core::get_server('REMOTE_USER') == $username) ||
+            (Core::get_server('HTTP_REMOTE_USER') == $username)) {
             $results['success']     = true;
             $results['type']        = 'http';
             $results['username']    = $username;

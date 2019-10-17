@@ -207,7 +207,7 @@ class Upload
                 throw new \RuntimeException('The file handle ' . $file . ' could not be unlinked');
             }
         }
-        header($_SERVER['SERVER_PROTOCOL'] . ' 500 File Upload Error', true, 500);
+        header(Core::get_server('SERVER_PROTOCOL') . ' 500 File Upload Error', true, 500);
         ob_get_contents();
         ob_end_clean();
         echo '{"status":"error"}';

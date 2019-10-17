@@ -815,7 +815,7 @@ class Daap_Api
     {
         self::setHeaders();
 
-        if ($_SERVER['REQUEST_METHOD'] != 'OPTIONS') {
+        if (Core::get_server('REQUEST_METHOD') != 'OPTIONS') {
             header("Content-length: " . strlen($string));
             echo $string;
         } else {
