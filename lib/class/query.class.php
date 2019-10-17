@@ -2362,6 +2362,7 @@ class Query
         } // if not simple
 
         $db_results = Dba::read($sql);
+        //debug_event('query.class', "resort_objects: " . $sql, 5);
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
