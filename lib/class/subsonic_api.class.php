@@ -1765,32 +1765,32 @@ class Subsonic_Api
      */
     public static function scrobble($input)
     {
-        $id         = self::check_parameter($input, 'id');
+        $oid        = self::check_parameter($input, 'id');
         $submission = $input['submission'];
         //$time = $input['time'];
 
-        if ($submission === 'false' || $submission === '0') {
-            $response = Subsonic_XML_Data::createSuccessResponse('scrobble');
-            self::apiOutput($input, $response);
-        } else {
-            if (!is_array($id)) {
-                $rid   = array();
-                $rid[] = $id;
-                $id    = $rid;
-            }
+        if (!is_array($oid)) {
+            $rid   = array();
+            $rid[] = $oid;
+            $oid   = $rid;
+        }
 
-            foreach ($id as $i) {
-                $aid  = Subsonic_XML_Data::getAmpacheId($i);
-                $type = Subsonic_XML_Data::getAmpacheType($i);
+        foreach ($oid as $object) {
+            $aid  = Subsonic_XML_Data::getAmpacheId($object);
+            $type = Subsonic_XML_Data::getAmpacheType($object);
 
-                $media = new $type($aid);
-                $media->format();
+            $media = new $type($aid);
+            $media->format();
+            // always record Ampache history
+            $media->set_played($input['u'], $input['c'], array(), time());
+            // only scrobble externally when asked
+            if ($submission !== 'false' || $submission !== '0') {
                 User::save_mediaplay(User::get_from_username($input['u']), $media);
             }
-
-            $response = Subsonic_XML_Data::createSuccessResponse('scrobble');
-            self::apiOutput($input, $response);
         }
+
+        $response = Subsonic_XML_Data::createSuccessResponse('scrobble');
+        self::apiOutput($input, $response);
     }
 
     /**

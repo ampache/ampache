@@ -691,7 +691,6 @@ function show_table_render($render = false, $force = false)
     // Include table render javascript only once
     if ($force || !defined('TABLE_RENDERED')) {
         define('TABLE_RENDERED', 1); ?>
-        <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js"></script>
         <?php if (isset($render) && $render) {
             ?>
             <script>sortPlaylistRender();</script>
