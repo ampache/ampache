@@ -663,6 +663,34 @@ div#autoupdate > span {
     margin-bottom: 100px;
 }
 
+.sb2 {
+    display: flex;
+    flex-direction: column;
+}
+
+sb2_music {
+    order: 1;
+}
+
+sb2_video {
+    order: 2;
+}
+sb2_random {
+    order: 3;
+}
+
+sb2_search {
+    order: 4;
+}
+
+sb2_playlist {
+    order: 5;
+}
+
+sb2_information {
+    order: 6;
+}
+
 #sidebar-tabs #catalog_select {
     width: 130px;
 }
