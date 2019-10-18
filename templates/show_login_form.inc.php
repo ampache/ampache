@@ -36,7 +36,7 @@ $web_path = AmpConfig::get('web_path');
 $_SESSION['login'] = true;
 define('TABLE_RENDERED', 1);
 $mobile_session = false;
-$user_agent     = $_SERVER['HTTP_USER_AGENT'];
+$user_agent     = Core::get_server('HTTP_USER_AGENT');
 
 if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'))) {
     $mobile_session = true;
@@ -79,7 +79,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                     </div>
                     <div class="formValidation">
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
-                        <input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
+                        <input type="hidden" name="referrer" value="<?php echo scrub_out(Core::get_server('HTTP_REFERRER')); ?>" />
                         <input type="hidden" name="action" value="login" />
                         <?php echo AmpConfig::get('login_message'); ?>
                     </div>

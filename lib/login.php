@@ -47,7 +47,7 @@ if (empty($_REQUEST['step'])) {
     /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
     if (($_POST['username']) ||
         (in_array('http', AmpConfig::get('auth_methods')) &&
-        ($_SERVER['REMOTE_USER'] || $_SERVER['HTTP_REMOTE_USER']))) {
+        (filter_has_var('REMOTE_USER') || filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')))) {
 
         /* If we are in demo mode let's force auth success */
         if (AmpConfig::get('demo_mode')) {
@@ -57,13 +57,13 @@ if (empty($_REQUEST['step'])) {
             $auth['info']['offset_limit']    = 25;
         } else {
             if (Core::get_post('username') !== '') {
-                $username = scrub_in(Core::get_post('username'));
+                $username = (string) scrub_in(Core::get_post('username'));
                 $password = Core::get_post('password');
             } else {
-                if ($_SERVER['REMOTE_USER']) {
-                    $username = $_SERVER['REMOTE_USER'];
-                } elseif ($_SERVER['HTTP_REMOTE_USER']) {
-                    $username = $_SERVER['HTTP_REMOTE_USER'];
+                if (filter_has_var('REMOTE_USER')) {
+                    $username = (string) Core::get_server('REMOTE_USER');
+                } elseif (filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')) {
+                    $username = (string) Core::get_server('HTTP_REMOTE_USER');
                 } else {
                     $username = '';
                 }

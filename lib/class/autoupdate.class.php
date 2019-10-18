@@ -108,8 +108,8 @@ class AutoUpdate
             }
 
             return json_decode($request->body);
-        } catch (Exception $e) {
-            debug_event('autoupdate.class', 'Request error: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('autoupdate.class', 'Request error: ' . $error->getMessage(), 1);
 
             return null;
         }
@@ -268,11 +268,14 @@ class AutoUpdate
         echo '<div id="autoupdate">';
         echo '<span>' . T_('Update available') . '</span>';
         echo ' (' . self::get_latest_version() . ').<br />';
+        $git_branch    = self::is_force_git_branch();
+        $develop_check = self::is_develop() || $git_branch != '';
+        $changelog     = ($git_branch == '') ? 'master' : $git_branch;
+        $zip_name      = ($git_branch == '') ? 'develop' : $git_branch;
 
-        echo '<a href="https://github.com/ampache/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
-        if (self::is_develop()) {
-            echo ' | <a href="https://github.com/ampache/ampache/archive/' .
-             (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank">' . T_('Download') . '</a>';
+        echo '<a href="https://github.com/ampache/ampache/' . ($develop_check ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/' . $changelog . '/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
+        if ($develop_check) {
+            echo ' | <a href="https://github.com/ampache/ampache/archive/' . $zip_name . '.zip' . '" target="_blank">' . T_('Download') . '</a>';
         } else {
             echo ' | <a href="https://github.com/ampache/ampache/releases/download/' . self::get_latest_version() .
               '/ampache-' . self::get_latest_version() . '_all.zip"' . ' target="_blank">' . T_('Download') . '</a>';

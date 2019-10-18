@@ -532,8 +532,8 @@ class Album extends database_object implements library_item
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             try {
                 Wanted::delete_wanted_release((string) $mbid);
-            } catch (Exception $e) {
-                debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), 2);
+            } catch (Exception $error) {
+                debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $error->getMessage(), 2);
             }
         }
 

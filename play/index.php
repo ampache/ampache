@@ -113,13 +113,13 @@ if (empty($oid) && empty($demo_id) && empty($random)) {
 }
 
 // Authenticate the user if specified
-$u = $_SERVER['PHP_AUTH_USER'];
-if (empty($u)) {
-    $u = $_REQUEST['u'];
+$username = Core::get_server('PHP_AUTH_USER');
+if (empty($username)) {
+    $username = $_REQUEST['u'];
 }
-$p = $_SERVER['PHP_AUTH_PW'];
-if (empty($p)) {
-    $p = $_REQUEST['p'];
+$password = Core::get_server('PHP_AUTH_PW');
+if (empty($password)) {
+    $password = $_REQUEST['p'];
 }
 $apikey = $_REQUEST['apikey'];
 
@@ -133,8 +133,8 @@ if (!empty($apikey)) {
         Preference::init();
         $user_authenticated = true;
     }
-} elseif (!empty($u) && !empty($p)) {
-    $auth = Auth::login($u, $p);
+} elseif (!empty($username) && !empty($password)) {
+    $auth = Auth::login($username, $password);
     if ($auth['success']) {
         $GLOBALS['user']         = User::get_from_username($auth['username']);
         $uid                     = Core::get_global('user')->id;
@@ -423,7 +423,7 @@ if (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
     }
 
     if (!$share_id) {
-        if ($_SERVER['REQUEST_METHOD'] != 'HEAD' && $record_stats) {
+        if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
             debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
             $sessionkey = $sid ?: Stream::get_session();
             $agent      = Session::agent($sessionkey);
@@ -610,7 +610,7 @@ Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($medi
 
 $start        = 0;
 $end          = 0;
-$range_values = sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d", $start, $end);
+$range_values = sscanf(Core::get_server('HTTP_RANGE'), "bytes=%d-%d", $start, $end);
 
 if ($range_values > 0 && ($start > 0 || $end > 0)) {
     // Calculate stream size from byte range
@@ -651,7 +651,7 @@ if (!isset($_REQUEST['segment'])) {
         debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
     } else {
         if (!$share_id && $record_stats) {
-            if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+            if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering stream stats for {' . $media->get_stream_name() . '}...', 4);
                 $sessionkey = $sid ?: Stream::get_session();
                 $agent      = Session::agent($sessionkey);

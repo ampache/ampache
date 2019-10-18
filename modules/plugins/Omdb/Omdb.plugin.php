@@ -158,8 +158,8 @@ class AmpacheOmdb
                     $results['genre'] = $query->Genre;
                 }
             }
-        } catch (Exception $e) {
-            debug_event('omdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('omdb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
         }
 
         return $results;

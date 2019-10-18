@@ -95,7 +95,7 @@ class AmpacheMusicBrainz
         );
         try {
             $track = $mb->lookup('recording', $mbid, $includes);
-        } catch (Exception $e) {
+        } catch (Exception $error) {
             return null;
         }
 

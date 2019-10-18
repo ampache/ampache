@@ -846,8 +846,8 @@ class Art extends database_object
                 $options['timeout'] = 3;
                 $request            = Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw                = $request->body;
-            } catch (Exception $e) {
-                debug_event('art.class', 'Error getting art: ' . $e->getMessage(), 2);
+            } catch (Exception $error) {
+                debug_event('art.class', 'Error getting art: ' . $error->getMessage(), 2);
                 $raw = '';
             }
 
@@ -1169,8 +1169,8 @@ class Art extends database_object
         );
         try {
             $release = $mb->lookup('release', $data['mbid'], $includes);
-        } catch (Exception $e) {
-            debug_event('art.class', "gather_musicbrainz exception: " . $e, 3);
+        } catch (Exception $error) {
+            debug_event('art.class', "gather_musicbrainz exception: " . $error, 3);
 
             return $images;
         }
@@ -1589,8 +1589,8 @@ class Art extends database_object
                     }
                 }
             }
-        } catch (Exception $e) {
-            debug_event('art.class', 'Error getting google images: ' . $e->getMessage(), 2);
+        } catch (Exception $error) {
+            debug_event('art.class', 'Error getting google images: ' . $error->getMessage(), 2);
         }
 
         return $images;
@@ -1649,8 +1649,8 @@ class Art extends database_object
                     return $images;
                 }
             } // end foreach
-        } catch (Exception $e) {
-            debug_event('art.class', 'LastFM error: ' . $e->getMessage(), 3);
+        } catch (Exception $error) {
+            debug_event('art.class', 'LastFM error: ' . $error->getMessage(), 3);
         }
 
         return $images;

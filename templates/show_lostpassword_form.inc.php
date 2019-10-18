@@ -34,7 +34,7 @@ $web_path       = AmpConfig::get('web_path');
 
 $_SESSION['login'] = true;
 $mobile_session    = false;
-$user_agent        = $_SERVER['HTTP_USER_AGENT'];
+$user_agent        = Core::get_server('HTTP_USER_AGENT');
 
 if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'))) {
     $mobile_session = true;

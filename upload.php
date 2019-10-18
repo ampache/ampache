@@ -34,7 +34,7 @@ if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
     $upload_max = $post_max;
 }
 // Check to handle POST requests exceeding max post size.
-if ($_SERVER['CONTENT_LENGTH'] > 0 && $post_max > 0 && $_SERVER['CONTENT_LENGTH'] > $post_max) {
+if (Core::get_server('CONTENT_LENGTH') > 0 && $post_max > 0 && Core::get_server('CONTENT_LENGTH') > $post_max) {
     Upload::rerror();
 
     return false;

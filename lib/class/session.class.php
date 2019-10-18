@@ -221,7 +221,7 @@ class Session
         if (isset($data['value'])) {
             $value = $data['value'];
         }
-        $agent = (!empty($data['agent'])) ? $data['agent'] : substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
+        $agent = (!empty($data['agent'])) ? $data['agent'] : substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
 
         $expire = time() + AmpConfig::get('session_length');
         if ($type == 'stream') {

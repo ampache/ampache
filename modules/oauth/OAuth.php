@@ -898,7 +898,7 @@ class OAuthUtil
             // that $_SERVER actually contains what we need
             $out = array();
             if (filter_has_var(INPUT_SERVER, 'CONTENT_TYPE')) {
-                $out['Content-Type'] = $_SERVER['CONTENT_TYPE'];
+                $out['Content-Type'] = Core::get_server('CONTENT_TYPE');
             }
             if (isset($_ENV['CONTENT_TYPE'])) {
                 $out['Content-Type'] = $_ENV['CONTENT_TYPE'];

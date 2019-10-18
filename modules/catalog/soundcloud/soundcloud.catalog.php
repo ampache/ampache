@@ -355,14 +355,14 @@ class Catalog_soundcloud extends Catalog
                         if ($song->user_favorite != true) {
                             $remove = true;
                         }
-                    } catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
+                    } catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $error) {
                         if ($e->getHttpCode() == '404') {
                             $remove = true;
                         } else {
-                            debug_event('soundcloud.catalog', 'Clean error: ' . $e->getMessage(), 5, 'ampache-catalog');
+                            debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
                         }
-                    } catch (Exception $e) {
-                        debug_event('soundcloud.catalog', 'Clean error: ' . $e->getMessage(), 5, 'ampache-catalog');
+                    } catch (Exception $error) {
+                        debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
                     }
 
                     if (!$remove) {

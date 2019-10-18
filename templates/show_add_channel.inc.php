@@ -81,7 +81,7 @@
 <tr>
     <td><?php echo T_('Loop'); ?></td>
     <td>
-        <input type="checkbox" name="loop" value="1" <?php echo ($_REQUEST['loop'] || $_SERVER['REQUEST_METHOD'] === 'GET') ? 'checked' : ''; ?> />
+        <input type="checkbox" name="loop" value="1" <?php echo ($_REQUEST['loop'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> />
     </td>
 </tr>
 <tr>

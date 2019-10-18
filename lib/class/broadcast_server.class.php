@@ -399,9 +399,9 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param \Ratchet\ConnectionInterface $conn
-     * @param \Exception $e
+     * @param \Exception $error
      */
-    public function onError(ConnectionInterface $conn, \Exception $e)
+    public function onError(ConnectionInterface $conn, \Exception $error)
     {
         $conn->close();
     }
@@ -414,7 +414,7 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $websocket_address = AmpConfig::get('websocket_address');
         if (empty($websocket_address)) {
-            $websocket_address = 'ws://' . $_SERVER['SERVER_NAME'] . ':8100';
+            $websocket_address = 'ws://' . Core::get_server('SERVER_NAME') . ':8100';
         }
 
         return $websocket_address . '/broadcast';

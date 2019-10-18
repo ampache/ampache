@@ -50,8 +50,8 @@ if (!function_exists('curl_version')) {
 if ($channel->is_private) {
     $is_auth = false;
     if (filter_has_var(INPUT_SERVER, 'PHP_AUTH_USER')) {
-        $htusername = $_SERVER['PHP_AUTH_USER'];
-        $htpassword = $_SERVER['PHP_AUTH_PW'];
+        $htusername = Core::get_server('PHP_AUTH_USER');
+        $htpassword = Core::get_server('PHP_AUTH_PW');
 
         $auth = Auth::login($htusername, $htpassword);
         if ($auth['success']) {
