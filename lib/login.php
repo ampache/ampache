@@ -57,13 +57,13 @@ if (empty($_REQUEST['step'])) {
             $auth['info']['offset_limit']    = 25;
         } else {
             if (Core::get_post('username') !== '') {
-                $username = scrub_in(Core::get_post('username'));
+                $username = (string) scrub_in(Core::get_post('username'));
                 $password = Core::get_post('password');
             } else {
                 if (filter_has_var('REMOTE_USER')) {
-                    $username = Core::get_server('REMOTE_USER');
+                    $username = (string) Core::get_server('REMOTE_USER');
                 } elseif (filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')) {
-                    $username = Core::get_server('HTTP_REMOTE_USER');
+                    $username = (string) Core::get_server('HTTP_REMOTE_USER');
                 } else {
                     $username = '';
                 }
