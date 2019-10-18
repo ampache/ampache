@@ -268,9 +268,11 @@ class AutoUpdate
         echo '<div id="autoupdate">';
         echo '<span>' . T_('Update available') . '</span>';
         echo ' (' . self::get_latest_version() . ').<br />';
-        $develop_check = self::is_develop() || self::is_force_git_branch() == 'develop';
+        $git_branch    = self::is_force_git_branch();
+        $develop_check = self::is_develop() || $git_branch == 'develop';
+        $changelog     = ($git_branch == '') ? 'master' : $git_branch;
 
-        echo '<a href="https://github.com/ampache/ampache/' . ($develop_check ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
+        echo '<a href="https://github.com/ampache/ampache/' . ($develop_check ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/'. $changelog .'/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
         if ($develop_check) {
             echo ' | <a href="https://github.com/ampache/ampache/archive/develop.zip' . '" target="_blank">' . T_('Download') . '</a>';
         } else {
