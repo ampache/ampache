@@ -988,7 +988,7 @@ class Subsonic_Api
         $contentLength = $input['estimateContentLength']; // Force content-length guessing if transcode
         $user_id       = User::get_from_username($input['u'])->id;
 
-        $params = '&action=download' . '&client=' . rawurlencode($input['c']);
+        $params = '&client=' . rawurlencode($input['c']);
         if ($contentLength == 'true') {
             $params .= '&content_length=required';
         }
@@ -1022,9 +1022,8 @@ class Subsonic_Api
     public static function download($input)
     {
         $fileid = self::check_parameter($input, 'id', true);
-        $params = '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1';
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'));
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
         self::follow_stream($url);
     }
 
