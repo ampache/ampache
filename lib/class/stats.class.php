@@ -101,6 +101,8 @@ class Stats
     public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null)
     {
         if ($user < 1) {
+            debug_event('stats.class', 'Invalid user given ' . $user, 3);
+
             return false;
         }
         if (!self::is_already_inserted($input_type, $oid, $user, $count_type, $date)) {
