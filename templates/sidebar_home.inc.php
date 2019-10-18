@@ -31,7 +31,7 @@ $t_expander  = T_('Expand/Collapse');
 $t_search    = T_('Search');
 ?>
 <ul class="sb2" id="sb_home">
-    <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Browse Music'); ?>"><?php echo T_('Music'); ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_music', 'header-img ' . (($_COOKIE['sb_browse_music'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+    <li class="sb2_music"><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Browse Music'); ?>"><?php echo T_('Music'); ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_music', 'header-img ' . (($_COOKIE['sb_browse_music'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <?php
         $text = (string) scrub_in(Core::get_request('action')) . '_ac';
         if ($text) {
@@ -76,7 +76,7 @@ $t_search    = T_('Search');
     </li>
     <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
             ?>
-        <li><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Video') ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_video', 'header-img ' . (($_COOKIE['sb_browse_video'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+        <li class="sb2_video"><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Video') ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_video', 'header-img ' . (($_COOKIE['sb_browse_video'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
             <ul class="sb3" id="sb_home_browse_video">
           <?php if (Video::get_item_count('Clip')) {
                 ?>
@@ -103,7 +103,7 @@ $t_search    = T_('Search');
         </li>
     <?php
         } ?>
-    <li>
+    <li class="sb2_random">
         <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Random'); ?>"><?php echo T_('Random'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_random'] == 'expanded') ? 'expanded' : 'collapsed'; ?>" id="random" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
         <ul class="sb3" id="sb_home_random" style="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_random'))) {
             echo 'display: none;';
@@ -115,7 +115,7 @@ $t_search    = T_('Search');
             <li id="sb_home_random_advanced"><a href="<?php echo $web_path; ?>/random.php?action=advanced&type=song"><?php echo T_('Advanced'); ?></a></li>
         </ul>
     </li>
-    <li>
+    <li class="sb2_search">
         <h4 class="header"><span class="sidebar-header-title" title="<?php echo $t_search; ?>"><?php echo $t_search; ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_search'] == 'expanded') ? 'expanded' : 'collapsed'; ?>" id="search" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
         <ul class="sb3" id="sb_home_search" style="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_search'))) {
             echo 'display: none;';
@@ -140,7 +140,7 @@ $t_search    = T_('Search');
     ?>
     <?php if (Access::check('interface', '25')) {
         ?>
-    <li>
+    <li class="sb2_playlist">
     <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo $t_playlists; ?></span><?php echo UI::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <?php if (AmpConfig::get('home_now_playing') || AmpConfig::get('allow_democratic_playback') || Access::check('interface', '50')) {
             ?>
@@ -168,7 +168,7 @@ $t_search    = T_('Search');
     </li>
     <?php
     } ?>
-    <li>
+    <li class="sb2_information">
         <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Information'); ?>"><?php echo T_('Information'); ?></span><?php echo UI::get_icon('all', $t_expander, 'information', 'header-img ' . (($_COOKIE['sb_info'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <ul class="sb3" id="sb_home_info">
             <li id="sb_home_info_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo T_('Recent'); ?></a></li>

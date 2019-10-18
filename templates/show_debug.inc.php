@@ -50,7 +50,7 @@
         <?php if ((string) AmpConfig::get('github_force_branch') !== '') {
     ?><?php echo "<div>" . T_('GitHub Branch') . ': "' . (string) AmpConfig::get('github_force_branch') . '"</div>';
 } ?>
-        <div><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
+        <div><a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
         <?php
         if (AutoUpdate::is_update_available()) {
             AutoUpdate::show_new_version();
