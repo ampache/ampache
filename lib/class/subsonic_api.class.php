@@ -1004,7 +1004,7 @@ class Subsonic_Api
 
         $url = '';
         if (Subsonic_XML_Data::isSong($fileid)) {
-            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
+            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params. '&noscrobble=1', 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
             $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         }

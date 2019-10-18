@@ -911,11 +911,10 @@ class User extends database_object
             } else {
                 self::save_mediaplay(Core::get_global('user'), $media);
             }
+            $media->set_played($user_id, $agent, $location, $date);
         } else {
             debug_event('user.class', 'Scrobbling explicitly skipped', 5);
         }
-
-        $media->set_played($user_id, $agent, $location, $date);
 
         return true;
     } // update_stats
