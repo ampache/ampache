@@ -1740,7 +1740,7 @@ class Api
      * update_from_tags
      * MINIMUM_API_VERSION=400001
      *
-     * updates a single album,artist,song from the tag data
+     * updates a single album, artist, song from the tag data
      *
      * @param array $input
      * $input = array(type = (string) 'artist'|'album'|'song'

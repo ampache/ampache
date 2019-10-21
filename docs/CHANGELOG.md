@@ -60,6 +60,7 @@
 * API - New Method: user_create ('user' access level only!)
 * API - New Method: user_update (update user details and passwords for non-admins)
 * API - New Method: user_delete (you can't delete yourself or and admin account!)
+* API - New Method: update_from_tags (updates a single album, artist, song from the tag data instead of the entire library!)
 * Fix slideshow creating black screen when using web player
 * Default to disk 1 instead of 0 (db updates to handle existing albums)
 * Add Barcode, Original Year and Catalog Number to Album table
@@ -85,6 +86,7 @@
 * Fix Catalog Manager can now access catalog areas correctly
 * Fix allow cli tools to use system settings for plugins.
 * HTML5 doctype across the board. (<!DOCTYPE html>)
+* Allow the main sidebar to be reordered using CSS (.sb2_music, .sb2_video, .sb2_*)
 
 ## 3.9.1
 
