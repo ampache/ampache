@@ -1767,6 +1767,7 @@ class Subsonic_Api
     {
         $oid        = self::check_parameter($input, 'id');
         $submission = $input['submission'];
+        $user       = User::get_from_username($input['u']);
         //$time = $input['time'];
 
         if (!is_array($oid)) {
@@ -1782,7 +1783,8 @@ class Subsonic_Api
             $media = new $type($aid);
             $media->format();
             // always record Ampache history
-            $media->set_played($input['u'], $input['c'], array(), time());
+            debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
+            $media->set_played($user->id, $input['c'], array(), time());
             // only scrobble externally when asked
             if ($submission !== 'false' || $submission !== '0') {
                 User::save_mediaplay(User::get_from_username($input['u']), $media);

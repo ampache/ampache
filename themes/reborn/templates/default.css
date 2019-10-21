@@ -39,6 +39,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 html {
     font-size: 100%;
     -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
     height: 100%;
 }
 
@@ -197,13 +198,10 @@ div#autoupdate > span {
     font-size: 15px;
 }
 
-.header-float {
-}
-
 .header-fixed {
     position: fixed;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     width: 97%;
 }
 
@@ -276,6 +274,7 @@ div#autoupdate > span {
 
 #headerbox  select {
     min-width: 150px;
+    -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
@@ -380,6 +379,7 @@ div#autoupdate > span {
     margin-left: 0;
     width: 100%;
     min-height: 28px;
+    -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
@@ -497,6 +497,7 @@ div#autoupdate > span {
     border: 2px solid;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
+    border-radius: 2px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -519,10 +520,10 @@ div#autoupdate > span {
 }
 
 #sidebar-content, #sidebar-content-light, #sidebar-light {
-    border-radius: 2px;
     border: 2px solid;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
+    border-radius: 2px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -536,7 +537,7 @@ div#autoupdate > span {
 }
 
 #sidebar-content-light {
-    padding: 0px;
+    padding: 0;
     display: none;
     width: 70px;
 }
@@ -544,7 +545,7 @@ div#autoupdate > span {
 #sidebar-light {
     width: 70px;
     position: fixed;
-    left: 0px;
+    left: 0;
     margin: 17px auto 5px 5px;
     padding: 10px 0 10px 0;
     text-align: center;
@@ -586,12 +587,6 @@ div#autoupdate > span {
     height: 25px;
 }
 
-#sidebar-tabs li.active {
-}
-
-#sidebar-tabs li.active img{
-}
-
 /* Tabs content */
 #sidebar-page {
     width: 148px;
@@ -608,7 +603,7 @@ div#autoupdate > span {
 
 .sidebar-page-float {
     position: absolute;
-    left: 0px;
+    left: 0;
 }
 
 #sidebar-tabs .sb2 li h4 {
@@ -745,7 +740,6 @@ div#autoupdate > span {
 
 #rightbar #rb_action li {
     display: inline;
-    margin-bottom: 5px;
     margin-right: 5px;
     padding-bottom: 3px
 }
@@ -1006,7 +1000,7 @@ table.tabledata tbody .cel_cover img {
 
 table.tabledata tbody .cel_cover img:hover {
     border: 2px solid;
-    margin: 0px;
+    margin: 0;
 }
 
 table.tabledata .cel_drag {
@@ -1131,7 +1125,7 @@ table.disablegv td.cel_rating {
 
 .random_selection .random_album .art_album img:hover {
     border: 2px solid;
-    margin: 0px;
+    margin: 0;
 }
 
 .random_selection .random_album .star-rating, .random_selection .random_video .star-rating {
@@ -1251,10 +1245,6 @@ div.box.box_rules {
 .album_group_disks_title {
     float: left;
     margin-right: 30px;
-}
-
-.album_group_disks_actions {
-
 }
 
 /***********************************************
@@ -1387,8 +1377,8 @@ span.fatalerror {
     display: none;
     position: absolute;
     float: right;
-    bottom: 0px;
-    right: 0px;
+    bottom: 0;
+    right: 0;
     padding-bottom: 10px;
     padding-top: 5px;
     width: 100%;
@@ -1415,7 +1405,7 @@ span.fatalerror {
 
 .item_art:hover {
     border: 2px solid;
-    margin: 0px;
+    margin: 0;
 }
 
 .item_art:hover  .item_art_actions {
@@ -1460,7 +1450,7 @@ span.fatalerror {
 }
 
 .item_uploaded_by {
-    padding-left: 0px;
+    padding-left: 0;
     padding-top: 10px;
     font-size: small;
 }
@@ -1677,7 +1667,7 @@ ol, ul, #rightbar ul {
 }
 
 input.list-header-navmenu-input {
-    padding: 0px;
+    padding: 0;
     margin-bottom: 2px;
     width: 50px;
     height: 16px;
