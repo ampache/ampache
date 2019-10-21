@@ -1570,7 +1570,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param integer $object_id
      */
-    public static function update_single_item($type, $object_id)
+    public static function update_single_item($type, $object_id, $api = false)
     {
         // Because single items are large numbers of things too
         set_time_limit(0);
@@ -1595,8 +1595,10 @@ abstract class Catalog extends database_object
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             $info = self::update_media_from_tags($song);
-
-            if ($info['change']) {
+            // don't echo useless info when using api
+            if ($api) {
+                //do nothing
+            } elseif ($info['change']) {
                 if ($info['element'][$type]) {
                     $change = explode(' --> ', $info['element'][$type]);
                     $result = $change[1];
@@ -1607,8 +1609,7 @@ abstract class Catalog extends database_object
                 echo $info['text'];
                 echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
                 flush();
-            } // if change
-            else {
+            } else {
                 echo"<dl>\n\t<dd>";
                 echo "<strong>" . scrub_out($song->file) . "</strong><br />" . T_('No Update Needed') . "\n";
                 echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
