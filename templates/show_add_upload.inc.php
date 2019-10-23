@@ -25,9 +25,6 @@
 <?php
 UI::show_box_top(T_('Upload'));
 $ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';
-
-$artist = (int) ($_REQUEST['artist']);
-$album  = (int) ($_REQUEST['album']);
 ?>
 <div id="container" role="main">
     <div id="tree"></div>
@@ -171,28 +168,6 @@ if ($upload_max > 0) {
 }
 ?>
 <table class="tabledata">
-<?php if (!AmpConfig::get('upload_user_artist')) {
-    ?>
-<tr>
-    <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
-    <td>
-        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
-        <div id="artist_select_album_1">
-            <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
-        </div>
-    </td>
-</tr>
-<?php
-} ?>
-<tr>
-    <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
-    <td>
-        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
-        <div id="album_select_upload_1">
-            <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
-        </div>
-    </td>
-</tr>
 <?php if (AmpConfig::get('licensing')) {
         ?>
 <tr>
@@ -218,6 +193,8 @@ if ($upload_max > 0) {
         <?php echo T_('Allowed file type'); ?>:<br />
         <?php echo str_replace("|", ", ", AmpConfig::get('catalog_file_pattern')); ?>
     </td>
+</tr>
+<tr>
     <td>
         <div id="dropfile">
             <?php echo T_('Drop File Here'); ?>
