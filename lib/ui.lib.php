@@ -350,7 +350,7 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
 
     if ($allow_add) {
         // Append additional option to the end with value=-1
-        echo "\t<option value=\"-1\">Add New...</option>\n";
+        echo "\t<option value=\"-1\">" . T_("Add New") . "...</option>\n";
     }
 
     echo "</select>\n";
@@ -391,7 +391,7 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
 
     if ($allow_add) {
         // Append additional option to the end with value=-1
-        echo "\t<option value=\"-1\">Add New...</option>\n";
+        echo "\t<option value=\"-1\">" . T_("Add New") . "...</option>\n";
     }
 
     echo "</select>\n";

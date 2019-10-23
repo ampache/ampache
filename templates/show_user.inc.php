@@ -137,7 +137,7 @@ if ($client->f_avatar) {
             UI::show_box_top(T_('Active Playlist')); ?>
         <table>
             <tr>
-                <td valign="top">
+                <td>
                     <?php
                         foreach ($object_ids as $object_data) {
                             $type   = array_shift($object_data);

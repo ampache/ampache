@@ -51,7 +51,7 @@
             </td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Message'); ?>:</td>
+            <td><?php echo T_('Message'); ?>:</td>
             <td>
                 <textarea class="input" name="message" rows="10" cols="70"></textarea>
             </td>
