@@ -527,7 +527,7 @@ class Album extends database_object implements library_item
         }
 
         $album_id = Dba::insert_id();
-        debug_event('album.class', 'Inserted new album id ' . $album_id, 4);
+        debug_event('album.class', 'Album check created new album id ' . $album_id, 4);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             try {

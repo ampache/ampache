@@ -158,9 +158,11 @@ class fs
         }
         throw new Exception('Not a valid selection: ' . $dir);
     }
+
     public function create($fs_id, $name, $mkdir = false)
     {
         $dir = $this->path($fs_id);
+        debug_event('fs.ajax', 'create ' . $fs_id . ' ' . $name, 5);
         if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
             throw new Exception('Invalid name: ' . $name);
         }
@@ -172,6 +174,7 @@ class fs
 
         return array('id' => $this->id($dir . DIRECTORY_SEPARATOR . $name));
     }
+
     public function rename($fs_id, $name)
     {
         $dir = $this->path($fs_id);
@@ -192,6 +195,7 @@ class fs
 
         return array('id' => $this->id($new));
     }
+
     public function remove($fs_id)
     {
         $dir = $this->path($fs_id);
@@ -210,6 +214,7 @@ class fs
 
         return array('status' => 'OK');
     }
+
     public function move($fs_id, $par)
     {
         $dir = $this->path($fs_id);
@@ -221,6 +226,7 @@ class fs
 
         return array('id' => $this->id($new));
     }
+
     public function copy($fs_id, $par)
     {
         $dir = $this->path($fs_id);

@@ -40,11 +40,14 @@ class Upload
 
         $catalog_id = AmpConfig::get('upload_catalog');
         if ($catalog_id > 0) {
+            debug_event('upload.class', 'Uploading to catalog ID ' . $catalog_id, 4);
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog->catalog_type == "local") {
                 $allowed = explode('|', AmpConfig::get('catalog_file_pattern'));
+                debug_event('upload.class', 'Uploading to local catalog', 5);
 
                 if (isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
+                    debug_event('upload.class', '$_FILES[upl] ' . $_FILES['upl']['name'], 5);
                     $extension = pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION);
 
                     if (!in_array(strtolower($extension), $allowed)) {
@@ -64,6 +67,7 @@ class Upload
                     }
 
                     $targetdir = realpath($targetdir);
+                    debug_event('upload.class', 'Target Directory `' . $targetdir, 4);
                     if (strpos($targetdir, $rootdir) === false) {
                         debug_event('upload.class', 'Something wrong with final upload path.', 1);
 
@@ -71,9 +75,11 @@ class Upload
                     }
 
                     $targetfile = $targetdir . DIRECTORY_SEPARATOR . $_FILES['upl']['name'];
+                    debug_event('upload.class', 'Target File `' . $targetfile, 4);
                     if (Core::is_readable($targetfile)) {
                         debug_event('upload.class', 'File `' . $targetfile . '` already exists.', 3);
-                        $targetfile .= '_' . time();
+                        $ext        = pathinfo($targetfile, PATHINFO_EXTENSION);
+                        $targetfile = str_replace(('.' . $ext), '_' . ((string) time() . '.' . $ext), $targetfile);
                         if (Core::is_readable($targetfile)) {
                             debug_event('upload.class', 'File `' . $targetfile . '` already exists.', 1);
 
@@ -238,7 +244,7 @@ class Upload
                 if (AmpConfig::get('upload_subdir')) {
                     $rootdir .= DIRECTORY_SEPARATOR . $username;
                     if (!Core::is_readable($rootdir)) {
-                        debug_event('upload.class', 'Target user directory `' . $rootdir . '` doesn\'t exists. Creating it...', 5);
+                        debug_event('upload.class', 'Target user directory `' . $rootdir . "` doesn't exist. Creating it...", 5);
                         mkdir($rootdir);
                     }
                 }
