@@ -169,7 +169,7 @@ if ($upload_max > 0) {
 ?>
 <table class="tabledata">
 <?php if (AmpConfig::get('licensing')) {
-        ?>
+    ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
     <td>
@@ -180,7 +180,7 @@ if ($upload_max > 0) {
     </td>
 </tr>
 <?php
-    } ?>
+} ?>
 <tr>
     <td>
         <?php echo T_('Files'); ?>
