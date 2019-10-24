@@ -251,7 +251,8 @@ $(function(){
 
             var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
                 ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
-            // Append the file name and file size
+
+          // Append the file name and file size
             tpl.find('p').text(data.files[0].name)
                          .append('<i>' + formatFileSize(data.files[0].size) + '</i>');
 
