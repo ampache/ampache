@@ -280,7 +280,7 @@ abstract class Catalog extends database_object
         echo '<script>' .
             "var type_fields = new Array();" .
             "type_fields['none'] = '';";
-        $seltypes = '<option value="none">[Select]</option>';
+        $seltypes = '<option value="none">[' . T_("Select") . ']</option>';
         $types    = self::get_catalog_types();
         foreach ($types as $type) {
             $catalog = self::create_catalog_type($type);

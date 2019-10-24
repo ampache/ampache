@@ -1074,6 +1074,11 @@ table.disablegv td.cel_rating {
     display: inline-block !important;
 }
 
+.tableform {
+    border-collapse: separate;
+    border-spacing: 5px 0;
+}
+
 #col_php_setting,
 #col_configuration {
     width: 20%;
@@ -1733,4 +1738,8 @@ a.option-list:hover {
 
 .error.show-disabled {
     text-align: center;
+}
+
+.find-duplicates strong {
+    display: block;
 }

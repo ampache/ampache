@@ -30,13 +30,13 @@ $all          = T_('All'); ?>
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Name') . ':'; ?></td>
-            <td colspan="3">
+            <td>
                 <input type="text" name="name" value="<?php echo scrub_out(Core::get_request('name')); ?>" />
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Level') . ':'; ?></td>
-            <td colspan="3">
+            <td>
                 <input name="level" type="radio" checked="checked" value="5" /> <?php echo T_('View'); ?>
                 <input name="level" type="radio" value="25" /> <?php echo T_('Read'); ?>
                 <input name="level" type="radio" value="50" /> <?php echo T_('Read/Write'); ?>
@@ -45,13 +45,13 @@ $all          = T_('All'); ?>
         </tr>
         <tr>
             <td><?php echo T_('User') . ':'; ?></td>
-            <td colspan="3">
+            <td>
                 <?php show_user_select('user'); ?>
             </td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Type') . ':'; ?></td>
-            <td colspan="3">
+            <td><?php echo T_('Type') . ':'; ?></td>
+            <td>
         <?php if ($action == 'show_add_rpc') {
     ?>
                 <input type="hidden" name="type" value="rpc" />
@@ -86,7 +86,7 @@ $all          = T_('All'); ?>
     &nbsp;
     <table class="tabledata">
         <tr>
-            <td colspan="4"><h3><?php echo T_('IPv4 or IPv6 Addresses'); ?></h3>
+            <td><h3><?php echo T_('IPv4 or IPv6 Addresses'); ?></h3>
                 <span class="information">(255.255.255.255) / (ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff)</span>
             </td>
         </tr>

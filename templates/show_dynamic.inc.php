@@ -29,7 +29,7 @@
         <th class="col_method"><?php echo T_('Method'); ?></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td>
             <select name="field">
             <?php
                 $fields = Song::get_fields();
@@ -51,10 +51,10 @@
                 <option value="like"><?php echo T_('Like'); ?></option>
             </select>
         </td>
-        <td valign="top">
+        <td>
             <input type="text" name="value" />
         </td>
-        <td valign="top">
+        <td>
             <select name="method">
                 <option value="OR"><?php echo T_('OR'); ?></option>
                 <option value="AND"><?php echo T_('AND'); ?></option>

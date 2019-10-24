@@ -60,18 +60,18 @@ $default_sort   = "%a/%A";
         </tr>
         <tr>
             <td><?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?></td>
-            <td valign="top"><input type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
+            <td><input type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Gather Art'); ?>:</td>
+            <td><?php echo T_('Gather Art'); ?>:</td>
             <td><input type="checkbox" name="gather_art" value="1" checked /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)'); ?>:</td>
+            <td><?php echo T_('Build Playlists from Playlist Files. (m3u, m3u8, asx, pls, xspf)'); ?>:</td>
             <td><input type="checkbox" name="parse_playlist" value="1" /></td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Catalog Media Type'); ?>:</td>
+            <td><?php echo T_('Catalog Media Type'); ?>:</td>
             <td>
 
                 <select name="gather_media">
