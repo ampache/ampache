@@ -557,7 +557,7 @@ class XML_Data
      */
     public static function albums($albums, $include = [], $full_xml = true)
     {
-        if (null == $include) {
+        if ($include == null || $include == '') {
             $include = array();
         }
         $string = "<total_count>" . count($albums) . "</total_count>\n";

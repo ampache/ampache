@@ -365,7 +365,7 @@ class Userflag extends database_object
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
-        $sql = "UPDATE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }

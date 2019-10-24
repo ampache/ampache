@@ -401,8 +401,15 @@ class Api
 
             return false;
         }
+        $type = (string) $input['type'];
+        // confirm the correct data
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
+            echo XML_Data::error('401', T_('Wrong object type ' . $type));
+
+            return;
+        }
         self::$browse->reset_filters();
-        self::$browse->set_type($input['type']);
+        self::$browse->set_type($type);
         self::$browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
@@ -414,14 +421,14 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
-        if ($input['type'] == 'playlist') {
+        if ($type == 'playlist') {
             $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists());
         } else {
             $objects = self::$browse->get_objects();
         }
         // echo out the resulting xml document
         ob_end_clean();
-        echo XML_Data::indexes($objects, $input['type']);
+        echo XML_Data::indexes($objects, $type);
     } // get_indexes
 
     /**
@@ -1194,9 +1201,9 @@ class Api
         $offset = $input['offset'];
         $limit  = $input['limit'];
         // original method only searched albums and had poor method inputs
-        if (in_array($input['type'], array('newest', 'highest', 'frequent', 'recent', 'flagged'))) {
+        if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'flagged'))) {
             $type   = 'album';
-            $filter = $input['type'];
+            $filter = $type;
         }
         if (!$limit) {
             $limit = AmpConfig::get('popular_threshold');
@@ -1441,9 +1448,15 @@ class Api
             return false;
         }
         ob_end_clean();
-        $type      = $input['type'];
+        $type      = (string) $input['type'];
         $object_id = $input['id'];
         $rating    = $input['rating'];
+        // confirm the correct data
+        if (!in_array($type, array('song', 'album', 'artist'))) {
+            echo XML_Data::error('401', T_('Wrong object type ' . $type));
+
+            return;
+        }
 
         if (!Core::is_library_item($type) || !$object_id) {
             echo XML_Data::error('401', T_('Wrong library item type'));
@@ -1489,6 +1502,12 @@ class Api
         $user_id   = null;
         if ($client) {
             $user_id = $client->id;
+        }
+        // confirm the correct data
+        if (!in_array($type, array('song', 'album', 'artist'))) {
+            echo XML_Data::error('401', T_('Wrong object type ' . $type));
+
+            return;
         }
 
         if (!Core::is_library_item($type) || !$object_id) {
@@ -1722,17 +1741,24 @@ class Api
      */
     public static function catalog_action($input)
     {
-        if (!self::check_parameter($input, array('catalog'))) {
-            debug_event('api.class', "'catalog' required on catalog_action function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'catalog'");
+        if (!self::check_parameter($input, array('catalog', 'task'))) {
+            debug_event('api.class', "'catalog', 'task' required on catalog_action function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'catalog', 'task'");
 
             return false;
         }
+        $task = (string) $input['task'];
+        // confirm the correct data
+        if (!in_array($task, array('add_to_catalog', 'clean_catalog'))) {
+            echo XML_Data::error('401', T_('Wrong catalog task ' . $type));
+
+            return;
+        }
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
-        if ($catalog && ((string) $input['task'] === 'add_to_catalog' || (string) $input['task'] === 'clean_catalog')) {
-            $catalog->process_action($input['task'], (int) $input['catalog']);
-            echo XML_Data::success('successfully started: ' . (string) $input['task']);
+        if ($catalog && ($task === 'add_to_catalog' || $task === 'clean_catalog')) {
+            $catalog->process_action($task, (int) $input['catalog']);
+            echo XML_Data::success('successfully started: ' . $task);
         }
     }
 
@@ -1894,8 +1920,14 @@ class Api
         }
         $object_id = $input['id'];
         $type      = $input['type'];
+        $size      = $input['size'];
 
-        $size = $input['size'];
+        // confirm the correct data
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
+            echo XML_Data::error('401', T_('Wrong object type ' . $type));
+
+            return;
+        }
 
         $art = null;
         if ($type == 'artist') {

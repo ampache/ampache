@@ -87,6 +87,7 @@
 * Fix allow cli tools to use system settings for plugins.
 * HTML5 doctype across the board. (<!DOCTYPE html>)
 * Allow the main sidebar to be reordered using CSS (.sb2_music, .sb2_video, .sb2_*)
+* Rework user uploads to rely on file tags ONLY instead of allowing manual choices.
 
 ## 3.9.1
 

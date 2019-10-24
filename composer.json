@@ -65,7 +65,7 @@
         "pklauzinski/jscroll": "2.*",
         "kumailht/responsive-elements": "dev-master",
         "swisnl/jquery-contextmenu": "2.1.*",
-        "blueimp/jquery-file-upload": "^9.18",
+        "blueimp/jquery-file-upload": "10.2.0",
         "krixon/xbmc-php-rpc": "dev-master",
         "friendsofphp/php-cs-fixer": "~2.12.0",
         "tightenco/collect": "5.2.*",

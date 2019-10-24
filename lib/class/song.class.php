@@ -414,14 +414,14 @@ class Song extends database_object implements media, library_item
             $album_id = (int) ($results['album_id']);
         }
 
-        $sql = 'INSERT INTO `song` (`file`, `catalog`, `album`, `artist`, ' .
+        $sql = 'INSERT INTO `song` (`catalog`, `file`, `album`, `artist`, ' .
             '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
             '`addition_time`, `year`, `mbid`, `user_upload`, `license`, ' .
             '`composer`, `channels`) ' .
             'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
-            $file, $catalog, $album_id, $artist_id,
+            $catalog, $file, $album_id, $artist_id,
             $title, $bitrate, $rate, $mode, $size, $time, $track,
             time(), $year, $track_mbid, $user_upload, $license,
             $composer, $channels));

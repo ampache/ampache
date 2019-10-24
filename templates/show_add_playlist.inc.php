@@ -31,8 +31,8 @@
             <td><?php echo T_('Type'); ?>:</td>
             <td>
                 <select name="type">
-                    <option value="private"> Private </option>
-                    <option value="public"> Public </option>
+                    <option value="private"><?php echo T_("Private"); ?></option>
+                    <option value="public"><?php echo T_("Public"); ?></option>
                 </select>
             </td>
         </tr>

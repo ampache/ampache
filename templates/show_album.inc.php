@@ -187,24 +187,14 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php if ($album->can_edit()) {
         $albumedit  = T_('Album Edit'); ?>
-            <?php if (AmpConfig::get('allow_upload')) {
-            $t_upload = T_('Upload'); ?>
-                <li>
-                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ? $album->album_artist : $album->artist_id); ?>&album=<?php echo $album->id ?>">
-                        <?php echo UI::get_icon('upload', $t_upload); ?>
-                        &nbsp;&nbsp;<?php echo $t_upload; ?>
-                    </a>
-                </li>
-            <?php
-        } ?>
-            <li>
-                <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
-                    <?php echo UI::get_icon('edit', T_('Edit')); ?>
-                </a>
-                <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
-                    <?php echo T_('Edit Album'); ?>
-                </a>
-            </li>
+        <li>
+            <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
+                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+            </a>
+            <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
+                <?php echo T_('Edit Album'); ?>
+            </a>
+        </li>
         <?php
     } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) {
