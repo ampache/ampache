@@ -414,12 +414,6 @@ class Song extends database_object implements media, library_item
             $album_id = (int) ($results['album_id']);
         }
 
-        if ((!$artist_id || $artist_id <= 0) || ($album_id || $album_id <= 0)) {
-            debug_event('song.class', 'Unable to insert ' . $file . ' Check your Artist and Album Tags', 2);
-
-            return false;
-        }
-
         $sql = 'INSERT INTO `song` (`catalog`, `file`, `album`, `artist`, ' .
             '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
             '`addition_time`, `year`, `mbid`, `user_upload`, `license`, ' .
