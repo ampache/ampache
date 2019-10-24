@@ -1161,7 +1161,7 @@ abstract class Catalog extends database_object
     public static function get_podcasts($catalogs = null)
     {
         if (!$catalogs) {
-            $catalogs = self::get_catalogs();
+            $catalogs = self::get_catalogs('podcast');
         }
 
         $results = array();
@@ -1209,7 +1209,7 @@ abstract class Catalog extends database_object
      */
     public static function get_newest_podcasts($count)
     {
-        $catalogs = self::get_catalogs();
+        $catalogs = self::get_catalogs('podcast');
         $results  = array();
 
         foreach ($catalogs as $catalog_id) {
