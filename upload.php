@@ -39,7 +39,7 @@ if (Core::get_server('CONTENT_LENGTH') > 0 && $post_max > 0 && Core::get_server(
 
     return false;
 }
-debug_event('upload', 'action ' . $_REQUEST['actionp'], 4);
+
 // Switch on the actions
 switch ($_REQUEST['actionp']) {
     case 'upload':
