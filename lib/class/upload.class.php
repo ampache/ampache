@@ -155,7 +155,6 @@ class Upload
      */
     public static function get_root($catalog = null, $username = null)
     {
-        debug_event('upload.class', 'get_root', 5);
         if ($catalog == null) {
             $catalog_id = AmpConfig::get('upload_catalog');
             if ($catalog_id > 0) {
