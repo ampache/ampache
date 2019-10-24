@@ -181,6 +181,9 @@ class Update
         $update_string = "* Make sure preference names are updated to current strings<br />";
         $version[]     = array('version' => '400003', 'description' => $update_string);
 
+        $update_string = "* Delete upload_user_artist database settings<br />";
+        $version[]     = array('version' => '400004', 'description' => $update_string);
+
         return $version;
     }
 
@@ -991,6 +994,28 @@ class Update
         $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Auto-pause between tabs' " .
                "WHERE `preference`.`name` = 'webplayer_pausetabs' ";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400004
+     *
+     * delete upload_user_artist database settings
+     */
+    public static function update_400004()
+    {
+        $retval = true;
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'upload_user_artist');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `preference` " .
+               "WHERE `preference`.`name` = 'upload_user_artist';";
         $retval &= Dba::write($sql);
 
         return $retval;
