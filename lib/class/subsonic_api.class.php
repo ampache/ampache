@@ -1971,11 +1971,11 @@ class Subsonic_Api
      */
     public static function getnewestpodcasts($input)
     {
-        //$count = $input['count'] ?: 20; // Seems to be useless code
+        $count = $input['count'] ?: AmpConfig::get('podcast_new_download');
 
         if (AmpConfig::get('podcast')) {
             $response = Subsonic_XML_Data::createSuccessResponse('getnewestpodcasts');
-            $episodes = Catalog::get_newest_podcasts(null);
+            $episodes = Catalog::get_newest_podcasts($count);
             Subsonic_XML_Data::addNewestPodcastEpisodes($response, $episodes);
         } else {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', 'getnewestpodcasts');

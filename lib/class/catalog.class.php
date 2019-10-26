@@ -1161,7 +1161,7 @@ abstract class Catalog extends database_object
     public static function get_podcasts($catalogs = null)
     {
         if (!$catalogs) {
-            $catalogs = self::get_catalogs();
+            $catalogs = self::get_catalogs('podcast');
         }
 
         $results = array();
@@ -1180,9 +1180,10 @@ abstract class Catalog extends database_object
      * get_newest_podcasts_ids
      *
      * This returns an array of ids of latest podcast episodes in this catalog
+     * @param integer $count
      * @return integer[]
      */
-    public function get_newest_podcasts_ids()
+    public function get_newest_podcasts_ids($count)
     {
         $results = array();
 
@@ -1190,6 +1191,9 @@ abstract class Catalog extends database_object
                 'INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ' .
                 'WHERE `podcast`.`catalog` = ? ' .
                 'ORDER BY `podcast_episode`.`pubdate` DESC';
+        if ($count > 0) {
+            $sql .= ' LIMIT ' . (string) $count;
+        }
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
@@ -1200,19 +1204,17 @@ abstract class Catalog extends database_object
 
     /**
      *
-     * @param int[]|null $catalogs
+     * @param integer $count
      * @return \Podcast_Episode[]
      */
-    public static function get_newest_podcasts($catalogs = null)
+    public static function get_newest_podcasts($count)
     {
-        if (!$catalogs) {
-            $catalogs = self::get_catalogs();
-        }
+        $catalogs = self::get_catalogs('podcast');
+        $results  = array();
 
-        $results = array();
         foreach ($catalogs as $catalog_id) {
             $catalog     = self::create_from_id($catalog_id);
-            $episode_ids = $catalog->get_newest_podcasts_ids();
+            $episode_ids = $catalog->get_newest_podcasts_ids($count);
             foreach ($episode_ids as $episode_id) {
                 $results[] = new Podcast_Episode($episode_id);
             }
