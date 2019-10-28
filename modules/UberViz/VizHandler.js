@@ -130,10 +130,10 @@ var VizHandler = (function() {
     return {
         init: init,
         update: update,
-        getVizHolder: function() { return vizHolder;},
-        getCamera: function() { return camera;},
-        getScene: function() { return scene;},
-        getRenderer: function() { return renderer;},
+        getVizHolder() { return vizHolder;},
+        getCamera() { return camera;},
+        getScene() { return scene;},
+        getRenderer() { return renderer;},
         onResize: onResize
     };
 
