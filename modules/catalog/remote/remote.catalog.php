@@ -92,7 +92,7 @@ class Catalog_remote extends Catalog
             "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
             ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $db_results = Dba::query($sql);
+        Dba::query($sql);
 
         return true;
     } // install

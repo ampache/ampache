@@ -67,6 +67,8 @@ class Ampachelyricwiki
      */
     public function load($user)
     {
+        $user->set_preferences();
+
         return true;
     } // load
 
