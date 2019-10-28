@@ -38,7 +38,7 @@ $type = $_POST['type'];
 if (empty($type)) {
     $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 }
-$object_id = $_GET['id'];
+$object_id = Core::get_get('id');
 
 if (empty($type)) {
     $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
