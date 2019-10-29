@@ -1750,7 +1750,7 @@ class Api
         $task = (string) $input['task'];
         // confirm the correct data
         if (!in_array($task, array('add_to_catalog', 'clean_catalog'))) {
-            echo XML_Data::error('401', T_('Wrong catalog task ' . $type));
+            echo XML_Data::error('401', T_('Wrong catalog task ' . $task));
 
             return;
         }

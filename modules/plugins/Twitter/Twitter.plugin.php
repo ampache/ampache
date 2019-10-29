@@ -90,7 +90,6 @@ class AmpacheTwitter
     public function load($user)
     {
         $user->set_preferences();
-        $data = $user->prefs;
 
         return true;
     } // load

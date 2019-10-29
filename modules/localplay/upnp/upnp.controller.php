@@ -90,7 +90,7 @@ class AmpacheUPnP extends localplay_controller
             "`owner` INT( 11 ) NOT NULL, " .
             "`url` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL  " .
             ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $db_results = Dba::query($sql);
+        Dba::query($sql);
 
         // Add an internal preference for the users current active instance
         Preference::insert('upnp_active', T_('UPnP Active Instance'), '0', '25', 'integer', 'internal', 'upnp');
@@ -104,8 +104,8 @@ class AmpacheUPnP extends localplay_controller
      */
     public function uninstall()
     {
-        $sql        = "DROP TABLE `localplay_upnp`";
-        $db_results = Dba::query($sql);
+        $sql = "DROP TABLE `localplay_upnp`";
+        Dba::query($sql);
 
         // Remove the pref we added for this
         Preference::delete('upnp_active');
@@ -132,8 +132,8 @@ class AmpacheUPnP extends localplay_controller
      */
     public function delete_instance($uid)
     {
-        $sql        = "DELETE FROM `localplay_upnp` WHERE `id` = ?";
-        $db_results = Dba::query($sql, array($uid));
+        $sql = "DELETE FROM `localplay_upnp` WHERE `id` = ?";
+        Dba::query($sql, array($uid));
 
         return true;
     }
@@ -147,8 +147,7 @@ class AmpacheUPnP extends localplay_controller
     {
         $sql        = "SELECT * FROM `localplay_upnp` ORDER BY `name`";
         $db_results = Dba::query($sql);
-
-        $results = array();
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
@@ -163,8 +162,8 @@ class AmpacheUPnP extends localplay_controller
      */
     public function update_instance($uid, $data)
     {
-        $sql        = "UPDATE `localplay_upnp` SET `url` = ?, `name` = ?  WHERE `id` = ?";
-        $db_results = Dba::query($sql, array($data['url'], $data['name'], $uid));
+        $sql = "UPDATE `localplay_upnp` SET `url` = ?, `name` = ?  WHERE `id` = ?";
+        Dba::query($sql, array($data['url'], $data['name'], $uid));
 
         return true;
     }

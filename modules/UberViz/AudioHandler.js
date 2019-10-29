@@ -155,11 +155,11 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide": function(event, ui) {  
+            "slide"(event, ui) {  
                 filter1.gain.value = ui.value;
 
              },
-            "stop": function(event, ui) {
+            "stop"(event, ui) {
                 console.log(filter1.gain.value);
             }
         };
@@ -172,11 +172,11 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide": function(event, ui) {  
+            "slide"(event, ui) {  
                 filter2.gain.value = ui.value;
 
              },
-            "stop": function(event, ui) {
+            "stop"(event, ui) {
                 console.log(filter2.gain.value);
             }
         };
@@ -189,11 +189,11 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide": function(event, ui) {  
+            "slide"(event, ui) {  
                 filter3.gain.value = ui.value;
 
              },
-            "stop": function(event, ui) {
+            "stop"(event, ui) {
                 console.log(filter3.gain.value);
             }
         };
@@ -206,11 +206,11 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide": function(event, ui) {  
+            "slide"(event, ui) {  
                 filter4.gain.value = ui.value;
 
              },
-            "stop": function(event, ui) {
+            "stop"(event, ui) {
                 console.log(filter4.gain.value);
             }
         };
@@ -223,11 +223,11 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide": function(event, ui) {  
+            "slide"(event, ui) {  
                 filter5.gain.value = ui.value;
 
              },
-            "stop": function(event, ui) {
+            "stop"(event, ui) {
                 console.log(filter5.gain.value);
             }
         };
@@ -529,9 +529,9 @@ var AudioHandler = (function() {
         loadMediaSource:loadMediaSource,
         onTap:onTap,
         onChangeBPMRate:onChangeBPMRate,
-        getLevelsData: function() { return levelsData;},
-        getVolume: function() { return volume;},
-        getBPMTime: function() { return bpmTime;}
+        getLevelsData() { return levelsData;},
+        getVolume() { return volume;},
+        getBPMTime() { return bpmTime;}
 
     };
 

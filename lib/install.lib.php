@@ -272,7 +272,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         for ($count = 0; $count < $p_count; $count++) {
             $pieces[$count] = trim($pieces[$count]);
             if (!empty($pieces[$count]) && $pieces[$count] != '#') {
-                if (!$result = Dba::write($pieces[$count])) {
+                if (!Dba::write($pieces[$count])) {
                     $errors[] = array(Dba::error(), $pieces[$count]);
                 }
             }

@@ -167,7 +167,7 @@ class Subsonic_Api
     /**
      * @param SimpleXMLElement $xml
      */
-    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'))
+    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album'))
     {
         $type     = $input['f'];
         $callback = $input['callback'];
@@ -178,7 +178,7 @@ class Subsonic_Api
      * @param SimpleXMLElement $xml
      * @param string $outputtype
      */
-    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'))
+    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album'))
     {
         $conf = array('alwaysArray' => $alwaysArray);
         if ($outputtype == "json") {
@@ -210,7 +210,7 @@ class Subsonic_Api
         $defaults = array(
             'namespaceSeparator' => ' :', //you may want this to be something other than a colon
             'attributePrefix' => '', //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'), //array of xml tag names which should always become arrays
+            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album'), //array of xml tag names which should always become arrays
             'autoArray' => true, //only create arrays for tags which appear more than once
             'textContent' => 'value', //key used for the text content of elements
             'autoText' => true, //skip textContent key if node has no attributes or child nodes
@@ -242,6 +242,8 @@ class Subsonic_Api
             }
         }
 
+        // these children must be in an array.
+        $forceArray = array('channel');
         //get child nodes from all namespaces
         $tagsArray = array();
         foreach ($namespaces as $prefix => $namespace) {
@@ -260,10 +262,9 @@ class Subsonic_Api
 
                     if (!isset($tagsArray[$childTagName])) {
                         //only entry with this key
-
                         if (count($childProperties) === 0) {
                             $tagsArray[$childTagName] = (object) $childProperties;
-                        } elseif (self::has_Nested_Array($childProperties)) {
+                        } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
                             $tagsArray[$childTagName] = (object) $childProperties;
                         } else {
 
@@ -454,7 +455,7 @@ class Subsonic_Api
 
     /**
      * getArtist
-     * Get details fro an artist, including a list of albums.
+     * Get details for an artist, including a list of albums.
      * Takes the artist id in parameter.
      */
     public static function getartist($input)
@@ -468,7 +469,7 @@ class Subsonic_Api
             $response = Subsonic_XML_Data::createSuccessResponse('getartist');
             Subsonic_XML_Data::addArtist($response, $artist, true, true);
         }
-        self::apiOutput($input, $response, array('musicFolder', 'child', 'playlist', 'song', 'album'));
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -490,7 +491,7 @@ class Subsonic_Api
             Subsonic_XML_Data::addAlbum($response, $album, true, $addAmpacheInfo);
         }
 
-        self::apiOutput($input, $response, array('musicFolder', 'artist', 'child', 'playlist', 'song'));
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -678,7 +679,7 @@ class Subsonic_Api
         $response = Subsonic_XML_Data::createSuccessResponse('getsong');
         $song     = Subsonic_XML_Data::getAmpacheId($songid);
         Subsonic_XML_Data::addSong($response, $song);
-        self::apiOutput($input, $response, array('musicFolder', 'artist', 'child', 'playlist', 'album'));
+        self::apiOutput($input, $response);
     }
 
     /**

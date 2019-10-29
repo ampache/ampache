@@ -114,14 +114,14 @@ class Wanted extends database_object
     public static function get_missing_albums($artist, $mbid = '')
     {
         $mb       = new MusicBrainz(new RequestsHttpAdapter());
-        $includes = array(
-            'release-groups'
-        );
-        $types = explode(',', AmpConfig::get('wanted_types'));
+        $includes = array('release-groups');
+        $types    = explode(',', AmpConfig::get('wanted_types'));
 
         try {
             $martist = $mb->lookup('artist', $artist ? $artist->mbid : $mbid, $includes);
         } catch (Exception $error) {
+            debug_event('wanted.class', 'get_missing_albums ERROR: ' . $error, 3);
+
             return null;
         }
 
@@ -162,6 +162,7 @@ class Wanted extends database_object
                 }
 
                 if ($add) {
+                    debug_event('wanted.class', 'get_missing_albums ADDING: ' . $group->title, 5);
                     if (!in_array($group->id, $owngroups)) {
                         $wantedid = self::get_wanted($group->id);
                         $wanted   = new Wanted($wantedid);

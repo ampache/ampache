@@ -98,7 +98,7 @@ class AmpacheXbmc extends localplay_controller
             "`user` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`pass` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL" .
             ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $db_results = Dba::query($sql);
+        Dba::query($sql);
 
         // Add an internal preference for the users current active instance
         Preference::insert('xbmc_active', T_('XBMC Active Instance'), '0', '25', 'integer', 'internal', 'xbmc');
@@ -112,8 +112,8 @@ class AmpacheXbmc extends localplay_controller
      */
     public function uninstall()
     {
-        $sql        = "DROP TABLE `localplay_xbmc`";
-        $db_results = Dba::query($sql);
+        $sql = "DROP TABLE `localplay_xbmc`";
+        Dba::query($sql);
 
         // Remove the pref we added for this
         Preference::delete('xbmc_active');
@@ -140,8 +140,8 @@ class AmpacheXbmc extends localplay_controller
      */
     public function delete_instance($uid)
     {
-        $sql        = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
-        $db_results = Dba::query($sql, array($uid));
+        $sql = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
+        Dba::query($sql, array($uid));
 
         return true;
     } // delete_instance
@@ -155,8 +155,7 @@ class AmpacheXbmc extends localplay_controller
     {
         $sql        = "SELECT * FROM `localplay_xbmc` ORDER BY `name`";
         $db_results = Dba::query($sql);
-
-        $results = array();
+        $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
@@ -171,8 +170,8 @@ class AmpacheXbmc extends localplay_controller
      */
     public function update_instance($uid, $data)
     {
-        $sql        = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
-        $db_results = Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid));
+        $sql = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
+        Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid));
 
         return true;
     } // update_instance
@@ -184,11 +183,11 @@ class AmpacheXbmc extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields['name']         = array('description' => T_('Instance Name'), 'type' => 'text');
-        $fields['host']         = array('description' => T_('Hostname'), 'type' => 'text');
-        $fields['port']         = array('description' => T_('Port'), 'type' => 'number');
-        $fields['user']         = array('description' => T_('Username'), 'type' => 'text');
-        $fields['pass']         = array('description' => T_('Password'), 'type' => 'password');
+        $fields['name'] = array('description' => T_('Instance Name'), 'type' => 'text');
+        $fields['host'] = array('description' => T_('Hostname'), 'type' => 'text');
+        $fields['port'] = array('description' => T_('Port'), 'type' => 'number');
+        $fields['user'] = array('description' => T_('Username'), 'type' => 'text');
+        $fields['pass'] = array('description' => T_('Password'), 'type' => 'password');
 
         return $fields;
     } // instance_fields
@@ -199,8 +198,7 @@ class AmpacheXbmc extends localplay_controller
     */
     public function get_instance($instance = '')
     {
-        $instance = $instance ? $instance : AmpConfig::get('xbmc_active');
-
+        $instance   = $instance ? $instance : AmpConfig::get('xbmc_active');
         $sql        = "SELECT * FROM `localplay_xbmc` WHERE `id` = ?";
         $db_results = Dba::query($sql, array($instance));
 

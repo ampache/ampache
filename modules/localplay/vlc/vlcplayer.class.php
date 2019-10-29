@@ -441,10 +441,10 @@ class VlcPlayer
         }//Hmm...
 
         //Initializations
-        $bigxml_array   = array();
-        $parents        = array();
-        $opened_tags    = array();
-        $arr            = array();
+        $bigxml_array = array();
+        //$parents      = array();
+        //$opened_tags  = array();
+        //$arr          = array();
 
         $current = &$bigxml_array; //Refference
 

@@ -971,7 +971,7 @@ class Album extends database_object implements library_item
     public function update(array $data)
     {
         $year           = isset($data['year']) ? $data['year'] : $this->year;
-        $artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
+        //$artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
         $album_artist   = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
         $name           = isset($data['name']) ? $data['name'] : $this->name;
         $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;

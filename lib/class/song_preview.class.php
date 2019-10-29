@@ -80,6 +80,13 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public static function insert($results)
     {
+        if ((int) $results['disk'] == 0) {
+            $results['disk'] = Album::sanitize_disk($results['disk']);
+        }
+        if ((int) $results['track'] == 0) {
+            $results['disk']  = Album::sanitize_disk($results['track'][0]);
+            $results['track'] = substr($results['track'], 1);
+        }
         $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) ' .
             ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
@@ -96,7 +103,7 @@ class Song_Preview extends database_object implements media, playable_item
         ));
 
         if (!$db_results) {
-            debug_event('song_preview.class', 'Unable to insert ' . $results[''], 2);
+            debug_event('song_preview.class', 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
 
             return false;
         }
@@ -206,7 +213,7 @@ class Song_Preview extends database_object implements media, playable_item
         // Format the artist name
         if ($this->artist) {
             $this->f_artist_full = $this->get_artist_name();
-            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
+            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist_full) . "</a>";
         } else {
             $wartist             = Wanted::get_missing_artist($this->artist_mbid);
             $this->f_artist_link = $wartist['link'];
