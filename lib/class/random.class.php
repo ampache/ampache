@@ -376,6 +376,10 @@ class Random
         }
 
         $sql = "";
+        
+        if ($catalog_disable) {
+            $catalog_disable_sql = " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1'";
+        }
         switch ($type) {
             case 'song':
                 $sql = "SELECT `song`.`id`, `size`, `time` " .
@@ -383,10 +387,7 @@ class Random
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
-                if ($catalog_disable) {
-                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                    $sql .= " WHERE `catalog`.`enabled` = '1'";
-                }
+                $sql .= $catalog_disable_sql;
                 if ($search_info) {
                     if ($catalog_disable) {
                         $sql .= ' AND ' . $search_info['where_sql'];
@@ -403,10 +404,7 @@ class Random
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
-                if ($catalog_disable) {
-                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                    $sql .= " WHERE `catalog`.`enabled` = '1'";
-                }
+                $sql .= $catalog_disable_sql;
                 if ($search_info) {
                     if ($catalog_disable) {
                         $sql .= ' AND ' . $search_info['where_sql'];
@@ -424,10 +422,7 @@ class Random
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
-                if ($catalog_disable) {
-                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                    $sql .= " WHERE `catalog`.`enabled` = '1'";
-                }
+                $sql .= $catalog_disable_sql;
                 if ($search_info) {
                     if ($catalog_disable) {
                         $sql .= ' AND ' . $search_info['where_sql'];
