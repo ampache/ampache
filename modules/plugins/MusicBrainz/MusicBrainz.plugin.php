@@ -98,6 +98,8 @@ class AmpacheMusicBrainz
         try {
             $track = $mb->lookup('recording', $mbid, $includes);
         } catch (Exception $error) {
+            debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+
             return null;
         }
 

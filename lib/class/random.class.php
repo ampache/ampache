@@ -361,6 +361,7 @@ class Random
      * Generate the sql query for self::advanced
      * @param array $data
      * @param string $type
+     * @param string $limit_sql
      * @return string
      */
     private static function advanced_sql($data, $type, $limit_sql)
@@ -375,6 +376,11 @@ class Random
             $search_info = $search->to_sql();
         }
 
+        $catalog_disable_sql = "";
+        if ($catalog_disable) {
+            $catalog_disable_sql = " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1'";
+        }
+
         $sql = "";
         switch ($type) {
             case 'song':
@@ -383,10 +389,7 @@ class Random
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
-                if ($catalog_disable) {
-                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                    $sql .= " WHERE `catalog`.`enabled` = '1'";
-                }
+                $sql .= $catalog_disable_sql;
                 if ($search_info) {
                     if ($catalog_disable) {
                         $sql .= ' AND ' . $search_info['where_sql'];
@@ -403,10 +406,7 @@ class Random
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
-                if ($catalog_disable) {
-                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                    $sql .= " WHERE `catalog`.`enabled` = '1'";
-                }
+                $sql .= $catalog_disable_sql;
                 if ($search_info) {
                     if ($catalog_disable) {
                         $sql .= ' AND ' . $search_info['where_sql'];
@@ -424,10 +424,7 @@ class Random
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
-                if ($catalog_disable) {
-                    $sql .= " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-                    $sql .= " WHERE `catalog`.`enabled` = '1'";
-                }
+                $sql .= $catalog_disable_sql;
                 if ($search_info) {
                     if ($catalog_disable) {
                         $sql .= ' AND ' . $search_info['where_sql'];

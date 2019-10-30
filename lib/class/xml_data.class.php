@@ -1117,7 +1117,7 @@ class XML_Data
         $xml->addAttribute("xmlns:xmlns:itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
         $xml->addAttribute("version", "2.0");
         $xchannel = $xml->addChild("channel");
-        $xchannel->addChild("title", $libitem->get_fullname() . " Podcast");
+        $xchannel->addChild("title", htmlspecialchars($libitem->get_fullname() . " Podcast"));
         //$xlink = $xchannel->addChild("atom:link", htmlentities($libitem->link));
         if (Art::has_db($libitem->id, get_class($libitem))) {
             $ximg = $xchannel->addChild("xmlns:itunes:image");
