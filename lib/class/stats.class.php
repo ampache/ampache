@@ -193,7 +193,7 @@ class Stats
         }
 
         $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
-        if ($date) {
+        if ($date !== '') {
             $sql .= "AND `date` >= '" . $date . "'";
         }
 
