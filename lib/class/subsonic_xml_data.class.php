@@ -784,7 +784,7 @@ class Subsonic_XML_Data
      */
     public static function addVideo($xml, $video, $elementName = 'video')
     {
-        $xvideo = $xml->addChild($elementName);
+        $xvideo = $xml->addChild(htmlspecialchars($elementName));
         $xvideo->addAttribute('id', (string) self::getVideoId($video->id));
         $xvideo->addAttribute('title', $video->f_full_title);
         $xvideo->addAttribute('isDir', 'false');
@@ -1147,7 +1147,7 @@ class Subsonic_XML_Data
         if (!empty($lyrics) && $lyrics['text']) {
             $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
             $text    = str_replace("\r", '', $text);
-            $xlyrics = $xml->addChild('lyrics', $text);
+            $xlyrics = $xml->addChild('lyrics', htmlspecialchars($text));
             if ($artist) {
                 $xlyrics->addAttribute('artist', $artist);
             }
@@ -1165,7 +1165,7 @@ class Subsonic_XML_Data
         $artist = new Artist($info['id']);
 
         $xartist = $xml->addChild('artistInfo');
-        $xartist->addChild('biography', trim($info['summary']));
+        $xartist->addChild('biography', htmlspecialchars(trim($info['summary'])));
         $xartist->addChild('musicBrainzId', $artist->mbid);
         //$xartist->addChild('lastFmUrl', "");
         $xartist->addChild('smallImageUrl', htmlentities($info['smallphoto']));
