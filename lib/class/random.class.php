@@ -361,6 +361,7 @@ class Random
      * Generate the sql query for self::advanced
      * @param array $data
      * @param string $type
+     * @param string $limit_sql
      * @return string
      */
     private static function advanced_sql($data, $type, $limit_sql)
@@ -375,11 +376,12 @@ class Random
             $search_info = $search->to_sql();
         }
 
-        $sql = "";
-        
+        $catalog_disable_sql = "";
         if ($catalog_disable) {
             $catalog_disable_sql = " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1'";
         }
+
+        $sql = "";
         switch ($type) {
             case 'song':
                 $sql = "SELECT `song`.`id`, `size`, `time` " .
