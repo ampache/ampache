@@ -1805,7 +1805,7 @@ class Api
      * update_art
      * MINIMUM_API_VERSION=400001
      *
-     * updates a single album, artist, song looking for art files
+     * updates a single album, artist, song running the gather_art process
      * Doesn't overwrite existing art by default.
      *
      * @param array $input
