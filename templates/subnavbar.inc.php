@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,8 +24,7 @@
  * This file expect an array of 'items' which have ['0']['url'] ['0']['title']
  * ['0']['active'] == true/false and ['0']['cssclass'] this is called from show_submenu($items);
  */
-
-?>
+ ?>
 <ul class="subnavside">
 <?php
     foreach ($items as $item) {
@@ -35,7 +34,7 @@
         }
         $li_id = "id=\"" . $item['cssclass'] . "\""; ?>
         <li <?php echo $li_class;
-        echo $li_id; ?>><a href="<?php echo AmpConfig::get('web_path') . "/" .  $item['url']; ?>"><?php echo $item['title']; ?></a></li>
+        echo $li_id; ?>><a href="<?php echo AmpConfig::get('web_path') . "/" . $item['url']; ?>"><?php echo $item['title']; ?></a></li>
     <?php unset($li_id);
-    } // END foreach ($items as $item) ?>
+    } // END foreach ($items as $item)?>
 </ul>

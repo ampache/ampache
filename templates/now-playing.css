@@ -1,0 +1,64 @@
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+/**
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * Copyright 2001 - 2017 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+body {
+    background-color: rgba(0, 0, 0, 0);
+    margin: 0px;
+    font-family: Arial,sans-serif;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 1.5em;
+    overflow: hidden;
+}
+a {
+    color: #ff9d00;
+    text-decoration: none;
+}
+label {
+    color: #fff;
+}
+.np_row {
+    background-color: rgba(50, 50, 50, 0.7);
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+}
+.box-top, .box-title, .box-bottom, .cel_username, .cel_tags, .similars, .cel_rating, .cel_userflag {
+    display: none;
+}
+#np_group_2 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding-left: 10px;
+}
+#np_group_3, .cel_song {
+    order: 1;
+}
+#np_group_2, .cel_artist {
+    order: 2;
+}
+.cel_album {
+    order: 3;
+}
+.item_art {
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}

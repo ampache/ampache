@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,6 +57,7 @@ class Ampache_RSS
                     $libitem = new $object_type($object_id);
                     if ($libitem->id) {
                         $libitem->format();
+
                         return XML_Data::podcast($libitem);
                     }
                 }
@@ -73,7 +74,7 @@ class Ampache_RSS
             }
 
             XML_Data::set_type('rss');
-            $xml_document = XML_Data::rss_feed($data, $this->get_title(), $this->get_description(), $pub_date);
+            $xml_document = XML_Data::rss_feed($data, $this->get_title(), $pub_date);
 
             return $xml_document;
         }
@@ -117,7 +118,7 @@ class Ampache_RSS
      */
     public static function validate_type($type)
     {
-        $valid_types = array('now_playing','recently_played','latest_album','latest_artist','latest_shout','podcast');
+        $valid_types = array('now_playing', 'recently_played', 'latest_album', 'latest_artist', 'latest_shout', 'podcast');
 
         if (!in_array($type, $valid_types)) {
             return 'now_playing';
@@ -134,9 +135,9 @@ class Ampache_RSS
      * @param array|null $params
      * @return string
      */
-    public static function get_display($type='now_playing', $title = '', $params = null)
+    public static function get_display($type = 'now_playing', $title = '', $params = null)
     {
-        // Default to now playing
+        // Default to Now Playing
         $type = self::validate_type($type);
 
         $strparams = "";
@@ -146,7 +147,7 @@ class Ampache_RSS
             }
         }
 
-        $string = '<a rel="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $strparams . '">' . UI::get_icon('feed', T_('RSS Feed'));
+        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $strparams . '">' . UI::get_icon('feed', T_('RSS Feed'));
         if (!empty($title)) {
             $string .= ' &nbsp;' . $title;
         }
@@ -159,7 +160,7 @@ class Ampache_RSS
 
     /**
      * load_now_playing
-     * This loads in the now playing information. This is just the raw data with key=>value pairs that could be turned
+     * This loads in the Now Playing information. This is just the raw data with key=>value pairs that could be turned
      * into an xml document if we so wished
      * @return array
      */
@@ -200,9 +201,9 @@ class Ampache_RSS
 
     /**
      * pubdate_now_playing
-     * this is the pub date we should use for the now playing information,
+     * this is the pub date we should use for the Now Playing information,
      * this is a little specific as it uses the 'newest' expire we can find
-     * @return int
+     * @return integer
      */
     public static function pubdate_now_playing()
     {
@@ -216,7 +217,7 @@ class Ampache_RSS
 
     /**
      * load_recently_played
-     * This loads in the recently played information and formats it up real nice like
+     * This loads in the Recently Played information and formats it up real nice like
      * @return array
      */
     public static function load_recently_played()
@@ -233,26 +234,26 @@ class Ampache_RSS
             $song   = new Song($item['object_id']);
             if ($song->enabled) {
                 $song->format();
-                $amount     = intval(time() - $item['date']+2);
+                $amount     = (int) (time() - $item['date'] + 2);
                 $final      = '0';
                 $time_place = '0';
                 while ($amount >= 1) {
                     $final = $amount;
                     $time_place++;
                     if ($time_place <= 2) {
-                        $amount = floor($amount/60);
+                        $amount = floor($amount / 60);
                     }
                     if ($time_place == '3') {
-                        $amount = floor($amount/24);
+                        $amount = floor($amount / 24);
                     }
                     if ($time_place == '4') {
-                        $amount = floor($amount/7);
+                        $amount = floor($amount / 7);
                     }
                     if ($time_place == '5') {
-                        $amount = floor($amount/4);
+                        $amount = floor($amount / 4);
                     }
                     if ($time_place == '6') {
-                        $amount = floor($amount/12);
+                        $amount = floor($amount / 12);
                     }
                     if ($time_place > '6') {
                         $final = $amount . '+';
@@ -262,11 +263,11 @@ class Ampache_RSS
 
                 $time_string = $final . ' ' . $time_unit[$time_place];
 
-                $xml_array = array('title'=>$song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-                            'link'=>str_replace('&amp;', '&', $song->link),
-                            'description'=>$song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
-                            'comments'=>$client->username,
-                            'pubDate'=>date("r", $item['date']));
+                $xml_array = array('title' => $song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
+                            'link' => str_replace('&amp;', '&', $song->link),
+                            'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
+                            'comments' => $client->username,
+                            'pubDate' => date("r", $item['date']));
                 $results[] = $xml_array;
             }
         } // end foreach
@@ -285,8 +286,8 @@ class Ampache_RSS
 
         $results = array();
 
-        foreach ($ids as $id) {
-            $album = new Album($id);
+        foreach ($ids as $albumid) {
+            $album = new Album($albumid);
             $album->format();
 
             $xml_array = array('title' => $album->f_name,
@@ -313,8 +314,8 @@ class Ampache_RSS
 
         $results = array();
 
-        foreach ($ids as $id) {
-            $artist = new Artist($id);
+        foreach ($ids as $artistid) {
+            $artist = new Artist($artistid);
             $artist->format();
 
             $xml_array = array('title' => $artist->f_name,
@@ -341,8 +342,8 @@ class Ampache_RSS
 
         $results = array();
 
-        foreach ($ids as $id) {
-            $shout = new Shoutbox($id);
+        foreach ($ids as $shoutid) {
+            $shout = new Shoutbox($shoutid);
             $shout->format();
             $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
             if ($object !== null) {
@@ -366,8 +367,8 @@ class Ampache_RSS
 
     /**
      * pubdate_recently_played
-     * This just returns the 'newest' recently played entry
-     * @return int
+     * This just returns the 'newest' Recently Played entry
+     * @return integer
      */
     public static function pubdate_recently_played()
     {

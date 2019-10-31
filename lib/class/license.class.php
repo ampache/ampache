@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,41 +48,41 @@ class License
      * Constructor
      * This pulls the license information from the database and returns
      * a constructed object
-     * @param int $id
+     * @param integer $license_id
      */
-    public function __construct($id)
+    public function __construct($license_id)
     {
         // Load the data from the database
-        $this->_get_info($id);
+        $this->has_info($license_id);
 
         return true;
     } // Constructor
 
     /**
-     * _get_info
+     * has_info
      * does the db call, reads from the license table
-     * @param int $id
+     * @param integer $id
      * @return boolean
      */
-    private function _get_info($id)
+    private function has_info($id)
     {
         $sql        = "SELECT * FROM `license` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($id));
 
         $data = Dba::fetch_assoc($db_results);
 
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             $this->$key = $value;
         }
 
         return true;
-    } // _get_info
+    } // has_info
 
     /**
      * create
      * This takes a key'd array of data as input and inserts a new license entry, it returns the auto_inc id
      * @param array $data
-     * @return int
+     * @return integer
      */
     public static function create(array $data)
     {
@@ -91,14 +91,14 @@ class License
         Dba::write($sql, array($data['name'], $data['description'], $data['external_link']));
         $insert_id = Dba::insert_id();
 
-        return $insert_id;
+        return (int) $insert_id;
     } // create
 
     /**
      * update
      * This takes a key'd array of data as input and updates a license entry
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {
@@ -120,7 +120,7 @@ class License
     /**
      * delete
      * this function deletes a specific license entry
-     * @param int $license_id
+     * @param integer $license_id
      */
     public static function delete($license_id)
     {
@@ -131,7 +131,7 @@ class License
     /**
      * get_licenses
      * Returns a list of licenses accessible by the current user.
-     * @return int[]
+     * @return integer[]
      */
     public static function get_licenses()
     {

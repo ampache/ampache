@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,50 +21,43 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-if ($browse->get_show_header()) {
+if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-}
-?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="video">
+} ?>
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="video">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-        <?php if (Art::is_enabled()) {
-    ?>
+        <?php if (Art::is_enabled()) { ?>
             <th class="cel_cover"><?php echo T_('Art'); ?></th>
-        <?php 
+        <?php
 } ?>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'sort_video_title'); ?></th>
             <th class="cel_add essential"></th>
 <?php
 if (isset($video_type) && $video_type != 'video') {
     require AmpConfig::get('prefix') . UI::find_template('show_partial_' . $video_type . 's.inc.php');
-}
-?>
+} ?>
             <th class="cel_release_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'), 'sort_video_release_date'); ?></th>
             <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'sort_video_codec'); ?></th>
             <th class="cel_resolution optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'sort_video_rez'); ?></th>
             <th class="cel_length optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'), 'sort_video_length'); ?></th>
-            <?php if (AmpConfig::get('show_played_times')) {
-    ?>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
-            <?php 
+            <?php
 } ?>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
-            <?php if (User::is_registered()) {
-    ?>
-                <?php if (AmpConfig::get('ratings')) {
-    ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php 
-} ?>
-                <?php if (AmpConfig::get('userflags')) {
-    ?>
+                <?php
+        } ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
                     <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
-                <?php 
-} ?>
-            <?php 
-} ?>
+                <?php
+        } ?>
+            <?php
+    } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
@@ -81,60 +74,53 @@ if (isset($video_type) && $video_type != 'video') {
         <tr id="video_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_video_row.inc.php'); ?>
         </tr>
-        <?php 
-        } //end foreach  ?>
-        <?php if (!count($object_ids)) {
-    ?>
+        <?php
+        } //end foreach?>
+        <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="42"><span class="nodata"><?php echo T_('No video found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-        <?php if (Art::is_enabled()) {
-    ?>
+        <?php if (Art::is_enabled()) { ?>
             <th class="cel_cover"><?php echo T_('Art'); ?></th>
-        <?php 
-} ?>
+        <?php
+        } ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'sort_video_title'); ?></th>
             <th class="cel_add"></th>
 <?php
 if (isset($video_type) && $video_type != 'video') {
-    require AmpConfig::get('prefix') . UI::find_template('show_partial_' . $video_type . 's.inc.php');
-}
-?>
+            require AmpConfig::get('prefix') . UI::find_template('show_partial_' . $video_type . 's.inc.php');
+        } ?>
             <th class="cel_release_date"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'), 'sort_video_release_date'); ?></th>
             <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'sort_video_codec'); ?></th>
             <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'sort_video_rez'); ?></th>
             <th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'), 'sort_video_length'); ?></th>
-            <?php if (AmpConfig::get('show_played_times')) {
-    ?>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
-            <?php 
+            <?php
 } ?>
             <th class="cel_tags"><?php echo T_('Tags'); ?></th>
-            <?php if (User::is_registered()) {
-    ?>
-                <?php if (AmpConfig::get('ratings')) {
-    ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating"><?php echo T_('Rating'); ?></th>
-                <?php 
-} ?>
-                <?php if (AmpConfig::get('userflags')) {
-    ?>
+                <?php
+        } ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
                     <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
-                <?php 
-} ?>
-            <?php 
-} ?>
+                <?php
+        } ?>
+            <?php
+    } ?>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>
     </tfoot>
 </table>
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+<?php if ($browse->is_show_header()) {
+        require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    } ?>

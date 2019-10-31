@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,23 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
 <div id="information_actions">
     <ul>
-        <?php if (Access::check('interface', 25)) {
-    ?>
+        <?php if (Access::check('interface', 25)) { ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Add Smart Playlist'); ?></a>
         </li>
-        <?php 
+        <?php
 } ?>
     </ul>
 </div>
-<?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="smartplaylist">
+<?php if ($browse->is_show_header()) {
+     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+ } ?>
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="smartplaylist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -56,15 +54,14 @@
         <tr class="<?php echo UI::flip_class(); ?>" id="smartplaylist_row_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_search_row.inc.php'); ?>
         </tr>
-        <?php 
-        } // end foreach ($playlists as $playlist) ?>
-        <?php if (!count($object_ids)) {
-    ?>
+        <?php
+        } // end foreach ($playlists as $playlist)?>
+        <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="6"><span class="nodata"><?php echo T_('No smart playlist found'); ?></span></td>
         </tr>
-        <?php 
-} ?>
+        <?php
+        } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -79,7 +76,6 @@
         </tr>
     </tfoot>
 </table>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+<?php if ($browse->is_show_header()) {
+            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        } ?>

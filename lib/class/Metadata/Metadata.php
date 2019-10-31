@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -111,8 +111,8 @@ trait Metadata
 
     /**
      *
-     * @param type $name
-     * @param type $public
+     * @param string $name
+     * @param boolean $public
      * @return \Lib\Metadata\Model\MetadataField
      */
     protected function createField($name, $public)
@@ -123,6 +123,7 @@ trait Metadata
             $field->hide();
         }
         $this->metadataFieldRepository->add($field);
+
         return $field;
     }
 
@@ -140,6 +141,7 @@ trait Metadata
         } else {
             $field = $this->createField($propertie, $public);
         }
+
         return $field;
     }
 
@@ -161,8 +163,8 @@ trait Metadata
         if (!$this->disabledMetadataFields) {
             $fields = array();
             $ids    = explode(',', \AmpConfig::get('disabled_custom_metadata_fields'));
-            foreach ($ids as $id) {
-                $field = $this->metadataFieldRepository->findById($id);
+            foreach ($ids as $metaid) {
+                $field = $this->metadataFieldRepository->findById($metaid);
                 if ($field) {
                     $fields[] = $field->getName();
                 }
@@ -171,6 +173,7 @@ trait Metadata
                     $fields, explode(',', \AmpConfig::get('disabled_custom_metadata_fields_input'))
             );
         }
+
         return $this->disabledMetadataFields;
     }
 }

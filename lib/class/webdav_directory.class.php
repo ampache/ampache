@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,9 +39,13 @@ class WebDAV_Directory extends DAV\Collection
         $this->libitem->format();
     }
 
+    /**
+     * getChildren
+     * @return array
+     */
     public function getChildren()
     {
-        debug_event('webdav', 'Directory getChildren', 5);
+        debug_event('webdav_directory.class', 'Directory getChildren', 5);
         $children = array();
         $childs   = $this->libitem->get_childrens();
         foreach ($childs as $key => $child) {
@@ -53,9 +57,14 @@ class WebDAV_Directory extends DAV\Collection
                 $children[] = WebDAV_Directory::getChildFromArray($child);
             }
         }
+
         return $children;
     }
 
+    /**
+     * getChild
+     * @return \WebDAV_File|\WebDAV_Directory
+     */
     public function getChild($name)
     {
         // Clean song name
@@ -65,7 +74,7 @@ class WebDAV_Directory extends DAV\Collection
             $nameinfo  = pathinfo($name);
             $name      = $nameinfo['filename'];
         }
-        debug_event('webdav', 'Directory getChild: ' . $name, 5);
+        debug_event('webdav_directory.class', 'Directory getChild: ' . $name, 5);
         $matches = $this->libitem->search_childrens($name);
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
@@ -74,9 +83,12 @@ class WebDAV_Directory extends DAV\Collection
         }
 
         throw new DAV\Exception\NotFound('The child with name: ' . $name . ' could not be found');
-        ;
     }
 
+    /**
+     * getChildFromArray
+     * @return \WebDAV_File|\WebDAV_Directory
+     */
     public static function getChildFromArray($array)
     {
         $libitem = new $array['object_type']($array['object_id']);
@@ -91,12 +103,21 @@ class WebDAV_Directory extends DAV\Collection
         }
     }
 
+    /**
+     * childExists
+     * @return boolean
+     */
     public function childExists($name)
     {
         $matches = $this->libitem->search_childrens($name);
+
         return (count($matches) > 0);
     }
 
+    /**
+     * getName
+     * @return string
+     */
     public function getName()
     {
         return $this->libitem->get_fullname();

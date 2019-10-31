@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,24 +18,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+ */ ?>
+<!DOCTYPE html>
 <html lang="en-US">
     <head>
-        <!-- Propulsed by Ampache | ampache.org -->
+        <!-- Propelled by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Ampache -- Debug Page</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?php echo T_("Ampache") . " -- " . T("Debug Page"); ?></title>
         <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
-                    <?php echo T_('Ampache'); ?> - For the love of Music
+                    <img src="<?php echo UI::get_logo_url('dark'); ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
+                    <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music'); ?>
                 </a>
             </div>
         </div>
@@ -45,20 +45,19 @@
         </div>
         <div class="well">
             <p>
-                <?php echo T_('You may have reached this page because a configuration error has occured. Debug information is below.'); ?>
-                <?php if (!is_readable($configfile)) {
-    ?>
+                <?php echo T_('You may have reached this page because a configuration error has occurred. Debug information is below.'); ?>
+                <?php if (!is_readable($configfile)) { ?>
                 | <a href="install.php"><?php echo T_('Web Installation'); ?></a>
-                <?php 
+                <?php
 } ?>
             </p>
         </div>
         <div>
-            <table class="table" cellpadding="3" cellspacing="0">
+            <table class="table">
                 <tr>
-                    <th><?php echo T_('CHECK'); ?></th>
-                    <th><?php echo T_('STATUS'); ?></th>
-                    <th><?php echo T_('DESCRIPTION'); ?></th>
+                    <th><?php echo T_('Check'); ?></th>
+                    <th><?php echo T_('Status'); ?></th>
+                    <th><?php echo T_('Description'); ?></th>
                 </tr>
                 <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
             </table>

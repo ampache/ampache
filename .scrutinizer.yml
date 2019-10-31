@@ -4,7 +4,7 @@ filter:
         - 'lib/vendor/*'
         - 'modules/*'
     paths: {  }
- 
+
 tools:
     php_mess_detector:
         enabled: true

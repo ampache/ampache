@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,16 +18,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Configure License')); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=edit">
-<?php if (isset($license)) {
-    ?>
+<?php if (isset($license)) { ?>
 <input type="hidden" name="license_id" value="<?php echo $license->id; ?>" />
-<?php 
+<?php
 } ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
     <td><input type="text" name="name" value="<?php if (isset($license)) {
