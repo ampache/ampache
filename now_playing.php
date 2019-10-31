@@ -27,9 +27,7 @@ require_once 'lib/init.php';
 if (!AmpConfig::get('use_now_playing_embedded') || AmpConfig::get('demo_mode')) {
     UI::access_denied();
     exit;
-}
-
-?>
+} ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
 <head>
@@ -37,8 +35,7 @@ if (!AmpConfig::get('use_now_playing_embedded') || AmpConfig::get('demo_mode')) 
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <title><?php echo AmpConfig::get('site_title') . ' - ' . T_("Now Playing"); ?></title>
 <?php
-if (AmpConfig::get('now_playing_css_file')) {
-    ?>
+if (AmpConfig::get('now_playing_css_file')) { ?>
     <link rel="stylesheet" href="<?php echo $web_path;
     echo AmpConfig::get('now_playing_css_file'); ?>" type="text/css" media="screen" />
 <?php
@@ -79,7 +76,6 @@ if (Core::get_request('user_id') !== '') {
     });
 }
 
-require AmpConfig::get('prefix') . UI::find_template('show_now_playing.inc.php');
-?>
+require AmpConfig::get('prefix') . UI::find_template('show_now_playing.inc.php'); ?>
 </body>
 </html>

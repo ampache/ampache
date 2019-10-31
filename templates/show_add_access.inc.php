@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
 <?php AmpError::display('general');
 $apirpc       = T_('API/RPC');
@@ -52,8 +51,7 @@ $all          = T_('All'); ?>
         <tr>
             <td><?php echo T_('Type') . ':'; ?></td>
             <td>
-        <?php if ($action == 'show_add_rpc') {
-    ?>
+        <?php if ($action == 'show_add_rpc') { ?>
                 <input type="hidden" name="type" value="rpc" />
                 <select name="addtype">
                     <option value="rpc"><?php echo $apirpc; ?></option>
@@ -61,16 +59,14 @@ $all          = T_('All'); ?>
                     <option value="all"><?php $apirpc . ' + ' . $all; ?></option>
         <?php
 } else {
-        if ($action == 'show_add_local') {
-            ?>
+    if ($action == 'show_add_local') { ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
                     <option value="network"><?php echo $localnetwork; ?></option>
                     <option value="stream"><?php $localnetwork . ' + ' . $streamaccess; ?></option>
                     <option selected="selected" value="all"><?php $localnetwork . ' + ' . $all; ?></option>
         <?php
-        } else {
-            ?>
+        } else { ?>
                 <select name="type">
                     <option selected="selected" value="stream"><?php echo $streamaccess; ?></option>
                     <option value="interface"><?php echo T_('Web Interface'); ?></option>
@@ -78,7 +74,7 @@ $all          = T_('All'); ?>
                     <option value="rpc"><?php echo $apirpc; ?></option>
         <?php
         }
-    } ?>
+} ?>
                 </select>
             </td>
         </tr>

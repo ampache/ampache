@@ -20,8 +20,7 @@
  *
  */
 
-$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-?>
+$htmllang = str_replace("_", "-", AmpConfig::get('lang')); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
@@ -34,7 +33,6 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 <?php
 echo '<a href="javascript:window.close()" title="' . T_('Click to close window') . '">';
 echo '<img src="' . AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out($_GET['id']) . '&object_type=album&auth=' . session_id() . '" alt="" />';
-echo "</a>";
-?>
+echo "</a>"; ?>
 </body>
 </html>

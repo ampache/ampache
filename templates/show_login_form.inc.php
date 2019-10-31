@@ -40,8 +40,7 @@ $user_agent     = Core::get_server('HTTP_USER_AGENT');
 
 if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'))) {
     $mobile_session = true;
-}
-?>
+} ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
 
@@ -85,11 +84,9 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                     </div>
                 </div>
 
-                <?php if (Mailer::is_mail_enabled()) {
-    ?>
+                <?php if (Mailer::is_mail_enabled()) { ?>
                     <div class="loginoptions">
-                        <?php if (AmpConfig::get('allow_public_registration')) {
-        ?>
+                        <?php if (AmpConfig::get('allow_public_registration')) { ?>
                             <a class="button nohtml" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
                         <?php
     } // end if allow_public_registration?>

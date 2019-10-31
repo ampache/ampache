@@ -18,13 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');
 $addrpc     = T_('Add API / RPC Host');
-$addlocal   = T_('Add Local Network Definition');
-?>
+$addlocal   = T_('Add Local Network Definition'); ?>
 <div id="information_actions" class="left-column">
 <ul>
     <li>
@@ -43,8 +41,7 @@ $addlocal   = T_('Add Local Network Definition');
 <?php UI::show_box_bottom(); ?>
 <?php UI::show_box_top(T_('Access Control Entries'), 'box box_access_entries'); ?>
 <?php Ajax::start_container('browse_content', 'browse_content'); ?>
-<?php if (count($list)) {
-    ?>
+<?php if (count($list)) { ?>
 <table class="tabledata">
 <thead>
     <tr class="th-top">

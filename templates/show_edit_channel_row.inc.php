@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <div>
     <form method="post" id="edit_channel_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
@@ -36,8 +35,7 @@
                                 echo " selected";
                             }
                             echo ">" . $playlist->f_name . "</option>";
-                        }
-?>
+                        } ?>
                 </select></td>
             </tr>
             <tr>

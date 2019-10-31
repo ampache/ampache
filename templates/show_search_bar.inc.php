@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php
 $t_search = T_('Search'); ?>
 <div id="sb_Subsearch">
@@ -35,13 +34,11 @@ $t_search = T_('Search'); ?>
             <option value="artist"><?php echo $t_artists?></option>
             <option value="playlist_name"><?php echo $t_playlists?></option>
             <option value="tag"><?php echo T_('Tags')?></option>
-            <?php if (AmpConfig::get('label')) {
-    ?>
+            <?php if (AmpConfig::get('label')) { ?>
                 <option value="label"><?php echo T_('Labels')?></option>
             <?php
 } ?>
-            <?php if (AmpConfig::get('wanted')) {
-        ?>
+            <?php if (AmpConfig::get('wanted')) { ?>
                 <option value="missing_artist"><?php echo T_('Missing Artists')?></option>
             <?php
     } ?>
@@ -50,8 +47,7 @@ $t_search = T_('Search'); ?>
         echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\"style=\"display: none;\" id=\"searchBtn\" />";
     } else {
         echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\" id=\"searchBtn\" />";
-    }
-?>
+    } ?>
     </form>
 </div>
 

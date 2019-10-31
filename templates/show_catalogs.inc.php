@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -46,8 +45,7 @@
             } ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="6">
-            <?php if (!count($object_ids)) {
-                ?>
+            <?php if (!count($object_ids)) { ?>
                 <span class="nodata"><?php echo T_('No Catalog found'); ?></span>
             <?php
             } ?>

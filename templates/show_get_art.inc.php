@@ -18,15 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Customize Search'), 'box box_get_albumart'); ?>
 <form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name'));?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
     <table class="tabledata">
         <?php
         foreach ($keywords as $key => $word) {
-            if ($key != 'keyword' && $word['label']) {
-                ?>
+            if ($key != 'keyword' && $word['label']) { ?>
                 <tr>
                     <td>
                         <?php echo $word['label']; ?>&nbsp;
@@ -37,8 +35,7 @@
                 </tr>
         <?php
             }
-        }
-        ?>
+        } ?>
         <tr>
             <td>
                 <?php echo T_('Direct URL to Image'); ?>

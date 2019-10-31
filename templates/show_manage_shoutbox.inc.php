@@ -20,8 +20,7 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path = AmpConfig::get('web_path'); ?>
 <table class="tabledata">
     <thead>
         <tr class="th-top">
@@ -46,8 +45,7 @@ $web_path = AmpConfig::get('web_path');
 
             require AmpConfig::get('prefix') . UI::find_template('show_shout_row.inc.php'); ?>
         <?php
-        } if (!count($object_ids)) {
-            ?>
+        } if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="6" class="error"><?php echo T_('No records found'); ?></td>
         </tr>

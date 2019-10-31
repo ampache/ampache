@@ -19,11 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+ } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>"  data-objecttype="broadcast">
     <thead>
         <tr class="th-top">
@@ -45,8 +44,7 @@
         </tr>
         <?php
         } ?>
-        <?php if (!count($object_ids)) {
-            ?>
+        <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="6"><span class="nodata"><?php echo T_('No Broadcast found'); ?></span></td>
         </tr>

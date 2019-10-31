@@ -23,8 +23,7 @@
 $boxtitle = T_('Statistical Graphs');
 if ($blink) {
     $boxtitle .= ' - ' . $blink;
-}
-?>
+} ?>
 <?php UI::show_box_top($boxtitle, 'box box_graph'); ?>
 <div class="stats_graph">
     <?php
@@ -37,16 +36,14 @@ if ($blink) {
 </div>
 
 <?php
-if (AmpConfig::get('geolocation')) {
-        ?>
+if (AmpConfig::get('geolocation')) { ?>
     <div class="stats_graph">
     <?php
         $graph = new Graph();
         $graph->display_map($user_id, $object_type, $object_id, $start_date, $end_date, $zoom); ?>
     </div>
 <?php
-    }
-?>
+    } ?>
 
 <form action='<?php echo get_current_path(); ?>' method='post' enctype='multipart/form-data'>
     <dl class="media_details">
@@ -73,8 +70,7 @@ if (AmpConfig::get('geolocation')) {
                         echo "selected";
                     }
                     echo ">" . $dname . "</option>";
-                }
-            ?>
+                } ?>
             </select>
         </dd>
         <?php $rowparity = UI::flip_class(); ?>

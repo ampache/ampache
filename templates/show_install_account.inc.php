@@ -20,8 +20,7 @@
  *
  */
 
-require $prefix . '/templates/install_header.inc.php';
-?>
+require $prefix . '/templates/install_header.inc.php'; ?>
 <div class="jumbotron">
     <h1><?php echo T_('Install Progress'); ?></h1>
     <div class="progress">

@@ -18,5 +18,4 @@ if (filter_has_var(INPUT_SERVER, 'HTTPS') && Core::get_server('HTTPS') == 'on') 
 $fromurl = rawurlencode($scheme . "://" . $domain . $_SERVER[REQUEST_URI]);
 
 header("Location: http://ampache.org/maintenance/?from=" . $fromurl);
-exit;
-?>
+exit; ?>

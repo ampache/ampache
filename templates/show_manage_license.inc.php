@@ -20,8 +20,7 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path = AmpConfig::get('web_path'); ?>
 <div id="information_actions">
     <ul>
         <li>
@@ -45,8 +44,7 @@ $web_path = AmpConfig::get('web_path');
 
             require AmpConfig::get('prefix') . UI::find_template('show_license_row.inc.php'); ?>
         <?php
-        } if (!count($object_ids)) {
-            ?>
+        } if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="6" class="error"><?php echo T_('No licenses found'); ?></td>
         </tr>

@@ -131,9 +131,7 @@ class UPnPFind
 }
 
 
-$devices = UPnPFind::findDevices();
-
-?>
+$devices = UPnPFind::findDevices(); ?>
 
 <pre>
 <?php print_r($devices); ?>

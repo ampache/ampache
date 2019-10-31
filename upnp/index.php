@@ -11,8 +11,7 @@ if (!AmpConfig::get('upnp_backend')) {
 if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
     $msIP = 1;
     Upnp_Api::sddpSend($msIP);
-}
-?>
+} ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -21,8 +20,7 @@ if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
 <?php
     if (Core::get_get('btnSendAuto') !== '') {
         echo '<meta http-equiv="refresh" content="1">';
-    }
-?>
+    } ?>
 <title><?php echo T_("Ampache") . " " . T_("UPnP"); ?></title>
 <style media="screen">
 body {
@@ -49,8 +47,7 @@ body {
 <br />
 <?php
 if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
-    echo 'SSDP sent at ' . date('H:i:s') . '.';
-}
-?>
+        echo 'SSDP sent at ' . date('H:i:s') . '.';
+    } ?>
 </body>
 </html>

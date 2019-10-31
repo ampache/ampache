@@ -23,8 +23,7 @@
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
 header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
-
-?>
+ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,11 +35,11 @@ header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 <meta property="og:site_name" content="Ampache"/>
 <?php
 if (!$is_share) {
-    $stream_id = $_REQUEST['playlist_id'];
-    if (is_string($stream_id) || is_integer($stream_id)) {
-        $playlist = new Stream_Playlist($stream_id);
-    }
-}
+     $stream_id = $_REQUEST['playlist_id'];
+     if (is_string($stream_id) || is_integer($stream_id)) {
+         $playlist = new Stream_Playlist($stream_id);
+     }
+ }
 
 $isRadio = false;
 $isVideo = false;
@@ -55,5 +54,4 @@ if (isset($playlist)) {
         $isVideo = WebPlayer::is_playlist_video($playlist);
     }
 }
-require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player.inc.php');
-?>
+require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player.inc.php'); ?>

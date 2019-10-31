@@ -22,8 +22,7 @@
 
 $localplay = new Localplay(AmpConfig::get('localplay_controller'));
 $localplay->connect();
-$status = $localplay->status();
-?>
+$status = $localplay->status(); ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -54,8 +53,7 @@ $status = $localplay->status();
             </td>
         </tr>
         <?php
-        } if (!count($object_ids)) {
-            ?>
+        } if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="3"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>

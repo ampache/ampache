@@ -20,11 +20,9 @@
  *
  */
 
-$object_type = strtolower(get_class($object));
-?>
+$object_type = strtolower(get_class($object)); ?>
 <div>
-<?php if (Access::check('interface', '25')) {
-    ?>
+<?php if (Access::check('interface', '25')) { ?>
 <div style="float: right">
 <?php
 $boxtitle = T_('Post to Shoutbox');
@@ -40,8 +38,7 @@ $boxtitle = T_('Post to Shoutbox');
 <tr>
     <td><textarea rows="5" cols="35" maxlength="140" name="comment"></textarea></td>
 </tr>
-<?php if (Access::check('interface', '50')) {
-        ?>
+<?php if (Access::check('interface', '50')) { ?>
 <tr>
     <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>
@@ -65,14 +62,12 @@ $boxtitle = T_('Post to Shoutbox');
 <div style="display: inline;">
 <?php
 $boxtitle = $object->f_title . ' ' . T_('Shoutbox');
-UI::show_box_top($boxtitle, 'box box_add_shout');
-?>
+UI::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <?php
 $shouts = Shoutbox::get_shouts($object_type, $object->id);
 if (count($shouts)) {
     require_once AmpConfig::get('prefix') . UI::find_template('show_shoutbox.inc.php');
-}
-?>
+} ?>
 <?php UI::show_box_bottom(); ?>
 </div>
 </div>

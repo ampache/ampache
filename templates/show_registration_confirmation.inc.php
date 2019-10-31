@@ -23,8 +23,7 @@
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 $web_path = AmpConfig::get('web_path');
 
-$_SESSION['login'] = true;
-?>
+$_SESSION['login'] = true; ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
     <head>
@@ -53,11 +52,9 @@ $_SESSION['login'] = true;
                     if (!AmpConfig::get('user_no_email_confirm')) {
                         $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information');
                     }
-                    show_confirmation(T_('Your Account Has Been Created'), $text, $url);
-                    ?>
+                    show_confirmation(T_('Your Account Has Been Created'), $text, $url); ?>
                 </div>
             </div>
         </div>
 <?php
-UI::show_footer();
-?>
+UI::show_footer(); ?>

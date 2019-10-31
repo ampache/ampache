@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <tr>
     <td><?php echo T_('PHP version'); ?></td>
     <td>
@@ -36,8 +35,7 @@
     </td>
     <td>
     <?php echo T_('This tests whether Ampache dependencies are installed.'); ?>
-    <?php if (!check_dependencies_folder()) {
-    ?>
+    <?php if (!check_dependencies_folder()) { ?>
         <br />
         <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --prefer-source --no-interaction` on the Ampache directory.'); ?></b>
     <?php
@@ -198,8 +196,7 @@
     </td>
 </tr>
 <?php
-if (!defined('INSTALL')) {
-        ?>
+if (!defined('INSTALL')) { ?>
 <tr>
     <td><?php echo T_('Configuration file readability'); ?></td>
     <td>
@@ -257,5 +254,4 @@ if (!defined('INSTALL')) {
     </td>
 </tr>
 <?php
-    }
-?>
+    } ?>

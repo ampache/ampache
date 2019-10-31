@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
@@ -54,8 +53,7 @@
         <?php
         if (AutoUpdate::is_update_available()) {
             AutoUpdate::show_new_version();
-        }
-        ?>
+        } ?>
         <br />
     <?php UI::show_box_bottom(); ?>
 
@@ -147,16 +145,14 @@
             }
 
             // Be sure to print only scalar values
-            if ($value === null || is_scalar($value)) {
-                ?>
+            if ($value === null || is_scalar($value)) { ?>
             <tr class="<?php echo UI::flip_class(); ?>">
                 <td><strong><?php echo $key; ?></strong></td>
                 <td><?php echo $value; ?></td>
             </tr>
 <?php
             }
-        }
-?>
+        } ?>
             </tbody>
         </table>
     <?php UI::show_box_bottom(); ?>

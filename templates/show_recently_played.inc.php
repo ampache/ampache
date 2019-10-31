@@ -21,8 +21,7 @@
  */
 
 $link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played') :  '';
-UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played');
-?>
+UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <table class="tabledata">
     <thead>
         <tr class="th-top">
@@ -87,16 +86,13 @@ foreach ($data as $row) {
         <td class="cel_play">
             <span class="cel_play_content">&nbsp;</span>
             <div class="cel_play_hover">
-            <?php if (AmpConfig::get('directplay')) {
-        ?>
+            <?php if (AmpConfig::get('directplay')) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $nb . '_' . $song->id); ?>
-                <?php if (Stream_Playlist::check_autoplay_next()) {
-            ?>
+                <?php if (Stream_Playlist::check_autoplay_next()) { ?>
                     <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $nb . '_' . $song->id); ?>
                 <?php
         } ?>
-                <?php if (Stream_Playlist::check_autoplay_append()) {
-            ?>
+                <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                     <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $nb . '_' . $song->id); ?>
                 <?php
         } ?>
@@ -126,10 +122,8 @@ foreach ($data as $row) {
     </tr>
 <?php
     ++$nb;
-}
-?>
-<?php if (!count($data)) {
-    ?>
+} ?>
+<?php if (!count($data)) { ?>
     <tr>
         <td colspan="8"><span class="nodata"><?php echo T_('No recently played items found'); ?></span></td>
     </tr>
@@ -154,8 +148,7 @@ foreach ($data as $row) {
     $user_id_a = '';
     if (isset($user_id) && !empty($user_id)) {
         $user_id_a = "&amp;user_id=" . scrub_out($user_id);
-    }
-?>
+    } ?>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=recent<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>
 <script>

@@ -18,10 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<?php if (Access::check('interface', '50')) {
-    ?>
+ */ ?>
+<?php if (Access::check('interface', '50')) { ?>
 <?php UI::show_box_top(T_('Manage'), 'info-box'); ?>
 <div id="information_actions">
 <ul>
@@ -34,8 +32,8 @@
 <?php
 } ?>
 <?php if ($browse->is_show_header()) {
-        require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-    } ?>
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="live_stream">
     <thead>
         <tr class="th-top">
@@ -57,8 +55,7 @@
         </tr>
         <?php
         } //end foreach ($artists as $artist)?>
-        <?php if (!count($object_ids)) {
-            ?>
+        <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
         </tr>

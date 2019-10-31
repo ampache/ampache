@@ -20,12 +20,10 @@
  *
  */
 
- // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/
-?>
+ // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 UI::show_box_top(T_('Upload'));
-$ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';
-?>
+$ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php'; ?>
 <div id="container" role="main">
     <div id="tree"></div>
     <div id="data">
@@ -161,15 +159,12 @@ $(function () {
 <input type="hidden" id="folder" name="folder" value="" />
 <?php
 // Display a max file size client side if we know it
-if ($upload_max > 0) {
-    ?>
+if ($upload_max > 0) { ?>
     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
 <?php
-}
-?>
+} ?>
 <table class="tabledata">
-<?php if (AmpConfig::get('licensing')) {
-    ?>
+<?php if (AmpConfig::get('licensing')) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
     <td>
@@ -187,8 +182,7 @@ if ($upload_max > 0) {
         <?php
         if ($upload_max > 0) {
             echo " (< " . UI::format_bytes($upload_max) . ")";
-        }
-        ?>
+        } ?>
         <br /><br />
         <?php echo T_('Allowed file type'); ?>:<br />
         <?php echo str_replace("|", ", ", AmpConfig::get('catalog_file_pattern')); ?>

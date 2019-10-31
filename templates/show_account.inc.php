@@ -22,13 +22,11 @@
 
 // Because this is a reset of the persons password make the form a little more secure
 
-$display_fields = (array) AmpConfig::get('registration_display_fields');
-?>
+$display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php AmpError::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
     <table class="tabledata">
-        <?php if (in_array('fullname', $display_fields)) {
-    ?>
+        <?php if (in_array('fullname', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('Full Name'); ?>:</td>
                 <td>
@@ -43,8 +41,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
                 <input type="text" name="email" id="email" value="<?php echo scrub_out($client->email); ?>" />
             </td>
         </tr>
-        <?php if (in_array('website', $display_fields)) {
-        ?>
+        <?php if (in_array('website', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('Website'); ?>:</td>
                 <td>
@@ -53,8 +50,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
             </tr>
         <?php
     } ?>
-        <?php if (in_array('state', $display_fields)) {
-        ?>
+        <?php if (in_array('state', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('State'); ?>:</td>
                 <td>
@@ -63,8 +59,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
             </tr>
         <?php
     } ?>
-        <?php if (in_array('city', $display_fields)) {
-        ?>
+        <?php if (in_array('city', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('City'); ?>:</td>
                 <td>
@@ -100,8 +95,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
 	      <?php
                 if ($client->f_avatar) {
                     echo $client->f_avatar;
-                }
-                ?>
+                } ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
             </td>
@@ -115,7 +109,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
                 <span>
                     <?php if ($client->apikey) {
                     $urlinfo       = parse_url(AmpConfig::get('web_path'));
-                    $apikey_qrcode = "ampache://" . $client->apikey . "@" . $urlinfo['host'];
+                    $apikey_qrcode = "https://" . $client->apikey . "@" . $urlinfo['host'];
                     if ($urlinfo['port'] && $urlinfo['port'] != 80) {
                         $apikey_qrcode .= ":" . $urlinfo['port'];
                     }

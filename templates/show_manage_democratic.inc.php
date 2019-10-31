@@ -50,8 +50,7 @@ UI::show_box_top(T_('Manage'));  ?>
         </td>
     </tr>
     <?php
-        } if (!count($playlists)) {
-            ?>
+        } if (!count($playlists)) { ?>
     <tr>
         <td colspan="7"><span class="nodata"><?php echo T_('No democratic found'); ?></span></td>
     </tr>
