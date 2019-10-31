@@ -1868,7 +1868,7 @@ class Song extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = false)
+    public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = false, $original = false)
     {
         $media = new $object_type($object_id);
         if (!$media->id) {
@@ -1884,7 +1884,7 @@ class Song extends database_object implements media, library_item
         // Some players doesn't allow a type streamed into another without giving the right extension
         $transcode_cfg = AmpConfig::get('transcode');
         $valid_types   = Song::get_stream_types_for_type($type, $player);
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
+        if ($transcode_cfg == 'always' && !$original || ($transcode_cfg != 'never' && !in_array('native', $valid_types) && !$original)) {
             $transcode_settings = $media->get_transcode_settings(null);
             if ($transcode_settings) {
                 debug_event('song.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings... ", 5);
@@ -1918,9 +1918,9 @@ class Song extends database_object implements media, library_item
      * @param boolean $uid
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
     {
-        return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid);
+        return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid, $original);
     }
 
     /**

@@ -61,6 +61,8 @@
 * API - New Method: user_update (update user details and passwords for non-admins)
 * API - New Method: user_delete (you can't delete yourself or and admin account!)
 * API - New Method: update_from_tags (updates a single album, artist, song from the tag data instead of the entire library!)
+* API - New Method: update_art (updates a single album, artist, song running the gather_art process)
+* API - New Method: update_artist_info (Update artist information and fetch similar artists from last.fm)
 * Fix slideshow creating black screen when using web player
 * Default to disk 1 instead of 0 (db updates to handle existing albums)
 * Add Barcode, Original Year and Catalog Number to Album table

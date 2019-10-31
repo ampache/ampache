@@ -1805,7 +1805,7 @@ class Api
      * update_art
      * MINIMUM_API_VERSION=400001
      *
-     * updates a single album, artist, song looking for art files
+     * updates a single album, artist, song running the gather_art process
      * Doesn't overwrite existing art by default.
      *
      * @param array $input
@@ -1893,7 +1893,7 @@ class Api
      * $input = array(id      = (string) $song_id / $podcast_episode_id
      *                type    = (string) 'song'|'podcast'
      *                bitrate = (int) max bitrate for transcoding
-     *                format  = (string) 'mp3'|'ogg', etc
+     *                format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
      *                offset  = (int) time offset in seconds
      *                length  = (string) 'true'|'false'
      */
@@ -1930,10 +1930,10 @@ class Api
 
         $url = '';
         if ($type == 'song') {
-            $url = Song::play_url($fileid, $params, 'api', function_exists('curl_version'), $user_id);
+            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id);
         }
         if ($type == 'podcast') {
-            $url = Podcast_Episode::play_url($fileid, $params, 'api', function_exists('curl_version'), $user_id);
+            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id);
         }
         if (!empty($url)) {
             header("Location: " . str_replace(':443/play', '/play', $url));
@@ -1947,11 +1947,12 @@ class Api
      * download
      * MINIMUM_API_VERSION=400001
      *
-     * Downloads a given media file.
+     * Downloads a given media file. set format=raw to download the full file
      *
      * @param array $input
-     * $input = array(id   = (string) $song_id / $podcast_episode_id
-     *                type = (string) 'song'|'podcast')
+     * $input = array(id     = (string) $song_id / $podcast_episode_id
+     *                type   = (string) 'song'|'podcast'
+     *                format = (string) 'mp3'|'ogg', etc //optional)
      */
     public static function download($input)
     {
@@ -1961,17 +1962,25 @@ class Api
 
             return false;
         }
-        $fileid  = $input['id'];
-        $type    = $input['type'];
-        $user_id = User::get_from_username(Session::username($input['auth']))->id;
+        $fileid   = $input['id'];
+        $type     = $input['type'];
+        $format   = $input['format'];
+        $original = ($format && $format != "raw") ? true : false;
+        $user_id  = User::get_from_username(Session::username($input['auth']))->id;
 
         $url    = '';
         $params = '&action=download' . '&client=api' . '&noscrobble=1';
+        if ($original) {
+            $params .= '&transcode_to=' . $format;
+        }
+        if ($format) {
+            $params .= '&format=' . $format;
+        }
         if ($type == 'song') {
-            $url = Song::play_url($fileid, $params, 'api', function_exists('curl_version'), $user_id);
+            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if ($type == 'podcast') {
-            $url = Podcast_Episode::play_url($fileid, $params, 'api', function_exists('curl_version'), $user_id);
+            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
             header("Location: " . str_replace(':443/play', '/play', $url));
@@ -2076,7 +2085,7 @@ class Api
      *
      * @param array $input
      * $input = array(username = (string) $username
-     *                fullname = (string) $fullname // optional
+     *                fullname = (string) $fullname //optional
      *                password = (string) hash('sha256', $password))
      *                email    = (string) $email)
      */
@@ -2115,14 +2124,14 @@ class Api
      *
      * @param array $input
      * $input = array(username   = (string) $username
-     *                password   = (string) hash('sha256', $password)) // optional
-     *                fullname   = (string) $fullname // optional
-     *                email      = (string) $email // optional
-     *                website    = (string) $website // optional
-     *                state      = (string) $state // optional
-     *                city       = (string) $city // optional
-     *                disable    = (string) 'true'|'false' // optional
-     *                maxbitrate = (int) $maxbitrate // optional
+     *                password   = (string) hash('sha256', $password)) //optional
+     *                fullname   = (string) $fullname //optional
+     *                email      = (string) $email //optional
+     *                website    = (string) $website //optional
+     *                state      = (string) $state //optional
+     *                city       = (string) $city //optional
+     *                disable    = (string) 'true'|'false' //optional
+     *                maxbitrate = (int) $maxbitrate //optional
      */
     public static function user_update($input)
     {
