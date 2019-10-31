@@ -204,7 +204,7 @@ class Democratic extends Tmp_Playlist
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
      * @param integer $limit
-     * @return array
+     * @return integer[]
      */
     public function get_items($limit = null)
     {
@@ -510,6 +510,7 @@ class Democratic extends Tmp_Playlist
     /**
      * create
      * This is the democratic play create function it inserts this into the democratic table
+     * @return PDOStatement|boolean
      */
     public static function create($data)
     {
@@ -597,6 +598,7 @@ class Democratic extends Tmp_Playlist
     /**
      * get_vote
      * This returns the current count for a specific song
+     * @param integer $id
      */
     public function get_vote($id)
     {

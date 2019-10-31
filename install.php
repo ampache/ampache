@@ -112,7 +112,7 @@ header('Content-Type: text/html; charset=' . AmpConfig::get('site_charset'));
 // Correct potential \ or / in the dirname
 $safe_dirname = get_web_path();
 
-$web_path = $http_type . $_SERVER['HTTP_HOST'] . $safe_dirname;
+$web_path = $http_type . Core::get_server('HTTP_HOST') . $safe_dirname;
 
 unset($safe_dirname);
 
@@ -145,17 +145,17 @@ switch ($_REQUEST['action']) {
         require_once 'templates/show_install_config.inc.php';
     break;
     case 'create_config':
-        $all  = (isset($_POST['create_all']));
-        $skip = (isset($_POST['skip_config']));
+        $all  = (filter_has_var(INPUT_POST, 'create_all'));
+        $skip = (filter_has_var(INPUT_POST, 'skip_config'));
         if (!$skip) {
-            $write                     = (isset($_POST['write']));
-            $download                  = (isset($_POST['download']));
-            $download_htaccess_channel = (isset($_POST['download_htaccess_channel']));
-            $download_htaccess_rest    = (isset($_POST['download_htaccess_rest']));
-            $download_htaccess_play    = (isset($_POST['download_htaccess_play']));
-            $write_htaccess_channel    = (isset($_POST['write_htaccess_channel']));
-            $write_htaccess_rest       = (isset($_POST['write_htaccess_rest']));
-            $write_htaccess_play       = (isset($_POST['write_htaccess_play']));
+            $write                     = (filter_has_var(INPUT_POST, 'write'));
+            $download                  = (filter_has_var(INPUT_POST, 'download'));
+            $download_htaccess_channel = (filter_has_var(INPUT_POST, 'download_htaccess_channel'));
+            $download_htaccess_rest    = (filter_has_var(INPUT_POST, 'download_htaccess_rest'));
+            $download_htaccess_play    = (filter_has_var(INPUT_POST, 'download_htaccess_play'));
+            $write_htaccess_channel    = (filter_has_var(INPUT_POST, 'write_htaccess_channel'));
+            $write_htaccess_rest       = (filter_has_var(INPUT_POST, 'write_htaccess_rest'));
+            $write_htaccess_play       = (filter_has_var(INPUT_POST, 'write_htaccess_play'));
 
             $created_config = true;
             if ($write_htaccess_channel || $download_htaccess_channel || $all) {

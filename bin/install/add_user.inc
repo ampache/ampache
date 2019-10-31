@@ -62,6 +62,4 @@ else {
     exit(1);
 }
 
-User::fix_preferences('-1');
-
-?>
+User::fix_preferences('-1'); ?>

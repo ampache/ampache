@@ -4,6 +4,7 @@
 
 * Resolve CVE-2019-12385 for the SQL Injection
 * Resolve CVE-2019-12386 for the persistent XSS
+* Resolve NS-18-046 Multiple Reflected Cross-site Scripting Vulnerabilities in Ampache 3.9.0
 * Remove charts/graphs that use non-free graph library pchart
 * Update the CSS theme colors and structure.
 * Light theme updated.
@@ -59,6 +60,9 @@
 * API - New Method: user_create ('user' access level only!)
 * API - New Method: user_update (update user details and passwords for non-admins)
 * API - New Method: user_delete (you can't delete yourself or and admin account!)
+* API - New Method: update_from_tags (updates a single album, artist, song from the tag data instead of the entire library!)
+* API - New Method: update_art (updates a single album, artist, song running the gather_art process)
+* API - New Method: update_artist_info (Update artist information and fetch similar artists from last.fm)
 * Fix slideshow creating black screen when using web player
 * Default to disk 1 instead of 0 (db updates to handle existing albums)
 * Add Barcode, Original Year and Catalog Number to Album table
@@ -74,6 +78,8 @@
 * Subsonic - New Method: updateUser
 * Subsonic - New Method: getTopSongs
 * Subsonic - Fix cover art for playlists and albums
+* Subsonic - Enable getChatMessages, addMessage allowing server chat
+* Subsonic - Api fixes for podcast playback, Ultrasonic/Dsub workarounds
 * Added SVG support to the theme engine.
 * New Plugin - Matomo.plugin. [<https://matomo.org/>]
 * New Plugin - ListenBrainz.plugin [<https://listenbrainz.org/>]
@@ -81,6 +87,9 @@
 * Fix MySQL8 installation using mysql_native_password
 * Fix Catalog Manager can now access catalog areas correctly
 * Fix allow cli tools to use system settings for plugins.
+* HTML5 doctype across the board. (<!DOCTYPE html>)
+* Allow the main sidebar to be reordered using CSS (.sb2_music, .sb2_video, .sb2_*)
+* Rework user uploads to rely on file tags ONLY instead of allowing manual choices.
 
 ## 3.9.1
 

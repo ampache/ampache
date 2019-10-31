@@ -137,7 +137,7 @@ class SeafileAdapter
         while (true) {
             try {
                 return $func();
-            } catch (ClientException $e) {
+            } catch (ClientException $error) {
                 if ($e->getResponse()->getStatusCode() !== 429) {
                     throw $e;
                 }
@@ -188,7 +188,7 @@ class SeafileAdapter
                 $this->directory_cache[$path] = $directory;
 
                 return $directory;
-            } catch (ClientException $e) {
+            } catch (ClientException $error) {
                 if ($e->getResponse()->getStatusCode() == 404) {
                     $this->directory_cache[$path] = false;
 

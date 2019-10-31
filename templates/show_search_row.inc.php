@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
@@ -29,8 +28,7 @@
             if (Stream_Playlist::check_autoplay_append()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $libitem->id);
             }
-        }
-    ?>
+        } ?>
     </div>
 </td>
 <td class="cel_playlist"><?php echo $libitem->f_link; ?></td>
@@ -48,20 +46,17 @@
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <td class="cel_action">
         <?php
-            if (Access::check_function('batch_download') && check_can_zip('search')) {
-                ?>
-                <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
+            if (Access::check_function('batch_download') && check_can_zip('search')) { ?>
+                <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
                     <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
                 </a>
         <?php
             }
-            if ($libitem->has_access()) {
-                ?>
+            if ($libitem->has_access()) { ?>
                 <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Smart Playlist Edit') ?>', 'smartplaylist_row_')">
                     <?php echo UI::get_icon('edit', T_('Edit')); ?>
                 </a>
                 <?php
                 echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id);
-            }
-        ?>
+            } ?>
 </td>

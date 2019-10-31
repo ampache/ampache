@@ -31,7 +31,7 @@ if (!Access::check('interface', '75')) {
 
 UI::show_header();
 
-$catalogs = $_REQUEST['catalogs'];
+$catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_STRING) : array();
 $action   = Core::get_request('action');
 // If only one catalog, check it is ready.
 if (is_array($catalogs) && count($catalogs) == 1 && $action !== 'delete_catalog' && $action !== 'show_delete_catalog') {
@@ -233,7 +233,7 @@ switch ($_REQUEST['action']) {
         if (count($songs)) {
             require AmpConfig::get('prefix') . UI::find_template('show_disabled_songs.inc.php');
         } else {
-            echo "<div class=\"error\" align=\"center\">" . T_('No disabled Songs found') . "</div>";
+            echo '<div class="error show-disabled">' . T_('No disabled Songs found') . '</div>';
         }
     break;
     case 'show_delete_catalog':
@@ -247,7 +247,7 @@ switch ($_REQUEST['action']) {
         $nexturl = AmpConfig::get('web_path') . '/admin/catalog.php?action=delete_catalog&amp;catalog_id=' . scrub_out($_REQUEST['catalog_id']);
         show_confirmation(T_('Are You Sure?'),
                 /* HINT: Catalog Name */
-                sprintf(T_('This will permanently delete "%s"'), $catalog->name), $nexturl, 1);
+                sprintf(T_('This will permanently delete the catalog "%s"'), $catalog->name), $nexturl, 1);
     break;
     case 'show_customize_catalog':
         $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);

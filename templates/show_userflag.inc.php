@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('User Favorites')); ?>
 <?php require_once AmpConfig::get('prefix') . UI::find_template('show_stats_userflag.inc.php'); ?>
 <?php UI::show_box_bottom(); ?>

@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
         }
 
         if ($tvshow->remove_from_disk()) {
-            show_confirmation(T_('No Problem'), T_('TV Show has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('TV Show has been deleted'), AmpConfig::get('web_path'));
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this TV Show"), AmpConfig::get('web_path'));
         }

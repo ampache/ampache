@@ -337,8 +337,9 @@ class Access
         }
 
         // Clean incoming variables
-        $user_ip = $user_ip ?: filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
-        $user_ip = inet_pton($user_ip);
+        $user_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')
+            ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+            : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
 
         switch ($type) {
             case 'init-api':
@@ -352,6 +353,7 @@ class Access
             // Intentional break fall-through
             case 'api':
                 $type = 'rpc';
+            // Intentional break fall-through
             case 'network':
             case 'interface':
             case 'stream':
@@ -364,7 +366,7 @@ class Access
                 'WHERE `start` <= ? AND `end` >= ? ' .
                 'AND `level` >= ? AND `type` = ?';
 
-        $params = array($user_ip, $user_ip, $level, $type);
+        $params = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
 
         if (strlen($user) && $user != '-1') {
             $sql .= " AND `user` IN(?, '-1')";
@@ -376,9 +378,11 @@ class Access
         $db_results = Dba::read($sql, $params);
 
         if (Dba::fetch_row($db_results)) {
-            // Yah they have access they can use the mojo
+            debug_event('access.class', 'check_network ' . $type . ': ip matched ACL ' . $user_ip, 5);
+
             return true;
         }
+        debug_event('access.class', 'check_network ' . $type . ': ip not found in ACL ' . $user_ip, 3);
 
         return false;
     }

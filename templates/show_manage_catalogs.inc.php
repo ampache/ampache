@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs') ?>
 <div id="information_actions">
     <ul style="float: left;">
@@ -46,7 +45,7 @@
         </li>
     </ul>
     <form style="padding-left: 250px;" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update_from">
-        <table class="tabledata2" cellspacing="0" cellpadding="0">
+        <table class="tabledata2">
             <tr>
                 <td><?php /* HINT: /data/myNewMusic */ ?><?php printf(T_('Add new files from: %s'), '<span class="information">/data/myNewMusic</span>'); ?></td>
                 <td><input type="text" name="add_path" value="/" /></td>
@@ -69,5 +68,4 @@
     $browse->set_static_content(true);
     $browse->save_objects($catalog_ids);
     $browse->show_objects($catalog_ids);
-    $browse->store();
-?>
+    $browse->store(); ?>

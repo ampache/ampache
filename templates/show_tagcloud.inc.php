@@ -25,8 +25,7 @@ $tag_types = array(
     'album' => T_('Album'),
     'song' => T_('Song'),
     'video' => T_('Video'),
-);
-?>
+); ?>
 <?php Ajax::start_container('tag_filter'); ?>
 
 <form action="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=tag" method="POST">
@@ -39,21 +38,18 @@ $tag_types = array(
                 echo " selected";
             }
             echo ">" . $tag_name . "</option>";
-        }
-        ?>
+        } ?>
     </select>
 <input type="submit" value="Ok" />
 </form>
 
-<?php foreach ($object_ids as $data) {
-            ?>
+<?php foreach ($object_ids as $data) { ?>
     <div class="tag_container">
         <div class="tag_button">
             <span id="click_tag_<?php echo $data['id']; ?>"><?php echo $data['name']; ?></span>
             <?php echo Ajax::observe('click_tag_' . $data['id'], 'click', Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $data['id'], '')); ?>
         </div>
-        <?php if (Access::check('interface', '50')) {
-                ?>
+        <?php if (Access::check('interface', '50')) { ?>
         <div class="tag_actions">
             <ul>
                 <li>
@@ -74,7 +70,7 @@ $tag_types = array(
 
 <br /><br /><br />
 <?php
-if (isset($_GET['show_tag'])) {
+if (filter_has_var(INPUT_GET, 'show_tag')) {
             $show_tag = (int) (Core::get_get('show_tag')); ?>
 <script>
 $(document).ready(function () {
@@ -83,8 +79,7 @@ $(document).ready(function () {
 </script>
 <?php
         } ?>
-<?php if (!count($object_ids)) {
-            ?>
+<?php if (!count($object_ids)) { ?>
 <span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>
 <?php
         } ?>

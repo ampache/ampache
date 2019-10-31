@@ -35,8 +35,7 @@ if (empty($local_pass)) {
     $local_pass = scrub_out($_REQUEST['local_pass']);
 }
 
-require $prefix . '/templates/install_header.inc.php';
-?>
+require $prefix . '/templates/install_header.inc.php'; ?>
         <div class="jumbotron">
             <h1><?php echo T_('Install Progress'); ?></h1>
             <div class="progress">
@@ -97,7 +96,7 @@ require $prefix . '/templates/install_header.inc.php';
 <div class="form-group">
     <label for="local_pass" class="col-sm-4 control-label"><?php echo T_('MySQL Password'); ?></label>
     <div class="col-sm-8">
-        <input type="password" class="form-control" id="local_pass" name="local_pass" value="<?php echo $local_pass; ?>" placeholder="Password (Required)">
+        <input type="password" class="form-control" id="local_pass" name="local_pass" value="<?php echo $local_pass; ?>" placeholder="<?php echo T_("Password") . '(' . T_("required") . ')'; ?>">
     </div>
 </div>
 
@@ -141,17 +140,15 @@ require $prefix . '/templates/install_header.inc.php';
         <option value=""><?php echo T_('None'); ?></option>
         <?php
             $modes = install_get_transcode_modes();
-            foreach ($modes as $mode) {
-                ?>
+            foreach ($modes as $mode) { ?>
             <option value="<?php echo $mode; ?>" <?php if (Core::get_request('transcode_template') == $mode) {
-                    echo 'selected';
-                } ?>><?php echo $mode; ?></option>
+                echo 'selected';
+            } ?>><?php echo $mode; ?></option>
         <?php
             } ?>
         </select>
         <?php
-        if (count($modes) == 0) {
-            ?>
+        if (count($modes) == 0) { ?>
         <label><?php echo T_('No default transcoding application found. You may need to install a popular application (FFmpeg, avconv ...) or customize transcoding settings manually after installation.'); ?></label>
         <?php
         } ?>
@@ -202,8 +199,7 @@ require $prefix . '/templates/install_header.inc.php';
             echo "in";
         } ?>">
             <div class="panel-body">
-                <?php if (install_check_server_apache()) {
-            ?>
+                <?php if (install_check_server_apache()) { ?>
                     <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
                         <?php echo T_('channel/.htaccess action'); ?>
@@ -211,8 +207,8 @@ require $prefix . '/templates/install_header.inc.php';
                     <div class="col-sm-8">
                         <button type="submit" class="btn btn-warning" name="download_htaccess_channel"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_channel" <?php if (!check_htaccess_channel_writable()) {
-                echo "disabled ";
-            } ?>>
+            echo "disabled ";
+        } ?>>
                             <?php echo T_('Write'); ?>
                         </button>
                     </div>
@@ -228,8 +224,8 @@ require $prefix . '/templates/install_header.inc.php';
                     <div class="col-sm-8">
                         <button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_rest" <?php if (!check_htaccess_rest_writable()) {
-                echo "disabled ";
-            } ?>>
+            echo "disabled ";
+        } ?>>
                             <?php echo T_('Write'); ?>
                         </button>
                     </div>
@@ -245,8 +241,8 @@ require $prefix . '/templates/install_header.inc.php';
                     <div class="col-sm-8">
                         <button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_play" <?php if (!check_htaccess_play_writable()) {
-                echo "disabled ";
-            } ?>>
+            echo "disabled ";
+        } ?>>
                             <?php echo T_('Write'); ?>
                         </button>
                     </div>

@@ -76,11 +76,11 @@ switch ($_REQUEST['action']) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_share.inc.php');
         } else {
             $share = new Share($share_id);
-            $body  = T_('Share created.') . '<br />' .
+            $body  = T_('Share created') . '<br />' .
                 T_('You can now start sharing the following URL:') . '<br />' .
                 '<a href="' . $share->public_url . '" target="_blank">' . $share->public_url . '</a><br />' .
                 '<div id="share_qrcode" style="text-align: center"></div>' .
-                '<script language="javascript" type="text/javascript">$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
+                '<script>$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
                 '<br /><br />' .
                 T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
                 '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, $share->secret) . '&embed=true"></iframe>') . '</i><br />';
@@ -111,7 +111,7 @@ switch ($_REQUEST['action']) {
         $share_id = Core::get_request('id');
         if (Share::delete_share($share_id)) {
             $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
-            show_confirmation(T_('No Problem'), T_('Share has been deleted.'), $next_url);
+            show_confirmation(T_('No Problem'), T_('Share has been deleted'), $next_url);
         }
         UI::show_footer();
 
@@ -126,7 +126,7 @@ switch ($_REQUEST['action']) {
         UI::show_header();
         Share::garbage_collection();
         $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
-        show_confirmation(T_('No Problem'), T_('Expired shares have been cleaned.'), $next_url);
+        show_confirmation(T_('No Problem'), T_('Expired shares have been cleaned'), $next_url);
         UI::show_footer();
 
         return false;
@@ -139,7 +139,7 @@ switch ($_REQUEST['action']) {
 
         $plugin = new Plugin(Core::get_get('plugin'));
         if (!$plugin) {
-            UI::access_denied('Access Denied - Unknown external share plugin.');
+            UI::access_denied('Access Denied - Unknown external share plugin');
 
             return false;
         }
@@ -166,7 +166,7 @@ switch ($_REQUEST['action']) {
  */
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', '5')) {
-        debug_event('share', 'Access Denied:' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ' is not in the Interface Access list', 3);
+        debug_event('share', 'Access Denied:' . Core::get_server('REMOTE_ADDR') . ' is not in the Interface Access list', 3);
         UI::access_denied();
 
         return false;

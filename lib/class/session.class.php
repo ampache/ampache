@@ -163,6 +163,7 @@ class Session
      * username
      *
      * This returns the username associated with a session ID, if any
+     * @return string
      */
     public static function username($key)
     {
@@ -214,13 +215,13 @@ class Session
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip  = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ? inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP)) : '0';
+        $s_ip  = filter_has_var(INPUT_SERVER, 'REMOTE_ADDR') ? filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP) : '0';
         $type  = $data['type'];
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];
         }
-        $agent = (!empty($data['agent'])) ? $data['agent'] : substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
+        $agent = (!empty($data['agent'])) ? $data['agent'] : substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
 
         $expire = time() + AmpConfig::get('session_length');
         if ($type == 'stream') {
@@ -270,7 +271,7 @@ class Session
         $session_name = AmpConfig::get('session_name');
 
         // No cookie no go!
-        if (!isset($_COOKIE[$session_name])) {
+        if (!filter_has_var(INPUT_COOKIE, $session_name)) {
             debug_event('session.class', 'Existing session NOT found', 5);
 
             return false;
@@ -284,6 +285,7 @@ class Session
             AmpConfig::get('cookie_path'),
             AmpConfig::get('cookie_domain'),
             AmpConfig::get('cookie_secure'));
+        session_write_close();
 
         // Set name
         session_name($session_name);
@@ -370,6 +372,7 @@ class Session
      * update_username
      *
      * This takes a SID and update associated username.
+     * @return PDOStatement|boolean
      */
     public static function update_username($sid, $username)
     {
@@ -459,7 +462,12 @@ class Session
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
-        session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+        if (isset($_SESSION)) {
+            setcookie(session_name(), session_id(), $cookie_life);
+        } else {
+            session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+        }
+        session_write_close();
         session_name(AmpConfig::get('session_name'));
 
         /* Start the session */
@@ -507,6 +515,7 @@ class Session
     }
 
     /**
+     * generateRandomToken
      * Generate a random token.
      * @return string
      */
@@ -516,7 +525,9 @@ class Session
     }
 
     /**
+     * storeTokenForUser
      * @param string $token
+     * @return PDOStatement|boolean
      */
     public static function storeTokenForUser($username, $token, $remember_length)
     {
@@ -533,7 +544,7 @@ class Session
     {
         $auth  = false;
         $cname = AmpConfig::get('session_name') . '_remember';
-        if (isset($_COOKIE[$cname])) {
+        if (filter_has_var(INPUT_COOKIE, $cname)) {
             list($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";

@@ -82,7 +82,7 @@ class License
      * create
      * This takes a key'd array of data as input and inserts a new license entry, it returns the auto_inc id
      * @param array $data
-     * @return int
+     * @return integer
      */
     public static function create(array $data)
     {
@@ -98,7 +98,7 @@ class License
      * update
      * This takes a key'd array of data as input and updates a license entry
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {

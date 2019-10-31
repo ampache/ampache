@@ -21,15 +21,14 @@
  */
 
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-$web_path = AmpConfig::get('web_path');
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+$web_path = AmpConfig::get('web_path'); ?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
+        <title><?php echo AmpConfig::get('site_title') . ' - ' . T_('Registration'); ?></title>
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
     </head>
     <body id="registerPage">
@@ -38,20 +37,19 @@ $web_path = AmpConfig::get('web_path');
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
                 <span><?php echo T_('Registration Validation'); ?>.</span>
             </div>
-            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
+            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
             <div>
 <?php
     if ($validation == User::get_validation($username) && strlen($validation)) {
         User::activate_user($username); ?>
 <h3><?php echo T_('User Activated'); ?></h3>
 <p>
-    <?php echo(T_('This User ID is activated and can be used.') . ' <a href="' . AmpConfig::get('web_path') . '/login.php">' . T_('Login') . '</a>'); ?>
+    <?php echo(T_('This User ID is activated and can be used') . ' <a href="' . AmpConfig::get('web_path') . '/login.php">' . T_('Login') . '</a>'); ?>
 </p>
 <?php
-    } else {
-        ?>
+    } else { ?>
 <h3><?php echo T_('Validation Failed'); ?></h3>
 <p><?php echo T_("The validation key used isn't correct"); ?></p>
 <?php
@@ -59,5 +57,4 @@ $web_path = AmpConfig::get('web_path');
             </div>
         </div>
 <?php
-UI::show_footer();
-?>
+UI::show_footer(); ?>

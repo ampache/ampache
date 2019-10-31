@@ -843,7 +843,7 @@ class Artist extends database_object implements library_item
         if ($exists) {
             self::$_mapcache[$name][$mbid] = $id;
 
-            return $id;
+            return (int) $id;
         }
 
         if ($readonly) {
@@ -858,10 +858,11 @@ class Artist extends database_object implements library_item
             return null;
         }
         $id = Dba::insert_id();
+        debug_event('artist.class', 'Artist check created new artist id `' . $id . '`.', 4);
 
         self::$_mapcache[$name][$mbid] = $id;
 
-        return $id;
+        return (int) $id;
     }
 
     /**

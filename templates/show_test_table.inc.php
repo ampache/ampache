@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <tr>
-    <td valign="top"><?php echo T_('PHP version'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP version'); ?></td>
+    <td>
     <?php echo debug_result(check_php_version()); ?>
     </td>
     <td>
@@ -30,14 +29,13 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('Dependencies'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('Dependencies'); ?></td>
+    <td>
     <?php echo debug_result(check_dependencies_folder()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether Ampache dependencies are installed.'); ?>
-    <?php if (!check_dependencies_folder()) {
-    ?>
+    <?php if (!check_dependencies_folder()) { ?>
         <br />
         <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --prefer-source --no-interaction` on the Ampache directory.'); ?></b>
     <?php
@@ -45,8 +43,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP hash extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP hash extension'); ?></td>
+    <td>
     <?php echo debug_result(check_php_hash()); ?>
     </td>
     <td>
@@ -54,8 +52,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('SHA256'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('SHA256'); ?></td>
+    <td>
     <?php echo debug_result(check_php_hash_algo()); ?>
     </td>
     <td>
@@ -63,8 +61,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP PDO extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP PDO extension'); ?></td>
+    <td>
     <?php echo debug_result(check_php_pdo()); ?>
     </td>
     <td>
@@ -72,8 +70,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('MySQL'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('MySQL'); ?></td>
+    <td>
     <?php echo debug_result(check_php_pdo_mysql()); ?>
     </td>
     <td>
@@ -81,8 +79,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP session extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP session extension'); ?></td>
+    <td>
     <?php echo debug_result(check_php_session()); ?>
     </td>
     <td>
@@ -90,8 +88,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP iconv extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP iconv extension'); ?></td>
+    <td>
     <?php echo debug_result(UI::check_iconv()); ?>
     </td>
     <td>
@@ -99,8 +97,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP JSON extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP JSON extension'); ?></td>
+    <td>
     <?php echo debug_result(check_php_json()); ?>
     </td>
     <td>
@@ -108,8 +106,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP cURL extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP cURL extension'); ?></td>
+    <td>
     <?php echo debug_wresult(check_php_curl()); ?>
     </td>
     <td>
@@ -117,8 +115,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP zlib extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP zlib extension'); ?></td>
+    <td>
     <?php echo debug_wresult(check_php_zlib()); ?>
     </td>
     <td>
@@ -126,8 +124,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP SimpleXML extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP SimpleXML extension'); ?></td>
+    <td>
     <?php echo debug_wresult(check_php_simplexml()); ?>
     </td>
     <td>
@@ -135,8 +133,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP GD extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP GD extension'); ?></td>
+    <td>
     <?php echo debug_wresult(check_php_gd()); ?>
     </td>
     <td>
@@ -144,8 +142,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP safe mode disabled'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP safe mode disabled'); ?></td>
+    <td>
     <?php echo debug_result(check_php_safemode()); ?>
     </td>
     <td>
@@ -153,8 +151,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP memory limit override'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP memory limit override'); ?></td>
+    <td>
     <?php echo debug_wresult(check_override_memory()); ?>
     </td>
     <td>
@@ -162,8 +160,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP execution time override'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP execution time override'); ?></td>
+    <td>
     <?php echo debug_wresult(check_override_exec_time()); ?>
     </td>
     <td>
@@ -171,8 +169,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP max upload size'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP max upload size'); ?></td>
+    <td>
     <?php echo debug_wresult(check_upload_size()); ?>
     </td>
     <td>
@@ -180,8 +178,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP integer size'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP integer size'); ?></td>
+    <td>
     <?php echo debug_wresult(check_php_int_size()); ?>
     </td>
     <td>
@@ -189,8 +187,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP mbstring.func_overload'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP mbstring.func_overload'); ?></td>
+    <td>
     <?php echo debug_result(check_mbstring_func_overload()); ?>
     </td>
     <td>
@@ -198,11 +196,10 @@
     </td>
 </tr>
 <?php
-if (!defined('INSTALL')) {
-        ?>
+if (!defined('INSTALL')) { ?>
 <tr>
-    <td valign="top"><?php echo T_('Configuration file readability'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('Configuration file readability'); ?></td>
+    <td>
     <?php echo debug_result(is_readable($configfile)); ?>
     </td>
     <td width="350px">
@@ -210,10 +207,10 @@ if (!defined('INSTALL')) {
     </td>
 </tr>
 <tr>
-    <td valign="top">
+    <td>
         <?php echo T_('Configuration file validity'); ?>
     </td>
-    <td valign="top">
+    <td>
     <?php
         $results = @parse_ini_file($configfile);
         AmpConfig::set_by_array($results);
@@ -224,8 +221,8 @@ if (!defined('INSTALL')) {
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_("Database connection"); ?></td>
-    <td valign="top">
+    <td><?php echo T_("Database connection"); ?></td>
+    <td>
     <?php echo debug_result(check_php_pdo() && Dba::check_database()); ?>
     </td>
     <td>
@@ -233,8 +230,8 @@ if (!defined('INSTALL')) {
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('Database tables'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('Database tables'); ?></td>
+    <td>
     <?php echo debug_result(check_php_pdo() && Dba::check_database_inserted()); ?>
     </td>
     <td>
@@ -243,8 +240,8 @@ if (!defined('INSTALL')) {
 </tr>
 <tr>
 
-    <td valign="top"><?php echo T_('Web path'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('Web path'); ?></td>
+    <td>
     <?php
         if (check_config_values($results)) {
             echo "&nbsp;&nbsp;&nbsp;" . UI::get_icon('enable', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
@@ -257,5 +254,4 @@ if (!defined('INSTALL')) {
     </td>
 </tr>
 <?php
-    }
-?>
+    } ?>

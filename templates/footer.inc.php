@@ -19,8 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
                 </div>
                 <div style="clear:both;">
                 </div>
@@ -32,32 +31,27 @@
                 if (Core::get_global('user')->playlist) {
                     $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
                 }
-            }
-        ?>
+            } ?>
         <div id="footer" class="<?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
-        <?php if (AmpConfig::get('show_donate')) {
-            ?>
+        <?php if (AmpConfig::get('show_donate')) { ?>
             <a id="donate" href="//ampache.github.io/donate.html" title="<?php echo T_('Donate'); ?>" target="_blank"><?php echo T_('Donate'); ?></a> |
         <?php
         } ?>
         <?php
         if (AmpConfig::get('custom_text_footer')) {
             echo AmpConfig::get('custom_text_footer');
-        } else {
-            ?>
+        } else { ?>
             <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © 2001 - 2019 Ampache.org"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
         <?php
         } ?>
         </div>
-        <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) {
-            ?>
+        <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
         <div id="webplayer-minimize">
           <a href="javascript:TogglePlayerVisibility();"><?php echo UI::get_icon('minimize', T_('Show/Hide Player')); ?></a>
         </div>
         <div id="webplayer"></div>
         <?php
             require_once AmpConfig::get('prefix') . UI::find_template('uberviz.inc.php');
-        }
-        ?>
+        } ?>
     </body>
 </html>

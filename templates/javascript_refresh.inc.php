@@ -19,10 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+ ?>
 
-?>
-
-<script type="text/javascript" language="javascript">
+<script>
 // Set refresh interval (in seconds)
 var refreshInterval=<?php echo $refresh_limit ?>;
 

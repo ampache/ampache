@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
         }
 
         if ($album->remove_from_disk()) {
-            show_confirmation(T_('No Problem'), T_('The Album has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('The Album has been deleted'), AmpConfig::get('web_path'));
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Album."), AmpConfig::get('web_path'));
         }
@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
             debug_event('albums', $key . '=' . Core::get_get($key), 5);
         }
 
-        if (isset($_GET['order'])) {
+        if (filter_has_var(INPUT_GET, 'order')) {
             $songs = explode(";", Core::get_get('order'));
             $track = filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT) ? ((filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1) : 1;
             foreach ($songs as $song_id) {

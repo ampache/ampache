@@ -52,8 +52,10 @@ switch ($_REQUEST['action']) {
 
         $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
         $_SESSION['data']['playlist_id'] = $playlist_id;
-        /* HINT: %1 playlist name, %2 playlist type */
-        show_confirmation(T_('Playlist created'), sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type), 'playlist.php');
+        show_confirmation(T_('Playlist created'),
+                /* HINT: %1 playlist name, %2 playlist type */
+                sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type),
+                'playlist.php');
     break;
     case 'delete_playlist':
         // If we made it here, we didn't have sufficient rights.
@@ -107,7 +109,7 @@ switch ($_REQUEST['action']) {
             debug_event('playlist', $key . '=' . Core::get_get($key), 5);
         }
 
-        if (isset($_GET['order'])) {
+        if (filter_has_var(INPUT_GET, 'order')) {
             $songs = explode(";", $_GET['order']);
             $track = $_GET['offset'] ? ((int) ($_GET['offset']) + 1) : 1;
             foreach ($songs as $song_id) {
@@ -172,7 +174,7 @@ switch ($_REQUEST['action']) {
     case 'sort_tracks':
         $playlist = new Playlist($_REQUEST['playlist_id']);
         if (!$playlist->has_access()) {
-            access_denied();
+            UI::access_denied();
             break;
         }
 

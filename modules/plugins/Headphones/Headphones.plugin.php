@@ -137,8 +137,8 @@ class AmpacheHeadphones
             $request = Requests::get($url, array(), array(
                 'timeout' => 600
             ));
-        } catch (Exception $e) {
-            debug_event('headphones.plugin', 'Headphones api http exception: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('headphones.plugin', 'Headphones api http exception: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -150,6 +150,7 @@ class AmpacheHeadphones
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {

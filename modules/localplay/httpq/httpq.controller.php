@@ -534,20 +534,20 @@ class AmpacheHttpq extends localplay_controller
     public function status()
     {
         /* Construct the Array */
-        $array['state']        = $this->_httpq->state();
-        $array['volume']       = $this->_httpq->get_volume();
-        $array['repeat']       = $this->_httpq->get_repeat();
-        $array['random']       = $this->_httpq->get_random();
-        $array['track']        = $this->_httpq->get_now_playing();
-        $url_data              = $this->parse_url($array['track']);
+        $array['state']  = $this->_httpq->state();
+        $array['volume'] = $this->_httpq->get_volume();
+        $array['repeat'] = $this->_httpq->get_repeat();
+        $array['random'] = $this->_httpq->get_random();
+        $array['track']  = $this->_httpq->get_now_playing();
+        $url_data        = $this->parse_url($array['track']);
 
         if (isset($url_data['oid'])) {
-            $song                      = new Song($data['oid']);
-            $array['track_title']      = $song->title;
-            $array['track_artist']     = $song->get_artist_name();
-            $array['track_album']      = $song->get_album_name();
+            $song                  = new Song($data['oid']);
+            $array['track_title']  = $song->title;
+            $array['track_artist'] = $song->get_artist_name();
+            $array['track_album']  = $song->get_album_name();
         } else {
-            $array['track_title']    = basename($array['track']);
+            $array['track_title'] = basename($array['track']);
         }
 
         return $array;

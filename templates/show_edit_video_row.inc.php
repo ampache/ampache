@@ -22,11 +22,10 @@
 
 $libitem = Video::create_from_id($libitem->id);
 $libitem->format();
-$video_type = strtolower(get_class($libitem));
-?>
+$video_type = strtolower(get_class($libitem)); ?>
 <div>
     <form method="post" id="edit_video_<?php echo $libitem->id; ?>" class="edit_dialog_content">
-        <table class="tabledata" cellspacing="0" cellpadding="0">
+        <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Title') ?></td>
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
@@ -38,8 +37,7 @@ $video_type = strtolower(get_class($libitem));
 <?php
 if ($video_type != 'video') {
     require AmpConfig::get('prefix') . UI::find_template('show_partial_edit_' . $video_type . '_row.inc.php');
-}
-?>
+} ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
                 <td>

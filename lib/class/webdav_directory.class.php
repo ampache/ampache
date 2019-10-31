@@ -39,6 +39,10 @@ class WebDAV_Directory extends DAV\Collection
         $this->libitem->format();
     }
 
+    /**
+     * getChildren
+     * @return array
+     */
     public function getChildren()
     {
         debug_event('webdav_directory.class', 'Directory getChildren', 5);
@@ -57,6 +61,10 @@ class WebDAV_Directory extends DAV\Collection
         return $children;
     }
 
+    /**
+     * getChild
+     * @return \WebDAV_File|\WebDAV_Directory
+     */
     public function getChild($name)
     {
         // Clean song name
@@ -75,9 +83,12 @@ class WebDAV_Directory extends DAV\Collection
         }
 
         throw new DAV\Exception\NotFound('The child with name: ' . $name . ' could not be found');
-        ;
     }
 
+    /**
+     * getChildFromArray
+     * @return \WebDAV_File|\WebDAV_Directory
+     */
     public static function getChildFromArray($array)
     {
         $libitem = new $array['object_type']($array['object_id']);
@@ -92,6 +103,10 @@ class WebDAV_Directory extends DAV\Collection
         }
     }
 
+    /**
+     * childExists
+     * @return boolean
+     */
     public function childExists($name)
     {
         $matches = $this->libitem->search_childrens($name);
@@ -99,6 +114,10 @@ class WebDAV_Directory extends DAV\Collection
         return (count($matches) > 0);
     }
 
+    /**
+     * getName
+     * @return string
+     */
     public function getName()
     {
         return $this->libitem->get_fullname();

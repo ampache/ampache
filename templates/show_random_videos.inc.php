@@ -21,8 +21,7 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-$button   = Ajax::button('?page=index&action=random_videos', 'random', T_('Refresh'), 'random_video_refresh');
-?>
+$button   = Ajax::button('?page=index&action=random_videos', 'random', T_('Refresh'), 'random_video_refresh'); ?>
 <?php UI::show_box_top(T_('Videos of the Moment') . ' ' . $button, 'box box_random_videos'); ?>
 <?php
 if ($videos) {
@@ -43,18 +42,15 @@ if ($videos) {
             //$release_art = $video->get_release_item_art();
             //$thumb       = UI::is_grid_view('video') ? 6 : 7;
             //Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), $thumb, $video->link);
-        } else {
-            ?>
+        } else { ?>
                 <?php echo $video->get_fullname(); ?>
             <?php
         } ?>
         </div>
         <div class="play_video">
-        <?php if (AmpConfig::get('directplay')) {
-            ?>
+        <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_album_' . $video->id); ?>
-            <?php if (Stream_Playlist::check_autoplay_append()) {
-                ?>
+            <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'play_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
             <?php
             } ?>

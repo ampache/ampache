@@ -551,7 +551,7 @@ class Video extends database_object implements media, library_item
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return int
+     * @return integer
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
@@ -601,7 +601,7 @@ class Video extends database_object implements media, library_item
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return int
+     * @return integer
      */
     private static function insert_video_type(array $data, $gtypes, $options = array())
     {
@@ -629,7 +629,7 @@ class Video extends database_object implements media, library_item
      * update
      * This takes a key'd array of data as input and updates a video entry
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {
@@ -1092,7 +1092,7 @@ class Video extends database_object implements media, library_item
      * get_item_count
      * Return the number of entries in the database...
      * @param string $type
-     * @return int
+     * @return integer
      */
     public static function get_item_count($type)
     {

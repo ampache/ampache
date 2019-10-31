@@ -65,7 +65,7 @@ if ($chanid <= 0) {
 $transcode_cfg = AmpConfig::get('transcode');
 
 if ($transcode_cfg == 'never') {
-    die('Cannot start channel, transcoding is mandatory to work.');
+    die('Cannot start channel, transcoding is mandatory to work');
 }
 
 echo T_("Starting Channel...") . $operations_string . "\n";
@@ -283,7 +283,7 @@ while(true)
         } else {
             $channel->update_listeners(0);
             debug_event('channel_run', 'No more data, stream ended.', 4);
-            die('No more data, stream ended.');
+            die('No more data, stream ended');
         }
     }
 }
@@ -297,7 +297,7 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     unset($client_socks[$key]);
     unset($stream_clients[$key]);
     if (fclose($sock) === false) {
-        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed.');
+        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed');
     }
     $channel->update_listeners(count($client_socks));
     debug_event('channel_run', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', 4);
@@ -423,7 +423,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">" . "\n";
                     $xsl .= "<head>" . "\n";
                     $xsl .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" . "\n";
-                    $xsl .= "<title>Icecast Streaming Media Server - Ampache</title>" . "\n";
+                    $xsl .= "<title>" . T_("Icecast Streaming Media Server") . " - " . T_("Ampache") . "</title>" . "\n";
                     $xsl .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />" . "\n";
                     $xsl .= "</head>" . "\n";
                     $xsl .= "<body>" . "\n";
@@ -436,7 +436,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "</div>" . "\n";
                     $xsl .= "<div class=\"newscontent\">" . "\n";
                     $xsl .= "<div class=\"streamheader\">" . "\n";
-                    $xsl .= "<table cellspacing=\"0\" cellpadding=\"0\">" . "\n";
+                    $xsl .= "<table>" . "\n";
                     $xsl .= "<colgroup align=\"left\"></colgroup>" . "\n";
                     $xsl .= "<colgroup align=\"right\" width=\"300\"></colgroup>" . "\n";
                     $xsl .= "<tr>" . "\n";
@@ -447,7 +447,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "</table>" . "\n";
                     $xsl .= "</div>" . "\n";
-                    $xsl .= "<table border=\"0\" cellpadding=\"4\">" . "\n";
+                    $xsl .= "<table>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Stream Title:</td>" . "\n";
                     $xsl .= "<td class=\"streamdata\">" . $channel->name . "</td>" . "\n";

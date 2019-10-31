@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 
 <td class="cel_object"><?php echo $libitem->f_object_link; ?></td>
 <td class="cel_object_type"><?php echo $libitem->object_type; ?></td>

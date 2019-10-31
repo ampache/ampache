@@ -37,28 +37,24 @@ $t_playlists = T_('Playlists');
 $t_tagcloud  = T_('Tag Cloud');
 $t_favorites = T_('Favorites');
 $t_upload    = T_('Upload');
-$t_logout    = T_('Log out');
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+$t_logout    = T_('Log out'); ?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
         <link rel="search" type="application/opensearchdescription+xml" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor" />
         <?php
-            if (AmpConfig::get('use_rss')) {
-                ?>
+            if (AmpConfig::get('use_rss')) { ?>
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php" />
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=recently_played" />
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Albums'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_album" />
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Artists'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_artist" />
         <?php
-                if (AmpConfig::get('sociable')) {
-                    ?>
+                if (AmpConfig::get('sociable')) { ?>
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_shout" />
         <?php
                 }
-            }
-        ?>
+            } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
@@ -71,35 +67,32 @@ $t_logout    = T_('Log out');
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jstree/dist/themes/default/style.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.min.css" type="text/css" media="screen" />
 
-        <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/vendor/needim/noty/js/noty/packaged/jquery.noty.packaged.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jquery-cookie/jquery.cookie.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/src/jquery.qrcode.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/responsive-elements/responsive-elements.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/modules/jquery-mediaTable/jquery.mediaTable.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-Knob/js/jquery.knob.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.iframe-transport.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-File-Upload/js/jquery.fileupload.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
-        <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/vendor/needim/noty/js/noty/packaged/jquery.noty.packaged.min.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-cookie/jquery.cookie.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/jquery-qrcode-built.js"></script>
+        <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/responsive-elements/responsive-elements.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jQuery-Knob/js/jquery.knob.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/vendor/blueimp/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/vendor/blueimp/jquery-file-upload/js/jquery.fileupload.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/tools.js"></script>
 
-        <script type="text/javascript" charset="utf-8">
+        <script>
             $(document).ready(function(){
                 $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
-                <?php if (AmpConfig::get('geolocation')) {
-            ?>
+                <?php if (AmpConfig::get('geolocation')) { ?>
                     geolocate_user();
                 <?php
         } ?>
@@ -116,9 +109,9 @@ $t_logout    = T_('Log out');
         <?php
         if (AmpConfig::get('ajax_load')) {
             $iframed = true; ?>
-        <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js" language="javascript" type="text/javascript"></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js"></script>
         <?php require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player_headers.inc.php'); ?>
-        <script type="text/javascript">
+        <script>
             function NavigateTo(url)
             {
                 window.location.hash = url.substring(jsWebPath.length + 1);
@@ -139,9 +132,8 @@ $t_logout    = T_('Log out');
             }
         </script>
         <?php
-        } else {
-            ?>
-        <script type="text/javascript">
+        } else { ?>
+        <script>
             function NavigateTo(url)
             {
                 window.location.href = url;
@@ -154,7 +146,7 @@ $t_logout    = T_('Log out');
         </script>
         <?php
         } ?>
-        <script type="text/javascript">
+        <script>
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
                 _renderItem: function( ul, item ) {
                         var itemhtml = "";
@@ -223,7 +215,7 @@ $t_logout    = T_('Log out');
                     });
             });
         </script>
-        <script type="text/javascript">
+        <script>
             var lastaction = new Date().getTime();
             var refresh_slideshow_interval=<?php if (Preference::exists('flickr_api_key')) {
             echo AmpConfig::get('slideshow_time');
@@ -300,7 +292,7 @@ $t_logout    = T_('Log out');
                 <div id="fslider_script"></div>
             </div>
         </div>
-        <script type="text/javascript" language="javascript">
+        <script>
             $("#aslideshow").click(function(e) {
                 if (!$(e.target).hasClass('rhino-btn')) {
                     update_action();
@@ -309,10 +301,9 @@ $t_logout    = T_('Log out');
         </script>
 
         <?php
-            if (AmpConfig::get('cookie_disclaimer') && !isset($_COOKIE['cookie_disclaimer'])) {
-                ?>
+            if (AmpConfig::get('cookie_disclaimer') && !filter_has_var(INPUT_COOKIE, 'cookie_disclaimer')) { ?>
 
-        <script type="text/javascript" language="javascript">
+        <script>
         noty({text: '<?php
                         printf(json_encode(nl2br(
                             /* HINT: Translator, "%s" is replaced by "cookie settings" */
@@ -332,10 +323,9 @@ $t_logout    = T_('Log out');
 
         <?php
             }
-            if (AmpConfig::get('libitem_contextmenu')) {
-                ?>
+            if (AmpConfig::get('libitem_contextmenu')) { ?>
 
-        <script type="text/javascript" language="javascript">
+        <script>
             function libitem_action(item, action)
             {
                 var iinfo = item.attr('id').split('_', 2);
@@ -362,8 +352,7 @@ $t_logout    = T_('Log out');
         </script>
 
         <?php
-            }
-        ?>
+            } ?>
 
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
@@ -384,35 +373,30 @@ $t_logout    = T_('Log out');
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo Core::get_global('user')->id; ?>"><?php echo Core::get_global('user')->fullname; ?></a>
                         <?php
-                            if (AmpConfig::get('sociable')) {
-                                ?>
+                            if (AmpConfig::get('sociable')) { ?>
                             <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs(Core::get_global('user')->id, true)); ?>)</a>
                         <?php
                             } ?>
                         </span>
                     <?php
-                        } else {
-                            ?>
+                        } else { ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/login.php" rel="nohtml"><?php echo T_('Login'); ?></a>
+                            <a href="<?php echo $web_path; ?>/login.php" class="nohtml"><?php echo T_('Login'); ?></a>
                         <?php
-                            if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) {
-                                ?>
-                                / <a href="<?php echo $web_path; ?>/register.php" rel="nohtml"><?php echo T_('Register'); ?></a>
+                            if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) { ?>
+                                / <a href="<?php echo $web_path; ?>/register.php" class="nohtml"><?php echo T_('Register'); ?></a>
                         <?php
                             } ?>
                         </span>
                     <?php
-                        }
-                    ?>
+                        } ?>
 
                     <?php UI::show_box_bottom(); ?>
                 </div> <!-- End headerbox -->
             </div><!-- End header -->
 
             <?php
-                if (AmpConfig::get('topmenu')) {
-                    ?>
+                if (AmpConfig::get('topmenu')) { ?>
 
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div class="topmenu_item">
@@ -441,8 +425,7 @@ $t_logout    = T_('Log out');
                 </div>
 
                 <?php
-                    if (AmpConfig::get('userflags') && Access::check('interface', '25')) {
-                        ?>
+                    if (AmpConfig::get('userflags') && Access::check('interface', '25')) { ?>
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
@@ -453,8 +436,7 @@ $t_logout    = T_('Log out');
 
                 <?php
                     }
-                    if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) {
-                        ?>
+                    if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) { ?>
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/upload.php">
@@ -470,8 +452,7 @@ $t_logout    = T_('Log out');
 
             <?php
                 }
-                $isCollapsed = ((AmpConfig::get('sidebar_light') && $_COOKIE['sidebar_state'] != "expanded") || $_COOKIE['sidebar_state'] == "collapsed");
-            ?>
+                $isCollapsed = ((AmpConfig::get('sidebar_light') && $_COOKIE['sidebar_state'] != "expanded") || $_COOKIE['sidebar_state'] == "collapsed"); ?>
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >
@@ -485,7 +466,7 @@ $t_logout    = T_('Log out');
                 </div>
             </div>
             <!-- Handle collapsed visibility -->
-            <script type="text/javascript">
+            <script>
             $('#sidebar-header').click(function(){
                 var newstate = "collapsed";
                 if ($('#sidebar-header').hasClass("sidebar-header-collapsed")) {
@@ -536,13 +517,12 @@ $t_logout    = T_('Log out');
                         }
                         $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
 
-                        if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) {
-                            ?>
+                        if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
                             <div class="fatalerror">
                                 <?php echo T_('Your Ampache config file is out of date!'); ?>
                                 <br />
-                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a new config file to manually update'); ?></a> |
-                                <a rel="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write a new config file directly to disk'); ?></a>
+                                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a new config file to manually update'); ?></a> |
+                                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Write a new config file directly to disk'); ?></a>
                             </div>
                 <?php
                         }
@@ -550,6 +530,5 @@ $t_logout    = T_('Log out');
                     }
                 if (AmpConfig::get("ajax_load")) {
                     require AmpConfig::get('prefix') . UI::find_template('show_web_player_embedded.inc.php');
-                } //load the web_player early to make sure the browser doesn't block audio playback
-                ?>
+                } //load the web_player early to make sure the browser doesn't block audio playback?>
                 <div id="guts">

@@ -134,7 +134,7 @@ class XML_Data
         return self::output_xml($xml_string);
     }
     // success
- 
+
     /**
      * header
      *
@@ -167,7 +167,8 @@ class XML_Data
      * tags_string
      *
      * This returns the formatted 'tags' string for an xml document
-     *
+     * @input array $tags
+     * @return string
      */
     private static function tags_string($tags)
     {
@@ -202,6 +203,7 @@ class XML_Data
      *
      * @param Song $song
      * @param int[] $playlist_data
+     * @return string
      */
     private static function playlist_song_tracks_string($song, $playlist_data)
     {
@@ -222,6 +224,7 @@ class XML_Data
      * output_xml_from_array
      * This takes a one dimensional array and creates a XML document from it. For
      * use primarily by the ajax mojo.
+     * @return string
      */
     public static function output_xml_from_array($array, $callback = false, $type = '')
     {
@@ -359,7 +362,7 @@ class XML_Data
                 $objects = array_splice($objects, self::$offset);
             }
         }
-        
+
         foreach ($objects as $object_id) {
             // 'artist'|'album'|'song'|'playlist'
             if ($object_type == 'artist') {
@@ -554,7 +557,7 @@ class XML_Data
      */
     public static function albums($albums, $include = [], $full_xml = true)
     {
-        if (null == $include) {
+        if ($include == null || $include == '') {
             $include = array();
         }
         $string = "<total_count>" . count($albums) . "</total_count>\n";
@@ -694,7 +697,8 @@ class XML_Data
      *
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
-     * @param integer[] $songs
+     * @param  integer[] $songs
+     * @return string    return xml
      */
     public static function songs($songs, $playlist_data = array(), $full_xml = true, $user_id = false)
     {
@@ -787,7 +791,7 @@ class XML_Data
      * This builds the xml document for displaying video objects
      *
      * @param    array    $videos    (description here...)
-     * @return    string    return xml
+     * @return   string   return xml
      */
     public static function videos($videos, $user_id = false)
     {
@@ -827,8 +831,8 @@ class XML_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param    array    $object_ids    Object IDs
-     * @return    string    return xml
+     * @param    integer[]  $object_ids    Object IDs
+     * @return   string     return xml
      */
     public static function democratic($object_ids = array(), $user_id = false)
     {
@@ -1007,8 +1011,6 @@ class XML_Data
      * @param    string    $title    RSS feed title
      * @param    string    $date    publish date
      * @return    string    RSS feed xml
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function rss_feed($data, $title, $date = null)
     {
@@ -1043,7 +1045,7 @@ class XML_Data
             case 'xspf':
                 $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
                         "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n" .
-                        "<title>" . ($title ?: "ampache XSPF Playlist") . "</title>\n" .
+                        "<title>" . ($title ?: T_("Ampache XSPF Playlist")) . "</title>\n" .
                         "<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n" .
                         "<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n" .
                         "<info>" . AmpConfig::get('web_path') . "</info>\n" .
@@ -1115,7 +1117,7 @@ class XML_Data
         $xml->addAttribute("xmlns:xmlns:itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd");
         $xml->addAttribute("version", "2.0");
         $xchannel = $xml->addChild("channel");
-        $xchannel->addChild("title", $libitem->get_fullname() . " Podcast");
+        $xchannel->addChild("title", htmlspecialchars($libitem->get_fullname() . " Podcast"));
         //$xlink = $xchannel->addChild("atom:link", htmlentities($libitem->link));
         if (Art::has_db($libitem->id, get_class($libitem))) {
             $ximg = $xchannel->addChild("xmlns:itunes:image");

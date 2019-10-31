@@ -41,6 +41,7 @@ class UI
      * Return the path to the template file wanted. The file can be overwriten
      * by the theme if it's not a php file, or if it is and if option
      * allow_php_themes is set to true.
+     * @return string
      */
     public static function find_template($template)
     {
@@ -75,6 +76,7 @@ class UI
      *
      * Does some trickery with the output buffer to return the output of a
      * template.
+     * @return string
      */
     public static function ajax_include($template)
     {
@@ -125,6 +127,7 @@ class UI
      * Removes characters that aren't valid in XML (which is a subset of valid
      * UTF-8, but close enough for our purposes.)
      * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
+     * @return string
      */
     public static function clean_utf8($string)
     {
@@ -253,6 +256,7 @@ class UI
      * @param string $title
      * @param string $id_attrib
      * @param string $class_attrib
+     * @return string
      */
     public static function get_icon($name, $title = null, $id_attrib = null, $class_attrib = null)
     {
@@ -282,10 +286,11 @@ class UI
                 $svgicon->desc = $title;
             }
 
-            $id_attrib = ($id_attrib) ?: 'icon-' . $name ;
-            $svgicon->addAttribute('id', $id_attrib);
+            if (!empty($id_attrib)) {
+                $svgicon->addAttribute('id', $id_attrib);
+            }
 
-            $class_attrib = ($class_attrib) ?: 'icon' ;
+            $class_attrib = ($class_attrib) ?: 'icon icon-' . $name ;
             $svgicon->addAttribute('class', $class_attrib);
 
             $tag = explode("\n", $svgicon->asXML(), 2)[1];
@@ -346,6 +351,7 @@ class UI
      * @param string $title
      * @param string $id_attrib
      * @param string $class_attrib
+     * @return string
      */
     public static function get_image($name, $title = null, $id_attrib = null, $class_attrib = null)
     {
@@ -378,10 +384,11 @@ class UI
                 $svgimage->desc = $title;
             }
 
-            $id_attrib = ($id_attrib) ?: 'image-' . $name ;
-            $svgimage->addAttribute('id', $id_attrib);
+            if (!empty($id_attrib)) {
+                $svgimage->addAttribute('id', $id_attrib);
+            }
 
-            $class_attrib = ($class_attrib) ?: 'image' ;
+            $class_attrib = ($class_attrib) ?: 'image image-' . $name ;
             $svgimage->addAttribute('class', $class_attrib);
 
             $tag = explode("\n", $svgimage->asXML(), 2)[1];
@@ -557,6 +564,7 @@ class UI
      *
      * Get the custom logo or logo relating to your theme color
      * @param string $color
+     * @return string
      */
     public static function get_logo_url($color = null)
     {
@@ -574,7 +582,7 @@ class UI
     {
         $isgv   = true;
         $name   = 'browse_' . $type . '_grid_view';
-        if (isset($_COOKIE[$name])) {
+        if (filter_has_var(INPUT_COOKIE, $name)) {
             $isgv = ($_COOKIE[$name] == 'true');
         }
 

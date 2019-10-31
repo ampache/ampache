@@ -75,6 +75,7 @@ class AmpacheDiscogs
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {
@@ -180,8 +181,8 @@ class AmpacheDiscogs
                     }
                 }
             }
-        } catch (Exception $e) {
-            debug_event('discogs.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('discogs.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
         }
 
         return $results;

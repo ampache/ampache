@@ -20,9 +20,8 @@
  *
  */
 
-$thcount = 5;
-?>
-<script language="javascript" type="text/javascript">
+$thcount = 5; ?>
+<script>
     function getSelectionArray()
     {
         var checked = []
@@ -43,7 +42,7 @@ $thcount = 5;
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="label">
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="label">
     <thead>
         <tr class="th-top">
             <th class="cel_select essential persist"></th>
@@ -65,8 +64,7 @@ $thcount = 5;
         </tr>
         <?php
         } ?>
-        <?php if (!count($object_ids)) {
-            ?>
+        <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No message found'); ?></span></td>
         </tr>

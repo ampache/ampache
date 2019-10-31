@@ -372,7 +372,7 @@ class Recommendation
         if ($artist) {
             $results['id'] = $artist->id;
             if (!empty($results['summary'])) {
-                $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
+                $artist->update_artist_info($results['summary'], $results['placeformed'], (int) $results['yearformed']);
             }
             if (!empty($results['megaphoto']) && !Art::has_db($artist_id, 'artist')) {
                 $image = Art::get_from_source(array('url' => $results['megaphoto']), 'artist');
@@ -398,7 +398,7 @@ class Recommendation
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
-        $sql = "UPDATE `recommendation` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $sql = "UPDATE IGNORE `recommendation` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }

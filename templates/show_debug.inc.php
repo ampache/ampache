@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
@@ -50,17 +49,16 @@
         <?php if ((string) AmpConfig::get('github_force_branch') !== '') {
     ?><?php echo "<div>" . T_('GitHub Branch') . ': "' . (string) AmpConfig::get('github_force_branch') . '"</div>';
 } ?>
-        <div><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
+        <div><a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
         <?php
         if (AutoUpdate::is_update_available()) {
             AutoUpdate::show_new_version();
-        }
-        ?>
+        } ?>
         <br />
     <?php UI::show_box_bottom(); ?>
 
     <?php UI::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
-        <table class="tabledata" cellpadding="0" cellspacing="0">
+        <table class="tabledata">
             <colgroup>
                 <col id="col_php_setting">
                 <col id="col_php_value">
@@ -113,7 +111,7 @@
     <?php UI::show_box_bottom(); ?>
 
     <?php UI::show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
-        <table class="tabledata" cellpadding="0" cellspacing="0">
+        <table class="tabledata">
             <colgroup>
                <col id="col_configuration">
                <col id="col_value">
@@ -147,16 +145,14 @@
             }
 
             // Be sure to print only scalar values
-            if ($value === null || is_scalar($value)) {
-                ?>
+            if ($value === null || is_scalar($value)) { ?>
             <tr class="<?php echo UI::flip_class(); ?>">
-                <td valign="top"><strong><?php echo $key; ?></strong></td>
+                <td><strong><?php echo $key; ?></strong></td>
                 <td><?php echo $value; ?></td>
             </tr>
 <?php
             }
-        }
-?>
+        } ?>
             </tbody>
         </table>
     <?php UI::show_box_bottom(); ?>

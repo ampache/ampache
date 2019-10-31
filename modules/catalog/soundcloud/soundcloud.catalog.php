@@ -147,7 +147,7 @@ class Catalog_soundcloud extends Catalog
         }
 
         if (!@include_once(AmpConfig::get('prefix') . '/lib/vendor/mptre/php-soundcloud/Services/Soundcloud.php')) {
-            throw new Exception('Missing php-soundcloud dependency.');
+            throw new Exception('Missing php-soundcloud dependency');
         }
     }
 
@@ -180,7 +180,7 @@ class Catalog_soundcloud extends Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('soundcloud.catalog', 'Cannot add catalog with duplicate user id ' . $userid, 1);
-            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $userid));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing SoundCloud Catalog: %s'), $userid));
 
             return false;
         }
@@ -305,7 +305,7 @@ class Catalog_soundcloud extends Catalog
                         }
                     }
 
-                    UI::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s).') . " " .
+                    UI::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s)') . " " .
                         /* HINT: Number of Songs added */
                         sprintf(nT_('%s Song added', '%s Songs added', $songsadded), $songsadded));
 
@@ -355,14 +355,14 @@ class Catalog_soundcloud extends Catalog
                         if ($song->user_favorite != true) {
                             $remove = true;
                         }
-                    } catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
+                    } catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $error) {
                         if ($e->getHttpCode() == '404') {
                             $remove = true;
                         } else {
-                            debug_event('soundcloud.catalog', 'Clean error: ' . $e->getMessage(), 5, 'ampache-catalog');
+                            debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
                         }
-                    } catch (Exception $e) {
-                        debug_event('soundcloud.catalog', 'Clean error: ' . $e->getMessage(), 5, 'ampache-catalog');
+                    } catch (Exception $error) {
+                        debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
                     }
 
                     if (!$remove) {

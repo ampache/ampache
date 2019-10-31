@@ -63,9 +63,12 @@ class AmpacheOmdb
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {
+        $user->set_preferences();
+
         return true;
     } // load
 
@@ -157,8 +160,8 @@ class AmpacheOmdb
                     $results['genre'] = $query->Genre;
                 }
             }
-        } catch (Exception $e) {
-            debug_event('omdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('omdb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
         }
 
         return $results;

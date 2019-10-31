@@ -50,8 +50,8 @@ if (!function_exists('curl_version')) {
 if ($channel->is_private) {
     $is_auth = false;
     if (filter_has_var(INPUT_SERVER, 'PHP_AUTH_USER')) {
-        $htusername = $_SERVER['PHP_AUTH_USER'];
-        $htpassword = $_SERVER['PHP_AUTH_PW'];
+        $htusername = Core::get_server('PHP_AUTH_USER');
+        $htpassword = Core::get_server('PHP_AUTH_PW');
 
         $auth = Auth::login($htusername, $htpassword);
         if ($auth['success']) {
@@ -63,7 +63,7 @@ if ($channel->is_private) {
             if (AmpConfig::get('access_control')) {
                 if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
                     !Access::check_network('network', Core::get_global('user')->id, '25')) {
-                    debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", 2);
+                    debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . Core::get_server('REMOTE_ADDR') . " does not have stream level access", 2);
                     UI::access_denied();
 
                     return false;
@@ -75,7 +75,7 @@ if ($channel->is_private) {
     if (!$is_auth) {
         header('WWW-Authenticate: Basic realm="Ampache Channel Authentication"');
         header('HTTP/1.0 401 Unauthorized');
-        echo T_('Unauthorized.');
+        echo T_('Unauthorized');
 
         return false;
     }

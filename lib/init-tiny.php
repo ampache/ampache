@@ -61,17 +61,17 @@ if (file_exists($composer_autoload)) {
 }
 
 // Check to see if this is http or https
-if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
-    || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')) {
+if ((filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_PROTO') && Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https')
+    || (filter_has_var(INPUT_SERVER, 'HTTPS') && Core::get_server('HTTPS') == 'on')) {
     $http_type = 'https://';
 } else {
     $http_type = 'http://';
 }
 
-if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_PORT')) {
     $http_port = $_SERVER['HTTP_X_FORWARDED_PORT'];
 } else {
-    if (isset($_SERVER['SERVER_PORT'])) {
+    if (filter_has_var(INPUT_SERVER, 'SERVER_PORT')) {
         $http_port = $_SERVER['SERVER_PORT'];
     }
 }

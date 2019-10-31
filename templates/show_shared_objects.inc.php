@@ -18,9 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="share">
+ */ ?>
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="share">
     <thead>
     <tr class="th-top">
             <th class="cel_object essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=object', T_('Object'), 'sort_share_object'); ?></th>
@@ -49,5 +48,4 @@
     } ?>
     </tbody>
 </table>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
 <?php UI::show_box_bottom(); ?>

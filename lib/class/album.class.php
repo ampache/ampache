@@ -527,13 +527,13 @@ class Album extends database_object implements library_item
         }
 
         $album_id = Dba::insert_id();
-        debug_event('album.class', 'Inserted new album id ' . $album_id, 4);
+        debug_event('album.class', 'Album check created new album id ' . $album_id, 4);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             try {
                 Wanted::delete_wanted_release((string) $mbid);
-            } catch (Exception $e) {
-                debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $e->getMessage(), 2);
+            } catch (Exception $error) {
+                debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $error->getMessage(), 2);
             }
         }
 
@@ -677,7 +677,7 @@ class Album extends database_object implements library_item
     /**
      * get_addtime_first_song
      * Get the add date of first added song.
-     * @return int
+     * @return integer
      */
     public function get_addtime_first_song()
     {
@@ -971,7 +971,7 @@ class Album extends database_object implements library_item
     public function update(array $data)
     {
         $year           = isset($data['year']) ? $data['year'] : $this->year;
-        $artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
+        //$artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
         $album_artist   = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
         $name           = isset($data['name']) ? $data['name'] : $this->name;
         $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;

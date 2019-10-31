@@ -92,7 +92,7 @@ class Catalog_remote extends Catalog
             "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
             ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $db_results = Dba::query($sql);
+        Dba::query($sql);
 
         return true;
     } // install
@@ -160,7 +160,7 @@ class Catalog_remote extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('remote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             /* HINT: remote URI */
-            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $uri));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing remote Catalog: %s'), $uri));
 
             return false;
         }
@@ -204,9 +204,9 @@ class Catalog_remote extends Catalog
                 'debug_callback' => 'debug_event',
                 'api_secure' => (substr($this->uri, 0, 8) == 'https://')
             ));
-        } catch (Exception $e) {
-            debug_event('remote.catalog', 'Connection error: ' . $e->getMessage(), 1);
-            AmpError::add('general', $e->getMessage());
+        } catch (Exception $error) {
+            debug_event('remote.catalog', 'Connection error: ' . $error->getMessage(), 1);
+            AmpError::add('general', $error->getMessage());
             AmpError::display('general');
             flush();
 
@@ -242,8 +242,10 @@ class Catalog_remote extends Catalog
         // Get the song count, etc.
         $remote_catalog_info = $remote_handle->info();
 
-        /* HINT: count of songs found*/
-        UI::update_text(T_("Remote Catalog Updated"), sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']), $remote_catalog_info['songs']));
+        UI::update_text(T_("Remote Catalog Updated"),
+                /* HINT: count of songs found*/
+                sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']),
+                $remote_catalog_info['songs']));
 
         // Hardcoded for now
         $step    = 500;
@@ -255,9 +257,9 @@ class Catalog_remote extends Catalog
             $current += $step;
             try {
                 $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
-            } catch (Exception $e) {
-                debug_event('remote.catalog', 'Songs parsing error: ' . $e->getMessage(), 1);
-                AmpError::add('general', $e->getMessage());
+            } catch (Exception $error) {
+                debug_event('remote.catalog', 'Songs parsing error: ' . $error->getMessage(), 1);
+                AmpError::add('general', $error->getMessage());
                 AmpError::display('general');
                 flush();
             }
@@ -315,9 +317,9 @@ class Catalog_remote extends Catalog
             debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
             try {
                 $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
-            } catch (Exception $e) {
+            } catch (Exception $error) {
                 // FIXME: What to do, what to do
-                debug_event('remote.catalog', 'url_to_song parsing error: ' . $e->getMessage(), 1);
+                debug_event('remote.catalog', 'url_to_song parsing error: ' . $error->getMessage(), 1);
             }
 
             if (count($song) == 1) {

@@ -188,7 +188,7 @@ class Repository
      * Only used in case where a property should not publicly writable
      * @param Model $object
      * @param string $property
-     * @param mixed $value
+     * @param string|null $value
      */
     protected function setPrivateProperty(Model $object, $property, $value)
     {

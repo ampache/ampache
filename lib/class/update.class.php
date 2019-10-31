@@ -53,6 +53,7 @@ class Update
      * This checks to see what version you are currently running.
      * Because we may not have the update_info table we have to check
      * for its existence first.
+     * @return string
      */
     public static function get_version()
     {
@@ -85,6 +86,7 @@ class Update
      * format_version
      *
      * Make the version number pretty.
+     * @return string
      */
     public static function format_version($data)
     {
@@ -100,6 +102,7 @@ class Update
      * need_update
      *
      * Checks to see if we need to update ampache at all.
+     * @return boolean
      */
     public static function need_update()
     {
@@ -123,6 +126,7 @@ class Update
      * populate_version
      * just sets an array the current differences
      * that require an update
+     * @return array
      */
     public static function populate_version()
     {
@@ -173,9 +177,12 @@ class Update
                          " * Add barcode catalog_number and original_year to albums.<br />" .
                          " * Drop catalog_number from song_data and use album instead.<br />";
         $version[]     = array('version' => '400002', 'description' => $update_string);
-      
+
         $update_string = "* Make sure preference names are updated to current strings<br />";
         $version[]     = array('version' => '400003', 'description' => $update_string);
+
+        $update_string = "* Delete upload_user_artist database settings<br />";
+        $version[]     = array('version' => '400004', 'description' => $update_string);
 
         return $version;
     }
@@ -219,7 +226,7 @@ class Update
 
         if (!$update_needed) {
             if (!defined('CLI')) {
-                echo '<p align="center">';
+                echo '<p class="database-update">';
             }
             echo T_('No Update Needed');
             if (!defined('CLI')) {
@@ -251,7 +258,7 @@ class Update
         // Run a check to make sure that they don't try to upgrade from a version that
         // won't work.
         if ($current_version < '340002') {
-            echo "<p align=\"center\">Database version too old, please upgrade to <a href=\"http://ampache.org/downloads/ampache-3.3.3.5.tar.gz\">Ampache-3.3.3.5</a> first</p>";
+            echo '<p class="database-update">Database version too old, please upgrade to <a href="http://ampache.org/downloads/ampache-3.3.3.5.tar.gz">Ampache-3.3.3.5</a> first</p>';
 
             return false;
         }
@@ -764,12 +771,12 @@ class Update
         $sql    = "UPDATE `album` SET `album`.`disk` = 1 " .
                   "WHERE `album`.`disk` = 0;";
         $retval &= Dba::write($sql);
-        
+
         $sql = "ALTER TABLE `album` ADD `original_year` INT(4) NULL," .
                "ADD `barcode` VARCHAR(64) NULL," .
                "ADD `catalog_number` VARCHAR(64) NULL;";
         $retval &= Dba::write($sql);
-        
+
         $sql    = "ALTER TABLE `song_data`  DROP `catalog_number`";
         $retval &= Dba::write($sql);
 
@@ -987,6 +994,28 @@ class Update
         $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Auto-pause between tabs' " .
                "WHERE `preference`.`name` = 'webplayer_pausetabs' ";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400004
+     *
+     * delete upload_user_artist database settings
+     */
+    public static function update_400004()
+    {
+        $retval = true;
+
+        $sql = "DELETE FROM `user_preference` " .
+               "WHERE `user_preference`.`preference` IN  " .
+               "(SELECT `preference`.`id` FROM `preference`  " .
+               "WHERE `preference`.`name` = 'upload_user_artist');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `preference` " .
+               "WHERE `preference`.`name` = 'upload_user_artist';";
         $retval &= Dba::write($sql);
 
         return $retval;

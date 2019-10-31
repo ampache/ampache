@@ -22,15 +22,13 @@
 
 $last_seen   = $client->last_seen ? date("m\/d\/y - H:i", $client->last_seen) : T_('Never');
 $create_date = $client->create_date ? date("m\/d\/y - H:i", $client->create_date) : T_('Unknown');
-$client->format();
-?>
+$client->format(); ?>
 <?php UI::show_box_top($client->f_name); ?>
 <div class="user_avatar">
 <?php
 if ($client->f_avatar) {
     echo $client->f_avatar . "<br /><br />";
-}
-?>
+} ?>
 <?php if (AmpConfig::get('sociable')) {
     echo $client->get_display_follow();
 
@@ -39,8 +37,7 @@ if ($client->f_avatar) {
 <?php
     foreach ($plugins as $plugin_name) {
         $plugin = new Plugin($plugin_name);
-        if ($plugin->load($client)) {
-            ?>
+        if ($plugin->load($client)) { ?>
         <li><?php $plugin->_plugin->display_user_field(); ?> </li>
 <?php
         }
@@ -54,30 +51,25 @@ if ($client->f_avatar) {
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Display Name'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php echo $client->f_name; ?>
-        <?php if (Access::check('interface', '25') && AmpConfig::get('sociable')) {
-        ?>
+        <?php if (Access::check('interface', '25') && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
                 <?php echo UI::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php
     } ?>
-        <?php if (Access::check('interface', '100')) {
-        ?>
+        <?php if (Access::check('interface', '100')) { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('preferences', T_('Preferences')); ?></a>
         <?php
-    } elseif ($client->id == Core::get_global('user')->id) {
-        ?>
+    } elseif ($client->id == Core::get_global('user')->id) { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?tab=account"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
 
         <?php
     }
-    if (AmpConfig::get('use_now_playing_embedded')) {
-        ?>
+    if (AmpConfig::get('use_now_playing_embedded')) { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo UI::get_icon('play_preview', T_('Now Playing')); ?></a>
  <?php
-    }
-?>
+    } ?>
 
     </dd>
     <?php $rowparity = UI::flip_class(); ?>
@@ -87,8 +79,7 @@ if ($client->f_avatar) {
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Last Seen'); ?></dt>
     <dd class="<?php echo $rowparity; ?>"><?php echo $last_seen; ?></dd>
     <?php $rowparity = UI::flip_class(); ?>
-    <?php if (Access::check('interface', '50')) {
-    ?>
+    <?php if (Access::check('interface', '50')) { ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
     <dd class="<?php echo $rowparity; ?>"><?php echo $client->f_usage; ?></dd>
     <?php
@@ -96,12 +87,10 @@ if ($client->f_avatar) {
     <?php $rowparity = UI::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Status'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
-    <?php if ($client->is_logged_in() && $client->is_online()) {
-        ?>
+    <?php if ($client->is_logged_in() && $client->is_online()) { ?>
         <i style="color:green;"><?php echo T_('User is Online Now'); ?></i>
     <?php
-    } else {
-        ?>
+    } else { ?>
         <i style="color:red;"><?php echo T_('User is Offline Now'); ?></i>
     <?php
     } ?>
@@ -113,14 +102,12 @@ if ($client->f_avatar) {
     <div id="tabs_container">
         <ul id="tabs">
             <li class="tab_active"><a href="#recentlyplayed"><?php echo T_('Recently Played'); ?></a></li>
-            <?php if (AmpConfig::get('allow_upload')) {
-        ?>
+            <?php if (AmpConfig::get('allow_upload')) { ?>
             <li><a href="#artists"><?php echo T_('Artists'); ?></a></li>
             <?php
     } ?>
             <li><a href="#playlists"><?php echo T_('Playlists'); ?></a></li>
-            <?php if (AmpConfig::get('sociable')) {
-        ?>
+            <?php if (AmpConfig::get('sociable')) { ?>
             <li><a href="#following"><?php echo T_('Following'); ?></a></li>
             <li><a href="#followers"><?php echo T_('Followers'); ?></a></li>
             <li><a href="#timeline"><?php echo T_('Timeline'); ?></a></li>
@@ -135,9 +122,9 @@ if ($client->f_avatar) {
         $object_ids   = $tmp_playlist->get_items();
         if (count($object_ids) > 0) {
             UI::show_box_top(T_('Active Playlist')); ?>
-        <table cellspacing="0">
+        <table>
             <tr>
-                <td valign="top">
+                <td>
                     <?php
                         foreach ($object_ids as $object_data) {
                             $type   = array_shift($object_data);
@@ -157,11 +144,9 @@ if ($client->f_avatar) {
             $data = Song::get_recently_played($client->id);
             Song::build_cache(array_keys($data));
             $user_id = $client->id;
-            require AmpConfig::get('prefix') . UI::find_template('show_recently_played.inc.php');
-        ?>
+            require AmpConfig::get('prefix') . UI::find_template('show_recently_played.inc.php'); ?>
         </div>
-        <?php if (AmpConfig::get('allow_upload')) {
-            ?>
+        <?php if (AmpConfig::get('allow_upload')) { ?>
         <div id="artists" class="tab_content">
         <?php
             $sql         = Catalog::get_uploads_sql('artist', $client->id);
@@ -180,11 +165,9 @@ if ($client->f_avatar) {
             $browse->set_type('playlist');
             $browse->set_simple_browse(false);
             $browse->show_objects($playlist_ids);
-            $browse->store();
-        ?>
+            $browse->store(); ?>
         </div>
-        <?php if (AmpConfig::get('sociable')) {
-            ?>
+        <?php if (AmpConfig::get('sociable')) { ?>
         <div id="following" class="tab_content">
         <?php
             $following_ids         = $client->get_following();

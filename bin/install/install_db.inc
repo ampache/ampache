@@ -65,12 +65,12 @@ if (!$db_user || !$db_pass || !$db_host || !$db_name) {
 
 // Now let's make sure it's not already installed
 if (!install_check_status($configfile)) {
-    echo "\n", T_('Existing Ampache installation found.'), "\n";
+    echo "\n", T_('Existing Ampache installation found'), "\n";
     if ($force) {
-        echo T_('Force specified, proceeding anyway.'), "\n";
+        echo T_('Force specified, proceeding anyway'), "\n";
     }
     else {
-        echo T_('Exiting.'), "\n";
+        echo T_('Exiting'), "\n";
         exit(1);
     }
 }
@@ -130,6 +130,4 @@ function install_usage() {
     echo T_('Force installation'), "\n";
 
     exit(1);
-}
-
-?>
+} ?>

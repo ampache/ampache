@@ -28,8 +28,7 @@ $rate     = $rating->get_user_rating();
 if (!$rate) {
     $rate     = $rating->get_average_rating();
     $othering = true;
-}
-?>
+} ?>
 
 <div class="star-rating dynamic-star-rating<?php if ($othering) {
     echo ' global-star-rating';
@@ -52,14 +51,12 @@ if (!$rate) {
         printf(T_('%s of 5'), $rate);
     } echo "</li>\n";
 
-    for ($count = 1; $count < 6; $count++) {
-        ?>
+    for ($count = 1; $count < 6; $count++) { ?>
       <li>
           <?php echo Ajax::text($base_url . '&rating=' . $count, '', 'rating' . $count . '_' . $rating->id . '_' . $rating->type, '', 'star' . $count); ?>
       </li>
     <?php
-    }
-    ?>
+    } ?>
   </ul>
        <?php echo Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id . '_' . $rating->type, '', 'star0'); ?>
 </div>

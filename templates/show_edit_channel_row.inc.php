@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <div>
     <form method="post" id="edit_channel_<?php echo $libitem->id; ?>" class="edit_dialog_content">
-        <table class="tabledata" cellspacing="0" cellpadding="0">
+        <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Stream Source') ?></td>
                 <td><select name="object_id" autofocus>
@@ -36,8 +35,7 @@
                                 echo " selected";
                             }
                             echo ">" . $playlist->f_name . "</option>";
-                        }
-?>
+                        } ?>
                 </select></td>
             </tr>
             <tr>

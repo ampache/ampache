@@ -54,6 +54,7 @@ class Dba
 
     /**
      * query
+     * @return PDOStatement|boolean
      */
     public static function query($sql, $params = array())
     {
@@ -125,6 +126,7 @@ class Dba
 
     /**
      * write
+     * @return PDOStatement|boolean
      */
     public static function write($sql, $params = null)
     {
@@ -231,6 +233,7 @@ class Dba
      * This emulates the mysql_num_rows function which is really
      * just a count of rows returned by our select statement, this
      * doesn't work for updates or inserts.
+     * @return integer
      */
     public static function num_rows($resource)
     {
@@ -260,6 +263,7 @@ class Dba
      * affected_rows
      *
      * This emulates the mysql_affected_rows function
+     * @return integer
      */
     public static function affected_rows($resource)
     {
@@ -298,9 +302,9 @@ class Dba
         try {
             debug_event('dba.class', 'Database connection...', 6);
             $dbh = new PDO($dsn, $username, $password);
-        } catch (PDOException $e) {
-            self::$_error = $e->getMessage();
-            debug_event('dba.class', 'Connection failed: ' . $e->getMessage(), 1);
+        } catch (PDOException $error) {
+            self::$_error = $error->getMessage();
+            debug_event('dba.class', 'Connection failed: ' . $error->getMessage(), 1);
 
             return null;
         }
@@ -339,6 +343,7 @@ class Dba
      * check_database
      *
      * Make sure that we can connect to the database
+     * @return boolean
      */
     public static function check_database()
     {
@@ -360,6 +365,7 @@ class Dba
      *
      * Checks to make sure that you have inserted the database
      * and that the user you are using has access to it.
+     * @return boolean
      */
     public static function check_database_inserted()
     {
@@ -426,6 +432,7 @@ class Dba
      * disconnect
      *
      * This nukes the dbh connection, this isn't used very often...
+     * @return true
      */
     public static function disconnect($database = '')
     {
@@ -444,6 +451,7 @@ class Dba
 
     /**
      * insert_id
+     * @return string|null
      */
     public static function insert_id()
     {
