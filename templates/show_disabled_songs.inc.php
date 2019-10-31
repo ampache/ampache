@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <br />
 <form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">
     <table class="tabledata">
@@ -34,8 +33,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($songs as $song) {
-    ?>
+            <?php foreach ($songs as $song) { ?>
                 <tr class="<?php echo UI::flip_class(); ?>">
                     <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
                     <td class="cel_song"><?php echo $song->title; ?></td>
@@ -45,8 +43,7 @@
                     <td class="cel_additiontime"><?php echo date("h:i:s, m/d/y", $song->addition_time); ?></td>
                 </tr>
             <?php
-} if (!count($songs)) {
-        ?>
+} if (!count($songs)) { ?>
                 <tr class="<?php echo UI::flip_class(); ?>">
                     <td colspan="6"><span class="error"><?php echo T_('No records found'); ?></span></td>
                 </tr>

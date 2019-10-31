@@ -19,8 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
 <?php
 $browse = new Browse();
 $browse->set_type($object_type);
@@ -28,8 +27,7 @@ $browse->set_type($object_type);
 UI::show_box_top($label->f_name, 'info-box');
 if ($label->website) {
     echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";
-}
-?>
+} ?>
 <div class="item_right_info">
     <div class="external_links">
         <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($label->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
@@ -53,10 +51,8 @@ if ($label->website) {
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
-    ?>
-            <?php if (AmpConfig::get('sociable')) {
-        ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) { ?>
+            <?php if (AmpConfig::get('sociable')) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->id; ?>"><?php echo T_('Post Shout'); ?></a>
@@ -65,16 +61,14 @@ if ($label->website) {
     } ?>
         <?php
 } ?>
-        <?php if ($label->email) {
-        ?>
+        <?php if ($label->email) { ?>
         <li>
             <a href="mailto:<?php echo scrub_out($label->email); ?>"><?php echo UI::get_icon('mail', T_('Send E-mail')); ?></a>
             <a href="mailto:<?php echo scrub_out($label->email); ?>"><?php echo T_('Send E-mail'); ?></a>
         </li>
         <?php
     } ?>
-        <?php if ($label->can_edit()) {
-        ?>
+        <?php if ($label->can_edit()) { ?>
         <li>
             <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
@@ -85,8 +79,7 @@ if ($label->website) {
         </li>
         <?php
     } ?>
-        <?php if (Catalog::can_remove($label)) {
-        ?>
+        <?php if (Catalog::can_remove($label)) { ?>
         <li>
             <a id="<?php echo 'delete_label_' . $label->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
                 <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
@@ -109,12 +102,10 @@ if ($label->website) {
 <?php
     $browse->show_objects($object_ids, true);
     $browse->set_use_alpha(false, false);
-    $browse->store();
-?>
+    $browse->store(); ?>
         </div>
 <?php
-    echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs'));
-?>
+    echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs')); ?>
         <div id="songs" class="tab_content">
         <?php UI::show_box_top(T_('Songs'), 'info-box'); echo T_('Loading...'); UI::show_box_bottom(); ?>
         </div>

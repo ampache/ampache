@@ -18,13 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Add Localplay Instance'), 'box box_localplay_add_instance'); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=add_instance">
 <table class="tabledata">
-<?php foreach ($fields as $key => $field) {
-    ?>
+<?php foreach ($fields as $key => $field) { ?>
 <tr>
     <td><?php echo $field['description']; ?></td>
     <td><input type="<?php echo $field["type"]; ?>" name="<?php echo $key; ?>" /></td>

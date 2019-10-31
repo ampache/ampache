@@ -21,8 +21,7 @@
  */
 
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path = AmpConfig::get('web_path'); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
     <head>
@@ -50,8 +49,7 @@ $web_path = AmpConfig::get('web_path');
     <?php echo(T_('This User ID is activated and can be used') . ' <a href="' . AmpConfig::get('web_path') . '/login.php">' . T_('Login') . '</a>'); ?>
 </p>
 <?php
-    } else {
-        ?>
+    } else { ?>
 <h3><?php echo T_('Validation Failed'); ?></h3>
 <p><?php echo T_("The validation key used isn't correct"); ?></p>
 <?php
@@ -59,5 +57,4 @@ $web_path = AmpConfig::get('web_path');
             </div>
         </div>
 <?php
-UI::show_footer();
-?>
+UI::show_footer(); ?>

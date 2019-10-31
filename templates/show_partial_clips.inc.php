@@ -18,6 +18,5 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <th class="cel_artist optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=clip&sort=artist', T_('Artist'), 'sort_video_artist'); ?></th>

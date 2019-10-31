@@ -21,8 +21,7 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-$thcount  = 6;
-?>
+$thcount  = 6; ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -38,18 +37,17 @@ $thcount  = 6;
             <th class="cel_season essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_season'); ?></th>
             <th class="cel_tvshow essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'), 'season_sort_tvshow'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
-            <?php if (User::is_registered()) {
-        ?>
+            <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) {
-            ++$thcount; ?>
+        ++$thcount; ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php
-        } ?>
+    } ?>
                 <?php if (AmpConfig::get('userflags')) {
-            ++$thcount; ?>
+        ++$thcount; ?>
                     <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
                 <?php
-        } ?>
+    } ?>
             <?php
     } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
@@ -72,8 +70,7 @@ $thcount  = 6;
         </tr>
         <?php
         } ?>
-        <?php if (!count($object_ids)) {
-            ?>
+        <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No season found'); ?></span></td>
         </tr>
@@ -83,23 +80,19 @@ $thcount  = 6;
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-        <?php if (Art::is_enabled()) {
-            ?>
+        <?php if (Art::is_enabled()) { ?>
             <th class="cel_cover"><?php echo T_('Art'); ?></th>
         <?php
         } ?>
             <th class="cel_season"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_name_bottom'); ?></th>
             <th class="cel_tvshow"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'), 'season_sort_artist_bottom'); ?></th>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
-            <?php if (User::is_registered()) {
-            ?>
-                <?php if (AmpConfig::get('ratings')) {
-                ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating"><?php echo T_('Rating'); ?></th>
                 <?php
             } ?>
-                <?php if (AmpConfig::get('userflags')) {
-                ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
                     <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
                 <?php
             } ?>

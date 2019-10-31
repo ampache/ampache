@@ -22,26 +22,22 @@
 
 /* HINT: Democratic Playlist Name */
 $string = $democratic->is_enabled() ? sprintf(T_('%s Playlist'), $democratic->name) : T_('Democratic Playlist');
-UI::show_box_top($string, 'info-box');
-?>
+UI::show_box_top($string, 'info-box'); ?>
 <div id="information_actions">
 <ul>
-<?php if ($democratic->is_enabled()) {
-    ?>
+<?php if ($democratic->is_enabled()) { ?>
 <li>
     <?php echo T_('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
 </li>
 <?php
 } ?>
-<?php if (Access::check('interface', '75')) {
-        ?>
+<?php if (Access::check('interface', '75')) { ?>
 <li>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=manage"><?php echo UI::get_icon('server_lightning', T_('Configure Democratic Playlist')); ?>
     &nbsp;
     <?php echo T_('Configure Democratic Playlist'); ?></a>
 </li>
-<?php if ($democratic->is_enabled()) {
-            ?>
+<?php if ($democratic->is_enabled()) { ?>
 <li>
     <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic'); ?>
     <?php echo Ajax::text('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, T_('Play Democratic Playlist'), 'play_democratic_full_text'); ?>
@@ -70,8 +66,7 @@ UI::show_box_top($string, 'info-box');
                 }, <?php echo(AmpConfig::get('refresh_limit') * 1000); ?>);
             }
         }
-        <?php if (filter_has_var(INPUT_GET, 'reloadpage')) {
-        ?>
+        <?php if (filter_has_var(INPUT_GET, 'reloadpage')) { ?>
         $(document).ready(function() {
             reloadPageChanged(document.getElementById('chkreloadpage'));
         });

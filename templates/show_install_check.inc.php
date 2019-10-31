@@ -19,8 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-require $prefix . '/templates/install_header.inc.php';
-?>
+require $prefix . '/templates/install_header.inc.php'; ?>
 <?php if (!defined('INSTALL')) {
     return false;
 } ?>

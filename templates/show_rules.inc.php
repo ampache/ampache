@@ -25,8 +25,7 @@ if ($playlist) {
 } else {
     $logic_operator = Core::get_request('operator');
 }
-$logic_operator = strtolower($logic_operator);
-?>
+$logic_operator = strtolower($logic_operator); ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>"></script>
 
@@ -71,5 +70,4 @@ if ($out) {
     echo $out;
 } else {
     echo '<script>SearchRow.add();</script>';
-}
-?>
+} ?>

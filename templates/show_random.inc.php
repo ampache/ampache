@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo Core::get_request('type') ? scrub_out(Core::get_request('type')) : 'song'; ?>">
 <table class="tabledata">
@@ -56,8 +55,7 @@
             echo "\t\t\t" . '<option value="-1" ' .
                 ($_POST['random'] == '-1'
                     ? 'selected="selected"' : '') . '>' .
-                T_('All') . "</option>\n";
-?>
+                T_('All') . "</option>\n"; ?>
         </select>
         </td>
 </tr>
@@ -81,8 +79,7 @@
                 printf(nT_('%d hour', '%d hours', $i / 60), $i / 60);
             }
             echo "</option>\n";
-        }
-?>
+        } ?>
                 </select>
         </td>
 </tr>
@@ -100,8 +97,7 @@
                 ($_POST['size_limit'] == $i
                     ? 'selected="selected"' : '') . '>' .
                 UI::format_bytes($i * 1048576) . "</option>\n";
-        }
-?>
+        } ?>
                 </select>
         </td>
 </tr>
@@ -123,6 +119,5 @@
         $browse->show_objects();
         $browse->store();
         echo Ajax::observe('window', 'load', Ajax::action('?action=refresh_rightbar', 'playlist_refresh_load'));
-    }
-?>
+    } ?>
 </div>

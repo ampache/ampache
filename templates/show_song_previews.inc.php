@@ -18,19 +18,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <table class="tabledata">
     <thead>
         <tr class="th-top">
-            <?php if (AmpConfig::get('echonest_api_key')) {
-    ?>
+            <?php if (AmpConfig::get('echonest_api_key')) { ?>
                 <th class="cel_play"></th>
             <?php
 } ?>
             <th class="cel_song"><?php echo T_('Song Title'); ?></th>
-            <?php if (AmpConfig::get('echonest_api_key')) {
-        ?>
+            <?php if (AmpConfig::get('echonest_api_key')) { ?>
                 <th class="cel_add"></th>
             <?php
     } ?>
@@ -42,8 +39,7 @@
     </thead>
     <tbody>
         <?php
-        foreach ($object_ids as $libitem) {
-            ?>
+        foreach ($object_ids as $libitem) { ?>
         <tr id="song_preview_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_song_preview_row.inc.php'); ?>
         </tr>

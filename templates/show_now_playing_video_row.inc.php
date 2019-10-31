@@ -20,8 +20,7 @@
  *
  */
 $media = Video::create_from_id($media->id);
-$media->format();
-?>
+$media->format(); ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>
@@ -30,8 +29,7 @@ $media->format();
             echo scrub_out($np_user->fullname);
             if ($np_user->f_avatar_medium) {
                 echo '<div>' . $np_user->f_avatar_medium . '</div>';
-            }
-        ?>
+            } ?>
         </a>
     </div>
 </div>
@@ -44,8 +42,7 @@ $media->format();
 </div>
 
 <?php
-    if (Art::is_enabled()) {
-        ?>
+    if (Art::is_enabled()) { ?>
         <div class="np_group" id="np_group_3">
             <div class="np_cell cel_albumart">
                 <?php
@@ -61,13 +58,11 @@ $media->format();
             </div>
         </div>
     <?php
-    }
-?>
+    } ?>
 
 <div class="np_group" id="np_group_4">
 <?php
-    if (AmpConfig::get('ratings')) {
-        ?>
+    if (AmpConfig::get('ratings')) { ?>
         <div class="np_cell cel_rating">
             <label><?php echo T_('Rating'); ?></label>
             <div id="rating_<?php echo $media->id; ?>_video">
@@ -81,6 +76,5 @@ $media->format();
             </div>
         </div>
     <?php
-    }
-?>
+    } ?>
 </div>

@@ -11,8 +11,7 @@ if (!AmpConfig::get('upnp_backend')) {
 header("Content-Type:text/xml");
 $web_path = AmpConfig::get('local_web_path');
 
-echo '<?xml version="1.0" encoding="UTF-8"?>';
-?>
+echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
 <root xmlns="urn:schemas-upnp-org:device-1-0">
     <specVersion>
         <major>1</major>

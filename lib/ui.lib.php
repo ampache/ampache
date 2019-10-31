@@ -691,8 +691,7 @@ function show_table_render($render = false, $force = false)
     // Include table render javascript only once
     if ($force || !defined('TABLE_RENDERED')) {
         define('TABLE_RENDERED', 1); ?>
-        <?php if (isset($render) && $render) {
-            ?>
+        <?php if (isset($render) && $render) { ?>
             <script>sortPlaylistRender();</script>
         <?php
         }

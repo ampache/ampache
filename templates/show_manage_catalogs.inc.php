@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs') ?>
 <div id="information_actions">
     <ul style="float: left;">
@@ -69,5 +68,4 @@
     $browse->set_static_content(true);
     $browse->save_objects($catalog_ids);
     $browse->show_objects($catalog_ids);
-    $browse->store();
-?>
+    $browse->store(); ?>

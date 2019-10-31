@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Create Channel'), 'box box_add_channel'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=create">
 <input type="hidden" name="type" value="<?php echo scrub_out(Core::get_request('type')); ?>" />

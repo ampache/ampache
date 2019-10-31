@@ -19,25 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
 <ul id="sidebar-tabs">
 <?php
 if (User::is_registered()) {
-    if (!$_SESSION['state']['sidebar_tab']) {
-        $_SESSION['state']['sidebar_tab'] = 'home';
-    }
-    $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
+     if (!$_SESSION['state']['sidebar_tab']) {
+         $_SESSION['state']['sidebar_tab'] = 'home';
+     }
+     $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 
-    // List of buttons ( id, title, icon, access level)
-    $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
-    if (AmpConfig::get('allow_localplay_playback')) {
-        $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
-    }
-    $sidebar_items[] = array('id' => 'preferences', 'title' => T_('Preferences'), 'icon' => 'edit', 'access' => 5);
-    $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
+     // List of buttons ( id, title, icon, access level)
+     $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
+     if (AmpConfig::get('allow_localplay_playback')) {
+         $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
+     }
+     $sidebar_items[] = array('id' => 'preferences', 'title' => T_('Preferences'), 'icon' => 'edit', 'access' => 5);
+     $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
 
-    $web_path = AmpConfig::get('web_path'); ?>
+     $web_path = AmpConfig::get('web_path'); ?>
     <?php
     foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
@@ -46,8 +45,7 @@ if (User::is_registered()) {
         <li <?php print_r($li_params); ?>>
     <?php
             print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));
-            if ($item['id'] == $_SESSION['state']['sidebar_tab']) {
-                ?>
+            if ($item['id'] == $_SESSION['state']['sidebar_tab']) { ?>
             <div id="sidebar-page" class="sidebar-page-float">
                 <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'); ?>
             </div>
@@ -57,8 +55,7 @@ if (User::is_registered()) {
     <?php
         }
     }
-} else {
-    ?>
+ } else { ?>
         <li id="sb_tab_home" class="sb1">
             <div id="sidebar-page" class="sidebar-page-float">
             <?php
@@ -66,8 +63,7 @@ if (User::is_registered()) {
             </div>
         </li>
 <?php
-}
-?>
+} ?>
         <li id="sb_tab_logout" class="sb1">
             <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" class="nohtml" >
             <?php echo UI::get_icon('logout', $t_logout); ?>

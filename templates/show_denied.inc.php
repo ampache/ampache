@@ -25,8 +25,7 @@ if (empty($logo_url)) {
     $logo_url = UI::get_logo_url('dark');
 }
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path = AmpConfig::get('web_path'); ?>
 <!DOCTYPE html>
 <html lang="en-US">
     <head>
@@ -54,14 +53,12 @@ $web_path = AmpConfig::get('web_path');
                 <p><?php echo T_('This event has been logged'); ?></p>
             </div>
             <div class="alert alert-danger">
-                <?php if (!AmpConfig::get('demo_mode')) {
-    ?>
+                <?php if (!AmpConfig::get('demo_mode')) { ?>
                 <p><?php echo T_('You have been redirected to this page because you do not have access to this function'); ?></p>
                 <p><?php echo T_('If you believe this is an error please contact an Ampache administrator'); ?></p>
                 <p><?php echo T_('This event has been logged'); ?></p>
                 <?php
-} else {
-        ?>
+} else { ?>
                 <p><?php echo T_("You have been redirected to this page because you attempted to access a function that is disabled in the demo."); ?></p>
                 <?php
     } ?>

@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 
 <td class="cel_date"><a href="<?php echo $libitem->url; ?>" target="_blank"><?php echo $libitem->startDate; ?></a></td>
 <td class="cel_place"><a href="<?php echo $libitem->venue->url ?>" target="_blank"><?php echo (count($libitem->venue->image) >= 1 && !empty($libitem->venue->image[1])) ? '<img src="' . $libitem->venue->image[1] . '"/>' : ''; ?> <?php echo $libitem->venue->name; ?></a></td>

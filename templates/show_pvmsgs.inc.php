@@ -20,8 +20,7 @@
  *
  */
 
-$thcount = 5;
-?>
+$thcount = 5; ?>
 <script>
     function getSelectionArray()
     {
@@ -65,8 +64,7 @@ $thcount = 5;
         </tr>
         <?php
         } ?>
-        <?php if (!count($object_ids)) {
-            ?>
+        <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No message found'); ?></span></td>
         </tr>

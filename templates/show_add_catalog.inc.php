@@ -21,8 +21,7 @@
  */
 
 $default_rename = "%T - %t";
-$default_sort   = "%a/%A";
-?>
+$default_sort   = "%a/%A"; ?>
 <?php UI::show_box_top(T_('Add Catalog'), 'box box_add_catalog'); ?>
 <p><?php echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
 &nbsp;
@@ -76,20 +75,17 @@ $default_sort   = "%a/%A";
 
                 <select name="gather_media">
                     <option value="music"><?php echo T_('Music'); ?></option>
-            <?php if (AmpConfig::get('allow_video')) {
-    ?>
+            <?php if (AmpConfig::get('allow_video')) { ?>
                     <option value="clip"><?php echo T_('Music Clip'); ?></option>
                     <option value="tvshow"><?php echo T_('TV Show'); ?></option>
                     <option value="movie"><?php echo T_('Movie'); ?></option>
                     <option value="personal_video"><?php echo T_('Personal Video'); ?></option>
             <?php
 }
-            if (AmpConfig::get('podcast')) {
-                ?>
+            if (AmpConfig::get('podcast')) { ?>
                     <option value="podcast"><?php echo T_('Podcast'); ?></option>
             <?php
-            }
-            ?>
+            } ?>
                 </select>
             </td>
         </tr>

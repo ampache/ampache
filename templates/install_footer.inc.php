@@ -10,7 +10,6 @@
             foreach ($jsEnd as $js) {
                 echo $js;
             }
-        }
-    ?>
+        } ?>
     </body>
 </html>

@@ -19,8 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
 <script>
 function PlayerFrame()
 {
@@ -29,8 +28,7 @@ function PlayerFrame()
     var $webplayer = $("#webplayer");
     if ($webplayer.is(':visible')) {
 
-<?php if (AmpConfig::get('webplayer_confirmclose')) {
-    ?>
+<?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
     document.onbeforeunload = null;
 <?php
 } ?>
