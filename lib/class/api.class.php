@@ -1802,6 +1802,87 @@ class Api
     }
 
     /**
+     * update_art
+     * MINIMUM_API_VERSION=400001
+     *
+     * updates a single album, artist, song looking for art files
+     * Doesn't overwrite existing art by default.
+     *
+     * @param array $input
+     * $input = array(type      = (string) 'artist'|'album'
+     *                id        = (int) $artist_id, $album_id)
+     *                overwrite = (boolean) 0|1 //optional
+     */
+    public static function update_art($input)
+    {
+        if (!self::check_parameter($input, array('type', 'id'))) {
+            debug_event('api.class', "'type', 'id' required on update_from_tags function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type', 'id'");
+
+            return false;
+        }
+        $type      = (string) $input['type'];
+        $object    = (int) $input['id'];
+        $overwrite = ((int) $input['overwrite'] == 0) ? true : false;
+        
+        // confirm the correct data
+        if (!in_array($type, array('artist', 'album'))) {
+            echo XML_Data::error('401', T_('Wrong item type ' . $type));
+
+            return;
+        }
+        $item = new $type($object);
+        if (!$item->id) {
+            echo XML_Data::error('404', T_('The requested item was not found'));
+
+            return;
+        }
+        // update your object
+        Catalog::gather_art_item($type, $object, $overwrite, true);
+
+        echo XML_Data::success('Gathered art for: ' . (string) $object . ' (' . $type . ')');
+    }
+
+    /**
+     * update_artist_info
+     * MINIMUM_API_VERSION=400001
+     *
+     * Update artist information and fetch similar artists from last.fm
+     * Make sure lastfm_api_key is set in your configuration file
+     *
+     * @param array $input
+     * $input = array(id   = (int) $artist_id)
+     */
+    public static function update_artist_info($input)
+    {
+        if (!self::check_parameter($input, array('id'))) {
+            debug_event('api.class', "'id' required on update_from_tags function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id'");
+
+            return false;
+        }
+        $object = (int) $input['id'];
+        
+        // confirm the correct data
+        if (!in_array($type, array('artist'))) {
+            echo XML_Data::error('401', T_('Wrong item type ' . $type));
+
+            return;
+        }
+        $item = new $type($object);
+        if (!$item->id) {
+            echo XML_Data::error('404', T_('The requested item was not found'));
+
+            return;
+        }
+        // update your object
+        Recommendation::get_artist_info($object);
+        Recommendation::get_artists_like($object);
+
+        echo XML_Data::success('Updated artist info: ' . (string) $object);
+    }
+
+    /**
      * stream
      * MINIMUM_API_VERSION=400001
      *

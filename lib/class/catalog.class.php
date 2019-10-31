@@ -1224,11 +1224,12 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
+     * gather_art_item
      * @param string $type
      * @param integer $id
+     * @param boolean $db_art_first
      */
-    public function gather_art_item($type, $id, $db_art_first = false)
+    public static function gather_art_item($type, $id, $db_art_first = false, $api = false)
     {
         debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 4);
 
@@ -1260,7 +1261,7 @@ abstract class Catalog extends database_object
                 $parent = $libitem->get_parent();
                 if ($parent != null) {
                     if (!Art::has_db($parent['object_id'], $parent['object_type'])) {
-                        $this->gather_art_item($parent['object_type'], $parent['object_id']);
+                        self::gather_art_item($parent['object_type'], $parent['object_id']);
                     }
                 }
             }
@@ -1302,8 +1303,8 @@ abstract class Catalog extends database_object
             Video::generate_preview($id);
         }
 
-        if (UI::check_ticker()) {
-            UI::update_text('read_art_' . $this->id, $libitem->get_fullname());
+        if (UI::check_ticker() && !$api) {
+            UI::update_text('read_art_' . $id, $libitem->get_fullname());
         }
     }
 
@@ -1594,10 +1595,12 @@ abstract class Catalog extends database_object
                 break;
         } // end switch type
 
-        echo '<table class="tabledata">' . "\n";
-        echo '<thead><tr class="th-top">' . "\n";
-        echo "<th>" . T_("Song") . "</th><th>" . T_("Status") . "</th>\n";
-        echo "<tbody>\n";
+        if (!$api) {
+            echo '<table class="tabledata">' . "\n";
+            echo '<thead><tr class="th-top">' . "\n";
+            echo "<th>" . T_("Song") . "</th><th>" . T_("Status") . "</th>\n";
+            echo "<tbody>\n";
+        }
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             $info = self::update_media_from_tags($song);
@@ -1620,7 +1623,9 @@ abstract class Catalog extends database_object
                 flush();
             }
         } // foreach songs
-        echo "</tbody></table>\n";
+        if (!$api) {
+            echo "</tbody></table>\n";
+        }
 
         return $result;
     } // update_single_item
