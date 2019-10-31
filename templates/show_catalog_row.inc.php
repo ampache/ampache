@@ -29,23 +29,20 @@ if ($libitem->enabled) {
     $icon     = 'enable';
     $icontext = T_('Enable');
 }
-$button_flip_state_id = 'button_flip_state_' . $libitem->id;
-?>
+$button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
 <td class="cel_catalog"><?php echo $libitem->f_link; ?></td>
 <td class="cel_info"><?php echo scrub_out($libitem->f_info); ?></td>
 <td class="cel_lastverify"><?php echo scrub_out($libitem->f_update); ?></td>
 <td class="cel_lastadd"><?php echo scrub_out($libitem->f_add); ?></td>
 <td class="cel_lastclean"><?php echo scrub_out($libitem->f_clean); ?></td>
 <td class="cel_action cel_action_text">
-<?php if (!$libitem->isReady()) {
-    ?>
-    <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $libitem->id; ?>"><b><?php echo T_('Make it ready ...'); ?></b></a><br />
+<?php if (!$libitem->isReady()) { ?>
+    <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $libitem->id; ?>"><b><?php echo T_('Make it ready ..'); ?></b></a><br />
 <?php
 } ?>
 <form>
     <select name="catalog_action_menu">
-<?php if ($libitem->isReady()) {
-        ?>
+<?php if ($libitem->isReady()) { ?>
         <option value="add_to_catalog"><?php echo T_('Add'); ?></option>
         <option value="update_catalog"><?php echo T_('Verify'); ?></option>
         <option value="clean_catalog"><?php echo T_('Clean'); ?></option>
@@ -56,8 +53,7 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id;
         <option value="show_delete_catalog"><?php echo T_('Delete'); ?></option>
     </select>
     <input type="button" onClick="NavigateTo('<?php echo $web_path; ?>/admin/catalog.php?action=' + this.form.catalog_action_menu.options[this.form.catalog_action_menu.selectedIndex].value + '&catalogs[]=<?php echo $libitem->id; ?>');" value="<?php echo T_('Go'); ?>">
-    <?php if (AmpConfig::get('catalog_disable')) {
-        ?>
+    <?php if (AmpConfig::get('catalog_disable')) { ?>
         <span id="<?php echo($button_flip_state_id); ?>">
             <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, $icontext, 'flip_state_' . $libitem->id); ?>
         </span>

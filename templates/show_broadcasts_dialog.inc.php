@@ -18,14 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 
 <ul>
 <?php
     $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);
     foreach ($broadcasts as $broadcast_id) {
-        $broadcast = new Broadcast($broadcast_id);
+        $broadcast = new Broadcast((int) $broadcast_id);
         $broadcast->format(); ?>
     <li>
         <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id; ?>" onclick="handleBroadcastAction('<?php echo AmpConfig::get('ajax_url') . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id; ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id; ?>');">

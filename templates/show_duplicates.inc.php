@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Duplicate Songs')); ?>
 <form method="post" enctype="multipart/form-data">
-    <table class="tabledata" cellpadding="0" cellspacing="0">
+    <table class="tabledata">
         <tr class="th-top">
             <th class="cel_disable"><?php echo T_('Disable'); ?></th>
             <th class="cel_song"><?php echo T_('Song'); ?></th>
@@ -65,8 +64,7 @@
         </tr>
         <?php
                 }
-            }
-        ?>
+            } ?>
         <tr class="th-bottom">
             <th class="cel_disable"><?php echo T_('Disable'); ?></th>
             <th class="cel_song"><?php echo T_('Song'); ?></th>

@@ -18,14 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <ul id="rb_action">
     <li>
         <?php echo Ajax::button('?page=stream&action=basket', 'all', $t_play, 'rightbar_play'); ?>
     </li>
-    <?php if (Access::check('interface', '25')) {
-    ?>
+    <?php if (Access::check('interface', '25')) { ?>
         <li id="pl_add">
             <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
             <ul id="pl_action_additems" class="submenu">
@@ -47,10 +45,9 @@
         </li>
     <?php
 } ?>
-<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) {
-        ?>
+<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) { ?>
     <li>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
             <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
         </a>
     </li>
@@ -80,8 +77,7 @@
 <?php
     if (AmpConfig::get('play_type') == 'localplay') {
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_control.inc.php');
-    }
-?>
+    } ?>
 <ul id="rb_current_playlist">
 
 <?php
@@ -90,18 +86,15 @@
     //FIXME :: this is kludgy
     if (!defined('NO_SONGS') && Core::get_global('user')->playlist) {
         $objects = Core::get_global('user')->playlist->get_items();
-    }
-?>
-    <script type="text/javascript">
-        <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) {
-    ?>
+    } ?>
+    <script>
+        <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) { ?>
              $("#content").removeClass("content-right-wild", 500);
              $("#footer").removeClass("footer-wild", 500);
              $("#rightbar").removeClass("hidden");
              $("#rightbar").show("slow");
         <?php
-} else {
-        ?>
+} else { ?>
             $("#content").addClass("content-right-wild", 500);
             $("#footer").addClass("footer-wild", 500);
             $("#rightbar").hide("slow");
@@ -129,13 +122,11 @@
         <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
 <?php
-    } if (!count($objects)) {
-        ?>
+    } if (!count($objects)) { ?>
     <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
 <?php
     } ?>
-<?php if (isset($truncated)) {
-        ?>
+<?php if (isset($truncated)) { ?>
     <li class="<?php echo UI::flip_class(); ?>">
         <?php echo $truncated . ' ' . T_('More'); ?>...
     </li>
@@ -148,5 +139,4 @@
 // to even pass
 if (count($objects)) {
     Stream::run_playlist_method();
-}
-?>
+} ?>

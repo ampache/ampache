@@ -81,7 +81,7 @@ class Preference extends database_object
             $pref_id = $preference;
             $name    = self::name_from_id($preference);
         }
-        if ($applytoall and Access::check('interface', '100')) {
+        if ($applytoall && Access::check('interface', '100')) {
             $user_check = "";
         } else {
             $user_check = " AND `user`='$user_id'";
@@ -91,7 +91,7 @@ class Preference extends database_object
             $value = implode(',', $value);
         }
 
-        if ($applytodefault and Access::check('interface', '100')) {
+        if ($applytodefault && Access::check('interface', '100')) {
             $sql = "UPDATE `preference` SET `value`='$value' WHERE `id`='$pref_id'";
             Dba::write($sql);
         }

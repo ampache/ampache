@@ -52,13 +52,13 @@ switch ($_REQUEST['action']) {
         }
 
         // Remove unauthorized defined values from here
-        if (isset($_POST['from_user'])) {
+        if (filter_has_var(INPUT_POST, 'from_user')) {
             unset($_POST['from_user']);
         }
-        if (isset($_POST['creation_date'])) {
+        if (filter_has_var(INPUT_POST, 'creation_date')) {
             unset($_POST['creation_date']);
         }
-        if (isset($_POST['is_read'])) {
+        if (filter_has_var(INPUT_POST, 'is_read')) {
             unset($_POST['is_read']);
         }
 
@@ -121,7 +121,7 @@ switch ($_REQUEST['action']) {
             }
         }
 
-        show_confirmation(T_('No Problem'), T_('Messages have been deleted.'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
+        show_confirmation(T_('No Problem'), T_('Messages have been deleted'), AmpConfig::get('web_path') . "/browse.php?action=pvmsg");
         break;
     case 'show':
     default:

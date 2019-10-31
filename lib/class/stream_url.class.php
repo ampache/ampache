@@ -30,6 +30,7 @@ class Stream_URL extends memory_object
      * parse
      *
      * Takes an url and parses out all the chewy goodness.
+     * @return array
      */
     public static function parse($url)
     {
@@ -65,6 +66,7 @@ class Stream_URL extends memory_object
                     if (make_bool($value)) {
                         $results['type'] = 'video';
                     }
+                // Intentional break fall-through
                 default:
                     // Nothing
                 break;
@@ -79,7 +81,9 @@ class Stream_URL extends memory_object
      * add_options
      *
      * Add options to an existing stream url.
+     * @param string $url
      * @param string $options
+     * @return string
      */
     public static function add_options($url, $options)
     {
@@ -110,6 +114,7 @@ class Stream_URL extends memory_object
      * format
      * This format the string url according to settings.
      * @param string $url
+     * @return string
      */
     public static function format($url)
     {

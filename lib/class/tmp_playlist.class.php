@@ -66,6 +66,7 @@ class Tmp_Playlist extends database_object
      * has_info
      * This is an internal (private) function that gathers the information
      * for this object from the playlist_id that was passed in.
+     * @return array
      */
     private function has_info()
     {
@@ -82,6 +83,7 @@ class Tmp_Playlist extends database_object
      * This returns a playlist object based on the session that is passed to
      * us.  This is used by the load_playlist on user for the most part.
      * @param string $session_id
+     * @return Tmp_Playlist
      */
     public static function get_from_session($session_id)
     {
@@ -133,6 +135,7 @@ class Tmp_Playlist extends database_object
     /**
      * get_items
      * Returns an array of all object_ids currently in this Tmp_Playlist.
+     * @return array
      */
     public function get_items()
     {
@@ -210,6 +213,7 @@ class Tmp_Playlist extends database_object
      * This function initializes a new Tmp_Playlist. It is associated with
      * the current session rather than a user, as you could have the same
      * user logged in from multiple locations.
+     * @return string|null
      */
     public static function create($data)
     {
@@ -243,6 +247,7 @@ class Tmp_Playlist extends database_object
      * session_clean
      * This deletes any other tmp_playlists associated with this
      * session
+     * @param string|null $id
      */
     public static function session_clean($sessid, $id)
     {
@@ -324,6 +329,7 @@ class Tmp_Playlist extends database_object
      * vote_active
      * This checks to see if this playlist is a voting playlist
      * and if it is active
+     * @return boolean
      */
     public function vote_active()
     {

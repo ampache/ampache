@@ -23,15 +23,14 @@
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 $web_path = AmpConfig::get('web_path');
 
-$_SESSION['login'] = true;
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+$_SESSION['login'] = true; ?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo T_('Registration'); ?></title>
+        <title><?php echo AmpConfig::get('site_title') . ' - ' . T_('Registration'); ?></title>
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
     </head>
     <body id="registerPage">
@@ -39,25 +38,23 @@ $_SESSION['login'] = true;
             <div id="header">
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
             </div>
-            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/base.js" language="javascript" type="text/javascript"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" language="javascript" type="text/javascript"></script>
+            <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
+            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
             <div id="content">
                 <div id="guts">
                     <?php
                     $url  = AmpConfig::get('web_path') . '/login.php';
                     $text = T_('Return to Login Page');
                     if (AmpConfig::get('admin_enable_required')) {
-                        $text = T_('Please wait for an administrator to activate your account.');
+                        $text = T_('Please wait for an administrator to activate your account');
                     }
                     if (!AmpConfig::get('user_no_email_confirm')) {
-                        $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information.');
+                        $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information');
                     }
-                    show_confirmation(T_('Your Account Has Been Created'), $text, $url);
-                    ?>
+                    show_confirmation(T_('Your Account Has Been Created'), $text, $url); ?>
                 </div>
             </div>
         </div>
 <?php
-UI::show_footer();
-?>
+UI::show_footer(); ?>

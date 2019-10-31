@@ -61,7 +61,7 @@ switch ($_REQUEST['action']) {
         if ($type == "song") {
             $media  = new Song($songid);
             $shouts = Shoutbox::get_shouts($type, $songid);
-            echo "<script type='text/javascript'>\r\n";
+            echo "<script>\r\n";
             echo "shouts = {};\r\n";
             foreach ($shouts as $shoutsid) {
                 $shout = new Shoutbox($shoutsid);

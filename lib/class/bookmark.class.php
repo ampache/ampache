@@ -116,6 +116,10 @@ class Bookmark extends database_object
         return $ids;
     }
 
+    /**
+     * get_bookmarks
+     * @return array
+     */
     public static function get_bookmarks($user = null)
     {
         $bookmarks = array();
@@ -127,6 +131,10 @@ class Bookmark extends database_object
         return $bookmarks;
     }
 
+    /**
+     * create
+     * @return boolean|PDOStatement
+     */
     public static function create(array $data)
     {
         $user     = $data['user'] ?: Core::get_global('user')->id;
@@ -138,6 +146,10 @@ class Bookmark extends database_object
         return Dba::write($sql, array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), time()));
     }
 
+    /**
+     * update
+     * @return boolean|PDOStatement
+     */
     public function update($position)
     {
         $sql = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?";
@@ -145,6 +157,10 @@ class Bookmark extends database_object
         return Dba::write($sql, array($position, time(), $this->id));
     }
 
+    /**
+     * remove
+     * @return boolean|PDOStatement
+     */
     public function remove()
     {
         $sql = "DELETE FROM `bookmark` WHERE `id` = ?";

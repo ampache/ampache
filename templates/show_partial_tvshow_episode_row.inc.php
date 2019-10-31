@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <td class="cel_episode"><?php echo $libitem->episode_number; ?></td>
 <td class="cel_season"><?php echo $libitem->f_season_link; ?></td>
 <td class="cel_tvshow"><?php echo $libitem->f_tvshow_link; ?></td>

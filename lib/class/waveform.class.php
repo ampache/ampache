@@ -119,7 +119,7 @@ class Waveform
                                 //$waveform = self::create_waveform("C:\\tmp\\test.wav");
 
                                 if (unlink($tmpfile) === false) {
-                                    throw new \RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked.');
+                                    throw new \RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked');
                                 }
                             } else {
                                 debug_event('waveform.class', 'transcode setting to wav required for waveform.', 3);
@@ -333,7 +333,7 @@ class Waveform
      * Save waveform to db.
      * @param integer $song_id
      * @param string $waveform
-     * @return boolean
+     * @return boolean|PDOStatement
      */
     protected static function save_to_db($song_id, $waveform)
     {

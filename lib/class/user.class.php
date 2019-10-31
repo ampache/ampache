@@ -260,16 +260,18 @@ class User extends database_object
      * get_from_username
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
+     * @param string $username
+     * @return User $user
      */
     public static function get_from_username($username)
     {
-        $sql        = "SELECT `id` FROM `user` WHERE `username` = ?";
-        $db_results = Dba::read($sql, array($username));
+        $sql        = "SELECT `id` FROM `user` WHERE `username` = ? OR `fullname` = ?";
+        $db_results = Dba::read($sql, array($username, $username));
         $results    = Dba::fetch_assoc($db_results);
 
-        $user_id = new User($results['id']);
+        $user = new User($results['id']);
 
-        return $user_id;
+        return $user;
     } // get_from_username
 
     /**
@@ -297,7 +299,7 @@ class User extends database_object
             if ($results['username']) {
                 return new User($results['username']);
             }
-            // check for sha256 hashed apikey fro client
+            // check for sha256 hashed apikey for client
             // https://github.com/ampache/ampache/wiki/XML-API
             $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
             $db_results = Dba::read($sql);
@@ -470,11 +472,10 @@ class User extends database_object
                 $items[]      = $data;
             }
             /* If it's a genre */
-            elseif ($type == 'genre') {
-                $data = new Genre($row['object_id']);
+            elseif (($type == 'genre' || $type == 'tag')) {
+                $data = new Tag($row['object_id']);
                 //$data->count = $row['count'];
-                $data->format();
-                $data->f_name = $data->f_link;
+                $data->f_name = $data->name;
                 $items[]      = $data;
             }
         } // end foreach
@@ -898,7 +899,7 @@ class User extends database_object
 
         if (!$noscrobble) {
             $this->set_preferences();
-            // If pthreads available, we call save_songplay in a new thread to quickly return
+            // If pthreads available, we call save_mediaplay in a new thread to quickly return
             if (class_exists("Thread", false)) {
                 debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
                 $thread = new scrobbler_async(Core::get_global('user'), $media);
@@ -919,17 +920,22 @@ class User extends database_object
         return true;
     } // update_stats
 
-    public static function save_mediaplay($user_id, $media)
+    /*
+     * save_mediaplay
+     * @param User $user
+     * @param Song $media
+     */
+    public static function save_mediaplay($user, $media)
     {
         debug_event('user.class', 'save_mediaplay...', 5);
         foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load($user_id)) {
+                if ($plugin->load($user)) {
                     $plugin->_plugin->save_mediaplay($media);
                 }
-            } catch (Exception $e) {
-                debug_event('user.class', 'Stats plugin error: ' . $e->getMessage(), 1);
+            } catch (Exception $error) {
+                debug_event('user.class', 'Stats plugin error: ' . $error->getMessage(), 1);
             }
         }
     }
@@ -942,11 +948,11 @@ class User extends database_object
     public function insert_ip_history()
     {
         if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-            $sip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            debug_event('user.class', 'Login from IP address: ' . $sip, 3);
+            $sip = filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
+            debug_event('user.class', 'Login from IP address: ' . (string) $sip, 3);
         } else {
-            $sip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
-            debug_event('user.class', 'Login from IP address: ' . $sip, 3);
+            $sip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+            debug_event('user.class', 'Login from IP address: ' . (string) $sip, 3);
         }
 
         // Remove port information if any
@@ -963,7 +969,7 @@ class User extends database_object
         $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim($sip, "[]"))) : '';
         $date    = time();
         $user_id = $this->id;
-        $agent   = Dba::escape($_SERVER['HTTP_USER_AGENT']);
+        $agent   = Dba::escape(Core::get_server('HTTP_USER_AGENT'));
 
         $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
         Dba::write($sql);
@@ -1070,6 +1076,9 @@ class User extends database_object
      */
     public function format($details = true)
     {
+        if (!$this->id) {
+            return;
+        }
         /* If they have a last seen date */
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
@@ -1390,14 +1399,20 @@ class User extends database_object
      * get_avatar
      * Get the user avatar
      */
-    public function get_avatar($local = false)
+    public function get_avatar($local = false, $session = array())
     {
         $avatar = array();
+        $auth   = '';
+        if ($session['t'] && $session['s']) {
+            $auth = '&t=' . $session['t'] . '&s=' . $session['s'];
+        } elseif ($session['auth']) {
+            $auth = '&auth=' . $session['auth'];
+        }
 
         $avatar['title'] = T_('User avatar');
         $upavatar        = new Art($this->id, 'user');
         if ($upavatar->has_db_info()) {
-            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id;
+            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id . $auth;
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
             $avatar['url'] .= '&thumb=4';
@@ -1482,6 +1497,7 @@ class User extends database_object
     /**
      * get_artists
      * Get artists associated with the user
+     * @return array
      */
     public function get_artists()
     {
@@ -1499,6 +1515,7 @@ class User extends database_object
     /**
      * is_xmlrpc
      * checks to see if this is a valid xmlrpc user
+     * @return boolean
      */
     public function is_xmlrpc()
     {
@@ -1674,18 +1691,18 @@ class User extends database_object
      * stream_control
      * Check all stream control plugins
      * @param array $media_ids
-     * @param User $user_id
+     * @param User $user
      * @return boolean
      */
-    public static function stream_control($media_ids, User $user_id = null)
+    public static function stream_control($media_ids, User $user = null)
     {
-        if ($user_id === null) {
-            $user_id = Core::get_global('user');
+        if ($user === null) {
+            $user = Core::get_global('user');
         }
 
         foreach (Plugin::get_plugins('stream_control') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($user_id)) {
+            if ($plugin->load($user)) {
                 if (!$plugin->_plugin->stream_control($media_ids)) {
                     return false;
                 }

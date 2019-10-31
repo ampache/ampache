@@ -18,15 +18,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+ */ ?>
+<!DOCTYPE html>
 <html lang="en-US">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ampache -- Debug Page</title>
+        <title><?php echo T_("Ampache") . " -- " . T("Debug Page"); ?></title>
         <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
         <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
@@ -47,15 +46,14 @@
         <div class="well">
             <p>
                 <?php echo T_('You may have reached this page because a configuration error has occurred. Debug information is below.'); ?>
-                <?php if (!is_readable($configfile)) {
-    ?>
+                <?php if (!is_readable($configfile)) { ?>
                 | <a href="install.php"><?php echo T_('Web Installation'); ?></a>
                 <?php
 } ?>
             </p>
         </div>
         <div>
-            <table class="table" cellpadding="3" cellspacing="0">
+            <table class="table">
                 <tr>
                     <th><?php echo T_('Check'); ?></th>
                     <th><?php echo T_('Status'); ?></th>

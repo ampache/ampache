@@ -18,10 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<?php if (AmpConfig::get('show_footer_statistics')) {
-    ?>
+ */ ?>
+<?php if (AmpConfig::get('show_footer_statistics')) { ?>
     <br />
     <span class="query-count">
     <?php echo T_('Queries: '); ?><?php echo Dba::$stats['query']; ?>

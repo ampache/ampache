@@ -23,8 +23,7 @@
 // Gotta do some math here!
 $total_images = count($images);
 $rows         = floor($total_images / 4);
-$count        = 0;
-?>
+$count        = 0; ?>
 <?php UI::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>
@@ -37,18 +36,15 @@ while ($count <= $rows) {
         $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
         if (!isset($images[$key]) || !Art::check_dimensions($dimensions)) {
             echo "<td>&nbsp;</td>\n";
-        } else {
-            ?>
-            <td align="center">
-                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" border="0" height="175" width="175" /></a>
+        } else { ?>
+            <td>
+                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="175" width="175" /></a>
                 <br />
-                <p align="center">
-                <?php if (is_array($dimensions)) {
-                ?>
+                <p>
+                <?php if (is_array($dimensions)) { ?>
                 [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
                 <?php
-            } else {
-                ?>
+            } else { ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>
                 <?php
             } ?>
@@ -65,7 +61,6 @@ while ($count <= $rows) {
         echo "</tr>";
     }
     $count++;
-} // end while
-?>
+} // end while?>
 </table>
 <?php UI::show_box_bottom(); ?>

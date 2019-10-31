@@ -19,25 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
 
 <?php UI::show_box_top($radio->f_name . ' ' . T_('Details'), 'box box_live_stream_details'); ?>
 <div class="item_right_info">
     <?php
         $thumb = UI::is_grid_view('live_stream') ? 2 : 11;
-        Art::display('live_stream', $radio->id, $radio->f_name, $thumb);
-    ?>
+        Art::display('live_stream', $radio->id, $radio->f_name, $thumb); ?>
 </div>
 <dl class="media_details">
 <?php $rowparity = UI::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
-        <?php if (AmpConfig::get('directplay')) {
-        ?>
+        <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id, 'play', T_('Play'), 'play_live_stream_' . $radio->id); ?>
-            <?php if (Stream_Playlist::check_autoplay_append()) {
-            ?>
+            <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&append=true', 'play_add', T_('Play last'), 'addplay_live_stream_' . $radio->id); ?>
             <?php
         } ?>
@@ -56,7 +52,6 @@
             $rowparity = UI::flip_class();
             echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
         }
-    }
-?>
+    } ?>
 </dl>
 <?php UI::show_box_bottom(); ?>

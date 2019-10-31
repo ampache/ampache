@@ -41,8 +41,7 @@ if ($directplay_limit > 0) {
     if ($show_direct_play) {
         $show_direct_play = $show_playlist_add;
     }
-}
-?>
+} ?>
 <?php UI::show_box_top($title, 'info-box'); ?>
 
 <div class="item_right_info">
@@ -55,20 +54,16 @@ if ($directplay_limit > 0) {
     <?php
         $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
         $thumb = UI::is_grid_view('album') ? 2 : 11;
-        Art::display('album', $album->id, $name, $thumb);
-    ?>
+        Art::display('album', $album->id, $name, $thumb); ?>
 </div>
-<?php if (User::is_registered()) {
-        ?>
-    <?php if (AmpConfig::get('ratings')) {
-            ?>
+<?php if (User::is_registered()) { ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
     <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
             <?php Rating::show($album->id, 'album'); ?>
     </div>
     <?php
         } ?>
-    <?php if (AmpConfig::get('userflags')) {
-            ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
     <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
             <?php Userflag::show($album->id, 'album'); ?>
     </div>
@@ -77,12 +72,11 @@ if ($directplay_limit > 0) {
 <?php
     } ?>
 <?php
-if (AmpConfig::get('show_played_times')) {
-        ?>
+if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;">
     <?php echo T_('Played') . ' ' .
-        /* HINT: Number of times an album is played */
+        /* HINT: Number of times an object has been played */
         sprintf(nT_('%d time', '%d times', $album->object_cnt), $album->object_cnt); ?>
 </div>
 <?php
@@ -109,8 +103,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', $play, 'directplay_full_' . $album->id); ?>
             <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), $play, 'directplay_full_text_' . $album->id); ?>
         </li>
-            <?php if (Stream_Playlist::check_autoplay_append()) {
-            ?>
+            <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', $playlast, 'addplay_album_' . $album->id); ?>
             <?php echo Ajax::text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', $playlast, 'addplay_album_text_' . $album->id); ?>
@@ -142,28 +135,23 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
-        <?php if (AmpConfig::get('use_rss')) {
-        ?>
+        <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
             <?php echo Ampache_RSS::get_display('podcast', T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
         </li>
         <?php
     } ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
-        ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) { ?>
             <?php if (AmpConfig::get('sociable')) {
-            $postshout = T_('Post Shout'); ?>
+        $postshout = T_('Post Shout'); ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('comment', $postshout); ?></a>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo $postshout; ?></a>
             <?php
-        } ?>
+    } ?>
         <?php
-    }
-    ?>
-    <?php if (Access::check('interface', '25')) {
-        ?>
-            <?php if (AmpConfig::get('share')) {
-            ?>
+    } ?>
+    <?php if (Access::check('interface', '25')) { ?>
+            <?php if (AmpConfig::get('share')) { ?>
             <li>
                 <?php Share::display_ui('album', $album->id); ?>
             </li>
@@ -187,31 +175,21 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php if ($album->can_edit()) {
         $albumedit  = T_('Album Edit'); ?>
-            <?php if (AmpConfig::get('allow_upload')) {
-            $t_upload = T_('Upload'); ?>
-                <li>
-                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ? $album->album_artist : $album->artist_id); ?>&album=<?php echo $album->id ?>">
-                        <?php echo UI::get_icon('upload', $t_upload); ?>
-                        &nbsp;&nbsp;<?php echo $t_upload; ?>
-                    </a>
-                </li>
-            <?php
-        } ?>
-            <li>
-                <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
-                    <?php echo UI::get_icon('edit', T_('Edit')); ?>
-                </a>
-                <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
-                    <?php echo T_('Edit Album'); ?>
-                </a>
-            </li>
+        <li>
+            <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
+                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+            </a>
+            <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
+                <?php echo T_('Edit Album'); ?>
+            </a>
+        </li>
         <?php
     } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) {
         $download   = T_('Download'); ?>
         <li>
-            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', $download); ?></a>
-            <a rel="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo $download; ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', $download); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo $download; ?></a>
         </li>
         <?php
     } ?>
@@ -239,6 +217,5 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     $browse->set_sort('track', 'ASC');
     $browse->get_objects();
     $browse->show_objects(null, true); // true argument is set to show the reorder column
-    $browse->store();
-?>
+    $browse->store(); ?>
 </div>

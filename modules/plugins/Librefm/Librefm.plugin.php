@@ -105,7 +105,7 @@ class Ampachelibrefm
     } // upgrade
 
     /**
-     * save_songplay
+     * save_mediaplay
      * This takes care of queueing and then submitting the tracks.
      */
     public function save_mediaplay($song)
@@ -211,6 +211,7 @@ class Ampachelibrefm
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {

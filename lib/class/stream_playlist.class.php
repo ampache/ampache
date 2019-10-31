@@ -108,6 +108,7 @@ class Stream_Playlist
     /**
      * media_to_urlarray
      * Formats the URL and media information and adds it to the object
+     * @return array
      */
     public static function media_to_urlarray($media, $additional_params = '')
     {
@@ -124,6 +125,7 @@ class Stream_Playlist
 
     /**
      * media_to_url
+     * @return Stream_URL
      */
     public static function media_to_url($media, $additional_params = '', $urltype = 'web')
     {
@@ -145,6 +147,7 @@ class Stream_Playlist
 
     /**
      * media_object_to_url
+     * @return Stream_URL
      */
     public static function media_object_to_url($object, $additional_params = '', $urltype = 'web')
     {
@@ -229,6 +232,10 @@ class Stream_Playlist
         return $surl;
     }
 
+    /**
+     * check_autoplay_append
+     * @return boolean
+     */
     public static function check_autoplay_append()
     {
         // For now, only iframed web player support media append in the currently played playlist
@@ -237,6 +244,10 @@ class Stream_Playlist
         );
     }
 
+    /**
+     * check_autoplay_next
+     * @return boolean
+     */
     public static function check_autoplay_next()
     {
         // Currently only supported for web player
@@ -357,6 +368,7 @@ class Stream_Playlist
      * get_m3u_string
      * creates an m3u file, this includes the EXTINFO and as such can be
      * large with very long playlists
+     * @return string
      */
     public function get_m3u_string()
     {
@@ -379,6 +391,7 @@ class Stream_Playlist
 
     /**
       * get_pls_string
+     * @return string
      */
     public function get_pls_string()
     {
@@ -406,11 +419,12 @@ class Stream_Playlist
     /**
      * get_asx_string
      * This should really only be used if all of the content is ASF files.
+     * @return string
      */
     public function get_asx_string()
     {
         $ret = '<ASX VERSION="3.0" BANNERBAR="auto">' . "\n";
-        $ret .= "<TITLE>" . ($this->title ?: "Ampache ASX Playlist") . "</TITLE>\n";
+        $ret .= "<TITLE>" . ($this->title ?: T_("Ampache ASX Playlist")) . "</TITLE>\n";
         $ret .= '<PARAM NAME="Encoding" VALUE="utf-8" />' . "\n";
 
         foreach ($this->urls as $url) {
@@ -438,6 +452,7 @@ class Stream_Playlist
 
     /**
      * get_xspf_string
+     * @return string
      */
     public function get_xspf_string()
     {
@@ -488,6 +503,10 @@ class Stream_Playlist
         echo $this->get_xspf_string();
     }
 
+    /**
+     * get_hls_string
+     * @return string
+     */
     public function get_hls_string()
     {
         $ssize = 10;

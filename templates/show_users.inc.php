@@ -21,21 +21,18 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-
-?>
+ ?>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="user">
+     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+ } ?>
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="user">
 <colgroup>
   <col id="col_username" />
   <col id="col_lastseen" />
   <col id="col_registrationdate" />
-<?php if (Access::check('interface', 50)) {
-    ?>
+<?php if (Access::check('interface', 50)) { ?>
   <col id="col_activity" />
-<?php if (AmpConfig::get('track_user_ip')) {
-        ?>
+<?php if (AmpConfig::get('track_user_ip')) { ?>
   <col id="col_lastip" />
 <?php
     } ?>
@@ -49,18 +46,15 @@ $web_path = AmpConfig::get('web_path');
       <th class="cel_username essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1');?><?php echo " ( " . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Full Name'), 'users_sort_fullname1') . ")";?></th>
       <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen'); ?></th>
       <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate'); ?></th>
-      <?php if (Access::check('interface', 50)) {
-        ?>
+      <?php if (Access::check('interface', 50)) { ?>
       <th class="cel_activity"><?php echo T_('Activity'); ?></th>
-      <?php if (AmpConfig::get('track_user_ip')) {
-            ?>
+      <?php if (AmpConfig::get('track_user_ip')) { ?>
       <th class="cel_lastip"><?php echo T_('Last IP'); ?></th>
       <?php
         } ?>
       <?php
     } ?>
-      <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
-        ?>
+      <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
       <th class="cel_follow essential"><?php echo T_('Following'); ?></th>
       <?php
     } ?>
@@ -86,18 +80,15 @@ foreach ($object_ids as $user_id) {
       <th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1');?><?php echo " ( " . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Full Name'), 'users_sort_fullname1') . ")";?></th>
       <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen1'); ?></th>
       <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate1'); ?></th>
-      <?php if (Access::check('interface', 50)) {
-        ?>
+      <?php if (Access::check('interface', 50)) { ?>
       <th class="cel_activity"><?php echo T_('Activity'); ?></th>
-      <?php if (AmpConfig::get('track_user_ip')) {
-            ?>
+      <?php if (AmpConfig::get('track_user_ip')) { ?>
       <th class="cel_lastip"><?php echo T_('Last IP'); ?></th>
       <?php
         } ?>
       <?php
     } ?>
-      <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
-        ?>
+      <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
       <th class="cel_follow"><?php echo T_('Following'); ?></th>
       <?php
     } ?>
@@ -106,7 +97,6 @@ foreach ($object_ids as $user_id) {
     </tr>
 </tfoot>
 </table>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
 <?php if ($browse->is_show_header()) {
         require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
     } ?>

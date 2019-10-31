@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
 <form name="podcast" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=create">
-<table class="tabledata" cellspacing="0" cellpadding="0">
+<table class="tabledata">
 <tr>
     <td><?php echo T_('Podcast Feed URL'); ?></td>
     <td>
@@ -33,7 +32,7 @@
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
     <td>
-        <?php show_catalog_select('catalog', scrub_out($_REQUEST['catalog']), '', false, 'podcast'); ?>
+        <?php show_catalog_select('catalog', (int) scrub_out($_REQUEST['catalog']), '', false, 'podcast'); ?>
         <?php AmpError::display('catalog'); ?>
     </td>
 </tr>

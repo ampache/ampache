@@ -277,10 +277,10 @@ abstract class Catalog extends database_object
      */
     public static function show_catalog_types($divback = 'catalog_type_fields')
     {
-        echo "<script language=\"javascript\" type=\"text/javascript\">" .
+        echo '<script>' .
             "var type_fields = new Array();" .
             "type_fields['none'] = '';";
-        $seltypes = '<option value="none">[Select]</option>';
+        $seltypes = '<option value="none">[' . T_("Select") . ']</option>';
         $types    = self::get_catalog_types();
         foreach ($types as $type) {
             $catalog = self::create_catalog_type($type);
@@ -313,7 +313,7 @@ abstract class Catalog extends database_object
             "var sel = document.getElementById('catalog_type');" .
             "var seltype = sel.options[sel.selectedIndex].value;" .
             "var ftbl = document.getElementById('" . $divback . "');" .
-            "ftbl.innerHTML = '<table class=\"tabledata\" cellpadding=\"0\" cellspacing=\"0\">' + type_fields[seltype] + '</table>';" .
+            "ftbl.innerHTML = '<table class=\"tabledata\">' + type_fields[seltype] + '</table>';" .
             "} </script>" .
             "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
     }
@@ -495,7 +495,7 @@ abstract class Catalog extends database_object
     /**
      * update_enabled
      * sets the enabled flag
-     * @param boolean $new_enabled
+     * @param string $new_enabled
      * @param integer $catalog_id
      */
     public static function update_enabled($new_enabled, $catalog_id)
@@ -586,7 +586,7 @@ abstract class Catalog extends database_object
     /**
      * Get last catalogs update.
      * @param int[]|null $catalogs
-     * @return int
+     * @return integer
      */
     public static function getLastUpdate($catalogs = null)
     {
@@ -647,7 +647,7 @@ abstract class Catalog extends database_object
      *
      * This creates a new catalog entry and associate it to current instance
      * @param array $data
-     * @return int
+     * @return integer
      */
     public static function create($data)
     {
@@ -701,7 +701,7 @@ abstract class Catalog extends database_object
      * count_tags
      *
      * This returns the current number of unique tags in the database.
-     * @return int
+     * @return integer
      */
     public static function count_tags()
     {
@@ -894,7 +894,7 @@ abstract class Catalog extends database_object
      *
      * @param integer|null $catalog_id
      * @param string $type
-     * @return int
+     * @return integer
      */
     public static function get_videos_count($catalog_id = null, $type = '')
     {
@@ -1161,7 +1161,7 @@ abstract class Catalog extends database_object
     public static function get_podcasts($catalogs = null)
     {
         if (!$catalogs) {
-            $catalogs = self::get_catalogs();
+            $catalogs = self::get_catalogs('podcast');
         }
 
         $results = array();
@@ -1180,9 +1180,10 @@ abstract class Catalog extends database_object
      * get_newest_podcasts_ids
      *
      * This returns an array of ids of latest podcast episodes in this catalog
+     * @param integer $count
      * @return integer[]
      */
-    public function get_newest_podcasts_ids()
+    public function get_newest_podcasts_ids($count)
     {
         $results = array();
 
@@ -1190,6 +1191,9 @@ abstract class Catalog extends database_object
                 'INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ' .
                 'WHERE `podcast`.`catalog` = ? ' .
                 'ORDER BY `podcast_episode`.`pubdate` DESC';
+        if ($count > 0) {
+            $sql .= ' LIMIT ' . (string) $count;
+        }
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
@@ -1200,19 +1204,17 @@ abstract class Catalog extends database_object
 
     /**
      *
-     * @param int[]|null $catalogs
+     * @param integer $count
      * @return \Podcast_Episode[]
      */
-    public static function get_newest_podcasts($catalogs = null)
+    public static function get_newest_podcasts($count)
     {
-        if (!$catalogs) {
-            $catalogs = self::get_catalogs();
-        }
+        $catalogs = self::get_catalogs('podcast');
+        $results  = array();
 
-        $results = array();
         foreach ($catalogs as $catalog_id) {
             $catalog     = self::create_from_id($catalog_id);
-            $episode_ids = $catalog->get_newest_podcasts_ids();
+            $episode_ids = $catalog->get_newest_podcasts_ids($count);
             foreach ($episode_ids as $episode_id) {
                 $results[] = new Podcast_Episode($episode_id);
             }
@@ -1222,11 +1224,12 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
+     * gather_art_item
      * @param string $type
      * @param integer $id
+     * @param boolean $db_art_first
      */
-    public function gather_art_item($type, $id, $db_art_first = false)
+    public static function gather_art_item($type, $id, $db_art_first = false, $api = false)
     {
         debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 4);
 
@@ -1258,7 +1261,7 @@ abstract class Catalog extends database_object
                 $parent = $libitem->get_parent();
                 if ($parent != null) {
                     if (!Art::has_db($parent['object_id'], $parent['object_type'])) {
-                        $this->gather_art_item($parent['object_type'], $parent['object_id']);
+                        self::gather_art_item($parent['object_type'], $parent['object_id']);
                     }
                 }
             }
@@ -1300,8 +1303,8 @@ abstract class Catalog extends database_object
             Video::generate_preview($id);
         }
 
-        if (UI::check_ticker()) {
-            UI::update_text('read_art_' . $this->id, $libitem->get_fullname());
+        if (UI::check_ticker() && !$api) {
+            UI::update_text('read_art_' . $id, $libitem->get_fullname());
         }
     }
 
@@ -1570,7 +1573,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param integer $object_id
      */
-    public static function update_single_item($type, $object_id)
+    public static function update_single_item($type, $object_id, $api = false)
     {
         // Because single items are large numbers of things too
         set_time_limit(0);
@@ -1592,29 +1595,37 @@ abstract class Catalog extends database_object
                 break;
         } // end switch type
 
+        if (!$api) {
+            echo '<table class="tabledata">' . "\n";
+            echo '<thead><tr class="th-top">' . "\n";
+            echo "<th>" . T_("Song") . "</th><th>" . T_("Status") . "</th>\n";
+            echo "<tbody>\n";
+        }
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             $info = self::update_media_from_tags($song);
-
-            if ($info['change']) {
+            // don't echo useless info when using api
+            if ($api) {
+                //do nothing
+            } elseif ($info['change']) {
                 if ($info['element'][$type]) {
                     $change = explode(' --> ', $info['element'][$type]);
                     $result = $change[1];
                 }
                 $file   = scrub_out($song->file);
-                echo "<dl>\n\t<dd>";
-                echo "<strong>$file " . T_('Updated') . "</strong>\n";
+                echo '<tr class="' . UI::flip_class() . '">' . "\n";
+                echo "<td>$file</td><td>" . T_('Updated') . "</td>\n";
                 echo $info['text'];
-                echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
+                echo "</td>\n</tr>\n";
                 flush();
-            } // if change
-            else {
-                echo"<dl>\n\t<dd>";
-                echo "<strong>" . scrub_out($song->file) . "</strong><br />" . T_('No Update Needed') . "\n";
-                echo "\t</dd>\n</dl><hr align=\"left\" width=\"50%\" />";
+            } else {
+                echo '<tr class="' . UI::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
                 flush();
             }
         } // foreach songs
+        if (!$api) {
+            echo "</tbody></table>\n";
+        }
 
         return $result;
     } // update_single_item
@@ -2220,7 +2231,7 @@ abstract class Catalog extends database_object
             if (!$playlist_id) {
                 return array(
                     'success' => false,
-                    'error' => T_('Failed to create playlist.'),
+                    'error' => T_('Failed to create playlist'),
                 );
             }
 
@@ -2241,7 +2252,7 @@ abstract class Catalog extends database_object
 
         return array(
             'success' => false,
-            'error' => T_('No valid songs found in playlist file.')
+            'error' => T_('No valid songs found in playlist file')
         );
     }
 

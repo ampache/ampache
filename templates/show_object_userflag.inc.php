@@ -24,8 +24,7 @@
 $web_path = AmpConfig::get('web_path');
 $base_url = '?action=set_userflag&userflag_type=' . $userflag->type . '&object_id=' . $userflag->id;
 $othering = false;
-$flagged  = $userflag->get_flag();
-?>
+$flagged  = $userflag->get_flag(); ?>
 
 <div class="userflag">
 <?php
@@ -33,6 +32,5 @@ $flagged  = $userflag->get_flag();
         echo Ajax::text($base_url . '&userflag=0', '', 'userflag_i_' . $userflag->id . '_' . $userflag->type, '', 'userflag_true');
     } else {
         echo Ajax::text($base_url . '&userflag=1', '', 'userflag_i_' . $userflag->id . '_' . $userflag->type, '', 'userflag_false');
-    }
-?>
+    } ?>
 </div>

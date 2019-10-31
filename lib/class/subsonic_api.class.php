@@ -167,7 +167,7 @@ class Subsonic_Api
     /**
      * @param SimpleXMLElement $xml
      */
-    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'))
+    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'entry'))
     {
         $type     = $input['f'];
         $callback = $input['callback'];
@@ -178,7 +178,7 @@ class Subsonic_Api
      * @param SimpleXMLElement $xml
      * @param string $outputtype
      */
-    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'))
+    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'entry'))
     {
         $conf = array('alwaysArray' => $alwaysArray);
         if ($outputtype == "json") {
@@ -210,7 +210,7 @@ class Subsonic_Api
         $defaults = array(
             'namespaceSeparator' => ' :', //you may want this to be something other than a colon
             'attributePrefix' => '', //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array('musicFolder', 'artist', 'child', 'playlist', 'song', 'album'), //array of xml tag names which should always become arrays
+            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'entry'), //array of xml tag names which should always become arrays
             'autoArray' => true, //only create arrays for tags which appear more than once
             'textContent' => 'value', //key used for the text content of elements
             'autoText' => true, //skip textContent key if node has no attributes or child nodes
@@ -242,6 +242,8 @@ class Subsonic_Api
             }
         }
 
+        // these children must be in an array.
+        $forceArray = array('channel');
         //get child nodes from all namespaces
         $tagsArray = array();
         foreach ($namespaces as $prefix => $namespace) {
@@ -260,10 +262,9 @@ class Subsonic_Api
 
                     if (!isset($tagsArray[$childTagName])) {
                         //only entry with this key
-
                         if (count($childProperties) === 0) {
                             $tagsArray[$childTagName] = (object) $childProperties;
-                        } elseif (self::has_Nested_Array($childProperties)) {
+                        } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
                             $tagsArray[$childTagName] = (object) $childProperties;
                         } else {
 
@@ -454,7 +455,7 @@ class Subsonic_Api
 
     /**
      * getArtist
-     * Get details fro an artist, including a list of albums.
+     * Get details for an artist, including a list of albums.
      * Takes the artist id in parameter.
      */
     public static function getartist($input)
@@ -468,7 +469,7 @@ class Subsonic_Api
             $response = Subsonic_XML_Data::createSuccessResponse('getartist');
             Subsonic_XML_Data::addArtist($response, $artist, true, true);
         }
-        self::apiOutput($input, $response, array('musicFolder', 'child', 'playlist', 'song', 'album'));
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -490,7 +491,7 @@ class Subsonic_Api
             Subsonic_XML_Data::addAlbum($response, $album, true, $addAmpacheInfo);
         }
 
-        self::apiOutput($input, $response, array('musicFolder', 'artist', 'child', 'playlist', 'song'));
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -678,7 +679,7 @@ class Subsonic_Api
         $response = Subsonic_XML_Data::createSuccessResponse('getsong');
         $song     = Subsonic_XML_Data::getAmpacheId($songid);
         Subsonic_XML_Data::addSong($response, $song);
-        self::apiOutput($input, $response, array('musicFolder', 'artist', 'child', 'playlist', 'album'));
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -1332,7 +1333,8 @@ class Subsonic_Api
             }
 
             if ($user !== null) {
-                $avatar = $user->get_avatar(true);
+                // Get Session key
+                $avatar = $user->get_avatar(true, $input);
                 if (isset($avatar['url']) && !empty($avatar['url'])) {
                     $request = Requests::get($avatar['url'], array(), Core::requests_options());
                     header("Content-Type: " . $request->headers['Content-Type']);
@@ -1764,32 +1766,34 @@ class Subsonic_Api
      */
     public static function scrobble($input)
     {
-        $id         = self::check_parameter($input, 'id');
+        $oid        = self::check_parameter($input, 'id');
         $submission = $input['submission'];
+        $user       = User::get_from_username($input['u']);
         //$time = $input['time'];
 
-        if ($submission === 'false' || $submission === '0') {
-            $response = Subsonic_XML_Data::createSuccessResponse('scrobble');
-            self::apiOutput($input, $response);
-        } else {
-            if (!is_array($id)) {
-                $rid   = array();
-                $rid[] = $id;
-                $id    = $rid;
-            }
-
-            foreach ($id as $i) {
-                $aid  = Subsonic_XML_Data::getAmpacheId($i);
-                $type = Subsonic_XML_Data::getAmpacheType($i);
-
-                $media = new $type($aid);
-                $media->format();
-                User::save_mediaplay(User::get_from_username($input['u'])->id, $media);
-            }
-
-            $response = Subsonic_XML_Data::createSuccessResponse('scrobble');
-            self::apiOutput($input, $response);
+        if (!is_array($oid)) {
+            $rid   = array();
+            $rid[] = $oid;
+            $oid   = $rid;
         }
+
+        foreach ($oid as $object) {
+            $aid  = Subsonic_XML_Data::getAmpacheId($object);
+            $type = Subsonic_XML_Data::getAmpacheType($object);
+
+            $media = new $type($aid);
+            $media->format();
+            // always record Ampache history
+            debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
+            $media->set_played($user->id, $input['c'], array(), time());
+            // only scrobble externally when asked
+            if ($submission !== 'false' || $submission !== '0') {
+                User::save_mediaplay(User::get_from_username($input['u']), $media);
+            }
+        }
+
+        $response = Subsonic_XML_Data::createSuccessResponse('scrobble');
+        self::apiOutput($input, $response);
     }
 
     /**
@@ -1968,11 +1972,11 @@ class Subsonic_Api
      */
     public static function getnewestpodcasts($input)
     {
-        //$count = $input['count'] ?: 20; // Seems to be useless code
+        $count = $input['count'] ?: AmpConfig::get('podcast_new_download');
 
         if (AmpConfig::get('podcast')) {
             $response = Subsonic_XML_Data::createSuccessResponse('getnewestpodcasts');
-            $episodes = Catalog::get_newest_podcasts(null);
+            $episodes = Catalog::get_newest_podcasts($count);
             Subsonic_XML_Data::addNewestPodcastEpisodes($response, $episodes);
         } else {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', 'getnewestpodcasts');
@@ -2169,7 +2173,6 @@ class Subsonic_Api
         }
         self::apiOutput($input, $response);
     }
-    /*     * **   CURRENT UNSUPPORTED FUNCTIONS   *** */
 
     /**
      * getChatMessages
@@ -2179,7 +2182,10 @@ class Subsonic_Api
      */
     public static function getchatmessages($input)
     {
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'getchatmessages');
+        $since     = (int) $input['since'];
+        $messages  = PrivateMsg::get_chat_msgs($since);
+        $response  = Subsonic_XML_Data::createSuccessResponse('getchatmessages');
+        Subsonic_XML_Data::addMessages($response, $messages);
         self::apiOutput($input, $response);
     }
 
@@ -2189,11 +2195,19 @@ class Subsonic_Api
      * Takes the message in parameter.
      * Not supported.
      */
-    public static function addchatmessages($input)
+    public static function addchatmessage($input)
     {
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'addchatmessages');
+        $message = self::check_parameter($input, 'message');
+        $user_id = User::get_from_username($input['u'])->id;
+        if (PrivateMsg::send_chat_msg($message, $user_id)) {
+            $response = Subsonic_XML_Data::createSuccessResponse('addchatmessage');
+        } else {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'addChatMessage');
+        }
         self::apiOutput($input, $response);
     }
+
+    /*     * **   CURRENT UNSUPPORTED FUNCTIONS   *** */
 
     /**
      * getPlayQueue

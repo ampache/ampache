@@ -19,12 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
 <html>
 <head>
 <title><?php echo AmpConfig::get('site_title'); ?></title>
-<script language="javascript" type="text/javascript">
+<script>
 <!-- begin
 function PlayerPopUp(URL)
 {
@@ -32,8 +31,7 @@ function PlayerPopUp(URL)
 $width = 730;
 if (WebPlayer::is_playlist_video($this)) {
     $width = 880;
-}
-?>
+} ?>
     window.open(URL, 'Web_player', 'width=<?php echo $width; ?>,height=285,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');
     window.location = '<?php echo return_referer() ?>';
     return false;

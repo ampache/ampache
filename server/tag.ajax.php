@@ -33,7 +33,6 @@ $action  = Core::get_request('action');
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'show_add_tag':
-
     break;
     case 'get_tag_map':
         $tags            = Tag::get_display(Tag::get_tags());

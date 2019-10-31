@@ -161,7 +161,7 @@ class Catalog_subsonic extends Catalog
         if (Dba::num_rows($db_results)) {
             debug_event('subsonic.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
             /* HINT: subsonic catalog URI */
-            AmpError::add('general', sprintf(T_('This path belongs to an existing Catalog: %s'), $uri));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing Subsonic Catalog: %s'), $uri));
 
             return false;
         }
@@ -270,9 +270,9 @@ class Catalog_subsonic extends Catalog
             }
         }
 
-        UI::update_text(T_("Updated"), T_('Completed updating Subsonic Catalog(s).') . " " .
+        UI::update_text(T_("Updated"), T_('Completed updating Subsonic Catalog(s)') . " " .
             /* HINT: Number of songs */
-            sprintf(nT_('%s Song added.', '%s Songs added', $songsadded), $songsadded));
+            sprintf(nT_('%s Song added', '%s Songs added', $songsadded), $songsadded));
 
         // Update the last update value
         $this->update_last_update();
@@ -323,8 +323,8 @@ class Catalog_subsonic extends Catalog
                 if (!$song['success']) {
                     $remove = true;
                 }
-            } catch (Exception $e) {
-                debug_event('subsonic.catalog', 'Clean error: ' . $e->getMessage(), 5, 'ampache-catalog');
+            } catch (Exception $error) {
+                debug_event('subsonic.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
             }
 
             if (!$remove) {

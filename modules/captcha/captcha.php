@@ -312,12 +312,12 @@ class easy_captcha
         $new_urls   = CAPTCHA_NEW_URLS ? 0 : 1;
         $onClick    = CAPTCHA_ONCLICK_HIRES ? 'onClick="this.src += this.src.match(/hires/) ? \'.\' : \'hires=1&\';"' : 'onClick="this.src += \'.\';"';
         $onKeyDown  = CAPTCHA_AJAX ? 'onKeyUp="captcha_check_solution()"' : '';
-        $javascript = CAPTCHA_AJAX ? '<script src="' . $base_url . 'base.js&captcha_new_urls=' . $new_urls . '" type="text/javascript" language="JavaScript" id="captcha_ajax_1"></script>' : '';
+        $javascript = CAPTCHA_AJAX ? '<script src="' . $base_url . 'base.js&captcha_new_urls=' . $new_urls . '" id="captcha_ajax_1"></script>' : '';
         $error      = function_exists('imagecreatetruecolor') ? '' : '<div class="error">PHP setup lacks GD. No image drawing possible</div>';
 
         #-- assemble
         $HTML =
-         //'<script type="text/javascript" language="JavaScript">if (document.getElementById("captcha")) { document.getElementById("captcha").parentNode.removeChild(document.getElementById("captcha")); }</script>' .   // workaround for double instantiations
+         //'<script>if (document.getElementById("captcha")) { document.getElementById("captcha").parentNode.removeChild(document.getElementById("captcha")); }</script>' .   // workaround for double instantiations
          '<div id="captcha" class="captcha">' .
          $error .
          '<input type="hidden" id="' . $p_id . '" name="' . $p_id . '" value="' . $id . '" />' .
@@ -358,7 +358,7 @@ class easy_captcha
                 $this->{$i} = $v;
             }
         } else {
-            $this->log("captcha file does not exist $filepath");
+            $this->log("::load()", "MISSING", "captcha file does not exist $filepath");
         }
     }
 
@@ -615,7 +615,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
       $dest         = $this->create();
 
         #-- URL param ?hires=1 influences used drawing scheme
-        if (isset($_GET["hires"])) {
+        if (filter_has_var(INPUT_GET, 'hires')) {
             $single_pixel = 0;
         }
 
@@ -965,7 +965,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     #-- give ok, if captach had already been solved recently
     public function solved($ignore = 0)
     {
-        if (CAPTCHA_PERSISTENT && isset($_COOKIE[$this->cookie()])) {
+        if (CAPTCHA_PERSISTENT && filter_has_var(INPUT_COOKIE, $this->cookie())) {
             return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
         }
     }
@@ -1109,7 +1109,7 @@ class easy_captcha_utility
 /* easy_captcha utility code */
 
 // global vars
-captcha_url_rx = /(https?:\/\/\w[^\/,\]\[=#]+)/ig;  //   
+captcha_url_rx = /(https?:\/\/\w[^\/,\]\[=#]+)/ig;  //
 captcha_form_urls = new Array();
 captcha_sol_cb = "";
 captcha_rpc = 0;
@@ -1162,8 +1162,6 @@ function captcha_check_solution() {
       }
       // create new <script> node, initiate JS-RPC call thereby
       scr = document.createElement("script");
-      scr.setAttribute("language", "JavaScript");
-      scr.setAttribute("type", "text/javascript");
       var url = "$BASE_URL" + "?$PARAM_ID=" + cid.value + "&$PARAM_INPUT=" + inf.value;
       scr.setAttribute("src", url);
       scr.setAttribute("id", "captcha_ajax_1");

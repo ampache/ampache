@@ -70,6 +70,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * get_songs
      * gets all episodes for this tv show season
+     * @return array
      */
     public function get_episodes()
     {
@@ -96,6 +97,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the tv show season, this means totals etc
+     * @return array
      */
     private function _get_extra_info()
     {
@@ -142,6 +144,10 @@ class TVShow_Season extends database_object implements library_item
         return true;
     }
 
+    /*
+     * get_keywords
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords           = array();
@@ -181,6 +187,10 @@ class TVShow_Season extends database_object implements library_item
         return array();
     }
 
+    /**
+     * get_medias
+     * @return array
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -250,6 +260,7 @@ class TVShow_Season extends database_object implements library_item
      * check
      *
      * Checks for an existing tv show season; if none exists, insert one.
+     * @return string|null
      */
     public static function check($tvshow, $season_number, $readonly = false)
     {
@@ -259,23 +270,19 @@ class TVShow_Season extends database_object implements library_item
             return self::$_mapcache[$name]['null'];
         }
 
-        $object_id = 0;
-        $exists    = false;
+        $object_id  = 0;
+        $exists     = false;
+        $sql        = 'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? AND `season_number` = ?';
+        $db_results = Dba::read($sql, array($tvshow, $season_number));
+        $id_array   = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $key            = 'null';
+            $id_array[$key] = $row['id'];
+        }
 
-        if (!$exists) {
-            $sql        = 'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? AND `season_number` = ?';
-            $db_results = Dba::read($sql, array($tvshow, $season_number));
-
-            $id_array = array();
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $key            = 'null';
-                $id_array[$key] = $row['id'];
-            }
-
-            if (count($id_array)) {
-                $object_id = array_shift($id_array);
-                $exists    = true;
-            }
+        if (count($id_array)) {
+            $object_id = array_shift($id_array);
+            $exists    = true;
         }
 
         if ($exists) {

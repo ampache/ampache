@@ -335,9 +335,3 @@ class Graph
         }
     }
 }
-
-// Need to create a function to pass to pGraph objects
-function pGraph_Yformat_bytes($value)
-{
-    return UI::format_bytes($value);
-}

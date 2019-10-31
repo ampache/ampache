@@ -20,8 +20,7 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path = AmpConfig::get('web_path'); ?>
 
 <ul id="sidebar-light">
     <li><a href="<?php echo $web_path ?>/mashup.php?action=artist"><?php echo UI::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists ?></a></li>
@@ -29,20 +28,17 @@ $web_path = AmpConfig::get('web_path');
     <li><a href="<?php echo $web_path ?>/mashup.php?action=playlist"><?php echo UI::get_image('topmenu-playlist', $t_playlists); ?><br /><?php echo $t_playlists ?></a></li>
     <li><a href="<?php echo $web_path ?>/browse.php?action=smartplaylist"><?php echo UI::get_image('topmenu-playlist', T_('Smartlists')); ?><br /><?php echo T_('Smartlists') ?></a></li>
     <li><a href="<?php echo $web_path ?>/browse.php?action=tag"><?php echo UI::get_image('topmenu-tagcloud', $t_tagcloud); ?><br /><?php echo $t_tagcloud ?></a></li>
-    <?php if (AmpConfig::get('live_stream')) {
-    ?>
+    <?php if (AmpConfig::get('live_stream')) { ?>
     <li><a href="<?php echo $web_path ?>/browse.php?action=live_stream"><?php echo UI::get_image('topmenu-radio', T_('Radio Stations')); ?><br /><?php echo T_('Radio') ?></a></li>
     <?php
 } ?>
-    <?php if (AmpConfig::get('userflags') && Access::check('interface', 25)) {
-        ?>
+    <?php if (AmpConfig::get('userflags') && Access::check('interface', 25)) { ?>
     <li><a href="<?php echo $web_path ?>/stats.php?action=userflag"><?php echo UI::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
     <?php
     } ?>
-    <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) {
-        ?>
+    <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
     <li><a href="<?php echo $web_path ?>/upload.php"><?php echo UI::get_image('topmenu-upload', $t_upload); ?><br /><?php echo $t_upload ?></a></li>
     <?php
     } ?>
-    <li><a target="_top" href="<?php echo $web_path; ?>/logout.php" rel="nohtml"><img src="<?php echo $web_path ?>/images/topmenu-logout.png" title="<?php echo $t_logout ?>" /><br /><?php echo $t_logout ?></a></li>
+    <li><a target="_top" href="<?php echo $web_path; ?>/logout.php" class="nohtml"><img src="<?php echo $web_path ?>/images/topmenu-logout.png" title="<?php echo $t_logout ?>" /><br /><?php echo $t_logout ?></a></li>
 </ul>

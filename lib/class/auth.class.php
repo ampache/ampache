@@ -70,7 +70,7 @@ class Auth
             xoutput_headers();
 
             $results            = array();
-            $results['rfc3514'] = '<script type="text/javascript">reloadRedirect("' . $target . '")</script>';
+            $results['rfc3514'] = '<script>reloadRedirect("' . $target . '")</script>';
             echo xoutput_from_array($results);
         } else {
             /* Redirect them to the login page */
@@ -311,8 +311,8 @@ class Auth
     {
         unset($password);
         $results = array();
-        if (($_SERVER['REMOTE_USER'] == $username) ||
-            ($_SERVER['HTTP_REMOTE_USER'] == $username)) {
+        if ((Core::get_server('REMOTE_USER') == $username) ||
+            (Core::get_server('HTTP_REMOTE_USER') == $username)) {
             $results['success']     = true;
             $results['type']        = 'http';
             $results['username']    = $username;
@@ -493,7 +493,7 @@ class Auth
      * @param string $salt
      * @return array
      */
-    private static function token_check($username, $token, $salt)
+    public static function token_check($username, $token, $salt)
     {
         // subsonic token auth with apikey
         if (strlen($token) && strlen($salt) && strlen($username)) {
@@ -504,7 +504,7 @@ class Auth
             if ($token == $hash_token) {
                 return array(
                     'success' => true,
-                    'type' => 'token',
+                    'type' => 'api',
                     'username' => $username
                 );
             }

@@ -41,10 +41,10 @@ switch ($_REQUEST['action']) {
         }
 
         // Remove unauthorized defined values from here
-        if (isset($_POST['user'])) {
+        if (filter_has_var(INPUT_POST, 'user')) {
             unset($_POST['user']);
         }
-        if (isset($_POST['date'])) {
+        if (filter_has_var(INPUT_POST, 'date')) {
             unset($_POST['date']);
         }
 

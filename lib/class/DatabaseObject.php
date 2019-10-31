@@ -51,10 +51,10 @@ abstract class DatabaseObject
         return $this->id;
     }
 
-    protected function isPropertyDirty($property)
-    {
-        return $this->originalData->$property !== $this->$property;
-    }
+    //protected function isPropertyDirty($property)
+    //{
+    //    return $this->originalData->$property !== $this->$property;
+    //}
 
     public function isDirty()
     {

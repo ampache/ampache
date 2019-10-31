@@ -18,12 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 
 <?php UI::show_box_top(T_('E-mail Users'), 'box box_mail_users'); ?>
 <form name="mail" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/mail.php?action=send_mail" enctype="multipart/form-data">
-    <table class="tabledata" cellspacing="0" cellpadding="0">
+    <table class="tabledata">
         <tr>
             <td><?php echo T_('Mail to'); ?>:</td>
             <td>
@@ -51,7 +50,7 @@
             </td>
         </tr>
         <tr>
-            <td valign="top"><?php echo T_('Message'); ?>:</td>
+            <td><?php echo T_('Message'); ?>:</td>
             <td>
                 <textarea class="input" name="message" rows="10" cols="70"></textarea>
             </td>

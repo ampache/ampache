@@ -37,8 +37,7 @@ if (empty($embed)) {
 
 if (!empty($embed)) {
     UI::show_box_bottom();
-} else {
-    ?>
+} else { ?>
 </body>
 </html>
 <?php

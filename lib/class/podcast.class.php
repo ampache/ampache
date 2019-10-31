@@ -321,11 +321,11 @@ class Podcast extends database_object implements library_item
 
         $xmlstr = file_get_contents($feed);
         if ($xmlstr === false) {
-            AmpError::add('feed', T_('Can not access the feed.'));
+            AmpError::add('feed', T_('Can not access the feed'));
         } else {
             $xml = simplexml_load_string($xmlstr);
             if ($xml === false) {
-                AmpError::add('feed', T_('Can not read the feed.'));
+                AmpError::add('feed', T_('Can not read the feed'));
             } else {
                 $title            = html_entity_decode($xml->channel->title);
                 $website          = $xml->channel->link;
@@ -469,6 +469,7 @@ class Podcast extends database_object implements library_item
     /**
      * update_lastsync
      * @param integer $time
+     * @return PDOStatement|boolean
      */
     private function update_lastsync($time)
     {
@@ -506,6 +507,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * remove
+     * @return PDOStatement|boolean
      */
     public function remove()
     {

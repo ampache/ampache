@@ -20,8 +20,7 @@
  *
  */
 
-UI::show_box_top($pvmsg->f_subject, 'info-box');
-?>
+UI::show_box_top($pvmsg->f_subject, 'info-box'); ?>
 <div>
     <?php echo T_('Sent by') . ' ' . $pvmsg->f_from_user_link . ' at ' . $pvmsg->f_creation_date; ?>
 </div>

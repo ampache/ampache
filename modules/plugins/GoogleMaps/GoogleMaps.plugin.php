@@ -90,8 +90,8 @@ class AmpacheGoogleMaps
             if (count($place['results']) > 0) {
                 $name = $place['results'][0]['formatted_address'];
             }
-        } catch (Exception $e) {
-            debug_event('googlemaps.plugin', 'Error getting location name: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('googlemaps.plugin', 'Error getting location name: ' . $error->getMessage(), 1);
         }
 
         return $name;
@@ -105,7 +105,7 @@ class AmpacheGoogleMaps
             return false;
         }
 
-        echo '<script type="text/javascript">' . "\n";
+        echo '<script>' . "\n";
         echo 'function map_ready() {' . "\n";
         echo 'var mapOptions = {' . "\n";
         if (count($pts) > 0) {
@@ -135,7 +135,6 @@ class AmpacheGoogleMaps
 
         echo 'function loadMapScript() {' . "\n";
         echo 'var script = document.createElement("script");' . "\n";
-        echo 'script.type = "text/javascript";' . "\n";
         echo 'script.src = "https://maps.googleapis.com/maps/api/js?key=' . $this->api_key . '&" + "callback=map_ready";' . "\n";
         echo 'document.body.appendChild(script);' . "\n";
         echo '}' . "\n";
@@ -151,6 +150,7 @@ class AmpacheGoogleMaps
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {

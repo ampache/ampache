@@ -18,12 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Editing Existing User')); ?>
 <?php AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php"; ?>">
-    <table class="tabledata" cellspacing="0" cellpadding="0">
+    <table class="tabledata">
         <tr>
             <th colspan="2"><?php echo T_('User Properties'); ?></th>
         </tr>
@@ -120,14 +119,16 @@
             </td>
             <td>
                 <input type="file" id="avatar" name="avatar" value="" />
-                <div class="user_avatar">
+        </tr>
+        <tr>
+            <td>
+        </td>
+        <td>
                 <?php
                 if ($client->f_avatar) {
                     echo $client->f_avatar;
-                }
-                ?>
+                } ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
-                </div>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
             </td>
         </tr>

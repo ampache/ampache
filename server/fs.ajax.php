@@ -98,8 +98,6 @@ class fs
             }
             if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
                 $res[] = array('text' => $item, 'children' => true,  'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'icon' => 'folder');
-            } else {
-                //$res[] = array('text' => $item, 'children' => false, 'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'type' => 'file', 'icon' => 'file file-'.substr($item, strrpos($item, '.') + 1));
             }
         }
         if ($with_root && $this->id($dir) === '/') {
@@ -160,9 +158,11 @@ class fs
         }
         throw new Exception('Not a valid selection: ' . $dir);
     }
+
     public function create($fs_id, $name, $mkdir = false)
     {
         $dir = $this->path($fs_id);
+        debug_event('fs.ajax', 'create ' . $fs_id . ' ' . $name, 5);
         if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
             throw new Exception('Invalid name: ' . $name);
         }
@@ -174,6 +174,7 @@ class fs
 
         return array('id' => $this->id($dir . DIRECTORY_SEPARATOR . $name));
     }
+
     public function rename($fs_id, $name)
     {
         $dir = $this->path($fs_id);
@@ -194,6 +195,7 @@ class fs
 
         return array('id' => $this->id($new));
     }
+
     public function remove($fs_id)
     {
         $dir = $this->path($fs_id);
@@ -212,6 +214,7 @@ class fs
 
         return array('status' => 'OK');
     }
+
     public function move($fs_id, $par)
     {
         $dir = $this->path($fs_id);
@@ -223,6 +226,7 @@ class fs
 
         return array('id' => $this->id($new));
     }
+
     public function copy($fs_id, $par)
     {
         $dir = $this->path($fs_id);
@@ -288,10 +292,10 @@ if (isset($_GET['operation'])) {
         }
         header('Content-Type: application/json; charset=utf8');
         echo json_encode($rslt);
-    } catch (Exception $e) {
-        header($_SERVER["SERVER_PROTOCOL"] . ' 500 Server Error');
+    } catch (Exception $error) {
+        header(Core::get_server('SERVER_PROTOCOL') . ' 500 Server Error');
         header('Status:  500 Server Error');
-        echo $e->getMessage();
+        echo $error->getMessage();
     }
     die();
 }

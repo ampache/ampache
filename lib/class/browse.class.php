@@ -170,16 +170,16 @@ class Browse extends Query
         $match = '';
         // Format any matches we have so we can show them to the masses
         if ($filter_value = $this->get_filter('alpha_match')) {
-            $match = ' (' . $filter_value . ')';
+            $match = ' (' . (string) $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('starts_with')) {
-            $match = ' (' . $filter_value . ')';
+            $match = ' (' . (string) $filter_value . ')';
         /*} elseif ($filter_value = $this->get_filter('regex_match')) {
-            $match = ' (' . $filter_value . ')';
+            $match = ' (' . (string) $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('regex_not_match')) {
-            $match = ' (' . $filter_value . ')';*/
+            $match = ' (' . (string) $filter_value . ')';*/
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
-            $catalog = Catalog::create_from_id((int) ($filter_value));
+            $catalog = Catalog::create_from_id((int) ((string) $filter_value));
             $match   = ' (' . $catalog->name . ')';
         }
 
@@ -363,7 +363,7 @@ class Browse extends Query
             if (isset($box_req)) {
                 UI::show_box_bottom();
             }
-            echo '<script type="text/javascript">';
+            echo '<script>';
             echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
         } else {

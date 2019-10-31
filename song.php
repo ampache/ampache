@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
         }
 
         if ($song->remove_from_disk()) {
-            show_confirmation(T_('No Problem'), T_('Song has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('Song has been deleted'), AmpConfig::get('web_path'));
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Song."), AmpConfig::get('web_path'));
         }

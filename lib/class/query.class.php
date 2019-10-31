@@ -625,7 +625,7 @@ class Query
     /**
      * get_start
      * This returns the current value of the start
-     * @return int
+     * @return integer
      */
     public function get_start()
     {
@@ -635,7 +635,7 @@ class Query
     /**
      * get_offset
      * This returns the current offset
-     * @return int
+     * @return integer
      */
     public function get_offset()
     {
@@ -658,7 +658,7 @@ class Query
      * If it's already cached used it. if they pass us an array then use
      * that.
      * @param array $objects
-     * @return int
+     * @return integer
      */
     public function get_total($objects = null)
     {
@@ -2348,6 +2348,7 @@ class Query
 
             $sql = $this->get_base_sql();
 
+            $group_sql = " GROUP BY `" . $this->get_type() . '`.`id`';
             $order_sql = " ORDER BY ";
 
             foreach ($this->_state['sort'] as $key => $value) {
@@ -2357,10 +2358,11 @@ class Query
             $order_sql = rtrim($order_sql, "ORDER BY ");
             $order_sql = rtrim($order_sql, ",");
 
-            $sql = $sql . $this->get_join_sql() . $where_sql . $order_sql;
+            $sql = $sql . $this->get_join_sql() . $where_sql . $group_sql . $order_sql;
         } // if not simple
 
         $db_results = Dba::read($sql);
+        //debug_event('query.class', "resort_objects: " . $sql, 5);
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {

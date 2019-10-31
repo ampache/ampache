@@ -75,7 +75,7 @@ class AmpConfig
      * get_rating_filter
      * Find out whether you are filtering ratings on your search
      * This function is used in mashup and random queries
-     * @return int
+     * @return integer
      */
     public static function get_rating_filter()
     {

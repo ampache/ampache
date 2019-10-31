@@ -78,7 +78,7 @@ function send_zip($name, $media_files)
 {
     /* Require needed library */
     if (!@include_once(AmpConfig::get('prefix') . '/lib/vendor/maennchen/zipstream-php/src/ZipStream.php')) {
-        throw new Exception('Missing ZipStream dependency.');
+        throw new Exception('Missing ZipStream dependency');
     }
 
     $filter  = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);

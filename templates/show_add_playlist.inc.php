@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Create Playlist')); ?>
 <form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/playlist.php">
-    <table class="tabledata" cellspacing="0" cellpadding="0">
+    <table class="tabledata">
         <tr>
             <td><?php echo T_('Name'); ?>:</td>
             <td><input type="text" name="playlist_name" /></td>
@@ -31,8 +30,8 @@
             <td><?php echo T_('Type'); ?>:</td>
             <td>
                 <select name="type">
-                    <option value="private"> Private </option>
-                    <option value="public"> Public </option>
+                    <option value="private"><?php echo T_("Private"); ?></option>
+                    <option value="public"><?php echo T_("Public"); ?></option>
                 </select>
             </td>
         </tr>

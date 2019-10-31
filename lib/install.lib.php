@@ -191,7 +191,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     preg_match('/([^\d\w\_\-])/', $database, $matches);
 
     if (count($matches)) {
-        AmpError::add('general', T_('Database name is invalid.'));
+        AmpError::add('general', T_('Database name is invalid'));
 
         return false;
     }
@@ -272,7 +272,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         for ($count = 0; $count < $p_count; $count++) {
             $pieces[$count] = trim($pieces[$count]);
             if (!empty($pieces[$count]) && $pieces[$count] != '#') {
-                if (!$result = Dba::write($pieces[$count])) {
+                if (!Dba::write($pieces[$count])) {
                     $errors[] = array(Dba::error(), $pieces[$count]);
                 }
             }

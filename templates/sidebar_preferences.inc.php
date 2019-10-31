@@ -24,11 +24,9 @@
  * they can have their own preference sections so we need to build the
  * links based on that, always ignore 'internal' though
  */
-$categories = Preference::get_categories();
-?>
+$categories = Preference::get_categories(); ?>
 <?php
-$t_preferences = T_('Preferences');
-?>
+$t_preferences = T_('Preferences'); ?>
 <ul class="sb2" id="sb_preferences">
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo $t_preferences; ?>"><?php echo $t_preferences; ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'preferences', 'header-all ' . ((filter_has_var(INPUT_COOKIE, 'sb_preferences')) ? $_COOKIE['sb_preferences'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_preferences_sections">
@@ -47,8 +45,7 @@ $t_preferences = T_('Preferences');
 
     </ul>
   </li>
-        <?php if (Access::check('interface', '50')) {
-        ?>
+        <?php if (Access::check('interface', '50')) { ?>
     <li>
     <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo T_('Playlist'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
     <ul class="sb3" id="sb_home_playlist">

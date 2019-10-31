@@ -18,12 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php
-$t_ampache = T_('Ampache');
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+$t_ampache = T_('Ampache'); ?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
     xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>"
     dir="<?php echo $dir;?>">

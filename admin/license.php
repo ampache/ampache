@@ -53,7 +53,7 @@ switch ($_REQUEST['action']) {
         break;
     case 'delete':
         License::delete($_REQUEST['license_id']);
-        show_confirmation(T_('No Problem'), T_('The License has been deleted.'), AmpConfig::get('web_path') . '/admin/license.php');
+        show_confirmation(T_('No Problem'), T_('The License has been deleted'), AmpConfig::get('web_path') . '/admin/license.php');
     break;
     default:
         $browse = new Browse();

@@ -19,6 +19,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
 <th class="cel_year optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=movie&sort=year', T_('Year'), 'sort_video_year'); ?></th>

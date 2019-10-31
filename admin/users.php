@@ -116,7 +116,7 @@ switch ($_REQUEST['action']) {
             $maxdimension = (int) AmpConfig::get('album_art_max_width') . "x" . (int) AmpConfig::get('album_art_max_height');
             show_confirmation(T_("There Was a Problem"),
                     /* HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions (2000x3000) */
-                    sprintf(T_('Please check your image is within the minimum %1$s and maximum %2$s dimensions.'), $mindimension, $maxdimension), AmpConfig::get('web_path') . '/admin/users.php');
+                    sprintf(T_('Please check your image is within the minimum %1$s and maximum %2$s dimensions'), $mindimension, $maxdimension), AmpConfig::get('web_path') . '/admin/users.php');
         } else {
             show_confirmation(T_('No Problem'), $client->username . ' (' . $client->fullname . ') ' . T_('updated'), AmpConfig::get('web_path') . '/admin/users.php');
         }
@@ -249,14 +249,14 @@ switch ($_REQUEST['action']) {
         $client = new User(Core::get_request('user_id'));
         show_confirmation(T_('Are You Sure?'),
             /* HINT: User Fullname */
-            sprintf(T_('This will permanently delete %s'), $client->fullname),
+            sprintf(T_('This will permanently delete the user "%s"'), $client->fullname),
             AmpConfig::get('web_path') . "/admin/users.php?action=confirm_delete&amp;user_id=" . Core::get_request('user_id'), 1, 'delete_user');
     break;
     case 'show_delete_avatar':
         $user_id = Core::get_request('user_id');
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php?action=delete_avatar&user_id=' . scrub_out($user_id);
-        show_confirmation(T_('Are you sure?'), T_('This Avatar will be deleted'), $next_url, 1, 'delete_avatar');
+        show_confirmation(T_('Are You Sure?'), T_('This Avatar will be deleted'), $next_url, 1, 'delete_avatar');
     break;
     case 'delete_avatar':
         if (AmpConfig::get('demo_mode')) {
@@ -273,7 +273,7 @@ switch ($_REQUEST['action']) {
         $client->delete_avatar();
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
-        show_confirmation(T_('No Problem'), T_('Avatar has been deleted.'), $next_url);
+        show_confirmation(T_('No Problem'), T_('Avatar has been deleted'), $next_url);
     break;
     case 'show_generate_apikey':
         $user_id = Core::get_request('user_id');
@@ -296,7 +296,7 @@ switch ($_REQUEST['action']) {
         $client->generate_apikey();
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
-        show_confirmation(T_('No Problem'), T_('A new user API Key has been generated.'), $next_url);
+        show_confirmation(T_('No Problem'), T_('A new user API Key has been generated'), $next_url);
     break;
     /* Show IP History for the Specified User */
     case 'show_ip_history':

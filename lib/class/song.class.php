@@ -414,14 +414,14 @@ class Song extends database_object implements media, library_item
             $album_id = (int) ($results['album_id']);
         }
 
-        $sql = 'INSERT INTO `song` (`file`, `catalog`, `album`, `artist`, ' .
+        $sql = 'INSERT INTO `song` (`catalog`, `file`, `album`, `artist`, ' .
             '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
             '`addition_time`, `year`, `mbid`, `user_upload`, `license`, ' .
             '`composer`, `channels`) ' .
             'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
-            $file, $catalog, $album_id, $artist_id,
+            $catalog, $file, $album_id, $artist_id,
             $title, $bitrate, $rate, $mode, $size, $time, $track,
             time(), $year, $track_mbid, $user_upload, $license,
             $composer, $channels));
@@ -969,16 +969,31 @@ class Song extends database_object implements media, library_item
      */
     public function set_played($user, $agent, $location, $date = null)
     {
+        $previous = Stats::get_last_song($user);
+        $diff     = time() - $previous['date'];
+
+        // this song was your last play and the length between plays is too short.
+        if ($previous['object_id'] == $this->id && $diff <= ($this->time - 20)) {
+            debug_event('song.class', 'Repeated the same song too quickly, not recording stats', 3);
+
+            return false;
+        }
+
+        // try to keep a difference between recording stats but also allowing short songs
+        if ($diff < 20 && !$this->time < 20) {
+            debug_event('song.class', 'Last song played within ' . $diff . ' seconds, not recording stats', 3);
+
+            return false;
+        }
+
         Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date);
         Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date);
         Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date);
 
-        if ($this->played) {
-            return true;
+        if (!$this->played) {
+            /* If it hasn't been played, set it! */
+            self::update_played(true, $this->id);
         }
-
-        /* If it hasn't been played, set it! */
-        self::update_played(true, $this->id);
 
         return true;
     } // set_played
@@ -1093,7 +1108,7 @@ class Song extends database_object implements media, library_item
      * This takes a key'd array of data does any cleaning it needs to
      * do and then calls the helper functions as needed.
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {
@@ -1853,7 +1868,7 @@ class Song extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = false)
+    public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = false, $original = false)
     {
         $media = new $object_type($object_id);
         if (!$media->id) {
@@ -1869,7 +1884,7 @@ class Song extends database_object implements media, library_item
         // Some players doesn't allow a type streamed into another without giving the right extension
         $transcode_cfg = AmpConfig::get('transcode');
         $valid_types   = Song::get_stream_types_for_type($type, $player);
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
+        if ($transcode_cfg == 'always' && !$original || ($transcode_cfg != 'never' && !in_array('native', $valid_types) && !$original)) {
             $transcode_settings = $media->get_transcode_settings(null);
             if ($transcode_settings) {
                 debug_event('song.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings... ", 5);
@@ -1900,12 +1915,12 @@ class Song extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param string $player
+     * @param boolean $uid
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
     {
-        return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid);
+        return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid, $original);
     }
 
     /**
