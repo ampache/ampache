@@ -357,9 +357,9 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
     {
-        return Song::generic_play_url('podcast_episode', $oid, $additional_params, $player, $local, $uid);
+        return Song::generic_play_url('podcast_episode', $oid, $additional_params, $player, $local, $uid, $original);
     }
 
     /**

@@ -39,11 +39,13 @@ $oid            = scrub_in($_REQUEST['oid']);
 $sid            = scrub_in($_REQUEST['ssid']);
 $type           = scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 $cache          = scrub_in($_REQUEST['cache']);
+$format         = scrub_in($_REQUEST['format']);
+$original       = ($format == 'raw') ? true : false;
 $record_stats   = true;
 
 // allow disabling stat recording from the play url
 if ($cache === '1' || $type == 'podcast_episode') {
-    debug_event('play/index', 'record_stats disabled: cache {' . $cache . "}", 5);
+    debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
     $record_stats = false;
 }
 
@@ -58,7 +60,7 @@ if (isset($_REQUEST['player'])) {
     $player = $_REQUEST['player'];
 }
 
-if (AmpConfig::get('transcode_player_customize')) {
+if (AmpConfig::get('transcode_player_customize') && !$original) {
     $transcode_to = scrub_in($_REQUEST['transcode_to']);
     $bitrate      = (int) ($_REQUEST['bitrate']);
 
@@ -407,8 +409,10 @@ $browser = new Horde_Browser();
 /* If they are just trying to download make sure they have rights
  * and then present them with the download file
  */
-if (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
-    debug_event('play/index', 'Downloading file...', 4);
+if (Core::get_get('action') == 'download' && !$original) {
+    debug_event('play/index', 'Downloading transcoded ' . $format . ' file... ', 4);
+} elseif (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
+    debug_event('play/index', 'Downloading raw file...', 4);
     // STUPID IE
     $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
 
@@ -481,7 +485,7 @@ if ($transcode_to) {
 }
 
 // If custom play action, do not try to transcode
-if (!$cpaction) {
+if (!$cpaction && !$original) {
     $transcode_cfg = AmpConfig::get('transcode');
     $valid_types   = $media->get_stream_types($player);
     if (!is_array($valid_types)) {
