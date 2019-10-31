@@ -411,6 +411,16 @@ $browser = new Horde_Browser();
  */
 if (Core::get_get('action') == 'download' && !$original) {
     debug_event('play/index', 'Downloading transcoded file... ', 4);
+    if (!$share_id) {
+        if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
+            debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
+            $sessionkey = $sid ?: Stream::get_session();
+            $agent      = Session::agent($sessionkey);
+            $location   = Session::get_geolocation($sessionkey);
+            Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+        }
+    }
+    $record_stats = false;
 } elseif (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
     debug_event('play/index', 'Downloading raw file...', 4);
     // STUPID IE
