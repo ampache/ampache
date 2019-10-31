@@ -75,7 +75,7 @@ class AmpConfig
      * get_rating_filter
      * Find out whether you are filtering ratings on your search
      * This function is used in mashup and random queries
-     * @return int
+     * @return integer
      */
     public static function get_rating_filter()
     {
@@ -103,7 +103,7 @@ class AmpConfig
     {
         if (isset(self::$_global[$name]) && !$clobber) {
             debug_event('ampconfig.class', "Tried to overwrite existing key $name without setting clobber", 5);
-            AmpError::add('Config Global', sprintf(T_('Trying to clobber \'%s\' without setting clobber'), $name));
+            AmpError::add('Config Global', sprintf(T_('Tried to clobber \'%s\' without setting clobber'), $name));
 
             return false;
         }

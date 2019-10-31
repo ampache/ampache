@@ -81,7 +81,7 @@ class Preference extends database_object
             $pref_id = $preference;
             $name    = self::name_from_id($preference);
         }
-        if ($applytoall and Access::check('interface', '100')) {
+        if ($applytoall && Access::check('interface', '100')) {
             $user_check = "";
         } else {
             $user_check = " AND `user`='$user_id'";
@@ -91,7 +91,7 @@ class Preference extends database_object
             $value = implode(',', $value);
         }
 
-        if ($applytodefault and Access::check('interface', '100')) {
+        if ($applytodefault && Access::check('interface', '100')) {
             $sql = "UPDATE `preference` SET `value`='$value' WHERE `id`='$pref_id'";
             Dba::write($sql);
         }
@@ -232,11 +232,11 @@ class Preference extends database_object
     } // name_from_id
 
     /**
-      * get_catagories
+      * get_categories
      * This returns an array of the names of the different possible sections
-     * it ignores the 'internal' catagory
+     * it ignores the 'internal' category
      */
-    public static function get_catagories()
+    public static function get_categories()
     {
         $sql        = "SELECT `preference`.`catagory` FROM `preference` GROUP BY `catagory` ORDER BY `catagory`";
         $db_results = Dba::read($sql);
@@ -250,7 +250,7 @@ class Preference extends database_object
         } // end while
 
         return $results;
-    } // get_catagories
+    } // get_categories
 
     /**
      * get_all
@@ -289,16 +289,17 @@ class Preference extends database_object
      * @param string $default
      * @param string $level
      * @param string $type
-     * @param string $catagory
+     * @param string $category
+     * @param string $subcategory
      */
-    public static function insert($name, $description, $default, $level, $type, $catagory, $subcatagory = null)
+    public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null)
     {
-        if ($subcatagory !== null) {
-            $subcatagory = strtolower($subcatagory);
+        if ($subcategory !== null) {
+            $subcategory = strtolower($subcategory);
         }
         $sql = "INSERT INTO `preference` (`name`,`description`,`value`,`level`,`type`,`catagory`,`subcatagory`) " .
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, (int) ($level), $type, $catagory, $subcatagory));
+        $db_results = Dba::write($sql, array($name, $description, $default, (int) ($level), $type, $category, $subcategory));
 
         if (!$db_results) {
             return false;
@@ -310,7 +311,7 @@ class Preference extends database_object
         if (!$db_results) {
             return false;
         }
-        if ($catagory !== "system") {
+        if ($category !== "system") {
             $sql        = "INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`";
             $db_results = Dba::write($sql, $params);
             if (!$db_results) {

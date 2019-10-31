@@ -23,12 +23,11 @@
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
 header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
-
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+ ?>
+<!DOCTYPE html>
 <html>
 <head>
-<!-- Propulsed by Ampache | ampache.org -->
+<!-- Propelled by Ampache | ampache.org -->
 <title><?php echo AmpConfig::get('site_title'); ?></title>
 <meta property="og:title" content="<?php echo AmpConfig::get('site_title'); ?>" />
 <meta property="og:image" content="<?php echo UI::get_logo_url(); ?>"/>
@@ -36,11 +35,11 @@ header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 <meta property="og:site_name" content="Ampache"/>
 <?php
 if (!$is_share) {
-    $stream_id = $_REQUEST['playlist_id'];
-    if (is_string($stream_id) || is_integer($stream_id)) {
-        $playlist = new Stream_Playlist($stream_id);
-    }
-}
+     $stream_id = $_REQUEST['playlist_id'];
+     if (is_string($stream_id) || is_integer($stream_id)) {
+         $playlist = new Stream_Playlist($stream_id);
+     }
+ }
 
 $isRadio = false;
 $isVideo = false;
@@ -55,5 +54,4 @@ if (isset($playlist)) {
         $isVideo = WebPlayer::is_playlist_video($playlist);
     }
 }
-require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player.inc.php');
-?>
+require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player.inc.php'); ?>

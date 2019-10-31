@@ -24,7 +24,7 @@ class AmpacheTwitter
 {
     public $name        = 'Twitter';
     public $categories  = 'share';
-    public $description = 'Twitter Share';
+    public $description = 'Twitter share';
     public $url         = 'https://twitter.com';
     public $version     = '000001';
     public $min_ampache = '370027';
@@ -36,6 +36,8 @@ class AmpacheTwitter
      */
     public function __construct()
     {
+        $this->description = T_('Twitter share');
+
         return true;
     } // constructor
 
@@ -83,11 +85,11 @@ class AmpacheTwitter
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
-        $data = $user->prefs;
 
         return true;
     } // load

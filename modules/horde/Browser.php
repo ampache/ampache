@@ -265,7 +265,7 @@ class Horde_Browser
     {
         // Set our agent string.
         if ($userAgent == null) {
-            if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            if (filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT')) {
                 $this->_agent = trim($_SERVER['HTTP_USER_AGENT']);
             }
         } else {
@@ -275,7 +275,7 @@ class Horde_Browser
 
         // Set our accept string.
         if ($accept === null) {
-            if (isset($_SERVER['HTTP_ACCEPT'])) {
+            if (filter_has_var(INPUT_SERVER, 'HTTP_ACCEPT')) {
                 $this->_accept = strtolower(trim($_SERVER['HTTP_ACCEPT']));
             }
         } else {
@@ -283,7 +283,7 @@ class Horde_Browser
         }
 
         // Check for UTF support.
-        if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
+        if (filter_has_var(INPUT_SERVER, 'HTTP_ACCEPT_CHARSET')) {
             $this->setFeature('utf', strpos(strtolower($_SERVER['HTTP_ACCEPT_CHARSET']), 'utf') !== false);
         }
 
@@ -1026,8 +1026,8 @@ class Horde_Browser
      */
     public function usingSSLConnection()
     {
-        return ((isset($_SERVER['HTTPS']) &&
-                 ($_SERVER['HTTPS'] == 'on')) ||
+        return ((filter_has_var(INPUT_SERVER, 'HTTPS') &&
+                 (Core::get_server('HTTPS') == 'on')) ||
                 getenv('SSL_PROTOCOL_VERSION'));
     }
 
@@ -1038,7 +1038,7 @@ class Horde_Browser
      */
     public function getHTTPProtocol()
     {
-        return (isset($_SERVER['SERVER_PROTOCOL']) && ($pos = strrpos($_SERVER['SERVER_PROTOCOL'], '/')))
+        return (filter_has_var(INPUT_SERVER, 'SERVER_PROTOCOL') && ($pos = strrpos($_SERVER['SERVER_PROTOCOL'], '/')))
             ? substr($_SERVER['SERVER_PROTOCOL'], $pos + 1)
             : null;
     }
@@ -1050,9 +1050,9 @@ class Horde_Browser
      */
     public function getIPAddress()
     {
-        return empty($_SERVER['HTTP_X_FORWARDED_FOR'])
-            ? filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP)
-            : $_SERVER['HTTP_X_FORWARDED_FOR'];
+        return filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')
+            ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+            : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
     }
 
     /**

@@ -24,7 +24,7 @@ class AmpacheOmdb
 {
     public $name           = 'Omdb';
     public $categories     = 'metadata';
-    public $description    = 'Omdb metadata integration';
+    public $description    = 'OMDb metadata integration';
     public $url            = 'http://www.omdbapi.com';
     public $version        = '000001';
     public $min_ampache    = '370009';
@@ -36,6 +36,8 @@ class AmpacheOmdb
      */
     public function __construct()
     {
+        $this->description = T_('OMDb metadata integration');
+
         return true;
     }
 
@@ -61,9 +63,12 @@ class AmpacheOmdb
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {
+        $user->set_preferences();
+
         return true;
     } // load
 
@@ -97,7 +102,7 @@ class AmpacheOmdb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('omdb.plugin', 'Getting metadata from Omdb...', 5);
+        debug_event('omdb.plugin', 'Getting metadata from OMDb...', 5);
 
         // TVShow and Movie metadata only
         if (!in_array('tvshow', $gather_types) && !in_array('movie', $gather_types)) {
@@ -110,7 +115,7 @@ class AmpacheOmdb
 
         $results = array();
         try {
-            // We cannot distinguish movies from tvshows with Omdb API (related to Imdb)
+            // We cannot distinguish movies from tvshows with OMDb API (related to Imdb)
             $query = $this->query_omdb($title);
             if ($query->Response == 'True') {
                 $match = false;
@@ -155,8 +160,8 @@ class AmpacheOmdb
                     $results['genre'] = $query->Genre;
                 }
             }
-        } catch (Exception $e) {
-            debug_event('omdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('omdb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
         }
 
         return $results;

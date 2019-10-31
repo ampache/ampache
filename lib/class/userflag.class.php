@@ -37,9 +37,9 @@ class Userflag extends database_object
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
      */
-    public function __construct($id, $type)
+    public function __construct($object_id, $type)
     {
-        $this->id   = (int) ($id);
+        $this->id   = (int) ($object_id);
         $this->type = $type;
 
         return true;
@@ -50,6 +50,7 @@ class Userflag extends database_object
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
      * @param string $type
+     * @return boolean
      */
     public static function build_cache($type, $ids, $user_id = null)
     {
@@ -112,6 +113,7 @@ class Userflag extends database_object
     /**
      * get_flag
      * @param boolean $get_date
+     * @return boolean|array
      */
     public function get_flag($user_id = null, $get_date = null)
     {
@@ -146,6 +148,8 @@ class Userflag extends database_object
      * set_flag
      * This function sets the user flag for the current object.
      * If no user_id is passed in, we use the currently logged in user.
+     * @param boolean $flagged
+     * @param integer $user_id
      */
     public function set_flag($flagged, $user_id = null)
     {
@@ -157,7 +161,7 @@ class Userflag extends database_object
         }
         $results = array();
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $sql = "SELECT `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
+            $sql = "SELECT `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
                     " WHERE `id` = ?";
             $db_results = Dba::read($sql, array($this->id));
             $results    = Dba::fetch_assoc($db_results);
@@ -197,8 +201,8 @@ class Userflag extends database_object
                         if ($plugin->load($user)) {
                             $plugin->_plugin->set_flag($song, $flagged);
                         }
-                    } catch (Exception $e) {
-                        debug_event('userflag.class', 'Stats plugin error: ' . $e->getMessage(), 1);
+                    } catch (Exception $error) {
+                        debug_event('userflag.class', 'Stats plugin error: ' . $error->getMessage(), 1);
                     }
                 }
             }
@@ -210,15 +214,30 @@ class Userflag extends database_object
     /**
      * set_flag_for_group
      * This function sets the user flag for an album group.
+     * @param boolean $flagged
+     * @param integer $user_id
      */
-    public function set_flag_for_group($flagged, $album, $user_id = null)
+    public static function set_flag_for_group($flagged, $album, $user_id = null)
     {
         $sql = "SELECT `album`.`id` FROM `album`" .
-                " WHERE `album`.`name` = '" . str_replace("'", "\'", $album['name']) . "' AND" .
-                " `album`.`album_artist` = " . $album['album_artist'] . " AND" .
-                " `album`.`mbid` = '" . $album['mbid'] . "'";
-        $db_results = Dba::read($sql);
+                " WHERE `album`.`name` = '" . Dba::escape($album['name']) . "'";
+        if ($album['album_artist']) {
+            $sql .= " AND `album`.`album_artist` = " . $album['album_artist'];
+        } else {
+            $sql .= " AND `album`.`album_artist` IS NULL";
+        }
+        if ($album['mbid']) {
+            $sql .= " AND `album`.`mbid` = '" . $album['mbid'] . "'";
+        } else {
+            $sql .= " AND `album`.`mbid` IS NULL";
+        }
+        if ($album['prefix']) {
+            $sql .= " AND `album`.`prefix` = '" . $album['prefix'] . "'";
+        } else {
+            $sql .= " AND `album`.`prefix` IS NULL";
+        }
         $results    = array();
+        $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -250,6 +269,7 @@ class Userflag extends database_object
      * Get the latest sql
      * @param string|null $type
      * @param string $user_id
+     * @return string
      */
     public static function get_latest_sql($type, $user_id = null)
     {
@@ -288,6 +308,7 @@ class Userflag extends database_object
      * Get the latest user flagged objects
      * @param string $type
      * @param string $user_id
+     * @return array
      */
     public static function get_latest($type = null, $user_id = null, $count = '', $offset = '')
     {
@@ -344,7 +365,7 @@ class Userflag extends database_object
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
-        $sql = "UPDATE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }

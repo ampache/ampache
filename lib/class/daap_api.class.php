@@ -85,7 +85,6 @@ class Daap_Api
     {
         set_time_limit(0);
         ob_end_clean();
-
         if (function_exists('curl_version')) {
             $headers      = apache_request_headers();
             $reqheaders   = array();
@@ -234,7 +233,7 @@ class Daap_Api
 
         self::check_auth($code);
 
-        if (! isset($_GET['session-id'])) {
+        if (!filter_has_var(INPUT_GET, 'session-id')) {
             debug_event('daap_api.class', 'Missing session id.', 2);
         } else {
             $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?";
@@ -333,7 +332,6 @@ class Daap_Api
      */
     public static function databases($input)
     {
-        // $revision = $_GET['revision-number'];
         $output = '';
         // Database list
         if (count($input) == 0) {
@@ -817,7 +815,7 @@ class Daap_Api
     {
         self::setHeaders();
 
-        if ($_SERVER['REQUEST_METHOD'] != 'OPTIONS') {
+        if (Core::get_server('REQUEST_METHOD') != 'OPTIONS') {
             header("Content-length: " . strlen($string));
             echo $string;
         } else {

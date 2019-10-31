@@ -40,6 +40,8 @@ class AmpacheShoutHome
      */
     public function __construct()
     {
+        $this->description = T_('Shoutbox on homepage');
+
         return true;
     }
 
@@ -55,7 +57,7 @@ class AmpacheShoutHome
             return false;
         }
 
-        Preference::insert('shouthome_max_items', 'Shoutbox on homepage max items', '5', '25', 'integer', 'plugins', $this->name);
+        Preference::insert('shouthome_max_items', T_('Shoutbox on homepage max items'), '5', '25', 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -101,6 +103,7 @@ class AmpacheShoutHome
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {

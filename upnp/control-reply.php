@@ -3,7 +3,7 @@ define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
-    echo "Disabled.";
+    echo T_("Disabled");
 
     return false;
 }
@@ -21,7 +21,7 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
         $upnpRequest = Upnp_Api::parseUPnPRequest($requestRaw);
     //!!debug_event('control-reply', 'Request: ' . $requestRaw, 5);
     } else {
-        echo 'Error: no UPnP request.';
+        echo T_('Received an empty UPnP request');
         debug_event('control-reply', 'No request', 5);
 
         return false;

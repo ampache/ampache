@@ -154,8 +154,6 @@ class Tag extends database_object implements library_item
 
         if ($user === true) {
             $uid = (int) (Core::get_global('user')->id);
-        } elseif ($user === false) {
-            $uid = 0;
         } else {
             $uid = (int) ($user);
         }
@@ -302,8 +300,6 @@ class Tag extends database_object implements library_item
     {
         if ($user === true) {
             $uid = (int) (Core::get_global('user')->id);
-        } elseif ($user === false) {
-            $uid = 0;
         } else {
             $uid = (int) ($user);
         }
@@ -492,6 +488,7 @@ class Tag extends database_object implements library_item
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      * @param string $type
+     * @return integer[]|false
      */
     public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
     {
@@ -501,7 +498,7 @@ class Tag extends database_object implements library_item
 
         $limit_sql = "";
         if ($count) {
-            $limit_sql = "LIMIT ";
+            $limit_sql = " LIMIT ";
             if ($offset) {
                 $limit_sql .= (string) ($offset) . ', ';
             }
@@ -509,16 +506,16 @@ class Tag extends database_object implements library_item
         }
 
         $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " .
-            "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? $limit_sql ";
+            "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? ";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
+            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`') . $limit_sql;
         }
         $db_results = Dba::read($sql, array($tag_id, $type));
 
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int) $row['object_id'];
         }
 
         return $results;
@@ -729,8 +726,6 @@ class Tag extends database_object implements library_item
 
         if ($user === true) {
             $uid = (int) (Core::get_global('user')->id);
-        } elseif ($user === false) {
-            $uid = 0;
         } else {
             $uid = (int) ($user);
         }
@@ -870,8 +865,6 @@ class Tag extends database_object implements library_item
     {
         if ($user === true) {
             $uid = (int) (Core::get_global('user')->id);
-        } elseif ($user === false) {
-            $uid = 0;
         } else {
             $uid = (int) ($user);
         }
@@ -892,5 +885,19 @@ class Tag extends database_object implements library_item
         }
 
         return false;
+    }
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return boolean|PDOStatement
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "UPDATE IGNORE `tag_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
 } // end of Tag class

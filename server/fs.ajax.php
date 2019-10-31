@@ -50,13 +50,13 @@ class fs
 
         return $temp;
     }
-    protected function path($id)
+    protected function path($fs_id)
     {
-        $id = str_replace('/', DIRECTORY_SEPARATOR, $id);
-        $id = trim($id, DIRECTORY_SEPARATOR);
-        $id = $this->real($this->base . DIRECTORY_SEPARATOR . $id);
+        $fs_id = str_replace('/', DIRECTORY_SEPARATOR, $fs_id);
+        $fs_id = trim($fs_id, DIRECTORY_SEPARATOR);
+        $fs_id = $this->real($this->base . DIRECTORY_SEPARATOR . $fs_id);
 
-        return $id;
+        return $fs_id;
     }
 
     /**
@@ -80,9 +80,9 @@ class fs
         }
     }
 
-    public function lst($id, $with_root = false)
+    public function lst($fs_id, $with_root = false)
     {
-        $dir = $this->path($id);
+        $dir = $this->path($fs_id);
         $lst = @scandir($dir);
         if (!$lst) {
             throw new Exception('Could not list path: ' . $dir);
@@ -98,8 +98,6 @@ class fs
             }
             if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
                 $res[] = array('text' => $item, 'children' => true,  'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'icon' => 'folder');
-            } else {
-                //$res[] = array('text' => $item, 'children' => false, 'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'type' => 'file', 'icon' => 'file file-'.substr($item, strrpos($item, '.') + 1));
             }
         }
         if ($with_root && $this->id($dir) === '/') {
@@ -109,16 +107,16 @@ class fs
         return $res;
     }
 
-    public function data($id)
+    public function data($fs_id)
     {
-        if (strpos($id, ":")) {
-            $id = array_map(array($this, 'id'), explode(':', $id));
+        if (strpos($fs_id, ":")) {
+            $fs_id = array_map(array($this, 'id'), explode(':', $fs_id));
 
-            return array('type' => 'multiple', 'content' => 'Multiple selected: ' . implode(' ', $id));
+            return array('type' => 'multiple', 'content' => 'Multiple selected: ' . implode(' ', $fs_id));
         }
-        $dir = $this->path($id);
+        $dir = $this->path($fs_id);
         if (is_dir($dir)) {
-            return array('type' => 'folder', 'content' => $id);
+            return array('type' => 'folder', 'content' => $fs_id);
         }
         if (is_file($dir)) {
             $ext = strpos($dir, '.') !== false ? substr($dir, strrpos($dir, '.') + 1) : '';
@@ -160,9 +158,11 @@ class fs
         }
         throw new Exception('Not a valid selection: ' . $dir);
     }
-    public function create($id, $name, $mkdir = false)
+
+    public function create($fs_id, $name, $mkdir = false)
     {
-        $dir = $this->path($id);
+        $dir = $this->path($fs_id);
+        debug_event('fs.ajax', 'create ' . $fs_id . ' ' . $name, 5);
         if (preg_match('([^ a-zа-я-_0-9.]+)ui', $name) || !strlen($name)) {
             throw new Exception('Invalid name: ' . $name);
         }
@@ -174,9 +174,10 @@ class fs
 
         return array('id' => $this->id($dir . DIRECTORY_SEPARATOR . $name));
     }
-    public function rename($id, $name)
+
+    public function rename($fs_id, $name)
     {
-        $dir = $this->path($id);
+        $dir = $this->path($fs_id);
         if ($dir === $this->base) {
             throw new Exception('Cannot rename root');
         }
@@ -194,9 +195,10 @@ class fs
 
         return array('id' => $this->id($new));
     }
-    public function remove($id)
+
+    public function remove($fs_id)
     {
-        $dir = $this->path($id);
+        $dir = $this->path($fs_id);
         if ($dir === $this->base) {
             throw new Exception('Cannot remove root');
         }
@@ -212,9 +214,10 @@ class fs
 
         return array('status' => 'OK');
     }
-    public function move($id, $par)
+
+    public function move($fs_id, $par)
     {
-        $dir = $this->path($id);
+        $dir = $this->path($fs_id);
         $par = $this->path($par);
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         $new = array_pop($new);
@@ -223,9 +226,10 @@ class fs
 
         return array('id' => $this->id($new));
     }
-    public function copy($id, $par)
+
+    public function copy($fs_id, $par)
     {
-        $dir = $this->path($id);
+        $dir = $this->path($fs_id);
         $par = $this->path($par);
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         $new = array_pop($new);
@@ -288,10 +292,10 @@ if (isset($_GET['operation'])) {
         }
         header('Content-Type: application/json; charset=utf8');
         echo json_encode($rslt);
-    } catch (Exception $e) {
-        header($_SERVER["SERVER_PROTOCOL"] . ' 500 Server Error');
+    } catch (Exception $error) {
+        header(Core::get_server('SERVER_PROTOCOL') . ' 500 Server Error');
         header('Status:  500 Server Error');
-        echo $e->getMessage();
+        echo $error->getMessage();
     }
     die();
 }

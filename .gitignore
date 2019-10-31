@@ -29,6 +29,7 @@ cs_fixer_tmp_*
 .env
 .project
 .settings/
+.vscode/
 bootstrap/
 components/
 node_modules/
@@ -39,3 +40,4 @@ vendor/
 core/
 develop/
 master/
+*.swp

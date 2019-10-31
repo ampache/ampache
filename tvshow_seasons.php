@@ -31,10 +31,8 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $tvshow_season_id = scrub_in($_REQUEST['tvshow_season_id']);
-        show_confirmation(
-            T_('TVShow Season Deletion'),
-            T_('Are you sure you want to permanently delete this tvshow season?'),
+        $tvshow_season_id = (string) scrub_in($_REQUEST['tvshow_season_id']);
+        show_confirmation(T_('Are You Sure?'), T_("The entire TV Season will be deleted"),
             AmpConfig::get('web_path') . "/tvshow_seasons.php?action=confirm_delete&tvshow_season_id=" . $tvshow_season_id,
             1,
             'delete_tvshow_season'
@@ -54,9 +52,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($tvshow_season->remove_from_disk()) {
-            show_confirmation(T_('TVShow Season Deletion'), T_('TVShow Season has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('TV Season has been deleted'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('TVShow Season Deletion'), T_('Cannot delete this tvshow season.'), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this TV Season."), AmpConfig::get('web_path'));
         }
     break;
     case 'show':
@@ -68,4 +66,6 @@ switch ($_REQUEST['action']) {
         break;
 } // end switch
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

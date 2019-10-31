@@ -48,12 +48,12 @@ class License
      * Constructor
      * This pulls the license information from the database and returns
      * a constructed object
-     * @param integer $id
+     * @param integer $license_id
      */
-    public function __construct($id)
+    public function __construct($license_id)
     {
         // Load the data from the database
-        $this->has_info($id);
+        $this->has_info($license_id);
 
         return true;
     } // Constructor
@@ -82,7 +82,7 @@ class License
      * create
      * This takes a key'd array of data as input and inserts a new license entry, it returns the auto_inc id
      * @param array $data
-     * @return int
+     * @return integer
      */
     public static function create(array $data)
     {
@@ -98,7 +98,7 @@ class License
      * update
      * This takes a key'd array of data as input and updates a license entry
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {

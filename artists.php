@@ -31,10 +31,8 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $artist_id = scrub_in($_REQUEST['artist_id']);
-        show_confirmation(
-            T_('Artist Deletion'),
-            T_('Are you sure you want to permanently delete this artist?'),
+        $artist_id = (string) scrub_in($_REQUEST['artist_id']);
+        show_confirmation(T_('Are You Sure?'), T_("The Artist and all files will be deleted"),
             AmpConfig::get('web_path') . "/artists.php?action=confirm_delete&artist_id=" . $artist_id,
             1,
             'delete_artist'
@@ -54,39 +52,26 @@ switch ($_REQUEST['action']) {
         }
 
         if ($artist->remove_from_disk()) {
-            show_confirmation(T_('Artist Deletion'), T_('Artist has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('The Artist has been deleted'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Artist Deletion'), T_('Cannot delete this artist.'), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Artist."), AmpConfig::get('web_path'));
         }
     break;
     case 'show':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
         if (AmpConfig::get('album_release_type')) {
-            $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], false, true);
+            $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], true);
         } else {
             $object_ids = $artist->get_albums($_REQUEST['catalog']);
         }
         $object_type = 'album';
         if (!$artist->id) {
             debug_event('artists', 'Requested an artist that does not exist', 2);
-            echo T_("Error: Requested an artist that does not exist.");
+            echo T_("You have requested an Artist that does not exist.");
         } else {
             require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
         }
-    break;
-    case 'showyear':
-        $artist = new Artist($_REQUEST['artist']);
-        $artist->format();
-        $year = (int) $_REQUEST['year'];
-        if (AmpConfig::get('album_release_type')) {
-            $multi_object_ids = $artist->get_by_year($_REQUEST['catalog'],$year, false, true);
-        } else {
-            $object_ids = $artist->get_by_year($_REQUEST['catalog'], $year);
-        }
-
-        $object_type = 'album';
-        require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
     break;
     case 'show_all_songs':
         $artist = new Artist($_REQUEST['artist']);
@@ -137,4 +122,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

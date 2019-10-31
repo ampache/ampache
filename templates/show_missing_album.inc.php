@@ -24,8 +24,7 @@ $web_path = AmpConfig::get('web_path');
 
 // Title for this album
 $title = scrub_out($walbum->name) . '&nbsp;(' . $walbum->year . ')';
-$title .= '&nbsp;-&nbsp;' . $walbum->f_artist_link;
-?>
+$title .= '&nbsp;-&nbsp;' . $walbum->f_artist_link; ?>
 <?php UI::show_box_top($title, 'info-box missing'); ?>
 <div class="item_art">
 <?php
@@ -44,14 +43,13 @@ if (count($images) > 0 && !empty($images[0]['url'])) {
     echo "<a href=\"" . $image . "\" rel=\"prettyPhoto\">";
     echo "<img src=\"" . $image . "\" alt=\"" . $name . "\" alt=\"" . $name . "\" height=\"128\" width=\"128\" />";
     echo "</a>\n";
-}
-?>
+} ?>
 </div>
 <div id="information_actions">
 <h3><?php echo T_('Actions'); ?>:</h3>
 <ul>
     <li>
-        <?php echo T_('Wanted actions'); ?>:
+        <?php echo T_('Actions'); ?>:
         <div id="wanted_action_<?php echo $walbum->mbid; ?>">
         <?php $walbum->show_action_buttons(); ?>
         </div>
@@ -67,6 +65,5 @@ if (count($images) > 0 && !empty($images[0]['url'])) {
     $browse = new Browse();
     $browse->set_type('song_preview');
     $browse->set_static_content(true);
-    $browse->show_objects($walbum->songs);
-?>
+    $browse->show_objects($walbum->songs); ?>
 </div>

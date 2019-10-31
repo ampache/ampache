@@ -20,8 +20,7 @@
  *
  */
 
-$class = $class ? $class : 'box';
-?>
+$class = $class ? $class : 'box'; ?>
 
 <div class="<?php echo $class; ?>">
   <div class="box-inside">
@@ -29,8 +28,7 @@ $class = $class ? $class : 'box';
       <div class="box-left-top"></div>
       <div class="box-right-top"></div>
     </div>
-    <?php if ($title) {
-    ?>
+    <?php if ($title) { ?>
        <h3 class="box-title"><?php echo $title; ?></h3>
       <?php
 } ?>

@@ -102,12 +102,8 @@ class Access
      * Takes an ID of the access_id dealie :)
      * @param integer|null $access_id
      */
-    public function __construct($access_id = null)
+    public function __construct($access_id)
     {
-        if ($access_id === null) {
-            return false;
-        }
-
         /* Assign id for use in get_info() */
         $this->id = (int) $access_id;
 
@@ -165,17 +161,17 @@ class Access
         $endn   = @inet_pton($endp);
 
         if (!$startn && $startp != '0.0.0.0' && $startp != '::') {
-            AmpError::add('start', T_('Invalid IPv4 / IPv6 Address Entered'));
+            AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
 
             return false;
         }
         if (!$endn) {
-            AmpError::add('end', T_('Invalid IPv4 / IPv6 Address Entered'));
+            AmpError::add('end', T_('An Invalid IPv4 / IPv6 Address was entered'));
         }
 
         if (strlen(bin2hex($startn)) != strlen(bin2hex($endn))) {
-            AmpError::add('start', T_('IP Address Version Mismatch'));
-            AmpError::add('end', T_('IP Address Version Mismatch'));
+            AmpError::add('start', T_('IP Address version mismatch'));
+            AmpError::add('end', T_('IP Address version mismatch'));
 
             return false;
         }
@@ -229,8 +225,8 @@ class Access
 
         // Check existing ACLs to make sure we're not duplicating values here
         if (self::exists($data)) {
-            debug_event('access.class', 'Error: An ACL equal to the created one already exists. Not adding another one: ' . $data['start'] . ' - ' . $data['end'], 1);
-            AmpError::add('general', T_('Duplicate ACL defined'));
+            debug_event('access.class', 'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'], 1);
+            AmpError::add('general', T_('Duplicate ACL entry defined'));
 
             return false;
         }
@@ -341,8 +337,9 @@ class Access
         }
 
         // Clean incoming variables
-        $user_ip = $user_ip ?: filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
-        $user_ip = inet_pton($user_ip);
+        $user_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')
+            ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+            : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
 
         switch ($type) {
             case 'init-api':
@@ -356,6 +353,7 @@ class Access
             // Intentional break fall-through
             case 'api':
                 $type = 'rpc';
+            // Intentional break fall-through
             case 'network':
             case 'interface':
             case 'stream':
@@ -368,7 +366,7 @@ class Access
                 'WHERE `start` <= ? AND `end` >= ? ' .
                 'AND `level` >= ? AND `type` = ?';
 
-        $params = array($user_ip, $user_ip, $level, $type);
+        $params = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
 
         if (strlen($user) && $user != '-1') {
             $sql .= " AND `user` IN(?, '-1')";
@@ -380,17 +378,19 @@ class Access
         $db_results = Dba::read($sql, $params);
 
         if (Dba::fetch_row($db_results)) {
-            // Yah they have access they can use the mojo
+            debug_event('access.class', 'check_network ' . $type . ': ip matched ACL ' . $user_ip, 5);
+
             return true;
         }
+        debug_event('access.class', 'check_network ' . $type . ': ip not found in ACL ' . $user_ip, 3);
 
         return false;
     }
 
     /**
-     * check_access
+     * check
      *
-     * This is the global 'has_access' function.(t can check for any 'type'
+     * This is the global 'has_access' function. it can check for any 'type'
      * of object.
      *
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is

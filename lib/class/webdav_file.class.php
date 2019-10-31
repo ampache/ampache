@@ -39,11 +39,19 @@ class WebDAV_File extends DAV\File
         $this->libitem->format();
     }
 
+    /**
+     * getName
+     * @return string
+     */
     public function getName()
     {
         return $this->libitem->f_file;
     }
 
+    /**
+     * get
+     * @return resource|null
+     */
     public function get()
     {
         debug_event('webdav_file.class', 'File get', 5);
@@ -62,11 +70,19 @@ class WebDAV_File extends DAV\File
         return null;
     }
 
+    /**
+     * getSize
+     * @return integer
+     */
     public function getSize()
     {
         return $this->libitem->size;
     }
 
+    /**
+     * getETag
+     * @return string
+     */
     public function getETag()
     {
         return md5(get_class($this->libitem) . "_" . $this->libitem->id . "_" . $this->libitem->update_time);

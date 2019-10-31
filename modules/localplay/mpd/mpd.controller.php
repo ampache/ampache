@@ -40,7 +40,7 @@ class AmpacheMpd extends localplay_controller
 
     /**
      * Constructor
-     * This returns the array map for the localplay object
+     * This returns the array map for the Localplay object
      * REQUIRED for Localplay
      */
     public function __construct()
@@ -81,7 +81,7 @@ class AmpacheMpd extends localplay_controller
 
     /**
      * install
-     * This function installs the MPD localplay controller
+     * This function installs the MPD Localplay controller
      */
     public function install()
     {
@@ -97,14 +97,14 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('mpd_active', 'MPD Active Instance', '0', '25', 'integer', 'internal', 'mpd');
+        Preference::insert('mpd_active', T_('MPD Active Instance'), '0', '25', 'integer', 'internal', 'mpd');
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This removes the localplay controller
+     * This removes the Localplay controller
      */
     public function uninstall()
     {
@@ -510,7 +510,7 @@ class AmpacheMpd extends localplay_controller
     /**
      * get_status
      * This returns bool/int values for features, loop, repeat and any other
-     * features that this localplay method supports.
+     * features that this Localplay method supports.
      */
     public function status()
     {

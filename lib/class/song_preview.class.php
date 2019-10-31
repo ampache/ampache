@@ -52,13 +52,9 @@ class Song_Preview extends database_object implements media, playable_item
      *
      * Song Preview class
      */
-    public function __construct($id = null)
+    public function __construct($object_id)
     {
-        if (!$id) {
-            return false;
-        }
-
-        $this->id = (int) ($id);
+        $this->id = (int) ($object_id);
 
         if ($info = $this->has_info()) {
             foreach ($info as $key => $value) {
@@ -80,9 +76,17 @@ class Song_Preview extends database_object implements media, playable_item
      * insert
      *
      * This inserts the song preview described by the passed array
+     * @return string|null
      */
     public static function insert($results)
     {
+        if ((int) $results['disk'] == 0) {
+            $results['disk'] = Album::sanitize_disk($results['disk']);
+        }
+        if ((int) $results['track'] == 0) {
+            $results['disk']  = Album::sanitize_disk($results['track'][0]);
+            $results['track'] = substr($results['track'], 1);
+        }
         $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) ' .
             ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
@@ -99,7 +103,7 @@ class Song_Preview extends database_object implements media, playable_item
         ));
 
         if (!$db_results) {
-            debug_event('song_preview.class', 'Unable to insert ' . $results[''], 2);
+            debug_event('song_preview.class', 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
 
             return false;
         }
@@ -113,6 +117,7 @@ class Song_Preview extends database_object implements media, playable_item
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
+     * @return boolean
      */
     public static function build_cache($song_ids)
     {
@@ -181,6 +186,7 @@ class Song_Preview extends database_object implements media, playable_item
     /**
      * get_artist_name
      * gets the name of $this->artist, allows passing of id
+     * @return string
      */
     public function get_artist_name($artist_id = 0)
     {
@@ -200,13 +206,14 @@ class Song_Preview extends database_object implements media, playable_item
      * This takes the current song object
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
+     * @return boolean
      */
     public function format($details = true)
     {
         // Format the artist name
         if ($this->artist) {
             $this->f_artist_full = $this->get_artist_name();
-            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
+            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist_full) . "</a>";
         } else {
             $wartist             = Wanted::get_missing_artist($this->artist_mbid);
             $this->f_artist_link = $wartist['link'];

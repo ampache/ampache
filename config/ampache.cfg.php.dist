@@ -134,7 +134,7 @@ auth_methods = "mysql"
 ; DEFAULT: false
 ;auth_password_save = "false"
 
-; Logout redirection target
+; Log out redirection target
 ; Defaults to our own login.php, but we can override it here if, for instance,
 ; we want to redirect to an SSO provider instead.
 ; logout_redirect = "http://sso.example.com/logout"
@@ -401,7 +401,7 @@ ratings = "true"
 ; DEFAULT: null
 ;rating_browse_minimum_stars = 1
 
-; Set the amount of items Album/Video of the moment will display
+; Set the amount of items Album/Video of the Moment will display
 ; This was previously hardcoded into the site
 ; DEFAULT: 6
 ;of_the_moment = 6
@@ -600,14 +600,14 @@ live_stream = "true"
 
 ; Refresh Limit
 ; This defines the default refresh limit in seconds for
-; pages with dynamic content, such as now playing
+; pages with dynamic content, such as Now Playing
 ; DEFAULT: 60
 ; Possible Values: Int > 5
 refresh_limit = "60"
 
 ; Embedded Now Playing Page
-; Set this to true to enable the embedded now playing page (now_playing.php).
-; This page allows for embedding a now playing badge into a stream
+; Set this to true to enable the embedded Now Playing page (now_playing.php).
+; This page allows for embedding a Now Playing badge into a stream
 ; or status page. Use with the parameter 'user_id' to filter by a
 ; specific user. This page is like rss in that it doesn't require a
 ; login to view.
@@ -616,7 +616,7 @@ refresh_limit = "60"
 
 ; Now Playing Refresh Limit
 ; This defines the refresh limit in seconds for the
-; now playing embedded page. This (now_playing.php) is not
+; Now Playing embedded page. This (now_playing.php) is not
 ; part of the normal application and is designed to be
 ; embedded in another app, like a stream or status page.
 ; If this value is not valid, automatic refresh will be disabled.
@@ -625,7 +625,7 @@ refresh_limit = "60"
 ;now_playing_refresh_limit = "-1"
 
 ; Now Playing Custom CSS
-; This defines the custom css file for the now playing embedded
+; This defines the custom css file for the Now Playing embedded
 ; page. This (now_playing.php) is not part of the normal
 ; application and is designed to be embedded in another app, like
 ; a stream or status page.
@@ -1073,7 +1073,7 @@ encode_ss_duration = "-t %DURATION%"
 ;#########################################################
 
 ; Enable or disable email server features
-; otherwise, you can reset your password 
+; otherwise, you can reset your password
 ; and never receive an email with the new one
 ; Default: false
 ;mail_enable = "false"
@@ -1134,11 +1134,11 @@ encode_ss_duration = "-t %DURATION%"
 ; DEFAULT: false
 ;mail_auth = "true"
 
-; SMTP Username
+; SMTP username
 ; your mail auth username.
 ;mail_auth_user = ""
 
-; SMTP Password
+; SMTP password
 ; your mail auth password.
 ;mail_auth_pass = ""
 

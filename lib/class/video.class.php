@@ -196,16 +196,16 @@ class Video extends database_object implements media, library_item
      * Constructor
      * This pulls the information from the database and returns
      * a constructed object
-     * @param integer|null $id
+     * @param integer|null $video_id
      */
-    public function __construct($id = null)
+    public function __construct($video_id = null)
     {
-        if ($id === null) {
+        if ($video_id === null) {
             return false;
         }
 
         // Load the data from the database
-        $info = $this->get_info($id, 'video');
+        $info = $this->get_info($video_id, 'video');
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -449,9 +449,9 @@ class Video extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
     {
-        return Song::generic_play_url('video', $oid, $additional_params, $player, $local);
+        return Song::generic_play_url('video', $oid, $additional_params, $player, $local, $uid);
     }
 
     /**
@@ -467,6 +467,7 @@ class Video extends database_object implements media, library_item
      * get_transcode_settings
      * @param string $target
      * @param array $options
+     * @param string $player
      * @return array
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
@@ -550,7 +551,7 @@ class Video extends database_object implements media, library_item
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return int
+     * @return integer
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
@@ -600,7 +601,7 @@ class Video extends database_object implements media, library_item
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return int
+     * @return integer
      */
     private static function insert_video_type(array $data, $gtypes, $options = array())
     {
@@ -628,7 +629,7 @@ class Video extends database_object implements media, library_item
      * update
      * This takes a key'd array of data as input and updates a video entry
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {
@@ -1091,12 +1092,12 @@ class Video extends database_object implements media, library_item
      * get_item_count
      * Return the number of entries in the database...
      * @param string $type
-     * @return int
+     * @return integer
      */
     public static function get_item_count($type)
     {
         $type       = self::validate_type($type);
-        $sql        = 'SELECT count(*) as count from `' . strtolower($type) . '`;';
+        $sql        = 'SELECT COUNT(*) as count from `' . strtolower($type) . '`;';
         $db_results = Dba::read($sql,array());
         if ($results = Dba::fetch_assoc($db_results)) {
             if ($results['count']) {

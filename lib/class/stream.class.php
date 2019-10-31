@@ -75,7 +75,7 @@ class Stream
     }
 
     /**
-     *
+     * get_allowed_bitrate
      * @return integer
      */
     public static function get_allowed_bitrate()
@@ -137,6 +137,7 @@ class Stream
      *
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
+     * @return array|false
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
@@ -160,7 +161,7 @@ class Stream
         }
 
         // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate) {
+        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
             debug_event('stream.class', 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
             $bit_rate = self::validate_bitrate($media->bitrate / 1000);
         }
@@ -216,7 +217,9 @@ class Stream
     }
 
     /**
+     * get_image_preview
      * @param Video $media
+     * @return string
      */
     public static function get_image_preview($media)
     {
@@ -252,6 +255,10 @@ class Stream
         return $image;
     }
 
+    /**
+     * start_process
+     * @return array
+     */
     private static function start_process($command, $settings = array())
     {
         debug_event('stream.class', "Transcode command: " . $command, 3);
@@ -308,6 +315,7 @@ class Stream
     /**
      * validate_bitrate
      * this function takes a bitrate and returns a valid one
+     * @return integer
      */
     public static function validate_bitrate($bitrate)
     {
@@ -320,12 +328,12 @@ class Stream
     /**
      * gc_now_playing
      *
-     * This will garbage collect the now playing data,
+     * This will garbage collect the Now Playing data,
      * this is done on every play start.
      */
     public static function gc_now_playing()
     {
-        // Remove any now playing entries for sessions that have been GC'd
+        // Remove any Now Playing entries for sessions that have been GC'd
         $sql = "DELETE FROM `now_playing` USING `now_playing` " .
             "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
             "WHERE `session`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
@@ -335,7 +343,7 @@ class Stream
     /**
      * insert_now_playing
      *
-     * This will insert the now playing data.
+     * This will insert the Now Playing data.
      */
     public static function insert_now_playing($oid, $uid, $length, $sid, $type)
     {
@@ -363,7 +371,8 @@ class Stream
     /**
      * get_now_playing
      *
-     * This returns the now playing information
+     * This returns the Now Playing information
+     * @return array
      */
     public static function get_now_playing()
     {
@@ -379,13 +388,14 @@ class Stream
                 'ON `np`.`user` = `np2`.`user` ' .
                 'AND `np`.`insertion` = `np2`.`max_insertion` ';
         }
+        $sql .= "WHERE `np`.`object_type` IN ('song', 'video')";
 
         if (!Access::check('interface', '100')) {
             // We need to check only for users which have allowed view of personnal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id) {
                 $current_user = Core::get_global('user')->id;
-                $sql .= "WHERE (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
+                $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
 
@@ -417,6 +427,7 @@ class Stream
      * This checks to see if the media is already being played.
      * @param integer $media_id
      * @param string $type
+     * @return boolean
      */
     public static function check_lock_media($media_id, $type)
     {
@@ -463,7 +474,7 @@ class Stream
         } // end switch on method
 
         // Load our javascript
-        echo "<script type=\"text/javascript\">";
+        echo "<script>";
         echo Core::get_reloadutil() . "('" . $_SESSION['iframe']['target'] . "');";
         echo "</script>";
     } // run_playlist_method
@@ -502,4 +513,4 @@ class Stream
 
         return $url;
     } // get_base_url
-} //end of stream class
+} // end of stream class

@@ -41,7 +41,7 @@ if (Core::get_request('action') == 'update') {
         set_time_limit(300);
         AutoUpdate::update_files();
         AutoUpdate::update_dependencies();
-        echo '<script language="javascript" type="text/javascript">window.location="' . AmpConfig::get('web_path') . '";</script>';
+        echo '<script>window.location="' . AmpConfig::get('web_path') . '";</script>';
 
         return false;
     } else {
@@ -52,17 +52,15 @@ if (Core::get_request('action') == 'update') {
         $version = Update::get_version();
     }
 }
-$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+$htmllang = str_replace("_", "-", AmpConfig::get('lang')); ?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
-    <!-- Propulsed by Ampache | ampache.org -->
+    <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo AmpConfig::get('site_title'); ?> - Update</title>
+    <title><?php echo AmpConfig::get('site_title') . ' - ' . T_('Update'); ?></title>
     <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
@@ -71,8 +69,8 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="<?php echo UI::get_logo_url('dark'); ?>" title="Ampache" alt="Ampache">
-                <?php echo T_('Ampache'); ?> - For the love of Music
+                <img src="<?php echo UI::get_logo_url('dark'); ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
+                <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?>
             </a>
         </div>
     </div>
@@ -81,15 +79,14 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
             <h1><?php echo T_('Ampache Update'); ?></h1>
         </div>
         <div class="well">
-             <p><?php printf(T_('This page handles all database updates to Ampache starting with <strong>3.3.3.5</strong>. Your current version is <strong>%s</strong> with database version <strong>%s</strong>.'), AmpConfig::get('version'), $version); ?></p>
+             <p><?php /* HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows current database version */ printf(T_('This page handles all database updates to Ampache starting with %1$s. Your current version is %2$s with database version %3$s'), '<strong>3.3.3.5</strong>', '<strong>' . AmpConfig::get('version') . '</strong>', '<strong>' . $version . '</strong>'); ?></p>
              <p><?php echo T_('The following updates need to be performed:'); ?></p>
         </div>
         <?php AmpError::display('general'); ?>
         <div class="content">
             <?php Update::display_update(); ?>
         </div>
-        <?php if (Update::need_update()) {
-    ?>
+        <?php if (Update::need_update()) { ?>
             <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/update.php?action=update">
                 <button type="submit" class="btn btn-warning" name="update"><?php echo T_('Update Now!'); ?></button>
             </form>

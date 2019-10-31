@@ -293,7 +293,7 @@ class OAuthRequest
      */
     public static function from_request($http_method = null, $http_url = null, $parameters = null)
     {
-        $scheme = (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on")
+        $scheme = (!filter_has_var(INPUT_SERVER, 'HTTPS') || Core::get_server('HTTPS') != "on")
               ? 'http'
               : 'https';
         $http_url = ($http_url) ? $http_url : $scheme .
@@ -492,7 +492,6 @@ class OAuthRequest
             $out = 'Authorization: OAuth';
         }
 
-        $total = array();
         foreach ($this->parameters as $k => $v) {
             if (substr($k, 0, 5) != "oauth") {
                 continue;
@@ -897,8 +896,8 @@ class OAuthUtil
             // otherwise we don't have apache and are just going to have to hope
             // that $_SERVER actually contains what we need
             $out = array();
-            if (isset($_SERVER['CONTENT_TYPE'])) {
-                $out['Content-Type'] = $_SERVER['CONTENT_TYPE'];
+            if (filter_has_var(INPUT_SERVER, 'CONTENT_TYPE')) {
+                $out['Content-Type'] = Core::get_server('CONTENT_TYPE');
             }
             if (isset($_ENV['CONTENT_TYPE'])) {
                 $out['Content-Type'] = $_ENV['CONTENT_TYPE'];

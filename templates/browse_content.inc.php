@@ -20,8 +20,7 @@
  *
  */
 
-// Because sometimes you just need a container
-?>
+// Because sometimes you just need a container?>
 <?php Ajax::start_container('browse_content_' . $type, 'browse_content'); ?>
 
 <?php Ajax::end_container(); ?>

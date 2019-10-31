@@ -46,9 +46,14 @@ class AutoUpdate
     {
         $version         = AmpConfig::get('version');
         $vspart          = explode('-', $version);
+        $git_branch      = self::is_force_git_branch();
 
-        if (self::is_force_git_branch() == 'develop' || self::is_force_git_branch() == 'core') {
+        if ($git_branch == 'develop') {
             return true;
+        }
+        // if you are using a non-develop branch
+        if ($git_branch !== '') {
+            return false;
         }
 
         return ($vspart[count($vspart) - 1] == 'develop');
@@ -70,11 +75,8 @@ class AutoUpdate
     protected static function is_force_git_branch()
     {
         $git_branch = (string) AmpConfig::get('github_force_branch');
-        if ($git_branch == 'master' || $git_branch == 'develop' || $git_branch == 'core') {
-            return $git_branch;
-        }
 
-        return '';
+        return $git_branch;
     }
 
     /**
@@ -106,8 +108,8 @@ class AutoUpdate
             }
 
             return json_decode($request->body);
-        } catch (Exception $e) {
-            debug_event('autoupdate.class', 'Request error: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('autoupdate.class', 'Request error: ' . $error->getMessage(), 1);
 
             return null;
         }
@@ -145,11 +147,11 @@ class AutoUpdate
             AmpConfig::set('autoupdate_lastcheck', $time, true);
 
             // Development version, get latest commit on develop branch
-            if (self::is_develop() || $git_branch == 'core') {
-                if ($git_branch == 'core') {
-                    $commits = self::github_request('/commits/core');
-                } else {
+            if (self::is_develop() || $git_branch !== '') {
+                if (self::is_develop() || $git_branch == 'develop') {
                     $commits = self::github_request('/commits/develop');
+                } else {
+                    $commits = self::github_request('/commits/' . $git_branch);
                 }
                 if (!empty($commits)) {
                     $lastversion = $commits->sha;
@@ -188,8 +190,9 @@ class AutoUpdate
      */
     public static function get_current_version()
     {
-        if (self::is_develop() || self::is_force_git_branch() == 'core') {
-            debug_event('autoupdate.class', 'get_current_version develop/core branch', 5);
+        $git_branch = self::is_force_git_branch();
+        if (self::is_develop() || $git_branch !== '') {
+            debug_event('autoupdate.class', 'get_current_version development branch', 5);
 
             return self::get_current_commit();
         } else {
@@ -206,8 +209,8 @@ class AutoUpdate
     public static function get_current_commit()
     {
         $git_branch = self::is_force_git_branch();
-        if ($git_branch === 'core' && is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/core')) {
-            return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/core'));
+        if ($git_branch !== '' && is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/' . $git_branch)) {
+            return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/' . $git_branch));
         }
         if (self::is_branch_develop_exists()) {
             return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/develop'));
@@ -229,12 +232,13 @@ class AutoUpdate
 
         debug_event('autoupdate.class', 'Checking latest version online...', 5);
 
-        $available = false;
-        $current   = self::get_current_version();
-        $latest    = self::get_latest_version();
+        $available  = false;
+        $git_branch = self::is_force_git_branch();
+        $current    = self::get_current_version();
+        $latest     = self::get_latest_version();
 
         if ($current != $latest && !empty($current)) {
-            if (self::is_develop()) {
+            if (self::is_develop() || $git_branch !== '') {
                 $ccommit = self::github_request('/commits/' . $current);
                 $lcommit = self::github_request('/commits/' . $latest);
 
@@ -262,19 +266,22 @@ class AutoUpdate
     public static function show_new_version()
     {
         echo '<div id="autoupdate">';
-        echo '<font color="#ff0000">' . T_('Update available') . '</font>';
+        echo '<span>' . T_('Update available') . '</span>';
         echo ' (' . self::get_latest_version() . ').<br />';
+        $git_branch    = self::is_force_git_branch();
+        $develop_check = self::is_develop() || $git_branch != '';
+        $changelog     = ($git_branch == '') ? 'master' : $git_branch;
+        $zip_name      = ($git_branch == '') ? 'develop' : $git_branch;
 
-        echo T_('See') . ' <a href="https://github.com/ampache/ampache/' . (self::is_develop() ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/master/docs/CHANGELOG.md') . '" target="_blank">' . T_('changes') . '</a> ';
-        if (self::is_develop()) {
-            echo T_('or') . ' <a href="https://github.com/ampache/ampache/archive/' .
-             (self::is_develop() ? 'develop.zip' : self::get_latest_version() . '.zip') . '" target="_blank"><b>' . T_('download') . '</b></a>.';
+        echo '<a href="https://github.com/ampache/ampache/' . ($develop_check ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/' . $changelog . '/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
+        if ($develop_check) {
+            echo ' | <a href="https://github.com/ampache/ampache/archive/' . $zip_name . '.zip' . '" target="_blank">' . T_('Download') . '</a>';
         } else {
-            echo T_('or') . ' <a href="https://github.com/ampache/ampache/releases/download/' . self::get_latest_version() .
-              '/ampache-' . self::get_latest_version() . '_all.zip"' . ' target="_blank"><b>' . T_('download') . '</b></a>.';
+            echo ' | <a href="https://github.com/ampache/ampache/releases/download/' . self::get_latest_version() .
+              '/ampache-' . self::get_latest_version() . '_all.zip"' . ' target="_blank">' . T_('Download') . '</a>';
         }
         if (self::is_git_repository()) {
-            echo ' | <a rel="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update">.:: Update ::.</a>';
+            echo ' | <a class="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
         }
         echo '</div>';
     }

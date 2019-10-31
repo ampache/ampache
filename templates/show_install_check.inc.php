@@ -19,8 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-require $prefix . '/templates/install_header.inc.php';
-?>
+require $prefix . '/templates/install_header.inc.php'; ?>
 <?php if (!defined('INSTALL')) {
     return false;
 } ?>
@@ -33,13 +32,13 @@ require $prefix . '/templates/install_header.inc.php';
             </p>
             <ul>
                 <li><?php echo T_('A MySQL server with a username and password that can create/modify databases'); ?></li>
-                <li><?php echo sprintf(T_('Your webserver has read access to the files %s and %s'), $prefix . '/sql/ampache.sql', $prefix . '/config/ampache.cfg.php.dist'); ?></li>
+                <li><?php /* HINT: %1 and %2 refer to Ampache configuration files */ echo sprintf(T_('Your webserver has read access to the files "%1$s" and "%2%s"'), $prefix . '/sql/ampache.sql', $prefix . '/config/ampache.cfg.php.dist'); ?></li>
             </ul>
             <p>
                 <?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), $prefix . '/config/ampache.cfg.php'); ?>
             </p>
         </div>
-<table class="table" cellspacing="0" cellpadding="0">
+<table class="table">
     <tr>
         <th><?php echo T_('Check'); ?></th>
         <th><?php echo T_('Status'); ?></th>
@@ -47,17 +46,17 @@ require $prefix . '/templates/install_header.inc.php';
     </tr>
     <?php require $prefix . '/templates/show_test_table.inc.php'; ?>
     <tr>
-        <td><?php echo sprintf(T_('%s is readable'), 'ampache.cfg.php.dist'); ?></td>
+        <td><?php echo T_('"ampache.cfg.php.dist" is readable'); ?></td>
         <td><?php echo debug_result(is_readable($prefix . '/config/ampache.cfg.php.dist')); ?></td>
         <td><?php echo T_('This tests whether the configuration template can be read.'); ?></td>
     </tr>
     <tr>
-        <td><?php echo sprintf(T_('%s is readable'), 'ampache.sql'); ?></td>
+        <td><?php echo T_('"ampache.sql" is readable'); ?></td>
         <td><?php echo debug_result(is_readable($prefix . '/sql/ampache.sql')); ?></td>
-        <td><?php echo T_('This tests whether the file needed to initialise the database structure is available.'); ?></td>
+        <td><?php echo T_('This tests whether the file needed to initialize the database structure is available.'); ?></td>
     </tr>
     <tr>
-        <td><?php echo T_('ampache.cfg.php is writable'); ?></td>
+        <td><?php echo T_('"ampache.cfg.php" is writable'); ?></td>
         <td><?php echo debug_result(check_config_writable()); ?></td>
         <td><?php echo T_('This tests whether PHP can write to config/. This is not strictly necessary, but will help streamline the installation process.'); ?></td>
     </tr>

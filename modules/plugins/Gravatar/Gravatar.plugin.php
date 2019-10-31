@@ -24,7 +24,7 @@ class AmpacheGravatar
 {
     public $name        = 'Gravatar';
     public $categories  = 'avatar';
-    public $description = 'Users avatars with Gravatar';
+    public $description = 'User\'s avatars with Gravatar';
     public $url         = 'http://gravatar.com';
     public $version     = '000001';
     public $min_ampache = '360040';
@@ -36,6 +36,8 @@ class AmpacheGravatar
      */
     public function __construct()
     {
+        $this->description = T_("User's avatars from Gravatar");
+
         return true;
     } // constructor
 
@@ -72,7 +74,7 @@ class AmpacheGravatar
     {
         $url = "";
         if (!empty($user->email)) {
-            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+            if (filter_has_var(INPUT_SERVER, 'HTTPS') && Core::get_server('HTTPS') !== 'off') {
                 $url = "https://secure.gravatar.com";
             } else {
                 $url = "http://www.gravatar.com";
@@ -90,9 +92,12 @@ class AmpacheGravatar
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
+        $user->set_preferences();
+
         return true;
     } // load
 } // end AmpacheGravatar

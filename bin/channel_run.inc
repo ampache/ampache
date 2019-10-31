@@ -43,21 +43,21 @@ if ($cargv > 1) {
 
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
             $chanid = (int) $_SERVER['argv'][++$x];
-            $operations_string .= "\n\t" . T_('- Channel ' . $chanid);
+            $operations_string .= '\n\t' . T_('Channel') . ' ' . $chanid;
         }
         elseif ($_SERVER['argv'][$x] == "-v") {
-            $operations_string .= "\n\t" . T_('- Verbose');
+            $operations_string .= '\n\t' . T_('Verbose');
             $verbose = true;
         }
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
             $port = (int) $_SERVER['argv'][++$x];
-            $operations_string .= "\n\t" . T_('- Port ' . $port);
+            $operations_string .= '\n\t' . T_('Port') . ' ' . $port;
         }
     }
 }
 
 if ($chanid <= 0) {
-    usage();
+    channel_usage();
     return false;
 }
 
@@ -65,7 +65,7 @@ if ($chanid <= 0) {
 $transcode_cfg = AmpConfig::get('transcode');
 
 if ($transcode_cfg == 'never') {
-    die('Cannot start channel, transcoding is mandatory to work.');
+    die('Cannot start channel, transcoding is mandatory to work');
 }
 
 echo T_("Starting Channel...") . $operations_string . "\n";
@@ -87,7 +87,7 @@ if ($port <= 0) {
             if (is_resource($connection)) {
                 fclose($connection);
             } else {
-                echo T_("Found available port ") . $p . "\n";
+                echo T_("Found available port") . " " .$p . "\n";
                 $port = $p;
                 break;
             }
@@ -104,7 +104,7 @@ if ($server === false)
     die("Could not bind to socket: " . $errorMessage);
 }
 $channel->update_start($start_date, $address, $port, getmypid());
-echo T_("Listening on ") . $address . ':' . $port . "\n";
+echo T_("Listening on") . " " .$address . ':' . $port . "\n";
 
 $stream_clients = array();
 $client_socks = array();
@@ -131,7 +131,7 @@ while(true)
                 $client_socks[] = $new_client;
                 $channel->update_listeners(count($client_socks), true);
                 debug_event('channel_run', 'Now there are total '. count($client_socks) . ' clients.', 4);
-                echo "New client connected.\n";
+                echo T_("Client connected") . "\n";
                 ob_flush();
             }
 
@@ -283,7 +283,7 @@ while(true)
         } else {
             $channel->update_listeners(0);
             debug_event('channel_run', 'No more data, stream ended.', 4);
-            die('No more data, stream ended.');
+            die('No more data, stream ended');
         }
     }
 }
@@ -297,19 +297,19 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     unset($client_socks[$key]);
     unset($stream_clients[$key]);
     if (fclose($sock) === false) {
-        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed.');
+        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed');
     }
     $channel->update_listeners(count($client_socks));
     debug_event('channel_run', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', 4);
-    echo "Client disconnected.\n";
+    echo T_("Client disconnected") . "\n";
     ob_flush();
 }
 
-function usage()
+function channel_usage()
 {
-    echo T_("- Channel Listening -");
+    echo T_("Usage:");
     echo "\n";
-    echo T_("Usage: channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]");
+    echo T_("channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]");
     echo "\n\t";
     echo "\n-c {CHANNEL ID}\t";
     echo T_('Channel id to start');
@@ -423,7 +423,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">" . "\n";
                     $xsl .= "<head>" . "\n";
                     $xsl .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" . "\n";
-                    $xsl .= "<title>Icecast Streaming Media Server - Ampache</title>" . "\n";
+                    $xsl .= "<title>" . T_("Icecast Streaming Media Server") . " - " . T_("Ampache") . "</title>" . "\n";
                     $xsl .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />" . "\n";
                     $xsl .= "</head>" . "\n";
                     $xsl .= "<body>" . "\n";
@@ -436,7 +436,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "</div>" . "\n";
                     $xsl .= "<div class=\"newscontent\">" . "\n";
                     $xsl .= "<div class=\"streamheader\">" . "\n";
-                    $xsl .= "<table cellspacing=\"0\" cellpadding=\"0\">" . "\n";
+                    $xsl .= "<table>" . "\n";
                     $xsl .= "<colgroup align=\"left\"></colgroup>" . "\n";
                     $xsl .= "<colgroup align=\"right\" width=\"300\"></colgroup>" . "\n";
                     $xsl .= "<tr>" . "\n";
@@ -447,7 +447,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "</table>" . "\n";
                     $xsl .= "</div>" . "\n";
-                    $xsl .= "<table border=\"0\" cellpadding=\"4\">" . "\n";
+                    $xsl .= "<table>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Stream Title:</td>" . "\n";
                     $xsl .= "<td class=\"streamdata\">" . $channel->name . "</td>" . "\n";

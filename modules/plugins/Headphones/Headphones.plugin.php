@@ -41,6 +41,8 @@ class AmpacheHeadphones
      */
     public function __construct()
     {
+        $this->description = T_('Automatically download accepted Wanted List albums with Headphones');
+
         return true;
     } // constructor
 
@@ -57,8 +59,8 @@ class AmpacheHeadphones
             return false;
         }
 
-        Preference::insert('headphones_api_url', 'Headphones url', '', '25', 'string', 'plugins', $this->name);
-        Preference::insert('headphones_api_key', 'Headphones api key', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('headphones_api_url', T_('Headphones URL'), '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('headphones_api_key', T_('Headphones API key'), '', '25', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -105,7 +107,7 @@ class AmpacheHeadphones
         )));
 
         // No artist info, need to add artist to Headphones first. Can be long!
-        if (count($headartist->artist) == 0) {
+        if (!$headartist->artist) {
             $this->headphones_call('addArtist', array(
                 'id' => $artist->mbid
             ));
@@ -135,8 +137,8 @@ class AmpacheHeadphones
             $request = Requests::get($url, array(), array(
                 'timeout' => 600
             ));
-        } catch (Exception $e) {
-            debug_event('headphones.plugin', 'Headphones api http exception: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('headphones.plugin', 'Headphones api http exception: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -148,11 +150,18 @@ class AmpacheHeadphones
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['headphones_api_url'])) || !strlen(trim($data['headphones_api_key']))) {
+            $data                       = array();
+            $data['headphones_api_url'] = Preference::get_by_user(-1, 'headphones_api_url');
+            $data['headphones_api_key'] = Preference::get_by_user(-1, 'headphones_api_key');
+        }
 
         if (strlen(trim($data['headphones_api_url']))) {
             $this->api_url = trim($data['headphones_api_url']);

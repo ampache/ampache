@@ -20,10 +20,9 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
@@ -58,10 +57,9 @@ $web_path = AmpConfig::get('web_path');
             <td class="cel_action"><?php echo $action; ?></td>
         </tr>
         <?php
-        } if (!count($plugins)) {
-            ?>
+        } if (!count($plugins)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="5"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
+            <td colspan="5"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
         <?php
         } ?>

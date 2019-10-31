@@ -5,7 +5,11 @@
 [www.ampache.org](http://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
 
-**Notice:**  Only pull requests (PR) for bug fixes will be considered.
+**Current News:**
+
+* Video features are considered a low priority feature.
+* A major string update is here which means new translations! Join us on [Transifex](https://www.transifex.com/ampache/ampache).
+* Subsonic API 1.13.0 and Ampache API 400001 are ready for testing!
 
 ## Basics
 

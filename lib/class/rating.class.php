@@ -188,19 +188,21 @@ class Rating extends database_object
     public static function get_highest_sql($type)
     {
         $type = Stats::validate_type($type);
-        $sql  = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating` FROM rating";
+        $sql  = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating`, COUNT(`object_id`) AS `count` FROM `rating`";
+
         if (AmpConfig::get('album_group') && $type === 'album') {
             $sql .= " LEFT JOIN `album` on `rating`.`object_id` = `album`.`id` and `rating`.`object_type` = 'album'";
         }
-        $sql .= " WHERE object_type = '" . $type . "'";
+        $sql .= " WHERE `object_type` = '" . $type . "'";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('album_group') && $type === 'album') {
-            "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid` ORDER BY `rating` DESC";
+            $sql .= " GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` ORDER BY `rating` DESC";
         } else {
-            $sql .= " GROUP BY object_id ORDER BY `rating` DESC ";
+            $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC ";
         }
+        //debug_event('rating.class', 'get_highest_sql ' . $sql, 5);
 
         return $sql;
     }
@@ -224,7 +226,7 @@ class Rating extends database_object
 
         /* Select Top objects counting by # of rows */
         $sql = self::get_highest_sql($type);
-        $sql .= "LIMIT $limit";
+        $sql .= " LIMIT $limit";
         $db_results = Dba::read($sql, array($type));
 
         $results = array();
@@ -251,7 +253,7 @@ class Rating extends database_object
 
         $results = array();
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $sql = "SELECT `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
+            $sql = "SELECT `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
                     " WHERE `id` = ?";
             $db_results = Dba::read($sql, array($this->id));
             $results    = Dba::fetch_assoc($db_results);
@@ -268,16 +270,16 @@ class Rating extends database_object
                     "`object_id` = ? AND " .
                     "`object_type` = ? AND " .
                     "`user` = ?";
-            $params = array($this->id, $this->type, (int) $user_id);
+            $params = array($this->id, $this->type, $user_id);
         } else {
             $sql = "REPLACE INTO `rating` " .
                     "(`object_id`, `object_type`, `rating`, `user`) " .
                     "VALUES (?, ?, ?, ?)";
-            $params = array($this->id, $this->type, $rating, (int) $user_id);
+            $params = array($this->id, $this->type, $rating, $user_id);
         }
         Dba::write($sql, $params);
 
-        parent::add_to_cache('rating_' . $this->type . '_user' . (int) $user_id, $this->id, $rating);
+        parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, $rating);
 
         foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
@@ -294,16 +296,30 @@ class Rating extends database_object
      * This function sets the rating for the current object.
      * This is currently only for grouped disk albums!
      * @param array $album
+     * @param string $rating
      * @return boolean
      */
     private static function set_rating_for_group($rating, $album, $user_id = null)
     {
         $sql = "SELECT `album`.`id` FROM `album`" .
-                " WHERE `album`.`name` = '" . str_replace("'", "\'", $album['name']) . "' AND" .
-                " `album`.`album_artist` = " . $album['album_artist'] . " AND" .
-                " `album`.`mbid` = '" . $album['mbid'] . "'";
-        $db_results = Dba::read($sql);
+                " WHERE `album`.`name` = '" . Dba::escape($album['name']) . "'";
+        if ($album['album_artist']) {
+            $sql .= " AND `album`.`album_artist` = " . $album['album_artist'];
+        } else {
+            $sql .= " AND `album`.`album_artist` IS NULL";
+        }
+        if ($album['mbid']) {
+            $sql .= " AND `album`.`mbid` = '" . $album['mbid'] . "'";
+        } else {
+            $sql .= " AND `album`.`mbid` IS NULL";
+        }
+        if ($album['prefix']) {
+            $sql .= " AND `album`.`prefix` = '" . $album['prefix'] . "'";
+        } else {
+            $sql .= " AND `album`.`prefix` IS NULL";
+        }
         $results    = array();
+        $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -366,7 +382,7 @@ class Rating extends database_object
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
-        $sql = "UPDATE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $sql = "UPDATE IGNORE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }

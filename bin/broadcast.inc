@@ -34,10 +34,10 @@ echo T_("Starting broadcasts...") . "\n";
 if (AmpConfig::get('upnp_backend')) {
     echo T_("UPnP broadcast... ");
     Upnp_Api::sddpSend();
-    echo T_("Done.") . "\n";
+    echo T_("Done") . "\n";
 } else {
     echo T_("UPnP backend disabled. Broadcast skipped.") . "\n";
 }
 
-ob_end_flush(); 
-echo "\n"; 
+ob_end_flush();
+echo "\n";

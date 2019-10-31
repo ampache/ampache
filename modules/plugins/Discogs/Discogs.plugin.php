@@ -39,6 +39,8 @@ class AmpacheDiscogs
      */
     public function __construct()
     {
+        $this->description = T_('Discogs metadata integration');
+
         return true;
     }
 
@@ -51,8 +53,8 @@ class AmpacheDiscogs
         if (Preference::exists('discogs_api_key')) {
             return false;
         }
-        Preference::insert('discogs_api_key', 'Discogs consumer key', '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('discogs_secret_api_key', 'Discogs secret', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -73,11 +75,18 @@ class AmpacheDiscogs
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['discogs_api_key'])) || !strlen(trim($data['discogs_secret_api_key']))) {
+            $data                           = array();
+            $data['discogs_api_key']        = Preference::get_by_user(-1, 'discogs_api_key');
+            $data['discogs_secret_api_key'] = Preference::get_by_user(-1, 'discogs_secret_api_key');
+        }
 
         if (strlen(trim($data['discogs_api_key']))) {
             $this->api_key = trim($data['discogs_api_key']);
@@ -115,9 +124,9 @@ class AmpacheDiscogs
         return $this->query_discogs($query);
     }
 
-    protected function get_artist($id)
+    protected function get_artist($object_id)
     {
-        $query = "artists/" . $id;
+        $query = "artists/" . $object_id;
 
         return $this->query_discogs($query);
     }
@@ -129,9 +138,9 @@ class AmpacheDiscogs
         return $this->query_discogs($query);
     }
 
-    protected function get_album($id)
+    protected function get_album($object_id)
     {
-        $query = "masters/" . $id;
+        $query = "masters/" . $object_id;
 
         return $this->query_discogs($query);
     }
@@ -172,8 +181,8 @@ class AmpacheDiscogs
                     }
                 }
             }
-        } catch (Exception $e) {
-            debug_event('discogs.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('discogs.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
         }
 
         return $results;

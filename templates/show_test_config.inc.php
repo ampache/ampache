@@ -18,13 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+ */ ?>
+<!DOCTYPE html>
 <html lang="en-US">
 
 <head>
-  <!-- Propulsed by Ampache | ampache.org -->
+  <!-- Propelled by Ampache | ampache.org -->
   <?php UI::show_custom_style(); ?>
   <title><?php echo T_('Ampache -- Config Debug Page') ?></title>
   <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -35,7 +34,7 @@
         <div class="navbar navbar-inverse" role="navigation">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="<?php echo "./themes/reborn/images/ampache-dark.png"; ?>" title="Ampache" alt="Ampache">
+                    <img src="./images/ampache-dark.png" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
                     <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music'); ?>
                 </a>
             </div>
@@ -43,7 +42,7 @@
   <div class="container" role="main">
     <div class="jumbotron">
       <h1><?php echo T_('Ampache Configuration Parse Error'); ?></h1>
-      <p><?php /* HINT: ampache config file path */ echo sprintf(T_('You may have reached this page because your %s configuration file was not parsable.'), '<strong>/config/ampache.cfg.php</strong>'); ?></p>
+      <p><?php /* HINT: ampache config file path */ echo sprintf(T_('You may have reached this page because your %s configuration file was not parsable'), '<strong>/config/ampache.cfg.php</strong>'); ?></p>
       <p><a href="https://github.com/ampache/ampache/wiki/FAQ#im-getting-ampache-configuration-parse-error" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
     </div>
   </div>

@@ -71,7 +71,7 @@ class Session
         $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
-        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 6);
+        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 5);
 
         return true;
     }
@@ -80,6 +80,7 @@ class Session
      * destroy
      *
      * This removes the specified session from the database.
+     * @param string $key
      */
     public static function destroy($key)
     {
@@ -87,7 +88,6 @@ class Session
             return false;
         }
 
-        // Remove anything and EVERYTHING
         $sql = 'DELETE FROM `session` WHERE `id` = ?';
         Dba::write($sql, array($key));
 
@@ -150,6 +150,7 @@ class Session
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
+            //debug_event('session.class', 'Read session from key ' . $key . ' ' . $results[$column], 3);
             return $results[$column];
         }
 
@@ -162,6 +163,7 @@ class Session
      * username
      *
      * This returns the username associated with a session ID, if any
+     * @return string
      */
     public static function username($key)
     {
@@ -169,7 +171,7 @@ class Session
     }
 
     /**
-     * username
+     * agent
      *
      * This returns the agent associated with a session ID, if any
      */
@@ -191,7 +193,7 @@ class Session
         switch ($data['type']) {
             case 'api':
                 $key = isset($data['apikey'])
-                    ? $data['apikey']
+                    ? md5(((string) $data['apikey'] . (string) time()))
                     : md5(uniqid(rand(), true));
                 break;
             case 'stream':
@@ -213,20 +215,18 @@ class Session
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip  = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ? inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP)) : '0';
+        $s_ip  = filter_has_var(INPUT_SERVER, 'REMOTE_ADDR') ? filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP) : '0';
         $type  = $data['type'];
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];
         }
-        $agent = (!empty($data['agent'])) ? $data['agent'] : substr($_SERVER['HTTP_USER_AGENT'], 0, 254);
+        $agent = (!empty($data['agent'])) ? $data['agent'] : substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
 
+        $expire = time() + AmpConfig::get('session_length');
         if ($type == 'stream') {
             $expire = time() + AmpConfig::get('stream_length');
-        } else {
-            $expire = time() + AmpConfig::get('session_length');
         }
-
         $latitude = null;
         if (isset($data['geo_latitude'])) {
             $latitude = $data['geo_latitude'];
@@ -271,7 +271,7 @@ class Session
         $session_name = AmpConfig::get('session_name');
 
         // No cookie no go!
-        if (!isset($_COOKIE[$session_name])) {
+        if (!filter_has_var(INPUT_COOKIE, $session_name)) {
             debug_event('session.class', 'Existing session NOT found', 5);
 
             return false;
@@ -280,12 +280,12 @@ class Session
 
         // Set up the cookie params before we start the session.
         // This is vital
-        session_write_close();
         session_set_cookie_params(
             AmpConfig::get('cookie_life'),
             AmpConfig::get('cookie_path'),
             AmpConfig::get('cookie_domain'),
             AmpConfig::get('cookie_secure'));
+        session_write_close();
 
         // Set name
         session_name($session_name);
@@ -307,13 +307,16 @@ class Session
      */
     public static function exists($type, $key)
     {
+        // didn't pass an auth key so don't let them in!
+        if (!$key) {
+            return false;
+        }
         // Switch on the type they pass
         switch ($type) {
             case 'api':
-                return true;
             case 'stream':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
-                    "AND `type` IN ('api', 'stream')";
+                    "AND `type` in ('stream', 'api')";
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
@@ -369,6 +372,7 @@ class Session
      * update_username
      *
      * This takes a SID and update associated username.
+     * @return PDOStatement|boolean
      */
     public static function update_username($sid, $username)
     {
@@ -389,8 +393,6 @@ class Session
         if ($sid) {
             $sql = "UPDATE `session` SET `geo_latitude` = ?, `geo_longitude` = ?, `geo_name` = ? WHERE `id` = ?";
             Dba::write($sql, array($latitude, $longitude, $name, $sid));
-        } else {
-            debug_event('session.class', 'Missing session id to update geolocation.', 3);
         }
     }
 
@@ -460,8 +462,12 @@ class Session
         $cookie_domain = null;
         $cookie_secure = AmpConfig::get('cookie_secure');
 
+        if (isset($_SESSION)) {
+            setcookie(session_name(), session_id(), $cookie_life);
+        } else {
+            session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+        }
         session_write_close();
-        session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         session_name(AmpConfig::get('session_name'));
 
         /* Start the session */
@@ -509,6 +515,7 @@ class Session
     }
 
     /**
+     * generateRandomToken
      * Generate a random token.
      * @return string
      */
@@ -518,7 +525,9 @@ class Session
     }
 
     /**
+     * storeTokenForUser
      * @param string $token
+     * @return PDOStatement|boolean
      */
     public static function storeTokenForUser($username, $token, $remember_length)
     {
@@ -534,9 +543,9 @@ class Session
     public static function auth_remember()
     {
         $auth  = false;
-        $name  = AmpConfig::get('session_name') . '_remember';
-        if ((filter_has_var(INPUT_COOKIE, $name))) {
-            list($username, $token, $mac) = explode(':', filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $cname = AmpConfig::get('session_name') . '_remember';
+        if (filter_has_var(INPUT_COOKIE, $cname)) {
+            list($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, array($username, $token, time()));

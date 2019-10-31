@@ -40,6 +40,8 @@ class AmpacheTheaudiodb
      */
     public function __construct()
     {
+        $this->description = T_('TheAudioDb metadata integration');
+
         return true;
     }
 
@@ -54,7 +56,7 @@ class AmpacheTheaudiodb
         }
 
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        Preference::insert('tadb_api_key', 'TheAudioDb api key', '41214789306c4690752dfb', '75', 'string', 'plugins', $this->name);
+        Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -74,11 +76,17 @@ class AmpacheTheaudiodb
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['tadb_api_key']))) {
+            $data                 = array();
+            $data['tadb_api_key'] = Preference::get_by_user(-1, 'tadb_api_key');
+        }
 
         if (strlen(trim($data['tadb_api_key']))) {
             $this->api_key = trim($data['tadb_api_key']);
@@ -155,8 +163,8 @@ class AmpacheTheaudiodb
                     $results['title']            = $track->strTrack;
                 }
             }
-        } catch (Exception $e) {
-            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
         }
 
         return $results;

@@ -44,8 +44,14 @@ switch ($_REQUEST['action']) {
 
         //Return the new Ajax::button
         $id           = 'button_flip_state_' . $song->id;
-        $button       = $song->enabled ? 'disable' : 'enable';
-        $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $button, T_(ucfirst($button)), 'flip_state_' . $song->id);
+        if ($catalog->enabled) {
+            $button     = 'disable';
+            $buttontext = T_('Disable');
+        } else {
+            $button     = 'enable';
+            $buttontext = T_('Enable');
+        }
+        $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $button, $buttontext, 'flip_state_' . $song->id);
     break;
     case 'shouts':
         ob_start();
@@ -55,7 +61,7 @@ switch ($_REQUEST['action']) {
         if ($type == "song") {
             $media  = new Song($songid);
             $shouts = Shoutbox::get_shouts($type, $songid);
-            echo "<script type='text/javascript'>\r\n";
+            echo "<script>\r\n";
             echo "shouts = {};\r\n";
             foreach ($shouts as $shoutsid) {
                 $shout = new Shoutbox($shoutsid);

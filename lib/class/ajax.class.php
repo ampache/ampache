@@ -62,8 +62,8 @@ class Ajax
             $source_txt = "'#$source'";
         }
 
-        $observe   = "<script type=\"text/javascript\">";
-        $methodact = (($method == 'click') ? "update_action();" : "");
+        $observe   = "<script>";
+        $methodact = ($method == 'click') ? "update_action();" : "";
         if (AmpConfig::get('ajax_load') && $method == 'load') {
             $source_txt = "$( document ).ready(";
         } else {
@@ -198,7 +198,7 @@ class Ajax
      */
     public static function run($action)
     {
-        echo "<script type=\"text/javascript\"><!--\n";
+        echo "<script><!--\n";
         echo "$action";
         echo "\n--></script>";
     } // run

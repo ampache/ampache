@@ -36,7 +36,7 @@ switch ($_REQUEST['action']) {
         $object_id = Core::get_request('id');
 
         $next_url = AmpConfig::get('web_path') . '/broadcast.php?action=delete&id=' . scrub_out($object_id);
-        show_confirmation(T_('Confirm Action'), T_('Delete Broadcast'), $next_url, 1, 'delete_broadcast');
+        show_confirmation(T_('Are You Sure?'), T_('This Broadcast will be deleted'), $next_url, 1, 'delete_broadcast');
         UI::show_footer();
 
         return false;
@@ -48,14 +48,16 @@ switch ($_REQUEST['action']) {
         }
 
         $object_id = Core::get_request('id');
-        $broadcast = new Broadcast($object_id);
+        $broadcast = new Broadcast((int) $object_id);
         if ($broadcast->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=broadcast';
-            show_confirmation(T_('Deleted'), T_('Broadcast has been deleted'), $next_url);
+            show_confirmation(T_('No Problem'), T_('Broadcast has been deleted'), $next_url);
         }
         UI::show_footer();
 
         return false;
 } // switch on the action
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

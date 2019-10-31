@@ -7,16 +7,15 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST");
 
-$domain = $_SERVER['HTTP_HOST'];
+$domain = Core::get_server('HTTP_HOST');
 if (empty($domain)) {
     $domain = $_SERVER['SERVER_NAME'];
 }
 $scheme = "http";
-if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+if (filter_has_var(INPUT_SERVER, 'HTTPS') && Core::get_server('HTTPS') == 'on') {
     $scheme = "https";
 }
 $fromurl = rawurlencode($scheme . "://" . $domain . $_SERVER[REQUEST_URI]);
 
 header("Location: http://ampache.org/maintenance/?from=" . $fromurl);
-exit;
-?>
+exit; ?>

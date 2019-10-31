@@ -28,6 +28,7 @@ class UI
     private static $_classes;
     private static $_ticker;
     private static $_icon_cache;
+    private static $_image_cache;
 
     public function __construct()
     {
@@ -40,6 +41,7 @@ class UI
      * Return the path to the template file wanted. The file can be overwriten
      * by the theme if it's not a php file, or if it is and if option
      * allow_php_themes is set to true.
+     * @return string
      */
     public static function find_template($template)
     {
@@ -57,6 +59,7 @@ class UI
      * access_denied
      *
      * Throw an error when they try to do something naughty.
+     * @return false
      */
     public static function access_denied($error = 'Access Denied')
     {
@@ -73,6 +76,7 @@ class UI
      *
      * Does some trickery with the output buffer to return the output of a
      * template.
+     * @return string
      */
     public static function ajax_include($template)
     {
@@ -88,6 +92,7 @@ class UI
      * check_iconv
      *
      * Checks to see whether iconv is available;
+     * @return boolean
      */
     public static function check_iconv()
     {
@@ -103,6 +108,7 @@ class UI
      *
      * Stupid little cutesie thing to ratelimit output of long-running
      * operations.
+     * @return boolean
      */
     public static function check_ticker()
     {
@@ -121,6 +127,7 @@ class UI
      * Removes characters that aren't valid in XML (which is a subset of valid
      * UTF-8, but close enough for our purposes.)
      * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
+     * @return string
      */
     public static function clean_utf8($string)
     {
@@ -143,7 +150,7 @@ class UI
               $clean = preg_replace($regex, '$1', $string); */
 
             if ($clean) {
-                return $clean;
+                return rtrim($clean);
             }
 
             debug_event('ui.class', 'Charset cleanup failed, something might break', 1);
@@ -171,6 +178,7 @@ class UI
      * format_bytes
      *
      * Turns a size in bytes into the best human-readable value
+     * @return string
      */
     public static function format_bytes($value, $precision = 2)
     {
@@ -201,7 +209,7 @@ class UI
                 break;
         }
 
-        return round($value, $precision) . ' ' . $unit;
+        return ((string) round($value, $precision)) . ' ' . $unit;
     }
 
     /**
@@ -243,45 +251,64 @@ class UI
     /**
      * get_icon
      *
-     * Returns an <img> tag for the specified icon
+     * Returns an <img> or <svg> tag for the specified icon
      * @param string $name
+     * @param string $title
+     * @param string $id_attrib
+     * @param string $class_attrib
+     * @return string
      */
-    public static function get_icon($name, $title = null, $object_id = null)
+    public static function get_icon($name, $title = null, $id_attrib = null, $class_attrib = null)
     {
-        $bUseSprite = file_exists(AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/icons.sprite.png');
-
         if (is_array($name)) {
             $hover_name = $name[1];
             $name       = $name[0];
         }
 
-        $title = $title ?: T_(ucfirst($name));
-
+        $title    = $title ?: T_(ucfirst($name));
         $icon_url = self::_find_icon($name);
+        $icontype = pathinfo($icon_url, 4);
         if (isset($hover_name)) {
             $hover_url = self::_find_icon($hover_name);
         }
-        if ($bUseSprite) {
-            $tag = '<span class="sprite sprite-icon_' . $name . '" ';
+        if ($icontype == 'svg') {
+            // load svg file
+            $svgicon = simplexml_load_file($icon_url);
+
+            if (empty($svgicon->title)) {
+                $svgicon->addChild('title', $title);
+            } else {
+                $svgicon->title = $title;
+            }
+            if (empty($svgicon->desc)) {
+                $svgicon->addChild('desc', $title);
+            } else {
+                $svgicon->desc = $title;
+            }
+
+            if (!empty($id_attrib)) {
+                $svgicon->addAttribute('id', $id_attrib);
+            }
+
+            $class_attrib = ($class_attrib) ?: 'icon icon-' . $name ;
+            $svgicon->addAttribute('class', $class_attrib);
+
+            $tag = explode("\n", $svgicon->asXML(), 2)[1];
         } else {
+            // fall back to png
             $tag = '<img src="' . $icon_url . '" ';
-        }
-
-        if ($object_id) {
-            $tag .= 'id="' . $object_id . '" ';
-        }
-
-        $tag .= 'alt="' . $title . '" ';
-        $tag .= 'title="' . $title . '" ';
-
-        if (isset($hover_name) && isset($hover_url)) {
-            $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
-            $tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
-        }
-
-        if ($bUseSprite) {
-            $tag .= '></span>';
-        } else {
+            $tag .= 'alt="' . $title . '" ';
+            $tag .= 'title="' . $title . '" ';
+            if ($id_attrib) {
+                $tag .= 'id="' . $id_attrib . '" ';
+            }
+            if ($class_attrib) {
+                $tag .= 'class="' . $class_attrib . '" ';
+            }
+            if (isset($hover_name) && isset($hover_url)) {
+                $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
+                $tag .= 'onmouseout="this.src=\'' . $icon_url . '\'; return true;" ';
+            }
             $tag .= '/>';
         }
 
@@ -291,21 +318,125 @@ class UI
     /**
      * _find_icon
      *
-     * Does the finding icon thing
+     * Does the finding icon thing. match svg first over png
+     * @return string
      */
     private static function _find_icon($name)
     {
-        if (isset(self::$_icon_cache[$name]) && $url = self::$_icon_cache[$name]) {
-            return $url;
+        if (isset(self::$_icon_cache[$name])) {
+            return self::$_icon_cache[$name];
         }
 
-        $filename = 'icon_' . $name . '.png';
-        $path     = AmpConfig::get('theme_path') . '/images/icons/';
-        if (!file_exists(AmpConfig::get('prefix') . $path . $filename)) {
-            $path = '/images/';
+        $path       = AmpConfig::get('theme_path') . '/images/icons/';
+        $filesearch = glob(AmpConfig::get('prefix') . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+        if (empty($filesearch)) {
+            // if the theme is missing an icon. fall back to default images folder
+            $filename = 'icon_' . $name . '.png';
+            $path     = '/images/';
+        } else {
+            $filename = pathinfo($filesearch[0], 2);
         }
-        $url                      = AmpConfig::get('web_path') . $path . $filename;
+        $url = AmpConfig::get('web_path') . $path . $filename;
+        // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
+
+        return $url;
+    }
+
+    /**
+     * get_image
+     *
+     * Returns an <img> or <svg> tag for the specified image
+     * @param string $name
+     * @param string $title
+     * @param string $id_attrib
+     * @param string $class_attrib
+     * @return string
+     */
+    public static function get_image($name, $title = null, $id_attrib = null, $class_attrib = null)
+    {
+        if (is_array($name)) {
+            $hover_name = $name[1];
+            $name       = $name[0];
+        }
+
+        $title = $title ?: ucfirst($name);
+
+        $image_url = self::_find_image($name);
+        $imagetype = pathinfo($image_url, 4);
+        if (isset($hover_name)) {
+            $hover_url = self::_find_image($hover_name);
+        }
+        if ($imagetype == 'svg') {
+            // load svg file
+            $svgimage = simplexml_load_file($image_url);
+
+            $svgimage->addAttribute('class', 'image');
+
+            if (empty($svgimage->title)) {
+                $svgimage->addChild('title', $title);
+            } else {
+                $svgimage->title = $title;
+            }
+            if (empty($svgimage->desc)) {
+                $svgimage->addChild('desc', $title);
+            } else {
+                $svgimage->desc = $title;
+            }
+
+            if (!empty($id_attrib)) {
+                $svgimage->addAttribute('id', $id_attrib);
+            }
+
+            $class_attrib = ($class_attrib) ?: 'image image-' . $name ;
+            $svgimage->addAttribute('class', $class_attrib);
+
+            $tag = explode("\n", $svgimage->asXML(), 2)[1];
+        } else {
+            // fall back to png
+            $tag = '<img src="' . $image_url . '" ';
+            $tag .= 'alt="' . $title . '" ';
+            $tag .= 'title="' . $title . '" ';
+            if ($id_attrib) {
+                $tag .= 'id="' . $id_attrib . '" ';
+            }
+            if ($class_attrib) {
+                $tag .= 'class="' . $class_attrib . '" ';
+            }
+            if (isset($hover_name) && isset($hover_url)) {
+                $tag .= 'onmouseover="this.src=\'' . $hover_url . '\'; return true;"';
+                $tag .= 'onmouseout="this.src=\'' . $image_url . '\'; return true;" ';
+            }
+            $tag .= '/>';
+        }
+
+        return $tag;
+    }
+
+    /**
+     * _find_image
+     *
+     * Does the finding image thing. match svg first over png
+     * @return string
+     */
+    private static function _find_image($name)
+    {
+        if (isset(self::$_image_cache[$name])) {
+            return self::$_image_cache[$name];
+        }
+
+        $path       = AmpConfig::get('theme_path') . '/images/';
+        $filesearch = glob(AmpConfig::get('prefix') . $path . $name . '.{svg,png}', GLOB_BRACE);
+        if (empty($filesearch)) {
+            // if the theme is missing an image. fall back to default images folder
+            $filename = $name . '.png';
+            $path     = '/images/';
+        } else {
+            $filename = pathinfo($filesearch[0], 2);
+        }
+        $url      = AmpConfig::get('web_path') . $path . $filename;
+        // cache the url so you don't need to keep searching
+        self::$_image_cache[$name] = $url;
 
         return $url;
     }
@@ -375,6 +506,16 @@ class UI
         require AmpConfig::get('prefix') . self::find_template('show_box_bottom.inc.php');
     }
 
+    /**
+     * show_query_stats
+     *
+     * This shows the bottom of the box
+     */
+    public static function show_query_stats()
+    {
+        require AmpConfig::get('prefix') . self::find_template('show_query_stats.inc.php');
+    }
+
     public static function show_custom_style()
     {
         if (AmpConfig::get('custom_login_logo')) {
@@ -423,6 +564,7 @@ class UI
      *
      * Get the custom logo or logo relating to your theme color
      * @param string $color
+     * @return string
      */
     public static function get_logo_url($color = null)
     {
@@ -440,7 +582,7 @@ class UI
     {
         $isgv   = true;
         $name   = 'browse_' . $type . '_grid_view';
-        if (isset($_COOKIE[$name])) {
+        if (filter_has_var(INPUT_COOKIE, $name)) {
             $isgv = ($_COOKIE[$name] == 'true');
         }
 

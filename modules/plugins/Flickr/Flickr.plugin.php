@@ -38,6 +38,8 @@ class Ampacheflickr
      */
     public function __construct()
     {
+        $this->description = T_('Artist photos from Flickr');
+
         return true;
     } // constructor
 
@@ -51,7 +53,7 @@ class Ampacheflickr
         if (Preference::exists('flickr_api_key')) {
             return false;
         }
-        Preference::insert('flickr_api_key', 'Flickr api key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('flickr_api_key', T_('Flickr API key'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -129,11 +131,17 @@ class Ampacheflickr
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['flickr_api_key']))) {
+            $data                   = array();
+            $data['flickr_api_key'] = Preference::get_by_user(-1, 'flickr_api_key');
+        }
 
         if (strlen(trim($data['flickr_api_key']))) {
             $this->api_key = trim($data['flickr_api_key']);

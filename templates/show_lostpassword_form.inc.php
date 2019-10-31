@@ -34,18 +34,17 @@ $web_path       = AmpConfig::get('web_path');
 
 $_SESSION['login'] = true;
 $mobile_session    = false;
-$user_agent        = $_SERVER['HTTP_USER_AGENT'];
+$user_agent        = Core::get_server('HTTP_USER_AGENT');
 
 if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'))) {
     $mobile_session = true;
-}
-?>
+} ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
 
 <head>
-    <!-- Propulsed by Ampache | ampache.org -->
+    <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
@@ -63,7 +62,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
             <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path ?>/lostpassword.php">
                 <div class="loginfield" id="emailfield">
-                    <label for="email"><?php echo  T_('Email'); ?>:</label>
+                    <label for="email"><?php echo  T_('E-mail'); ?>:</label>
                     <input type="hidden" id="action" name="action" value="send" />
                     <input type="text" id="email" name="email" autofocus />
                 </div>
@@ -78,5 +77,4 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
 } ?>
         </div>
         <?php
-        UI::show_footer();
-        ?>
+        UI::show_footer(); ?>

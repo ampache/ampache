@@ -27,25 +27,22 @@ require_once 'lib/init.php';
 if (!AmpConfig::get('use_now_playing_embedded') || AmpConfig::get('demo_mode')) {
     UI::access_denied();
     exit;
-}
-
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+} ?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
 <head>
-    <!-- Propulsed by Ampache | ampache.org -->
+    <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-    <title><?php echo AmpConfig::get('site_title'); ?> - Now Playing</title>
+    <title><?php echo AmpConfig::get('site_title') . ' - ' . T_("Now Playing"); ?></title>
 <?php
-if (AmpConfig::get('now_playing_css_file')) {
-    ?>
+if (AmpConfig::get('now_playing_css_file')) { ?>
     <link rel="stylesheet" href="<?php echo $web_path;
     echo AmpConfig::get('now_playing_css_file'); ?>" type="text/css" media="screen" />
 <?php
 }
 if (AmpConfig::get('now_playing_refresh_limit') > 1) {
     $refresh_limit = AmpConfig::get('now_playing_refresh_limit'); ?>
-    <script type="text/javascript" language="javascript">
+    <script>
         reload = window.setInterval(function(){ window.location.reload(); }, <?php echo $refresh_limit ?> * 1000);
     </script>
 <?php
@@ -79,7 +76,6 @@ if (Core::get_request('user_id') !== '') {
     });
 }
 
-require AmpConfig::get('prefix') . UI::find_template('show_now_playing.inc.php');
-?>
+require AmpConfig::get('prefix') . UI::find_template('show_now_playing.inc.php'); ?>
 </body>
 </html>

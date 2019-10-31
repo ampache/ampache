@@ -40,7 +40,7 @@ header("Content-Disposition: attachment; filename=information.xml");
 if (!AmpConfig::get('access_control')) {
     ob_end_clean();
     debug_event('xml.server', 'Error Attempted to use XML API with Access Control turned off', 3);
-    echo XML_Data::error('501', T_('Access Control not Enabled'));
+    echo XML_Data::error('501', T_('Access Control not enabled'));
 
     return false;
 }
@@ -49,7 +49,7 @@ if (!AmpConfig::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Session::exists('api', $_REQUEST['auth']) && Core::get_request('action') != 'handshake' and Core::get_request('action') != 'ping') {
+if (!Session::exists('api', $_REQUEST['auth']) && Core::get_request('action') != 'handshake' && Core::get_request('action') != 'ping') {
     debug_event('Access Denied', 'Invalid Session attempt to API [' . Core::get_request('action') . ']', 3);
     ob_end_clean();
     echo XML_Data::error('401', T_('Session Expired'));
@@ -68,7 +68,7 @@ if ((Core::get_request('action') == 'handshake') && isset($_REQUEST['timestamp']
 }
 
 if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
-    debug_event('Access Denied', 'Unauthorized access attempt to API [' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', 3);
+    debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
 

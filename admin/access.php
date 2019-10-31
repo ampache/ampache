@@ -40,18 +40,19 @@ switch ($_REQUEST['action']) {
         }
         Access::delete(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $url = AmpConfig::get('web_path') . '/admin/access.php';
-        show_confirmation(T_('Deleted'), T_('Your Access List Entry has been removed'), $url);
+        show_confirmation(T_('No Problem'), T_('Your Access List entry has been removed'), $url);
     break;
     case 'show_delete_record':
         if (AmpConfig::get('demo_mode')) {
             break;
         }
-        $access = new Access(Core::get_get('access_id'));
-        show_confirmation(T_('Confirm Action'), T_('Are you sure you want to permanently delete') . ' ' . $access->name,
+        $access = new Access((int) Core::get_get('access_id'));
+        show_confirmation(T_('Are You Sure?'),
+                /* HINT: ACL Name */
+                sprintf(T_('This will permanently delete the ACL "%s"'), $access->name),
                 'admin/access.php?action=delete_record&amp;access_id=' . $access->id, 1, 'delete_access');
     break;
     case 'add_host':
-
         // Make sure we've got a valid form submission
         if (!Core::form_verify('add_acl', 'post')) {
             UI::access_denied();
@@ -75,7 +76,7 @@ switch ($_REQUEST['action']) {
 
         if (!AmpError::occurred()) {
             $url = AmpConfig::get('web_path') . '/admin/access.php';
-            show_confirmation(T_('Added'), T_('Your new Access Control List(s) have been created'), $url);
+            show_confirmation(T_('No Problem'), T_('Your new Access Control List(s) have been created'), $url);
         } else {
             $action = 'show_add_' . Core::get_post('type');
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
@@ -90,7 +91,7 @@ switch ($_REQUEST['action']) {
         $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->update($_POST);
         if (!AmpError::occurred()) {
-            show_confirmation(T_('Updated'), T_('Access List Entry updated'), AmpConfig::get('web_path') . '/admin/access.php');
+            show_confirmation(T_('No Problem'), T_('Your Access Control List has been updated'), AmpConfig::get('web_path') . '/admin/access.php');
         } else {
             $access->format();
             require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');
@@ -114,4 +115,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_access_list.inc.php');
     break;
 } // end switch on action
+
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

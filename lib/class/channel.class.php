@@ -56,15 +56,12 @@ class Channel extends database_object implements media, library_item
 
     /**
      * Constructor
+     * @param integer $channel_id
      */
-    public function __construct($id = 0)
+    public function __construct($channel_id)
     {
-        if (!$id) {
-            return true;
-        }
-
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($channel_id);
 
         // Foreach what we've got
         foreach ($info as $key => $value) {
@@ -135,6 +132,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * delete
+     * @return boolean|PDOStatement
      */
     public function delete()
     {
@@ -239,7 +237,7 @@ class Channel extends database_object implements media, library_item
             if (Core::get_global('user')->has_access('75')) {
                 echo Ajax::button('?page=index&action=start_channel&id=' . $this->id, 'run', T_('Start Channel'), 'channel_start_' . $this->id);
                 echo " " . Ajax::button('?page=index&action=stop_channel&id=' . $this->id, 'stop', T_('Stop Channel'), 'channel_stop_' . $this->id);
-                echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel edit') . "', 'channel_row_', 'refresh_channel')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
+                echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel Edit') . "', 'channel_row_', 'refresh_channel')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/channel.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
@@ -277,7 +275,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_parent
-     * @return boolean
+     * @return boolean|null
      */
     public function get_parent()
     {
@@ -325,7 +323,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_user_owner
-     * @return boolean
+     * @return boolean|null
      */
     public function get_user_owner()
     {
@@ -665,7 +663,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_stream_types
-     * @return array
+     * @return string[]
      */
     public function get_stream_types($player = null)
     {

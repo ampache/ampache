@@ -61,8 +61,8 @@ switch ($_REQUEST['action']) {
         if (!$results) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_podcast.inc.php');
         } else {
-            $title  = T_('Subscribed to Podcast');
-            $body   = '';
+            $title  = T_('No Problem');
+            $body   = T_('Subscribed to the Podcast');
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=podcast');
         }
     break;
@@ -73,10 +73,8 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        $podcast_id = scrub_in($_REQUEST['podcast_id']);
-        show_confirmation(
-            T_('Podcast Deletion'),
-            T_('Are you sure you want to delete this podcast?'),
+        $podcast_id = (string) scrub_in($_REQUEST['podcast_id']);
+        show_confirmation(T_('Are You Sure?'), T_("The Podcast will be removed from the database"),
             AmpConfig::get('web_path') . "/podcast.php?action=confirm_delete&podcast_id=" . $podcast_id,
             1,
             'delete_podcast'
@@ -91,9 +89,9 @@ switch ($_REQUEST['action']) {
 
         $podcast = new Podcast($_REQUEST['podcast_id']);
         if ($podcast->remove()) {
-            show_confirmation(T_('Podcast Deletion'), T_('Podcast has been deleted.'), AmpConfig::get('web_path') . '/browse.php?action=podcast');
+            show_confirmation(T_('No Problem'), T_('Podcast has been deleted'), AmpConfig::get('web_path') . '/browse.php?action=podcast');
         } else {
-            show_confirmation(T_('Podcast Deletion'), T_('Cannot delete this podcast.'), AmpConfig::get('web_path') . '/browse.php?action=podcast');
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Podcast."), AmpConfig::get('web_path') . '/browse.php?action=podcast');
         }
     break;
     case 'show':
@@ -108,4 +106,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end data collection
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

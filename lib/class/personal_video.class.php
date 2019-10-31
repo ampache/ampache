@@ -33,11 +33,11 @@ class Personal_Video extends Video
      * This pulls the personal video information from the database and returns
      * a constructed object
      */
-    public function __construct($id)
+    public function __construct($object_id)
     {
-        parent::__construct($id);
+        parent::__construct($object_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($object_id);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

@@ -206,7 +206,8 @@ class Art extends database_object
             return false;
         }
 
-        $test = false;
+        $test  = false;
+        $image = false;
         // Check to make sure PHP:GD exists.  If so, we can sanity check the image.
         if (function_exists('ImageCreateFromString') && is_string($source)) {
             $test  = true;
@@ -218,7 +219,7 @@ class Art extends database_object
         }
         if ($test) {
             if (imagedestroy($image) === false) {
-                throw new \RuntimeException('The image handle ' . $image . ' could not be destroyed.');
+                throw new \RuntimeException('The image handle ' . $image . ' could not be destroyed');
             }
         }
 
@@ -370,6 +371,15 @@ class Art extends database_object
             return false;
         }
 
+        $dimensions = Core::image_dimensions($source);
+        $width      = (int) ($dimensions['width']);
+        $height     = (int) ($dimensions['height']);
+        $sizetext   = 'original';
+
+        if (!self::check_dimensions($dimensions)) {
+            return false;
+        }
+
         // Default to image/jpeg if they don't pass anything
         $mime = $mime ? $mime : 'image/jpeg';
         // Blow it away!
@@ -401,15 +411,6 @@ class Art extends database_object
                     }
                 }
             }
-        }
-
-        $dimensions = Core::image_dimensions($source);
-        $width      = (int) ($dimensions['width']);
-        $height     = (int) ($dimensions['height']);
-        $sizetext   = 'original';
-
-        if (!self::check_dimensions($dimensions)) {
-            return false;
         }
 
         if (AmpConfig::get('album_art_store_disk')) {
@@ -487,13 +488,13 @@ class Art extends database_object
      * @param string $uid
      * @param string $kind
      * @param boolean $autocreate
-     * @return boolean|string
+     * @return false|string
      */
     public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
-            debug_event('art.class', 'local_metadata_dir setting is required to store arts on disk.', 1);
+            debug_event('art.class', 'local_metadata_dir setting is required to store art on disk.', 1);
 
             return false;
         }
@@ -845,8 +846,8 @@ class Art extends database_object
                 $options['timeout'] = 3;
                 $request            = Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw                = $request->body;
-            } catch (Exception $e) {
-                debug_event('art.class', 'Error getting art: ' . $e->getMessage(), 2);
+            } catch (Exception $error) {
+                debug_event('art.class', 'Error getting art: ' . $error->getMessage(), 2);
                 $raw = '';
             }
 
@@ -1168,8 +1169,8 @@ class Art extends database_object
         );
         try {
             $release = $mb->lookup('release', $data['mbid'], $includes);
-        } catch (Exception $e) {
-            debug_event('art.class', "gather_musicbrainz exception: " . $e, 3);
+        } catch (Exception $error) {
+            debug_event('art.class', "gather_musicbrainz exception: " . $error, 3);
 
             return $images;
         }
@@ -1349,7 +1350,7 @@ class Art extends database_object
             $handle = opendir($dir);
 
             if (!$handle) {
-                AmpError::add('general', T_('Error: Unable to open') . ' ' . $dir);
+                AmpError::add('general', T_('Unable to open') . ' ' . $dir);
                 debug_event('art.class', "gather_folder: Error: Unable to open $dir for album art read", 2);
                 continue;
             }
@@ -1374,7 +1375,7 @@ class Art extends database_object
                     continue;
                 }
 
-                // Regularise for mime type
+                // Regularize for mime type
                 if ($extension == 'jpg') {
                     $extension = 'jpeg';
                 }
@@ -1406,7 +1407,7 @@ class Art extends database_object
         } // end foreach dirs
 
         if (is_array($preferred)) {
-            // We found our favourite filename somewhere, so we need
+            // We found our favorite filename somewhere, so we need
             // to dump the other, less sexy ones.
             $results = $preferred;
         }
@@ -1588,8 +1589,8 @@ class Art extends database_object
                     }
                 }
             }
-        } catch (Exception $e) {
-            debug_event('art.class', 'Error getting google images: ' . $e->getMessage(), 2);
+        } catch (Exception $error) {
+            debug_event('art.class', 'Error getting google images: ' . $error->getMessage(), 2);
         }
 
         return $images;
@@ -1648,8 +1649,8 @@ class Art extends database_object
                     return $images;
                 }
             } // end foreach
-        } catch (Exception $e) {
-            debug_event('art.class', 'LastFM error: ' . $e->getMessage(), 3);
+        } catch (Exception $error) {
+            debug_event('art.class', 'LastFM error: ' . $error->getMessage(), 3);
         }
 
         return $images;

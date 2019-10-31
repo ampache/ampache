@@ -46,15 +46,10 @@ class TVShow extends database_object implements library_item
      * TV Show
      * Takes the ID of the tv show and pulls the info from the db
      */
-    public function __construct($id = '')
+    public function __construct($show_id)
     {
-        /* If they failed to pass in an id, just run for it */
-        if (!$id) {
-            return false;
-        }
-
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($show_id);
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -289,27 +284,22 @@ class TVShow extends database_object implements library_item
             return self::$_mapcache[$name]['null'];
         }
 
-        $id     = 0;
-        $exists = false;
+        $id         = 0;
+        $exists     = false;
+        $trimmed    = Catalog::trim_prefix(trim($name));
+        $name       = $trimmed['string'];
+        $prefix     = $trimmed['prefix'];
+        $sql        = 'SELECT `id` FROM `tvshow` WHERE `name` LIKE ? AND `year` = ?';
+        $db_results = Dba::read($sql, array($name, $year));
+        $id_array   = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $key            = 'null';
+            $id_array[$key] = $row['id'];
+        }
 
-        $trimmed = Catalog::trim_prefix(trim($name));
-        $name    = $trimmed['string'];
-        $prefix  = $trimmed['prefix'];
-
-        if (!$exists) {
-            $sql        = 'SELECT `id` FROM `tvshow` WHERE `name` LIKE ? AND `year` = ?';
-            $db_results = Dba::read($sql, array($name, $year));
-
-            $id_array = array();
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $key            = 'null';
-                $id_array[$key] = $row['id'];
-            }
-
-            if (count($id_array)) {
-                $id     = array_shift($id_array);
-                $exists = true;
-            }
+        if (count($id_array)) {
+            $id     = array_shift($id_array);
+            $exists = true;
         }
 
         if ($exists) {
@@ -359,6 +349,10 @@ class TVShow extends database_object implements library_item
                 $current_id = $tvshow_id;
                 Stats::migrate('tvshow', $this->id, $tvshow_id);
                 UserActivity::migrate('tvshow', $this->id, $tvshow_id);
+                Recommendation::migrate('tvshow', $this->id, $tvshow_id);
+                Share::migrate('tvshow', $this->id, $tvshow_id);
+                Shoutbox::migrate('tvshow', $this->id, $tvshow_id);
+                Tag::migrate('tvshow', $this->id, $tvshow_id);
                 Userflag::migrate('tvshow', $this->id, $tvshow_id);
                 Rating::migrate('tvshow', $this->id, $tvshow_id);
                 Art::migrate('tvshow', $this->id, $tvshow_id);

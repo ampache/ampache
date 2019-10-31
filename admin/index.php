@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface', 100)) {
+if (!Access::check('interface', 75)) {
     UI::access_denied();
 
     return false;
@@ -44,4 +44,6 @@ switch ($_REQUEST['action']) {
     break;
 }
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

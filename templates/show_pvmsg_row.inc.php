@@ -19,8 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
 <td class="cel_select"><input type="checkbox" name="pvmsg_select[]" value="<?php echo $libitem->id; ?>" title="<?php echo T_('Select'); ?>" /></td>
 <td class="cel_subject"><?php echo $libitem->f_link; ?></td>
 <td class="cel_from_user"><?php echo $libitem->f_from_user_link; ?></td>

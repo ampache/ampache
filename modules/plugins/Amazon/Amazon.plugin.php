@@ -42,6 +42,8 @@ class AmpacheAmazon
      */
     public function __construct()
     {
+        $this->description = T_('Amazon art search');
+
         return true;
     }
 
@@ -55,11 +57,11 @@ class AmpacheAmazon
             return false;
         }
 
-        Preference::insert('amazon_base_url', 'Amazon base url', 'http://webservices.amazon.com', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_max_results_pages', 'Amazon max results pages', '1', '75', 'integer', 'plugins', $this->name);
-        Preference::insert('amazon_developer_public_key', 'Amazon Access Key ID', '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_private_api_key', 'Amazon Secret Access Key', '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_associate_tag', 'Amazon associate tag', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), '1', '75', 'integer', 'plugins', $this->name);
+        Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -83,11 +85,25 @@ class AmpacheAmazon
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['amazon_base_url'])) ||
+                !strlen(trim($data['amazon_developer_public_key'])) ||
+                !strlen(trim($data['amazon_developer_private_api_key'])) ||
+                !strlen(trim($data['amazon_max_results_pages'])) ||
+                !strlen(trim($data['amazon_developer_associate_tag']))) {
+            $data                                     = array();
+            $data['amazon_base_url']                  = Preference::get_by_user(-1, 'amazon_base_url');
+            $data['amazon_developer_public_key']      = Preference::get_by_user(-1, 'amazon_developer_public_key');
+            $data['amazon_developer_private_api_key'] = Preference::get_by_user(-1, 'amazon_developer_private_api_key');
+            $data['amazon_max_results_pages']         = Preference::get_by_user(-1, 'amazon_max_results_pages');
+            $data['amazon_developer_associate_tag']   = Preference::get_by_user(-1, 'amazon_developer_associate_tag');
+        }
 
         if (strlen(trim($data['amazon_base_url']))) {
             $this->amazon_base_url = trim($data['amazon_base_url']);

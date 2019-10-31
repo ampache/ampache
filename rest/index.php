@@ -24,7 +24,7 @@ define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 if (!AmpConfig::get('subsonic_backend')) {
-    echo "Disabled.";
+    echo T_("Disabled");
 
     return false;
 }
@@ -45,17 +45,17 @@ if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $acti
 if (!AmpConfig::get('access_control')) {
     debug_event('rest/index', 'Error Attempted to use Subsonic API with Access Control turned off', 3);
     ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')), $callback);
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled'), ''), $callback);
 
     return false;
 }
 
 // Authenticate the user with preemptive HTTP Basic authentication first
-$user = $_SERVER['PHP_AUTH_USER'];
+$user = Core::get_server('PHP_AUTH_USER');
 if (empty($user)) {
     $user = $_REQUEST['u'];
 }
-$password = $_SERVER['PHP_AUTH_PW'];
+$password = Core::get_server('PHP_AUTH_PW');
 if (empty($password)) {
     $password = $_REQUEST['p'];
     $token    = $_REQUEST['t'];
@@ -64,31 +64,14 @@ if (empty($password)) {
 $version   = $_REQUEST['v'];
 $clientapp = $_REQUEST['c'];
 
-if (empty($_SERVER['HTTP_USER_AGENT'])) {
+if (!filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT')) {
     $_SERVER['HTTP_USER_AGENT'] = $clientapp;
 }
 
 if (empty($user) || (empty($password) && (empty($token) || empty($salt))) || empty($version) || empty($action) || empty($clientapp)) {
     ob_end_clean();
     debug_event('rest/index', 'Missing Subsonic base parameters', 3);
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM), $callback);
-
-    return false;
-}
-
-if (isset($token) && isset($salt)) {
-    //We can't support token authentication.
-    //No external authentication modules will support this since we can't extract password from salted hash
-    //Can't support with mysql because password is stored as a hash (not salted and using different encryption)
-    //so no comparisons are possible
-
-    //tell client we don't support token authentication
-    //hopefully they will fall back to earlier authentication method
-    //( pre api 1.13 using the p parameter with the password)
-
-    debug_event('rest/index', 'Token authentication not supported in Subsonic API for user [' . $user . ']', 3);
-    ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_TOKENAUTHNOTSUPPORTED), $callback);
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM, 'Missing Subsonic base parameters', $version), $callback);
 
     return false;
 }
@@ -96,19 +79,19 @@ if (isset($token) && isset($salt)) {
 $password = Subsonic_Api::decrypt_password($password);
 
 // Check user authentication
-$auth = Auth::login($user, $password, true);
+$auth = Auth::login($user, $password, true, $token, $salt);
 if (!$auth['success']) {
     debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', 3);
     ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_BADAUTH), $callback);
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_BADAUTH, 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', $version), $callback);
 
     return false;
 }
 
 if (!Access::check_network('init-api', $user, 5)) {
-    debug_event('rest/index', 'Unauthorized access attempt to Subsonic API [' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . ']', 3);
+    debug_event('rest/index', 'Unauthorized access attempt to Subsonic API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
     ob_end_clean();
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error'), $callback);
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error', $version), $callback);
 
     return false;
 }
@@ -118,7 +101,7 @@ $GLOBALS['user'] =  User::get_from_username($user);
 if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
     ob_end_clean();
     debug_event('rest/index', 'Requested client version is not supported', 3);
-    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_SERVER), $callback);
+    Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_SERVER, 'Requested client version is not supported', $version), $callback);
 
     return false;
 }
@@ -131,7 +114,7 @@ $methods = get_class_methods('subsonic_api');
 $internal_functions = array('check_version', 'check_parameter', 'decrypt_password', 'follow_stream', '_updatePlaylist', '_setStar', 'setHeader', 'apiOutput', 'apiOutput2', 'xml2json');
 
 // We do not use $_GET because of multiple parameters with the same name
-$query_string = $_SERVER['QUERY_STRING'];
+$query_string = Core::get_server('QUERY_STRING');
 // Trick to avoid $HTTP_RAW_POST_DATA
 $postdata = file_get_contents("php://input");
 if (!empty($postdata)) {
@@ -189,4 +172,4 @@ foreach ($methods as $method) {
 
 // If we manage to get here, we still need to hand out an XML document
 ob_end_clean();
-echo Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND)->asXml();
+echo Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, 'subsonic_api', $version)->asXml();

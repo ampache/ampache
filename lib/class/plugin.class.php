@@ -256,6 +256,7 @@ class Plugin
     /**
      * load
      * This calls the plugin's load function
+     * @param User $user
      */
     public function load($user)
     {

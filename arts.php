@@ -32,7 +32,7 @@ if (!Core::is_library_item($object_type)) {
     return false;
 }
 $burl = '';
-if (isset($_GET['burl'])) {
+if (filter_has_var(INPUT_GET, 'burl')) {
     $burl = base64_decode(Core::get_get('burl'));
 }
 $item = new $object_type($object_id);
@@ -49,13 +49,13 @@ switch ($_REQUEST['action']) {
     case 'clear_art':
         $art = new Art($object_id, $object_type);
         $art->reset();
-        show_confirmation(T_('Art Cleared'), T_('Art information has been removed from the database'), $burl);
+        show_confirmation(T_('No Problem'), T_('Art information has been removed from the database'), $burl);
     break;
     // Upload art
     case 'upload_art':
         // we didn't find anything
         if (empty($_FILES['file']['tmp_name'])) {
-            show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'), $burl);
+            show_confirmation(T_('There Was a Problem'), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'), $burl);
             break;
         }
 
@@ -64,14 +64,14 @@ switch ($_REQUEST['action']) {
         $image_data = Art::get_from_source($data, $object_type);
 
         // If we got something back insert it
-        if ($image_data !== null) {
+        if ($image_data !== '') {
             $art = new Art($object_id, $object_type);
             $art->insert($image_data, $_FILES['file']['type']);
-            show_confirmation(T_('Art Inserted'), '', $burl);
+            show_confirmation(T_('No Problem'), T_('Art has been added'), $burl);
         }
         // Else it failed
         else {
-            show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'), $burl);
+            show_confirmation(T_("There Was a Problem"), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'), $burl);
         }
 
     break;
@@ -91,9 +91,9 @@ switch ($_REQUEST['action']) {
             $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, $object_type);
 
-            if ($image_data !== null) {
+            if ($image_data['object_id']) {
                 $art->insert($image_data, $upload['0']['mime']);
-                show_confirmation(T_('Art Inserted'), '', $burl);
+                show_confirmation(T_('No Problem'), T_('Art has been added'), $burl);
                 break;
             } // if image data
         } // if it's an upload
@@ -138,7 +138,7 @@ switch ($_REQUEST['action']) {
         }
         // Else nothing
         else {
-            show_confirmation(T_('Art Not Located'), T_('Art could not be located at this time. This may be due to write access error, or the file is not received correctly.'), $burl);
+            show_confirmation(T_("There Was a Problem"), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'), $burl);
         }
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
@@ -172,4 +172,6 @@ switch ($_REQUEST['action']) {
     break;
 }
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

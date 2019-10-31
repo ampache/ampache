@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface', '100')) {
+if (!Access::check('interface', '75')) {
     UI::access_denied();
 
     return false;
@@ -38,12 +38,12 @@ switch ($_REQUEST['action']) {
             if ($license->id) {
                 $license->update($_POST);
             }
-            $text = T_('License Updated');
+            $text = T_('The License has been updated');
         } else {
             License::create($_POST);
-            $text = T_('License Created');
+            $text = T_('A new License has been created');
         }
-        show_confirmation($text, '', AmpConfig::get('web_path') . '/admin/license.php');
+        show_confirmation(T_('No Problem'), $text, AmpConfig::get('web_path') . '/admin/license.php');
     break;
     case 'show_edit':
         $license = new License($_REQUEST['license_id']);
@@ -53,7 +53,7 @@ switch ($_REQUEST['action']) {
         break;
     case 'delete':
         License::delete($_REQUEST['license_id']);
-        show_confirmation(T_('License Deleted'), '', AmpConfig::get('web_path') . '/admin/license.php');
+        show_confirmation(T_('No Problem'), T_('The License has been deleted'), AmpConfig::get('web_path') . '/admin/license.php');
     break;
     default:
         $browse = new Browse();
@@ -65,4 +65,6 @@ switch ($_REQUEST['action']) {
     break;
 }
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

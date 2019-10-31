@@ -24,7 +24,7 @@ class AmpacheStreamHits
 {
     public $name        = 'Stream Hits';
     public $categories  = 'stream_control';
-    public $description = 'Stream Control Hits per user';
+    public $description = 'Control hits per user';
     public $url         = '';
     public $version     = '000001';
     public $min_ampache = '370024';
@@ -40,6 +40,8 @@ class AmpacheStreamHits
      */
     public function __construct()
     {
+        $this->description = T_('Control hits per user');
+
         return true;
     } // constructor
 
@@ -53,8 +55,8 @@ class AmpacheStreamHits
         if (Preference::exists('stream_control_hits_max')) {
             return false;
         }
-        Preference::insert('stream_control_hits_max', 'Stream control maximal hits', '-1', '50', 'integer', 'plugins', $this->name);
-        Preference::insert('stream_control_hits_days', 'Stream control hits history (days)', '30', '50', 'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_hits_max', T_('Stream control maximal hits'), '-1', '50', 'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_hits_days', T_('Stream control hits history (days)'), '30', '50', 'integer', 'plugins', $this->name);
 
         return true;
     } // install
@@ -110,6 +112,7 @@ class AmpacheStreamHits
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {

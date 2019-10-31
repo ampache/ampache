@@ -24,7 +24,7 @@ class AmpacheStreamTime
 {
     public $name        = 'Stream Time';
     public $categories  = 'stream_control';
-    public $description = 'Stream Control Time per user';
+    public $description = 'Control time per user';
     public $url         = '';
     public $version     = '000001';
     public $min_ampache = '370024';
@@ -40,6 +40,8 @@ class AmpacheStreamTime
      */
     public function __construct()
     {
+        $this->description = T_('Control time per user');
+
         return true;
     } // constructor
 
@@ -53,8 +55,8 @@ class AmpacheStreamTime
         if (Preference::exists('stream_control_time_max')) {
             return false;
         }
-        Preference::insert('stream_control_time_max', 'Stream control maximal time (Minutes)', '-1', '50', 'integer', 'plugins', $this->name);
-        Preference::insert('stream_control_time_days', 'Stream control time history (days)', '30', '50', 'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_time_max', T_('Stream control maximal time (minutes)'), '-1', '50', 'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), '30', '50', 'integer', 'plugins', $this->name);
 
         return true;
     } // install
@@ -116,6 +118,7 @@ class AmpacheStreamTime
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {

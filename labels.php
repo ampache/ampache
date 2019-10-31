@@ -31,10 +31,8 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $label_id = scrub_in($_REQUEST['label_id']);
-        show_confirmation(
-            T_('Label Deletion'),
-            T_('Are you sure you want to permanently delete this label?'),
+        $label_id = (string) scrub_in($_REQUEST['label_id']);
+        show_confirmation(T_('Are You Sure?'), T_('This Label will be deleted'),
             AmpConfig::get('web_path') . "/labels.php?action=confirm_delete&label_id=" . $label_id,
             1,
             'delete_label'
@@ -54,9 +52,9 @@ switch ($_REQUEST['action']) {
         }
 
         if ($label->remove()) {
-            show_confirmation(T_('Label Deletion'), T_('Label has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('The Label has been deleted'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Label Deletion'), T_('Cannot delete this label.'), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Unable to delete this Label."), AmpConfig::get('web_path'));
         }
     break;
     case 'add_label':
@@ -74,10 +72,10 @@ switch ($_REQUEST['action']) {
         }
 
         // Remove unauthorized defined values from here
-        if (isset($_POST['user'])) {
+        if (filter_has_var(INPUT_POST, 'user')) {
             unset($_POST['user']);
         }
-        if (isset($_POST['creation_date'])) {
+        if (filter_has_var(INPUT_POST, 'creation_date')) {
             unset($_POST['creation_date']);
         }
 
@@ -85,9 +83,7 @@ switch ($_REQUEST['action']) {
         if (!$label_id) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
-            $body  = T_('Label Added');
-            $title = '';
-            show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=label');
+            show_confirmation(T_('No Problem'), T_('The Label has been added'), AmpConfig::get('web_path') . '/browse.php?action=label');
         }
     break;
     case 'show':
@@ -112,9 +108,11 @@ switch ($_REQUEST['action']) {
         if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
-            echo T_('Label cannot be found.');
+            echo T_('The Label cannot be found');
         }
     break;
 } // end switch
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

@@ -24,7 +24,7 @@ class AmpacheTvdb
 {
     public $name           = 'Tvdb';
     public $categories     = 'metadata';
-    public $description    = 'Tvdb metadata integration';
+    public $description    = 'TVDb metadata integration';
     public $url            = 'http://thetvdb.com';
     public $version        = '000003';
     public $min_ampache    = '370009';
@@ -40,6 +40,8 @@ class AmpacheTvdb
      */
     public function __construct()
     {
+        $this->description = T_('TVDb metadata integration');
+
         return true;
     }
 
@@ -53,7 +55,7 @@ class AmpacheTvdb
             return false;
         }
 
-        Preference::insert('tvdb_api_key', 'Tvdb api key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('tvdb_api_key', T_('TVDb API key'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -73,16 +75,22 @@ class AmpacheTvdb
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['tvdb_api_key']))) {
+            $data                 = array();
+            $data['tvdb_api_key'] = Preference::get_by_user(-1, 'tvdb_api_key');
+        }
 
         if (strlen(trim($data['tvdb_api_key']))) {
             $this->api_key = trim($data['tvdb_api_key']);
         } else {
-            debug_event('tvdb.plugin', 'No Tvdb api key, metadata plugin skipped', 3);
+            debug_event('tvdb.plugin', 'No TVDb API key, metadata plugin skipped', 3);
 
             return false;
         }
@@ -96,7 +104,7 @@ class AmpacheTvdb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('tvdb.plugin', 'Getting metadata from Tvdb...', 5);
+        debug_event('tvdb.plugin', 'Getting metadata from TVDb...', 5);
 
         // TVShow metadata only
         if (!in_array('tvshow', $gather_types)) {
@@ -170,8 +178,8 @@ class AmpacheTvdb
                     }
                 }
             }
-        } catch (Exception $e) {
-            debug_event('tvdb.plugin', 'Error getting metadata: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('tvdb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
         }
 
         return $results;

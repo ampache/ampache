@@ -19,16 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
 <?php if (!defined('INSTALL')) {
-    return false;
-} ?>
+     return false;
+ } ?>
 <?php $results = 0; ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
 <head>
-    <!-- Propulsed by Ampache | ampache.org -->
+    <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="cache-control" content="max-age=0" />
@@ -38,19 +37,19 @@
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Ampache :: For the love of Music - Install</title>
+    <title><?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?></title>
     <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
-    <script src="lib/components/jquery/jquery.min.js" language="javascript" type="text/javascript"></script>
-    <script src="lib/components/bootstrap/js/bootstrap.min.js" language="javascript" type="text/javascript"></script>
+    <script src="lib/components/jquery/jquery.min.js"></script>
+    <script src="lib/components/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body id="install-page">
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="<?php echo "./themes/reborn/images/ampache-dark.png"; ?>" title="Ampache" alt="Ampache">
-                <?php echo T_('Ampache Installation'); ?> - For the love of Music
+                <img src="./images/ampache-dark.png" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
+                <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?>
             </a>
         </div>
     </div>

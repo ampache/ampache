@@ -312,8 +312,8 @@ class LDAP
             'mime' => AmpConfig::get('ldap_avatar_mime', 'image/jpeg'),
         ];
             }
-        } catch (LDAPException $e) {
-            $message = $e->getMessage();
+        } catch (LDAPException $error) {
+            $message = $error->getMessage();
 
             debug_event('ldap.class', 'Error during authentication: ' . $message, 3);
 

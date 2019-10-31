@@ -41,6 +41,8 @@ class AmpacheRSSView
      */
     public function __construct()
     {
+        $this->description = T_('RSS View');
+
         return true;
     }
 
@@ -56,8 +58,8 @@ class AmpacheRSSView
             return false;
         }
 
-        Preference::insert('rssview_feed_url', 'RSS Feed url', '', '25', 'string', 'plugins', $this->name);
-        Preference::insert('rssview_max_items', 'RSS Feed max items', '5', '25', 'integer', 'plugins', $this->name);
+        Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('rssview_max_items', T_('RSS Feed max items'), '5', '25', 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -124,6 +126,7 @@ class AmpacheRSSView
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {

@@ -47,21 +47,21 @@ switch ($_REQUEST['action']) {
             $broadcast_id = Broadcast::create(T_('My Broadcast'));
         }
 
-        $broadcast = new Broadcast($broadcast_id);
+        $broadcast = new Broadcast((int) $broadcast_id);
         if ($broadcast->id) {
             $key  = Broadcast::generate_key();
             $broadcast->update_state(true, $key);
-            $results['broadcast'] = Broadcast::get_unbroadcast_link($broadcast_id) . '' .
-                '<script type="text/javascript">startBroadcast(\'' . $key . '\');</script>';
+            $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '' .
+                '<script>startBroadcast(\'' . $key . '\');</script>';
         }
     break;
     case 'unbroadcast':
         $broadcast_id = Core::get_get('broadcast_id');
-        $broadcast    = new Broadcast($broadcast_id);
+        $broadcast    = new Broadcast((int) $broadcast_id);
         if ($broadcast->id) {
             $broadcast->update_state(false);
             $results['broadcast'] = Broadcast::get_broadcast_link() . '' .
-                '<script type="text/javascript">stopBroadcast();</script>';
+                '<script>stopBroadcast();</script>';
         }
     break;
     default:

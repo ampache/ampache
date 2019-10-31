@@ -50,13 +50,11 @@ class Democratic extends Tmp_Playlist
      * constructor
      * We need a constructor for this class. It does it's own thing now
      */
-    public function __construct($id = '')
+    public function __construct($democratic_id)
     {
-        if (!$id) {
-            return false;
-        }
+        parent::__construct($democratic_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($democratic_id);
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -150,26 +148,9 @@ class Democratic extends Tmp_Playlist
      */
     public function format()
     {
-        $this->f_cooldown    = $this->cooldown . ' ' . T_('minutes');
-        $this->f_primary     = $this->primary ? T_('Primary') : '';
-
-        switch ($this->level) {
-            case '5':
-                $this->f_level = T_('Guest');
-            break;
-            case '25':
-                $this->f_level = T_('User');
-            break;
-            case '50':
-                $this->f_level = T_('Content Manager');
-            break;
-            case '75':
-                $this->f_level = T_('Catalog Manager');
-            break;
-            case '100':
-                $this->f_level = T_('Admin');
-            break;
-        }
+        $this->f_cooldown = $this->cooldown . ' ' . T_('minutes');
+        $this->f_primary  = $this->primary ? T_('Primary') : '';
+        $this->f_level    = User::access_level_to_name($this->level);
     } // format
 
     /**
@@ -193,7 +174,7 @@ class Democratic extends Tmp_Playlist
 
     /**
      * get_current_playlist
-     * This returns the curren users current playlist, or if specified
+     * This returns the current users current playlist, or if specified
      * this current playlist of the user
      */
     public static function get_current_playlist()
@@ -223,7 +204,7 @@ class Democratic extends Tmp_Playlist
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
      * @param integer $limit
-     * @return array
+     * @return integer[]
      */
     public function get_items($limit = null)
     {
@@ -529,6 +510,7 @@ class Democratic extends Tmp_Playlist
     /**
      * create
      * This is the democratic play create function it inserts this into the democratic table
+     * @return PDOStatement|boolean
      */
     public static function create($data)
     {
@@ -616,6 +598,7 @@ class Democratic extends Tmp_Playlist
     /**
      * get_vote
      * This returns the current count for a specific song
+     * @param integer $id
      */
     public function get_vote($id)
     {

@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
     case 'install_localplay':
         $localplay = new Localplay(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!$localplay->player_loaded()) {
-            AmpError::add('general', T_('Failed to enable the module, Controller Error'));
+            AmpError::add('general', T_('Failed to enable the Localplay module'));
             AmpError::display('general');
             break;
         }
@@ -52,15 +52,15 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
-        $title  = T_('localplay enabled');
-        $body   = '';
+        $title  = T_('No Problem');
+        $body   = T_('Localplay has been enabled');
         show_confirmation($title, $body, $url);
     break;
     case 'install_catalog_type':
         $type    = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            AmpError::add('general', T_('Failed to enable the module, Catalog Error'));
+            AmpError::add('general', T_('Failed to enable the Catalog module'));
             AmpError::display('general');
             break;
         }
@@ -69,22 +69,22 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_catalog_types';
-        $title  = T_('Module enabled');
-        $body   = '';
+        $title  = T_('No Problem');
+        $body   = T_('The Module has been enabled');
         show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_localplay':
         $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_localplay&amp;type=' . $type;
-        $title = T_('Are you sure you want to disable this module?');
-        $body  = '';
+        $title = T_('Are You Sure?');
+        $body  = T_('This will disable the Localplay module');
         show_confirmation($title, $body, $url, 1);
     break;
     case 'confirm_uninstall_catalog_type':
         $type  = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_catalog_type&amp;type=' . $type;
-        $title = T_('Are you sure you want to disable this module?');
-        $body  = '';
+        $title = T_('Are You Sure?');
+        $body  = T_('This will disable the Catalog module');
         show_confirmation($title, $body, $url, 1);
     break;
     case 'uninstall_localplay':
@@ -95,8 +95,8 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_localplay';
-        $title  = T_('Module disabled');
-        $body   = '';
+        $title  = T_('No Problem');
+        $body   = T_('The Module has been disabled');
         show_confirmation($title, $body, $url);
     break;
     case 'uninstall_catalog_type':
@@ -104,7 +104,7 @@ switch ($_REQUEST['action']) {
 
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
-            AmpError::add('general', T_('Failed to disable module, Catalog Error'));
+            AmpError::add('general', T_("Unable to disable the Catalog module."));
             AmpError::display('general');
             break;
         }
@@ -112,8 +112,8 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_catalog_types';
-        $title  = T_('Module disabled');
-        $body   = '';
+        $title  = T_('No Problem');
+        $body   = T_('The Module has been disabled');
         show_confirmation($title, $body, $url);
     break;
     case 'install_plugin':
@@ -127,8 +127,8 @@ switch ($_REQUEST['action']) {
         if (!$plugin->install()) {
             debug_event('modules', 'Error: Plugin Install Failed, ' . Core::get_request('plugin'), 1);
             $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-            $title  = T_('Unable to Install Plugin');
-            $body   = '';
+            $title  = T_('There Was a Problem');
+            $body   = T_('Unable to install this Plugin');
             show_confirmation($title, $body, $url);
             break;
         }
@@ -137,16 +137,16 @@ switch ($_REQUEST['action']) {
         User::rebuild_all_preferences();
 
         /* Show Confirmation */
-        $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title    = T_('Plugin enabled');
-        $body     = '';
+        $url   = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
+        $title = T_('No Problem');
+        $body  = T_('The Plugin has been enabled');
         show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_plugin':
-        $plugin   = scrub_in($_REQUEST['plugin']);
-        $url      = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
-        $title    = T_('Are you sure you want to disable this plugin?');
-        $body     = '';
+        $plugin = scrub_in($_REQUEST['plugin']);
+        $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
+        $title  = T_('Are You Sure?');
+        $body   = T_('This will disable the Plugin and remove your settings');
         show_confirmation($title, $body, $url, 1);
     break;
     case 'uninstall_plugin':
@@ -164,8 +164,8 @@ switch ($_REQUEST['action']) {
 
         /* Show Confirmation */
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title  = T_('Plugin disabled');
-        $body   = '';
+        $title  = T_('No Problem');
+        $body   = T_('The Plugin has been disabled');
         show_confirmation($title, $body, $url);
     break;
     case 'upgrade_plugin':
@@ -179,13 +179,13 @@ switch ($_REQUEST['action']) {
         $plugin->upgrade();
         User::rebuild_all_preferences();
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-        $title  = T_('Plugin Upgraded');
-        $body   = '';
+        $title  = T_('No Problem');
+        $body   = T_('The Plugin has been upgraded');
         show_confirmation($title, $body, $url);
     break;
     case 'show_plugins':
         $plugins = Plugin::get_plugins();
-        UI::show_box_top(T_('Plugins'), 'box box_localplay_plugins');
+        UI::show_box_top(T_('Manage Plugins'), 'box box_localplay_plugins');
         require_once AmpConfig::get('prefix') . UI::find_template('show_plugins.inc.php');
         UI::show_box_bottom();
     break;
@@ -206,4 +206,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

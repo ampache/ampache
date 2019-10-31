@@ -357,20 +357,24 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
     {
-        return Song::generic_play_url('podcast_episode', $oid, $additional_params, $player, $local);
+        return Song::generic_play_url('podcast_episode', $oid, $additional_params, $player, $local, $uid, $original);
     }
 
     /**
      * Get stream types.
-     * @return string
+     * @return array
      */
     public function get_stream_types($player = null)
     {
         return Song::get_stream_types_for_type($this->type, $player);
     }
 
+    /**
+     * remove
+     * @return PDOStatement|boolean
+     */
     public function remove()
     {
         debug_event('podcast_episode.class', 'Removing podcast episode ' . $this->id, 5);
@@ -387,7 +391,9 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
+     * change_state
      * @param string $state
+     * @return PDOStatement|boolean
      */
     public function change_state($state)
     {

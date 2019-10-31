@@ -154,6 +154,7 @@ class vainfo
      *
      * Takes an array of tags and attempts to automatically detect their
      * encoding.
+     * @return string
      */
     private static function _detect_encoding($tags, $mb_order)
     {
@@ -222,7 +223,7 @@ class vainfo
         }
 
         /* Figure out what type of file we are dealing with */
-        $this->type = $this->_get_type();
+        $this->type = $this->_get_type() ?: '';
 
         if (in_array('filename', $enabled_sources)) {
             $this->tags['filename'] = $this->_parse_filename($this->filename);
@@ -283,6 +284,7 @@ class vainfo
     /**
      * read_id3
      * This function runs the various steps to gathering the metadata
+     * @return array
      */
     public function read_id3()
     {
@@ -291,8 +293,8 @@ class vainfo
             $this->_raw = $this->_getID3->analyze($this->filename);
 
             return $this->_raw;
-        } catch (Exception $e) {
-            debug_event('vainfo.class', "Unable to read file:" . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('vainfo.class', "Unable to read file:" . $error->getMessage(), 1);
         }
     } // read_id3
 
@@ -303,6 +305,7 @@ class vainfo
      * file and tries to figure out which tag type(s) it should use. If your
      * tag_order doesn't match anything then it throws up its hands and uses
      * everything in random order.
+     * @return array
      */
     public static function get_tag_type($results, $config_key = 'metadata_order')
     {
@@ -337,7 +340,8 @@ class vainfo
      *
      * This function takes the array from vainfo along with the
      * key we've decided on and the filename and returns it in a
-     * sanitized format that ampache can actually use
+     * sanitized format that Ampache can actually use
+     * @return array
      */
     public static function clean_tag_info($results, $keys, $filename = null)
     {
@@ -450,7 +454,9 @@ class vainfo
     }
 
     /**
+     * clean_array_tag
      * @param string $field
+     * @return array
      */
     private static function clean_array_tag($field, $info, $tags)
     {
@@ -476,6 +482,7 @@ class vainfo
      *
      * This function takes the raw information and figures out what type of
      * file we are dealing with.
+     * @return string|false
      */
     private function _get_type()
     {
@@ -506,6 +513,7 @@ class vainfo
      * _get_tags
      *
      * This processes the raw getID3 output and bakes it.
+     * @return array
      */
     private function _get_tags()
     {
@@ -577,6 +585,10 @@ class vainfo
         return $cleaned;
     }
 
+    /**
+     * get_metadata_order_key
+     * @return string
+     */
     private function get_metadata_order_key()
     {
         if (!in_array('music', $this->gather_types)) {
@@ -586,6 +598,10 @@ class vainfo
         return 'metadata_order';
     }
 
+    /**
+     * get_metadata_order
+     * @return array
+     */
     private function get_metadata_order()
     {
         return (array) AmpConfig::get($this->get_metadata_order_key());
@@ -622,6 +638,7 @@ class vainfo
      *
      * Gather and return the general information about a file (vbr/cbr,
      * sample rate, channels, etc.)
+     * @return array
      */
     private function _parse_general($tags)
     {
@@ -679,6 +696,7 @@ class vainfo
     /**
      * _clean_type
      * This standardizes the type that we are given into a recognized type.
+     * @return string
      */
     private function _clean_type($type)
     {
@@ -710,6 +728,7 @@ class vainfo
      * _cleanup_generic
      *
      * This does generic cleanup.
+     * @return array
      */
     private function _cleanup_generic($tags)
     {
@@ -751,6 +770,7 @@ class vainfo
      * _cleanup_lyrics
      *
      * This is supposed to handle lyrics3. FIXME: does it?
+     * @return array
      */
     private function _cleanup_lyrics($tags)
     {
@@ -769,7 +789,8 @@ class vainfo
     /**
      * _cleanup_vorbiscomment
      *
-     * Standardises tag names from vorbis.
+     * Standardizes tag names from vorbis.
+     * @return array
      */
     private function _cleanup_vorbiscomment($tags)
     {
@@ -838,6 +859,7 @@ class vainfo
      * _cleanup_id3v1
      *
      * Doesn't do much.
+     * @return array
      */
     private function _cleanup_id3v1($tags)
     {
@@ -856,6 +878,7 @@ class vainfo
      * _cleanup_id3v2
      *
      * Whee, v2!
+     * @return array
      */
     private function _cleanup_id3v2($tags)
     {
@@ -989,6 +1012,7 @@ class vainfo
 
     /**
      * _cleanup_riff
+     * @return array
      */
     private function _cleanup_riff($tags)
     {
@@ -1010,6 +1034,7 @@ class vainfo
 
     /**
      * _cleanup_quicktime
+     * @return array
      */
     private function _cleanup_quicktime($tags)
     {
@@ -1069,6 +1094,7 @@ class vainfo
         return $parsed;
     }
     /**
+     * _parse_filename
      * This function uses the file and directory patterns to pull out extra tag
      * information.
      *  parses TV show name variations:
@@ -1082,6 +1108,7 @@ class vainfo
      *    title.[date].ext
      *    /movie title [(date)]/title.ext
      * @param string $filepath
+     * @return array
      */
     private function _parse_filename($filepath)
     {
@@ -1180,9 +1207,11 @@ class vainfo
     }
 
     /**
+     * parse_pattern
      * @param string $filepath
      * @param string $dir_pattern
      * @param string $file_pattern
+     * @return array
      */
     public static function parse_pattern($filepath, $dir_pattern, $file_pattern)
     {
@@ -1233,6 +1262,7 @@ class vainfo
     }
 
     /**
+     * removeCommonAbbreviations
      * @return string
      */
     private function removeCommonAbbreviations($name)
@@ -1251,11 +1281,14 @@ class vainfo
         return $string;
     }
 
+    /**
+     * formatVideoName
+     * @return string
+     */
     private function formatVideoName($name)
     {
-        return ucwords(trim($this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name), "\s\t\n\r\0\x0B\.\_\-")));
+        return ucwords(trim($this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name)), "\s\t\n\r\0\x0B\.\_\-"));
     }
-
 
     /**
      * set_broken
@@ -1299,7 +1332,7 @@ class vainfo
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
             $genres  = preg_split($pattern, reset($data));
             if ($genres === false) {
-                throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~).');
+                throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~)');
             }
             $data = $genres;
         }

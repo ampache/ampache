@@ -137,7 +137,7 @@ class Ampache_RSS
      */
     public static function get_display($type = 'now_playing', $title = '', $params = null)
     {
-        // Default to now playing
+        // Default to Now Playing
         $type = self::validate_type($type);
 
         $strparams = "";
@@ -147,7 +147,7 @@ class Ampache_RSS
             }
         }
 
-        $string = '<a rel="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $strparams . '">' . UI::get_icon('feed', T_('RSS Feed'));
+        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $strparams . '">' . UI::get_icon('feed', T_('RSS Feed'));
         if (!empty($title)) {
             $string .= ' &nbsp;' . $title;
         }
@@ -160,7 +160,7 @@ class Ampache_RSS
 
     /**
      * load_now_playing
-     * This loads in the now playing information. This is just the raw data with key=>value pairs that could be turned
+     * This loads in the Now Playing information. This is just the raw data with key=>value pairs that could be turned
      * into an xml document if we so wished
      * @return array
      */
@@ -201,9 +201,9 @@ class Ampache_RSS
 
     /**
      * pubdate_now_playing
-     * this is the pub date we should use for the now playing information,
+     * this is the pub date we should use for the Now Playing information,
      * this is a little specific as it uses the 'newest' expire we can find
-     * @return int
+     * @return integer
      */
     public static function pubdate_now_playing()
     {
@@ -217,7 +217,7 @@ class Ampache_RSS
 
     /**
      * load_recently_played
-     * This loads in the recently played information and formats it up real nice like
+     * This loads in the Recently Played information and formats it up real nice like
      * @return array
      */
     public static function load_recently_played()
@@ -367,8 +367,8 @@ class Ampache_RSS
 
     /**
      * pubdate_recently_played
-     * This just returns the 'newest' recently played entry
-     * @return int
+     * This just returns the 'newest' Recently Played entry
+     * @return integer
      */
     public static function pubdate_recently_played()
     {

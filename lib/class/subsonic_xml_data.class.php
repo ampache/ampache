@@ -29,7 +29,7 @@
  */
 class Subsonic_XML_Data
 {
-    const API_VERSION = "1.11.0";
+    const API_VERSION = "1.13.0";
 
     const SSERROR_GENERIC               = 0;
     const SSERROR_MISSINGPARAM          = 10;
@@ -49,6 +49,7 @@ class Subsonic_XML_Data
     const AMPACHEID_VIDEO     = 500000000;
     const AMPACHEID_PODCAST   = 600000000;
     const AMPACHEID_PODCASTEP = 700000000;
+    const AMPACHEID_PLAYLIST  = 800000000;
 
     public static $enable_json_checks = false;
 
@@ -114,6 +115,14 @@ class Subsonic_XML_Data
         return $episodeid + self::AMPACHEID_PODCASTEP;
     }
 
+    /**
+     * @param integer $plistid
+     */
+    public static function getPlaylistId($plistid)
+    {
+        return $plistid + self::AMPACHEID_PLAYLIST;
+    }
+
     private static function cleanId($objectid)
     {
         // Remove all al-, ar-, ... prefixs
@@ -174,7 +183,12 @@ class Subsonic_XML_Data
 
     public static function isPodcastEp($episodeid)
     {
-        return (self::cleanId($episodeid) >= self::AMPACHEID_PODCASTEP);
+        return (self::cleanId($episodeid) >= self::AMPACHEID_PODCASTEP && $episodeid < self::AMPACHEID_PLAYLIST);
+    }
+
+    public static function isPlaylist($plistid)
+    {
+        return (self::cleanId($plistid) >= self::AMPACHEID_PLAYLIST);
     }
 
     public static function getAmpacheType($objectid)
@@ -193,48 +207,53 @@ class Subsonic_XML_Data
             return "podcast";
         } elseif (self::isPodcastEp($objectid)) {
             return "podcast_episode";
+        } elseif (self::isPlaylist($objectid)) {
+            return "playlist";
         }
 
         return "";
     }
 
-    public static function createFailedResponse($version = '')
+    public static function createFailedResponse($function = '')
     {
-        $response = self::createResponse($version);
-        $response->addAttribute('status', 'failed');
-        debug_event('subsonic_xml_data.class', 'API auth fail ' . $version, 3);
+        $version  = self::API_VERSION;
+        $response = self::createResponse($version, 'failed');
+        debug_event('subsonic_xml_data.class', 'API fail in function ' . $function . '-' . $version, 3);
 
         return $response;
     }
 
-    public static function createSuccessResponse($version = '')
+    public static function createSuccessResponse($function = '')
     {
+        $version  = self::API_VERSION;
         $response = self::createResponse($version);
-        debug_event('subsonic_xml_data.class', 'API auth success: ' . $version, 5);
+        debug_event('subsonic_xml_data.class', 'API success in function ' . $function . '-' . $version, 5);
 
         return $response;
     }
 
-    public static function createResponse($version = '')
+    /**
+     * createResponse
+     * @param string $version
+     */
+    public static function createResponse($version, $status = 'ok')
     {
-        if (empty($version)) {
-            $version = self::API_VERSION;
-        }
         $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         //       $response->addAttribute('type', 'ampache');
-        $response->addAttribute('status', 'ok');
+        $response->addAttribute('status', $status);
         $response->addAttribute('version', $version);
 
         return $response;
     }
 
-    public static function createError($code, $message = '', $version = '')
+    /**
+     * createError
+     * @param string $message
+     */
+    public static function createError($code, $message, $function = '')
     {
-        if (empty($version)) {
-            $version = self::API_VERSION;
-        }
-        $response = self::createFailedResponse($version);
+        $response = self::createFailedResponse($function);
         self::setError($response, $code, $message);
 
         return $response;
@@ -284,7 +303,7 @@ class Subsonic_XML_Data
             }
         }
 
-        $xerr->addAttribute("message", $message);
+        $xerr->addAttribute('message', $message);
     }
 
     /**
@@ -400,11 +419,11 @@ class Subsonic_XML_Data
     {
         $artist->format();
         $xartist = $xml->addChild('artist');
-        $xartist->addAttribute('id', self::getArtistId($artist->id));
+        $xartist->addAttribute('id', (string) self::getArtistId($artist->id));
         $xartist->addAttribute('name', self::checkName($artist->f_full_name));
         $allalbums = array();
         if (($extra && !$albumsSet) || $albums) {
-            $allalbums = $artist->get_albums(null, true);
+            $allalbums = $artist->get_albums();
         }
 
         if ($extra) {
@@ -442,9 +461,9 @@ class Subsonic_XML_Data
     public static function addAlbum($xml, $album, $songs = false, $addAmpacheInfo = false, $elementName = "album")
     {
         $xalbum = $xml->addChild(htmlspecialchars($elementName));
-        $xalbum->addAttribute('id', self::getAlbumId($album->id));
+        $xalbum->addAttribute('id', (string) self::getAlbumId($album->id));
         $xalbum->addAttribute('album', self::checkName($album->full_name));
-        $xalbum->addAttribute('title', self::formatAlbum($album, $elementName === "album"));
+        $xalbum->addAttribute('title', self::formatAlbum($album));
         $xalbum->addAttribute('name', self::checkName($album->full_name));
         $xalbum->addAttribute('isDir', 'true');
         $xalbum->addAttribute('discNumber', $album->disk);
@@ -454,7 +473,7 @@ class Subsonic_XML_Data
         $xalbum->addAttribute('songCount', $album->song_count);
         //FIXME total_duration on Album doesn't exist
         $xalbum->addAttribute('duration', $album->total_duration);
-        $xalbum->addAttribute('artistId', self::getArtistId($album->artist_id));
+        $xalbum->addAttribute('artistId', (string) self::getArtistId($album->artist_id));
         $xalbum->addAttribute('parent', self::getArtistId($album->artist_id));
         $xalbum->addAttribute('artist', self::checkName($album->f_album_artist_name));
         if ($album->year > 0) {
@@ -479,9 +498,13 @@ class Subsonic_XML_Data
         self::setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
-            $allsongs = $album->get_songs();
-            foreach ($allsongs as $songid) {
-                self::addSong($xalbum, $songid, $addAmpacheInfo);
+            $disc_ids = $album->get_group_disks_ids();
+            foreach ($disc_ids as $discid) {
+                $disc     = new Album($discid);
+                $allsongs = $disc->get_songs();
+                foreach ($allsongs as $songid) {
+                    self::addSong($xalbum, $songid, $addAmpacheInfo);
+                }
             }
         }
     }
@@ -582,7 +605,7 @@ class Subsonic_XML_Data
         }
 
         $xsong = $xml->addChild(htmlspecialchars($elementName));
-        $xsong->addAttribute('id', self::getSongId($songData['id']));
+        $xsong->addAttribute('id', (string) self::getSongId($songData['id']));
         $xsong->addAttribute('parent', self::getAlbumId($songData['album']));
         //$xsong->addAttribute('created', );
         $xsong->addAttribute('title', self::checkName($songData['title']));
@@ -590,13 +613,13 @@ class Subsonic_XML_Data
         $xsong->addAttribute('isVideo', 'false');
         $xsong->addAttribute('type', 'music');
         // $album = new Album(songData->album);
-        $xsong->addAttribute('albumId', self::getAlbumId($albumData['id']));
+        $xsong->addAttribute('albumId', (string) self::getAlbumId($albumData['id']));
         $albumData['full_name'] = trim(trim($albumData['prefix']) . ' ' . trim($albumData['name']));
 
         $xsong->addAttribute('album', self::checkName($albumData['full_name']));
         // $artist = new Artist($song->artist);
         // $artist->format();
-        $xsong->addAttribute('artistId', self::getArtistId($songData['artist']));
+        $xsong->addAttribute('artistId', (string) self::getArtistId($songData['artist']));
         $xsong->addAttribute('artist', self::checkName($artistData['f_full_name']));
         $xsong->addAttribute('coverArt', self::getAlbumId($albumData['id']));
         $xsong->addAttribute('duration', $songData['time']);
@@ -625,8 +648,8 @@ class Subsonic_XML_Data
             $xsong->addAttribute('genre', $tags[0]['name']);
         }
         $xsong->addAttribute('size', $songData['size']);
-        if ($albumData['disk'] > 0) {
-            $xsong->addAttribute('discNumber', $albumData['disk']);
+        if (Album::sanitize_disk($albumData['disk']) > 0) {
+            $xsong->addAttribute('discNumber', Album::sanitize_disk($albumData['disk']));
         }
         $xsong->addAttribute('suffix', $songData['type']);
         $xsong->addAttribute('contentType', $songData['mime']);
@@ -651,14 +674,14 @@ class Subsonic_XML_Data
      *
      * @return string|null
      */
-    private static function formatAlbum($album, $checkDisk = true)
+    private static function formatAlbum($album)
     {
         $name = $album->full_name;
         /*        if ($album->year > 0) {
                     $name .= " [" . $album->year . "]";
                 }
         */
-        if (($checkDisk || !AmpConfig::get('album_group')) && $album->disk) {
+        if ($album->disk && !$album->allow_group_disks && count($album->get_album_suite()) > 1) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
 
@@ -692,7 +715,7 @@ class Subsonic_XML_Data
     {
         $artist->format();
         $xdir = $xml->addChild('directory');
-        $xdir->addAttribute('id', self::getArtistId($artist->id));
+        $xdir->addAttribute('id', (string) self::getArtistId($artist->id));
         $xdir->addAttribute('name', $artist->f_full_name);
 
         $allalbums = $artist->get_albums();
@@ -709,8 +732,8 @@ class Subsonic_XML_Data
     public static function addAlbumDirectory($xml, $album)
     {
         $xdir = $xml->addChild('directory');
-        $xdir->addAttribute('id', self::getAlbumId($album->id));
-        $xdir->addAttribute('name', self::formatAlbum($album, false));
+        $xdir->addAttribute('id', (string) self::getAlbumId($album->id));
+        $xdir->addAttribute('name', self::formatAlbum($album));
         $album->format();
         if ($album->artist_id) {
             $xdir->addAttribute('parent', self::getArtistId($album->artist_id));
@@ -736,12 +759,16 @@ class Subsonic_XML_Data
         foreach ($tags as $tag) {
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
-            $counts = $otag->count('', Core::get_global('user')->id);
-            $xgenre->addAttribute("songCount", $counts['song']);
-            $xgenre->addAttribute("albumCount", $counts['album']);
+            $counts = $otag->count('', 0);
+            $xgenre->addAttribute('songCount', (int) $counts['song']);
+            $xgenre->addAttribute('albumCount', (int) $counts['album']);
         }
     }
 
+    /**
+     * @param SimpleXMLElement $xml
+     * @param Video[] $videos
+     */
     public static function addVideos($xml, $videos)
     {
         $xvideos = $xml->addChild('videos');
@@ -750,10 +777,15 @@ class Subsonic_XML_Data
             self::addVideo($xvideos, $video);
         }
     }
+
+    /**
+     * @param SimpleXMLElement $xml
+     * @param Video $video
+     */
     public static function addVideo($xml, $video, $elementName = 'video')
     {
-        $xvideo = $xml->addChild($elementName);
-        $xvideo->addAttribute('id', self::getVideoId($video->id));
+        $xvideo = $xml->addChild(htmlspecialchars($elementName));
+        $xvideo->addAttribute('id', (string) self::getVideoId($video->id));
         $xvideo->addAttribute('title', $video->f_full_title);
         $xvideo->addAttribute('isDir', 'false');
         $xvideo->addAttribute('coverArt', self::getVideoId($video->id));
@@ -811,12 +843,13 @@ class Subsonic_XML_Data
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        $xplaylist->addAttribute('id', $playlist->id);
+        $xplaylist->addAttribute('id', (string) self::getPlaylistId($playlist->id));
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', $user->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('created', date("c", $playlist->date));
+        $xplaylist->addAttribute('changed', date("c", $playlist->last_update));
         $xplaylist->addAttribute('songCount', $playlist->get_media_count('song'));
         $xplaylist->addAttribute('duration', $playlist->get_total_duration());
 
@@ -835,7 +868,7 @@ class Subsonic_XML_Data
     public static function addSmartPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        $xplaylist->addAttribute('id', self::getSmartPlId($playlist->id));
+        $xplaylist->addAttribute('id', (string) self::getSmartPlId($playlist->id));
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', $user->username);
@@ -872,6 +905,16 @@ class Subsonic_XML_Data
         }
     }
 
+    /**
+     * @param SimpleXMLElement $xml
+     */
+    public static function addTopSongs($xml, $songs)
+    {
+        $xsongs = $xml->addChild('topSongs');
+        foreach ($songs as $songid) {
+            self::addSong($xsongs, $songid);
+        }
+    }
     /**
      * @param SimpleXMLElement $xml
      */
@@ -948,6 +991,7 @@ class Subsonic_XML_Data
 
     /**
      * @param SimpleXMLElement $xml
+     * @param User $user
      */
     public static function addUser($xml, $user)
     {
@@ -988,7 +1032,7 @@ class Subsonic_XML_Data
     public static function addRadio($xml, $radio)
     {
         $xradio = $xml->addChild('internetRadioStation ');
-        $xradio->addAttribute('id', $radio->id);
+        $xradio->addAttribute('id', (string) $radio->id);
         $xradio->addAttribute('name', self::checkName($radio->name));
         $xradio->addAttribute('streamUrl', $radio->url);
         $xradio->addAttribute('homePageUrl', $radio->site_url);
@@ -1013,7 +1057,7 @@ class Subsonic_XML_Data
     public static function addShare($xml, $share)
     {
         $xshare = $xml->addChild('share');
-        $xshare->addAttribute('id', $share->id);
+        $xshare->addAttribute('id', (string) $share->id);
         $xshare->addAttribute('url', $share->public_url);
         $xshare->addAttribute('description', $share->description);
         $user = new User($share->user);
@@ -1051,8 +1095,8 @@ class Subsonic_XML_Data
     public static function addShares($xml, $shares)
     {
         $xshares = $xml->addChild('shares');
-        foreach ($shares as $shareid) {
-            $share = new Share($shareid);
+        foreach ($shares as $share_id) {
+            $share = new Share($share_id);
             // Don't add share with max counter already reached
             if ($share->max_counter == 0 || $share->counter < $share->max_counter) {
                 self::addShare($xshares, $share);
@@ -1103,12 +1147,12 @@ class Subsonic_XML_Data
         if (!empty($lyrics) && $lyrics['text']) {
             $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
             $text    = str_replace("\r", '', $text);
-            $xlyrics = $xml->addChild("lyrics", $text);
+            $xlyrics = $xml->addChild('lyrics', htmlspecialchars($text));
             if ($artist) {
-                $xlyrics->addAttribute("artist", $artist);
+                $xlyrics->addAttribute('artist', $artist);
             }
             if ($title) {
-                $xlyrics->addAttribute("title", $title);
+                $xlyrics->addAttribute('title', $title);
             }
         }
     }
@@ -1120,18 +1164,18 @@ class Subsonic_XML_Data
     {
         $artist = new Artist($info['id']);
 
-        $xartist = $xml->addChild("artistInfo");
-        $xartist->addChild("biography", trim($info['summary']));
-        $xartist->addChild("musicBrainzId", $artist->mbid);
-        //$xartist->addChild("lastFmUrl", "");
-        $xartist->addChild("smallImageUrl", htmlentities($info['smallphoto']));
-        $xartist->addChild("mediumImageUrl", htmlentities($info['mediumphoto']));
-        $xartist->addChild("largeImageUrl", htmlentities($info['largephoto']));
+        $xartist = $xml->addChild('artistInfo');
+        $xartist->addChild('biography', htmlspecialchars(trim($info['summary'])));
+        $xartist->addChild('musicBrainzId', $artist->mbid);
+        //$xartist->addChild('lastFmUrl', "");
+        $xartist->addChild('smallImageUrl', htmlentities($info['smallphoto']));
+        $xartist->addChild('mediumImageUrl', htmlentities($info['mediumphoto']));
+        $xartist->addChild('largeImageUrl', htmlentities($info['largephoto']));
 
         foreach ($similars as $similar) {
-            $xsimilar = $xartist->addChild("similarArtist");
-            $xsimilar->addAttribute("id", ($similar['id'] !== null ? self::getArtistId($similar['id']) : "-1"));
-            $xsimilar->addAttribute("name", self::checkName($similar['name']));
+            $xsimilar = $xartist->addChild('similarArtist');
+            $xsimilar->addAttribute('id', ($similar['id'] !== null ? self::getArtistId($similar['id']) : "-1"));
+            $xsimilar->addAttribute('name', self::checkName($similar['name']));
         }
     }
 
@@ -1140,7 +1184,7 @@ class Subsonic_XML_Data
      */
     public static function addSimilarSongs($xml, $similar_songs)
     {
-        $xsimilar = $xml->addChild("similarSongs");
+        $xsimilar = $xml->addChild('similarSongs');
         foreach ($similar_songs as $similar_song) {
             $song = new Song($similar_song['id']);
             $song->format();
@@ -1156,18 +1200,18 @@ class Subsonic_XML_Data
      */
     public static function addPodcasts($xml, $podcasts, $includeEpisodes = false)
     {
-        $xpodcasts = $xml->addChild("podcasts");
+        $xpodcasts = $xml->addChild('podcasts');
         foreach ($podcasts as $podcast) {
             $podcast->format();
-            $xchannel = $xpodcasts->addChild("channel");
-            $xchannel->addAttribute("id", self::getPodcastId($podcast->id));
-            $xchannel->addAttribute("url", $podcast->feed);
-            $xchannel->addAttribute("title", self::checkName($podcast->f_title));
-            $xchannel->addAttribute("description", $podcast->f_description);
+            $xchannel = $xpodcasts->addChild('channel');
+            $xchannel->addAttribute('id', self::getPodcastId($podcast->id));
+            $xchannel->addAttribute('url', $podcast->feed);
+            $xchannel->addAttribute('title', self::checkName($podcast->f_title));
+            $xchannel->addAttribute('description', $podcast->f_description);
             if (Art::has_db($podcast->id, 'podcast')) {
-                $xchannel->addAttribute("coverArt", "pod-" . self::getPodcastId($podcast->id));
+                $xchannel->addAttribute('coverArt', 'pod-' . self::getPodcastId($podcast->id));
             }
-            $xchannel->addAttribute("status", "completed");
+            $xchannel->addAttribute('status', 'completed');
             if ($includeEpisodes) {
                 $episodes = $podcast->get_episodes();
                 foreach ($episodes as $episode_id) {
@@ -1186,31 +1230,31 @@ class Subsonic_XML_Data
     {
         $episode->format();
         $xepisode = $xml->addChild($elementName);
-        $xepisode->addAttribute("id", self::getPodcastEpId($episode->id));
-        $xepisode->addAttribute("channelId", self::getPodcastId($episode->podcast));
-        $xepisode->addAttribute("title", self::checkName($episode->f_title));
-        $xepisode->addAttribute("album", $episode->f_podcast);
-        $xepisode->addAttribute("description", self::checkName($episode->f_description));
-        $xepisode->addAttribute("duration", $episode->time);
-        $xepisode->addAttribute("genre", "Podcast");
-        $xepisode->addAttribute("isDir", "false");
-        $xepisode->addAttribute("publishDate", date("c", $episode->pubdate));
-        $xepisode->addAttribute("status", $episode->state);
-        $xepisode->addAttribute("parent", self::getPodcastId($episode->podcast));
+        $xepisode->addAttribute('id', self::getPodcastEpId($episode->id));
+        $xepisode->addAttribute('channelId', self::getPodcastId($episode->podcast));
+        $xepisode->addAttribute('title', self::checkName($episode->f_title));
+        $xepisode->addAttribute('album', $episode->f_podcast);
+        $xepisode->addAttribute('description', self::checkName($episode->f_description));
+        $xepisode->addAttribute('duration', $episode->time);
+        $xepisode->addAttribute('genre', "Podcast");
+        $xepisode->addAttribute('isDir', "false");
+        $xepisode->addAttribute('publishDate', date("c", $episode->pubdate));
+        $xepisode->addAttribute('status', $episode->state);
+        $xepisode->addAttribute('parent', self::getPodcastId($episode->podcast));
         if (Art::has_db($episode->podcast, 'podcast')) {
-            $xepisode->addAttribute("coverArt", self::getPodcastId($episode->podcast));
+            $xepisode->addAttribute('coverArt', self::getPodcastId($episode->podcast));
         }
 
-        self::setIfStarred($xepisode, 'episode', $episode->id);
+        self::setIfStarred($xepisode, 'podcast_episode', $episode->id);
 
         if ($episode->file) {
-            $xepisode->addAttribute("streamId", self::getPodcastEpId($episode->id));
-            $xepisode->addAttribute("size", $episode->size);
-            $xepisode->addAttribute("suffix", $episode->type);
-            $xepisode->addAttribute("contentType", $episode->mime);
+            $xepisode->addAttribute('streamId', self::getPodcastEpId($episode->id));
+            $xepisode->addAttribute('size', $episode->size);
+            $xepisode->addAttribute('suffix', $episode->type);
+            $xepisode->addAttribute('contentType', $episode->mime);
             // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
             $path = basename($episode->file);
-            $xepisode->addAttribute("path", $path);
+            $xepisode->addAttribute('path', $path);
         }
     }
 
@@ -1220,7 +1264,7 @@ class Subsonic_XML_Data
      */
     public static function addNewestPodcastEpisodes($xml, $episodes)
     {
-        $xpodcasts = $xml->addChild("newestPodcasts");
+        $xpodcasts = $xml->addChild('newestPodcasts');
         foreach ($episodes as $episode) {
             $episode->format();
             self::addPodcastEpisode($xpodcasts, $episode);
@@ -1232,7 +1276,7 @@ class Subsonic_XML_Data
      */
     public static function addBookmarks($xml, $bookmarks)
     {
-        $xbookmarks = $xml->addChild("bookmarks");
+        $xbookmarks = $xml->addChild('bookmarks');
         foreach ($bookmarks as $bookmark) {
             $bookmark->format();
             self::addBookmark($xbookmarks, $bookmark);
@@ -1244,12 +1288,12 @@ class Subsonic_XML_Data
      */
     private static function addBookmark($xml, $bookmark)
     {
-        $xbookmark = $xml->addChild("bookmark");
-        $xbookmark->addAttribute("position", $bookmark->position);
-        $xbookmark->addAttribute("username", $bookmark->f_user);
-        $xbookmark->addAttribute("comment", $bookmark->comment);
-        $xbookmark->addAttribute("created", date("c", $bookmark->creation_date));
-        $xbookmark->addAttribute("changed", date("c", $bookmark->update_date));
+        $xbookmark = $xml->addChild('bookmark');
+        $xbookmark->addAttribute('position', $bookmark->position);
+        $xbookmark->addAttribute('username', $bookmark->f_user);
+        $xbookmark->addAttribute('comment', $bookmark->comment);
+        $xbookmark->addAttribute('created', date("c", $bookmark->creation_date));
+        $xbookmark->addAttribute('changed', date("c", $bookmark->update_date));
         if ($bookmark->object_type == "song") {
             $song = new Song($bookmark->object_id);
             self::addSong($xbookmark, $song->id, false, 'entry');
@@ -1259,4 +1303,40 @@ class Subsonic_XML_Data
             self::addPodcastEpisode($xbookmark, new Podcast_Episode($bookmark->object_id), 'entry');
         }
     }
-}
+
+    /**
+     * addMessages
+     * @param SimpleXMLElement $xml
+     * @param integer[] $messages
+     */
+    public static function addMessages($xml, $messages)
+    {
+        $xmessages = $xml->addChild('chatMessages');
+        if (empty($messages)) {
+            return;
+        }
+        foreach ($messages as $message) {
+            $chat = new PrivateMsg($message);
+            $chat->format();
+            self::addMessage($xmessages, $chat);
+        }
+    }
+
+    /**
+     * addMessage
+     * @param SimpleXMLElement $xml
+     * @param PrivateMsg $message
+     */
+    private static function addMessage($xml, $message)
+    {
+        $user      = new User($message->from_user);
+        $xbookmark = $xml->addChild('chatMessage');
+        if ($user->fullname_public) {
+            $xbookmark->addAttribute('username', $user->fullname);
+        } else {
+            $xbookmark->addAttribute('username', $user->username);
+        }
+        $xbookmark->addAttribute('time', $message->creation_date * 1000);
+        $xbookmark->addAttribute('message', $message->message);
+    }
+} // end of subsonic_xml_data class

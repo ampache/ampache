@@ -38,11 +38,11 @@ class TVShow_Episode extends Video
      * This pulls the tv show episode information from the database and returns
      * a constructed object
      */
-    public function __construct($id)
+    public function __construct($episode_id)
     {
-        parent::__construct($id);
+        parent::__construct($episode_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($episode_id);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -73,8 +73,8 @@ class TVShow_Episode extends Video
         $tags = $data['genre'];
 
         $tvshow = TVShow::check($data['tvshow'], $data['year'], $data['tvshow_summary']);
-        if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db($tvshow, 'tvshow')) {
-            $art = new Art($tvshow, 'tvshow');
+        if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db((int) $tvshow, 'tvshow')) {
+            $art = new Art((int) $tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
         }
         $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
@@ -166,8 +166,8 @@ class TVShow_Episode extends Video
         return true;
     }
 
-    /**
-     * Get item keywords for metadata searches.
+    /*
+     * get_keywords
      * @return array
      */
     public function get_keywords()
@@ -192,11 +192,19 @@ class TVShow_Episode extends Video
         return $keywords;
     }
 
+    /**
+     * get_parent
+     * @return array
+     */
     public function get_parent()
     {
         return array('object_type' => 'tvshow_season', 'object_id' => $this->season);
     }
 
+    /**
+     * get_release_item_art
+     * @return array
+     */
     public function get_release_item_art()
     {
         return array('object_type' => 'tvshow_season',

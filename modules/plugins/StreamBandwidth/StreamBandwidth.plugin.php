@@ -24,7 +24,7 @@ class AmpacheStreamBandwidth
 {
     public $name        = 'Stream Bandwidth';
     public $categories  = 'stream_control';
-    public $description = 'Stream Control Bandwidth per user';
+    public $description = 'Control bandwidth per user';
     public $url         = '';
     public $version     = '000001';
     public $min_ampache = '370024';
@@ -40,6 +40,8 @@ class AmpacheStreamBandwidth
      */
     public function __construct()
     {
+        $this->description = T_('Control bandwidth per user');
+
         return true;
     } // constructor
 
@@ -53,8 +55,8 @@ class AmpacheStreamBandwidth
         if (Preference::exists('stream_control_bandwidth_max')) {
             return false;
         }
-        Preference::insert('stream_control_bandwidth_max', 'Stream control maximal bandwidth (Mo)', '1024', '50', 'integer', 'plugins', $this->name);
-        Preference::insert('stream_control_bandwidth_days', 'Stream control bandwidth history (days)', '30', '50', 'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_bandwidth_max', T_('Stream control maximal bandwidth (month)'), '1024', '50', 'integer', 'plugins', $this->name);
+        Preference::insert('stream_control_bandwidth_days', T_('Stream control bandwidth history (days)'), '30', '50', 'integer', 'plugins', $this->name);
 
         return true;
     } // install
@@ -116,6 +118,7 @@ class AmpacheStreamBandwidth
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {

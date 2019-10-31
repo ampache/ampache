@@ -39,6 +39,7 @@ class Ampache7digital
      */
     public function __construct()
     {
+        $this->description = T_('Song preview from 7digital');
         require_once AmpConfig::get('prefix') . "/modules/oauth/OAuth.php";
 
         return true;
@@ -54,8 +55,8 @@ class Ampache7digital
         if (Preference::exists('7digital_api_key')) {
             return false;
         }
-        Preference::insert('7digital_api_key', '7digital consumer key', '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('7digital_secret_api_key', '7digital secret', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('7digital_api_key', T_('7digital consumer key'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -98,8 +99,8 @@ class Ampache7digital
         try {
             $enProfile = $echonest->getTrackApi()->profile('musicbrainz:track:' . $track_mbid);
             $enSong    = $echonest->getSongApi()->profile($enProfile['song_id'], array( 'id:7digital-US', 'audio_summary', 'tracks'));
-        } catch (Exception $e) {
-            debug_event('7digital.plugin', 'EchoNest track error on `' . $track_mbid . '` (' . $title . '): ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('7digital.plugin', 'EchoNest track error on `' . $track_mbid . '` (' . $title . '): ' . $error->getMessage(), 1);
         }
 
         // Wans't able to get the song with MusicBrainz ID, try a search
@@ -111,8 +112,8 @@ class Ampache7digital
                     'title' => $title,
                     'bucket' => array( 'id:7digital-US', 'audio_summary', 'tracks'),
                 ));
-            } catch (Exception $e) {
-                debug_event('7digital.plugin', 'EchoNest song search error: ' . $e->getMessage(), 1);
+            } catch (Exception $error) {
+                debug_event('7digital.plugin', 'EchoNest song search error: ' . $error->getMessage(), 1);
             }
         }
 
@@ -145,11 +146,18 @@ class Ampache7digital
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['7digital_api_key'])) || !strlen(trim($data['7digital_secret_api_key']))) {
+            $data                            = array();
+            $data['7digital_api_key']        = Preference::get_by_user(-1, '7digital_api_key');
+            $data['7digital_secret_api_key'] = Preference::get_by_user(-1, '7digital_secret_api_key');
+        }
 
         if (strlen(trim($data['7digital_api_key']))) {
             $this->api_key = trim($data['7digital_api_key']);

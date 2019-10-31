@@ -39,6 +39,8 @@ class AmpacheMusicBrainz
      */
     public function __construct()
     {
+        $this->description = T_('MusicBrainz metadata integration');
+
         return true;
     }
 
@@ -64,9 +66,12 @@ class AmpacheMusicBrainz
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {
+        $user->set_preferences();
+
         return true;
     } // load
 
@@ -92,7 +97,9 @@ class AmpacheMusicBrainz
         );
         try {
             $track = $mb->lookup('recording', $mbid, $includes);
-        } catch (Exception $e) {
+        } catch (Exception $error) {
+            debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+
             return null;
         }
 

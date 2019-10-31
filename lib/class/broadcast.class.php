@@ -74,16 +74,12 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Constructor
-     * @param integer $id
+     * @param integer $broadcast_id
      */
-    public function __construct($id = 0)
+    public function __construct($broadcast_id)
     {
-        if (!$id) {
-            return true;
-        }
-
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($broadcast_id);
 
         // Foreach what we've got
         foreach ($info as $key => $value) {
@@ -146,7 +142,7 @@ class Broadcast extends database_object implements library_item
      * Create a broadcast
      * @param string $name
      * @param string $description
-     * @return int
+     * @return integer
      */
     public static function create($name, $description =  '')
     {
@@ -164,7 +160,7 @@ class Broadcast extends database_object implements library_item
     /**
      * Update a broadcast from data array.
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {
@@ -360,7 +356,7 @@ class Broadcast extends database_object implements library_item
     {
         if ($this->id) {
             if (Core::get_global('user')->has_access('75')) {
-                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast edit') . "', 'broadcast_row_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
+                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
@@ -381,13 +377,13 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get unbroadcast link.
-     * @param integer $id
+     * @param integer $broadcast_id
      * @return string
      */
-    public static function get_unbroadcast_link($id)
+    public static function get_unbroadcast_link($broadcast_id)
     {
         $link = "<div class=\"broadcast-action\">";
-        $link .= Ajax::button('?page=player&action=unbroadcast&broadcast_id=' . $id, 'broadcast', T_('Unbroadcast'), 'broadcast_action');
+        $link .= Ajax::button('?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id, 'broadcast', T_('Unbroadcast'), 'broadcast_action');
         $link .= "</div>";
         $link .= "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
 

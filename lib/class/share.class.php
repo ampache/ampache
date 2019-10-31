@@ -48,14 +48,10 @@ class Share extends database_object
     /**
      * Constructor
      */
-    public function __construct($id = 0)
+    public function __construct($share_id)
     {
-        if (!$id) {
-            return true;
-        }
-
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($share_id);
 
         // Foreach what we've got
         foreach ($info as $key => $value) {
@@ -65,6 +61,10 @@ class Share extends database_object
         return true;
     } //constructor
 
+    /**
+     * delete_share
+     * @return PDOStatement|boolean
+     */
     public static function delete_share($id)
     {
         $sql    = "DELETE FROM `share` WHERE `id` = ?";
@@ -77,12 +77,20 @@ class Share extends database_object
         return Dba::write($sql, $params);
     }
 
+    /**
+     * garbage_collection
+     * @return PDOStatement|boolean
+     */
     public static function garbage_collection()
     {
         $sql = "DELETE FROM `share` WHERE (`expire_days` > 0 AND (`creation_date` + (`expire_days` * 86400)) < " . time() . ") OR (`max_counter` > 0 AND `counter` >= `max_counter`)";
         Dba::write($sql);
     }
 
+    /**
+     * delete_shares
+     * @return PDOStatement|boolean
+     */
     public static function delete_shares($object_type, $object_id)
     {
         $sql = "DELETE FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
@@ -103,6 +111,7 @@ class Share extends database_object
 
     /**
      * @param string $type
+     * @return string
      */
     public static function format_type($type)
     {
@@ -127,11 +136,23 @@ class Share extends database_object
         if (empty($object_type)) {
             return '';
         }
-
         if (!$allow_stream && !$allow_download) {
             return '';
         }
 
+        if ($description == '') {
+            if ($object_type == 'song') {
+                $song        = new Song($object_id);
+                $description = $song->title;
+            } elseif ($object_type == 'playlist') {
+                $playlist    = new Playlist($object_id);
+                $description = 'Playlist - ' . $playlist->name;
+            } elseif ($object_type == 'album') {
+                $album = new Album($object_id);
+                $album->format();
+                $description = $album->f_name . ' (' . $album->f_album_artist_name . ')';
+            }
+        }
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array(Core::get_global('user')->id, $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
         Dba::write($sql, $params);
@@ -150,8 +171,8 @@ class Share extends database_object
                         break;
                     }
                 }
-            } catch (Exception $e) {
-                debug_event('share.class', 'Share plugin error: ' . $e->getMessage(), 1);
+            } catch (Exception $error) {
+                debug_event('share.class', 'Share plugin error: ' . $error->getMessage(), 1);
             }
         }
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
@@ -161,11 +182,13 @@ class Share extends database_object
     }
 
     /**
+     * get_url
      * @param string $secret
+     * @param string|null $share_id
      */
-    public static function get_url($id, $secret)
+    public static function get_url($share_id, $secret)
     {
-        $url = AmpConfig::get('web_path') . '/share.php?id=' . $id;
+        $url = AmpConfig::get('web_path') . '/share.php?id=' . $share_id;
         if (!empty($secret)) {
             $url .= '&secret=' . $secret;
         }
@@ -173,6 +196,10 @@ class Share extends database_object
         return $url;
     }
 
+    /**
+     * get_share_list_sql
+     * @return string
+     */
     public static function get_share_list_sql()
     {
         $sql = "SELECT `id` FROM `share` ";
@@ -184,6 +211,10 @@ class Share extends database_object
         return $sql;
     }
 
+    /**
+     * get_share_list
+     * @return array
+     */
     public static function get_share_list()
     {
         $sql        = self::get_share_list_sql();
@@ -197,6 +228,10 @@ class Share extends database_object
         return $results;
     }
 
+    /**
+     * get_shares
+     * @return array
+     */
     public static function get_shares($object_type, $object_id)
     {
         $sql        = "SELECT `id` FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
@@ -213,7 +248,7 @@ class Share extends database_object
     {
         if ($this->id) {
             if (Core::get_global('user')->has_access('75') || $this->user == (int) Core::get_global('user')->id) {
-                echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
+                echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
@@ -236,12 +271,16 @@ class Share extends database_object
         $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", $this->creation_date) : '';
     }
 
+    /**
+     * update
+     * @return PDOStatement|boolean
+     */
     public function update(array $data)
     {
         $this->max_counter    = (int) ($data['max_counter']);
         $this->expire_days    = (int) ($data['expire']);
-        $this->allow_stream   = $data['allow_stream'] == '1';
-        $this->allow_download = $data['allow_download'] == '1';
+        $this->allow_stream   = ($data['allow_stream'] == '1');
+        $this->allow_download = ($data['allow_download'] == '1');
         $this->description    = isset($data['description']) ? $data['description'] : $this->description;
 
         $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " .
@@ -255,6 +294,10 @@ class Share extends database_object
         return Dba::write($sql, $params);
     }
 
+    /**
+     * save_access
+     * @return PDOStatement|boolean
+     */
     public function save_access()
     {
         $sql = "UPDATE `share` SET `counter` = (`counter` + 1), lastvisit_date = ? WHERE `id` = ?";
@@ -262,6 +305,10 @@ class Share extends database_object
         return Dba::write($sql, array(time(), $this->id));
     }
 
+    /**
+     * is_valid
+     * @return boolean
+     */
     public function is_valid($secret, $action)
     {
         if (!$this->id) {
@@ -391,7 +438,7 @@ class Share extends database_object
                     // Add session information to the link to avoid authentication
                     $dllink .= "&ssid=" . Stream::get_session();
                 }
-                echo "<li><a rel=\"nohtml\" href=\"" . $dllink . "\">" . UI::get_icon('download', T_('Temporary direct link')) . " &nbsp;" . T_('Temporary direct link') . "</a></li>";
+                echo "<li><a class=\"nohtml\" href=\"" . $dllink . "\">" . UI::get_icon('download', T_('Temporary direct link')) . " &nbsp;" . T_('Temporary direct link') . "</a></li>";
             }
         }
         echo "<li style='padding-top: 8px; text-align: right;'>";
@@ -402,4 +449,18 @@ class Share extends database_object
         echo "</li>";
         echo "</ul>";
     }
-} // end of recommendation class
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return boolean|PDOStatement
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
+} // end of share class

@@ -30,7 +30,7 @@ switch ($_REQUEST['action']) {
         $object_ids = Random::advanced($_REQUEST['type'], $_POST);
 
         // We need to add them to the active playlist
-        if (is_array($object_ids)) {
+        if (!empty($object_ids)) {
             foreach ($object_ids as $object_id) {
                 Core::get_global('user')->playlist->add_object($object_id, 'song');
             }
@@ -41,4 +41,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

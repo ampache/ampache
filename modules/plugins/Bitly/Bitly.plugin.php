@@ -24,7 +24,7 @@ class AmpacheBitly
 {
     public $name        = 'Bit.ly';
     public $categories  = 'shortener';
-    public $description = 'Url shorteners on shared links with Bit.ly';
+    public $description = 'URL shorteners on shared links with Bit.ly';
     public $url         = 'http://bitly.com';
     public $version     = '000002';
     public $min_ampache = '360037';
@@ -41,6 +41,8 @@ class AmpacheBitly
      */
     public function __construct()
     {
+        $this->description = T_('URL shorteners on shared links with Bit.ly');
+
         return true;
     } // constructor
 
@@ -57,8 +59,8 @@ class AmpacheBitly
             return false;
         }
 
-        Preference::insert('bitly_username', 'Bit.ly username', '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('bitly_api_key', 'Bit.ly api key', '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('bitly_username', T_('Bit.ly Username'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('bitly_api_key', T_('Bit.ly API key'), '', '75', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -98,8 +100,8 @@ class AmpacheBitly
             debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
             $request  = Requests::get($apiurl, array(), Core::requests_options());
             $shorturl = json_decode($request->body)->data->url;
-        } catch (Exception $e) {
-            debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $e->getMessage(), 1);
+        } catch (Exception $error) {
+            debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -111,11 +113,18 @@ class AmpacheBitly
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['bitly_username'])) || !strlen(trim($data['bitly_api_key']))) {
+            $data                   = array();
+            $data['bitly_username'] = Preference::get_by_user(-1, 'bitly_username');
+            $data['bitly_api_key']  = Preference::get_by_user(-1, 'bitly_api_key');
+        }
 
         if (strlen(trim($data['bitly_username']))) {
             $this->bitly_username = trim($data['bitly_username']);

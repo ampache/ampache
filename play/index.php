@@ -39,11 +39,13 @@ $oid            = scrub_in($_REQUEST['oid']);
 $sid            = scrub_in($_REQUEST['ssid']);
 $type           = scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 $cache          = scrub_in($_REQUEST['cache']);
+$format         = scrub_in($_REQUEST['format']);
+$original       = ($format == 'raw') ? true : false;
 $record_stats   = true;
 
 // allow disabling stat recording from the play url
-if ($cache === '1') {
-    debug_event('play/index', 'record_stats disabled: cache {' . $cache . "}", 5);
+if ($cache === '1' || $type == 'podcast_episode') {
+    debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
     $record_stats = false;
 }
 
@@ -58,7 +60,7 @@ if (isset($_REQUEST['player'])) {
     $player = $_REQUEST['player'];
 }
 
-if (AmpConfig::get('transcode_player_customize')) {
+if (AmpConfig::get('transcode_player_customize') && !$original) {
     $transcode_to = scrub_in($_REQUEST['transcode_to']);
     $bitrate      = (int) ($_REQUEST['bitrate']);
 
@@ -113,13 +115,13 @@ if (empty($oid) && empty($demo_id) && empty($random)) {
 }
 
 // Authenticate the user if specified
-$u = $_SERVER['PHP_AUTH_USER'];
-if (empty($u)) {
-    $u = $_REQUEST['u'];
+$username = Core::get_server('PHP_AUTH_USER');
+if (empty($username)) {
+    $username = $_REQUEST['u'];
 }
-$p = $_SERVER['PHP_AUTH_PW'];
-if (empty($p)) {
-    $p = $_REQUEST['p'];
+$password = Core::get_server('PHP_AUTH_PW');
+if (empty($password)) {
+    $password = $_REQUEST['p'];
 }
 $apikey = $_REQUEST['apikey'];
 
@@ -133,8 +135,8 @@ if (!empty($apikey)) {
         Preference::init();
         $user_authenticated = true;
     }
-} elseif (!empty($u) && !empty($p)) {
-    $auth = Auth::login($u, $p);
+} elseif (!empty($username) && !empty($password)) {
+    $auth = Auth::login($username, $password);
     if ($auth['success']) {
         $GLOBALS['user']         = User::get_from_username($auth['username']);
         $uid                     = Core::get_global('user')->id;
@@ -167,7 +169,7 @@ if (!$share_id) {
         /* If the user has been disabled (true value) */
         if (make_bool(Core::get_global('user')->disabled)) {
             debug_event('play/index', Core::get_global('user')->username . " is currently disabled, stream access denied", 3);
-            header('HTTP/1.1 403 User Disabled');
+            header('HTTP/1.1 403 User disabled');
 
             return false;
         }
@@ -175,7 +177,7 @@ if (!$share_id) {
         // If require session is set then we need to make sure we're legit
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, '5')) {
-                debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP), 4);
+                debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
             } else {
                 if (!Session::exists('stream', $sid)) {
                     // No valid session id given, try with cookie session from web interface
@@ -234,7 +236,7 @@ if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
         !Access::check_network('network', Core::get_global('user')->id, '25')) {
-        debug_event('play/index', "Streaming Access Denied: " . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) . " does not have stream level access", 3);
+        debug_event('play/index', "Streaming Access Denied: " . Core::get_server('REMOTE_ADDR') . " does not have stream level access", 3);
         UI::access_denied();
 
         return false;
@@ -340,7 +342,7 @@ if ($media->catalog) {
         if ($demo_id !== '' && isset($democratic)) {
             $democratic->delete_from_oid($oid, $type);
         }
-        header('HTTP/1.1 404 File Disabled');
+        header('HTTP/1.1 404 File disabled');
 
         return false;
     }
@@ -407,8 +409,20 @@ $browser = new Horde_Browser();
 /* If they are just trying to download make sure they have rights
  * and then present them with the download file
  */
-if (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
-    debug_event('play/index', 'Downloading file...', 4);
+if (Core::get_get('action') == 'download' && !$original) {
+    debug_event('play/index', 'Downloading transcoded file... ', 4);
+    if (!$share_id) {
+        if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
+            debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
+            $sessionkey = $sid ?: Stream::get_session();
+            $agent      = Session::agent($sessionkey);
+            $location   = Session::get_geolocation($sessionkey);
+            Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+        }
+    }
+    $record_stats = false;
+} elseif (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
+    debug_event('play/index', 'Downloading raw file...', 4);
     // STUPID IE
     $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
 
@@ -423,7 +437,7 @@ if (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
     }
 
     if (!$share_id) {
-        if ($_SERVER['REQUEST_METHOD'] != 'HEAD' && $record_stats) {
+        if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
             debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
             $sessionkey = $sid ?: Stream::get_session();
             $agent      = Session::agent($sessionkey);
@@ -460,7 +474,7 @@ if (AmpConfig::get('track_user_ip')) {
 $force_downsample = false;
 if (AmpConfig::get('downsample_remote')) {
     if (!Access::check_network('network', Core::get_global('user')->id, '0')) {
-        debug_event('play/index', 'Downsampling enabled for non-local address ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP), 5);
+        debug_event('play/index', 'Downsampling enabled for non-local address ' . Core::get_server('REMOTE_ADDR'), 5);
         $force_downsample = true;
     }
 }
@@ -481,13 +495,13 @@ if ($transcode_to) {
 }
 
 // If custom play action, do not try to transcode
-if (!$cpaction) {
+if (!$cpaction && !$original) {
     $transcode_cfg = AmpConfig::get('transcode');
     $valid_types   = $media->get_stream_types($player);
     if (!is_array($valid_types)) {
         $valid_types = array($valid_types);
     }
-    if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
+    if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'podcast_episode') {
         if ($transcode_to) {
             $transcode = true;
             debug_event('play/index', 'Transcoding due to explicit request for ' . $transcode_to, 5);
@@ -610,7 +624,7 @@ Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($medi
 
 $start        = 0;
 $end          = 0;
-$range_values = sscanf($_SERVER['HTTP_RANGE'], "bytes=%d-%d", $start, $end);
+$range_values = sscanf(Core::get_server('HTTP_RANGE'), "bytes=%d-%d", $start, $end);
 
 if ($range_values > 0 && ($start > 0 || $end > 0)) {
     // Calculate stream size from byte range
@@ -651,7 +665,7 @@ if (!isset($_REQUEST['segment'])) {
         debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
     } else {
         if (!$share_id && $record_stats) {
-            if ($_SERVER['REQUEST_METHOD'] != 'HEAD') {
+            if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering stream stats for {' . $media->get_stream_name() . '}...', 4);
                 $sessionkey = $sid ?: Stream::get_session();
                 $agent      = Session::agent($sessionkey);

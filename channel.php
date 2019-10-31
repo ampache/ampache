@@ -62,8 +62,7 @@ switch ($_REQUEST['action']) {
         if (!$created) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_channel.inc.php');
         } else {
-            $title = T_('Channel Created');
-            show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=channel');
+            show_confirmation(T_('No Problem'), T_('The Channel has been created'), AmpConfig::get('web_path') . '/browse.php?action=channel');
         }
         UI::show_footer();
 
@@ -72,7 +71,7 @@ switch ($_REQUEST['action']) {
         $object_id = Core::get_request('id');
 
         $next_url = AmpConfig::get('web_path') . '/channel.php?action=delete&id=' . scrub_out($object_id);
-        show_confirmation(T_('Confirm Action'), T_('Delete Channel'), $next_url, 1, 'delete_channel');
+        show_confirmation(T_('Are You Sure?'), T_('This Channel will be deleted'), $next_url, 1, 'delete_channel');
         UI::show_footer();
 
         return false;
@@ -84,14 +83,16 @@ switch ($_REQUEST['action']) {
         }
 
         $object_id = Core::get_request('id');
-        $channel   = new Channel($object_id);
+        $channel   = new Channel((int) $object_id);
         if ($channel->delete()) {
             $next_url = AmpConfig::get('web_path') . '/browse.php?action=channel';
-            show_confirmation(T_('Deleted'), T_('Channel has been deleted'), $next_url);
+            show_confirmation(T_('No Problem'), T_('The Channel has been deleted'), $next_url);
         }
         UI::show_footer();
 
         return false;
 } // switch on the action
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

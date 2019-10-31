@@ -76,7 +76,6 @@ switch ($_REQUEST['action']) {
         $results['rfc3514'] = '0x0';
     break;
     case 'directplay':
-
         $object_type = Core::get_request('object_type');
         $object_id   = $_GET['object_id'];
         if (is_array($object_id)) {
@@ -102,7 +101,7 @@ switch ($_REQUEST['action']) {
                     unset($_SESSION['iframe']['subtitle']);
                 }
             }
-            $results['rfc3514'] = '<script type="text/javascript">' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
+            $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
         }
     break;
     case 'basket':
@@ -117,7 +116,7 @@ switch ($_REQUEST['action']) {
 
         // We need to set the basket up!
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']);
-        $results['rfc3514']           = '<script type="text/javascript">' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
+        $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
     break;
     default:
         $results['rfc3514'] = '0x1';

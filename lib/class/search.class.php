@@ -381,6 +381,7 @@ class Search extends playlist_object
             if (AmpConfig::get('show_played_times')) {
                 $this->types[] = array(
                     'name' => 'played_times',
+                    /* HINT: Number of times object has been played */
                     'label' => T_('# Played'),
                     'type' => 'numeric',
                     'widget' => array('input', 'number')
@@ -929,7 +930,7 @@ class Search extends playlist_object
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string) ($this->limit);
         }
-        debug_event('search.class', 'SQL get_items: ' . $sql, 5);
+        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -980,7 +981,7 @@ class Search extends playlist_object
 
         $sql .= ' ORDER BY RAND()';
         $sql .= $limit ? ' LIMIT ' . (string) ($limit) : '';
-        debug_event('search.sql', 'SQL get_random_items: ' . $sql, 5);
+        //debug_event('search.sql', 'SQL get_random_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
 
@@ -1071,7 +1072,7 @@ class Search extends playlist_object
     {
         $js = "";
         foreach ($this->rules as $rule) {
-            $js .= '<script type="text/javascript">' .
+            $js .= '<script>' .
                 'SearchRow.add("' . $rule[0] . '","' .
                 $rule[1] . '","' . $rule[2] . '", "' . $rule[3] . '"); </script>';
         }
@@ -1180,6 +1181,7 @@ class Search extends playlist_object
                 $group[] = "`album`.`name`";
                 $group[] = "`album`.`album_artist`";
                 $group[] = "`album`.`mbid`";
+                $group[] = "`album`.`year`";
             }
 
             switch ($rule[0]) {
@@ -1232,7 +1234,7 @@ class Search extends playlist_object
                     $join['image'] = true;
                 break;
                 case 'artist':
-                    $where[]        = "`artist`.`name` $sql_match_operator '$input'";
+                    $where[]        = "`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input'";
                     $join['artist'] = true;
                 break;
                 default:
@@ -1491,7 +1493,9 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'anywhere':
-                    $where[]           = "(`artist`.`name` $sql_match_operator '$input' OR `album`.`name` $sql_match_operator '$input' OR `song_data`.`comment` $sql_match_operator '$input' OR `song_data`.`label` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input')";
+                    $where[]           = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input' OR " .
+                                         "`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input' OR " .
+                                         " `song_data`.`comment` $sql_match_operator '$input' OR `song_data`.`label` $sql_match_operator '$input' OR `song`.`file` $sql_match_operator '$input' OR `song`.`title` $sql_match_operator '$input')";
                     $join['album']     = true;
                     $join['artist']    = true;
                     $join['song_data'] = true;
@@ -1511,11 +1515,15 @@ class Search extends playlist_object
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
                 break;
                 case 'album':
-                    $where[]       = "`album`.`name` $sql_match_operator '$input'";
+                    $where[]       = "`album`.`name` $sql_match_operator '$input' " .
+                                     " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
+                                     "' ', `album`.`name`)) $sql_match_operator '$input'";
                     $join['album'] = true;
                 break;
                 case 'artist':
-                    $where[]        = "`artist`.`name` $sql_match_operator '$input'";
+                    $where[]        = "`artist`.`name` $sql_match_operator '$input' " .
+                                      " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
+                                      "' ', `artist`.`name`)) $sql_match_operator '$input'";
                     $join['artist'] = true;
                 break;
                 case 'composer':
@@ -2011,5 +2019,33 @@ class Search extends playlist_object
             'group_sql' => '',
             'having_sql' => ''
         );
+    }
+    /**
+     * year_search
+     *
+     * Build search rules for year -> year searching.
+     * @return array
+     */
+    public static function year_search($fromYear, $toYear, $size, $offset)
+    {
+        $search           = array();
+        $search['limit']  = $size;
+        $search['offset'] = $offset;
+        $search['type']   = "album";
+        $count            = 0;
+        if ($fromYear) {
+            $search['rule_' . $count . '_input']    = $fromYear;
+            $search['rule_' . $count . '_operator'] = 0;
+            $search['rule_' . $count . '']          = "year";
+            ++$count;
+        }
+        if ($toYear) {
+            $search['rule_' . $count . '_input']    = $toYear;
+            $search['rule_' . $count . '_operator'] = 1;
+            $search['rule_' . $count . '']          = "year";
+            ++$count;
+        }
+
+        return $search;
     }
 }

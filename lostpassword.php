@@ -36,19 +36,13 @@ switch ($_REQUEST['action']) {
     case 'send':
         /* Check for posted email */
         $result = false;
-        if (isset($_POST['email']) && Core::get_post('email')) {
+        if (filter_has_var(INPUT_POST, 'email') && Core::get_post('email')) {
             /* Get the email address and the current ip*/
             $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-            $current_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') ? filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR', FILTER_VALIDATE_IP) : filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP);
+            $current_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') ? Core::get_server('HTTP_X_FORWARDED_FOR') : Core::get_server('REMOTE_ADDR');
             $result     = send_newpassword($email, $current_ip);
         }
-        /* Do not acknowledge a password has been sent or failed
-        if ($result) {
-            AmpError::add('general', T_('Password has been sent'));
-        } else {
-            AmpError::add('general', T_('Password has not been sent'));
-        }*/
-
+        // Do not acknowledge a password has been sent or failed and go back to login
         require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');
         break;
     default:
@@ -79,7 +73,9 @@ function send_newpassword($email, $current_ip)
         $mailer->recipient_name = $client->fullname;
         $mailer->recipient      = $client->email;
 
-        $message  = sprintf(T_("A user from %s has requested a password reset for '%s'."), $current_ip, $client->username);
+        $message  = sprintf(
+            /* HINT: %1 IP Address, %2 Username */
+            T_('A user from "%1$s" has requested a password reset for "%2$s"'), $current_ip, $client->username);
         $message .= "\n";
         $message .= sprintf(T_("The password has been set to: %s"), $newpassword);
         $mailer->message = $message;

@@ -37,6 +37,7 @@ class Podcast extends database_object implements library_item
 
     public $episodes;
     public $f_title;
+    public $f_website;
     public $f_description;
     public $f_language;
     public $f_copyright;
@@ -291,16 +292,16 @@ class Podcast extends database_object implements library_item
         $feed = $data['feed'];
         // Feed must be http/https
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
-            AmpError::add('feed', T_('Wrong feed url'));
+            AmpError::add('feed', T_('Feed URL is invalid'));
         }
 
         $catalog_id = (int) ($data['catalog']);
         if ($catalog_id <= 0) {
-            AmpError::add('catalog', T_('Target catalog required'));
+            AmpError::add('catalog', T_('Target Catalog is required'));
         } else {
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog->gather_types !== "podcast") {
-                AmpError::add('catalog', T_('Wrong target catalog type'));
+                AmpError::add('catalog', T_('Wrong target Catalog type'));
             }
         }
 
@@ -320,11 +321,11 @@ class Podcast extends database_object implements library_item
 
         $xmlstr = file_get_contents($feed);
         if ($xmlstr === false) {
-            AmpError::add('feed', T_('Cannot access the feed.'));
+            AmpError::add('feed', T_('Can not access the feed'));
         } else {
             $xml = simplexml_load_string($xmlstr);
             if ($xml === false) {
-                AmpError::add('feed', T_('Cannot read the feed.'));
+                AmpError::add('feed', T_('Can not read the feed'));
             } else {
                 $title            = html_entity_decode($xml->channel->title);
                 $website          = $xml->channel->link;
@@ -376,7 +377,7 @@ class Podcast extends database_object implements library_item
      * add_episodes
      * @param SimpleXMLElement $episodes
      * @param integer $afterdate
-     * @param PDOStatement|boolean $gather
+     * @param boolean $gather
      */
     public function add_episodes($episodes, $afterdate = 0, $gather = false)
     {
@@ -468,6 +469,7 @@ class Podcast extends database_object implements library_item
     /**
      * update_lastsync
      * @param integer $time
+     * @return PDOStatement|boolean
      */
     private function update_lastsync($time)
     {
@@ -505,6 +507,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * remove
+     * @return PDOStatement|boolean
      */
     public function remove()
     {

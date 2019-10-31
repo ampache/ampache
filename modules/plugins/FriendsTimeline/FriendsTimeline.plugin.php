@@ -40,6 +40,8 @@ class AmpacheFriendsTimeline
      */
     public function __construct()
     {
+        $this->description = T_("Friend's Timeline on homepage");
+
         return true;
     }
 
@@ -55,7 +57,7 @@ class AmpacheFriendsTimeline
             return false;
         }
 
-        Preference::insert('ftl_max_items', 'Friends timeline max items', '5', '25', 'integer', 'plugins', $this->name);
+        Preference::insert('ftl_max_items', T_('Friends timeline max items'), '5', '25', 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -110,6 +112,7 @@ class AmpacheFriendsTimeline
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {

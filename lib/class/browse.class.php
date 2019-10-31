@@ -39,14 +39,14 @@ class Browse extends Query
     /**
      * Constructor.
      *
-     * @param integer|null $id
+     * @param integer|null $browse_id
      * @param boolean $cached
      */
-    public function __construct($id = null, $cached = true)
+    public function __construct($browse_id = null, $cached = true)
     {
-        parent::__construct($id, $cached);
+        parent::__construct($browse_id, $cached);
 
-        if (!$id) {
+        if (!$browse_id) {
             $this->set_use_pages(true);
             $this->set_use_alpha(false);
             $this->set_grid_view(true);
@@ -170,16 +170,16 @@ class Browse extends Query
         $match = '';
         // Format any matches we have so we can show them to the masses
         if ($filter_value = $this->get_filter('alpha_match')) {
-            $match = ' (' . $filter_value . ')';
+            $match = ' (' . (string) $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('starts_with')) {
-            $match = ' (' . $filter_value . ')';
+            $match = ' (' . (string) $filter_value . ')';
         /*} elseif ($filter_value = $this->get_filter('regex_match')) {
-            $match = ' (' . $filter_value . ')';
+            $match = ' (' . (string) $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('regex_not_match')) {
-            $match = ' (' . $filter_value . ')';*/
+            $match = ' (' . (string) $filter_value . ')';*/
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
-            $catalog = Catalog::create_from_id((int) ($filter_value));
+            $catalog = Catalog::create_from_id((int) ((string) $filter_value));
             $match   = ' (' . $catalog->name . ')';
         }
 
@@ -222,7 +222,7 @@ class Browse extends Query
                 $box_req = AmpConfig::get('prefix') . UI::find_template('show_albums.inc.php');
             break;
             case 'user':
-                $box_title = T_('Users') . $match;
+                $box_title = T_('Browse Users') . $match;
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_users.inc.php');
             break;
             case 'artist':
@@ -240,7 +240,7 @@ class Browse extends Query
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_playlists.inc.php');
             break;
             case 'playlist_media':
-                $box_title = T_('Playlist Medias') . $match;
+                $box_title = T_('Playlist Items') . $match;
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_playlist_medias.inc.php');
             break;
             case 'playlist_localplay':
@@ -280,7 +280,7 @@ class Browse extends Query
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_wanted_albums.inc.php');
             break;
             case 'share':
-                $box_title = T_('Shared Objects');
+                $box_title = T_('Shares');
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_shared_objects.inc.php');
             break;
             case 'song_preview':
@@ -363,7 +363,7 @@ class Browse extends Query
             if (isset($box_req)) {
                 UI::show_box_bottom();
             }
-            echo '<script type="text/javascript">';
+            echo '<script>';
             echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
         } else {

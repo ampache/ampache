@@ -19,12 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
-<html>
-<head>
-<title><?php echo AmpConfig::get('site_title'); ?></title>
-<script language="javascript" type="text/javascript">
+ ?>
+<script>
 function PlayerFrame()
 {
     var appendmedia = false;
@@ -32,8 +28,7 @@ function PlayerFrame()
     var $webplayer = $("#webplayer");
     if ($webplayer.is(':visible')) {
 
-<?php if (AmpConfig::get('webplayer_confirmclose')) {
-    ?>
+<?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
     document.onbeforeunload = null;
 <?php
 } ?>
@@ -45,7 +40,3 @@ function PlayerFrame()
 
 PlayerFrame();
 </script>
-</head>
-<body>
-</body>
-</html>

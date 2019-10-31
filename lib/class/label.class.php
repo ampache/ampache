@@ -83,13 +83,10 @@ class Label extends database_object implements library_item
     /**
      * __construct
      */
-    public function __construct($id = null)
+    public function __construct($label_id)
     {
-        if (!$id) {
-            return false;
-        }
+        $info = $this->get_info($label_id);
 
-        $info = $this->get_info($id);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -146,6 +143,10 @@ class Label extends database_object implements library_item
         return $this->f_name;
     }
 
+    /**
+     * get_keywords
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords          = array();
@@ -182,6 +183,10 @@ class Label extends database_object implements library_item
         return $this->user;
     }
 
+    /**
+     * search_childrens
+     * @return array
+     */
     public function search_childrens($name)
     {
         $search                    = array();
@@ -202,6 +207,10 @@ class Label extends database_object implements library_item
         return $childrens;
     }
 
+    /**
+     * can_edit
+     * @return boolean
+     */
     public function can_edit($user = null)
     {
         if (!$user) {
@@ -221,6 +230,10 @@ class Label extends database_object implements library_item
         return Access::check('interface', 50, $user);
     }
 
+    /**
+     * update
+     * @return integer
+     */
     public function update(array $data)
     {
         if (self::lookup($data, $this->id) !== 0) {
@@ -247,6 +260,10 @@ class Label extends database_object implements library_item
         return $this->id;
     }
 
+    /**
+     * create
+     * @return string
+     */
     public static function create(array $data)
     {
         if (self::lookup($data) !== 0) {
@@ -310,7 +327,9 @@ class Label extends database_object implements library_item
     }
 
     /**
+     * add_artist_assoc
      * @param integer $artist_id
+     * @return boolean|PDOStatement
      */
     public function add_artist_assoc($artist_id)
     {
@@ -320,7 +339,9 @@ class Label extends database_object implements library_item
     }
 
     /**
+     * remove_artist_assoc
      * @param integer $artist_id
+     * @return boolean|PDOStatement
      */
     public function remove_artist_assoc($artist_id)
     {

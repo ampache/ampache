@@ -103,15 +103,17 @@ class Playlist extends playlist_object
 
         $sql    = 'SELECT `id` FROM `playlist`';
         $params = array();
-        if ($user_id > -1) {
+
+        if ($user_id > -1 && $incl_public) {
+            $sql .= " WHERE (`user` = ? OR `type` = 'public')";
+            $params[] = $user_id;
+        }
+        if ($user_id > -1 && !$incl_public) {
             $sql .= ' WHERE `user` = ?';
             $params[] = $user_id;
         }
-
-        if ($incl_public) {
-            if (count($params) > 0) {
-                $sql .= " OR `type` = 'public'";
-            } else {
+        if (!$user_id > -1 && $incl_public) {
+            if (count($params) === 0) {
                 $sql .= " WHERE `type` = 'public'";
             }
         }
@@ -478,6 +480,7 @@ class Playlist extends playlist_object
     /**
      * create
      * This function creates an empty playlist, gives it a name and type
+     * @param string $type
      */
     public static function create($name, $type, $user_id = null, $date = null)
     {

@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>
@@ -28,8 +27,7 @@
             echo scrub_out($np_user->fullname);
             if ($np_user->f_avatar_medium) {
                 echo '<div>' . $np_user->f_avatar_medium . '</div>';
-            }
-        ?>
+            } ?>
         </a>
     </div>
 </div>
@@ -52,19 +50,16 @@
         <?php echo $media->f_year_link; ?>
     </div>
     <?php
-        if (!empty($media->f_tags)) {
-            ?>
+        if (!empty($media->f_tags)) { ?>
             <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
                 <label><?php echo T_('Tags'); ?></label>
                 <?php echo $media->f_tags; ?>
             </div>
         <?php
-        }
-    ?>
+        } ?>
 </div>
 
-<?php if (Art::is_enabled()) {
-        ?>
+<?php if (Art::is_enabled()) { ?>
 <div class="np_group" id="np_group_3">
   <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
       <?php
@@ -78,8 +73,7 @@
 <?php
     } ?>
 
-<?php if (AmpConfig::get('show_similar')) {
-        ?>
+<?php if (AmpConfig::get('show_similar')) { ?>
 <div class="np_group similars" id="similar_items_<?php echo $media->id; ?>">
     <div class="np_group similars">
         <div class="np_cell cel_similar">
@@ -94,7 +88,7 @@
         </div>
     </div>
 </div>
-<script language="javascript" type="text/javascript">
+<script>
 $(document).ready(function(){
     <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id=' . $media->id . '&media_artist=' . $media->artist, 'similar_now_playing'); ?>
 });
@@ -103,12 +97,10 @@ $(document).ready(function(){
     } ?>
 
 <?php
-    if (Access::check('interface', '25')) {
-        ?>
+    if (Access::check('interface', '25')) { ?>
         <div class="np_group" id="np_group_4">
     <?php
-        if (AmpConfig::get('ratings')) {
-            ?>
+        if (AmpConfig::get('ratings')) { ?>
             <div class="np_cell cel_rating">
                 <label><?php echo T_('Rating'); ?></label>
                 <div id="rating_<?php echo $media->id; ?>_song">
@@ -117,8 +109,7 @@ $(document).ready(function(){
             </div>
         <?php
         }
-        if (AmpConfig::get('userflags')) {
-            ?>
+        if (AmpConfig::get('userflags')) { ?>
             <div class="np_cell cel_userflag">
                 <label><?php echo T_('Fav.'); ?></label>
                 <div id="userflag_<?php echo $media->id; ?>_song">
@@ -129,5 +120,4 @@ $(document).ready(function(){
         } ?>
         </div>
     <?php
-    }
-?>
+    } ?>

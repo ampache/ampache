@@ -40,6 +40,8 @@ class AmpacheGoogleAnalytics
      */
     public function __construct()
     {
+        $this->description = T_('Google Analytics statistics');
+
         return true;
     }
 
@@ -55,7 +57,7 @@ class AmpacheGoogleAnalytics
             return false;
         }
 
-        Preference::insert('googleanalytics_tracking_id', 'Google Analytics Tracking ID', '', 100, 'string', 'plugins', $this->name);
+        Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', 100, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -102,12 +104,18 @@ class AmpacheGoogleAnalytics
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $this->user = $user;
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['googleanalytics_tracking_id']))) {
+            $data                                = array();
+            $data['googleanalytics_tracking_id'] = Preference::get_by_user(-1, 'googleanalytics_tracking_id');
+        }
 
         $this->tracking_id = trim($data['googleanalytics_tracking_id']);
         if (!strlen($this->tracking_id)) {

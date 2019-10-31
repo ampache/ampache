@@ -41,6 +41,8 @@ class AmpachePiwik
      */
     public function __construct()
     {
+        $this->description = T_('Piwik statistics');
+
         return true;
     }
 
@@ -56,8 +58,8 @@ class AmpachePiwik
             return false;
         }
 
-        Preference::insert('piwik_site_id', 'Piwik Site ID', '1', 100, 'string', 'plugins', 'piwik');
-        Preference::insert('piwik_url', 'Piwik URL', AmpConfig::get('web_path') . '/piwik/', 100, 'string', 'plugins', $this->name);
+        Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', 100, 'string', 'plugins', 'piwik');
+        Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get('web_path') . '/piwik/', 100, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -90,10 +92,10 @@ class AmpachePiwik
      */
     public function display_on_footer()
     {
-        $currentUrl = scrub_out("http" . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        $currentUrl = scrub_out("http" . (filter_has_var(INPUT_SERVER, 'HTTPS') ? 's' : '') . '://' . Core::get_server('HTTP_HOST') . Core::get_server('REQUEST_URI'));
 
         echo "<!-- Piwik -->\n";
-        echo "<script type='text/javascript'>\n";
+        echo "<script>\n";
         echo "var _paq = _paq || [];\n";
         //echo "_paq.push(['trackPageView']);\n";   // Doesn't work when using Ajax page loading
         echo "_paq.push(['trackLink', '" . $currentUrl . "', 'link']);\n";
@@ -106,7 +108,7 @@ class AmpachePiwik
             echo "_paq.push(['setUserId', '" . Core::get_global('user')->username . "']);\n";
         }
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
-        echo "g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n";
+        echo "g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n";
         echo "})();\n";
         echo "</script>\n";
         echo "<noscript><p><img src='" . scrub_out($this->piwik_url) . "piwik.php?idsite=" . scrub_out($this->site_id) . "' style='border:0;' alt= '' /></p></noscript>\n";
@@ -117,11 +119,18 @@ class AmpachePiwik
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['piwik_site_id'])) || !strlen(trim($data['piwik_url']))) {
+            $data                  = array();
+            $data['piwik_site_id'] = Preference::get_by_user(-1, 'piwik_site_id');
+            $data['piwik_url']     = Preference::get_by_user(-1, 'piwik_url');
+        }
 
         $this->site_id = trim($data['piwik_site_id']);
         if (!strlen($this->site_id)) {

@@ -36,21 +36,20 @@ $web_path = AmpConfig::get('web_path');
 $_SESSION['login'] = true;
 define('TABLE_RENDERED', 1);
 $mobile_session = false;
-$user_agent     = $_SERVER['HTTP_USER_AGENT'];
+$user_agent     = Core::get_server('HTTP_USER_AGENT');
 
 if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'))) {
     $mobile_session = true;
-}
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+} ?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
 
 <head>
-    <!-- Propulsed by Ampache | ampache.org -->
+    <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
-    <title> <?php echo AmpConfig::get('site_title'); ?> </title>
+    <title><?php echo AmpConfig::get('site_title'); ?></title>
 </head>
 
 <body id="loginPage">
@@ -79,31 +78,26 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                     </div>
                     <div class="formValidation">
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
-                        <input type="hidden" name="referrer" value="<?php echo scrub_out($_SERVER['HTTP_REFERRER']); ?>" />
+                        <input type="hidden" name="referrer" value="<?php echo scrub_out(Core::get_server('HTTP_REFERRER')); ?>" />
                         <input type="hidden" name="action" value="login" />
                         <?php echo AmpConfig::get('login_message'); ?>
                     </div>
                 </div>
 
-                <?php if (Mailer::is_mail_enabled()) {
-    ?>
+                <?php if (Mailer::is_mail_enabled()) { ?>
                     <div class="loginoptions">
-                        <?php if (AmpConfig::get('allow_public_registration')) {
-        ?>
-                            <a rel="nohtml" class="button" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
+                        <?php if (AmpConfig::get('allow_public_registration')) { ?>
+                            <a class="button nohtml" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
                         <?php
-    } // end if allow_public_registration
-                        ?>
-                        <a rel=\"nohtml\" class=\"button\" id=\"lostpasswordbutton\" href=\"" . $web_path . "/lostpassword.php\">Lost password</a>
+    } // end if allow_public_registration?>
+                        <a class="button nohtml" id="lostpasswordbutton" href="<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
                     </div>
                 <?php
 } ?>
             </form>
             <?php if ($mobile_session) {
-                            echo "<div id=\"mobileheader\"><!-- This is the header -->";
-                            echo "<h1 id=\"headerlogo\"></h1>";
-                            echo "</div>";
-                        } ?>
-            <?php
-            UI::show_footer();
-            ?>
+        echo '<div id="mobileheader"><!-- This is the header -->';
+        echo '<h1 id="headerlogo"></h1>';
+        echo '</div>';
+    }
+    UI::show_footer(); ?>
