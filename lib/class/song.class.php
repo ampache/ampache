@@ -1884,7 +1884,7 @@ class Song extends database_object implements media, library_item
         // Some players doesn't allow a type streamed into another without giving the right extension
         $transcode_cfg = AmpConfig::get('transcode');
         $valid_types   = Song::get_stream_types_for_type($type, $player);
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types)) || !$original) {
+        if ($transcode_cfg == 'always' && !$original || ($transcode_cfg != 'never' && !in_array('native', $valid_types) && !$original)) {
             $transcode_settings = $media->get_transcode_settings(null);
             if ($transcode_settings) {
                 debug_event('song.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings... ", 5);

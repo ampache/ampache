@@ -410,7 +410,7 @@ $browser = new Horde_Browser();
  * and then present them with the download file
  */
 if (Core::get_get('action') == 'download' && !$original) {
-    debug_event('play/index', 'Downloading transcoded ' . $format . ' file... ', 4);
+    debug_event('play/index', 'Downloading transcoded file... ', 4);
 } elseif (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
     debug_event('play/index', 'Downloading raw file...', 4);
     // STUPID IE
