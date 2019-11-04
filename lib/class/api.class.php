@@ -827,7 +827,7 @@ class Api
             $items    = $playlist->get_items();
         } else {
             //Smartlists
-            $playlist = new Search(str_replace('smart_', '', $input['filter']));
+            $playlist = new Search(str_replace('smart_', '', $input['filter']), 'song', $user);
             $items    = $playlist->get_items();
         }
 
@@ -997,9 +997,28 @@ class Api
      * advanced_search
      * MINIMUM_API_VERSION=380001
      *
-     * Perform an advanced search given passed rules
+     * Perform an advanced search given passed rules. This works in a similar way to the web/UI search pages.
+     * You can pass multiple rules as well as joins to create in depth search results
+     * 
+     * Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
+     * Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
+     * 
+     * Rule arrays must contain the following:
+     *   * rule name (e.g. rule_1, rule_2)
+     *   * rule operator (e.g. rule_1_operator, rule_2_operator)
+     *   * rule input (e.g. rule_1_input, rule_2_input)
+     * 
+     * Refer to the wiki for firther information on rule_* types and data
+     * https://github.com/ampache/ampache/wiki/XML-methods
      *
      * @param array $input
+     * $input = array(operator        = (string) 'and'|'or' (whether to match one rule or all)
+     *                rule_1          = (string)
+     *                rule_1_operator = (integer) 0|1|2|3|4|5|6
+     *                rule_1_input    = (mixed) The string, date, integer you are searching for
+     *                type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
+     *                offset          = (integer)
+     *                limit           = (integer))
      */
     public static function advanced_search($input)
     {
@@ -1008,8 +1027,8 @@ class Api
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
-        $results = Search::run($input);
         $user    = User::get_from_username(Session::username($input['auth']));
+        $results = Search::run($input, $user);
 
         $type = 'song';
         if (isset($input['type'])) {
@@ -2011,6 +2030,7 @@ class Api
         $object_id = $input['id'];
         $type      = $input['type'];
         $size      = $input['size'];
+        $user      = User::get_from_username(Session::username($input['auth']));
 
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
@@ -2035,7 +2055,7 @@ class Api
         } elseif ($type == 'podcast') {
             $art = new Art($object_id, "podcast");
         } elseif ($type == 'search') {
-            $smartlist = new Search($object_id);
+            $smartlist = new Search($object_id. 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
             $art       = new Art($item['object_id'], $item['object_type']);
