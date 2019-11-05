@@ -8,7 +8,7 @@
 * Remove charts/graphs that use non-free graph library pchart
 * Update the CSS theme colors and structure.
 * Light theme updated.
-* Remove plex, dropbox, googleplus plugins
+* Remove plex and googleplus plugins
 * Remove all plex code
 * Remove message of the day
 * Don't allow lost password reset for Admin users
@@ -41,6 +41,7 @@
 * Remove '[Disk x]' when grouped from all UI areas by enforcing the group setting.
 * Make test.php, init.php & install.php show an error page instead of blank screen. (gettext)
 * Filter zip names in batch so they are named correctly by the download
+* API - Document the Ampache API [<https://github.com/ampache/ampache/wiki/XML-methods>]
 * API - Authentication: Require a handshake and generate unique sessions
 * API - Authentication: allow sha256 encrypted apikey for auth
   * You must send an encrypted api key in the following fashion. (Hash key joined with username)
@@ -90,6 +91,7 @@
 * HTML5 doctype across the board. (<!DOCTYPE html>)
 * Allow the main sidebar to be reordered using CSS (.sb2_music, .sb2_video, .sb2_*)
 * Rework user uploads to rely on file tags ONLY instead of allowing manual choices.
+* Fixed QRCode views
 
 ## 3.9.1
 

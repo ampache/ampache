@@ -856,11 +856,12 @@ class Api
     {
         $name = $input['name'];
         $type = $input['type'];
+        $user = User::get_from_username(Session::username($input['auth']));
         if ($type != 'private') {
             $type = 'public';
         }
 
-        $uid = Playlist::create($name, $type);
+        $uid = Playlist::create($name, $type, $user->id);
         echo XML_Data::playlists(array($uid));
     } // playlist_create
 
@@ -999,15 +1000,15 @@ class Api
      *
      * Perform an advanced search given passed rules. This works in a similar way to the web/UI search pages.
      * You can pass multiple rules as well as joins to create in depth search results
-     * 
+     *
      * Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
      * Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
-     * 
+     *
      * Rule arrays must contain the following:
      *   * rule name (e.g. rule_1, rule_2)
      *   * rule operator (e.g. rule_1_operator, rule_2_operator)
      *   * rule input (e.g. rule_1_input, rule_2_input)
-     * 
+     *
      * Refer to the wiki for firther information on rule_* types and data
      * https://github.com/ampache/ampache/wiki/XML-methods
      *
@@ -1470,6 +1471,7 @@ class Api
         $type      = (string) $input['type'];
         $object_id = $input['id'];
         $rating    = $input['rating'];
+        $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
             echo XML_Data::error('401', T_('Wrong object type ' . $type));
@@ -1487,7 +1489,7 @@ class Api
                 return;
             }
             $rate = new Rating($object_id, $type);
-            $rate->set_rating($rating);
+            $rate->set_rating($rating, $user->id);
             echo XML_Data::success('rating set ' . $object_id);
         }
     } // rate
@@ -1517,10 +1519,10 @@ class Api
         $type      = $input['type'];
         $object_id = $input['id'];
         $flag      = $input['flag'];
-        $client    = User::get_from_apikey($input['auth']);
+        $user      = User::get_from_apikey($input['auth']);
         $user_id   = null;
-        if ($client) {
-            $user_id = $client->id;
+        if ($user) {
+            $user_id = $user->id;
         }
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
@@ -1801,7 +1803,7 @@ class Api
         }
         $type   = (string) $input['type'];
         $object = (int) $input['id'];
-        
+
         // confirm the correct data
         if (!in_array($type, array('artist', 'album', 'song'))) {
             echo XML_Data::error('401', T_('Wrong item type ' . $type));
@@ -1843,7 +1845,7 @@ class Api
         $type      = (string) $input['type'];
         $object    = (int) $input['id'];
         $overwrite = ((int) $input['overwrite'] == 0) ? true : false;
-        
+
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
             echo XML_Data::error('401', T_('Wrong item type ' . $type));
@@ -1857,9 +1859,14 @@ class Api
             return;
         }
         // update your object
-        Catalog::gather_art_item($type, $object, $overwrite, true);
+        if (Access::check('interface', 75, User::get_from_username(Session::username($input['auth']))->id)) {
+            Catalog::gather_art_item($type, $object, $overwrite, true);
+            echo XML_Data::success('Gathered art for: ' . (string) $object . ' (' . $type . ')');
 
-        echo XML_Data::success('Gathered art for: ' . (string) $object . ' (' . $type . ')');
+            return;
+        }
+        //need at least catalog_manager access to the db
+        echo XML_Data::error('400', T_('failed to update_art for ' . (string) $object));
     }
 
     /**
@@ -1881,7 +1888,7 @@ class Api
             return false;
         }
         $object = (int) $input['id'];
-        
+
         // confirm the correct data
         if (!in_array($type, array('artist'))) {
             echo XML_Data::error('401', T_('Wrong item type ' . $type));
@@ -1895,10 +1902,16 @@ class Api
             return;
         }
         // update your object
-        Recommendation::get_artist_info($object);
-        Recommendation::get_artists_like($object);
+        if (Access::check('interface', 75, User::get_from_username(Session::username($input['auth']))->id)) {
+            Recommendation::get_artist_info($object);
+            Recommendation::get_artists_like($object);
 
-        echo XML_Data::success('Updated artist info: ' . (string) $object);
+            echo XML_Data::success('Updated artist info: ' . (string) $object);
+
+            return;
+        }
+        //need at least catalog_manager access to the db
+        echo XML_Data::error('400', T_('failed to update_artist_info for ' . (string) $object));
     }
 
     /**
@@ -2055,7 +2068,7 @@ class Api
         } elseif ($type == 'podcast') {
             $art = new Art($object_id, "podcast");
         } elseif ($type == 'search') {
-            $smartlist = new Search($object_id. 'song', $user);
+            $smartlist = new Search($object_id . 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
             $art       = new Art($item['object_id'], $item['object_type']);
