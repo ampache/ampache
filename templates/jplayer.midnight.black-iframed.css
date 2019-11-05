@@ -269,6 +269,7 @@ div.jp-seek-bar {
     background-repeat: repeat-x;
     background-position: 0 -202px;
     width: 0;
+    min-width: 135px;
     height: 100%;
     cursor: pointer;
     border-radius: 5px;
