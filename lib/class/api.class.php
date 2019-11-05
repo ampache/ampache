@@ -152,7 +152,7 @@ class Api
      * @param array $input
      * $input = array(user      = (string) $username
      *                auth      = (string) $passphrase
-     *                timestamp = (int) UNIXTIME()
+     *                timestamp = (integer) UNIXTIME()
      *                version   = (string) $version //optional)
      * @return boolean
      */
@@ -1424,7 +1424,7 @@ class Api
      * This get the latest posted shouts
      *
      * @param array $input
-     * $input = array(limit = (int) $limit //optional)
+     * $input = array(limit = (integer) $limit //optional)
      */
     public static function last_shouts($input)
     {
@@ -1455,8 +1455,8 @@ class Api
      *
      * @param array $input
      * $input = array(type   = (string) 'song'|'album'|'artist' $type
-     *                id     = (int) $object_id
-     *                rating = (int) 0|1|2|3|4|5 $rating)
+     *                id     = (integer) $object_id
+     *                rating = (integer) 0|1|2|3|4|5 $rating)
      */
     public static function rate($input)
     {
@@ -1502,7 +1502,7 @@ class Api
      *
      * @param array $input
      * $input = array(type = (string) 'song'|'album'|'artist' $type
-     *                id   = (int) $object_id
+     *                id   = (integer) $object_id
      *                flag = (bool) 0|1 $flag)
      */
     public static function flag($input)
@@ -1556,8 +1556,8 @@ class Api
      * This allows other sources to record play history to Ampache
      *
      * @param array $input
-     * $input = array(id     = (int) $object_id
-     *                user   = (int) $user_id
+     * $input = array(id     = (integer) $object_id
+     *                user   = (integer) $user_id
      *                client = (string) $agent //optional)
      */
     public static function record_play($input)
@@ -1617,7 +1617,7 @@ class Api
      *                songmbid   = (string) $song_mbid //optional
      *                artistmbid = (string) $artist_mbid //optional
      *                albummbid  = (string) $album_mbid //optional
-     *                date       = (int) UNIXTIME() //optional
+     *                date       = (integer) UNIXTIME() //optional
      *                client     = (string) $agent //optional)
      */
     public static function scrobble($input)
@@ -1690,8 +1690,8 @@ class Api
      *
      * @param array $input
      * $input = array(username = (string)
-     *                limit    = (int) //optional
-     *                since    = (int) UNIXTIME() //optional)
+     *                limit    = (integer) //optional
+     *                since    = (integer) UNIXTIME() //optional)
      */
     public static function timeline($input)
     {
@@ -1728,8 +1728,8 @@ class Api
      * This get current user friends timeline
      *
      * @param array $input
-     * $input = array(limit = (int) //optional
-     *                since = (int) UNIXTIME() //optional)
+     * $input = array(limit = (integer) //optional
+     *                since = (integer) UNIXTIME() //optional)
      */
     public static function friends_timeline($input)
     {
@@ -1756,7 +1756,7 @@ class Api
      *
      * @param array $input
      * $input = array(task    = (string) 'add_to_catalog'|'clean_catalog'
-     *                catalog = (int) $catalog_id)
+     *                catalog = (integer) $catalog_id)
      */
     public static function catalog_action($input)
     {
@@ -1789,7 +1789,7 @@ class Api
      *
      * @param array $input
      * $input = array(type = (string) 'artist'|'album'|'song'
-     *                id   = (int) $artist_id, $album_id, $song_id)
+     *                id   = (integer) $artist_id, $album_id, $song_id)
      */
     public static function update_from_tags($input)
     {
@@ -1829,7 +1829,7 @@ class Api
      *
      * @param array $input
      * $input = array(type      = (string) 'artist'|'album'
-     *                id        = (int) $artist_id, $album_id)
+     *                id        = (integer) $artist_id, $album_id)
      *                overwrite = (boolean) 0|1 //optional
      */
     public static function update_art($input)
@@ -1870,7 +1870,7 @@ class Api
      * Make sure lastfm_api_key is set in your configuration file
      *
      * @param array $input
-     * $input = array(id   = (int) $artist_id)
+     * $input = array(id   = (integer) $artist_id)
      */
     public static function update_artist_info($input)
     {
@@ -1911,10 +1911,10 @@ class Api
      * @param array $input
      * $input = array(id      = (string) $song_id / $podcast_episode_id
      *                type    = (string) 'song'|'podcast'
-     *                bitrate = (int) max bitrate for transcoding
+     *                bitrate = (integer) max bitrate for transcoding
      *                format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
-     *                offset  = (int) time offset in seconds
-     *                length  = (string) 'true'|'false'
+     *                offset  = (integer) time offset in seconds
+     *                length  = (boolean) 0|1
      */
     public static function stream($input)
     {
@@ -1931,10 +1931,10 @@ class Api
         $maxBitRate    = $input['bitrate'];
         $format        = $input['format']; // mp3, flv or raw
         $timeOffset    = $input['offset'];
-        $contentLength = $input['length']; // Force content-length guessing if transcode
+        $contentLength = (int) $input['length']; // Force content-length guessing if transcode
 
         $params = '&client=api';
-        if ($contentLength == 'true') {
+        if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
         if ($format && $format != "raw") {
@@ -2107,7 +2107,8 @@ class Api
      * $input = array(username = (string) $username
      *                fullname = (string) $fullname //optional
      *                password = (string) hash('sha256', $password))
-     *                email    = (string) $email)
+     *                email    = (string) $email
+     *                disable  = (integer) 0|1 //optional)
      */
     public static function user_create($input)
     {
@@ -2121,7 +2122,7 @@ class Api
         $fullname = $input['fullname'] ?: $username;
         $email    = $input['email'];
         $password = $input['password'];
-        $disable  = ($input['disable'] == 'true');
+        $disable  = ((int) $input['disable'] == 1);
 
         if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
             $access  = 25;
@@ -2150,8 +2151,8 @@ class Api
      *                website    = (string) $website //optional
      *                state      = (string) $state //optional
      *                city       = (string) $city //optional
-     *                disable    = (string) 'true'|'false' //optional
-     *                maxbitrate = (int) $maxbitrate //optional
+     *                disable    = (integer) 0|1 //optional
+     *                maxbitrate = (integer) $maxbitrate //optional
      */
     public static function user_update($input)
     {
@@ -2206,9 +2207,9 @@ class Api
             if ($city) {
                 $user->update_city($city);
             }
-            if ($disable == 'true') {
+            if ((int) $disable == 1) {
                 $user->disable();
-            } elseif ($disable == 'false') {
+            } elseif ((int)$disable == 0) {
                 $user->enable();
             }
             if ((int) $maxbitrate > 0) {
