@@ -39,12 +39,19 @@ class Search extends playlist_object
 
     public $link;
     public $f_link;
+    
+    public $search_user;
 
     /**
      * constructor
      */
-    public function __construct($search_id = null, $searchtype = 'song')
+    public function __construct($search_id = null, $searchtype = 'song', $user = null)
     {
+        if ($user) {
+            $this->search_user = $user;
+        } else {
+            $this->search_user = Core::get_global('user');
+        }
         $this->searchtype = $searchtype;
         if ($search_id) {
             $info = $this->get_info($search_id);
@@ -831,13 +838,13 @@ class Search extends playlist_object
      * This function actually runs the search and returns an array of the
      * results.
      */
-    public static function run($data)
+    public static function run($data, $user = null)
     {
         $limit  = (int) ($data['limit']);
         $offset = (int) ($data['offset']);
         $data   = self::clean_request($data);
 
-        $search = new Search(null, $data['type']);
+        $search = new Search(null, $data['type'], $user);
         $search->parse_rules($data);
 
         // Generate BASE SQL
@@ -1025,6 +1032,7 @@ class Search extends playlist_object
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
                 $ruleID = $ruleID[1];
                 foreach (explode('|', $data['rule_' . $ruleID . '_input']) as $input) {
+                    debug_event('search.class', 'parse_rules: ' . $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'], 5);
                     $this->rules[] = array(
                         $value,
                         $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'],
@@ -1155,7 +1163,7 @@ class Search extends playlist_object
     private function album_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $userid             = Core::get_global('user')->id;
+        $userid             = $this->search_user->id;
 
         $where       = array();
         $table       = array();
@@ -1329,7 +1337,7 @@ class Search extends playlist_object
     private function artist_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $userid             = Core::get_global('user')->id;
+        $userid             = $this->search_user->id;
 
         $where              = array();
         $table              = array();
@@ -1469,7 +1477,7 @@ class Search extends playlist_object
     private function song_to_sql()
     {
         $sql_logic_operator = $this->logic_operator;
-        $userid             = Core::get_global('user')->id;
+        $userid             = $this->search_user->id;
 
         $where       = array();
         $table       = array();
@@ -1641,7 +1649,7 @@ class Search extends playlist_object
                     $where[]               = "`playlist_data`.`playlist` $sql_match_operator '$input'";
                 break;
                 case 'smartplaylist':
-                    $subsearch = new Search($input, 'song');
+                    $subsearch = new Search($input, 'song', $this->search_user);
                     $subsql    = $subsearch->to_sql();
                     $where[]   = "$sql_match_operator (" . $subsql['where_sql'] . ")";
                     // HACK: array_merge would potentially lose tags, since it

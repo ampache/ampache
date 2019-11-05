@@ -192,7 +192,7 @@ class Api
      * @param array $input
      * $input = array(user      = (string) $username
      *                auth      = (string) $passphrase
-     *                timestamp = (int) UNIXTIME()
+     *                timestamp = (integer) UNIXTIME()
      *                version   = (string) $version //optional)
      * @return boolean
      */
@@ -1054,7 +1054,7 @@ class Api
             $items    = $playlist->get_items();
         } else {
             //Smartlists
-            $playlist = new Search(str_replace('smart_', '', $input['filter']));
+            $playlist = new Search(str_replace('smart_', '', $input['filter']), 'song', $user);
             $items    = $playlist->get_items();
         }
 
@@ -1093,11 +1093,12 @@ class Api
     {
         $name = $input['name'];
         $type = $input['type'];
+        $user = User::get_from_username(Session::username($input['auth']));
         if ($type != 'private') {
             $type = 'public';
         }
 
-        $uid = Playlist::create($name, $type);
+        $uid = Playlist::create($name, $type, $user->id);
 
         //Whatever format the user wants
         $outputFormat = $input['format'];
@@ -1292,15 +1293,34 @@ class Api
      * advanced_search
      * MINIMUM_API_VERSION=380001
      *
-     * Perform an advanced search given passed rules
+     * Perform an advanced search given passed rules. This works in a similar way to the web/UI search pages.
+     * You can pass multiple rules as well as joins to create in depth search results
+     *
+     * Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
+     * Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
+     *
+     * Rule arrays must contain the following:
+     *   * rule name (e.g. rule_1, rule_2)
+     *   * rule operator (e.g. rule_1_operator, rule_2_operator)
+     *   * rule input (e.g. rule_1_input, rule_2_input)
+     *
+     * Refer to the wiki for firther information on rule_* types and data
+     * https://github.com/ampache/ampache/wiki/XML-methods
      *
      * @param array $input
+     * $input = array(operator        = (string) 'and'|'or' (whether to match one rule or all)
+     *                rule_1          = (string)
+     *                rule_1_operator = (integer) 0|1|2|3|4|5|6
+     *                rule_1_input    = (mixed) The string, date, integer you are searching for
+     *                type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
+     *                offset          = (integer)
+     *                limit           = (integer))
      */
     public static function advanced_search($input)
     {
         ob_end_clean();
-        $results = Search::run($input);
         $user    = User::get_from_username(Session::username($input['auth']));
+        $results = Search::run($input, $user);
 
         //Whatever format the user wants
         $outputFormat = $input['format'];
@@ -1842,7 +1862,7 @@ class Api
      * This get the latest posted shouts
      *
      * @param array $input
-     * $input = array(limit = (int) $limit //optional)
+     * $input = array(limit = (integer) $limit //optional)
      */
     public static function last_shouts($input)
     {
@@ -1880,8 +1900,8 @@ class Api
      *
      * @param array $input
      * $input = array(type   = (string) 'song'|'album'|'artist' $type
-     *                id     = (int) $object_id
-     *                rating = (int) 0|1|2|3|4|5 $rating)
+     *                id     = (integer) $object_id
+     *                rating = (integer) 0|1|2|3|4|5 $rating)
      */
     public static function rate($input)
     {
@@ -1895,6 +1915,7 @@ class Api
         $type      = (string) $input['type'];
         $object_id = $input['id'];
         $rating    = $input['rating'];
+        $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
             echo XML_Data::error('401', T_('Wrong object type ' . $type));
@@ -1921,7 +1942,7 @@ class Api
                 }
             } else {
                 $rate = new Rating($object_id, $type);
-                $rate->set_rating($rating);
+                $rate->set_rating($rating, $user->id);
                 if ($outputFormat == 'json') {
                     echo JSON_Data::success('success');
                 } else {  // Defaults to XML
@@ -1941,7 +1962,7 @@ class Api
      *
      * @param array $input
      * $input = array(type = (string) 'song'|'album'|'artist' $type
-     *                id   = (int) $object_id
+     *                id   = (integer) $object_id
      *                flag = (bool) 0|1 $flag)
      */
     public static function flag($input)
@@ -1956,10 +1977,10 @@ class Api
         $type      = $input['type'];
         $object_id = $input['id'];
         $flag      = $input['flag'];
-        $client    = User::get_from_apikey($input['auth']);
+        $user      = User::get_from_apikey($input['auth']);
         $user_id   = null;
-        if ($client) {
-            $user_id = $client->id;
+        if ($user) {
+            $user_id = $user->id;
         }
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
@@ -1995,8 +2016,8 @@ class Api
      * This allows other sources to record play history to Ampache
      *
      * @param array $input
-     * $input = array(id     = (int) $object_id
-     *                user   = (int) $user_id
+     * $input = array(id     = (integer) $object_id
+     *                user   = (integer) $user_id
      *                client = (string) $agent //optional)
      */
     public static function record_play($input)
@@ -2056,7 +2077,7 @@ class Api
      *                songmbid   = (string) $song_mbid //optional
      *                artistmbid = (string) $artist_mbid //optional
      *                albummbid  = (string) $album_mbid //optional
-     *                date       = (int) UNIXTIME() //optional
+     *                date       = (integer) UNIXTIME() //optional
      *                client     = (string) $agent //optional)
      */
     public static function scrobble($input)
@@ -2129,8 +2150,8 @@ class Api
      *
      * @param array $input
      * $input = array(username = (string)
-     *                limit    = (int) //optional
-     *                since    = (int) UNIXTIME() //optional)
+     *                limit    = (integer) //optional
+     *                since    = (integer) UNIXTIME() //optional)
      */
     public static function timeline($input)
     {
@@ -2176,8 +2197,8 @@ class Api
      * This get current user friends timeline
      *
      * @param array $input
-     * $input = array(limit = (int) //optional
-     *                since = (int) UNIXTIME() //optional)
+     * $input = array(limit = (integer) //optional
+     *                since = (integer) UNIXTIME() //optional)
      */
     public static function friends_timeline($input)
     {
@@ -2211,7 +2232,7 @@ class Api
      *
      * @param array $input
      * $input = array(task    = (string) 'add_to_catalog'|'clean_catalog'
-     *                catalog = (int) $catalog_id)
+     *                catalog = (integer) $catalog_id)
      */
     public static function catalog_action($input)
     {
@@ -2244,7 +2265,7 @@ class Api
      *
      * @param array $input
      * $input = array(type = (string) 'artist'|'album'|'song'
-     *                id   = (int) $artist_id, $album_id, $song_id)
+     *                id   = (integer) $artist_id, $album_id, $song_id)
      */
     public static function update_from_tags($input)
     {
@@ -2256,7 +2277,7 @@ class Api
         }
         $type   = (string) $input['type'];
         $object = (int) $input['id'];
-        
+
         // confirm the correct data
         if (!in_array($type, array('artist', 'album', 'song'))) {
             echo XML_Data::error('401', T_('Wrong item type ' . $type));
@@ -2284,7 +2305,7 @@ class Api
      *
      * @param array $input
      * $input = array(type      = (string) 'artist'|'album'
-     *                id        = (int) $artist_id, $album_id)
+     *                id        = (integer) $artist_id, $album_id)
      *                overwrite = (boolean) 0|1 //optional
      */
     public static function update_art($input)
@@ -2298,7 +2319,7 @@ class Api
         $type      = (string) $input['type'];
         $object    = (int) $input['id'];
         $overwrite = ((int) $input['overwrite'] == 0) ? true : false;
-        
+
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
             echo XML_Data::error('401', T_('Wrong item type ' . $type));
@@ -2312,9 +2333,14 @@ class Api
             return;
         }
         // update your object
-        Catalog::gather_art_item($type, $object, $overwrite, true);
+        if (Access::check('interface', 75, User::get_from_username(Session::username($input['auth']))->id)) {
+            Catalog::gather_art_item($type, $object, $overwrite, true);
+            echo XML_Data::success('Gathered art for: ' . (string) $object . ' (' . $type . ')');
 
-        echo XML_Data::success('Gathered art for: ' . (string) $object . ' (' . $type . ')');
+            return;
+        }
+        //need at least catalog_manager access to the db
+        echo XML_Data::error('400', T_('failed to update_art for ' . (string) $object));
     }
 
     /**
@@ -2325,7 +2351,7 @@ class Api
      * Make sure lastfm_api_key is set in your configuration file
      *
      * @param array $input
-     * $input = array(id   = (int) $artist_id)
+     * $input = array(id   = (integer) $artist_id)
      */
     public static function update_artist_info($input)
     {
@@ -2336,7 +2362,7 @@ class Api
             return false;
         }
         $object = (int) $input['id'];
-        
+
         // confirm the correct data
         if (!in_array($type, array('artist'))) {
             echo XML_Data::error('401', T_('Wrong item type ' . $type));
@@ -2350,10 +2376,16 @@ class Api
             return;
         }
         // update your object
-        Recommendation::get_artist_info($object);
-        Recommendation::get_artists_like($object);
+        if (Access::check('interface', 75, User::get_from_username(Session::username($input['auth']))->id)) {
+            Recommendation::get_artist_info($object);
+            Recommendation::get_artists_like($object);
 
-        echo XML_Data::success('Updated artist info: ' . (string) $object);
+            echo XML_Data::success('Updated artist info: ' . (string) $object);
+
+            return;
+        }
+        //need at least catalog_manager access to the db
+        echo XML_Data::error('400', T_('failed to update_artist_info for ' . (string) $object));
     }
 
     /**
@@ -2366,10 +2398,10 @@ class Api
      * @param array $input
      * $input = array(id      = (string) $song_id / $podcast_episode_id
      *                type    = (string) 'song'|'podcast'
-     *                bitrate = (int) max bitrate for transcoding
+     *                bitrate = (integer) max bitrate for transcoding
      *                format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
-     *                offset  = (int) time offset in seconds
-     *                length  = (string) 'true'|'false'
+     *                offset  = (integer) time offset in seconds
+     *                length  = (boolean) 0|1
      */
     public static function stream($input)
     {
@@ -2386,10 +2418,10 @@ class Api
         $maxBitRate    = $input['bitrate'];
         $format        = $input['format']; // mp3, flv or raw
         $timeOffset    = $input['offset'];
-        $contentLength = $input['length']; // Force content-length guessing if transcode
+        $contentLength = (int) $input['length']; // Force content-length guessing if transcode
 
         $params = '&client=api';
-        if ($contentLength == 'true') {
+        if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
         if ($format && $format != "raw") {
@@ -2485,6 +2517,7 @@ class Api
         $object_id = $input['id'];
         $type      = $input['type'];
         $size      = $input['size'];
+        $user      = User::get_from_username(Session::username($input['auth']));
 
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
@@ -2509,7 +2542,7 @@ class Api
         } elseif ($type == 'podcast') {
             $art = new Art($object_id, "podcast");
         } elseif ($type == 'search') {
-            $smartlist = new Search($object_id);
+            $smartlist = new Search($object_id . 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
             $art       = new Art($item['object_id'], $item['object_type']);
@@ -2561,7 +2594,8 @@ class Api
      * $input = array(username = (string) $username
      *                fullname = (string) $fullname //optional
      *                password = (string) hash('sha256', $password))
-     *                email    = (string) $email)
+     *                email    = (string) $email
+     *                disable  = (integer) 0|1 //optional)
      */
     public static function user_create($input)
     {
@@ -2575,7 +2609,7 @@ class Api
         $fullname = $input['fullname'] ?: $username;
         $email    = $input['email'];
         $password = $input['password'];
-        $disable  = ($input['disable'] == 'true');
+        $disable  = ((int) $input['disable'] == 1);
 
         if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
             $access  = 25;
@@ -2604,8 +2638,8 @@ class Api
      *                website    = (string) $website //optional
      *                state      = (string) $state //optional
      *                city       = (string) $city //optional
-     *                disable    = (string) 'true'|'false' //optional
-     *                maxbitrate = (int) $maxbitrate //optional
+     *                disable    = (integer) 0|1 //optional
+     *                maxbitrate = (integer) $maxbitrate //optional
      */
     public static function user_update($input)
     {
@@ -2660,9 +2694,9 @@ class Api
             if ($city) {
                 $user->update_city($city);
             }
-            if ($disable == 'true') {
+            if ((int) $disable == 1) {
                 $user->disable();
-            } elseif ($disable == 'false') {
+            } elseif ((int)$disable == 0) {
                 $user->enable();
             }
             if ((int) $maxbitrate > 0) {
