@@ -41,6 +41,7 @@ $type           = scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECI
 $cache          = scrub_in($_REQUEST['cache']);
 $format         = scrub_in($_REQUEST['format']);
 $original       = ($format == 'raw') ? true : false;
+$action         = Core::get_get('action');
 $record_stats   = true;
 
 // allow disabling stat recording from the play url
@@ -409,7 +410,7 @@ $browser = new Horde_Browser();
 /* If they are just trying to download make sure they have rights
  * and then present them with the download file
  */
-if (Core::get_get('action') == 'download' && !$original) {
+if ($action == 'download' && !$original) {
     debug_event('play/index', 'Downloading transcoded file... ', 4);
     if (!$share_id) {
         if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
@@ -421,7 +422,7 @@ if (Core::get_get('action') == 'download' && !$original) {
         }
     }
     $record_stats = false;
-} elseif (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
+} elseif ($action == 'download' && AmpConfig::get('download')) {
     debug_event('play/index', 'Downloading raw file...', 4);
     // STUPID IE
     $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
@@ -618,8 +619,9 @@ if (!is_resource($filepointer)) {
 if (!$transcode) {
     header('ETag: ' . $media->id);
 }
-Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
-
+if ($action != 'download') {
+    Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
+}
 // Handle Content-Range
 
 $start        = 0;
