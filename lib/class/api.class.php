@@ -1133,14 +1133,14 @@ class Api
         switch ($input['method']) {
             case 'vote':
                 $type  = 'song';
-                $media = new $type($input['oid']);
+                $media = new Song($input['oid']);
                 if (!$media->id) {
                     echo XML_Data::error('400', T_('Media object invalid or not specified'));
                     break;
                 }
                 $democratic->add_vote(array(
                     array(
-                        'object_type' => 'song',
+                        'object_type' => $type,
                         'object_id' => $media->id
                     )
                 ));
@@ -1151,7 +1151,7 @@ class Api
             break;
             case 'devote':
                 $type  = 'song';
-                $media = new $type($input['oid']);
+                $media = new Song($input['oid']);
                 if (!$media->id) {
                     echo XML_Data::error('400', T_('Media object invalid or not specified'));
                 }
@@ -1259,13 +1259,13 @@ class Api
                         } else {
                             debug_event('api.class', 'stats random ' . $type, 4);
                             if ($type === 'song') {
-                                $results = Random::get_default($limit);
+                                $results = Random::get_default($limit, $user_id);
                             }
                             if ($type === 'artist') {
-                                $results = Artist::get_random($limit);
+                                $results = Artist::get_random($limit, false, $user_id);
                             }
                             if ($type === 'album') {
-                                $results = Album::get_random($limit);
+                                $results = Album::get_random($limit, false, $user_id);
                             }
                         }
                     }
@@ -1573,7 +1573,6 @@ class Api
         ob_end_clean();
         $object_id = $input['id'];
         $user_id   = (int) $input['user'];
-        $type      = 'song';
         $user      = new User($user_id);
         $valid     = in_array($user->id, User::get_valid_users());
 
@@ -1591,18 +1590,14 @@ class Api
             $agent = 'api';
         }
 
-        if (!Core::is_library_item($type) || !$object_id) {
-            echo XML_Data::error('401', T_('Wrong library item type'));
-        } else {
-            $item = new $type($object_id);
-            if (!$item->id) {
-                echo XML_Data::error('404', T_('Library item not found'));
+        $item = new Song($object_id);
+        if (!$item->id) {
+            echo XML_Data::error('404', T_('Library item not found'));
 
-                return;
-            }
-            $user->update_stats($type, $object_id, $agent);
-            echo XML_Data::success('successfully recorded play: ' . $object_id);
+            return;
         }
+        $user->update_stats('song', $object_id, $agent);
+        echo XML_Data::success('successfully recorded play: ' . $object_id);
     } // record_play
 
     /**
@@ -1888,14 +1883,7 @@ class Api
             return false;
         }
         $object = (int) $input['id'];
-
-        // confirm the correct data
-        if (!in_array($type, array('artist'))) {
-            echo XML_Data::error('401', T_('Wrong item type ' . $type));
-
-            return;
-        }
-        $item = new $type($object);
+        $item   = new Artist($object);
         if (!$item->id) {
             echo XML_Data::error('404', T_('The requested item was not found'));
 

@@ -144,7 +144,7 @@ class Playlist extends playlist_object
      */
     public static function get_smartlists($incl_public = true, $user_id = null)
     {
-        if (!$user_id) {
+        if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
 
@@ -481,13 +481,14 @@ class Playlist extends playlist_object
      * create
      * This function creates an empty playlist, gives it a name and type
      * @param string $type
+     * @param integer $user_id
      */
     public static function create($name, $type, $user_id = null, $date = null)
     {
-        if ($user_id == null) {
+        if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        if ($date == null) {
+        if ($date === null) {
             $date = time();
         }
 

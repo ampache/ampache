@@ -1623,7 +1623,7 @@ class User extends database_object
      */
     public function get_display_follow($user_id = null)
     {
-        if (!$user_id) {
+        if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
 

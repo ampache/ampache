@@ -514,7 +514,8 @@ class Subsonic_Api
      */
     public static function getalbumlist($input, $elementName = "albumList")
     {
-        $type = self::check_parameter($input, 'type');
+        $type     = self::check_parameter($input, 'type');
+        $username = self::check_parameter($input, 'u');
 
         $size          = $input['size'];
         $offset        = $input['offset'];
@@ -531,10 +532,11 @@ class Subsonic_Api
         $response     = Subsonic_XML_Data::createSuccessResponse('getalbumlist');
         $errorOccured = false;
         $albums       = array();
+        $user         = User::get_from_username($username);
 
         switch ($type) {
             case "random":
-                $albums = Album::get_random($size);
+                $albums = Album::get_random($size, false, $user->id);
                 break;
             case "newest":
                 $albums = Stats::get_newest("album", $size, $offset, $musicFolderId);
@@ -606,6 +608,8 @@ class Subsonic_Api
         if (!$size) {
             $size = 10;
         }
+
+        $username      = self::check_parameter($input, 'u');
         $genre         = $input['genre'];
         $fromYear      = $input['fromYear'];
         $toYear        = $input['toYear'];
@@ -657,10 +661,11 @@ class Subsonic_Api
             $search['rule_' . $count . '']          = $ftype;
             ++$count;
         }
+        $user = User::get_from_username($username);
         if ($count > 0) {
             $songs = Random::advanced('song', $search);
         } else {
-            $songs = Random::get_default($size);
+            $songs = Random::get_default($size, $user->id);
         }
 
         $response = Subsonic_XML_Data::createSuccessResponse('getrandomsongs');

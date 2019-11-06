@@ -100,12 +100,15 @@ class Random
      * This just randomly picks a song at whim from all catalogs
      * nothing special here...
      */
-    public static function get_default($limit = '')
+    public static function get_default($limit = '', $user_id = null)
     {
         $results = array();
 
         if (empty($limit)) {
             $limit = AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25';
+        }
+        if ((int) $user_id < 1) {
+            $user_id = Core::get_global('user');
         }
 
         $rating_join = 'WHERE';
@@ -116,8 +119,7 @@ class Random
             $rating_join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
-            $user_id = Core::get_global('user')->id;
+        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
             $sql .= " " . $rating_join . " `song`.`artist` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .

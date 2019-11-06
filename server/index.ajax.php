@@ -38,7 +38,7 @@ if (!$moment > 0) {
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'random_albums':
-        $albums = Album::get_random($moment);
+        $albums = Album::get_random($moment, false, Core::get_global('user')->id);
         if (count($albums) && is_array($albums)) {
             ob_start();
             require_once AmpConfig::get('prefix') . UI::find_template('show_random_albums.inc.php');

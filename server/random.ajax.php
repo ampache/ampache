@@ -33,7 +33,7 @@ $action  = Core::get_request('action');
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'song':
-        $songs = Random::get_default();
+        $songs = Random::get_default(null, Core::get_global('user')->id);
 
         if (!count($songs)) {
             $results['rfc3514'] = '0x1';
@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
     break;
     case 'album':
-        $album_id = Album::get_random();
+        $album_id = Album::get_random(null, false, Core::get_global('user')->id);
 
         if (empty($album_id)) {
             $results['rfc3514'] = '0x1';
