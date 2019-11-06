@@ -837,6 +837,7 @@ class Search extends playlist_object
      *
      * This function actually runs the search and returns an array of the
      * results.
+     * @param User $user
      */
     public static function run($data, $user = null)
     {

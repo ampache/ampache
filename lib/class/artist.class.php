@@ -440,12 +440,15 @@ class Artist extends database_object implements library_item
      * @param boolean $with_art
      * @return integer[]
      */
-    public static function get_random($count = 1, $with_art = false)
+    public static function get_random($count = 1, $with_art = false, $user_id = null)
     {
         $results = array();
 
         if (!$count) {
             $count = 1;
+        }
+        if ($user_id === null) {
+            $user_id = Core::get_global('user');
         }
 
         $sql = "SELECT DISTINCT `artist`.`id` FROM `artist` " .
@@ -463,8 +466,7 @@ class Artist extends database_object implements library_item
         $sql .= $where;
 
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
-            $user_id = Core::get_global('user')->id;
+        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
             $sql .= " AND `artist`.`id` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .

@@ -1259,13 +1259,13 @@ class Api
                         } else {
                             debug_event('api.class', 'stats random ' . $type, 4);
                             if ($type === 'song') {
-                                $results = Random::get_default($limit);
+                                $results = Random::get_default($limit, $user_id);
                             }
                             if ($type === 'artist') {
-                                $results = Artist::get_random($limit);
+                                $results = Artist::get_random($limit, false, $user_id);
                             }
                             if ($type === 'album') {
-                                $results = Album::get_random($limit);
+                                $results = Album::get_random($limit, false, $user_id);
                             }
                         }
                     }
