@@ -114,7 +114,7 @@ class PrivateMsg extends database_object
         return true;
     }
 
-    public function format($details = true)
+    public function format()
     {
         $this->f_subject       = scrub_out($this->subject);
         $this->f_message       = scrub_out($this->message);
