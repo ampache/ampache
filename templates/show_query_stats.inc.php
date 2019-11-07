@@ -27,7 +27,7 @@
     <span class="query-count">
     <?php
     echo T_('Queries: ') . Dba::$stats['query'] . ' | '
-    . T_('Cache Hits: ') . database_object::$cache_hit .' | '
+    . T_('Cache Hits: ') . database_object::$cache_hit . ' | '
     . T_('Load Time: ') . $load_time;
     ?>
     </span>

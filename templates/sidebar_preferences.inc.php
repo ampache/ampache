@@ -25,19 +25,23 @@
  * they can have their own preference sections so we need to build the
  * links based on that, always ignore 'internal' though
  */
-$categories = Preference::get_categories();
+$categories    = Preference::get_categories();
 $t_preferences = T_('Preferences');
 ?>
 <ul class="sb2" id="sb_preferences">
-  <li class="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_preferences'))) { echo 'collapsed'; } else { echo $_COOKIE['sb_preferences']; } ?>">
+  <li class="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_preferences'))) {
+    echo 'collapsed';
+} else {
+    echo $_COOKIE['sb_preferences'];
+} ?>">
     <h4 class="header"><span class="sidebar-header-title" title="<?php echo $t_preferences; ?>"><?php echo $t_preferences; ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'preferences', 'header-img'); ?></h4>
     <ul class="sb3" id="sb_preferences_sections">
       <?php
       foreach ($categories as $name) {
-        if ($name == 'system') {
-          continue;
-        }
-        $f_name = ucfirst($name); ?>
+          if ($name == 'system') {
+              continue;
+          }
+          $f_name = ucfirst($name); ?>
         <li id="sb_preferences_sections_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
       <?php
       } ?>
@@ -45,13 +49,17 @@ $t_preferences = T_('Preferences');
     </ul>
   </li>
   <?php if (Access::check('interface', '50')) {
-    ?>
-    <li class="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_home_playlist'))) { echo 'collapsed'; } else { echo $_COOKIE['sb_home_playlist']; } ?>">
+          ?>
+    <li class="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_home_playlist'))) {
+              echo 'collapsed';
+          } else {
+              echo $_COOKIE['sb_home_playlist'];
+          } ?>">
       <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo T_('Playlist'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'playlist', 'header-img'); ?></h4>
       <ul class="sb3" id="sb_home_playlist">
         <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
     </li>
     <?php
-  } ?>
+      } ?>
 </ul>
 </ul>
