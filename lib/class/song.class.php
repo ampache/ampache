@@ -2063,7 +2063,7 @@ class Song extends database_object implements media, library_item
         // debug_event('song.class', 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_default_target) {
             $target = $has_default_target;
-        // debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
+            // debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
         // fall back to resampling if no defuault
         if (!$target) {
