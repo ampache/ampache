@@ -521,7 +521,7 @@ if (!$cpaction && !$original) {
                         $transcode = true;
                         debug_event('play/index', 'Transcoding because explicit bitrate request', 5);
                     } else {
-                        if (!in_array('native', $valid_types)) {
+                        if (!in_array('native', $valid_types) && $action != 'download') {
                             $transcode = true;
                             debug_event('play/index', 'Transcoding because native streaming is unavailable', 5);
                         } else {
