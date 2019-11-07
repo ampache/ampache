@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "es6",
+    "moduleResolution": "node",
+    "allowJs": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
