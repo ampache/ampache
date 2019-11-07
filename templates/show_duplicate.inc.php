@@ -23,7 +23,7 @@
 <?php UI::show_box_top(T_('Find Duplicates'), 'box box_duplicate'); ?>
 <form name="duplicates" action="<?php echo AmpConfig::get('web_path'); ?>/admin/duplicates.php?action=find_duplicates" method="post" enctype="multipart/form-data">
     <div class="find-duplicates">
-        <strong><?php echo T_('Search Type'); ?>:</strong>
+        <strong><?php echo T_('Search Type'); ?>:</strong><br />
         <input type="radio" name="search_type" id="title" value="title" /><label for="title"><?php echo T_('Title'); ?></label><br />
         <input type="radio" name="search_type" id="artist_title" value="artist_title" /><label for="artist_title"><?php echo T_('Artist and Title'); ?></label><br />
         <input type="radio" name="search_type" id="artist_album_title" value="artist_album_title" /><label for="artist_album_title"><?php echo T_('Artist, Album and Title'); ?></label>
