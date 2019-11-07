@@ -1882,13 +1882,15 @@ class Song extends database_object implements media, library_item
 
         // Checking if the media is gonna be transcoded into another type
         // Some players doesn't allow a type streamed into another without giving the right extension
-        $transcode_cfg = AmpConfig::get('transcode');
-        $valid_types   = Song::get_stream_types_for_type($type, $player);
-        if ($transcode_cfg == 'always' && !$original || ($transcode_cfg != 'never' && !in_array('native', $valid_types) && !$original)) {
-            $transcode_settings = $media->get_transcode_settings(null);
-            if ($transcode_settings) {
-                debug_event('song.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings... ", 5);
-                $type = $transcode_settings['format'];
+        if (!original) {
+            $transcode_cfg = AmpConfig::get('transcode');
+            $valid_types   = Song::get_stream_types_for_type($type, $player);
+            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
+                $transcode_settings = $media->get_transcode_settings(null);
+                if ($transcode_settings) {
+                    debug_event('song.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings... ", 5);
+                    $type = $transcode_settings['format'];
+                }
             }
         }
 
@@ -2055,20 +2057,20 @@ class Song extends database_object implements media, library_item
             debug_event('song.class', 'Explicit target requested: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_player_target) {
             $target = $has_player_target;
-            debug_event('song.class', 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
+        // debug_event('song.class', 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_codec_target) {
             $target = $has_codec_target;
-            debug_event('song.class', 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
+        // debug_event('song.class', 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_default_target) {
             $target = $has_default_target;
-            debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
+            // debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
         // fall back to resampling if no defuault
         if (!$target) {
             $target = $source;
             debug_event('song.class', 'No transcode target for: ' . $source . ', choosing to resample', 5);
         }
-        debug_event('song.class', 'Transcoding from ' . $source . ' to ' . $target, 3);
+        // debug_event('song.class', 'Transcoding from ' . $source . ' to ' . $target, 3);
 
         $cmd  = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
         $args = '';

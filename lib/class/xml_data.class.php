@@ -484,9 +484,10 @@ class XML_Data
      * @param    array    $artists    (description here...)
      * @param    array    $include    Array of other items to include.
      * @param    bool     $full_xml  whether to return a full XML document or just the node.
+     * @param    integer $user_id
      * @return    string    return xml
      */
-    public static function artists($artists, $include = [], $full_xml = true)
+    public static function artists($artists, $include = [], $full_xml = true, $user_id = false)
     {
         if (null == $include) {
             $include = array();
@@ -508,6 +509,7 @@ class XML_Data
             $artist->format();
 
             $rating     = new Rating($artist_id, 'artist');
+            $flag       = new Userflag($artist_id, 'artist');
             $tag_string = self::tags_string($artist->tags);
 
             // Build the Art URL, include session
@@ -531,6 +533,7 @@ class XML_Data
                     "\t<albums>" . $albums . "</albums>\n" .
                     "\t<songs>" . $songs . "</songs>\n" .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
+                    "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
                     "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
                     "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
@@ -555,7 +558,7 @@ class XML_Data
      * @param    bool     $full_xml  whether to return a full XML document or just the node.
      * @return    string    return xml
      */
-    public static function albums($albums, $include = [], $full_xml = true)
+    public static function albums($albums, $include = [], $full_xml = true, $user_id = false)
     {
         if ($include == null || $include == '') {
             $include = array();
@@ -577,6 +580,7 @@ class XML_Data
             $album->format();
 
             $rating = new Rating($album_id, 'album');
+            $flag   = new Userflag($album_id, 'album');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out(Core::get_request('auth'));
@@ -616,6 +620,7 @@ class XML_Data
                     "\t<disk>" . $album->disk . "</disk>\n" .
                     self::tags_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
+                    "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
                     "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
                     "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
                     "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
@@ -728,6 +733,7 @@ class XML_Data
             $track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string   = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating       = new Rating($song_id, 'song');
+            $flag         = new Userflag($song_id, 'song');
             $art_url      = Art::url($song->album, 'album', Core::get_request('auth'));
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
@@ -761,6 +767,7 @@ class XML_Data
                     "\t<artist_mbid>" . $song->artist_mbid . "</artist_mbid>\n" .
                     "\t<albumartist_mbid>" . $song->albumartist_mbid . "</albumartist_mbid>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                    "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
                     "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
                     "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . (string) ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .

@@ -456,9 +456,10 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         $artists = self::$browse->get_objects();
+        $user    = User::get_from_username(Session::username($input['auth']));
         // echo out the resulting xml document
         ob_end_clean();
-        echo XML_Data::artists($artists, $input['include']);
+        echo XML_Data::artists($artists, $input['include'], true, $user->id);
     } // artists
 
     /**
@@ -471,8 +472,9 @@ class Api
      */
     public static function artist($input)
     {
-        $uid = scrub_in($input['filter']);
-        echo XML_Data::artists(array($uid), $input['include']);
+        $uid  = scrub_in($input['filter']);
+        $user = User::get_from_username(Session::username($input['auth']));
+        echo XML_Data::artists(array($uid), $input['include'], true, $user->id);
     } // artist
 
     /**
@@ -487,12 +489,13 @@ class Api
     {
         $artist = new Artist($input['filter']);
         $albums = $artist->get_albums();
+        $user   = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::albums($albums, array());
+        echo XML_Data::albums($albums, array(), true, $user->id);
     } // artist_albums
 
     /**
@@ -537,12 +540,13 @@ class Api
         self::set_filter('update', $input['update']);
 
         $albums = self::$browse->get_objects();
+        $user   = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
-        echo XML_Data::albums($albums, $input['include']);
+        echo XML_Data::albums($albums, $input['include'], true, $user->id);
     } // albums
 
     /**
@@ -555,8 +559,9 @@ class Api
      */
     public static function album($input)
     {
-        $uid = (int) scrub_in($input['filter']);
-        echo XML_Data::albums(array($uid), $input['include']);
+        $uid  = (int) scrub_in($input['filter']);
+        $user = User::get_from_username(Session::username($input['auth']));
+        echo XML_Data::albums(array($uid), $input['include'], true, $user->id);
     } // album
 
     /**
@@ -651,11 +656,12 @@ class Api
     {
         $artists = Tag::get_tag_objects('artist', $input['filter']);
         if ($artists) {
+            $user = User::get_from_username(Session::username($input['auth']));
             XML_Data::set_offset($input['offset']);
             XML_Data::set_limit($input['limit']);
 
             ob_end_clean();
-            echo XML_Data::artists($artists, array());
+            echo XML_Data::artists($artists, array(), true, $user->id);
         }
     } // tag_artists
 
@@ -671,11 +677,12 @@ class Api
     {
         $albums = Tag::get_tag_objects('album', $input['filter']);
         if ($albums) {
+            $user = User::get_from_username(Session::username($input['auth']));
             XML_Data::set_offset($input['offset']);
             XML_Data::set_limit($input['limit']);
 
             ob_end_clean();
-            echo XML_Data::albums($albums, array());
+            echo XML_Data::albums($albums, array(), true, $user->id);
         }
     } // tag_albums
 
@@ -1038,10 +1045,10 @@ class Api
 
         switch ($type) {
             case 'artist':
-                echo XML_Data::artists($results, array());
+                echo XML_Data::artists($results, array(), true, $user->id);
                 break;
             case 'album':
-                echo XML_Data::albums($results, array());
+                echo XML_Data::albums($results, array(), true, $user->id);
                 break;
             default:
                 echo XML_Data::songs($results, array(), true, $user->id);
@@ -1280,10 +1287,10 @@ class Api
                 echo XML_Data::songs($results, array(), true, $user->id);
             }
             if ($type === 'artist') {
-                echo XML_Data::artists($results, array());
+                echo XML_Data::artists($results, array(), true, $user->id);
             }
             if ($type === 'album') {
-                echo XML_Data::albums($results, array());
+                echo XML_Data::albums($results, array(), true, $user->id);
             }
         }
     } // stats
@@ -1931,6 +1938,7 @@ class Api
 
         $maxBitRate    = $input['bitrate'];
         $format        = $input['format']; // mp3, flv or raw
+        $original      = ($format && $format != "raw") ? true : false;
         $timeOffset    = $input['offset'];
         $contentLength = (int) $input['length']; // Force content-length guessing if transcode
 
@@ -1938,7 +1946,7 @@ class Api
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
-        if ($format && $format != "raw") {
+        if ($original) {
             $params .= '&transcode_to=' . $format;
         }
         if ((int) $maxBitRate > 0) {
@@ -1950,10 +1958,10 @@ class Api
 
         $url = '';
         if ($type == 'song') {
-            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id);
+            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id);
+            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
             header("Location: " . str_replace(':443/play', '/play', $url));
