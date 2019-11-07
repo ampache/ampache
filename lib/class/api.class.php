@@ -1937,6 +1937,7 @@ class Api
 
         $maxBitRate    = $input['bitrate'];
         $format        = $input['format']; // mp3, flv or raw
+        $original      = ($format && $format != "raw") ? true : false;
         $timeOffset    = $input['offset'];
         $contentLength = (int) $input['length']; // Force content-length guessing if transcode
 
@@ -1944,7 +1945,7 @@ class Api
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
-        if ($format && $format != "raw") {
+        if ($original) {
             $params .= '&transcode_to=' . $format;
         }
         if ((int) $maxBitRate > 0) {
@@ -1956,10 +1957,10 @@ class Api
 
         $url = '';
         if ($type == 'song') {
-            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id);
+            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id);
+            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
             header("Location: " . str_replace(':443/play', '/play', $url));
