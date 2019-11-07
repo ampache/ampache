@@ -112,6 +112,7 @@ class Userflag extends database_object
 
     /**
      * get_flag
+     * @param boolean|integer $user_id
      * @param boolean $get_date
      * @return boolean|array
      */

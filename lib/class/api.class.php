@@ -540,6 +540,7 @@ class Api
         self::set_filter('update', $input['update']);
 
         $albums = self::$browse->get_objects();
+        $user   = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         XML_Data::set_offset($input['offset']);

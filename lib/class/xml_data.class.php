@@ -484,6 +484,7 @@ class XML_Data
      * @param    array    $artists    (description here...)
      * @param    array    $include    Array of other items to include.
      * @param    bool     $full_xml  whether to return a full XML document or just the node.
+     * @param    boolean|integer $user_id
      * @return    string    return xml
      */
     public static function artists($artists, $include = [], $full_xml = true, $user_id = false)
