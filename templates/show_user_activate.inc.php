@@ -34,7 +34,9 @@ $web_path = AmpConfig::get('web_path'); ?>
     <body id="registerPage">
         <div id="maincontainer">
             <div id="header">
-                <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
+                <a href="<?php echo $web_path; ?>">
+                    <img id="headerlogo" src="<?php echo UI::get_logo_url(); ?>" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
+                </a>
                 <span><?php echo T_('Registration Validation'); ?>.</span>
             </div>
             <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>

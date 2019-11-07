@@ -135,10 +135,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
 }
 
-#loginPage #headerlogo, #registerPage #headerlogo {
-    background-image: url('../images/ampache-dark.png');
-}
-
 #loginPage #loginbox {
     color: #999;
 }

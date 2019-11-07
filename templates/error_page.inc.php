@@ -41,7 +41,7 @@ $t_ampache = T_('Ampache'); ?>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="./images/ampache-dark.png" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>">
+                <img src="<?php UI::get_logo_url('dark') ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>">
                 <?php echo $t_ampache . ' :: ' . T_('For the Love of Music'); ?>
             </a>
         </div>

@@ -176,13 +176,17 @@ div#autoupdate > span {
 #ajax-loading {
     background-repeat: no-repeat;
     background-position: right;
-    display: none;
+    display: block;
     font-size: 12px;
     left: 52px;
     position: absolute;
     text-align: center;
     top: 39px;
     width: 120px;
+}
+
+#ajax-loading.hidden {
+    display: none;
 }
 
 /***********************************************
@@ -216,11 +220,10 @@ div#autoupdate > span {
 }
 
 #header #headerlogo {
-    float:left;
     width: 20%;
 }
 
-#header #headerlogo img {
+#header #headerlogo {
     height: 64px;
     width: 64px;
 }
@@ -229,10 +232,11 @@ div#autoupdate > span {
     height: 64px;
     padding-bottom: 64px;
     padding-top: 24px;
+    clear: both;
 }
 
 #header #headerbox {
-    float:left;
+    float: right;
     width: 80%;
 }
 
@@ -314,10 +318,8 @@ div#autoupdate > span {
 #registerPage #headerlogo {
     width: 128px;
     height: 128px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
     margin: auto;
+    display: block;
 }
 
 #registerPage #content {
@@ -473,7 +475,7 @@ div#autoupdate > span {
 }
 
 .sidebar-collapsed {
-    width: 70px !important;
+    width: 70px;
 }
 
 .sidebar-header-title {
@@ -504,6 +506,14 @@ div#autoupdate > span {
 
 #sidebar-header span {
     line-height: 15px;
+}
+
+span#sidebar-header-content::after {
+	content: "<<<";
+}
+
+#sidebar-header.sidebar-header-collapsed > span#sidebar-header-content::after {
+	content: ">>>";
 }
 
 .sidebar-header-collapsed {
