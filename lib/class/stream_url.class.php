@@ -30,6 +30,7 @@ class Stream_URL extends memory_object
      * parse
      *
      * Takes an url and parses out all the chewy goodness.
+     * @param string $url
      * @return array
      */
     public static function parse($url)
