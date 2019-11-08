@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2017",
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "esModuleInterop": true,
@@ -8,7 +8,8 @@
     "experimentalDecorators": true,
     "module": "es6",
     "moduleResolution": "node",
-    "allowJs": true
+    "allowJs": true,
+    "baseUrl": "."
   },
   "exclude": [
     "node_modules"
