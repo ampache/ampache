@@ -2,7 +2,7 @@ import React from 'react'
 
 interface LoginState {
     username: string;
-    apiKey: string;
+    password: string;
 }
 
 interface LoginProps {

@@ -10,11 +10,13 @@ async function digestMessage(message) {
 }
 
 /**
- * @callback handshakeSongsCallback
- * @param {null|string} errorCode - The code returned by the Ampache server
- * @param {string|null} authKey - Key used for all future interactions with the API
+ * @async
+ * @param username
+ * @param password
+ * @param server
+ * @return {Promise<string>}
  */
-const handshake = async (username, password, server) => {
+const handshake = async (username: string, password: string, server: string) => {
     let time = Math.round((new Date()).getTime() / 1000);
     const key = await digestMessage(password);
     const passphrase = await digestMessage(time + key);

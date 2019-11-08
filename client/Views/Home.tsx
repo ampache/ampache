@@ -6,6 +6,7 @@ export default class HomeView extends React.Component {
     }
 
     render() {
+        console.log(this.props);
         return (
             <div className='homePage'>
                 <span>Home Page</span>

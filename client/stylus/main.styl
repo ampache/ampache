@@ -1,19 +1,36 @@
 @import "./reset"
+@import "sizes"
+@import "color"
 
-body
-  font-family 'DejaVuSansCondensed', Helvetica, Arial, sans-serif
-  font-weight normal
-  font-size 16px
-  line-height 1.5em
+html
+  height 100%
+  #root
+    height 100%
+  body
+    font-family 'DejaVuSansCondensed', Helvetica, Arial, sans-serif
+    font-weight normal
+    font-size 16px
+    line-height 1.5em
+    height: 100%;
+    background-color #242424
+    color #e1e1e1
+    .container
+      display flex
+      min-height "calc(100% - %s)" % headerHeight
 
 a
   text-decoration: none;
   cursor: pointer;
+  color linkColor
 
-@import "color"
+.content
+  width: "calc(100% - %s)" % sidebarWidth
+  margin-left 10px
+
 
 //Pages
 @import "./pages/Home"
 
 //Components
 @import './components/Header'
+@import './components/Sidebar'
