@@ -1,3 +1,19 @@
-@import "./reset.styl"
+@import "./reset"
 
-@import "./pages/Home.styl"
+body
+  font-family 'DejaVuSansCondensed', Helvetica, Arial, sans-serif
+  font-weight normal
+  font-size 16px
+  line-height 1.5em
+
+a
+  text-decoration: none;
+  cursor: pointer;
+
+@import "color"
+
+//Pages
+@import "./pages/Home"
+
+//Components
+@import './components/Header'

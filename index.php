@@ -20,6 +20,9 @@
  *
  */
 
+echo file_get_contents('./client/dist/index.html');
+return;
+
 require_once 'lib/init.php';
 
 UI::show_header();

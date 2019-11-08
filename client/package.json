@@ -7,13 +7,17 @@
   "author": "Ashot Nazaryan",
   "license": "GPL",
   "dependencies": {
+    "axios": "^0.19.0",
+    "images": "^3.0.2",
+    "js-cookie": "^2.2.1",
     "react": "^16.11.0",
     "react-dom": "npm:@hot-loader/react-dom",
     "react-router-dom": "^5.1.2"
   },
   "scripts": {
     "start": "parcel start index.html --public-url /client/dist/",
-    "build": "parcel build index.html --public-url /client/dist/"
+    "build": "parcel build index.html --public-url /client/dist/",
+    "watch": "parcel watch index.html --public-url /client/dist/"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,5 +49,4 @@
   "alias": {
     "components": "./src/components"
   }
-
 }
