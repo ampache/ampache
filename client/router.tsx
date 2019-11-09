@@ -10,6 +10,8 @@ import NotFound from './Views/404/'
 import handshake from "./logic/Auth";
 import {getUser, User} from './logic/User';
 import AlbumView from "./Views/Album";
+import MusicPlayer from "./Views/MusicPlayer";
+import {MusicPlayerContextProvider} from "./MusicPlayerContext";
 
 //TODO, fix any
 interface RouterState {
@@ -79,17 +81,21 @@ export default class Root extends Component<any, RouterState> {
             <BrowserRouter>
                 <App user={this.state.user}>
                     <Switch>
-                        <Route exact path="/" render={(props) => <Home {...props} user={this.state.user} />}/>
-                        <Route exact path="/account" render={(props) => <Account {...props} user={this.state.user} />}/>
-                        <Route exact path="/album/:albumID" render={(props) => <AlbumView {...props} user={this.state.user} />}/>
                         <Route exact path="/login">
                             <Redirect to='/'/>
                         </Route>
-                        <Route exact path='/logout' render={() => {this.handleLogout(); return(<Redirect to='/login'/>) }  }>
-
-                        </Route>
-                        <Route path="*" render={(props) => <NotFound {...props} />}/> {/*404*/}
-                    </Switch>
+                        <Route exact path='/logout' render={() => {this.handleLogout(); return(<Redirect to='/login'/>) }  } />
+                        <MusicPlayerContextProvider>
+                            <MusicPlayer>
+                                <Switch>
+                                    <Route exact path="/" render={(props) => <Home {...props} user={this.state.user} />}/>
+                                    <Route exact path="/account" render={(props) => <Account {...props} user={this.state.user} />}/>
+                                    <Route exact path="/album/:albumID" render={(props) => <AlbumView {...props} user={this.state.user} />}/>
+                                    <Route path="*" render={(props) => <NotFound {...props} />}/> {/*404*/}
+                                </Switch>
+                            </MusicPlayer>
+                        </MusicPlayerContextProvider>
+                        </Switch>
                 </App>
             </BrowserRouter>
         );

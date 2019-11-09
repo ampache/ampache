@@ -26,6 +26,11 @@ a
 .content
   width: "calc(100% - %s)" % sidebarWidth
   margin-left 10px
+  position relative
+  &::after
+    content ''
+    display block
+    height musicPlayerHeight
 
 
 //Pages
@@ -35,3 +40,4 @@ a
 @import './components/Header'
 @import './components/Sidebar'
 @import './components/AlbumDisplay'
+@import './components/MusicPlayer'

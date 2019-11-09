@@ -50,7 +50,8 @@ const getAlbumSongs = async (albumID: number, authCode: string, server: string) 
             if (JSONData.error) {
                 reject(JSONData.error);
             } else if (JSONData) {
-                const songs: Song[] = JSONData;
+                let songs: Song[] = JSONData;
+
                 resolve(songs);
             } else {
                 reject("Something wrong with JSON");
