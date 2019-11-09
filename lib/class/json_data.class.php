@@ -275,10 +275,8 @@ class JSON_Data
 
             $theArray = [];
 
-            $theArray["album"] = array(
-                id => $album->id,
-                name => $album->name
-            );
+            $theArray["id"]   = $album->id;
+            $theArray["name"] = $album->name;
 
             // Do a little check for artist stuff
             if ($album->artist_count != 1) {

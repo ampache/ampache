@@ -2,7 +2,7 @@
   "name": "ampache-client",
   "version": "1.0.0",
   "description": "Client side for Ampache server",
-  "main": "index.js",
+  "main": "index.html",
   "repository": "https://github.com/AshotN/ampache",
   "author": "Ashot Nazaryan",
   "license": "GPL",
