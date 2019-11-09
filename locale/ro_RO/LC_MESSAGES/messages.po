@@ -3,21 +3,22 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Gustav Gustav <gsnmobil@gmail.com>, 2018
+# Cozmiuc Valentin <valentin.cozmiuc1@gmail.com>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
 "POT-Creation-Date: 2019-11-09 23:26+0100\n"
-"PO-Revision-Date: 2019-10-19 03:56+0000\n"
-"Last-Translator: Afterster\n"
-"Language-Team: Danish (Denmark) (http://www.transifex.com/ampache/ampache/"
-"language/da_DK/)\n"
-"Language: da_DK\n"
+"PO-Revision-Date: 2019-10-26 18:39+0000\n"
+"Last-Translator: Cozmiuc Valentin <valentin.cozmiuc1@gmail.com>\n"
+"Language-Team: Romanian (Romania) (http://www.transifex.com/ampache/ampache/"
+"language/ro_RO/)\n"
+"Language: ro_RO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #: ../../admin/access.php:43 ../../admin/access.php:79
 #: ../../admin/access.php:94 ../../admin/catalog.php:108
@@ -45,11 +46,11 @@ msgstr ""
 #: ../../share.php:129 ../../song.php:55 ../../tvshow_seasons.php:55
 #: ../../tvshows.php:55 ../../video.php:55
 msgid "No Problem"
-msgstr ""
+msgstr "Nicio problemă!"
 
 #: ../../admin/access.php:43
 msgid "Your Access List entry has been removed"
-msgstr ""
+msgstr "Înscrierea din lista ta de acces a fost ștearsă"
 
 #: ../../admin/access.php:50 ../../admin/catalog.php:115
 #: ../../admin/catalog.php:248 ../../admin/modules.php:79
@@ -111,6 +112,7 @@ msgid "Song has been enabled"
 msgid_plural "Songs have been enabled"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../admin/catalog.php:130
 msgid "You didn't select any disabled Songs"
@@ -2034,12 +2036,14 @@ msgid "day"
 msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../lib/class/catalog.class.php:638
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../lib/class/catalog.class.php:683
 msgid "Failed to create the catalog, check the debug logs"
@@ -2088,7 +2092,7 @@ msgstr ""
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:308
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:273
 msgid "Updated"
-msgstr "Opdateret"
+msgstr ""
 
 #: ../../lib/class/catalog.class.php:1622 ../../lib/class/update.class.php:231
 msgid "No Update Needed"
@@ -2104,6 +2108,7 @@ msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../lib/class/catalog.class.php:2009
 msgid "Catalog Verified"
@@ -2115,6 +2120,7 @@ msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../lib/class/catalog.class.php:2234
 msgid "Failed to create playlist"
@@ -2545,7 +2551,7 @@ msgstr ""
 #: ../../lib/class/search.class.php:460 ../../templates/show_song.inc.php:159
 #: ../../templates/show_video.inc.php:140
 msgid "Added"
-msgstr "Tilføjet"
+msgstr ""
 
 #: ../../lib/class/search.class.php:480 ../../lib/class/search.class.php:633
 #: ../../templates/browse_filters.inc.php:79
@@ -3548,7 +3554,7 @@ msgstr ""
 #: ../../lib/debug.lib.php:377 ../../templates/error_page.inc.php:51
 #: ../../templates/test_error_page.inc.php:49
 msgid "Error"
-msgstr "Fejl"
+msgstr ""
 
 #. HINT: File
 #: ../../lib/general.lib.php:314
@@ -4173,6 +4179,7 @@ msgid "%s song was found"
 msgid_plural "%s songs were found"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #. HINT: Song Title
 #. HINT: filename (file path)
@@ -4359,6 +4366,7 @@ msgid "%s Song added"
 msgid_plural "%s Songs added"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:315
 msgid "API Error: Couldn't get song list."
@@ -4859,6 +4867,7 @@ msgid "Successfully imported playlist with %d song."
 msgid_plural "Successfully imported playlist with %d songs."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../playlist.php:92
 msgid "The Playlist could not be imported"
@@ -6095,6 +6104,7 @@ msgid "%d time"
 msgid_plural "%d times"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_album.inc.php:91 ../../templates/show_artist.inc.php:85
 #: ../../templates/show_song.inc.php:176
@@ -7955,6 +7965,7 @@ msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_random.inc.php:79
 #, php-format
@@ -7962,6 +7973,7 @@ msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_random.inc.php:87
 msgid "Size Limit"
@@ -7982,6 +7994,7 @@ msgid "%d second ago"
 msgid_plural "%d seconds ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_recently_played.inc.php:63
 #, php-format
@@ -7989,6 +8002,7 @@ msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_recently_played.inc.php:66
 #, php-format
@@ -7996,6 +8010,7 @@ msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_recently_played.inc.php:69
 #, php-format
@@ -8003,6 +8018,7 @@ msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_recently_played.inc.php:72
 #, php-format
@@ -8010,6 +8026,7 @@ msgid "%d week ago"
 msgid_plural "%d weeks ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_recently_played.inc.php:75
 #, php-format
@@ -8017,6 +8034,7 @@ msgid "%d month ago"
 msgid_plural "%d months ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_recently_played.inc.php:78
 #, php-format
@@ -8024,6 +8042,7 @@ msgid "%d year ago"
 msgid_plural "%d years ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_recently_played.inc.php:81
 #, php-format
@@ -8031,6 +8050,7 @@ msgid "%d decade ago"
 msgid_plural "%d decades ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../../templates/show_recently_played.inc.php:128
 msgid "No recently played items found"
