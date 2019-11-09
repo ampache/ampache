@@ -10,6 +10,7 @@
 * Video features are considered a low priority feature.
 * A major string update is here which means new translations! Join us on [Transifex](https://www.transifex.com/ampache/ampache).
 * Subsonic API 1.13.0 and Ampache API 400001 are ready for testing!
+* PHP 5.6 has been removed as a supported version. (7.1+)
 
 ## Basics
 
@@ -47,7 +48,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
   * nginx
   * IIS
 
-* PHP 5.6 or greater.
+* PHP 7.1 or greater.
 
 * PHP modules:
   * PDO

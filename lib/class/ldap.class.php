@@ -22,24 +22,13 @@
 /**
  * array_filter_key
  *
- * This function is here for retrocompatibility with PHP < 5.6.
- * For PHP >= 5.6, one can use array_filter with flag ARRAY_FILTER_USE_KEY.
+ * @param array $array
  * @param string $callback
  */
 function array_filter_key($array, $callback)
 {
-    foreach ($array as $key => $value) {
-        if (! call_user_func($callback, $key)) {
-            unset($array[$key]);
-        }
-    }
-
-    return $array;
+    return array_filter($array, $callback, ARRAY_FILTER_USE_KEY);
 }
-// function array_filter_key ($array, $callback)
-// {
-//     return array_filter ($array, $callback, ARRAY_FILTER_USE_KEY);
-// }
 
 /**
  * This class defines custom LDAP exceptions that will be used in the

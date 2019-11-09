@@ -41,7 +41,7 @@ switch ($_REQUEST['action']) {
 
         // Multi-byte Character Mail
         if (function_exists('mb_language')) {
-            $ini_default_charset = version_compare(PHP_VERSION, '5.6', '<') ? 'mbstring.internal_encoding' : 'default_charset';
+            $ini_default_charset = 'default_charset';
             if (ini_get($ini_default_charset)) {
                 ini_set($ini_default_charset, "UTF-8");
             }
