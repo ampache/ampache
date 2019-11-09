@@ -29,7 +29,7 @@
         }
     },
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.2",
         "wikimedia/composer-merge-plugin": "1.*",
 
         "doctrine/cache": "1.*.*",
@@ -70,7 +70,8 @@
         "friendsofphp/php-cs-fixer": "~2.15.0",
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
         "tightenco/collect": "5.2.*",
-        "ampache/ampacheapi-php": "^1.0"
+        "ampache/ampacheapi-php": "^1.0",
+      "ext-json": "*"
     },
 
     "repositories":

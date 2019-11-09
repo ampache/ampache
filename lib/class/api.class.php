@@ -543,6 +543,36 @@ class Api
     } // album
 
     /**
+     * MINIMUM_API_VERSION=400001
+     *
+     * This returns a number of random albums.
+     *
+     * @param array $input
+     * 'count' (int) Number of albums
+     * 'with_art'   (boolean)
+     * 'user_id'   (int) ID of the user
+     */
+    public static function random_albums($input)
+    {
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        $count    = isset($input['count']) ? $input['count'] : 6;
+        $with_art = isset($input['with_art']) ? $input['with_art'] : false;
+
+        $user_id = $input['user_id'];
+
+        $results = Album::get_random($count, $with_art, $user_id);
+
+        if ($outputFormat == 'json') {
+            echo JSON_Data::albums($results);
+            return;
+        }
+
+        echo XML_Data::albums($results);
+    }
+
+    /**
      * album_songs
      * This returns the songs of a specified album
      * @param array $input

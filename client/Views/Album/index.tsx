@@ -3,9 +3,12 @@ import {getRandomAlbums, Album, getAlbum, getAlbumSongs} from '../../logic/Album
 import AlbumDisplay from '../components/AlbumDisplay';
 import {User} from "../../logic/User";
 import {Song} from "../../logic/Song";
+import MusicPlayer from "../MusicPlayer";
+import {MusicPlayerContextProvider, withMusicPlayerContext} from "../../MusicPlayerContext";
 
 interface HomeProps {
     user: User;
+    global: MusicPlayerContextProvider
 }
 
 interface HomeState {
@@ -16,7 +19,7 @@ interface HomeState {
     songsLoading: boolean
 }
 
-export default class AlbumView extends React.Component<HomeProps, HomeState> {
+class AlbumView extends React.Component<HomeProps, HomeState> {
 
     constructor(props) {
         super(props);
@@ -42,6 +45,12 @@ export default class AlbumView extends React.Component<HomeProps, HomeState> {
                 this.setState({songsLoading: false, error})
             });
         }
+
+        this.onSongClick = this.onSongClick.bind(this);
+    }
+
+    onSongClick(url: string) {
+        this.props.global.startPlaying(url);
     }
 
     render() {
@@ -72,7 +81,7 @@ export default class AlbumView extends React.Component<HomeProps, HomeState> {
                     {!this.state.songsLoading &&
                     this.state.songs.map((song: Song) => {
                         return (
-                            <div>
+                            <div onClick={() => this.onSongClick(song.url)} key={song.id}>
                                 {song.title}
                             </div>)
                     })
@@ -82,3 +91,5 @@ export default class AlbumView extends React.Component<HomeProps, HomeState> {
         );
     }
 }
+
+export default withMusicPlayerContext(AlbumView);
