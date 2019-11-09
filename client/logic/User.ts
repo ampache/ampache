@@ -29,5 +29,5 @@ const getUser = async (username: string, authKey: string, server: string) => {
         });
     });
 };
-export {getUser as default, User};
+export {getUser, User};
 

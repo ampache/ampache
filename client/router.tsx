@@ -3,12 +3,13 @@ import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import Cookies from 'js-cookie'
 
 import App from './Views/App'
-import Home from './Views/Home'
-import Account from './Views/Account'
-import Login from './Views/Login'
-import NotFound from './Views/404'
+import Home from './Views/Home/'
+import Account from './Views/Account/'
+import Login from './Views/Login/'
+import NotFound from './Views/404/'
 import handshake from "./logic/Auth";
-import getUser, {User} from './logic/User';
+import {getUser, User} from './logic/User';
+import AlbumView from "./Views/Album";
 
 //TODO, fix any
 interface RouterState {
@@ -80,6 +81,7 @@ export default class Root extends Component<any, RouterState> {
                     <Switch>
                         <Route exact path="/" render={(props) => <Home {...props} user={this.state.user} />}/>
                         <Route exact path="/account" render={(props) => <Account {...props} user={this.state.user} />}/>
+                        <Route exact path="/album/:albumID" render={(props) => <AlbumView {...props} user={this.state.user} />}/>
                         <Route exact path="/login">
                             <Redirect to='/'/>
                         </Route>

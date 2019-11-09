@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import '/stylus/main.styl'
 import logo from '/images/ampache-dark.png'
 import userIcon from '/images/icons/svg/user.svg';
+import ReactPlayer from "react-player";
 
 export default class AppView extends Component<any, any> {
     constructor(props) {
