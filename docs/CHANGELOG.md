@@ -2,6 +2,7 @@
 
 ## 4.0.0-DEVELOP
 
+* Drop PHP 5.6 support for 7.1+
 * Resolve CVE-2019-12385 for the SQL Injection
 * Resolve CVE-2019-12386 for the persistent XSS
 * Resolve NS-18-046 Multiple Reflected Cross-site Scripting Vulnerabilities in Ampache 3.9.0

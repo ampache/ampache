@@ -349,8 +349,7 @@ class Core
         $buffer = '';
         if (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
-        } elseif (phpversion() > "5.6.12" && function_exists('openssl_random_pseudo_bytes')) {
-            // PHP version check for https://bugs.php.net/bug.php?id=70014
+        } elseif (function_exists('openssl_random_pseudo_bytes')) {
             $buffer = openssl_random_pseudo_bytes($length);
         } elseif (file_exists('/dev/random') && is_readable('/dev/random')) {
             $buffer = file_get_contents('/dev/random', false, null, -1, $length);

@@ -29,7 +29,7 @@
         }
     },
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.1.0",
         "wikimedia/composer-merge-plugin": "1.*",
 
         "doctrine/cache": "1.*.*",
