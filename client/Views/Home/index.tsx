@@ -11,7 +11,10 @@ interface HomeState {
     randomAlbums: Album[];
 }
 
-export default class HomeView extends React.Component<HomeProps, HomeState> {
+export default class HomeView extends React.PureComponent<
+    HomeProps,
+    HomeState
+> {
     constructor(props) {
         super(props);
 
@@ -36,7 +39,7 @@ export default class HomeView extends React.Component<HomeProps, HomeState> {
     }
 
     render() {
-        console.log(this.props);
+        console.log('HOME');
         return (
             <div className='homePage'>
                 <section>

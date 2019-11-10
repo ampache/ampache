@@ -11,7 +11,7 @@
         "howler": "^2.1.2",
         "images": "^3.0.2",
         "js-cookie": "^2.2.1",
-        "react": "^16.11.0",
+        "react": ">=16",
         "react-dom": "npm:@hot-loader/react-dom",
         "react-router-dom": "^5.1.2"
     },

@@ -1,11 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import '/stylus/main.styl';
 import logo from '/images/ampache-dark.png';
 import userIcon from '/images/icons/svg/user.svg';
 import Sidebar from './components/Sidebar';
+import { User } from '../logic/User';
 
-export default class AppView extends Component<any, any> {
+interface AppViewProps {
+    user: User;
+}
+
+export default class AppView extends React.PureComponent<AppViewProps> {
     render() {
         if (this.props.user == null) {
             return <span>Loading...</span>;
