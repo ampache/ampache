@@ -9,7 +9,7 @@ interface MusicPlayerProps {
     global: MusicPlayerContextChildProps;
 }
 
-class MusicPlayer extends React.Component<MusicPlayerProps, any> {
+class MusicPlayer extends React.PureComponent<MusicPlayerProps> {
     render() {
         return (
             <>

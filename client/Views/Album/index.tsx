@@ -25,7 +25,7 @@ interface HomeState {
     songsLoading: boolean;
 }
 
-class AlbumView extends React.Component<HomeProps, HomeState> {
+class AlbumView extends React.PureComponent<HomeProps, HomeState> {
     constructor(props) {
         super(props);
 

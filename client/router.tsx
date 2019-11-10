@@ -13,15 +13,14 @@ import AlbumView from './Views/Album';
 import MusicPlayer from './Views/MusicPlayer';
 import { MusicPlayerContextProvider } from './MusicPlayerContext';
 
-//TODO, fix any
 interface RouterState {
     authCode: string;
     username: string;
-    user: object;
+    user: User;
 }
 
 const server = 'http://localhost:8080';
-export default class Root extends Component<any, RouterState> {
+export default class Root extends Component<void, RouterState> {
     constructor(props) {
         super(props);
 
@@ -39,6 +38,7 @@ export default class Root extends Component<any, RouterState> {
                 })
                 .catch((error) => {
                     console.error('GETUSERFAILED', error); //TODO: Error handling
+                    this.handleLogout();
                 });
         }
 
@@ -59,7 +59,7 @@ export default class Root extends Component<any, RouterState> {
                         console.log(user);
                     })
                     .catch((error) => {
-                        console.error('GETUSERFAILED', error); //TODO: Error handling
+                        console.error('HANDSHAKE-GETUSERFAILED', error); //TODO: Error handling
                     });
             })
             .catch((error) => {

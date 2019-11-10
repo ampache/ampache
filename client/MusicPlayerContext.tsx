@@ -3,7 +3,6 @@ import { PLAYERSTATUS } from './enum/PlayerStatus';
 import { Howl, Howler } from 'howler';
 
 interface MusicPlayerContextState {
-    howlID: any;
     howlObject: Howl;
     playerStatus: PLAYERSTATUS;
 }
@@ -11,21 +10,24 @@ interface MusicPlayerContextState {
 export interface MusicPlayerContextChildProps {
     //TODO: is there no better way?
     playerStatus: PLAYERSTATUS.STOPPED;
-    howlID: null;
     howlObject: null;
     playPause: () => {};
     startPlaying: (url: string) => {};
 }
 
-const MusicPlayerContext = React.createContext({});
+const MusicPlayerContext = React.createContext({
+    playerStatus: PLAYERSTATUS.STOPPED,
+    howlObject: null,
+    playPause: () => {},
+    startPlaying: (url: string) => {}
+});
 
 export class MusicPlayerContextProvider extends React.Component<
-    any,
+    { children: JSX.Element },
     MusicPlayerContextState
 > {
     state = {
         playerStatus: PLAYERSTATUS.STOPPED,
-        howlID: null,
         howlObject: null
     };
 
@@ -50,12 +52,10 @@ export class MusicPlayerContextProvider extends React.Component<
             src: [playURL],
             format: 'mp3', //Howler is broken, this bypasses https://github.com/goldfire/howler.js/issues/1248
             onload: () => {
-                const howlID = howl.play();
-                console.log('Loaded', howlID);
+                howl.play();
                 this.setState({
                     playerStatus: PLAYERSTATUS.PLAYING,
-                    howlObject: howl,
-                    howlID: howlID
+                    howlObject: howl
                 });
             },
             onloaderror: (id, err) => {

@@ -5,7 +5,7 @@ interface AccountProps {
     user: User;
 }
 
-export default class AccountView extends React.Component<AccountProps, any> {
+export default class AccountView extends React.PureComponent<AccountProps> {
     render() {
         return (
             <div className='userPage'>
