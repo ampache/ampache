@@ -25,7 +25,7 @@ interface HomeState {
     songsLoading: boolean;
 }
 
-class AlbumView extends React.PureComponent<HomeProps, HomeState> {
+class AlbumView extends React.Component<HomeProps, HomeState> {
     constructor(props) {
         super(props);
 
@@ -66,6 +66,15 @@ class AlbumView extends React.PureComponent<HomeProps, HomeState> {
                     this.setState({ songsLoading: false, error });
                 });
         }
+    }
+
+    shouldComponentUpdate(
+        nextProps: Readonly<HomeProps>,
+        nextState: Readonly<HomeState>,
+        nextContext: any
+    ): boolean {
+        //playerStatus is not relevant to this page
+        return this.props.global.playerStatus === nextProps.global.playerStatus;
     }
 
     onSongClick(url: string) {
