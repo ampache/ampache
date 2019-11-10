@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ComponentState} from 'react'
 
 interface LoginState {
     username: string;
@@ -36,7 +36,7 @@ export default class HomeView extends React.Component<LoginProps, LoginState> {
 
         this.setState({
             [name]: value
-        });
+        } as ComponentState);
 
         this.handleInputChange = this.handleInputChange.bind(this);
     }

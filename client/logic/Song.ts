@@ -1,5 +1,3 @@
-import axios from "axios";
-
 type Song = {
     id: number,
     title: string,

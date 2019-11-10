@@ -17,13 +17,13 @@ const getUser = async (username: string, authKey: string, server: string) => {
 
             let JSONData = response.data;
             if (JSONData.error) {
-                reject(JSONData.error);
-            } else if (JSONData.user) {
-                const user: User = JSONData.user;
-                resolve(user);
-            } else {
-                reject("Something wrong with JSON");
+                return reject(JSONData.error);
             }
+            if (JSONData.user) {
+                const user: User = JSONData.user;
+                return resolve(user);
+            }
+            return reject("Something wrong with JSON");
         }).catch(error => {
             reject(error);
         });

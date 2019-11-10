@@ -4,7 +4,6 @@ import '/stylus/main.styl'
 import logo from '/images/ampache-dark.png'
 import userIcon from '/images/icons/svg/user.svg';
 import Sidebar from "./components/Sidebar";
-import MusicPlayer from "./MusicPlayer";
 
 export default class AppView extends Component<any, any> {
     constructor(props) {
@@ -17,7 +16,7 @@ export default class AppView extends Component<any, any> {
         if(this.props.user == null){
             return (<span>Loading...</span>)
         }
-        console.log(this.props)
+        console.log(this.props);
 
         return (
             <>
