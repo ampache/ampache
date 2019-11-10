@@ -659,7 +659,7 @@ class Api
      *
      * @param array $input
      * 'filter'  (string) UID of Album
-     * 'include' (array) 'albums'|'songs' //optional
+     * 'include' (array) 'songs' //optional
 
      */
     public static function album($input)
