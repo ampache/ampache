@@ -2389,7 +2389,7 @@ class Api
         $where        = array();
         $order        = array();
         $bound_values = array();
-        
+
         if (in_array($input[mode], array("least_recent_played", "most_recent_played"), true)) {
             $select[] = "(SELECT user_activity.activity_date
 		                   FROM user_activity 
@@ -2407,6 +2407,11 @@ class Api
 
             $bound_values[] = User::get_from_username(Session::username($input['auth']))->id;
         }
+        if (array_key_exists("flagged_only", $input) && $input[flagged_only]) {
+            $from[]         = "LEFT JOIN user_flag ON (song.id = user_flag.object_id) AND (user_flag.object_type = 'song') AND (user_flag.user = ?)";
+            $where[]        = "(user_flag.object_id IS NOT NULL)";
+            $bound_values[] = User::get_from_username(Session::username($input['auth']))->id;
+        }
         if (array_key_exists("filter", $input)) {
             $where[]        = "(song.title LIKE ?)";
             $bound_values[] = "%$input[filter]%";
@@ -2418,11 +2423,6 @@ class Api
         if (array_key_exists("artist_id", $input)) {
             $where[]        = "(song.artist = ?)";
             $bound_values[] = $input[artist_id];
-        }
-        if (array_key_exists("flagged_only", $input) && $input[flagged_only]) {
-            $from[]         = "LEFT JOIN user_flag ON (song.id = user_flag.object_id) AND (user_flag.object_type = 'song') AND (user_flag.user = ?)";
-            $where[]        = "(user_flag.object_id IS NOT NULL)";
-            $bound_values[] = User::get_from_username(Session::username($input['auth']))->id;
         }
         $order[] = "RAND()";
 
