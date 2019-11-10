@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {AppContainer} from 'react-hot-loader';
+import { AppContainer } from 'react-hot-loader';
 
 import Root from './router';
 
@@ -9,7 +9,7 @@ const render = (Component) => {
         <AppContainer>
             <Component />
         </AppContainer>,
-        document.getElementById('root'),
+        document.getElementById('root')
     );
 };
 

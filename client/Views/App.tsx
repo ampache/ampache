@@ -1,20 +1,14 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import '/stylus/main.styl'
-import logo from '/images/ampache-dark.png'
+import '/stylus/main.styl';
+import logo from '/images/ampache-dark.png';
 import userIcon from '/images/icons/svg/user.svg';
-import Sidebar from "./components/Sidebar";
+import Sidebar from './components/Sidebar';
 
 export default class AppView extends Component<any, any> {
-    constructor(props) {
-        super(props);
-        this.state = {
-        }
-    }
-
     render() {
-        if(this.props.user == null){
-            return (<span>Loading...</span>)
+        if (this.props.user == null) {
+            return <span>Loading...</span>;
         }
         console.log(this.props);
 
@@ -28,34 +22,55 @@ export default class AppView extends Component<any, any> {
                     </div>
                     <div className='search'>
                         <form>
-                            <input type='text' placeholder='Search' name='rule_1_input' autoComplete='off'/>
+                            <input
+                                type='text'
+                                placeholder='Search'
+                                name='rule_1_input'
+                                autoComplete='off'
+                            />
                         </form>
                     </div>
                     <div className='account'>
-                        <img src={userIcon} alt='user icon'/>
+                        <img src={userIcon} alt='user icon' />
                         <div className='options'>
                             <ul>
-                                <li><Link to='/account'>{this.props.user.username}</Link></li>
+                                <li>
+                                    <Link to='/account'>
+                                        {this.props.user.username}
+                                    </Link>
+                                </li>
                                 <hr />
-                                <li><Link to='/favorites'>My Favorites</Link></li>
+                                <li>
+                                    <Link to='/favorites'>My Favorites</Link>
+                                </li>
                                 <hr />
                                 <li>My Settings</li>
-                                <li><Link to='/interface'>Interface</Link></li>
-                                <li><Link to='/options'>Options</Link></li>
-                                <li><Link to='/playlist'>Playlist</Link></li>
-                                <li><Link to='/plugins'>Plugins</Link></li>
-                                <li><Link to='/streaming'>Streaming</Link></li>
+                                <li>
+                                    <Link to='/interface'>Interface</Link>
+                                </li>
+                                <li>
+                                    <Link to='/options'>Options</Link>
+                                </li>
+                                <li>
+                                    <Link to='/playlist'>Playlist</Link>
+                                </li>
+                                <li>
+                                    <Link to='/plugins'>Plugins</Link>
+                                </li>
+                                <li>
+                                    <Link to='/streaming'>Streaming</Link>
+                                </li>
                                 <hr />
-                                <li><Link to='/logout'>Logout</Link></li>
+                                <li>
+                                    <Link to='/logout'>Logout</Link>
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </header>
                 <div className='container'>
                     <Sidebar />
-                    <div className='content'>
-                        {this.props.children}
-                    </div>
+                    <div className='content'>{this.props.children}</div>
                 </div>
             </>
         );

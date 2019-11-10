@@ -1,16 +1,11 @@
-import React from 'react'
-import {User} from "logic/User";
+import React from 'react';
+import { User } from 'logic/User';
 
 interface AccountProps {
     user: User;
 }
 
 export default class AccountView extends React.Component<AccountProps, any> {
-
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div className='userPage'>

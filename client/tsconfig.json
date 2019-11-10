@@ -1,20 +1,18 @@
 {
-  "compilerOptions": {
-    "target": "es2018",
-    "allowSyntheticDefaultImports": true,
-    "jsx": "react",
-    "esModuleInterop": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "module": "es6",
-    "moduleResolution": "node",
-    "allowJs": true,
-    "baseUrl": ".",
-    "paths": {
-      "@logic/*": [ "./logic/" ]
-    }
-  },
-  "exclude": [
-    "node_modules"
-  ]
+    "compilerOptions": {
+        "target": "es2018",
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react",
+        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "module": "es6",
+        "moduleResolution": "node",
+        "allowJs": true,
+        "baseUrl": ".",
+        "paths": {
+            "@logic/*": ["./logic/"]
+        }
+    },
+    "exclude": ["node_modules"]
 }

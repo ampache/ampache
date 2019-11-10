@@ -1,53 +1,54 @@
 {
-  "name": "ampache-client",
-  "version": "1.0.0",
-  "description": "Client side for Ampache server",
-  "main": "index.html",
-  "repository": "https://github.com/AshotN/ampache",
-  "author": "Ashot Nazaryan",
-  "license": "GPL",
-  "dependencies": {
-    "axios": "^0.19.0",
-    "howler": "^2.1.2",
-    "images": "^3.0.2",
-    "js-cookie": "^2.2.1",
-    "react": "^16.11.0",
-    "react-dom": "npm:@hot-loader/react-dom",
-    "react-router-dom": "^5.1.2"
-  },
-  "scripts": {
-    "start": "parcel start index.html --public-url /client/dist/",
-    "build": "parcel build index.html --public-url /client/dist/",
-    "watch": "parcel watch index.html --public-url /client/dist/"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      "last 1 version",
-      "> 1%",
-      "not dead"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@babel/core": "^7.7.2",
-    "@babel/preset-env": "^7.7.1",
-    "@babel/preset-react": "^7.7.0",
-    "@babel/preset-typescript": "^7.7.2",
-    "@types/react": "^16.9.11",
-    "@types/react-dom": "^16.9.4",
-    "parcel-bundler": "^1.12.4",
-    "react-hot-loader": "^4.12.16",
-    "stylus": "^0.54.7",
-    "typescript": "^3.7.2"
-  },
-  "alias": {
-    "components": "./src/components"
-  }
+    "name": "ampache-client",
+    "version": "1.0.0",
+    "description": "Client side for Ampache server",
+    "main": "index.html",
+    "repository": "https://github.com/AshotN/ampache",
+    "author": "Ashot Nazaryan",
+    "license": "GPL",
+    "dependencies": {
+        "axios": "^0.19.0",
+        "howler": "^2.1.2",
+        "images": "^3.0.2",
+        "js-cookie": "^2.2.1",
+        "react": "^16.11.0",
+        "react-dom": "npm:@hot-loader/react-dom",
+        "react-router-dom": "^5.1.2"
+    },
+    "scripts": {
+        "start": "parcel start index.html --public-url /client/dist/",
+        "build": "parcel build index.html --public-url /client/dist/",
+        "watch": "parcel watch index.html --public-url /client/dist/"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": {
+        "production": [
+            "last 1 version",
+            "> 1%",
+            "not dead"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@babel/core": "^7.7.2",
+        "@babel/preset-env": "^7.7.1",
+        "@babel/preset-react": "^7.7.0",
+        "@babel/preset-typescript": "^7.7.2",
+        "@types/react": "^16.9.11",
+        "@types/react-dom": "^16.9.4",
+        "parcel-bundler": "^1.12.4",
+        "prettier": "1.19.1",
+        "react-hot-loader": "^4.12.16",
+        "stylus": "^0.54.7",
+        "typescript": "^3.7.2"
+    },
+    "alias": {
+        "components": "./src/components"
+    }
 }
