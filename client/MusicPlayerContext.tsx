@@ -1,24 +1,28 @@
 import React from 'react';
-import {PLAYERSTATUS} from "./enum/PlayerStatus";
-import {Howl, Howler} from 'howler';
+import { PLAYERSTATUS } from './enum/PlayerStatus';
+import { Howl, Howler } from 'howler';
 
 interface MusicPlayerContextState {
-    howlID: any
-    howlObject: Howl
-    playerStatus: PLAYERSTATUS,
+    howlID: any;
+    howlObject: Howl;
+    playerStatus: PLAYERSTATUS;
 }
 
-export interface MusicPlayerContextChildProps { //TODO: is there no better way?
-    playerStatus: PLAYERSTATUS.STOPPED,
-    howlID: null,
-    howlObject: null,
-    playPause: () => {},
-    startPlaying: (url: string) => {}
+export interface MusicPlayerContextChildProps {
+    //TODO: is there no better way?
+    playerStatus: PLAYERSTATUS.STOPPED;
+    howlID: null;
+    howlObject: null;
+    playPause: () => {};
+    startPlaying: (url: string) => {};
 }
 
 const MusicPlayerContext = React.createContext({});
 
-export class MusicPlayerContextProvider extends React.Component<any, MusicPlayerContextState> {
+export class MusicPlayerContextProvider extends React.Component<
+    any,
+    MusicPlayerContextState
+> {
     state = {
         playerStatus: PLAYERSTATUS.STOPPED,
         howlID: null,
@@ -26,17 +30,20 @@ export class MusicPlayerContextProvider extends React.Component<any, MusicPlayer
     };
 
     playPause = () => {
-        if(this.state.playerStatus === PLAYERSTATUS.PLAYING) {
+        if (this.state.playerStatus === PLAYERSTATUS.PLAYING) {
             this.state.howlObject.pause();
-            this.setState({playerStatus: PLAYERSTATUS.PAUSED})
-        } else if(this.state.playerStatus === PLAYERSTATUS.PAUSED) {
+            this.setState({ playerStatus: PLAYERSTATUS.PAUSED });
+        } else if (this.state.playerStatus === PLAYERSTATUS.PAUSED) {
             this.state.howlObject.play();
-            this.setState({playerStatus: PLAYERSTATUS.PLAYING})
+            this.setState({ playerStatus: PLAYERSTATUS.PLAYING });
         }
     };
 
     startPlaying = (playURL: string) => {
-        if(this.state.playerStatus === PLAYERSTATUS.PLAYING || this.state.playerStatus === PLAYERSTATUS.PAUSED) {
+        if (
+            this.state.playerStatus === PLAYERSTATUS.PLAYING ||
+            this.state.playerStatus === PLAYERSTATUS.PAUSED
+        ) {
             this.state.howlObject.stop();
         }
         const howl = new Howl({
@@ -44,20 +51,18 @@ export class MusicPlayerContextProvider extends React.Component<any, MusicPlayer
             format: 'mp3', //Howler is broken, this bypasses https://github.com/goldfire/howler.js/issues/1248
             onload: () => {
                 const howlID = howl.play();
-                console.log("Loaded", howlID);
+                console.log('Loaded', howlID);
                 this.setState({
                     playerStatus: PLAYERSTATUS.PLAYING,
                     howlObject: howl,
-                    howlID: howlID,
+                    howlID: howlID
                 });
             },
             onloaderror: (id, err) => {
-                this.setState({
-                });
-                console.log("ERROR", err)
+                this.setState({});
+                console.log('ERROR', err);
                 Howler.unload();
             }
-
         });
     };
 
@@ -72,15 +77,13 @@ export class MusicPlayerContextProvider extends React.Component<any, MusicPlayer
             >
                 {this.props.children}
             </MusicPlayerContext.Provider>
-        )
+        );
     }
 }
 
 // create the consumer as higher order component
-export const withMusicPlayerContext = ChildComponent => props => (
+export const withMusicPlayerContext = (ChildComponent) => (props) => (
     <MusicPlayerContext.Consumer>
-        {
-            context => <ChildComponent {...props} global={context}/>
-        }
+        {(context) => <ChildComponent {...props} global={context} />}
     </MusicPlayerContext.Consumer>
 );

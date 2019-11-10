@@ -1,29 +1,31 @@
-import React from 'react'
-import {Album, getAlbum, getAlbumSongs} from '../../logic/Album';
-import {User} from "../../logic/User";
-import {Song} from "../../logic/Song";
-import {MusicPlayerContextChildProps, withMusicPlayerContext} from "../../MusicPlayerContext";
+import React from 'react';
+import { Album, getAlbum, getAlbumSongs } from '../../logic/Album';
+import { User } from '../../logic/User';
+import { Song } from '../../logic/Song';
+import {
+    MusicPlayerContextChildProps,
+    withMusicPlayerContext
+} from '../../MusicPlayerContext';
 
 interface HomeProps {
     user: User;
     match: {
         params: {
-            albumID: number
-        }
+            albumID: number;
+        };
     };
     global: MusicPlayerContextChildProps;
 }
 
 interface HomeState {
-    theAlbum: Album,
-    songs: Song[],
-    error: string,
-    albumLoading: boolean
-    songsLoading: boolean
+    theAlbum: Album;
+    songs: Song[];
+    error: string;
+    albumLoading: boolean;
+    songsLoading: boolean;
 }
 
 class AlbumView extends React.Component<HomeProps, HomeState> {
-
     constructor(props) {
         super(props);
 
@@ -40,19 +42,30 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
 
     componentDidMount() {
         if (this.props.match.params.albumID != null) {
-            getAlbum(this.props.match.params.albumID, this.props.user.authCode, "http://localhost:8080").then((theAlbum: Album) => {
-                this.setState({theAlbum, albumLoading: false});
-            }).catch((error) => {
-                this.setState({albumLoading: false, error})
-            });
+            getAlbum(
+                this.props.match.params.albumID,
+                this.props.user.authCode,
+                'http://localhost:8080'
+            )
+                .then((theAlbum: Album) => {
+                    this.setState({ theAlbum, albumLoading: false });
+                })
+                .catch((error) => {
+                    this.setState({ albumLoading: false, error });
+                });
 
-            getAlbumSongs(this.props.match.params.albumID, this.props.user.authCode, "http://localhost:8080").then((songs: Song[]) => {
-                this.setState({songs, songsLoading: false});
-            }).catch((error) => {
-                this.setState({songsLoading: false, error})
-            });
+            getAlbumSongs(
+                this.props.match.params.albumID,
+                this.props.user.authCode,
+                'http://localhost:8080'
+            )
+                .then((songs: Song[]) => {
+                    this.setState({ songs, songsLoading: false });
+                })
+                .catch((error) => {
+                    this.setState({ songsLoading: false, error });
+                });
         }
-
     }
 
     onSongClick(url: string) {
@@ -71,27 +84,34 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
             return (
                 <div className='albumPage'>
                     <span>Error: {this.state.error}</span>
-                </div>)
+                </div>
+            );
         }
         console.log(this.state.theAlbum);
         return (
             <div className='albumPage'>
                 <div className='details'>
                     <div className='imageContainer'>
-                        <img src={this.state.theAlbum.art} alt={'Album Cover'}/>
+                        <img
+                            src={this.state.theAlbum.art}
+                            alt={'Album Cover'}
+                        />
                     </div>
                     Name: {this.state.theAlbum.name}
                 </div>
                 <div className='songs'>
-                    {this.state.songsLoading && "Loading Songs..."}
+                    {this.state.songsLoading && 'Loading Songs...'}
                     {!this.state.songsLoading &&
-                    this.state.songs.map((song: Song) => {
-                        return (
-                            <div onClick={() => this.onSongClick(song.url)} key={song.id}>
-                                {song.title}
-                            </div>)
-                    })
-                    }
+                        this.state.songs.map((song: Song) => {
+                            return (
+                                <div
+                                    onClick={() => this.onSongClick(song.url)}
+                                    key={song.id}
+                                >
+                                    {song.title}
+                                </div>
+                            );
+                        })}
                 </div>
             </div>
         );
