@@ -2361,9 +2361,9 @@ class Api
     /**
      * ad_hoc_playlist
      * MINIMUM_API_VERSION=400001
-     * 
+     *
      * Return songs based on supplied criteria
-     * 
+     *
      * @param array $input
      * $input = array(mode            = (string)  "least_recent_played"|"most_recent_played"|"random"   // optional, default = "least_recent_played"
      *                filter          = (string)  $filter                                               // optional, LIKE matched to song title
@@ -2408,13 +2408,16 @@ class Api
             $bound_values[] = User::get_from_username(Session::username($input['auth']))->id;
         }
         if (array_key_exists("filter", $input)) {
-            $where[] = "(song.title LIKE \"%$input[filter]%\")";
+            $where[]        = "(song.title LIKE ?)";
+            $bound_values[] = "%$input[filter]%";
         }
         if (array_key_exists("album_id", $input)) {
-            $where[] = "(song.album = $input[album_id])";
+            $where[]        = "(song.album = ?)";
+            $bound_values[] = $input[album_id];
         }
         if (array_key_exists("artist_id", $input)) {
-            $where[] = "(song.artist = $input[artist_id])";
+            $where[]        = "(song.artist = ?)";
+            $bound_values[] = $input[artist_id];
         }
         if (array_key_exists("flagged_only", $input) && $input[flagged_only]) {
             $from[]         = "LEFT JOIN user_flag ON (song.id = user_flag.object_id) AND (user_flag.object_type = 'song') AND (user_flag.user = ?)";
@@ -2424,23 +2427,23 @@ class Api
         $order[] = "RAND()";
 
         // construct sql
-        $sql = "SELECT ".join(', ', $select)." FROM ".join(" ", $from);
+        $sql = "SELECT " . join(', ', $select) . " FROM " . join(" ", $from);
         if (count($where)) {
-            $sql .= " WHERE ".join(" AND ", $where);
+            $sql .= " WHERE " . join(" AND ", $where);
         }
-        $sql .= " ORDER BY ".join(", ", $order);
+        $sql .= " ORDER BY " . join(", ", $order);
 
         // add offest and limit
-        if (array_key_exists("limit", $input)) {
+        if (array_key_exists("limit", $input) && is_numeric($input[limit])) {
             $sql .= " LIMIT ";
-            if (array_key_exists("offset", $input)) {
+            if (array_key_exists("offset", $input) && is_numeric($input[offset])) {
                 $sql .= "$input[offset], ";
             }
-            $sql .= $input[limit];
+            $sql .= "$input[limit]";
         }
 
         // get db data
-        $song_ids=array();
+        $song_ids   = array();
         $db_results = Dba::read($sql, $bound_values);
         while ($row = Dba::fetch_assoc($db_results)) {
             $song_ids[] = $row[song_id];
@@ -2449,11 +2452,9 @@ class Api
         // output formatted XML
         if ($input[format] == "id") {
             echo XML_Data::keyed_array($song_ids);
-        }
-        else if ($input[format] == "index") {
+        } elseif ($input[format] == "index") {
             echo XML_Data::indexes($song_ids, "song");
-        }
-        else {
+        } else {
             echo XML_Data::songs($song_ids);
         }
 
