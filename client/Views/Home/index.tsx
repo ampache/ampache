@@ -20,9 +20,11 @@ export default class HomeView extends React.Component<HomeProps, HomeState> {
             randomAlbums: []
         };
 
+    }
+
+    componentDidMount() {
         getRandomAlbums(this.props.user.username,6, this.props.user.authCode,"http://localhost:8080").then((albums: Album[]) => {
             this.setState({randomAlbums: albums});
-            console.log(albums);
         }).catch((e) => {
             //TODO
         });

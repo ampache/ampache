@@ -27,13 +27,13 @@ const handshake = async (username: string, password: string, server: string) => 
             let JSONData = response.data;
 
             if (JSONData.error) {
-                reject(JSONData.error);
-            } else if (JSONData.auth) {
-                console.log(JSONData.auth);
-                resolve(JSONData.auth);
-            } else {
-                reject("Something wrong with JSON");
+                return reject(JSONData.error);
             }
+            if (JSONData.auth) {
+                console.log(JSONData.auth);
+                return resolve(JSONData.auth);
+            }
+            return reject("Something wrong with JSON");
         }).catch(error => {
             reject(error);
         });

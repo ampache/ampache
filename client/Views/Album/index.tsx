@@ -1,14 +1,17 @@
 import React from 'react'
-import {getRandomAlbums, Album, getAlbum, getAlbumSongs} from '../../logic/Album';
-import AlbumDisplay from '../components/AlbumDisplay';
+import {Album, getAlbum, getAlbumSongs} from '../../logic/Album';
 import {User} from "../../logic/User";
 import {Song} from "../../logic/Song";
-import MusicPlayer from "../MusicPlayer";
-import {MusicPlayerContextProvider, withMusicPlayerContext} from "../../MusicPlayerContext";
+import {MusicPlayerContextChildProps, withMusicPlayerContext} from "../../MusicPlayerContext";
 
 interface HomeProps {
     user: User;
-    global: MusicPlayerContextProvider
+    match: {
+        params: {
+            albumID: number
+        }
+    };
+    global: MusicPlayerContextChildProps;
 }
 
 interface HomeState {
@@ -32,21 +35,24 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
             songsLoading: true
         };
 
-        if (props.match.params.albumID != null) {
-            getAlbum(props.match.params.albumID, this.props.user.authCode, "http://localhost:8080").then((theAlbum: Album) => {
+        this.onSongClick = this.onSongClick.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.props.match.params.albumID != null) {
+            getAlbum(this.props.match.params.albumID, this.props.user.authCode, "http://localhost:8080").then((theAlbum: Album) => {
                 this.setState({theAlbum, albumLoading: false});
             }).catch((error) => {
                 this.setState({albumLoading: false, error})
             });
 
-            getAlbumSongs(props.match.params.albumID, this.props.user.authCode, "http://localhost:8080").then((songs: Song[]) => {
+            getAlbumSongs(this.props.match.params.albumID, this.props.user.authCode, "http://localhost:8080").then((songs: Song[]) => {
                 this.setState({songs, songsLoading: false});
             }).catch((error) => {
                 this.setState({songsLoading: false, error})
             });
         }
 
-        this.onSongClick = this.onSongClick.bind(this);
     }
 
     onSongClick(url: string) {
@@ -72,7 +78,7 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
             <div className='albumPage'>
                 <div className='details'>
                     <div className='imageContainer'>
-                        <img src={this.state.theAlbum.art} />
+                        <img src={this.state.theAlbum.art} alt={'Album Cover'}/>
                     </div>
                     Name: {this.state.theAlbum.name}
                 </div>
