@@ -47,7 +47,7 @@ $old_config = file_get_contents($prefix . '/config/ampache.cfg.php');
 
 $data = explode("\n",$old_config);
 
-echo T_("Parsing old config file...");
+echo "Parsing old config file...";
 echo "\n";
 
 foreach ($data as $line) {
@@ -77,7 +77,7 @@ foreach ($data as $line) {
 
 } // end foreach lines
 
-echo T_("Parse complete, writing");
+echo "Parse complete, writing";
 echo "\n";
 
 $handle = fopen($prefix . '/config/ampache.cfg.php','w');
@@ -85,10 +85,10 @@ $handle = fopen($prefix . '/config/ampache.cfg.php','w');
 $worked = fwrite($handle,$new_config);
 
 if ($worked) {
-    echo T_("Write success, config migrated");
+    echo "Write success, config migrated";
     echo "\n";
 }
 else {
-    echo T_("Access denied, config migration failed");
+    echo "Access denied, config migration failed";
     echo "\n";
 }

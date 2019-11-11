@@ -1007,6 +1007,9 @@ class Subsonic_Api
         if ($timeOffset) {
             $params .= '&frame=' . $timeOffset;
         }
+        if (AmpConfig::get('subsonic_stream_scrobble') == 'false') {
+            $params .= '&cache=1';
+        }
 
         $url = '';
         if (Subsonic_XML_Data::isSong($fileid)) {
@@ -1029,7 +1032,7 @@ class Subsonic_Api
     {
         $fileid = self::check_parameter($input, 'id', true);
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&cache=1', 'api', function_exists('curl_version'));
         self::follow_stream($url);
     }
 

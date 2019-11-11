@@ -1147,6 +1147,12 @@ class Api
      */
     public static function search_songs($input)
     {
+        if (!self::check_parameter($input, array('filter'))) {
+            debug_event('api.class', "'filter' required on search_songs function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'filter'");
+
+            return false;
+        }
         $array                    = array();
         $array['type']            = 'song';
         $array['rule_1']          = 'anywhere';
@@ -1177,6 +1183,12 @@ class Api
      */
     public static function videos($input)
     {
+        if (!self::check_parameter($input, array('filter'))) {
+            debug_event('api.class', "'filter' required on videos function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'filter'");
+
+            return false;
+        }
         self::$browse->reset_filters();
         self::$browse->set_type('video');
         self::$browse->set_sort('title', 'ASC');
@@ -1219,7 +1231,7 @@ class Api
      *
      * @param array $input
      * type     = (string)  'song'|'album'|'artist'
-     * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|null //optional
+     * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
      * user_id  = (integer) //optional
      * username = (string)  //optional
      * offset   = (integer) //optional
@@ -1227,9 +1239,9 @@ class Api
      */
     public static function stats($input)
     {
-        if (!self::check_parameter($input, array('type'))) {
+        if (!self::check_parameter($input, array('type', 'filter'))) {
             debug_event('api.class', "'type' required on stats function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type'");
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type', 'filter'");
 
             return false;
         }
@@ -1289,6 +1301,7 @@ class Api
                 debug_event('api.class', 'stats flagged', 4);
                 $results = Userflag::get_latest($type, $user_id);
                 break;
+            case "random":
             default:
                 debug_event('api.class', 'stats random ' . $type, 4);
                 switch ($type) {
@@ -1876,7 +1889,7 @@ class Api
 
                 return;
             }
-            $user->update_stats('song', $scrobble_id, $agent, array(), false, $date);
+            $user->update_stats('song', $scrobble_id, $agent, array(), $date);
             echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
         }
         Session::extend($input['auth']);
@@ -2199,7 +2212,7 @@ class Api
         $user_id  = User::get_from_username(Session::username($input['auth']))->id;
 
         $url    = '';
-        $params = '&action=download' . '&client=api' . '&noscrobble=1';
+        $params = '&action=download' . '&client=api' . '&cache=1';
         if ($original) {
             $params .= '&transcode_to=' . $format;
         }
