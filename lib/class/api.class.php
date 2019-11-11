@@ -1147,6 +1147,12 @@ class Api
      */
     public static function search_songs($input)
     {
+        if (!self::check_parameter($input, array('filter'))) {
+            debug_event('api.class', "'filter' required on search_songs function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'filter'");
+
+            return false;
+        }
         $array                    = array();
         $array['type']            = 'song';
         $array['rule_1']          = 'anywhere';
@@ -1177,6 +1183,12 @@ class Api
      */
     public static function videos($input)
     {
+        if (!self::check_parameter($input, array('filter'))) {
+            debug_event('api.class', "'filter' required on videos function call.", 2);
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'filter'");
+
+            return false;
+        }
         self::$browse->reset_filters();
         self::$browse->set_type('video');
         self::$browse->set_sort('title', 'ASC');
