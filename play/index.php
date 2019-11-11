@@ -619,7 +619,7 @@ if (!is_resource($filepointer)) {
 if (!$transcode) {
     header('ETag: ' . $media->id);
 }
-if ($action != 'download') {
+if (($action != 'download') && $record_stats) {
     Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
 }
 // Handle Content-Range
