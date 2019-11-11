@@ -279,10 +279,8 @@ class JSON_Data
 
             $theArray = [];
 
-            $theArray["album"] = array(
-                id => $album->id,
-                name => $album->name
-            );
+            $theArray["id"]   = $album->id;
+            $theArray["name"] = $album->name;
 
             // Do a little check for artist stuff
             if ($album->artist_count != 1) {
@@ -297,15 +295,15 @@ class JSON_Data
                 );
             }
 
-            $theArray['album']['year']          = $album->year;
-            $theArray['album']['tracks']        = $album->song_count;
-            $theArray['album']['disk']          = $album->disk;
-            $theArray['album']['tags']          = self::tags_string($album->tags);
-            $theArray['album']['art']           = $art_url;
-            $theArray['album']['preciserating'] = $rating->get_user_rating();
-            $theArray['album']['rating']        = $rating->get_user_rating();
-            $theArray['album']['averagerating'] = $rating->get_average_rating();
-            $theArray['album']['mbid']          = $album->mbid;
+            $theArray['year']          = $album->year;
+            $theArray['tracks']        = $album->song_count;
+            $theArray['disk']          = $album->disk;
+            $theArray['tags']          = self::tags_string($album->tags);
+            $theArray['art']           = $art_url;
+            $theArray['preciserating'] = $rating->get_user_rating();
+            $theArray['rating']        = $rating->get_user_rating();
+            $theArray['averagerating'] = $rating->get_average_rating();
+            $theArray['mbid']          = $album->mbid;
 
             array_push($JSON, $theArray);
         } // end foreach
@@ -410,7 +408,7 @@ class JSON_Data
             $ourSong['album_mbid']            = $song->album_mbid;
             $ourSong['artist_mbid']           = $song->artist_mbid;
             $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
-            $ourSong['art']                   = $song->art_url;
+            $ourSong['art']                   = $art_url;
             $ourSong['preciserating']         = ($rating->get_user_rating() ?: 0);
             $ourSong['rating']                = ($rating->get_user_rating() ?: 0);
             $ourSong['averagerating']         = ($rating->get_average_rating() ?: 0);
@@ -430,7 +428,7 @@ class JSON_Data
             }
             $ourSong['tags'] = $tags;
 
-            array_push($JSON, array("song" => $ourSong));
+            array_push($JSON, $ourSong);
         } // end foreach
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
