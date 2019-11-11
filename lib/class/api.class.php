@@ -454,6 +454,7 @@ class Api
         // echo out the resulting xml document
         ob_end_clean();
         echo XML_Data::indexes($objects, $type);
+        Session::extend($input['auth']);
     } // get_indexes
 
     /**
@@ -509,6 +510,7 @@ class Api
                 echo XML_Data::songs($results, array(), true, $user->id);
                 break;
         }
+        Session::extend($input['auth']);
     } // advanced_search
 
     /**
@@ -547,6 +549,7 @@ class Api
         // echo out the resulting xml document
         ob_end_clean();
         echo XML_Data::artists($artists, $input['include'], true, $user->id);
+        Session::extend($input['auth']);
     } // artists
 
     /**
@@ -564,6 +567,7 @@ class Api
         $uid  = scrub_in($input['filter']);
         $user = User::get_from_username(Session::username($input['auth']));
         echo XML_Data::artists(array($uid), $input['include'], true, $user->id);
+        Session::extend($input['auth']);
     } // artist
 
     /**
@@ -588,6 +592,7 @@ class Api
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
         echo XML_Data::albums($albums, array(), true, $user->id);
+        Session::extend($input['auth']);
     } // artist_albums
 
     /**
@@ -614,6 +619,7 @@ class Api
         if (!empty($songs)) {
             echo XML_Data::songs($songs, array(), true, $user->id);
         }
+        Session::extend($input['auth']);
     } // artist_songs
 
     /**
@@ -649,6 +655,7 @@ class Api
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
         echo XML_Data::albums($albums, $input['include'], true, $user->id);
+        Session::extend($input['auth']);
     } // albums
 
     /**
@@ -659,7 +666,7 @@ class Api
      *
      * @param array $input
      * 'filter'  (string) UID of Album
-     * 'include' (array) 'albums'|'songs' //optional
+     * 'include' (array) 'songs' //optional
 
      */
     public static function album($input)
@@ -667,6 +674,7 @@ class Api
         $uid  = (int) scrub_in($input['filter']);
         $user = User::get_from_username(Session::username($input['auth']));
         echo XML_Data::albums(array($uid), $input['include'], true, $user->id);
+        Session::extend($input['auth']);
     } // album
 
     /**
@@ -709,6 +717,7 @@ class Api
         if (!empty($songs)) {
             echo XML_Data::songs($songs, array(), true, $user->id);
         }
+        Session::extend($input['auth']);
     } // album_songs
 
     /**
@@ -739,6 +748,7 @@ class Api
 
         ob_end_clean();
         echo XML_Data::tags($tags);
+        Session::extend($input['auth']);
     } // tags
 
     /**
@@ -755,6 +765,7 @@ class Api
         $uid = scrub_in($input['filter']);
         ob_end_clean();
         echo XML_Data::tags(array($uid));
+        Session::extend($input['auth']);
     } // tag
 
     /**
@@ -779,6 +790,7 @@ class Api
             ob_end_clean();
             echo XML_Data::artists($artists, array(), true, $user->id);
         }
+        Session::extend($input['auth']);
     } // tag_artists
 
     /**
@@ -803,6 +815,7 @@ class Api
             ob_end_clean();
             echo XML_Data::albums($albums, array(), true, $user->id);
         }
+        Session::extend($input['auth']);
     } // tag_albums
 
     /**
@@ -828,6 +841,7 @@ class Api
         if ($songs) {
             echo XML_Data::songs($songs, array(), true, $user->id);
         }
+        Session::extend($input['auth']);
     } // tag_songs
 
     /**
@@ -866,6 +880,7 @@ class Api
 
         ob_end_clean();
         echo XML_Data::songs($songs, array(), true, $user->id);
+        Session::extend($input['auth']);
     } // songs
 
     /**
@@ -884,6 +899,7 @@ class Api
 
         ob_end_clean();
         echo XML_Data::songs(array((int) $song_id), array(), true, $user->id);
+        Session::extend($input['auth']);
     } // song
 
     /**
@@ -916,6 +932,7 @@ class Api
 
         ob_end_clean();
         echo XML_Data::playlists($playlist_ids);
+        Session::extend($input['auth']);
     } // playlists
 
     /**
@@ -933,6 +950,7 @@ class Api
 
         ob_end_clean();
         echo XML_Data::playlists(array($uid));
+        Session::extend($input['auth']);
     } // playlist
 
     /**
@@ -971,6 +989,7 @@ class Api
         XML_Data::set_limit($input['limit']);
         ob_end_clean();
         echo XML_Data::songs($songs, $items, true, $user->id);
+        Session::extend($input['auth']);
     } // playlist_songs
 
     /**
@@ -994,6 +1013,7 @@ class Api
 
         $uid = Playlist::create($name, $type, $user->id);
         echo XML_Data::playlists(array($uid));
+        Session::extend($input['auth']);
     } // playlist_create
 
     /**
@@ -1030,6 +1050,7 @@ class Api
             $playlist->update($array);
             echo XML_Data::success('playlist changes saved');
         }
+        Session::extend($input['auth']);
     } // playlist_edit
 
     /**
@@ -1051,6 +1072,7 @@ class Api
             $playlist->delete();
             echo XML_Data::success('playlist deleted');
         }
+        Session::extend($input['auth']);
     } // playlist_delete
 
     /**
@@ -1074,6 +1096,7 @@ class Api
             $playlist->add_songs(array($song), true);
             echo XML_Data::success('song added to playlist');
         }
+        Session::extend($input['auth']);
     } // playlist_add_song
 
     /**
@@ -1108,6 +1131,7 @@ class Api
                 echo XML_Data::success('song removed from playlist');
             }
         }
+        Session::extend($input['auth']);
     } // playlist_remove_song
 
     /**
@@ -1138,6 +1162,7 @@ class Api
         $user    = User::get_from_username(Session::username($input['auth']));
 
         echo XML_Data::songs($results, array(), true, $user->id);
+        Session::extend($input['auth']);
     } // search_songs
 
     /**
@@ -1166,6 +1191,7 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         echo XML_Data::videos($video_ids, $user->id);
+        Session::extend($input['auth']);
     } // videos
 
     /**
@@ -1192,10 +1218,10 @@ class Api
      * When filter is null get some random items instead
      *
      * @param array $input
-     * type     = (string) 'song'|'album'|'artist'
-     * filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'|null //optional
+     * type     = (string)  'song'|'album'|'artist'
+     * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|null //optional
      * user_id  = (integer) //optional
-     * username = (string) //optional
+     * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) //optional
      */
@@ -1212,10 +1238,11 @@ class Api
         $user_id = $user->id;
         // override your user if you're looking at others
         if ($input['username']) {
-            $username = $input['username'];
-            $user_id  = User::get_from_username($username);
+            $user    = User::get_from_username($input['username']);
+            $user_id = $user->id;
         } elseif ($input['user_id']) {
-            $user_id  = $input['user_id'];
+            $user_id = (int) $input['user_id'];
+            $user    = new User($user_id);
         }
         // moved type to filter and allowed multipe type selection
         $type   = $input['type'];
@@ -1223,7 +1250,7 @@ class Api
         $offset = $input['offset'];
         $limit  = $input['limit'];
         // original method only searched albums and had poor method inputs
-        if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'flagged'))) {
+        if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'))) {
             $type   = 'album';
             $filter = $type;
         }
@@ -1235,44 +1262,45 @@ class Api
         }
 
         $results = null;
-        if ($filter == "newest") {
-            debug_event('api.class', 'stats newest', 5);
-            $results = Stats::get_newest($type, $limit, $offset);
-        } else {
-            if ($filter == "highest") {
+        switch ($input['filter']) {
+            case "newest":
+                debug_event('api.class', 'stats newest', 5);
+                $results = Stats::get_newest($type, $limit, $offset);
+                break;
+            case "highest":
                 debug_event('api.class', 'stats highest', 4);
                 $results = Rating::get_highest($type, $limit, $offset);
-            } else {
-                if ($filter == "frequent") {
-                    debug_event('api.class', 'stats frequent', 4);
-                    $results = Stats::get_top($type, $limit, '', $offset);
+                break;
+            case "frequent":
+                debug_event('api.class', 'stats frequent', 4);
+                $results = Stats::get_top($type, $limit, '', $offset);
+                break;
+            case "recent":
+            case "forgotten":
+                debug_event('api.class', 'stats ' . $input['filter'], 4);
+                $newest = ($input['filter'] == "recent") ? true : false;
+                if ($user_id !== null) {
+                    $results = $user->get_recently_played($limit, $type, $newest);
                 } else {
-                    if ($filter == "recent") {
-                        debug_event('api.class', 'stats recent', 4);
-                        if ($user_id !== null) {
-                            $results = $user_id->get_recently_played($limit, $type);
-                        } else {
-                            $results = Stats::get_recent($type, $limit, $offset);
-                        }
-                    } else {
-                        if ($filter == "flagged") {
-                            debug_event('api.class', 'stats flagged', 4);
-                            $results = Userflag::get_latest($type, $user_id);
-                        } else {
-                            debug_event('api.class', 'stats random ' . $type, 4);
-                            if ($type === 'song') {
-                                $results = Random::get_default($limit, $user_id);
-                            }
-                            if ($type === 'artist') {
-                                $results = Artist::get_random($limit, false, $user_id);
-                            }
-                            if ($type === 'album') {
-                                $results = Album::get_random($limit, false, $user_id);
-                            }
-                        }
-                    }
+                    $results = Stats::get_recent($type, $limit, $offset, $newest);
                 }
-            }
+                break;
+            case "flagged":
+                debug_event('api.class', 'stats flagged', 4);
+                $results = Userflag::get_latest($type, $user_id);
+                break;
+            default:
+                debug_event('api.class', 'stats random ' . $type, 4);
+                switch ($type) {
+                    case 'song':
+                        $results = Random::get_default($limit, $user_id);
+                        break;
+                    case 'artist':
+                        $results = Artist::get_random($limit, false, $user_id);
+                        break;
+                    case 'album':
+                        $results = Album::get_random($limit, false, $user_id);
+                    }
         }
 
         if ($results !== null) {
@@ -1288,6 +1316,7 @@ class Api
                 echo XML_Data::albums($results, array(), true, $user->id);
             }
         }
+        Session::extend($input['auth']);
     } // stats
 
     /**
@@ -1317,6 +1346,7 @@ class Api
                 debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
             }
         }
+        Session::extend($input['auth']);
     } // user
 
     /**
@@ -1357,7 +1387,8 @@ class Api
             }
         }
         echo XML_Data::error('400', 'failed to create: ' . $username);
-    }
+        Session::extend($input['auth']);
+    } // user_create
 
     /**
      * user_update
@@ -1443,7 +1474,8 @@ class Api
             return true;
         }
         echo XML_Data::error('400', 'failed to update: ' . $username);
-    }
+        Session::extend($input['auth']);
+    } // user_update
 
     /**
      * user_delete
@@ -1475,7 +1507,8 @@ class Api
             }
         }
         echo XML_Data::error('400', 'failed to delete: ' . $username);
-    }
+        Session::extend($input['auth']);
+    } // user_delete
 
     /**
      * followers
@@ -1509,6 +1542,7 @@ class Api
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
+        Session::extend($input['auth']);
     } // followers
 
     /**
@@ -1544,6 +1578,7 @@ class Api
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
+        Session::extend($input['auth']);
     } // following
 
     /**
@@ -1576,6 +1611,7 @@ class Api
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
+        Session::extend($input['auth']);
     } // toggle_follow
 
 
@@ -1608,6 +1644,7 @@ class Api
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
+        Session::extend($input['auth']);
     } // last_shouts
 
     /**
@@ -1654,6 +1691,7 @@ class Api
             $rate->set_rating($rating, $user->id);
             echo XML_Data::success('rating set ' . $object_id);
         }
+        Session::extend($input['auth']);
     } // rate
 
     /**
@@ -1710,6 +1748,7 @@ class Api
             }
             echo XML_Data::error('400', 'flag failed ' . $object_id);
         }
+        Session::extend($input['auth']);
     } // flag
 
     /**
@@ -1760,6 +1799,7 @@ class Api
         }
         $user->update_stats('song', $object_id, $agent);
         echo XML_Data::success('successfully recorded play: ' . $object_id);
+        Session::extend($input['auth']);
     } // record_play
 
     /**
@@ -1839,6 +1879,7 @@ class Api
             $user->update_stats('song', $scrobble_id, $agent, array(), false, $date);
             echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
         }
+        Session::extend($input['auth']);
     } // scrobble
 
     /**
@@ -1872,7 +1913,8 @@ class Api
             $catalog->process_action($task, (int) $input['catalog']);
             echo XML_Data::success('successfully started: ' . $task);
         }
-    }
+        Session::extend($input['auth']);
+    } // catalog_action
 
     /**
      * timeline
@@ -1911,6 +1953,7 @@ class Api
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
+        Session::extend($input['auth']);
     } // timeline
 
     /**
@@ -1938,6 +1981,7 @@ class Api
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
+        Session::extend($input['auth']);
     } // friends_timeline
 
     /**
@@ -1977,7 +2021,8 @@ class Api
         Catalog::update_single_item($type, $object, true);
 
         echo XML_Data::success('Updated tags for: ' . (string) $object . ' (' . $type . ')');
-    }
+        Session::extend($input['auth']);
+    } // update_from_tags
 
     /**
      * update_artist_info
@@ -2005,6 +2050,7 @@ class Api
             return;
         }
         // update your object
+        //need at least catalog_manager access to the db
         if (Access::check('interface', 75, User::get_from_username(Session::username($input['auth']))->id)) {
             Recommendation::get_artist_info($object);
             Recommendation::get_artists_like($object);
@@ -2013,9 +2059,9 @@ class Api
 
             return;
         }
-        //need at least catalog_manager access to the db
         echo XML_Data::error('400', T_('failed to update_artist_info for ' . (string) $object));
-    }
+        Session::extend($input['auth']);
+    } // update_artist_info
     /**
      * update_art
      * MINIMUM_API_VERSION=400001
@@ -2061,7 +2107,8 @@ class Api
         }
         //need at least catalog_manager access to the db
         echo XML_Data::error('400', T_('failed to update_art for ' . (string) $object));
-    }
+        Session::extend($input['auth']);
+    } // update_art
 
     /**
      * stream
@@ -2123,7 +2170,8 @@ class Api
             return true;
         }
         echo XML_Data::error('400', 'failed to create: ' . $url);
-    }
+        Session::extend($input['auth']);
+    } // stream
 
     /**
      * download
@@ -2170,7 +2218,8 @@ class Api
             return true;
         }
         echo XML_Data::error('400', 'failed to create: ' . $url);
-    }
+        Session::extend($input['auth']);
+    } // download
 
     /**
      * get_art
@@ -2257,7 +2306,8 @@ class Api
             header('Content-Length: ' . strlen($art->raw));
             echo $art->raw;
         }
-    }
+        Session::extend($input['auth']);
+    } // get_art
 
     /**
      * localplay
@@ -2288,6 +2338,7 @@ class Api
                 echo XML_Data::error('405', T_('Invalid request'));
             break;
         } // end switch on command
+        Session::extend($input['auth']);
     } // localplay
 
     /**
@@ -2356,6 +2407,7 @@ class Api
                 echo XML_Data::error('405', T_('Invalid request'));
             break;
         } // switch on method
+        Session::extend($input['auth']);
     } // democratic
 
     /**
