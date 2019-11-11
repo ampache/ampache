@@ -1141,18 +1141,18 @@ class Api
      * Return songs based on supplied criteria
      *
      * @param array $input
-     * $input = array(mode            = (string)  "least_recent_played"|"most_recent_played"|"random"   // optional, default = "least_recent_played"
-     *                filter          = (string)  $filter                                               // optional, LIKE matched to song title
-     *                album_id        = (integer) $album_id                                             // optional
-     *                artist_id       = (integer) $artist_id                                            // optional
-     *                flagged_only    = (integer) 0|1                                                   // optional, default = 0
-     *                format          = (string)  "song"|"index"|"id"                                   // optional, default = "song"
+     * $input = array(mode     = (string)  "recent"|"forgotten"|"random" // optional, default = "random"
+     *                filter   = (string)  $filter                       // optional, LIKE matched to song title
+     *                album    = (integer) $album_id                     // optional
+     *                artist   = (integer) $artist_id                    // optional
+     *                flagged  = (integer) 0|1                           // optional, default = 0
+     *                format   = (string)  "song"|"index"|"id"           // optional, default = "song"
      */
     public static function playlist_generate($input)
     {
         // parameter defaults
-        if (!in_array($input['mode'], array("least_recent_played", "most_recent_played", "random"), true)) {
-            $input['mode'] = "least_recent_played";
+        if (!in_array($input['mode'], array("forgotten", "recent", "random"), true)) {
+            $input['mode'] = "random";
         }
         if (!in_array($input['format'], array("song", "index", "id"), true)) {
             $input['format'] = "song";
@@ -1165,7 +1165,7 @@ class Api
         $order        = array();
         $bound_values = array();
 
-        if (in_array($input['mode'], array("least_recent_played", "most_recent_played"), true)) {
+        if (in_array($input['mode'], array("forgotten", "recent"), true)) {
             $select[] = "(SELECT user_activity.activity_date
 		                   FROM user_activity 
                           WHERE (user_activity.user = ?)             AND
@@ -1176,13 +1176,13 @@ class Api
                           LIMIT 1) AS last_played";
 
             $order[] = "last_played";
-            if ($input['mode'] == "most_recent_played") {
+            if ($input['mode'] == "recent") {
                 $order[0] .= " DESC";
             }
 
             $bound_values[] = User::get_from_username(Session::username($input['auth']))->id;
         }
-        if (array_key_exists("flagged_only", $input) && $input['flagged_only']) {
+        if (array_key_exists("flagged", $input) && $input['flagged']) {
             $from[]         = "LEFT JOIN user_flag ON (song.id = user_flag.object_id) AND (user_flag.object_type = 'song') AND (user_flag.user = ?)";
             $where[]        = "(user_flag.object_id IS NOT NULL)";
             $bound_values[] = User::get_from_username(Session::username($input['auth']))->id;
@@ -1191,13 +1191,13 @@ class Api
             $where[]        = "(song.title LIKE ?)";
             $bound_values[] = "%" . $input['filter'] . "%";
         }
-        if (array_key_exists("album_id", $input)) {
+        if (array_key_exists("album", $input)) {
             $where[]        = "(song.album = ?)";
-            $bound_values[] = $input['album_id'];
+            $bound_values[] = $input['album'];
         }
-        if (array_key_exists("artist_id", $input)) {
+        if (array_key_exists("artist", $input)) {
             $where[]        = "(song.artist = ?)";
-            $bound_values[] = $input['artist_id'];
+            $bound_values[] = $input['artist'];
         }
         $order[] = "RAND()";
 
