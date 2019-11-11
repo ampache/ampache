@@ -1168,12 +1168,12 @@ class Api
 
         if (in_array($input['mode'], array("forgotten", "recent"), true)) {
             $select[] = "(SELECT `object_count`.`object_id` " .
-		                "FROM `object_count` " .
+                        "FROM `object_count` " .
                         "WHERE (`object_count`.`user` = ?) AND " .
                         "(`object_count`.`object_id` = `song`.`id`) AND " .
-			            "(`object_count`.`object_type` = 'song') AND " .
-			            "(`object_count`.`count_type` = 'stream') " .
-		                "ORDER BY `object_count`.`date` DESC " .
+                        "(`object_count`.`object_type` = 'song') AND " .
+                        "(`object_count`.`count_type` = 'stream') " .
+                        "ORDER BY `object_count`.`date` DESC " .
                         "LIMIT 1) AS `last_played`";
 
             $order[] = "last_played";
