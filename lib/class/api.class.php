@@ -1231,7 +1231,7 @@ class Api
      *
      * @param array $input
      * type     = (string)  'song'|'album'|'artist'
-     * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|null //optional
+     * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
      * user_id  = (integer) //optional
      * username = (string)  //optional
      * offset   = (integer) //optional
@@ -1239,9 +1239,9 @@ class Api
      */
     public static function stats($input)
     {
-        if (!self::check_parameter($input, array('type'))) {
+        if (!self::check_parameter($input, array('type', 'filter'))) {
             debug_event('api.class', "'type' required on stats function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type'");
+            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type', 'filter'");
 
             return false;
         }
@@ -1301,6 +1301,7 @@ class Api
                 debug_event('api.class', 'stats flagged', 4);
                 $results = Userflag::get_latest($type, $user_id);
                 break;
+            case "random":
             default:
                 debug_event('api.class', 'stats random ' . $type, 4);
                 switch ($type) {
