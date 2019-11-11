@@ -160,26 +160,26 @@ class Random
         }
         $type_sql = '`song`.`' . $type . '`';
         if ($type == 'song') {
-            $type_sql = '`song`.`id';`
+            $type_sql = '`song`.`id`';
         }
         $flag_join = 'WHERE';
         $sql       = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
                     "WHERE `catalog`.`enabled` = '1' ";
-            $rating_join = 'AND';
+            $flag_join = 'AND';
         }
         if ($user_id !== null) {
-            $sql .= " " . $flag_join . " " . $type_sql . " NOT IN" .
+            $sql .= " " . $flag_join . " " . $type_sql . " IN" .
                     " (SELECT `object_id` FROM `user_flag`" .
                     " WHERE `user_flag`.`object_type` = '" . $type . "'" .
-                    " AND `user_flag`.`user` = " . $user_id . ")";
+                    " AND `user_flag`.`user` = " . $user_id . ") ";
         }
         $sql .= "ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
