@@ -6,6 +6,7 @@ import {
     MusicPlayerContextChildProps,
     withMusicPlayerContext
 } from '../../MusicPlayerContext';
+import AmpacheError from '../../logic/AmpacheError';
 
 interface HomeProps {
     user: User;
@@ -20,7 +21,7 @@ interface HomeProps {
 interface HomeState {
     theAlbum: Album;
     songs: Song[];
-    error: string;
+    error: Error | AmpacheError;
     albumLoading: boolean;
     songsLoading: boolean;
 }
@@ -36,8 +37,6 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
             albumLoading: true,
             songsLoading: true
         };
-
-        this.onSongClick = this.onSongClick.bind(this);
     }
 
     componentDidMount() {
@@ -47,8 +46,8 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
                 this.props.user.authKey,
                 'http://localhost:8080'
             )
-                .then((theAlbum: Album) => {
-                    this.setState({ theAlbum, albumLoading: false });
+                .then((data) => {
+                    this.setState({ theAlbum: data, albumLoading: false });
                 })
                 .catch((error) => {
                     this.setState({ albumLoading: false, error });
@@ -59,17 +58,13 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
                 this.props.user.authKey,
                 'http://localhost:8080'
             )
-                .then((songs: Song[]) => {
+                .then((songs) => {
                     this.setState({ songs, songsLoading: false });
                 })
                 .catch((error) => {
                     this.setState({ songsLoading: false, error });
                 });
         }
-    }
-
-    onSongClick(url: string) {
-        this.props.global.startPlaying(url);
     }
 
     render() {
@@ -83,7 +78,7 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
         if (this.state.error) {
             return (
                 <div className='albumPage'>
-                    <span>Error: {this.state.error}</span>
+                    <span>Error: {this.state.error.message}</span>
                 </div>
             );
         }
@@ -105,7 +100,9 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
                         this.state.songs.map((song: Song) => {
                             return (
                                 <div
-                                    onClick={() => this.onSongClick(song.url)}
+                                    onClick={() =>
+                                        this.props.global.startPlaying(song.url)
+                                    }
                                     key={song.id}
                                 >
                                     {song.title}

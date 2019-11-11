@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import App from './Views/App';
 import Home from './Views/Home/';
 import Account from './Views/Account/';
+import SearchView from './Views/Search/';
 import Login from './Views/Login/';
 import NotFound from './Views/404/';
 import handshake, { AuthKey } from './logic/Auth';
@@ -43,6 +44,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                 })
                 .catch((error) => {
                     console.error('GETUSERFAILED', error); //TODO: Error handling
+                    console.log(this.state.authKey, this.state.username);
                     this.handleLogout();
                 });
         }
@@ -76,6 +78,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
     }
 
     render() {
+        console.log('rENDER")');
         if (this.state.authKey == null) {
             return (
                 <BrowserRouter>
@@ -87,7 +90,6 @@ export default class Root extends React.PureComponent<void, RouterState> {
                 </BrowserRouter>
             );
         }
-        console.log('ROUTER RENDER');
         return (
             <BrowserRouter>
                 <App user={this.state.user}>
@@ -132,6 +134,16 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     path='/album/:albumID'
                                     render={(props) => (
                                         <AlbumView
+                                            {...props}
+                                            user={this.state.user}
+                                        />
+                                    )}
+                                />
+                                <Route
+                                    exact
+                                    path='/search/:searchQuery'
+                                    render={(props) => (
+                                        <SearchView
                                             {...props}
                                             user={this.state.user}
                                         />

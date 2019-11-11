@@ -830,6 +830,11 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
+"@types/history@*":
+  version "4.7.3"
+  resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.3.tgz#856c99cdc1551d22c22b18b5402719affec9839a"
+  integrity sha512-cS5owqtwzLN5kY+l+KgKdRJ/Cee8tlmQoGQuIE9tWnSmS3JMKzmxo2HIAk2wODMifGwO20d62xZQLYz+RLfXmw==
+
 "@types/prop-types@*":
   version "15.7.3"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
@@ -845,6 +850,23 @@
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.4.tgz#0b58df09a60961dcb77f62d4f1832427513420df"
   integrity sha512-fya9xteU/n90tda0s+FtN5Ym4tbgxpq/hb/Af24dvs6uYnYn+fspaxw5USlw0R8apDNwxsqumdRoCoKitckQqw==
   dependencies:
+    "@types/react" "*"
+
+"@types/react-router-dom@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@types/react-router-dom/-/react-router-dom-5.1.2.tgz#853f229f1f297513c0be84f7c914a08b778cfdf5"
+  integrity sha512-kRx8hoBflE4Dp7uus+j/0uMHR5uGTAvQtc4A3vOTWKS+epe0leCuxEx7HNT7XGUd1lH53/moWM51MV2YUyhzAg==
+  dependencies:
+    "@types/history" "*"
+    "@types/react" "*"
+    "@types/react-router" "*"
+
+"@types/react-router@*":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@types/react-router/-/react-router-5.1.2.tgz#41e5e6aa333a7b9a2bfdac753c04e1ca4b3e0d21"
+  integrity sha512-euC3SiwDg3NcjFdNmFL8uVuAFTpZJm0WMFUw+4eXMUnxa7M9RGFEG0szt0z+/Zgk4G2k9JBFhaEnY64RBiFmuw==
+  dependencies:
+    "@types/history" "*"
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^15.0.0 || ^16.0.0", "@types/react@^16.9.11":

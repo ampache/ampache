@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AmpacheError from './AmpacheError';
 
 async function digestMessage(message) {
     const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
@@ -24,21 +25,21 @@ const handshake = async (
     password: string,
     server: string
 ) => {
-    let time = Math.round(new Date().getTime() / 1000);
+    const time = Math.round(new Date().getTime() / 1000);
     const key = await digestMessage(password);
     const passphrase = await digestMessage(time + key);
     return axios
         .get(
             `${server}/server/json.server.php?action=handshake&user=${username}&timestamp=${time}&auth=${passphrase}&version=350001`
         )
-        .then((response): AuthKey | Error => {
-            let JSONData = response.data;
+        .then((response) => {
+            const JSONData = response.data;
 
             if (!JSONData) {
                 throw new Error('Server Error');
             }
             if (JSONData.error) {
-                throw new Error(JSONData.error);
+                throw new AmpacheError(JSONData.error);
             }
             if (JSONData.auth) {
                 console.log(JSONData.auth);

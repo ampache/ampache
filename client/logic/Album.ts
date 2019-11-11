@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Song } from './Song';
 import { AuthKey } from './Auth';
+import AmpacheError from './AmpacheError';
 
 type Album = {
     id: number;
@@ -34,15 +35,15 @@ const getRandomAlbums = async (
         .get(
             `${server}/server/json.server.php?action=stats&username=${username}&limit=${count}&auth=${authKey}&version=400001`
         )
-        .then((response): Album[] | Error => {
-            let JSONData = response.data;
+        .then((response) => {
+            const JSONData = response.data;
             if (!JSONData) {
                 throw new Error('Server Error');
             }
             if (JSONData.error) {
-                throw new Error(JSONData.error);
+                throw new AmpacheError(JSONData.error);
             }
-            return JSONData;
+            return JSONData as Album[];
         });
 };
 
@@ -55,15 +56,15 @@ const getAlbumSongs = async (
         .get(
             `${server}/server/json.server.php?action=album_songs&filter=${albumID}&auth=${authKey}&version=400001`
         )
-        .then((response): Song[] | Error => {
-            let JSONData = response.data;
+        .then((response) => {
+            const JSONData = response.data;
             if (!JSONData) {
                 throw new Error('Server Error');
             }
             if (JSONData.error) {
-                throw new Error(JSONData.error);
+                throw new AmpacheError(JSONData.error);
             }
-            return JSONData;
+            return JSONData as Song[];
         });
 };
 
@@ -72,15 +73,16 @@ const getAlbum = async (albumID: number, authKey: AuthKey, server: string) => {
         .get(
             `${server}/server/json.server.php?action=album&filter=${albumID}&auth=${authKey}&version=400001`
         )
-        .then((response): Album | Error => {
-            let JSONData = response.data;
+        .then((response) => {
+            const JSONData = response.data;
+            console.log(JSONData);
             if (!JSONData) {
                 throw new Error('Server Error');
             }
             if (JSONData.error) {
-                throw new Error(JSONData.error);
+                throw new AmpacheError(JSONData.error);
             }
-            return JSONData[0];
+            return JSONData[0] as Album;
         });
 };
 
