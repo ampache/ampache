@@ -1229,7 +1229,7 @@ class Api
         switch ($input['format']) {
             case "id":
                 echo XML_Data::keyed_array($song_ids);
-                break:
+                break;
             case "index":
                 echo XML_Data::indexes($song_ids, "song");
                 break;
