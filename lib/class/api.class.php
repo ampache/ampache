@@ -1889,7 +1889,7 @@ class Api
 
                 return;
             }
-            $user->update_stats('song', $scrobble_id, $agent, array(), false, $date);
+            $user->update_stats('song', $scrobble_id, $agent, array(), $date);
             echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
         }
         Session::extend($input['auth']);
@@ -2212,7 +2212,7 @@ class Api
         $user_id  = User::get_from_username(Session::username($input['auth']))->id;
 
         $url    = '';
-        $params = '&action=download' . '&client=api' . '&noscrobble=1';
+        $params = '&action=download' . '&client=api' . '&cache=1';
         if ($original) {
             $params .= '&transcode_to=' . $format;
         }

@@ -885,7 +885,7 @@ class User extends database_object
      * updates the playcount mojo for this specific user
      * @param string $media_type
      */
-    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $noscrobble = false, $date = null)
+    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $date = null)
     {
         debug_event('user.class', 'Updating stats for {' . $media_type . '/' . $media_id . '} {' . $agent . '}...', 5);
         $media = new $media_type($media_id);
@@ -897,24 +897,19 @@ class User extends database_object
             return false;
         }
 
-        if (!$noscrobble) {
-            $this->set_preferences();
-            // If pthreads available, we call save_mediaplay in a new thread to quickly return
-            if (class_exists("Thread", false)) {
-                debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
-                $thread = new scrobbler_async(Core::get_global('user'), $media);
-                if ($thread->start()) {
-                    //$thread->join();
-                } else {
-                    debug_event('user.class', 'Error when starting the thread.', 1);
-                }
+        $this->set_preferences();
+        // If pthreads available, we call save_mediaplay in a new thread to quickly return
+        if (class_exists("Thread", false)) {
+            debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
+            $thread = new scrobbler_async(Core::get_global('user'), $media);
+            if ($thread->start()) {
+                //$thread->join();
             } else {
-                self::save_mediaplay(Core::get_global('user'), $media);
+                debug_event('user.class', 'Error when starting the thread.', 1);
             }
         } else {
-            debug_event('user.class', 'Scrobbling explicitly skipped', 5);
+            self::save_mediaplay(Core::get_global('user'), $media);
         }
-
         $media->set_played($user_id, $agent, $location, $date);
 
         return true;
