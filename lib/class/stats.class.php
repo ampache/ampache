@@ -397,11 +397,14 @@ class Stats
      * get_recent_sql
      * This returns the get_recent sql
      * @param string $input_type
+     * @param string $user_id
+     * @param boolean $newest
      */
-    public static function get_recent_sql($input_type, $user_id = '')
+    public static function get_recent_sql($input_type, $user_id = '', $newest = true)
     {
         $type = self::validate_type($input_type);
 
+        $ordersql = ($newest == true) ? 'DESC' : 'ASC';
         $user_sql = '';
         if (!empty($user_id)) {
             $user_sql = " AND `user` = '" . $user_id . "'";
@@ -420,7 +423,7 @@ class Stats
                     " AND `rating`.`rating` <=" . $rating_filter .
                     " AND `rating`.`user` = " . $user_id . ")";
         }
-        $sql .= " GROUP BY `object_id` ORDER BY MAX(`date`) DESC, `id` ";
+        $sql .= " GROUP BY `object_id` ORDER BY MAX(`date`) " . $ordersql . ", `id` ";
 
         //playlists aren't the same as other objects so change the sql
         if ($type === 'playlist') {
@@ -428,7 +431,7 @@ class Stats
             if (!empty($user_id)) {
                 $sql .= " WHERE `user` = '" . $user_id . "'";
             }
-            $sql .= " ORDER BY `last_update` DESC";
+            $sql .= " ORDER BY `last_update` " . $ordersql;
         }
         //debug_event('stats.class', 'get_recent ' . $sql, 5);
 
@@ -440,7 +443,7 @@ class Stats
      * This returns the recent X for type Y
      * @param string $input_type
      */
-    public static function get_recent($input_type, $count = '', $offset = '')
+    public static function get_recent($input_type, $count = '', $offset = '', $newest = true)
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
@@ -454,7 +457,7 @@ class Stats
             $limit = (int) ($offset) . "," . $count;
         }
 
-        $sql = self::get_recent_sql($type);
+        $sql = self::get_recent_sql($type, null, $newest);
         $sql .= "LIMIT $limit";
         $db_results = Dba::read($sql);
 

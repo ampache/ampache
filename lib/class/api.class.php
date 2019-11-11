@@ -1218,10 +1218,10 @@ class Api
      * When filter is null get some random items instead
      *
      * @param array $input
-     * type     = (string) 'song'|'album'|'artist'
-     * filter   = (string) 'newest'|'highest'|'frequent'|'recent'|'flagged'|null //optional
+     * type     = (string)  'song'|'album'|'artist'
+     * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|null //optional
      * user_id  = (integer) //optional
-     * username = (string) //optional
+     * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) //optional
      */
@@ -1238,10 +1238,11 @@ class Api
         $user_id = $user->id;
         // override your user if you're looking at others
         if ($input['username']) {
-            $username = $input['username'];
-            $user_id  = User::get_from_username($username);
+            $user    = User::get_from_username($input['username']);
+            $user_id = $user->id;
         } elseif ($input['user_id']) {
-            $user_id  = $input['user_id'];
+            $user_id = (int) $input['user_id'];
+            $user    = new User($user_id);
         }
         // moved type to filter and allowed multipe type selection
         $type   = $input['type'];
@@ -1249,7 +1250,7 @@ class Api
         $offset = $input['offset'];
         $limit  = $input['limit'];
         // original method only searched albums and had poor method inputs
-        if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'flagged'))) {
+        if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'))) {
             $type   = 'album';
             $filter = $type;
         }
@@ -1261,44 +1262,45 @@ class Api
         }
 
         $results = null;
-        if ($filter == "newest") {
-            debug_event('api.class', 'stats newest', 5);
-            $results = Stats::get_newest($type, $limit, $offset);
-        } else {
-            if ($filter == "highest") {
+        switch ($input['filter']) {
+            case "newest":
+                debug_event('api.class', 'stats newest', 5);
+                $results = Stats::get_newest($type, $limit, $offset);
+                break;
+            case "highest":
                 debug_event('api.class', 'stats highest', 4);
                 $results = Rating::get_highest($type, $limit, $offset);
-            } else {
-                if ($filter == "frequent") {
-                    debug_event('api.class', 'stats frequent', 4);
-                    $results = Stats::get_top($type, $limit, '', $offset);
+                break;
+            case "frequent":
+                debug_event('api.class', 'stats frequent', 4);
+                $results = Stats::get_top($type, $limit, '', $offset);
+                break;
+            case "recent":
+            case "forgotten":
+                debug_event('api.class', 'stats ' . $input['filter'], 4);
+                $newest = ($input['filter'] == "recent") ? true : false;
+                if ($user_id !== null) {
+                    $results = $user->get_recently_played($limit, $type, $newest);
                 } else {
-                    if ($filter == "recent") {
-                        debug_event('api.class', 'stats recent', 4);
-                        if ($user_id !== null) {
-                            $results = $user_id->get_recently_played($limit, $type);
-                        } else {
-                            $results = Stats::get_recent($type, $limit, $offset);
-                        }
-                    } else {
-                        if ($filter == "flagged") {
-                            debug_event('api.class', 'stats flagged', 4);
-                            $results = Userflag::get_latest($type, $user_id);
-                        } else {
-                            debug_event('api.class', 'stats random ' . $type, 4);
-                            if ($type === 'song') {
-                                $results = Random::get_default($limit, $user_id);
-                            }
-                            if ($type === 'artist') {
-                                $results = Artist::get_random($limit, false, $user_id);
-                            }
-                            if ($type === 'album') {
-                                $results = Album::get_random($limit, false, $user_id);
-                            }
-                        }
-                    }
+                    $results = Stats::get_recent($type, $limit, $offset, $newest);
                 }
-            }
+                break;
+            case "flagged":
+                debug_event('api.class', 'stats flagged', 4);
+                $results = Userflag::get_latest($type, $user_id);
+                break;
+            default:
+                debug_event('api.class', 'stats random ' . $type, 4);
+                switch ($type) {
+                    case 'song':
+                        $results = Random::get_default($limit, $user_id);
+                        break;
+                    case 'artist':
+                        $results = Artist::get_random($limit, false, $user_id);
+                        break;
+                    case 'album':
+                        $results = Album::get_random($limit, false, $user_id);
+                    }
         }
 
         if ($results !== null) {
