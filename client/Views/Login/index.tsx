@@ -38,8 +38,6 @@ export default class HomeView extends React.PureComponent<
         this.setState({
             [name]: value
         } as ComponentState);
-
-        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     render() {

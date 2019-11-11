@@ -2,6 +2,7 @@ import React from 'react';
 import { getRandomAlbums, Album } from '../../logic/Album';
 import AlbumDisplay from '../components/AlbumDisplay';
 import { User } from '../../logic/User';
+import AmpacheError from '../../logic/AmpacheError';
 
 interface HomeProps {
     user: User;
@@ -9,6 +10,7 @@ interface HomeProps {
 
 interface HomeState {
     randomAlbums: Album[];
+    error: Error | AmpacheError;
 }
 
 export default class HomeView extends React.PureComponent<
@@ -19,7 +21,8 @@ export default class HomeView extends React.PureComponent<
         super(props);
 
         this.state = {
-            randomAlbums: []
+            randomAlbums: [],
+            error: null
         };
     }
 
@@ -33,13 +36,19 @@ export default class HomeView extends React.PureComponent<
             .then((albums: Album[]) => {
                 this.setState({ randomAlbums: albums });
             })
-            .catch((e) => {
-                //TODO
+            .catch((error) => {
+                this.setState({ error });
             });
     }
 
     render() {
-        console.log('HOME');
+        if (this.state.error) {
+            return (
+                <div className='albumPage'>
+                    <span>Error: {this.state.error.message}</span>
+                </div>
+            );
+        }
         return (
             <div className='homePage'>
                 <section>

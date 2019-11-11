@@ -12,7 +12,7 @@ html
     font-size 16px
     line-height 1.5em
     height: 100%;
-    background-color #242424
+    background-color bodyBackgroundColor
     color #e1e1e1
     .container
       display flex
@@ -21,7 +21,9 @@ html
 a
   text-decoration: none;
   cursor: pointer;
-  color linkColor
+  color white
+  &:hover
+    color linkHoverColor
 
 .content
   width: "calc(100% - %s)" % sidebarWidth
@@ -35,9 +37,11 @@ a
 
 //Pages
 @import "./pages/Home"
+@import "./pages/Search"
 
 //Components
 @import './components/Header'
 @import './components/Sidebar'
 @import './components/AlbumDisplay'
 @import './components/MusicPlayer'
+@import './components/SongBlock'

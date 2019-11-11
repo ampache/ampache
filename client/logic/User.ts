@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { AuthKey } from './Auth';
+import AmpacheError from './AmpacheError';
 
 type User = {
     authKey: AuthKey;
@@ -17,15 +18,15 @@ const getUser = async (username: string, authKey: AuthKey, server: string) => {
         .get(
             `${server}/server/json.server.php?action=user&username=${username}&auth=${authKey}&version=350001`
         )
-        .then((response): User | Error => {
-            let JSONData = response.data;
+        .then((response) => {
+            const JSONData = response.data;
             if (!JSONData) {
                 throw new Error('Server Error');
             }
             if (JSONData.error) {
-                throw new Error(JSONData.error);
+                throw new AmpacheError(JSONData.error);
             }
-            return JSONData;
+            return JSONData as User;
         });
 };
 export { getUser, User };
