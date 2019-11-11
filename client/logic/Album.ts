@@ -75,7 +75,6 @@ const getAlbum = async (albumID: number, authKey: AuthKey, server: string) => {
         )
         .then((response) => {
             const JSONData = response.data;
-            console.log(JSONData);
             if (!JSONData) {
                 throw new Error('Server Error');
             }

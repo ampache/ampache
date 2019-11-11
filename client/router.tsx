@@ -11,6 +11,7 @@ import NotFound from './Views/404/';
 import handshake, { AuthKey } from './logic/Auth';
 import { getUser, User } from './logic/User';
 import AlbumView from './Views/Album';
+import ArtistView from './Views/Artist';
 import MusicPlayer from './Views/MusicPlayer';
 import { MusicPlayerContextProvider } from './MusicPlayerContext';
 
@@ -44,7 +45,6 @@ export default class Root extends React.PureComponent<void, RouterState> {
                 })
                 .catch((error) => {
                     console.error('GETUSERFAILED', error); //TODO: Error handling
-                    console.log(this.state.authKey, this.state.username);
                     this.handleLogout();
                 });
         }
@@ -60,7 +60,6 @@ export default class Root extends React.PureComponent<void, RouterState> {
                     .then((user: User) => {
                         user.authKey = authKey;
                         this.setState({ user });
-                        console.log(user);
                     })
                     .catch((error) => {
                         console.error('HANDSHAKE-GETUSERFAILED', error); //TODO: Error handling
@@ -78,7 +77,6 @@ export default class Root extends React.PureComponent<void, RouterState> {
     }
 
     render() {
-        console.log('rENDER")');
         if (this.state.authKey == null) {
             return (
                 <BrowserRouter>
@@ -134,6 +132,16 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     path='/album/:albumID'
                                     render={(props) => (
                                         <AlbumView
+                                            {...props}
+                                            user={this.state.user}
+                                        />
+                                    )}
+                                />
+                                <Route
+                                    exact
+                                    path='/artist/:artistID'
+                                    render={(props) => (
+                                        <ArtistView
                                             {...props}
                                             user={this.state.user}
                                         />

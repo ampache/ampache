@@ -54,7 +54,6 @@ export class MusicPlayerContextProvider extends React.Component<
                 src: [playURL],
                 format: 'mp3', //Howler is broken, this bypasses https://github.com/goldfire/howler.js/issues/1248
                 onload: () => {
-                    console.log('PLAYING');
                     this.howl.play();
                     this.setState({
                         playerStatus: PLAYERSTATUS.PLAYING

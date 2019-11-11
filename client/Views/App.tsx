@@ -13,7 +13,6 @@ export default class AppView extends React.PureComponent<AppViewProps> {
         if (this.props.user == null) {
             return <span>Loading...</span>;
         }
-        console.log('PROPS: ', this.props);
 
         return (
             <>
