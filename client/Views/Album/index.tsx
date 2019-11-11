@@ -44,7 +44,7 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
         if (this.props.match.params.albumID != null) {
             getAlbum(
                 this.props.match.params.albumID,
-                this.props.user.authCode,
+                this.props.user.authKey,
                 'http://localhost:8080'
             )
                 .then((theAlbum: Album) => {
@@ -56,7 +56,7 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
 
             getAlbumSongs(
                 this.props.match.params.albumID,
-                this.props.user.authCode,
+                this.props.user.authKey,
                 'http://localhost:8080'
             )
                 .then((songs: Song[]) => {
@@ -66,15 +66,6 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
                     this.setState({ songsLoading: false, error });
                 });
         }
-    }
-
-    shouldComponentUpdate(
-        nextProps: Readonly<HomeProps>,
-        nextState: Readonly<HomeState>,
-        nextContext: any
-    ): boolean {
-        //playerStatus is not relevant to this page
-        return this.props.global.playerStatus === nextProps.global.playerStatus;
     }
 
     onSongClick(url: string) {

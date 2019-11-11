@@ -27,7 +27,7 @@ export default class HomeView extends React.PureComponent<
         getRandomAlbums(
             this.props.user.username,
             6,
-            this.props.user.authCode,
+            this.props.user.authKey,
             'http://localhost:8080'
         )
             .then((albums: Album[]) => {

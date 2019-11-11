@@ -8,12 +8,16 @@ async function digestMessage(message) {
     return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+export type AuthKey = {
+    string;
+};
+
 /**
  * @async
  * @param username
  * @param password
  * @param server
- * @return {Promise<string>}
+ * @return {Promise<AuthKey>}
  */
 const handshake = async (
     username: string,
@@ -27,20 +31,20 @@ const handshake = async (
         .get(
             `${server}/server/json.server.php?action=handshake&user=${username}&timestamp=${time}&auth=${passphrase}&version=350001`
         )
-        .then((response) => {
+        .then((response): AuthKey | Error => {
             let JSONData = response.data;
 
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
             if (JSONData.error) {
-                throw JSONData.error;
+                throw new Error(JSONData.error);
             }
             if (JSONData.auth) {
                 console.log(JSONData.auth);
-                return JSONData.auth;
+                return JSONData.auth as AuthKey;
             }
-            throw 'Something wrong with JSON';
-        })
-        .catch((error) => {
-            throw error;
+            throw new Error('Missing Auth Key'); //TOOD: Is this needed?
         });
 };
 export default handshake;
