@@ -1189,7 +1189,7 @@ class Api
         }
         if (array_key_exists("filter", $input)) {
             $where[]        = "(song.title LIKE ?)";
-            $bound_values[] = "%$input['filter']%";
+            $bound_values[] = "%" . $input['filter'] . "%";
         }
         if (array_key_exists("album_id", $input)) {
             $where[]        = "(song.album = ?)";
@@ -1212,9 +1212,9 @@ class Api
         if (array_key_exists("limit", $input) && is_numeric($input['limit'])) {
             $sql .= " LIMIT ";
             if (array_key_exists("offset", $input) && is_numeric($input['offset'])) {
-                $sql .= "$input['offset'], ";
+                $sql .= $input['offset'] . ", ";
             }
-            $sql .= "$input['limit']";
+            $sql .= $input['limit'];
         }
 
         // get db data
