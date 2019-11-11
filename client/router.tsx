@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -7,33 +7,38 @@ import Home from './Views/Home/';
 import Account from './Views/Account/';
 import Login from './Views/Login/';
 import NotFound from './Views/404/';
-import handshake from './logic/Auth';
+import handshake, { AuthKey } from './logic/Auth';
 import { getUser, User } from './logic/User';
 import AlbumView from './Views/Album';
 import MusicPlayer from './Views/MusicPlayer';
 import { MusicPlayerContextProvider } from './MusicPlayerContext';
 
 interface RouterState {
-    authCode: string;
+    authKey: AuthKey;
     username: string;
     user: User;
 }
 
 const server = 'http://localhost:8080';
-export default class Root extends Component<void, RouterState> {
+export default class Root extends React.PureComponent<void, RouterState> {
     constructor(props) {
         super(props);
 
         this.state = {
-            authCode: Cookies.get('authCode'),
+            authKey: Cookies.get('authKey'),
             username: Cookies.get('username'),
             user: null
         };
 
-        if (this.state.authCode != null) {
-            getUser(this.state.username, this.state.authCode, server)
+        this.handleLogin = this.handleLogin.bind(this);
+        this.handleLogout = this.handleLogout.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.state.authKey != null) {
+            getUser(this.state.username, this.state.authKey, server)
                 .then((user: User) => {
-                    user.authCode = this.state.authCode;
+                    user.authKey = this.state.authKey;
                     this.setState({ user });
                 })
                 .catch((error) => {
@@ -41,20 +46,17 @@ export default class Root extends Component<void, RouterState> {
                     this.handleLogout();
                 });
         }
-
-        this.handleLogin = this.handleLogin.bind(this);
-        this.handleLogout = this.handleLogout.bind(this);
     }
 
     private handleLogin(username: string, password: string) {
         handshake(username, password, server)
-            .then((authCode: string) => {
-                this.setState({ authCode });
-                Cookies.set('authCode', authCode);
+            .then((authKey: AuthKey) => {
+                this.setState({ authKey });
+                Cookies.set('authKey', authKey);
                 Cookies.set('username', username);
-                getUser(username, authCode, server)
+                getUser(username, authKey, server)
                     .then((user: User) => {
-                        user.authCode = authCode;
+                        user.authKey = authKey;
                         this.setState({ user });
                         console.log(user);
                     })
@@ -68,13 +70,13 @@ export default class Root extends Component<void, RouterState> {
     }
 
     private handleLogout() {
-        Cookies.remove('authCode');
+        Cookies.remove('authKey');
         Cookies.remove('username');
-        this.setState({ authCode: null, username: null, user: null });
+        this.setState({ authKey: null, username: null, user: null });
     }
 
     render() {
-        if (this.state.authCode == null) {
+        if (this.state.authKey == null) {
             return (
                 <BrowserRouter>
                     <Route
@@ -85,11 +87,13 @@ export default class Root extends Component<void, RouterState> {
                 </BrowserRouter>
             );
         }
-
+        console.log('ROUTER RENDER');
         return (
             <BrowserRouter>
                 <App user={this.state.user}>
                     <Switch>
+                        {' '}
+                        //TODO: Do i need this switch?
                         <Route exact path='/login'>
                             <Redirect to='/' />
                         </Route>
@@ -102,47 +106,43 @@ export default class Root extends Component<void, RouterState> {
                             }}
                         />
                         <MusicPlayerContextProvider>
-                            <MusicPlayer>
-                                <Switch>
-                                    <Route
-                                        exact
-                                        path='/'
-                                        render={(props) => (
-                                            <Home
-                                                {...props}
-                                                user={this.state.user}
-                                            />
-                                        )}
-                                    />
-                                    <Route
-                                        exact
-                                        path='/account'
-                                        render={(props) => (
-                                            <Account
-                                                {...props}
-                                                user={this.state.user}
-                                            />
-                                        )}
-                                    />
-                                    <Route
-                                        exact
-                                        path='/album/:albumID'
-                                        render={(props) => (
-                                            <AlbumView
-                                                {...props}
-                                                user={this.state.user}
-                                            />
-                                        )}
-                                    />
-                                    <Route
-                                        path='*'
-                                        render={(props) => (
-                                            <NotFound {...props} />
-                                        )}
-                                    />{' '}
-                                    {/*404*/}
-                                </Switch>
-                            </MusicPlayer>
+                            <Switch>
+                                <Route
+                                    exact
+                                    path='/'
+                                    render={(props) => (
+                                        <Home
+                                            {...props}
+                                            user={this.state.user}
+                                        />
+                                    )}
+                                />
+                                <Route
+                                    exact
+                                    path='/account'
+                                    render={(props) => (
+                                        <Account
+                                            {...props}
+                                            user={this.state.user}
+                                        />
+                                    )}
+                                />
+                                <Route
+                                    exact
+                                    path='/album/:albumID'
+                                    render={(props) => (
+                                        <AlbumView
+                                            {...props}
+                                            user={this.state.user}
+                                        />
+                                    )}
+                                />
+                                <Route
+                                    path='*'
+                                    render={(props) => <NotFound {...props} />}
+                                />{' '}
+                            </Switch>
+                            <MusicPlayer />
                         </MusicPlayerContextProvider>
                     </Switch>
                 </App>

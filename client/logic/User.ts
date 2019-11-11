@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { AuthKey } from './Auth';
 
 type User = {
-    authCode: string;
+    authKey: AuthKey;
     city: string;
     create_date: number;
     id: number;
@@ -11,24 +12,20 @@ type User = {
     website: string;
 };
 
-const getUser = async (username: string, authKey: string, server: string) => {
+const getUser = async (username: string, authKey: AuthKey, server: string) => {
     return axios
         .get(
             `${server}/server/json.server.php?action=user&username=${username}&auth=${authKey}&version=350001`
         )
-        .then((response) => {
+        .then((response): User | Error => {
             let JSONData = response.data;
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
             if (JSONData.error) {
-                throw JSONData.error;
+                throw new Error(JSONData.error);
             }
-            if (JSONData.user) {
-                const user: User = JSONData.user;
-                return user;
-            }
-            throw 'Something wrong with JSON';
-        })
-        .catch((error) => {
-            throw error;
+            return JSONData;
         });
 };
 export { getUser, User };

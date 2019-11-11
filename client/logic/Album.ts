@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Song } from './Song';
+import { AuthKey } from './Auth';
 
 type Album = {
     id: number;
@@ -26,72 +27,60 @@ type Album = {
 const getRandomAlbums = async (
     username: string,
     count: number,
-    authCode: string,
+    authKey: AuthKey,
     server: string
 ) => {
     return axios
         .get(
-            `${server}/server/json.server.php?action=stats&username=${username}&limit=${count}&auth=${authCode}&version=400001`
+            `${server}/server/json.server.php?action=stats&username=${username}&limit=${count}&auth=${authKey}&version=400001`
         )
-        .then((response) => {
+        .then((response): Album[] | Error => {
             let JSONData = response.data;
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
             if (JSONData.error) {
-                throw JSONData.error;
+                throw new Error(JSONData.error);
             }
-            if (JSONData) {
-                const albums: Album[] = JSONData;
-                return albums;
-            }
-            throw 'Something wrong with JSON';
-        })
-        .catch((error) => {
-            throw error;
+            return JSONData;
         });
 };
 
 const getAlbumSongs = async (
     albumID: number,
-    authCode: string,
+    authKey: AuthKey,
     server: string
 ) => {
     return axios
         .get(
-            `${server}/server/json.server.php?action=album_songs&filter=${albumID}&auth=${authCode}&version=400001`
+            `${server}/server/json.server.php?action=album_songs&filter=${albumID}&auth=${authKey}&version=400001`
         )
-        .then((response) => {
+        .then((response): Song[] | Error => {
             let JSONData = response.data;
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
             if (JSONData.error) {
-                throw JSONData.error;
+                throw new Error(JSONData.error);
             }
-            if (JSONData) {
-                let songs: Song[] = JSONData;
-                return songs;
-            }
-            throw 'Something wrong with JSON';
-        })
-        .catch((error) => {
-            throw error;
+            return JSONData;
         });
 };
 
-const getAlbum = async (albumID: number, authCode: string, server: string) => {
+const getAlbum = async (albumID: number, authKey: AuthKey, server: string) => {
     return axios
         .get(
-            `${server}/server/json.server.php?action=album&filter=${albumID}&auth=${authCode}&version=400001`
+            `${server}/server/json.server.php?action=album&filter=${albumID}&auth=${authKey}&version=400001`
         )
-        .then((response) => {
+        .then((response): Album | Error => {
             let JSONData = response.data;
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
             if (JSONData.error) {
-                throw JSONData.error;
+                throw new Error(JSONData.error);
             }
-            if (JSONData) {
-                const album: Album = JSONData[0];
-                return album;
-            }
-            throw 'Something wrong with JSON';
-        })
-        .catch((error) => {
-            throw error;
+            return JSONData[0];
         });
 };
 

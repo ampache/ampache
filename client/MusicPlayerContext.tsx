@@ -23,7 +23,7 @@ const MusicPlayerContext = React.createContext({
 });
 
 export class MusicPlayerContextProvider extends React.Component<
-    { children: JSX.Element },
+    { children: JSX.Element[] },
     MusicPlayerContextState
 > {
     state = {
