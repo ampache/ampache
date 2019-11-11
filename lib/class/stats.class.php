@@ -252,11 +252,12 @@ class Stats
      * This returns the objects that have happened for $user_id sometime after $time
      * used primarily by the democratic cooldown code
      */
-    public static function get_object_history($user_id, $time)
+    public static function get_object_history($user_id, $time, $newest = true)
     {
         if (!in_array((string) $user_id, User::get_valid_users())) {
             $user_id = Core::get_global('user')->id;
         }
+        $order = ($newest) ? 'DESC' : 'ASC';
 
         $sql = "SELECT * FROM `object_count` " .
                 "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
@@ -267,7 +268,7 @@ class Stats
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
-        $sql .= "ORDER BY `object_count`.`date` DESC";
+        $sql .= "ORDER BY `object_count`.`date` " . $order;
         $db_results = Dba::read($sql, array($user_id, $time));
 
         $results = array();
