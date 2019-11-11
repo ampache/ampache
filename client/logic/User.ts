@@ -26,7 +26,7 @@ const getUser = async (username: string, authKey: AuthKey, server: string) => {
             if (JSONData.error) {
                 throw new AmpacheError(JSONData.error);
             }
-            return JSONData as User;
+            return JSONData.user as User;
         });
 };
 export { getUser, User };

@@ -436,7 +436,7 @@ class Api
     {
         $artist = new Artist($input['filter']);
 
-        $albums = $artist->get_albums(null, true);
+        $albums = $artist->get_albums();
 
         //Whatever format the user wants
         $outputFormat = $input['format'];

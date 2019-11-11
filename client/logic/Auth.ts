@@ -42,7 +42,6 @@ const handshake = async (
                 throw new AmpacheError(JSONData.error);
             }
             if (JSONData.auth) {
-                console.log(JSONData.auth);
                 return JSONData.auth as AuthKey;
             }
             throw new Error('Missing Auth Key'); //TOOD: Is this needed?

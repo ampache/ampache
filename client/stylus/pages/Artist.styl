@@ -1,0 +1,29 @@
+.artistPage
+  .albums
+    display flex
+    flex-wrap wrap
+    .album
+      width 200px
+      height 200px
+      display flex
+      flex-direction column
+      text-align center
+      margin 20px
+      .imageContainer
+        position relative
+        width inherit
+        height inherit
+        &::before
+            content ""
+            position absolute
+            width inherit
+            height inherit
+            background-color black
+            transition 0.1s opacity
+            opacity 0
+          &:hover
+            &::before
+              opacity 0.5
+          img
+            width inherit
+            height inherit

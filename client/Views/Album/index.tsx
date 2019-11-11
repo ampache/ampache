@@ -8,7 +8,7 @@ import {
 } from '../../MusicPlayerContext';
 import AmpacheError from '../../logic/AmpacheError';
 
-interface HomeProps {
+interface AlbumProps {
     user: User;
     match: {
         params: {
@@ -18,7 +18,7 @@ interface HomeProps {
     global: MusicPlayerContextChildProps;
 }
 
-interface HomeState {
+interface AlbumState {
     theAlbum: Album;
     songs: Song[];
     error: Error | AmpacheError;
@@ -26,7 +26,7 @@ interface HomeState {
     songsLoading: boolean;
 }
 
-class AlbumView extends React.Component<HomeProps, HomeState> {
+class AlbumView extends React.Component<AlbumProps, AlbumState> {
     constructor(props) {
         super(props);
 
@@ -82,7 +82,6 @@ class AlbumView extends React.Component<HomeProps, HomeState> {
                 </div>
             );
         }
-        console.log(this.state.theAlbum);
         return (
             <div className='albumPage'>
                 <div className='details'>
