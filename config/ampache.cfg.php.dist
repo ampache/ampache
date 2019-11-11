@@ -653,6 +653,12 @@ show_footer_statistics = "true"
 ; DEFAULT: false
 ;allow_php_themes = "false"
 
+; Subsonic clients all seem to ignore the download method
+; This setting will not scrobble actions from stream actions.
+; (This means you can sync playlists without overloading your server)
+; Make sure you enable scrobbling in your client to keep recording stats!
+; DEFAULT: "true"
+;subsonic_stream_scrobble = "false"
 
 ;#########################################################
 ; Debugging                                              #
@@ -801,7 +807,6 @@ site_charset = UTF-8
 ; DEFAULT: member
 ;ldap_member_attribute = "member"
 ;ldap_member_attribute = "memberuid"
-
 
 
 ;#########################################################

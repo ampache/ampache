@@ -1007,6 +1007,9 @@ class Subsonic_Api
         if ($timeOffset) {
             $params .= '&frame=' . $timeOffset;
         }
+        if (AmpConfig::get('subsonic_stream_scrobble')) {
+            $params .= '&noscrobble=1';
+        }
 
         $url = '';
         if (Subsonic_XML_Data::isSong($fileid)) {
