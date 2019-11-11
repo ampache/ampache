@@ -1141,12 +1141,12 @@ class Api
      * Return songs based on supplied criteria
      *
      * @param array $input
-     * $input = array(mode     = (string)  "recent"|"forgotten"|"random" // optional, default = "random"
-     *                filter   = (string)  $filter                       // optional, LIKE matched to song title
-     *                album    = (integer) $album_id                     // optional
-     *                artist   = (integer) $artist_id                    // optional
-     *                flagged  = (integer) 0|1                           // optional, default = 0
-     *                format   = (string)  "song"|"index"|"id"           // optional, default = "song"
+     * mode    = (string)  "recent"|"forgotten"|"random" // optional, default = "random"
+     * filter  = (string)  $filter                       // optional, LIKE matched to song title
+     * album   = (integer) $album_id                     // optional
+     * artist  = (integer) $artist_id                    // optional
+     * flagged = (integer) 0|1                           // optional, default = 0
+     * format  = (string)  "song"|"index"|"id"           // optional, default = "song"
      */
     public static function playlist_generate($input)
     {
@@ -1157,46 +1157,47 @@ class Api
         if (!in_array($input['format'], array("song", "index", "id"), true)) {
             $input['format'] = "song";
         }
+        $user = User::get_from_username(Session::username($input['auth']));
         
         // process parameters
-        $select       = array("song.id AS song_id");
+        $select       = array("`song`.`id` AS `song_id`");
         $from         = array("song");
         $where        = array();
         $order        = array();
         $bound_values = array();
 
         if (in_array($input['mode'], array("forgotten", "recent"), true)) {
-            $select[] = "(SELECT user_activity.activity_date
-		                   FROM user_activity 
-                          WHERE (user_activity.user = ?)             AND
-                                (user_activity.object_id = song.id ) AND
-			                     (user_activity.object_type = 'song') AND
-			                     (user_activity.action = 'play')
-		                   ORDER BY user_activity.activity_date DESC
-                          LIMIT 1) AS last_played";
+            $select[] = "(SELECT `object_count`.`object_id` " .
+		                "FROM `object_count` " .
+                        "WHERE (`object_count`.`user` = ?) AND " .
+                        "(`object_count`.`object_id` = `song`.`id`) AND " .
+			            "(`object_count`.`object_type` = 'song') AND " .
+			            "(`object_count`.`count_type` = 'stream') " .
+		                "ORDER BY `object_count`.`date` DESC " .
+                        "LIMIT 1) AS `last_played`";
 
             $order[] = "last_played";
             if ($input['mode'] == "recent") {
                 $order[0] .= " DESC";
             }
 
-            $bound_values[] = User::get_from_username(Session::username($input['auth']))->id;
+            $bound_values[] = $user->id;
         }
-        if (array_key_exists("flagged", $input) && $input['flagged']) {
-            $from[]         = "LEFT JOIN user_flag ON (song.id = user_flag.object_id) AND (user_flag.object_type = 'song') AND (user_flag.user = ?)";
-            $where[]        = "(user_flag.object_id IS NOT NULL)";
-            $bound_values[] = User::get_from_username(Session::username($input['auth']))->id;
+        if ((int) $input['flagged'] == 1) {
+            $from[]         = "LEFT JOIN `user_flag` ON (`song`.`id` = `user_flag`.`object_id`) AND (`user_flag`.`object_type` = 'song') AND (`user_flag`.`user` = ?)";
+            $where[]        = "(`user_flag`.`object_id` IS NOT NULL)";
+            $bound_values[] = $user->id;
         }
         if (array_key_exists("filter", $input)) {
-            $where[]        = "(song.title LIKE ?)";
+            $where[]        = "(`song`.`title` LIKE ?)";
             $bound_values[] = "%" . $input['filter'] . "%";
         }
         if (array_key_exists("album", $input)) {
-            $where[]        = "(song.album = ?)";
+            $where[]        = "(`song`.`album` = ?)";
             $bound_values[] = $input['album'];
         }
         if (array_key_exists("artist", $input)) {
-            $where[]        = "(song.artist = ?)";
+            $where[]        = "(`song`.`artist` = ?)";
             $bound_values[] = $input['artist'];
         }
         $order[] = "RAND()";
@@ -1225,12 +1226,15 @@ class Api
         }
         
         // output formatted XML
-        if ($input['format'] == "id") {
-            echo XML_Data::keyed_array($song_ids);
-        } elseif ($input['format'] == "index") {
-            echo XML_Data::indexes($song_ids, "song");
-        } else {
-            echo XML_Data::songs($song_ids);
+        switch ($input['format']) {
+            case "id":
+                echo XML_Data::keyed_array($song_ids);
+                break:
+            case "index":
+                echo XML_Data::indexes($song_ids, "song");
+                break;
+            default:
+                echo XML_Data::songs($song_ids);
         }
 
         return true;
