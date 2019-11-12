@@ -8,20 +8,20 @@ interface AppViewProps {
     user: User;
 }
 
-export default class AppView extends React.PureComponent<AppViewProps> {
-    render() {
-        if (this.props.user == null) {
-            return <span>Loading...</span>;
-        }
-
-        return (
-            <>
-                <Header username={this.props.user.username} />
-                <div className='container'>
-                    <Sidebar />
-                    <div className='content'>{this.props.children}</div>
-                </div>
-            </>
-        );
+const AppView: React.FunctionComponent<AppViewProps> = (props) => {
+    if (props.user == null) {
+        return <span>Loading...</span>;
     }
-}
+
+    return (
+        <>
+            <Header username={props.user.username} />
+            <div className='container'>
+                <Sidebar />
+                <div className='content'>{props.children}</div>
+            </div>
+        </>
+    );
+};
+
+export default AppView;
