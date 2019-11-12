@@ -326,12 +326,12 @@ class Stream
     }
 
     /**
-     * gc_now_playing
+     * garbage_collection
      *
      * This will garbage collect the Now Playing data,
      * this is done on every play start.
      */
-    public static function gc_now_playing()
+    public static function garbage_collection()
     {
         // Remove any Now Playing entries for sessions that have been GC'd
         $sql = "DELETE FROM `now_playing` USING `now_playing` " .
