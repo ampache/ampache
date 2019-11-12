@@ -1,10 +1,6 @@
 import React from 'react';
 import { getAlbums } from '../../logic/Artist';
 import { User } from '../../logic/User';
-import {
-    MusicPlayerContextChildProps,
-    withMusicPlayerContext
-} from '../../MusicPlayerContext';
 import AmpacheError from '../../logic/AmpacheError';
 import { Album } from '../../logic/Album';
 import { Link } from 'react-router-dom';
@@ -16,7 +12,6 @@ interface ArtistProps {
             artistID: number;
         };
     };
-    global: MusicPlayerContextChildProps;
 }
 
 interface ArtistState {
@@ -26,7 +21,10 @@ interface ArtistState {
     songsLoading: boolean;
 }
 
-class ArtistView extends React.Component<ArtistProps, ArtistState> {
+export default class ArtistView extends React.Component<
+    ArtistProps,
+    ArtistState
+> {
     constructor(props) {
         super(props);
 
@@ -55,6 +53,7 @@ class ArtistView extends React.Component<ArtistProps, ArtistState> {
     }
 
     render() {
+        console.log('RENDER');
         if (this.state.albumLoading) {
             return (
                 <div className='artistPage'>
@@ -101,5 +100,3 @@ class ArtistView extends React.Component<ArtistProps, ArtistState> {
         );
     }
 }
-
-export default withMusicPlayerContext(ArtistView);

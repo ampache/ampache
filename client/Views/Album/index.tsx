@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {
+    FunctionComponent,
+    useContext,
+    useEffect,
+    useState
+} from 'react';
 import { Album, getAlbum, getAlbumSongs } from '../../logic/Album';
 import { User } from '../../logic/User';
 import { Song } from '../../logic/Song';
-import {
-    MusicPlayerContextChildProps,
-    withMusicPlayerContext
-} from '../../MusicPlayerContext';
 import AmpacheError from '../../logic/AmpacheError';
+import { Link } from 'react-router-dom';
+import { MusicContext } from '../../MusicContext';
 
 interface AlbumProps {
     user: User;
@@ -15,103 +18,109 @@ interface AlbumProps {
             albumID: number;
         };
     };
-    global: MusicPlayerContextChildProps;
 }
 
-interface AlbumState {
-    theAlbum: Album;
-    songs: Song[];
-    error: Error | AmpacheError;
-    albumLoading: boolean;
-    songsLoading: boolean;
-}
+const AlbumView: FunctionComponent<AlbumProps> = (props) => {
+    const musicContext = useContext(MusicContext);
 
-class AlbumView extends React.Component<AlbumProps, AlbumState> {
-    constructor(props) {
-        super(props);
+    const [theAlbum, setTheAlbum] = useState<Album>(null);
+    const [songs, setSongs] = useState<Song[]>([]);
+    const [error, setError] = useState<Error | AmpacheError>(null);
 
-        this.state = {
-            theAlbum: null,
-            songs: [],
-            error: null,
-            albumLoading: true,
-            songsLoading: true
-        };
-    }
-
-    componentDidMount() {
-        if (this.props.match.params.albumID != null) {
+    useEffect(() => {
+        if (props.match.params.albumID != null) {
             getAlbum(
-                this.props.match.params.albumID,
-                this.props.user.authKey,
+                props.match.params.albumID,
+                props.user.authKey,
                 'http://localhost:8080'
             )
                 .then((data) => {
-                    this.setState({ theAlbum: data, albumLoading: false });
+                    setTheAlbum(data);
                 })
                 .catch((error) => {
-                    this.setState({ albumLoading: false, error });
+                    setError(error);
                 });
 
             getAlbumSongs(
-                this.props.match.params.albumID,
-                this.props.user.authKey,
+                props.match.params.albumID,
+                props.user.authKey,
                 'http://localhost:8080'
             )
                 .then((songs) => {
-                    this.setState({ songs, songsLoading: false });
+                    setSongs(songs);
                 })
                 .catch((error) => {
-                    this.setState({ songsLoading: false, error });
+                    setError(error);
                 });
         }
-    }
+    }, []);
 
-    render() {
-        if (this.state.albumLoading) {
-            return (
-                <div className='albumPage'>
-                    <span>Loading...</span>
-                </div>
-            );
-        }
-        if (this.state.error) {
-            return (
-                <div className='albumPage'>
-                    <span>Error: {this.state.error.message}</span>
-                </div>
-            );
-        }
+    if (error) {
         return (
             <div className='albumPage'>
-                <div className='details'>
-                    <div className='imageContainer'>
-                        <img
-                            src={this.state.theAlbum.art}
-                            alt={'Album Cover'}
-                        />
-                    </div>
-                    Name: {this.state.theAlbum.name}
-                </div>
-                <div className='songs'>
-                    {this.state.songsLoading && 'Loading Songs...'}
-                    {!this.state.songsLoading &&
-                        this.state.songs.map((song: Song) => {
-                            return (
-                                <div
-                                    onClick={() =>
-                                        this.props.global.startPlaying(song.url)
-                                    }
-                                    key={song.id}
-                                >
-                                    {song.title}
-                                </div>
-                            );
-                        })}
-                </div>
+                <span>Error: {error.message}</span>
             </div>
         );
     }
-}
+    if (!theAlbum) {
+        return (
+            <div className='albumPage'>
+                <span>Loading...</span>
+            </div>
+        );
+    }
+    return (
+        <div className='albumPage'>
+            <div className='album'>
+                <div className='imageContainer'>
+                    <img src={theAlbum.art} alt={'Album Cover'} />
+                </div>
+                <div className='details'>
+                    <div className='albumName'>{theAlbum.name}</div>
+                    <Link
+                        to={`/artist/${theAlbum.artist.id}`}
+                        className='artistName'
+                    >
+                        {theAlbum.artist.name}
+                    </Link>
+                </div>
+            </div>
+            <div className='songs'>
+                <ul>
+                    {!songs && <li>'Loading Songs...'</li>}
+                    {songs &&
+                        songs.map((song: Song) => {
+                            const minutes: number = Math.round(song.time / 60);
+                            const seconds: string = (song.time % 60).toString();
+                            const paddedSeconds: string =
+                                seconds.length === 1 ? seconds + '0' : seconds;
 
-export default withMusicPlayerContext(AlbumView);
+                            return (
+                                <li
+                                    onClick={() =>
+                                        musicContext.startPlaying(
+                                            song.url,
+                                            song.id
+                                        )
+                                    }
+                                    className={
+                                        musicContext.playingSongID === song.id
+                                            ? 'playing'
+                                            : ''
+                                    }
+                                    key={song.id}
+                                >
+                                    <span className='title'>{song.title}</span>
+                                    <span className='time'>
+                                        {minutes}:{paddedSeconds}
+                                    </span>
+                                </li>
+                            );
+                        })}
+                </ul>
+            </div>
+        </div>
+    );
+};
+
+export default AlbumView;

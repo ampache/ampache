@@ -289,7 +289,7 @@ class JSON_Data
                     name => 'Various'
                 );
             } else {
-                $theArray['album']['artist'] = array(
+                $theArray['artist'] = array(
                     id => $album->artist_id,
                     name => $album->artist_name
                 );

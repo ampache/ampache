@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { Howler } from 'howler';
 
 import App from './Views/App';
 import Home from './Views/Home/';
@@ -12,8 +13,8 @@ import handshake, { AuthKey } from './logic/Auth';
 import { getUser, User } from './logic/User';
 import AlbumView from './Views/Album';
 import ArtistView from './Views/Artist';
+import { MusicContextProvider } from './MusicContext';
 import MusicPlayer from './Views/MusicPlayer';
-import { MusicPlayerContextProvider } from './MusicPlayerContext';
 
 interface RouterState {
     authKey: AuthKey;
@@ -45,7 +46,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                 })
                 .catch((error) => {
                     console.error('GETUSERFAILED', error); //TODO: Error handling
-                    this.handleLogout();
+                    // this.handleLogout();
                 });
         }
     }
@@ -71,6 +72,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
     }
 
     private handleLogout() {
+        Howler.unload();
         Cookies.remove('authKey');
         Cookies.remove('username');
         this.setState({ authKey: null, username: null, user: null });
@@ -105,7 +107,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                 return <Redirect to='/login' />;
                             }}
                         />
-                        <MusicPlayerContextProvider>
+                        <MusicContextProvider>
                             <Switch>
                                 <Route
                                     exact
@@ -163,7 +165,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                 />{' '}
                             </Switch>
                             <MusicPlayer />
-                        </MusicPlayerContextProvider>
+                        </MusicContextProvider>
                     </Switch>
                 </App>
             </BrowserRouter>
