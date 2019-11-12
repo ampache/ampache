@@ -1784,16 +1784,21 @@ class Subsonic_Api
             $rid[] = $oid;
             $oid   = $rid;
         }
-        if ($submission !== 'false' || $submission !== '0') {
-            foreach ($oid as $object) {
-                $aid   = Subsonic_XML_Data::getAmpacheId($object);
-                $type  = Subsonic_XML_Data::getAmpacheType($object);
-                $media = new $type($aid);
-                $media->format();
-                $media->set_played($user->id, $input['c'], array(), time());
 
+        foreach ($oid as $object) {
+            $aid   = Subsonic_XML_Data::getAmpacheId($object);
+            $type  = Subsonic_XML_Data::getAmpacheType($object);
+            $media = new $type($aid);
+            $media->format();
+            $media->set_played($user->id, $input['c'], array(), time());
+
+            if ($submission === 'true' || $submission === '1') {
+                // stream has finished
                 debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
                 User::save_mediaplay(User::get_from_username($input['u']), $media);
+            } else {
+                // stream is in progress
+                Stream::insert_now_playing($media->id, $input['u'], $media->time, $input['auth'], get_class($media));
             }
         }
 
