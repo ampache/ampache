@@ -1,9 +1,4 @@
-import React, {
-    FunctionComponent,
-    useContext,
-    useEffect,
-    useState
-} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Album, getAlbum, getAlbumSongs } from '../../logic/Album';
 import { User } from '../../logic/User';
 import { Song } from '../../logic/Song';
@@ -20,7 +15,7 @@ interface AlbumProps {
     };
 }
 
-const AlbumView: FunctionComponent<AlbumProps> = (props) => {
+const AlbumView: React.FC<AlbumProps> = (props) => {
     const musicContext = useContext(MusicContext);
 
     const [theAlbum, setTheAlbum] = useState<Album>(null);
@@ -100,7 +95,8 @@ const AlbumView: FunctionComponent<AlbumProps> = (props) => {
                                     onClick={() =>
                                         musicContext.startPlaying(
                                             song.url,
-                                            song.id
+                                            song.id,
+                                            song.art
                                         )
                                     }
                                     className={

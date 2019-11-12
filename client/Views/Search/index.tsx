@@ -1,9 +1,4 @@
-import React, {
-    FunctionComponent,
-    useContext,
-    useEffect,
-    useState
-} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { User } from '../../logic/User';
 import { searchSongs } from '../../logic/Search';
 import { Song } from '../../logic/Song';
@@ -20,7 +15,7 @@ interface SearchProps {
     };
 }
 
-const SearchView: FunctionComponent<SearchProps> = (props) => {
+const SearchView: React.FC<SearchProps> = (props) => {
     const musicContext = useContext(MusicContext);
 
     const [searchResults, setSearchResults] = useState<Song[]>(null);
@@ -64,7 +59,11 @@ const SearchView: FunctionComponent<SearchProps> = (props) => {
                     return (
                         <div
                             onClick={() =>
-                                musicContext.startPlaying(song.url, song.id)
+                                musicContext.startPlaying(
+                                    song.url,
+                                    song.id,
+                                    song.art
+                                )
                             }
                             key={song.id}
                             className={

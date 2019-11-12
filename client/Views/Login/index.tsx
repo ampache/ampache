@@ -9,7 +9,7 @@ interface LoginProps {
     handleLogin: (apiKey: string, username: string) => void;
 }
 
-export default class HomeView extends React.PureComponent<
+export default class LoginView extends React.PureComponent<
     LoginProps,
     LoginState
 > {

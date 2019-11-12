@@ -1,25 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PLAYERSTATUS } from './enum/PlayerStatus';
 import { Howl, Howler } from 'howler';
-
-interface MusicPlayerContextState {
-    playerStatus: PLAYERSTATUS;
-}
+import { useHotkeys } from 'react-hotkeys-hook';
 
 export const MusicContext = React.createContext({
     playerStatus: PLAYERSTATUS.STOPPED,
     playingSongID: -1,
+    playingSongArt: '',
     playPause: () => {},
-    startPlaying: (url: string, songID: number) => {}
+    startPlaying: (url: string, songID: number, songArt: string) => {}
 });
+
 export const MusicContextProvider = (props) => {
     const [playerStatus, setPlayerStatus] = useState(PLAYERSTATUS.STOPPED);
     const [playingSongID, setPlayingSongID] = useState(-1);
+    const [playingSongArt, setPlayingSongArt] = useState('');
 
     const howl = React.useRef<Howl>(null);
 
+    useHotkeys('space', () => playPause(), [playerStatus]);
+
     const playPause = () => {
-        console.log('PLAYPAUSE', howl);
+        console.log(playerStatus);
         if (playerStatus === PLAYERSTATUS.PLAYING) {
             howl.current.pause();
             setPlayerStatus(PLAYERSTATUS.PAUSED);
@@ -29,7 +31,7 @@ export const MusicContextProvider = (props) => {
         }
     };
 
-    const startPlaying = (playURL: string, songID: number) => {
+    const startPlaying = (playURL: string, songID: number, songArt: string) => {
         if (songID === playingSongID) return;
         if (
             playerStatus === PLAYERSTATUS.PLAYING ||
@@ -38,6 +40,7 @@ export const MusicContextProvider = (props) => {
             howl.current.stop();
         }
         setPlayingSongID(songID);
+        setPlayingSongArt(songArt);
         howl.current = new Howl({
             src: [playURL],
             format: 'mp3', //Howler is broken, this bypasses https://github.com/goldfire/howler.js/issues/1248
@@ -58,6 +61,7 @@ export const MusicContextProvider = (props) => {
             value={{
                 playerStatus,
                 playingSongID,
+                playingSongArt,
                 playPause,
                 startPlaying
             }}
