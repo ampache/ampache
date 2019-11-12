@@ -99,8 +99,9 @@ class Live_Stream extends database_object implements media, library_item
      * for the users, the new variables are put in f_??? and f_???_link
      * @return true
      */
-    public function format()
+    public function format($details = true)
     {
+        unset($details); //dead code but called from other format calls
         // Default link used on the rightbar
         $this->f_name         = scrub_out($this->name);
         $this->link           = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
