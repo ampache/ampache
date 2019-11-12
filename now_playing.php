@@ -51,7 +51,7 @@ if (AmpConfig::get('now_playing_refresh_limit') > 1) {
 <body>
 <?php
 
-Stream::gc_now_playing();
+Stream::garbage_collection();
 $results = Stream::get_now_playing();
 
 if (Core::get_request('user_id') !== '') {

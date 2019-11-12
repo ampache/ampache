@@ -679,7 +679,7 @@ function print_bool($value)
 function show_now_playing()
 {
     Session::garbage_collection();
-    Stream::gc_now_playing();
+    Stream::garbage_collection();
 
     $web_path = AmpConfig::get('web_path');
     $results  = Stream::get_now_playing();
