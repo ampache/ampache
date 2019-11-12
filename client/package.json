@@ -13,6 +13,7 @@
         "js-cookie": "^2.2.1",
         "react": ">=16",
         "react-dom": "npm:@hot-loader/react-dom",
+        "react-hotkeys-hook": "^1.5.3",
         "react-router-dom": "^5.1.2"
     },
     "scripts": {

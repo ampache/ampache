@@ -7,14 +7,13 @@ import App from './Views/App';
 import Home from './Views/Home/';
 import Account from './Views/Account/';
 import SearchView from './Views/Search/';
-import Login from './Views/Login/';
+import LoginView from './Views/Login/';
 import NotFound from './Views/404/';
 import handshake, { AuthKey } from './logic/Auth';
 import { getUser, User } from './logic/User';
 import AlbumView from './Views/Album';
 import ArtistView from './Views/Artist';
 import { MusicContextProvider } from './MusicContext';
-import MusicPlayer from './Views/MusicPlayer';
 
 interface RouterState {
     authKey: AuthKey;
@@ -84,7 +83,10 @@ export default class Root extends React.PureComponent<void, RouterState> {
                 <BrowserRouter>
                     <Route
                         render={(props) => (
-                            <Login {...props} handleLogin={this.handleLogin} />
+                            <LoginView
+                                {...props}
+                                handleLogin={this.handleLogin}
+                            />
                         )}
                     />
                 </BrowserRouter>
@@ -92,22 +94,22 @@ export default class Root extends React.PureComponent<void, RouterState> {
         }
         return (
             <BrowserRouter>
-                <App user={this.state.user}>
-                    <Switch>
-                        {' '}
-                        //TODO: Do i need this switch?
-                        <Route exact path='/login'>
-                            <Redirect to='/' />
-                        </Route>
-                        <Route
-                            exact
-                            path='/logout'
-                            render={() => {
-                                this.handleLogout();
-                                return <Redirect to='/login' />;
-                            }}
-                        />
-                        <MusicContextProvider>
+                <Switch>
+                    {' '}
+                    //TODO: Do i need this switch?
+                    <Route exact path='/login'>
+                        <Redirect to='/' />
+                    </Route>
+                    <Route
+                        exact
+                        path='/logout'
+                        render={() => {
+                            this.handleLogout();
+                            return <Redirect to='/login' />;
+                        }}
+                    />
+                    <MusicContextProvider>
+                        <App user={this.state.user}>
                             <Switch>
                                 <Route
                                     exact
@@ -164,10 +166,9 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     render={(props) => <NotFound {...props} />}
                                 />{' '}
                             </Switch>
-                            <MusicPlayer />
-                        </MusicContextProvider>
-                    </Switch>
-                </App>
+                        </App>
+                    </MusicContextProvider>
+                </Switch>
             </BrowserRouter>
         );
     }

@@ -8,7 +8,7 @@ interface AppViewProps {
     user: User;
 }
 
-const AppView: React.FunctionComponent<AppViewProps> = (props) => {
+const AppView: React.FC<AppViewProps> = (props) => {
     if (props.user == null) {
         return <span>Loading...</span>;
     }
