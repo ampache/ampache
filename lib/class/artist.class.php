@@ -438,6 +438,7 @@ class Artist extends database_object implements library_item
      * This returns a number of random artists.
      * @param integer $count
      * @param boolean $with_art
+     * @param integer $user_id
      * @return integer[]
      */
     public static function get_random($count = 1, $with_art = false, $user_id = null)
