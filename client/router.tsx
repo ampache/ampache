@@ -52,13 +52,13 @@ export default class Root extends React.PureComponent<void, RouterState> {
 
     private handleLogin(username: string, password: string) {
         handshake(username, password, server)
-            .then((authKey: AuthKey) => {
-                this.setState({ authKey });
-                Cookies.set('authKey', authKey);
+            .then((newAuthKey: AuthKey) => {
+                this.setState({ authKey: newAuthKey });
+                Cookies.set('authKey', newAuthKey);
                 Cookies.set('username', username);
-                getUser(username, authKey, server)
+                getUser(username, newAuthKey, server)
                     .then((user: User) => {
-                        user.authKey = authKey;
+                        user.authKey = newAuthKey;
                         this.setState({ user });
                     })
                     .catch((error) => {
@@ -108,7 +108,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                             return <Redirect to='/login' />;
                         }}
                     />
-                    <MusicContextProvider>
+                    <MusicContextProvider authKey={this.state.authKey}>
                         <App user={this.state.user}>
                             <Switch>
                                 <Route

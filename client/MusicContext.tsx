@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { PLAYERSTATUS } from './enum/PlayerStatus';
 import { Howl, Howler } from 'howler';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { AuthKey } from './logic/Auth';
+
+interface MusicContextProps {
+    authKey: AuthKey;
+}
 
 export const MusicContext = React.createContext({
     playerStatus: PLAYERSTATUS.STOPPED,
@@ -11,7 +16,7 @@ export const MusicContext = React.createContext({
     startPlaying: (url: string, songID: number, songArt: string) => {}
 });
 
-export const MusicContextProvider = (props) => {
+export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const [playerStatus, setPlayerStatus] = useState(PLAYERSTATUS.STOPPED);
     const [playingSongID, setPlayingSongID] = useState(-1);
     const [playingSongArt, setPlayingSongArt] = useState('');

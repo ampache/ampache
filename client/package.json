@@ -14,7 +14,8 @@
         "react": ">=16",
         "react-dom": "npm:@hot-loader/react-dom",
         "react-hotkeys-hook": "^1.5.3",
-        "react-router-dom": "^5.1.2"
+        "react-router-dom": "^5.1.2",
+        "react-use-context-menu": "^0.1.3"
     },
     "scripts": {
         "start": "parcel start index.html --public-url /client/dist/",
