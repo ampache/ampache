@@ -613,7 +613,7 @@ class XML_Data
             
             //count multiple disks
             if ($album->allow_group_disks) {
-                $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite;
+                $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
             $string .= "\t<year>" . $album->year . "</year>\n" .
