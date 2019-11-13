@@ -105,7 +105,6 @@ class Stats
 
             return false;
         }
-        $date;
         if (!self::is_already_inserted($input_type, $oid, $user, $count_type, $date, $song_time)) {
             $type = self::validate_type($input_type);
 
