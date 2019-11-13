@@ -393,8 +393,8 @@ class Album extends database_object implements library_item
                    "LEFT JOIN `song` ON `song`.`album` = `album`.`id` " .
                    "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
                    "WHERE `song`.`album` IN (SELECT `id` FROM `album` " .
-                   "WHERE LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name') AND " .
-                   "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`release_type` $release_type AND " .
+                   "WHERE LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name' AND " .
+                   "`album`.`release_type` $release_type AND " .
                    "`album`.`mbid` $mbid AND " .
                    "`album`.`album_artist` $artist AND " .
                    "`album`.`year` = " . (string) $this->year . ") " .
