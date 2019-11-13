@@ -411,7 +411,7 @@ class Album extends database_object implements library_item
                    "`album`.`release_type` $release_type AND " .
                    "`album`.`mbid` $mbid AND " .
                    "`album`.`album_artist` $artist AND " .
-                   "`album`.`year` = " . (string) $this->year . ") " .
+                   "`album`.`year` = " . (string) $this->year . " " .
                    "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
         }
         $db_results = Dba::read($sql);
