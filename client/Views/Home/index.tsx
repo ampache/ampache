@@ -3,7 +3,7 @@ import { getRandomAlbums, Album, getAlbumSongs } from '../../logic/Album';
 import AlbumDisplay from '../components/AlbumDisplay';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
-import { MusicContext } from '../../MusicContext';
+import { MusicContext } from '../../Contexts/MusicContext';
 import { playSongFromAlbum } from '../Helpers/playAlbumHelper';
 
 interface HomeViewProps {

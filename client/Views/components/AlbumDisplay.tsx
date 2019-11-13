@@ -21,7 +21,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props) => {
     return (
         <>
             <Link
-                to={`album/${props.album.id}`}
+                to={`/album/${props.album.id}`}
                 className='albumDisplayContainer'
             >
                 <div {...bindTrigger} className='albumDisplay'>

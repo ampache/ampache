@@ -13,7 +13,8 @@ import handshake, { AuthKey } from './logic/Auth';
 import { getUser, User } from './logic/User';
 import AlbumView from './Views/Album';
 import ArtistView from './Views/Artist';
-import { MusicContextProvider } from './MusicContext';
+import { MusicContextProvider } from './Contexts/MusicContext';
+import ArtistsView from './Views/Artists';
 
 interface RouterState {
     authKey: AuthKey;
@@ -146,6 +147,16 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     path='/artist/:artistID'
                                     render={(props) => (
                                         <ArtistView
+                                            {...props}
+                                            user={this.state.user}
+                                        />
+                                    )}
+                                />{' '}
+                                <Route
+                                    exact
+                                    path='/artists/'
+                                    render={(props) => (
+                                        <ArtistsView
                                             {...props}
                                             user={this.state.user}
                                         />

@@ -4,7 +4,7 @@ import { User } from '../../logic/User';
 import { Song } from '../../logic/Song';
 import AmpacheError from '../../logic/AmpacheError';
 import { Link } from 'react-router-dom';
-import { MusicContext } from '../../MusicContext';
+import { MusicContext } from '../../Contexts/MusicContext';
 
 interface AlbumViewProps {
     user: User;

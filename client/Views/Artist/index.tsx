@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getAlbums } from '../../logic/Artist';
+import { getAlbumsFromArtist } from '../../logic/Artist';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import { Album } from '../../logic/Album';
-import { Link } from 'react-router-dom';
 import AlbumDisplay from '../components/AlbumDisplay';
 import { playSongFromAlbum } from '../Helpers/playAlbumHelper';
-import { MusicContext } from '../../MusicContext';
+import { MusicContext } from '../../Contexts/MusicContext';
 
 interface ArtistViewProps {
     user: User;
@@ -25,7 +24,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props) => {
 
     useEffect(() => {
         if (props.match.params.artistID != null) {
-            getAlbums(
+            getAlbumsFromArtist(
                 props.match.params.artistID,
                 props.user.authKey,
                 'http://localhost:8080'

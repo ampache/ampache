@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { PLAYERSTATUS } from './enum/PlayerStatus';
+import { PLAYERSTATUS } from '../enum/PlayerStatus';
 import { Howl, Howler } from 'howler';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { AuthKey } from './logic/Auth';
+import { AuthKey } from '../logic/Auth';
 
 interface MusicContextProps {
     authKey: AuthKey;
