@@ -557,7 +557,7 @@ class User extends database_object
     {
         $username = Dba::escape($this->username);
 
-        $sql = "SELECT `id`,`ip` FROM `session` WHERE `username`='$username'" .
+        $sql = "SELECT `id`, `ip` FROM `session` WHERE `username`='$username'" .
             " AND `expire` > " . time();
         $db_results = Dba::read($sql);
 
@@ -966,7 +966,7 @@ class User extends database_object
         $user_id = $this->id;
         $agent   = Dba::escape(Core::get_server('HTTP_USER_AGENT'));
 
-        $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
+        $sql = "INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
         Dba::write($sql);
 
         /* Clean up old records... sometimes  */
@@ -1210,7 +1210,7 @@ class User extends database_object
 
         /* If we aren't the -1 user before we continue grab the -1 users values */
         if ($user_id != '-1') {
-            $sql = "SELECT `user_preference`.`preference`,`user_preference`.`value` FROM `user_preference`,`preference` " .
+            $sql = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` " .
                 "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
@@ -1239,7 +1239,7 @@ class User extends database_object
                     $row['value'] = $zero_results[$key];
                 }
                 $value = Dba::escape($row['value']);
-                $sql   = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id', '$key', '$value')";
+                $sql   = "INSERT INTO user_preference (`user`, `preference`, `value`) VALUES ('$user_id', '$key', '$value')";
                 Dba::write($sql);
             }
         } // while preferences
@@ -1371,7 +1371,7 @@ class User extends database_object
         }
 
         /* Select ip history */
-        $sql = "SELECT `ip`,`date` FROM `ip_history`" .
+        $sql = "SELECT `ip`, `date` FROM `ip_history`" .
             " WHERE `user`='$username'" .
             " $group_sql ORDER BY `date` DESC $limit_sql";
         $db_results = Dba::read($sql);

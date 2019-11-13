@@ -330,9 +330,9 @@ class Album extends database_object implements library_item
         }
 
         $full_name    = Dba::escape($this->full_name);
-        $release_type = " is null";
-        $mbid         = " is null";
-        $artist       = " is null";
+        $release_type = "is null";
+        $mbid         = "is null";
+        $artist       = "is null";
 
         if ($this->release_type) {
             $release_type = "= '" . ucwords($this->release_type) . "'";
@@ -348,7 +348,8 @@ class Album extends database_object implements library_item
         $sql = "SELECT " .
                 "COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
                 "COUNT(`song`.`id`) AS `song_count`, " .
-                "SUM(`song`.`time`) AS `total_duration` ";
+                "SUM(`song`.`time`) AS `total_duration`, " .
+                "`song`.`catalog` AS `catalog_id`";
 
         $suite_array = $this->album_suite;
         if (!count($suite_array)) {
@@ -373,32 +374,46 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
+            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `catalog_id`";
         } else {
-            $sqlw .= "GROUP BY `song`.`artist` ";
+            $sqlw .= "GROUP BY `song`.`artist`, `catalog_id`";
         }
         $sql .= $sqlj . $sqlw;
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-
-        // Get associated information from first song only
-        $sql = "SELECT " .
-                "`song`.`catalog` AS `catalog_id`," .
-                "`artist`.`name` AS `artist_name`, " .
-                "`artist`.`prefix` AS `artist_prefix`, " .
-                "`artist`.`id` AS `artist_id` ";
-        if ($this->allow_group_disks) {
-            $sql .= "FROM `album` ";
-            $sqlj .= "INNER JOIN `artist` " .
-                "ON `artist`.`id`=`song`.`artist` ";
+        if ($artist == "is null") {
+            // no album_artist is set
+            // Get associated information from first song only
+            $sql = "SELECT MIN(`song`.`id`) AS `song_id`, " .
+                   "`artist`.`name` AS `artist_name`, " .
+                   "`artist`.`prefix` AS `artist_prefix`, " .
+                   "`artist`.`id` AS `artist_id` " .
+                   "FROM `album` " .
+                   "LEFT JOIN `song` ON `song`.`album` = `album`.`id` " .
+                   "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
+                   "WHERE `song`.`album` IN (SELECT `id` FROM `album` " .
+                   "WHERE LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name' AND " .
+                   "`album`.`release_type` $release_type AND " .
+                   "`album`.`mbid` $mbid AND " .
+                   "`album`.`album_artist` $artist AND " .
+                   "`album`.`year` = " . (string) $this->year . ") " .
+                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` " .
+                   "LIMIT 1";
         } else {
-            $sql .= "FROM `song` INNER JOIN `artist` " .
-                "ON `artist`.`id`=`song`.`artist` ";
+            // album_artist is set
+            $sql = "SELECT DISTINCT `artist`.`name` AS `artist_name`, " .
+                   "`artist`.`prefix` AS `artist_prefix`, " .
+                   "`artist`.`id` AS `artist_id` " .
+                   "FROM `album` " .
+                   "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist` " .
+                   "WHERE LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name' AND " .
+                   "`album`.`release_type` $release_type AND " .
+                   "`album`.`mbid` $mbid AND " .
+                   "`album`.`album_artist` $artist AND " .
+                   "`album`.`year` = " . (string) $this->year . " " .
+                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
         }
-        $sql .= $sqlj . $sqlw . ", `catalog_id` LIMIT 1";
-        //debug_event('album.class', 'sql ' . $sql, 5);
-
         $db_results = Dba::read($sql);
         $results    = array_merge($results, Dba::fetch_assoc($db_results));
 
@@ -1151,6 +1166,7 @@ class Album extends database_object implements library_item
      * This returns a number of random albums.
      * @param integer $count
      * @param boolean $with_art
+     * @param integer $user_id
      * @return integer[]
      */
     public static function get_random($count = 1, $with_art = false, $user_id = null)

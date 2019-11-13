@@ -481,7 +481,7 @@ abstract class Catalog extends database_object
                 $this->_filecache[strtolower($results['file'])] = $results['id'];
             }
 
-            $sql        = 'SELECT `id`,`file` FROM `video` WHERE `catalog` = ?';
+            $sql        = 'SELECT `id`, `file` FROM `video` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
 
             while ($results = Dba::fetch_assoc($db_results)) {

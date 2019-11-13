@@ -103,7 +103,7 @@ class Tag extends database_object implements library_item
 
         $idlist = '(' . implode(',', $ids) . ')';
 
-        $sql = "SELECT `tag_map`.`id`,`tag_map`.`tag_id`, `tag`.`name`,`tag_map`.`object_id`,`tag_map`.`user` FROM `tag` " .
+        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
             "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
 
@@ -249,8 +249,8 @@ class Tag extends database_object implements library_item
         if ($this->id != $merge_to) {
             debug_event('tag.class', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
 
-            $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
-                   "SELECT " . $merge_to . ",`user`,`object_type`,`object_id` " .
+            $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
+                   "SELECT " . $merge_to . ",`user`, `object_type`, `object_id` " .
                    "FROM `tag_map` AS `tm` " .
                    "WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (" .
                        "SELECT 1 FROM `tag_map` " .
@@ -323,7 +323,7 @@ class Tag extends database_object implements library_item
             $merges[] = array('id' => $parent->id, 'name' => $parent->name);
         }
         foreach ($merges as $tag) {
-            $sql = "INSERT INTO `tag_map` (`tag_id`,`user`,`object_type`,`object_id`) " .
+            $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
                 "VALUES (?, ?, ?, ?)";
             Dba::write($sql, array($tag['id'], $uid, $type, $id));
         }

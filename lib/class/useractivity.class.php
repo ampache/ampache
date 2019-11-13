@@ -122,7 +122,7 @@ class Useractivity extends database_object
         if ($object_type === 'song') {
             // insert fields to be more like last.fm activity stats
             $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`," .
-                    " `name_track`, `name_artist`, `name_album`,`mbid_track`, `mbid_artist`, `mbid_album`)" .
+                    " `name_track`, `name_artist`, `name_album`, `mbid_track`, `mbid_artist`, `mbid_album`)" .
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $song = new Song($object_id);
             $song->format();

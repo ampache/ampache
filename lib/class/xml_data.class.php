@@ -585,6 +585,7 @@ class XML_Data
             $album = new Album($album_id);
             $album->format();
 
+            $disk   = $album->disk;
             $rating = new Rating($album_id, 'album');
             $flag   = new Userflag($album_id, 'album');
 
@@ -607,23 +608,17 @@ class XML_Data
             if (in_array("songs", $include)) {
                 $songs = self::songs($album->get_songs(), array(), false);
             } else {
-                if (AmpConfig::get('album_group')) {
-                    $song_count = 0;
-                    $disc_ids   = $album->get_group_disks_ids();
-                    foreach ($disc_ids as $discid) {
-                        $disc = new Album($discid);
-                        $disc->format();
-                        $song_count = $song_count + $disc->song_count;
-                    }
-                    $songs = $song_count;
-                } else {
-                    $songs = $album->song_count;
-                }
+                $songs = $album->song_count;
+            }
+            
+            //count multiple disks
+            if ($album->allow_group_disks) {
+                $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
             $string .= "\t<year>" . $album->year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
-                    "\t<disk>" . $album->disk . "</disk>\n" .
+                    "\t<disk>" . $disk . "</disk>\n" .
                     self::tags_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .

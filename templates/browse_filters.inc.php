@@ -80,7 +80,7 @@ if (!Core::is_session_started()) {
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
                 <?php
-                    $sql     = 'SELECT `id`,`name` FROM `catalog`';
+                    $sql     = 'SELECT `id`, `name` FROM `catalog`';
         $db_results          = Dba::read($sql);
         while ($data = Dba::fetch_assoc($db_results)) {
             $results[] = $data;

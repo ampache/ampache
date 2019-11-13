@@ -485,7 +485,7 @@ function show_user_select($name, $selected = '', $style = '')
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('All') . "</option>\n";
 
-    $sql        = "SELECT `id`,`username`,`fullname` FROM `user` ORDER BY `fullname`";
+    $sql        = "SELECT `id`, `username`, `fullname` FROM `user` ORDER BY `fullname`";
     $db_results = Dba::read($sql);
 
     while ($row = Dba::fetch_assoc($db_results)) {
@@ -511,7 +511,7 @@ function show_playlist_select($name, $selected = '', $style = '')
     echo "<select name=\"$name\" style=\"$style\">\n";
     echo "\t<option value=\"\">" . T_('None') . "</option>\n";
 
-    $sql              = "SELECT `id`,`name` FROM `playlist` ORDER BY `name`";
+    $sql              = "SELECT `id`, `name` FROM `playlist` ORDER BY `name`";
     $db_results       = Dba::read($sql);
     $nb_items         = Dba::num_rows($db_results);
     $index            = 1;

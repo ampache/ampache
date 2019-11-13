@@ -842,7 +842,7 @@ class Song extends database_object implements media, library_item
                 $sql .= "AND `album` = '" . Dba::escape($dupe['album']) . "' ";
             }
 
-            $sql .= 'ORDER BY `time`,`bitrate`,`size`';
+            $sql .= 'ORDER BY `time`, `bitrate`, `size`';
             $db_results = Dba::read($sql);
 
             while ($item = Dba::fetch_assoc($db_results)) {
@@ -986,9 +986,9 @@ class Song extends database_object implements media, library_item
             return false;
         }
 
-        Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date);
-        Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date);
-        Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date);
+        Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
+        Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date, $this->time);
+        Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date, $this->time);
 
         if (!$this->played) {
             /* If it hasn't been played, set it! */

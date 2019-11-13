@@ -294,27 +294,27 @@ class Artist extends database_object implements library_item
         $sort_type = AmpConfig::get('album_sort');
         switch ($sort_type) {
             case 'year_asc':
-                $sql_sort = '`album`.`year` ASC,`album`.`disk`';
+                $sql_sort = '`album`.`year` ASC, `album`.`disk`';
                 break;
             case 'year_desc':
-                $sql_sort = '`album`.`year` DESC,`album`.`disk`';
+                $sql_sort = '`album`.`year` DESC, `album`.`disk`';
                 break;
             case 'name_asc':
-                $sql_sort = '`album`.`name` ASC,`album`.`disk`';
+                $sql_sort = '`album`.`name` ASC, `album`.`disk`';
                 break;
             case 'name_desc':
-                $sql_sort = '`album`.`name` DESC,`album`.`disk`';
+                $sql_sort = '`album`.`name` DESC, `album`.`disk`';
                 break;
             default:
-                $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
+                $sql_sort  = '`album`.`name`, `album`.`disk`, `album`.`year`';
         }
 
-        $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-            "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
+        $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+            "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
 
         if (AmpConfig::get('album_group')) {
-            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                    "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
+            $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+                    "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
         }
         //debug_event('artist.class', 'get_albums ' . $sql, 5);
 
@@ -438,6 +438,7 @@ class Artist extends database_object implements library_item
      * This returns a number of random artists.
      * @param integer $count
      * @param boolean $with_art
+     * @param integer $user_id
      * @return integer[]
      */
     public static function get_random($count = 1, $with_art = false, $user_id = null)

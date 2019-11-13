@@ -395,7 +395,7 @@ class Democratic extends Tmp_Playlist
 
         /* If it's not there, add it and pull ID */
         if (!$results = Dba::fetch_assoc($db_results)) {
-            $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`,`object_id`,`object_type`,`track`) " .
+            $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`, `object_id`, `object_type`, `track`) " .
                 "VALUES (?, ?, ?, ?)";
             Dba::write($sql, array($this->tmp_playlist, $object_id, $object_type, $track));
             $results['id'] = Dba::insert_id();
@@ -403,7 +403,7 @@ class Democratic extends Tmp_Playlist
 
         /* Vote! */
         $time = time();
-        $sql  = "INSERT INTO user_vote (`user`,`object_id`,`date`,`sid`) " .
+        $sql  = "INSERT INTO user_vote (`user`, `object_id`, `date`, `sid`) " .
             "VALUES (?, ?, ?, ?)";
         Dba::write($sql, array(Core::get_global('user')->id, $results['id'], $time, session_id()));
 
@@ -522,7 +522,7 @@ class Democratic extends Tmp_Playlist
         $default  = Dba::escape($data['make_default']);
         $user     = Dba::escape(Core::get_global('user')->id);
 
-        $sql = "INSERT INTO `democratic` (`name`,`base_playlist`,`cooldown`,`level`,`user`,`primary`) " .
+        $sql = "INSERT INTO `democratic` (`name`, `base_playlist`, `cooldown`, `level`, `user`, `primary`) " .
             "VALUES ('$name', '$base', '$cool', '$level', '$user', '$default')";
         $db_results = Dba::write($sql);
 

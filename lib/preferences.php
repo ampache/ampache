@@ -31,7 +31,7 @@
 function update_preferences($pref_id = 0)
 {
     /* Get current keys */
-    $sql = "SELECT `id`,`name`,`type` FROM `preference`";
+    $sql = "SELECT `id`, `name`, `type` FROM `preference`";
 
     /* If it isn't the System Account's preferences */
     if ($pref_id != '-1') {
