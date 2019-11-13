@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { MusicContext } from '../../MusicContext';
+import { MusicContext } from '../../Contexts/MusicContext';
 import { PLAYERSTATUS } from '../../enum/PlayerStatus';
 
 const Sidebar: React.FC = () => {

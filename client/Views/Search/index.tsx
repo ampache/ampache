@@ -4,7 +4,7 @@ import { searchSongs } from '../../logic/Search';
 import { Song } from '../../logic/Song';
 import AmpacheError from '../../logic/AmpacheError';
 import { Link } from 'react-router-dom';
-import { MusicContext } from '../../MusicContext';
+import { MusicContext } from '../../Contexts/MusicContext';
 
 interface SearchProps {
     user: User;

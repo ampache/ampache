@@ -228,16 +228,19 @@ class JSON_Data
             $artist = new Artist($artist_id);
             $artist->format();
 
+            // Build the Art URL, include session
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
+
             $rating     = new Rating($artist_id, 'artist');
             $tag_string = self::tags_string($artist->tags);
 
             array_push($JSON, array(
-                "artist" => array(
                     id => $artist->id,
                     name => $artist->f_full_name,
                     tags => $tag_string,
                     albums => ($artist->albums ?: 0),
                     songs => ($artist->songs ?: 0),
+                    art => $art_url,
                     preciserating => ($rating->get_user_rating() ?: 0),
                     rating => ($rating->get_user_rating() ?: 0),
                     averagerating => ($rating->get_average_rating() ?: 0),
@@ -245,7 +248,7 @@ class JSON_Data
                     summary => $artist->summary,
                     yearformed => $artist->yearformed,
                     placeformed => $artist->placeformed
-                )));
+                ));
         } // end foreach artists
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
