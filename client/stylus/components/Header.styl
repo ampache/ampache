@@ -1,0 +1,96 @@
+header
+  height headerHeight
+  padding 0 5px
+  font-size 15px
+  background-color #000
+  display flex
+  position relative
+  .logoContainer
+    width: 100px
+    height 100%
+    display flex
+    align-items: center;
+    .logo
+      height 100%
+      padding-right 5px
+      img
+        height 100%
+  .search
+    align-self: center;
+    form
+      input
+        border-radius 3px
+        border none
+        padding 10px
+        background-color #3d3d3d
+        color white
+        width 175px
+        transition 0.2s width
+        background-image url('https://img.icons8.com/cotton/64/000000/search.png')
+        background-repeat no-repeat
+        padding-left 35px
+        background-size 24px
+        background-position-y center
+        background-position-x 5px
+        &:focus
+          width 200px
+  .account
+    position absolute
+    right 0
+    display flex
+    align-items center
+    justify-content flex-end
+    height 100%
+    width 150px
+    z-index 2
+    img
+      padding-right 10px
+      width 34px
+      transition 0.2s filter
+      filter invert(1) //You expect me to edit photos?
+
+    @keyframes fadeInFromNone
+      0%
+        display none
+        opacity 0
+      1%
+        display block
+        opacity 0
+      100%
+        display block
+        opacity 1
+
+    &:hover
+      & > img
+        filter invert(56%) sepia(96%) saturate(1211%) hue-rotate(0deg) brightness(103%) contrast(104%); //make orange
+      & > .options
+        display block
+        opacity 1
+        animation: fadeInFromNone 0.3s ease;
+
+    .options
+      animation-direction reverse
+      color white
+      background-color #3d3d3d
+      position absolute
+      top headerHeight
+      padding 10px
+      padding-right 0
+      display none
+      font-size 18px
+      width calc(100% - 10px)
+      &:after
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 100%;
+        right 17px
+        width: 0;
+        height: 0;
+        border-bottom: 10px solid #3d3d3d;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+      li
+        color gray
+        a
+          color linkColor

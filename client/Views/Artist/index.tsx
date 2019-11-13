@@ -78,6 +78,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props) => {
                                     musicContext
                                 );
                             }}
+                            showGoToAlbum={false}
                             key={theAlbum.id}
                         />
                     );
