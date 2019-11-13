@@ -385,7 +385,7 @@ class Album extends database_object implements library_item
         if ($artist == "is null") {
             // no album_artist is set
             // Get associated information from first song only
-            $sql = "SELECT MIN(`song`.`id`) AS `id`, " .
+            $sql = "SELECT MIN(`song`.`id`) AS `song_id`, " .
                    "`artist`.`name` AS `artist_name`, " .
                    "`artist`.`prefix` AS `artist_prefix`, " .
                    "`artist`.`id` AS `artist_id` " .
