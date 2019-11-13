@@ -842,7 +842,7 @@ class Song extends database_object implements media, library_item
                 $sql .= "AND `album` = '" . Dba::escape($dupe['album']) . "' ";
             }
 
-            $sql .= 'ORDER BY `time`,`bitrate`,`size`';
+            $sql .= 'ORDER BY `time`, `bitrate`, `size`';
             $db_results = Dba::read($sql);
 
             while ($item = Dba::fetch_assoc($db_results)) {

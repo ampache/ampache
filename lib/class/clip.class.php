@@ -90,7 +90,7 @@ class Clip extends Video
         }
         if ($artist_id || $song_id) {
             debug_event('clips.class', 'insert ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
-            $sql = "INSERT INTO `clip` (`id`,`artist`,`song`) " .
+            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) " .
           "VALUES (?, ?, ?)";
             Dba::write($sql, array($data['id'], $artist_id, $song_id));
         }
