@@ -1,67 +1,68 @@
-import React from 'react';
-import { getRandomAlbums, Album } from '../../logic/Album';
+import React, { useContext, useEffect, useState } from 'react';
+import { getRandomAlbums, Album, getAlbumSongs } from '../../logic/Album';
 import AlbumDisplay from '../components/AlbumDisplay';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
+import { MusicContext } from '../../MusicContext';
+import { playSongFromAlbum } from '../Helpers/playAlbumHelper';
 
-interface HomeProps {
+interface HomeViewProps {
     user: User;
 }
 
-interface HomeState {
-    randomAlbums: Album[];
-    error: Error | AmpacheError;
-}
+const HomeView: React.FC<HomeViewProps> = (props) => {
+    const musicContext = useContext(MusicContext);
 
-export default class HomeView extends React.PureComponent<
-    HomeProps,
-    HomeState
-> {
-    constructor(props) {
-        super(props);
+    const [randomAlbums, setRandomAlbums] = useState<Album[]>([]);
+    const [error, setError] = useState<Error | AmpacheError>(null);
 
-        this.state = {
-            randomAlbums: [],
-            error: null
-        };
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         getRandomAlbums(
-            this.props.user.username,
+            props.user.username,
             6,
-            this.props.user.authKey,
+            props.user.authKey,
             'http://localhost:8080'
         )
             .then((albums: Album[]) => {
-                this.setState({ randomAlbums: albums });
+                setRandomAlbums(albums);
             })
             .catch((error) => {
-                this.setState({ error });
+                setError(error);
             });
-    }
+    }, []);
 
-    render() {
-        if (this.state.error) {
-            return (
-                <div className='albumPage'>
-                    <span>Error: {this.state.error.message}</span>
-                </div>
-            );
-        }
+    if (error) {
         return (
-            <div className='homePage'>
-                <section>
-                    <h1>Random Albums</h1>
-                    <div className='randomAlbums'>
-                        {this.state.randomAlbums.map((album) => {
-                            return (
-                                <AlbumDisplay album={album} key={album.id} />
-                            );
-                        })}
-                    </div>
-                </section>
+            <div className='albumPage'>
+                <span>Error: {error.message}</span>
             </div>
         );
     }
-}
+    return (
+        <div className='homePage'>
+            <section>
+                <h1>Random Albums</h1>
+                <div className='randomAlbums'>
+                    {randomAlbums.map((theAlbum) => {
+                        return (
+                            <AlbumDisplay
+                                album={theAlbum}
+                                playSongFromAlbum={(albumID, random) => {
+                                    playSongFromAlbum(
+                                        albumID,
+                                        random,
+                                        props.user.authKey,
+                                        musicContext
+                                    );
+                                }}
+                                key={theAlbum.id}
+                            />
+                        );
+                    })}
+                </div>
+            </section>
+        </div>
+    );
+};
+
+export default HomeView;

@@ -6,7 +6,7 @@ import AmpacheError from '../../logic/AmpacheError';
 import { Link } from 'react-router-dom';
 import { MusicContext } from '../../MusicContext';
 
-interface AlbumProps {
+interface AlbumViewProps {
     user: User;
     match: {
         params: {
@@ -15,7 +15,7 @@ interface AlbumProps {
     };
 }
 
-const AlbumView: React.FC<AlbumProps> = (props) => {
+const AlbumView: React.FC<AlbumViewProps> = (props) => {
     const musicContext = useContext(MusicContext);
 
     const [theAlbum, setTheAlbum] = useState<Album>(null);
