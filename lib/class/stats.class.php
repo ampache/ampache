@@ -98,14 +98,15 @@ class Stats
      * @param integer $oid
      * @param integer $user
      */
-    public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null)
+    public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
     {
         if ($user < 1) {
             debug_event('stats.class', 'Invalid user given ' . $user, 3);
 
             return false;
         }
-        if (!self::is_already_inserted($input_type, $oid, $user, $count_type, $date)) {
+        $date;
+        if (!self::is_already_inserted($input_type, $oid, $user, $count_type, $date, $song_time)) {
             $type = self::validate_type($input_type);
 
             $latitude  = null;
@@ -149,12 +150,12 @@ class Stats
      * @param integer $oid
      * @return boolean
      */
-    public static function is_already_inserted($type, $oid, $user, $count_type = 'stream', $date = null)
+    public static function is_already_inserted($type, $oid, $user, $count_type = 'stream', $date = null, $song_time = 0)
     {
-        // We look 10 seconds in the past
-        $delay = time() - 10;
+        // We look 10 + song time seconds in the past
+        $delay = time() - (10 + $song_time);
         if ($date) {
-            $delay = $date - 10;
+            $delay = $date - (10 + $song_time);
         }
 
         $sql = "SELECT `id` FROM `object_count` ";
