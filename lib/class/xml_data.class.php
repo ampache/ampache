@@ -607,8 +607,7 @@ class XML_Data
             if (in_array("songs", $include)) {
                 $songs = self::songs($album->get_songs(), array(), false);
             } else {
-                    $songs = $album->song_count;
-                }
+                $songs = $album->song_count;
             }
 
             $string .= "\t<year>" . $album->year . "</year>\n" .
