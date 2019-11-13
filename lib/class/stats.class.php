@@ -130,7 +130,7 @@ class Stats
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $db_results = Dba::write($sql, array($type, $oid, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-            if (Core::is_media($type) && $count_type === 'stream') {
+            if ($type = 'song' && $count_type === 'stream') {
                 Useractivity::post_activity($user, 'play', $type, $oid, $date);
             }
 
