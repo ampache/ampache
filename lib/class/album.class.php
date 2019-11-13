@@ -373,7 +373,7 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
+            $sqlw .= "GROUP BY `artist`.`name`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
         } else {
             $sqlw .= "GROUP BY `song`.`artist` ";
         }
@@ -384,12 +384,14 @@ class Album extends database_object implements library_item
 
         // Get associated information from first song only
         $sql = "SELECT " .
-                "`song`.`catalog` AS `catalog_id`," .
+                "`song`.`catalog` AS `catalog_id`, " .
                 "`artist`.`name` AS `artist_name`, " .
                 "`artist`.`prefix` AS `artist_prefix`, " .
                 "`artist`.`id` AS `artist_id` ";
         if ($this->allow_group_disks) {
             $sql .= "FROM `album` ";
+            $sqlj .= "INNER JOIN `song` " .
+                "ON `album`.`id`=`song`.`album` ";
             $sqlj .= "INNER JOIN `artist` " .
                 "ON `artist`.`id`=`song`.`artist` ";
         } else {

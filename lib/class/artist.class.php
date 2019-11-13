@@ -309,11 +309,11 @@ class Artist extends database_object implements library_item
                 $sql_sort  = '`album`.`name`,`album`.`disk`,`album`.`year`';
         }
 
-        $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+        $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
             "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`,`album`.`mbid` ORDER BY $sql_sort";
 
         if (AmpConfig::get('album_group')) {
-            $sql = "SELECT `album`.`id`, `album`.`release_type`,`album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+            $sql = "SELECT MAX(`album`.`id`), `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                     "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`name`, `album`.`album_artist`,`album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
         }
         //debug_event('artist.class', 'get_albums ' . $sql, 5);
