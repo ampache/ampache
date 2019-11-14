@@ -368,7 +368,6 @@ class Api
     public static function goodbye($input)
     {
         if (!self::check_parameter($input, array('type'), 'goodbye')) {
-
             return false;
         }
         // Check and see if we should destroy the api session (done if valid session is passed)
@@ -422,7 +421,6 @@ class Api
     public static function get_indexes($input)
     {
         if (!self::check_parameter($input, array('type'), 'get_indexes')) {
-
             return false;
         }
         $type = (string) $input['type'];
@@ -1029,7 +1027,6 @@ class Api
     public static function playlist_edit($input)
     {
         if (!self::check_parameter($input, array('name', 'type'), 'playlist_edit')) {
-
             return false;
         }
         $name = $input['name'];
@@ -1145,7 +1142,6 @@ class Api
     public static function search_songs($input)
     {
         if (!self::check_parameter($input, array('filter'), 'search_songs')) {
-
             return false;
         }
         $array                    = array();
@@ -1179,7 +1175,6 @@ class Api
     public static function videos($input)
     {
         if (!self::check_parameter($input, array('filter'), 'videos')) {
-
             return false;
         }
         self::$browse->reset_filters();
@@ -1233,7 +1228,6 @@ class Api
     public static function stats($input)
     {
         if (!self::check_parameter($input, array('type', 'filter'), 'stats')) {
-
             return false;
         }
         // set a default user
@@ -1335,7 +1329,6 @@ class Api
     public static function user($input)
     {
         if (!self::check_parameter($input, array('username'), 'user')) {
-
             return false;
         }
         $username = $input['username'];
@@ -1368,7 +1361,6 @@ class Api
     public static function user_create($input)
     {
         if (!self::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
-
             return false;
         }
         $username = $input['username'];
@@ -1411,7 +1403,6 @@ class Api
     public static function user_update($input)
     {
         if (!self::check_parameter($input, array('username'), 'user_update')) {
-
             return false;
         }
         $username   = $input['username'];
@@ -1488,7 +1479,6 @@ class Api
     public static function user_delete($input)
     {
         if (!self::check_parameter($input, array('username'), 'user_delete')) {
-
             return false;
         }
         $username = $input['username'];
@@ -1519,7 +1509,6 @@ class Api
     {
         if (AmpConfig::get('sociable')) {
             if (!self::check_parameter($input, array('username'), 'followers')) {
-
                 return false;
             }
             $username = $input['username'];
@@ -1552,7 +1541,6 @@ class Api
     {
         if (AmpConfig::get('sociable')) {
             if (!self::check_parameter($input, array('username'), 'following')) {
-
                 return false;
             }
             $username = $input['username'];
@@ -1586,7 +1574,6 @@ class Api
     {
         if (AmpConfig::get('sociable')) {
             if (!self::check_parameter($input, array('username'), 'toggle_follow')) {
-
                 return false;
             }
             $username = $input['username'];
@@ -1651,7 +1638,6 @@ class Api
     public static function rate($input)
     {
         if (!self::check_parameter($input, array('type', 'id', 'rating'), 'rate')) {
-
             return false;
         }
         ob_end_clean();
@@ -1698,7 +1684,6 @@ class Api
     public static function flag($input)
     {
         if (!self::check_parameter($input, array('type', 'id', 'flag'), 'flag')) {
-
             return false;
         }
         ob_end_clean();
@@ -1752,7 +1737,6 @@ class Api
     public static function record_play($input)
     {
         if (!self::check_parameter($input, array('id', 'user'), 'record_play')) {
-
             return false;
         }
         ob_end_clean();
@@ -1806,7 +1790,6 @@ class Api
     public static function scrobble($input)
     {
         if (!self::check_parameter($input, array('song', 'artist', 'album'), 'scrobble')) {
-
             return false;
         }
         ob_end_clean();
@@ -1877,7 +1860,6 @@ class Api
     public static function catalog_action($input)
     {
         if (!self::check_parameter($input, array('catalog', 'task'), 'catalog_action')) {
-
             return false;
         }
         $task = (string) $input['task'];
@@ -1911,7 +1893,6 @@ class Api
     {
         if (AmpConfig::get('sociable')) {
             if (!self::check_parameter($input, array('username'), 'timeline')) {
-
                 return false;
             }
             $username = $input['username'];
@@ -1975,7 +1956,6 @@ class Api
     public static function update_from_tags($input)
     {
         if (!self::check_parameter($input, array('type', 'id'), 'update_from_tags')) {
-
             return false;
         }
         $type   = (string) $input['type'];
@@ -2013,7 +1993,6 @@ class Api
     public static function update_artist_info($input)
     {
         if (!self::check_parameter($input, array('id'), 'update_artist_info')) {
-
             return false;
         }
         $object = (int) $input['id'];
@@ -2051,7 +2030,6 @@ class Api
     public static function update_art($input)
     {
         if (!self::check_parameter($input, array('type', 'id'), 'update_art')) {
-
             return false;
         }
         $type      = (string) $input['type'];
@@ -2100,7 +2078,6 @@ class Api
     public static function stream($input)
     {
         if (!self::check_parameter($input, array('id', 'type'), 'stream')) {
-
             return false;
         }
         $fileid  = $input['id'];
@@ -2157,7 +2134,6 @@ class Api
     public static function download($input)
     {
         if (!self::check_parameter($input, array('id', 'type'), 'download')) {
-
             return false;
         }
         $fileid   = $input['id'];
@@ -2202,7 +2178,6 @@ class Api
     public static function get_art($input)
     {
         if (!self::check_parameter($input, array('id', 'type'), 'get_art')) {
-
             return false;
         }
         $object_id = $input['id'];
