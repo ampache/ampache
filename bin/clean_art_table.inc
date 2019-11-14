@@ -28,17 +28,20 @@ require_once $prefix . '/lib/init.php';
 // Turn off output buffering we don't need it for a command line script
 ob_end_clean(); 
 
-echo "This file will clean the image table for items that don't fit into set dimensions\n";
-
+echo "This file cleans the image table for items that don't fit into set dimensions\n";
+$run = true;
 if (((!AmpConfig::get('album_art_min_width')) && (!AmpConfig::get('album_art_max_width'))) ||
     ((!AmpConfig::get('album_art_min_height')) && (!AmpConfig::get('album_art_max_height')))) {
-    echo "A minimum OR maximum height/width must be specified in the config\n";
+    echo "\nA minimum OR maximum height/width must be specified in the config\n\n";
     echo "Minimum Dimensions - album_art_min_width AND album_art_min_height\n\n";
     echo "Maximum Dimensions - album_art_max_width AND album_art_max_height\n";
+    $run = false;
 }
 
-if (Art::clean_art_by_dimension()) {
-    echo "Clean Completed\n";
-} else {
-    echo "Clean Failed. Check your logs.\n";
+if ($run) {
+    if (Art::clean_art_by_dimension()) {
+        echo "Clean Completed\n";
+    } else {
+        echo "Clean Failed. Check your logs.\n";
+    }
 }
