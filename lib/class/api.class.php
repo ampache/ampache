@@ -132,10 +132,13 @@ class Api
      * @param string[] $parameters e.g. array('auth','type')
      * @return boolean
      */
-    private static function check_parameter($input, $parameters)
+    private static function check_parameter($input, $parameters, $method = '')
     {
         foreach ($parameters as $parameter) {
             if (empty($input[$parameter])) {
+                debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
+                echo XML_Data::error('401', T_("Missing mandatory parameter") . " '" . $parameter . "'");
+
                 return false;
             }
         }
@@ -364,10 +367,7 @@ class Api
      */
     public static function goodbye($input)
     {
-        if (!self::check_parameter($input, array('type'))) {
-            debug_event('api.class', "'type' required on get_indexes function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type'");
-
+        if (!self::check_parameter($input, array('type'), 'goodbye')) {
             return false;
         }
         // Check and see if we should destroy the api session (done if valid session is passed)
@@ -420,10 +420,7 @@ class Api
      */
     public static function get_indexes($input)
     {
-        if (!self::check_parameter($input, array('type'))) {
-            debug_event('api.class', "'type' required on get_indexes function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type'");
-
+        if (!self::check_parameter($input, array('type'), 'get_indexes')) {
             return false;
         }
         $type = (string) $input['type'];
@@ -1029,10 +1026,7 @@ class Api
      */
     public static function playlist_edit($input)
     {
-        if (!self::check_parameter($input, array('name', 'type'))) {
-            debug_event('api.class', "'name', 'type' required on playlist_edit function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'name', 'type'");
-
+        if (!self::check_parameter($input, array('name', 'type'), 'playlist_edit')) {
             return false;
         }
         $name = $input['name'];
@@ -1147,10 +1141,7 @@ class Api
      */
     public static function search_songs($input)
     {
-        if (!self::check_parameter($input, array('filter'))) {
-            debug_event('api.class', "'filter' required on search_songs function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'filter'");
-
+        if (!self::check_parameter($input, array('filter'), 'search_songs')) {
             return false;
         }
         $array                    = array();
@@ -1183,10 +1174,7 @@ class Api
      */
     public static function videos($input)
     {
-        if (!self::check_parameter($input, array('filter'))) {
-            debug_event('api.class', "'filter' required on videos function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'filter'");
-
+        if (!self::check_parameter($input, array('filter'), 'videos')) {
             return false;
         }
         self::$browse->reset_filters();
@@ -1239,10 +1227,7 @@ class Api
      */
     public static function stats($input)
     {
-        if (!self::check_parameter($input, array('type', 'filter'))) {
-            debug_event('api.class', "'type' required on stats function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type', 'filter'");
-
+        if (!self::check_parameter($input, array('type', 'filter'), 'stats')) {
             return false;
         }
         // set a default user
@@ -1343,10 +1328,7 @@ class Api
      */
     public static function user($input)
     {
-        if (!self::check_parameter($input, array('username'))) {
-            debug_event('api.class', "'username' required on user function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
-
+        if (!self::check_parameter($input, array('username'), 'user')) {
             return false;
         }
         $username = $input['username'];
@@ -1378,10 +1360,7 @@ class Api
      */
     public static function user_create($input)
     {
-        if (!self::check_parameter($input, array('username', 'password', 'email'))) {
-            debug_event('api.class', "'username', 'password', 'email' required on user_create function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username', 'password', 'email'");
-
+        if (!self::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
             return false;
         }
         $username = $input['username'];
@@ -1423,10 +1402,7 @@ class Api
      */
     public static function user_update($input)
     {
-        if (!self::check_parameter($input, array('username'))) {
-            debug_event('api.class', "'username' required on user_update function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
-
+        if (!self::check_parameter($input, array('username'), 'user_update')) {
             return false;
         }
         $username   = $input['username'];
@@ -1502,10 +1478,7 @@ class Api
      */
     public static function user_delete($input)
     {
-        if (!self::check_parameter($input, array('username'))) {
-            debug_event('api.class', "'username' required on user_delete function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
-
+        if (!self::check_parameter($input, array('username'), 'user_delete')) {
             return false;
         }
         $username = $input['username'];
@@ -1535,10 +1508,7 @@ class Api
     public static function followers($input)
     {
         if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter($input, array('username'))) {
-                debug_event('api.class', "'username' required on followers function call.", 2);
-                echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
-
+            if (!self::check_parameter($input, array('username'), 'followers')) {
                 return false;
             }
             $username = $input['username'];
@@ -1570,10 +1540,7 @@ class Api
     public static function following($input)
     {
         if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter($input, array('username'))) {
-                debug_event('api.class', "'username' required on following function call.", 2);
-                echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
-
+            if (!self::check_parameter($input, array('username'), 'following')) {
                 return false;
             }
             $username = $input['username'];
@@ -1606,10 +1573,7 @@ class Api
     public static function toggle_follow($input)
     {
         if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter($input, array('username'))) {
-                debug_event('api.class', "'username' required on toggle_follow function call.", 2);
-                echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
-
+            if (!self::check_parameter($input, array('username'), 'toggle_follow')) {
                 return false;
             }
             $username = $input['username'];
@@ -1673,10 +1637,7 @@ class Api
      */
     public static function rate($input)
     {
-        if (!self::check_parameter($input, array('type', 'id', 'rating'))) {
-            debug_event('api.class', "'type', 'id', 'rating' required on rate function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type', 'id', 'rating'");
-
+        if (!self::check_parameter($input, array('type', 'id', 'rating'), 'rate')) {
             return false;
         }
         ob_end_clean();
@@ -1722,10 +1683,7 @@ class Api
      */
     public static function flag($input)
     {
-        if (!self::check_parameter($input, array('type', 'id', 'flag'))) {
-            debug_event('api.class', "'type', 'id', 'flag' required on flag function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type', 'id', 'flag'");
-
+        if (!self::check_parameter($input, array('type', 'id', 'flag'), 'flag')) {
             return false;
         }
         ob_end_clean();
@@ -1778,10 +1736,7 @@ class Api
      */
     public static function record_play($input)
     {
-        if (!self::check_parameter($input, array('id', 'user'))) {
-            debug_event('api.class', "'id', 'user' required on record_play function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'user'");
-
+        if (!self::check_parameter($input, array('id', 'user'), 'record_play')) {
             return false;
         }
         ob_end_clean();
@@ -1834,10 +1789,7 @@ class Api
      */
     public static function scrobble($input)
     {
-        if (!self::check_parameter($input, array('song', 'artist', 'album'))) {
-            debug_event('api.class', "'song', 'artist', 'album' required on scrobble function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'song', 'artist', 'album'");
-
+        if (!self::check_parameter($input, array('song', 'artist', 'album'), 'scrobble')) {
             return false;
         }
         ob_end_clean();
@@ -1907,10 +1859,7 @@ class Api
      */
     public static function catalog_action($input)
     {
-        if (!self::check_parameter($input, array('catalog', 'task'))) {
-            debug_event('api.class', "'catalog', 'task' required on catalog_action function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'catalog', 'task'");
-
+        if (!self::check_parameter($input, array('catalog', 'task'), 'catalog_action')) {
             return false;
         }
         $task = (string) $input['task'];
@@ -1943,10 +1892,7 @@ class Api
     public static function timeline($input)
     {
         if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter($input, array('username'))) {
-                debug_event('api.class', "'username' required on timeline function call.", 2);
-                echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'username'");
-
+            if (!self::check_parameter($input, array('username'), 'timeline')) {
                 return false;
             }
             $username = $input['username'];
@@ -2009,10 +1955,7 @@ class Api
      */
     public static function update_from_tags($input)
     {
-        if (!self::check_parameter($input, array('type', 'id'))) {
-            debug_event('api.class', "'type', 'id' required on update_from_tags function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type', 'id'");
-
+        if (!self::check_parameter($input, array('type', 'id'), 'update_from_tags')) {
             return false;
         }
         $type   = (string) $input['type'];
@@ -2049,10 +1992,7 @@ class Api
      */
     public static function update_artist_info($input)
     {
-        if (!self::check_parameter($input, array('id'))) {
-            debug_event('api.class', "'id' required on update_from_tags function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id'");
-
+        if (!self::check_parameter($input, array('id'), 'update_artist_info')) {
             return false;
         }
         $object = (int) $input['id'];
@@ -2089,10 +2029,7 @@ class Api
      */
     public static function update_art($input)
     {
-        if (!self::check_parameter($input, array('type', 'id'))) {
-            debug_event('api.class', "'type', 'id' required on update_from_tags function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type', 'id'");
-
+        if (!self::check_parameter($input, array('type', 'id'), 'update_art')) {
             return false;
         }
         $type      = (string) $input['type'];
@@ -2131,7 +2068,7 @@ class Api
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
      *
      * @param array $input
-     * id      = (string) $song_id / $podcast_episode_id
+     * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song'|'podcast'
      * bitrate = (integer) max bitrate for transcoding
      * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
@@ -2140,10 +2077,7 @@ class Api
      */
     public static function stream($input)
     {
-        if (!self::check_parameter($input, array('id', 'type'))) {
-            debug_event('api.class', "'id', 'type' required on stream function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'type'");
-
+        if (!self::check_parameter($input, array('id', 'type'), 'stream')) {
             return false;
         }
         $fileid  = $input['id'];
@@ -2193,16 +2127,13 @@ class Api
      * Downloads a given media file. set format=raw to download the full file
      *
      * @param array $input
-     * id     = (string) $song_id / $podcast_episode_id
+     * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song'|'podcast'
      * format = (string) 'mp3'|'ogg', etc //optional)
      */
     public static function download($input)
     {
-        if (!self::check_parameter($input, array('id', 'type'))) {
-            debug_event('api.class', "'id', 'type' required on download function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'type'");
-
+        if (!self::check_parameter($input, array('id', 'type'), 'download')) {
             return false;
         }
         $fileid   = $input['id'];
@@ -2246,10 +2177,7 @@ class Api
      */
     public static function get_art($input)
     {
-        if (!self::check_parameter($input, array('id', 'type'))) {
-            debug_event('api.class', "'id', 'type' required on get_art function call.", 2);
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'id', 'type'");
-
+        if (!self::check_parameter($input, array('id', 'type'), 'get_art')) {
             return false;
         }
         $object_id = $input['id'];
