@@ -32,9 +32,9 @@ echo "This file cleans the image table for items that don't fit into set dimensi
 $run = true;
 if (((!AmpConfig::get('album_art_min_width')) && (!AmpConfig::get('album_art_max_width'))) ||
     ((!AmpConfig::get('album_art_min_height')) && (!AmpConfig::get('album_art_max_height')))) {
-    echo "\nA minimum OR maximum height/width must be specified in the config\n\n";
-    echo "Minimum Dimensions - album_art_min_width AND album_art_min_height\n\n";
-    echo "Maximum Dimensions - album_art_max_width AND album_art_max_height\n";
+    echo "\nERROR:\n    A minimum OR maximum height/width must be specified in the config\n\n";
+    echo "Minimum Dimensions: album_art_min_width AND album_art_min_height\n";
+    echo "Maximum Dimensions: album_art_max_width AND album_art_max_height\n\n";
     $run = false;
 }
 
