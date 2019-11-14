@@ -438,7 +438,7 @@ class Album extends database_object implements library_item
      */
     public function can_edit($user = null)
     {
-        if ($user == null) {
+        if ($user === null) {
             $user = Core::get_global('user')->id;
         }
 

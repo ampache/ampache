@@ -103,7 +103,7 @@ class Bookmark extends database_object
     public static function get_bookmarks_ids($user = null)
     {
         $ids = array();
-        if ($user == null) {
+        if ($user === null) {
             $user = Core::get_global('user');
         }
 
