@@ -466,21 +466,24 @@ $t_logout    = T_('Log out'); ?>
             <script>
             $('#sidebar-header').click(function(){
                 var newstate;
-                if ($('#sidebar-header').hasClass("sidebar-header-collapsed")) {
+                $('#sidebar').hide(500, function () {
+                    if ($('#sidebar-header').hasClass("sidebar-header-collapsed")) {
                     newstate = "expanded";
                     $('#sidebar').removeClass("sidebar-collapsed");
                     $("#content").removeClass("content-left-wild");
-                        $('#sidebar-content-light').removeClass("sidebar-content-light-collapsed");
-                        $('#sidebar-content').removeClass("sidebar-content-collapsed");
-                        $('#sidebar-header').removeClass("sidebar-header-collapsed");
-                    } else {
+                    $('#sidebar-content-light').removeClass("sidebar-content-light-collapsed");
+                    $('#sidebar-content').removeClass("sidebar-content-collapsed");
+                    $('#sidebar-header').removeClass("sidebar-header-collapsed");
+                } else {
                     newstate = "collapsed"
                     $('#sidebar').addClass("sidebar-collapsed");
                     $("#content").addClass("content-left-wild");
-                        $('#sidebar-content').addClass("sidebar-content-collapsed");
-                        $('#sidebar-header').addClass("sidebar-header-collapsed");
-                        $('#sidebar-content-light').addClass("sidebar-content-light-collapsed");
-                    }
+                    $('#sidebar-content').addClass("sidebar-content-collapsed");
+                    $('#sidebar-header').addClass("sidebar-header-collapsed");
+                    $('#sidebar-content-light').addClass("sidebar-content-light-collapsed");
+                }
+                })
+                $('#sidebar').show(500);
 
                 $.cookie('sidebar_state', newstate, { expires: 30, path: '/'});
             });
@@ -491,7 +494,7 @@ $t_logout    = T_('Log out'); ?>
             </div>
 
             <!-- Tiny little div, used to cheat the system -->
-            <div id="ajax-loading" class="hidden"><?php echo T_('Loading') . ' . . .'; ?></div>
+            <div id="ajax-loading" class="inactive"><?php echo T_('Loading') . ' . . .'; ?></div>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 

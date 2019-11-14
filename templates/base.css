@@ -278,10 +278,6 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     padding: 0;
 }
 
-.collapsed > ul {
-    display: none;
-}
-
 .expanded .header-img {
     float: right;
     margin-top: 5px;

@@ -185,7 +185,7 @@ div#autoupdate > span {
     width: 120px;
 }
 
-#ajax-loading.hidden {
+.inactive {
     display: none;
 }
 

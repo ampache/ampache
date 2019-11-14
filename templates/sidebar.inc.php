@@ -72,16 +72,21 @@
 <script>
 $(function() {
     $(".header").click(function () {
-
             $header = $(this);
             //getting the next element
+            $content = $header.next();
+            //getting the parent element
             $li = $header.parent();
-            $li.toggleClass("expanded collapsed");
-            //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
-            var sbstate = "expanded";
-            if ($header.children(".header-img").hasClass("collapsed")) {
-                sbstate = "collapsed";
-            }
+            $content.slideToggle(500, function () {
+                $li.toggleClass("expanded collapsed");
+                //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+                var sbstate = "expanded";
+                if ($header.children(".header-img").hasClass("collapsed")) {
+                    sbstate = "collapsed";
+                }
+            })
+
+            $content.height($content.height());
             $.cookie('sb_' + $header.children(".header-img").attr('id'), sbstate, { expires: 30, path: '/' });
         });
     });
