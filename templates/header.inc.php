@@ -56,10 +56,8 @@ $t_logout    = T_('Log out'); ?>
                 }
             } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
-
-        <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><?php echo AmpConfig::get('site_title') . ' - ' . $location['title']; ?></title>
 
         <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('jquery-editdialog.css'); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
@@ -69,6 +67,7 @@ $t_logout    = T_('Log out'); ?>
         <link rel="stylesheet" href="<?php echo $web_path; ?>/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.min.css" type="text/css" media="screen" />
+        <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
 
         <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
@@ -359,11 +358,9 @@ $t_logout    = T_('Log out'); ?>
         <div id="notification" class="notification-out"><?php echo UI::get_icon('info', T_('Information')); ?><span id="notification-content"></span></div>
         <div id="maincontainer">
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
-                <h1 id="headerlogo">
-                  <a href="<?php echo $web_path; ?>/index.php">
-                    <img src="<?php echo UI::get_logo_url(); ?>" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
-                  </a>
-                </h1>
+                <a href="<?php echo $web_path; ?>/index.php">
+                <img id="headerlogo" src="<?php echo UI::get_logo_url(); ?>" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
+                </a>
                 <div id="headerbox">
                     <?php
                         UI::show_box_top('', 'box box_headerbox');
@@ -468,30 +465,25 @@ $t_logout    = T_('Log out'); ?>
             <!-- Handle collapsed visibility -->
             <script>
             $('#sidebar-header').click(function(){
-                var newstate = "collapsed";
-                if ($('#sidebar-header').hasClass("sidebar-header-collapsed")) {
+                var newstate;
+                $('#sidebar').hide(500, function () {
+                    if ($('#sidebar-header').hasClass("sidebar-header-collapsed")) {
                     newstate = "expanded";
-                }
-
-                if (newstate != "expanded") {
-                    $("#content").addClass("content-left-wild", 600);
+                    $('#sidebar').removeClass("sidebar-collapsed");
+                    $("#content").removeClass("content-left-wild");
+                    $('#sidebar-content-light').removeClass("sidebar-content-light-collapsed");
+                    $('#sidebar-content').removeClass("sidebar-content-collapsed");
+                    $('#sidebar-header').removeClass("sidebar-header-collapsed");
                 } else {
-                    $("#content").removeClass("content-left-wild", 1000);
+                    newstate = "collapsed"
+                    $('#sidebar').addClass("sidebar-collapsed");
+                    $("#content").addClass("content-left-wild");
+                    $('#sidebar-content').addClass("sidebar-content-collapsed");
+                    $('#sidebar-header').addClass("sidebar-header-collapsed");
+                    $('#sidebar-content-light').addClass("sidebar-content-light-collapsed");
                 }
-
-                $('#sidebar').hide(500, function() {
-                    if (newstate == "expanded") {
-                        $('#sidebar-content-light').removeClass("sidebar-content-light-collapsed");
-                        $('#sidebar-content').removeClass("sidebar-content-collapsed");
-                        $('#sidebar-header').removeClass("sidebar-header-collapsed");
-                    } else {
-                        $('#sidebar-content').addClass("sidebar-content-collapsed");
-                        $('#sidebar-header').addClass("sidebar-header-collapsed");
-                        $('#sidebar-content-light').addClass("sidebar-content-light-collapsed");
-                    }
-
-                    $('#sidebar').show(500);
-                });
+                })
+                $('#sidebar').show(500);
 
                 $.cookie('sidebar_state', newstate, { expires: 30, path: '/'});
             });
@@ -502,7 +494,7 @@ $t_logout    = T_('Log out'); ?>
             </div>
 
             <!-- Tiny little div, used to cheat the system -->
-            <div id="ajax-loading"><?php echo T_('Loading') . ' . . .'; ?></div>
+            <div id="ajax-loading" class="inactive"><?php echo T_('Loading') . ' . . .'; ?></div>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
@@ -510,10 +502,9 @@ $t_logout    = T_('Log out'); ?>
 
                 <?php
                     if (Access::check('interface', '100')) {
-                        echo '<div id=update_notify>';
+                        echo '<div id="update_notify">';
                         if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
                             AutoUpdate::show_new_version();
-                            echo '<br />';
                         }
                         $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
 

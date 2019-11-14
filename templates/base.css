@@ -278,24 +278,20 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     padding: 0;
 }
 
-.expanded {
+.expanded .header-img {
     float: right;
     margin-top: 5px;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 
-.collapsed {
+.collapsed .header-img {
     float: right;
     margin-top: 5px;
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
+}
+
+#localplay_disabled {
+    display: none;
 }
 
 #notification {

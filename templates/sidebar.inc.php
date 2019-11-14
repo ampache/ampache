@@ -21,45 +21,43 @@
  */
  ?>
 <ul id="sidebar-tabs">
-<?php
-if (User::is_registered()) {
-     if (!$_SESSION['state']['sidebar_tab']) {
-         $_SESSION['state']['sidebar_tab'] = 'home';
-     }
-     $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
-
-     // List of buttons ( id, title, icon, access level)
-     $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
-     if (AmpConfig::get('allow_localplay_playback')) {
-         $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
-     }
-     $sidebar_items[] = array('id' => 'preferences', 'title' => T_('Preferences'), 'icon' => 'edit', 'access' => 5);
-     $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
-
-     $web_path = AmpConfig::get('web_path'); ?>
     <?php
-    foreach ($sidebar_items as $item) {
-        if (Access::check('interface', $item['access'])) {
-            $active    = ('sidebar_' . $item['id'] == $class_name) ? ' active' : '';
-            $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'"; ?>
-        <li <?php print_r($li_params); ?>>
-    <?php
-            print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));
-            if ($item['id'] == $_SESSION['state']['sidebar_tab']) { ?>
-            <div id="sidebar-page" class="sidebar-page-float">
-                <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'); ?>
-            </div>
-    <?php
-            } ?>
-        </li>
-    <?php
+    if (User::is_registered()) {
+        if (!$_SESSION['state']['sidebar_tab']) {
+            $_SESSION['state']['sidebar_tab'] = 'home';
         }
-    }
- } else { ?>
+        $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
+
+        // List of buttons ( id, title, icon, access level)
+        $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
+        if (AmpConfig::get('allow_localplay_playback')) {
+            $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
+        }
+        $sidebar_items[] = array('id' => 'preferences', 'title' => T_('Preferences'), 'icon' => 'edit', 'access' => 5);
+        $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
+
+        $web_path = AmpConfig::get('web_path'); ?>
+        <?php
+            foreach ($sidebar_items as $item) {
+                if (Access::check('interface', $item['access'])) {
+                    $active    = ('sidebar_' . $item['id'] == $class_name) ? ' active' : '';
+                    $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'"; ?>
+                <li <?php print_r($li_params); ?>>
+                    <?php
+                                print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));
+                    if ($item['id'] == $_SESSION['state']['sidebar_tab']) { ?>
+                        <div id="sidebar-page" class="sidebar-page-float">
+                            <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'); ?>
+                        </div>
+                    <?php } ?>
+                </li>
+        <?php
+                }
+            }
+    } else { ?>
         <li id="sb_tab_home" class="sb1">
             <div id="sidebar-page" class="sidebar-page-float">
-            <?php
-                require_once AmpConfig::get('prefix') . UI::find_template('sidebar_home.inc.php'); ?>
+                <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar_home.inc.php'); ?>
             </div>
         </li>
 <?php
@@ -67,53 +65,55 @@ if (User::is_registered()) {
         <li id="sb_tab_logout" class="sb1">
             <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" class="nohtml" >
             <?php echo UI::get_icon('logout', $t_logout); ?>
-            </a>
-</li>
+        </a>
+    </li>
 </ul>
 
 <script>
 $(function() {
     $(".header").click(function () {
+            $header = $(this);
+            //getting the next element
+            $content = $header.next();
+            //getting the parent element
+            $li = $header.parent();
+            $content.slideToggle(500, function () {
+                $li.toggleClass("expanded collapsed");
+                //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+                var sbstate = "expanded";
+                if ($header.children(".header-img").hasClass("collapsed")) {
+                    sbstate = "collapsed";
+                }
+            })
 
-        $header = $(this);
-        //getting the next element
-        $content = $header.next();
-        //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
-        $content.slideToggle(500, function() {
-            $header.children(".header-img").toggleClass("expanded collapsed");
-            var sbstate = "expanded";
-            if ($header.children(".header-img").hasClass("collapsed")) {
-                sbstate = "collapsed";
-            }
-            $.cookie('sb_' + $header.children(".header-img").attr('id'), sbstate, { expires: 30, path: '/'});
+            $content.height($content.height());
+            $.cookie('sb_' + $header.children(".header-img").attr('id'), sbstate, { expires: 30, path: '/' });
         });
-
     });
-});
 
-$(document).ready(function() {
-    // Get a string of all the cookies.
-    var cookieArray = document.cookie.split(";");
-    var result = new Array();
-    // Create a key/value array with the individual cookies.
-    for (var elem in cookieArray) {
-        var temp = cookieArray[elem].split("=");
-        // We need to trim whitespaces.
-        temp[0] = $.trim(temp[0]);
-        temp[1] = $.trim(temp[1]);
-        // Only take sb_* cookies (= sidebar cookies)
-        if (temp[0].substring(0, 3) == "sb_") {
-            result[temp[0].substring(3)] = temp[1];
+    $(document).ready(function() {
+        // Get a string of all the cookies.
+        var cookieArray = document.cookie.split(";");
+        var result = new Array();
+        // Create a key/value array with the individual cookies.
+        for (var elem in cookieArray) {
+            var temp = cookieArray[elem].split("=");
+            // We need to trim whitespaces.
+            temp[0] = $.trim(temp[0]);
+            temp[1] = $.trim(temp[1]);
+            // Only take sb_* cookies (= sidebar cookies)
+            if (temp[0].substring(0, 3) == "sb_") {
+                result[temp[0].substring(3)] = temp[1];
+            }
         }
-    }
-    // Finds the elements and if the cookie is collapsed, it
-    // collapsed the found element.
-    for (var key in result) {
-        if ($("#" + key).length && result[key] == "collapsed") {
-            $("#" + key).removeClass("expanded");
-            $("#" + key).addClass("collapsed");
-            $("#" + key).parent().next().slideToggle(0);
+        // Finds the elements and if the cookie is collapsed, it
+        // collapsed the found element.
+        for (var key in result) {
+            if ($("#" + key).length && result[key] == "collapsed") {
+                $("#" + key).removeClass("expanded");
+                $("#" + key).addClass("collapsed");
+                $("#" + key).parent().next().slideToggle(0);
+            }
         }
-    }
-});
+    });
 </script>
