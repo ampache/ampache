@@ -880,7 +880,7 @@ class Song extends database_object implements media, library_item
      */
     public function get_album_catalog_number($album_id = null)
     {
-        if (!$album_id) {
+        if ($album_id === null) {
             $album_id = $this->album;
         }
         $album = new Album($album_id);
@@ -896,7 +896,7 @@ class Song extends database_object implements media, library_item
      */
     public function get_album_original_year($album_id = null)
     {
-        if (!$album_id) {
+        if ($album_id === null) {
             $album_id = $this->album;
         }
         $album = new Album($album_id);
@@ -2053,7 +2053,7 @@ class Song extends database_object implements media, library_item
 
         // Fall backwards from the specific transcode formats to default
         // TARGET > PLAYER > CODEC > DEFAULT
-        if ($target) {
+        if ($target !== null) {
             debug_event('song.class', 'Explicit target requested: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_player_target) {
             $target = $has_player_target;

@@ -1335,7 +1335,7 @@ class User extends database_object
         if (!$type) {
             $type = 'song';
         }
-        $ordersql = ($newest == true) ? 'DESC' : 'ASC';
+        $ordersql = ($newest === true) ? 'DESC' : 'ASC';
 
         $sql = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
             "ORDER BY `date` " . $ordersql . " LIMIT " . $limit;

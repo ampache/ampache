@@ -405,7 +405,7 @@ class Stats
     {
         $type = self::validate_type($input_type);
 
-        $ordersql = ($newest == true) ? 'DESC' : 'ASC';
+        $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $user_sql = '';
         if (!empty($user_id)) {
             $user_sql = " AND `user` = '" . $user_id . "'";
