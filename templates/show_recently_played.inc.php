@@ -111,7 +111,7 @@ foreach ($data as $row) {
         </td>
         <td class="cel_album"><?php echo $song->f_album_link; ?></td>
         <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
-        <td class="cel_artist"><?php echo $song->year; ?></td>
+        <td class="cel_year"><?php echo $song->year; ?></td>
         <td class="cel_username">
             <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=show_user&amp;user_id=<?php echo scrub_out($row_user->id); ?>">
             <?php echo scrub_out($row_user->fullname); ?>

@@ -157,7 +157,7 @@ if (!$isVideo && !$isRadio && !$is_share) {
             echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-media_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
             echo "var actionsobj = '';";
             if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface', '25'))) {
-                echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
+                echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . str_replace("\n", '', UI::get_icon('comment', T_('Post Shout'))) . "</a> |';";
             }
             echo "actionsobj += '<div id=\'action_buttons\'></div>';";
             if (AmpConfig::get('waveform') && !$is_share) {

@@ -47,7 +47,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
 <head>
     <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
     <title><?php echo AmpConfig::get('site_title'); ?></title>
 </head>
@@ -56,7 +56,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
     <div id="maincontainer">
         <?php if (!$mobile_session) {
     echo "<div id=\"header\"><!-- This is the header -->";
-    echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"></a>";
+    echo '<img id="headerlogo" src="' . UI::get_logo_url() . '" title="' . AmpConfig::get('site_title') . '" alt="' . AmpConfig::get('site_title') . '" />';
     echo "</div>";
 } ?>
         <div id="loginbox">
@@ -97,7 +97,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
             </form>
             <?php if ($mobile_session) {
         echo '<div id="mobileheader"><!-- This is the header -->';
-        echo '<h1 id="headerlogo"></h1>';
+        echo '<img id="headerlogo" src="' . UI::get_logo_url() . '" title="' . AmpConfig::get('site_title') . '" alt="' . AmpConfig::get('site_title') . '" />';
         echo '</div>';
     }
     UI::show_footer(); ?>
