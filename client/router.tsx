@@ -15,6 +15,7 @@ import AlbumView from './Views/Album';
 import ArtistView from './Views/Artist';
 import { MusicContextProvider } from './Contexts/MusicContext';
 import ArtistsView from './Views/Artists';
+import AmpacheError from './logic/AmpacheError';
 
 interface RouterState {
     authKey: AuthKey;
@@ -24,6 +25,10 @@ interface RouterState {
 
 const server = 'http://localhost:8080';
 export default class Root extends React.PureComponent<void, RouterState> {
+    private handleLogin: (
+        username: string,
+        password: string
+    ) => Promise<void | AmpacheError | Error>;
     constructor(props) {
         super(props);
 
@@ -33,7 +38,26 @@ export default class Root extends React.PureComponent<void, RouterState> {
             user: null
         };
 
-        this.handleLogin = this.handleLogin.bind(this);
+        this.handleLogin = (username: string, password: string) => {
+            return handshake(username, password, server)
+                .then((newAuthKey: AuthKey) => {
+                    this.setState({ authKey: newAuthKey });
+                    Cookies.set('authKey', newAuthKey);
+                    Cookies.set('username', username);
+                    return getUser(username, newAuthKey, server)
+                        .then((user: User) => {
+                            user.authKey = newAuthKey;
+                            this.setState({ user });
+                        })
+                        .catch((error) => {
+                            console.error('HANDSHAKE-GETUSERFAILED', error); //TODO: Error handling
+                            return new AmpacheError(error);
+                        });
+                })
+                .catch((error) => {
+                    throw new Error(error);
+                });
+        };
         this.handleLogout = this.handleLogout.bind(this);
     }
 
@@ -46,29 +70,9 @@ export default class Root extends React.PureComponent<void, RouterState> {
                 })
                 .catch((error) => {
                     console.error('GETUSERFAILED', error); //TODO: Error handling
-                    // this.handleLogout();
+                    this.handleLogout();
                 });
         }
-    }
-
-    private handleLogin(username: string, password: string) {
-        handshake(username, password, server)
-            .then((newAuthKey: AuthKey) => {
-                this.setState({ authKey: newAuthKey });
-                Cookies.set('authKey', newAuthKey);
-                Cookies.set('username', username);
-                getUser(username, newAuthKey, server)
-                    .then((user: User) => {
-                        user.authKey = newAuthKey;
-                        this.setState({ user });
-                    })
-                    .catch((error) => {
-                        console.error('HANDSHAKE-GETUSERFAILED', error); //TODO: Error handling
-                    });
-            })
-            .catch((error) => {
-                console.error('LOGINFAILED', error); //TODO: Error handling
-            });
     }
 
     private handleLogout() {
@@ -81,7 +85,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
     render() {
         if (this.state.authKey == null) {
             return (
-                <BrowserRouter>
+                <BrowserRouter basename='/newclient'>
                     <Route
                         render={(props) => (
                             <LoginView
@@ -94,7 +98,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
             );
         }
         return (
-            <BrowserRouter>
+            <BrowserRouter basename='/newclient'>
                 <Switch>
                     {' '}
                     //TODO: Do i need this switch?
