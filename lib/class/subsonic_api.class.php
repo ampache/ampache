@@ -2108,7 +2108,7 @@ class Subsonic_Api
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
             $episode = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($id));
-            if ($episode->id) {
+            if ($episode->id !== null) {
                 $episode->gather();
                 $response = Subsonic_XML_Data::createSuccessResponse('downloadpodcastepisode');
             } else {
@@ -2212,7 +2212,7 @@ class Subsonic_Api
     {
         $message = self::check_parameter($input, 'message');
         $user_id = User::get_from_username($input['u'])->id;
-        if (PrivateMsg::send_chat_msg($message, $user_id)) {
+        if (PrivateMsg::send_chat_msg($message, $user_id) !== null) {
             $response = Subsonic_XML_Data::createSuccessResponse('addchatmessage');
         } else {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'addChatMessage');
