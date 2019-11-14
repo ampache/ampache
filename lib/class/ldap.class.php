@@ -189,7 +189,7 @@ class LDAP
     /**
      * Search for a DN in the LDAP
      * @param string $filter
-     * @return boolean $only_one_result
+     * @param boolean $only_one_result
      * @return array
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true)
