@@ -1,64 +1,49 @@
-import React, { ComponentState } from 'react';
-
-interface LoginState {
-    username: string;
-    password: string;
-}
+import React, { ComponentState, useState } from 'react';
+import logo from '/images/ampache-dark.png';
+import AmpacheError from '../../logic/AmpacheError';
 
 interface LoginProps {
-    handleLogin: (apiKey: string, username: string) => void;
+    handleLogin: (
+        apiKey: string,
+        username: string
+    ) => Promise<void | AmpacheError | Error>;
 }
 
-export default class LoginView extends React.PureComponent<
-    LoginProps,
-    LoginState
-> {
-    constructor(props) {
-        super(props);
+const LoginView: React.FC<LoginProps> = (props) => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState<Error | AmpacheError>(null);
 
-        this.state = {
-            username: '',
-            password: ''
-        };
-
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
-    }
-
-    handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        this.props.handleLogin(this.state.username, this.state.password);
-    }
+        props.handleLogin(username, password).catch((e) => {
+            console.log(e);
+            setError(e);
+        });
+    };
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
+    return (
+        <div className='loginPage'>
+            <div>{error?.message}</div>
+            <img src={logo} className='logo' alt='Ampache Logo' />
+            <form onSubmit={handleSubmit}>
+                <input
+                    placeholder='Username'
+                    name='username'
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                />
+                <input
+                    placeholder='Password'
+                    type='password'
+                    name='password'
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                />
+                <button className='submit'>Submit</button>
+            </form>
+        </div>
+    );
+};
 
-        this.setState({
-            [name]: value
-        } as ComponentState);
-    }
-
-    render() {
-        return (
-            <div className='loginPage'>
-                <form onSubmit={this.handleSubmit}>
-                    <input
-                        placeholder='Username'
-                        name='username'
-                        value={this.state.username}
-                        onChange={this.handleInputChange}
-                    />
-                    <input
-                        placeholder='Password'
-                        name='password'
-                        value={this.state.password}
-                        onChange={this.handleInputChange}
-                    />
-                    <button className='submit'>Submit</button>
-                </form>
-            </div>
-        );
-    }
-}
+export default LoginView;

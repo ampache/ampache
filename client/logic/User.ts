@@ -23,7 +23,7 @@ const getUser = async (username: string, authKey: AuthKey, server: string) => {
             if (!JSONData) {
                 throw new Error('Server Error');
             }
-            if (JSONData.error) {
+            if (JSONData.error && !JSONData.error.contains('Request Aborted')) {
                 throw new AmpacheError(JSONData.error);
             }
             return JSONData.user as User;

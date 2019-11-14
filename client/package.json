@@ -20,6 +20,7 @@
     "scripts": {
         "start": "parcel start index.html --public-url /client/dist/",
         "build": "parcel build index.html --public-url /client/dist/",
+        "prod": "rm -rf dist && parcel build index.html --no-source-maps --public-url /client/dist/",
         "watch": "parcel watch index.html --public-url /client/dist/"
     },
     "eslintConfig": {
