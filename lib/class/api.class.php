@@ -137,7 +137,7 @@ class Api
         foreach ($parameters as $parameter) {
             if (empty($input[$parameter])) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
-                echo XML_Data::error('401', T_("Missing mandatory parameter") . " " . $parameter);
+                echo XML_Data::error('401', T_("Missing mandatory parameter") . " '" . $parameter . "'");
 
                 return false;
             }
@@ -368,7 +368,6 @@ class Api
     public static function goodbye($input)
     {
         if (!self::check_parameter($input, array('type'), 'goodbye')) {
-            echo XML_Data::error('401', T_("Missing mandatory parameter") . " 'type'");
 
             return false;
         }
