@@ -19,8 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
+ ?>
+<html>
+<head>
+<title><?php echo AmpConfig::get('site_title'); ?></title>
 <script>
 function PlayerFrame()
 {
@@ -33,11 +35,11 @@ if ($_REQUEST['append']) { ?>
         appendmedia = true;
 <?php
 } else {
-    if ($_REQUEST['playnext']) { ?>
+     if ($_REQUEST['playnext']) { ?>
         playnext = true;
 <?php
         }
-} ?>
+ } ?>
     }
 
 <?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
@@ -61,3 +63,7 @@ if ($_REQUEST['append']) { ?>
 
 PlayerFrame();
 </script>
+</head>
+<body>
+</body>
+</html>
