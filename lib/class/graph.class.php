@@ -111,13 +111,13 @@ class Graph
     protected function get_all_type_pts($fct, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $type = $object_type;
-        if ($object_type == null) {
+        if ($object_type === null) {
             $type = 'song';
         }
 
         $song_values  = $this->$fct($id, $type, $object_id, $start_date, $end_date, $zoom);
         $video_values = array();
-        if ($object_type == null && AmpConfig::get('allow_video')) {
+        if ($object_type === null && AmpConfig::get('allow_video')) {
             $video_values = $this->$fct($id, 'video', $object_id, $start_date, $end_date, $zoom);
         }
 
@@ -221,7 +221,7 @@ class Graph
         }
         $sql = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` " .
                 $where . " AND `geo_latitude` IS NOT NULL AND `geo_longitude` IS NOT NULL " .
-                "GROUP BY `geo_latitude`, `geo_longitude` ORDER BY `last_date` DESC";
+                "GROUP BY `geo_latitude`, `geo_longitude` ORDER BY `last_date`, `geo_name` DESC"; //TODO mysql8 test
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
             $pts[] = array(
