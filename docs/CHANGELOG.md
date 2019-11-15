@@ -18,7 +18,7 @@
 * JavaScript and Ajax updates
 * Code documentation and bug hunting
 * Added SVG support to the theme engine.
-* Fix - MySQL8 installation using mysql_native_password
+* Fix - MySQL8 installation using mysql_native_password with caveats ([<https://github.com/ampache/ampache/wiki/mysql-faq>])
 * Fix - Catalog Manager can now access catalog areas correctly
 * HTML5 doctype across the board. (<!DOCTYPE html>)
 

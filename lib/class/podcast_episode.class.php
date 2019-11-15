@@ -285,6 +285,11 @@ class Podcast_Episode extends database_object implements media, library_item
         return true;
     } // set_played
 
+    public function check_play_history($user)
+    {
+        // Do nothing
+    }
+
     /**
      * update_played
      * sets the played flag

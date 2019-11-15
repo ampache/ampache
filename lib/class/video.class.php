@@ -753,6 +753,11 @@ class Video extends database_object implements media, library_item
         return true;
     } // set_played
 
+    public function check_play_history($user)
+    {
+        // Do nothing
+    }
+
     /**
      * compare_video_information
      * this compares the new ID3 tags of a file against

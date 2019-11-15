@@ -1005,15 +1005,15 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT " . $size;
         } elseif ($offset > 0) {
             // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
-            // https://dev.mysql.com/doc/refman/5.0/en/select.html
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html  //TODO mysql8 test
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
 
         $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, (SELECT COUNT(DISTINCT album) from `song` as `inner_song` WHERE `inner_song`.`artist` = `song`.`artist`) AS `albums`" .
                 "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " .
                 $sql_where .
-                "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`summary`, `song`.`artist` ORDER BY `artist`.`name` " .
-                $sql_limit;
+                "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist` ORDER BY `artist`.`name` " .
+                $sql_limit;  //TODO mysql8 test
 
         $results    = array();
         $db_results = Dba::read($sql);
@@ -1116,7 +1116,7 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $size";
         } elseif ($offset > 0) {
             // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
-            // https://dev.mysql.com/doc/refman/5.0/en/select.html
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html  //TODO mysql8 test
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 

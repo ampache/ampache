@@ -685,6 +685,11 @@ class Channel extends database_object implements media, library_item
         // Do nothing
     }
 
+    public function check_play_history($user)
+    {
+        // Do nothing
+    }
+
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return false;

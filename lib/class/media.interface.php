@@ -62,4 +62,6 @@ interface media
     public function get_stream_name();
 
     public function set_played($user, $agent, $location);
+
+    public function check_play_history($user);
 } // end interface

@@ -963,11 +963,34 @@ class Song extends database_object implements media, library_item
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
      * @param integer $user
+     * @return boolean
+     */
+    public function set_played($user, $agent, $location, $date = null)
+    {
+        if ($this->check_play_history($user)) {
+            Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
+            Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date, $this->time);
+            Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date, $this->time);
+        }
+
+        if (!$this->played) {
+            /* If it hasn't been played, set it! */
+            self::update_played(true, $this->id);
+        }
+
+        return true;
+    } // set_played
+
+    /**
+     * check_play_history
+     * this checks to see if the current object has been played
+     * if not then it sets it to played. In any case it updates stats.
+     * @param integer $user
      * @param string $agent
      * @param array $location
      * @return boolean
      */
-    public function set_played($user, $agent, $location, $date = null)
+    public function check_play_history($user)
     {
         $previous = Stats::get_last_song($user);
         $diff     = time() - $previous['date'];
@@ -986,17 +1009,8 @@ class Song extends database_object implements media, library_item
             return false;
         }
 
-        Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
-        Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date, $this->time);
-        Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date, $this->time);
-
-        if (!$this->played) {
-            /* If it hasn't been played, set it! */
-            self::update_played(true, $this->id);
-        }
-
         return true;
-    } // set_played
+    }
 
     /**
      * compare_song_information
