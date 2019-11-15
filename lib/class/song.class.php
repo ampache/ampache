@@ -963,8 +963,6 @@ class Song extends database_object implements media, library_item
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
      * @param integer $user
-     * @param string $agent
-     * @param array $location
      * @return boolean
      */
     public function set_played($user, $agent, $location, $date = null)
