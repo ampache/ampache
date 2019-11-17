@@ -1785,18 +1785,22 @@ class Subsonic_Api
             $oid   = $rid;
         }
 
+        $counter = 0;
         foreach ($oid as $object) {
             $aid   = Subsonic_XML_Data::getAmpacheId($object);
             $type  = Subsonic_XML_Data::getAmpacheType($object);
             $media = new $type($aid);
             $media->format();
-
+            // internal scrobbling (user_activity and object_count tables)
+            if (($submission === 'true' || $submission === '1') && $counter == 0) {
+                $media->set_played($user->id, $input['c'], array(), time())
+                $counter++;
+            }
+            //scrobble plugins
             if ($submission === 'true' || $submission === '1') {
-                if ($media->set_played($user->id, $input['c'], array(), time())) {
-                    // stream has finished
-                    debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
-                    User::save_mediaplay($user, $media);
-                }
+                // stream has finished
+                debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
+                User::save_mediaplay($user, $media);
             } elseif ($submission === 'false' || $submission === '0') {
                 // stream is in progress
                 debug_event('subsonic_api.class', 'now_playing: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
