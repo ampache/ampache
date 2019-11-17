@@ -1793,7 +1793,7 @@ class Subsonic_Api
             $media->format();
             // internal scrobbling (user_activity and object_count tables)
             if (($submission === 'true' || $submission === '1') && $counter == 0) {
-                $media->set_played($user->id, $input['c'], array(), time())
+                $media->set_played($user->id, $input['c'], array(), time());
                 $counter++;
             }
             //scrobble plugins
