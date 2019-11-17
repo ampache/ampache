@@ -938,7 +938,7 @@ class Search extends playlist_object
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string) ($this->limit);
         }
-        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
+        debug_event('search.class', 'SQL get_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1258,6 +1258,7 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
+            debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
                 "SELECT `object_id`, COUNT(`name`) AS `match` " .
