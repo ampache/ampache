@@ -1289,7 +1289,7 @@ class Search extends playlist_object
                 case 'tag':
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
-                    $join['tag'][$key] = "'$input'";
+                    $join['tag'][$key] = "$sql_match_operator '$input'";
                 break;
                 case 'image height':
                     $where[]       = "`image`.`height` $sql_match_operator '$input'";
@@ -1322,7 +1322,7 @@ class Search extends playlist_object
                 "FROM `tag` LEFT JOIN `tag_map` " .
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
                 "WHERE `tag_map`.`object_type`='album' " .
-                "AND `tag`.`name` = $value GROUP BY `object_id`" .
+                "AND `tag`.`name` $value GROUP BY `object_id`" .
                 ") AS `realtag_$key` " .
                 "ON `album`.`id`=`realtag_$key`.`object_id`";
         }
@@ -1433,7 +1433,7 @@ class Search extends playlist_object
                 case 'tag':
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
-                    $join['tag'][$key] = "'$input'";
+                    $join['tag'][$key] = "$sql_match_operator '$input'";
                 break;
                 case 'rating':
                     if ($this->type != "public") {
@@ -1475,7 +1475,7 @@ class Search extends playlist_object
                 "FROM `tag` LEFT JOIN `tag_map` " .
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
                 "WHERE `tag_map`.`object_type`='artist' " .
-                "AND `tag`.`name` = $value  GROUP BY `object_id`" .
+                "AND `tag`.`name` $value  GROUP BY `object_id`" .
                 ") AS `realtag_$key` " .
                 "ON `artist`.`id`=`realtag_$key`.`object_id`";
         }
@@ -1571,12 +1571,12 @@ class Search extends playlist_object
                 case 'tag':
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
-                    $join['tag'][$key] = "'$input'";
+                    $join['tag'][$key] = "$sql_match_operator '$input'";
                 break;
                 case 'album_tag':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
-                    $join['album_tag'][$key] = "'$input'";
+                    $join['album_tag'][$key] = "$sql_match_operator '$input'";
                     $join['album']           = true;
                 break;
                 case 'title':
@@ -1768,7 +1768,7 @@ class Search extends playlist_object
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='song' " .
-                    "AND `tag`.`name` = $value GROUP BY `object_id`" .
+                    "AND `tag`.`name` $value GROUP BY `object_id`" .
                     ") AS `realtag_$key` " .
                     "ON `song`.`id`=`realtag_$key`.`object_id`";
             }
