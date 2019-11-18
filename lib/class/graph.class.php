@@ -303,11 +303,11 @@ class Graph
     protected function render_graph($title, CpChart\Chart\Data $MyData, $zoom, $width = 0, $height = 0)
     {
         // Check graph size sanity
-        $width = (int) $width);
+        $width = (int) $width;
         if ($width <= 50 || $width > 4096) {
             $width = 700;
         }
-        $height = (int) $height);
+        $height = (int) $height;
         if ($height <= 60 || $height > 4096) {
             $height = 260;
         }

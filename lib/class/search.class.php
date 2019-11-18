@@ -1586,8 +1586,8 @@ class Search extends playlist_object
                     $join['album_tag'][$key] = "$sql_match_operator '$input'";
                     $join['album']           = true;
                 case 'artist_tag':
-                    $key                     = md5($input . $sql_match_operator);
-                    $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $key                      = md5($input . $sql_match_operator);
+                    $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['artist_tag'][$key] = "$sql_match_operator '$input'";
                     $join['artist']           = true;
                 break;
