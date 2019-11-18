@@ -598,7 +598,7 @@ class Search extends playlist_object
         } // end switch on searchtype
     } // end constructor
 
-    private function set_basetypes();
+    private function set_basetypes()
     {
         $this->basetypes['numeric'][] = array(
             'name' => 'gte',
