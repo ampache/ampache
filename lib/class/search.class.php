@@ -244,7 +244,6 @@ class Search extends playlist_object
      * songtypes
      *
      * this is where all the searchtypes for songs are defined
-     * @return array
      */
     private function songtypes()
     {
@@ -561,15 +560,12 @@ class Search extends playlist_object
                 'widget' => array('select', $licenses)
             );
         }
-
-        return $types;
     }
 
     /**
      * artisttypes
      *
      * this is where all the searchtypes for artists are defined
-     * @return array
      */
     private function artisttypes()
     {
@@ -637,15 +633,12 @@ class Search extends playlist_object
                 )
             );
         }
-
-        return $types;
     }
 
     /**
      * albumtypes
      *
      * this is where all the searchtypes for albums are defined
-     * @return array
      */
     private function albumtypes()
     {
@@ -743,15 +736,12 @@ class Search extends playlist_object
             'type' => 'text',
             'widget' => array('input', 'text')
         );
-
-        return $types;
     }
 
     /**
      * videotypes
      *
      * this is where all the searchtypes for videos are defined
-     * @return array
      */
     private function videotypes()
     {
@@ -761,15 +751,12 @@ class Search extends playlist_object
             'type' => 'text',
             'widget' => array('input', 'text')
         );
-
-        return $types;
     }
     
     /**
      * playlisttypes
      *
      * this is where all the searchtypes for playlists are defined
-     * @return array
      */
     private function playlisttypes()
     {
@@ -779,15 +766,12 @@ class Search extends playlist_object
             'type' => 'text',
             'widget' => array('input', 'text')
         );
-
-        return $types;
     }
     
     /**
      * labeltypes
      *
      * this is where all the searchtypes for labels are defined
-     * @return array
      */
     private function labeltypes()
     {
@@ -803,15 +787,12 @@ class Search extends playlist_object
             'type' => 'text',
             'widget' => array('input', 'text')
         );
-
-        return $types;
     }
     
     /**
      * usertypes
      *
      * this is where all the searchtypes for users are defined
-     * @return array
      */
     private function usertypes()
     {
@@ -821,8 +802,6 @@ class Search extends playlist_object
             'type' => 'text',
             'widget' => array('input', 'text')
         );
-
-        return $types;
     }
 
     /**
