@@ -129,7 +129,7 @@ class Stats
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $db_results = Dba::write($sql, array($type, $oid, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-            if (($type = 'song') && ($count_type === 'stream')) {
+            if (($input_type == 'song') && ($count_type === 'stream')) {
                 Useractivity::post_activity($user, 'play', $type, $oid, $date);
             }
 
@@ -337,7 +337,7 @@ class Stats
         }
         $sql .= " AND `count_type` = '" . $count_type . "'";
         if ($allow_group_disks && $type == 'album') {
-            $sql .= " GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`";
+            $sql .= " GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`";  //TODO mysql8 test
         } else {
             $sql .= " GROUP BY `object_count`.`object_id`";
         }
@@ -583,7 +583,7 @@ class Stats
             }
         }
         if ($allow_group_disks && $type == 'album') {
-            $sql .= "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
+            $sql .= "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";  //TODO mysql8 test
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
         }

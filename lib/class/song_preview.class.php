@@ -341,6 +341,11 @@ class Song_Preview extends database_object implements media, playable_item
         // Do nothing
     }
 
+    public function check_play_history($user)
+    {
+        // Do nothing
+    }
+
     /**
      * @param string $album_mbid
      */

@@ -384,4 +384,9 @@ class Live_Stream extends database_object implements media, library_item
     {
         // Do nothing
     }
+
+    public function check_play_history($user)
+    {
+        // Do nothing
+    }
 } // end of live_stream class

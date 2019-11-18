@@ -1777,7 +1777,7 @@ class Subsonic_Api
         $oid        = self::check_parameter($input, 'id');
         $submission = $input['submission'];
         $user       = User::get_from_username($input['u']);
-        //$time = $input['time'];
+        $time       = time();
 
         if (!is_array($oid)) {
             $rid   = array();
@@ -1791,6 +1791,7 @@ class Subsonic_Api
             $type  = Subsonic_XML_Data::getAmpacheType($object);
             $media = new $type($aid);
             $media->format();
+
             // internal scrobbling (user_activity and object_count tables)
             if (($submission === 'true' || $submission === '1') && $counter == 0) {
                 $media->set_played($user->id, $input['c'], array(), time());
@@ -1803,7 +1804,7 @@ class Subsonic_Api
                 User::save_mediaplay($user, $media);
             } elseif ($submission === 'false' || $submission === '0') {
                 // stream is in progress
-                debug_event('subsonic_api.class', 'now_playing: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
+                debug_event('subsonic_api.class', 'now_playing: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) $time, 5);
                 Stream::garbage_collection();
                 Stream::insert_now_playing((int) $media->id, (int) $user->id, (int) $media->time, $user->username, $type);
             }
