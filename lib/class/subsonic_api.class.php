@@ -41,6 +41,7 @@ class Subsonic_Api
     }
 
     /**
+     * check_parameter
      * @param string $parameter
      */
     public static function check_parameter($input, $parameter, $addheader = false)
@@ -76,6 +77,7 @@ class Subsonic_Api
 
     public static function output_body($curl, $data)
     {
+        unset($curl);
         echo $data;
         ob_flush();
 
@@ -101,6 +103,7 @@ class Subsonic_Api
     }
 
     /**
+     * follow_stream
      * @param string $url
      */
     public static function follow_stream($url)
@@ -165,6 +168,7 @@ class Subsonic_Api
     }
 
     /**
+     * apiOutput
      * @param SimpleXMLElement $xml
      */
     public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'entry'))
@@ -175,6 +179,7 @@ class Subsonic_Api
     }
 
     /**
+     * apiOutput2
      * @param SimpleXMLElement $xml
      * @param string $outputtype
      */
@@ -201,7 +206,8 @@ class Subsonic_Api
     }
 
     /**
-     * xml2json based from http://outlandish.com/blog/xml-to-json/
+     * xml2json
+     * [based from http://outlandish.com/blog/xml-to-json/]
      * Because we cannot use only json_encode to respect JSON Subsonic API
      * @param SimpleXMLElement $xml
      */
@@ -304,6 +310,11 @@ class Subsonic_Api
         );
     }
 
+    /**
+     * has_Nested_Array
+     * Used for xml2json to detect a sub-array
+     * @return boolean
+     */
     private static function has_Nested_Array($properties)
     {
         foreach ($properties as $property) {

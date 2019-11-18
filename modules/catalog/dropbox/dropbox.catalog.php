@@ -557,12 +557,12 @@ class Catalog_dropbox extends Catalog
 
     public function get_rel_path($file_path)
     {
-        $p = strpos($file_path, "|");
-        if ($p !== false) {
-            $p++;
+        $path = strpos($file_path, "|");
+        if ($path !== false) {
+            $path++;
         }
         
-        return substr($file_path, $p);
+        return substr($file_path, $path);
     }
     
     /**

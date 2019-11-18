@@ -802,16 +802,16 @@ class Artist extends database_object implements library_item
             return self::$_mapcache[$name][$mbid];
         }
 
-        $id     = 0;
-        $exists = false;
+        $artist_id = 0;
+        $exists    = false;
 
         if ($mbid !== '') {
             $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
             $db_results = Dba::read($sql, array($mbid));
 
             if ($row = Dba::fetch_assoc($db_results)) {
-                $id     = $row['id'];
-                $exists = true;
+                $artist_id = $row['id'];
+                $exists    = true;
             }
         }
 
@@ -832,21 +832,21 @@ class Artist extends database_object implements library_item
                         Dba::write($sql, array($mbid, $id_array['null']));
                     }
                     if (isset($id_array['null'])) {
-                        $id     = $id_array['null'];
-                        $exists = true;
+                        $artist_id = $id_array['null'];
+                        $exists    = true;
                     }
                 } else {
                     // Pick one at random
-                    $id     = array_shift($id_array);
-                    $exists = true;
+                    $artist_id = array_shift($id_array);
+                    $exists    = true;
                 }
             }
         }
 
         if ($exists) {
-            self::$_mapcache[$name][$mbid] = $id;
+            self::$_mapcache[$name][$mbid] = $artist_id;
 
-            return (int) $id;
+            return (int) $artist_id;
         }
 
         if ($readonly) {
@@ -860,12 +860,12 @@ class Artist extends database_object implements library_item
         if (!$db_results) {
             return null;
         }
-        $id = Dba::insert_id();
-        debug_event('artist.class', 'Artist check created new artist id `' . $id . '`.', 4);
+        $artist_id = Dba::insert_id();
+        debug_event('artist.class', 'Artist check created new artist id `' . $artist_id . '`.', 4);
 
-        self::$_mapcache[$name][$mbid] = $id;
+        self::$_mapcache[$name][$mbid] = $artist_id;
 
-        return (int) $id;
+        return (int) $artist_id;
     }
 
     /**
