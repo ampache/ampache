@@ -7,7 +7,7 @@
     "license": "AGPL-3.0",
     "require": {
         "szymach/c-pchart": "2.*"
-    }
+    },
     "autoload": {
         "psr-4": {
             "Lib\\": "lib/class"
