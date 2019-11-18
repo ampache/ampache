@@ -104,9 +104,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <?php
         } ?>
         <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface', '50')) {
-        ?>
-            <?php if (AmpConfig::get('statistical_graphs')) {
             ?>
+            <?php if (AmpConfig::get('statistical_graphs')) {
+                ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=song&object_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
             } ?>
