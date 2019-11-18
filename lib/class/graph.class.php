@@ -24,9 +24,9 @@ class Graph
 {
     public function __construct()
     {
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Data.php';
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Draw.php';
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Image.php';
+        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Data.php';
+        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Draw.php';
+        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Image.php';
 
         return true;
     }

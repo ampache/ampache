@@ -72,7 +72,7 @@
         "tightenco/collect": "5.2.*",
         "ampache/ampacheapi-php": "^1.0",
         "dropbox/dropbox-sdk": "^1.1",
-        "szymach/c-pchart": "^3.0"
+        "szymach/c-pchart": "2.*"
     },
 
     "repositories":
