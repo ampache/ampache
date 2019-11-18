@@ -318,6 +318,13 @@ class Search extends playlist_object
         );
 
         $this->types[] = array(
+            'name' => 'artist_tag',
+            'label' => T_('Artist tag'),
+            'type' => 'text',
+            'widget' => array('input', 'text')
+        );
+
+        $this->types[] = array(
             'name' => 'file',
             'label' => T_('Filename'),
             'type' => 'text',
@@ -1578,6 +1585,11 @@ class Search extends playlist_object
                     $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['album_tag'][$key] = "$sql_match_operator '$input'";
                     $join['album']           = true;
+                case 'artist_tag':
+                    $key                      = md5($input . $sql_match_operator);
+                    $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $join['artist_tag'][$key] = "$sql_match_operator '$input'";
+                    $join['artist']           = true;
                 break;
                 case 'title':
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
@@ -1777,13 +1789,26 @@ class Search extends playlist_object
             foreach ($join['album_tag'] as $key => $value) {
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
-                    "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                    "SELECT `object_id`, `name` " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='album' " .
                     "AND `tag`.`name` $value  GROUP BY `object_id`" .
                     ") AS realtag_$key " .
                     "ON `album`.`id`=`realtag_$key`.`object_id`";
+            }
+        }
+        if ($join['artist_tag']) {
+            foreach ($join['artist_tag'] as $key => $value) {
+                $table['tag_' . $key] =
+                    "LEFT JOIN (" .
+                    "SELECT `object_id`, `name` " .
+                    "FROM `tag` LEFT JOIN `tag_map` " .
+                    "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                    "WHERE `tag_map`.`object_type`='artist' " .
+                    "AND `tag`.`name` $value  GROUP BY `object_id`" .
+                    ") AS realtag_$key " .
+                    "ON `artist`.`id`=`realtag_$key`.`object_id`";
             }
         }
         if ($join['rating']) {

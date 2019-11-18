@@ -222,12 +222,12 @@ class Tmp_Playlist extends database_object
             " VALUES (?, ?, ?)";
         Dba::write($sql, array($data['session_id'], $data['type'], $data['object_type']));
 
-        $id = Dba::insert_id();
+        $tmp_id = Dba::insert_id();
 
         /* Clean any other playlists associated with this session */
-        self::session_clean($data['session_id'], $id);
+        self::session_clean($data['session_id'], $tmp_id);
 
-        return $id;
+        return $tmp_id;
     } // create
 
     /**

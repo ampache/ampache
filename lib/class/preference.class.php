@@ -304,8 +304,8 @@ class Preference extends database_object
         if (!$db_results) {
             return false;
         }
-        $id         = Dba::insert_id();
-        $params     = array($id, $default);
+        $pref_id    = Dba::insert_id();
+        $params     = array($pref_id, $default);
         $sql        = "INSERT INTO `user_preference` VALUES (-1,?,?)";
         $db_results = Dba::write($sql, $params);
         if (!$db_results) {

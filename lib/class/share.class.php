@@ -157,9 +157,9 @@ class Share extends database_object
         $params = array(Core::get_global('user')->id, $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
         Dba::write($sql, $params);
 
-        $id = Dba::insert_id();
+        $share_id = Dba::insert_id();
 
-        $url = self::get_url($id, $secret);
+        $url = self::get_url($share_id, $secret);
         // Get a shortener url if any available
         foreach (Plugin::get_plugins('shortener') as $plugin_name) {
             try {
@@ -176,9 +176,9 @@ class Share extends database_object
             }
         }
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
-        Dba::write($sql, array($url, $id));
+        Dba::write($sql, array($url, $share_id));
 
-        return $id;
+        return $share_id;
     }
 
     /**

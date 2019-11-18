@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -557,12 +557,12 @@ class Catalog_dropbox extends Catalog
 
     public function get_rel_path($file_path)
     {
-        $p = strpos($file_path, "|");
-        if ($p !== false) {
-            $p++;
+        $path = strpos($file_path, "|");
+        if ($path !== false) {
+            $path++;
         }
         
-        return substr($file_path, $p);
+        return substr($file_path, $path);
     }
     
     /**

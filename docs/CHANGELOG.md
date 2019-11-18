@@ -7,7 +7,7 @@ Warning for API developers, Advanced search rule numbers have changed for text s
 
 'is not' has been added shifting values down the list.
 0=contains, 1=does not contain, 2=starts with, 3=ends with
-4=is, 5=is not, 6=sounds like, 7=does not sound like  
+4=is, 5=is not, 6=sounds like, 7=does not sound like
 
 ### Backend
 
@@ -15,7 +15,6 @@ Warning for API developers, Advanced search rule numbers have changed for text s
 * Resolve CVE-2019-12385 for the SQL Injection
 * Resolve CVE-2019-12386 for the persistent XSS
 * Resolve NS-18-046 Multiple Reflected Cross-site Scripting Vulnerabilities in Ampache 3.9.0
-* Remove charts/graphs that use non-free graph library pchart
 * Remove all plex code
 * Remove message of the day
 * Don't allow lost password reset for Admin users
@@ -103,7 +102,8 @@ Warning for API developers, Advanced search rule numbers have changed for text s
 * New Method: update_from_tags (updates a single album, artist, song from the tag data instead of the entire library!)
 * New Method: update_art (updates a single album, artist, song running the gather_art process)
 * New Method: update_artist_info (Update artist information and fetch similar artists from last.fm)
-* Added 'is not' to text searches
+* Added 'is not' to all text searches
+* Added artist_tag to song searches
 
 ### Subsonic Backend
 
@@ -127,7 +127,6 @@ Warning for API developers, Advanced search rule numbers have changed for text s
 * Add: waveform_height,  waveform_width - customize waveform size
 * Add: of_the_moment - set custom amount of albums/videos in "of the moment areas"
 * Add: use_now_playing_embedded, now_playing_refresh_limit, now_playing_css_file - Show a user forum tag "Now playing / last played"
-* Remove: statistical_graphs - Graphs have been removed due to poor implementation
 
 ## 3.9.1
 

@@ -42,7 +42,7 @@ Steps to reproduce the behavior:
 
 <!-- Keep only the affected clients in the list below. Add the client application name and version to the right of the client type used. -->
 
-### Client type:
+### Client type
 
 * Web
 * Ampache

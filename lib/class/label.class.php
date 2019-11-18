@@ -283,9 +283,9 @@ class Label extends database_object implements library_item
                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date));
 
-        $id = Dba::insert_id();
+        $label_id = Dba::insert_id();
 
-        return $id;
+        return $label_id;
     }
 
     public static function lookup(array $data, $id = 0)
