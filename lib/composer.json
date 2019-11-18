@@ -1,0 +1,16 @@
+{
+    "name": "ampache/ampache-nonfree",
+    "description": "Non-free or questionable packages that are not required for Ampache to function.",
+    "homepage": "http://ampache.org",
+    "keywords": ["php", "music", "video", "player", "stream"],
+    "type": "project",
+    "license": "AGPL-3.0",
+    "require": {
+        "szymach/c-pchart": "2.*"
+    }
+    "autoload": {
+        "psr-4": {
+            "Lib\\": "lib/class"
+        }
+    }
+}
