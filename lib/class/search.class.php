@@ -246,7 +246,7 @@ class Search extends playlist_object
      * this is where all the searchtypes for songs are defined
      * @return array
      */
-    private static function songtypes()
+    private function songtypes()
     {
         $this->types[] = array(
             'name' => 'anywhere',
@@ -579,7 +579,7 @@ class Search extends playlist_object
      * this is where all the searchtypes for artists are defined
      * @return array
      */
-    private static function artisttypes()
+    private function artisttypes()
     {
         $this->types[] = array(
             'name' => 'name',
@@ -657,7 +657,7 @@ class Search extends playlist_object
      * this is where all the searchtypes for albums are defined
      * @return array
      */
-    private static function albumtypes()
+    private function albumtypes()
     {
         $this->types[] = array(
             'name' => 'title',
@@ -766,7 +766,7 @@ class Search extends playlist_object
      * this is where all the searchtypes for videos are defined
      * @return array
      */
-    private static function videotypes()
+    private function videotypes()
     {
         $this->types[] = array(
             'name' => 'filename',
@@ -784,7 +784,7 @@ class Search extends playlist_object
      * this is where all the searchtypes for playlists are defined
      * @return array
      */
-    private static function playlisttypes()
+    private function playlisttypes()
     {
         $this->types[] = array(
             'name' => 'name',
@@ -802,7 +802,7 @@ class Search extends playlist_object
      * this is where all the searchtypes for labels are defined
      * @return array
      */
-    private static function labeltypes()
+    private function labeltypes()
     {
         $this->types[] = array(
             'name' => 'name',
@@ -826,7 +826,7 @@ class Search extends playlist_object
      * this is where all the searchtypes for users are defined
      * @return array
      */
-    private static function usertypes()
+    private function usertypes()
     {
         $this->types[] = array(
             'name' => 'username',
