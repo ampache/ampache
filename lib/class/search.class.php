@@ -153,6 +153,12 @@ class Search extends playlist_object
         );
 
         $this->basetypes['text'][] = array(
+            'name' => 'not equal',
+            'description' => T_('is not'),
+            'sql' => '!='
+        );
+
+        $this->basetypes['text'][] = array(
             'name' => 'sounds',
             'description' => T_('sounds like'),
             'sql' => 'SOUNDS LIKE'
@@ -873,10 +879,9 @@ class Search extends playlist_object
         $sql .= ' ' . $limit_sql;
         $sql = trim($sql);
 
+        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -1258,6 +1263,7 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
+            //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
                 "SELECT `object_id`, COUNT(`name`) AS `match` " .
@@ -1410,6 +1416,7 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
+            //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
                 "SELECT `object_id`, COUNT(`name`) AS `match` " .
@@ -1702,6 +1709,7 @@ class Search extends playlist_object
         }
         if ($join['tag']) {
             foreach ($join['tag'] as $key => $value) {
+                //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
                     "SELECT `object_id`, COUNT(`name`) AS `match` " .

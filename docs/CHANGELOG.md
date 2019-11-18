@@ -2,6 +2,13 @@
 
 ## 4.0.0-DEVELOP
 
+Warning for API developers, Advanced search rule numbers have changed for text searches
+(album, artist,composer, comment, label, tag, album_tag, filename, placeformed, username)
+
+'is not' has been added shifting values down the list.
+0=contains, 1=does not contain, 2=starts with, 3=ends with
+4=is, 5=is not, 6=sounds like, 7=does not sound like  
+
 ### Backend
 
 * Drop PHP 5.6 support for 7.1+
@@ -96,6 +103,7 @@
 * New Method: update_from_tags (updates a single album, artist, song from the tag data instead of the entire library!)
 * New Method: update_art (updates a single album, artist, song running the gather_art process)
 * New Method: update_artist_info (Update artist information and fetch similar artists from last.fm)
+* Added 'is not' to text searches
 
 ### Subsonic Backend
 
