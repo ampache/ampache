@@ -332,6 +332,15 @@ class Search extends playlist_object
             'widget' => array('input', 'number')
         );
 
+        if (AmpConfig::get('userflags')) {
+            $this->types[] = array(
+                'name' => 'favorite',
+                'label' => T_('Favorites'),
+                'type' => 'text',
+                'widget' => array('input', 'text')
+            );
+        }
+
         if (AmpConfig::get('ratings')) {
             $this->types[] = array(
                 'name' => 'rating',
@@ -348,18 +357,6 @@ class Search extends playlist_object
                     )
                 )
             );
-        }
-
-        if (AmpConfig::get('userflags')) {
-            $this->types[] = array(
-                'name' => 'favorite',
-                'label' => T_('Favorites'),
-                'type' => 'text',
-                'widget' => array('input', 'text')
-            );
-        }
-
-        if (AmpConfig::get('ratings')) {
             $this->types[] = array(
                 'name' => 'myrating',
                 'label' => T_('My Rating'),
@@ -375,9 +372,6 @@ class Search extends playlist_object
                     )
                 )
             );
-        }
-
-        if (AmpConfig::get('ratings')) {
             $this->types[] = array(
                 'name' => 'artistrating',
                 'label' => T_('My Rating (Artist)'),
@@ -393,8 +387,6 @@ class Search extends playlist_object
                     )
                 )
             );
-        }
-        if (AmpConfig::get('ratings')) {
             $this->types[] = array(
                 'name' => 'albumrating',
                 'label' => T_('My Rating (Album)'),
@@ -605,6 +597,14 @@ class Search extends playlist_object
             'type' => 'text',
             'widget' => array('input', 'text')
         );
+
+        $this->types[] = array(
+            'name' => 'last_play',
+            'label' => T_('My Last Play'),
+            'type' => 'days',
+            'widget' => array('input', 'number')
+        );
+
         if (AmpConfig::get('ratings')) {
             $this->types[] = array(
                 'name' => 'rating',
@@ -621,16 +621,6 @@ class Search extends playlist_object
                     )
                 )
             );
-        }
-
-        $this->types[] = array(
-            'name' => 'last_play',
-            'label' => T_('My Last Play'),
-            'type' => 'days',
-            'widget' => array('input', 'number')
-        );
-
-        if (AmpConfig::get('ratings')) {
             $this->types[] = array(
                 'name' => 'myrating',
                 'label' => T_('My Rating'),
@@ -710,9 +700,6 @@ class Search extends playlist_object
                     )
                 )
             );
-        }
-
-        if (AmpConfig::get('ratings')) {
             $this->types[] = array(
                 'name' => 'myrating',
                 'label' => T_('My Rating'),
