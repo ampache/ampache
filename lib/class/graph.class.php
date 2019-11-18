@@ -138,6 +138,9 @@ class Graph
         return $values;
     }
 
+    /**
+     * @param string $fct
+     */
     protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
     {
         $values = $this->get_all_type_pts($fct, $id, $object_type, $object_id, $start_date, $end_date, $zoom);
@@ -151,6 +154,9 @@ class Graph
         return $values;
     }
 
+    /**
+     * @param string $fct
+     */
     protected function get_user_all_pts($fct, CpChart\Chart\Data $MyData, $user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $values = $this->get_all_pts($fct, $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
@@ -174,6 +180,9 @@ class Graph
         }
     }
 
+    /**
+     * @param string $fct
+     */
     protected function get_catalog_all_pts($fct, CpChart\Chart\Data $MyData, $catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $values = $this->get_all_pts($fct, $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom, false);
@@ -300,6 +309,10 @@ class Graph
         return $pts;
     }
 
+    /**
+     * @param string $title
+     * @param string $zoom
+     */
     protected function render_graph($title, CpChart\Chart\Data $MyData, $zoom, $width = 0, $height = 0)
     {
         // Check graph size sanity
