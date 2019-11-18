@@ -58,171 +58,11 @@ class Search extends playlist_object
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
-
             $this->rules = json_decode($this->rules, true);
         }
 
         // Define our basetypes
-
-        $this->basetypes['numeric'][] = array(
-            'name' => 'gte',
-            'description' => T_('is greater than or equal to'),
-            'sql' => '>='
-        );
-
-        $this->basetypes['numeric'][] = array(
-            'name' => 'lte',
-            'description' => T_('is less than or equal to'),
-            'sql' => '<='
-        );
-
-        $this->basetypes['numeric'][] = array(
-            'name' => 'equal',
-            'description' => T_('is'),
-            'sql' => '<=>'
-        );
-
-        $this->basetypes['numeric'][] = array(
-            'name' => 'ne',
-            'description' => T_('is not'),
-            'sql' => '<>'
-        );
-
-        $this->basetypes['numeric'][] = array(
-            'name' => 'gt',
-            'description' => T_('is greater than'),
-            'sql' => '>'
-        );
-
-        $this->basetypes['numeric'][] = array(
-            'name' => 'lt',
-            'description' => T_('is less than'),
-            'sql' => '<'
-        );
-
-
-        $this->basetypes['boolean'][] = array(
-            'name' => 'true',
-            'description' => T_('is true'),
-            'sql' => '1'
-        );
-
-        $this->basetypes['boolean'][] = array(
-            'name' => 'false',
-            'description' => T_('is false'),
-            'sql' => '0'
-        );
-
-
-        $this->basetypes['text'][] = array(
-            'name' => 'contain',
-            'description' => T_('contains'),
-            'sql' => 'LIKE',
-            'preg_match' => array('/^/', '/$/'),
-            'preg_replace' => array('%', '%')
-        );
-
-        $this->basetypes['text'][] = array(
-            'name' => 'notcontain',
-            'description' => T_('does not contain'),
-            'sql' => 'NOT LIKE',
-            'preg_match' => array('/^/', '/$/'),
-            'preg_replace' => array('%', '%')
-        );
-
-        $this->basetypes['text'][] = array(
-            'name' => 'start',
-            'description' => T_('starts with'),
-            'sql' => 'LIKE',
-            'preg_match' => '/$/',
-            'preg_replace' => '%'
-        );
-
-        $this->basetypes['text'][] = array(
-            'name' => 'end',
-            'description' => T_('ends with'),
-            'sql' => 'LIKE',
-            'preg_match' => '/^/',
-            'preg_replace' => '%'
-        );
-
-        $this->basetypes['text'][] = array(
-            'name' => 'equal',
-            'description' => T_('is'),
-            'sql' => '='
-        );
-
-        $this->basetypes['text'][] = array(
-            'name' => 'not equal',
-            'description' => T_('is not'),
-            'sql' => '!='
-        );
-
-        $this->basetypes['text'][] = array(
-            'name' => 'sounds',
-            'description' => T_('sounds like'),
-            'sql' => 'SOUNDS LIKE'
-        );
-
-        $this->basetypes['text'][] = array(
-            'name' => 'notsounds',
-            'description' => T_('does not sound like'),
-            'sql' => 'NOT SOUNDS LIKE'
-        );
-
-
-        $this->basetypes['boolean_numeric'][] = array(
-            'name' => 'equal',
-            'description' => T_('is'),
-            'sql' => '<=>'
-        );
-
-        $this->basetypes['boolean_numeric'][] = array(
-            'name' => 'ne',
-            'description' => T_('is not'),
-            'sql' => '<>'
-        );
-
-
-        $this->basetypes['boolean_subsearch'][] = array(
-            'name' => 'equal',
-            'description' => T_('is'),
-            'sql' => ''
-        );
-
-        $this->basetypes['boolean_subsearch'][] = array(
-            'name' => 'ne',
-            'description' => T_('is not'),
-            'sql' => 'NOT'
-        );
-
-
-        $this->basetypes['date'][] = array(
-            'name' => 'lt',
-            'description' => T_('before'),
-            'sql' => '<'
-        );
-
-        $this->basetypes['date'][] = array(
-            'name' => 'gt',
-            'description' => T_('after'),
-            'sql' => '>'
-        );
-
-
-        $this->basetypes['days'][] = array(
-            'name' => 'lt',
-            'description' => T_('before (x) days ago'),
-            'sql' => '<'
-        );
-
-        $this->basetypes['days'][] = array(
-            'name' => 'gt',
-            'description' => T_('after (x) days ago'),
-            'sql' => '>'
-        );
-
-        $this->basetypes['multiple'] = array_merge($this->basetypes['text'], $this->basetypes['numeric']);
+        $this->set_basetypes();
 
         switch ($searchtype) {
         case 'song':
@@ -757,6 +597,168 @@ class Search extends playlist_object
         break;
         } // end switch on searchtype
     } // end constructor
+
+    private function set_basetypes();
+    {
+        $this->basetypes['numeric'][] = array(
+            'name' => 'gte',
+            'description' => T_('is greater than or equal to'),
+            'sql' => '>='
+        );
+
+        $this->basetypes['numeric'][] = array(
+            'name' => 'lte',
+            'description' => T_('is less than or equal to'),
+            'sql' => '<='
+        );
+
+        $this->basetypes['numeric'][] = array(
+            'name' => 'equal',
+            'description' => T_('is'),
+            'sql' => '<=>'
+        );
+
+        $this->basetypes['numeric'][] = array(
+            'name' => 'ne',
+            'description' => T_('is not'),
+            'sql' => '<>'
+        );
+
+        $this->basetypes['numeric'][] = array(
+            'name' => 'gt',
+            'description' => T_('is greater than'),
+            'sql' => '>'
+        );
+
+        $this->basetypes['numeric'][] = array(
+            'name' => 'lt',
+            'description' => T_('is less than'),
+            'sql' => '<'
+        );
+
+
+        $this->basetypes['boolean'][] = array(
+            'name' => 'true',
+            'description' => T_('is true'),
+            'sql' => '1'
+        );
+
+        $this->basetypes['boolean'][] = array(
+            'name' => 'false',
+            'description' => T_('is false'),
+            'sql' => '0'
+        );
+
+
+        $this->basetypes['text'][] = array(
+            'name' => 'contain',
+            'description' => T_('contains'),
+            'sql' => 'LIKE',
+            'preg_match' => array('/^/', '/$/'),
+            'preg_replace' => array('%', '%')
+        );
+
+        $this->basetypes['text'][] = array(
+            'name' => 'notcontain',
+            'description' => T_('does not contain'),
+            'sql' => 'NOT LIKE',
+            'preg_match' => array('/^/', '/$/'),
+            'preg_replace' => array('%', '%')
+        );
+
+        $this->basetypes['text'][] = array(
+            'name' => 'start',
+            'description' => T_('starts with'),
+            'sql' => 'LIKE',
+            'preg_match' => '/$/',
+            'preg_replace' => '%'
+        );
+
+        $this->basetypes['text'][] = array(
+            'name' => 'end',
+            'description' => T_('ends with'),
+            'sql' => 'LIKE',
+            'preg_match' => '/^/',
+            'preg_replace' => '%'
+        );
+
+        $this->basetypes['text'][] = array(
+            'name' => 'equal',
+            'description' => T_('is'),
+            'sql' => '='
+        );
+
+        $this->basetypes['text'][] = array(
+            'name' => 'not equal',
+            'description' => T_('is not'),
+            'sql' => '!='
+        );
+
+        $this->basetypes['text'][] = array(
+            'name' => 'sounds',
+            'description' => T_('sounds like'),
+            'sql' => 'SOUNDS LIKE'
+        );
+
+        $this->basetypes['text'][] = array(
+            'name' => 'notsounds',
+            'description' => T_('does not sound like'),
+            'sql' => 'NOT SOUNDS LIKE'
+        );
+
+
+        $this->basetypes['boolean_numeric'][] = array(
+            'name' => 'equal',
+            'description' => T_('is'),
+            'sql' => '<=>'
+        );
+
+        $this->basetypes['boolean_numeric'][] = array(
+            'name' => 'ne',
+            'description' => T_('is not'),
+            'sql' => '<>'
+        );
+
+
+        $this->basetypes['boolean_subsearch'][] = array(
+            'name' => 'equal',
+            'description' => T_('is'),
+            'sql' => ''
+        );
+
+        $this->basetypes['boolean_subsearch'][] = array(
+            'name' => 'ne',
+            'description' => T_('is not'),
+            'sql' => 'NOT'
+        );
+
+
+        $this->basetypes['date'][] = array(
+            'name' => 'lt',
+            'description' => T_('before'),
+            'sql' => '<'
+        );
+
+        $this->basetypes['date'][] = array(
+            'name' => 'gt',
+            'description' => T_('after'),
+            'sql' => '>'
+        );
+
+        $this->basetypes['days'][] = array(
+            'name' => 'lt',
+            'description' => T_('before (x) days ago'),
+            'sql' => '<'
+        );
+
+        $this->basetypes['days'][] = array(
+            'name' => 'gt',
+            'description' => T_('after (x) days ago'),
+            'sql' => '>'
+        );
+
+        $this->basetypes['multiple'] = array_merge($this->basetypes['text'], $this->basetypes['numeric']);
+    }
 
     /**
      * clean_request
