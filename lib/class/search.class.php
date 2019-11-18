@@ -1281,8 +1281,8 @@ class Search extends playlist_object
                 break;
                 case 'tag':
                     $key               = md5($input . $sql_match_operator);
-                    $where[]           = "`realtag_$key`.`match` > 0";
-                    $join['tag'][$key] = "$sql_match_operator '$input'";
+                    $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $join['tag'][$key] = "'$input'";
                 break;
                 case 'image height':
                     $where[]       = "`image`.`height` $sql_match_operator '$input'";
@@ -1311,11 +1311,11 @@ class Search extends playlist_object
             //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
-                "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                "SELECT `object_id`, `name` " .
                 "FROM `tag` LEFT JOIN `tag_map` " .
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
                 "WHERE `tag_map`.`object_type`='album' " .
-                "AND `tag`.`name` $value GROUP BY `object_id`" .
+                "AND `tag`.`name` = $value GROUP BY `object_id`" .
                 ") AS realtag_$key " .
                 "ON `album`.`id`=`realtag_$key`.`object_id`";
         }
@@ -1425,8 +1425,8 @@ class Search extends playlist_object
                 break;
                 case 'tag':
                     $key               = md5($input . $sql_match_operator);
-                    $where[]           = "`realtag_$key`.`match` > 0";
-                    $join['tag'][$key] = "$sql_match_operator '$input'";
+                    $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $join['tag'][$key] = "'$input'";
                 break;
                 case 'rating':
                     if ($this->type != "public") {
@@ -1464,11 +1464,11 @@ class Search extends playlist_object
             //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
-                "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                "SELECT `object_id`, `name` " .
                 "FROM `tag` LEFT JOIN `tag_map` " .
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
                 "WHERE `tag_map`.`object_type`='artist' " .
-                "AND `tag`.`name` $value  GROUP BY `object_id`" .
+                "AND `tag`.`name` = $value  GROUP BY `object_id`" .
                 ") AS realtag_$key " .
                 "ON `artist`.`id`=`realtag_$key`.`object_id`";
         }
@@ -1563,8 +1563,8 @@ class Search extends playlist_object
                 break;
                 case 'tag':
                     $key               = md5($input . $sql_match_operator);
-                    $where[]           = "`realtag_$key`.`match` > 0";
-                    $join['tag'][$key] = "$sql_match_operator '$input'";
+                    $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $join['tag'][$key] = "'$input'";
                 break;
                 case 'album_tag':
                     $key                     = md5($input . $sql_match_operator);
@@ -1757,11 +1757,11 @@ class Search extends playlist_object
                 //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
-                    "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                    "SELECT `object_id`, `name` " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='song' " .
-                    "AND `tag`.`name` $value GROUP BY `object_id`" .
+                    "AND `tag`.`name` = $value GROUP BY `object_id`" .
                     ") AS realtag_$key " .
                     "ON `song`.`id`=`realtag_$key`.`object_id`";
             }
