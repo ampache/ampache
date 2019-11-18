@@ -1789,7 +1789,7 @@ class Search extends playlist_object
             foreach ($join['album_tag'] as $key => $value) {
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
-                    "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                    "SELECT `object_id`, `name` " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='album' " .
@@ -1802,13 +1802,13 @@ class Search extends playlist_object
             foreach ($join['artist_tag'] as $key => $value) {
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
-                    "SELECT `object_id`, COUNT(`name`) AS `match` " .
+                    "SELECT `object_id`, `name` " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='artist' " .
                     "AND `tag`.`name` $value  GROUP BY `object_id`" .
                     ") AS realtag_$key " .
-                    "ON `album`.`id`=`realtag_$key`.`object_id`";
+                    "ON `artist`.`id`=`realtag_$key`.`object_id`";
             }
         }
         if ($join['rating']) {
