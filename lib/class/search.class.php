@@ -67,19 +67,19 @@ class Search extends playlist_object
         $this->types = array();
         switch ($searchtype) {
             case 'song':
-                self::songtypes();
+                $this->songtypes();
             case 'album':
-                self::albumtypes();
+                $this->albumtypes();
             case 'video':
-                self::videotypes();
+                $this->videotypes();
             case 'artist':
-                self::artisttypes();
+                $this->artisttypes();
             case 'playlist':
-                self::playlisttypes();
+                $this->playlisttypes();
             case 'label':
-                self::labeltypes();
+                $this->labeltypes();
             case 'user':
-                self::usertypes();
+                $this->usertypes();
         } // end switch on searchtype
     } // end constructor
 
