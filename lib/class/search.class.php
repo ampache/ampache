@@ -834,7 +834,7 @@ class Search extends playlist_object
 
         return $types;
     }
-    }
+
     /**
      * clean_request
      *
