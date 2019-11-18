@@ -68,18 +68,25 @@ class Search extends playlist_object
         switch ($searchtype) {
             case 'song':
                 $this->songtypes();
+                break;
             case 'album':
                 $this->albumtypes();
+                break;
             case 'video':
                 $this->videotypes();
+                break;
             case 'artist':
                 $this->artisttypes();
+                break;
             case 'playlist':
                 $this->playlisttypes();
+                break;
             case 'label':
                 $this->labeltypes();
+                break;
             case 'user':
                 $this->usertypes();
+                break;
         } // end switch on searchtype
     } // end constructor
 
@@ -1316,7 +1323,7 @@ class Search extends playlist_object
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
                 "WHERE `tag_map`.`object_type`='album' " .
                 "AND `tag`.`name` = $value GROUP BY `object_id`" .
-                ") AS realtag_$key " .
+                ") AS `realtag_$key` " .
                 "ON `album`.`id`=`realtag_$key`.`object_id`";
         }
         if ($join['artist']) {
@@ -1469,7 +1476,7 @@ class Search extends playlist_object
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
                 "WHERE `tag_map`.`object_type`='artist' " .
                 "AND `tag`.`name` = $value  GROUP BY `object_id`" .
-                ") AS realtag_$key " .
+                ") AS `realtag_$key` " .
                 "ON `artist`.`id`=`realtag_$key`.`object_id`";
         }
 
@@ -1568,8 +1575,8 @@ class Search extends playlist_object
                 break;
                 case 'album_tag':
                     $key                     = md5($input . $sql_match_operator);
-                    $where[]                 = "`realtag_$key`.`match` > 0";
-                    $join['album_tag'][$key] = "$sql_match_operator '$input'";
+                    $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $join['album_tag'][$key] = "'$input'";
                     $join['album']           = true;
                 break;
                 case 'title':
@@ -1762,7 +1769,7 @@ class Search extends playlist_object
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='song' " .
                     "AND `tag`.`name` = $value GROUP BY `object_id`" .
-                    ") AS realtag_$key " .
+                    ") AS `realtag_$key` " .
                     "ON `song`.`id`=`realtag_$key`.`object_id`";
             }
         }
