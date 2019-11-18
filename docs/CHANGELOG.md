@@ -103,7 +103,8 @@ Warning for API developers, Advanced search rule numbers have changed for text s
 * New Method: update_from_tags (updates a single album, artist, song from the tag data instead of the entire library!)
 * New Method: update_art (updates a single album, artist, song running the gather_art process)
 * New Method: update_artist_info (Update artist information and fetch similar artists from last.fm)
-* Added 'is not' to text searches
+* Added 'is not' to all text searches
+* Added artist_tag to song searches
 
 ### Subsonic Backend
 
