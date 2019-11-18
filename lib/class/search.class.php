@@ -64,6 +64,7 @@ class Search extends playlist_object
         // Define our basetypes
         $this->set_basetypes();
 
+        $this->types = array();
         switch ($searchtype) {
             case 'song':
                 self::songtypes();
