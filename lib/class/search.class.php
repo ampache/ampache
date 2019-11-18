@@ -127,7 +127,6 @@ class Search extends playlist_object
             'sql' => '<'
         );
 
-
         $this->basetypes['boolean'][] = array(
             'name' => 'true',
             'description' => T_('is true'),
@@ -139,7 +138,6 @@ class Search extends playlist_object
             'description' => T_('is false'),
             'sql' => '0'
         );
-
 
         $this->basetypes['text'][] = array(
             'name' => 'contain',
@@ -197,7 +195,6 @@ class Search extends playlist_object
             'sql' => 'NOT SOUNDS LIKE'
         );
 
-
         $this->basetypes['boolean_numeric'][] = array(
             'name' => 'equal',
             'description' => T_('is'),
@@ -210,7 +207,6 @@ class Search extends playlist_object
             'sql' => '<>'
         );
 
-
         $this->basetypes['boolean_subsearch'][] = array(
             'name' => 'equal',
             'description' => T_('is'),
@@ -222,7 +218,6 @@ class Search extends playlist_object
             'description' => T_('is not'),
             'sql' => 'NOT'
         );
-
 
         $this->basetypes['date'][] = array(
             'name' => 'lt',
@@ -1152,7 +1147,6 @@ class Search extends playlist_object
 
         return $insert_id;
     }
-
 
     /**
      * to_js
