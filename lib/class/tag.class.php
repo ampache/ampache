@@ -466,7 +466,7 @@ class Tag extends database_object implements library_item
 
     /**
      * get_object_tags
-     * Display all tags that apply to maching target type of the specified id
+     * Display all tags that apply to matching target type of the specified id
      *
      * @param string $type
      */
