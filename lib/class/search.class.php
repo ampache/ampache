@@ -1307,7 +1307,7 @@ class Search extends playlist_object
                     $where[] = "`album`.`year` $sql_match_operator '$input'";
                 break;
                 case 'time':
-                    $input   = $input * 60;
+                    $input    = $input * 60;
                     $having[] = "SUM(`song`.`time`) $sql_match_operator '$input'";
                 break;
                 case 'rating':
