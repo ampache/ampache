@@ -707,13 +707,22 @@ class Search extends playlist_object
             'type' => 'text',
             'widget' => array('input', 'text')
         );
-
         $this->last_play();
+        $this->total_time();
 
+        if (AmpConfig::get('userflags')) {
+            $this->types[] = array(
+            $this->favorite();
+        }
         if (AmpConfig::get('ratings')) {
             $this->rating();
             $this->myrating();
         }
+        if (AmpConfig::get('show_played_times')) {
+            $this->played_times();
+        }
+        $this->image_width();
+        $this->image_height();
     }
 
     /**
@@ -750,10 +759,18 @@ class Search extends playlist_object
         if (AmpConfig::get('ratings')) {
             $this->rating();
             $this->myrating();
+            $this->artistrating();
         }
-
+        if (AmpConfig::get('show_played_times')) {
+            $this->played_times();
+        }
         $this->last_play();
+        $this->total_time();
 
+        if (AmpConfig::get('userflags')) {
+            $this->types[] = array(
+            $this->favorite();
+        }
         $catalogs = array();
         foreach (Catalog::get_catalogs() as $catid) {
             $catalog = Catalog::create_from_id($catid);
