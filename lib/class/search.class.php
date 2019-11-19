@@ -1586,7 +1586,7 @@ class Search extends playlist_object
             }
         }
         if ($join['user_flag']) {
-            $table['user_flag']  = "LEFT JOIN `user_flag` ON `album`.`id`=`user_flag`.`object_id`";
+            $table['user_flag']  = "LEFT JOIN `user_flag` ON `artist`.`id`=`user_flag`.`object_id`";
         }
         if ($join['rating']) {
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
