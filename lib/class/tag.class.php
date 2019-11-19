@@ -359,6 +359,12 @@ class Tag extends database_object implements library_item
             "WHERE `tag_map`.`id` IS NULL " .
             "AND NOT EXISTS (SELECT 1 FROM `tag_merge` where `tag_merge`.`tag_id` = `tag`.`id`)";
         Dba::write($sql);
+
+        // delete duplicates
+        $sql = "DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` " .
+               "WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND " .
+               "`a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`";
+        Dba::write($sql);
     }
 
     /**
