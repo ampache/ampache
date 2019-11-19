@@ -203,7 +203,7 @@ class Tag extends database_object implements library_item
      */
     public function update(array $data)
     {
-        //debug_event('tag.class', 'Updating tag {'.$this->id.'} with name {'.$name.'}...', 5);
+        debug_event('tag.class', 'Updating tag {'.$this->id.'} with name {'.$name.'}...', 5);
         if (!strlen($data['name'])) {
             return false;
         }
@@ -616,7 +616,7 @@ class Tag extends database_object implements library_item
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
         $filterunder = str_replace('_',', ', $filterfolk);
         $filter      = str_replace(';',', ', $filterunder);
-        $editedTags  = explode(",", $filter);
+        $editedTags  = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
 
         if (is_array($ctags)) {
             foreach ($ctags as $ctid => $ctv) {
