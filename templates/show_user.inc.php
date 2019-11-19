@@ -82,7 +82,7 @@ if ($client->f_avatar) {
     <?php if (Access::check('interface', '50')) { ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
     <dd class="<?php echo $rowparity; ?>"><?php echo $client->f_usage; ?></dd>
-        <?php if (AmpConfig::get('statistical_graphs')) {
+        <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
         ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
         <?php
