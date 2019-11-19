@@ -1584,8 +1584,8 @@ class Search extends playlist_object
             $table['object_count'] .= "`object_count`.`object_id`=`artist`.`id`";
         }
         if ($join['image']) {
-            $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
-            $where_sql .= " AND `image`.`object_type`='album'";
+            $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`artist`.`id`";
+            $where_sql .= " AND `image`.`object_type`='artist'";
             $where_sql .= " AND `image`.`size`='original'";
         }
         $table_sql  = implode(' ', $table);
