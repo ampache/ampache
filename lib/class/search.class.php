@@ -1332,7 +1332,7 @@ class Search extends playlist_object
                     } else {
                         $where[] = "`song`.`artist` IN (SELECT `rating`.`object_id` FROM `rating` " .
                                    "WHERE COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND " .
-                                   "`rating`.`object_type` = 'artist') ";
+                                   "`rating`.`user`='" . $userid . "' AND `rating`.`object_type` = 'artist') ";
                     }
                 break;
                 case 'myplayed':
@@ -1750,7 +1750,7 @@ class Search extends playlist_object
                     } else {
                         $where[] = "`song`.`album` IN (SELECT `rating`.`object_id` FROM `rating` " .
                                    "WHERE COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND " .
-                                   "`rating`.`object_type` = 'album') ";
+                                   "`rating`.`user`='" . $userid . "' AND `rating`.`object_type` = 'album') ";
                     }
                 break;
                 case 'artistrating':
@@ -1763,7 +1763,7 @@ class Search extends playlist_object
                     } else {
                         $where[] = "`song`.`artist` IN (SELECT `rating`.`object_id` FROM `rating` " .
                                    "WHERE COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND " .
-                                   "`rating`.`object_type` = 'artist') ";
+                                   "`rating`.`user`='" . $userid . "' AND `rating`.`object_type` = 'artist') ";
                     }
                 break;
                 case 'last_play':
