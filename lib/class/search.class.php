@@ -1310,6 +1310,7 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            $namesql  = '`name`';
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1394,7 +1395,6 @@ class Search extends playlist_object
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
-                    $namesql           = '`name`';
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
                         $namesql = 'GROUP_CONCAT(`name`) AS `name`';
                     }
@@ -1516,6 +1516,7 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            $namesql  = '`name`';
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1542,7 +1543,6 @@ class Search extends playlist_object
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
-                    $namesql           = '`name`';
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
                         $namesql = 'GROUP_CONCAT(`name`) AS `name`';
                     }
@@ -1687,8 +1687,11 @@ class Search extends playlist_object
         $join['tag'] = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->name_to_basetype($rule[0]);
-            $operator = array();
+            $type          = $this->name_to_basetype($rule[0]);
+            $operator      = array();
+            $namesql       = '`name`';
+            $albumnamesql  = '`name`';
+            $artistnamesql = '`name`';
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1712,7 +1715,6 @@ class Search extends playlist_object
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
-                    $namesql           = '`name`';
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
                         $namesql = 'GROUP_CONCAT(`name`) AS `name`';
                     }
@@ -1722,7 +1724,6 @@ class Search extends playlist_object
                     $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['album_tag'][$key] = "$sql_match_operator '$input'";
                     $join['album']           = true;
-                    $albumnamesql            = '`name`';
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
                         $albumnamesql = 'GROUP_CONCAT(`name`) AS `name`';
                     }
@@ -1731,7 +1732,6 @@ class Search extends playlist_object
                     $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['artist_tag'][$key] = "$sql_match_operator '$input'";
                     $join['artist']           = true;
-                    $artistnamesql            = '`name`';
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
                         $artistnamesql = 'GROUP_CONCAT(`name`) AS `name`';
                     }
