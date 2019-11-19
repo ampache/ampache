@@ -1343,6 +1343,11 @@ class Search extends playlist_object
                     $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` WHERE `object_count`.`object_type` = 'album' GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
                     break;
+                case 'played_times':
+                    $where[] = "`album`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' " .
+                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                break;
                 case 'catalog':
                     $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
                     $join['song'] = true;
@@ -1525,6 +1530,11 @@ class Search extends playlist_object
                     $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` WHERE `object_count`.`object_type` = 'artist' GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
                     break;
+                case 'played_times':
+                    $where[] = "`artist`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' " .
+                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                break;
                 default:
                     // Nihil
                 break;
