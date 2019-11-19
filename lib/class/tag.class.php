@@ -203,10 +203,10 @@ class Tag extends database_object implements library_item
      */
     public function update(array $data)
     {
-        //debug_event('tag.class', 'Updating tag {'.$this->id.'} with name {'.$name.'}...', 5);
         if (!strlen($data['name'])) {
             return false;
         }
+        debug_event('tag.class', 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
 
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
         Dba::write($sql, array($data['name'], $this->id));
@@ -215,7 +215,7 @@ class Tag extends database_object implements library_item
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $data['edit_tags']);
             $filterunder = str_replace('_',', ', $filterfolk);
             $filter      = str_replace(';',', ', $filterunder);
-            $tag_names   = explode(',', $filter);
+            $tag_names   = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
             foreach ($tag_names as $tag) {
                 $merge_to = self::construct_from_name($tag);
                 if ($merge_to->id == 0) {
@@ -358,6 +358,12 @@ class Tag extends database_object implements library_item
         $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
             "WHERE `tag_map`.`id` IS NULL " .
             "AND NOT EXISTS (SELECT 1 FROM `tag_merge` where `tag_merge`.`tag_id` = `tag`.`id`)";
+        Dba::write($sql);
+
+        // delete duplicates
+        $sql = "DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` " .
+               "WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND " .
+               "`a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`";
         Dba::write($sql);
     }
 
@@ -616,7 +622,7 @@ class Tag extends database_object implements library_item
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
         $filterunder = str_replace('_',', ', $filterfolk);
         $filter      = str_replace(';',', ', $filterunder);
-        $editedTags  = explode(",", $filter);
+        $editedTags  = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
 
         if (is_array($ctags)) {
             foreach ($ctags as $ctid => $ctv) {
@@ -662,10 +668,10 @@ class Tag extends database_object implements library_item
         if (is_array($tags)) {
             $taglist = $tags;
         } else {
-            $filterfolk       = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
-            $filterunder      = str_replace('_',', ', $filterfolk);
-            $filter           = str_replace(';',', ', $filterunder);
-            $taglist          = explode(",", $filter);
+            $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
+            $filterunder = str_replace('_',', ', $filterfolk);
+            $filter      = str_replace(';',', ', $filterunder);
+            $taglist     = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
         }
 
         $ret = array();

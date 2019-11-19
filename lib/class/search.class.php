@@ -195,6 +195,37 @@ class Search extends playlist_object
             'description' => T_('does not sound like'),
             'sql' => 'NOT SOUNDS LIKE'
         );
+        $this->basetypes['tags'][] = array(
+            'name' => 'contain',
+            'description' => T_('contains'),
+            'sql' => 'LIKE',
+            'preg_match' => array('/^/', '/$/'),
+            'preg_replace' => array('%', '%')
+        );
+
+        $this->basetypes['tags'][] = array(
+            'name' => 'notcontain',
+            'description' => T_('does not contain'),
+            'sql' => 'NOT LIKE',
+            'preg_match' => array('/^/', '/$/'),
+            'preg_replace' => array('%', '%')
+        );
+
+        $this->basetypes['tags'][] = array(
+            'name' => 'start',
+            'description' => T_('starts with'),
+            'sql' => 'LIKE',
+            'preg_match' => '/$/',
+            'preg_replace' => '%'
+        );
+
+        $this->basetypes['tags'][] = array(
+            'name' => 'end',
+            'description' => T_('ends with'),
+            'sql' => 'LIKE',
+            'preg_match' => '/^/',
+            'preg_replace' => '%'
+        );
 
         $this->basetypes['boolean_numeric'][] = array(
             'name' => 'equal',
@@ -245,6 +276,169 @@ class Search extends playlist_object
         );
 
         $this->basetypes['multiple'] = array_merge($this->basetypes['text'], $this->basetypes['numeric']);
+    }
+
+    /**
+     * total_time
+     *
+     * Length (in minutes) Numeric search (Song, Album)
+     */
+    private function total_time()
+    {
+        $this->types[] = array(
+            'name' => 'time',
+            'label' => T_('Length (in minutes)'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
+        );
+    }
+
+    /**
+     * artistrating
+     *
+     * My Rating (Artist) Numeric search (Song, Album)
+     */
+    private function artistrating()
+    {
+        $this->types[] = array(
+            'name' => 'artistrating',
+            'label' => T_('My Rating (Artist)'),
+            'type' => 'numeric',
+            'widget' => array(
+                'select',
+                array(
+                    '1 Star',
+                    '2 Stars',
+                    '3 Stars',
+                    '4 Stars',
+                    '5 Stars'
+                )
+            )
+        );
+    }
+
+    /**
+     * image_height
+     *
+     * Image Height (Album, Artist)
+     */
+    private function image_height()
+    {
+        $this->types[] = array(
+            'name' => 'image height',
+            'label' => T_('Image Height'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
+        );
+    }
+
+    /**
+     * image_width
+     *
+     * Image Width (Album, Artist)
+     */
+    private function image_width()
+    {
+        $this->types[] = array(
+            'name' => 'image width',
+            'label' => T_('Image Width'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
+        );
+    }
+
+    /**
+     * last_play
+     *
+     * My Last Play in days (song, album, artist)
+     */
+    private function last_play()
+    {
+        $this->types[] = array(
+            'name' => 'last_play',
+            'label' => T_('My Last Play'),
+            'type' => 'days',
+            'widget' => array('input', 'number')
+        );
+    }
+
+    /**
+     * rating
+     *
+     * Rating (Average) across all users (song, album, artist)
+     */
+    private function rating()
+    {
+        $this->types[] = array(
+            'name' => 'rating',
+            'label' => T_('Rating (Average)'),
+            'type' => 'numeric',
+            'widget' => array(
+                'select',
+                array(
+                    '1 Star',
+                    '2 Stars',
+                    '3 Stars',
+                    '4 Stars',
+                    '5 Stars'
+                )
+            )
+        );
+    }
+
+    /**
+     * myrating
+     *
+     * My Rating, the rating from your user (song, album, artist)
+     */
+    private function myrating()
+    {
+        $this->types[] = array(
+            'name' => 'myrating',
+            'label' => T_('My Rating'),
+            'type' => 'numeric',
+            'widget' => array(
+                'select',
+                array(
+                    '1 Star',
+                    '2 Stars',
+                    '3 Stars',
+                    '4 Stars',
+                    '5 Stars'
+                )
+            )
+        );
+    }
+
+    /**
+     * played_times
+     *
+     * # Played, Number of times this objet has been played (song, album, artist)
+     */
+    private function played_times()
+    {
+        $this->types[] = array(
+            'name' => 'played_times',
+            /* HINT: Number of times object has been played */
+            'label' => T_('# Played'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
+        );
+    }
+
+    /**
+     * favorite
+     *
+     * Objects you have flagged / loved (song, album, artist)
+     */
+    private function favorite()
+    {
+        $this->types[] = array(
+            'name' => 'favorite',
+            'label' => T_('Favorites'),
+            'type' => 'text',
+            'widget' => array('input', 'text')
+        );
     }
 
     /**
@@ -306,21 +500,21 @@ class Search extends playlist_object
         $this->types[] = array(
             'name' => 'tag',
             'label' => T_('Tag'),
-            'type' => 'text',
+            'type' => 'tags',
             'widget' => array('input', 'text')
         );
 
         $this->types[] = array(
             'name' => 'album_tag',
             'label' => T_('Album tag'),
-            'type' => 'text',
+            'type' => 'tags',
             'widget' => array('input', 'text')
         );
 
         $this->types[] = array(
             'name' => 'artist_tag',
             'label' => T_('Artist tag'),
-            'type' => 'text',
+            'type' => 'tags',
             'widget' => array('input', 'text')
         );
 
@@ -338,68 +532,16 @@ class Search extends playlist_object
             'widget' => array('input', 'number')
         );
 
-        $this->types[] = array(
-            'name' => 'time',
-            'label' => T_('Length (in minutes)'),
-            'type' => 'numeric',
-            'widget' => array('input', 'number')
-        );
+        $this->total_time();
 
         if (AmpConfig::get('userflags')) {
-            $this->types[] = array(
-                'name' => 'favorite',
-                'label' => T_('Favorites'),
-                'type' => 'text',
-                'widget' => array('input', 'text')
-            );
+            $this->favorite();
         }
 
         if (AmpConfig::get('ratings')) {
-            $this->types[] = array(
-                'name' => 'rating',
-                'label' => T_('Rating (Average)'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
-            $this->types[] = array(
-                'name' => 'myrating',
-                'label' => T_('My Rating'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
-            $this->types[] = array(
-                'name' => 'artistrating',
-                'label' => T_('My Rating (Artist)'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
+            $this->rating();
+            $this->myrating();
+            $this->artistrating();
             $this->types[] = array(
                 'name' => 'albumrating',
                 'label' => T_('My Rating (Album)'),
@@ -418,13 +560,7 @@ class Search extends playlist_object
         }
 
         if (AmpConfig::get('show_played_times')) {
-            $this->types[] = array(
-                'name' => 'played_times',
-                /* HINT: Number of times object has been played */
-                'label' => T_('# Played'),
-                'type' => 'numeric',
-                'widget' => array('input', 'number')
-            );
+            $this->played_times();
         }
 
         $this->types[] = array(
@@ -452,12 +588,7 @@ class Search extends playlist_object
             )
         );
 
-        $this->types[] = array(
-            'name' => 'last_play',
-            'label' => T_('My Last Play'),
-            'type' => 'days',
-            'widget' => array('input', 'number')
-        );
+        $this->last_play();
 
         $this->types[] = array(
             'name' => 'played',
@@ -604,49 +735,24 @@ class Search extends playlist_object
         $this->types[] = array(
             'name' => 'tag',
             'label' => T_('Tag'),
-            'type' => 'text',
+            'type' => 'tags',
             'widget' => array('input', 'text')
         );
+        $this->last_play();
+        $this->total_time();
 
-        $this->types[] = array(
-            'name' => 'last_play',
-            'label' => T_('My Last Play'),
-            'type' => 'days',
-            'widget' => array('input', 'number')
-        );
-
-        if (AmpConfig::get('ratings')) {
-            $this->types[] = array(
-                'name' => 'rating',
-                'label' => T_('Rating (Average)'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
-            $this->types[] = array(
-                'name' => 'myrating',
-                'label' => T_('My Rating'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
+        if (AmpConfig::get('userflags')) {
+            $this->favorite();
         }
+        if (AmpConfig::get('ratings')) {
+            $this->rating();
+            $this->myrating();
+        }
+        if (AmpConfig::get('show_played_times')) {
+            $this->played_times();
+        }
+        $this->image_width();
+        $this->image_height();
     }
 
     /**
@@ -677,60 +783,23 @@ class Search extends playlist_object
             'widget' => array('input', 'number')
         );
 
-        $this->types[] = array(
-            'name' => 'image width',
-            'label' => T_('Image Width'),
-            'type' => 'numeric',
-            'widget' => array('input', 'number')
-        );
-
-        $this->types[] = array(
-            'name' => 'image height',
-            'label' => T_('Image Height'),
-            'type' => 'numeric',
-            'widget' => array('input', 'number')
-        );
+        $this->image_width();
+        $this->image_height();
 
         if (AmpConfig::get('ratings')) {
-            $this->types[] = array(
-                'name' => 'rating',
-                'label' => T_('Rating (Average)'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
-            $this->types[] = array(
-                'name' => 'myrating',
-                'label' => T_('My Rating'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
+            $this->rating();
+            $this->myrating();
+            $this->artistrating();
         }
+        if (AmpConfig::get('show_played_times')) {
+            $this->played_times();
+        }
+        $this->last_play();
+        $this->total_time();
 
-        $this->types[] = array(
-            'name' => 'last_play',
-            'label' => T_('My Last Play'),
-            'type' => 'days',
-            'widget' => array('input', 'number')
-        );
-
+        if (AmpConfig::get('userflags')) {
+            $this->favorite();
+        }
         $catalogs = array();
         foreach (Catalog::get_catalogs() as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -747,7 +816,7 @@ class Search extends playlist_object
         $this->types[] = array(
             'name' => 'tag',
             'label' => T_('Tag'),
-            'type' => 'text',
+            'type' => 'tags',
             'widget' => array('input', 'text')
         );
     }
@@ -1255,6 +1324,8 @@ class Search extends playlist_object
                 $group[] = "`album`.`album_artist`";
                 $group[] = "`album`.`mbid`";
                 $group[] = "`album`.`year`";
+            } else {
+                $group[] = "`album`.`id`";
             }
 
             switch ($rule[0]) {
@@ -1266,20 +1337,41 @@ class Search extends playlist_object
                 case 'year':
                     $where[] = "`album`.`year` $sql_match_operator '$input'";
                 break;
+                case 'time':
+                    $input    = $input * 60;
+                    $having[] = "SUM(`song`.`time`) $sql_match_operator '$input'";
+                break;
                 case 'rating':
                     if ($this->type != "public") {
                         $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     } else {
-                        if (!$groupdisks) {
-                            $group[] = "`album`.`id`";
-                        }
                         $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
                     }
                     $join['rating'] = true;
                 break;
+                case 'favorite':
+                    $join['user_flag']  = true;
+                    $where[]            = "(`album`.`name` $sql_match_operator '$input' " .
+                                " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
+                                "' ', `album`.`name`)) $sql_match_operator '$input') AND `user_flag`.`user` = $userid";
+                    $where[] .= "`user_flag`.`object_type` = 'album'";
+                break;
                 case 'myrating':
                     $where[]          = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['myrating'] = true;
+                break;
+                case 'artistrating':
+                    if ($sql_match_operator === '<=' || $sql_match_operator === '<>' || $sql_match_operator === '<=') {
+                        $where[] = "(`song`.`artist` IN (SELECT `rating`.`object_id` FROM `rating` " .
+                                   "WHERE COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND " .
+                                   "`rating`.`user`='" . $userid . "' AND `rating`.`object_type` = 'artist') OR " .
+                                   "`song`.`artist` NOT IN (SELECT `rating`.`object_id` FROM `rating` " .
+                                   "WHERE `rating`.`object_type` = 'artist'))";
+                    } else {
+                        $where[] = "`song`.`artist` IN (SELECT `rating`.`object_id` FROM `rating` " .
+                                   "WHERE COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND " .
+                                   "`rating`.`user`='" . $userid . "' AND `rating`.`object_type` = 'artist') ";
+                    }
                 break;
                 case 'myplayed':
                     $where[]              = "`object_count`.`date` IS NOT NULL";
@@ -1289,6 +1381,11 @@ class Search extends playlist_object
                     $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` WHERE `object_count`.`object_type` = 'album' GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
                     break;
+                case 'played_times':
+                    $where[] = "`album`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' " .
+                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                break;
                 case 'catalog':
                     $where[]      = "`song`.`catalog` $sql_match_operator '$input'";
                     $join['song'] = true;
@@ -1297,6 +1394,10 @@ class Search extends playlist_object
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
+                    $namesql           = '`name`';
+                    if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $namesql = 'GROUP_CONCAT(`name`) AS `name`';
+                    }
                 break;
                 case 'image height':
                     $where[]       = "`image`.`height` $sql_match_operator '$input'";
@@ -1317,7 +1418,7 @@ class Search extends playlist_object
         } // foreach rule
 
         $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog'] = AmpConfig::get('catalog_disable');
+        $join['catalog'] = $join['song'] || AmpConfig::get('catalog_disable');
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -1325,11 +1426,11 @@ class Search extends playlist_object
             //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
-                "SELECT `object_id`, `name` " .
+                "SELECT `object_id`, " . $namesql . " " .
                 "FROM `tag` LEFT JOIN `tag_map` " .
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
                 "WHERE `tag_map`.`object_type`='album' " .
-                "AND `tag`.`name` $value GROUP BY `object_id`" .
+                "GROUP BY `object_id`" .
                 ") AS `realtag_$key` " .
                 "ON `album`.`id`=`realtag_$key`.`object_id`";
         }
@@ -1374,7 +1475,7 @@ class Search extends playlist_object
             $table['object_count'] .= "`object_count`.`object_id`=`album`.`id`";
         }
         if ($join['image']) {
-            $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
+            $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id` LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
             $where_sql .= " AND `image`.`object_type`='album'";
             $where_sql .= " AND `image`.`size`='original'";
         }
@@ -1441,6 +1542,10 @@ class Search extends playlist_object
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
+                    $namesql           = '`name`';
+                    if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $namesql = 'GROUP_CONCAT(`name`) AS `name`';
+                    }
                 break;
                 case 'rating':
                     if ($this->type != "public") {
@@ -1450,6 +1555,21 @@ class Search extends playlist_object
                         $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
                     }
                     $join['rating'] = true;
+                break;
+                case 'favorite':
+                    $join['user_flag']  = true;
+                    $where[]            = "(`artist`.`name` $sql_match_operator '$input' " .
+                                " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
+                                "' ', `artist`.`name`)) $sql_match_operator '$input') AND `user_flag`.`user` = $userid";
+                    $where[] .= "`user_flag`.`object_type` = 'artist'";
+                break;
+                case 'image height':
+                    $where[]       = "`image`.`height` $sql_match_operator '$input'";
+                    $join['image'] = true;
+                break;
+                case 'image width':
+                    $where[]       = "`image`.`width` $sql_match_operator '$input'";
+                    $join['image'] = true;
                 break;
                 case 'myrating':
                     $where[]           = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
@@ -1463,6 +1583,11 @@ class Search extends playlist_object
                     $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` WHERE `object_count`.`object_type` = 'artist' GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
                     break;
+                case 'played_times':
+                    $where[] = "`artist`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' " .
+                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                break;
                 default:
                     // Nihil
                 break;
@@ -1478,11 +1603,11 @@ class Search extends playlist_object
             //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
-                "SELECT `object_id`, `name` " .
+                "SELECT `object_id`, " . $namesql . " " .
                 "FROM `tag` LEFT JOIN `tag_map` " .
                 "ON `tag`.`id`=`tag_map`.`tag_id` " .
                 "WHERE `tag_map`.`object_type`='artist' " .
-                "AND `tag`.`name` $value  GROUP BY `object_id`" .
+                "GROUP BY `object_id`" .
                 ") AS `realtag_$key` " .
                 "ON `artist`.`id`=`realtag_$key`.`object_id`";
         }
@@ -1498,6 +1623,9 @@ class Search extends playlist_object
                     $where_sql .= " `catalog_se`.`enabled` = '1'";
                 }
             }
+        }
+        if ($join['user_flag']) {
+            $table['user_flag']  = "LEFT JOIN `user_flag` ON `artist`.`id`=`user_flag`.`object_id`";
         }
         if ($join['rating']) {
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
@@ -1520,6 +1648,11 @@ class Search extends playlist_object
             $table['object_count'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='artist' AND ";
             $table['object_count'] .= "`object_count`.`user`='" . $userid . "' AND ";
             $table['object_count'] .= "`object_count`.`object_id`=`artist`.`id`";
+        }
+        if ($join['image']) {
+            $table['song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` LEFT JOIN `image` ON `image`.`object_id`=`artist`.`id`";
+            $where_sql .= " AND `image`.`object_type`='artist'";
+            $where_sql .= " AND `image`.`size`='original'";
         }
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(',', $group);
@@ -1579,17 +1712,29 @@ class Search extends playlist_object
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
+                    $namesql           = '`name`';
+                    if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $namesql = 'GROUP_CONCAT(`name`) AS `name`';
+                    }
                 break;
                 case 'album_tag':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['album_tag'][$key] = "$sql_match_operator '$input'";
                     $join['album']           = true;
+                    $albumnamesql            = '`name`';
+                    if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $albumnamesql = 'GROUP_CONCAT(`name`) AS `name`';
+                    }
                 case 'artist_tag':
                     $key                      = md5($input . $sql_match_operator);
                     $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['artist_tag'][$key] = "$sql_match_operator '$input'";
                     $join['artist']           = true;
+                    $artistnamesql            = '`name`';
+                    if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $artistnamesql = 'GROUP_CONCAT(`name`) AS `name`';
+                    }
                 break;
                 case 'title':
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
@@ -1683,7 +1828,7 @@ class Search extends playlist_object
                     } else {
                         $where[] = "`song`.`album` IN (SELECT `rating`.`object_id` FROM `rating` " .
                                    "WHERE COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND " .
-                                   "`rating`.`object_type` = 'album') ";
+                                   "`rating`.`user`='" . $userid . "' AND `rating`.`object_type` = 'album') ";
                     }
                 break;
                 case 'artistrating':
@@ -1696,7 +1841,7 @@ class Search extends playlist_object
                     } else {
                         $where[] = "`song`.`artist` IN (SELECT `rating`.`object_id` FROM `rating` " .
                                    "WHERE COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND " .
-                                   "`rating`.`object_type` = 'artist') ";
+                                   "`rating`.`user`='" . $userid . "' AND `rating`.`object_type` = 'artist') ";
                     }
                 break;
                 case 'last_play':
@@ -1776,11 +1921,11 @@ class Search extends playlist_object
                 //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
-                    "SELECT `object_id`, `name` " .
+                    "SELECT `object_id`, " . $namesql . " " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='song' " .
-                    "AND `tag`.`name` $value GROUP BY `object_id`" .
+                    "GROUP BY `object_id`" .
                     ") AS `realtag_$key` " .
                     "ON `song`.`id`=`realtag_$key`.`object_id`";
             }
@@ -1789,11 +1934,11 @@ class Search extends playlist_object
             foreach ($join['album_tag'] as $key => $value) {
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
-                    "SELECT `object_id`, `name` " .
+                    "SELECT `object_id`, " . $albumnamesql . " " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='album' " .
-                    "AND `tag`.`name` $value  GROUP BY `object_id`" .
+                    "GROUP BY `object_id`" .
                     ") AS realtag_$key " .
                     "ON `album`.`id`=`realtag_$key`.`object_id`";
             }
@@ -1802,11 +1947,11 @@ class Search extends playlist_object
             foreach ($join['artist_tag'] as $key => $value) {
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
-                    "SELECT `object_id`, `name` " .
+                    "SELECT `object_id`, " . $artistnamesql . " " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='artist' " .
-                    "AND `tag`.`name` $value  GROUP BY `object_id`" .
+                    "GROUP BY `object_id`" .
                     ") AS realtag_$key " .
                     "ON `artist`.`id`=`realtag_$key`.`object_id`";
             }
@@ -2114,6 +2259,7 @@ class Search extends playlist_object
             'having_sql' => ''
         );
     }
+
     /**
      * year_search
      *

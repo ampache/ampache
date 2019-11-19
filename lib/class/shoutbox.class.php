@@ -220,7 +220,7 @@ class Shoutbox
         $insert_id = Dba::insert_id();
 
         // Never send email in case of user impersonation
-        if (!isset($data['user']) && $insert_id) {
+        if (!isset($data['user']) && $insert_id !== null) {
             $libitem       = new $data['object_type']($data['object_id']);
             $item_owner_id = $libitem->get_user_owner();
             if ($item_owner_id) {

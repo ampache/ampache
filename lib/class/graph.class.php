@@ -76,7 +76,7 @@ class Graph
         $object_id = (int) ($object_id);
         if (Core::is_library_item($object_type)) {
             $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
-            if ($object_id) {
+            if ($object_id > 0) {
                 $sql .= " AND `object_count`.`object_id` = '" . $object_id . "'";
             }
         }
@@ -102,7 +102,7 @@ class Graph
         }
 
         $object_id = (int) ($object_id);
-        if ($object_id) {
+        if ($object_id > 0) {
             $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
         }
 
@@ -166,7 +166,7 @@ class Graph
         if (!$user && $ustats['users'] < 10) {
             $user_ids = User::get_valid_users();
             foreach ($user_ids as $user_id) {
-                $u           = new User($user_id);
+                $user_check  = new User($user_id);
                 $user_values = $this->get_all_type_pts($fct, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
                 foreach ($values as $date => $value) {
                     if (array_key_exists($date, $user_values)) {
@@ -174,7 +174,7 @@ class Graph
                     } else {
                         $value = 0;
                     }
-                    $MyData->addPoints($value, $u->username);
+                    $MyData->addPoints($value, $user_check->username);
                 }
             }
         }
@@ -492,11 +492,9 @@ class Graph
 
         $libitem  = null;
         $owner_id = 0;
-        if ($object_id) {
-            if (Core::is_library_item($object_type)) {
-                $libitem  = new $object_type($object_id);
-                $owner_id = $libitem->get_user_owner();
-            }
+        if (($object_id) && (Core::is_library_item($object_type))) {
+            $libitem  = new $object_type($object_id);
+            $owner_id = $libitem->get_user_owner();
         }
 
         if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', '50')) {

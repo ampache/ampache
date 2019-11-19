@@ -29,6 +29,7 @@ class Channel extends database_object implements media, library_item
     public $start_date;
     public $pid;
     public $listeners;
+    public $max_listeners;
     public $peak_listeners;
     public $object_type;
     public $object_id;
