@@ -214,7 +214,7 @@ class Tag extends database_object implements library_item
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $data['edit_tags']);
             $filterunder = str_replace('_',', ', $filterfolk);
             $filter      = str_replace(';',', ', $filterunder);
-            $tag_names   = explode(',', $filter);
+            $tag_names   = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
             foreach ($tag_names as $tag) {
                 $merge_to = self::construct_from_name($tag);
                 if ($merge_to->id == 0) {
