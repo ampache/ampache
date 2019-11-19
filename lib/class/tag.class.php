@@ -616,7 +616,7 @@ class Tag extends database_object implements library_item
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
         $filterunder = str_replace('_',', ', $filterfolk);
         $filter      = str_replace(';',', ', $filterunder);
-        $editedTags  = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
+        $editedTags  = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
 
         if (is_array($ctags)) {
             foreach ($ctags as $ctid => $ctv) {
@@ -665,7 +665,7 @@ class Tag extends database_object implements library_item
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
             $filterunder = str_replace('_',', ', $filterfolk);
             $filter      = str_replace(';',', ', $filterunder);
-            $taglist     = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
+            $taglist     = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
         }
 
         $ret = array();
