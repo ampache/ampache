@@ -1371,7 +1371,7 @@ class Search extends playlist_object
         } // foreach rule
 
         $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
-        $join['catalog'] = AmpConfig::get('catalog_disable');
+        $join['catalog'] = $join['song'] || AmpConfig::get('catalog_disable');
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
@@ -1428,7 +1428,7 @@ class Search extends playlist_object
             $table['object_count'] .= "`object_count`.`object_id`=`album`.`id`";
         }
         if ($join['image']) {
-            $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
+            $table['song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
             $where_sql .= " AND `image`.`object_type`='album'";
             $where_sql .= " AND `image`.`size`='original'";
         }
@@ -1584,7 +1584,7 @@ class Search extends playlist_object
             $table['object_count'] .= "`object_count`.`object_id`=`artist`.`id`";
         }
         if ($join['image']) {
-            $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`artist`.`id`";
+            $table['song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` LEFT JOIN `image` ON `image`.`object_id`=`artist`.`id`";
             $where_sql .= " AND `image`.`object_type`='artist'";
             $where_sql .= " AND `image`.`size`='original'";
         }
