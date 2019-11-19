@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5c92082d07cf56cb9fb8ff4d7f644ed",
+    "content-hash": "1d115ade08f0bfd18b3373373121967a",
     "packages": [
         {
             "name": "Afterster/php-echonest-api",
