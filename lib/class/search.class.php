@@ -248,6 +248,169 @@ class Search extends playlist_object
     }
 
     /**
+     * total_time
+     *
+     * Length (in minutes) Numeric search (Song, Album)
+     */
+    private function total_time()
+    {
+        $this->types[] = array(
+            'name' => 'time',
+            'label' => T_('Length (in minutes)'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
+        );
+    }
+
+    /**
+     * artistrating
+     *
+     * My Rating (Artist) Numeric search (Song, Album)
+     */
+    private function artistrating()
+    {
+        $this->types[] = array(
+            'name' => 'artistrating',
+            'label' => T_('My Rating (Artist)'),
+            'type' => 'numeric',
+            'widget' => array(
+                'select',
+                array(
+                    '1 Star',
+                    '2 Stars',
+                    '3 Stars',
+                    '4 Stars',
+                    '5 Stars'
+                )
+            )
+        );
+    }
+
+    /**
+     * image_height
+     *
+     * Image Height (Album, Artist)
+     */
+    private function image_height()
+    {
+        $this->types[] = array(
+            'name' => 'image height',
+            'label' => T_('Image Height'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
+        );
+    }
+
+    /**
+     * image_width
+     *
+     * Image Width (Album, Artist)
+     */
+    private function image_width()
+    {
+        $this->types[] = array(
+            'name' => 'image width',
+            'label' => T_('Image Width'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
+        );
+    }
+
+    /**
+     * last_play
+     *
+     * My Last Play in days (song, album, artist)
+     */
+    private function last_play()
+    {
+        $this->types[] = array(
+            'name' => 'last_play',
+            'label' => T_('My Last Play'),
+            'type' => 'days',
+            'widget' => array('input', 'number')
+        );
+    }
+
+    /**
+     * rating
+     *
+     * Rating (Average) across all users (song, album, artist)
+     */
+    private function rating()
+    {
+        $this->types[] = array(
+            'name' => 'rating',
+            'label' => T_('Rating (Average)'),
+            'type' => 'numeric',
+            'widget' => array(
+                'select',
+                array(
+                    '1 Star',
+                    '2 Stars',
+                    '3 Stars',
+                    '4 Stars',
+                    '5 Stars'
+                )
+            )
+        );
+    }
+
+    /**
+     * myrating
+     *
+     * My Rating, the rating from your user (song, album, artist)
+     */
+    private function myrating()
+    {
+        $this->types[] = array(
+            'name' => 'myrating',
+            'label' => T_('My Rating'),
+            'type' => 'numeric',
+            'widget' => array(
+                'select',
+                array(
+                    '1 Star',
+                    '2 Stars',
+                    '3 Stars',
+                    '4 Stars',
+                    '5 Stars'
+                )
+            )
+        );
+    }
+
+    /**
+     * played_times
+     *
+     * # Played, Number of times this objet has been played (song, album, artist)
+     */
+    private function played_times()
+    {
+        $this->types[] = array(
+            'name' => 'played_times',
+            /* HINT: Number of times object has been played */
+            'label' => T_('# Played'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
+        );
+    }
+
+    /**
+     * favorite
+     *
+     * Objects you have flagged / loved (song, album, artist)
+     */
+    private function favorite()
+    {
+        $this->types[] = array(
+            'name' => 'favorite',
+            'label' => T_('Favorites'),
+            'type' => 'text',
+            'widget' => array('input', 'text')
+        );
+    }
+
+    /**
      * songtypes
      *
      * this is where all the searchtypes for songs are defined
@@ -338,68 +501,16 @@ class Search extends playlist_object
             'widget' => array('input', 'number')
         );
 
-        $this->types[] = array(
-            'name' => 'time',
-            'label' => T_('Length (in minutes)'),
-            'type' => 'numeric',
-            'widget' => array('input', 'number')
-        );
+        $this->total_time();
 
         if (AmpConfig::get('userflags')) {
-            $this->types[] = array(
-                'name' => 'favorite',
-                'label' => T_('Favorites'),
-                'type' => 'text',
-                'widget' => array('input', 'text')
-            );
+            $this->favorite();
         }
 
         if (AmpConfig::get('ratings')) {
-            $this->types[] = array(
-                'name' => 'rating',
-                'label' => T_('Rating (Average)'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
-            $this->types[] = array(
-                'name' => 'myrating',
-                'label' => T_('My Rating'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
-            $this->types[] = array(
-                'name' => 'artistrating',
-                'label' => T_('My Rating (Artist)'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
+            $this->rating();
+            $this->myrating();
+            $this->artistrating();
             $this->types[] = array(
                 'name' => 'albumrating',
                 'label' => T_('My Rating (Album)'),
@@ -418,13 +529,7 @@ class Search extends playlist_object
         }
 
         if (AmpConfig::get('show_played_times')) {
-            $this->types[] = array(
-                'name' => 'played_times',
-                /* HINT: Number of times object has been played */
-                'label' => T_('# Played'),
-                'type' => 'numeric',
-                'widget' => array('input', 'number')
-            );
+            $this->played_times();
         }
 
         $this->types[] = array(
@@ -452,12 +557,7 @@ class Search extends playlist_object
             )
         );
 
-        $this->types[] = array(
-            'name' => 'last_play',
-            'label' => T_('My Last Play'),
-            'type' => 'days',
-            'widget' => array('input', 'number')
-        );
+        $this->last_play();
 
         $this->types[] = array(
             'name' => 'played',
@@ -608,44 +708,11 @@ class Search extends playlist_object
             'widget' => array('input', 'text')
         );
 
-        $this->types[] = array(
-            'name' => 'last_play',
-            'label' => T_('My Last Play'),
-            'type' => 'days',
-            'widget' => array('input', 'number')
-        );
+        $this->last_play();
 
         if (AmpConfig::get('ratings')) {
-            $this->types[] = array(
-                'name' => 'rating',
-                'label' => T_('Rating (Average)'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
-            $this->types[] = array(
-                'name' => 'myrating',
-                'label' => T_('My Rating'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
+            $this->rating();
+            $this->myrating();
         }
     }
 
@@ -677,59 +744,15 @@ class Search extends playlist_object
             'widget' => array('input', 'number')
         );
 
-        $this->types[] = array(
-            'name' => 'image width',
-            'label' => T_('Image Width'),
-            'type' => 'numeric',
-            'widget' => array('input', 'number')
-        );
-
-        $this->types[] = array(
-            'name' => 'image height',
-            'label' => T_('Image Height'),
-            'type' => 'numeric',
-            'widget' => array('input', 'number')
-        );
+        $this->image_width();
+        $this->image_height();
 
         if (AmpConfig::get('ratings')) {
-            $this->types[] = array(
-                'name' => 'rating',
-                'label' => T_('Rating (Average)'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
-            $this->types[] = array(
-                'name' => 'myrating',
-                'label' => T_('My Rating'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
+            $this->rating();
+            $this->myrating();
         }
 
-        $this->types[] = array(
-            'name' => 'last_play',
-            'label' => T_('My Last Play'),
-            'type' => 'days',
-            'widget' => array('input', 'number')
-        );
+        $this->last_play();
 
         $catalogs = array();
         foreach (Catalog::get_catalogs() as $catid) {
@@ -2114,6 +2137,7 @@ class Search extends playlist_object
             'having_sql' => ''
         );
     }
+
     /**
      * year_search
      *
