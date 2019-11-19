@@ -161,7 +161,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php if (($owner_id > 0 && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', '50')) {
         $saveorder  = T_('Save Track Order'); ?>
-        <?php if (AmpConfig::get('statistical_graphs')) { ?>
+        <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>"><?php echo T_('Graphs'); ?></a>

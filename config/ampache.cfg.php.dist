@@ -512,8 +512,11 @@ sociable = "true"
 ;playlist_art = "false"
 
 ; Statistical Graphs * Requires PHP-GD *
-; Set this to true if you want Ampache to generate statistical
-; graphs on usages / users.
+; Set this to true if you want Ampache to generate statistical graphs on usages / users.
+; This is false by default due to issues around the licencing of pchart.
+;  https://github.com/ampache/ampache/issues/1515
+;  http://www.pchart.net/license
+; REFERENCE: https://github.com/ampache/ampache/wiki/chart-faq
 ; DEFAULT: false
 ;statistical_graphs = "false"
 
