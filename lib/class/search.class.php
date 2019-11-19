@@ -1318,6 +1318,13 @@ class Search extends playlist_object
                     }
                     $join['rating'] = true;
                 break;
+                case 'favorite':
+                    $join['user_flag']  = true;
+                    $where[]            = "(`album`.`name` $sql_match_operator '$input' " .
+                                " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
+                                "' ', `album`.`name`)) $sql_match_operator '$input') AND `user_flag`.`user` = $userid";
+                    $where[] .= "`user_flag`.`object_type` = 'album'";
+                break;
                 case 'myrating':
                     $where[]          = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['myrating'] = true;
@@ -1509,6 +1516,13 @@ class Search extends playlist_object
                         $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
                     }
                     $join['rating'] = true;
+                break;
+                case 'favorite':
+                    $join['user_flag']  = true;
+                    $where[]            = "(`artist`.`name` $sql_match_operator '$input' " .
+                                " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
+                                "' ', `artist`.`name`)) $sql_match_operator '$input') AND `user_flag`.`user` = $userid";
+                    $where[] .= "`user_flag`.`object_type` = 'artist'";
                 break;
                 case 'image height':
                     $where[]       = "`image`.`height` $sql_match_operator '$input'";
