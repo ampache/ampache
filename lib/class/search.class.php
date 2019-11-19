@@ -1394,9 +1394,9 @@ class Search extends playlist_object
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
-                    $namesql = '`name`';
+                    $namesql           = '`name`';
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                       $namesql = 'GROUP_CONCAT(`name`) AS `name`';
+                        $namesql = 'GROUP_CONCAT(`name`) AS `name`';
                     }
                 break;
                 case 'image height':
@@ -1542,9 +1542,9 @@ class Search extends playlist_object
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
-                    $namesql = '`name`';
+                    $namesql           = '`name`';
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                       $namesql = 'GROUP_CONCAT(`name`) AS `name`';
+                        $namesql = 'GROUP_CONCAT(`name`) AS `name`';
                     }
                 break;
                 case 'rating':
@@ -1712,9 +1712,9 @@ class Search extends playlist_object
                     $key               = md5($input . $sql_match_operator);
                     $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['tag'][$key] = "$sql_match_operator '$input'";
-                    $namesql = '`name`';
+                    $namesql           = '`name`';
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                       $namesql = 'GROUP_CONCAT(`name`) AS `name`';
+                        $namesql = 'GROUP_CONCAT(`name`) AS `name`';
                     }
                 break;
                 case 'album_tag':
@@ -1722,18 +1722,18 @@ class Search extends playlist_object
                     $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['album_tag'][$key] = "$sql_match_operator '$input'";
                     $join['album']           = true;
-                    $albumnamesql = '`name`';
+                    $albumnamesql            = '`name`';
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                       $albumnamesql = 'GROUP_CONCAT(`name`) AS `name`';
+                        $albumnamesql = 'GROUP_CONCAT(`name`) AS `name`';
                     }
                 case 'artist_tag':
                     $key                      = md5($input . $sql_match_operator);
                     $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
                     $join['artist_tag'][$key] = "$sql_match_operator '$input'";
                     $join['artist']           = true;
-                    $artistnamesql = '`name`';
+                    $artistnamesql            = '`name`';
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                       $artistnamesql = 'GROUP_CONCAT(`name`) AS `name`';
+                        $artistnamesql = 'GROUP_CONCAT(`name`) AS `name`';
                     }
                 break;
                 case 'title':
