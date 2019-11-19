@@ -711,7 +711,6 @@ class Search extends playlist_object
         $this->total_time();
 
         if (AmpConfig::get('userflags')) {
-            $this->types[] = array(
             $this->favorite();
         }
         if (AmpConfig::get('ratings')) {
@@ -768,7 +767,6 @@ class Search extends playlist_object
         $this->total_time();
 
         if (AmpConfig::get('userflags')) {
-            $this->types[] = array(
             $this->favorite();
         }
         $catalogs = array();
