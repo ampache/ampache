@@ -195,6 +195,37 @@ class Search extends playlist_object
             'description' => T_('does not sound like'),
             'sql' => 'NOT SOUNDS LIKE'
         );
+        $this->basetypes['tags'][] = array(
+            'name' => 'contain',
+            'description' => T_('contains'),
+            'sql' => 'LIKE',
+            'preg_match' => array('/^/', '/$/'),
+            'preg_replace' => array('%', '%')
+        );
+
+        $this->basetypes['tags'][] = array(
+            'name' => 'notcontain',
+            'description' => T_('does not contain'),
+            'sql' => 'NOT LIKE',
+            'preg_match' => array('/^/', '/$/'),
+            'preg_replace' => array('%', '%')
+        );
+
+        $this->basetypes['tags'][] = array(
+            'name' => 'start',
+            'description' => T_('starts with'),
+            'sql' => 'LIKE',
+            'preg_match' => '/$/',
+            'preg_replace' => '%'
+        );
+
+        $this->basetypes['tags'][] = array(
+            'name' => 'end',
+            'description' => T_('ends with'),
+            'sql' => 'LIKE',
+            'preg_match' => '/^/',
+            'preg_replace' => '%'
+        );
 
         $this->basetypes['boolean_numeric'][] = array(
             'name' => 'equal',
@@ -466,37 +497,25 @@ class Search extends playlist_object
             'widget' => array('input', 'text')
         );
 
-        $tags = array();
-        foreach (Tag::get_tags('song', 0, 'name') as $tag) {
-            $tags[$tag['id']] = $tag['name'];
-        }
         $this->types[] = array(
             'name' => 'tag',
             'label' => T_('Tag'),
-            'type' => 'boolean_numeric',
-            'widget' => array('select', $tags)
+            'type' => 'tags',
+            'widget' => array('input', 'text')
         );
 
-        $albumtags = array();
-        foreach (Tag::get_tags('album', 0, 'name') as $tag) {
-            $albumtags[$tag['id']] = $tag['name'];
-        }
         $this->types[] = array(
             'name' => 'album_tag',
-            'label' => T_('Album Tag'),
-            'type' => 'boolean_numeric',
-            'widget' => array('select', $albumtags)
+            'label' => T_('Album tag'),
+            'type' => 'tags',
+            'widget' => array('input', 'text')
         );
 
-        $artisttags = array();
-        foreach (Tag::get_tags('artist', 0, 'name') as $tag) {
-            $artisttags[$tag['id']] = $tag['name'];
-        }
         $this->types[] = array(
             'name' => 'artist_tag',
-            'label' => T_('Artist Tag'),
-            'type' => 'boolean_numeric',
-            'widget' => array('select', $artisttags)
+            'label' => T_('Artist tag'),
+            'type' => 'tags',
+            'widget' => array('input', 'text')
         );
 
         $this->types[] = array(
@@ -713,16 +732,11 @@ class Search extends playlist_object
             'type' => 'text',
             'widget' => array('input', 'text')
         );
-
-        $tags = array();
-        foreach (Tag::get_tags('album', 0, 'name') as  $tag) {
-            $tags[$tag['id']] = $tag['name'];
-        }
         $this->types[] = array(
             'name' => 'tag',
             'label' => T_('Tag'),
-            'type' => 'boolean_numeric',
-            'widget' => array('select', $tags)
+            'type' => 'tags',
+            'widget' => array('input', 'text')
         );
         $this->last_play();
         $this->total_time();
@@ -799,15 +813,11 @@ class Search extends playlist_object
             'widget' => array('select', $catalogs)
         );
 
-        $tags = array();
-        foreach (Tag::get_tags('album', 0, 'name') as $tag) {
-            $tags[$tag['id']] = $tag['name'];
-        }
         $this->types[] = array(
             'name' => 'tag',
             'label' => T_('Tag'),
-            'type' => 'boolean_numeric',
-            'widget' => array('select', $tags)
+            'type' => 'tags',
+            'widget' => array('input', 'text')
         );
     }
 
@@ -1381,9 +1391,13 @@ class Search extends playlist_object
                     $join['song'] = true;
                 break;
                 case 'tag':
-                    $key           = md5($input . $sql_match_operator);
-                    $where[]       = "`tag`.`id` $sql_match_operator '$input'";
-                    $join['tag']   = true;
+                    $key               = md5($input . $sql_match_operator);
+                    $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $join['tag'][$key] = "$sql_match_operator '$input'";
+                    $namesql           = '`name`';
+                    if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $namesql = 'GROUP_CONCAT(`name`) AS `name`';
+                    }
                 break;
                 case 'image height':
                     $where[]       = "`image`.`height` $sql_match_operator '$input'";
@@ -1408,9 +1422,17 @@ class Search extends playlist_object
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        if ($join['tag']) {
-            $table['tag'] = "LEFT JOIN `tag_map` ON `tag_map`.`object_type` = 'album' AND `tag_map`.`object_id` = `album`.`id` " .
-                    "LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id`";
+        foreach ($join['tag'] as $key => $value) {
+            //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
+            $table['tag_' . $key] =
+                "LEFT JOIN (" .
+                "SELECT `object_id`, " . $namesql . " " .
+                "FROM `tag` LEFT JOIN `tag_map` " .
+                "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                "WHERE `tag_map`.`object_type`='album' " .
+                "GROUP BY `object_id`" .
+                ") AS `realtag_$key` " .
+                "ON `album`.`id`=`realtag_$key`.`object_id`";
         }
         if ($join['artist']) {
             $table['artist'] = "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist`";
@@ -1517,9 +1539,13 @@ class Search extends playlist_object
                     $where[] = "`artist`.`placeformed` $sql_match_operator '$input'";
                 break;
                 case 'tag':
-                    $key           = md5($input . $sql_match_operator);
-                    $where[]       = "`tag`.`id` $sql_match_operator '$input'";
-                    $join['tag']   = true;
+                    $key               = md5($input . $sql_match_operator);
+                    $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $join['tag'][$key] = "$sql_match_operator '$input'";
+                    $namesql           = '`name`';
+                    if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $namesql = 'GROUP_CONCAT(`name`) AS `name`';
+                    }
                 break;
                 case 'rating':
                     if ($this->type != "public") {
@@ -1573,10 +1599,19 @@ class Search extends playlist_object
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        if ($join['tag']) {
-            $table['tag'] = "LEFT JOIN `tag_map` ON `tag_map`.`object_type` = 'artist' AND `tag_map`.`object_id` = `artist`.`id` " .
-                    "LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id`";
+        foreach ($join['tag'] as $key => $value) {
+            //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
+            $table['tag_' . $key] =
+                "LEFT JOIN (" .
+                "SELECT `object_id`, " . $namesql . " " .
+                "FROM `tag` LEFT JOIN `tag_map` " .
+                "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                "WHERE `tag_map`.`object_type`='artist' " .
+                "GROUP BY `object_id`" .
+                ") AS `realtag_$key` " .
+                "ON `artist`.`id`=`realtag_$key`.`object_id`";
         }
+
         if ($join['song']) {
             $table['song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id`";
 
@@ -1674,19 +1709,32 @@ class Search extends playlist_object
                     $join['song_data'] = true;
                 break;
                 case 'tag':
-                    $where[]       = "`tag`.`id` $sql_match_operator '$input'";
-                    $join['tag']   = true;
+                    $key               = md5($input . $sql_match_operator);
+                    $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $join['tag'][$key] = "$sql_match_operator '$input'";
+                    $namesql           = '`name`';
+                    if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $namesql = 'GROUP_CONCAT(`name`) AS `name`';
+                    }
                 break;
                 case 'album_tag':
-                    $key               = md5($input . $sql_match_operator);
-                    $where[]           = "`tag`.`id` $sql_match_operator '$input'";
-                    $join['album_tag'] = true;
-                    $join['album']     = true;
+                    $key                     = md5($input . $sql_match_operator);
+                    $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $join['album_tag'][$key] = "$sql_match_operator '$input'";
+                    $join['album']           = true;
+                    $albumnamesql            = '`name`';
+                    if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $albumnamesql = 'GROUP_CONCAT(`name`) AS `name`';
+                    }
                 case 'artist_tag':
-                    $key                = md5($input . $sql_match_operator);
-                    $where[]            = "`tag`.`id` $sql_match_operator '$input'";
-                    $join['artist_tag'] = true;
-                    $join['artist']     = true;
+                    $key                      = md5($input . $sql_match_operator);
+                    $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $join['artist_tag'][$key] = "$sql_match_operator '$input'";
+                    $join['artist']           = true;
+                    $artistnamesql            = '`name`';
+                    if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $artistnamesql = 'GROUP_CONCAT(`name`) AS `name`';
+                    }
                 break;
                 case 'title':
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
@@ -1869,16 +1917,44 @@ class Search extends playlist_object
             $table['song_data'] = "LEFT JOIN `song_data` ON `song`.`id`=`song_data`.`song_id`";
         }
         if ($join['tag']) {
-            $table['tag'] = "LEFT JOIN `tag_map` ON `tag_map`.`object_type` = 'song' AND `tag_map`.`object_id` = `song`.`id` " .
-                    "LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id`";
+            foreach ($join['tag'] as $key => $value) {
+                //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
+                $table['tag_' . $key] =
+                    "LEFT JOIN (" .
+                    "SELECT `object_id`, " . $namesql . " " .
+                    "FROM `tag` LEFT JOIN `tag_map` " .
+                    "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                    "WHERE `tag_map`.`object_type`='song' " .
+                    "GROUP BY `object_id`" .
+                    ") AS `realtag_$key` " .
+                    "ON `song`.`id`=`realtag_$key`.`object_id`";
+            }
         }
         if ($join['album_tag']) {
-            $table['tag_' . $key] = "LEFT JOIN `tag_map` ON `tag_map`.`object_type` = 'album' AND `tag_map`.`object_id` = `album`.`id` " .
-                    "LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id`";
+            foreach ($join['album_tag'] as $key => $value) {
+                $table['tag_' . $key] =
+                    "LEFT JOIN (" .
+                    "SELECT `object_id`, " . $albumnamesql . " " .
+                    "FROM `tag` LEFT JOIN `tag_map` " .
+                    "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                    "WHERE `tag_map`.`object_type`='album' " .
+                    "GROUP BY `object_id`" .
+                    ") AS realtag_$key " .
+                    "ON `album`.`id`=`realtag_$key`.`object_id`";
+            }
         }
         if ($join['artist_tag']) {
-            $table['tag_' . $key] = "LEFT JOIN `tag_map` ON `tag_map`.`object_type` = 'artist' AND `tag_map`.`object_id` = `artist`.`id` " .
-                    "LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id`";
+            foreach ($join['artist_tag'] as $key => $value) {
+                $table['tag_' . $key] =
+                    "LEFT JOIN (" .
+                    "SELECT `object_id`, " . $artistnamesql . " " .
+                    "FROM `tag` LEFT JOIN `tag_map` " .
+                    "ON `tag`.`id`=`tag_map`.`tag_id` " .
+                    "WHERE `tag_map`.`object_type`='artist' " .
+                    "GROUP BY `object_id`" .
+                    ") AS realtag_$key " .
+                    "ON `artist`.`id`=`realtag_$key`.`object_id`";
+            }
         }
         if ($join['rating']) {
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";
