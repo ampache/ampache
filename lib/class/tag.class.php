@@ -662,10 +662,10 @@ class Tag extends database_object implements library_item
         if (is_array($tags)) {
             $taglist = $tags;
         } else {
-            $filterfolk       = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
-            $filterunder      = str_replace('_',', ', $filterfolk);
-            $filter           = str_replace(';',', ', $filterunder);
-            $taglist          = explode(",", $filter);
+            $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
+            $filterunder = str_replace('_',', ', $filterfolk);
+            $filter      = str_replace(';',', ', $filterunder);
+            $taglist     = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
         }
 
         $ret = array();
