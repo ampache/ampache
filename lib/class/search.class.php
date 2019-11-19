@@ -1306,11 +1306,11 @@ class Search extends playlist_object
         $having      = array();
         $join['tag'] = array();
         $groupdisks  = AmpConfig::get('album_group');
+        $namesql     = '`name`';
 
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
-            $namesql  = '`name`';
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1512,11 +1512,11 @@ class Search extends playlist_object
         $group              = array();
         $having             = array();
         $join['tag']        = array();
+        $namesql            = '`name`';
 
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
-            $namesql  = '`name`';
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1679,19 +1679,19 @@ class Search extends playlist_object
         $sql_logic_operator = $this->logic_operator;
         $userid             = $this->search_user->id;
 
-        $where       = array();
-        $table       = array();
-        $join        = array();
-        $group       = array();
-        $having      = array();
-        $join['tag'] = array();
+        $where        = array();
+        $table        = array();
+        $join         = array();
+        $group        = array();
+        $having       = array();
+        $join['tag']  = array();
+        $namesql       = '`name`';
+        $albumnamesql  = '`name`';
+        $artistnamesql = '`name`';
 
         foreach ($this->rules as $rule) {
             $type          = $this->name_to_basetype($rule[0]);
             $operator      = array();
-            $namesql       = '`name`';
-            $albumnamesql  = '`name`';
-            $artistnamesql = '`name`';
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
