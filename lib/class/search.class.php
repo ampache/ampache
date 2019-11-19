@@ -1308,7 +1308,7 @@ class Search extends playlist_object
                 break;
                 case 'time':
                     $input   = $input * 60;
-                    $where[] = "SUM(`song`.`time`) $sql_match_operator '$input'";
+                    $having[] = "SUM(`song`.`time`) $sql_match_operator '$input'";
                 break;
                 case 'rating':
                     if ($this->type != "public") {
