@@ -1947,7 +1947,7 @@ class Search extends playlist_object
             foreach ($join['artist_tag'] as $key => $value) {
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
-                    "SELECT `object_id`, " . $namesql . " " .
+                    "SELECT `object_id`, " . $artistnamesql . " " .
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='artist' " .
