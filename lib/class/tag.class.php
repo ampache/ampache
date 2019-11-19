@@ -206,6 +206,7 @@ class Tag extends database_object implements library_item
         if (!strlen($data['name'])) {
             return false;
         }
+        debug_event('tag.class', 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
 
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
         Dba::write($sql, array($data['name'], $this->id));
