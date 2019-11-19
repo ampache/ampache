@@ -1293,6 +1293,8 @@ class Search extends playlist_object
                 $group[] = "`album`.`album_artist`";
                 $group[] = "`album`.`mbid`";
                 $group[] = "`album`.`year`";
+            } else {
+                $group[] = "`album`.`id`";
             }
 
             switch ($rule[0]) {
@@ -1304,13 +1306,14 @@ class Search extends playlist_object
                 case 'year':
                     $where[] = "`album`.`year` $sql_match_operator '$input'";
                 break;
+                case 'time':
+                    $input   = $input * 60;
+                    $where[] = "SUM(`song`.`time`) $sql_match_operator '$input'";
+                break;
                 case 'rating':
                     if ($this->type != "public") {
                         $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     } else {
-                        if (!$groupdisks) {
-                            $group[] = "`album`.`id`";
-                        }
                         $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
                     }
                     $join['rating'] = true;
@@ -1318,6 +1321,19 @@ class Search extends playlist_object
                 case 'myrating':
                     $where[]          = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['myrating'] = true;
+                break;
+                case 'artistrating':
+                    if ($sql_match_operator === '<=' || $sql_match_operator === '<>' || $sql_match_operator === '<=') {
+                        $where[] = "(`song`.`artist` IN (SELECT `rating`.`object_id` FROM `rating` " .
+                                   "WHERE COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND " .
+                                   "`rating`.`user`='" . $userid . "' AND `rating`.`object_type` = 'artist') OR " .
+                                   "`song`.`artist` NOT IN (SELECT `rating`.`object_id` FROM `rating` " .
+                                   "WHERE `rating`.`object_type` = 'artist'))";
+                    } else {
+                        $where[] = "`song`.`artist` IN (SELECT `rating`.`object_id` FROM `rating` " .
+                                   "WHERE COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND " .
+                                   "`rating`.`object_type` = 'artist') ";
+                    }
                 break;
                 case 'myplayed':
                     $where[]              = "`object_count`.`date` IS NOT NULL";
@@ -1489,6 +1505,14 @@ class Search extends playlist_object
                     }
                     $join['rating'] = true;
                 break;
+                case 'image height':
+                    $where[]       = "`image`.`height` $sql_match_operator '$input'";
+                    $join['image'] = true;
+                break;
+                case 'image width':
+                    $where[]       = "`image`.`width` $sql_match_operator '$input'";
+                    $join['image'] = true;
+                break;
                 case 'myrating':
                     $where[]           = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
                     $join['myrating']  = true;
@@ -1558,6 +1582,11 @@ class Search extends playlist_object
             $table['object_count'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='artist' AND ";
             $table['object_count'] .= "`object_count`.`user`='" . $userid . "' AND ";
             $table['object_count'] .= "`object_count`.`object_id`=`artist`.`id`";
+        }
+        if ($join['image']) {
+            $table['song'] = "LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
+            $where_sql .= " AND `image`.`object_type`='album'";
+            $where_sql .= " AND `image`.`size`='original'";
         }
         $table_sql  = implode(' ', $table);
         $group_sql  = implode(',', $group);
