@@ -1173,6 +1173,11 @@ class Search extends playlist_object
     public function name_to_basetype($name)
     {
         foreach ($this->types as $type) {
+            if ($type['name'] == 'name') {
+                debug_event('search.class', "name_to_basetype: WARNING, searching by 'name' is depreciated. use 'title' for all name searches", 2);
+
+                return 'title';
+            }
             if ($type['name'] == $name) {
                 return $type['type'];
             }
