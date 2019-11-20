@@ -330,6 +330,30 @@ class Search extends playlist_object
     }
 
     /**
+     * albumrating
+     *
+     * My Rating (Album) Numeric search (Song)
+     */
+    private function albumrating()
+    {
+        $this->types[] = array(
+            'name' => 'albumrating',
+            'label' => T_('My Rating (Album)'),
+            'type' => 'numeric',
+            'widget' => array(
+                'select',
+                array(
+                    '1 Star',
+                    '2 Stars',
+                    '3 Stars',
+                    '4 Stars',
+                    '5 Stars'
+                )
+            )
+        );
+    }
+
+    /**
      * image_height
      *
      * Image Height (Album, Artist)
@@ -496,18 +520,18 @@ class Search extends playlist_object
         );
 
         $this->types[] = array(
-            'name' => 'comment',
-            'label' => T_('Comment'),
-            'type' => 'text',
-            'widget' => array('input', 'text')
+            'name' => 'year',
+            'label' => T_('Year'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
         );
 
-        $this->types[] = array(
-            'name' => 'label',
-            'label' => T_('Label'),
-            'type' => 'text',
-            'widget' => array('input', 'text')
-        );
+        if (AmpConfig::get('ratings')) {
+            $this->myrating();
+            $this->rating();
+            $this->albumrating();
+            $this->artistrating();
+        }
 
         $this->types[] = array(
             'name' => 'tag',
@@ -537,43 +561,31 @@ class Search extends playlist_object
             'widget' => array('input', 'text')
         );
 
-        $this->types[] = array(
-            'name' => 'year',
-            'label' => T_('Year'),
-            'type' => 'numeric',
-            'widget' => array('input', 'number')
-        );
-
         $this->total_time();
 
         if (AmpConfig::get('userflags')) {
             $this->favorite();
         }
 
-        if (AmpConfig::get('ratings')) {
-            $this->rating();
-            $this->myrating();
-            $this->artistrating();
-            $this->types[] = array(
-                'name' => 'albumrating',
-                'label' => T_('My Rating (Album)'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
-        }
 
         if (AmpConfig::get('show_played_times')) {
             $this->played_times();
         }
+
+        $this->types[] = array(
+            'name' => 'comment',
+            'label' => T_('Comment'),
+            'type' => 'text',
+            'widget' => array('input', 'text')
+        );
+
+        $this->types[] = array(
+            'name' => 'label',
+            'label' => T_('Label'),
+            'type' => 'text',
+            'widget' => array('input', 'text')
+        );
+
 
         $this->types[] = array(
             'name' => 'bitrate',
@@ -727,7 +739,7 @@ class Search extends playlist_object
     private function artisttypes()
     {
         $this->types[] = array(
-            'name' => 'name',
+            'name' => 'title',
             'label' => T_('Name'),
             'type' => 'text',
             'widget' => array('input', 'text')
@@ -738,6 +750,10 @@ class Search extends playlist_object
             'type' => 'numeric',
             'widget' => array('input', 'number')
         );
+        if (AmpConfig::get('ratings')) {
+            $this->myrating();
+            $this->rating();
+        }
         $this->types[] = array(
             'name' => 'placeformed',
             'label' => T_('Place'),
@@ -750,16 +766,14 @@ class Search extends playlist_object
             'type' => 'tags',
             'widget' => array('input', 'text')
         );
-        $this->last_play();
-        $this->total_time();
 
         if (AmpConfig::get('userflags')) {
             $this->favorite();
         }
-        if (AmpConfig::get('ratings')) {
-            $this->rating();
-            $this->myrating();
-        }
+
+        $this->last_play();
+        $this->total_time();
+
         if (AmpConfig::get('show_played_times')) {
             $this->played_times();
         }
@@ -795,12 +809,9 @@ class Search extends playlist_object
             'widget' => array('input', 'number')
         );
 
-        $this->image_width();
-        $this->image_height();
-
         if (AmpConfig::get('ratings')) {
-            $this->rating();
             $this->myrating();
+            $this->rating();
             $this->artistrating();
         }
         if (AmpConfig::get('show_played_times')) {
@@ -812,6 +823,14 @@ class Search extends playlist_object
         if (AmpConfig::get('userflags')) {
             $this->favorite();
         }
+
+        $this->types[] = array(
+            'name' => 'tag',
+            'label' => T_('Tag'),
+            'type' => 'tags',
+            'widget' => array('input', 'text')
+        );
+
         $catalogs = array();
         foreach (Catalog::get_catalogs() as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -825,12 +844,8 @@ class Search extends playlist_object
             'widget' => array('select', $catalogs)
         );
 
-        $this->types[] = array(
-            'name' => 'tag',
-            'label' => T_('Tag'),
-            'type' => 'tags',
-            'widget' => array('input', 'text')
-        );
+        $this->image_width();
+        $this->image_height();
     }
 
     /**
@@ -856,7 +871,7 @@ class Search extends playlist_object
     private function playlisttypes()
     {
         $this->types[] = array(
-            'name' => 'name',
+            'name' => 'title',
             'label' => T_('Name'),
             'type' => 'text',
             'widget' => array('input', 'text')
@@ -871,7 +886,7 @@ class Search extends playlist_object
     private function labeltypes()
     {
         $this->types[] = array(
-            'name' => 'name',
+            'name' => 'title',
             'label' => T_('Name'),
             'type' => 'text',
             'widget' => array('input', 'text')

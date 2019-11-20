@@ -469,7 +469,7 @@ class Api
      *   * rule operator (e.g. rule_1_operator, rule_2_operator)
      *   * rule input (e.g. rule_1_input, rule_2_input)
      *
-     * Refer to the wiki for firther information on rule_* types and data
+     * Refer to the wiki for further information on rule_* types and data
      * https://github.com/ampache/ampache/wiki/XML-methods
      *
      * @param array $input

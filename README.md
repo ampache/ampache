@@ -10,7 +10,7 @@
 * If you are using charts/graphs there has been a change regarding c-pchart [chart-faq](https://github.com/ampache/ampache/wiki/chart-faq)
 * Video features are considered a low priority feature.
 * A major string update is here which means new translations! Join us on [Transifex](https://www.transifex.com/ampache/ampache).
-* Subsonic API 1.13.0 and Ampache API 400001 are ready for testing!
+* Subsonic API 1.13.0 and Ampache API 400001 are ready for testing! [Visit the api the wiki](https://github.com/ampache/ampache/wiki/XML-API)
 * PHP 5.6 has been removed as a supported version. (7.1+)
 
 ## Basics
