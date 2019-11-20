@@ -1765,8 +1765,15 @@ class Api
 
             return;
         }
-        $user->update_stats('song', $object_id, $agent);
-        echo XML_Data::success('successfully recorded play: ' . $object_id);
+        debug_event('api.class', 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+
+        // internal scrobbling (user_activity and object_count tables)
+        $item->set_played(user_id, $agent, array(), time());
+
+        //scrobble plugins
+        User::save_mediaplay($user, $item);
+
+        echo XML_Data::success('successfully recorded play: ' . $item->id);
         Session::extend($input['auth']);
     } // record_play
 
@@ -1801,8 +1808,8 @@ class Api
         $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
         $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
         $date        = scrub_in($input['date']); //optional
-        $user_id     = User::get_from_username(Session::username($input['auth']))->id;
-        $user        = new User($user_id);
+        $user        = User::get_from_username(Session::username($input['auth']));
+        $user_id     = $user->id;
         $valid       = in_array($user->id, User::get_valid_users());
 
         // set time to now if not included
@@ -1841,7 +1848,14 @@ class Api
 
                 return;
             }
-            $user->update_stats('song', $scrobble_id, $agent, array(), $date);
+            debug_event('api.class', 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+
+            // internal scrobbling (user_activity and object_count tables)
+            $item->set_played(user_id, $agent, array(), time());
+
+            //scrobble plugins
+            User::save_mediaplay($user, $item);
+            }
             echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
         }
         Session::extend($input['auth']);
