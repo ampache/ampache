@@ -1408,8 +1408,8 @@ class Search extends playlist_object
                         $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                         $join['tag'][$key] = "$sql_match_operator '$input'";
                     } else {
-                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
-                        $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
+                        $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                     }
                     
                 break;
@@ -1558,8 +1558,8 @@ class Search extends playlist_object
                         $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                         $join['tag'][$key] = "$sql_match_operator '$input'";
                     } else {
-                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
-                        $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
+                        $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                     }
                 break;
                 case 'rating':
@@ -1729,8 +1729,8 @@ class Search extends playlist_object
                         $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                         $join['tag'][$key] = "$sql_match_operator '$input'";
                     } else {
-                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
-                        $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
+                        $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                     }
                 break;
                 case 'album_tag':
@@ -1740,8 +1740,8 @@ class Search extends playlist_object
                         $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
                         $join['album_tag'][$key] = "$sql_match_operator '$input'";
                     } else {
-                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
-                        $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
+                        $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                     }
                 case 'artist_tag':
                     $key            = md5($input . $sql_match_operator);
@@ -1750,8 +1750,8 @@ class Search extends playlist_object
                         $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
                         $join['artist_tag'][$key] = "$sql_match_operator '$input'";
                     } else {
-                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
-                        $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
+                        $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                     }
                 break;
                 case 'title':
