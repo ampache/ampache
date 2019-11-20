@@ -1556,7 +1556,7 @@ class Search extends playlist_object
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
-                case 'name':
+                case 'title':
                     $where[] = "(`artist`.`name` $sql_match_operator '$input' " .
                                 " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
                                 "' ', `artist`.`name`)) $sql_match_operator '$input')";
@@ -2144,7 +2144,7 @@ class Search extends playlist_object
             $where[] = "`playlist`.`type` = 'public'";
 
             switch ($rule[0]) {
-                case 'name':
+                case 'title':
                     $where[] = "`playlist`.`name` $sql_match_operator '$input'";
                 break;
                 default:
@@ -2219,7 +2219,7 @@ class Search extends playlist_object
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
-                case 'name':
+                case 'title':
                     $where[] = "`label`.`name` $sql_match_operator '$input'";
                 break;
                 case 'category':
