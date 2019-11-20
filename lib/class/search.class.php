@@ -330,6 +330,30 @@ class Search extends playlist_object
     }
 
     /**
+     * albumrating
+     *
+     * My Rating (Album) Numeric search (Song)
+     */
+    private function albumrating()
+    {
+        $this->types[] = array(
+            'name' => 'albumrating',
+            'label' => T_('My Rating (Album)'),
+            'type' => 'numeric',
+            'widget' => array(
+                'select',
+                array(
+                    '1 Star',
+                    '2 Stars',
+                    '3 Stars',
+                    '4 Stars',
+                    '5 Stars'
+                )
+            )
+        );
+    }
+
+    /**
      * image_height
      *
      * Image Height (Album, Artist)
@@ -496,18 +520,18 @@ class Search extends playlist_object
         );
 
         $this->types[] = array(
-            'name' => 'comment',
-            'label' => T_('Comment'),
-            'type' => 'text',
-            'widget' => array('input', 'text')
+            'name' => 'year',
+            'label' => T_('Year'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
         );
 
-        $this->types[] = array(
-            'name' => 'label',
-            'label' => T_('Label'),
-            'type' => 'text',
-            'widget' => array('input', 'text')
-        );
+        if (AmpConfig::get('ratings')) {
+            $this->myrating();
+            $this->rating();
+            $this->albumrating();
+            $this->artistrating();
+        }
 
         $this->types[] = array(
             'name' => 'tag',
@@ -537,43 +561,31 @@ class Search extends playlist_object
             'widget' => array('input', 'text')
         );
 
-        $this->types[] = array(
-            'name' => 'year',
-            'label' => T_('Year'),
-            'type' => 'numeric',
-            'widget' => array('input', 'number')
-        );
-
         $this->total_time();
 
         if (AmpConfig::get('userflags')) {
             $this->favorite();
         }
 
-        if (AmpConfig::get('ratings')) {
-            $this->rating();
-            $this->myrating();
-            $this->artistrating();
-            $this->types[] = array(
-                'name' => 'albumrating',
-                'label' => T_('My Rating (Album)'),
-                'type' => 'numeric',
-                'widget' => array(
-                    'select',
-                    array(
-                        '1 Star',
-                        '2 Stars',
-                        '3 Stars',
-                        '4 Stars',
-                        '5 Stars'
-                    )
-                )
-            );
-        }
 
         if (AmpConfig::get('show_played_times')) {
             $this->played_times();
         }
+
+        $this->types[] = array(
+            'name' => 'comment',
+            'label' => T_('Comment'),
+            'type' => 'text',
+            'widget' => array('input', 'text')
+        );
+
+        $this->types[] = array(
+            'name' => 'label',
+            'label' => T_('Label'),
+            'type' => 'text',
+            'widget' => array('input', 'text')
+        );
+
 
         $this->types[] = array(
             'name' => 'bitrate',
@@ -727,7 +739,7 @@ class Search extends playlist_object
     private function artisttypes()
     {
         $this->types[] = array(
-            'name' => 'name',
+            'name' => 'title',
             'label' => T_('Name'),
             'type' => 'text',
             'widget' => array('input', 'text')
@@ -738,6 +750,10 @@ class Search extends playlist_object
             'type' => 'numeric',
             'widget' => array('input', 'number')
         );
+        if (AmpConfig::get('ratings')) {
+            $this->myrating();
+            $this->rating();
+        }
         $this->types[] = array(
             'name' => 'placeformed',
             'label' => T_('Place'),
@@ -750,16 +766,14 @@ class Search extends playlist_object
             'type' => 'tags',
             'widget' => array('input', 'text')
         );
-        $this->last_play();
-        $this->total_time();
 
         if (AmpConfig::get('userflags')) {
             $this->favorite();
         }
-        if (AmpConfig::get('ratings')) {
-            $this->rating();
-            $this->myrating();
-        }
+
+        $this->last_play();
+        $this->total_time();
+
         if (AmpConfig::get('show_played_times')) {
             $this->played_times();
         }
@@ -795,12 +809,9 @@ class Search extends playlist_object
             'widget' => array('input', 'number')
         );
 
-        $this->image_width();
-        $this->image_height();
-
         if (AmpConfig::get('ratings')) {
-            $this->rating();
             $this->myrating();
+            $this->rating();
             $this->artistrating();
         }
         if (AmpConfig::get('show_played_times')) {
@@ -812,6 +823,14 @@ class Search extends playlist_object
         if (AmpConfig::get('userflags')) {
             $this->favorite();
         }
+
+        $this->types[] = array(
+            'name' => 'tag',
+            'label' => T_('Tag'),
+            'type' => 'tags',
+            'widget' => array('input', 'text')
+        );
+
         $catalogs = array();
         foreach (Catalog::get_catalogs() as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -825,12 +844,8 @@ class Search extends playlist_object
             'widget' => array('select', $catalogs)
         );
 
-        $this->types[] = array(
-            'name' => 'tag',
-            'label' => T_('Tag'),
-            'type' => 'tags',
-            'widget' => array('input', 'text')
-        );
+        $this->image_width();
+        $this->image_height();
     }
 
     /**
@@ -856,7 +871,7 @@ class Search extends playlist_object
     private function playlisttypes()
     {
         $this->types[] = array(
-            'name' => 'name',
+            'name' => 'title',
             'label' => T_('Name'),
             'type' => 'text',
             'widget' => array('input', 'text')
@@ -871,7 +886,7 @@ class Search extends playlist_object
     private function labeltypes()
     {
         $this->types[] = array(
-            'name' => 'name',
+            'name' => 'title',
             'label' => T_('Name'),
             'type' => 'text',
             'widget' => array('input', 'text')
@@ -1176,10 +1191,13 @@ class Search extends playlist_object
     {
         $this->rules = array();
         foreach ($data as $rule => $value) {
+            if ($value == 'name' && preg_match('/^rule_[0|1|2|3|4|5|6|7|8|9]*$/', $rule)) {
+                debug_event('search.class', "parse_rules: WARNING, " . $rule . "['name'] is depreciated. use 'title' for all name searches", 2);
+                $value = 'title';
+            }
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
                 $ruleID = $ruleID[1];
                 foreach (explode('|', $data['rule_' . $ruleID . '_input']) as $input) {
-                    //debug_event('search.class', 'parse_rules: ' . $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'], 5);
                     $this->rules[] = array(
                         $value,
                         $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'],
@@ -1386,8 +1404,8 @@ class Search extends playlist_object
                     }
                 break;
                 case 'myplayed':
-                    $where[]              = "`object_count`.`date` IS NOT NULL";
-                    $join['myplayed']     = true;
+                    $where[]                  = "`object_count`.`date` IS NOT NULL";
+                    $join['object_count']     = true;
                     break;
                 case 'last_play':
                     $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` WHERE `object_count`.`object_type` = 'album' GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
@@ -1437,7 +1455,6 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
-            //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
                 "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
@@ -1478,15 +1495,11 @@ class Search extends playlist_object
             $table['myrating'] .= "`rating`.`user`='" . $userid . "' AND ";
             $table['myrating'] .= "`rating`.`object_id`=`album`.`id`";
         }
-        if ($join['myplayed']) {
-            $table['myplayed'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='album' AND ";
-            $table['myplayed'] .= "`object_count`.`user`='" . $userid . "' AND ";
-            $table['myplayed'] .= "`object_count`.`object_id`=`album`.`id`";
-        }
         if ($join['object_count']) {
-            $table['object_count'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='album' AND ";
-            $table['object_count'] .= "`object_count`.`user`='" . $userid . "' AND ";
-            $table['object_count'] .= "`object_count`.`object_id`=`album`.`id`";
+            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
+                    "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND " .
+                    "`object_count`.`user`='" . $userid . "' GROUP BY `object_count`.`object_id`) AS " .
+                    "`object_count` ON `object_count`.`object_id`=`album`.`id`";
         }
         if ($join['image']) {
             $table['song'] = "LEFT JOIN `song` ON `song`.`album`=`album`.`id` LEFT JOIN `image` ON `image`.`object_id`=`album`.`id`";
@@ -1541,6 +1554,7 @@ class Search extends playlist_object
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
+                case 'title':
                 case 'name':
                     $where[] = "(`artist`.`name` $sql_match_operator '$input' " .
                                 " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
@@ -1615,7 +1629,6 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
-            //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
                 "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
@@ -1654,15 +1667,11 @@ class Search extends playlist_object
             $table['rating'] .= "`rating`.`user`='" . $userid . "' AND ";
             $table['rating'] .= "`rating`.`object_id`=`artist`.`id`";
         }
-        if ($join['myplayed']) {
-            $table['object_count'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='artist' AND ";
-            $table['object_count'] .= "`object_count`.`user`='" . $userid . "' AND ";
-            $table['object_count'] .= "`object_count`.`object_id`=`artist`.`id`";
-        }
         if ($join['object_count']) {
-            $table['object_count'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='artist' AND ";
-            $table['object_count'] .= "`object_count`.`user`='" . $userid . "' AND ";
-            $table['object_count'] .= "`object_count`.`object_id`=`artist`.`id`";
+            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
+                    "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND " .
+                    "`object_count`.`user`='" . $userid . "' GROUP BY `object_count`.`object_id`) AS " .
+                    "`object_count` ON `object_count`.`object_id`=`artist`.`id`";
         }
         if ($join['image']) {
             $table['song'] = "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` LEFT JOIN `image` ON `image`.`object_id`=`artist`.`id`";
@@ -1794,24 +1803,30 @@ class Search extends playlist_object
                     $where[] = " `song`.`played` = '$sql_match_operator'";
                 break;
                 case 'myplayed':
-                    $where[]           = " `song`.`played` = '$sql_match_operator'";
-                    $join['myplayed']  = true;
+                    $group[]              = "`song`.`id`";
+                    $having[]             = "COUNT(`object_count`.`object_id`) = " . $sql_match_operator;
+                    $join['object_count'] = true;
+                break;
+                case 'last_play':
+                    $where[]              = "`object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['object_count'] = true;
+                    break;
+                case 'played_times':
+                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' " .
+                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                 break;
                 case 'myplayedalbum':
-                    $match = 'NOT IN';
-                    if ($sql_match_operator === '1') {
-                        $match = 'IN';
-                    }
-                    $where[] = "`song`.`album` $match (SELECT `object_count`.`object_id` FROM `object_count` " .
-                               "WHERE `object_count`.`object_type` = 'album') ";
+                    $group[]                     = "`song`.`id`";
+                    $having[]                    = "COUNT(`object_count_album`.`object_id`) = " . $sql_match_operator;
+                    $join['album']               = true;
+                    $join['object_count_album']  = true;
                     break;
                 case 'myplayedartist':
-                    $match = 'NOT IN';
-                    if ($sql_match_operator === '1') {
-                        $match = 'IN';
-                    }
-                    $where[] = "`song`.`artist` $match (SELECT `object_count`.`object_id` FROM `object_count` " .
-                               "WHERE `object_count`.`object_type` = 'artist') ";
+                    $group[]                      = "`song`.`id`";
+                    $having[]                     = "COUNT(`object_count_artist`.`object_id`) = " . $sql_match_operator;
+                    $join['artist']               = true;
+                    $join['object_count_artist']  = true;
                     break;
                 case 'bitrate':
                     $input   = $input * 1000;
@@ -1861,15 +1876,6 @@ class Search extends playlist_object
                                    "WHERE COALESCE(`rating`.`rating`,0) $sql_match_operator '$input' AND " .
                                    "`rating`.`user`='" . $userid . "' AND `rating`.`object_type` = 'artist') ";
                     }
-                break;
-                case 'last_play':
-                    $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` WHERE `object_count`.`object_type` = 'song' GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
-                    $join['object_count'] = true;
-                    break;
-                case 'played_times':
-                    $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' " .
-                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                 break;
                 case 'catalog':
                     $where[] = "`song`.`catalog` $sql_match_operator '$input'";
@@ -1936,7 +1942,6 @@ class Search extends playlist_object
         }
         if ($join['tag']) {
             foreach ($join['tag'] as $key => $value) {
-                //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
                     "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
@@ -1991,14 +1996,22 @@ class Search extends playlist_object
             $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
         }
         if ($join['object_count']) {
-            $table['object_count'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='song' AND ";
-            $table['object_count'] .= "`object_count`.`user`='" . $userid . "' AND ";
-            $table['object_count'] .= "`object_count`.`object_id`=`song`.`id`";
+            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
+                    "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND " .
+                    "`object_count`.`user`='" . $userid . "' GROUP BY `object_count`.`object_id`) AS " .
+                    "`object_count` ON `object_count`.`object_id`=`song`.`id`";
         }
-        if ($join['myplayed']) {
-            $table['object_count'] = "LEFT JOIN `object_count` ON `object_count`.`object_type`='song' AND ";
-            $table['object_count'] .= "`object_count`.`user`='" . $userid . "' AND ";
-            $table['object_count'] .= "`object_count`.`object_id`=`song`.`id`";
+        if ($join['object_count_album']) {
+            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
+                    "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND " .
+                    "`object_count`.`user`='" . $userid . "' GROUP BY `object_count`.`object_id`) AS " .
+                    "`object_count_album` ON `object_count_album`.`object_id`=`album`.`id`";
+        }
+        if ($join['object_count_artist']) {
+            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
+                    "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND " .
+                    "`object_count`.`user`='" . $userid . "' GROUP BY `object_count`.`object_id`) AS " .
+                    "`object_count_artist` ON `object_count_artist`.`object_id`=`artist`.`id`";
         }
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
@@ -2128,6 +2141,7 @@ class Search extends playlist_object
             $where[] = "`playlist`.`type` = 'public'";
 
             switch ($rule[0]) {
+                case 'title':
                 case 'name':
                     $where[] = "`playlist`.`name` $sql_match_operator '$input'";
                 break;
@@ -2203,6 +2217,7 @@ class Search extends playlist_object
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
+                case 'title':
                 case 'name':
                     $where[] = "`label`.`name` $sql_match_operator '$input'";
                 break;

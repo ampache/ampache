@@ -2,12 +2,14 @@
 
 ## 4.0.0-DEVELOP
 
-Warning for API developers, Advanced search rule numbers have changed for text searches
+Warning for API developers, Advanced search rules have changed for text searches
 (album, artist,composer, comment, label, tag, album_tag, filename, placeformed, username)
 
-'is not' has been added shifting values down the list.
-0=contains, 1=does not contain, 2=starts with, 3=ends with
-4=is, 5=is not, 6=sounds like, 7=does not sound like
+* 'is not' has been added shifting values down the list.
+  0=contains, 1=does not contain, 2=starts with, 3=ends with
+  4=is, 5=is not, 6=sounds like, 7=does not sound like
+* rule_1['name'] is depreciated. Instead of multiple searches for the same thing rule_1['name'] Instead of multiple searches for the same thing rule_1'name' has been replaced with 'title'
+  (I have put a temp workaround into the search rules to alleviate this change)
 
 ### Backend
 
@@ -36,6 +38,7 @@ Warning for API developers, Advanced search rule numbers have changed for text s
 * Stop trying to insert art when present during catalog update
 * Extend bin/sort_files.inc & catalog patterns to handle new fields
 * Updated bin/sort_files.inc for a smoother experience that actually works
+* Add bin/clean_art_table.inc to clean art that doesn't fit your min or max dimensions.
 * Add -u to bin/catalog_update.inc This function will update the artist table with bio, image, etc as well as update similar artists.
 * Filter zip names in batch so they are named correctly by the download
 * Numerous catalog updates to allow data migration when updating file tags. 
