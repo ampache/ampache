@@ -1855,9 +1855,8 @@ class Api
 
             //scrobble plugins
             User::save_mediaplay($user, $item);
-            }
-            echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
         }
+        echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
         Session::extend($input['auth']);
     } // scrobble
 
