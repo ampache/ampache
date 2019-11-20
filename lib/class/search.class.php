@@ -1403,11 +1403,12 @@ class Search extends playlist_object
                     $join['song'] = true;
                 break;
                 case 'tag':
-                    $key               = md5($input . $sql_match_operator);
-                    $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                         $join['tag'][$key] = "$sql_match_operator '$input'";
                     } else {
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
                     }
                     
@@ -1552,11 +1553,12 @@ class Search extends playlist_object
                     $where[] = "`artist`.`placeformed` $sql_match_operator '$input'";
                 break;
                 case 'tag':
-                    $key               = md5($input . $sql_match_operator);
-                    $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                         $join['tag'][$key] = "$sql_match_operator '$input'";
                     } else {
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
                     }
                 break;
@@ -1722,30 +1724,33 @@ class Search extends playlist_object
                     $join['song_data'] = true;
                 break;
                 case 'tag':
-                    $key               = md5($input . $sql_match_operator);
-                    $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                    $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
                         $join['tag'][$key] = "$sql_match_operator '$input'";
                     } else {
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
                     }
                 break;
                 case 'album_tag':
-                    $key                     = md5($input . $sql_match_operator);
-                    $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
-                    $join['album']           = true;
+                    $key           = md5($input . $sql_match_operator);
+                    $join['album'] = true;
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
                         $join['album_tag'][$key] = "$sql_match_operator '$input'";
                     } else {
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
                     }
                 case 'artist_tag':
-                    $key                      = md5($input . $sql_match_operator);
-                    $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
-                    $join['artist']           = true;
+                    $key            = md5($input . $sql_match_operator);
+                    $join['artist'] = true;
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
+                        $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
                         $join['artist_tag'][$key] = "$sql_match_operator '$input'";
                     } else {
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) sql_match_operator 0";
                     }
                 break;
