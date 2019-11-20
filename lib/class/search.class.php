@@ -1193,6 +1193,10 @@ class Search extends playlist_object
         foreach ($data as $rule => $value) {
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
                 $ruleID = $ruleID[1];
+                if ($ruleID == 'name') {
+                    debug_event('search.class', "parse_rules: WARNING, searching by 'name' is depreciated. use 'title' for all name searches", 2);
+                    $ruleID = 'title';
+                }
                 foreach (explode('|', $data['rule_' . $ruleID . '_input']) as $input) {
                     debug_event('search.class', 'parse_rules: ' . $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'], 5);
                     $this->rules[] = array(
