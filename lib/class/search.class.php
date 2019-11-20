@@ -1020,7 +1020,7 @@ class Search extends playlist_object
         $sql .= ' ' . $limit_sql;
         $sql = trim($sql);
 
-        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
+        debug_event('search.class', 'SQL get_items: ' . $sql, 5);
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1084,7 +1084,7 @@ class Search extends playlist_object
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string) ($this->limit);
         }
-        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
+        debug_event('search.class', 'SQL get_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1135,7 +1135,7 @@ class Search extends playlist_object
 
         $sql .= ' ORDER BY RAND()';
         $sql .= $limit ? ' LIMIT ' . (string) ($limit) : '';
-        //debug_event('search.sql', 'SQL get_random_items: ' . $sql, 5);
+        debug_event('search.sql', 'SQL get_random_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
 
@@ -1179,7 +1179,7 @@ class Search extends playlist_object
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
                 $ruleID = $ruleID[1];
                 foreach (explode('|', $data['rule_' . $ruleID . '_input']) as $input) {
-                    //debug_event('search.class', 'parse_rules: ' . $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'], 5);
+                    debug_event('search.class', 'parse_rules: ' . $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'], 5);
                     $this->rules[] = array(
                         $value,
                         $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'],
@@ -1437,7 +1437,7 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
-            //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
+            debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
                 "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
@@ -1611,7 +1611,7 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         foreach ($join['tag'] as $key => $value) {
-            //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
+            debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
             $table['tag_' . $key] =
                 "LEFT JOIN (" .
                 "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
@@ -1786,7 +1786,8 @@ class Search extends playlist_object
                     $where[] = " `song`.`played` = '$sql_match_operator'";
                 break;
                 case 'myplayed':
-                    $having[]             = "COUNT(`object_count`.`object_id` = " . $sql_match_operator;
+                    $group[]              = "`song`.`id`";
+                    $having[]             = "COUNT(`object_count`.`object_id`) = " . $sql_match_operator;
                     $join['object_count'] = true;
                 break;
                 case 'last_play':
@@ -1930,7 +1931,7 @@ class Search extends playlist_object
         }
         if ($join['tag']) {
             foreach ($join['tag'] as $key => $value) {
-                //debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
+                debug_event('search.class', '$join[tag]: ' . $key . " " . $value, 5);
                 $table['tag_' . $key] =
                     "LEFT JOIN (" .
                     "SELECT `object_id`, GROUP_CONCAT(`name`) AS `name` " .
