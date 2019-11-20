@@ -1193,10 +1193,6 @@ class Search extends playlist_object
         foreach ($data as $rule => $value) {
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
                 $ruleID = $ruleID[1];
-                if ($ruleID == 'name') {
-                    debug_event('search.class', "parse_rules: WARNING, searching by 'name' is depreciated. use 'title' for all name searches", 2);
-                    $ruleID = 'title';
-                }
                 foreach (explode('|', $data['rule_' . $ruleID . '_input']) as $input) {
                     debug_event('search.class', 'parse_rules: ' . $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'], 5);
                     $this->rules[] = array(
@@ -1557,6 +1553,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[] = "(`artist`.`name` $sql_match_operator '$input' " .
                                 " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
                                 "' ', `artist`.`name`)) $sql_match_operator '$input')";
@@ -2145,6 +2142,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[] = "`playlist`.`name` $sql_match_operator '$input'";
                 break;
                 default:
@@ -2220,6 +2218,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[] = "`label`.`name` $sql_match_operator '$input'";
                 break;
                 case 'category':
