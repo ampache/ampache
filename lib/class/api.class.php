@@ -1151,13 +1151,9 @@ class Api
     public static function playlist_generate($input)
     {
         // parameter defaults
-        if (!in_array($input['mode'], array("forgotten", "recent", "random"), true)) {
-            $input['mode'] = "random";
-        }
-        if (!in_array($input['format'], array("song", "index", "id"), true)) {
-            $input['format'] = "song";
-        }
-        $user = User::get_from_username(Session::username($input['auth']));
+        $mode   = (!in_array($input['mode'], array("forgotten", "recent", "random"), true)) ? 'random' : $input['mode'];
+        $format = (!in_array($input['format'], array("song", "index", "id"), true)) ? 'song' : $input['format'];
+        $user   = User::get_from_username(Session::username($input['auth']));
         
         // process parameters
         $select       = array("`song`.`id` AS `song_id`");
@@ -1166,7 +1162,7 @@ class Api
         $order        = array();
         $bound_values = array();
 
-        if (in_array($input['mode'], array("forgotten", "recent"), true)) {
+        if (in_array($mode, array("forgotten", "recent"), true)) {
             $select[] = "(SELECT `object_count`.`object_id` " .
                         "FROM `object_count` " .
                         "WHERE (`object_count`.`user` = ?) AND " .
@@ -1177,7 +1173,7 @@ class Api
                         "LIMIT 1) AS `last_played`";
 
             $order[] = "last_played";
-            if ($input['mode'] == "recent") {
+            if ($mode == "recent") {
                 $order[0] .= " DESC";
             }
 
@@ -1226,7 +1222,7 @@ class Api
         }
         
         // output formatted XML
-        switch ($input['format']) {
+        switch ($format) {
             case "id":
                 echo XML_Data::keyed_array($song_ids);
                 break;
