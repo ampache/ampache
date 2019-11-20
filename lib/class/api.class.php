@@ -1222,7 +1222,7 @@ class Api
         $song_ids   = array();
         $db_results = Dba::read($sql, $bound_values);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $song_ids[] = $row[song_id];
+            $song_ids[] = $row[$song_id];
         }
         
         // output formatted XML
