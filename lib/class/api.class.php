@@ -137,7 +137,7 @@ class Api
         foreach ($parameters as $parameter) {
             if (empty($input[$parameter])) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
-                echo XML_Data::error('401', T_("Missing mandatory parameter") . " '" . $parameter . "'");
+                echo XML_Data::error('401', T_('Missing mandatory parameter') . " '" . $parameter . "'");
 
                 return false;
             }
@@ -1132,23 +1132,25 @@ class Api
      * playlist_generate
      * MINIMUM_API_VERSION=400001
      *
-     * Return songs based on supplied criteria
+     * Get a list of song xml, indexes or id's based on some simple search criteria
+     * 'recent' will search for tracks played after 'Popular Threshold' days
+     * 'forgotten' will search for tracks played before 'Popular Threshold' days
      *
      * @param array $input
-     * mode    = (string)  "recent"|"forgotten"|"random" //optional, default = "random"
+     * mode    = (string)  'recent'|'forgotten'|'random' //optional, default = 'random'
      * filter  = (string)  $filter                       //optional, LIKE matched to song title
      * album   = (integer) $album_id                     //optional
      * artist  = (integer) $artist_id                    //optional
      * flag    = (integer) 0|1                           //optional, default = 0
-     * format  = (string)  "song"|"index"|"id"           //optional, default = "song"
+     * format  = (string)  'song'|'index'|'id'           //optional, default = 'song'
      * offset  = (integer)                               //optional
      * limit   = (integer)                               //optional
      */
     public static function playlist_generate($input)
     {
         // parameter defaults
-        $mode   = (!in_array($input['mode'], array("forgotten", "recent", "random"), true)) ? 'random' : $input['mode'];
-        $format = (!in_array($input['format'], array("song", "index", "id"), true)) ? 'song' : $input['format'];
+        $mode   = (!in_array($input['mode'], array('forgotten', 'recent', 'random'), true)) ? 'random' : $input['mode'];
+        $format = (!in_array($input['format'], array('song', 'index', 'id'), true)) ? 'song' : $input['format'];
         $user   = User::get_from_username(Session::username($input['auth']));
         $array  = array();
 
@@ -1156,7 +1158,7 @@ class Api
         $rule_count = 1;
 
         $array['type'] = 'song';
-        if (in_array($mode, array("forgotten", "recent"), true)) {
+        if (in_array($mode, array('forgotten', 'recent'), true)) {
             //played songs
             $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 0;
@@ -1181,13 +1183,13 @@ class Api
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        if (array_key_exists("filter", $input)) {
+        if (array_key_exists('filter', $input)) {
             $array['rule_' . $rule_count]               = 'title';
             $array['rule_' . $rule_count . '_input']    = (string) $input['filter'];
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        if (array_key_exists("album", $input)) {
+        if (array_key_exists('album', $input)) {
             $album = new Album((int) $input['album']);
             // set rule
             $array['rule_' . $rule_count]               = 'album';
@@ -1195,7 +1197,7 @@ class Api
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        if (array_key_exists("artist", $input)) {
+        if (array_key_exists('artist', $input)) {
             $artist = new Artist((int) $input['artist']);
             // set rule
             $array['rule_' . $rule_count]               = 'artist';
@@ -1362,33 +1364,33 @@ class Api
 
         $results = null;
         switch ($input['filter']) {
-            case "newest":
+            case 'newest':
                 debug_event('api.class', 'stats newest', 5);
                 $results = Stats::get_newest($type, $limit, $offset);
                 break;
-            case "highest":
+            case 'highest':
                 debug_event('api.class', 'stats highest', 4);
                 $results = Rating::get_highest($type, $limit, $offset);
                 break;
-            case "frequent":
+            case 'frequent':
                 debug_event('api.class', 'stats frequent', 4);
                 $results = Stats::get_top($type, $limit, '', $offset);
                 break;
-            case "recent":
-            case "forgotten":
+            case 'recent':
+            case 'forgotten':
                 debug_event('api.class', 'stats ' . $input['filter'], 4);
-                $newest = ($input['filter'] == "recent") ? true : false;
+                $newest = ($input['filter'] == 'recent') ? true : false;
                 if ($user_id !== null) {
                     $results = $user->get_recently_played($limit, $type, $newest);
                 } else {
                     $results = Stats::get_recent($type, $limit, $offset, $newest);
                 }
                 break;
-            case "flagged":
+            case 'flagged':
                 debug_event('api.class', 'stats flagged', 4);
                 $results = Userflag::get_latest($type, $user_id);
                 break;
-            case "random":
+            case 'random':
             default:
                 debug_event('api.class', 'stats random ' . $type, 4);
                 switch ($type) {
@@ -2201,7 +2203,7 @@ class Api
 
         $maxBitRate    = $input['bitrate'];
         $format        = $input['format']; // mp3, flv or raw
-        $original      = ($format && $format != "raw") ? true : false;
+        $original      = ($format && $format != 'raw') ? true : false;
         $timeOffset    = $input['offset'];
         $contentLength = (int) $input['length']; // Force content-length guessing if transcode
 
@@ -2227,7 +2229,7 @@ class Api
             $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
-            header("Location: " . str_replace(':443/play', '/play', $url));
+            header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;
         }
@@ -2254,7 +2256,7 @@ class Api
         $fileid   = $input['id'];
         $type     = $input['type'];
         $format   = $input['format'];
-        $original = ($format && $format != "raw") ? true : false;
+        $original = ($format && $format != 'raw') ? true : false;
         $user_id  = User::get_from_username(Session::username($input['auth']))->id;
 
         $url    = '';
@@ -2272,7 +2274,7 @@ class Api
             $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
-            header("Location: " . str_replace(':443/play', '/play', $url));
+            header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;
         }
@@ -2309,19 +2311,19 @@ class Api
 
         $art = null;
         if ($type == 'artist') {
-            $art = new Art($object_id, "artist");
+            $art = new Art($object_id, 'artist');
         } elseif ($type == 'album') {
-            $art = new Art($object_id, "album");
+            $art = new Art($object_id, 'album');
         } elseif ($type == 'song') {
-            $art = new Art($object_id, "song");
+            $art = new Art($object_id, 'song');
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
                 $song = new Song($object_id);
-                $art  = new Art($song->album, "album");
+                $art  = new Art($song->album, 'album');
             }
         } elseif ($type == 'podcast') {
-            $art = new Art($object_id, "podcast");
+            $art = new Art($object_id, 'podcast');
         } elseif ($type == 'search') {
             $smartlist = new Search($object_id . 'song', $user);
             $listitems = $smartlist->get_items();
@@ -2329,7 +2331,7 @@ class Api
             $art       = new Art($item['object_id'], $item['object_type']);
             if ($art != null && $art->id == null) {
                 $song = new Song($item['object_id']);
-                $art  = new Art($song->album, "album");
+                $art  = new Art($song->album, 'album');
             }
         } elseif ($type == 'playlist') {
             $playlist  = new Playlist($object_id);
@@ -2338,11 +2340,11 @@ class Api
             $art       = new Art($item['object_id'], $item['object_type']);
             if ($art != null && $art->id == null) {
                 $song = new Song($item['object_id']);
-                $art  = new Art($song->album, "album");
+                $art  = new Art($song->album, 'album');
             }
         }
 
-        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Origin: *');
         if ($art != null) {
             if ($art->has_db_info() && $size && AmpConfig::get('resize_images')) {
                 $dim           = array();
