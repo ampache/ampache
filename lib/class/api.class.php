@@ -1141,8 +1141,8 @@ class Api
      * artist  = (integer) $artist_id                    //optional
      * flagged = (integer) 0|1                           //optional, default = 0
      * format  = (string)  "song"|"index"|"id"           //optional, default = "song"
-     * 'offset'= (integer)                               //optional
-     * 'limit' = (integer)                               //optional
+     * offset  = (integer)                               //optional
+     * limit   = (integer)                               //optional
      */
     public static function playlist_generate($input)
     {
@@ -1158,12 +1158,11 @@ class Api
         $array['type'] = 'song';
         if (in_array($mode, array("forgotten", "recent"), true)) {
             //played songs
-            $array['rule_' . $rule_count] = 'myplayed';
-            //$array['rule_1_input']    = 0;
+            $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
 
-            //not played for a while
+            //not played for a while or played recently
             $array['rule_' . $rule_count]               = 'last_play';
             $array['rule_' . $rule_count . '_input']    = AmpConfig::get('popular_threshold');
             $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
@@ -1175,7 +1174,7 @@ class Api
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-
+        // additional rules
         if ((int) $input['flagged'] == 1) {
             $array['rule_' . $rule_count]               = 'favorite';
             $array['rule_' . $rule_count . '_input']    = '%';
@@ -1207,8 +1206,8 @@ class Api
 
         ob_end_clean();
     
-        //XML_Data::set_offset($input['offset']);
-        //XML_Data::set_limit($input['limit']);
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
 
         // get db data
         $song_ids = Search::run($array, $user);
@@ -1343,7 +1342,6 @@ class Api
         }
         // moved type to filter and allowed multipe type selection
         $type   = $input['type'];
-        $filter = $input['filter'];
         $offset = $input['offset'];
         $limit  = $input['limit'];
         // original method only searched albums and had poor method inputs
