@@ -1135,12 +1135,14 @@ class Api
      * Return songs based on supplied criteria
      *
      * @param array $input
-     * mode    = (string)  "recent"|"forgotten"|"random" // optional, default = "random"
-     * filter  = (string)  $filter                       // optional, LIKE matched to song title
-     * album   = (integer) $album_id                     // optional
-     * artist  = (integer) $artist_id                    // optional
-     * flagged = (integer) 0|1                           // optional, default = 0
-     * format  = (string)  "song"|"index"|"id"           // optional, default = "song"
+     * mode    = (string)  "recent"|"forgotten"|"random" //optional, default = "random"
+     * filter  = (string)  $filter                       //optional, LIKE matched to song title
+     * album   = (integer) $album_id                     //optional
+     * artist  = (integer) $artist_id                    //optional
+     * flagged = (integer) 0|1                           //optional, default = 0
+     * format  = (string)  "song"|"index"|"id"           //optional, default = "song"
+     * 'offset'= (integer)                               //optional
+     * 'limit' = (integer)                               //optional
      */
     public static function playlist_generate($input)
     {
@@ -1148,61 +1150,68 @@ class Api
         $mode   = (!in_array($input['mode'], array("forgotten", "recent", "random"), true)) ? 'random' : $input['mode'];
         $format = (!in_array($input['format'], array("song", "index", "id"), true)) ? 'song' : $input['format'];
         $user   = User::get_from_username(Session::username($input['auth']));
+        $array  = array();
 
-        // process parameters
-        $select       = array("`song`.`id` AS `song_id`");
-        $from         = array("song");
-        $where        = array();
-        $order        = array();
-        $bound_values = array();
+        //count for search rules
+        $rule_count = 1;
 
+        $array['type'] = 'song';
         if (in_array($mode, array("forgotten", "recent"), true)) {
-            $array         = array();
-            $array['type'] = 'song';
             //played songs
-            $array['rule_1']          = 'myplayed';
+            $array['rule_' . $rule_count] = 'myplayed';
             //$array['rule_1_input']    = 0;
-            $array['rule_1_operator'] = 0;
+            $array['rule_' . $rule_count . '_operator'] = 0;
+            $rule_count++;
 
             //not played for a while
-            $array['rule_2']          = 'last_play';
-            $array['rule_2_input']    = AmpConfig::get('popular_threshold');
-            $array['rule_2_operator'] = ($mode == 'recent') ? 0 : 1;
-
+            $array['rule_' . $rule_count]               = 'last_play';
+            $array['rule_' . $rule_count . '_input']    = AmpConfig::get('popular_threshold');
+            $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
+            $rule_count++;
+        } else {
+            // random / anywhere
+            $array['rule_' . $rule_count]               = 'anywhere';
+            $array['rule_' . $rule_count . '_input']    = '%';
+            $array['rule_' . $rule_count . '_operator'] = 0;
+            $rule_count++;
         }
-        //count for other rules
-        $rule_count = 3;
 
         if ((int) $input['flagged'] == 1) {
-            $array['rule_' . $rule_count] = 'favorite';
+            $array['rule_' . $rule_count]               = 'favorite';
             $array['rule_' . $rule_count . '_input']    = '%';
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
         if (array_key_exists("filter", $input)) {
-            $where[]        = "(`song`.`title` LIKE ?)";
-            $bound_values[] = "%" . $input['filter'] . "%";
+            $array['rule_' . $rule_count]               = 'title';
+            $array['rule_' . $rule_count . '_input']    = (string) $input['filter'];
+            $array['rule_' . $rule_count . '_operator'] = 0;
+            $rule_count++;
         }
         if (array_key_exists("album", $input)) {
-            $array['rule_' . $rule_count] = 'album';
-            $array['rule_' . $rule_count . '_input']    = $input['album'];
+            $album = New Album((int) $input['album']);
+            // set rule
+            $array['rule_' . $rule_count]               = 'album';
+            $array['rule_' . $rule_count . '_input']    = $album;
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
         if (array_key_exists("artist", $input)) {
-            $array['rule_' . $rule_count] = 'artist';
-            $array['rule_' . $rule_count . '_input']    = $input['artist'];
+            $artist = New Artist((int) $input['artist']);
+            // set rule
+            $array['rule_' . $rule_count]               = 'artist';
+            $array['rule_' . $rule_count . '_input']    = $artist->id;
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
 
         ob_end_clean();
     
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        //XML_Data::set_offset($input['offset']);
+        //XML_Data::set_limit($input['limit']);
 
         // get db data
-        $song_ids = Search::run($array);
+        $song_ids = Search::run($array, $user);
         shuffle($song_ids);
         
         // output formatted XML
