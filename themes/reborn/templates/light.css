@@ -244,14 +244,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     border-color: #000;
 }
 
-span#sidebar-header-content::after {
-	content: "<<<";
-}
-
-#sidebar-header.sidebar-header-collapsed > span#sidebar-header-content::after {
-	content: ">>>";
-}
-
 /***********************************************
                   Rightbar
 ***********************************************/

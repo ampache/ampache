@@ -1031,10 +1031,11 @@ class Api
         }
         $name = $input['name'];
         $type = $input['type'];
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
 
-        if (!$playlist->has_access()) {
+        if (!$playlist->has_access($user)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             $array = [
@@ -1058,9 +1059,10 @@ class Api
      */
     public static function playlist_delete($input)
     {
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access()) {
+        if (!$playlist->has_access($user)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             $playlist->delete();
@@ -1078,18 +1080,26 @@ class Api
      * @param array $input
      * 'filter' (string) UID of playlist
      * 'song' (string) UID of song to add to playlist
+     * 'check' (integer) 0|1 Check for duplicates (default = 0)
      */
     public static function playlist_add_song($input)
     {
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
-        if (!$playlist->has_access()) {
+        if (!$playlist->has_access($user)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
-        } else {
-            $playlist->add_songs(array($song), true);
-            echo XML_Data::success('song added to playlist');
+
+            return;
         }
+        if ((int) $input['check'] == 1 && in_array($song, $playlist->get_songs())) {
+            echo XML_Data::error('400', T_("Can't add a duplicate item when check is enabled"));
+
+            return;
+        }
+        $playlist->add_songs(array($song), true);
+        echo XML_Data::success('song added to playlist');
         Session::extend($input['auth']);
     } // playlist_add_song
 
@@ -1108,9 +1118,10 @@ class Api
      */
     public static function playlist_remove_song($input)
     {
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access()) {
+        if (!$playlist->has_access($user)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             if ($input['song']) {
