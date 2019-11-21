@@ -1409,7 +1409,7 @@ class Search extends playlist_object
                     $join['object_count']     = true;
                     break;
                 case 'last_play':
-                    $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` WHERE `object_count`.`object_type` = 'album' GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
                     break;
                 case 'played_times':
@@ -1475,9 +1475,9 @@ class Search extends playlist_object
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
                 if (!empty($where_sql)) {
-                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                    $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 } else {
-                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                    $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 }
             }
         }
@@ -1499,7 +1499,7 @@ class Search extends playlist_object
         if ($join['object_count']) {
             $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
                     "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND " .
-                    "`object_count`.`user`='" . $userid . "' GROUP BY `object_count`.`object_id`) AS " .
+                    "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " .
                     "`object_count` ON `object_count`.`object_id`=`album`.`id`";
         }
         if ($join['image']) {
@@ -1610,7 +1610,9 @@ class Search extends playlist_object
                     $join['object_count'] = true;
                     break;
                 case 'last_play':
-                    $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` WHERE `object_count`.`object_type` = 'artist' GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' " .
+                        "GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
                     break;
                 case 'played_times':
@@ -1647,9 +1649,9 @@ class Search extends playlist_object
             if ($join['catalog']) {
                 $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
                 if (!empty($where_sql)) {
-                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                    $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 } else {
-                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                    $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 }
             }
         }
@@ -1671,7 +1673,7 @@ class Search extends playlist_object
         if ($join['object_count']) {
             $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
                     "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND " .
-                    "`object_count`.`user`='" . $userid . "' GROUP BY `object_count`.`object_id`) AS " .
+                    "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " .
                     "`object_count` ON `object_count`.`object_id`=`artist`.`id`";
         }
         if ($join['image']) {
@@ -1999,19 +2001,19 @@ class Search extends playlist_object
         if ($join['object_count']) {
             $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
                     "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND " .
-                    "`object_count`.`user`='" . $userid . "' GROUP BY `object_count`.`object_id`) AS " .
+                    "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " .
                     "`object_count` ON `object_count`.`object_id`=`song`.`id`";
         }
         if ($join['object_count_album']) {
             $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
                     "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND " .
-                    "`object_count`.`user`='" . $userid . "' GROUP BY `object_count`.`object_id`) AS " .
+                    "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " .
                     "`object_count_album` ON `object_count_album`.`object_id`=`album`.`id`";
         }
         if ($join['object_count_artist']) {
             $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
                     "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND " .
-                    "`object_count`.`user`='" . $userid . "' GROUP BY `object_count`.`object_id`) AS " .
+                    "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " .
                     "`object_count_artist` ON `object_count_artist`.`object_id`=`artist`.`id`";
         }
         if ($join['playlist_data']) {
@@ -2024,9 +2026,9 @@ class Search extends playlist_object
         if ($join['catalog']) {
             $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1'";
+                $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             }
         }
 
