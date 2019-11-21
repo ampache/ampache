@@ -1205,13 +1205,17 @@ class Api
         }
 
         ob_end_clean();
-    
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
         // get db data
         $song_ids = Search::run($array, $user);
         shuffle($song_ids);
+
+        //slice the array if there is a limit
+        if ((int) $input['limit'] > 0) {
+            $song_ids = array_slice($song_ids, 0, (int) $input['limit']);
+        }
         
         // output formatted XML
         switch ($format) {
@@ -1249,14 +1253,13 @@ class Api
         $array['rule_1_input']    = $input['filter'];
         $array['rule_1_operator'] = 0;
 
-        ob_end_clean();
-
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
         $results = Search::run($array);
         $user    = User::get_from_username(Session::username($input['auth']));
 
+        ob_end_clean();
         echo XML_Data::songs($results, array(), true, $user->id);
         Session::extend($input['auth']);
     } // search_songs
