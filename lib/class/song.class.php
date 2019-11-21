@@ -1133,9 +1133,10 @@ class Song extends database_object implements media, library_item
             switch ($key) {
                 case 'artist_name':
                     // Need to create new artist according the name
+                    $old_artist_id = $this->artist;
                     $new_artist_id = Artist::check($value);
                     $this->artist  = $new_artist_id;
-                    self::update_artist($new_artist_id, $this->id);
+                    self::update_artist($new_artist_id, $this->id, $old_artist_id);
                 break;
                 case 'album_name':
                     // Need to create new album according the name
@@ -1427,22 +1428,22 @@ class Song extends database_object implements media, library_item
      * updates the artist field
      * @param integer $new_artist
      * @param integer $song_id
+     * @param integer $old_artist
      */
-    public static function update_artist($new_artist, $song_id)
+    public static function update_artist($new_artist, $song_id, $old_artist)
     {
         self::_update_item('artist', $new_artist, $song_id, 50);
 
-        $song = new Song($song_id);
         //migrate stats for the old album
-        Stats::migrate('artist', $song->artist, $new_artist);
-        UserActivity::migrate('artist', $song->artist, $new_artist);
-        Recommendation::migrate('artist', $song->artist, $new_artist);
-        Share::migrate('artist', $song->artist, $new_artist);
-        Shoutbox::migrate('artist', $song->artist, $new_artist);
-        Tag::migrate('artist', $song->artist, $new_artist);
-        Userflag::migrate('artist', $song->artist, $new_artist);
-        Rating::migrate('artist', $song->artist, $new_artist);
-        Art::migrate('artist', $song->artist, $new_artist);
+        Stats::migrate('artist', $old_artist, $new_artist);
+        UserActivity::migrate('artist', $old_artist, $new_artist);
+        Recommendation::migrate('artist', $old_artist, $new_artist);
+        Share::migrate('artist', $old_artist, $new_artist);
+        Shoutbox::migrate('artist', $old_artist, $new_artist);
+        Tag::migrate('artist', $old_artist, $new_artist);
+        Userflag::migrate('artist', $old_artist, $new_artist);
+        Rating::migrate('artist', $old_artist, $new_artist);
+        Art::migrate('artist', $old_artist, $new_artist);
     } // update_artist
 
     /**

@@ -896,7 +896,7 @@ class Artist extends database_object implements library_item
             if ($artist_id !== null && $artist_id !== $this->id) {
                 $songs = $this->get_songs();
                 foreach ($songs as $song_id) {
-                    Song::update_artist($artist_id, $song_id);
+                    Song::update_artist($artist_id, $song_id, $this->id);
                 }
                 $updated    = true;
                 $current_id = $artist_id;
