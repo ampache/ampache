@@ -1016,7 +1016,7 @@ class Album extends database_object implements library_item
                 $songs = $this->get_songs();
             }
             foreach ($songs as $song_id) {
-                Song::update_album($album_id, $song_id);
+                Song::update_album($album_id, $song_id, $this->id);
                 Song::update_year($year, $song_id);
                 Song::write_id3_for_song($song_id);
             }
