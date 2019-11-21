@@ -1090,7 +1090,7 @@ class Api
 
             return;
         }
-        if ((int) $input['check'] == 1 && in_array($song, $playlist->get_songs()) {
+        if ((int) $input['check'] == 1 && in_array($song, $playlist->get_songs())) {
             echo XML_Data::error('400', T_("Can't add a duplicate item when check is enabled"));
 
             return;
