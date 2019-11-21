@@ -1129,6 +1129,108 @@ class Api
     } // playlist_remove_song
 
     /**
+     * playlist_generate
+     * MINIMUM_API_VERSION=400001
+     *
+     * Return songs based on supplied criteria
+     *
+     * @param array $input
+     * mode    = (string)  "recent"|"forgotten"|"random" // optional, default = "random"
+     * filter  = (string)  $filter                       // optional, LIKE matched to song title
+     * album   = (integer) $album_id                     // optional
+     * artist  = (integer) $artist_id                    // optional
+     * flagged = (integer) 0|1                           // optional, default = 0
+     * format  = (string)  "song"|"index"|"id"           // optional, default = "song"
+     */
+    public static function playlist_generate($input)
+    {
+        // parameter defaults
+        $mode   = (!in_array($input['mode'], array("forgotten", "recent", "random"), true)) ? 'random' : $input['mode'];
+        $format = (!in_array($input['format'], array("song", "index", "id"), true)) ? 'song' : $input['format'];
+        $user   = User::get_from_username(Session::username($input['auth']));
+        
+        // process parameters
+        $select       = array("`song`.`id` AS `song_id`");
+        $from         = array("song");
+        $where        = array();
+        $order        = array();
+        $bound_values = array();
+
+        if (in_array($mode, array("forgotten", "recent"), true)) {
+            $select[] = "(SELECT `object_count`.`object_id` " .
+                        "FROM `object_count` " .
+                        "WHERE (`object_count`.`user` = ?) AND " .
+                        "(`object_count`.`object_id` = `song`.`id`) AND " .
+                        "(`object_count`.`object_type` = 'song') AND " .
+                        "(`object_count`.`count_type` = 'stream') " .
+                        "ORDER BY `object_count`.`date` DESC " .
+                        "LIMIT 1) AS `last_played`";
+
+            $order[] = "last_played";
+            if ($mode == "recent") {
+                $order[0] .= " DESC";
+            }
+
+            $bound_values[] = $user->id;
+        }
+        if ((int) $input['flagged'] == 1) {
+            $from[]         = "LEFT JOIN `user_flag` ON (`song`.`id` = `user_flag`.`object_id`) AND (`user_flag`.`object_type` = 'song') AND (`user_flag`.`user` = ?)";
+            $where[]        = "(`user_flag`.`object_id` IS NOT NULL)";
+            $bound_values[] = $user->id;
+        }
+        if (array_key_exists("filter", $input)) {
+            $where[]        = "(`song`.`title` LIKE ?)";
+            $bound_values[] = "%" . $input['filter'] . "%";
+        }
+        if (array_key_exists("album", $input)) {
+            $where[]        = "(`song`.`album` = ?)";
+            $bound_values[] = $input['album'];
+        }
+        if (array_key_exists("artist", $input)) {
+            $where[]        = "(`song`.`artist` = ?)";
+            $bound_values[] = $input['artist'];
+        }
+        $order[] = "RAND()";
+
+        // construct sql
+        $sql = "SELECT " . join(', ', $select) . " FROM " . join(" ", $from);
+        if (count($where)) {
+            $sql .= " WHERE " . join(" AND ", $where);
+        }
+        $sql .= " ORDER BY " . join(", ", $order);
+
+        // add offest and limit
+        if (array_key_exists("limit", $input) && is_numeric($input['limit'])) {
+            $sql .= " LIMIT ";
+            if (array_key_exists("offset", $input) && is_numeric($input['offset'])) {
+                $sql .= $input['offset'] . ", ";
+            }
+            $sql .= $input['limit'];
+        }
+
+        // get db data
+        $song_ids   = array();
+        $db_results = Dba::read($sql, $bound_values);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $song_ids[] = $row[$song_id];
+        }
+        
+        // output formatted XML
+        switch ($format) {
+            case "id":
+                echo XML_Data::keyed_array($song_ids);
+                break;
+            case "index":
+                echo XML_Data::indexes($song_ids, "song");
+                break;
+            default:
+                echo XML_Data::songs($song_ids);
+        }
+
+        return true;
+    } // playlist_generate
+
+    /**
      * search_songs
      * MINIMUM_API_VERSION=380001
      *
