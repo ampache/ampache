@@ -69,6 +69,21 @@ class Playlist extends playlist_object
     }
 
     /**
+     * has_access
+     * check the user is an Admin or the owner of a playlist
+     * @param \User $user
+     * @return boolean
+     */
+    public function has_access($user)
+    {
+        if (Access::check('interface', 100, $user->id) || $this->user == $user->id) {
+            return true;
+        }
+
+        return false;
+    } // build_cache
+
+    /**
      * build_cache
      * This is what builds the cache from the objects
      */
