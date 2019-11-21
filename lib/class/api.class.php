@@ -1226,7 +1226,7 @@ class Api
                 echo XML_Data::indexes($song_ids, 'song');
                 break;
             default:
-                echo XML_Data::songs($song_ids);
+                echo XML_Data::songs($song_ids, array(), true, $user->id);
         }
         Session::extend($input['auth']);
     } // playlist_generate
