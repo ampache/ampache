@@ -493,17 +493,18 @@ class Album extends database_object implements library_item
         $catalog_number = empty($catalog_number) ? null : $catalog_number;
 
         if (!$name) {
-            $name         = T_('Unknown (Orphaned)');
-            $year         = 0;
-            $disk         = 1;
-            $album_artist = null;
+            $name          = T_('Unknown (Orphaned)');
+            $year          = 0;
+            $original_year = 0;
+            $disk          = 1;
+            $album_artist  = null;
         }
-        if (isset(self::$_mapcache[$name][$disk][$mbid][$album_artist])) {
-            return self::$_mapcache[$name][$disk][$mbid][$album_artist];
+        if (isset(self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist])) {
+            return self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist];
         }
 
-        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ?  AND `album`.`year` = ? ";
-        $params = array($name, $name, $disk, $year);
+        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ? AND `album`.`year` = ? AND `album`.`original_year` = ? ";
+        $params = array($name, $name, $disk, $year, $original_year);
 
         if ($mbid) {
             $sql .= 'AND `album`.`mbid` = ? ';
@@ -524,8 +525,9 @@ class Album extends database_object implements library_item
         $db_results = Dba::read($sql, $params);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            $album_id                                            = $row['id'];
-            self::$_mapcache[$name][$disk][$mbid][$album_artist] = $album_id;
+            $album_id = $row['id'];
+            // cache the album id against it's details
+            self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist] = $album_id;
 
             return $album_id;
         }
@@ -552,7 +554,7 @@ class Album extends database_object implements library_item
             }
         }
 
-        self::$_mapcache[$name][$disk][$mbid][$album_artist] = $album_id;
+        self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist] = $album_id;
 
         return $album_id;
     }
