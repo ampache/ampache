@@ -683,6 +683,16 @@ div#autoupdate > span {
     border: 1px solid;
 }
 
+span#sidebar-header-content::after {
+	content: "<<<";
+    position: fixed;
+}
+
+#sidebar-header.sidebar-header-collapsed > span#sidebar-header-content::after {
+	content: ">>>";
+    position: fixed;
+}
+
 /***********************************************
                   Rightbar
 ***********************************************/
