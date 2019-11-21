@@ -249,7 +249,7 @@ class Subsonic_Api
         }
 
         // these children must be in an array.
-        $forceArray = array('channel');
+        $forceArray = array('channel', 'share');
         //get child nodes from all namespaces
         $tagsArray = array();
         foreach ($namespaces as $prefix => $namespace) {
