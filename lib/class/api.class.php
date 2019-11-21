@@ -1188,7 +1188,7 @@ class Api
             $rule_count++;
         }
         if (array_key_exists("album", $input)) {
-            $album = New Album((int) $input['album']);
+            $album = new Album((int) $input['album']);
             // set rule
             $array['rule_' . $rule_count]               = 'album';
             $array['rule_' . $rule_count . '_input']    = $album;
@@ -1196,7 +1196,7 @@ class Api
             $rule_count++;
         }
         if (array_key_exists("artist", $input)) {
-            $artist = New Artist((int) $input['artist']);
+            $artist = new Artist((int) $input['artist']);
             // set rule
             $array['rule_' . $rule_count]               = 'artist';
             $array['rule_' . $rule_count . '_input']    = $artist->id;
