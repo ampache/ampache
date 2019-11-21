@@ -1078,6 +1078,7 @@ class Api
      * @param array $input
      * 'filter' (string) UID of playlist
      * 'song' (string) UID of song to add to playlist
+     * 'check' (integer) 0|1 Check for duplicates (default = 0)
      */
     public static function playlist_add_song($input)
     {
@@ -1086,9 +1087,16 @@ class Api
         $song     = $input['song'];
         if (!$playlist->has_access()) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
-        } else {
-            $playlist->add_songs(array($song), true);
-            echo XML_Data::success('song added to playlist');
+
+            return;
+        }
+        if ((int) $input['check'] == 1 && in_array($song, $playlist->get_songs()) {
+            echo XML_Data::error('400', T_("Can't add a duplicate item when check is enabled"));
+
+            return;
+        }
+        $playlist->add_songs(array($song), true);
+        echo XML_Data::success('song added to playlist');
         }
         Session::extend($input['auth']);
     } // playlist_add_song
