@@ -690,6 +690,7 @@ span#sidebar-header-content::after {
 
 #sidebar-header.sidebar-header-collapsed > span#sidebar-header-content::after {
 	content: ">>>";
+    left: 67px;
     position: fixed;
 }
 
