@@ -1133,8 +1133,8 @@ class Api
      * MINIMUM_API_VERSION=400001
      *
      * Get a list of song xml, indexes or id's based on some simple search criteria
-     * 'recent' will search for tracks played after 'Popular Threshold' days
-     * 'forgotten' will search for tracks played before 'Popular Threshold' days
+     * 'recent' will search for tracks played after 'Statistics Day Threshold' days
+     * 'forgotten' will search for tracks played before 'Statistics Day Threshold' days
      *
      * @param array $input
      * mode    = (string)  'recent'|'forgotten'|'random' //optional, default = 'random'
@@ -1166,7 +1166,7 @@ class Api
 
             //not played for a while or played recently
             $array['rule_' . $rule_count]               = 'last_play';
-            $array['rule_' . $rule_count . '_input']    = AmpConfig::get('popular_threshold');
+            $array['rule_' . $rule_count . '_input']    = AmpConfig::get('stats_threshold');
             $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
             $rule_count++;
         } else {
