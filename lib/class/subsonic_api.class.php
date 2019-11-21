@@ -171,7 +171,7 @@ class Subsonic_Api
      * apiOutput
      * @param SimpleXMLElement $xml
      */
-    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'entry'))
+    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'))
     {
         $type     = $input['f'];
         $callback = $input['callback'];
@@ -183,7 +183,7 @@ class Subsonic_Api
      * @param SimpleXMLElement $xml
      * @param string $outputtype
      */
-    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'entry'))
+    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'))
     {
         $conf = array('alwaysArray' => $alwaysArray);
         if ($outputtype == "json") {
@@ -216,7 +216,7 @@ class Subsonic_Api
         $defaults = array(
             'namespaceSeparator' => ' :', //you may want this to be something other than a colon
             'attributePrefix' => '', //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'entry'), //array of xml tag names which should always become arrays
+            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'), //array of xml tag names which should always become arrays
             'autoArray' => true, //only create arrays for tags which appear more than once
             'textContent' => 'value', //key used for the text content of elements
             'autoText' => true, //skip textContent key if node has no attributes or child nodes
@@ -249,7 +249,7 @@ class Subsonic_Api
         }
 
         // these children must be in an array.
-        $forceArray = array('channel');
+        $forceArray = array('channel', 'share');
         //get child nodes from all namespaces
         $tagsArray = array();
         foreach ($namespaces as $prefix => $namespace) {
@@ -1410,22 +1410,30 @@ class Subsonic_Api
         if (AmpConfig::get('share')) {
             if (isset($input['expires'])) {
                 $expires = $input['expires'];
-                // Parse as a string to work on 32-bit computers
-                if (strlen($expires) > 3) {
-                    $expires = (int) (substr($expires, 0, - 3));
+                // no limit expiry
+                if ($expires == 0) {
+                    $expire_days = 0;
+                } else {
+                    // Parse as a string to work on 32-bit computers
+                    if (strlen($expires) > 3) {
+                        $expires = (int) (substr($expires, 0, - 3));
+                    }
+                    $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
                 }
-                $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
             } else {
+                //fall back to config defaults
                 $expire_days = AmpConfig::get('share_expire');
             }
 
             $object_id = Subsonic_XML_Data::getAmpacheId($id);
             if (Subsonic_XML_Data::isAlbum($id)) {
                 $object_type = 'album';
-            } else {
-                if (Subsonic_XML_Data::isSong($id)) {
-                    $object_type = 'song';
-                }
+            }
+            if (Subsonic_XML_Data::isSong($id)) {
+                $object_type = 'song';
+            }
+            if (Subsonic_XML_Data::isPlaylist($id)) {
+                $object_type = 'playlist';
             }
 
             if (!empty($object_type)) {
