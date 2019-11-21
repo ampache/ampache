@@ -798,8 +798,8 @@ class Artist extends database_object implements library_item
             $prefix = null;
         }
 
-        if (isset(self::$_mapcache[$name][$mbid])) {
-            return self::$_mapcache[$name][$mbid];
+        if (isset(self::$_mapcache[$name][$prefix][$mbid])) {
+            return self::$_mapcache[$name][$prefix][$mbid];
         }
 
         $artist_id = 0;
@@ -844,7 +844,7 @@ class Artist extends database_object implements library_item
         }
 
         if ($exists) {
-            self::$_mapcache[$name][$mbid] = $artist_id;
+            self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
             return (int) $artist_id;
         }
@@ -863,7 +863,7 @@ class Artist extends database_object implements library_item
         $artist_id = Dba::insert_id();
         debug_event('artist.class', 'Artist check created new artist id `' . $artist_id . '`.', 4);
 
-        self::$_mapcache[$name][$mbid] = $artist_id;
+        self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
         return (int) $artist_id;
     }
