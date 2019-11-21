@@ -1428,10 +1428,12 @@ class Subsonic_Api
             $object_id = Subsonic_XML_Data::getAmpacheId($id);
             if (Subsonic_XML_Data::isAlbum($id)) {
                 $object_type = 'album';
-            } else {
-                if (Subsonic_XML_Data::isSong($id)) {
-                    $object_type = 'song';
-                }
+            }
+            if (Subsonic_XML_Data::isSong($id)) {
+                $object_type = 'song';
+            }
+            if (Subsonic_XML_Data::isPlaylist($id)) {
+                $object_type = 'playlist';
             }
 
             if (!empty($object_type)) {
