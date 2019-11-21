@@ -1139,7 +1139,7 @@ class Api
      * filter  = (string)  $filter                       //optional, LIKE matched to song title
      * album   = (integer) $album_id                     //optional
      * artist  = (integer) $artist_id                    //optional
-     * flagged = (integer) 0|1                           //optional, default = 0
+     * flag    = (integer) 0|1                           //optional, default = 0
      * format  = (string)  "song"|"index"|"id"           //optional, default = "song"
      * offset  = (integer)                               //optional
      * limit   = (integer)                               //optional
@@ -1175,7 +1175,7 @@ class Api
             $rule_count++;
         }
         // additional rules
-        if ((int) $input['flagged'] == 1) {
+        if ((int) $input['flag'] == 1) {
             $array['rule_' . $rule_count]               = 'favorite';
             $array['rule_' . $rule_count . '_input']    = '%';
             $array['rule_' . $rule_count . '_operator'] = 0;
