@@ -374,7 +374,7 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `catalog_id`"; //TODO mysql8 test
+            $sqlw .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `catalog_id`"; //TODO mysql8 test
         } else {
             $sqlw .= "GROUP BY `song`.`artist`, `catalog_id`";
         }
@@ -398,7 +398,7 @@ class Album extends database_object implements library_item
                    "`album`.`mbid` $mbid AND " .
                    "`album`.`album_artist` $artist AND " .
                    "`album`.`year` = " . (string) $this->year . ") " .
-                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` " .
+                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` " .
                    "LIMIT 1"; //TODO mysql8 test (And Shorten/merger with the other query)
         } else {
             // album_artist is set
@@ -412,7 +412,7 @@ class Album extends database_object implements library_item
                    "`album`.`mbid` $mbid AND " .
                    "`album`.`album_artist` $artist AND " .
                    "`album`.`year` = " . (string) $this->year . " " .
-                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`"; //TODO mysql8 test
+                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`"; //TODO mysql8 test
         }
         $db_results = Dba::read($sql);
         $results    = array_merge($results, Dba::fetch_assoc($db_results));
@@ -493,17 +493,18 @@ class Album extends database_object implements library_item
         $catalog_number = empty($catalog_number) ? null : $catalog_number;
 
         if (!$name) {
-            $name         = T_('Unknown (Orphaned)');
-            $year         = 0;
-            $disk         = 1;
-            $album_artist = null;
+            $name          = T_('Unknown (Orphaned)');
+            $year          = 0;
+            $original_year = 0;
+            $disk          = 1;
+            $album_artist  = null;
         }
-        if (isset(self::$_mapcache[$name][$disk][$mbid][$album_artist])) {
-            return self::$_mapcache[$name][$disk][$mbid][$album_artist];
+        if (isset(self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist])) {
+            return self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist];
         }
 
-        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ?  AND `album`.`year` = ? ";
-        $params = array($name, $name, $disk, $year);
+        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ? AND `album`.`year` = ? AND `album`.`original_year` = ? ";
+        $params = array($name, $name, $disk, $year, $original_year);
 
         if ($mbid) {
             $sql .= 'AND `album`.`mbid` = ? ';
@@ -524,8 +525,9 @@ class Album extends database_object implements library_item
         $db_results = Dba::read($sql, $params);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            $album_id                                            = $row['id'];
-            self::$_mapcache[$name][$disk][$mbid][$album_artist] = $album_id;
+            $album_id = $row['id'];
+            // cache the album id against it's details
+            self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist] = $album_id;
 
             return $album_id;
         }
@@ -552,7 +554,7 @@ class Album extends database_object implements library_item
             }
         }
 
-        self::$_mapcache[$name][$disk][$mbid][$album_artist] = $album_id;
+        self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist] = $album_id;
 
         return $album_id;
     }
@@ -1014,7 +1016,7 @@ class Album extends database_object implements library_item
                 $songs = $this->get_songs();
             }
             foreach ($songs as $song_id) {
-                Song::update_album($album_id, $song_id);
+                Song::update_album($album_id, $song_id, $this->id);
                 Song::update_year($year, $song_id);
                 Song::write_id3_for_song($song_id);
             }

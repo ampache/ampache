@@ -1350,6 +1350,7 @@ class Search extends playlist_object
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
             if ($groupdisks) {
+                $group[] = "`album`.`prefix`";
                 $group[] = "`album`.`name`";
                 $group[] = "`album`.`album_artist`";
                 $group[] = "`album`.`mbid`";

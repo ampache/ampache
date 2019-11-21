@@ -198,7 +198,7 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('album_group') && $type === 'album') {
-            $sql .= " GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` ORDER BY `rating`, `object_id` DESC";  //TODO mysql8 test
+            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `rating`, `object_id` DESC";  //TODO mysql8 test
         } else {
             $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC ";
         }
@@ -253,7 +253,7 @@ class Rating extends database_object
 
         $results = array();
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $sql = "SELECT `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
+            $sql = "SELECT `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` FROM `album`" .
                     " WHERE `id` = ?";
             $db_results = Dba::read($sql, array($this->id));
             $results    = Dba::fetch_assoc($db_results);
