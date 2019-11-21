@@ -1410,12 +1410,18 @@ class Subsonic_Api
         if (AmpConfig::get('share')) {
             if (isset($input['expires'])) {
                 $expires = $input['expires'];
-                // Parse as a string to work on 32-bit computers
-                if (strlen($expires) > 3) {
-                    $expires = (int) (substr($expires, 0, - 3));
+                // no limit expiry
+                if ($expires == 0) {
+                    $expire_days = 0;
+                } else {
+                    // Parse as a string to work on 32-bit computers
+                    if (strlen($expires) > 3) {
+                        $expires = (int) (substr($expires, 0, - 3));
+                    }
+                    $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
                 }
-                $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
             } else {
+                //fall back to config defaults
                 $expire_days = AmpConfig::get('share_expire');
             }
 
