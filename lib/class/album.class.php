@@ -374,7 +374,7 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `catalog_id`"; //TODO mysql8 test
+            $sqlw .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `catalog_id`"; //TODO mysql8 test
         } else {
             $sqlw .= "GROUP BY `song`.`artist`, `catalog_id`";
         }
@@ -398,7 +398,7 @@ class Album extends database_object implements library_item
                    "`album`.`mbid` $mbid AND " .
                    "`album`.`album_artist` $artist AND " .
                    "`album`.`year` = " . (string) $this->year . ") " .
-                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` " .
+                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` " .
                    "LIMIT 1"; //TODO mysql8 test (And Shorten/merger with the other query)
         } else {
             // album_artist is set
@@ -412,7 +412,7 @@ class Album extends database_object implements library_item
                    "`album`.`mbid` $mbid AND " .
                    "`album`.`album_artist` $artist AND " .
                    "`album`.`year` = " . (string) $this->year . " " .
-                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`"; //TODO mysql8 test
+                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`"; //TODO mysql8 test
         }
         $db_results = Dba::read($sql);
         $results    = array_merge($results, Dba::fetch_assoc($db_results));
