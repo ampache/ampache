@@ -537,8 +537,8 @@ class XML_Data
                     "\t<songs>" . $songs . "</songs>\n" .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
-                    "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
-                    "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: 0) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating($user_id) ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                     "\t<mbid>" . $artist->mbid . "</mbid>\n" .
                     "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" .
@@ -622,8 +622,8 @@ class XML_Data
                     self::tags_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
-                    "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
-                    "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
+                    "\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n" .
+                    "\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n" .
                     "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
                     "\t<mbid>" . $album->mbid . "</mbid>\n" .
                     "</album>\n";
@@ -769,8 +769,8 @@ class XML_Data
                     "\t<albumartist_mbid>" . $song->albumartist_mbid . "</albumartist_mbid>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                     "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
-                    "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
-                    "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: 0) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating($user_id) ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . (string) ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                     "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                     "\t<channels>" . $song->channels . "</channels>\n" .
@@ -876,8 +876,8 @@ class XML_Data
                     "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-                    "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
-                    "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
+                    "\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n" .
+                    "\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n" .
                     "\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n" .
                     "\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .
                     "</song>\n";

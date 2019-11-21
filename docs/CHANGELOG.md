@@ -105,6 +105,7 @@ Warning for API developers, Advanced search rules have changed for text searches
 * New Method: update_from_tags (updates a single album, artist, song from the tag data instead of the entire library!)
 * New Method: update_art (updates a single album, artist, song running the gather_art process)
 * New Method: update_artist_info (Update artist information and fetch similar artists from last.fm)
+* New Method: playlist_generate (Get a list of song xml, indexes or id's based on some simple search criteria. care of @4phun)
 * Added 'is not' to all text searches
 * Added artist_tag to song searches
 
