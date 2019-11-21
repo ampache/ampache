@@ -1097,7 +1097,6 @@ class Api
         }
         $playlist->add_songs(array($song), true);
         echo XML_Data::success('song added to playlist');
-        }
         Session::extend($input['auth']);
     } // playlist_add_song
 
