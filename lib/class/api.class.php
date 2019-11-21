@@ -1219,12 +1219,13 @@ class Api
         
         // output formatted XML
         switch ($format) {
-            case "id":
+            case 'id':
                 echo XML_Data::keyed_array($song_ids);
                 break;
-            case "index":
+            case 'index':
                 echo XML_Data::indexes($song_ids, 'song');
                 break;
+            case 'song':
             default:
                 echo XML_Data::songs($song_ids, array(), true, $user->id);
         }
