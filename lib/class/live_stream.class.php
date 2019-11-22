@@ -387,6 +387,7 @@ class Live_Stream extends database_object implements media, library_item
 
     public function check_play_history($user)
     {
+        unset($user);
         // Do nothing
     }
 } // end of live_stream class

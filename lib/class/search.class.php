@@ -90,6 +90,11 @@ class Search extends playlist_object
         } // end switch on searchtype
     } // end constructor
 
+    /**
+     * set_basetypes
+     *
+     * Function called during construction to set the different types and rules for search
+     */
     private function set_basetypes()
     {
         $this->basetypes['numeric'][] = array(
@@ -918,6 +923,7 @@ class Search extends playlist_object
      * clean_request
      *
      * Sanitizes raw search data
+     * @param array $data
      * @return array
      */
     public static function clean_request($data)
@@ -965,6 +971,7 @@ class Search extends playlist_object
      * get_name_byid
      *
      * Returns the name of the saved search corresponding to the given ID
+     * @param string $search_id
      * @return string
      */
     public static function get_name_byid($search_id)
@@ -1071,7 +1078,7 @@ class Search extends playlist_object
      */
     public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
 
         $this->link   = AmpConfig::get('web_path') . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
@@ -1280,6 +1287,7 @@ class Search extends playlist_object
      * update
      *
      * This function updates the saved version with the current settings.
+     * @param array $data
      * @return integer
      */
     public function update(array $data = null)
@@ -1311,7 +1319,9 @@ class Search extends playlist_object
      * Private convenience function.  Mangles the input according to a set
      * of predefined rules so that we don't have to include this logic in
      * foo_to_sql.
+     * @param array $data
      * @param string|false $type
+     * @param array $operator
      */
     private function _mangle_data($data, $type, $operator)
     {

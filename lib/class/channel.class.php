@@ -688,6 +688,7 @@ class Channel extends database_object implements media, library_item
 
     public function check_play_history($user)
     {
+        unset($user);
         // Do nothing
     }
 

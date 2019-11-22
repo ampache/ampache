@@ -744,6 +744,7 @@ class Tag extends database_object implements library_item
 
     public function format($details = true)
     {
+        unset($details); //dead code but called from other format calls
     }
 
     /**
