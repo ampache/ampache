@@ -47,7 +47,7 @@ set_time_limit(0);
 
 $media_ids    = array();
 $default_name = "Unknown.zip";
-$object_type  = ($object_type == null) ? (string) scrub_in(Core::get_request('action')) : $object_type;
+$object_type  = (!$object_type) ? (string) scrub_in(Core::get_request('action')) : $object_type;
 $name         = $default_name;
 
 if ($object_type == 'browse') {
@@ -61,7 +61,7 @@ if (!check_can_zip($object_type)) {
     return false;
 }
 
-if (Core::is_playable_item(Core::get_request('action'))) {
+if (Core::is_playable_item($object_type)) {
     $object_id = $_REQUEST['id'];
     if (!is_array($object_id)) {
         $object_id = array($object_id);
@@ -78,7 +78,7 @@ if (Core::is_playable_item(Core::get_request('action'))) {
     }
 } else {
     // Switch on the actions
-    switch ($_REQUEST['action']) {
+    switch ($object_type) {
         case 'tmp_playlist':
             $media_ids = Core::get_global('user')->playlist->get_items();
             $name      = Core::get_global('user')->username . ' - Playlist';
