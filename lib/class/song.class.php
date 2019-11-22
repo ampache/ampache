@@ -2070,7 +2070,7 @@ class Song extends database_object implements media, library_item
 
         // Fall backwards from the specific transcode formats to default
         // TARGET > PLAYER > CODEC > DEFAULT
-        if ($target !== null) {
+        if ($target) {
             debug_event('song.class', 'Explicit target requested: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_player_target) {
             $target = $has_player_target;
