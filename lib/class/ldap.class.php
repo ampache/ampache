@@ -22,24 +22,13 @@
 /**
  * array_filter_key
  *
- * This function is here for retrocompatibility with PHP < 5.6.
- * For PHP >= 5.6, one can use array_filter with flag ARRAY_FILTER_USE_KEY.
+ * @param array $array
  * @param string $callback
  */
 function array_filter_key($array, $callback)
 {
-    foreach ($array as $key => $value) {
-        if (! call_user_func($callback, $key)) {
-            unset($array[$key]);
-        }
-    }
-
-    return $array;
+    return array_filter($array, $callback, ARRAY_FILTER_USE_KEY);
 }
-// function array_filter_key ($array, $callback)
-// {
-//     return array_filter ($array, $callback, ARRAY_FILTER_USE_KEY);
-// }
 
 /**
  * This class defines custom LDAP exceptions that will be used in the
@@ -93,12 +82,14 @@ class LDAP
      *
      * This function is here to return a real array {number} => {field} => {value array}
      * instead of the custom LDAP search results provided by the ldap_* library.
+     * @param array $searchresult
+     * @return array
      */
-    private static function clean_search_results($sr)
+    private static function clean_search_results($searchresult)
     {
         $sr_clean = [];
 
-        foreach (array_filter_key($sr, 'is_int') as $i => $result) {
+        foreach (array_filter_key($searchresult, 'is_int') as $i => $result) {
             $sr_clean[$i] = [];
 
             foreach ($result as $field => $values) {
@@ -122,6 +113,7 @@ class LDAP
      * Note: This does not open a connection. It checks whether
      * the given parameters are plausible and can be used to open a
      * connection as soon as one is needed.
+     * @return resource|false
      */
     private static function connect()
     {
@@ -196,7 +188,9 @@ class LDAP
 
     /**
      * Search for a DN in the LDAP
-     * @return string|array
+     * @param string $filter
+     * @param boolean $only_one_result
+     * @return array
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true)
     {

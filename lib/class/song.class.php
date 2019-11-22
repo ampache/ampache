@@ -842,7 +842,7 @@ class Song extends database_object implements media, library_item
                 $sql .= "AND `album` = '" . Dba::escape($dupe['album']) . "' ";
             }
 
-            $sql .= 'ORDER BY `time`,`bitrate`,`size`';
+            $sql .= 'ORDER BY `time`, `bitrate`, `size`';
             $db_results = Dba::read($sql);
 
             while ($item = Dba::fetch_assoc($db_results)) {
@@ -880,7 +880,7 @@ class Song extends database_object implements media, library_item
      */
     public function get_album_catalog_number($album_id = null)
     {
-        if (!$album_id) {
+        if ($album_id === null) {
             $album_id = $this->album;
         }
         $album = new Album($album_id);
@@ -896,7 +896,7 @@ class Song extends database_object implements media, library_item
      */
     public function get_album_original_year($album_id = null)
     {
-        if (!$album_id) {
+        if ($album_id === null) {
             $album_id = $this->album;
         }
         $album = new Album($album_id);
@@ -965,15 +965,39 @@ class Song extends database_object implements media, library_item
      * @param integer $user
      * @param string $agent
      * @param array $location
+     * @param integer $date
      * @return boolean
      */
     public function set_played($user, $agent, $location, $date = null)
+    {
+        if ($this->check_play_history($user)) {
+            Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
+            Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date, $this->time);
+            Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date, $this->time);
+        }
+
+        if (!$this->played) {
+            /* If it hasn't been played, set it! */
+            self::update_played(true, $this->id);
+        }
+
+        return true;
+    } // set_played
+
+    /**
+     * check_play_history
+     * this checks to see if the current object has been played
+     * if not then it sets it to played. In any case it updates stats.
+     * @param integer $user
+     * @return boolean
+     */
+    public function check_play_history($user)
     {
         $previous = Stats::get_last_song($user);
         $diff     = time() - $previous['date'];
 
         // this song was your last play and the length between plays is too short.
-        if ($previous['object_id'] == $this->id && $diff <= ($this->time - 20)) {
+        if ($previous['object_id'] == $this->id && $diff <= ($this->time + 10)) {
             debug_event('song.class', 'Repeated the same song too quickly, not recording stats', 3);
 
             return false;
@@ -986,17 +1010,8 @@ class Song extends database_object implements media, library_item
             return false;
         }
 
-        Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date);
-        Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date);
-        Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date);
-
-        if (!$this->played) {
-            /* If it hasn't been played, set it! */
-            self::update_played(true, $this->id);
-        }
-
         return true;
-    } // set_played
+    }
 
     /**
      * compare_song_information
@@ -1118,15 +1133,17 @@ class Song extends database_object implements media, library_item
             switch ($key) {
                 case 'artist_name':
                     // Need to create new artist according the name
+                    $old_artist_id = $this->artist;
                     $new_artist_id = Artist::check($value);
                     $this->artist  = $new_artist_id;
-                    self::update_artist($new_artist_id, $this->id);
+                    self::update_artist($new_artist_id, $this->id, $old_artist_id);
                 break;
                 case 'album_name':
                     // Need to create new album according the name
+                    $old_album_id = $this->album;
                     $new_album_id = Album::check($value);
                     $this->album  = $new_album_id;
-                    self::update_album($new_album_id, $this->id);
+                    self::update_album($new_album_id, $this->id, $old_album_id);
                 break;
                 case 'year':
                 case 'title':
@@ -1411,22 +1428,22 @@ class Song extends database_object implements media, library_item
      * updates the artist field
      * @param integer $new_artist
      * @param integer $song_id
+     * @param integer $old_artist
      */
-    public static function update_artist($new_artist, $song_id)
+    public static function update_artist($new_artist, $song_id, $old_artist)
     {
         self::_update_item('artist', $new_artist, $song_id, 50);
 
-        $song = new Song($song_id);
         //migrate stats for the old album
-        Stats::migrate('artist', $song->artist, $new_artist);
-        UserActivity::migrate('artist', $song->artist, $new_artist);
-        Recommendation::migrate('artist', $song->artist, $new_artist);
-        Share::migrate('artist', $song->artist, $new_artist);
-        Shoutbox::migrate('artist', $song->artist, $new_artist);
-        Tag::migrate('artist', $song->artist, $new_artist);
-        Userflag::migrate('artist', $song->artist, $new_artist);
-        Rating::migrate('artist', $song->artist, $new_artist);
-        Art::migrate('artist', $song->artist, $new_artist);
+        Stats::migrate('artist', $old_artist, $new_artist);
+        UserActivity::migrate('artist', $old_artist, $new_artist);
+        Recommendation::migrate('artist', $old_artist, $new_artist);
+        Share::migrate('artist', $old_artist, $new_artist);
+        Shoutbox::migrate('artist', $old_artist, $new_artist);
+        Tag::migrate('artist', $old_artist, $new_artist);
+        Userflag::migrate('artist', $old_artist, $new_artist);
+        Rating::migrate('artist', $old_artist, $new_artist);
+        Art::migrate('artist', $old_artist, $new_artist);
     } // update_artist
 
     /**
@@ -1434,22 +1451,22 @@ class Song extends database_object implements media, library_item
      * updates the album field
      * @param integer $new_album
      * @param integer $song_id
+     * @param integer $old_album
      */
-    public static function update_album($new_album, $song_id)
+    public static function update_album($new_album, $song_id, $old_album)
     {
         self::_update_item('album', $new_album, $song_id, 50, true);
 
-        $song = new Song($song_id);
         //migrate stats for the old album
-        Stats::migrate('album', $song->album, $new_album);
-        UserActivity::migrate('album', $song->album, $new_album);
-        Recommendation::migrate('album', $song->album, $new_album);
-        Share::migrate('album', $song->album, $new_album);
-        Shoutbox::migrate('album', $song->album, $new_album);
-        Tag::migrate('album', $song->album, $new_album);
-        Userflag::migrate('album', $song->album, $new_album);
-        Rating::migrate('album', $song->album, $new_album);
-        Art::migrate('album', $song->album, $new_album);
+        Stats::migrate('album', $old_album, $new_album);
+        UserActivity::migrate('album', $old_album, $new_album);
+        Recommendation::migrate('album', $old_album, $new_album);
+        Share::migrate('album', $old_album, $new_album);
+        Shoutbox::migrate('album', $old_album, $new_album);
+        Tag::migrate('album', $old_album, $new_album);
+        Userflag::migrate('album', $old_album, $new_album);
+        Rating::migrate('album', $old_album, $new_album);
+        Art::migrate('album', $old_album, $new_album);
     } // update_album
 
     /**
@@ -1882,7 +1899,7 @@ class Song extends database_object implements media, library_item
 
         // Checking if the media is gonna be transcoded into another type
         // Some players doesn't allow a type streamed into another without giving the right extension
-        if (!original) {
+        if (!$original) {
             $transcode_cfg = AmpConfig::get('transcode');
             $valid_types   = Song::get_stream_types_for_type($type, $player);
             if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
@@ -2057,20 +2074,19 @@ class Song extends database_object implements media, library_item
             debug_event('song.class', 'Explicit target requested: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_player_target) {
             $target = $has_player_target;
-        // debug_event('song.class', 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
+            debug_event('song.class', 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_codec_target) {
             $target = $has_codec_target;
-        // debug_event('song.class', 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
+            debug_event('song.class', 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_default_target) {
             $target = $has_default_target;
-            // debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
+            debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
         // fall back to resampling if no defuault
         if (!$target) {
             $target = $source;
             debug_event('song.class', 'No transcode target for: ' . $source . ', choosing to resample', 5);
         }
-        // debug_event('song.class', 'Transcoding from ' . $source . ' to ' . $target, 3);
 
         $cmd  = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
         $args = '';

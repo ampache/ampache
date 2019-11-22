@@ -127,7 +127,7 @@ class AmpacheHttpq extends localplay_controller
         $password = Dba::escape($data['password']);
         $user_id  = Dba::escape(Core::get_global('user')->id);
 
-        $sql = "INSERT INTO `localplay_httpq` (`name`,`host`,`port`,`password`,`owner`) " .
+        $sql = "INSERT INTO `localplay_httpq` (`name`, `host`, `port`, `password`, `owner`) " .
             "VALUES ('$name', '$host', '$port', '$password', '$user_id')";
         $db_results = Dba::write($sql);
 

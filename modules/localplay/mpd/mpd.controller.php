@@ -138,7 +138,7 @@ class AmpacheMpd extends localplay_controller
 
         $user_id = Dba::escape(Core::get_global('user')->id);
 
-        $sql = "INSERT INTO `localplay_mpd` (`name`,`host`,`port`,`password`,`owner`) " .
+        $sql = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) " .
             "VALUES ('$name', '$host', '$port', '$password', '$user_id')";
         $db_results = Dba::write($sql);
 

@@ -299,10 +299,10 @@ class UI
             $tag = '<img src="' . $icon_url . '" ';
             $tag .= 'alt="' . $title . '" ';
             $tag .= 'title="' . $title . '" ';
-            if ($id_attrib) {
+            if ($id_attrib !== null) {
                 $tag .= 'id="' . $id_attrib . '" ';
             }
-            if ($class_attrib) {
+            if ($class_attrib !== null) {
                 $tag .= 'class="' . $class_attrib . '" ';
             }
             if (isset($hover_name) && isset($hover_url)) {
@@ -397,10 +397,10 @@ class UI
             $tag = '<img src="' . $image_url . '" ';
             $tag .= 'alt="' . $title . '" ';
             $tag .= 'title="' . $title . '" ';
-            if ($id_attrib) {
+            if ($id_attrib !== null) {
                 $tag .= 'id="' . $id_attrib . '" ';
             }
-            if ($class_attrib) {
+            if ($class_attrib !== null) {
                 $tag .= 'class="' . $class_attrib . '" ';
             }
             if (isset($hover_name) && isset($hover_url)) {

@@ -353,16 +353,16 @@ class Podcast extends database_object implements library_item
         $sql        = "INSERT INTO `podcast` (`feed`, `catalog`, `title`, `website`, `description`, `language`, `copyright`, `generator`, `lastbuilddate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($feed, $catalog_id, $title, $website, $description, $language, $copyright, $generator, $lastbuilddate));
         if ($db_results) {
-            $id      = Dba::insert_id();
-            $podcast = new Podcast($id);
-            $dirpath = $podcast->get_root_path();
+            $podcast_id = Dba::insert_id();
+            $podcast    = new Podcast($podcast_id);
+            $dirpath    = $podcast->get_root_path();
             if (!is_dir($dirpath)) {
                 if (mkdir($dirpath) === false) {
                     debug_event('podcast.class', 'Cannot create directory ' . $dirpath, 1);
                 }
             }
             if (!empty($arturl)) {
-                $art = new Art($id, 'podcast');
+                $art = new Art($podcast_id, 'podcast');
                 $art->insert_url($arturl);
             }
             if (count($episodes) > 0) {

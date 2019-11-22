@@ -317,11 +317,11 @@ class TVShow extends database_object implements library_item
         if (!$db_results) {
             return null;
         }
-        $id = Dba::insert_id();
+        $show_id = Dba::insert_id();
 
-        self::$_mapcache[$name]['null'] = $id;
+        self::$_mapcache[$name]['null'] = $show_id;
 
-        return $id;
+        return $show_id;
     }
 
     /**

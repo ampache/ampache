@@ -216,7 +216,7 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $sql        = "SELECT `id`,`object_id`,`object_type`,`track` FROM `playlist_data` WHERE `playlist`= ? ORDER BY `track`";
+        $sql        = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist`= ? ORDER BY `track`";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -241,7 +241,7 @@ class Playlist extends playlist_object
 
         $limit_sql = $limit ? 'LIMIT ' . (string) ($limit) : '';
 
-        $sql = "SELECT `object_id`,`object_type` FROM `playlist_data` " .
+        $sql = "SELECT `object_id`, `object_type` FROM `playlist_data` " .
             "WHERE `playlist` = ? ORDER BY RAND() $limit_sql";
         $db_results = Dba::read($sql, array($this->id));
 
@@ -468,7 +468,7 @@ class Playlist extends playlist_object
 
             /* Don't insert dead media */
             if ($media->id) {
-                $sql = "INSERT INTO `playlist_data` (`playlist`,`object_id`,`object_type`,`track`) " .
+                $sql = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) " .
                     " VALUES (?, ?, ?, ?)";
                 Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
             } // if valid id
@@ -488,11 +488,11 @@ class Playlist extends playlist_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        if ($date === null) {
+        if (is_int($date)) {
             $date = time();
         }
 
-        $sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`date`,`last_update`) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `playlist` (`name`, `user`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $user_id, $type, $date, $date));
 
         $insert_id = Dba::insert_id();

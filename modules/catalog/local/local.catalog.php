@@ -135,7 +135,7 @@ class Catalog_local extends Catalog
     public static function get_from_path($path)
     {
         // First pull a list of all of the paths for the different catalogs
-        $sql        = "SELECT `catalog_id`,`path` FROM `catalog_local`";
+        $sql        = "SELECT `catalog_id`, `path` FROM `catalog_local`";
         $db_results = Dba::read($sql);
 
         $catalog_paths  = array();

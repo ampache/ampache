@@ -68,8 +68,16 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) {
-        if (AmpConfig::get('use_rss')) { ?>
+        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
+            <li>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>"><?php echo T_('Graphs'); ?></a>
+            </li>
+        <?php
+        } ?>
+    <?php if (AmpConfig::get('use_rss')) {
+            ?>
         <li>
             <?php echo Ampache_RSS::get_display('podcast', T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
         </li>

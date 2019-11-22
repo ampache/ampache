@@ -557,7 +557,7 @@ class User extends database_object
     {
         $username = Dba::escape($this->username);
 
-        $sql = "SELECT `id`,`ip` FROM `session` WHERE `username`='$username'" .
+        $sql = "SELECT `id`, `ip` FROM `session` WHERE `username`='$username'" .
             " AND `expire` > " . time();
         $db_results = Dba::read($sql);
 
@@ -885,7 +885,7 @@ class User extends database_object
      * updates the playcount mojo for this specific user
      * @param string $media_type
      */
-    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $noscrobble = false, $date = null)
+    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $date = null)
     {
         debug_event('user.class', 'Updating stats for {' . $media_type . '/' . $media_id . '} {' . $agent . '}...', 5);
         $media = new $media_type($media_id);
@@ -897,24 +897,19 @@ class User extends database_object
             return false;
         }
 
-        if (!$noscrobble) {
-            $this->set_preferences();
-            // If pthreads available, we call save_mediaplay in a new thread to quickly return
-            if (class_exists("Thread", false)) {
-                debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
-                $thread = new scrobbler_async(Core::get_global('user'), $media);
-                if ($thread->start()) {
-                    //$thread->join();
-                } else {
-                    debug_event('user.class', 'Error when starting the thread.', 1);
-                }
+        $this->set_preferences();
+        // If pthreads available, we call save_mediaplay in a new thread to quickly return
+        if (class_exists("Thread", false)) {
+            debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
+            $thread = new scrobbler_async(Core::get_global('user'), $media);
+            if ($thread->start()) {
+                //$thread->join();
             } else {
-                self::save_mediaplay(Core::get_global('user'), $media);
+                debug_event('user.class', 'Error when starting the thread.', 1);
             }
         } else {
-            debug_event('user.class', 'Scrobbling explicitly skipped', 5);
+            self::save_mediaplay(Core::get_global('user'), $media);
         }
-
         $media->set_played($user_id, $agent, $location, $date);
 
         return true;
@@ -971,7 +966,7 @@ class User extends database_object
         $user_id = $this->id;
         $agent   = Dba::escape(Core::get_server('HTTP_USER_AGENT'));
 
-        $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
+        $sql = "INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
         Dba::write($sql);
 
         /* Clean up old records... sometimes  */
@@ -1215,7 +1210,7 @@ class User extends database_object
 
         /* If we aren't the -1 user before we continue grab the -1 users values */
         if ($user_id != '-1') {
-            $sql = "SELECT `user_preference`.`preference`,`user_preference`.`value` FROM `user_preference`,`preference` " .
+            $sql = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` " .
                 "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
@@ -1244,7 +1239,7 @@ class User extends database_object
                     $row['value'] = $zero_results[$key];
                 }
                 $value = Dba::escape($row['value']);
-                $sql   = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id', '$key', '$value')";
+                $sql   = "INSERT INTO user_preference (`user`, `preference`, `value`) VALUES ('$user_id', '$key', '$value')";
                 Dba::write($sql);
             }
         } // while preferences
@@ -1273,7 +1268,7 @@ class User extends database_object
         // simple deletion queries.
         $user_tables = array('playlist', 'object_count', 'ip_history',
             'access_list', 'rating', 'tag_map',
-            'user_preference', 'user_vote', '');
+            'user_preference', 'user_vote');
         foreach ($user_tables as $table_id) {
             $sql = "DELETE FROM `" . $table_id . "` WHERE `user` = ?";
             Dba::write($sql, array($this->id));
@@ -1330,16 +1325,20 @@ class User extends database_object
     /**
      * get_recently_played
      * This gets the recently played items for this user respecting
-     * the limit passed
+     * the limit passed. ger recent by default or oldest if $newest is false.
+     * @param string $limit
+     * @param string $type
+     * @param boolean $newest
      */
-    public function get_recently_played($limit, $type = '')
+    public function get_recently_played($limit, $type = '', $newest = true)
     {
         if (!$type) {
             $type = 'song';
         }
+        $ordersql = ($newest === true) ? 'DESC' : 'ASC';
 
-        $sql = "SELECT * FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
-            "ORDER BY `date` DESC LIMIT " . $limit;
+        $sql = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
+            "ORDER BY `date` " . $ordersql . " LIMIT " . $limit;
         $db_results = Dba::read($sql, array($type, $this->id));
 
         $results = array();
@@ -1372,7 +1371,7 @@ class User extends database_object
         }
 
         /* Select ip history */
-        $sql = "SELECT `ip`,`date` FROM `ip_history`" .
+        $sql = "SELECT `ip`, `date` FROM `ip_history`" .
             " WHERE `user`='$username'" .
             " $group_sql ORDER BY `date` DESC $limit_sql";
         $db_results = Dba::read($sql);

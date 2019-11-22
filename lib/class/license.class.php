@@ -86,7 +86,7 @@ class License
      */
     public static function create(array $data)
     {
-        $sql = "INSERT INTO `license` (`name`,`description`,`external_link`) " .
+        $sql = "INSERT INTO `license` (`name`, `description`, `external_link`) " .
             "VALUES (? , ?, ?)";
         Dba::write($sql, array($data['name'], $data['description'], $data['external_link']));
         $insert_id = Dba::insert_id();

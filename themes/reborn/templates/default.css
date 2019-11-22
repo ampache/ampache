@@ -159,7 +159,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 div#autoupdate > span {
-	color: #FF0000;
+    color: #FF0000;
 }
 
 
@@ -691,6 +691,18 @@ span#sidebar-header-content::after {
 /* Localplay */
 .active_instance {
     border: 1px solid;
+}
+
+span#sidebar-header-content::after {
+    content: "<<<";
+    left: 67px;
+    position: absolute;
+}
+
+#sidebar-header.sidebar-header-collapsed > span#sidebar-header-content::after {
+    content: ">>>";
+    left: 20px;
+    position: absolute;
 }
 
 /***********************************************

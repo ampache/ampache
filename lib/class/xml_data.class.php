@@ -416,7 +416,7 @@ class XML_Data
                     $playlist->format();
 
                     $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
-                    $playitem_total = $playlist->limit;
+                    $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 }
                 // don't allow unlimited smartlists or empty playlists into xml
                 if ((int) $playitem_total > 0) {
@@ -489,8 +489,11 @@ class XML_Data
      */
     public static function artists($artists, $include = [], $full_xml = true, $user_id = false)
     {
-        if (null == $include) {
+        if ($include == null || $include == '') {
             $include = array();
+        }
+        if (is_string($include)) {
+            $include = explode(',', $include);
         }
         $string = "<total_count>" . count($artists) . "</total_count>\n";
 
@@ -534,8 +537,8 @@ class XML_Data
                     "\t<songs>" . $songs . "</songs>\n" .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
-                    "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
-                    "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: 0) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating($user_id) ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                     "\t<mbid>" . $artist->mbid . "</mbid>\n" .
                     "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" .
@@ -563,6 +566,9 @@ class XML_Data
         if ($include == null || $include == '') {
             $include = array();
         }
+        if (is_string($include)) {
+            $include = explode(',', $include);
+        }
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
         if (count($albums) > self::$limit || self::$offset > 0) {
@@ -579,6 +585,7 @@ class XML_Data
             $album = new Album($album_id);
             $album->format();
 
+            $disk   = $album->disk;
             $rating = new Rating($album_id, 'album');
             $flag   = new Userflag($album_id, 'album');
 
@@ -601,28 +608,22 @@ class XML_Data
             if (in_array("songs", $include)) {
                 $songs = self::songs($album->get_songs(), array(), false);
             } else {
-                if (AmpConfig::get('album_group')) {
-                    $song_count = 0;
-                    $disc_ids   = $album->get_group_disks_ids();
-                    foreach ($disc_ids as $discid) {
-                        $disc = new Album($discid);
-                        $disc->format();
-                        $song_count = $song_count + $disc->song_count;
-                    }
-                    $songs = $song_count;
-                } else {
-                    $songs = $album->song_count;
-                }
+                $songs = $album->song_count;
+            }
+            
+            //count multiple disks
+            if ($album->allow_group_disks) {
+                $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
             $string .= "\t<year>" . $album->year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
-                    "\t<disk>" . $album->disk . "</disk>\n" .
+                    "\t<disk>" . $disk . "</disk>\n" .
                     self::tags_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
-                    "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
-                    "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
+                    "\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n" .
+                    "\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n" .
                     "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
                     "\t<mbid>" . $album->mbid . "</mbid>\n" .
                     "</album>\n";
@@ -678,7 +679,7 @@ class XML_Data
                 } else {
                     $playlist_user  = $playlist->type;
                 }
-                $playitem_total = $playlist->limit;
+                $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
             // don't allow unlimited smartlists or empty playlists into xml
@@ -760,7 +761,7 @@ class XML_Data
                     "\t<rate>" . $song->rate . "</rate>\n" .
                     "\t<mode>" . $song->mode . "</mode>\n" .
                     "\t<mime>" . $song->mime . "</mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<mbid>" . $song->mbid . "</mbid>\n" .
                     "\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n" .
@@ -768,8 +769,8 @@ class XML_Data
                     "\t<albumartist_mbid>" . $song->albumartist_mbid . "</albumartist_mbid>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                     "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
-                    "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
-                    "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: 0) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating($user_id) ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . (string) ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                     "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                     "\t<channels>" . $song->channels . "</channels>\n" .
@@ -872,11 +873,11 @@ class XML_Data
                     "\t<track>" . $song->track . "</track>\n" .
                     "\t<time>" . $song->time . "</time>\n" .
                     "\t<mime>" . $song->mime . "</mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-                    "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
-                    "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
+                    "\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n" .
+                    "\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n" .
                     "\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n" .
                     "\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .
                     "</song>\n";
@@ -1022,7 +1023,7 @@ class XML_Data
     public static function rss_feed($data, $title, $date = null)
     {
         $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
-        if ($date !== null) {
+        if (is_int($date)) {
             $string .= "<pubDate>" . date("r", (int) $date) . "</pubDate>\n";
         }
 

@@ -211,7 +211,7 @@ class Shoutbox
         $date       = (int) ($data['date'] ?: time());
         $comment    = strip_tags($data['comment']);
 
-        $sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`, `data`) " .
+        $sql = "INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) " .
             "VALUES (? , ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
 
@@ -220,7 +220,7 @@ class Shoutbox
         $insert_id = Dba::insert_id();
 
         // Never send email in case of user impersonation
-        if (!isset($data['user']) && $insert_id) {
+        if (!isset($data['user']) && $insert_id !== null) {
             $libitem       = new $data['object_type']($data['object_id']);
             $item_owner_id = $libitem->get_user_owner();
             if ($item_owner_id) {

@@ -240,7 +240,7 @@ class Access
         $enabled = make_bool($data['enabled']) ? 1 : 0;
 
         $sql = 'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, ' .
-                '`user`,`type`,`enabled`) VALUES (?, ?, ?, ?, ?, ?, ?)';
+                '`user`, `type`, `enabled`) VALUES (?, ?, ?, ?, ?, ?, ?)';
         Dba::write($sql, array($name, $level, $start, $end, $user, $type, $enabled));
 
         return true;
