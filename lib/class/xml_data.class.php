@@ -416,7 +416,7 @@ class XML_Data
                     $playlist->format();
 
                     $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
-                    $playitem_total = $playlist->limit;
+                    $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 }
                 // don't allow unlimited smartlists or empty playlists into xml
                 if ((int) $playitem_total > 0) {
@@ -679,7 +679,7 @@ class XML_Data
                 } else {
                     $playlist_user  = $playlist->type;
                 }
-                $playitem_total = $playlist->limit;
+                $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
             // don't allow unlimited smartlists or empty playlists into xml
@@ -761,7 +761,7 @@ class XML_Data
                     "\t<rate>" . $song->rate . "</rate>\n" .
                     "\t<mode>" . $song->mode . "</mode>\n" .
                     "\t<mime>" . $song->mime . "</mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<mbid>" . $song->mbid . "</mbid>\n" .
                     "\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n" .
@@ -873,7 +873,7 @@ class XML_Data
                     "\t<track>" . $song->track . "</track>\n" .
                     "\t<time>" . $song->time . "</time>\n" .
                     "\t<mime>" . $song->mime . "</mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                     "\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n" .
@@ -1023,7 +1023,7 @@ class XML_Data
     public static function rss_feed($data, $title, $date = null)
     {
         $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
-        if ($date !== null) {
+        if (is_int($date)) {
             $string .= "<pubDate>" . date("r", (int) $date) . "</pubDate>\n";
         }
 

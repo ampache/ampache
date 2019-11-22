@@ -123,7 +123,7 @@ class Stats
                 $geoname = $location['name'];
             }
             // allow setting date for scrobbles
-            if (!$date) {
+            if (!is_int($date)) {
                 $date = time();
             }
 
@@ -149,19 +149,20 @@ class Stats
      * @param string $type
      * @param integer $user
      * @param integer $oid
+     * @param integer $date
      * @return boolean
      */
     public static function is_already_inserted($type, $oid, $user, $count_type = 'stream', $date = null, $song_time = 0)
     {
         // We look 10 + song time seconds in the past
         $delay = time() - (10 + $song_time);
-        if ($date) {
+        if (is_int($date)) {
             $delay = $date - (10 + $song_time);
         }
 
         $sql = "SELECT `id` FROM `object_count` ";
         $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?  AND `object_count`.`count_type` = ? AND `object_count`.`date` >= ? ";
-        if ($date) {
+        if (is_int($date)) {
             $sql .= "AND `object_count`.`date` <= " . $date . " ";
         }
         $sql .= "ORDER BY `object_count`.`date` DESC";

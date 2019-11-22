@@ -262,8 +262,8 @@ class Artist extends database_object implements library_item
      */
     public static function get_from_name($name)
     {
-        $sql        = "SELECT `id` FROM `artist` WHERE `name` = ?'";
-        $db_results = Dba::read($sql, array($name));
+        $sql        = "SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? ";
+        $db_results = Dba::read($sql, array($name, $name));
 
         $row = Dba::fetch_assoc($db_results);
 
@@ -390,12 +390,13 @@ class Artist extends database_object implements library_item
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE `song`.`artist` = " . $artist;
+        $sql .= "WHERE `song`.`artist` = " . $artist . " ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . (string) $count;
         $db_results = Dba::read($sql);
+        debug_event('artist.class', 'get_top_songs sql: ' . $sql, 5);
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
