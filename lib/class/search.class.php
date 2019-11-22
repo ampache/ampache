@@ -918,6 +918,7 @@ class Search extends playlist_object
      * clean_request
      *
      * Sanitizes raw search data
+     * @return array
      */
     public static function clean_request($data)
     {
@@ -964,6 +965,7 @@ class Search extends playlist_object
      * get_name_byid
      *
      * Returns the name of the saved search corresponding to the given ID
+     * @return string
      */
     public static function get_name_byid($search_id)
     {
@@ -978,6 +980,7 @@ class Search extends playlist_object
      * get_searches
      *
      * Return the IDs of all saved searches accessible by the current user.
+     * @return array
      */
     public static function get_searches()
     {
@@ -999,7 +1002,9 @@ class Search extends playlist_object
      *
      * This function actually runs the search and returns an array of the
      * results.
+     * @param array $data
      * @param User $user
+     * @return array
      */
     public static function run($data, $user = null)
     {
@@ -1049,6 +1054,7 @@ class Search extends playlist_object
      * delete
      *
      * Does what it says on the tin.
+     * @return true
      */
     public function delete()
     {
@@ -1076,6 +1082,7 @@ class Search extends playlist_object
      *
      * Return an array of the items output by our search (part of the
      * playlist interface).
+     * @return array
      */
     public function get_items()
     {
@@ -1117,6 +1124,8 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
+     * @param integer $limit
+     * @return array
      */
     public function get_random_items($limit = null)
     {
@@ -1169,6 +1178,7 @@ class Search extends playlist_object
      *
      * Iterates over our array of types to find out the basetype for
      * the passed string.
+     * @return string|false
      */
     public function name_to_basetype($name)
     {
@@ -1186,6 +1196,7 @@ class Search extends playlist_object
      *
      * Takes an array of sanitized search data from the form and generates
      * our real array from it.
+     * @param array $data
      */
     public function parse_rules($data)
     {
@@ -1214,6 +1225,7 @@ class Search extends playlist_object
      * save
      *
      * Save this search to the database for use as a smart playlist
+     * @return string
      */
     public function save()
     {
@@ -1239,6 +1251,7 @@ class Search extends playlist_object
      * to_js
      *
      * Outputs the javascript necessary to re-show the current set of rules.
+     * @return string
      */
     public function to_js()
     {
@@ -1256,6 +1269,7 @@ class Search extends playlist_object
      * to_sql
      *
      * Call the appropriate real function.
+     * @return array
      */
     public function to_sql()
     {
@@ -1266,6 +1280,7 @@ class Search extends playlist_object
      * update
      *
      * This function updates the saved version with the current settings.
+     * @return integer
      */
     public function update(array $data = null)
     {
@@ -1323,6 +1338,7 @@ class Search extends playlist_object
      * album_to_sql
      *
      * Handles the generation of the SQL for album searches.
+     * @return array
      */
     private function album_to_sql()
     {
@@ -1530,6 +1546,7 @@ class Search extends playlist_object
      * artist_to_sql
      *
      * Handles the generation of the SQL for artist searches.
+     * @return array
      */
     private function artist_to_sql()
     {
@@ -1702,6 +1719,7 @@ class Search extends playlist_object
     /**
      * song_to_sql
      * Handles the generation of the SQL for song searches.
+     * @return array
      */
     private function song_to_sql()
     {
@@ -2054,6 +2072,7 @@ class Search extends playlist_object
      * video_to_sql
      *
      * Handles the generation of the SQL for video searches.
+     * @return array
      */
     private function video_to_sql()
     {
@@ -2120,6 +2139,7 @@ class Search extends playlist_object
      * playlist_to_sql
      *
      * Handles the generation of the SQL for playlist searches.
+     * @return array
      */
     private function playlist_to_sql()
     {
@@ -2200,6 +2220,7 @@ class Search extends playlist_object
      * label_to_sql
      *
      * Handles the generation of the SQL for label searches.
+     * @return array
      */
     private function label_to_sql()
     {
@@ -2253,6 +2274,7 @@ class Search extends playlist_object
      * user_to_sql
      *
      * Handles the generation of the SQL for user searches.
+     * @return array
      */
     private function user_to_sql()
     {
