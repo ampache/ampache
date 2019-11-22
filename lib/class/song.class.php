@@ -2074,20 +2074,19 @@ class Song extends database_object implements media, library_item
             debug_event('song.class', 'Explicit target requested: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_player_target) {
             $target = $has_player_target;
-        // debug_event('song.class', 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
+            debug_event('song.class', 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_codec_target) {
             $target = $has_codec_target;
-        // debug_event('song.class', 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
+            debug_event('song.class', 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_default_target) {
             $target = $has_default_target;
-            // debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
+            debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
         // fall back to resampling if no defuault
         if (!$target) {
             $target = $source;
             debug_event('song.class', 'No transcode target for: ' . $source . ', choosing to resample', 5);
         }
-        // debug_event('song.class', 'Transcoding from ' . $source . ' to ' . $target, 3);
 
         $cmd  = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
         $args = '';
