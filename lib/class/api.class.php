@@ -367,7 +367,7 @@ class Api
      */
     public static function goodbye($input)
     {
-        if (!self::check_parameter($input, array('type'), 'goodbye')) {
+        if (!self::check_parameter($input, array('auth'), 'goodbye')) {
             return false;
         }
         // Check and see if we should destroy the api session (done if valid session is passed)
