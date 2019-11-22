@@ -2,18 +2,13 @@
 
 ## 4.0.0-DEVELOP
 
-Warning for API developers, Advanced search rules have changed for text searches
-(album, artist,composer, comment, label, tag, album_tag, filename, placeformed, username)
-
-
-
 ### Backend
 
 * Drop PHP 5.6 support for 7.1+
 * Resolve CVE-2019-12385 for the SQL Injection
 * Resolve CVE-2019-12386 for the persistent XSS
 * Resolve NS-18-046 Multiple Reflected Cross-site Scripting Vulnerabilities in Ampache 3.9.0
-* Remove all plex code
+* Remove all Plex code
 * Remove message of the day
 * Don't allow lost password reset for Admin users
 * Don't allow emails until mail_enable is true
@@ -25,6 +20,7 @@ Warning for API developers, Advanced search rules have changed for text searches
 * Fix - MySQL8 installation using mysql_native_password with caveats ([<https://github.com/ampache/ampache/wiki/mysql-faq>])
 * Fix - Catalog Manager can now access catalog areas correctly
 * HTML5 doctype across the board. (<!DOCTYPE html>)
+* Lots of HTML and UI fixes courtesy of @kuzi-moto
 
 ### CLI tools / Processes
 
@@ -65,7 +61,7 @@ Warning for API developers, Advanced search rules have changed for text searches
 * Use a random cover for playlist art
 * Fixed setting button requiring two single clicks to open. (Thanks for this 2016 pull @AshotN)
 * Lots of code tweaks to make things more uniform and readable.
-* Add now_playing.php to allow badges for currently playing tracks. (Fall back to last played if none.)
+* Add now_playing.php to allow badges for currently track and fall back to last played if none. (thanks @Rycieos)
 * Add Now Playing icon to each user page if enabled.
 * Add year information and links to the data rows and interface
 * Default to mashup for artists and albums
@@ -84,7 +80,7 @@ Warning for API developers, Advanced search rules have changed for text searches
   * You must send an encrypted api key in the following fashion. (Hash key joined with username)
   * $passphrase = hash('sha256', $username . hash('sha256', $apikey));
 * Added artist_tag to song searches
-* CHANGED in verion 400001
+* CHANGED in version 400001
   * advanced_search
     * 'is not' has been added shifting values down the list. (0=contains, 1=does not contain, 2=starts with, 3=ends with, 4=is, 5=is not, 6=sounds like, 7=does not sound like)
     * rule_1['name'] is depreciated. Instead of multiple searches for the same thing rule_1'name' has been replaced with 'title' (I have put a temp workaround into the search rules to alleviate this change)
