@@ -97,6 +97,8 @@ class Stats
      * @param string $input_type
      * @param integer $oid
      * @param integer $user
+     * @param integer $date
+     * @param integer $song_time
      */
     public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
     {
