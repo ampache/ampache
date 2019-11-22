@@ -705,9 +705,8 @@ class Subsonic_Api
      */
     public static function gettopsongs($input)
     {
-        $artist_id = self::check_parameter($input, 'artist');
-        $artist    = new Artist(Subsonic_XML_Data::getAmpacheId($artist_id));
-        $count     = (int) $input['count'];
+        $artist = Artist::get_from_name(urldecode(self::check_parameter($input, 'artist')));
+        $count  = (int) $input['count'];
         if ($count <= 0) {
             $count = 50;
         }
