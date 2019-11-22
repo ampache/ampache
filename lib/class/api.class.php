@@ -367,7 +367,7 @@ class Api
      */
     public static function goodbye($input)
     {
-        if (!self::check_parameter($input, array('type'), 'goodbye')) {
+        if (!self::check_parameter($input, array('auth'), 'goodbye')) {
             return false;
         }
         // Check and see if we should destroy the api session (done if valid session is passed)
@@ -1530,12 +1530,6 @@ class Api
         $disable    = $input['disable'];
         $maxbitrate = $input['maxbitrate'];
 
-        // if you didn't send anything to update don't do anything
-        if (!$fullname || !$email || !$website || !$password || !$state || !$city || !$disable || !$maxbitrate) {
-            echo XML_Data::error('401', T_('Nothing to update'));
-
-            return false;
-        }
         // identify the user to modify
         $user    = User::get_from_username($username);
         $user_id = $user->id;

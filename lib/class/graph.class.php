@@ -141,9 +141,9 @@ class Graph
     /**
      * @param string $fct
      */
-    protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
+    protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $user_id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
     {
-        $values = $this->get_all_type_pts($fct, $id, $object_type, $object_id, $start_date, $end_date, $zoom);
+        $values = $this->get_all_type_pts($fct, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         foreach ($values as $date => $value) {
             if ($show_total) {
                 $MyData->addPoints($value, "Total");

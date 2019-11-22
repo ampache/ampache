@@ -90,6 +90,11 @@ class Search extends playlist_object
         } // end switch on searchtype
     } // end constructor
 
+    /**
+     * set_basetypes
+     *
+     * Function called during construction to set the different types and rules for search
+     */
     private function set_basetypes()
     {
         $this->basetypes['numeric'][] = array(
@@ -918,6 +923,8 @@ class Search extends playlist_object
      * clean_request
      *
      * Sanitizes raw search data
+     * @param array $data
+     * @return array
      */
     public static function clean_request($data)
     {
@@ -964,6 +971,8 @@ class Search extends playlist_object
      * get_name_byid
      *
      * Returns the name of the saved search corresponding to the given ID
+     * @param string $search_id
+     * @return string
      */
     public static function get_name_byid($search_id)
     {
@@ -978,6 +987,7 @@ class Search extends playlist_object
      * get_searches
      *
      * Return the IDs of all saved searches accessible by the current user.
+     * @return array
      */
     public static function get_searches()
     {
@@ -999,7 +1009,9 @@ class Search extends playlist_object
      *
      * This function actually runs the search and returns an array of the
      * results.
+     * @param array $data
      * @param User $user
+     * @return array
      */
     public static function run($data, $user = null)
     {
@@ -1049,6 +1061,7 @@ class Search extends playlist_object
      * delete
      *
      * Does what it says on the tin.
+     * @return boolean
      */
     public function delete()
     {
@@ -1065,7 +1078,7 @@ class Search extends playlist_object
      */
     public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
 
         $this->link   = AmpConfig::get('web_path') . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
@@ -1076,6 +1089,7 @@ class Search extends playlist_object
      *
      * Return an array of the items output by our search (part of the
      * playlist interface).
+     * @return array
      */
     public function get_items()
     {
@@ -1117,6 +1131,8 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
+     * @param integer $limit
+     * @return array
      */
     public function get_random_items($limit = null)
     {
@@ -1169,6 +1185,7 @@ class Search extends playlist_object
      *
      * Iterates over our array of types to find out the basetype for
      * the passed string.
+     * @return string|false
      */
     public function name_to_basetype($name)
     {
@@ -1186,6 +1203,7 @@ class Search extends playlist_object
      *
      * Takes an array of sanitized search data from the form and generates
      * our real array from it.
+     * @param array $data
      */
     public function parse_rules($data)
     {
@@ -1214,6 +1232,7 @@ class Search extends playlist_object
      * save
      *
      * Save this search to the database for use as a smart playlist
+     * @return string
      */
     public function save()
     {
@@ -1239,6 +1258,7 @@ class Search extends playlist_object
      * to_js
      *
      * Outputs the javascript necessary to re-show the current set of rules.
+     * @return string
      */
     public function to_js()
     {
@@ -1256,6 +1276,7 @@ class Search extends playlist_object
      * to_sql
      *
      * Call the appropriate real function.
+     * @return array
      */
     public function to_sql()
     {
@@ -1266,6 +1287,8 @@ class Search extends playlist_object
      * update
      *
      * This function updates the saved version with the current settings.
+     * @param array $data
+     * @return integer
      */
     public function update(array $data = null)
     {
@@ -1296,7 +1319,9 @@ class Search extends playlist_object
      * Private convenience function.  Mangles the input according to a set
      * of predefined rules so that we don't have to include this logic in
      * foo_to_sql.
+     * @param array $data
      * @param string|false $type
+     * @param array $operator
      */
     private function _mangle_data($data, $type, $operator)
     {
@@ -1323,6 +1348,7 @@ class Search extends playlist_object
      * album_to_sql
      *
      * Handles the generation of the SQL for album searches.
+     * @return array
      */
     private function album_to_sql()
     {
@@ -1530,6 +1556,7 @@ class Search extends playlist_object
      * artist_to_sql
      *
      * Handles the generation of the SQL for artist searches.
+     * @return array
      */
     private function artist_to_sql()
     {
@@ -1702,6 +1729,7 @@ class Search extends playlist_object
     /**
      * song_to_sql
      * Handles the generation of the SQL for song searches.
+     * @return array
      */
     private function song_to_sql()
     {
@@ -2054,6 +2082,7 @@ class Search extends playlist_object
      * video_to_sql
      *
      * Handles the generation of the SQL for video searches.
+     * @return array
      */
     private function video_to_sql()
     {
@@ -2120,6 +2149,7 @@ class Search extends playlist_object
      * playlist_to_sql
      *
      * Handles the generation of the SQL for playlist searches.
+     * @return array
      */
     private function playlist_to_sql()
     {
@@ -2200,6 +2230,7 @@ class Search extends playlist_object
      * label_to_sql
      *
      * Handles the generation of the SQL for label searches.
+     * @return array
      */
     private function label_to_sql()
     {
@@ -2253,6 +2284,7 @@ class Search extends playlist_object
      * user_to_sql
      *
      * Handles the generation of the SQL for user searches.
+     * @return array
      */
     private function user_to_sql()
     {
