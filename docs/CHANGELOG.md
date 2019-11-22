@@ -5,11 +5,7 @@
 Warning for API developers, Advanced search rules have changed for text searches
 (album, artist,composer, comment, label, tag, album_tag, filename, placeformed, username)
 
-* 'is not' has been added shifting values down the list.
-  0=contains, 1=does not contain, 2=starts with, 3=ends with
-  4=is, 5=is not, 6=sounds like, 7=does not sound like
-* rule_1['name'] is depreciated. Instead of multiple searches for the same thing rule_1['name'] Instead of multiple searches for the same thing rule_1'name' has been replaced with 'title'
-  (I have put a temp workaround into the search rules to alleviate this change)
+
 
 ### Backend
 
@@ -82,32 +78,59 @@ Warning for API developers, Advanced search rules have changed for text searches
 
 ### Ampache API
 
-* Document the Ampache API [<https://github.com/ampache/ampache/wiki/XML-methods>]
+* Documented the Ampache API [<https://github.com/ampache/ampache/wiki/XML-methods>]
 * Authentication: Require a handshake and generate unique sessions at all times
 * Authentication: allow sha256 encrypted apikey for auth
   * You must send an encrypted api key in the following fashion. (Hash key joined with username)
   * $passphrase = hash('sha256', $username . hash('sha256', $apikey));
-* Extended Method: stats allow songs|artists|albums (instead of just albums)
-* Extended Method: playlists allow return of smartlists as well as regular playlists (Only allow smartlists with an item limit)
-* New Method: flag allows flagging object by id & type
-* New Method: record_play allows recording play of object without streaming
-* New Method: catalog_action allow running add_to_catalog|clean_catalog
-* New Method: playlist_edit alow editing name and type of playlist
-* New Method: goodbye (Destroy session)
-* New Method: get_indexes (return simple index lists to allow a quicker library fill.)
-* New Method: check_parameter (error when mandatory inputs are missing)
-* New Method: stream (Raw stream of song_id)
-* New Method: download (Download, not recorded as a play)
-* New Method: get_art (Raw art file like subsonic getCoverArt)
-* New Method: user_create ('user' access level only!)
-* New Method: user_update (update user details and passwords for non-admins)
-* New Method: user_delete (you can't delete yourself or and admin account!)
-* New Method: update_from_tags (updates a single album, artist, song from the tag data instead of the entire library!)
-* New Method: update_art (updates a single album, artist, song running the gather_art process)
-* New Method: update_artist_info (Update artist information and fetch similar artists from last.fm)
-* New Method: playlist_generate (Get a list of song xml, indexes or id's based on some simple search criteria. care of @4phun)
-* Added 'is not' to all text searches
 * Added artist_tag to song searches
+* CHANGED in verion 400001
+  * advanced_search
+    * 'is not' has been added shifting values down the list. (0=contains, 1=does not contain, 2=starts with, 3=ends with, 4=is, 5=is not, 6=sounds like, 7=does not sound like)
+    * rule_1['name'] is depreciated. Instead of multiple searches for the same thing rule_1'name' has been replaced with 'title' (I have put a temp workaround into the search rules to alleviate this change)
+  * stats
+    * allow songs|artists|albums (instead of just albums)
+  * playlists
+    * allow return of smartlists as well as regular playlists (set a 5000 limit on unlimited smartlists)
+  * playlist_add_song
+    * Added check boolean to skip duplicate songs
+  * playlist_remove_song
+    * Allow uid of song instead of the track id from the playlist
+* NEW in verison 400001
+  * flag
+    * allows flagging object by id & type
+  * record_play
+    * allows recording play of object without streaming
+  * catalog_action
+    * allow running add_to_catalog|clean_catalog
+  * playlist_edit
+    * allow editing name and type of playlist
+  * goodbye
+    * Destroy session
+  * get_indexes
+    * return simple index lists to allow a quicker library fill.
+  * check_parameter
+    * error when mandatory inputs are missing
+  * stream
+    * Raw stream of song_id
+  * download
+    * Download, not recorded as a play
+  * get_art
+    * Raw art file like subsonic getCoverArt
+  * user_create
+    * 'user' access level only!
+  * user_update
+    * update user details and passwords for non-admins
+  * user_delete
+    * you can't delete yourself or and admin account!
+  * update_from_tags
+    * updates a single album, artist, song from the tag data instead of the entire library!
+  * update_art
+    * updates a single album, artist, song running the gather_art process
+  * update_artist_info
+    * Update artist information and fetch similar artists from last.fm
+  * playlist_generate
+    * Get a list of song xml, indexes or id's based on some simple search criteria. care of @4phun
 
 ### Subsonic Backend
 
