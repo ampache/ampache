@@ -1268,7 +1268,7 @@ class User extends database_object
         // simple deletion queries.
         $user_tables = array('playlist', 'object_count', 'ip_history',
             'access_list', 'rating', 'tag_map',
-            'user_preference', 'user_vote', '');
+            'user_preference', 'user_vote');
         foreach ($user_tables as $table_id) {
             $sql = "DELETE FROM `" . $table_id . "` WHERE `user` = ?";
             Dba::write($sql, array($this->id));
