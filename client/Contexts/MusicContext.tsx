@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { PLAYERSTATUS } from '../enum/PlayerStatus';
 import { Howl, Howler } from 'howler';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { AuthKey } from '../logic/Auth';
+import { Song } from '../logic/Song';
 
 interface MusicContextProps {
     authKey: AuthKey;
@@ -10,20 +11,36 @@ interface MusicContextProps {
 
 export const MusicContext = React.createContext({
     playerStatus: PLAYERSTATUS.STOPPED,
-    playingSongID: -1,
+    currentPlayingSongID: -1,
+    songQueueIndex: -1,
+    songQueue: [],
     playingSongArt: '',
     playPause: () => {},
-    startPlaying: (url: string, songID: number, songArt: string) => {}
+    playPrevious: () => {},
+    playNext: () => {},
+    startPlaying: (song: Song, newQueue: Song[]) => {}
 });
 
 export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const [playerStatus, setPlayerStatus] = useState(PLAYERSTATUS.STOPPED);
-    const [playingSongID, setPlayingSongID] = useState(-1);
+    const [currentPlayingSongID, setCurrentPlayingSongID] = useState(-1);
     const [playingSongArt, setPlayingSongArt] = useState('');
+    const [songQueue, setSongQueue]: [
+        Song[],
+        React.Dispatch<React.SetStateAction<any[]>>
+    ] = useState([]);
+    const [songQueueIndex, setSongQueueIndex] = useState(-1);
 
     const howl = React.useRef<Howl>(null);
 
-    useHotkeys('space', () => playPause(), [playerStatus]);
+    useHotkeys(
+        'space',
+        (e) => {
+            e.preventDefault();
+            playPause();
+        },
+        [playerStatus]
+    );
 
     const playPause = () => {
         console.log(playerStatus);
@@ -36,18 +53,31 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         }
     };
 
-    const startPlaying = (playURL: string, songID: number, songArt: string) => {
-        if (songID === playingSongID) return;
+    const playPrevious = () => {
+        startPlaying(songQueue[songQueueIndex - 1], songQueue);
+    };
+    const playNext = () => {
+        startPlaying(songQueue[songQueueIndex + 1], songQueue);
+    };
+
+    const startPlaying = (song: Song, newQueue: Song[]) => {
+        if (song.id === currentPlayingSongID) return;
+
+        const queueIndex = newQueue.findIndex((o) => o.id === song.id);
         if (
             playerStatus === PLAYERSTATUS.PLAYING ||
             playerStatus === PLAYERSTATUS.PAUSED
         ) {
             howl.current.stop();
         }
-        setPlayingSongID(songID);
-        setPlayingSongArt(songArt);
+        setCurrentPlayingSongID(song.id);
+        setPlayingSongArt(song.art);
+        setSongQueue(newQueue);
+        setSongQueueIndex(queueIndex);
+        console.log(newQueue, queueIndex);
+
         howl.current = new Howl({
-            src: [playURL],
+            src: [song.url],
             format: 'mp3', //Howler is broken, this bypasses https://github.com/goldfire/howler.js/issues/1248
             onload: () => {
                 console.log('LOADED');
@@ -57,6 +87,17 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
             onloaderror: (id, err) => {
                 console.log('ERROR', err);
                 Howler.unload();
+            },
+            onend: () => {
+                const newSong = newQueue[queueIndex + 1];
+                if (newSong == undefined) {
+                    setCurrentPlayingSongID(-1);
+                    setPlayerStatus(PLAYERSTATUS.STOPPED);
+                    setPlayingSongArt('');
+
+                    return;
+                }
+                startPlaying(newSong, newQueue);
             }
         });
     };
@@ -65,9 +106,13 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         <MusicContext.Provider
             value={{
                 playerStatus,
-                playingSongID,
+                currentPlayingSongID,
+                songQueueIndex,
+                songQueue,
                 playingSongArt,
                 playPause,
+                playPrevious,
+                playNext,
                 startPlaying
             }}
         >
