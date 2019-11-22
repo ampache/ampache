@@ -398,6 +398,7 @@ class Artist extends database_object implements library_item
         $db_results = Dba::read($sql);
         //debug_event('artist.class', 'get_top_songs sql: ' . $sql, 5);
 
+
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
