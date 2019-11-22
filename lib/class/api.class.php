@@ -1928,7 +1928,7 @@ class Api
         $valid       = in_array($user->id, User::get_valid_users());
 
         // set time to now if not included
-        if (!$date) {
+        if (!is_int($date)) {
             $date = time();
         }
         // validate supplied user

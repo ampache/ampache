@@ -112,11 +112,12 @@ class Useractivity extends database_object
      * @param string $action
      * @param string $object_type
      * @param integer $object_id
+     * @param integer $date
      * @return PDOStatement|boolean
      */
     public static function post_activity($user_id, $action, $object_type, $object_id, $date = null)
     {
-        if (!$date) {
+        if (!is_int($date)) {
             $date = time();
         }
         if ($object_type === 'song') {
