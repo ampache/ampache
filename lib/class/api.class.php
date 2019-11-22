@@ -1530,12 +1530,6 @@ class Api
         $disable    = $input['disable'];
         $maxbitrate = $input['maxbitrate'];
 
-        // if you didn't send anything to update don't do anything
-        if (!$fullname || !$email || !$website || !$password || !$state || !$city || !$disable || !$maxbitrate) {
-            echo XML_Data::error('401', T_('Nothing to update'));
-
-            return false;
-        }
         // identify the user to modify
         $user    = User::get_from_username($username);
         $user_id = $user->id;
