@@ -1,11 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { MusicContext } from '../../Contexts/MusicContext';
-import { PLAYERSTATUS } from '../../enum/PlayerStatus';
+import MusicPlayer from './MusicPlayer';
 
 const Sidebar: React.FC = () => {
-    const musicContext = useContext(MusicContext);
-
     return (
         <div className='sidebar'>
             <section>
@@ -48,60 +45,7 @@ const Sidebar: React.FC = () => {
                     <select />
                 </form>
             </section>
-            <div className='player'>
-                <img className='songArt' src={musicContext.playingSongArt} />
-                <div
-                    className={
-                        musicContext.songQueueIndex == -1
-                            ? 'disabled controls'
-                            : 'controls'
-                    }
-                >
-                    <div className='previousSong'>
-                        <img
-                            src='https://img.icons8.com/flat_round/50/000000/back--v2.png'
-                            onClick={() => {
-                                musicContext.playPrevious();
-                            }}
-                            className={
-                                musicContext.songQueueIndex == 0
-                                    ? 'disabled'
-                                    : ''
-                            }
-                        />
-                    </div>
-                    <div className='playPause'>
-                        {musicContext.playerStatus === PLAYERSTATUS.STOPPED ||
-                        musicContext.playerStatus === PLAYERSTATUS.PAUSED ? (
-                            <img
-                                src='https://img.icons8.com/flat_round/50/000000/play.png'
-                                alt='Play'
-                                onClick={musicContext.playPause}
-                            />
-                        ) : (
-                            <img
-                                src='https://img.icons8.com/flat_round/50/000000/pause--v2.png'
-                                alt='Pause'
-                                onClick={musicContext.playPause}
-                            />
-                        )}
-                    </div>
-                    <div className='nextSong'>
-                        <img
-                            src='https://img.icons8.com/flat_round/50/000000/circled-chevron-right.png'
-                            onClick={() => {
-                                musicContext.playNext();
-                            }}
-                            className={
-                                musicContext.songQueueIndex ==
-                                musicContext.songQueue.length - 1
-                                    ? 'disabled'
-                                    : ''
-                            }
-                        />
-                    </div>
-                </div>
-            </div>
+            <MusicPlayer />
         </div>
     );
 };

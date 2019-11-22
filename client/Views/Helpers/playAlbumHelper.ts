@@ -15,7 +15,7 @@ export const playSongFromAlbum = (
                 songIndex = Math.floor(Math.random() * songs.length) + 1;
             }
             const song = songs[songIndex];
-            musicContext.startPlaying(song, songs);
+            musicContext.startPlayingWithNewQueue(song, songs);
         })
         .catch((error) => {
             //TODO

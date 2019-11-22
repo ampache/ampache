@@ -328,21 +328,21 @@ class JSON_Data
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
 
-        $allPlaylists = [];
 
+        $allPlaylists =[];
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
             $playlist = new Playlist($playlist_id);
             $playlist->format();
             $item_total = $playlist->get_media_count('song');
 
-            array_push($allPlaylists, array(
-                "playlist" => array(
+            array_push($allPlaylists,
+                    array(
                     "id" => $playlist->id,
                     "name" => $playlist->name,
                     "owner" => $playlist->f_user,
                     "items" => $item_total,
-                    "type" => $playlist->type)));
+                    "type" => $playlist->type));
         } // end foreach
 
         return json_encode($allPlaylists, JSON_PRETTY_PRINT);

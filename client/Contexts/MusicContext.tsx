@@ -11,25 +11,29 @@ interface MusicContextProps {
 
 export const MusicContext = React.createContext({
     playerStatus: PLAYERSTATUS.STOPPED,
-    currentPlayingSongID: -1,
+    currentPlayingSong: {} as Song,
     songQueueIndex: -1,
-    songQueue: [],
-    playingSongArt: '',
+    songQueue: [] as Song[],
     playPause: () => {},
     playPrevious: () => {},
     playNext: () => {},
-    startPlaying: (song: Song, newQueue: Song[]) => {}
+    playSong: (song: Song) => {},
+    startPlayingWithNewQueue: (song: Song, newQueue: Song[]) => {},
+    addToQueue: (song: Song, next: Boolean) => {}
 });
 
 export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const [playerStatus, setPlayerStatus] = useState(PLAYERSTATUS.STOPPED);
-    const [currentPlayingSongID, setCurrentPlayingSongID] = useState(-1);
-    const [playingSongArt, setPlayingSongArt] = useState('');
+    const [currentPlayingSong, setCurrentPlayingSong]: [
+        Song,
+        React.Dispatch<React.SetStateAction<Song>>
+    ] = useState();
     const [songQueue, setSongQueue]: [
         Song[],
-        React.Dispatch<React.SetStateAction<any[]>>
+        React.Dispatch<React.SetStateAction<Song[]>>
     ] = useState([]);
     const [songQueueIndex, setSongQueueIndex] = useState(-1);
+    const [userQCount, setUserQCount] = useState(0);
 
     const howl = React.useRef<Howl>(null);
 
@@ -54,33 +58,32 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     };
 
     const playPrevious = () => {
-        startPlaying(songQueue[songQueueIndex - 1], songQueue);
+        const previousSong = songQueue[songQueueIndex - 1];
+        setSongQueueIndex(songQueueIndex - 1);
+        setCurrentPlayingSong(previousSong);
+
+        playSong(previousSong);
     };
+
     const playNext = () => {
-        startPlaying(songQueue[songQueueIndex + 1], songQueue);
+        const nextSong = songQueue[songQueueIndex + 1];
+        setSongQueueIndex(songQueueIndex + 1);
+        setCurrentPlayingSong(nextSong);
+        if (userQCount > 0) setUserQCount(userQCount - 1);
+        playSong(nextSong);
     };
 
-    const startPlaying = (song: Song, newQueue: Song[]) => {
-        if (song.id === currentPlayingSongID) return;
-
-        const queueIndex = newQueue.findIndex((o) => o.id === song.id);
+    const playSong = (song: Song) => {
         if (
             playerStatus === PLAYERSTATUS.PLAYING ||
             playerStatus === PLAYERSTATUS.PAUSED
         ) {
             howl.current.stop();
         }
-        setCurrentPlayingSongID(song.id);
-        setPlayingSongArt(song.art);
-        setSongQueue(newQueue);
-        setSongQueueIndex(queueIndex);
-        console.log(newQueue, queueIndex);
-
         howl.current = new Howl({
             src: [song.url],
             format: 'mp3', //Howler is broken, this bypasses https://github.com/goldfire/howler.js/issues/1248
             onload: () => {
-                console.log('LOADED');
                 howl.current.play();
                 setPlayerStatus(PLAYERSTATUS.PLAYING);
             },
@@ -89,31 +92,63 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 Howler.unload();
             },
             onend: () => {
-                const newSong = newQueue[queueIndex + 1];
-                if (newSong == undefined) {
-                    setCurrentPlayingSongID(-1);
+                if (songQueueIndex === songQueue.length) {
+                    setCurrentPlayingSong({} as Song);
                     setPlayerStatus(PLAYERSTATUS.STOPPED);
-                    setPlayingSongArt('');
 
                     return;
                 }
-                startPlaying(newSong, newQueue);
+                playNext();
             }
         });
+    };
+
+    const startPlayingWithNewQueue = (song: Song, newQueue: Song[]) => {
+        if (song.id === currentPlayingSong?.id) return;
+
+        const queueIndex = newQueue.findIndex((o) => o.id === song.id);
+        if (
+            playerStatus === PLAYERSTATUS.PLAYING ||
+            playerStatus === PLAYERSTATUS.PAUSED
+        ) {
+            howl.current.stop();
+        }
+        setCurrentPlayingSong(song);
+        setSongQueue(newQueue);
+        setSongQueueIndex(queueIndex);
+        console.log(newQueue, queueIndex);
+        playSong(song);
+    };
+
+    const addToQueue = (song: Song, next: Boolean) => {
+        let newQueue = [...songQueue];
+        console.log('ADD', userQCount);
+        if (next) {
+            //splice starts at 1, so we don't need +1
+            newQueue.splice(songQueueIndex + 1 + userQCount, 0, song);
+            setUserQCount(userQCount + 1); //TODO: Reducer?
+
+            setSongQueue(newQueue);
+            return;
+        }
+
+        newQueue.push(song);
+        setSongQueue(newQueue);
     };
 
     return (
         <MusicContext.Provider
             value={{
                 playerStatus,
-                currentPlayingSongID,
+                currentPlayingSong,
                 songQueueIndex,
                 songQueue,
-                playingSongArt,
                 playPause,
                 playPrevious,
                 playNext,
-                startPlaying
+                playSong,
+                startPlayingWithNewQueue,
+                addToQueue
             }}
         >
             {props.children}

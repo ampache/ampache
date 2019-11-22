@@ -59,11 +59,14 @@ const SearchView: React.FC<SearchProps> = (props) => {
                     return (
                         <div
                             onClick={() =>
-                                musicContext.startPlaying(song, searchResults)
+                                musicContext.startPlayingWithNewQueue(
+                                    song,
+                                    searchResults
+                                )
                             }
                             key={song.id}
                             className={
-                                (musicContext.currentPlayingSongID === song.id
+                                (musicContext.currentPlayingSong.id === song.id
                                     ? 'playing '
                                     : '') + 'songBlock'
                             }

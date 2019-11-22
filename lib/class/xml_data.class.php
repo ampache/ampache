@@ -489,8 +489,11 @@ class XML_Data
      */
     public static function artists($artists, $include = [], $full_xml = true, $user_id = false)
     {
-        if (null == $include) {
+        if ($include == null || $include == '') {
             $include = array();
+        }
+        if (is_string($include)) {
+            $include = explode(',', $include);
         }
         $string = "<total_count>" . count($artists) . "</total_count>\n";
 
@@ -562,6 +565,9 @@ class XML_Data
     {
         if ($include == null || $include == '') {
             $include = array();
+        }
+        if (is_string($include)) {
+            $include = explode(',', $include);
         }
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
