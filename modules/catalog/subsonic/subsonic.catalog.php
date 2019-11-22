@@ -368,13 +368,13 @@ class Catalog_subsonic extends Catalog
 
     public function url_to_songid($url)
     {
-        $id = 0;
+        $song_id = 0;
         preg_match('/\?id=([0-9]*)&/', $url, $matches);
         if (count($matches)) {
-            $id = $matches[1];
+            $song_id = $matches[1];
         }
 
-        return $id;
+        return $song_id;
     }
 
     /**
