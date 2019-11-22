@@ -396,7 +396,7 @@ class Artist extends database_object implements library_item
         }
         $sql .= "GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . (string) $count;
         $db_results = Dba::read($sql);
-        debug_event('artist.class', 'get_top_songs sql: ' . $sql, 5);
+        //debug_event('artist.class', 'get_top_songs sql: ' . $sql, 5);
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
