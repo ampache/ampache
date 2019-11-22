@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Album, getAlbum, getAlbumSongs } from '../../logic/Album';
 import { User } from '../../logic/User';
 import { Song } from '../../logic/Song';
 import AmpacheError from '../../logic/AmpacheError';
 import { Link } from 'react-router-dom';
-import { MusicContext } from '../../Contexts/MusicContext';
+import SongList from '../components/SongList';
 
 interface AlbumViewProps {
     user: User;
@@ -16,8 +16,6 @@ interface AlbumViewProps {
 }
 
 const AlbumView: React.FC<AlbumViewProps> = (props) => {
-    const musicContext = useContext(MusicContext);
-
     const [theAlbum, setTheAlbum] = useState<Album>(null);
     const [songs, setSongs] = useState<Song[]>([]);
     const [error, setError] = useState<Error | AmpacheError>(null);
@@ -83,33 +81,7 @@ const AlbumView: React.FC<AlbumViewProps> = (props) => {
             <div className='songs'>
                 <ul>
                     {!songs && <li>'Loading Songs...'</li>}
-                    {songs &&
-                        songs.map((song: Song) => {
-                            const minutes: number = Math.round(song.time / 60);
-                            const seconds: string = (song.time % 60).toString();
-                            const paddedSeconds: string =
-                                seconds.length === 1 ? seconds + '0' : seconds;
-
-                            return (
-                                <li
-                                    onClick={() =>
-                                        musicContext.startPlaying(song, songs)
-                                    }
-                                    className={
-                                        musicContext.currentPlayingSongID ===
-                                        song.id
-                                            ? 'playing'
-                                            : ''
-                                    }
-                                    key={song.id}
-                                >
-                                    <span className='title'>{song.title}</span>
-                                    <span className='time'>
-                                        {minutes}:{paddedSeconds}
-                                    </span>
-                                </li>
-                            );
-                        })}
+                    {songs && <SongList songs={songs} />}
                 </ul>
             </div>
         </div>

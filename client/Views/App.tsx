@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import '/stylus/main.styl';
 import Sidebar from './components/Sidebar';
 import { User } from '../logic/User';
@@ -8,20 +8,46 @@ interface AppViewProps {
     user: User;
 }
 
-const AppView: React.FC<AppViewProps> = (props) => {
-    if (props.user == null) {
-        return <span>Loading...</span>;
+interface AppViewStates {
+    error: Error;
+}
+
+class AppView extends Component<AppViewProps, AppViewStates> {
+    constructor(props) {
+        super(props);
+        this.state = { error: null };
     }
 
-    return (
-        <>
-            <Header username={props.user.username} />
-            <div className='container'>
-                <Sidebar />
-                <div className='content'>{props.children}</div>
-            </div>
-        </>
-    );
-};
+    componentDidCatch(error: Error, errorInfo) {
+        console.log('EERERRR');
+        //TODO: Server log?
+    }
+
+    static getDerivedStateFromError(error) {
+        // Update state so the next render will show the fallback UI.
+        console.log('DERIVED', error);
+        return { error };
+    }
+
+    render() {
+        if (this.state.error) {
+            return <span>An Error Occured: {this.state.error.message}</span>;
+        }
+
+        if (this.props.user == null) {
+            return <span>Loading...</span>;
+        }
+
+        return (
+            <>
+                <Header username={this.props.user.username} />
+                <div className='container'>
+                    <Sidebar />
+                    <div className='content'>{this.props.children}</div>
+                </div>
+            </>
+        );
+    }
+}
 
 export default AppView;

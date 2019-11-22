@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import useContextMenu from 'react-use-context-menu';
 import { Artist } from '../../logic/Artist';
 
 interface ArtistDisplayProps {

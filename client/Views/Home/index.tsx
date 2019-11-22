@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getRandomAlbums, Album, getAlbumSongs } from '../../logic/Album';
+import { getRandomAlbums, Album } from '../../logic/Album';
 import AlbumDisplay from '../components/AlbumDisplay';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import { MusicContext } from '../../Contexts/MusicContext';
 import { playSongFromAlbum } from '../Helpers/playAlbumHelper';
+import { Song } from '../../logic/Song';
 
 interface HomeViewProps {
     user: User;
@@ -60,6 +61,23 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
                         );
                     })}
                 </div>
+            </section>
+            <section>
+                <span>{musicContext.songQueueIndex}</span>
+                {musicContext.songQueue.map((song: Song) => {
+                    return (
+                        <div
+                            key={song.id}
+                            style={
+                                musicContext.currentPlayingSong?.id === song.id
+                                    ? { color: 'orange' }
+                                    : {}
+                            }
+                        >
+                            {song.title}
+                        </div>
+                    );
+                })}
             </section>
         </div>
     );

@@ -16,6 +16,8 @@ import ArtistView from './Views/Artist';
 import { MusicContextProvider } from './Contexts/MusicContext';
 import ArtistsView from './Views/Artists';
 import AmpacheError from './logic/AmpacheError';
+import PlaylistsView from './Views/Playlists';
+import PlaylistView from './Views/Playlist';
 
 interface RouterState {
     authKey: AuthKey;
@@ -155,12 +157,32 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                             user={this.state.user}
                                         />
                                     )}
-                                />{' '}
+                                />
                                 <Route
                                     exact
-                                    path='/artists/'
+                                    path='/artists'
                                     render={(props) => (
                                         <ArtistsView
+                                            {...props}
+                                            user={this.state.user}
+                                        />
+                                    )}
+                                />
+                                <Route
+                                    exact
+                                    path='/playlists'
+                                    render={(props) => (
+                                        <PlaylistsView
+                                            {...props}
+                                            user={this.state.user}
+                                        />
+                                    )}
+                                />
+                                <Route
+                                    exact
+                                    path='/playlist/:playlistID'
+                                    render={(props) => (
+                                        <PlaylistView
                                             {...props}
                                             user={this.state.user}
                                         />
