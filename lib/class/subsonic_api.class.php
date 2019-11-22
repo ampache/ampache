@@ -1102,13 +1102,15 @@ class Subsonic_Api
         } elseif (Subsonic_XML_Data::isPodcast($id)) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "podcast");
         } else {
+            $listitems = array();
             // playlists and smartlists
             if (Subsonic_XML_Data::isSmartPlaylist($id)) {
                 $playlist = new Search(Subsonic_XML_Data::getAmpacheId($id));
+            $listitems = $playlist->get_items();
             } elseif (Subsonic_XML_Data::isPlaylist($id)) {
                 $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($id));
-            }
             $listitems = $playlist->get_items();
+            }
             $item      = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
             $art       = (!empty($item)) ? new Art($item['object_id'], $item['object_type']) : null;
             if ($art != null && $art->id == null) {
