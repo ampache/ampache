@@ -203,6 +203,7 @@ if ($action == 'download') {
     } else {
         $_REQUEST['action'] = $share->object_type;
         $_REQUEST['id']     = $share->object_id;
+        $object_type        = $share->object_type;
         require AmpConfig::get('prefix') . '/batch.php';
     }
 } elseif ($action == 'stream') {
