@@ -1200,19 +1200,19 @@ class Api
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        if (array_key_exists('album', $input)) {
-            $album = new Album((int) $input['album']);
+        $album = (int) $input['album'];
+        if ((array_key_exists('album', $input)) && ($album > 0)) {
             // set rule
             $array['rule_' . $rule_count]               = 'album';
             $array['rule_' . $rule_count . '_input']    = $album;
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        if (array_key_exists('artist', $input)) {
-            $artist = new Artist((int) $input['artist']);
+        $artist = (int) $input['artist'];
+        if ((array_key_exists('artist', $input)) && ($artist > 0)) {
             // set rule
             $array['rule_' . $rule_count]               = 'artist';
-            $array['rule_' . $rule_count . '_input']    = $artist->id;
+            $array['rule_' . $rule_count . '_input']    = $artist;
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
