@@ -1170,7 +1170,7 @@ class Api
 
         $array['type'] = 'song';
         if (in_array($mode, array('forgotten', 'recent'), true)) {
-            debug_event('api.class', 'playlist_generate '. $mode, 5);
+            debug_event('api.class', 'playlist_generate ' . $mode, 5);
             //played songs
             $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 0;
