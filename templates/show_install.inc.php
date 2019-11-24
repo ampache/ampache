@@ -86,7 +86,7 @@ require $prefix . '/templates/install_header.inc.php'; ?>
         </div>
     </div>
     <div class="form-group">
-        <label for="mysql8" class="col-sm-4 control-label"><?php echo T_('MySQL 8 host?') . ' ' . '<a href="https://github.com/ampache/ampache/docs/CHANGELOG.md' . '" target="_blank">' . T_('Oracle MySQL FAQ') . '</a>'; ?></label>
+        <label for="mysql8" class="col-sm-4 control-label"><?php echo T_('MySQL 8 host?') . ' ' . '<a href="https://github.com/ampache/ampache/wiki/mysql-faq' . '" target="_blank">' . T_('Oracle MySQL FAQ') . '</a>'; ?></label>
         <div class="col-sm-8">
             <input
                 type="checkbox" value="1"
