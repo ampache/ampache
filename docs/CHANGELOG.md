@@ -19,8 +19,9 @@
 * Added SVG support to the theme engine.
 * Fix - MySQL8 installation using mysql_native_password with caveats ([<https://github.com/ampache/ampache/wiki/mysql-faq>])
 * Fix - Catalog Manager can now access catalog areas correctly
-* HTML5 doctype across the board. (<!DOCTYPE html>)
+* HTML5 doctype across the board. (DOCTYPE html)
 * Lots of HTML and UI fixes courtesy of @kuzi-moto
+* If you are using charts/graphs there has been a change regarding c-pchart [chart-faq](https://github.com/ampache/ampache/wiki/chart-faq)
 
 ### CLI tools / Processes
 

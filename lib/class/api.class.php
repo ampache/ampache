@@ -1204,16 +1204,16 @@ class Api
         if ((array_key_exists('album', $input)) && ($album > 0)) {
             // set rule
             $array['rule_' . $rule_count]               = 'album';
-            $array['rule_' . $rule_count . '_input']    = $album;
-            $array['rule_' . $rule_count . '_operator'] = 0;
+            $array['rule_' . $rule_count . '_input']    = $album->full_name;
+            $array['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
         $artist = (int) $input['artist'];
         if ((array_key_exists('artist', $input)) && ($artist > 0)) {
             // set rule
             $array['rule_' . $rule_count]               = 'artist';
-            $array['rule_' . $rule_count . '_input']    = $artist;
-            $array['rule_' . $rule_count . '_operator'] = 0;
+            $array['rule_' . $rule_count . '_input']    = trim(trim($artist->prefix) . ' ' . trim($artist->name));
+            $array['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
 
