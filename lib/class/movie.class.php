@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,11 +35,11 @@ class Movie extends Video
      * This pulls the movie information from the database and returns
      * a constructed object
      */
-    public function __construct($id)
+    public function __construct($movie_id)
     {
-        parent::__construct($id);
+        parent::__construct($movie_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($movie_id);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -48,11 +48,11 @@ class Movie extends Video
     } // Constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused movies
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` " .
             "WHERE `video`.`id` IS NULL";
@@ -124,6 +124,7 @@ class Movie extends Video
     } //format
 
     /**
+     * get_keywords
      * Get item keywords for metadata searches.
      * @return array
      */

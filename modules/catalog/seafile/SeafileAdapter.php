@@ -121,7 +121,7 @@ class SeafileAdapter
         }));
 
         if (count($matches) == 0) {
-            AmpError::add('general', sprintf(T_('No media updated: could not find Seafile library called "%s"'), $this->library_name));
+            AmpError::add('general', sprintf(T_('Could not find the Seafile library called "%s", no media was updated'), $this->library_name));
 
             return false;
         }
@@ -137,7 +137,7 @@ class SeafileAdapter
         while (true) {
             try {
                 return $func();
-            } catch (ClientException $e) {
+            } catch (ClientException $error) {
                 if ($e->getResponse()->getStatusCode() !== 429) {
                     throw $e;
                 }
@@ -188,7 +188,7 @@ class SeafileAdapter
                 $this->directory_cache[$path] = $directory;
 
                 return $directory;
-            } catch (ClientException $e) {
+            } catch (ClientException $error) {
                 if ($e->getResponse()->getStatusCode() == 404) {
                     $this->directory_cache[$path] = false;
 

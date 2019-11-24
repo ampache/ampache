@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,8 @@ UI::show_header();
 // Check to see if we've got the rights to be here
 if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', '25')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 switch ($_REQUEST['action']) {
@@ -38,7 +39,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        // Get the current localplay fields
+        // Get the current Localplay fields
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $fields    = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_add_instance.inc.php');
@@ -77,7 +78,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_edit_instance.inc.php');
     break;
     case 'show_instances':
-        // First build the localplay object and then get the instances
+        // First build the Localplay object and then get the instances
         if (!Access::check('localplay', '5')) {
             UI::access_denied();
             break;
@@ -93,7 +94,7 @@ switch ($_REQUEST['action']) {
             UI::access_denied();
             break;
         }
-        // Init and then connect to our localplay instance
+        // Init and then connect to our Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
@@ -103,4 +104,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch action
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

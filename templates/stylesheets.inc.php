@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,8 +24,10 @@ $web_path       = AmpConfig::get('web_path');
 $theme_path     = AmpConfig::get('theme_path') . '/templates';
 $theme_color    = AmpConfig::get('theme_color');
 $theme_css_base = AmpConfig::get('theme_css_base');
-foreach ($theme_css_base as $css_base) {
-    ?>
+if (!is_array($theme_css_base)) {
+    $theme_css_base = array($theme_css_base);
+}
+foreach ($theme_css_base as $css_base) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $css_base[0]; ?>" type="text/css" media="<?php echo $css_base[1]; ?>" />
 <?php
 } ?>
@@ -33,20 +35,10 @@ foreach ($theme_css_base as $css_base) {
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css'; ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/print.css'; ?>" type="text/css" media="print" />
 <?php
-if (file_exists(AmpConfig::get('prefix') . $theme_path . '/icons.sprite.css')) {
-        ?>
-<link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/icons.sprite.css" type="text/css" media="screen" />
-<?php
-    }
-?>
-<?php
 if (is_rtl(AmpConfig::get('lang'))
-    && is_file(AmpConfig::get('prefix') . $theme_path . '/rtl.css')) {
-    ?>
+    && is_file(AmpConfig::get('prefix') . $theme_path . '/rtl.css')) { ?>
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen" />
-<?php
-}
-?>
+<?php } ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/prettyphoto/css/prettyPhoto.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-ui.custom.css'; ?>" type="text/css" media="screen" />
 <?php UI::show_custom_style(); ?>

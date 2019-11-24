@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,6 +41,8 @@ class AmpacheHeadphones
      */
     public function __construct()
     {
+        $this->description = T_('Automatically download accepted Wanted List albums with Headphones');
+
         return true;
     } // constructor
 
@@ -57,8 +59,8 @@ class AmpacheHeadphones
             return false;
         }
 
-        Preference::insert('headphones_api_url', 'Headphones url', '', '25', 'string', 'plugins', $this->name);
-        Preference::insert('headphones_api_key', 'Headphones api key', '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('headphones_api_url', T_('Headphones URL'), '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('headphones_api_key', T_('Headphones API key'), '', '25', 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -72,7 +74,7 @@ class AmpacheHeadphones
     {
         Preference::delete('headphones_api_url');
         Preference::delete('headphones_api_key');
-        
+
         return true;
     } // uninstall
 
@@ -92,25 +94,25 @@ class AmpacheHeadphones
     public function process_wanted($wanted)
     {
         set_time_limit(0);
-        
+
         $artist     = new Artist($wanted->artist);
         if (empty($artist->mbid)) {
-            debug_event($this->name, 'Artist `' . $artist->name . '` doesn\'t have MusicBrainz Id. Skipped.', 3);
+            debug_event('headphones.plugin', 'Artist `' . $artist->name . '` doesn\'t have MusicBrainz Id. Skipped.', 3);
 
             return false;
         }
-        
+
         $headartist = json_decode($this->headphones_call('getArtist', array(
             'id' => $artist->mbid
         )));
-        
+
         // No artist info, need to add artist to Headphones first. Can be long!
-        if (count($headartist->artist) == 0) {
+        if (!$headartist->artist) {
             $this->headphones_call('addArtist', array(
                 'id' => $artist->mbid
             ));
         }
-        
+
         return ($this->headphones_call('queueAlbum', array(
             'id' => $wanted->mbid
         )) == 'OK');
@@ -119,52 +121,59 @@ class AmpacheHeadphones
     protected function headphones_call($command, $params)
     {
         if (empty($this->api_url) || empty($this->api_key)) {
-            debug_event($this->name, 'Headphones url or api key missing', '3');
+            debug_event('headphones.plugin', 'Headphones url or api key missing', 3);
 
             return false;
         }
-    
+
         $url = $this->api_url . '/api?apikey=' . $this->api_key . '&cmd=' . $command;
         foreach ($params as $key => $value) {
             $url .= '&' . $key . '=' . urlencode($value);
         }
-        
-        debug_event($this->name, 'Headphones api call: ' . $url, '5');
+
+        debug_event('headphones.plugin', 'Headphones api call: ' . $url, 5);
         try {
             // We assume Headphone server is local, don't use proxy here
             $request = Requests::get($url, array(), array(
                 'timeout' => 600
             ));
-        } catch (Exception $e) {
-            debug_event($this->name, 'Headphones api http exception: ' . $e->getMessage(), '1');
+        } catch (Exception $error) {
+            debug_event('headphones.plugin', 'Headphones api http exception: ' . $error->getMessage(), 1);
 
             return false;
         }
-        
+
         return $request->body;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['headphones_api_url'])) || !strlen(trim($data['headphones_api_key']))) {
+            $data                       = array();
+            $data['headphones_api_url'] = Preference::get_by_user(-1, 'headphones_api_url');
+            $data['headphones_api_key'] = Preference::get_by_user(-1, 'headphones_api_key');
+        }
 
         if (strlen(trim($data['headphones_api_url']))) {
             $this->api_url = trim($data['headphones_api_url']);
         } else {
-            debug_event($this->name, 'No Headphones url, auto download skipped', '3');
+            debug_event('headphones.plugin', 'No Headphones url, auto download skipped', 3);
 
             return false;
         }
         if (strlen(trim($data['headphones_api_key']))) {
             $this->api_key = trim($data['headphones_api_key']);
         } else {
-            debug_event($this->name, 'No Headphones api key, auto download skipped', '3');
+            debug_event('headphones.plugin', 'No Headphones api key, auto download skipped', 3);
 
             return false;
         }

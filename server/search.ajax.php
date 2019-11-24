@@ -3,13 +3,13 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * \
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -24,9 +24,10 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'search':
         $search = $_REQUEST['search'];
@@ -50,8 +51,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $artist = new Artist($id);
+            foreach ($sres as $artistid) {
+                $artist = new Artist($artistid);
                 $artist->format(false);
                 $results[] = array(
                     'type' => T_('Artists'),
@@ -79,11 +80,11 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $album = new Album($id);
+            foreach ($sres as $albumid) {
+                $album = new Album($albumid);
                 $album->format(true);
                 $a_title = $album->f_title;
-                if ($album->disk) {
+                if ($album->disk && !$album->allow_group_disks && count($album->get_album_suite()) > 1) {
                     $a_title .= " [" . T_('Disk') . " " . $album->disk . "]";
                 }
                 $results[] = array(
@@ -112,8 +113,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $song = new Song($id);
+            foreach ($sres as $songid) {
+                $song = new Song($songid);
                 $song->format(false);
                 $results[] = array(
                     'type' => T_('Songs'),
@@ -141,8 +142,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $playlist = new Playlist($id);
+            foreach ($sres as $playlistid) {
+                $playlist = new Playlist($playlistid);
                 $playlist->format(false);
                 $results[] = array(
                     'type' => T_('Playlists'),
@@ -171,8 +172,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $label = new Label($id);
+            foreach ($sres as $labelid) {
+                $label = new Label($labelid);
                 $label->format(false);
                 $results[] = array(
                     'type' => T_('Labels'),
@@ -186,20 +187,20 @@ switch ($_REQUEST['action']) {
         }
 
         if ($target == 'missing_artist' && AmpConfig::get('wanted')) {
-            $sres = Wanted::search_missing_artists($search);
-            $i    = 0;
-            foreach ($sres as $r) {
+            $sres     = Wanted::search_missing_artists($search);
+            $count    = 0;
+            foreach ($sres as $artist) {
                 $results[] = array(
                     'type' => T_('Missing Artists'),
-                    'link' => AmpConfig::get('web_path') . '/artists.php?action=show_missing&mbid=' . $r['mbid'],
-                    'label' => $r['name'],
-                    'value' => $r['name'],
+                    'link' => AmpConfig::get('web_path') . '/artists.php?action=show_missing&mbid=' . $artist['mbid'],
+                    'label' => $artist['name'],
+                    'value' => $artist['name'],
                     'rels' => '',
                     'image' => '',
                 );
-                $i++;
+                $count++;
 
-                if ($i >= $limit) {
+                if ($count >= $limit) {
                     break;
                 }
             }
@@ -221,8 +222,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $id) {
-                $user = new User($id);
+            foreach ($sres as $userid) {
+                $user = new User($userid);
                 $user->format();
                 $avatar    = $user->get_avatar();
                 $results[] = array(

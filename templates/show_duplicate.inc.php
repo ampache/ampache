@@ -1,9 +1,10 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,22 +19,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Find Duplicates'), 'box box_duplicate'); ?>
-<form name="duplicates" action="<?php echo AmpConfig::get('web_path'); ?>/admin/duplicates.php?action=find_duplicates" method="post" enctype="multipart/form-data" >
-    <table cellspacing="0" cellpadding="3">
-        <tr>
-            <td valign="top"><strong><?php echo T_('Search Type'); ?>:</strong></td>
-            <td>
-                <input type="radio" name="search_type" value="title" /><?php echo T_('Title'); ?><br />
-                <input type="radio" name="search_type" value="artist_title" /><?php echo T_('Artist and Title'); ?><br />
-                <input type="radio" name="search_type" value="artist_album_title" /><?php echo T_('Artist, Album and Title'); ?><br />
-            </td>
-        </tr>
-    </table>
+<form name="duplicates" action="<?php echo AmpConfig::get('web_path'); ?>/admin/duplicates.php?action=find_duplicates" method="post" enctype="multipart/form-data">
+    <div class="find-duplicates">
+        <strong><?php echo T_('Search Type'); ?>:</strong><br />
+        <input type="radio" name="search_type" id="title" value="title" /><label for="title"><?php echo T_('Title'); ?></label><br />
+        <input type="radio" name="search_type" id="artist_title" value="artist_title" /><label for="artist_title"><?php echo T_('Artist and Title'); ?></label><br />
+        <input type="radio" name="search_type" id="artist_album_title" value="artist_album_title" /><label for="artist_album_title"><?php echo T_('Artist, Album and Title'); ?></label>
+    </div>
     <div class="formValidation">
-          <input type="submit" value="<?php echo T_('Find Duplicates'); ?>" />
+        <input type="submit" value="<?php echo T_('Find Duplicates'); ?>" />
     </div>
 </form>
 <?php UI::show_box_bottom(); ?>

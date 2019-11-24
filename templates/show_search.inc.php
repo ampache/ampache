@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,21 +18,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php
 ob_start();
 require AmpConfig::get('prefix') . UI::find_template('show_search_title.inc.php');
 $title = ob_get_contents();
 ob_end_clean();
-UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist');
-?>
+UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist'); ?>
 <div id="information_actions">
     <ul>
-        <?php if (Access::check_function('batch_download') && check_can_zip('search')) {
-    ?>
+        <?php if (Access::check_function('batch_download') && check_can_zip('search')) { ?>
         <li>
-            <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
             <?php echo T_('Batch Download'); ?>
         </li>
             <?php
@@ -41,8 +38,7 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
             <?php echo Ajax::button('?action=basket&type=search&id=' . $playlist->id, 'add', T_('Add All'), 'play_playlist'); ?>
             <?php echo T_('Add All'); ?>
         </li>
-        <?php if ($playlist->has_access()) {
-        ?>
+        <?php if ($playlist->has_access()) { ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
                 <?php echo UI::get_icon('delete'); ?>
@@ -70,6 +66,5 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
     $browse->add_supplemental_object('search', $playlist->id);
     $browse->set_static_content(false);
     $browse->show_objects($object_ids);
-    $browse->store();
-?>
+    $browse->store(); ?>
 </div>

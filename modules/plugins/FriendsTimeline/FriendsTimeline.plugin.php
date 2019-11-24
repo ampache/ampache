@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,6 +40,8 @@ class AmpacheFriendsTimeline
      */
     public function __construct()
     {
+        $this->description = T_("Friend's Timeline on homepage");
+
         return true;
     }
 
@@ -55,7 +57,7 @@ class AmpacheFriendsTimeline
             return false;
         }
 
-        Preference::insert('ftl_max_items', 'Friends timeline max items', '5', '25', 'integer', 'plugins', $this->name);
+        Preference::insert('ftl_max_items', T_('Friends timeline max items'), '5', '25', 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -88,7 +90,7 @@ class AmpacheFriendsTimeline
     public function display_home()
     {
         if (AmpConfig::get('sociable')) {
-            $user_id = $GLOBALS['user']->id;
+            $user_id = Core::get_global('user')->id;
             if ($user_id) {
                 echo '<div class="home_plugin">';
                 $activities = Useractivity::get_friends_activities($user_id, $this->maxitems);
@@ -110,13 +112,14 @@ class AmpacheFriendsTimeline
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->maxitems = intval($data['ftl_max_items']);
+        $this->maxitems = (int) ($data['ftl_max_items']);
         if ($this->maxitems < 1) {
             $this->maxitems = 10;
         }

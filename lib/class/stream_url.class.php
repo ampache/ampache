@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,6 +30,8 @@ class Stream_URL extends memory_object
      * parse
      *
      * Takes an url and parses out all the chewy goodness.
+     * @param string $url
+     * @return array
      */
     public static function parse($url)
     {
@@ -39,7 +41,8 @@ class Stream_URL extends memory_object
                 $argsstr = substr($url, $posargs + 6);
                 $url     = substr($url, 0, $posargs + 6) . 'index.php?';
                 $args    = explode('/', $argsstr);
-                for ($i = 0; $i < count($args); $i += 2) {
+                $a_count = count($args);
+                for ($i = 0; $i < $a_count; $i += 2) {
                     if ($i > 0) {
                         $url .= '&';
                     }
@@ -64,6 +67,7 @@ class Stream_URL extends memory_object
                     if (make_bool($value)) {
                         $results['type'] = 'video';
                     }
+                // Intentional break fall-through
                 default:
                     // Nothing
                 break;
@@ -78,6 +82,9 @@ class Stream_URL extends memory_object
      * add_options
      *
      * Add options to an existing stream url.
+     * @param string $url
+     * @param string $options
+     * @return string
      */
     public static function add_options($url, $options)
     {
@@ -107,6 +114,8 @@ class Stream_URL extends memory_object
     /**
      * format
      * This format the string url according to settings.
+     * @param string $url
+     * @return string
      */
     public static function format($url)
     {

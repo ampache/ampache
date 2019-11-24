@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 UI::show_box_top(T_('Starting New Media Search'), 'box box_adds_catalog');
 /* HINT: Catalog Name */
-printf(T_('Starting New Media Search on %s catalog'), "<strong>[ $this->name ]</strong>");
+printf(T_('Starting New Media Search on "%s" Catalog'), "<strong>[ $this->name ]</strong>");
 echo "<br />\n";
 echo T_('Found') . ': <span id="add_count_' . $this->id . '">' . T_('None') . '</span><br />';
 echo T_('Reading') . ':<span id="add_dir_' . $this->id . '"></span><br />';

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,33 +18,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo $_REQUEST['type'] ? scrub_out($_REQUEST['type']) : 'song'; ?>">
-<table class="tabledata" cellpadding="3" cellspacing="0">
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo Core::get_request('type') ? scrub_out(Core::get_request('type')) : 'song'; ?>">
+<table class="tabledata">
 <tr id="search_location">
-    <td><?php if ($_REQUEST['type'] != 'song') {
+    <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'song') {
     ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=song"><?php echo T_('Songs'); ?></a><?php
 } else {
         echo T_('Songs');
     } ?></td>
-    <td><?php if ($_REQUEST['type'] != 'album') {
+    <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'album') {
         ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=album"><?php echo T_('Albums'); ?></a><?php
     } else {
         echo T_('Albums');
     } ?></td>
-    <td><?php if ($_REQUEST['type'] != 'artist') {
+    <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'artist') {
         ?><a href="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=advanced&type=artist"><?php echo T_('Artists'); ?></a><?php
     } else {
         echo T_('Artists');
     } ?></td>
 </tr>
-<tr id="search_blank_line"><td>&nbsp;</td></tr>
 </table>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <tr id="search_item_count">
-        <td><?php echo T_('Item count'); ?></td>
+        <td><?php echo T_('Item Count'); ?></td>
         <td>
         <select name="random">
 <?php
@@ -57,15 +55,14 @@
             echo "\t\t\t" . '<option value="-1" ' .
                 ($_POST['random'] == '-1'
                     ? 'selected="selected"' : '') . '>' .
-                T_('All') . "</option>\n";
-?>
+                T_('All') . "</option>\n"; ?>
         </select>
         </td>
 </tr>
 <tr id="search_length">
         <td><?php echo T_('Length'); ?></td>
         <td>
-                <?php $name = 'length_' . intval($_POST['length']); ${$name} = ' selected="selected"'; ?>
+                <?php $name = 'length_' . (int) (Core::get_post('length')); ${$name} = ' selected="selected"'; ?>
                 <select name="length">
 <?php
             echo "\t\t\t" . '<option value="0" ' .
@@ -82,8 +79,7 @@
                 printf(nT_('%d hour', '%d hours', $i / 60), $i / 60);
             }
             echo "</option>\n";
-        }
-?>
+        } ?>
                 </select>
         </td>
 </tr>
@@ -101,8 +97,7 @@
                 ($_POST['size_limit'] == $i
                     ? 'selected="selected"' : '') . '>' .
                 UI::format_bytes($i * 1048576) . "</option>\n";
-        }
-?>
+        } ?>
                 </select>
         </td>
 </tr>
@@ -124,6 +119,5 @@
         $browse->show_objects();
         $browse->store();
         echo Ajax::observe('window', 'load', Ajax::action('?action=refresh_rightbar', 'playlist_refresh_load'));
-    }
-?>
+    } ?>
 </div>

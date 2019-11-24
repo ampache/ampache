@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,6 +39,8 @@ class AmpacheMusicBrainz
      */
     public function __construct()
     {
+        $this->description = T_('MusicBrainz metadata integration');
+
         return true;
     }
 
@@ -64,9 +66,12 @@ class AmpacheMusicBrainz
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {
+        $user->set_preferences();
+
         return true;
     } // load
 
@@ -80,7 +85,7 @@ class AmpacheMusicBrainz
         if (!in_array('music', $gather_types)) {
             return null;
         }
-    
+
         if (!$mbid = $song_info['mb_trackid']) {
             return null;
         }
@@ -92,7 +97,9 @@ class AmpacheMusicBrainz
         );
         try {
             $track = $mb->lookup('recording', $mbid, $includes);
-        } catch (Exception $e) {
+        } catch (Exception $error) {
+            debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+
             return null;
         }
 

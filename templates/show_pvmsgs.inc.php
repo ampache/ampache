@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,30 +20,29 @@
  *
  */
 
-$thcount = 5;
-?>
-<script language="javascript" type="text/javascript">
+$thcount = 5; ?>
+<script>
     function getSelectionArray()
     {
         var checked = []
         $("input[name='pvmsg_select[]']:checked").each(function () {
-            checked.push(parseInt($(this).val()));
+            checked.push(parseInt($(this).val(), 10));
         });
         return checked.join(",");
     }
 </script>
 <div id="information_actions">
     <ul>
-        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message"><?php echo UI::get_icon('mail', T_('Compose')); ?> <?php echo T_('Compose a new message'); ?></a></li>
-        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=set_is_read&read=1&msgs=' + getSelectionArray());"><?php echo T_('Set as read'); ?></a></li>
-        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=set_is_read&read=0&msgs=' + getSelectionArray());"><?php echo T_('Set as unread'); ?></a></li>
+        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message"><?php echo UI::get_icon('mail', T_('Compose')); ?> <?php echo T_('Compose a New Message'); ?></a></li>
+        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=set_is_read&read=1&msgs=' + getSelectionArray());"><?php echo T_('Mark as Read'); ?></a></li>
+        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=set_is_read&read=0&msgs=' + getSelectionArray());"><?php echo T_('Mark as Unread'); ?></a></li>
         <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=' + getSelectionArray());"><?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?></a></li>
     </ul>
 </div>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="label">
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="label">
     <thead>
         <tr class="th-top">
             <th class="cel_select essential persist"></th>
@@ -65,8 +64,7 @@ $thcount = 5;
         </tr>
         <?php
         } ?>
-        <?php if (!count($object_ids)) {
-            ?>
+        <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No message found'); ?></span></td>
         </tr>
@@ -86,6 +84,6 @@ $thcount = 5;
 </table>
 
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
             require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
         } ?>

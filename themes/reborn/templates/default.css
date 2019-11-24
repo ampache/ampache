@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,11 +21,7 @@
 
 @font-face {
     font-family: 'DejaVuSansCondensed';
-    src: url('fonts/dejavusanscondensed.eot');
-    src: url('fonts/dejavusanscondensed.eot') format('embedded-opentype'),
-         url('fonts/dejavusanscondensed.woff') format('woff'),
-         url('fonts/dejavusanscondensed.ttf') format('truetype'),
-         url('fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
+    src: url('fonts/dejavusanscondensed.eot?') format('embedded-opentype'),  url('fonts/dejavusanscondensed.woff') format('woff'), url('fonts/dejavusanscondensed.ttf') format('truetype'), url('fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
 }
 
 /***********************************************
@@ -43,6 +39,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 html {
     font-size: 100%;
     -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
     height: 100%;
 }
 
@@ -54,6 +51,10 @@ body {
     font-size: 16px;
     line-height: 1.5em;
     height: 90%;
+}
+
+body#main-page {
+    min-width: 1024px;
 }
 
 blockquote,q {
@@ -114,7 +115,6 @@ input[type=password], input[type=text], textarea {
     border-radius: 2px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -136,7 +136,6 @@ input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, in
     background-position: 0 -10px;
     -webkit-transition: background-position .1s linear;
     -moz-transition: background-position .1s linear;
-    -ms-transition: background-position .1s linear;
     -o-transition: background-position .1s linear;
     transition: background-position .1s linear;
     text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
@@ -146,7 +145,6 @@ input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, in
 input[type=button]:focus:active, input[type=submit]:focus:active {
     -webkit-transition: background-position .1s linear;
     -moz-transition: background-position .1s linear;
-    -ms-transition: background-position .1s linear;
     -o-transition: background-position .1s linear;
     transition: background-position .1s linear;
 }
@@ -155,6 +153,15 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     font-size: 18px;
     margin-bottom: 10px;
 }
+
+.alert-danger{
+    color: #c33;
+}
+
+div#autoupdate > span {
+    color: #FF0000;
+}
+
 
 /***********************************************
            Main
@@ -166,26 +173,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     padding-bottom: 40px;
 }
 
-#footer {
-    width: auto;
-    z-index: 5;
-    margin: 15px 250px 0px 0px;
-}
-
-.footer-wild {
-    margin-right: 20px !important;
-}
-
 #ajax-loading {
-    position: fixed;
-    top: 63px;
-    left: 6px;
-    font-size: 12px;
-    text-align: center;
-    width: 120px;
-    display: none;
     background-repeat: no-repeat;
-    background-position: right; 
+    background-position: right;
+    display: none;
+    font-size: 12px;
+    left: 52px;
+    position: absolute;
+    text-align: center;
+    top: 39px;
+    width: 120px;
 }
 
 /***********************************************
@@ -194,18 +191,19 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #header {
     z-index: 5;
     height: 64px;
-    padding: 0 32px;
+    padding: 0 5px;
     font-size: 15px;
-}
-
-.header-float {
 }
 
 .header-fixed {
     position: fixed;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     width: 97%;
+}
+
+#header a {
+    display: inline-block;
 }
 
 #header .box-top, #header .box-bottom {
@@ -214,6 +212,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #header #headerlogo, #header #headerbox , #header .box_headerbox, #header .box-inside, #header .box-content {
     height: 100%;
+    overflow: hidden;
 }
 
 #header #headerlogo {
@@ -224,6 +223,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #header #headerlogo img {
     height: 64px;
     width: 64px;
+}
+
+#mobileheader {
+    height: 64px;
+    padding-bottom: 64px;
+    padding-top: 24px;
 }
 
 #header #headerbox {
@@ -244,8 +249,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #loginInfo {
     position: absolute;
-    left: 150px;
-    top: 20px;
+    left: 80px;
+    top: 17px;
 }
 
 #sb_Subsearch input[type=submit] {
@@ -266,8 +271,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #headerbox  select {
     min-width: 150px;
+    -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
     box-sizing: border-box;
     font-size: 16px;
     font-weight: normal;
@@ -280,109 +285,141 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 /***********************************************
-           Login
+           Login / Registration
 ***********************************************/
-#loginPage #maincontainer, #registerPage #maincontainer {
-    padding: 20px;
+#loginPage #maincontainer,
+#registerPage #maincontainer {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
     box-sizing: border-box;
     display: block;
-    width: 800px;
-    margin: 50px auto 0 auto;
+    min-width: 250px;
+    margin: 0 auto 0 auto;
 }
 
-#loginPage #maincontainer {
-    height: 580px;
-}
-
-#registerPage #maincontainer {
-    height: auto;
-}
-
-#loginPage #header, #registerPage #header {
+#loginPage #header,
+#registerPage #header {
+    height: 128px;
     background-color: transparent;
-    width: 254px;
+    width: 128px;
     margin: auto;
     border: none;
     box-shadow: none;
 }
 
-#loginPage #header {
-    height: 254px;
-}
-
-#registerPage #header {
-    height: 314px;
-}
-
-#loginPage #headerlogo, #registerPage #headerlogo {
-    width: 256px;
-    height: 256px;
+#loginPage #headerlogo,
+#registerPage #headerlogo {
+    width: 128px;
+    height: 128px;
     background-repeat: no-repeat;
-    background-position: center; 
+    background-position: center;
     background-size: contain;
     margin: auto;
 }
 
-#loginPage #headerlogo a, #registerPage #headerlogo a {
+#registerPage #content {
+    margin: 0 5px;
+}
+
+.registerfield {
+    padding-bottom: 5px;
+}
+
+.agreementContent {
+    padding-bottom: 20px;
+}
+
+#loginbox,
+#registerbox {
+    margin: auto;
+    max-width: 350px;
+    min-width: 250px;
+}
+
+#loginbox h2{
     display: none;
 }
 
-#loginPage #loginbox, #registerPage #registerbox {
-    width: 500px;
-    margin: auto auto 20px auto;
+#registerbox h2,
+#registerbox h3 {
+    padding-bottom: 10px;
+    margin-bottom: 0;
 }
 
-#loginPage #loginbox h2, #registerPage #registerbox h2{
-    display: none;
-}
-
-#loginPage #loginbox div, #registerPage #registerbox div {
+#loginbox div,
+#registerbox div {
     font-size: 18px;
     line-height: 1.5em;
     text-rendering: auto;
 }
 
-#loginPage #loginbox #usernamefield input,
-#loginPage #loginbox #emailfield input,
-#loginPage #loginbox #passwordfield input,
-#registerPage #registerbox input {
+#loginbox .alert,
+#registerbox .alert {
+    margin-top: 5px;
+}
+
+.loginfield {
+    margin-top: 20px;
+    overflow: auto;
+}
+
+.loginfield input[type=password],
+.loginfield input[type=text],
+.registerfield input[type=password],
+.registerfield input[type=text] {
     float: none;
     margin-left: 0;
     width: 100%;
     min-height: 28px;
+    -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
     box-sizing: border-box;
     border-radius: 7px;
     height: 32px;
 }
 
-#registerbox .require label::after {
-	content: " *";
+.submit-registration {
+    width: 100%;
+    overflow: auto;
+    padding-top: 10px;
 }
 
-#loginPage #loginbox #usernamefield input:focus,
-#loginPage #loginbox #emailfield input:focus,
-#loginPage #loginbox #passwordfield input:focus {
-    float: none;
-    outline: none;
+#accept_agreement {
+    min-height: 0;
+    height: unset;
+    cursor: pointer;
+    width: 40px;
 }
 
-#loginPage #loginbox #usernamefield,
-#loginPage #loginbox #passwordfield,
-#loginPage #loginbox #emailfield,
-#loginPage #loginbox #remembermefield {
-    margin-top: 20px;
-}
-
-#loginPage #loginbox #remembermefield {
+#registerPage #registerbox .submit-registration #agreementCheckbox {
     font-size: 16px;
+    display: inline;
+}
+
+#submit-registration-button {
+    float: right;
+}
+
+.require,
+.require label::after {
+    color: #c33;
+    content: " *";
+}
+
+#remembermefield,
+#agreementCheckbox {
+    padding-top: 4px;
+}
+
+#loginPage #loginbox #agreementCheckbox,
+#loginPage #loginbox #remembermefield {
+    vertical-align: middle;
+    font-size: 16px;
+    padding: auto 0;
+    float: left;
 }
 
 #loginPage #loginbox #remembermefield input {
@@ -390,25 +427,33 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     width: 40px;
 }
 
-#lostpasswordbutton {
+.loginoptions {
     margin-top: 10px;
+    text-align: center;
 }
 
-.formValidation {
-    margin: 0;
-    padding: 0;
-    float: right !important;
-}
-
-.formValidation input {
-    border: none;
-    min-width: 150px;
-}
-
-.formValidation a {
+.loginoptions a {
     font-size: 15px;
-    vertical-align: bottom;
-    margin-right: 20px;
+}
+
+#registerbutton {
+    padding-right: 60px;
+}
+
+#lostpasswordbutton {
+    padding-top: 10px;
+    padding-left: 60px;
+}
+
+#submit-lostpassword {
+    padding-top: 20px;
+}
+
+#loginPage #footer,
+#registerPage #footer {
+    max-width: 1280px;
+    margin: 15px auto;
+    padding: 0 5px;
 }
 
 #loginPage span.error {
@@ -418,11 +463,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     padding: 10px;
     text-align: center;
     margin-bottom: 10px;
-}
-
-#loginPage #footer {
-    width: 800px;
-    margin: 10px auto;
 }
 
 /***********************************************
@@ -437,22 +477,22 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .sidebar-header-title {
-    white-space: nowrap;
+    display: inline-block;
+    max-width: 148px;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 125px;
-    display: inline-block;
+    white-space: nowrap;
 }
 
 #sidebar-header {
     height: 20px;
-    width: 175px;
+    width: 148px;
     border: 2px solid;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
+    border-radius: 2px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
     box-sizing: border-box;
     text-align: center;
     font-size: 10px;
@@ -472,15 +512,13 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-content, #sidebar-content-light, #sidebar-light {
-    border-radius: 2px;
     border: 2px solid;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
+    border-radius: 2px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
     box-sizing: border-box;
-    border-right: 2px solid;
     padding: 10px;
 }
 
@@ -489,7 +527,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-content-light {
-    padding: 0px;
+    padding: 0;
     display: none;
     width: 70px;
 }
@@ -497,14 +535,14 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #sidebar-light {
     width: 70px;
     position: fixed;
-    left: 0px;
+    left: 0;
     margin: 17px auto 5px 5px;
     padding: 10px 0 10px 0;
     text-align: center;
 }
 
 #sidebar-light li {
-	padding-top: 10px;
+    padding-top: 10px;
 }
 
 #sidebar-light img {
@@ -518,12 +556,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .sidebar-float {
-    margin: 20px auto auto 5px;
+    margin: 5px auto auto 5px;
     float: left;
 }
 
 .sidebar-fixed {
-    margin: 0px auto auto 5px;
+    margin: 0 auto auto 5px;
     float: left;
 }
 
@@ -535,19 +573,13 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #sidebar-tabs li.sb1 {
     float: left;
-    margin: 0px 4px 0px 4px;
+    margin: 0 4px 0 4px;
     height: 25px;
-}
-
-#sidebar-tabs li.active {
-}
-
-#sidebar-tabs li.active img{
 }
 
 /* Tabs content */
 #sidebar-page {
-    width: 175px;
+    width: 148px;
     margin: 3px auto 5px 5px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -555,13 +587,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     border: 2px solid;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
     box-sizing: border-box;
 }
 
 .sidebar-page-float {
     position: absolute;
-    left: 0px;
+    left: 0;
 }
 
 #sidebar-tabs .sb2 li h4 {
@@ -576,24 +607,22 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-tabs .sb2 li ul li a {
-	width: 100%;
-	margin: 0 0 0 5px;
-	background-color: transparent;
-	-webkit-transition: color .1s;
-	-moz-transition: color .1s;
-	-ms-transition: color .1s;
-	-o-transition: color .1s;
-	transition: color .1s;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	box-sizing: border-box;
-	display: inline-block;
+    width: 100%;
+    margin: 0 0 0 5px;
+    background-color: transparent;
+    -webkit-transition: color .1s;
+    -moz-transition: color .1s;
+    -o-transition: color .1s;
+    transition: color .1s;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
 }
 
 #sidebar-tabs .sb2 li ul li a:hover {
-	width: 95%;
-	padding-left: 5px;
+    width: 95%;
+    padding-left: 5px;
 }
 
 #sidebar-tabs .sb2 #browse_filters li {
@@ -616,6 +645,35 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     margin-bottom: 100px;
 }
 
+.sb2 {
+    display: flex;
+    flex-direction: column;
+}
+
+.sb2_music {
+    order: 10;
+}
+
+.sb2_video {
+    order: 20;
+}
+
+.sb2_random {
+    order: 30;
+}
+
+.sb2_search {
+    order: 40;
+}
+
+.sb2_playlist {
+    order: 50;
+}
+
+.sb2_information {
+    order: 60;
+}
+
 #sidebar-tabs #catalog_select {
     width: 130px;
 }
@@ -625,6 +683,18 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     border: 1px solid;
 }
 
+span#sidebar-header-content::after {
+    content: "<<<";
+    left: 67px;
+    position: absolute;
+}
+
+#sidebar-header.sidebar-header-collapsed > span#sidebar-header-content::after {
+    content: ">>>";
+    left: 20px;
+    position: absolute;
+}
+
 /***********************************************
                   Rightbar
 ***********************************************/
@@ -632,20 +702,19 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     position: fixed;
     right: 10px;
     top: 66px;
-    width: 200px;
-    margin: 20px 20px auto auto;
+    min-width: 100px;
+    max-width: 250px;
+    margin: 5px 15px auto auto;
     max-height: 85%;
-    padding: 10px;
+    padding: 4px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    border: 2px solid;
+    border: 2px solid #161616;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
     box-sizing: border-box;
-    z-index: 10;
-    overflow-y: auto;
+    z-index: 10000;
 }
 
 /* For jQuery scrolling feature */
@@ -664,12 +733,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #rightbar #rb_action {
     list-style-type: none;
-    padding: 4px;
 }
 
 #rightbar #rb_action li {
-    margin-right: 5px;
     display: inline;
+    margin-right: 5px;
+    padding-bottom: 3px
 }
 
 #rightbar li #rb_add, #rightbar li #pl_add {
@@ -701,16 +770,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #rightbar .submenu {
     display: none;
     position: fixed;
-    top: 120px;
+    top: 98px;
     right: 15px;
     border: 2px solid;
-    width: 210px;
+    width: 214px;
     padding: 0.6em;
     font-size: 12px;
     z-index: 99;
-	overflow: hidden;
+    overflow: hidden;
     overflow-y: scroll;
-	max-height: 350px;
+    max-height: 350px;
 }
 
 #rightbar #rb_action .submenu li {
@@ -737,7 +806,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #rightbar #localplay-control {
     padding: 5px;
     text-align: center;
-    margin: 7px 0px;
+    margin: 7px 0;
 }
 
 #rightbar #localplay-control img {
@@ -748,28 +817,25 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Content
 ***********************************************/
 #content {
-    z-index: 3;
+    z-index: 3000000;
     -webkit-transition: top .5s;
     -moz-transition: top .5s;
-    -ms-transition: top .5s;
     -o-transition: top .5s;
     transition: top .5s;
     width: auto;
     max-height: 85%;
-    padding: 10px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
     border: 2px solid;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
     box-sizing: border-box;
     padding: 20px;
 }
 
 .content-float {
-    margin: 20px 250px 0px 205px;
+    margin: 5px 0 0 160px;
 }
 
 .content-right-wild {
@@ -777,15 +843,15 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 .content-left-wild {
-    margin-left: 90px !important;
+    margin-left: 80px !important;
 }
 
 .content-fixed {
-    margin: 86px 250px 0px 205px;
+    margin: 86px 250px 0 205px;
 }
 
 .content-fixed-topmenu {
-    margin: 0px 250px 0px 205px;
+    margin: 0 250px 0 205px;
 }
 
 .browse_content {
@@ -810,6 +876,10 @@ table.tabledata {
     margin-bottom: 20px;
 }
 
+.box_debug_tools table {
+    table-layout: fixed;
+}
+
 table.tabledata thead .th-top, table.tabledata tfoot .th-bottom {
     font-size: 12px;
 }
@@ -825,10 +895,9 @@ table.tabledata tfoot .th-bottom {
 
 table.tabledata td {
     vertical-align: middle;
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
     padding: 3px 10px 3px 0;
+    word-wrap: break-word;
 }
 
 table.tabledata tr:hover, table.tabledata tr:focus {
@@ -867,7 +936,7 @@ table.tabledata tbody tr:hover .cel_play_content, table.tabledata tbody tr:focus
 }
 
 table.tabledata tbody tr.unread {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 table.tabledata tbody .cel_add {
@@ -920,11 +989,12 @@ table.tabledata tbody .cel_cover img {
     -moz-border-radius: 2px;
     border-radius: 2px;
     margin: 2px;
+    object-fit: cover;
 }
 
 table.tabledata tbody .cel_cover img:hover {
     border: 2px solid;
-    margin: 0px;
+    margin: 0;
 }
 
 table.tabledata .cel_drag {
@@ -963,9 +1033,11 @@ table.disablegv thead {
 
 table.disablegv tr {
     float: left;
+    max-width: 15%;
+    min-width: 170px;
+    padding: 0.5%;
     text-align: center;
-    width: 215px;
-    padding: 20px;
+    width: 15%;
 }
 
 table.disablegv tr.odd {
@@ -975,6 +1047,8 @@ table.disablegv tr.odd {
 table.disablegv td {
     display: block !important;
     height: 25px;
+    margin-left: 4%;
+    margin-right: 4%;
 }
 
 table.disablegv td.optional {
@@ -992,6 +1066,16 @@ table.disablegv td.cel_play, table.disablegv td.cel_add, table.disablegv td.cel_
 
 table.disablegv td.cel_rating {
     display: inline-block !important;
+}
+
+.tableform {
+    border-collapse: separate;
+    border-spacing: 5px 0;
+}
+
+#col_php_setting,
+#col_configuration {
+    width: 20%;
 }
 
 /***********************************************
@@ -1013,8 +1097,10 @@ table.disablegv td.cel_rating {
 
 .random_selection .random_album, .random_selection .random_video {
     float: left;
-    width: 16%;
-    margin-bottom: 10px;
+    min-width: 110px;
+    max-width: 16%;
+    margin-bottom: 1%;
+    margin-right: 3%;
     text-align: center;
 }
 
@@ -1038,7 +1124,7 @@ table.disablegv td.cel_rating {
 
 .random_selection .random_album .art_album img:hover {
     border: 2px solid;
-    margin: 0px;
+    margin: 0;
 }
 
 .random_selection .random_album .star-rating, .random_selection .random_video .star-rating {
@@ -1074,11 +1160,11 @@ div.box.box_rules {
     background-position: center;
 }
 
-.cel_song, .cel_album, .cel_artist {
+.cel_song, .cel_album, .cel_artist, .cel_year {
     max-width: 350px;
     white-space: normal !important;
     text-overflow: ellipsis;
-	overflow: hidden;
+    overflow: hidden;
 }
 
 /***********************************************
@@ -1119,7 +1205,7 @@ div.box.box_rules {
     width: 140px;
 }
 
-#now_playing .cel_song, #now_playing .cel_album, #now_playing .cel_artist, #now_playing .cel_video {
+#now_playing .cel_song, #now_playing .cel_album, #now_playing .cel_artist, #now_playing .cel_video, #now_playing .cel_year {
     width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1158,10 +1244,6 @@ div.box.box_rules {
 .album_group_disks_title {
     float: left;
     margin-right: 30px;
-}
-
-.album_group_disks_actions {
-
 }
 
 /***********************************************
@@ -1209,15 +1291,18 @@ span.fatalerror {
     cursor: pointer;
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-border-top-left-radius: 2px;
-    -moz-border-radius-topleft: 2px;
-    border-top-left-radius: 2px;
-    -webkit-border-bottom-left-radius: 2px;
-    -moz-border-radius-bottomleft: 2px;
-    border-bottom-left-radius: 2px;
+    border-radius: 2px 4px 4px 2px;
+    background-color: #5f5f5f;
+    background-image: -moz-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -ms-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#6d6d6d),to(#4a4a4a));
+    background-image: -webkit-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -o-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: linear-gradient(top,#6d6d6d,#4a4a4a);
+    border-bottom-color: #b3b3b3;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
 }
 
 .box-content #tag_filter .tag_button span:hover {
@@ -1258,10 +1343,9 @@ span.fatalerror {
 
 .item_properties {
     text-align: right;
-    color: #999;
     font-size: 13px;
-	clear: right;
-	max-width: 128px;
+    clear: right;
+    max-width: 128px;
 }
 
 .item_art {
@@ -1272,22 +1356,19 @@ span.fatalerror {
 
 .item_art .item_art_play {
     display: none;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
+    height: 64px;
+    margin: 35% auto 0 auto;
+    position: relative;
     width: 64px;
-    height: 100%;
-    position: absolute;
 }
 
 .item_art .item_art_play .item_art_play_icon {
-    width: 64px;
+    display: block;
     height: 64px;
+    opacity: 0.4;
     position: relative;
     text-align: center;
-    opacity: 0.4;
-    display: block;
-    margin: 100% 0 0 0;
+    width: 64px;
 }
 
 .item_art .item_art_play .item_art_play_icon:hover {
@@ -1298,8 +1379,8 @@ span.fatalerror {
     display: none;
     position: absolute;
     float: right;
-    bottom: 0px;
-    right: 0px;
+    bottom: 0;
+    right: 0;
     padding-bottom: 10px;
     padding-top: 5px;
     width: 100%;
@@ -1326,7 +1407,7 @@ span.fatalerror {
 
 .item_art:hover {
     border: 2px solid;
-    margin: 0px;
+    margin: 0;
 }
 
 .item_art:hover  .item_art_actions {
@@ -1341,7 +1422,6 @@ span.fatalerror {
     border-radius: 4px;
     -webkit-transition: color .1s;
     -moz-transition: color .1s;
-    -ms-transition: color .1s;
     -o-transition: color .1s;
     transition: color .1s;
 }
@@ -1355,7 +1435,7 @@ span.fatalerror {
 }
 
 #information_actions input {
-    margin: 0px 5px 0 2px;
+    margin: 0 5px 0 2px;
 }
 
 #information_actions .star-rating li {
@@ -1371,9 +1451,9 @@ span.fatalerror {
 }
 
 .item_uploaded_by {
-	padding-left: 0px;
-	padding-top: 10px;
-	font-size: small;
+    padding-left: 0;
+    padding-top: 10px;
+    font-size: small;
 }
 
 .item_right_info {
@@ -1382,11 +1462,12 @@ span.fatalerror {
 }
 
 .external_links {
+    margin-top: 10px;
     text-align: right;
 }
 
 .external_links a {
-    margin: 0px 5px 0px 0px;
+    margin: 0 5px 0 0;
     opacity: 0.3;
 }
 
@@ -1448,7 +1529,7 @@ span.fatalerror {
 .star-rating .current-rating { z-index:1; background-position: left bottom; }
 
 .star-rating a.star0 {
-    left:0px;
+    left:0;
     width:16px;
     background: url(../../../images/ratings/x_off.gif) left top;
 }
@@ -1511,7 +1592,16 @@ dl.media_details dd {
         Footer
 ***********************************************/
 #footer {
+    bottom: 0;
+    margin: 15px 250px 0 0;
+    right: 0;
     text-align: right;
+    width: auto;
+    z-index: 5;
+}
+
+.footer-wild {
+    margin-right: 20px !important;
 }
 
 #footer a:hover {
@@ -1569,35 +1659,40 @@ ol, ul, #rightbar ul {
 }
 
 #plugins_user_field {
-	margin-top: 15px;
+    margin-top: 15px;
 }
 
 .list-header-navmenu-border {
-	border: 1px solid;
-	border-radius: 2px;
+    border: 1px solid;
+    border-radius: 2px;
 }
 
 input.list-header-navmenu-input {
-	padding: 0px;
-	margin-bottom: 2px;
-	width: 50px;
-	height: 16px;
-	text-align: center;
+    padding: 0;
+    margin-bottom: 2px;
+    width: 50px;
+    height: 16px;
+    text-align: center;
 }
 
 span.item-count {
-	font-size: 11px;
+    font-size: 11px;
+}
+
+span.query-count {
+    font-size: 11px;
+    float: right;
 }
 
 a.option-list {
-	border: solid 1px transparent;
-	width: 100%;
-	margin: 0;
-	display: inline-block;
+    border: solid 1px transparent;
+    width: 100%;
+    margin: 0;
+    display: inline-block;
 }
 
 a.option-list:hover {
-	border: 1px solid;
+    border: 1px solid;
 }
 
 .stats_graph {
@@ -1605,18 +1700,42 @@ a.option-list:hover {
 }
 
 .followbtn {
-	background-repeat: repeat-x;
-	position: relative;
-	padding: 5px 12px 4px;
-	font-size: 15px;
-	line-height: normal;
-	border: 0px none;
-	cursor: pointer;
-	border-radius: 2px;
-	background-position: 0px -10px;
-	transition: background-position 0.1s linear 0s;
-	text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.5);
-	text-decoration: none;
-	min-width: 100px;
-	background-color: #363F4A;
+    background-repeat: repeat-x;
+    position: relative;
+    padding: 5px 12px 4px;
+    font-size: 15px;
+    line-height: normal;
+    border: 0 none;
+    cursor: pointer;
+    border-radius: 2px;
+    background-position: 0 -10px;
+    transition: background-position 0.1s linear 0s;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+    text-decoration: none;
+    min-width: 100px;
+}
+
+.formValidation {
+    margin: 0;
+    padding: 0;
+    float: right !important;
+}
+
+.formValidation input {
+    border: none;
+    min-width: 150px;
+}
+
+.formValidation a {
+    font-size: 15px;
+    vertical-align: bottom;
+    margin-right: 20px;
+}
+
+.error.show-disabled {
+    text-align: center;
+}
+
+.find-duplicates strong {
+    display: block;
 }

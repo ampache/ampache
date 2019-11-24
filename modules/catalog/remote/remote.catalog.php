@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -92,16 +92,16 @@ class Catalog_remote extends Catalog
             "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
             ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $db_results = Dba::query($sql);
+        Dba::query($sql);
 
         return true;
     } // install
 
     public function catalog_fields()
     {
-        $fields['uri']           = array('description' => T_('Uri'),'type' => 'url');
-        $fields['username']      = array('description' => T_('Username'),'type' => 'text');
-        $fields['password']      = array('description' => T_('Password'),'type' => 'password');
+        $fields['uri']           = array('description' => T_('URI'), 'type' => 'url');
+        $fields['username']      = array('description' => T_('Username'), 'type' => 'text');
+        $fields['password']      = array('description' => T_('Password'), 'type' => 'password');
 
         return $fields;
     }
@@ -118,7 +118,7 @@ class Catalog_remote extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = intval($catalog_id);
+            $this->id = (int) ($catalog_id);
             $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
@@ -141,13 +141,13 @@ class Catalog_remote extends Catalog
         $password = $data['password'];
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {
-            AmpError::add('general', T_('Error: Remote selected, but path is not a URL'));
+            AmpError::add('general', T_('Remote Catalog type was selected, but the path is not a URL'));
 
             return false;
         }
 
-        if (!strlen($username) or !strlen($password)) {
-            AmpError::add('general', T_('Error: Username and Password Required for Remote Catalogs'));
+        if (!strlen($username) || !strlen($password)) {
+            AmpError::add('general', T_('No username or password was specified'));
 
             return false;
         }
@@ -158,8 +158,9 @@ class Catalog_remote extends Catalog
         $db_results = Dba::read($sql, array($uri));
 
         if (Dba::num_rows($db_results)) {
-            debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
-            AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $uri));
+            debug_event('remote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
+            /* HINT: remote URI */
+            AmpError::add('general', sprintf(T_('This path belongs to an existing remote Catalog: %s'), $uri));
 
             return false;
         }
@@ -178,7 +179,7 @@ class Catalog_remote extends Catalog
     public function add_to_catalog($options = null)
     {
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Remote Update') . '. . .');
+            UI::show_box_top(T_('Running Remote Update'));
         }
         $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
@@ -203,9 +204,9 @@ class Catalog_remote extends Catalog
                 'debug_callback' => 'debug_event',
                 'api_secure' => (substr($this->uri, 0, 8) == 'https://')
             ));
-        } catch (Exception $e) {
-            debug_event('catalog', 'Connection error: ' . $e->getMessage(), 1);
-            AmpError::add('general', $e->getMessage());
+        } catch (Exception $error) {
+            debug_event('remote.catalog', 'Connection error: ' . $error->getMessage(), 1);
+            AmpError::add('general', $error->getMessage());
             AmpError::display('general');
             flush();
 
@@ -213,8 +214,8 @@ class Catalog_remote extends Catalog
         }
 
         if ($remote_handle->state() != 'CONNECTED') {
-            debug_event('catalog', 'API client failed to connect', 1);
-            AmpError::add('general', T_('Error connecting to remote server'));
+            debug_event('remote.catalog', 'API client failed to connect', 1);
+            AmpError::add('general', T_('Failed to connect to the remote server'));
             AmpError::display('general');
 
             return false;
@@ -241,8 +242,10 @@ class Catalog_remote extends Catalog
         // Get the song count, etc.
         $remote_catalog_info = $remote_handle->info();
 
-        // Tell 'em what we've found, Johnny!
-        UI::update_text('', sprintf(T_('%u remote catalog(s) found (%u songs)'), $remote_catalog_info['catalogs'], $remote_catalog_info['songs']));
+        UI::update_text(T_("Remote Catalog Updated"),
+                /* HINT: count of songs found*/
+                sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']),
+                $remote_catalog_info['songs']));
 
         // Hardcoded for now
         $step    = 500;
@@ -254,9 +257,9 @@ class Catalog_remote extends Catalog
             $current += $step;
             try {
                 $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
-            } catch (Exception $e) {
-                debug_event('catalog', 'Songs parsing error: ' . $e->getMessage(), 1);
-                AmpError::add('general', $e->getMessage());
+            } catch (Exception $error) {
+                debug_event('remote.catalog', 'Songs parsing error: ' . $error->getMessage(), 1);
+                AmpError::add('general', $error->getMessage());
                 AmpError::display('general');
                 flush();
             }
@@ -264,13 +267,14 @@ class Catalog_remote extends Catalog
             // Iterate over the songs we retrieved and insert them
             foreach ($songs as $data) {
                 if ($this->check_remote_song($data['song'])) {
-                    debug_event('remote_catalog', 'Skipping existing song ' . $data['song']['url'], 5);
+                    debug_event('remote.catalog', 'Skipping existing song ' . $data['song']['url'], 5);
                 } else {
                     $data['song']['catalog'] = $this->id;
                     $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
                     if (!Song::insert($data['song'])) {
-                        debug_event('remote_catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
-                        AmpError::add('general', T_('Unable to Insert Song - %s'), $data['song']['title']);
+                        debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
+                        /* HINT: Song Title */
+                        AmpError::add('general', T_('Unable to insert song - %s'), $data['song']['title']);
                         AmpError::display('general');
                         flush();
                     }
@@ -278,7 +282,7 @@ class Catalog_remote extends Catalog
             }
         } // end while
 
-        UI::update_text('', T_('Completed updating remote catalog(s).'));
+        UI::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));
 
         // Update the last update value
         $this->update_last_update();
@@ -300,7 +304,7 @@ class Catalog_remote extends Catalog
     {
         $remote_handle = $this->connect();
         if (!$remote_handle) {
-            debug_event('remote-clean', 'Remote login failed', 1, 'ampache-catalog');
+            debug_event('remote.catalog', 'Remote login failed', 1, 'ampache-catalog');
 
             return false;
         }
@@ -310,18 +314,18 @@ class Catalog_remote extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('remote-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
             try {
                 $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
-            } catch (Exception $e) {
+            } catch (Exception $error) {
                 // FIXME: What to do, what to do
-                debug_event('catalog', 'url_to_song parsing error: ' . $e->getMessage(), 1);
+                debug_event('remote.catalog', 'url_to_song parsing error: ' . $error->getMessage(), 1);
             }
 
             if (count($song) == 1) {
-                debug_event('remote-clean', 'keeping song', 5, 'ampache-catalog');
+                debug_event('remote.catalog', 'keeping song', 5, 'ampache-catalog');
             } else {
-                debug_event('remote-clean', 'removing song', 5, 'ampache-catalog');
+                debug_event('remote.catalog', 'removing song', 5, 'ampache-catalog');
                 $dead++;
                 Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
             }
@@ -375,16 +379,17 @@ class Catalog_remote extends Catalog
 
         // If we don't get anything back we failed and should bail now
         if (!$remote_handle) {
-            debug_event('play', 'Connection to remote server failed', 1);
-            exit;
+            debug_event('remote.catalog', 'Connection to remote server failed', 1);
+
+            return false;
         }
 
         $handshake = $remote_handle->info();
         $url       = $media->file . '&ssid=' . $handshake['auth'];
 
         header('Location: ' . $url);
-        debug_event('play', 'Started remote stream - ' . $url, 5);
+        debug_event('remote.catalog', 'Started remote stream - ' . $url, 5);
 
         return null;
     }
-} // end of catalog class
+} // end of remote.catalog class

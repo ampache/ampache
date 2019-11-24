@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,17 +25,18 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
-$user_id = intval($_REQUEST['user_id']);
+$user_id = (int) (Core::get_request('user_id'));
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'flip_follow':
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
             $fuser = new User($user_id);
-            if ($fuser->id > 0 && $user_id !== $GLOBALS['user']->id) {
-                $GLOBALS['user']->toggle_follow($user_id);
+            if ($fuser->id > 0 && $user_id !== (int) Core::get_global('user')->id) {
+                Core::get_global('user')->toggle_follow($user_id);
                 $results['button_follow_' . $user_id] = $fuser->get_display_follow();
             }
         }

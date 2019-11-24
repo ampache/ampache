@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,7 @@
  *
  */
 
-$confirmation = Core::form_register($form_name);
-?>
+$confirmation = Core::form_register($form_name); ?>
 <?php UI::show_box_top(scrub_out($title), 'box box_confirmation'); ?>
 <?php echo $text; ?>
     <br />
@@ -29,8 +28,7 @@ $confirmation = Core::form_register($form_name);
         <input type="submit" value="<?php echo T_('Continue'); ?>" />
         <?php echo $confirmation; ?>
     </form>
-<?php if ($cancel) {
-    ?>
+<?php if ($cancel) { ?>
     <form method="post" action="<?php echo AmpConfig::get('web_path') . '/' . return_referer(); ?>" style="display:inline;">
         <input type="submit" value="<?php echo T_('Cancel'); ?>" />
         <?php echo $confirmation; ?>

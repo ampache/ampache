@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,22 +18,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <ul id="rb_action">
     <li>
-        <?php echo Ajax::button('?page=stream&action=basket', 'all', T_('Play'), 'rightbar_play'); ?>
+        <?php echo Ajax::button('?page=stream&action=basket', 'all', $t_play, 'rightbar_play'); ?>
     </li>
-    <?php if (Access::check('interface', '25')) {
-    ?>
+    <?php if (Access::check('interface', '25')) { ?>
         <li id="pl_add">
-            <?php echo UI::get_icon('playlist_add', T_('Add to Playlist')); ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
             <ul id="pl_action_additems" class="submenu">
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to new playlist'), 'rb_create_playlist'); ?>
                 </li>
             <?php
-                $playlists = Playlist::get_users($GLOBALS['user']->id);
+                $playlists = Playlist::get_users(Core::get_global('user')->id);
     Playlist::build_cache($playlists);
     foreach ($playlists as $playlist_id) {
         $playlist = new Playlist($playlist_id);
@@ -47,32 +45,31 @@
         </li>
     <?php
 } ?>
-<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) {
-        ?>
+<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) { ?>
     <li>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo $GLOBALS['user']->playlist->id; ?>">
-            <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
+            <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
         </a>
     </li>
 <?php
     } ?>
     <li>
-    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
+    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear playlist'), 'rb_clear_playlist'); ?>
     </li>
     <li id="rb_add">
-      <?php echo UI::get_icon('add', T_('Add Dynamic Items')); ?>
+      <?php echo UI::get_icon('add', T_('Add dynamic items')); ?>
         <ul id="rb_action_additems" class="submenu">
             <li>
-                <?php echo Ajax::text('?page=random&action=song', T_('Random Song'), 'rb_add_random_song'); ?>
+                <?php echo Ajax::text('?page=random&action=song', T_('Random song'), 'rb_add_random_song'); ?>
             </li>
             <li>
-                <?php echo Ajax::text('?page=random&action=artist', T_('Random Artist'), 'rb_add_random_artist'); ?>
+                <?php echo Ajax::text('?page=random&action=artist', T_('Random artist'), 'rb_add_random_artist'); ?>
             </li>
             <li>
-                <?php echo Ajax::text('?page=random&action=album', T_('Random Album'), 'rb_add_random_album'); ?>
+                <?php echo Ajax::text('?page=random&action=album', T_('Random album'), 'rb_add_random_album'); ?>
             </li>
             <li>
-                <?php echo Ajax::text('?page=random&action=playlist', T_('Random Playlist'), 'rb_add_random_playlist'); ?>
+                <?php echo Ajax::text('?page=random&action=playlist', T_('Random playlist'), 'rb_add_random_playlist'); ?>
             </li>
         </ul>
     </li>
@@ -80,28 +77,24 @@
 <?php
     if (AmpConfig::get('play_type') == 'localplay') {
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_control.inc.php');
-    }
-?>
+    } ?>
 <ul id="rb_current_playlist">
 
 <?php
     $objects = array();
 
     //FIXME :: this is kludgy
-    if (!defined('NO_SONGS')) {
-        $objects = $GLOBALS['user']->playlist->get_items();
-    }
-?>
-    <script type="text/javascript">
-        <?php if (count($objects) || (AmpConfig::get('play_type') == 'localplay')) {
-    ?>
-            $("#content").removeClass("content-right-wild", 500);
-            $("#footer").removeClass("footer-wild", 500);
-            $("#rightbar").removeClass("hidden");
-            $("#rightbar").show("slow");
+    if (!defined('NO_SONGS') && Core::get_global('user')->playlist) {
+        $objects = Core::get_global('user')->playlist->get_items();
+    } ?>
+    <script>
+        <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) { ?>
+             $("#content").removeClass("content-right-wild", 500);
+             $("#footer").removeClass("footer-wild", 500);
+             $("#rightbar").removeClass("hidden");
+             $("#rightbar").show("slow");
         <?php
-} else {
-        ?>
+} else { ?>
             $("#content").addClass("content-right-wild", 500);
             $("#footer").addClass("footer-wild", 500);
             $("#rightbar").hide("slow");
@@ -129,13 +122,11 @@
         <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
 <?php
-    } if (!count($objects)) {
-        ?>
+    } if (!count($objects)) { ?>
     <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
 <?php
     } ?>
-<?php if (isset($truncated)) {
-        ?>
+<?php if (isset($truncated)) { ?>
     <li class="<?php echo UI::flip_class(); ?>">
         <?php echo $truncated . ' ' . T_('More'); ?>...
     </li>
@@ -148,5 +139,4 @@
 // to even pass
 if (count($objects)) {
     Stream::run_playlist_method();
-}
-?>
+} ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,10 +18,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Missing Artists'), 'info-box'); ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
@@ -30,8 +29,7 @@
     <tbody>
         <?php
         if ($wartists) {
-            foreach ($wartists as $libitem) {
-                ?>
+            foreach ($wartists as $libitem) { ?>
         <tr id="wartist_<?php echo $libitem['mbid']; ?>" class="<?php echo UI::flip_class(); ?>">
             <td class="cel_artist">
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=show_missing&amp;mbid=<?php echo $libitem['mbid']; ?>"><?php echo $libitem['name']; ?></a>
@@ -39,10 +37,8 @@
         </tr>
         <?php
             }
-        }
-        ?>
-        <?php if (!$wartists || !count($wartists)) {
-            ?>
+        } ?>
+        <?php if (!$wartists || !count($wartists)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
         </tr>

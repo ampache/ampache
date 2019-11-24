@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,10 +18,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Missing Albums'), 'info-box'); ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th class="cel_album"><?php echo T_('Album'); ?></th>
@@ -34,17 +33,14 @@
     <tbody>
         <?php
         if ($walbums) {
-            foreach ($walbums as $libitem) {
-                ?>
+            foreach ($walbums as $libitem) { ?>
         <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo UI::flip_class(); ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>
         <?php
             }
-        }
-        ?>
-        <?php if (!$walbums || !count($walbums)) {
-            ?>
+        } ?>
+        <?php if (!$walbums || !count($walbums)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing albums found'); ?></span></td>
         </tr>

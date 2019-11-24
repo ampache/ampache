@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,17 +22,17 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface', '100')) {
+if (!Access::check('interface', '75')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 UI::show_header();
 
-/* Switch on Action */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'export':
-
         // This may take a while
         set_time_limit(0);
 
@@ -42,7 +42,7 @@ switch ($_REQUEST['action']) {
         // This will disable buffering so contents are sent immediately to browser.
         // This is very useful for large catalogs because it will immediately display the download dialog to user,
         // instead of waiting until contents are generated, which could take a long time.
-        ob_implicit_flush(true);
+        ob_implicit_flush(1);
 
         header("Content-Transfer-Encoding: binary");
         header("Cache-control: public");
@@ -63,10 +63,12 @@ switch ($_REQUEST['action']) {
         } // end switch on format
 
         // We don't want the footer so we're done here
-        exit;
+        return false;
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_export.inc.php');
     break;
 } // end switch on action
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

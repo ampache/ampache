@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,8 @@ require_once 'lib/init.php';
 
 if (!AmpConfig::get('allow_upload') || !Access::check('interface', '25')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 $upload_max = return_bytes(ini_get('upload_max_filesize'));
@@ -33,21 +34,24 @@ if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
     $upload_max = $post_max;
 }
 // Check to handle POST requests exceeding max post size.
-if ($_SERVER['CONTENT_LENGTH'] > 0 && $post_max > 0 && $_SERVER['CONTENT_LENGTH'] > $post_max) {
+if (Core::get_server('CONTENT_LENGTH') > 0 && $post_max > 0 && Core::get_server('CONTENT_LENGTH') > $post_max) {
     Upload::rerror();
-    exit;
+
+    return false;
 }
 
-/* Switch on the action passed in */
+// Switch on the actions
 switch ($_REQUEST['actionp']) {
     case 'upload':
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         Upload::process();
-        exit;
+
+        return false;
 
     default:
         UI::show_header();
@@ -55,4 +59,6 @@ switch ($_REQUEST['actionp']) {
         break;
 } // switch on the action
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

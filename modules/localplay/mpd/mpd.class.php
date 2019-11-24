@@ -188,7 +188,7 @@ class mpd
         }
 
         $this->_debug('construct', 'constructor called', 5);
-        
+
         if (empty($this->host)) {
             $this->_error('construct', 'Host is empty');
 
@@ -297,7 +297,7 @@ class mpd
             $response_string = '';
 
             // Check the command compatibility:
-            if (! self::_checkCompatibility($command, $this->mpd_version)) {
+            if (!$this->_checkCompatibility($command, $this->mpd_version)) {
                 return false;
             }
 
@@ -472,11 +472,11 @@ class mpd
 
         // If we're not compatible with SETVOL, we'll try adjusting
         // using VOLUME
-        if (self::_checkCompatibility(self::COMMAND_SETVOL, $this->mpd_version)) {
+        if ($this->_checkCompatibility(self::COMMAND_SETVOL, $this->mpd_version)) {
             $command = self::COMMAND_SETVOL;
         } else {
             $this->RefreshInfo(); // Get the latest volume
-            if (is_null($this->status['volume'])) {
+            if ($this->status['volume'] === null) {
                 return false;
             } else {
                 $command = self::COMMAND_VOLUME;
@@ -517,8 +517,8 @@ class mpd
     {
         $this->_debug('PLAddBulk', 'start', 5);
         $num_files = count($trackArray);
-        for ($i = 0; $i < $num_files; $i++) {
-            $this->QueueCommand(self::COMMAND_ADD, $trackArray[$i]);
+        for ($count = 0; $count < $num_files; $count++) {
+            $this->QueueCommand(self::COMMAND_ADD, $trackArray[$count]);
         }
         $response = $this->SendCommandQueue();
         $this->_debug('PLAddBulk', "return: $response", 5);
@@ -938,7 +938,7 @@ class mpd
         $this->_debug('GetAlbums', 'start', 5);
 
         $params[] = self::TABLE_ALBUM;
-        if (!is_null($artist)) {
+        if ($artist === null) {
             $params[] = $artist;
         }
 
@@ -977,7 +977,7 @@ class mpd
      * Check MPD command compatibility against our internal table of
      * incompatibilities.
      */
-    private static function _checkCompatibility($cmd, $mpd_version)
+    private function _checkCompatibility($cmd, $mpd_version)
     {
         $mpd = self::_computeVersionValue($mpd_version);
 
@@ -1073,7 +1073,7 @@ class mpd
             echo "$source / $message\n";
         }
 
-        if (!is_null($this->_debug_callback)) {
+        if ($this->_debug_callback === null) {
             call_user_func($this->_debug_callback, 'MPD', "$source / $message", $level);
         }
     }

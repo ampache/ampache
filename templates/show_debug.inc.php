@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,13 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<?php UI::show_box_top(T_('Debug Tools'), 'box box_debug_tools'); ?>
+ */ ?>
+<?php UI::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo UI::get_icon('cog', T_('Generate Configuration')) . ' ' . T_('Generate Configuration'); ?></a>
+                <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo UI::get_icon('cog', T_('Generate Configuration File')) . ' ' . T_('Generate Configuration File'); ?></a>
             </li>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=write_config"><?php echo UI::get_icon('cog', T_('Write New Config')) . ' ' . T_('Write New Config'); ?></a>
@@ -47,17 +46,19 @@
     <?php UI::show_box_top(T_('Ampache Update'), 'box'); ?>
         <div><?php echo T_('Installed Ampache version'); ?>: <?php echo AutoUpdate::get_current_version(); ?>.</div>
         <div><?php echo T_('Latest Ampache version'); ?>: <?php echo AutoUpdate::get_latest_version(); ?>.</div>
-        <div><a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
+        <?php if ((string) AmpConfig::get('github_force_branch') !== '') {
+    ?><?php echo "<div>" . T_('GitHub Branch') . ': "' . (string) AmpConfig::get('github_force_branch') . '"</div>';
+} ?>
+        <div><a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
         <?php
         if (AutoUpdate::is_update_available()) {
             AutoUpdate::show_new_version();
-        }
-        ?>
+        } ?>
         <br />
     <?php UI::show_box_bottom(); ?>
 
     <?php UI::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
-        <table class="tabledata" cellpadding="0" cellspacing="0">
+        <table class="tabledata">
             <colgroup>
                 <col id="col_php_setting">
                 <col id="col_php_value">
@@ -86,7 +87,7 @@
                 <td><?php echo print_bool(ini_get('safe_mode')); ?></td>
             </tr>
             <tr class="<?php echo UI::flip_class(); ?>">
-                <td>Open Basedir</td>
+                <td><?php T_('Open Basedir'); ?></td>
                 <td><?php echo ini_get('open_basedir'); ?></td>
             </tr>
             <tr class="<?php echo UI::flip_class(); ?>">
@@ -110,7 +111,7 @@
     <?php UI::show_box_bottom(); ?>
 
     <?php UI::show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
-        <table class="tabledata" cellpadding="0" cellspacing="0">
+        <table class="tabledata">
             <colgroup>
                <col id="col_configuration">
                <col id="col_value">
@@ -129,25 +130,29 @@
             if (is_array($value)) {
                 $string = '';
                 foreach ($value as $setting) {
-                    $string .= $setting . '<br />';
+                    if (is_array($setting)) {
+                        foreach ($setting as $array_value) {
+                            $string .= $array_value . '<br />';
+                        }
+                    } else {
+                        $string .= $setting . '<br />';
+                    }
                 }
                 $value = $string;
             }
             if (Preference::is_boolean($key)) {
                 $value = print_bool($value);
             }
-    
+
             // Be sure to print only scalar values
-            if ($value === null || is_scalar($value)) {
-                ?>
+            if ($value === null || is_scalar($value)) { ?>
             <tr class="<?php echo UI::flip_class(); ?>">
-                <td valign="top"><strong><?php echo $key; ?></strong></td>
+                <td><strong><?php echo $key; ?></strong></td>
                 <td><?php echo $value; ?></td>
             </tr>
 <?php
             }
-        }
-?>
+        } ?>
             </tbody>
         </table>
     <?php UI::show_box_bottom(); ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,17 +24,15 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-// Switch on the incomming action
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;
         }
 
-        $label_id = scrub_in($_REQUEST['label_id']);
-        show_confirmation(
-            T_('Label Deletion'),
-            T_('Are you sure you want to permanently delete this label?'),
+        $label_id = (string) scrub_in($_REQUEST['label_id']);
+        show_confirmation(T_('Are You Sure?'), T_('This Label will be deleted'),
             AmpConfig::get('web_path') . "/labels.php?action=confirm_delete&label_id=" . $label_id,
             1,
             'delete_label'
@@ -47,34 +45,37 @@ switch ($_REQUEST['action']) {
 
         $label = new Label($_REQUEST['label_id']);
         if (!Catalog::can_remove($label)) {
-            debug_event('label', 'Unauthorized to remove the label `.' . $label->id . '`.', 1);
+            debug_event('labels', 'Unauthorized to remove the label `.' . $label->id . '`.', 1);
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if ($label->remove()) {
-            show_confirmation(T_('Label Deletion'), T_('Label has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('The Label has been deleted'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Label Deletion'), T_('Cannot delete this label.'), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Unable to delete this Label."), AmpConfig::get('web_path'));
         }
     break;
     case 'add_label':
         // Must be at least a content manager or edit upload enabled
         if (!Access::check('interface', '50') && !AmpConfig::get('upload_allow_edit')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if (!Core::form_verify('add_label', 'post')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         // Remove unauthorized defined values from here
-        if (isset($_POST['user'])) {
+        if (filter_has_var(INPUT_POST, 'user')) {
             unset($_POST['user']);
         }
-        if (isset($_POST['creation_date'])) {
+        if (filter_has_var(INPUT_POST, 'creation_date')) {
             unset($_POST['creation_date']);
         }
 
@@ -82,13 +83,11 @@ switch ($_REQUEST['action']) {
         if (!$label_id) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
-            $body  = T_('Label Added');
-            $title = '';
-            show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=label');
+            show_confirmation(T_('No Problem'), T_('The Label has been added'), AmpConfig::get('web_path') . '/browse.php?action=label');
         }
     break;
     case 'show':
-        $label_id = intval($_REQUEST['label']);
+        $label_id = (int) filter_input(INPUT_GET, 'label', FILTER_SANITIZE_NUMBER_INT);
         if (!$label_id) {
             if (!empty($_REQUEST['name'])) {
                 $label_id = Label::lookup($_REQUEST);
@@ -101,15 +100,19 @@ switch ($_REQUEST['action']) {
             $object_type = 'artist';
             require_once AmpConfig::get('prefix') . UI::find_template('show_label.inc.php');
             UI::show_footer();
-            exit;
+
+            return false;
         }
+        // intentional fall through
     case 'show_add_label':
         if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
-            echo T_('Label cannot be found.');
+            echo T_('The Label cannot be found');
         }
     break;
 } // end switch
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

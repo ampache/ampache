@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,16 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-?>
-<?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="channel">
+ ?>
+<?php if ($browse->is_show_header()) {
+     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+ } ?>
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="channel">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <th class="cel_id essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=id', T_('#'), 'channel_sort_id'); ?></th>
+            <th class="cel_id essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=id', '#', 'channel_sort_id'); ?></th>
             <th class="cel_name essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=name', T_('Name'), 'channel_sort_name'); ?></th>
             <th class="cel_interface essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=interface', T_('Interface'), 'channel_sort_interface'); ?></th>
             <th class="cel_port essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=port', T_('Port'), 'channel_sort_port'); ?></th>
@@ -39,7 +38,7 @@
             <th class="cel_bitrate optional"><?php echo T_('Bitrate'); ?></th>
             <th class="cel_startdate optional"><?php echo T_('Start Date'); ?></th>
             <th class="cel_listeners optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=channel&sort=listeners', T_('Listeners'), 'channel_sort_listeners'); ?></th>
-            <th class="cel_streamurl essential"><?php echo T_('Stream Url'); ?></th>
+            <th class="cel_streamurl essential"><?php echo T_('Stream URL'); ?></th>
             <th class="cel_state optional"><?php echo T_('State'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
@@ -54,8 +53,7 @@
         </tr>
         <?php
         } ?>
-        <?php if (!count($object_ids)) {
-            ?>
+        <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="13"><span class="nodata"><?php echo T_('No channel found'); ?></span></td>
         </tr>
@@ -63,7 +61,6 @@
         } ?>
     </tbody>
 </table>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
             require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
         } ?>

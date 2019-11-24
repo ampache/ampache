@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,63 +34,68 @@ $catclean = 0;
 $catverify = 0;
 $catadd = 0;
 $artadd = 0;
+$infoupdate = 0;
 $plimp = 0;
 $optimizetables = 0;
-$cattype = '';
-$catname = '';
-$options = getopt("hn:t:mvcagio");
+$cattype = false;
+$catname = false;
+$options = getopt("hn:t:mvcaguio");
 
-if (count($options) == 0) { 
-    $operations_string = "\n\t- ". T_('Doing all catalog operations');
+if (count($options) == 0) {
+    $operations_string = "\n\t- ". T_('Doing all Catalog operations');
 } else {
 
         if (array_key_exists('h', $options)) {
             usage();
-            exit;
+            return false;
         }
         if (array_key_exists('m', $options)) {
-            $operations_string .= "\n\t- " . T_('Temporary deactivate PHP memory limit');
+            $operations_string .= "\n\t- " . T_('Temporarily deactivating PHP memory limit');
             $tmpmemlimoff = 1;
         }
         if (array_key_exists('n', $options)) {
-            $operations_string .= "\n\t- " . T_('Setting catalog name');
+            $operations_string .= "\n\t- " . T_('Setting Catalog name');
             $catname = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
         }
         if (array_key_exists('t', $options)) {
-            $operations_string .= "\n\t- " . T_('Setting catalog type');
+            $operations_string .= "\n\t- " . T_('Setting Catalog type');
             $cattype = strtolower($options['t']);
         }
         if (array_key_exists('c', $options)) {
-            $operations_string .= "\n\t- " . T_('Cleaning catalog/s');
+            $operations_string .= "\n\t- " . T_('Cleaning Catalog/s');
             $catclean = 1;
-        } 
+        }
         if (array_key_exists('v', $options)) {
-            $operations_string .= "\n\t- " . T_('Verifying catalog/s');
+            $operations_string .= "\n\t- " . T_('Verifying Catalog/s');
             $catverify = 1;
-        } 
+        }
         if (array_key_exists('a', $options)) {
-            $operations_string .= "\n\t- " . T_('Adding new media to catalog/s');
+            $operations_string .= "\n\t- " . T_('Adding new media to Catalog/s');
             $catadd = 1;
         }
-        if (array_key_exists('g', $options)) { 
+        if (array_key_exists('g', $options)) {
             $operations_string .= "\n\t- " . T_('Gathering new media art');
             $artadd = 1;
-        } 
-        if (array_key_exists('i', $options)) { 
+        }
+        if (array_key_exists('u', $options)) {
+            $operations_string .= "\n\t- " . T_('Update artist information and fetch similar artists from last.fm');
+            $infoupdate = 1;
+        }
+        if (array_key_exists('i', $options)) {
             $operations_string .= "\n\t- " . T_('Importing playlist/s');
             $plimp = 1;
         }
-        if (array_key_exists('o', $options)) { 
+        if (array_key_exists('o', $options)) {
             $operations_string .= "\n\t- " . T_('Database table optimization');
             $optimizetables = 1;
         }
 }
-if (count($_SERVER['argv']) != 1 AND $artadd != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1) {
+if (count($_SERVER['argv']) != 1 && $artadd != 1 && $infoupdate != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $plimp != 1) {
     usage();
-    exit;
+    return false;
 }
 
-if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0) {    //didn't pass any clean/verify/add arguments
+if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0 && $plimp == 0 && $infoupdate != 1) {    //didn't pass any clean/verify/add arguments
     $catclean = 1;     //set them all to on
     $catverify = 1;
     $catadd = 1;
@@ -98,10 +103,10 @@ if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimi
     $optimizetables = 1;
 }
 echo "\n----------------------------------------------------------\n";
-echo T_("Starting catalog operations...") . $operations_string . "\n";
+echo T_("Starting Catalog operations...") . $operations_string . "\n";
 echo "----------------------------------------------------------\n\n";
 
-// -------- Options before the catalog actions loop
+// -------- Options before the Catalog actions loop
 if ($tmpmemlimoff == 1) {
     // Temporarily deactivate PHP memory limit
     echo "\033[31m- " . T_("Deactivated PHP memory limit") . " -\033[0m\n";
@@ -123,14 +128,18 @@ if ($plimp == 1) {
     $options['parse_playlist'] = false;
 }
 // --------
-if ($catname) $where = " name = '$catname' ";
-if ($cattype) { 
+if ($catname !== false) {
+    $where = " name = '$catname' ";
+}
+if ($cattype !== false) {
     $where .= "catalog_type='$cattype'";
 } elseif (!$where) {
     $where .= "catalog_type='local'";
 }
-$sql = "SELECT id FROM catalog";
-if ($where) $sql .= " WHERE $where";
+$sql = "SELECT `id` FROM `catalog`";
+if ($where) {
+    $sql .= " WHERE $where";
+}
 $db_results = Dba::read($sql);
 
 ob_start("ob_html_strip",'1024',true);
@@ -138,7 +147,8 @@ ob_start("ob_html_strip",'1024',true);
 while ($row = Dba::fetch_row($db_results)) {
 
     $catalog = Catalog::create_from_id($row['0']);
-    printf(T_('Reading catalog: %s'), $catalog->name);
+    /* HINT: Catalog Name */
+    printf(T_('Reading Catalog: "%s"'), $catalog->name);
     ob_flush();
     echo "\n";
 
@@ -151,9 +161,9 @@ while ($row = Dba::fetch_row($db_results)) {
     }
     if ($catverify == 1) {
         // Verify Existing
-        echo "- " . T_("Start verifying media related to catalog entries") . " - \n";
+        echo "- " . T_("Start verifying media related to Catalog entries") . " - \n";
         echo "\n";
-        $catalog->verify_catalog($row['0']);
+        $catalog->verify_catalog();
         echo "-------------------\n\n";
     }
     if ($catadd == 1) {
@@ -163,11 +173,18 @@ while ($row = Dba::fetch_row($db_results)) {
         $catalog->add_to_catalog($options);
         echo "----------------\n\n";
     }
-    elseif ($artadd == 1) { 
+    elseif ($artadd == 1) {
         // Look for media art
         echo "- " . T_('Start searching new media art') . " - \n";
         echo "\n";
         $catalog->gather_art();
+        echo "----------------\n\n";
+    }
+    if ($infoupdate == 1) {
+        // Look for updated artist information. (missing or < 6 months since last update)
+        echo "- " . T_('Update artist information and fetch similar artists from last.fm') . " - \n";
+        echo "\n";
+        $catalog->gather_artist_info();
         echo "----------------\n\n";
     }
 }
@@ -198,9 +215,9 @@ function ob_html_strip($string) {
 function usage() {
     echo "\n";
     echo "----------------------------------------------------------\n\t\t";
-    echo T_("- Catalog Update Help -");
+    echo T_("Usage:");
     echo "\n\033[32m";
-    echo T_("Usage: catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-i|-o]") . "\033[0m (\033[31m!\033[0m)";
+    echo T_("catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-u|-i|-o]") . "\033[0m (\033[31m!\033[0m)";
     echo "\033[0m\n";
     echo "----------------------------------------------------------";
     echo "\n";
@@ -210,31 +227,31 @@ function usage() {
     echo "\n-h\t";
     echo T_('This help message');
     echo "\n-n\t";
-    echo T_('Name of Catalog (Optional)');
+    echo T_('Name of Catalog (optional)');
     echo "\n-t\t";
-    echo T_('Type of Catalog (Optional)');
+    echo T_('Type of Catalog (optional)');
     echo "\n-m\t";
-    echo T_('Temporarily deactivates PHP memory limit.') . " (\033[31m1\033[0m)";
+    echo T_('Temporarily deactivates PHP memory limit') . " (\033[31m1\033[0m)";
     echo "\n-c\t";
-    echo T_('Cleans catalogs from orphaned entries.');
+    echo T_('Cleans Catalogs from orphaned entries');
     echo "\n-v\t";
-    echo T_('Verifies catalog entries and updates them if related files have new information.');
+    echo T_('Verifies Catalog entries and updates them if related files have new information');
     echo "\n-a\t";
-    echo T_('Adds new media to catalogs.');
+    echo T_('Adds new media to Catalogs');
     echo "\n-g\t";
-    echo T_('Gathers media Art.');
+    echo T_('Gathers media Art');
+    echo "\n-u\t";
+    echo T_('Update artist information and fetch similar artists from last.fm') . " " . T_('Make sure lastfm_api_key is set in your configuration file');
     echo "\n-i\t";
-    echo T_('Imports playlists.');
+    echo T_('Imports playlists');
     echo "\n-o\t";
-    echo T_('Optimizes Database Tables.') . " (\033[31m2\033[0m)";
+    echo T_('Optimizes database tables') . " (\033[31m2\033[0m)";
     echo "\n";
     echo "----------------------------------------------------------\033[31m\n";
     echo "1. " . T_('Use this option at your own risk! Your system could crash or become unresponsive due to huge memory consumption!') . "\n";
-    echo "2. " . T_('Depending on your systems performance, this option could need a long time to finish and extremely slow down other database processes if you have big catalogs!') . "\n";
-    echo "!  " . T_('The switches [-m|-i|-o] can only be used, if one of the other switches [-c|-v|-a|-g] is used.');
+    echo "2. " . T_("Depending on your system's performance, this option may need a long time to finish and could greatly slow down other database processes if you have large Catalogs!") . "\n";
+    echo "!  " . T_('The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-a|-g] is used');
     echo "\033[0m\n";
     echo "----------------------------------------------------------";
     echo "\n";
 }
-
-?>

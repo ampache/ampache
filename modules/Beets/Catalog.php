@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,7 @@
 
 namespace Beets;
 
+use Album;
 use AmpConfig;
 use UI;
 use Dba;
@@ -65,9 +66,9 @@ abstract class Catalog extends \Catalog
      * Catalog class constructor, pulls catalog information
      */
     public function __construct($catalog_id = null)
-    { // TODO: Basic constructer should be provided from parent
+    { // TODO: Basic constructor should be provided from parent
         if ($catalog_id) {
-            $this->id = intval($catalog_id);
+            $this->id = (int) ($catalog_id);
             $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
@@ -83,7 +84,7 @@ abstract class Catalog extends \Catalog
      */
     public function prepare_media($media)
     {
-        debug_event('play', 'Started remote stream - ' . $media->file, 5);
+        debug_event('beets_catalog', 'Play: Started remote stream - ' . $media->file, 5);
 
         return $media;
     }
@@ -122,11 +123,11 @@ abstract class Catalog extends \Catalog
         }
         set_time_limit(0);
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Beets Update') . '. . .');
+            UI::show_box_top(T_('Running Beets Update'));
         }
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
-        $parser->start($parser->getTimedCommand($this->listCommand, 'added', $this->last_add));
+        $parser->start($parser->getTimedCommand($this->listCommand, 'added', null));
         $this->updateUi('add', $this->addedSongs, null, true);
         $this->update_last_add();
 
@@ -146,6 +147,9 @@ abstract class Catalog extends \Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
+            $album_id = Album::check($song['album'],$song['year'],$song['disc'],$song['mbid'],
+                $song['mb_releasegroupid'],$song['album_artist'], null, null );
+            $song['album_id'] = $album_id;
             $songId = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
                 $songObj = new Song($songId);
@@ -153,6 +157,7 @@ abstract class Catalog extends \Catalog
                 $this->updateUi('add', ++$this->addedSongs, $song);
             }
         }
+
     }
 
     public function addMetadata(\library_item $libraryItem, $metadata)
@@ -197,7 +202,8 @@ abstract class Catalog extends \Catalog
             debug_event('beets_catalog', 'Adding song ' . $song['file'], 5, 'ampache-catalog');
         } else {
             debug_event('beets_catalog', 'Insert failed for ' . $song['file'], 1);
-            AmpError::add('general', T_('Unable to Insert Song - %s'), $song['file']);
+            /* HINT: filename (file path) */
+            AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
             AmpError::display('general');
         }
         flush();
@@ -211,7 +217,7 @@ abstract class Catalog extends \Catalog
      */
     public function verify_catalog_proc()
     {
-        debug_event('verify', 'Starting on ' . $this->name, 5);
+        debug_event('beets_catalog', 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
 
         /* @var $parser Handler */
@@ -231,6 +237,8 @@ abstract class Catalog extends \Catalog
     public function verifySong($beetsSong)
     {
         $song = new Song($this->getIdFromPath($beetsSong['file']));
+        $beetsSong['album_id'] = $song->album;
+
         if ($song->id) {
             $song->update($beetsSong);
             if (Song::isCustomMetadataEnabled()) {
@@ -254,10 +262,12 @@ abstract class Catalog extends \Catalog
         $parser->setHandler($this, 'removeFromDeleteList');
         $parser->start($this->listCommand);
         $count = count($this->songs);
-        $this->deleteSongs($this->songs);
+        if ($count > 0) {
+           $this->deleteSongs($this->songs);
+        }
         if (Song::isCustomMetadataEnabled()) {
-            \Lib\Metadata\Repository\Metadata::gc();
-            \Lib\Metadata\Repository\MetadataField::gc();
+            \Lib\Metadata\Repository\Metadata::garbage_collection();
+            \Lib\Metadata\Repository\MetadataField::garbage_collection();
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
@@ -363,7 +373,7 @@ abstract class Catalog extends \Catalog
     }
 
     /**
-     * Doesent seems like we need this...
+     * Doesn't seems like we need this...
      * @param string $file_path
      */
     public function get_rel_path($file_path)

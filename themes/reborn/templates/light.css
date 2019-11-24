@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@
 ***********************************************/
 
 body {
-    color: #666;
+    color: #000;
     background-color: #fff;
     height: 90%;
 }
@@ -42,7 +42,6 @@ a:hover {
 }
 
 hr {
-  border-top-color: #bbb;
   border-top-color: #eee;
 }
 
@@ -80,12 +79,20 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
 }
 
+.edit_dialog_content input[type=text] , .edit_dialog_content select {
+    color: #000;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-titlebar {
+    color: #000;
+}
+
 /***********************************************
            Main
 ***********************************************/
 #ajax-loading {
     color: #1990db;
-    background-image: url(../images/ajax-loader.gif);
+    background-image: url(../images/ajax-loader-light.gif);
 }
 
 /***********************************************
@@ -94,6 +101,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #header {
     background-color: #eee;
     border-bottom: 2px solid #d8d8d8;
+    -webkit-box-shadow: 0 18px 18px rgba(30,30,30,0.7);
+    -moz-box-shadow: 0 18px 18px rgba(30,30,30,0.7);
+    box-shadow: 0 18px 18px rgba(30,30,30,0.7);
 }
 
 #sb_Subsearch input[type=text] {
@@ -126,7 +136,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #headerlogo, #registerPage #headerlogo {
-    background-image: url('../images/ampache-reborn-blue.png');
+    background-image: url('../images/ampache-light.png');
+}
+
+#loginPage #loginbox {
+    color: #000;
+}
+
+#loginPage #loginbox div, #registerPage #registerbox div {
+    text-shadow: 0 1px 0 #eee;
+    color: #000;
 }
 
 #loginPage #loginbox #usernamefield input:focus,
@@ -136,8 +155,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     box-shadow: 0 0 10px #9ecaed;
 }
 
-.formValidation input {
+#loginPage #loginbox #remembermefield {
     color: #000;
+}
+
+.formValidation input {
+    color: #fff;
 }
 
 #loginPage span.error {
@@ -147,11 +170,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #footer {
-    color: #888;
+    color: #000;
 }
 
 #loginPage #footer a {
-    color: #555;
+    color: #000;
 }
 
 #loginPage #footer #donate {
@@ -162,15 +185,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Sidebar
 ***********************************************/
 #sidebar {
-    color: #666;
+    color: #000;
 }
 
 #sidebar-header {
-    background-color: #f8f8f8;
+    background-color: #F8F8F8;
     border-color: #d8d8d8;
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    color: #000;
 }
 
 #sidebar-header:hover {
@@ -187,7 +211,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 /* Tabs content */
 #sidebar-page {
-    background-color: #f8f8f8;
+    background-color: #F8F8F8;
     border-color: #d8d8d8;
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -204,11 +228,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-tabs .sb2 li ul li a {
-	color: #999;
+    color: #000;
 }
 
 #sidebar-tabs .sb2 li ul li a:hover {
-	color: #000;
+    color: #000;
 }
 
 #sidebar-tabs .sb2 #browse_filters #multi_alpha_filter {
@@ -224,16 +248,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
                   Rightbar
 ***********************************************/
 #rightbar {
-    background-color: #f8f8f8;
+    background-color: #F8F8F8;
     border-color: #d8d8d8;
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    color: #666;
+    color: #000;
 }
 
 #rightbar #rb_current_playlist li {
-    color: #666;
+    color: #000;
 }
 
 #rightbar #rb_current_playlist li a {
@@ -241,6 +265,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #rightbar #rb_current_playlist li a:hover, #rightbar #rb_current_playlist li a:focus {
+    color: #000;
     background-color: #bfe1f6;
     background-image: -moz-linear-gradient(top,#bfe1f6,#82caf8);
     background-image: -ms-linear-gradient(top,#bfe1f6,#82caf8);
@@ -272,20 +297,20 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Content
 ***********************************************/
 #content {
-    background-color: #f8f8f8;
+    background-color: #F8F8F8;
     border-color: #d8d8d8;
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    color: #666;
+    color: #000;
 }
 
 .list-header, .list-header a {
-    color: #999;
+    color: #000;
 }
 
 .list-header a:hover, .list-header a:focus {
-    color: #fff;
+    color: #52aae4;
 }
 
 span.page-nb {
@@ -293,15 +318,15 @@ span.page-nb {
  }
 
 table.tabledata {
-    color: #666;
+    color: #000;
 }
 
 table.tabledata a {
-    color: #666;
+    color: #000;
 }
 
 #catalog_type_fields table.tabledata a {
-	color: #1990db;
+    color: #1990db;
 }
 
 table.tabledata a:hover, table.tabledata a:focus {
@@ -324,7 +349,7 @@ table.tabledata tfoot .th-bottom {
 }
 
 table.tabledata th a {
-    color: #1990db;
+    color: #000;
 }
 
 table.tabledata tr:hover, table.tabledata tr:focus {
@@ -406,20 +431,6 @@ span.fatalerror {
     color: #fff;
 }
 
-.box-content #tag_filter .tag_button span {
-    background-color: #5f5f5f;
-    background-image: -moz-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: -ms-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#6d6d6d),to(#4a4a4a));
-    background-image: -webkit-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: -o-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: linear-gradient(top,#6d6d6d,#4a4a4a);
-    border-bottom-color: #b3b3b3;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
-}
-
 .box-content #tag_filter .tag_button span:hover {
     background-color: #c85a00;
     background-image: -moz-linear-gradient(top,#1473AF,#027ecc);
@@ -433,6 +444,10 @@ span.fatalerror {
 /***********************************************
     Content (information-actions)
 ***********************************************/
+.item_properties {
+    color: #999;
+}
+
 .item_art .item_art_play .item_art_play_icon {
     background-image: url('../images/videoplay.png');
 }
@@ -453,6 +468,10 @@ span.fatalerror {
 
 #information_actions ul li{
     color: #999;
+}
+
+#information_actions a:hover, #information_actions li:hover {
+    color: #000;/*#ffc466;*/
 }
 
 /************************************************/
@@ -489,7 +508,7 @@ dl.media_details dt {
 }
 
 #ampache_link {
-	color: #555;
+    color: #000;
 }
 
 /***********************************************
@@ -498,45 +517,45 @@ dl.media_details dt {
 div.jp-audio,
 div.jp-audio-stream,
 div.jp-video {
-	color: #999;
-	border: 1px solid #F8F8F8;
+    color: #000;
+    border: 1px solid #F8F8F8;
 }
 
 div.jp-video div.jp-interface {
-	border-top: 1px solid #F8F8F8;
+    border-top: 1px solid #F8F8F8;
 }
 
 div.jp-title,
 div.jp-playlist {
-	background-color: #CCC;
-	border-top: 1px solid #F8F8F8;
+    background-color: #D4D4D4;
+    border-top: 1px solid #F8F8F8;
 }
 
 .jp-no-solution {
-	background: #121112 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
-	border-top: 1px solid #F8F8F8;
+    background: #121112 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
+    border-top: 1px solid #F8F8F8;
 }
 
 #webplayer {
-	background-color: #F8F8F8 !important;
+    background-color: #F8F8F8 !important;
 }
 
 div.playing_title a {
-	color: #999;
+    color: #000;
 }
 
 div.playing_artist a {
-	color: #999;
+    color: #000;
 }
 
 div.jp-interface {
-	/*background: #F8F8F8 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;*/
+    /*background: #F8F8F8 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;*/
     background-color: #F8F8F8;
 }
 
 div.jp-playlist li {
-	border-bottom: 1px solid #BFBFBF;
-	/*background: #343433 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;*/
+    border-bottom: 1px solid #BFBFBF;
+    /*background: #343433 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;*/
 }
 
 /***********************************************
@@ -545,7 +564,11 @@ div.jp-playlist li {
 .jscroll-next {
     border-color: #ccc;
     background-color: #eee;
-    color: #999;
+    color: #000;
+}
+
+.followbtn {
+   background-color: #167FC2;
 }
 
 .missing_album {
@@ -565,15 +588,15 @@ div.jp-playlist li {
 }
 
 .list-header-navmenu-border {
-	border-color: #fff;
+    border-color: #fff;
 }
 
-span.item-count {
-	color: #999;
+span.item-count, span.query-count {
+    color: #000;
 }
 
 a.option-list:hover {
-	border-color: #fff;
+    border-color: #fff;
 }
 
 .editdialogstyle.ui-dialog {
@@ -589,5 +612,5 @@ a.option-list:hover {
 }
 
 #tabs li.tab_active a {
-	color: #000;
+    color: #000;
 }

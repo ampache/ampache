@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,11 +28,11 @@ require_once($prefix . '/lib/init.php');
 
 $valid_exts = array ('m3u', 'xspf', 'pls');
 
-if (!$GLOBALS['argv']['1'] || $GLOBALS['argv']['1'] == '-h') { usage(); }
+if (!Core::get_global('argv')[1] || Core::get_global('argv')[1] == '-h') { write_plist_usage(); }
 else {
-    $dirname    = $GLOBALS['argv']['1'];
-    $type       = $GLOBALS['argv']['2'];
-    $ext        = $GLOBALS['argv']['3'];
+    $dirname    = Core::get_global('argv')[1];
+    $type       = Core::get_global('argv')[2];
+    $ext        = Core::get_global('argv')[3];
     if (!$ext || !in_array($ext, $valid_exts)) {
         $ext = 'm3u';
     }
@@ -40,18 +40,19 @@ else {
 
 // Make sure the output dir is valid and writeable
 if (!is_writeable($dirname)) {
-    printf (T_('Error: Directory %s is not writable'), $dirname);
-    echo "\n"; 
+    /* HINT: Directory (File path) */
+    printf (T_("There was a problem creating this directory: %s"), $dirname);
+    echo "\n";
 }
 
-// Switch on the type of playlist dump we want to do 
+// Switch on the type of playlist dump we want to do
 // here
 switch ($type) {
     case 'albums':
         $ids = Catalog::get_albums();
         $items = array();
-        foreach ($ids as $id) {
-            $items[] = new Album($id);
+        foreach ($ids as $albumid) {
+            $items[] = new Album($albumid);
         }
     break;
     case 'artists':
@@ -60,8 +61,8 @@ switch ($type) {
     default:
         $ids = Playlist::get_playlists(false, -1);
         $items = array();
-        foreach ($ids as $id) {
-            $items[] = new Playlist($id);
+        foreach ($ids as $playlistid) {
+            $items[] = new Playlist($playlistid);
         }
     break;
 } // end type switch
@@ -80,22 +81,26 @@ foreach ($items as $item) {
     foreach ($medias as $media) {
         $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, 'file');
     }
-    
+
     $plstr = $pl->{'get_' . $ext . '_string'}();
     if (file_put_contents($filename, $plstr) === false) {
-        echo "Error: cannot write playlist file `" . $filename . "`.\n";
+        /* HINT: playlist (file path) */
+        sprintf(T_('There was a problem creating the playlist file "%s"'), $path);
+        echo "\n";
     } else {
-        echo "Playlist file `" . $filename . "` created.\n";
+        /* HINT: playlist (file path) */
+        sprintf(T_('Playlist created "%s"'), $path);
+        echo "\n";
     }
 }
 
 echo "Playlist export completed.\n";
 
 /* FUNCTIONS */
-function usage() {
+function write_plist_usage() {
     $desc1 = T_("This will dump a collection of playlists files based on type");
-    $desc2 = T_("Types:");
-    $desc3 = T_("Dumps all of your Playlists");
+    $desc2 = T_("Playlists");
+    $desc3 = T_("Dumps all of your playlists");
     $desc4 = T_("Dumps all Albums as individual playlists");
     $desc5 = T_("Dumps all Artists as individual playlists");
     $desc6 = T_("Extensions: m3u (default), xspf, pls");
@@ -109,6 +114,7 @@ function usage() {
             artists       $desc5
         $desc6\n\n";
 
-        exit($string); 
+        echo $string;
+
+        return;
 } // usage
-?>

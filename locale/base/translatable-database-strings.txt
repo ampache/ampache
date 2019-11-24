@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 13.08.2018 06:22:54 CEST 
+ # Last Update: 09.11.2019 23:26:14 CET 
 
  #######################################################################
 
@@ -28,18 +28,12 @@ msgid "Lock Songs"
 msgstr ""
 
 #: Database preference table id 24
-msgid "Forces Http play regardless of port"
+msgid "Force HTTP playback regardless of port"
 msgstr ""
 
 #: Database preference table id 29
-msgid "Type of Playback"
+msgid "Playback Type"
 msgstr ""
-
-#: Database preference table id 31
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Language"
-# msgstr ""
 
 #: Database preference table id 32
 msgid "Playlist Type"
@@ -85,18 +79,6 @@ msgstr ""
 msgid "Playlist Method"
 msgstr ""
 
-#: Database preference table id 55
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Transcoding"
-# msgstr ""
-
-#: Database preference table id 69
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "Show Lyrics"
-# msgstr ""
-
 #: Database preference table id 72
 msgid "Shoutcast Active Instance"
 msgstr ""
@@ -121,16 +103,12 @@ msgstr ""
 msgid "Last.FM Submit URL"
 msgstr ""
 
-#: Database preference table id 78
-msgid "Last.FM Submit Challenge"
-msgstr ""
-
 #: Database preference table id 82
-msgid "Now playing filtered per user"
+msgid "Now Playing filtered per user"
 msgstr ""
 
 #: Database preference table id 83
-msgid "Album Default Sort"
+msgid "Album - Default sort"
 msgstr ""
 
 #: Database preference table id 84
@@ -142,35 +120,31 @@ msgid "Show current song in Web player page title"
 msgstr ""
 
 #: Database preference table id 86
-msgid "Use SubSonic backend"
-msgstr ""
-
-#: Database preference table id 87
-msgid "Use Plex backend"
+msgid "Use Subsonic backend"
 msgstr ""
 
 #: Database preference table id 88
-msgid "Authorize Flash Web Player(s)"
+msgid "Authorize Flash Web Player"
 msgstr ""
 
 #: Database preference table id 89
-msgid "Authorize HTML5 Web Player(s)"
+msgid "Authorize HTML5 Web Player"
 msgstr ""
 
 #: Database preference table id 90
-msgid "Personal information visibility - Now playing"
+msgid "Share Now Playing information"
 msgstr ""
 
 #: Database preference table id 91
-msgid "Personal information visibility - Recently played"
+msgid "Share Recently Played information"
 msgstr ""
 
 #: Database preference table id 92
-msgid "Personal information visibility - Recently played - Allow to show streaming date/time"
+msgid "Share Recently Played information - Allow access to streaming date/time"
 msgstr ""
 
 #: Database preference table id 93
-msgid "Personal information visibility - Recently played - Allow to show streaming agent"
+msgid "Share Recently Played information - Allow access to streaming agent"
 msgstr ""
 
 #: Database preference table id 94
@@ -198,11 +172,11 @@ msgid "Confirmation when closing current playing window"
 msgstr ""
 
 #: Database preference table id 100
-msgid "Auto-pause betweens tabs"
+msgid "Auto-pause between tabs"
 msgstr ""
 
 #: Database preference table id 101
-msgid "Enable url rewriting"
+msgid "Enable URL Rewriting"
 msgstr ""
 
 #: Database preference table id 102
@@ -238,7 +212,7 @@ msgid "Top menu"
 msgstr ""
 
 #: Database preference table id 110
-msgid "Clear democratic votes of expired user sessions"
+msgid "Democratic - Clear votes for expired user sessions"
 msgstr ""
 
 #: Database preference table id 111
@@ -246,27 +220,23 @@ msgid "Show donate button in footer"
 msgstr ""
 
 #: Database preference table id 112
-msgid "Uploads catalog destination"
+msgid "Destination catalog"
 msgstr ""
 
 #: Database preference table id 113
-msgid "Allow users to upload media"
+msgid "Allow user uploads"
 msgstr ""
 
 #: Database preference table id 114
-msgid "Upload: create a subdirectory per user (recommended)"
-msgstr ""
-
-#: Database preference table id 115
-msgid "Upload: consider the user sender as the track's artist"
+msgid "Create a subdirectory per user"
 msgstr ""
 
 #: Database preference table id 116
-msgid "Upload: run the following script after upload (current directory = upload target directory)"
+msgid "Post-upload script (current directory = upload target directory)"
 msgstr ""
 
 #: Database preference table id 117
-msgid "Upload: allow users to edit uploaded songs"
+msgid "Allow users to edit uploaded songs"
 msgstr ""
 
 #: Database preference table id 118
@@ -282,7 +252,7 @@ msgid "Use UPnP backend"
 msgstr ""
 
 #: Database preference table id 121
-msgid "Allow video features"
+msgid "Allow Video Features"
 msgstr ""
 
 #: Database preference table id 122
@@ -298,23 +268,23 @@ msgid "Limit direct play to maximum media count"
 msgstr ""
 
 #: Database preference table id 125
-msgid "Show Albums of the moment at home page"
+msgid "Show Albums of the Moment"
 msgstr ""
 
 #: Database preference table id 126
-msgid "Show Videos of the moment at home page"
+msgid "Show Videos of the Moment"
 msgstr ""
 
 #: Database preference table id 127
-msgid "Show Recently Played at home page"
+msgid "Show Recently Played"
 msgstr ""
 
 #: Database preference table id 128
-msgid "Show Now Playing at home page"
+msgid "Show Now Playing"
 msgstr ""
 
 #: Database preference table id 129
-msgid "Custom logo url"
+msgid "Custom URL - Logo"
 msgstr ""
 
 #: Database preference table id 130
@@ -322,31 +292,31 @@ msgid "Album - Group per release type Sort"
 msgstr ""
 
 #: Database preference table id 131
-msgid "WebPlayer browser notifications"
+msgid "Web Player browser notifications"
 msgstr ""
 
 #: Database preference table id 132
-msgid "WebPlayer browser notifications timeout (seconds)"
+msgid "Web Player browser notifications timeout (seconds)"
 msgstr ""
 
 #: Database preference table id 133
-msgid "Allow geolocation"
+msgid "Allow Geolocation"
 msgstr ""
 
 #: Database preference table id 134
-msgid "Authorize JavaScript decoder (Aurora.js) in Web Player(s)"
+msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
 msgstr ""
 
 #: Database preference table id 139
-msgid "Upload: allow users to remove uploaded songs"
+msgid "Allow users to remove uploaded songs"
 msgstr ""
 
 #: Database preference table id 140
-msgid "Custom login page logo url"
+msgid "Custom URL - Login page logo"
 msgstr ""
 
 #: Database preference table id 141
-msgid "Custom favicon url"
+msgid "Custom URL - Favicon"
 msgstr ""
 
 #: Database preference table id 142
@@ -358,7 +328,7 @@ msgid "Use WebDAV backend"
 msgstr ""
 
 #: Database preference table id 144
-msgid "Receive notifications by email (shouts, private messages, ...)"
+msgid "Allow E-mail notifications"
 msgstr ""
 
 #: Database preference table id 145
@@ -366,19 +336,19 @@ msgid "Theme color"
 msgstr ""
 
 #: Database preference table id 146
-msgid "Disable custom metadata fields (ctrl / shift click to select multiple)"
+msgid "Custom metadata - Disable these fields"
 msgstr ""
 
 #: Database preference table id 147
-msgid "Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above."
+msgid "Custom metadata - Define field list"
 msgstr ""
 
 #: Database preference table id 148
-msgid "Podcast: # latest episodes to keep"
+msgid "# latest episodes to keep"
 msgstr ""
 
 #: Database preference table id 149
-msgid "Podcast: # episodes to download when new episodes are available"
+msgid "# episodes to download when new episodes are available"
 msgstr ""
 
 #: Database preference table id 150
@@ -413,88 +383,86 @@ msgstr ""
 msgid "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr ""
 
-#: Database preference table id 164
-msgid "Amazon base url"
+#: Database preference subcategory table id 1
+msgid "feature"
 msgstr ""
 
-#: Database preference table id 165
-msgid "Amazon max results pages"
+#: Database preference subcategory table id 4
+msgid "query"
 msgstr ""
 
-#: Database preference table id 166
-msgid "Amazon Access Key ID"
+#: Database preference subcategory table id 19
+msgid "transcoding"
 msgstr ""
 
-#: Database preference table id 167
-msgid "Amazon Secret Access Key"
-msgstr ""
-
-#: Database preference table id 168
-msgid "Amazon associate tag"
-msgstr ""
-
-#: Database preference table id 150
-msgid "library"
-msgstr ""
-
-#: Database preference table id 151
-msgid "upload"
-msgstr ""
-
-#: Database preference table id 152
-msgid "catalog"
-msgstr ""
-
-#: Database preference table id 153
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "library"
-# msgstr ""
-
-#: Database preference table id 154
-msgid "theme"
-msgstr ""
-
-#: Database preference table id 155
+#: Database preference subcategory table id 22
 msgid "custom"
 msgstr ""
 
-#: Database preference table id 156
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "custom"
-# msgstr ""
-
-#: Database preference table id 157
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "library"
-# msgstr ""
-
-#: Database preference table id 164
-msgid "amazon"
+#: Database preference subcategory table id 33
+msgid "theme"
 msgstr ""
 
-#: Database preference table id 165
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "amazon"
-# msgstr ""
+#: Database preference subcategory table id 40
+msgid "localplay"
+msgstr ""
 
-#: Database preference table id 166
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "amazon"
-# msgstr ""
+#: Database preference subcategory table id 69
+msgid "player"
+msgstr ""
 
-#: Database preference table id 167
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "amazon"
-# msgstr ""
+#: Database preference subcategory table id 72
+msgid "shoutcast"
+msgstr ""
 
-#: Database preference table id 168
-# is already in the source code
-# but to avoid confusion, it's added and commented
-# msgid "amazon"
-# msgstr ""
+#: Database preference subcategory table id 78
+msgid "lastfm"
+msgstr ""
+
+#: Database preference subcategory table id 82
+msgid "home"
+msgstr ""
+
+#: Database preference subcategory table id 83
+msgid "library"
+msgstr ""
+
+#: Database preference subcategory table id 86
+msgid "backend"
+msgstr ""
+
+#: Database preference subcategory table id 90
+msgid "privacy"
+msgstr ""
+
+#: Database preference subcategory table id 95
+msgid "update"
+msgstr ""
+
+#: Database preference subcategory table id 103
+msgid "share"
+msgstr ""
+
+#: Database preference subcategory table id 112
+msgid "upload"
+msgstr ""
+
+#: Database preference subcategory table id 131
+msgid "notification"
+msgstr ""
+
+#: Database preference subcategory table id 146
+msgid "metadata"
+msgstr ""
+
+#: Database preference subcategory table id 148
+msgid "podcast"
+msgstr ""
+
+#: Database preference subcategory table id 152
+msgid "catalog"
+msgstr ""
+
+#: Database preference subcategory table id 164
+msgid "amazon"
+msgstr ""

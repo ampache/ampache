@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,6 +38,10 @@ class WebDAV_Catalog extends DAV\Collection
         $this->catalog_id = $catalog_id;
     }
 
+    /**
+     * getChildren
+     * @return array
+     */
     public function getChildren()
     {
         $children = array();
@@ -54,11 +58,15 @@ class WebDAV_Catalog extends DAV\Collection
         return $children;
     }
 
+    /**
+     * getChild
+     * @return \WebDAV_File|\WebDAV_Directory
+     */
     public function getChild($name)
     {
-        debug_event('webdav', 'Catalog getChild for `' . $name . '`', 5);
+        debug_event('webdav_catalog.class', 'Catalog getChild for `' . $name . '`', 5);
         $matches = Catalog::search_childrens($name, $this->catalog_id);
-        debug_event('webdav', 'Found ' . count($matches) . ' childs.', 5);
+        debug_event('webdav_catalog.class', 'Found ' . count($matches) . ' childs.', 5);
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
         if (count($matches) > 0) {
@@ -68,6 +76,10 @@ class WebDAV_Catalog extends DAV\Collection
         throw new DAV\Exception\NotFound('The artist with name: ' . $name . ' could not be found');
     }
 
+    /**
+     * childExists
+     * @return boolean
+     */
     public function childExists($name)
     {
         $matches = Catalog::search_childrens($name, $this->catalog_id);
@@ -75,6 +87,10 @@ class WebDAV_Catalog extends DAV\Collection
         return (count($matches) > 0);
     }
 
+    /**
+     * getName
+     * @return string
+     */
     public function getName()
     {
         if ($this->catalog_id > 0) {

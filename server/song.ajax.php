@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,14 +24,16 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'flip_state':
         if (!Access::check('interface', '75')) {
-            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to change the state of a song', '1');
-            exit;
+            debug_event('song.ajax', Core::get_global('user')->username . ' attempted to change the state of a song', 1);
+
+            return false;
         }
 
         $song        = new Song($_REQUEST['song_id']);
@@ -42,23 +44,29 @@ switch ($_REQUEST['action']) {
 
         //Return the new Ajax::button
         $id           = 'button_flip_state_' . $song->id;
-        $button       = $song->enabled ? 'disable' : 'enable';
-        $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $button, T_(ucfirst($button)), 'flip_state_' . $song->id);
+        if ($catalog->enabled) {
+            $button     = 'disable';
+            $buttontext = T_('Disable');
+        } else {
+            $button     = 'enable';
+            $buttontext = T_('Enable');
+        }
+        $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $button, $buttontext, 'flip_state_' . $song->id);
     break;
     case 'shouts':
         ob_start();
-        $type = $_REQUEST['object_type'];
-        $id   = $_REQUEST['object_id'];
+        $type   = Core::get_request('object_type');
+        $songid = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
         if ($type == "song") {
-            $media  = new Song($id);
-            $shouts = Shoutbox::get_shouts($type, $id);
-            echo "<script type='text/javascript'>\r\n";
+            $media  = new Song($songid);
+            $shouts = Shoutbox::get_shouts($type, $songid);
+            echo "<script>\r\n";
             echo "shouts = {};\r\n";
-            foreach ($shouts as $id) {
-                $shout = new Shoutbox($id);
+            foreach ($shouts as $shoutsid) {
+                $shout = new Shoutbox($shoutsid);
                 $shout->format();
-                $key = intval($shout->data);
+                $key = (int) ($shout->data);
                 echo "if (shouts['" . $key . "'] == undefined) { shouts['" . $key . "'] = new Array(); }\r\n";
                 echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";
                 echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($shout->data / $media->time) * 400) - 1) . "px;\' />');\r\n";

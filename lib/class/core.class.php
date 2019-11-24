@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,17 +55,18 @@ class Core
         }
 
         foreach ($possiblePaths as $path) {
-            if (is_file($path) && Core::is_readable($path)) {
+            if (is_file($path) && self::is_readable($path)) {
                 require_once($path);
                 self::executeAutoCall($class);
             } else {
-                debug_event('autoload', "'$class' not found!", 1);
+                debug_event('core.class', "'$class' not found!", 1);
             }
         }
     }
 
     /**
-     * Execute _auto_init if availlable
+     * executeAutoCall
+     * Execute _auto_init if available
      * @param string $class
      */
     private static function executeAutoCall($class)
@@ -74,6 +75,134 @@ class Core
         if (is_callable($autocall)) {
             call_user_func($autocall);
         }
+    }
+
+    /**
+     * get_global
+     * Return a $GLOBAL variable instead of calling directly
+     *
+     * @param string $variable
+     */
+    public static function get_global($variable)
+    {
+        return $GLOBALS[$variable];
+    }
+
+    /**
+     * get_request
+     * Return a $REQUEST variable instead of calling directly
+     *
+     * @param string $variable
+     * @return string
+     */
+    public static function get_request($variable)
+    {
+        if (filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== null) {
+            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if (filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== null) {
+            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if (isset($_REQUEST[$variable])) {
+            return filter_var($_REQUEST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if ($_REQUEST[$variable] === null) {
+            return '';
+        }
+
+        return $_REQUEST[$variable];
+    }
+
+    /**
+     * get_get
+     * Return a $GET variable instead of calling directly
+     *
+     * @param string $variable
+     * @return string
+     */
+    public static function get_get($variable)
+    {
+        if (filter_has_var(INPUT_GET, $variable)) {
+            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if (isset($_GET[$variable])) {
+            return filter_var($_GET[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if ($_GET[$variable] === null) {
+            return '';
+        }
+
+        return $_GET[$variable];
+    }
+
+    /**
+     * get_cookie
+     * Return a $COOKIE variable instead of calling directly
+     *
+     * @param string $variable
+     * @return string
+     */
+    public static function get_cookie($variable)
+    {
+        if (filter_has_var(INPUT_COOKIE, $variable)) {
+            return filter_input(INPUT_COOKIE, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if (isset($_COOKIE[$variable])) {
+            return filter_var($_COOKIE[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if ($_COOKIE[$variable] === null) {
+            return '';
+        }
+
+        return $_COOKIE[$variable];
+    }
+
+    /**
+     * get_server
+     * Return a $SERVER variable instead of calling directly
+     *
+     * @param string $variable
+     * @return string
+     */
+    public static function get_server($variable)
+    {
+        if (filter_has_var(INPUT_SERVER, $variable)) {
+            return filter_input(INPUT_SERVER, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        // INPUT_SERVER can sometimes fail
+        if (filter_has_var(INPUT_ENV, $variable)) {
+            return filter_input(INPUT_ENV, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if (isset($_SERVER[$variable])) {
+            return filter_var($_SERVER[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if ($_SERVER[$variable] === null) {
+            return '';
+        }
+
+        return $_SERVER[$variable];
+    }
+
+    /**
+     * get_post
+     * Return a $POST variable instead of calling directly
+     *
+     * @param string $variable
+     * @return string
+     */
+    public static function get_post($variable)
+    {
+        if (filter_has_var(INPUT_POST, $variable)) {
+            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if (isset($_POST[$variable])) {
+            return filter_var($_POST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if ($_POST[$variable] === null) {
+            return '';
+        }
+
+        return $_POST[$variable];
     }
 
     /**
@@ -93,7 +222,7 @@ class Core
     /**
      * Get possible filepaths of namespaced classes
      * @param string $class
-     * @return string
+     * @return string[]
      */
     private static function getNamespacedPaths($class)
     {
@@ -111,7 +240,7 @@ class Core
     /**
      * Get possible filepaths of non namespaced classes
      * @param string $class
-     * @return string
+     * @return string[]
      */
     private static function getNonNamespacedPaths($class)
     {
@@ -136,7 +265,11 @@ class Core
 
         // Register it
         $_SESSION['forms'][$sid] = array('name' => $name, 'expire' => $expire);
-        debug_event('Core', "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
+        if (!isset($_SESSION['forms'][$sid])) {
+            debug_event('core.class', "Form $sid not found in session, failed to register!", 2);
+        } else {
+            debug_event('core.class', "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
+        }
 
         switch ($type) {
             case 'get':
@@ -178,7 +311,7 @@ class Core
         }
 
         if (!isset($_SESSION['forms'][$sid])) {
-            debug_event('Core', "Form $sid not found in session, rejecting request", 2);
+            debug_event('core.class', "Form $sid not found in session, rejecting request", 2);
 
             return false;
         }
@@ -187,9 +320,9 @@ class Core
         unset($_SESSION['forms'][$sid]);
 
         if ($form['name'] == $name) {
-            debug_event('Core', "Verified SID $sid for $type form $name", 5);
+            debug_event('core.class', "Verified SID $sid for $type form $name", 5);
             if ($form['expire'] < time()) {
-                debug_event('Core', "Form $sid is expired, rejecting request", 2);
+                debug_event('core.class', "Form $sid is expired, rejecting request", 2);
 
                 return false;
             }
@@ -198,7 +331,7 @@ class Core
         }
 
         // OMG HAX0RZ
-        debug_event('Core', "$type form $sid failed consistency check, rejecting request", 2);
+        debug_event('core.class', "$type form $sid failed consistency check, rejecting request", 2);
 
         return false;
     } // form_verify
@@ -209,16 +342,14 @@ class Core
      * This generates a cryptographically secure token.
      * Returns a token of the required bytes length, as a string. Returns false
      * if it could not generate a cryptographically secure token.
+     * @param integer $length
      */
     public static function gen_secure_token($length)
     {
         $buffer = '';
         if (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
-        } elseif (function_exists('mcrypt_create_iv')) {
-            $buffer = mcrypt_create_iv($length, MCRYPT_DEV_RANDOM);
-        } elseif (phpversion() > "5.6.12" && function_exists('openssl_random_pseudo_bytes')) {
-            // PHP version check for https://bugs.php.net/bug.php?id=70014
+        } elseif (function_exists('openssl_random_pseudo_bytes')) {
             $buffer = openssl_random_pseudo_bytes($length);
         } elseif (file_exists('/dev/random') && is_readable('/dev/random')) {
             $buffer = file_get_contents('/dev/random', false, null, -1, $length);
@@ -231,36 +362,39 @@ class Core
 
     /**
      * image_dimensions
-    * This returns the dimensions of the passed song of the passed type
-    * returns an empty array if PHP-GD is not currently installed, returns
-    * false on error
-    */
+     * This returns the dimensions of the passed song of the passed type
+     * returns an empty array if PHP-GD is not currently installed, returns
+     * false on error
+     *
+     * @param string $image_data
+     * @return array|boolean
+     */
     public static function image_dimensions($image_data)
     {
         if (!function_exists('ImageCreateFromString')) {
-            return false;
+            return array('width' => 0, 'height' => 0);
         }
 
         if (empty($image_data)) {
-            debug_event('Core', "Cannot create image from empty data", 2);
+            debug_event('core.class', "Cannot create image from empty data", 2);
 
-            return false;
+            return array('width' => 0, 'height' => 0);
         }
 
         $image = ImageCreateFromString($image_data);
 
-        if (!$image) {
-            return false;
+        if ($image == false) {
+            return array('width' => 0, 'height' => 0);
         }
 
         $width  = imagesx($image);
         $height = imagesy($image);
 
         if (!$width || !$height) {
-            return false;
+            return array('width' => 0, 'height' => 0);
         }
 
-        return array('width' => $width,'height' => $height);
+        return array('width' => $width, 'height' => $height);
     } // image_dimensions
 
     /*
@@ -268,6 +402,8 @@ class Core
      *
      * Replacement function because PHP's is_readable is buggy:
      * https://bugs.php.net/bug.php?id=49620
+     *
+     * @param string|false $path
      */
     public static function is_readable($path)
     {
@@ -298,18 +434,18 @@ class Core
     {
         $size = filesize($filename);
         if ($size === false) {
-            $fp = fopen($filename, 'rb');
-            if (!$fp) {
+            $filepointer = fopen($filename, 'rb');
+            if (!$filepointer) {
                 return false;
             }
             $offset = PHP_INT_MAX - 1;
             $size   = (float) $offset;
-            if (!fseek($fp, $offset)) {
+            if (!fseek($filepointer, $offset)) {
                 return false;
             }
             $chunksize = 8192;
-            while (!feof($fp)) {
-                $size += strlen(fread($fp, $chunksize));
+            while (!feof($filepointer)) {
+                $size += strlen(fread($filepointer, $chunksize));
             }
         } elseif ($size < 0) {
             // Handle overflowed integer...
@@ -356,6 +492,11 @@ class Core
         return false;
     }
 
+    /**
+     * is_class_typeof
+     *
+     * @param string $typeofname
+     */
     private static function is_class_typeof($classname, $typeofname)
     {
         if (class_exists($classname)) {
@@ -387,7 +528,7 @@ class Core
 
     public static function requests_options($options = null)
     {
-        if ($options == null) {
+        if ($options === null) {
             $options = array();
         }
 
@@ -406,28 +547,31 @@ class Core
 
         return $options;
     }
-    
+
+    /**
+     * get_tmp_dir
+     *
+     * @return string
+     */
     public static function get_tmp_dir()
     {
         $tmp_dir = AmpConfig::get('tmp_dir_path');
-        if (empty($store_path)) {
-            if (function_exists('sys_get_temp_dir')) {
-                $tmp_dir = sys_get_temp_dir();
+        if (function_exists('sys_get_temp_dir')) {
+            $tmp_dir = sys_get_temp_dir();
+        } else {
+            if (strpos(PHP_OS, 'WIN') === 0) {
+                $tmp_dir = $_ENV['TMP'];
+                if (!isset($tmp_dir)) {
+                    $tmp_dir = 'C:\Windows\Temp';
+                }
             } else {
-                if (strpos(PHP_OS, 'WIN') === 0) {
-                    $tmp_dir = $_ENV['TMP'];
-                    if (!isset($tmp_dir)) {
-                        $tmp_dir = 'C:\Windows\Temp';
-                    }
-                } else {
-                    $tmp_dir = @$_ENV['TMPDIR'];
-                    if (!isset($tmp_dir)) {
-                        $tmp_dir = '/tmp';
-                    }
+                $tmp_dir = @$_ENV['TMPDIR'];
+                if (!isset($tmp_dir)) {
+                    $tmp_dir = '/tmp';
                 }
             }
         }
-        
+
         return $tmp_dir;
     }
 } // Core

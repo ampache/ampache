@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,11 +24,10 @@
  * This page has a few tabs, as such we need to figure out which tab we are on
  * and display the information accordingly
  */
-
-?>
-<?php /* HINT: Editing Username preferences */ UI::show_box_top(sprintf(T_('Editing %s preferences'), $client->fullname), 'box box_preferences'); ?>
+ ?>
+<?php /* HINT: Username FullName */ UI::show_box_top(sprintf(T_('Editing %s Preferences'), $client->fullname), 'box box_preferences'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
-<table class="tabledata" cellspacing="0">
+<table class="tabledata">
 <colgroup>
     <col id="col_preference" />
     <col id="col_value" />
@@ -37,8 +36,7 @@
     <th class="col_preference"><?php echo T_('Preference'); ?></th>
     <th class="col_value"><?php echo T_('Value'); ?></th>
 </tr>
-<?php foreach ($preferences as $pref) {
-    ?>
+<?php foreach ($preferences as $pref) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
                 <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
                 <td class="cel_value">
@@ -52,7 +50,7 @@
     <div class="formValidation">
     <input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
     <?php echo Core::form_register('update_preference'); ?>
-    <input type="hidden" name="user_id" value="<?php echo scrub_out($_REQUEST['user_id']); ?>" />
+    <input type="hidden" name="user_id" value="<?php echo scrub_out(Core::get_request('user_id')); ?>" />
     </div>
     </td>
     <td>&nbsp;</td>

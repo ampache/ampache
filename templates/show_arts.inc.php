@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,32 +23,28 @@
 // Gotta do some math here!
 $total_images = count($images);
 $rows         = floor($total_images / 4);
-$i            = 0;
-?>
+$count        = 0; ?>
 <?php UI::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>
 <?php
-while ($i <= $rows) {
+while ($count <= $rows) {
     $j=0;
     while ($j < 4) {
-        $key        = $i * 4 + $j;
+        $key        = $count * 4 + $j;
         $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . mt_rand();
         $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
         if (!isset($images[$key]) || !Art::check_dimensions($dimensions)) {
             echo "<td>&nbsp;</td>\n";
-        } else {
-            ?>
-            <td align="center">
-                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" border="0" height="175" width="175" /></a>
+        } else { ?>
+            <td>
+                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="175" width="175" /></a>
                 <br />
-                <p align="center">
-                <?php if (is_array($dimensions)) {
-                ?>
-                [<?php echo intval($dimensions['width']); ?>x<?php echo intval($dimensions['height']); ?>]
+                <p>
+                <?php if (is_array($dimensions)) { ?>
+                [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
                 <?php
-            } else {
-                ?>
+            } else { ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>
                 <?php
             } ?>
@@ -59,13 +55,12 @@ while ($i <= $rows) {
         } // end else
         $j++;
     } // end while cells
-    if ($i < $rows) {
+    if ($count < $rows) {
         echo "</tr>\n<tr>";
     } else {
         echo "</tr>";
     }
-    $i++;
-} // end while
-?>
+    $count++;
+} // end while?>
 </table>
 <?php UI::show_box_bottom(); ?>

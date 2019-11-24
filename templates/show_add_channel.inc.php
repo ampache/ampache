@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,13 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Create Channel'), 'box box_add_channel'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=create">
-<input type="hidden" name="type" value="<?php echo scrub_out($_REQUEST['type']); ?>" />
-<input type="hidden" name="id" value="<?php echo scrub_out($_REQUEST['id']); ?>" />
-<table class="tabledata" cellspacing="0" cellpadding="0">
+<input type="hidden" name="type" value="<?php echo scrub_out(Core::get_request('type')); ?>" />
+<input type="hidden" name="id" value="<?php echo scrub_out(Core::get_request('id')); ?>" />
+<table class="tabledata">
 <tr>
     <td><?php echo T_('Stream Source'); ?></td>
     <td>
@@ -81,7 +80,7 @@
 <tr>
     <td><?php echo T_('Loop'); ?></td>
     <td>
-        <input type="checkbox" name="loop" value="1" <?php echo ($_REQUEST['loop'] || $_SERVER['REQUEST_METHOD'] === 'GET') ? 'checked' : ''; ?> />
+        <input type="checkbox" name="loop" value="1" <?php echo ($_REQUEST['loop'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> />
     </td>
 </tr>
 <tr>

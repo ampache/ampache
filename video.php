@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,16 +24,15 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;
         }
 
-        $video_id = scrub_in($_REQUEST['video_id']);
-        show_confirmation(
-            T_('Video Deletion'),
-            T_('Are you sure you want to permanently delete this video?'),
+        $video_id = scrub_in(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
+        show_confirmation(T_('Are You Sure?'), T_("The Video will be deleted"),
             AmpConfig::get('web_path') . "/video.php?action=confirm_delete&video_id=" . $video_id,
             1,
             'delete_video'
@@ -44,25 +43,28 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $video = Video::create_from_id($_REQUEST['video_id']);
+        $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!Catalog::can_remove($video)) {
             debug_event('video', 'Unauthorized to remove the video `.' . $video->id . '`.', 1);
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if ($video->remove_from_disk()) {
-            show_confirmation(T_('Video Deletion'), T_('Video has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('Video has been deleted'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Video Deletion'), T_('Cannot delete this video.'), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Video."), AmpConfig::get('web_path'));
         }
     break;
     case 'show_video':
     default:
-        $video = Video::create_from_id($_REQUEST['video_id']);
+        $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $video->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_video.inc.php');
     break;
 }
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

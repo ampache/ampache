@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,14 +23,14 @@
 require_once 'lib/init.php';
 
  if (isset($_REQUEST['param_name'])) {
-     $name = scrub_in($_REQUEST['param_name']);
+     $name = (string) scrub_in(filter_var($_REQUEST['param_name'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
      if (isset($_REQUEST[$name])) {
-         echo $name . ": " . scrub_in($_REQUEST[$name]);
+         echo $name . ": " . (string) scrub_in(filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
      }
  }
 
  if (isset($_REQUEST['error'])) {
-     $error             = scrub_in($_REQUEST['error']);
-     $error_description = scrub_in($_REQUEST['error_description']);
+     $error             = (string) scrub_in(filter_var($_REQUEST['error'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+     $error_description = (string) scrub_in(filter_var($_REQUEST['error_description'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
      echo $error . " error: " . $error_description;
  }

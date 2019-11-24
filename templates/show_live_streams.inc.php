@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<?php if (Access::check('interface', '50')) {
-    ?>
-<?php UI::show_box_top(T_('Manage Radio Stations'), 'info-box'); ?>
+ */ ?>
+<?php if (Access::check('interface', '50')) { ?>
+<?php UI::show_box_top(T_('Manage'), 'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
@@ -33,10 +31,10 @@
 <?php UI::show_box_bottom(); ?>
 <?php
 } ?>
-<?php if ($browse->get_show_header()) {
-        require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-    } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="live_stream">
+<?php if ($browse->is_show_header()) {
+    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+} ?>
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="live_stream">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -57,8 +55,7 @@
         </tr>
         <?php
         } //end foreach ($artists as $artist)?>
-        <?php if (!count($object_ids)) {
-            ?>
+        <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
         </tr>
@@ -76,7 +73,6 @@
         </tr>
     </tfoot>
 </table>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
             require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
         } ?>

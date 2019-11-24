@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Duplicate Songs')); ?>
 <form method="post" enctype="multipart/form-data">
-    <table class="tabledata" cellpadding="0" cellspacing="0">
+    <table class="tabledata">
         <tr class="th-top">
             <th class="cel_disable"><?php echo T_('Disable'); ?></th>
             <th class="cel_song"><?php echo T_('Song'); ?></th>
@@ -44,10 +43,16 @@
                     $row_key              = 'duplicate_' . $song_id;
                     $button_flip_state_id = 'button_flip_state_' . $song_id;
                     $current_class        = ($key == '0') ? 'row-highlight' : UI::flip_class();
-                    $button               = $song->enabled ? 'disable' : 'enable'; ?>
+                    if ($button) {
+                        $button     = 'disable';
+                        $buttontext = T_('Disable');
+                    } else {
+                        $button     = 'enable';
+                        $buttontext = T_('Enable');
+                    } ?>
         <tr id="<?php echo $row_key; ?>" class="<?php echo $current_class; ?>">
             <td class="cel_disable" id="<?php echo($button_flip_state_id); ?>">
-                <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song_id, $button, T_(ucfirst($button)), 'flip_state_' . $song_id); ?>
+                <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song_id, $button, $buttontext, 'flip_state_' . $song_id); ?>
             </td>
             <td class="cel_song"><?php echo $song->f_link; ?></td>
             <td class="cel_artist"><?php echo $song->f_artist_link; ?></td>
@@ -59,8 +64,7 @@
         </tr>
         <?php
                 }
-            }
-        ?>
+            } ?>
         <tr class="th-bottom">
             <th class="cel_disable"><?php echo T_('Disable'); ?></th>
             <th class="cel_song"><?php echo T_('Song'); ?></th>

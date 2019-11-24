@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,11 +20,9 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path = AmpConfig::get('web_path'); ?>
 <?php
-UI::show_box_top($wartist['name'], 'info-box');
-?>
+UI::show_box_top($wartist['name'], 'info-box'); ?>
 <?php
 if (AmpConfig::get('lastfm_api_key')) {
     echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&fullname=' . rawurlencode($wartist['name']), 'artist_info')); ?>

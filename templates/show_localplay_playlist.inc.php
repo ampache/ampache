@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,12 +22,11 @@
 
 $localplay = new Localplay(AmpConfig::get('localplay_controller'));
 $localplay->connect();
-$status = $localplay->status();
-?>
-<?php if ($browse->get_show_header()) {
+$status = $localplay->status(); ?>
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th class="cel_track"><?php echo T_('Track'); ?></th>
@@ -50,14 +49,13 @@ $status = $localplay->status();
                 <?php echo $localplay->format_name($object['name'], $object['id']); ?>
             </td>
             <td class="cel_action">
-            <?php echo Ajax::button('?page=localplay&action=delete_track&id=' . intval($object['id']), 'delete', T_('Delete'), 'localplay_delete_' . intval($object['id'])); ?>
+            <?php echo Ajax::button('?page=localplay&action=delete_track&id=' . (int) ($object['id']), 'delete', T_('Delete'), 'localplay_delete_' . (int) ($object['id'])); ?>
             </td>
         </tr>
         <?php
-        } if (!count($object_ids)) {
-            ?>
+        } if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="3"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
+            <td colspan="3"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
         <?php
         } ?>
@@ -70,6 +68,6 @@ $status = $localplay->status();
         </tr>
     </tfoot>
 </table>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
             require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
         } ?>

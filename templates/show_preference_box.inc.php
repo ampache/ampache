@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,15 +25,13 @@
  */
 if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
     $is_admin = true;
-}
-?>
+} ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <colgroup>
   <col id="col_preference" />
   <col id="col_value" />
-    <?php if ($is_admin) {
-    ?>
+    <?php if ($is_admin) { ?>
   <col id="col_applytoall" />
   <col id="col_level" />
     <?php
@@ -43,8 +41,7 @@ if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
     <tr class="th-top">
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
-        <?php if ($is_admin) {
-        ?>
+        <?php if ($is_admin) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
         <?php
@@ -69,8 +66,7 @@ if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
             <td class="cel_value">
                 <?php create_preference_input($pref['name'], $pref['value']); ?>
             </td>
-            <?php if ($is_admin) {
-            ?>
+            <?php if ($is_admin) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
                 <td class="cel_level">
                     <?php $name         = 'on_' . $pref['level'];
@@ -94,8 +90,7 @@ if (Access::check('interface', '100') && $_REQUEST['action'] == 'admin') {
     <tr class="th-bottom">
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
-        <?php if ($is_admin) {
-        ?>
+        <?php if ($is_admin) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
         <?php

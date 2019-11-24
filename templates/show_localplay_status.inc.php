@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,8 +24,7 @@ $status      = $localplay->status();
 $now_playing = $status['track_title'];
 if (!empty($status['track_album'])) {
     $now_playing .= ' - ' . $status['track_album'] . ' - ' . $status['track_artist'];
-}
-?>
+} ?>
 <?php Ajax::start_container('localplay_status'); ?>
 <?php UI::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status'); ?>
 <?php echo T_('Now Playing'); ?>:&nbsp;<i><?php echo $now_playing; ?></i>
@@ -58,7 +57,6 @@ if (!empty($status['track_album'])) {
     $browse->set_type('playlist_localplay');
     $browse->set_static_content(true);
     $browse->show_objects($objects);
-    $browse->store();
-?>
+    $browse->store(); ?>
 <?php UI::show_box_bottom(); ?>
 <?php Ajax::end_container(); ?>

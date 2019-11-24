@@ -18,7 +18,7 @@ Benifits to using the Transifex platform include:
 * Translations are updated in a single commit without conflicts.
 * The current translation state is available to the team to understand the status of each language.
 
-## Questions:
+## Questions
 
 If you have further questions, please feel free to open an issue here or start a new thread on our GoogleGroups forum and ask for @Psy-Virus - The Translation Guy.
 

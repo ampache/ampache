@@ -2,7 +2,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,7 +42,6 @@ a:hover {
 }
 
 hr {
-  border-top-color: #bbb;
   border-top-color: #eee;
 }
 
@@ -78,6 +77,14 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -webkit-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
     -moz-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
     box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
+}
+
+.edit_dialog_content input[type=text] , .edit_dialog_content select {
+    color: #fff;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-titlebar {
+    color: #fff;
 }
 
 /***********************************************
@@ -116,7 +123,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 /***********************************************
            Login
 ***********************************************/
-#loginPage #maincontainer, #registerPage #maincontainer {
+#loginPage {
+    background-color: #000;
+}
+
+#loginPage #maincontainer { /* , #registerPage #maincontainer */
     background-color: rgba(0,0,0,0.15);
     border: 2px solid rgba(0,0,0,0.15);
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -125,15 +136,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #headerlogo, #registerPage #headerlogo {
-    background-image: url('../images/ampache-reborn.png');
+    background-image: url('../images/ampache-dark.png');
 }
 
-#loginPage #loginbox, #registerPage #registerbox {
+#loginPage #loginbox {
     color: #999;
 }
 
 #loginPage #loginbox div, #registerPage #registerbox div {
     text-shadow: 0 1px 0 #000;
+    color: #999;
 }
 
 #loginPage #loginbox #usernamefield input:focus,
@@ -182,6 +194,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    color: #999;
 }
 
 #sidebar-header:hover {
@@ -194,7 +207,6 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
     background-color: #1a1a1a;
-    border-right-color: #000;
 }
 
 /* Tabs content */
@@ -216,11 +228,11 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-tabs .sb2 li ul li a {
-	color: #999;
+    color: #999;
 }
 
 #sidebar-tabs .sb2 li ul li a:hover {
-	color: #fff;
+    color: #fff;
 }
 
 #sidebar-tabs .sb2 #browse_filters #multi_alpha_filter {
@@ -236,9 +248,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
                   Rightbar
 ***********************************************/
 #rightbar {
-    /* background-color: rgba(0,0,0,0.15); */
     background-color: #222;
-    border-color: gba(0,0,0,0.15);
+    border-color: rgba(0,0,0,0.15);
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -315,7 +326,7 @@ table.tabledata a {
 }
 
 #catalog_type_fields table.tabledata a{
-	color: #ff9d00
+    color: #ff9d00
 }
 
 table.tabledata a:hover, table.tabledata a:focus {
@@ -420,20 +431,6 @@ span.fatalerror {
     color: #fff;
 }
 
-.box-content #tag_filter .tag_button span {
-    background-color: #5f5f5f;
-    background-image: -moz-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: -ms-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#6d6d6d),to(#4a4a4a));
-    background-image: -webkit-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: -o-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: linear-gradient(top,#6d6d6d,#4a4a4a);
-    border-bottom-color: #b3b3b3;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),inset -1px 0 0 rgba(0,0,0,0.2);
-}
-
 .box-content #tag_filter .tag_button span:hover {
     background-color: #c85a00;
     background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
@@ -447,6 +444,10 @@ span.fatalerror {
 /***********************************************
     Content (information-actions)
 ***********************************************/
+.item_properties {
+    color: #999;
+}
+
 .item_art .item_art_play .item_art_play_icon {
     background-image: url('../images/videoplay.png');
 }
@@ -476,20 +477,12 @@ span.fatalerror {
 /************************************************/
 /*        Styles for user flags                 */
 /************************************************/
-.userflag a.userflag_true {
+.userflag a.userflag_true, .userflag a:hover.userflag_false {
     background: url(../../../images/icon_flag.png) left top;
 }
 
-.userflag a:hover.userflag_true {
+.userflag a:hover.userflag_true, .userflag a.userflag_false {
     background: url(../../../images/icon_flag_off.png) left top;
-}
-
-.userflag a.userflag_false {
-    background: url(../../../images/icon_flag_off.png) left top;
-}
-
-.userflag a:hover.userflag_false {
-    background: url(../../../images/icon_flag.png) left top;
 }
 
 /***********************************************
@@ -507,7 +500,7 @@ dl.media_details dt {
 }
 
 #ampache_link {
-	color: #555;
+    color: #555;
 }
 
 /***********************************************
@@ -516,45 +509,45 @@ dl.media_details dt {
 div.jp-audio,
 div.jp-audio-stream,
 div.jp-video {
-	color: #999;
-	border: 1px solid #191919;
+    color: #999;
+    border: 1px solid #191919;
 }
 
 div.jp-video div.jp-interface {
-	border-top: 1px solid #191919;
+    border-top: 1px solid #191919;
 }
 
 div.jp-title,
 div.jp-playlist {
-	background-color: #202020;
-	border-top: 1px solid #191919;
+    background-color: #202020;
+    border-top: 1px solid #191919;
 }
 
 .jp-no-solution {
-	background: #121112 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
-	border-top: 1px solid #191919;
+    background: #121112 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
+    border-top: 1px solid #191919;
 }
 
 #webplayer {
-	background-color: #191919 !important;
+    background-color: #191919 !important;
 }
 
 div.playing_title a {
-	color: #EEE;
+    color: #EEE;
 }
 
 div.playing_artist a {
-	color: #EEE;
+    color: #EEE;
 }
 
 div.jp-interface {
-	/*background: #191919 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;*/
+    /*background: #191919 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;*/
     background-color: #191919;
 }
 
 div.jp-playlist li {
-	border-bottom: 1px solid #121212;
-	/*background: #343433 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;*/
+    border-bottom: 1px solid #121212;
+    /*background: #343433 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;*/
 }
 
 /***********************************************
@@ -564,6 +557,10 @@ div.jp-playlist li {
     border-color: #ccc;
     background-color: #eee;
     color: #999;
+}
+
+.followbtn {
+   background-color: #363F4A;
 }
 
 .missing_album {
@@ -583,15 +580,19 @@ div.jp-playlist li {
 }
 
 .list-header-navmenu-border {
-	border-color: #1d1d1d;
+    border-color: #1d1d1d;
 }
 
-span.item-count {
-	color: #999;
+span.item-count, span.query-count {
+    color: #999;
 }
 
 a.option-list:hover {
-	border-color: #1d1d1d;
+    border-color: #1d1d1d;
+}
+
+.editdialogstyle.ui-dialog {
+    background-image: url("../../../images/background.png") !important;
 }
 
 #tabs li a {
@@ -603,5 +604,5 @@ a.option-list:hover {
 }
 
 #tabs li.tab_active a {
-	color: #fff;
+    color: #fff;
 }

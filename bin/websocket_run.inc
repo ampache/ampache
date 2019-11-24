@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,9 +28,6 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 ob_end_flush();
 
-use Ratchet\MessageComponentInterface;
-use Ratchet\ConnectionInterface;
-
 $verbose = false;
 $port = 8100;
 
@@ -39,12 +36,12 @@ if ($cargv > 1) {
     for ($x = 1; $x < $cargv; $x++) {
 
         if ($_SERVER['argv'][$x] == "-v") {
-            $operations_string .= "\n\t" . T_('- Verbose');
+            $operations_string .= "\n\t- " . T_('Verbose');
             $verbose = true;
         } 
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
-            $port = intval($_SERVER['argv'][++$x]);
-            $operations_string .= "\n\t" . T_('- Port ' . $port);
+            $port = (int) $_SERVER['argv'][++$x];
+            $operations_string .= "\n\t- " . T_('Port') . ' ' . $port;
         }
     }
 }
@@ -62,11 +59,11 @@ $app->route('/broadcast', $brserver);
 $app->route('/echo', new Ratchet\Server\EchoServer, array('*'));
 $app->run();
 
-function usage()
+function websocket_usage()
 {
-    echo T_("- WebSocket server -");
+    echo T_("Usage:");
     echo "\n";
-    echo T_("Usage: websocket_run.inc [-p {PORT}|-v]");
+    echo T_("websocket_run.inc [-p {PORT}|-v]");
     echo "\n\t"; 
     echo "\n-p {PORT}\t";
     echo T_('Listening port, default 8100');
@@ -76,5 +73,3 @@ function usage()
     echo "----------------------------------------------------------";
     echo "\n";
 }
-
-?>

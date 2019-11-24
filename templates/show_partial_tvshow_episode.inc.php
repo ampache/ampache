@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@
  *
  */
 
-$videoprops[gettext_noop('TV Show')]   = $video->f_tvshow_link;
-$videoprops[gettext_noop('Season')]    = $video->f_season_link;
-$videoprops[gettext_noop('Episode')]   = $video->episode_number;
-$videoprops[gettext_noop('Summary')]   = $video->summary;
+$videoprops[T_('TV Show')]   = $video->f_tvshow_link;
+$videoprops[T_('Season')]    = $video->f_season_link;
+$videoprops[T_('Episode')]   = $video->episode_number;
+$videoprops[T_('Summary')]   = $video->summary;

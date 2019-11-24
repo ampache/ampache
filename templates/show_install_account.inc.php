@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,9 @@
  *
  */
 
-require $prefix . '/templates/install_header.inc.php';
-?>
+require $prefix . '/templates/install_header.inc.php'; ?>
 <div class="jumbotron">
-    <h1><?php echo T_('Install progress'); ?></h1>
+    <h1><?php echo T_('Install Progress'); ?></h1>
     <div class="progress">
         <div class="progress-bar progress-bar-warning"
             role="progressbar"
@@ -56,13 +55,13 @@ require $prefix . '/templates/install_header.inc.php';
 <div class="form-group">
     <label for="local_pass" class="col-sm-3 control-label"><?php echo T_('Password'); ?></label>
     <div class="col-sm-9">
-        <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="Password">
+        <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="<?php echo T_("Password"); ?>">
     </div>
 </div>
 <div class="form-group">
     <label for="local_pass2" class="col-sm-3 control-label"><?php echo T_('Confirm Password'); ?></label>
     <div class="col-sm-9">
-        <input type="password" class="form-control" id="local_pass2" name="local_pass2" placeholder="Confirm Password">
+        <input type="password" class="form-control" id="local_pass2" name="local_pass2" placeholder="<?php echo T_("Confirm Password"); ?>">
     </div>
 </div>
 <div class="col-sm-9">

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <div id="localplay-control">
 <?php echo Ajax::button('?page=localplay&action=command&command=prev', 'prev', T_('Previous'), 'localplay_control_previous'); ?>
 <?php echo Ajax::button('?page=localplay&action=command&command=stop', 'stop', T_('Stop'), 'localplay_control_stop'); ?>

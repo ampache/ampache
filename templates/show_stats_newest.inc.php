@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,7 @@ $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-if (AmpConfig::get('allow_video')) {
+if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
     $sql    = Stats::get_newest_sql('video');
     $browse = new Browse();
     $browse->set_type('video', $sql);
@@ -42,3 +42,10 @@ if (AmpConfig::get('allow_video')) {
     $browse->show_objects();
     $browse->store();
 }
+
+$sql    = Stats::get_newest_sql('playlist');
+$browse = new Browse();
+$browse->set_type('playlist', $sql);
+$browse->set_simple_browse(true);
+$browse->show_objects();
+$browse->store();

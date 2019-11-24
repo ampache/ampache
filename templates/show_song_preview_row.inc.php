@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,10 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<?php if (AmpConfig::get('echonest_api_key')) {
-    ?>
+ */ ?>
+<?php if (AmpConfig::get('echonest_api_key')) { ?>
 <td class="cel_play">
     <?php
         if (AmpConfig::get('directplay') && $libitem->file) {
@@ -34,17 +32,15 @@
 <?php
 } ?>
 <td class="cel_song"><?php echo $libitem->title; ?></td>
-<?php if (AmpConfig::get('echonest_api_key')) {
-            ?>
+<?php if (AmpConfig::get('echonest_api_key')) { ?>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php
             if ($libitem->file) {
                 echo Ajax::button('?action=basket&type=song_preview&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_' . $libitem->id);
-                if (Access::check('interface', '25')) {
-                    ?>
+                if (Access::check('interface', '25')) { ?>
                     <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'song_preview', '<?php echo $libitem->id ?>')">
-                    <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                    <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
                     </a>
             <?php
                 }

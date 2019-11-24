@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,5 +20,5 @@
  *
  */
 
-$videoprops[gettext_noop('Location')]   = $video->f_location;
-$videoprops[gettext_noop('Summary')]    = scrub_out($video->summary);
+$videoprops[T_('Location')]   = $video->f_location;
+$videoprops[T_('Summary')]    = scrub_out($video->summary);

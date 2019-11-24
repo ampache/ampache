@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -89,16 +89,12 @@ class Wanted extends database_object
 
     /**
      * Constructor
-     * @param int $id
+     * @param integer $wanted_id
      */
-    public function __construct($id=0)
+    public function __construct($wanted_id)
     {
-        if (!$id) {
-            return true;
-        }
-
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($wanted_id);
 
         // Foreach what we've got
         foreach ($info as $key => $value) {
@@ -115,17 +111,17 @@ class Wanted extends database_object
      * @param string $mbid
      * @return array
      */
-    public static function get_missing_albums($artist, $mbid='')
+    public static function get_missing_albums($artist, $mbid = '')
     {
         $mb       = new MusicBrainz(new RequestsHttpAdapter());
-        $includes = array(
-            'release-groups'
-        );
-        $types = explode(',', AmpConfig::get('wanted_types'));
+        $includes = array('release-groups');
+        $types    = explode(',', AmpConfig::get('wanted_types'));
 
         try {
             $martist = $mb->lookup('artist', $artist ? $artist->mbid : $mbid, $includes);
-        } catch (Exception $e) {
+        } catch (Exception $error) {
+            debug_event('wanted.class', 'get_missing_albums ERROR: ' . $error, 3);
+
             return null;
         }
 
@@ -133,8 +129,8 @@ class Wanted extends database_object
         $wartist   = array();
         if ($artist) {
             $albums = $artist->get_albums();
-            foreach ($albums as $id) {
-                $album = new Album($id);
+            foreach ($albums as $albumid) {
+                $album = new Album($albumid);
                 if (trim($album->mbid_group)) {
                     $owngroups[] = $album->mbid_group;
                 } else {
@@ -158,13 +154,15 @@ class Wanted extends database_object
         $results = array();
         foreach ($martist->{'release-groups'} as $group) {
             if (in_array(strtolower($group->{'primary-type'}), $types)) {
-                $add = true;
+                $add     = true;
+                $g_count = count($group->{'secondary-types'});
 
-                for ($i = 0; $i < count($group->{'secondary-types'}) && $add; ++$i) {
+                for ($i = 0; $i < $g_count && $add; ++$i) {
                     $add = in_array(strtolower($group->{'secondary-types'}[$i]), $types);
                 }
 
                 if ($add) {
+                    debug_event('wanted.class', 'get_missing_albums ADDING: ' . $group->title, 5);
                     if (!in_array($group->id, $owngroups)) {
                         $wantedid = self::get_wanted($group->id);
                         $wanted   = new Wanted($wantedid);
@@ -194,7 +192,7 @@ class Wanted extends database_object
                             }
                             $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
                             $wanted->f_artist_link = $artist ? $artist->f_link : $wartist['link'];
-                            $wanted->f_user        = $GLOBALS['user']->f_name;
+                            $wanted->f_user        = Core::get_global('user')->f_name;
                         }
                         $results[] = $wanted;
                     }
@@ -223,7 +221,7 @@ class Wanted extends database_object
 
             try {
                 $martist = $mb->lookup('artist', $mbid);
-            } catch (Exception $e) {
+            } catch (Exception $error) {
                 return $wartist;
             }
 
@@ -236,6 +234,10 @@ class Wanted extends database_object
         return $wartist;
     }
 
+    /**
+     * search_missing_artists
+     * @return array
+     */
     public static function search_missing_artists($name)
     {
         $args = array(
@@ -257,7 +259,7 @@ class Wanted extends database_object
 
     /**
      * Get accepted wanted release count.
-     * @return int
+     * @return integer
      */
     public static function get_accepted_wanted_count()
     {
@@ -273,7 +275,7 @@ class Wanted extends database_object
     /**
      * Get wanted release by mbid.
      * @param string $mbid
-     * @return int
+     * @return integer
      */
     public static function get_wanted($mbid)
     {
@@ -294,9 +296,9 @@ class Wanted extends database_object
     {
         $sql    = "DELETE FROM `wanted` WHERE `mbid` = ?";
         $params = array( $mbid );
-        if (!$GLOBALS['user']->has_access('75')) {
+        if (!Core::get_global('user')->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = $GLOBALS['user']->id;
+            $params[] = Core::get_global('user')->id;
         }
 
         Dba::write($sql, $params);
@@ -312,24 +314,24 @@ class Wanted extends database_object
             $mb     = new MusicBrainz(new RequestsHttpAdapter());
             $malbum = $mb->lookup('release', $mbid, array('release-groups'));
             if ($malbum->{'release-group'}) {
-                self::delete_wanted($malbum->{'release-group'});
+                self::delete_wanted(print_r($malbum->{'release-group'}, true));
             }
         }
     }
 
     /**
      * Delete a wanted release by name.
-     * @param int $artist
+     * @param integer $artist
      * @param string $album_name
-     * @param int $year
+     * @param integer $year
      */
     public static function delete_wanted_by_name($artist, $album_name, $year)
     {
         $sql    = "DELETE FROM `wanted` WHERE `artist` = ? AND `name` = ? AND `year` = ?";
         $params = array( $artist, $album_name, $year );
-        if (!$GLOBALS['user']->has_access('75')) {
+        if (!Core::get_global('user')->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = $GLOBALS['user']->id;
+            $params[] = Core::get_global('user')->id;
         }
 
         Dba::write($sql, $params);
@@ -340,15 +342,15 @@ class Wanted extends database_object
      */
     public function accept()
     {
-        if ($GLOBALS['user']->has_access('75')) {
+        if (Core::get_global('user')->has_access('75')) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
             Dba::write($sql, array( $this->mbid ));
             $this->accepted = true;
 
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
-                debug_event('wanted', 'Using Wanted Process plugin: ' . $plugin_name, '5');
+                debug_event('wanted.class', 'Using Wanted Process plugin: ' . $plugin_name, 5);
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->load($GLOBALS['user'])) {
+                if ($plugin->load(Core::get_global('user'))) {
                     $plugin->_plugin->process_wanted($this);
                 }
             }
@@ -358,13 +360,13 @@ class Wanted extends database_object
     /**
      * Check if a release mbid is already marked as wanted
      * @param string $mbid
-     * @param int $userid
-     * @return boolean
+     * @param integer $userid
+     * @return boolean|integer
      */
     public static function has_wanted($mbid, $userid = 0)
     {
         if ($userid == 0) {
-            $userid = $GLOBALS['user']->id;
+            $userid = Core::get_global('user')->id;
         }
 
         $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ?";
@@ -380,21 +382,21 @@ class Wanted extends database_object
     /**
      * Add a new wanted release.
      * @param string $mbid
-     * @param int $artist
+     * @param integer $artist
      * @param string $artist_mbid
      * @param string $name
-     * @param int $year
+     * @param integer $year
      */
     public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {
         $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $accept = $GLOBALS['user']->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
-        $params = array($GLOBALS['user']->id, $artist, $artist_mbid, $mbid, $name, $year, time(), '0');
+        $accept = Core::get_global('user')->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
+        $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, $year, time(), '0');
         Dba::write($sql, $params);
 
         if ($accept) {
             $wantedid = Dba::insert_id();
-            $wanted   = new Wanted($wantedid);
+            $wanted   = new Wanted((int) $wantedid);
             $wanted->accept();
 
             database_object::remove_from_cache('wanted', $wantedid);
@@ -408,11 +410,11 @@ class Wanted extends database_object
     {
         if ($this->id) {
             if (!$this->accepted) {
-                if ($GLOBALS['user']->has_access('75')) {
+                if (Core::get_global('user')->has_access('75')) {
                     echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->mbid, 'enable', T_('Accept'), 'wanted_accept_' . $this->mbid);
                 }
             }
-            if ($GLOBALS['user']->has_access('75') || (Wanted::has_wanted($this->mbid) && $this->accepted != '1')) {
+            if (Core::get_global('user')->has_access('75') || (Wanted::has_wanted($this->mbid) && $this->accepted != '1')) {
                 echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
             }
         } else {
@@ -445,7 +447,7 @@ class Wanted extends database_object
                     foreach ($release->media as $media) {
                         foreach ($media->tracks as $track) {
                             $song          = array();
-                            $song['disk']  = $media->position;
+                            $song['disk']  = Album::sanitize_disk($media->position);
                             $song['track'] = $track->number;
                             $song['title'] = $track->title;
                             $song['mbid']  = $track->id;
@@ -467,7 +469,7 @@ class Wanted extends database_object
                             $song['file'] = null;
                             foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
                                 $plugin = new Plugin($plugin_name);
-                                if ($plugin->load($GLOBALS['user'])) {
+                                if ($plugin->load(Core::get_global('user'))) {
                                     $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
                                     if ($song['file'] != null) {
                                         break;
@@ -482,7 +484,7 @@ class Wanted extends database_object
                     }
                 }
             }
-        } catch (Exception $e) {
+        } catch (Exception $error) {
             $this->songs = array();
         }
 
@@ -520,8 +522,8 @@ class Wanted extends database_object
     {
         $sql = "SELECT `id` FROM `wanted` ";
 
-        if (!$GLOBALS['user']->has_access('75')) {
-            $sql .= "WHERE `user` = '" . scrub_in($GLOBALS['user']->id) . "'";
+        if (!Core::get_global('user')->has_access('75')) {
+            $sql .= "WHERE `user` = '" . (string) Core::get_global('user')->id . "'";
         }
 
         return $sql;
@@ -529,7 +531,7 @@ class Wanted extends database_object
 
     /**
      * Get wanted list.
-     * @return int[]
+     * @return integer[]
      */
     public static function get_wanted_list()
     {
@@ -543,4 +545,4 @@ class Wanted extends database_object
 
         return $results;
     }
-} // end of recommendation class
+} // end of wanted class

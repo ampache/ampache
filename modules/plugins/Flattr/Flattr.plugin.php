@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,6 +41,8 @@ class AmpacheFlattr
      */
     public function __construct()
     {
+        $this->description = T_('Flattr donation button on user page');
+
         return true;
     }
 
@@ -56,7 +58,7 @@ class AmpacheFlattr
             return false;
         }
 
-        Preference::insert('flattr_user_id', 'Flattr User ID', '', 25, 'string', 'plugins', $this->name);
+        Preference::insert('flattr_user_id', T_('Flattr User ID'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -91,23 +93,29 @@ class AmpacheFlattr
         $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
         $link = ($libitem != null && $libitem->link) ? $libitem->link : $this->user->link;
 
-        echo "<a rel='nohtml' href='https://flattr.com/submit/auto?user_id=" . scrub_out($this->user_id) . "&url=" . rawurlencode($link) . "&category=audio&title=" . rawurlencode($name) . "' target='_blank'><img src='//button.flattr.com/flattr-badge-large.png' alt='Flattr this' title='Flattr this' border='0'></a>";
+        echo "<a class='nohtml' href='https://flattr.com/submit/auto?user_id=" . scrub_out($this->user_id) . "&url=" . rawurlencode($link) . "&category=audio&title=" . rawurlencode($name) . "' target='_blank'><img src='//button.flattr.com/flattr-badge-large.png' alt='" . T_('Flattr this') . "' title='" . T_('Flattr this') . "'></a>";
     }
 
     /**
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $this->user = $user;
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['flattr_user_id']))) {
+            $data                   = array();
+            $data['flattr_user_id'] = Preference::get_by_user(-1, 'flattr_user_id');
+        }
 
         $this->user_id = trim($data['flattr_user_id']);
         if (!strlen($this->user_id)) {
-            debug_event($this->name, 'No Flattr User ID, user field plugin skipped', '3');
+            debug_event('flattr.plugin', 'No Flattr User ID, user field plugin skipped', 3);
 
             return false;
         }

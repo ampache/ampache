@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,16 +18,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<?php if ($browse->get_show_header()) {
+ */ ?>
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="catalog">
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="catalog">
     <thead>
         <tr class="th-top">
             <th class="cel_catalog essential persist"><?php echo T_('Name'); ?></th>
-            <th class="cel_info essential"><?php echo T_('Info'); ?></th>
+            <th class="cel_info essential"><?php echo T_('Path'); ?></th>
             <th class="cel_lastverify optional"><?php echo T_('Last Verify'); ?></th>
             <th class="cel_lastadd optional"><?php echo T_('Last Add'); ?></th>
             <th class="cel_lastclean optional "><?php echo T_('Last Clean'); ?></th>
@@ -46,9 +45,8 @@
             } ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="6">
-            <?php if (!count($object_ids)) {
-                ?>
-                <span class="nodata"><?php echo T_('No catalog found'); ?></span>
+            <?php if (!count($object_ids)) { ?>
+                <span class="nodata"><?php echo T_('No Catalog found'); ?></span>
             <?php
             } ?>
             </td>
@@ -57,7 +55,7 @@
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_catalog"><?php echo T_('Name'); ?></th>
-            <th class="cel_info"><?php echo T_('Info'); ?></th>
+            <th class="cel_info"><?php echo T_('Path'); ?></th>
             <th class="cel_lastverify"><?php echo T_('Last Verify'); ?></th>
             <th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
             <th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
@@ -65,7 +63,6 @@
         </tr>
     </tfoot>
 </table>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tabledata.js" language="javascript" type="text/javascript"></script>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
                 require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
             } ?>

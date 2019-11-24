@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,7 @@
  *
  */
 $media = Video::create_from_id($media->id);
-$media->format();
-?>
+$media->format(); ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>
@@ -30,8 +29,7 @@ $media->format();
             echo scrub_out($np_user->fullname);
             if ($np_user->f_avatar_medium) {
                 echo '<div>' . $np_user->f_avatar_medium . '</div>';
-            }
-        ?>
+            } ?>
         </a>
     </div>
 </div>
@@ -44,23 +42,27 @@ $media->format();
 </div>
 
 <?php
-    if (Art::is_enabled()) {
-        ?>
+    if (Art::is_enabled()) { ?>
         <div class="np_group" id="np_group_3">
             <div class="np_cell cel_albumart">
                 <?php
-                    $release_art = $media->get_release_item_art();
-        Art::display($release_art['object_type'], $release_art['object_id'], $media->get_fullname(), 6, $media->link); ?>
+                    //$release_art = $media->get_release_item_art();
+        //Art::display($release_art['object_type'], $release_art['object_id'], $media->get_fullname(), 6, $media->link);
+            $art_showed = false;
+        if ($media->get_default_art_kind() == 'preview') {
+            $art_showed = Art::display('video', $media->id, $media->f_full_title, 9, $media->link, false, 'preview');
+        }
+        if (!$art_showed) {
+            Art::display('video', $media->id, $media->f_full_title, 6, $media->link);
+        } ?>
             </div>
         </div>
     <?php
-    }
-?>
+    } ?>
 
 <div class="np_group" id="np_group_4">
 <?php
-    if (AmpConfig::get('ratings')) {
-        ?>
+    if (AmpConfig::get('ratings')) { ?>
         <div class="np_cell cel_rating">
             <label><?php echo T_('Rating'); ?></label>
             <div id="rating_<?php echo $media->id; ?>_video">
@@ -74,6 +76,5 @@ $media->format();
             </div>
         </div>
     <?php
-    }
-?>
+    } ?>
 </div>

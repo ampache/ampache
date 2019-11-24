@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
 <form name="label" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=add_label">
-<table class="tabledata" cellspacing="0" cellpadding="0">
+<table class="tabledata">
 <tr>
     <td><?php echo T_('Name'); ?></td>
     <td>
@@ -37,10 +36,10 @@
                 <option value="personal" <?php if (empty($_REQUEST['category']) || $_REQUEST['category'] === "personal") {
     echo "selected";
 } ?>><?php echo T_('Personal'); ?></option>
-                <option value="association" <?php if ($_REQUEST['category'] === "association") {
+                <option value="association" <?php if (Core::get_request('category') === "association") {
     echo "selected";
 } ?>><?php echo T_('Association'); ?></option>
-                <option value="company" <?php if ($_REQUEST['category'] === "company") {
+                <option value="company" <?php if (Core::get_request('category') === "company") {
     echo "selected";
 } ?>><?php echo T_('Company'); ?></option>
             </select>
@@ -61,7 +60,7 @@
     </td>
 </tr>
 <tr>
-    <td><?php echo T_('Email'); ?></td>
+    <td><?php echo T_('E-mail'); ?></td>
     <td>
         <input type="text" name="email" value="<?php echo scrub_out($_REQUEST['email']); ?>" />
         <?php AmpError::display('email'); ?>

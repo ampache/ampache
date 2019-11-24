@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,21 +26,21 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 $version = "1.0";
 
-if (count($GLOBALS['argv']) != 2) {
-    usage();
-    exit;
+if (count(Core::get_global('argv')) != 2) {
+    print_tags_usage();
+    return false;
 } else {
-    $filename = $GLOBALS['argv'][1];
+    $filename = Core::get_global('argv')[1];
 }
 
 if(!file_exists($filename)) {
     print T_("File not found.");
     print "\n";
-    usage();
-    exit;
+    print_tags_usage();
+    return false;
 }
-
-printf(T_('Reading: %s'), $filename);
+/* HINT: filename (File path) */
+sprintf(T_('Reading: %s'), $filename);
 print "\n";
 
 /* Attempt to figure out what catalog it comes from */
@@ -55,7 +55,8 @@ $file_pattern = $catalog->rename_pattern;
 
 $info = new vainfo($filename, array('music'), '', '', '', $dir_pattern, $file_pattern);
 if(isset($dir_pattern) || isset($file_pattern)) {
-    printf(T_('Using: %s AND %s for file pattern matching'), $dir_pattern, $file_pattern);
+    /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
+    printf(T_('Using: %1$s AND %2$s for file pattern matching'), $dir_pattern, $file_pattern);
     print "\n";
 }
 $info->get_info();
@@ -72,10 +73,10 @@ printf(T_('Final results seen by Ampache using %s:'), implode(' + ', $keys));
 echo "\n\n";
 print_r($ampache_results);
 
-function usage() {
+function print_tags_usage() {
     global $version;
 
-    $text  = sprintf(T_('%s Version %s'), 'print_tags.inc', $version);
+    $text  = 'print_tags.inc' . T_('Version') . ': ' . $version;
     $text .= "\n\n";
     $text .= T_('Usage:');
     $text .= "\n";
@@ -84,6 +85,4 @@ function usage() {
 
     return print $text;
 
-}// usage()
-
-?>
+}// print_tags_usage()

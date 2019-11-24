@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,8 +24,9 @@ define('NO_SESSION', '1');
 require_once '../lib/init.php';
 
 if (!AmpConfig::get('webdav_backend')) {
-    echo "Disabled.";
-    exit;
+    echo T_("Disabled");
+
+    return false;
 }
 
 use Sabre\DAV;

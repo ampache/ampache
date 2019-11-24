@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,7 @@ if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !
     exit;
 }
 
-if (!AmpConfig::get('statistical_graphs')) {
+if (!AmpConfig::get('statistical_graphs') || !is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
     debug_event('graph', 'Access denied, statistical graph disabled.', 1);
     exit;
 }

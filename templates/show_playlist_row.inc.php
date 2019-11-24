@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
@@ -28,19 +27,19 @@
             echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id, 'play', T_('Play'), 'play_playlist_' . $libitem->id);
             if (Stream_Playlist::check_autoplay_next()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_playlist_' . $libitem->id);
-                if (Stream_Playlist::check_autoplay_append()) {
-                    echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $libitem->id);
-                }
             }
-        }
-    ?>
+            if (Stream_Playlist::check_autoplay_append()) {
+                echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $libitem->id);
+            }
+        } ?>
     </div>
 </td>
-<?php if (AmpConfig::get('playlist_art')) {
-        ?>
+<?php if (AmpConfig::get('playlist_art')) { ?>
 <td class="cel_cover">
+<div style="max-width: 128px;">
     <?php
-    $libitem->display_art(3); ?>
+    $libitem->display_art(2); ?>
+</div>
 </td>
 <?php
     } ?>
@@ -52,11 +51,10 @@
             if (Access::check('interface', '25')) {
                 echo Ajax::button('?action=basket&type=playlist_random&id=' . $libitem->id, 'random', T_('Random to temporary playlist'), 'random_playlist_' . $libitem->id); ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'playlist', '<?php echo $libitem->id ?>')">
-                <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+                <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php
-            }
-        ?>
+            } ?>
     </span>
 </td>
 <td class="cel_last_update"><?php echo $libitem->f_last_update ?></td>
@@ -65,24 +63,20 @@
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <?php
     if (User::is_registered()) {
-        if (AmpConfig::get('ratings')) {
-            ?>
+        if (AmpConfig::get('ratings')) { ?>
     <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_playlist"><?php Rating::show($libitem->id, 'playlist'); ?></td>
     <?php
         }
-        if (AmpConfig::get('userflags')) {
-            ?>
+        if (AmpConfig::get('userflags')) { ?>
     <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_playlist"><?php Userflag::show($libitem->id, 'playlist'); ?></td>
     <?php
         }
-    }
-?>
+    } ?>
 <td class="cel_action">
 <?php
-    if (Access::check_function('batch_download') && check_can_zip('playlist')) {
-        ?>
-        <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id; ?>">
-            <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
+    if (Access::check_function('batch_download') && check_can_zip('playlist')) { ?>
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id; ?>">
+            <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
         </a>
 <?php
     }
@@ -91,12 +85,10 @@
             Share::display_ui('playlist', $libitem->id, false);
         }
     }
-    if ($libitem->has_access()) {
-        ?>
-    <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Playlist edit') ?>', 'playlist_row_')">
+    if ($libitem->has_access()) { ?>
+    <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Playlist Edit') ?>', 'playlist_row_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
-    <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id, '', '', T_('Do you really want to delete the playlist?'));
-    }
-?>
+    <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id, '', '', T_('Do you really want to delete this Playlist?'));
+    } ?>
 </td>

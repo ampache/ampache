@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,18 +24,20 @@ class AmpacheFacebook
 {
     public $name        = 'Facebook';
     public $categories  = 'share';
-    public $description = 'Facebook Share';
+    public $description = 'Facebook share';
     public $url         = 'https://facebook.com';
     public $version     = '000001';
     public $min_ampache = '370027';
     public $max_ampache = '999999';
-    
+
     /**
      * Constructor
      * This function does nothing...
      */
     public function __construct()
     {
+        $this->description = T_('Facebook share');
+
         return true;
     } // constructor
 
@@ -72,20 +74,20 @@ class AmpacheFacebook
     {
         $share = "https://www.facebook.com/sharer/sharer.php";
         $share .= "?u=" . rawurlencode($url);
-        
+
         return $share;
     }
-    
+
     /**
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
-        $data = $user->prefs;
-        
+
         return true;
     } // load
 }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,7 @@
 define('NO_SESSION', '1');
 require_once 'lib/init.php';
 // Avoid form login if still connected
-if (AmpConfig::get('use_auth') && !isset($_GET['force_display'])) {
+if (AmpConfig::get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
     $auth = false;
     if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         $auth = true;
@@ -34,7 +34,8 @@ if (AmpConfig::get('use_auth') && !isset($_GET['force_display'])) {
     }
     if ($auth) {
         header("Location: " . AmpConfig::get('web_path'));
-        exit;
+
+        return false;
     }
 }
 require_once 'lib/login.php';

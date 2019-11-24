@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@
  * Stream_Playlist Class
  *
  * This class is used to generate the Playlists and pass them on
- * For localplay this actually just sends the commands to the localplay
+ * For Localplay this actually just sends the commands to the Localplay
  * module in question.
  */
 
@@ -33,29 +33,30 @@ class Stream_Playlist
     public $id;
     public $urls  = array();
     public $user;
-    
+
     public $title;
 
     /**
      * Stream_Playlist constructor
      * If an ID is passed, it should be a stream session ID.
+     * @param integer $session_id
      */
-    public function __construct($id = null)
+    public function __construct($session_id = null)
     {
-        if ($id != -1) {
-            if ($id) {
-                Stream::set_session($id);
+        if ($session_id != -1) {
+            if ($session_id !== null) {
+                Stream::set_session($session_id);
             }
 
             $this->id = Stream::get_session();
 
             if (!Session::exists('stream', $this->id)) {
-                debug_event('stream_playlist', 'Session::exists failed', 2);
+                debug_event('stream_playlist.class', 'Session::exists failed', 2);
 
                 return false;
             }
 
-            $this->user = intval($GLOBALS['user']->id);
+            $this->user = (int) (Core::get_global('user')->id);
 
             $sql        = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
             $db_results = Dba::read($sql, array($this->id));
@@ -89,13 +90,13 @@ class Stream_Playlist
                 $values[]  = $url->$field;
             }
         }
-        $sql .= '(' . implode(', ', $fields) . ') ';
-        $sql .= 'VALUES(' . implode(', ', $holders) . ')';
+        $sql .= '(' . implode(',', $fields) . ') ';
+        $sql .= 'VALUES(' . implode(',', $holders) . ')';
 
         return Dba::write($sql, $values);
     }
 
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' .
             'LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` ' .
@@ -107,8 +108,9 @@ class Stream_Playlist
     /**
      * media_to_urlarray
      * Formats the URL and media information and adds it to the object
+     * @return array
      */
-    public static function media_to_urlarray($media, $additional_params='')
+    public static function media_to_urlarray($media, $additional_params = '')
     {
         $urls = array();
         foreach ($media as $medium) {
@@ -120,17 +122,18 @@ class Stream_Playlist
 
         return $urls;
     }
-    
+
     /**
      * media_to_url
+     * @return Stream_URL
      */
-    public static function media_to_url($media, $additional_params='', $urltype='web')
+    public static function media_to_url($media, $additional_params = '', $urltype = 'web')
     {
         $type      = $media['object_type'];
         $object_id = $media['object_id'];
         $object    = new $type($object_id);
         $object->format();
-        
+
         if ($media['custom_play_action']) {
             $additional_params .= "&custom_play_action=" . $media['custom_play_action'];
         }
@@ -138,21 +141,22 @@ class Stream_Playlist
         if ($_SESSION['iframe']['subtitle']) {
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
-        
+
         return self::media_object_to_url($object, $additional_params, $urltype);
     }
-    
+
     /**
      * media_object_to_url
+     * @return Stream_URL
      */
-    public static function media_object_to_url($object, $additional_params='', $urltype='web')
+    public static function media_object_to_url($object, $additional_params = '', $urltype = 'web')
     {
         $surl = null;
         $url  = array();
-        
+
         $type        = strtolower(get_class($object));
         $url['type'] = $type;
-        
+
         // Don't add disabled media objects to the stream playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
         if (!isset($object->enabled) || make_bool($object->enabled)) {
@@ -173,7 +177,7 @@ class Stream_Playlist
                 $url['url'] = $type::play_url($object->id, $additional_params);
             }
 
-            $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+            $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : '';
 
             // Set a default which can be overridden
             $url['author'] = 'Ampache';
@@ -224,10 +228,14 @@ class Stream_Playlist
 
             $surl = new Stream_URL($url);
         }
-        
+
         return $surl;
     }
 
+    /**
+     * check_autoplay_append
+     * @return boolean
+     */
     public static function check_autoplay_append()
     {
         // For now, only iframed web player support media append in the currently played playlist
@@ -236,6 +244,10 @@ class Stream_Playlist
         );
     }
 
+    /**
+     * check_autoplay_next
+     * @return boolean
+     */
     public static function check_autoplay_next()
     {
         // Currently only supported for web player
@@ -245,12 +257,12 @@ class Stream_Playlist
     public function generate_playlist($type, $redirect = false)
     {
         if (!count($this->urls)) {
-            debug_event('stream_playlist', 'Error: Empty URL array for ' . $this->id, 2);
+            debug_event('stream_playlist.class', 'Error: Empty URL array for ' . $this->id, 2);
 
             return false;
         }
 
-        debug_event('stream_playlist', 'Generating a {' . $type . '} object...', 5);
+        debug_event('stream_playlist.class', 'Generating a {' . $type . '} object...', 4);
 
         $ext = $type;
         switch ($type) {
@@ -259,35 +271,35 @@ class Stream_Playlist
             case 'localplay':
             case 'web_player':
                 // These are valid, but witchy
-                $ct       = "";
+                $ctype    = "";
                 $redirect = false;
                 unset($ext);
             break;
             case 'asx':
-                $ct = 'video/x-ms-asf';
+                $ctype = 'video/x-ms-asf';
             break;
             case 'pls':
-                $ct = 'audio/x-scpls';
+                $ctype = 'audio/x-scpls';
             break;
             case 'ram':
-                $ct = 'audio/x-pn-realaudio ram';
+                $ctype = 'audio/x-pn-realaudio ram';
             break;
             case 'simple_m3u':
-                $ext = 'm3u';
-                $ct  = 'audio/x-mpegurl';
+                $ext   = 'm3u';
+                $ctype = 'audio/x-mpegurl';
             break;
             case 'xspf':
-                $ct = 'application/xspf+xml';
+                $ctype = 'application/xspf+xml';
             break;
             case 'hls':
-                $ext = 'm3u8';
-                $ct  = 'application/vnd.apple.mpegurl';
+                $ext   = 'm3u8';
+                $ctype = 'application/vnd.apple.mpegurl';
             break;
             case 'm3u':
             default:
                 // Assume M3U if the pooch is screwed
-                $ext = $type = 'm3u';
-                $ct  = 'audio/x-mpegurl';
+                $ext   = $type = 'm3u';
+                $ctype = 'audio/x-mpegurl';
             break;
         }
 
@@ -295,13 +307,14 @@ class Stream_Playlist
             // Our ID is the SID, so we always want to include it
             AmpConfig::set('require_session', true, true);
             header('Location: ' . Stream::get_base_url() . 'uid=' . scrub_out($this->user) . '&type=playlist&playlist_type=' . scrub_out($type));
-            exit;
+
+            return false;
         }
 
         if (isset($ext)) {
             header('Cache-control: public');
             header('Content-Disposition: filename=ampache_playlist.' . $ext);
-            header('Content-Type: ' . $ct . ';');
+            header('Content-Type: ' . $ctype . ';');
         }
 
         $this->{'create_' . $type}();
@@ -355,16 +368,17 @@ class Stream_Playlist
      * get_m3u_string
      * creates an m3u file, this includes the EXTINFO and as such can be
      * large with very long playlists
+     * @return string
      */
     public function get_m3u_string()
     {
         $ret = "#EXTM3U\n";
 
-        $i = 0;
+        $count = 0;
         foreach ($this->urls as $url) {
-            $ret .= '#EXTINF:' . $url->time . ',' . $url->author . ' - ' . $url->title . "\n";
+            $ret .= '#EXTINF:' . $url->time . ', ' . $url->author . ' - ' . $url->title . "\n";
             $ret .= $url->url . "\n";
-            $i++;
+            $count++;
         }
 
         return $ret;
@@ -377,18 +391,19 @@ class Stream_Playlist
 
     /**
       * get_pls_string
+     * @return string
      */
     public function get_pls_string()
     {
         $ret = "[playlist]\n";
         $ret .= 'NumberOfEntries=' . count($this->urls) . "\n";
-        $i = 0;
+        $count = 0;
         foreach ($this->urls as $url) {
-            $i++;
-            $ret .= 'File' . $i . '=' . $url->url . "\n";
-            $ret .= 'Title' . $i . '=' . $url->author . ' - ' .
+            $count++;
+            $ret .= 'File' . $count . '=' . $url->url . "\n";
+            $ret .= 'Title' . $count . '=' . $url->author . ' - ' .
                 $url->title . "\n";
-            $ret .= 'Length' . $i . '=' . $url->time . "\n";
+            $ret .= 'Length' . $count . '=' . $url->time . "\n";
         }
 
         $ret .= "Version=2\n";
@@ -404,11 +419,12 @@ class Stream_Playlist
     /**
      * get_asx_string
      * This should really only be used if all of the content is ASF files.
+     * @return string
      */
     public function get_asx_string()
     {
         $ret = '<ASX VERSION="3.0" BANNERBAR="auto">' . "\n";
-        $ret .= "<TITLE>" . ($this->title ?: "Ampache ASX Playlist") . "</TITLE>\n";
+        $ret .= "<TITLE>" . ($this->title ?: T_("Ampache ASX Playlist")) . "</TITLE>\n";
         $ret .= '<PARAM NAME="Encoding" VALUE="utf-8" />' . "\n";
 
         foreach ($this->urls as $url) {
@@ -436,6 +452,7 @@ class Stream_Playlist
 
     /**
      * get_xspf_string
+     * @return string
      */
     public function get_xspf_string()
     {
@@ -486,6 +503,10 @@ class Stream_Playlist
         echo $this->get_xspf_string();
     }
 
+    /**
+     * get_hls_string
+     * @return string
+     */
     public function get_hls_string()
     {
         $ssize = 10;
@@ -529,7 +550,7 @@ class Stream_Playlist
 
         return $ret;
     }
-    
+
     public function create_hls()
     {
         echo $this->get_hls_string();
@@ -548,6 +569,19 @@ class Stream_Playlist
             require AmpConfig::get('prefix') . UI::find_template('create_web_player.inc.php');
         }
     }  // create_web_player
+
+    /**
+     * show_web_player
+     *
+     * Show the created web player for ajax page loading.
+     * Browsers block autoplay when you haven't interacted with the page so load it early.
+     */
+    public function show_web_player()
+    {
+        if (AmpConfig::get("ajax_load")) {
+            require AmpConfig::get('prefix') . UI::find_template('show_web_player_embedded.inc.php');
+        }
+    }  // show_web_player
 
     /**
      * create_localplay
@@ -571,7 +605,7 @@ class Stream_Playlist
                 $furl = $this->urls[0];
                 if (strpos($furl->url, "&demo_id=1") !== false && $furl->time == -1) {
                     // If democratic, repeat the song to get the next voted one.
-                    debug_event('stream_playlist', 'Playing democratic on localplay, enabling repeat...', 5);
+                    debug_event('stream_playlist.class', 'Playing democratic on Localplay, enabling repeat...', 5);
                     $localplay->repeat(true);
                 }
             }
@@ -608,14 +642,15 @@ class Stream_Playlist
     {
         // There should only be one here...
         if (count($this->urls) != 1) {
-            debug_event('stream_playlist', 'Download called, but $urls contains ' . json_encode($this->urls), 2);
+            debug_event('stream_playlist.class', 'Download called, but $urls contains ' . json_encode($this->urls), 2);
         }
 
         // Header redirect baby!
         $url = current($this->urls);
-        $url = Stream_URL::add_options($url->url, '&action=download');
+        $url = Stream_URL::add_options($url->url, 'action=download');
         header('Location: ' . $url);
-        exit;
+
+        return false;
     } //create_download
 
     /**

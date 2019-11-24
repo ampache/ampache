@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,27 +20,24 @@
  *
  */
 
+/* HINT: Democratic Playlist Name */
 $string = $democratic->is_enabled() ? sprintf(T_('%s Playlist'), $democratic->name) : T_('Democratic Playlist');
-UI::show_box_top($string, 'info-box');
-?>
+UI::show_box_top($string, 'info-box'); ?>
 <div id="information_actions">
 <ul>
-<?php if ($democratic->is_enabled()) {
-    ?>
+<?php if ($democratic->is_enabled()) { ?>
 <li>
     <?php echo T_('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
 </li>
 <?php
 } ?>
-<?php if (Access::check('interface', '75')) {
-        ?>
+<?php if (Access::check('interface', '75')) { ?>
 <li>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=manage"><?php echo UI::get_icon('server_lightning', T_('Configure Democratic Playlist')); ?>
     &nbsp;
     <?php echo T_('Configure Democratic Playlist'); ?></a>
 </li>
-<?php if ($democratic->is_enabled()) {
-            ?>
+<?php if ($democratic->is_enabled()) { ?>
 <li>
     <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic'); ?>
     <?php echo Ajax::text('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, T_('Play Democratic Playlist'), 'play_democratic_full_text'); ?>
@@ -56,28 +53,27 @@ UI::show_box_top($string, 'info-box');
 </ul>
 </div>
 <div style="text-align: right;">
-    <script language="javascript" type="text/javascript">
+    <script>
         function reloadPageChanged(obj)
         {
             if (obj.checked) {
                 setTimeout(function() {
                     if (obj.checked) {
-                        window.location.href = window.location.href<?php echo " + '&dummy=" . time() . "'"; if (!isset($_GET['reloadpage'])) {
+                        window.location.href = window.location.href<?php echo " + '&dummy=" . time() . "'"; if (!filter_has_var(INPUT_GET, 'reloadpage')) {
         echo " + '&reloadpage=1'";
     } ?>;
                     }
                 }, <?php echo(AmpConfig::get('refresh_limit') * 1000); ?>);
             }
         }
-        <?php if (isset($_GET['reloadpage'])) {
-        ?>
+        <?php if (filter_has_var(INPUT_GET, 'reloadpage')) { ?>
         $(document).ready(function() {
             reloadPageChanged(document.getElementById('chkreloadpage'));
         });
         <?php
     } ?>
     </script>
-    <input type="checkbox" id='chkreloadpage' onClick="reloadPageChanged(this);" <?php if (isset($_GET['reloadpage'])) {
+    <input type="checkbox" id='chkreloadpage' onClick="reloadPageChanged(this);" <?php if (filter_has_var(INPUT_GET, 'reloadpage')) {
         echo "checked";
     } ?> /> <?php echo T_('Reload this page automatically'); ?>
 </div>

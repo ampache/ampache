@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,12 +34,10 @@ echo T_("Starting broadcasts...") . "\n";
 if (AmpConfig::get('upnp_backend')) {
     echo T_("UPnP broadcast... ");
     Upnp_Api::sddpSend();
-    echo T_("Done.") . "\n";
+    echo T_("Done") . "\n";
 } else {
     echo T_("UPnP backend disabled. Broadcast skipped.") . "\n";
 }
 
-ob_end_flush(); 
-echo "\n"; 
-
-?>
+ob_end_flush();
+echo "\n";

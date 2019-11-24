@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,19 +18,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<?php UI::show_box_top(T_('Access Control'), 'box box_access_control'); ?>
+ */ ?>
+<?php UI::show_box_top(T_('Access Control'), 'box box_access_control');
+$addcurrent = T_('Add Current Host');
+$addrpc     = T_('Add API / RPC Host');
+$addlocal   = T_('Add Local Network Definition'); ?>
 <div id="information_actions" class="left-column">
 <ul>
     <li>
-        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_current"><?php echo UI::get_icon('add_user', T_('Add Current Host')) . ' ' . T_('Add Current Host'); ?></a>
+        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_current"><?php echo UI::get_icon('add_user', $addcurrent) . ' ' . $addcurrent; ?></a>
     </li>
     <li>
-        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_rpc"><?php echo UI::get_icon('cog', T_('Add API / RPC Host')) . ' ' . T_('Add API / RPC Host'); ?></a>
+        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_rpc"><?php echo UI::get_icon('cog', $addrpc) . ' ' . $addrpc; ?></a>
     </li>
     <li>
-        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_local"><?php echo UI::get_icon('home', T_('Add Local Network Definition')) . ' ' . T_('Add Local Network Definition'); ?></a>
+        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_local"><?php echo UI::get_icon('home', $addlocal) . ' ' . $addlocal; ?></a>
     <li>
         <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_advanced"><?php echo UI::get_icon('add_key', T_('Advanced Add')) . ' ' . T_('Advanced Add'); ?></a>
     </li>
@@ -39,9 +41,8 @@
 <?php UI::show_box_bottom(); ?>
 <?php UI::show_box_top(T_('Access Control Entries'), 'box box_access_entries'); ?>
 <?php Ajax::start_container('browse_content', 'browse_content'); ?>
-<?php if (count($list)) {
-    ?>
-<table cellspacing="1" cellpadding="3" class="tabledata">
+<?php if (count($list)) { ?>
+<table class="tabledata">
 <thead>
     <tr class="th-top">
         <th><?php echo T_('Name'); ?></th>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,6 @@
  *
  */
 
-// Get the count of the number of items in their playlist
-?>
+// Get the count of the number of items in their playlist?>
 <?php echo T_('Found'); ?>:<?php echo $catalog_add_found; ?><br />
 <?php echo T_('Reading'); ?>:<?php echo $catalog_add_directory; ?><br />

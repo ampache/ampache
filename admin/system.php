@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,14 +22,15 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface', 100) or AmpConfig::get('demo_mode')) {
+if (!Access::check('interface', 100) || AmpConfig::get('demo_mode')) {
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 UI::show_header();
 
-/* Switch on action boys */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     /* This re-generates the config file comparing
      * /config/ampache.cfg to .cfg.dist
@@ -41,33 +42,43 @@ switch ($_REQUEST['action']) {
         $browser = new Horde_Browser();
         $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
         echo $final;
-        exit;
+
+        return false;
     case 'write_config':
         write_config(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
         header('Location: ' . AmpConfig::get('web_path') . '/index.php');
-        exit;
+
+        return false;
     case 'reset_db_charset':
         Dba::reset_db_charset();
-        show_confirmation(T_('Database Charset Updated'), T_('Your Database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
+        show_confirmation(T_('No Problem'), T_('Your database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
     break;
     case 'show_debug':
         $configuration = AmpConfig::get_all();
-        if ($_REQUEST['autoupdate'] == 'force') {
+        if (Core::get_request('autoupdate') == 'force') {
             $version = AutoUpdate::get_latest_version(true);
         }
         require_once AmpConfig::get('prefix') . UI::find_template('show_debug.inc.php');
     break;
     case 'clear_cache':
         switch ($_REQUEST['type']) {
-            case 'song': Song::clear_cache(); break;
-            case 'artist': Artist::clear_cache(); break;
-            case 'album': Album::clear_cache(); break;
+            case 'song':
+                Song::clear_cache();
+                break;
+            case 'artist':
+                Artist::clear_cache();
+                break;
+            case 'album':
+                Album::clear_cache();
+                break;
         }
-        show_confirmation(T_('Cache cleared'), T_('Your cache has been cleared successfully.'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
+        show_confirmation(T_('No Problem'), T_('Your cache has been cleared successfully'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
     break;
     default:
         // Rien a faire
     break;
 } // end switch
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

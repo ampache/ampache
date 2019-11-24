@@ -1,6 +1,6 @@
 /*----------------------------
     The file upload form
-    
+
     http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/
 -----------------------------*/
 
@@ -50,8 +50,11 @@
 
     background-color:#333639;
 
-    background-image:-webkit-linear-gradient(top, #333639, #303335);
     background-image:-moz-linear-gradient(top, #333639, #303335);
+    background-image:-webkit-linear-gradient(top, #333639, #303335);
+    background-image:-webkit-gradient(top, #333639, #303335);
+    background-image:-o-linear-gradient(top, #333639, #303335);
+    background-image:-ms-linear-gradient(top, #333639, #303335);
     background-image:linear-gradient(top, #333639, #303335);
 
     border-top:1px solid #3d4043;

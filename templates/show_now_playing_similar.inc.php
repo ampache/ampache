@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,16 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 
-<?php if ($artists) {
-    ?>
+<?php if ($artists) { ?>
 <div class="np_group similars">
     <div class="np_cell cel_similar">
         <label><?php echo T_('Similar Artists'); ?></label>
-        <?php foreach ($artists as $a) {
-        ?>
+        <?php foreach ($artists as $a) { ?>
             <div class="np_cell cel_similar_artist">
             <?php
                 if ($a['id'] === null) {
@@ -49,13 +46,11 @@
 <?php
 } ?>
 
-<?php if ($songs) {
-        ?>
+<?php if ($songs) { ?>
 <div class="np_group similars">
     <div class="np_cell cel_similar">
         <label><?php echo T_('Similar Songs'); ?></label>
-        <?php foreach ($songs as $s) {
-            ?>
+        <?php foreach ($songs as $s) { ?>
             <div class="np_cell cel_similar_song">
             <?php
                 $song = new Song($s['id']);

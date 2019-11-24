@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,26 +24,34 @@
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
 if (!defined('AJAX_INCLUDE')) {
-    exit;
+    return false;
 }
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'flip_state':
         if (!Access::check('interface', '75')) {
-            debug_event('DENIED', $GLOBALS['user']->username . ' attempted to change the state of a catalog', '1');
-            exit;
+            debug_event('catalog.ajax', Core::get_global('user')->username . ' attempted to change the state of a catalog', 1);
+
+            return false;
         }
 
         $catalog     = Catalog::create_from_id($_REQUEST['catalog_id']);
-        $new_enabled = $catalog->enabled ? false : true;
+        $new_enabled = $catalog->enabled ? '0' : '1';
         $catalog->update_enabled($new_enabled, $catalog->id);
-        $catalog->enabled = $new_enabled;
+        $catalog->enabled = (int) $new_enabled;
         $catalog->format();
 
         //Return the new Ajax::button
         $id           = 'button_flip_state_' . $catalog->id;
-        $button       = $catalog->enabled ? 'disable' : 'enable';
-        $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, T_(ucfirst($button)), 'flip_state_' . $catalog->id);
+        if ($catalog->enabled) {
+            $button     = 'disable';
+            $buttontext = T_('Disable');
+        } else {
+            $button     = 'enable';
+            $buttontext = T_('Enable');
+        }
+        $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
 
     break;
     default:

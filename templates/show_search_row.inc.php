@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
@@ -29,8 +28,7 @@
             if (Stream_Playlist::check_autoplay_append()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $libitem->id);
             }
-        }
-    ?>
+        } ?>
     </div>
 </td>
 <td class="cel_playlist"><?php echo $libitem->f_link; ?></td>
@@ -38,7 +36,7 @@
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_playlist_' . $libitem->id); ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to existing playlist')); ?>
+            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
     </span>
 </td>
@@ -48,20 +46,17 @@
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <td class="cel_action">
         <?php
-            if (Access::check_function('batch_download') && check_can_zip('search')) {
-                ?>
-                <a rel="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
-                    <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
+            if (Access::check_function('batch_download') && check_can_zip('search')) { ?>
+                <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
+                    <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
                 </a>
         <?php
             }
-            if ($libitem->has_access()) {
-                ?>
-                <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Smart Playlist edit') ?>', 'smartplaylist_row_')">
+            if ($libitem->has_access()) { ?>
+                <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Smart Playlist Edit') ?>', 'smartplaylist_row_')">
                     <?php echo UI::get_icon('edit', T_('Edit')); ?>
                 </a>
                 <?php
                 echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id);
-            }
-        ?>
+            } ?>
 </td>

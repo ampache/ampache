@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,17 +25,19 @@ require_once 'lib/init.php';
 /* Make sure they have access to this */
 if (!AmpConfig::get('allow_democratic_playback')) {
     UI::access_denied();
-    exit;
+
+    return false;
 }
 
 UI::show_header();
 
-// Switch on their action
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'manage':
                 $democratic = Democratic::get_current_playlist();
                 $democratic->set_parent();
                 $democratic->format();
+    // intentional fall through
     case 'show_create':
         if (!Access::check('interface', '75')) {
             UI::access_denied();
@@ -53,10 +55,7 @@ switch ($_REQUEST['action']) {
 
         Democratic::delete($_REQUEST['democratic_id']);
 
-        $title = '';
-        $text  = T_('The Requested Playlist has been deleted.');
-        $url   = AmpConfig::get('web_path') . '/democratic.php?action=manage_playlists';
-        show_confirmation($title, $text, $url);
+        show_confirmation(T_('No Problem'), T_('The Playlist has been deleted'), AmpConfig::get('web_path') . '/democratic.php?action=manage_playlists');
     break;
     case 'create':
         // Only power users here
@@ -67,7 +66,8 @@ switch ($_REQUEST['action']) {
 
         if (!Core::form_verify('create_democratic')) {
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         $democratic = Democratic::get_current_playlist();
@@ -82,7 +82,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Now check for additional things we might have to do
-        if ($_POST['force_democratic']) {
+        if (Core::get_post('force_democratic') !== '') {
             Democratic::set_user_preferences();
         }
 
@@ -122,4 +122,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch on action
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

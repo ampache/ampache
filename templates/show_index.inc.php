@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,53 +19,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+$user = Core::get_global('user');
 
-
-if (@is_readable(AmpConfig::get('prefix') . '/config/motd.php')) {
-    echo '<div id="motd">';
-    require_once AmpConfig::get('prefix') . '/config/motd.php';
-    echo '</div><br />';
-}
-
-foreach (Plugin::get_plugins('display_home') as $plugin_name) {
-    $plugin = new Plugin($plugin_name);
-    if ($plugin->load($GLOBALS['user'])) {
-        $plugin->_plugin->display_home();
+if ($user) {
+    foreach (Plugin::get_plugins('display_home') as $plugin_name) {
+        $plugin = new Plugin($plugin_name);
+        if ($plugin->load(Core::get_global('user'))) {
+            $plugin->_plugin->display_home();
+        }
     }
-}
-?>
-<?php if (AmpConfig::get('home_now_playing')) {
-    ?>
+} ?>
+<?php if (AmpConfig::get('home_now_playing')) { ?>
 <div id="now_playing">
     <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
 <?php
 } ?>
-<!-- Randomly selected albums of the moment -->
+<!-- Randomly selected Albums of the Moment -->
 <?php
 if (Art::is_enabled()) {
-        if (AmpConfig::get('home_moment_albums')) {
-            echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums')); ?>
+    if (AmpConfig::get('home_moment_albums')) {
+        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums')); ?>
 <div id="random_selection" class="random_selection">
     <?php UI::show_box_top(T_('Albums of the Moment'));
-            echo T_('Loading...');
-            UI::show_box_bottom(); ?>
+        echo T_('Loading...');
+        UI::show_box_bottom(); ?>
 </div>
 <?php
-        }
-        if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
-            echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos')); ?>
+    }
+    if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
+        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos')); ?>
 <div id="random_video_selection" class="random_selection">
     <?php UI::show_box_top(T_('Videos of the Moment'));
-            echo T_('Loading...');
-            UI::show_box_bottom(); ?>
+        echo T_('Loading...');
+        UI::show_box_bottom(); ?>
 </div>
     <?php
-        } ?>
-<?php
     } ?>
-<?php if (AmpConfig::get('home_recently_played')) {
-        ?>
+<?php
+} ?>
+<?php if (AmpConfig::get('home_recently_played')) { ?>
 <!-- Recently Played -->
 <div id="recently_played">
     <?php

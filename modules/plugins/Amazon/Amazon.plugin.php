@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,19 +29,21 @@ class AmpacheAmazon
     public $version        = '000001';
     public $min_ampache    = '370009';
     public $max_ampache    = '999999';
-    
+
     public $amazon_base_url;
     public $amazon_max_results_pages;
     public $amazon_developer_public_key;
     public $amazon_developer_private_api_key;
     public $amazon_developer_associate_tag;
-    
+
     /**
      * Constructor
      * This function does nothing
      */
     public function __construct()
     {
+        $this->description = T_('Amazon art search');
+
         return true;
     }
 
@@ -55,12 +57,12 @@ class AmpacheAmazon
             return false;
         }
 
-        Preference::insert('amazon_base_url', 'Amazon base url', 'http://webservices.amazon.com', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_max_results_pages', 'Amazon max results pages', '1', '75', 'integer', 'plugins', $this->name);
-        Preference::insert('amazon_developer_public_key', 'Amazon Access Key ID', '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_private_api_key', 'Amazon Secret Access Key', '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_associate_tag', 'Amazon associate tag', '', '75', 'string', 'plugins', $this->name);
-        
+        Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), '1', '75', 'integer', 'plugins', $this->name);
+        Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', '75', 'string', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -75,7 +77,7 @@ class AmpacheAmazon
         Preference::delete('amazon_developer_public_key');
         Preference::delete('amazon_developer_private_api_key');
         Preference::delete('amazon_developer_associate_tag');
-    
+
         return true;
     } // uninstall
 
@@ -83,48 +85,62 @@ class AmpacheAmazon
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
      */
     public function load($user)
     {
         $user->set_preferences();
         $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim($data['amazon_base_url'])) ||
+                !strlen(trim($data['amazon_developer_public_key'])) ||
+                !strlen(trim($data['amazon_developer_private_api_key'])) ||
+                !strlen(trim($data['amazon_max_results_pages'])) ||
+                !strlen(trim($data['amazon_developer_associate_tag']))) {
+            $data                                     = array();
+            $data['amazon_base_url']                  = Preference::get_by_user(-1, 'amazon_base_url');
+            $data['amazon_developer_public_key']      = Preference::get_by_user(-1, 'amazon_developer_public_key');
+            $data['amazon_developer_private_api_key'] = Preference::get_by_user(-1, 'amazon_developer_private_api_key');
+            $data['amazon_max_results_pages']         = Preference::get_by_user(-1, 'amazon_max_results_pages');
+            $data['amazon_developer_associate_tag']   = Preference::get_by_user(-1, 'amazon_developer_associate_tag');
+        }
 
         if (strlen(trim($data['amazon_base_url']))) {
             $this->amazon_base_url = trim($data['amazon_base_url']);
         } else {
-            debug_event($this->name, 'No amazon base url, plugin skipped', '3');
+            debug_event('amazon.plugin', 'No amazon base url, plugin skipped', 3);
 
             return false;
         }
-        
+
         if (strlen(trim($data['amazon_developer_public_key']))) {
             $this->amazon_developer_public_key = trim($data['amazon_developer_public_key']);
         } else {
-            debug_event($this->name, 'No amazon developer public key, plugin skipped', '3');
+            debug_event('amazon.plugin', 'No amazon developer public key, plugin skipped', 3);
 
             return false;
         }
-        
+
         if (strlen(trim($data['amazon_developer_private_api_key']))) {
             $this->amazon_developer_private_api_key = trim($data['amazon_developer_private_api_key']);
         } else {
-            debug_event($this->name, 'No amazon developer private key, plugin skipped', '3');
+            debug_event('amazon.plugin', 'No amazon developer private key, plugin skipped', 3);
 
             return false;
         }
-        
+
         if (strlen(trim($data['amazon_max_results_pages']))) {
             $this->amazon_max_results_pages = trim($data['amazon_max_results_pages']);
         } else {
             $this->amazon_max_results_pages = 1;
         }
-        
+
         if (strlen(trim($data['amazon_developer_associate_tag']))) {
             $this->amazon_developer_associate_tag = trim($data['amazon_developer_associate_tag']);
         } else {
             $this->amazon_developer_associate_tag = '';
         }
-        
+
         return true;
     } // load
 
@@ -141,7 +157,7 @@ class AmpacheAmazon
             'MediumImage',
             'SmallImage'
         );
-        
+
         $mediaType = ($type == 'album' || $type == 'artist') ? 'Music' : 'Video';
 
         // Prevent the script from timing out
@@ -154,7 +170,7 @@ class AmpacheAmazon
             $proxyport = AmpConfig::get('proxy_port');
             $proxyuser = AmpConfig::get('proxy_user');
             $proxypass = AmpConfig::get('proxy_pass');
-            debug_event('amazon', 'setProxy', 5);
+            debug_event('amazon.plugin', 'setProxy', 5);
             $amazon->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
         }
 
@@ -171,7 +187,7 @@ class AmpacheAmazon
             if ($limit && $total > $limit) {
                 $raw_results = array_slice($raw_results, 0, -($total - $limit), true);
 
-                debug_event('amazon-xml', "Found $total, limit $limit; reducing and breaking from loop", 5);
+                debug_event('amazon.plugin', "Found $total, limit $limit; reducing and breaking from loop", 5);
                 // Merge the results and BREAK!
                 $search_results = array_merge($search_results, $raw_results);
                 break;
@@ -179,7 +195,7 @@ class AmpacheAmazon
 
             $search_results  = array_merge($search_results, $raw_results);
             $pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
-            debug_event('amazon-xml', "Searched results page " . ($amazon->_currentPage + 1) . "/" . $pages_to_search, '5');
+            debug_event('amazon.plugin', "Searched results page " . ($amazon->_currentPage + 1) . "/" . $pages_to_search, 5);
             $amazon->_currentPage++;
         } while ($amazon->_currentPage < $pages_to_search);
 
@@ -190,7 +206,7 @@ class AmpacheAmazon
         }
 
         /* Log this if we're doin debug */
-        debug_event('amazon-xml', "Searched using " . $options['keyword'] . ", results: " . count($final_results), 5);
+        debug_event('amazon.plugin', "Searched using " . $options['keyword'] . ", results: " . count($final_results), 5);
 
         /* Foreach through what we've found */
         foreach ($final_results as $result) {

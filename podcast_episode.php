@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,16 +24,15 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;
         }
 
-        $episode_id = scrub_in($_REQUEST['podcast_episode_id']);
-        show_confirmation(
-            T_('Podcast Episode Deletion'),
-            T_('Are you sure you want to permanently delete this episode?'),
+        $episode_id = (string) scrub_in($_REQUEST['podcast_episode_id']);
+        show_confirmation(T_('Are You Sure?'), T_("The Podcast Episode will be deleted"),
             AmpConfig::get('web_path') . "/podcast_episode.php?action=confirm_delete&podcast_episode_id=" . $episode_id,
             1,
             'delete_podcast_episode'
@@ -46,15 +45,16 @@ switch ($_REQUEST['action']) {
 
         $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
         if (!Catalog::can_remove($episode)) {
-            debug_event('video', 'Unauthorized to remove the episode `.' . $episode->id . '`.', 1);
+            debug_event('podcast_episode', 'Unauthorized to remove the episode `.' . $episode->id . '`.', 1);
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if ($episode->remove()) {
-            show_confirmation(T_('Podcast Episode Deletion'), T_('Episode has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('Podcast Episode has been deleted'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('Podcast Episode Deletion'), T_('Cannot delete this episode.'), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Podcast Episode"), AmpConfig::get('web_path'));
         }
     break;
     case 'show':
@@ -65,4 +65,6 @@ switch ($_REQUEST['action']) {
     break;
 }
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

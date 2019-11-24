@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,7 @@
  *
  */
 
-echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-?>
+echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n"; ?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
     <ShortName>Ampache</ShortName>
     <Description><?php echo scrub_out(AmpConfig::get('site_title')); ?></Description>

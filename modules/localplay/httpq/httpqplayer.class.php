@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,11 +37,11 @@ class HttpQPlayer
      * This is the constructor, it defaults to localhost
      * with port 4800
      */
-    public function __construct($h = "localhost", $pw = "", $p = 4800)
+    public function __construct($host = "localhost", $password = '', $port = 4800)
     {
-        $this->host     = $h;
-        $this->port     = $p;
-        $this->password = $pw;
+        $this->host     = $host;
+        $this->port     = $port;
+        $this->password = $password;
     } // HttpQPlayer
 
     /**
@@ -54,9 +54,9 @@ class HttpQPlayer
     {
         $args['name'] = urlencode($name);
         $args['url']  = urlencode($url);
-        
+
         $results = $this->sendCommand('playurl', $args);
-        
+
         if ($results == '0') {
             $results = null;
         }
@@ -73,7 +73,7 @@ class HttpQPlayer
     {
         $args    = array();
         $results = $this->sendCommand('getversion', $args);
-        
+
         // a return of 0 is a bad value
         if ($results == '0') {
             $results = null;
@@ -127,7 +127,7 @@ class HttpQPlayer
         if ($results == '0') {
             return null;
         }
-    
+
         return true;
     } // prev
 
@@ -207,7 +207,7 @@ class HttpQPlayer
     {
         $args    = array('enable' => $value);
         $results = $this->sendCommand('repeat', $args);
-        
+
         if ($results == '0') {
             $results = null;
         }
@@ -239,7 +239,7 @@ class HttpQPlayer
     {
         $args    = array('index' => $track);
         $results = $this->sendCommand('deletepos', $args);
-        
+
         if ($results == '0') {
             $results = null;
         }
@@ -265,7 +265,7 @@ class HttpQPlayer
         if ($results == '3') {
             $state = 'pause';
         }
-        
+
         return $state;
     } // state
 
@@ -296,7 +296,7 @@ class HttpQPlayer
     {
         $args    = array();
         $results = $this->sendCommand('volumeup', $args);
-        
+
         if ($results == '0') {
             return null;
         }
@@ -312,7 +312,7 @@ class HttpQPlayer
     {
         $args    = array();
         $results = $this->sendCommand('volumedown', $args);
-        
+
         if ($results == '0') {
             return null;
         }
@@ -329,8 +329,8 @@ class HttpQPlayer
     {
 
         // Convert it to base 255
-        $value   = $value * 2.55;
-        $args    = array('level' => $value);
+        $volume  = $value * 2.55;
+        $args    = array('level' => $volume);
         $results = $this->sendCommand('setvolume', $args);
 
         if ($results == '0') {
@@ -348,7 +348,7 @@ class HttpQPlayer
     {
         $args    = array();
         $results = $this->sendcommand('flushplaylist', $args);
-        
+
         if ($results == '0') {
             return null;
         }
@@ -376,7 +376,7 @@ class HttpQPlayer
     {
         $args    = array();
         $results = $this->sendCommand('shuffle_status', $args);
-        
+
         return $results;
     } // get_random
 
@@ -390,7 +390,7 @@ class HttpQPlayer
 
         // First get the current POS
         $pos = $this->sendCommand('getlistpos', array());
-        
+
         // Now get the filename
         $file = $this->sendCommand('getplaylistfile', array('index' => $pos));
 
@@ -407,11 +407,11 @@ class HttpQPlayer
 
         // Pull a delimited list of all tracks
         $results = $this->sendCommand('getplaylistfile', array('delim' => '::'));
-        
+
         if ($results == '0') {
             $results = null;
         }
-    
+
         return $results;
     } // get_tracks
 
@@ -422,10 +422,10 @@ class HttpQPlayer
      */
     private function sendCommand($cmd, $args)
     {
-        $fp = fsockopen($this->host, $this->port, $errno, $errstr);
+        $fsock = fsockopen($this->host, $this->port, $errno, $errstr);
 
-        if (!$fp) {
-            debug_event('httpq', "HttpQPlayer: $errstr ($errno)", '1');
+        if (!$fsock) {
+            debug_event('httpqplayer.class', "HttpQPlayer: $errstr ($errno)", 1);
 
             return null;
         }
@@ -439,20 +439,19 @@ class HttpQPlayer
         }
 
         $msg = $msg . " HTTP/1.0\r\n\r\n";
-        fputs($fp, $msg);
+        fputs($fsock, $msg);
         $data = '';
 
-        while (!feof($fp)) {
-            $data .= fgets($fp);
+        while (!feof($fsock)) {
+            $data .= fgets($fsock);
         }
-        fclose($fp);
+        fclose($fsock);
 
         // Explode the results by line break and take 4th line (results)
         $data = explode("\n", $data);
-        
+
         $result = $data['4'];
-        
+
         return $result;
     } // sendCommand
 } // End HttpQPlayer Class
-;

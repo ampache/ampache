@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,20 +24,21 @@
 
 require_once 'lib/init.php';
 // We special-case this so we can send a 302 if the delete succeeded
-if ($_REQUEST['action'] == 'delete_playlist') {
+if (Core::get_request('action') == 'delete_playlist') {
     // Check rights
     $playlist = new Playlist($_REQUEST['playlist_id']);
     if ($playlist->has_access()) {
         $playlist->delete();
         // Go elsewhere
         header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=playlist');
-        exit;
+
+        return false;
     }
 }
 
 UI::show_header();
 
-/* Switch on the action passed in */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'create_playlist':
         /* Check rights */
@@ -47,11 +48,14 @@ switch ($_REQUEST['action']) {
         }
 
         $playlist_name = scrub_in($_REQUEST['playlist_name']);
-        $playlist_type = scrub_in($_REQUEST['type']);
+        $playlist_type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
         $_SESSION['data']['playlist_id'] = $playlist_id;
-        show_confirmation(T_('Playlist Created'), sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type), 'playlist.php');
+        show_confirmation(T_('Playlist created'),
+                /* HINT: %1 playlist name, %2 playlist type */
+                sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type),
+                'playlist.php');
     break;
     case 'delete_playlist':
         // If we made it here, we didn't have sufficient rights.
@@ -77,19 +81,20 @@ switch ($_REQUEST['action']) {
 
         if ($result['success']) {
             $url   = 'show_playlist&amp;playlist_id=' . $result['id'];
-            $title = T_('Playlist Imported');
+            $title = T_('No Problem');
             $body  = basename($_FILES['filename']['name']);
             $body .= '<br />' .
+                /* HINT: Number of songs */
                 sprintf(nT_('Successfully imported playlist with %d song.', 'Successfully imported playlist with %d songs.', $result['count']), $result['count']);
         } else {
             $url   = 'show_import_playlist';
-            $title = T_('Playlist Not Imported');
-            $body  = T_($result['error']);
+            $title = T_('There Was a Problem');
+            $body  = T_('The Playlist could not be imported') . ': ' . $result['error'];
         }
         show_confirmation($title, $body, AmpConfig::get('web_path') . '/playlist.php?action=' . $url);
     break;
     case 'set_track_numbers':
-        debug_event('playlist', 'Set track numbers called.', '5');
+        debug_event('playlist', 'Set track numbers called.', 5);
 
         $playlist = new Playlist($_REQUEST['playlist_id']);
         /* Make sure they have permission */
@@ -100,13 +105,13 @@ switch ($_REQUEST['action']) {
 
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
-            $_GET[$key] = unhtmlentities(scrub_in($data));
-            debug_event('playlist', $key . '=' . $_GET[$key], '5');
+            $_GET[$key] = unhtmlentities((string) scrub_in($data));
+            debug_event('playlist', $key . '=' . Core::get_get($key), 5);
         }
 
-        if (isset($_GET['order'])) {
+        if (filter_has_var(INPUT_GET, 'order')) {
             $songs = explode(";", $_GET['order']);
-            $track = $_GET['offset'] ? (intval($_GET['offset']) + 1) : 1;
+            $track = $_GET['offset'] ? ((int) ($_GET['offset']) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     $playlist->update_track_number($song_id, $track);
@@ -125,19 +130,19 @@ switch ($_REQUEST['action']) {
         $playlist->add_songs(array($_REQUEST['song_id']), true);
     break;
     case 'prune_empty':
-        if (!$GLOBALS['user']->has_access(100)) {
+        if (!Core::get_global('user')->has_access(100)) {
             UI::access_denied();
             break;
         }
 
         prune_empty_playlists();
         $url   = AmpConfig::get('web_path') . '/playlist.php';
-        $title = T_('Empty Playlists Deleted');
-        $body  = '';
+        $title = T_('No Problem');
+        $body  = T_('Empty Playlists have been deleted');
         show_confirmation($title, $body, $url);
     break;
     case 'remove_duplicates':
-        debug_event('playlist', 'Remove duplicates called.', '5');
+        debug_event('playlist', 'Remove duplicates called.', 4);
 
         $playlist = new Playlist($_REQUEST['playlist_id']);
         /* Make sure they have permission */
@@ -169,7 +174,7 @@ switch ($_REQUEST['action']) {
     case 'sort_tracks':
         $playlist = new Playlist($_REQUEST['playlist_id']);
         if (!$playlist->has_access()) {
-            access_denied();
+            UI::access_denied();
             break;
         }
 
@@ -183,4 +188,6 @@ switch ($_REQUEST['action']) {
     break;
 } // switch on the action
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

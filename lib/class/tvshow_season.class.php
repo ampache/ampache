@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,15 +43,10 @@ class TVShow_Season extends database_object implements library_item
      * TV Show
      * Takes the ID of the tv show season and pulls the info from the db
      */
-    public function __construct($id='')
+    public function __construct($show_id)
     {
-        /* If they failed to pass in an id, just run for it */
-        if (!$id) {
-            return false;
-        }
-
         /* Get the information from the db */
-        $info = $this->get_info($id);
+        $info = $this->get_info($show_id);
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -61,11 +56,11 @@ class TVShow_Season extends database_object implements library_item
     } //constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused tv shows seasons
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `tvshow_season` USING `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " .
             "WHERE `tvshow_episode`.`id` IS NULL";
@@ -75,6 +70,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * get_songs
      * gets all episodes for this tv show season
+     * @return array
      */
     public function get_episodes()
     {
@@ -91,8 +87,8 @@ class TVShow_Season extends database_object implements library_item
         $db_results = Dba::read($sql);
 
         $results = array();
-        while ($r = Dba::fetch_assoc($db_results)) {
-            $results[] = $r['id'];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
         }
 
         return $results;
@@ -101,6 +97,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the tv show season, this means totals etc
+     * @return array
      */
     private function _get_extra_info()
     {
@@ -147,6 +144,10 @@ class TVShow_Season extends database_object implements library_item
         return true;
     }
 
+    /*
+     * get_keywords
+     * @return array
+     */
     public function get_keywords()
     {
         $keywords           = array();
@@ -181,13 +182,19 @@ class TVShow_Season extends database_object implements library_item
 
     public function search_childrens($name)
     {
+        debug_event('tvshow_season.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
+    /**
+     * get_medias
+     * @return array
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'video') {
+        if ($filter_type === null || $filter_type == 'video') {
             $episodes = $this->get_episodes();
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
@@ -204,7 +211,7 @@ class TVShow_Season extends database_object implements library_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -253,6 +260,7 @@ class TVShow_Season extends database_object implements library_item
      * check
      *
      * Checks for an existing tv show season; if none exists, insert one.
+     * @return string|null
      */
     public static function check($tvshow, $season_number, $readonly = false)
     {
@@ -262,29 +270,25 @@ class TVShow_Season extends database_object implements library_item
             return self::$_mapcache[$name]['null'];
         }
 
-        $id     = 0;
-        $exists = false;
+        $object_id  = 0;
+        $exists     = false;
+        $sql        = 'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? AND `season_number` = ?';
+        $db_results = Dba::read($sql, array($tvshow, $season_number));
+        $id_array   = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $key            = 'null';
+            $id_array[$key] = $row['id'];
+        }
 
-        if (!$exists) {
-            $sql        = 'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? AND `season_number` = ?';
-            $db_results = Dba::read($sql, array($tvshow, $season_number));
-
-            $id_array = array();
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $key            = 'null';
-                $id_array[$key] = $row['id'];
-            }
-
-            if (count($id_array)) {
-                $id     = array_shift($id_array);
-                $exists = true;
-            }
+        if (count($id_array)) {
+            $object_id = array_shift($id_array);
+            $exists    = true;
         }
 
         if ($exists) {
-            self::$_mapcache[$name]['null'] = $id;
+            self::$_mapcache[$name]['null'] = $object_id;
 
-            return $id;
+            return $object_id;
         }
 
         if ($readonly) {
@@ -298,11 +302,11 @@ class TVShow_Season extends database_object implements library_item
         if (!$db_results) {
             return null;
         }
-        $id = Dba::insert_id();
+        $object_id = Dba::insert_id();
 
-        self::$_mapcache[$name]['null'] = $id;
+        self::$_mapcache[$name]['null'] = $object_id;
 
-        return $id;
+        return $object_id;
     }
 
     /**
@@ -321,11 +325,11 @@ class TVShow_Season extends database_object implements library_item
     {
         $deleted   = true;
         $video_ids = $this->get_episodes();
-        foreach ($video_ids as $id) {
-            $video   = Video::create_from_id($id);
+        foreach ($video_ids as $videos) {
+            $video   = Video::create_from_id($videos);
             $deleted = $video->remove_from_disk();
             if (!$deleted) {
-                debug_event('tvshow_season', 'Error when deleting the video `' . $id . '`.', 1);
+                debug_event('tvshow_season.class', 'Error when deleting the video `' . $videos . '`.', 1);
                 break;
             }
         }
@@ -334,11 +338,11 @@ class TVShow_Season extends database_object implements library_item
             $sql     = "DELETE FROM `tvshow_season` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
-                Art::gc('tvshow_season', $this->id);
-                Userflag::gc('tvshow_season', $this->id);
-                Rating::gc('tvshow_season', $this->id);
-                Shoutbox::gc('tvshow_season', $this->id);
-                Useractivity::gc('tvshow_season', $this->id);
+                Art::garbage_collection('tvshow_season', $this->id);
+                Userflag::garbage_collection('tvshow_season', $this->id);
+                Rating::garbage_collection('tvshow_season', $this->id);
+                Shoutbox::garbage_collection('tvshow_season', $this->id);
+                Useractivity::garbage_collection('tvshow_season', $this->id);
             }
         }
 

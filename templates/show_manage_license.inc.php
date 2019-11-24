@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,16 +20,15 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path = AmpConfig::get('web_path'); ?>
 <div id="information_actions">
     <ul>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=show_create"><?php echo T_('Create new license'); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=show_create"><?php echo T_('Create License'); ?></a>
         </li>
     </ul>
 </div>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
     <thead>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
@@ -45,10 +44,9 @@ $web_path = AmpConfig::get('web_path');
 
             require AmpConfig::get('prefix') . UI::find_template('show_license_row.inc.php'); ?>
         <?php
-        } if (!count($object_ids)) {
-            ?>
+        } if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="6" class="error"><?php echo T_('No Licenses Found'); ?></td>
+            <td colspan="6" class="error"><?php echo T_('No licenses found'); ?></td>
         </tr>
         <?php
         } ?>

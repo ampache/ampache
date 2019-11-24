@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,21 +18,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ */ ?>
+<?php
+$t_ampache = T_('Ampache'); ?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
     xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>"
     dir="<?php echo $dir;?>">
 
 <head>
-<!-- Propulsed by Ampache | ampache.org -->
+<!-- Propelled by Ampache | ampache.org -->
 <meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
 <?php UI::show_custom_style(); ?>
-<title><?php echo(T_("Ampache error page"));?></title>
+<title><?php echo(T_("Ampache Error Page"));?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-<link rel="stylesheet" href="templates/install-doped.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body>
 <!-- rfc3514 implementation -->
@@ -40,17 +41,17 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="themes/reborn/images/ampache.png" title="Ampache" alt="Ampache">
-                <?php echo T_('Ampache'); ?> - For the love of Music
+                <img src="./images/ampache-dark.png" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>">
+                <?php echo $t_ampache . ' :: ' . T_('For the Love of Music'); ?>
             </a>
         </div>
     </div>
     <div class="container" role="main">
         <div class="jumbotron">
             <h1><?php echo T_('Error'); ?></h1>
-            <p><?php echo(T_("The following error has occured, you will automaticly be redirected after 10 seconds.")); ?></p>
+            <p><?php echo(T_("The following error has occurred, you will be automatically redirected in 10 seconds.")); ?></p>
         </div>
-        <h2><?php echo(T_("Error messages"));?>:</h2>
+        <h2><?php echo(T_("Error Messages"));?>:</h2>
         <?php AmpError::display('general'); ?>
     </div>
 </body>

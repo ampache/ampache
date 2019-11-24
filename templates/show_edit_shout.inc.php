@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,14 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
-<?php UI::show_box_top(T_('Edit existing Shoutbox Post')); ?>
+ */ ?>
+<?php UI::show_box_top(T_('Edit Existing Shoutbox Post')); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/shout.php?action=edit_shout">
 <input type="hidden" name="shout_id" value="<?php echo $shout->id; ?>" />
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <tr>
-    <td><strong><?php /* HINT: Client link, Object link */ printf(T_('Created by: %s for %s'), $client->f_link, $object->f_link); ?></strong>
+    <td><strong><?php /* HINT: %1 Client link, %2 Object link */ printf(T_('Created by: %1$s for %2$s'), $client->f_link, $object->f_link); ?></strong>
 <tr>
 <tr>
     <td><strong><?php echo T_('Comment:'); ?></strong>

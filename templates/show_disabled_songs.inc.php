@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <br />
 <form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">
-    <table class="tabledata" cellpadding="0" cellspacing="0">
+    <table class="tabledata">
         <thead>
             <tr class="th-top">
                 <th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo T_('Select'); ?></a></th>
@@ -34,8 +33,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($songs as $song) {
-    ?>
+            <?php foreach ($songs as $song) { ?>
                 <tr class="<?php echo UI::flip_class(); ?>">
                     <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
                     <td class="cel_song"><?php echo $song->title; ?></td>
@@ -45,10 +43,9 @@
                     <td class="cel_additiontime"><?php echo date("h:i:s, m/d/y", $song->addition_time); ?></td>
                 </tr>
             <?php
-} if (!count($songs)) {
-        ?>
+} if (!count($songs)) { ?>
                 <tr class="<?php echo UI::flip_class(); ?>">
-                    <td colspan="6"><span class="error"><?php echo T_('No Records Found'); ?></span></td>
+                    <td colspan="6"><span class="error"><?php echo T_('No records found'); ?></span></td>
                 </tr>
             <?php
     } ?>

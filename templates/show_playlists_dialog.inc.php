@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,17 +18,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 
 <ul>
     <li>
-        <a href="javascript:void(0);" id="rb_append_dplaylist_new" onclick="createNewPlaylist('<?php echo T_('Playlist name'); ?>', '<?php echo AmpConfig::get('ajax_url') . '?page=playlist&action=append_item&item_type=' . $object_type . '&item_id=' . $object_id; ?>', 'rb_append_dplaylist_new');">
+        <a href="javascript:void(0);" id="rb_append_dplaylist_new" onclick="createNewPlaylist('<?php echo T_('Playlist Name'); ?>', '<?php echo AmpConfig::get('ajax_url') . '?page=playlist&action=append_item&item_type=' . $object_type . '&item_id=' . $object_id; ?>', 'rb_append_dplaylist_new');">
             <?php echo T_('Add to New Playlist'); ?>
         </a>
     </li>
 <?php
-    $playlists = Playlist::get_users($GLOBALS['user']->id);
+    $playlists = Playlist::get_users(Core::get_global('user')->id);
     Playlist::build_cache($playlists);
     foreach ($playlists as $playlist_id) {
         $playlist = new Playlist($playlist_id);

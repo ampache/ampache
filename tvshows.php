@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,19 +24,15 @@ require_once 'lib/init.php';
 
 UI::show_header();
 
-/**
- * Display Switch
- */
+// Switch on the actions
 switch ($_REQUEST['action']) {
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;
         }
 
-        $tvshow_id = scrub_in($_REQUEST['tvshow_id']);
-        show_confirmation(
-            T_('TVShow Deletion'),
-            T_('Are you sure you want to permanently delete this tvshow?'),
+        $tvshow_id = (string) scrub_in($_REQUEST['tvshow_id']);
+        show_confirmation(T_('Are You Sure?'), T_("The TV Show and its files will be deleted"),
             AmpConfig::get('web_path') . "/tvshows.php?action=confirm_delete&tvshow_id=" . $tvshow_id,
             1,
             'delete_tvshow'
@@ -49,15 +45,16 @@ switch ($_REQUEST['action']) {
 
         $tvshow = new TVShow($_REQUEST['tvshow_id']);
         if (!Catalog::can_remove($tvshow)) {
-            debug_event('tvshow', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
+            debug_event('tvshows', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
             UI::access_denied();
-            exit;
+
+            return false;
         }
 
         if ($tvshow->remove_from_disk()) {
-            show_confirmation(T_('TVShow Deletion'), T_('TVShow has been deleted.'), AmpConfig::get('web_path'));
+            show_confirmation(T_('No Problem'), T_('TV Show has been deleted'), AmpConfig::get('web_path'));
         } else {
-            show_confirmation(T_('TVShow Deletion'), T_('Cannot delete this tvshow.'), AmpConfig::get('web_path'));
+            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this TV Show"), AmpConfig::get('web_path'));
         }
     break;
     case 'show':
@@ -96,4 +93,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

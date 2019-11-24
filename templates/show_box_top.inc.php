@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,7 @@
  *
  */
 
-$class = $class ? $class : 'box';
-?>
+$class = $class ? $class : 'box'; ?>
 
 <div class="<?php echo $class; ?>">
   <div class="box-inside">
@@ -29,8 +28,7 @@ $class = $class ? $class : 'box';
       <div class="box-left-top"></div>
       <div class="box-right-top"></div>
     </div>
-    <?php if ($title) {
-    ?>
+    <?php if ($title) { ?>
        <h3 class="box-title"><?php echo $title; ?></h3>
       <?php
 } ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <div>
     <form method="post" id="edit_album_<?php echo $libitem->id; ?>" class="edit_dialog_content">
-        <table class="tabledata" cellspacing="0" cellpadding="0">
+        <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($libitem->full_name); ?>" autofocus /></td>
@@ -39,8 +38,7 @@
                             }
                         } else {
                             echo $libitem->f_artist_name;
-                        }
-                    ?>
+                        } ?>
                 </td>
             </tr>
             <tr>
@@ -55,8 +53,7 @@
                     <?php
                         } else {
                             echo $libitem->f_album_artist_name;
-                        }
-                    ?>
+                        } ?>
                 </td>
             </tr>
             <tr>
@@ -70,21 +67,18 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
                 <td>
-                    <?php if (Access::check('interface', 50)) {
-                        ?>
+                    <?php if (Access::check('interface', 50)) { ?>
                         <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                     <?php
                     } else {
                         echo $libitem->mbid;
-                    }
-                    ?>
+                    } ?>
                 </td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz Release Group ID') ?></td>
                 <td>
-                <?php if (Access::check('interface', 50)) {
-                        ?>
+                <?php if (Access::check('interface', 50)) { ?>
                     <input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group; ?>" />
                 <?php
                     } else {
@@ -95,6 +89,18 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Type') ?></td>
                 <td><input type="text" name="release_type" value="<?php echo $libitem->release_type; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>
+                <td><input type="text" name="catalog_number" value="<?php echo $libitem->catalog_number; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Barcode') ?></td>
+                <td><input type="text" name="barcode" value="<?php echo $libitem->barcode; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Original Year') ?></td>
+                <td><input type="text" name="original_year" value="<?php echo $libitem->original_year; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>

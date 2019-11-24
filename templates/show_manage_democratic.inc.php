@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +20,8 @@
  *
  */
 
-UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+UI::show_box_top(T_('Manage'));  ?>
+<table class="tabledata">
     <tr class="th-top">
         <th class="cel_number"><?php echo T_('Playlist'); ?></th>
         <th class="cel_base_playlist"><?php echo T_('Base Playlist'); ?></th>
@@ -50,8 +50,7 @@ UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
         </td>
     </tr>
     <?php
-        } if (!count($playlists)) {
-            ?>
+        } if (!count($playlists)) { ?>
     <tr>
         <td colspan="7"><span class="nodata"><?php echo T_('No democratic found'); ?></span></td>
     </tr>
@@ -60,6 +59,6 @@ UI::show_box_top(T_('Manage Democratic Playlists'));  ?>
 </table>
 <br />
 <div>
-    <a class="button" href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=show_create"><?php echo T_('Create New Playlist'); ?></a>
+    <a class="button" href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=show_create"><?php echo T_('Create Playlist'); ?></a>
 </div>
 <?php UI::show_box_bottom(); ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,33 +20,29 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
-?>
-<?php if ($browse->get_show_header()) {
+$web_path = AmpConfig::get('web_path'); ?>
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
-    <table id="reorder_playlist_table" class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="media">
+    <table id="reorder_playlist_table" class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="media">
         <thead>
             <tr class="th-top">
                 <th class="cel_play essential"></th>
-                <?php if (Art::is_enabled()) {
-    ?>
+                <?php if (Art::is_enabled()) { ?>
                 <th class="cel_cover optional"><?php echo T_('Art') ?></th>
                 <?php
 } ?>
                 <th class="cel_title essential persist"><?php echo T_('Title'); ?></th>
                 <th class="cel_add essential"></th>
                 <th class="cel_time optional"><?php echo T_('Time'); ?></th>
-                <?php if (User::is_registered()) {
-        ?>
+                <?php if (User::is_registered()) { ?>
                     <?php if (AmpConfig::get('ratings')) {
-            ; ?>
+    ; ?>
                         <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                     <?php
-        } ?>
-                    <?php if (AmpConfig::get('userflags')) {
-            ?>
+} ?>
+                    <?php if (AmpConfig::get('userflags')) { ?>
                 <?php
         } ?>
                 <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
@@ -76,23 +72,19 @@ $web_path = AmpConfig::get('web_path');
         <tfoot>
             <tr class="th-bottom">
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
-                <?php if (Art::is_enabled()) {
-        ?>
+                <?php if (Art::is_enabled()) { ?>
                 <th class="cel_cover"><?php echo T_('Art') ?></th>
                 <?php
     } ?>
                 <th class="cel_title"><?php echo T_('Title'); ?></th>
                 <th class="cel_add"></th>
                 <th class="cel_time"><?php echo T_('Time'); ?></th>
-                <?php if (User::is_registered()) {
-        ?>
-                    <?php if (AmpConfig::get('ratings')) {
-            ?>
+                <?php if (User::is_registered()) { ?>
+                    <?php if (AmpConfig::get('ratings')) { ?>
                         <th class="cel_rating"><?php echo T_('Rating'); ?></th>
                     <?php
         } ?>
-                    <?php if (AmpConfig::get('userflags')) {
-            ?>
+                    <?php if (AmpConfig::get('userflags')) { ?>
                         <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
                     <?php
         } ?>
@@ -105,6 +97,6 @@ $web_path = AmpConfig::get('web_path');
     </table>
 </form>
 <?php show_table_render($argument); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
         require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
     } ?>

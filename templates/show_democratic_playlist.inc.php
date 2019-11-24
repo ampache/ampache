@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,12 +20,11 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
-?>
-<?php if ($browse->get_show_header()) {
+$web_path = AmpConfig::get('web_path'); ?>
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata" cellpadding="0" cellspacing="0">
+<table class="tabledata">
 <colgroup>
   <col id="col_action" />
   <col id="col_votes" />
@@ -33,26 +32,24 @@ $web_path = AmpConfig::get('web_path');
   <col id="col_album" />
   <col id="col_artist" />
   <col id="col_time" />
-  <?php if (Access::check('interface', '100')) {
-    ?>
+  <?php if (Access::check('interface', '100')) { ?>
   <col id="col_admin" />
   <?php
 } ?>
 </colgroup>
 <?php
 if (!count($object_ids)) {
-        $playlist = new Playlist($democratic->base_playlist); ?>
+    $playlist = new Playlist($democratic->base_playlist); ?>
 <tr>
 <td>
-    <?php echo T_('Playing from base Playlist'); ?>.
+    <?php echo T_('Playing from base playlist'); ?>.
     </a>
 </td>
 </tr>
 <?php
-    } // if no songs
+} // if no songs
 /* Else we have songs */
-else {
-    ?>
+else { ?>
 <thead>
     <tr class="th-top">
         <th class="cel_action"><?php echo T_('Action'); ?></th>
@@ -61,8 +58,7 @@ else {
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (Access::check('interface', '100')) {
-        ?>
+        <?php if (Access::check('interface', '100')) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
         <?php
     } ?>
@@ -80,12 +76,10 @@ $democratic = Democratic::get_current_playlist();
         $media->format(); ?>
 <tr class="<?php echo UI::flip_class(); ?>">
     <td class="cel_action">
-    <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) {
-            ?>
+    <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) { ?>
     <?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'], 'delete', T_('Remove Vote'), 'remove_vote_' . $item['id']); ?>
     <?php
-        } else {
-            ?>
+        } else { ?>
     <?php echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'remove_vote_' . $item['id']); ?>
     <?php
         } ?>
@@ -95,8 +89,7 @@ $democratic = Democratic::get_current_playlist();
     <td class="cel_album"><?php echo $media->f_album_link; ?></td>
     <td class="cel_artist"><?php echo $media->f_artist_link; ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
-    <?php if (Access::check('interface', '100')) {
-            ?>
+    <?php if (Access::check('interface', '100')) { ?>
     <td class="cel_admin">
     <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'disable', T_('Delete'), 'delete_row_' . $item['id']); ?>
     </td>
@@ -114,19 +107,17 @@ $democratic = Democratic::get_current_playlist();
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (Access::check('interface', '100')) {
-        ?>
+        <?php if (Access::check('interface', '100')) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
         <?php
     } ?>
     </tr>
 </tfoot>
 <?php
-} // end else
-?>
+} // end else?>
 </table>
 
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-} ?>
+<?php if ($browse->is_show_header()) {
+        require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    } ?>

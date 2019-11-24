@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,13 +33,14 @@
  */
 class Upnp_Api
 {
-    # UPnP classes:
-    # object.item.audioItem
-    # object.item.imageItem
-    # object.item.videoItem
-    # object.item.playlistItem
-    # object.item.textItem
-    # object.container
+    /* UPnP classes:
+     * object.item.audioItem
+     * object.item.imageItem
+     * object.item.videoItem
+     * object.item.playlistItem
+     * object.item.textItem
+     * object.container
+     */
 
     /**
      * constructor
@@ -48,7 +49,7 @@ class Upnp_Api
     private function __construct()
     {
     }
-    
+
     public static function get_uuidStr()
     {
         // Create uuid based on host
@@ -59,6 +60,9 @@ class Upnp_Api
         return $uuidstr;
     }
 
+    /**
+     * @param string $buf
+     */
     private static function udpSend($buf, $delay=15, $host="239.255.255.250", $port=1900)
     {
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
@@ -68,7 +72,7 @@ class Upnp_Api
         usleep($delay * 1000);
     }
 
-    public static function sddpSend($delay=15, $host="239.255.255.250", $port=1900, $prefix="NT")
+    public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT")
     {
         $strHeader  = 'NOTIFY * HTTP/1.1' . "\r\n";
         $strHeader .= 'HOST: ' . $host . ':' . $port . "\r\n";
@@ -77,7 +81,7 @@ class Upnp_Api
         $strHeader .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
         $strHeader .= 'NTS: ssdp:alive' . "\r\n";
         $uuidStr = self::get_uuidStr();
-        
+
         $rootDevice = $prefix . ': upnp:rootdevice' . "\r\n";
         $rootDevice .= 'USN: uuid:' . $uuidStr . '::upnp:rootdevice' . "\r\n" . "\r\n";
         $buf = $strHeader . $rootDevice;
@@ -122,49 +126,49 @@ class Upnp_Api
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['objectid'] = $reader->value;
-                        } # end if
+                        } // end if
                         break;
                     case 'BrowseFlag':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['browseflag'] = $reader->value;
-                        } # end if
+                        } // end if
                         break;
                     case 'Filter':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['filter'] = $reader->value;
-                        } # end if
+                        } // end if
                         break;
                     case 'StartingIndex':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['startingindex'] = $reader->value;
-                        } # end if
+                        } // end if
                         break;
                     case 'RequestedCount':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['requestedcount'] = $reader->value;
-                        } # end if
+                        } // end if
                         break;
                     case 'SearchCriteria':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['searchcriteria'] = $reader->value;
-                        } # end if
+                        } // end if
                         break;
                     case 'SortCriteria':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['sortcriteria'] = $reader->value;
-                        } # end if
+                        } // end if
                         break;
-                } # end switch
-            } # end if
-        } #end while
+                } // end switch
+            } // end if
+        } //end while
         return $retArr;
-    } #end function
+    } //end function
 
 
     public static function createDIDL($prmItems)
@@ -172,27 +176,27 @@ class Upnp_Api
         $xmlDoc               = new DOMDocument('1.0', 'utf-8');
         $xmlDoc->formatOutput = true;
 
-        # Create root element and add namespaces:
+        // Create root element and add namespaces:
         $ndDIDL = $xmlDoc->createElementNS('urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/', 'DIDL-Lite');
         $ndDIDL->setAttribute('xmlns:dc', 'http://purl.org/dc/elements/1.1/');
         $ndDIDL->setAttribute('xmlns:upnp', 'urn:schemas-upnp-org:metadata-1-0/upnp/');
         $xmlDoc->appendChild($ndDIDL);
 
-        # Return empty DIDL if no items present:
+        // Return empty DIDL if no items present:
         if ((!isset($prmItems)) || (!is_array($prmItems))) {
             return $xmlDoc;
         }
 
-        # sometimes here comes only one single item, not an array. Convert it to array. (TODO - UGLY)
+        // sometimes here comes only one single item, not an array. Convert it to array. (TODO - UGLY)
         if ((count($prmItems) > 0) && (!is_array($prmItems[0]))) {
             $prmItems = array($prmItems);
         }
 
-        # Add each item in $prmItems array to $ndDIDL:
+        // Add each item in $prmItems array to $ndDIDL:
         foreach ($prmItems as $item) {
             if (!is_array($item)) {
-                debug_event('upnp_class', 'item is not array', 2);
-                debug_event('upnp_class', $item, '5');
+                debug_event('upnp_api.class', 'item is not array', 2);
+                debug_event('upnp_api.class', $item, 5);
                 continue;
             }
 
@@ -206,9 +210,9 @@ class Upnp_Api
             $ndRes_text = $xmlDoc->createTextNode($item['res']);
             $ndRes->appendChild($ndRes_text);
 
-            # Add each element / attribute in $item array to item node:
+            // Add each element / attribute in $item array to item node:
             foreach ($item as $key => $value) {
-                # Handle attributes. Better solution?
+                // Handle attributes. Better solution?
                 switch ($key) {
                     case 'id':
                         $ndItem->setAttribute('id', $value);
@@ -259,7 +263,7 @@ class Upnp_Api
                     default:
                         $ndTag = $xmlDoc->createElement($key);
                         $ndItem->appendChild($ndTag);
-                        # check if string is already utf-8 encoded
+                        // check if string is already utf-8 encoded
                         $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($value, 'auto') == 'UTF-8')?$value:utf8_encode($value));
                         $ndTag->appendChild($ndTag_text);
                 }
@@ -276,17 +280,18 @@ class Upnp_Api
 
     public static function createSOAPEnvelope($prmDIDL, $prmNumRet, $prmTotMatches, $prmResponseType = 'u:BrowseResponse', $prmUpdateID = '0')
     {
-        # $prmDIDL is DIDL XML string
-        # XML-Layout:
-        #
-        #		-s:Envelope
-        #				-s:Body
-        #						-u:BrowseResponse
-        #								Result (DIDL)
-        #								NumberReturned
-        #								TotalMatches
-        #								UpdateID
-        #
+        /*
+         * $prmDIDL is DIDL XML string
+         * XML-Layout:
+         *
+         *        -s:Envelope
+         *            -s:Body
+         *                -u:BrowseResponse
+         *                    Result (DIDL)
+         *                    NumberReturned
+         *                    TotalMatches
+         *                    UpdateID
+         */
         $doc               = new DOMDocument('1.0', 'utf-8');
         $doc->formatOutput = true;
         $ndEnvelope        = $doc->createElementNS('http://schemas.xmlsoap.org/soap/envelope/', 's:Envelope');
@@ -302,13 +307,16 @@ class Upnp_Api
         $ndBrowseResp->appendChild($ndNumRet);
         $ndTotMatches = $doc->createElement('TotalMatches', $prmTotMatches);
         $ndBrowseResp->appendChild($ndTotMatches);
-        $ndUpdateID = $doc->createElement('UpdateID', $prmUpdateID); # seems to be ignored by the WDTVL
-        #$ndUpdateID = $doc->createElement('UpdateID', (string) mt_rand(); # seems to be ignored by the WDTVL
+        $ndUpdateID = $doc->createElement('UpdateID', $prmUpdateID); // seems to be ignored by the WDTVL
+        //$ndUpdateID = $doc->createElement('UpdateID', (string) mt_rand(); // seems to be ignored by the WDTVL
         $ndBrowseResp->appendChild($ndUpdateID);
 
         return $doc;
     }
 
+    /**
+     * @param string $prmPath
+     */
     public static function _musicMetadata($prmPath, $prmQuery = '')
     {
         $root    = 'amp://music';
@@ -438,7 +446,7 @@ class Upnp_Api
                     break;
                 }
             break;
-            
+
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1:
@@ -462,7 +470,7 @@ class Upnp_Api
                     break;
                 }
             break;
-            
+
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1:
@@ -476,7 +484,7 @@ class Upnp_Api
                             'upnp:class' => 'object.container',
                         );
                     break;
-                
+
                     case 2:
                         $podcast = new Podcast($pathreq[1]);
                         if ($podcast->id) {
@@ -484,10 +492,10 @@ class Upnp_Api
                             $meta = self::_itemPodcast($podcast, $root . '/podcasts');
                         }
                     break;
-                    
+
                     case 3:
                         $episode = new Podcast_Episode($pathreq[2]);
-                        if ($episode->id) {
+                        if ($episode->id !== null) {
                             $episode->format();
                             $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
                         }
@@ -513,7 +521,7 @@ class Upnp_Api
     private static function _slice($items, $start, $count)
     {
         $maxCount = count($items);
-        debug_event('upnp-api', 'slice: ' . $maxCount . "   " . $start . "    " . $count, '5');
+        debug_event('upnp_api.class', 'slice: ' . $maxCount . "   " . $start . "    " . $count, 5);
 
         return array($maxCount, array_slice($items, $start, ($count == 0 ? $maxCount - $start : $count)));
     }
@@ -659,7 +667,7 @@ class Upnp_Api
                     break;
                 }
             break;
-            
+
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1: // Get radios list
@@ -673,7 +681,7 @@ class Upnp_Api
                     break;
                 }
             break;
-            
+
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1: // Get podcasts list
@@ -721,6 +729,9 @@ class Upnp_Api
         return array($maxCount, $mediaItems);
     }
 
+    /**
+     * @param string $prmPath
+     */
     public static function _videoMetadata($prmPath, $prmQuery = '')
     {
         $root    = 'amp://video';
@@ -971,10 +982,10 @@ class Upnp_Api
 
     private static function _replaceSpecialSymbols($title)
     {
-        ///debug_event('upnp_class', 'replace <<< ' . $title, 5);
+        ///debug_event('upnp_api.class', 'replace <<< ' . $title, 5);
         // replace non letter or digits
         $title = preg_replace('~[^\\pL\d\.\s\(\)\.\,\'\"]+~u', '-', $title);
-        ///debug_event('upnp_class', 'replace >>> ' . $title, 5);
+        ///debug_event('upnp_api.class', 'replace >>> ' . $title, 5);
 
         if ($title == "") {
             $title = '(no title)';
@@ -983,6 +994,10 @@ class Upnp_Api
         return $title;
     }
 
+    /**
+     * @param Artist $artist
+     * @param string $parent
+     */
     private static function _itemArtist($artist, $parent)
     {
         return array(
@@ -995,6 +1010,10 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param Album $album
+     * @param string $parent
+     */
     private static function _itemAlbum($album, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
@@ -1011,6 +1030,9 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param string $parent
+     */
     private static function _itemPlaylist($playlist, $parent)
     {
         return array(
@@ -1023,6 +1045,10 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param Search $playlist
+     * @param string $parent
+     */
     private static function _itemSmartPlaylist($playlist, $parent)
     {
         return array(
@@ -1035,6 +1061,9 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param string $parent
+     */
     public static function _itemSong($song, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
@@ -1066,7 +1095,11 @@ class Upnp_Api
             'description' => self::_replaceSpecialSymbols($song->comment),
         );
     }
-    
+
+    /**
+     * @param Live_Stream $radio
+     * @param string $parent
+     */
     public static function _itemLiveStream($radio, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
@@ -1088,6 +1121,9 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param string $parent
+     */
     private static function _itemTVShow($tvshow, $parent)
     {
         return array(
@@ -1100,6 +1136,10 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param TVShow_Season $season
+     * @param string $parent
+     */
     private static function _itemTVShowSeason($season, $parent)
     {
         return array(
@@ -1112,6 +1152,9 @@ class Upnp_Api
         );
     }
 
+    /**
+     * @param string $parent
+     */
     private static function _itemVideo($video, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
@@ -1135,7 +1178,11 @@ class Upnp_Api
             'duration' => $video->f_time_h . '.0',
         );
     }
-    
+
+    /**
+     * @param string $parent
+     * @return array
+     */
     private static function _itemPodcast($podcast, $parent)
     {
         return array(
@@ -1147,7 +1194,12 @@ class Upnp_Api
             'upnp:class' => 'object.container',
         );
     }
-    
+
+    /**
+     * @param Podcast_Episode $episode
+     * @param string $parent
+     * @return array
+     */
     private static function _itemPodcastEpisode($episode, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
@@ -1178,222 +1230,60 @@ class Upnp_Api
     private static function _getFileTypes()
     {
         return array(
-            'wav' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/x-wav:*',
-            ),
-            'mpa' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/mpeg:*',
-            ),
-            '.mp1' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/mpeg:*',
-            ),
-            'mp3' => array(
-                'class' => 'object.item.audioItem.musicTrack',
-                'mime' => 'http-get:*:audio/mpeg:*',
-            ),
-            'aiff' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/x-aiff:*',
-            ),
-            'aif' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/x-aiff:*',
-            ),
-            'wma' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/x-ms-wma:*',
-            ),
-            'lpcm' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/lpcm:*',
-            ),
-            'aac' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/x-aac:*',
-            ),
-            'm4a' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/x-m4a:*',
-            ),
-            'ac3' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/x-ac3:*',
-            ),
-            'pcm' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/lpcm:*',
-            ),
-            'flac' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/flac:*',
-            ),
-            'ogg' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:application/ogg:*',
-            ),
-            'mka' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/x-matroska:*',
-            ),
-            'mp4a' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/x-m4a:*',
-            ),
-            'mp2' => array(
-                'class' => 'object.item.audioItem',
-                'mime' => 'http-get:*:audio/mpeg:*',
-            ),
-            'gif' => array(
-                'class' => 'object.item.imageItem',
-                'mime' => 'http-get:*:image/gif:*',
-            ),
-            'jpg' => array(
-                'class' => 'object.item.imageItem',
-                'mime' => 'http-get:*:image/jpeg:*',
-            ),
-            'jpe' => array(
-                'class' => 'object.item.imageItem',
-                'mime' => 'http-get:*:image/jpeg:*',
-            ),
-            'png' => array(
-                'class' => 'object.item.imageItem',
-                'mime' => 'http-get:*:image/png:*',
-            ),
-            'tiff' => array(
-                'class' => 'object.item.imageItem',
-                'mime' => 'http-get:*:image/tiff:*',
-            ),
-            'tif' => array(
-                'class' => 'object.item.imageItem',
-                'mime' => 'http-get:*:image/tiff:*',
-            ),
-            'jpeg' => array(
-                'class' => 'object.item.imageItem',
-                'mime' => 'http-get:*:image/jpeg:*',
-            ),
-            'bmp' => array(
-                'class' => 'object.item.imageItem',
-                'mime' => 'http-get:*:image/bmp:*',
-            ),
-            'asf' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/x-ms-asf:*',
-            ),
-            'wmv' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/x-ms-wmv:*',
-            ),
-            'mpeg2' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2:*',
-            ),
-            'avi' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/x-msvideo:*',
-            ),
-            'divx' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/x-msvideo:*',
-            ),
-            'mpg' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg:*',
-            ),
-            'm1v' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg:*',
-            ),
-            'm2v' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg:*',
-            ),
-            'mp4' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mp4:*',
-            ),
-            'mov' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/quicktime:*',
-            ),
-            'vob' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/dvd:*',
-            ),
-            'dvr-ms' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/x-ms-dvr:*',
-            ),
-            'dat' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg:*',
-            ),
-            'mpeg' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg:*',
-            ),
-            'm1s' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg:*',
-            ),
-            'm2p' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2:*',
-            ),
-            'm2t' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2ts:*',
-            ),
-            'm2ts' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2ts:*',
-            ),
-            'mts' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2ts:*',
-            ),
-            'ts' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2ts:*',
-            ),
-            'tp' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2ts:*',
-            ),
-            'trp' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2ts:*',
-            ),
-            'm4t' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2ts:*',
-            ),
-            'm4v' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/MP4V-ES:*',
-            ),
-            'vbs' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2:*',
-            ),
-            'mod' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mpeg2:*',
-            ),
-            'mkv' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/x-matroska:*',
-            ),
-            '3g2' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mp4:*',
-            ),
-            '3gp' => array(
-                'class' => 'object.item.videoItem',
-                'mime' => 'http-get:*:video/mp4:*',
-            ),
+            'wav' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-wav:*',),
+            'mpa' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/mpeg:*',),
+            '.mp1' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/mpeg:*',),
+            'mp3' => array('class' => 'object.item.audioItem.musicTrack', 'mime' => 'http-get:*:audio/mpeg:*',),
+            'aiff' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-aiff:*',),
+            'aif' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-aiff:*',),
+            'wma' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-ms-wma:*',),
+            'lpcm' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/lpcm:*',),
+            'aac' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-aac:*',),
+            'm4a' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-m4a:*',),
+            'ac3' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-ac3:*',),
+            'pcm' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/lpcm:*',),
+            'flac' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/flac:*',),
+            'ogg' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:application/ogg:*',),
+            'mka' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-matroska:*',),
+            'mp4a' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-m4a:*',),
+            'mp2' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/mpeg:*',),
+            'gif' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/gif:*',),
+            'jpg' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/jpeg:*',),
+            'jpe' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/jpeg:*',),
+            'png' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/png:*',),
+            'tiff' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/tiff:*',),
+            'tif' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/tiff:*',),
+            'jpeg' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/jpeg:*',),
+            'bmp' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/bmp:*',),
+            'asf' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-ms-asf:*',),
+            'wmv' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-ms-wmv:*',),
+            'mpeg2' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',),
+            'avi' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-msvideo:*',),
+            'divx' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-msvideo:*',),
+            'mpg' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
+            'm1v' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
+            'm2v' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
+            'mp4' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
+            'mov' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/quicktime:*',),
+            'vob' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/dvd:*',),
+            'dvr-ms' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-ms-dvr:*',),
+            'dat' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
+            'mpeg' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
+            'm1s' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
+            'm2p' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',),
+            'm2t' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
+            'm2ts' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
+            'mts' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
+            'ts' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
+            'tp' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
+            'trp' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
+            'm4t' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
+            'm4v' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/MP4V-ES:*',),
+            'vbs' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',),
+            'mod' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',),
+            'mkv' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-matroska:*',),
+            '3g2' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
+            '3gp' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
         );
     }
 }

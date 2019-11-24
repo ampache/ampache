@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <tr>
-    <td valign="top"><?php echo T_('PHP version'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP version'); ?></td>
+    <td>
     <?php echo debug_result(check_php_version()); ?>
     </td>
     <td>
@@ -30,23 +29,22 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('Dependencies'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('Dependencies'); ?></td>
+    <td>
     <?php echo debug_result(check_dependencies_folder()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether Ampache dependencies are installed.'); ?>
-    <?php if (!check_dependencies_folder()) {
-    ?>
+    <?php if (!check_dependencies_folder()) { ?>
         <br />
-        <b><?php echo T_('Please download and install Composer from http://getcomposer.org and install it (e.g: mv composer.phar /usr/local/bin/composer) then run `composer install --prefer-source --no-interaction` on Ampache directory.'); ?></b>
+        <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --prefer-source --no-interaction` on the Ampache directory.'); ?></b>
     <?php
 } ?>
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP hash extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP hash extension'); ?></td>
+    <td>
     <?php echo debug_result(check_php_hash()); ?>
     </td>
     <td>
@@ -54,8 +52,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('SHA256'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('SHA256'); ?></td>
+    <td>
     <?php echo debug_result(check_php_hash_algo()); ?>
     </td>
     <td>
@@ -63,8 +61,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP PDO extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP PDO extension'); ?></td>
+    <td>
     <?php echo debug_result(check_php_pdo()); ?>
     </td>
     <td>
@@ -72,8 +70,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('MySQL'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('MySQL'); ?></td>
+    <td>
     <?php echo debug_result(check_php_pdo_mysql()); ?>
     </td>
     <td>
@@ -81,8 +79,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP session extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP session extension'); ?></td>
+    <td>
     <?php echo debug_result(check_php_session()); ?>
     </td>
     <td>
@@ -90,8 +88,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP iconv extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP iconv extension'); ?></td>
+    <td>
     <?php echo debug_result(UI::check_iconv()); ?>
     </td>
     <td>
@@ -99,8 +97,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP JSON extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP JSON extension'); ?></td>
+    <td>
     <?php echo debug_result(check_php_json()); ?>
     </td>
     <td>
@@ -108,17 +106,17 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP curl extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP cURL extension'); ?></td>
+    <td>
     <?php echo debug_wresult(check_php_curl()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether you have the curl extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
+    <?php echo T_('This tests whether you have the cURL extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP zlib extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP zlib extension'); ?></td>
+    <td>
     <?php echo debug_wresult(check_php_zlib()); ?>
     </td>
     <td>
@@ -126,17 +124,17 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP simplexml extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP SimpleXML extension'); ?></td>
+    <td>
     <?php echo debug_wresult(check_php_simplexml()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether you have the simplexml extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
+    <?php echo T_('This tests whether you have the SimpleXML extension enabled. This is not strictly necessary, but may result in a better experience.'); ?>
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP GD extension'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP GD extension'); ?></td>
+    <td>
     <?php echo debug_wresult(check_php_gd()); ?>
     </td>
     <td>
@@ -144,8 +142,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP safe mode disabled'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP safe mode disabled'); ?></td>
+    <td>
     <?php echo debug_result(check_php_safemode()); ?>
     </td>
     <td>
@@ -153,8 +151,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP memory limit override'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP memory limit override'); ?></td>
+    <td>
     <?php echo debug_wresult(check_override_memory()); ?>
     </td>
     <td>
@@ -162,8 +160,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP execution time override'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP execution time override'); ?></td>
+    <td>
     <?php echo debug_wresult(check_override_exec_time()); ?>
     </td>
     <td>
@@ -171,8 +169,8 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP max upload size'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP max upload size'); ?></td>
+    <td>
     <?php echo debug_wresult(check_upload_size()); ?>
     </td>
     <td>
@@ -180,52 +178,51 @@
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP Integer Size'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP integer size'); ?></td>
+    <td>
     <?php echo debug_wresult(check_php_int_size()); ?>
     </td>
     <td>
-    <?php echo T_('This tests whether Ampache can manage large files (> 2GB). This is not strictly necessary, but may result in a better experience. This generally requires 64-bit operating system.'); ?>
+    <?php echo T_('This tests whether Ampache can manage large files (> 2GB). This is not strictly necessary, but may result in a better experience. This generally requires a 64-bit operating system.'); ?>
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('PHP mbstring.func_overload'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('PHP mbstring.func_overload'); ?></td>
+    <td>
     <?php echo debug_result(check_mbstring_func_overload()); ?>
     </td>
     <td>
-    <?php printf(T_('This tests whether PHP %s is set as it may break the ID3 tag support. This is not stricly necessary, but enabling Ampache ID3 tag write support (disabled by default) along with mbstring.func_overload may result in irreversible corruption of your music files.'), '<a href="http://php.net/manual/en/mbstring.overload.php">mbstring.func_overload</a>'); ?>
+    <?php /* HINT: Shows mbstring.func_overload */ printf(T_('This tests whether PHP %s is set as it may break the ID3 tag support. This is not strictly necessary, but enabling Ampache ID3 tag write support (disabled by default) along with mbstring.func_overload may result in irreversible corruption of your music files.'), '<a href="http://php.net/manual/en/mbstring.overload.php">mbstring.func_overload</a>'); ?>
     </td>
 </tr>
 <?php
-if (!defined('INSTALL')) {
-        ?>
+if (!defined('INSTALL')) { ?>
 <tr>
-    <td valign="top"><?php echo T_('Configuration file readability'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('Configuration file readability'); ?></td>
+    <td>
     <?php echo debug_result(is_readable($configfile)); ?>
     </td>
     <td width="350px">
-    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file either is not in the correct location or is not currently readable.'); ?>
+    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?>
     </td>
 </tr>
 <tr>
-    <td valign="top">
+    <td>
         <?php echo T_('Configuration file validity'); ?>
     </td>
-    <td valign="top">
+    <td>
     <?php
         $results = @parse_ini_file($configfile);
         AmpConfig::set_by_array($results);
         echo debug_result(check_config_values($results)); ?>
     </td>
     <td>
-    <?php echo T_("This test makes sure that you have set all of the required configuration variables and that we are able to completely parse your config file."); ?>
+    <?php echo T_("This test makes sure that you have set all of the required configuration variables and that Ampache is able to completely parse your config file."); ?>
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_("Database connection"); ?></td>
-    <td valign="top">
+    <td><?php echo T_("Database connection"); ?></td>
+    <td>
     <?php echo debug_result(check_php_pdo() && Dba::check_database()); ?>
     </td>
     <td>
@@ -233,21 +230,21 @@ if (!defined('INSTALL')) {
     </td>
 </tr>
 <tr>
-    <td valign="top"><?php echo T_('Database tables'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('Database tables'); ?></td>
+    <td>
     <?php echo debug_result(check_php_pdo() && Dba::check_database_inserted()); ?>
     </td>
     <td>
-    <?php echo T_('This checks a few key tables to make sure that you have successfully inserted the Ampache database and that the user has access to the database'); ?>
+    <?php echo T_('This checks a few key tables to make sure that the Ampache database exists, and the user has access to the database'); ?>
     </td>
 </tr>
 <tr>
 
-    <td valign="top"><?php echo T_('Web path'); ?></td>
-    <td valign="top">
+    <td><?php echo T_('Web path'); ?></td>
+    <td>
     <?php
         if (check_config_values($results)) {
-            echo "&nbsp;&nbsp;&nbsp;<img src=\"" . AmpConfig::get('web_path') . "/images/icon_enable.png\" />&nbsp;&nbsp;&nbsp;";
+            echo "&nbsp;&nbsp;&nbsp;" . UI::get_icon('enable', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
         } else {
             echo debug_result(false, "SKIPPED");
         } ?>
@@ -257,5 +254,4 @@ if (!defined('INSTALL')) {
     </td>
 </tr>
 <?php
-    }
-?>
+    } ?>

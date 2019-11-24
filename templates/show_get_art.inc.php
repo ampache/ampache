@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,15 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <?php UI::show_box_top(T_('Customize Search'), 'box box_get_albumart'); ?>
-<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode($_REQUEST['artist_name']);?>&album_name=<?php echo urlencode($_REQUEST['album_name']); ?>&cover=<?php echo urlencode($_REQUEST['cover']); ?>" style="Display:inline;">
-    <table class="tabledata" cellspacing="0" cellpadding="0">
+<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name'));?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
+    <table class="tabledata">
         <?php
         foreach ($keywords as $key => $word) {
-            if ($key != 'keyword' && $word['label']) {
-                ?>
+            if ($key != 'keyword' && $word['label']) { ?>
                 <tr>
                     <td>
                         <?php echo $word['label']; ?>&nbsp;
@@ -37,8 +35,7 @@
                 </tr>
         <?php
             }
-        }
-        ?>
+        } ?>
         <tr>
             <td>
                 <?php echo T_('Direct URL to Image'); ?>
@@ -61,7 +58,8 @@
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
-        <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="NavigateTo('<?php echo AmpConfig::get('web_path') . '/' . $burl; ?>');" />
+        <?php $cancelurl = ((string) AmpConfig::get('web_path') == '') ? $burl : (AmpConfig::get('web_path') . '/' . $burl); ?>
+        <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="NavigateTo('<?php echo $cancelurl; ?>');" />
         <input type="submit" value="<?php echo T_('Get Art'); ?>" />
     </div>
 </form>

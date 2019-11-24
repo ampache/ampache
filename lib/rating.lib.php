@@ -1,9 +1,10 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,6 +35,7 @@ function show_rating($object_id, $type)
 /**
  * get_rating_name
  * This takes a score and returns the name that we should use
+ * @return string
  */
 function get_rating_name($score)
 {

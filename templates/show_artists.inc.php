@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,12 +23,11 @@
 session_start();
 
 $web_path = AmpConfig::get('web_path');
-$thcount  = 8;
-?>
-<?php if ($browse->get_show_header()) {
+$thcount  = 8; ?>
+<?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" cellpadding="0" cellspacing="0" data-objecttype="artist">
+<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="artist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
@@ -42,24 +41,22 @@ $thcount  = 8;
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
             <th class="cel_time optional"><?php echo T_('Time'); ?></th>
-            <?php if (AmpConfig::get('show_played_times')) {
-        ?>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php
     } ?>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
-            <?php if (User::is_registered()) {
-        ?>
+            <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) {
-            ++$thcount; ?>
+        ++$thcount; ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php
-        } ?>
+    } ?>
                 <?php if (AmpConfig::get('userflags')) {
-            ++$thcount; ?>
+        ++$thcount; ?>
                     <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
                 <?php
-        } ?>
+    } ?>
             <?php
     } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
@@ -95,10 +92,9 @@ $thcount  = 8;
         </tr>
         <?php
         } //end foreach ($artists as $artist)?>
-        <?php if (!count($object_ids)) {
-            ?>
+        <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No artist found'); ?></span></td>
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Artist found'); ?></span></td>
         </tr>
         <?php
         } ?>
@@ -106,8 +102,7 @@ $thcount  = 8;
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
-            <?php if (Art::is_enabled()) {
-            ?>
+            <?php if (Art::is_enabled()) { ?>
                 <th class="cel_cover"><?php echo T_('Art'); ?></th>
             <?php
         } ?>
@@ -116,21 +111,17 @@ $thcount  = 8;
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
             <th class="cel_time essential"><?php echo T_('Time'); ?></th>
-            <?php if (AmpConfig::get('show_played_times')) {
-            ?>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php
         } ?>
             <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
-            <?php if (User::is_registered()) {
-            ?>
-                <?php if (AmpConfig::get('ratings')) {
-                ?>
+            <?php if (User::is_registered()) { ?>
+                <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php
             } ?>
-                <?php if (AmpConfig::get('userflags')) {
-                ?>
+                <?php if (AmpConfig::get('userflags')) { ?>
                     <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
                 <?php
             } ?>
@@ -142,6 +133,6 @@ $thcount  = 8;
 </table>
 
 <?php show_table_render(); ?>
-<?php if ($browse->get_show_header()) {
+<?php if ($browse->is_show_header()) {
             require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
         } ?>

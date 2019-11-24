@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,38 +20,31 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path = AmpConfig::get('web_path'); ?>
 <?php
 $browse = new Browse();
 $browse->set_type($object_type);
 
-UI::show_box_top($tvshow->f_name, 'info-box');
-?>
+UI::show_box_top($tvshow->f_name, 'info-box'); ?>
 <div class="item_right_info">
     <?php
-    Art::display('tvshow', $tvshow->id, $tvshow->f_name, 6);
-    ?>
-    <?php if ($tvshow->summary) {
-        ?>
+    Art::display('tvshow', $tvshow->id, $tvshow->f_name, 6); ?>
+    <?php if ($tvshow->summary) { ?>
     <div id="item_summary">
         <?php echo $tvshow->summary; ?>
     </div>
     <?php
     } ?>
 </div>
-<?php if (User::is_registered()) {
-        ?>
+<?php if (User::is_registered()) { ?>
     <?php
-    if (AmpConfig::get('ratings')) {
-        ?>
-    <div id="rating_<?php echo intval($tvshow->id); ?>_tvshow" style="display:inline;">
+    if (AmpConfig::get('ratings')) { ?>
+    <div id="rating_<?php echo (int) ($tvshow->id); ?>_tvshow" style="display:inline;">
         <?php show_rating($tvshow->id, 'tvshow'); ?>
     </div>
     <?php
     } ?>
-    <?php if (AmpConfig::get('userflags')) {
-        ?>
+    <?php if (AmpConfig::get('userflags')) { ?>
     <div style="display:table-cell;" id="userflag_<?php echo $tvshow->id; ?>_tvshow">
             <?php Userflag::show($tvshow->id, 'tvshow'); ?>
     </div>
@@ -62,36 +55,32 @@ UI::show_box_top($tvshow->f_name, 'info-box');
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
-        <?php if (AmpConfig::get('directplay')) {
-        ?>
+        <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, 'play', T_('Play all'), 'directplay_full_' . $tvshow->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, T_('Play all'), 'directplay_full_text_' . $tvshow->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, 'play', T_('Play All'), 'directplay_full_' . $tvshow->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, T_('Play All'), 'directplay_full_text_' . $tvshow->id); ?>
         </li>
         <?php
     } ?>
-        <?php if (Stream_Playlist::check_autoplay_append()) {
-        ?>
+        <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', 'play_add', T_('Play all last'), 'addplay_tvshow_' . $tvshow->id); ?>
-            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', T_('Play all last'), 'addplay_tvshow_text_' . $tvshow->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_tvshow_' . $tvshow->id); ?>
+            <?php echo Ajax::text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', T_('Play All Last'), 'addplay_tvshow_text_' . $tvshow->id); ?>
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) {
-        ?>
+        <?php if (Access::check('interface', '50')) { ?>
         <li>
-            <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '')">
+            <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo T_('TV Show Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>
-            <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo T_('TV Show edit') ?>', '')">
+            <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo T_('TV Show Edit') ?>', '')">
                 <?php echo T_('Edit TV Show'); ?>
             </a>
         </li>
         <?php
     } ?>
-        <?php if (Catalog::can_remove($tvshow)) {
-        ?>
+        <?php if (Catalog::can_remove($tvshow)) { ?>
         <li>
             <a id="<?php echo 'delete_tvshow_' . $tvshow->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
                 <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
@@ -114,8 +103,7 @@ UI::show_box_top($tvshow->f_name, 'info-box');
         <div id="seasons" class="tab_content" style="display: block;">
 <?php
     $browse->show_objects($object_ids, true);
-    $browse->store();
-?>
+    $browse->store(); ?>
         </div>
     </div>
 </div>

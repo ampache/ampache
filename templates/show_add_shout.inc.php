@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,11 +20,9 @@
  *
  */
 
-$object_type = strtolower(get_class($object));
-?>
+$object_type = strtolower(get_class($object)); ?>
 <div>
-<?php if (Access::check('interface', '25')) {
-    ?>
+<?php if (Access::check('interface', '25')) { ?>
 <div style="float: right">
 <?php
 $boxtitle = T_('Post to Shoutbox');
@@ -33,15 +31,14 @@ $boxtitle = T_('Post to Shoutbox');
     }
     UI::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=add_shout">
-<table id="shoutbox-input" cellpadding="0" cellspacing="0">
+<table id="shoutbox-input">
 <tr>
     <td><strong><?php echo T_('Comment:'); ?></strong>
 </tr>
 <tr>
     <td><textarea rows="5" cols="35" maxlength="140" name="comment"></textarea></td>
 </tr>
-<?php if (Access::check('interface', '50')) {
-        ?>
+<?php if (Access::check('interface', '50')) { ?>
 <tr>
     <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>
@@ -65,14 +62,12 @@ $boxtitle = T_('Post to Shoutbox');
 <div style="display: inline;">
 <?php
 $boxtitle = $object->f_title . ' ' . T_('Shoutbox');
-UI::show_box_top($boxtitle, 'box box_add_shout');
-?>
+UI::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <?php
 $shouts = Shoutbox::get_shouts($object_type, $object->id);
 if (count($shouts)) {
     require_once AmpConfig::get('prefix') . UI::find_template('show_shoutbox.inc.php');
-}
-?>
+} ?>
 <?php UI::show_box_bottom(); ?>
 </div>
 </div>

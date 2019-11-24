@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,14 +23,14 @@
 /**
  * Error class
  *
- * This is the baic error class, its better now that we can use php5
+ * This is the basic error class, its better now that we can use php5
  * hello static functions and variables
  *
  */
 class AmpError
 {
     private static $state  = false; // set to one when an error occurs
-    private static $errors = array(); // Errors array key'd array with errors that have occured
+    private static $errors = array(); // Errors array key'd array with errors that have occurred
 
     /**
      * __constructor
@@ -57,7 +57,7 @@ class AmpError
      * This is a public static function it adds a new error message to the array
      * It can optionally clobber rather then adding to the error message
      */
-    public static function add($name, $message, $clobber=0)
+    public static function add($name, $message, $clobber = 0)
     {
         // Make sure its set first
         if (!isset(AmpError::$errors[$name])) {
@@ -88,7 +88,8 @@ class AmpError
 
     /**
      * occurred
-     * This returns true / false if an error has occured anywhere
+     * This returns true / false if an error has occurred anywhere
+     * @return boolean
      */
     public static function occurred()
     {
@@ -102,6 +103,7 @@ class AmpError
     /**
      * get
      * This returns an error by name
+     * @return string
      */
     public static function get($name)
     {
@@ -116,6 +118,7 @@ class AmpError
      * display
      * This prints the error out with a standard Error class span
      * Ben Goska: Renamed from print to display, print is reserved
+     * @param string $name
      */
     public static function display($name)
     {

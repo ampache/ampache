@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,36 +18,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-?>
+ */ ?>
 <div id="play_type_switch">
 <?php
 $name    = "is_" . AmpConfig::get('play_type');
 ${$name} = 'selected="selected" ';
 
-if (Preference::has_access('play_type')) {
-    ?>
+if (Preference::has_access('play_type')) { ?>
     <form method="post" id="play_type_form" action="javascript.void(0);">
         <select id="play_type_select" name="type">
-            <?php if (AmpConfig::get('allow_stream_playback')) {
-        ?>
+            <?php if (AmpConfig::get('allow_stream_playback')) { ?>
                 <option value="stream" <?php if (isset($is_stream)) {
-            echo $is_stream;
-        } ?>><?php echo T_('Stream'); ?></option>
+    echo $is_stream;
+} ?>><?php echo T_('Stream'); ?></option>
             <?php
     }
-    if (AmpConfig::get('allow_localplay_playback')) {
-        ?>
+    if (AmpConfig::get('allow_localplay_playback')) { ?>
                 <option value="localplay" <?php if (isset($is_localplay)) {
-            echo $is_localplay;
-        } ?>><?php echo T_('Localplay'); ?></option>
+        echo $is_localplay;
+    } ?>><?php echo T_('Localplay'); ?></option>
             <?php
     }
-    if (AmpConfig::get('allow_democratic_playback')) {
-        ?>
+    if (AmpConfig::get('allow_democratic_playback')) { ?>
                 <option value="democratic" <?php if (isset($is_democratic)) {
-            echo $is_democratic;
-        } ?>><?php echo T_('Democratic'); ?></option>
+        echo $is_democratic;
+    } ?>><?php echo T_('Democratic'); ?></option>
             <?php
     } ?>
             <option value="web_player" <?php if (isset($is_web_player)) {
@@ -61,6 +56,5 @@ if (Preference::has_access('play_type')) {
 // Else just show what it currently is
 else {
     echo T_(ucwords(AmpConfig::get('play_type')));
-}
-?>
+} ?>
 </div>

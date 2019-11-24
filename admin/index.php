@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,13 +22,15 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface', 100)) {
+if (!Access::check('interface', 75)) {
     UI::access_denied();
-    exit();
+
+    return false;
 }
 
 UI::show_header();
 
+// Switch on the actions
 switch ($_REQUEST['action']) {
     default:
         // Show Catalogs
@@ -42,4 +44,6 @@ switch ($_REQUEST['action']) {
     break;
 }
 
+/* Show the Footer */
+UI::show_query_stats();
 UI::show_footer();

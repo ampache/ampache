@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,12 +20,12 @@
  *
  */
 
-define('NO_SESSION','1'); 
+define('NO_SESSION','1');
 
 $unmigratable = array('auth_methods'=>'mysql',
     'tag_order'=>'id3v2,id3v1,vorbiscomment,quicktime,ape,asf',
     'album_art_order'=>'db,id3,folder,lastfm,amazon',
-    'amazon_base_urls'=>'http://webservices.amazon.com'); 
+    'amazon_base_urls'=>'http://webservices.amazon.com');
 
 $translate = array('local_host'=>'database_hostname',
     'local_db'=>'database_name',
@@ -39,7 +39,7 @@ $translate = array('local_host'=>'database_hostname',
     'stream_cmd_mpc'=>'transcode_cmd_mpc',
     'sess_name'=>'session_name',
     'sess_cookielife'=>'session_cookielife',
-    'sess_cookiesecure'=>'session_cookiesecure'); 
+    'sess_cookiesecure'=>'session_cookiesecure');
 
 $path = dirname(__FILE__);
 $prefix = realpath($path . '/../');
@@ -47,7 +47,7 @@ $old_config = file_get_contents($prefix . '/config/ampache.cfg.php');
 
 $data = explode("\n",$old_config);
 
-echo T_("Parsing old config file...");
+echo "Parsing old config file...";
 echo "\n";
 
 foreach ($data as $line) {
@@ -58,7 +58,7 @@ foreach ($data as $line) {
     }
 
     foreach ($unmigratable as $option=>$default) {
-        if (strstr($line,$option) AND !$migrated[$option]) {
+        if (strstr($line,$option) && !$migrated[$option]) {
             $line = $option . " = \"$default\"";
             $migrated[$option] = true;
         }
@@ -77,7 +77,7 @@ foreach ($data as $line) {
 
 } // end foreach lines
 
-echo T_("Parse complete, writing");
+echo "Parse complete, writing";
 echo "\n";
 
 $handle = fopen($prefix . '/config/ampache.cfg.php','w');
@@ -85,12 +85,10 @@ $handle = fopen($prefix . '/config/ampache.cfg.php','w');
 $worked = fwrite($handle,$new_config);
 
 if ($worked) {
-    echo T_("Write success, config migrated");
+    echo "Write success, config migrated";
     echo "\n";
 }
 else {
-    echo T_("Access Denied, config migration failed");
+    echo "Access denied, config migration failed";
     echo "\n";
 }
-
-?>
