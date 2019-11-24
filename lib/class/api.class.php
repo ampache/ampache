@@ -1170,6 +1170,7 @@ class Api
 
         $array['type'] = 'song';
         if (in_array($mode, array('forgotten', 'recent'), true)) {
+            debug_event('api.class', 'playlist_generate '. $mode, 5);
             //played songs
             $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 0;
@@ -1181,6 +1182,7 @@ class Api
             $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
             $rule_count++;
         } else {
+            debug_event('api.class', 'playlist_generate random', 5);
             // random / anywhere
             $array['rule_' . $rule_count]               = 'anywhere';
             $array['rule_' . $rule_count . '_input']    = '%';
@@ -1189,6 +1191,7 @@ class Api
         }
         // additional rules
         if ((int) $input['flag'] == 1) {
+            debug_event('api.class', 'playlist_generate flagged', 5);
             $array['rule_' . $rule_count]               = 'favorite';
             $array['rule_' . $rule_count . '_input']    = '%';
             $array['rule_' . $rule_count . '_operator'] = 0;
@@ -1200,16 +1203,16 @@ class Api
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        $album = (int) $input['album'];
-        if ((array_key_exists('album', $input)) && ($album > 0)) {
+        $album = new Album((int) $input['album']);
+        if ((array_key_exists('album', $input)) && ($album->id == $input['album'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'album';
             $array['rule_' . $rule_count . '_input']    = $album->full_name;
             $array['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
-        $artist = (int) $input['artist'];
-        if ((array_key_exists('artist', $input)) && ($artist > 0)) {
+        $artist = new Artist((int) $input['artist']);
+        if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'artist';
             $array['rule_' . $rule_count . '_input']    = trim(trim($artist->prefix) . ' ' . trim($artist->name));
@@ -1229,7 +1232,7 @@ class Api
         if ((int) $input['limit'] > 0) {
             $song_ids = array_slice($song_ids, 0, (int) $input['limit']);
         }
-        
+
         // output formatted XML
         switch ($format) {
             case 'id':
