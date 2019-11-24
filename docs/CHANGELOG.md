@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 4.0.0-DEVELOP
+## 4.0.1
+
+* initial bugfixes made in release processing (Parity with 4.0.0-release right now.)
+
+## 4.0.0
 
 ### Backend
 
