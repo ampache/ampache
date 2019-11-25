@@ -784,6 +784,13 @@ class Song extends database_object implements media, library_item
                 return $results['id'];
             }
         }
+        if ($data['file']) {
+            $sql        = $sql_base . " WHERE `song`.`file` = ? LIMIT 1";
+            $db_results = Dba::read($sql, array($data['file']));
+            if ($results = Dba::fetch_assoc($db_results)) {
+                return $results['id'];
+            }
+        }
 
         $where  = "WHERE `song`.`title` = ?";
         $sql    = $sql_base;
