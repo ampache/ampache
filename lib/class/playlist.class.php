@@ -547,10 +547,10 @@ class Playlist extends playlist_object
     public function has_item($object = null, $track = null)
     {
         if ($object) {
-            $sql = "SELECT `id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
+            $sql        = "SELECT `id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
             $db_results = Dba::read($sql, array($this->id, $object));
         } elseif ($track) {
-            $sql = "SELECT FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
+            $sql        = "SELECT FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
             $db_results = Dba::read($sql, array($this->id, $track));
         }
         $results = Dba::fetch_assoc($db_results);
