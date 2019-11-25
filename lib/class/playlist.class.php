@@ -538,6 +538,30 @@ class Playlist extends playlist_object
     } // delete_track_number
 
     /**
+    * has_item
+    * look for the track id or the object id in a playlist
+    * @param integer $object
+    * @param integer $track
+    * @return boolean
+    */
+    public function has_item($object = null, $track = null)
+    {
+        if ($object) {
+            $sql = "SELECT `id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
+            $db_results = Dba::read($sql, array($this->id, $object));
+        } elseif ($track) {
+            $sql = "SELECT FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
+            $db_results = Dba::read($sql, array($this->id, $track));
+        }
+        $results = Dba::fetch_assoc($db_results);
+        if (isset($results['id'])) {
+            return true;
+        }
+
+        return false;
+    } // delete_track_number
+
+    /**
      * delete
      * This deletes the current playlist and all associated data
      */
