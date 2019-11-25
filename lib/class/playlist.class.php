@@ -515,7 +515,7 @@ class Playlist extends playlist_object
      */
     public function delete_track($object_id)
     {
-        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
+        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $object_id));
 
         $this->update_last_update();
