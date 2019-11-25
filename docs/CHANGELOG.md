@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 4.0.1
+
+* Bug fix that would cause albums to be recreated in Album::check
+* Added 'file' to Song::find
+
 ## 4.0.0
 
 ### Backend

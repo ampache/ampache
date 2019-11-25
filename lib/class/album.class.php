@@ -503,7 +503,7 @@ class Album extends database_object implements library_item
             return self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist];
         }
 
-        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ? AND `album`.`year` = ? AND `album`.`original_year` = ? ";
+        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ? AND `album`.`year` = ? ";
         $params = array($name, $name, $disk, $year, $original_year);
 
         if ($mbid) {
@@ -516,10 +516,13 @@ class Album extends database_object implements library_item
             $sql .= 'AND `album`.`prefix` = ? ';
             $params[] = $prefix;
         }
-
         if ($album_artist) {
             $sql .= 'AND `album`.`album_artist` = ? ';
             $params[] = $album_artist;
+        }
+        if ($original_year) {
+            $sql .= 'AND `album`.`original_year` = ? ';
+            $params[] = $original_year;
         }
 
         $db_results = Dba::read($sql, $params);
