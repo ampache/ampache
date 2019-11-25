@@ -25,7 +25,7 @@
         <!-- Propelled by Ampache | ampache.org -->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo T_("Ampache") . " -- " . T("Debug Page"); ?></title>
+        <title><?php echo T_("Ampache") . " -- " . T_("Debug Page"); ?></title>
         <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
         <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
