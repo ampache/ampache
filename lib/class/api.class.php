@@ -39,7 +39,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '400001';
+    public static $version = '400002';
 
     /**
      *  @var Browse $browse
@@ -1142,13 +1142,15 @@ class Api
     /**
      * playlist_generate
      * MINIMUM_API_VERSION=400001
+     * CHANGED_IN_API_VERSION=400002
      *
      * Get a list of song xml, indexes or id's based on some simple search criteria
      * 'recent' will search for tracks played after 'Statistics Day Threshold' days
      * 'forgotten' will search for tracks played before 'Statistics Day Threshold' days
+     * 'unplayed' added in 400002 for searching unplayed tracks.
      *
      * @param array $input
-     * mode    = (string)  'recent'|'forgotten'|'random' //optional, default = 'random'
+     * mode    = (string)  'recent'|'forgotten'|'unplayed'|'random' //optional, default = 'random'
      * filter  = (string)  $filter                       //optional, LIKE matched to song title
      * album   = (integer) $album_id                     //optional
      * artist  = (integer) $artist_id                    //optional
@@ -1160,7 +1162,7 @@ class Api
     public static function playlist_generate($input)
     {
         // parameter defaults
-        $mode   = (!in_array($input['mode'], array('forgotten', 'recent', 'random'), true)) ? 'random' : $input['mode'];
+        $mode   = (!in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? 'random' : $input['mode'];
         $format = (!in_array($input['format'], array('song', 'index', 'id'), true)) ? 'song' : $input['format'];
         $user   = User::get_from_username(Session::username($input['auth']));
         $array  = array();
@@ -1180,6 +1182,12 @@ class Api
             $array['rule_' . $rule_count]               = 'last_play';
             $array['rule_' . $rule_count . '_input']    = AmpConfig::get('stats_threshold');
             $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
+            $rule_count++;
+        } elseif ($mode == 'unplayed') {
+            debug_event('api.class', 'playlist_generate unplayed', 5);
+            // random / anywhere
+            $array['rule_' . $rule_count]               = 'myplayed';
+            $array['rule_' . $rule_count . '_operator'] = 1;
             $rule_count++;
         } else {
             debug_event('api.class', 'playlist_generate random', 5);
