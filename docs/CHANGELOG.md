@@ -1,8 +1,9 @@
 # CHANGELOG
 
-## 4.0.1
+## 4.1.0
 
-* initial bugfixes made in release processing (Parity with 4.0.0-release right now.)
+* Extend Api::playlist_generate (add new mode 'unplayed')
+* Bump API version to 400002 because of this extension
 
 ## 4.0.0
 
