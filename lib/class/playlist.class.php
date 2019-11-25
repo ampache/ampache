@@ -488,7 +488,7 @@ class Playlist extends playlist_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        if (is_int($date)) {
+        if (!is_int($date)) {
             $date = time();
         }
 
