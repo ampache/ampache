@@ -5,6 +5,11 @@
 * Extend Api::playlist_generate (add new mode 'unplayed')
 * Bump API version to 400002 because of this extension
 
+## 4.0.1
+
+* Bug fix that would cause albums to be recreated in Album::check
+* Added 'file' to Song::find
+
 ## 4.0.0
 
 ### Backend
