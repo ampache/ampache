@@ -1195,7 +1195,7 @@ class Api
             $rule_count++;
         } elseif ($mode == 'unplayed') {
             debug_event('api.class', 'playlist_generate unplayed', 5);
-            // random / anywhere
+            //unplayed songs
             $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 1;
             $rule_count++;
