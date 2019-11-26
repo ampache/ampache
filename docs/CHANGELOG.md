@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 4.0.2
+
+* Bump API version to 400002 (4.0.0 build 002)
+* Extend Api::playlist_generate (add new mode 'unplayed')
+* Fix API playlist commands and access checks relating to playlists
+* Access::check should be passing user id from the API
+* SQL query fixes for Album, Playlist methods
+* Remove spaces from play url extensions (Should help nginx users)
+* Translate typo in show_test.inc
+* Trim massive year, time and track when importing new songs
+* Set play_type correctly in preferences pages
+
 ## 4.0.1
 
 * Bug fix that would cause albums to be recreated in Album::check

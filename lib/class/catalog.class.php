@@ -1682,7 +1682,7 @@ abstract class Catalog extends database_object
         $new_song              = new Song();
         $new_song->file        = $results['file'];
         $new_song->title       = $results['title'];
-        $new_song->year        = $results['year'];
+        $new_song->year        = (strlen($results['year'] > 4) ? (int) substr($results['year'], -4, 4) : (int) ($results['year']));
         $new_song->comment     = $results['comment'];
         $new_song->language    = $results['language'];
         $new_song->lyrics      = str_replace(
@@ -1693,9 +1693,9 @@ abstract class Catalog extends database_object
         $new_song->rate                  = $results['rate'];
         $new_song->mode                  = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
         $new_song->size                  = $results['size'];
-        $new_song->time                  = $results['time'];
+        $new_song->time                  = (strlen($results['time'] > 5) ? (int) substr($results['time'], -5, 5) : (int) ($results['time']));
         $new_song->mime                  = $results['mime'];
-        $new_song->track                 = (int) ($results['track']);
+        $new_song->track                 = (strlen($results['track'] > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']));
         $new_song->mbid                  = $results['mb_trackid'];
         $new_song->label                 = $results['publisher'];
         $new_song->composer              = $results['composer'];

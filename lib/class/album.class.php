@@ -504,7 +504,7 @@ class Album extends database_object implements library_item
         }
 
         $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ? AND `album`.`year` = ? ";
-        $params = array($name, $name, $disk, $year, $original_year);
+        $params = array($name, $name, $disk, $year);
 
         if ($mbid) {
             $sql .= 'AND `album`.`mbid` = ? ';

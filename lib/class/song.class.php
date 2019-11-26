@@ -1919,7 +1919,7 @@ class Song extends database_object implements media, library_item
         }
 
         $media->format();
-        $media_name = $media->get_stream_name() . " . " . $type;
+        $media_name = $media->get_stream_name() . "." . $type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 
