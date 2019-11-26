@@ -226,21 +226,22 @@ function create_preference_input($name, $value)
             show_catalog_select('upload_catalog', $value, '', true);
         break;
         case 'play_type':
+            $is_stream     = '';
             $is_localplay  = '';
             $is_democratic = '';
             $is_web_player = '';
             switch ($value) {
                 case 'localplay':
                     $is_localplay = 'selected="selected"';
-                    // intentional fallthrough
+                    break;
                 case 'democratic':
                     $is_democratic = 'selected="selected"';
-                    // intentional fallthrough
+                    break;
                 case 'web_player':
                     $is_web_player = 'selected="selected"';
-                    // intentional fallthrough
+                    break;
                 default:
-                    $is_stream = "selected=\"selected\"";
+                    $is_stream = 'selected="selected"';
             }
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
