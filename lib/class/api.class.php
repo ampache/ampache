@@ -1135,12 +1135,12 @@ class Api
                 $playlist->regenerate_track_numbers();
                 echo XML_Data::success('song removed from playlist');
             } else {
+                $track = scrub_in($input['track']);
                 if (!$playlist->has_item(null, $track)) {
                     echo XML_Data::error('404', T_('Track ID not found in playlist'));
     
                     return;
                 }
-                $track = scrub_in($input['track']);
                 $playlist->delete_track_number($track);
                 $playlist->regenerate_track_numbers();
                 echo XML_Data::success('song removed from playlist');
