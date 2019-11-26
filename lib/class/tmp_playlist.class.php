@@ -218,16 +218,16 @@ class Tmp_Playlist extends database_object
     public static function create($data)
     {
         $sql = "INSERT INTO `tmp_playlist` " .
-            "(`session`,`type`,`object_type`) " .
+            "(`session`, `type`, `object_type`) " .
             " VALUES (?, ?, ?)";
         Dba::write($sql, array($data['session_id'], $data['type'], $data['object_type']));
 
-        $id = Dba::insert_id();
+        $tmp_id = Dba::insert_id();
 
         /* Clean any other playlists associated with this session */
-        self::session_clean($data['session_id'], $id);
+        self::session_clean($data['session_id'], $tmp_id);
 
-        return $id;
+        return $tmp_id;
     } // create
 
     /**
@@ -311,7 +311,7 @@ class Tmp_Playlist extends database_object
     public function add_object($object_id, $object_type)
     {
         $sql = "INSERT INTO `tmp_playlist_data` " .
-            "(`object_id`,`tmp_playlist`,`object_type`) " .
+            "(`object_id`, `tmp_playlist`, `object_type`) " .
             " VALUES (?, ?, ?)";
         Dba::write($sql, array($object_id, $this->id, $object_type));
 

@@ -571,7 +571,7 @@ class Video extends database_object implements media, library_item
         $frame_rate     = floatval($data['frame_rate']);
         $video_bitrate  = (int) ($data['video_bitrate']);
 
-        $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`,`release_date`,`addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) " .
+        $sql = "INSERT INTO `video` (`file`, `catalog`, `title`, `video_codec`, `audio_codec`, `resolution_x`, `resolution_y`, `size`, `time`, `mime`, `release_date`, `addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) " .
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array($data['file'], $data['catalog'], $data['title'], $data['video_codec'], $data['audio_codec'], $rezx, $rezy, $data['size'], $data['time'], $data['mime'], $release_date, time(), $bitrate, $mode, $channels, $disx, $disy, $frame_rate, $video_bitrate);
         Dba::write($sql, $params);
@@ -752,6 +752,12 @@ class Video extends database_object implements media, library_item
 
         return true;
     } // set_played
+
+    public function check_play_history($user)
+    {
+        unset($user);
+        // Do nothing
+    }
 
     /**
      * compare_video_information

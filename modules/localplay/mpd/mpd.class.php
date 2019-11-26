@@ -297,7 +297,7 @@ class mpd
             $response_string = '';
 
             // Check the command compatibility:
-            if (! self::_checkCompatibility($command, $this->mpd_version)) {
+            if (!$this->_checkCompatibility($command, $this->mpd_version)) {
                 return false;
             }
 
@@ -472,7 +472,7 @@ class mpd
 
         // If we're not compatible with SETVOL, we'll try adjusting
         // using VOLUME
-        if (self::_checkCompatibility(self::COMMAND_SETVOL, $this->mpd_version)) {
+        if ($this->_checkCompatibility(self::COMMAND_SETVOL, $this->mpd_version)) {
             $command = self::COMMAND_SETVOL;
         } else {
             $this->RefreshInfo(); // Get the latest volume
@@ -977,7 +977,7 @@ class mpd
      * Check MPD command compatibility against our internal table of
      * incompatibilities.
      */
-    private static function _checkCompatibility($cmd, $mpd_version)
+    private function _checkCompatibility($cmd, $mpd_version)
     {
         $mpd = self::_computeVersionValue($mpd_version);
 

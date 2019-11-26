@@ -41,6 +41,7 @@ $type           = scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECI
 $cache          = scrub_in($_REQUEST['cache']);
 $format         = scrub_in($_REQUEST['format']);
 $original       = ($format == 'raw') ? true : false;
+$action         = Core::get_get('action');
 $record_stats   = true;
 
 // allow disabling stat recording from the play url
@@ -409,7 +410,7 @@ $browser = new Horde_Browser();
 /* If they are just trying to download make sure they have rights
  * and then present them with the download file
  */
-if (Core::get_get('action') == 'download' && !$original) {
+if ($action == 'download' && !$original) {
     debug_event('play/index', 'Downloading transcoded file... ', 4);
     if (!$share_id) {
         if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
@@ -421,7 +422,7 @@ if (Core::get_get('action') == 'download' && !$original) {
         }
     }
     $record_stats = false;
-} elseif (Core::get_get('action') == 'download' && AmpConfig::get('download')) {
+} elseif ($action == 'download' && AmpConfig::get('download')) {
     debug_event('play/index', 'Downloading raw file...', 4);
     // STUPID IE
     $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
@@ -520,7 +521,7 @@ if (!$cpaction && !$original) {
                         $transcode = true;
                         debug_event('play/index', 'Transcoding because explicit bitrate request', 5);
                     } else {
-                        if (!in_array('native', $valid_types)) {
+                        if (!in_array('native', $valid_types) && $action != 'download') {
                             $transcode = true;
                             debug_event('play/index', 'Transcoding because native streaming is unavailable', 5);
                         } else {
@@ -618,8 +619,9 @@ if (!is_resource($filepointer)) {
 if (!$transcode) {
     header('ETag: ' . $media->id);
 }
-Stream::insert_now_playing($media->id, $uid, $media->time, $sid, get_class($media));
-
+if (($action != 'download') && $record_stats) {
+    Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $sid, get_class($media));
+}
 // Handle Content-Range
 
 $start        = 0;
@@ -664,13 +666,18 @@ if (!isset($_REQUEST['segment'])) {
     if ($start > 0) {
         debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
     } else {
+        $sessionkey = $sid ?: Stream::get_session();
+        $agent      = Session::agent($sessionkey);
+        $location   = Session::get_geolocation($sessionkey);
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering stream stats for {' . $media->get_stream_name() . '}...', 4);
-                $sessionkey = $sid ?: Stream::get_session();
-                $agent      = Session::agent($sessionkey);
-                $location   = Session::get_geolocation($sessionkey);
-                Core::get_global('user')->update_stats($type, $media->id, $agent, $location, isset($_REQUEST['noscrobble']));
+                Core::get_global('user')->update_stats($type, $media->id, $agent, $location);
+            }
+        } elseif (!$share_id && !$record_stats) {
+            if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
+                debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
+                Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
             }
         }
     }

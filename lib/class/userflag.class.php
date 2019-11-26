@@ -96,7 +96,7 @@ class Userflag extends database_object
     {
         $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
 
-        if ($object_type != null) {
+        if ($object_type !== null) {
             if (in_array($object_type, $types)) {
                 $sql = "DELETE FROM `user_flag` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
@@ -112,6 +112,7 @@ class Userflag extends database_object
 
     /**
      * get_flag
+     * @param boolean|integer $user_id
      * @param boolean $get_date
      * @return boolean|array
      */
@@ -161,7 +162,7 @@ class Userflag extends database_object
         }
         $results = array();
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $sql = "SELECT `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid` FROM `album`" .
+            $sql = "SELECT `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` FROM `album`" .
                     " WHERE `id` = ?";
             $db_results = Dba::read($sql, array($this->id));
             $results    = Dba::fetch_assoc($db_results);

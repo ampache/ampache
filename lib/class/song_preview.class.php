@@ -210,6 +210,7 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public function format($details = true)
     {
+        unset($details); //dead code but called from other format calls
         // Format the artist name
         if ($this->artist) {
             $this->f_artist_full = $this->get_artist_name();
@@ -338,6 +339,12 @@ class Song_Preview extends database_object implements media, playable_item
 
     public function set_played($user, $agent, $location)
     {
+        // Do nothing
+    }
+
+    public function check_play_history($user)
+    {
+        unset($user);
         // Do nothing
     }
 

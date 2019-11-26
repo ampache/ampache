@@ -481,7 +481,7 @@ abstract class Catalog extends database_object
                 $this->_filecache[strtolower($results['file'])] = $results['id'];
             }
 
-            $sql        = 'SELECT `id`,`file` FROM `video` WHERE `catalog` = ?';
+            $sql        = 'SELECT `id`, `file` FROM `video` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
 
             while ($results = Dba::fetch_assoc($db_results)) {
@@ -1005,15 +1005,15 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT " . $size;
         } elseif ($offset > 0) {
             // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
-            // https://dev.mysql.com/doc/refman/5.0/en/select.html
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html  //TODO mysql8 test
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
 
         $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, (SELECT COUNT(DISTINCT album) from `song` as `inner_song` WHERE `inner_song`.`artist` = `song`.`artist`) AS `albums`" .
                 "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " .
                 $sql_where .
-                "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`summary`, `song`.`artist` ORDER BY `artist`.`name` " .
-                $sql_limit;
+                "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist` ORDER BY `artist`.`name` " .
+                $sql_limit;  //TODO mysql8 test
 
         $results    = array();
         $db_results = Dba::read($sql);
@@ -1116,7 +1116,7 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $size";
         } elseif ($offset > 0) {
             // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
-            // https://dev.mysql.com/doc/refman/5.0/en/select.html
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html  //TODO mysql8 test
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
@@ -1231,8 +1231,6 @@ abstract class Catalog extends database_object
      */
     public static function gather_art_item($type, $id, $db_art_first = false, $api = false)
     {
-        debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 4);
-
         // Should be more generic !
         if ($type == 'video') {
             $libitem = Video::create_from_id($id);
@@ -1270,9 +1268,10 @@ abstract class Catalog extends database_object
         $art = new Art($id, $type);
         // don't search for art when you already have it
         if ($art->has_db_info() && $db_art_first) {
-            debug_event('catalog.class', 'Blocking art search, DB item exists', 5);
+            debug_event('catalog.class', 'Blocking art search for ' . $type . '/' . $id . ' DB item exists', 5);
             $results = array();
         } else {
+            debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 4);
             $results = $art->gather($options);
         }
 
@@ -1683,7 +1682,7 @@ abstract class Catalog extends database_object
         $new_song              = new Song();
         $new_song->file        = $results['file'];
         $new_song->title       = $results['title'];
-        $new_song->year        = $results['year'];
+        $new_song->year        = (strlen($results['year'] > 4) ? (int) substr($results['year'], -4, 4) : (int) ($results['year']));
         $new_song->comment     = $results['comment'];
         $new_song->language    = $results['language'];
         $new_song->lyrics      = str_replace(
@@ -1694,9 +1693,9 @@ abstract class Catalog extends database_object
         $new_song->rate                  = $results['rate'];
         $new_song->mode                  = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
         $new_song->size                  = $results['size'];
-        $new_song->time                  = $results['time'];
+        $new_song->time                  = (strlen($results['time'] > 5) ? (int) substr($results['time'], -5, 5) : (int) ($results['time']));
         $new_song->mime                  = $results['mime'];
-        $new_song->track                 = (int) ($results['track']);
+        $new_song->track                 = (strlen($results['track'] > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']));
         $new_song->mbid                  = $results['mb_trackid'];
         $new_song->label                 = $results['publisher'];
         $new_song->composer              = $results['composer'];

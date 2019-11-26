@@ -276,7 +276,7 @@ initAudioContext();
 
 function ToggleReplayGain()
 {
-    if (replaygainNode == null) {
+    if (replaygainNode === null) {
         var mediaElement = $('.jp-jplayer').find('audio').get(0);
         if (mediaElement) {
             if (audioContext !== null) {
@@ -341,7 +341,7 @@ function WaveformClick(songid, time)
         NavigateTo('<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=song&id=' + songid + '&offset=' + time);
     } else {
         // Single click
-        if (brconn == null) {
+        if (brconn === null) {
             wavclicktimer = setTimeout(function() {
                 wavclicktimer = null;
                 $("#jquery_jplayer_1").data("jPlayer").play(time);

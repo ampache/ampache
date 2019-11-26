@@ -116,6 +116,7 @@ class PrivateMsg extends database_object
 
     public function format($details = true)
     {
+        unset($details); //dead code but called from other format calls
         $this->f_subject       = scrub_out($this->subject);
         $this->f_message       = scrub_out($this->message);
         $this->f_creation_date = date("Y/m/d H:i:s", $this->creation_date);
@@ -250,6 +251,8 @@ class PrivateMsg extends database_object
 
             return $insert_id;
         }
+
+        return null;
     }
 
     /**

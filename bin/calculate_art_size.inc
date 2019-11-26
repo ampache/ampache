@@ -30,7 +30,7 @@ ob_end_clean();
 
 $inDisk = AmpConfig::get('album_art_store_disk');
 
-$sql = "SELECT `image`,`id`,object_id,object_type,size FROM `image`";
+$sql = "SELECT `image`, `id`, `object_id`, `object_type`, `size` FROM `image`";
 $db_results = Dba::read($sql);
 $results = array();
 

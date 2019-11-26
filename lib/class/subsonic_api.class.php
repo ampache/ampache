@@ -41,6 +41,7 @@ class Subsonic_Api
     }
 
     /**
+     * check_parameter
      * @param string $parameter
      */
     public static function check_parameter($input, $parameter, $addheader = false)
@@ -76,6 +77,7 @@ class Subsonic_Api
 
     public static function output_body($curl, $data)
     {
+        unset($curl);
         echo $data;
         ob_flush();
 
@@ -101,6 +103,7 @@ class Subsonic_Api
     }
 
     /**
+     * follow_stream
      * @param string $url
      */
     public static function follow_stream($url)
@@ -165,9 +168,10 @@ class Subsonic_Api
     }
 
     /**
+     * apiOutput
      * @param SimpleXMLElement $xml
      */
-    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'entry'))
+    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'))
     {
         $type     = $input['f'];
         $callback = $input['callback'];
@@ -175,10 +179,11 @@ class Subsonic_Api
     }
 
     /**
+     * apiOutput2
      * @param SimpleXMLElement $xml
      * @param string $outputtype
      */
-    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'entry'))
+    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'))
     {
         $conf = array('alwaysArray' => $alwaysArray);
         if ($outputtype == "json") {
@@ -201,7 +206,8 @@ class Subsonic_Api
     }
 
     /**
-     * xml2json based from http://outlandish.com/blog/xml-to-json/
+     * xml2json
+     * [based from http://outlandish.com/blog/xml-to-json/]
      * Because we cannot use only json_encode to respect JSON Subsonic API
      * @param SimpleXMLElement $xml
      */
@@ -210,7 +216,7 @@ class Subsonic_Api
         $defaults = array(
             'namespaceSeparator' => ' :', //you may want this to be something other than a colon
             'attributePrefix' => '', //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'entry'), //array of xml tag names which should always become arrays
+            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'), //array of xml tag names which should always become arrays
             'autoArray' => true, //only create arrays for tags which appear more than once
             'textContent' => 'value', //key used for the text content of elements
             'autoText' => true, //skip textContent key if node has no attributes or child nodes
@@ -243,7 +249,7 @@ class Subsonic_Api
         }
 
         // these children must be in an array.
-        $forceArray = array('channel');
+        $forceArray = array('channel', 'share');
         //get child nodes from all namespaces
         $tagsArray = array();
         foreach ($namespaces as $prefix => $namespace) {
@@ -304,6 +310,11 @@ class Subsonic_Api
         );
     }
 
+    /**
+     * has_Nested_Array
+     * Used for xml2json to detect a sub-array
+     * @return boolean
+     */
     private static function has_Nested_Array($properties)
     {
         foreach ($properties as $property) {
@@ -514,7 +525,8 @@ class Subsonic_Api
      */
     public static function getalbumlist($input, $elementName = "albumList")
     {
-        $type = self::check_parameter($input, 'type');
+        $type     = self::check_parameter($input, 'type');
+        $username = self::check_parameter($input, 'u');
 
         $size          = $input['size'];
         $offset        = $input['offset'];
@@ -531,10 +543,11 @@ class Subsonic_Api
         $response     = Subsonic_XML_Data::createSuccessResponse('getalbumlist');
         $errorOccured = false;
         $albums       = array();
+        $user         = User::get_from_username($username);
 
         switch ($type) {
             case "random":
-                $albums = Album::get_random($size);
+                $albums = Album::get_random($size, false, $user->id);
                 break;
             case "newest":
                 $albums = Stats::get_newest("album", $size, $offset, $musicFolderId);
@@ -606,6 +619,8 @@ class Subsonic_Api
         if (!$size) {
             $size = 10;
         }
+
+        $username      = self::check_parameter($input, 'u');
         $genre         = $input['genre'];
         $fromYear      = $input['fromYear'];
         $toYear        = $input['toYear'];
@@ -657,10 +672,11 @@ class Subsonic_Api
             $search['rule_' . $count . '']          = $ftype;
             ++$count;
         }
+        $user = User::get_from_username($username);
         if ($count > 0) {
             $songs = Random::advanced('song', $search);
         } else {
-            $songs = Random::get_default($size);
+            $songs = Random::get_default($size, $user->id);
         }
 
         $response = Subsonic_XML_Data::createSuccessResponse('getrandomsongs');
@@ -689,9 +705,8 @@ class Subsonic_Api
      */
     public static function gettopsongs($input)
     {
-        $artist_id = self::check_parameter($input, 'artist');
-        $artist    = new Artist(Subsonic_XML_Data::getAmpacheId($artist_id));
-        $count     = (int) $input['count'];
+        $artist = Artist::get_from_name(urldecode(self::check_parameter($input, 'artist')));
+        $count  = (int) $input['count'];
         if ($count <= 0) {
             $count = 50;
         }
@@ -1002,6 +1017,9 @@ class Subsonic_Api
         if ($timeOffset) {
             $params .= '&frame=' . $timeOffset;
         }
+        if (AmpConfig::get('subsonic_stream_scrobble') == 'false') {
+            $params .= '&cache=1';
+        }
 
         $url = '';
         if (Subsonic_XML_Data::isSong($fileid)) {
@@ -1024,7 +1042,7 @@ class Subsonic_Api
     {
         $fileid = self::check_parameter($input, 'id', true);
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&noscrobble=1', 'api', function_exists('curl_version'));
+        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&cache=1', 'api', function_exists('curl_version'));
         self::follow_stream($url);
     }
 
@@ -1083,20 +1101,18 @@ class Subsonic_Api
             }
         } elseif (Subsonic_XML_Data::isPodcast($id)) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "podcast");
-        } elseif (Subsonic_XML_Data::isSmartPlaylist($id)) {
-            $smartlist = new Search(Subsonic_XML_Data::getAmpacheId($id));
-            $listitems = $smartlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
-                $song = new Song($item['object_id']);
-                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
+        } else {
+            $listitems = array();
+            // playlists and smartlists
+            if (Subsonic_XML_Data::isSmartPlaylist($id)) {
+                $playlist  = new Search(Subsonic_XML_Data::getAmpacheId($id));
+                $listitems = $playlist->get_items();
+            } elseif (Subsonic_XML_Data::isPlaylist($id)) {
+                $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($id));
+                $listitems = $playlist->get_items();
             }
-        } elseif (Subsonic_XML_Data::isPlaylist($id)) {
-            $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($id));
-            $listitems = $playlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
+            $item      = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
+            $art       = (!empty($item)) ? new Art($item['object_id'], $item['object_type']) : null;
             if ($art != null && $art->id == null) {
                 $song = new Song($item['object_id']);
                 $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
@@ -1391,22 +1407,30 @@ class Subsonic_Api
         if (AmpConfig::get('share')) {
             if (isset($input['expires'])) {
                 $expires = $input['expires'];
-                // Parse as a string to work on 32-bit computers
-                if (strlen($expires) > 3) {
-                    $expires = (int) (substr($expires, 0, - 3));
+                // no limit expiry
+                if ($expires == 0) {
+                    $expire_days = 0;
+                } else {
+                    // Parse as a string to work on 32-bit computers
+                    if (strlen($expires) > 3) {
+                        $expires = (int) (substr($expires, 0, - 3));
+                    }
+                    $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
                 }
-                $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
             } else {
+                //fall back to config defaults
                 $expire_days = AmpConfig::get('share_expire');
             }
 
             $object_id = Subsonic_XML_Data::getAmpacheId($id);
             if (Subsonic_XML_Data::isAlbum($id)) {
                 $object_type = 'album';
-            } else {
-                if (Subsonic_XML_Data::isSong($id)) {
-                    $object_type = 'song';
-                }
+            }
+            if (Subsonic_XML_Data::isSong($id)) {
+                $object_type = 'song';
+            }
+            if (Subsonic_XML_Data::isPlaylist($id)) {
+                $object_type = 'playlist';
             }
 
             if (!empty($object_type)) {
@@ -1769,7 +1793,7 @@ class Subsonic_Api
         $oid        = self::check_parameter($input, 'id');
         $submission = $input['submission'];
         $user       = User::get_from_username($input['u']);
-        //$time = $input['time'];
+        $time       = time();
 
         if (!is_array($oid)) {
             $rid   = array();
@@ -1777,18 +1801,28 @@ class Subsonic_Api
             $oid   = $rid;
         }
 
+        $counter = 0;
         foreach ($oid as $object) {
-            $aid  = Subsonic_XML_Data::getAmpacheId($object);
-            $type = Subsonic_XML_Data::getAmpacheType($object);
-
+            $aid   = Subsonic_XML_Data::getAmpacheId($object);
+            $type  = Subsonic_XML_Data::getAmpacheType($object);
             $media = new $type($aid);
             $media->format();
-            // always record Ampache history
-            debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
-            $media->set_played($user->id, $input['c'], array(), time());
-            // only scrobble externally when asked
-            if ($submission !== 'false' || $submission !== '0') {
-                User::save_mediaplay(User::get_from_username($input['u']), $media);
+
+            // internal scrobbling (user_activity and object_count tables)
+            if (($submission === 'true' || $submission === '1') && $counter == 0) {
+                $media->set_played($user->id, $input['c'], array(), time());
+                $counter++;
+            }
+            //scrobble plugins
+            if ($submission === 'true' || $submission === '1') {
+                // stream has finished
+                debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
+                User::save_mediaplay($user, $media);
+            } elseif ($submission === 'false' || $submission === '0') {
+                // stream is in progress
+                debug_event('subsonic_api.class', 'now_playing: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) $time, 5);
+                Stream::garbage_collection();
+                Stream::insert_now_playing((int) $media->id, (int) $user->id, (int) $media->time, $user->username, $type);
             }
         }
 
@@ -2095,7 +2129,7 @@ class Subsonic_Api
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
             $episode = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($id));
-            if ($episode->id) {
+            if ($episode->id !== null) {
                 $episode->gather();
                 $response = Subsonic_XML_Data::createSuccessResponse('downloadpodcastepisode');
             } else {
@@ -2199,7 +2233,7 @@ class Subsonic_Api
     {
         $message = self::check_parameter($input, 'message');
         $user_id = User::get_from_username($input['u'])->id;
-        if (PrivateMsg::send_chat_msg($message, $user_id)) {
+        if (PrivateMsg::send_chat_msg($message, $user_id) !== null) {
             $response = Subsonic_XML_Data::createSuccessResponse('addchatmessage');
         } else {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'addChatMessage');

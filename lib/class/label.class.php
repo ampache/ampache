@@ -103,6 +103,7 @@ class Label extends database_object implements library_item
 
     public function format($details = true)
     {
+        unset($details);
         $this->f_name       = scrub_out($this->name);
         $this->link         = AmpConfig::get('web_path') . '/labels.php?action=show&label=' . scrub_out($this->id);
         $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name;
@@ -283,9 +284,9 @@ class Label extends database_object implements library_item
                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date));
 
-        $id = Dba::insert_id();
+        $label_id = Dba::insert_id();
 
-        return $id;
+        return $label_id;
     }
 
     public static function lookup(array $data, $id = 0)
@@ -462,7 +463,7 @@ class Label extends database_object implements library_item
         debug_event('label.class', 'Updating labels for values {' . $labels_comma . '} artist {' . $artist_id . '}', 5);
 
         $clabels      = Label::get_labels($artist_id);
-        $editedLabels = explode(",", $labels_comma);
+        $editedLabels = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels_comma));
 
         foreach ($clabels as $clid => $clv) {
             if ($clid) {
@@ -521,7 +522,7 @@ class Label extends database_object implements library_item
         if (is_array($labels)) {
             $array = $labels;
         } else {
-            $array = explode(",", $labels);
+            $array = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
         }
 
         $ret = array();

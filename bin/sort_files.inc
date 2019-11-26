@@ -85,7 +85,7 @@ while ($row = Dba::fetch_row($db_results)) {
         // sort_find_home will replace the % with the correct values.
         $directory = sort_find_home($song, $catalog->sort_pattern, $catalog->path);
         $filename  = sort_find_home($song, $catalog->rename_pattern, null);
-        if (!$directory || !$filename) {
+        if ($directory === false || $filename === false) {
             $fullpath = $song->file;
         } else {
             $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);;

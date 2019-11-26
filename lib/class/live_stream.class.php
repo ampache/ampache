@@ -101,6 +101,7 @@ class Live_Stream extends database_object implements media, library_item
      */
     public function format($details = true)
     {
+        unset($details); //dead code but called from other format calls
         // Default link used on the rightbar
         $this->f_name         = scrub_out($this->name);
         $this->link           = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
@@ -289,7 +290,7 @@ class Live_Stream extends database_object implements media, library_item
         }
 
         // If we've made it this far everything must be ok... I hope
-        $sql = "INSERT INTO `live_stream` (`name`,`site_url`,`url`,`catalog`,`codec`) " .
+        $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " .
             "VALUES (?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
 
@@ -381,6 +382,12 @@ class Live_Stream extends database_object implements media, library_item
 
     public function set_played($user, $agent, $location)
     {
+        // Do nothing
+    }
+
+    public function check_play_history($user)
+    {
+        unset($user);
         // Do nothing
     }
 } // end of live_stream class

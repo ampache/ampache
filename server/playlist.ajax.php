@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
                 $name = Core::get_global('user')->username . ' - ' . date("Y-m-d H:i:s", time());
             }
             $playlist_id = Playlist::create($name, 'private');
-            if (!$playlist_id) {
+            if ($playlist_id === null) {
                 break;
             }
             $playlist = new Playlist($playlist_id);

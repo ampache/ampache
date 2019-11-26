@@ -144,7 +144,7 @@ class Playlist extends playlist_object
      */
     public static function get_smartlists($incl_public = true, $user_id = null)
     {
-        if (!$user_id) {
+        if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
 
@@ -216,7 +216,7 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $sql        = "SELECT `id`,`object_id`,`object_type`,`track` FROM `playlist_data` WHERE `playlist`= ? ORDER BY `track`";
+        $sql        = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist`= ? ORDER BY `track`";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -241,7 +241,7 @@ class Playlist extends playlist_object
 
         $limit_sql = $limit ? 'LIMIT ' . (string) ($limit) : '';
 
-        $sql = "SELECT `object_id`,`object_type` FROM `playlist_data` " .
+        $sql = "SELECT `object_id`, `object_type` FROM `playlist_data` " .
             "WHERE `playlist` = ? ORDER BY RAND() $limit_sql";
         $db_results = Dba::read($sql, array($this->id));
 
@@ -468,7 +468,7 @@ class Playlist extends playlist_object
 
             /* Don't insert dead media */
             if ($media->id) {
-                $sql = "INSERT INTO `playlist_data` (`playlist`,`object_id`,`object_type`,`track`) " .
+                $sql = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) " .
                     " VALUES (?, ?, ?, ?)";
                 Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
             } // if valid id
@@ -481,17 +481,18 @@ class Playlist extends playlist_object
      * create
      * This function creates an empty playlist, gives it a name and type
      * @param string $type
+     * @param integer $user_id
      */
     public static function create($name, $type, $user_id = null, $date = null)
     {
-        if ($user_id == null) {
+        if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        if ($date == null) {
+        if (!is_int($date)) {
             $date = time();
         }
 
-        $sql = "INSERT INTO `playlist` (`name`,`user`,`type`,`date`,`last_update`) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `playlist` (`name`, `user`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $user_id, $type, $date, $date));
 
         $insert_id = Dba::insert_id();
@@ -514,7 +515,7 @@ class Playlist extends playlist_object
      */
     public function delete_track($object_id)
     {
-        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
+        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $object_id));
 
         $this->update_last_update();
@@ -534,6 +535,34 @@ class Playlist extends playlist_object
         $this->update_last_update();
 
         return true;
+    } // delete_track_number
+
+    /**
+    * has_item
+    * look for the track id or the object id in a playlist
+    * @param integer $object
+    * @param integer $track
+    * @return boolean
+    */
+    public function has_item($object = null, $track = null)
+    {
+        $results = array();
+        if ($object) {
+            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
+            $db_results = Dba::read($sql, array($this->id, $object));
+            $results    = Dba::fetch_assoc($db_results);
+        } elseif ($track) {
+            $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
+            $db_results = Dba::read($sql, array($this->id, $track));
+            $results    = Dba::fetch_assoc($db_results);
+        }
+        if (isset($results['object_id']) || isset($results['track'])) {
+            debug_event('playlist.class', 'has_item results: ' . $results['object_id'], 5);
+
+            return true;
+        }
+
+        return false;
     } // delete_track_number
 
     /**
