@@ -50,7 +50,7 @@ function check_php()
  */
 function check_php_version()
 {
-    if (floatval(phpversion()) < 5.3) {
+    if (floatval(phpversion()) < 7.1) {
         return false;
     }
 
