@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Artist, getArtists } from '../../logic/Artist';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
-import { Link } from 'react-router-dom';
 import ArtistDisplay from '../components/ArtistDisplay';
 
 interface ArtistsViewProps {
@@ -14,7 +13,7 @@ const ArtistsView: React.FC<ArtistsViewProps> = (props) => {
     const [error, setError] = useState<Error | AmpacheError>(null);
 
     useEffect(() => {
-        getArtists(props.user.authKey, 'http://localhost:8080')
+        getArtists(props.user.authKey)
             .then((data) => {
                 setArtists(data);
             })
@@ -51,7 +50,9 @@ const ArtistsView: React.FC<ArtistsViewProps> = (props) => {
             <h1>Artists</h1>
             <div className='artists'>
                 {artists.map((theArtist) => {
-                    return <ArtistDisplay artist={theArtist} />;
+                    return (
+                        <ArtistDisplay artist={theArtist} key={theArtist.id} />
+                    );
                 })}
             </div>
         </div>

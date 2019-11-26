@@ -17,20 +17,15 @@ export type AuthKey = {
  * @async
  * @param username
  * @param password
- * @param server
  * @return {Promise<AuthKey>}
  */
-const handshake = async (
-    username: string,
-    password: string,
-    server: string
-) => {
+const handshake = async (username: string, password: string) => {
     const time = Math.round(new Date().getTime() / 1000);
     const key = await digestMessage(password);
     const passphrase = await digestMessage(time + key);
     return axios
         .get(
-            `${server}/server/json.server.php?action=handshake&user=${username}&timestamp=${time}&auth=${passphrase}&version=350001`
+            `${process.env.ServerURL}/server/json.server.php?action=handshake&user=${username}&timestamp=${time}&auth=${passphrase}&version=350001`
         )
         .then((response) => {
             const JSONData = response.data;

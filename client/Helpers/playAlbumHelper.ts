@@ -1,5 +1,5 @@
-import { getAlbumSongs } from '../../logic/Album';
-import { AuthKey } from '../../logic/Auth';
+import { getAlbumSongs } from '../logic/Album';
+import { AuthKey } from '../logic/Auth';
 
 export const playSongFromAlbum = (
     albumID: number,
@@ -8,7 +8,7 @@ export const playSongFromAlbum = (
     musicContext
 ) => {
     //TODO: MusicContext type
-    getAlbumSongs(albumID, authKey, 'http://localhost:8080')
+    getAlbumSongs(albumID, authKey)
         .then((songs) => {
             let songIndex = 0;
             if (randomSong) {

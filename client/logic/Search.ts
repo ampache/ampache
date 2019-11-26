@@ -2,14 +2,10 @@ import axios from 'axios';
 import { Song } from './Song';
 import { AuthKey } from './Auth';
 
-const searchSongs = async (
-    searchQuery: string,
-    authKey: AuthKey,
-    server: string
-) => {
+const searchSongs = async (searchQuery: string, authKey: AuthKey) => {
     return axios
         .get(
-            `${server}/server/json.server.php?action=search_songs&filter=${searchQuery}&auth=${authKey}&version=400001`
+            `${process.env.ServerURL}/server/json.server.php?action=search_songs&filter=${searchQuery}&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;

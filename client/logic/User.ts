@@ -13,10 +13,10 @@ type User = {
     website: string;
 };
 
-const getUser = async (username: string, authKey: AuthKey, server: string) => {
+const getUser = async (username: string, authKey: AuthKey) => {
     return axios
         .get(
-            `${server}/server/json.server.php?action=user&username=${username}&auth=${authKey}&version=350001`
+            `${process.env.ServerURL}/server/json.server.php?action=user&username=${username}&auth=${authKey}&version=350001`
         )
         .then((response) => {
             const JSONData = response.data;

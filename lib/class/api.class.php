@@ -106,13 +106,13 @@ class Api
                 }
             break;
             case 'alpha_match':
-                self::$browse->set_filter('alpha_match',$value);
+                self::$browse->set_filter('alpha_match', $value);
             break;
             case 'exact_match':
-                self::$browse->set_filter('exact_match',$value);
+                self::$browse->set_filter('exact_match', $value);
             break;
             case 'enabled':
-                self::$browse->set_filter('enabled',$value);
+                self::$browse->set_filter('enabled', $value);
             break;
             default:
                 // Rien a faire
@@ -121,7 +121,6 @@ class Api
 
         return true;
     } // set_filter
-
 
     /**
      * logout
@@ -995,47 +994,81 @@ class Api
                 echo JSON_Data::error('401', T_('Access denied to this playlist.'));
             } else {
                 $playlist->add_songs(array($song));
-                echo JSON_Data::single_string('success');
+                echo JSON_Data::success('success');
             }
         } else {  // Defaults to XML
             if (!$playlist->has_access()) {
                 echo XML_Data::error('401', T_('Access denied to this playlist.'));
             } else {
                 $playlist->add_songs(array($song));
-                echo XML_Data::single_string('success');
+                echo XML_Data::success('success');
             }
         }
     } // playlist_add_song
 
     /**
      * playlist_remove_song
-     * This remove a song from a playlist
+     * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=400001
+     *
+     * This removes a song from a playlist using track number in the list or song ID.
+     * Pre-400001 the api required 'track' instead of 'song'.
+     *
      * @param array $input
+     * 'filter' (string) UID of playlist
+     * 'song'   (string) UID of song to remove from the playlist //optional
+     * 'track'  (string) track number to remove from the playlist //optionak
      */
     public static function playlist_remove_song($input)
     {
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $track    = scrub_in($input['track']);
 
-        //Whatever format the user wants
         $outputFormat = $input['format'];
 
-        if ($outputFormat == 'json') {
-            if (!$playlist->has_access()) {
-                echo JSON_Data::error('401', T_('Access denied to this playlist.'));
+        if (!$playlist->has_access($user->id) && !Access::check('interface', 75, $user->id)) {
+            if ($outputFormat == 'json') {
+                echo JSON_Data::error('401', T_('Access denied to this playlist'));
             } else {
-                $playlist->delete_track_number($track);
-                echo JSON_Data::single_string('success');
+                echo XML_Data::error('401', T_('Access denied to this playlist'));
             }
-        } else {  // Defaults to XML
-            if (!$playlist->has_access()) {
-                echo XML_Data::error('401', T_('Access denied to this playlist.'));
+        } else {
+            if ($input['song']) {
+                $track = scrub_in($input['song']);
+                if (!$playlist->has_item($track)) {
+                    if ($outputFormat == 'json') {
+                        echo JSON_Data::error('404', T_('Song not found in playlist'));
+                        return;
+                    }
+
+                    echo XML_Data::error('404', T_('Song not found in playlist'));
+
+                    return;
+                }
+                $playlist->delete_track($track);
+                $playlist->regenerate_track_numbers();
             } else {
+                $track = scrub_in($input['track']);
+                if (!$playlist->has_item(null, $track)) {
+                    if ($outputFormat == 'json') {
+                        echo JSON_Data::error('404', T_('Track ID not found in playlist'));
+                        return;
+                    }
+                    echo XML_Data::error('404', T_('Track ID not found in playlist'));
+
+                    return;
+                }
                 $playlist->delete_track_number($track);
-                echo XML_Data::single_string('success');
+                $playlist->regenerate_track_numbers();
+            }
+            if ($outputFormat == 'json') {
+                echo JSON_Data::success('song removed from playlist');
+            } else {
+                echo XML_Data::success('song removed from playlist');
             }
         }
+        Session::extend($input['auth']);
     } // playlist_remove_song
 
     /**

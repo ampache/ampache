@@ -25,7 +25,6 @@ interface RouterState {
     user: User;
 }
 
-const server = 'http://localhost:8080';
 export default class Root extends React.PureComponent<void, RouterState> {
     private handleLogin: (
         username: string,
@@ -41,12 +40,12 @@ export default class Root extends React.PureComponent<void, RouterState> {
         };
 
         this.handleLogin = (username: string, password: string) => {
-            return handshake(username, password, server)
+            return handshake(username, password)
                 .then((newAuthKey: AuthKey) => {
                     this.setState({ authKey: newAuthKey });
                     Cookies.set('authKey', newAuthKey);
                     Cookies.set('username', username);
-                    return getUser(username, newAuthKey, server)
+                    return getUser(username, newAuthKey)
                         .then((user: User) => {
                             user.authKey = newAuthKey;
                             this.setState({ user });
@@ -65,7 +64,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
 
     componentDidMount() {
         if (this.state.authKey != null) {
-            getUser(this.state.username, this.state.authKey, server)
+            getUser(this.state.username, this.state.authKey)
                 .then((user: User) => {
                     user.authKey = this.state.authKey;
                     this.setState({ user });

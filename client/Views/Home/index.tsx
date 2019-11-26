@@ -4,7 +4,7 @@ import AlbumDisplay from '../components/AlbumDisplay';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import { MusicContext } from '../../Contexts/MusicContext';
-import { playSongFromAlbum } from '../Helpers/playAlbumHelper';
+import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
 import { Song } from '../../logic/Song';
 
 interface HomeViewProps {
@@ -18,12 +18,7 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
     const [error, setError] = useState<Error | AmpacheError>(null);
 
     useEffect(() => {
-        getRandomAlbums(
-            props.user.username,
-            6,
-            props.user.authKey,
-            'http://localhost:8080'
-        )
+        getRandomAlbums(props.user.username, 6, props.user.authKey)
             .then((albums: Album[]) => {
                 setRandomAlbums(albums);
             })

@@ -1,10 +1,15 @@
 import React from 'react';
 import useContextMenu from 'react-use-context-menu';
 import { Song } from '../../logic/Song';
+import { Link } from 'react-router-dom';
 
 interface SongRow {
     song: Song;
-    isCurrentlyPlaying: Boolean;
+    isCurrentlyPlaying: boolean;
+    showArtist?: boolean;
+    showAlbum?: boolean;
+    removeFromPlaylist?: (trackID: number) => void;
+    addToPlaylist?: (trackID: number) => void;
     addToQueue: (next: Boolean) => void;
     startPlaying: () => void;
 }
@@ -33,6 +38,27 @@ const SongRow: React.FC<SongRow> = (props) => {
                 onClick={props.startPlaying}
             >
                 <span className='title'>{props.song.title}</span>
+                {props.showArtist && (
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <Link
+                            className='artist'
+                            to={`/artist/${props.song.artist.id}`}
+                        >
+                            {props.song.artist.name}
+                        </Link>
+                    </div>
+                )}
+                {props.showAlbum && (
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <Link
+                            className='album'
+                            to={`/album/${props.song.album.id}`}
+                        >
+                            {props.song.album.name}
+                        </Link>
+                    </div>
+                )}
+
                 <span className='time'>
                     {minutes}:{paddedSeconds}
                 </span>
@@ -56,6 +82,44 @@ const SongRow: React.FC<SongRow> = (props) => {
                 >
                     Add to Queue
                 </div>
+                {props.showArtist && (
+                    <Link
+                        {...bindMenuItems}
+                        to={`/artist/${props.song.artist.id}`}
+                    >
+                        Go To Artist
+                    </Link>
+                )}
+                {props.showAlbum && (
+                    <Link
+                        {...bindMenuItems}
+                        to={`/album/${props.song.album.id}`}
+                    >
+                        Go To Album
+                    </Link>
+                )}
+                {props.removeFromPlaylist && (
+                    <div
+                        {...bindMenuItems}
+                        onClick={() => {
+                            setVisible(false);
+                            props.removeFromPlaylist(props.song.id);
+                        }}
+                    >
+                        Remove From Playlist
+                    </div>
+                )}
+                {props.addToPlaylist && (
+                    <div
+                        {...bindMenuItems}
+                        onClick={() => {
+                            setVisible(false);
+                            props.addToPlaylist(props.song.id);
+                        }}
+                    >
+                        Add to Playlist
+                    </div>
+                )}
             </div>
         </>
     );

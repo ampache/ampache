@@ -73,7 +73,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         playSong(nextSong);
     };
 
-    const playSong = (song: Song) => {
+    const playSong = async (song: Song) => {
         if (
             playerStatus === PLAYERSTATUS.PLAYING ||
             playerStatus === PLAYERSTATUS.PAUSED
@@ -83,15 +83,16 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         howl.current = new Howl({
             src: [song.url],
             format: 'mp3', //Howler is broken, this bypasses https://github.com/goldfire/howler.js/issues/1248
-            onload: () => {
+            onload: async () => {
+                console.log('LOADED');
                 howl.current.play();
                 setPlayerStatus(PLAYERSTATUS.PLAYING);
             },
-            onloaderror: (id, err) => {
+            onloaderror: async (id, err) => {
                 console.log('ERROR', err);
                 Howler.unload();
             },
-            onend: () => {
+            onend: async () => {
                 if (songQueueIndex === songQueue.length) {
                     setCurrentPlayingSong({} as Song);
                     setPlayerStatus(PLAYERSTATUS.STOPPED);
@@ -103,7 +104,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         });
     };
 
-    const startPlayingWithNewQueue = (song: Song, newQueue: Song[]) => {
+    const startPlayingWithNewQueue = async (song: Song, newQueue: Song[]) => {
         if (song.id === currentPlayingSong?.id) return;
 
         const queueIndex = newQueue.findIndex((o) => o.id === song.id);

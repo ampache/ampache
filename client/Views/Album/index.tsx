@@ -17,30 +17,13 @@ interface AlbumViewProps {
 
 const AlbumView: React.FC<AlbumViewProps> = (props) => {
     const [theAlbum, setTheAlbum] = useState<Album>(null);
-    const [songs, setSongs] = useState<Song[]>([]);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
     useEffect(() => {
         if (props.match.params.albumID != null) {
-            getAlbum(
-                props.match.params.albumID,
-                props.user.authKey,
-                'http://localhost:8080'
-            )
+            getAlbum(props.match.params.albumID, props.user.authKey)
                 .then((data) => {
                     setTheAlbum(data);
-                })
-                .catch((error) => {
-                    setError(error);
-                });
-
-            getAlbumSongs(
-                props.match.params.albumID,
-                props.user.authKey,
-                'http://localhost:8080'
-            )
-                .then((songs) => {
-                    setSongs(songs);
                 })
                 .catch((error) => {
                     setError(error);
@@ -79,10 +62,10 @@ const AlbumView: React.FC<AlbumViewProps> = (props) => {
                 </div>
             </div>
             <div className='songs'>
-                <ul>
-                    {!songs && <li>'Loading Songs...'</li>}
-                    {songs && <SongList songs={songs} />}
-                </ul>
+                <SongList
+                    inAlbumID={props.match.params.albumID}
+                    authKey={props.user.authKey}
+                />
             </div>
         </div>
     );
