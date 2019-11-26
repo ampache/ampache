@@ -1820,7 +1820,7 @@ class Api
         $type      = $input['type'];
         $object_id = $input['id'];
         $flag      = $input['flag'];
-        $user      = User::get_from_apikey($input['auth']);
+        $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
         if ($user) {
             $user_id = $user->id;
