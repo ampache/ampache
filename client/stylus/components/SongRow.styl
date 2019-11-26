@@ -4,6 +4,13 @@
   display flex
   justify-content space-between
   border 1px solid transparent
+  cursor pointer
+  & > :first-child
+    text-align left
+  *
+    flex 1
+  & > :last-child
+    text-align right
   &:nth-child(odd)
     background-color #333
   &:hover

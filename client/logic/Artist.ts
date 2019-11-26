@@ -21,12 +21,11 @@ export type Artist = {
 
 export const getAlbumsFromArtist = async (
     albumID: number,
-    authKey: AuthKey,
-    server: string
+    authKey: AuthKey
 ) => {
     return axios
         .get(
-            `${server}/server/json.server.php?action=artist_albums&filter=${albumID}&auth=${authKey}&version=400001`
+            `${process.env.ServerURL}/server/json.server.php?action=artist_albums&filter=${albumID}&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;
@@ -40,10 +39,10 @@ export const getAlbumsFromArtist = async (
         });
 };
 
-export const getArtists = async (authKey: AuthKey, server: string) => {
+export const getArtists = async (authKey: AuthKey) => {
     return axios
         .get(
-            `${server}/server/json.server.php?action=artists&auth=${authKey}&version=400001`
+            `${process.env.ServerURL}/server/json.server.php?action=artists&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;

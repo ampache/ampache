@@ -11,9 +11,8 @@ interface PlaylistsViewProps {
 const PlaylistsView: React.FC<PlaylistsViewProps> = (props) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
-
     useEffect(() => {
-        getPlaylists(props.user.authKey, 'http://localhost:8080')
+        getPlaylists(props.user.authKey)
             .then((data) => {
                 setPlaylists(data);
             })

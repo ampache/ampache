@@ -1,0 +1,55 @@
+.playlistSelector
+  position: fixed;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  .content
+    position:fixed;
+    background-color: gray;
+    width: 40%;
+    height: 50%
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    .header
+      width 100%
+      height 50px
+      background-color bodyBackgroundColor
+      position relative
+      display flex
+      justify-content center
+      align-items center
+      .title
+        font-size 2vw
+      .close
+        position absolute
+        right 5px
+        top 5px
+        cursor pointer
+        width 12px
+        height 12px
+    .playlists
+      display flex
+      flex-direction column
+      height calc(100% - 50px)
+      background-color @background-color
+      .playlist
+        cursor pointer
+        font-size 1.5vw
+        padding 10px
+        margin-bottom 1px
+        background-color #4d4d4d
+        border 1px solid transparent
+        &:nth-child(odd)
+          background-color #333
+        &.newPlaylist
+          background-color lighten(bodyBackgroundColor, 10%)
+          text-align center
+          margin-top: auto;
+          margin-bottom: 0;
+
+        &:hover
+          color linkHoverColor
+          border 1px solid linkHoverColor

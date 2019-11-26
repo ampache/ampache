@@ -28,12 +28,11 @@ type Album = {
 const getRandomAlbums = async (
     username: string,
     count: number,
-    authKey: AuthKey,
-    server: string
+    authKey: AuthKey
 ) => {
     return axios
         .get(
-            `${server}/server/json.server.php?action=stats&username=${username}&limit=${count}&auth=${authKey}&version=400001`
+            `${process.env.ServerURL}/server/json.server.php?action=stats&username=${username}&limit=${count}&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;
@@ -47,14 +46,10 @@ const getRandomAlbums = async (
         });
 };
 
-const getAlbumSongs = async (
-    albumID: number,
-    authKey: AuthKey,
-    server: string
-) => {
+const getAlbumSongs = async (albumID: number, authKey: AuthKey) => {
     return axios
         .get(
-            `${server}/server/json.server.php?action=album_songs&filter=${albumID}&auth=${authKey}&version=400001`
+            `${process.env.ServerURL}/server/json.server.php?action=album_songs&filter=${albumID}&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;
@@ -68,10 +63,10 @@ const getAlbumSongs = async (
         });
 };
 
-const getAlbum = async (albumID: number, authKey: AuthKey, server: string) => {
+const getAlbum = async (albumID: number, authKey: AuthKey) => {
     return axios
         .get(
-            `${server}/server/json.server.php?action=album&filter=${albumID}&auth=${authKey}&version=400001`
+            `${process.env.ServerURL}/server/json.server.php?action=album&filter=${albumID}&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;

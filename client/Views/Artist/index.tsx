@@ -4,7 +4,7 @@ import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import { Album } from '../../logic/Album';
 import AlbumDisplay from '../components/AlbumDisplay';
-import { playSongFromAlbum } from '../Helpers/playAlbumHelper';
+import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
 import { MusicContext } from '../../Contexts/MusicContext';
 
 interface ArtistViewProps {
@@ -24,11 +24,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props) => {
 
     useEffect(() => {
         if (props.match.params.artistID != null) {
-            getAlbumsFromArtist(
-                props.match.params.artistID,
-                props.user.authKey,
-                'http://localhost:8080'
-            )
+            getAlbumsFromArtist(props.match.params.artistID, props.user.authKey)
                 .then((data) => {
                     setAlbums(data);
                 })

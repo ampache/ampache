@@ -23,11 +23,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
 
     useEffect(() => {
         if (props.match.params.searchQuery != null) {
-            searchSongs(
-                props.match.params.searchQuery,
-                props.user.authKey,
-                'http://localhost:8080'
-            )
+            searchSongs(props.match.params.searchQuery, props.user.authKey)
                 .then((Songs) => {
                     setSearchResults(Songs);
                 })
@@ -66,7 +62,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
                             }
                             key={song.id}
                             className={
-                                (musicContext.currentPlayingSong.id === song.id
+                                (musicContext.currentPlayingSong?.id === song.id
                                     ? 'playing '
                                     : '') + 'songBlock'
                             }
