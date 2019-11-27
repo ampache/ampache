@@ -17,7 +17,6 @@ export const MusicContext = React.createContext({
     playPause: () => {},
     playPrevious: () => {},
     playNext: () => {},
-    playSong: (song: Song) => {},
     startPlayingWithNewQueue: (song: Song, newQueue: Song[]) => {},
     addToQueue: (song: Song, next: Boolean) => {}
 });
@@ -62,7 +61,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         setSongQueueIndex(songQueueIndex - 1);
         setCurrentPlayingSong(previousSong);
 
-        playSong(previousSong);
+        _playSong(previousSong);
     };
 
     const playNext = () => {
@@ -70,10 +69,10 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         setSongQueueIndex(songQueueIndex + 1);
         setCurrentPlayingSong(nextSong);
         if (userQCount > 0) setUserQCount(userQCount - 1);
-        playSong(nextSong);
+        _playSong(nextSong);
     };
 
-    const playSong = async (song: Song) => {
+    const _playSong = async (song: Song) => {
         if (
             playerStatus === PLAYERSTATUS.PLAYING ||
             playerStatus === PLAYERSTATUS.PAUSED
@@ -108,17 +107,11 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         if (song.id === currentPlayingSong?.id) return;
 
         const queueIndex = newQueue.findIndex((o) => o.id === song.id);
-        if (
-            playerStatus === PLAYERSTATUS.PLAYING ||
-            playerStatus === PLAYERSTATUS.PAUSED
-        ) {
-            howl.current.stop();
-        }
-        setCurrentPlayingSong(song);
+
+        _playSong(song);
         setSongQueue(newQueue);
         setSongQueueIndex(queueIndex);
         console.log(newQueue, queueIndex);
-        playSong(song);
     };
 
     const addToQueue = (song: Song, next: Boolean) => {
@@ -147,7 +140,6 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 playPause,
                 playPrevious,
                 playNext,
-                playSong,
                 startPlayingWithNewQueue,
                 addToQueue
             }}

@@ -3,11 +3,11 @@ import useContextMenu from 'react-use-context-menu';
 import { Playlist } from '../../logic/Playlist';
 import { Link } from 'react-router-dom';
 
-interface PlaylistRow {
+interface PlaylistRowProps {
     playlist: Playlist;
 }
 
-const PlaylistRow: React.FC<PlaylistRow> = (props) => {
+const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
     const [
         bindMenu,
         bindMenuItems,

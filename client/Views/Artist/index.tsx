@@ -16,7 +16,7 @@ interface ArtistViewProps {
     };
 }
 
-const ArtistView: React.FC<ArtistViewProps> = (props) => {
+const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
     const musicContext = useContext(MusicContext);
 
     const [albums, setAlbums] = useState<Album[]>(null);

@@ -8,7 +8,7 @@ interface ArtistsViewProps {
     user: User;
 }
 
-const ArtistsView: React.FC<ArtistsViewProps> = (props) => {
+const ArtistsView: React.FC<ArtistsViewProps> = (props: ArtistsViewProps) => {
     const [artists, setArtists] = useState<Artist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 

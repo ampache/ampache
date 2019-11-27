@@ -3,7 +3,7 @@ import useContextMenu from 'react-use-context-menu';
 import { Song } from '../../logic/Song';
 import { Link } from 'react-router-dom';
 
-interface SongRow {
+interface SongRowProps {
     song: Song;
     isCurrentlyPlaying: boolean;
     showArtist?: boolean;
@@ -14,7 +14,7 @@ interface SongRow {
     startPlaying: () => void;
 }
 
-const SongRow: React.FC<SongRow> = (props) => {
+const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
     const [
         bindMenu,
         bindMenuItems,
