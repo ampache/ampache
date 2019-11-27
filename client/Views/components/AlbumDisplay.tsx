@@ -9,7 +9,9 @@ interface AlbumDisplayProps {
     playSongFromAlbum?: (albumID: number, random: boolean) => void;
 }
 
-const AlbumDisplay: React.FC<AlbumDisplayProps> = (props) => {
+const AlbumDisplay: React.FC<AlbumDisplayProps> = (
+    props: AlbumDisplayProps
+) => {
     const [
         bindMenu,
         bindMenuItems,

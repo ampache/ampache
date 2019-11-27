@@ -2,7 +2,7 @@ import { PLAYERSTATUS } from '../../enum/PlayerStatus';
 import React, { useContext } from 'react';
 import { MusicContext } from '../../Contexts/MusicContext';
 
-const MusicPlayer: React.FC = (props) => {
+const MusicPlayer: React.FC = () => {
     const musicContext = useContext(MusicContext);
 
     return (

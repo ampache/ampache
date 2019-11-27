@@ -15,7 +15,7 @@ interface AlbumViewProps {
     };
 }
 
-const AlbumView: React.FC<AlbumViewProps> = (props) => {
+const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
     const [theAlbum, setTheAlbum] = useState<Album>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 

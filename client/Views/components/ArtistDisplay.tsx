@@ -7,7 +7,9 @@ interface ArtistDisplayProps {
     playSongFromAlbum?: (albumID: number) => void;
 }
 
-const ArtistDisplay: React.FC<ArtistDisplayProps> = (props) => {
+const ArtistDisplay: React.FC<ArtistDisplayProps> = (
+    props: ArtistDisplayProps
+) => {
     return (
         <>
             <Link

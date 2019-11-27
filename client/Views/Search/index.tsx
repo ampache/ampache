@@ -5,6 +5,7 @@ import { Song } from '../../logic/Song';
 import AmpacheError from '../../logic/AmpacheError';
 import { Link } from 'react-router-dom';
 import { MusicContext } from '../../Contexts/MusicContext';
+import SongBlock from '../components/SongBlock';
 
 interface SearchProps {
     user: User;
@@ -33,6 +34,10 @@ const SearchView: React.FC<SearchProps> = (props) => {
         }
     }, [props.match.params.searchQuery]);
 
+    const playSong = (song: Song) => {
+        musicContext.startPlayingWithNewQueue(song, searchResults);
+    };
+
     if (error) {
         return (
             <div className='searchPage'>
@@ -53,43 +58,14 @@ const SearchView: React.FC<SearchProps> = (props) => {
             <div className='songs'>
                 {searchResults.map((song: Song) => {
                     return (
-                        <div
-                            onClick={() =>
-                                musicContext.startPlayingWithNewQueue(
-                                    song,
-                                    searchResults
-                                )
+                        <SongBlock
+                            song={song}
+                            currentlyPlaying={
+                                musicContext.currentPlayingSong?.id === song.id
                             }
+                            playSong={playSong}
                             key={song.id}
-                            className={
-                                (musicContext.currentPlayingSong?.id === song.id
-                                    ? 'playing '
-                                    : '') + 'songBlock'
-                            }
-                        >
-                            <img src={song.art} alt='Album Cover' />
-                            <div className='details'>
-                                <div className='title'>{song.title}</div>
-                                <div className='bottom'>
-                                    <Link
-                                        to={`/album/${song.album.id}`}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                        }}
-                                    >
-                                        {song.album.name}
-                                    </Link>
-                                    <Link
-                                        to={`/artist/${song.artist.id}`}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                        }}
-                                    >
-                                        {song.artist.name}
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
+                        />
                     );
                 })}
             </div>
