@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { Howler } from 'howler';
 
 import App from './Views/App';
 import Home from './Views/Home/';
@@ -77,7 +76,6 @@ export default class Root extends React.PureComponent<void, RouterState> {
     }
 
     private handleLogout() {
-        Howler.unload();
         Cookies.remove('authKey');
         Cookies.remove('username');
         this.setState({ authKey: null, username: null, user: null });
