@@ -2651,11 +2651,6 @@ hotkeys-js@3.7.1:
   resolved "https://registry.yarnpkg.com/hotkeys-js/-/hotkeys-js-3.7.1.tgz#851f92fc3ae18f6a0b0cf77449f0e4b961a6c083"
   integrity sha512-dCQOlRQdDBxKLFjT4/yi5QODTfKlxuXvXgz65g1T3qHuUUc5cWudJw4ok0IvL7XgGgOknbB13tcIW2VTG7ZUIw==
 
-howler@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/howler/-/howler-2.1.2.tgz#8433a09d8fe84132a3e726e05cb2bd352ef8bd49"
-  integrity sha512-oKrTFaVXsDRoB/jik7cEpWKTj7VieoiuzMYJ7E/EU5ayvmpRhumCv3YQ3823zi9VTJkSWAhbryHnlZAionGAJg==
-
 hsl-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/hsl-regex/-/hsl-regex-1.0.0.tgz#d49330c789ed819e276a4c0d272dffa30b18fe6e"
