@@ -8,6 +8,7 @@
     "license": "GPL",
     "dependencies": {
         "@babel/runtime": "^7.7.4",
+        "@types/wicg-mediasession": "^1.0.3",
         "axios": "^0.19.0",
         "images": "^3.0.2",
         "js-cookie": "^2.2.1",

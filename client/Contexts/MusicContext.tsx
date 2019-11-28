@@ -63,6 +63,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     };
 
     const playNext = () => {
+        console.log(songQueueIndex);
         const nextSong = songQueue[songQueueIndex + 1];
         setSongQueueIndex(songQueueIndex + 1);
         if (userQCount > 0) setUserQCount(userQCount - 1);
@@ -72,7 +73,19 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const _playSong = async (song: Song) => {
         setCurrentPlayingSong(song);
         setPlayerStatus(PLAYERSTATUS.PLAYING);
-    };
+        if ('mediaSession' in navigator) {
+            // @ts-ignore TODO
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: song.title,
+                artist: song.artist.name,
+                album: song.album.name,
+                // artwork: song.art
+            });
+
+            // navigator.mediaSession.setActionHandler('previoustrack', () => {playPrevious()});
+            // navigator.mediaSession.setActionHandler('nexttrack', () => {playNext()});
+        }
+        };
 
     const songIsOver = () => {
         if (songQueueIndex === songQueue.length - 1) {
