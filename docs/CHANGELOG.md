@@ -1,9 +1,24 @@
 # CHANGELOG
 
-## 4.1.0
+## 4.1.0-develop
 
+* Fixes for Api::get_indexes, Api::playlists, Api::playlist, Api::playlist_songs
+* Fix Access::check to allow all public lists
+* Filter playlists by access in subsonic
+* Fail check_php_verison() when using less than php7.1
+* Fix global user connecting through the API with an API key.
+
+## 4.0.2
+
+* Bump API version to 400002 (4.0.0 build 002)
 * Extend Api::playlist_generate (add new mode 'unplayed')
-* Bump API version to 400002 because of this extension
+* Fix API playlist commands and access checks relating to playlists
+* Access::check should be passing user id from the API
+* SQL query fixes for Album, Playlist methods
+* Remove spaces from play url extensions (Should help nginx users)
+* Translate typo in show_test.inc
+* Trim massive year, time and track when importing new songs
+* Set play_type correctly in preferences pages
 
 ## 4.0.1
 
