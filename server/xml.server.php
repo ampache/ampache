@@ -49,7 +49,7 @@ if (!AmpConfig::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Session::exists('api', $_REQUEST['auth']) && Core::get_request('action') != 'handshake' && Core::get_request('action') != 'ping') {
+if (!Session::exists('api', Core::get_request('auth')) && Core::get_request('action') != 'handshake' && Core::get_request('action') != 'ping') {
     debug_event('Access Denied', 'Invalid Session attempt to API [' . Core::get_request('action') . ']', 3);
     ob_end_clean();
     echo XML_Data::error('401', T_('Session Expired'));
@@ -62,9 +62,9 @@ $username = null;
 $apikey   = null;
 
 if ((Core::get_request('action') == 'handshake') && isset($_REQUEST['timestamp'])) {
-    $username = $_REQUEST['user'];
+    $username = Core::get_request('user');
 } else {
-    $apikey = $_REQUEST['auth'];
+    $apikey = Core::get_request('auth');
 }
 
 if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
@@ -77,9 +77,10 @@ if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
 
 if ((Core::get_request('action') != 'handshake') && (Core::get_request('action') != 'ping')) {
     if (isset($_REQUEST['user'])) {
-        $GLOBALS['user'] = User::get_from_username($_REQUEST['user']);
+        $GLOBALS['user'] = User::get_from_username(Core::get_request('user'));
     } else {
-        $GLOBALS['user'] = User::get_from_username(Session::username($input['auth']));
+        debug_event('xml.server', 'API [' . Core::get_request('auth') . ']', 3);
+        $GLOBALS['user'] = User::get_from_username(Session::username(Core::get_request('auth')));
     }
 }
 
