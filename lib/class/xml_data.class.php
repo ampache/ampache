@@ -643,8 +643,6 @@ class XML_Data
      */
     public static function playlists($playlists)
     {
-        $string = "<total_count>" . count($playlists) . "</total_count>\n";
-
         if (count($playlists) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -652,6 +650,7 @@ class XML_Data
                 $playlists = array_slice($playlists, self::$offset);
             }
         }
+        $string = "<total_count>" . count($playlists) . "</total_count>\n";
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {

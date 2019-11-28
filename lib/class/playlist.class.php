@@ -22,7 +22,6 @@
 
 /**
  * Playlist Class
- *
  * This class handles playlists in ampache. it references the playlist* tables
  *
  */
