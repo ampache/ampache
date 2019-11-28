@@ -844,12 +844,12 @@ class Subsonic_Api
     {
         $response = Subsonic_XML_Data::createSuccessResponse('getplaylists');
         $username = $input['username'];
+        $user     = User::get_from_username($username);
 
         // Don't allow playlist listing for another user
         if (empty($username) || $username == $input['u']) {
-            Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists(), Search::get_searches());
+            Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists(true, $user->id), Search::get_searches(true, $user->id));
         } else {
-            $user = User::get_from_username($username);
             if ($user->id) {
                 Subsonic_XML_Data::addPlaylists($response, Playlist::get_users($user->id));
             } else {

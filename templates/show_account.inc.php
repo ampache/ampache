@@ -92,7 +92,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
         </td>
         <td>
-	      <?php
+          <?php
                 if ($client->f_avatar) {
                     echo $client->f_avatar;
                 } ?>

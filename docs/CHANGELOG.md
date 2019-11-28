@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 4.0.3
+
+* Fixes for Api::get_indexes, Api::playlists, Api::playlist, Api::playlist_songs
+* Fix Access::check to allow all public lists
+* Filter playlists by access in subsonic
+* Fail check_php_verison() when using less than php7.1
+* Fix global user connecting through the API with an API key.
+
 ## 4.0.2
 
 * Bump API version to 400002 (4.0.0 build 002)
