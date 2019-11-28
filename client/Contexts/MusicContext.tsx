@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { PLAYERSTATUS } from '../enum/PlayerStatus';
-import { Howl, Howler } from 'howler';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { AuthKey } from '../logic/Auth';
 import { Song } from '../logic/Song';
@@ -34,7 +33,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const [songQueueIndex, setSongQueueIndex] = useState(-1);
     const [userQCount, setUserQCount] = useState(0);
 
-    const howl = React.useRef<Howl>(null);
+    const audioRef = React.useRef(null);
 
     useHotkeys(
         'space',
@@ -46,12 +45,12 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     );
 
     const playPause = () => {
-        console.log(playerStatus);
+        console.log(playerStatus, audioRef.current);
         if (playerStatus === PLAYERSTATUS.PLAYING) {
-            howl.current.pause();
+            audioRef.current.pause();
             setPlayerStatus(PLAYERSTATUS.PAUSED);
         } else if (playerStatus === PLAYERSTATUS.PAUSED) {
-            howl.current.play();
+            audioRef.current.play();
             setPlayerStatus(PLAYERSTATUS.PLAYING);
         }
     };
@@ -59,7 +58,6 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const playPrevious = () => {
         const previousSong = songQueue[songQueueIndex - 1];
         setSongQueueIndex(songQueueIndex - 1);
-        setCurrentPlayingSong(previousSong);
 
         _playSong(previousSong);
     };
@@ -67,40 +65,22 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const playNext = () => {
         const nextSong = songQueue[songQueueIndex + 1];
         setSongQueueIndex(songQueueIndex + 1);
-        setCurrentPlayingSong(nextSong);
         if (userQCount > 0) setUserQCount(userQCount - 1);
         _playSong(nextSong);
     };
 
     const _playSong = async (song: Song) => {
-        if (
-            playerStatus === PLAYERSTATUS.PLAYING ||
-            playerStatus === PLAYERSTATUS.PAUSED
-        ) {
-            howl.current.stop();
-        }
-        howl.current = new Howl({
-            src: [song.url],
-            format: 'mp3', //Howler is broken, this bypasses https://github.com/goldfire/howler.js/issues/1248
-            onload: async () => {
-                console.log('LOADED');
-                howl.current.play();
-                setPlayerStatus(PLAYERSTATUS.PLAYING);
-            },
-            onloaderror: async (id, err) => {
-                console.log('ERROR', err);
-                Howler.unload();
-            },
-            onend: async () => {
-                if (songQueueIndex === songQueue.length) {
-                    setCurrentPlayingSong({} as Song);
-                    setPlayerStatus(PLAYERSTATUS.STOPPED);
+        setCurrentPlayingSong(song);
+        setPlayerStatus(PLAYERSTATUS.PLAYING);
+    };
 
-                    return;
-                }
-                playNext();
-            }
-        });
+    const songIsOver = () => {
+        if (songQueueIndex === songQueue.length - 1) {
+            setCurrentPlayingSong({} as Song);
+            setPlayerStatus(PLAYERSTATUS.STOPPED);
+            return;
+        }
+        playNext();
     };
 
     const startPlayingWithNewQueue = async (song: Song, newQueue: Song[]) => {
@@ -118,7 +98,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         let newQueue = [...songQueue];
         console.log('ADD', userQCount);
         if (next) {
-            //splice starts at 1, so we don't need +1
+            //splice starts at 1, so we don't need +2 //TODO make this comment more clear!
             newQueue.splice(songQueueIndex + 1 + userQCount, 0, song);
             setUserQCount(userQCount + 1); //TODO: Reducer?
 
@@ -144,6 +124,12 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 addToQueue
             }}
         >
+            <audio
+                ref={audioRef}
+                onEnded={() => songIsOver()}
+                src={currentPlayingSong?.url}
+                autoPlay
+            />
             {props.children}
         </MusicContext.Provider>
     );
