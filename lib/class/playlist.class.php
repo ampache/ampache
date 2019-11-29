@@ -524,14 +524,29 @@ class Playlist extends playlist_object
     } // set_items
 
     /**
-     * delete_track
+     * delete_song
      * this deletes a single track, you specify the playlist_data.id here
      */
-    public function delete_track($object_id)
+    public function delete_song($object_id)
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $object_id));
         debug_event('playlist.class', 'Delete object_id: ' . $object_id . ' from ' . $this->id, 5);
+
+        $this->update_last_update();
+
+        return true;
+    } // delete_track
+
+    /**
+     * delete_track
+     * this deletes a single track, you specify the playlist_data.id here
+     */
+    public function delete_track($item_id)
+    {
+        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
+        Dba::write($sql, array($this->id, $item_id));
+        debug_event('playlist.class', 'Delete item_id: ' . $item_id . ' from ' . $this->id, 5);
 
         $this->update_last_update();
 

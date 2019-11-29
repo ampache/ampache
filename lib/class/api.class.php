@@ -1149,7 +1149,7 @@ class Api
 
                     return;
                 }
-                $playlist->delete_track($track);
+                $playlist->delete_song($track);
                 $playlist->regenerate_track_numbers();
                 echo XML_Data::success('song removed from playlist');
             } else {
