@@ -90,7 +90,6 @@ abstract class playlist_object extends database_object implements library_item
         }
         // allow the owner
         if (($this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
-
             return true;
         } else {
             return Access::check('interface', 75, $user_id);
