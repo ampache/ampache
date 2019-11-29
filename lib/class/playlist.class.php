@@ -531,6 +531,7 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $object_id));
+        debug_event('playlist.class', 'Delete object_id: ' . $object_id . ' from ' . $this->id, 5);
 
         $this->update_last_update();
 
@@ -545,6 +546,7 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $track));
+        debug_event('playlist.class', 'Delete track: ' . $track . ' from ' . $this->id, 5);
 
         $this->update_last_update();
 
