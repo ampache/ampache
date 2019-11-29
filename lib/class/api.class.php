@@ -919,18 +919,10 @@ class Api
     {
         $user         = User::get_from_username(Session::username($input['auth']));
         $method       = $input['exact'] ? false : true;
+        // regular playlists
         $playlist_ids = Playlist::get_playlists(true, $user->id, (string) $input['filter'], $method);
-        // unset playlists you can't access
-        foreach ($playlist_ids as $key => $playlist_id) {
-            debug_event('api.class', 'playlists ' . $key . ' ' . $playlist_id, 5);
-            $playlist = new Playlist($playlist_id);
-            if (!$playlist->type == 'public' || (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id))) {
-                unset($playlist_ids[$key]);
-            }
-        }
         // merge with the smartlists
         $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists(true, $user->id, (string) $input['filter'], $method));
-        // filter if you've set one
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
