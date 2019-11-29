@@ -85,15 +85,15 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function has_access($user_id = null)
     {
-        //if (!Access::check('interface', 25)) {
-        //    return false;
-        //}
-        debug_event('playlist_object', 'checking type ' . $type, 5);
+        if (!Access::check('interface', 25)) {
+            return false;
+        }
+        //debug_event('playlist_object', 'checking type ' . $type, 5);
         debug_event('playlist_object', 'checking user ' . $this->user, 5);
         // allow access to public lists
-        if ($this->type == 'public') {
-            return true;
-        }
+        //if ($this->type == 'public') {
+        //    return true;
+        //}
         // if it's private, allow the owner
         if (($this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
             return true;
