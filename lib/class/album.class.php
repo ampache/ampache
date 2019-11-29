@@ -656,7 +656,9 @@ class Album extends database_object implements library_item
             $mbid = "= '$this->mbid'";
         }
         $results       = array();
-        $where         = "WHERE `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND WHERE (`album`.`name` = '$full_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name') AND `album`.`year` = $year ";
+        $where         = "WHERE `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND " .
+                         "(`album`.`name` = '$full_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name') " .
+                         "AND `album`.`year` = $year ";
         $catalog_where = "";
         $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
 
@@ -668,7 +670,7 @@ class Album extends database_object implements library_item
         }
 
         $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                "$where $catalog_where ORDER BY `album`.`disk` ASC";
+                "$where $catalog_where GROUP BY `album`.`id` ORDER BY `album`.`disk` ASC";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
