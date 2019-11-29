@@ -848,7 +848,7 @@ class Subsonic_Api
 
         // Don't allow playlist listing for another user
         if (empty($username) || $username == $input['u']) {
-            Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists(true, $user->id), Search::get_searches(true, $user->id));
+            Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists(true, $user->id), Playlist::get_smartlists(true, $user->id));
         } else {
             if ($user->id) {
                 Subsonic_XML_Data::addPlaylists($response, Playlist::get_users($user->id));

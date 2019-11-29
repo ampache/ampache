@@ -927,7 +927,7 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo XML_Data::playlists($playlist_ids, $user->id);
+        echo XML_Data::playlists($playlist_ids);
         Session::extend($input['auth']);
     } // playlists
 

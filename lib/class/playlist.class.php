@@ -91,7 +91,9 @@ class Playlist extends playlist_object
      * get_playlists
      * Returns a list of playlists accessible by the user.
      * @param boolean $incl_public
-     * @param int $user_id
+     * @param integer $user_id
+     * @param string $playlist_name
+     * @param boolean $like
      * @return array
      */
     public static function get_playlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
@@ -140,6 +142,10 @@ class Playlist extends playlist_object
     /**
      * get_smartlists
      * Returns a list of playlists accessible by the user.
+     * @param boolean $incl_public
+     * @param integer $user_id
+     * @param string $playlist_name
+     * @param boolean $like
      * @return array
      */
     public static function get_smartlists($incl_public = true, $user_id = null, $playlist_name = '', $like = true)
