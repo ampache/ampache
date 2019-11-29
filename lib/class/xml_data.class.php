@@ -610,7 +610,7 @@ class XML_Data
             } else {
                 $songs = $album->song_count;
             }
-            
+
             //count multiple disks
             if ($album->allow_group_disks) {
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
