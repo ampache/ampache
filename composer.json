@@ -29,7 +29,7 @@
         }
     },
     "require": {
-        "php": ">=7.1.0",
+        "php": ">=7.2",
         "wikimedia/composer-merge-plugin": "1.*",
 
         "doctrine/cache": "1.*.*",
@@ -71,7 +71,7 @@
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
         "tightenco/collect": "5.2.*",
         "ampache/ampacheapi-php": "^1.0",
-        "dropbox/dropbox-sdk": "^1.1"
+        "dropbox/dropbox-sdk": "^1.1",
       "ext-json": "*"
     },
 
