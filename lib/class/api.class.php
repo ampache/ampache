@@ -917,12 +917,15 @@ class Api
      */
     public static function playlists($input)
     {
-        $user         = User::get_from_username(Session::username($input['auth']));
-        $method       = $input['exact'] ? false : true;
+        $user   = User::get_from_username(Session::username($input['auth']));
+        $method = $input['exact'] ? false : true;
+        $userid = (!Access::check('interface', 100)) ? $user->id : -1;
+        $public = (!Access::check('interface', 100)) ? true : false;
+
         // regular playlists
-        $playlist_ids = Playlist::get_playlists(true, $user->id, (string) $input['filter'], $method);
+        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
         // merge with the smartlists
-        $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists(true, $user->id, (string) $input['filter'], $method));
+        $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 

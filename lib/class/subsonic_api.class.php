@@ -845,9 +845,11 @@ class Subsonic_Api
         $response = Subsonic_XML_Data::createSuccessResponse('getplaylists');
         $username = $input['username'];
         $user     = User::get_from_username($username);
+        $userid   = (!Access::check('interface', 100)) ? $user->id : -1;
+        $public   = (!Access::check('interface', 100)) ? true : false;
 
         // Don't allow playlist listing for another user
-        Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists(false, -1), Playlist::get_smartlists(false, -1));
+        Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists($public, $userid), Playlist::get_smartlists($public, $userid));
         self::apiOutput($input, $response);
     }
 
