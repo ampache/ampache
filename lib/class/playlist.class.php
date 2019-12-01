@@ -128,7 +128,7 @@ class Playlist extends playlist_object
             }
         }
         $sql .= ' ORDER BY `name`';
-        debug_event('playlist.class', 'get_playlists query: ' . $sql, 5);
+        //debug_event('playlist.class', 'get_playlists query: ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();
@@ -148,9 +148,9 @@ class Playlist extends playlist_object
      * @param boolean $like
      * @return array
      */
-    public static function get_smartlists($incl_public = true, $user_id = null, $playlist_name = '', $like = true)
+    public static function get_smartlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
     {
-        if ($user_id === null) {
+        if (!$user_id) {
             $user_id = Core::get_global('user')->id;
         }
 
@@ -180,6 +180,7 @@ class Playlist extends playlist_object
             }
         }
         $sql .= ' ORDER BY `name`';
+        //debug_event('playlist.class', 'get_smartlists ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();
@@ -280,6 +281,7 @@ class Playlist extends playlist_object
 
         $sql         = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
         $db_results  = Dba::read($sql, array($this->id));
+        //debug_event('playlist.class', 'get_songs ' . $sql . ' ' . $this->id, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];

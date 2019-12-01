@@ -847,15 +847,7 @@ class Subsonic_Api
         $user     = User::get_from_username($username);
 
         // Don't allow playlist listing for another user
-        if (empty($username) || $username == $input['u']) {
-            Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists(true, $user->id), Playlist::get_smartlists(true, $user->id));
-        } else {
-            if ($user->id) {
-                Subsonic_XML_Data::addPlaylists($response, Playlist::get_users($user->id));
-            } else {
-                Subsonic_XML_Data::addPlaylists($response, array());
-            }
-        }
+        Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists(false, -1), Playlist::get_smartlists(false, -1));
         self::apiOutput($input, $response);
     }
 
