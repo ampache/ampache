@@ -891,7 +891,7 @@ class Subsonic_XML_Data
             self::addPlaylist($xplaylists, $playlist);
         }
         foreach ($smartplaylists as $splistid) {
-            $smartplaylist = new Search($splistid, 'song');
+            $smartplaylist = new Search(str_replace('smart_', '', $splistid), 'song');
             self::addSmartPlaylist($xplaylists, $smartplaylist);
         }
     }
@@ -903,6 +903,8 @@ class Subsonic_XML_Data
      */
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
+        $songcount = $playlist->get_media_count('song');
+        $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
         $xplaylist = $xml->addChild('playlist');
         $xplaylist->addAttribute('id', (string) self::getPlaylistId($playlist->id));
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
@@ -911,8 +913,8 @@ class Subsonic_XML_Data
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
         $xplaylist->addAttribute('created', date("c", $playlist->date));
         $xplaylist->addAttribute('changed', date("c", $playlist->last_update));
-        $xplaylist->addAttribute('songCount', $playlist->get_media_count('song'));
-        $xplaylist->addAttribute('duration', $playlist->get_total_duration());
+        $xplaylist->addAttribute('songCount', $songcount);
+        $xplaylist->addAttribute('duration', $duration);
 
         if ($songs) {
             $allsongs = $playlist->get_songs();
@@ -930,11 +932,13 @@ class Subsonic_XML_Data
     public static function addSmartPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
+        debug_event('subsonic_xml_data.class', 'addsmartplaylist ' . $playlist->id, 5);
         $xplaylist->addAttribute('id', (string) self::getSmartPlId($playlist->id));
         $xplaylist->addAttribute('name', self::checkName($playlist->name));
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', $user->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
+        $xplaylist->addAttribute('changed', date("c", time()));
 
         if ($songs) {
             $allitems = $playlist->get_items();

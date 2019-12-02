@@ -296,10 +296,10 @@ class Api
                 $vcounts    = Dba::fetch_assoc($db_results);
 
                 // We consider playlists and smartlists to be playlists
-                $sql        = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`";
+                $sql        = "SELECT COUNT(`id`) AS `playlist` FROM `playlist` WHERE `type` = 'public' OR `user` = " . $user_id;
                 $db_results = Dba::read($sql);
                 $playlist   = Dba::fetch_assoc($db_results);
-                $sql        = "SELECT COUNT(`id`) AS `smartlist` FROM `search` WHERE `limit` > 0";
+                $sql        = "SELECT COUNT(`id`) AS `smartlist` FROM `search` WHERE `type` = 'public' OR `user` = " . $user_id;
                 $db_results = Dba::read($sql);
                 $smartlist  = Dba::fetch_assoc($db_results);
 
@@ -316,7 +316,7 @@ class Api
                     'songs' => $song['song'],
                     'albums' => $album['album'],
                     'artists' => $artist['artist'],
-                    'playlists' => ($playlist['playlist'] + $smartlist['smartlist']),
+                    'playlists' => ((int) $playlist['playlist'] + (int) $smartlist['smartlist']),
                     'videos' => $vcounts['video'],
                     'catalogs' => $catalog['catalog']));
 
@@ -917,24 +917,15 @@ class Api
      */
     public static function playlists($input)
     {
-        $user = User::get_from_username(Session::username($input['auth']));
-        self::$browse->reset_filters();
-        self::$browse->set_type('playlist');
-        self::$browse->set_sort('name', 'ASC');
+        $user   = User::get_from_username(Session::username($input['auth']));
+        $method = $input['exact'] ? false : true;
+        $userid = (!Access::check('interface', 100)) ? $user->id : -1;
+        $public = (!Access::check('interface', 100)) ? true : false;
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        self::set_filter($method, $input['filter']);
-
-        $playlist_ids = self::$browse->get_objects();
-        // unset playlists you can't access
-        foreach ($playlist_ids as $key => $playlist_id) {
-            $playlist = new Playlist($playlist_id);
-            if (!$playlist->has_access($user->id)) {
-                unset($playlist_ids[$key]);
-            }
-        }
+        // regular playlists
+        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
         // merge with the smartlists
-        $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists(true, $user->id));
+        $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
@@ -964,7 +955,7 @@ class Api
             //Smartlists
             $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
         }
-        if (!$playlist->has_access($user->id)) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id))) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
 
             return;
@@ -997,7 +988,7 @@ class Api
             //Smartlists
             $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
         }
-        if (!$playlist->has_access($user->id)) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id))) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
 
             return;
@@ -1064,7 +1055,7 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
 
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 75, $user->id)) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id))) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
 
             return;
@@ -1092,7 +1083,7 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 75, $user->id)) {
+        if (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             $playlist->delete();
@@ -1118,7 +1109,7 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 75, $user->id)) {
+        if (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
 
             return;
@@ -1151,24 +1142,24 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 75, $user->id)) {
+        if (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             if ($input['song']) {
                 $track = scrub_in($input['song']);
                 if (!$playlist->has_item($track)) {
                     echo XML_Data::error('404', T_('Song not found in playlist'));
-    
+
                     return;
                 }
-                $playlist->delete_track($track);
+                $playlist->delete_song($track);
                 $playlist->regenerate_track_numbers();
                 echo XML_Data::success('song removed from playlist');
             } else {
                 $track = scrub_in($input['track']);
                 if (!$playlist->has_item(null, $track)) {
                     echo XML_Data::error('404', T_('Track ID not found in playlist'));
-    
+
                     return;
                 }
                 $playlist->delete_track_number($track);

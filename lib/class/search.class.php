@@ -1387,6 +1387,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                    $group[] = "`album`.`id`";
                     $where[] = "(`album`.`name` $sql_match_operator '$input' " .
                                 " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
                                 "' ', `album`.`name`)) $sql_match_operator '$input')";
@@ -1458,7 +1459,6 @@ class Search extends playlist_object
                         $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                     }
-                    
                 break;
                 case 'image height':
                     $where[]       = "`image`.`height` $sql_match_operator '$input'";
@@ -1800,12 +1800,14 @@ class Search extends playlist_object
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
                 break;
                 case 'album':
+                    $group[]       = "`album`.`id`";
                     $where[]       = "(`album`.`name` $sql_match_operator '$input' " .
                                      " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
                                      "' ', `album`.`name`)) $sql_match_operator '$input')";
                     $join['album'] = true;
                 break;
                 case 'artist':
+                    $group[]        = "`artist`.`id`";
                     $where[]        = "(`artist`.`name` $sql_match_operator '$input' " .
                                       " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
                                       "' ', `artist`.`name`)) $sql_match_operator '$input')";

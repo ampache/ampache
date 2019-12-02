@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 4.0.4
+
+* Finalize release procedure to make these updates a bit smoother
+* Reduce the time for repeated track playback (Song length - 5 sec)
+* Filter playlists in API, Web and Subsonic correctly for regular users vs admins
+* Fix album count for Artists when the album is missing data
+* Fix searches / searchbox for MYSQL8
+* Fix some invalid returns in lib/*
+* Send correct the function in ajax.server when deleting from playlist
+* Hide some lines from the mashup to make it a bit nicer
+* Remove the old logo from the main install page
+
 ## 4.0.3
 
 * Fixes for Api::get_indexes, Api::playlists, Api::playlist, Api::playlist_songs

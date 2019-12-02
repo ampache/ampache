@@ -88,16 +88,15 @@ abstract class playlist_object extends database_object implements library_item
         if (!Access::check('interface', 25)) {
             return false;
         }
-        // allow access to public lists
-        if ($this->type == 'public') {
+        if (Access::check('interface', 100)) {
             return true;
         }
-        // if it's private, allow the owner
-        if ((($this->user == Core::get_global('user')->id) && ($user_id == null)) || ($this->user == $user_id)) {
+        // allow the owner
+        if (($this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
             return true;
-        } else {
-            return Access::check('interface', 75, $user_id);
         }
+
+        return false;
     } // has_access
 
     public function get_medias($filter_type = null)

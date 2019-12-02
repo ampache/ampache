@@ -292,18 +292,22 @@ class Artist extends database_object implements library_item
         }
 
         $sort_type = AmpConfig::get('album_sort');
+        $sort_disk = ", `album`.`disk`";
+        if (AmpConfig::get('album_group')) {
+            $sort_disk = "";
+        }
         switch ($sort_type) {
             case 'year_asc':
-                $sql_sort = '`album`.`year` ASC, `album`.`disk`';
+                $sql_sort = '`album`.`year` ASC' . $sort_disk;
                 break;
             case 'year_desc':
-                $sql_sort = '`album`.`year` DESC, `album`.`disk`';
+                $sql_sort = '`album`.`year` DESC' . $sort_disk;
                 break;
             case 'name_asc':
-                $sql_sort = '`album`.`name` ASC, `album`.`disk`';
+                $sql_sort = '`album`.`name` ASC' . $sort_disk;
                 break;
             case 'name_desc':
-                $sql_sort = '`album`.`name` DESC, `album`.`disk`';
+                $sql_sort = '`album`.`name` DESC' . $sort_disk;
                 break;
             default:
                 $sql_sort  = '`album`.`name`, `album`.`disk`, `album`.`year`';
@@ -501,10 +505,14 @@ class Artist extends database_object implements library_item
         } else {
             $params = array($this->id);
             // Calculation
-            $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+            $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, " .
+                    "COUNT(DISTINCT `song`.`album`) AS `album_count`, " .
+                    "SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
             $sqlw = "WHERE `song`.`artist` = ? ";
             if (AmpConfig::get('album_group')) {
-                $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT CONCAT(`album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year`)) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` ";
+                $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, " .
+                        "COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count`, " .
+                        "SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` ";
                 $sqlw = "WHERE `song`.`artist` = ? ";
             }
             if ($catalog) {

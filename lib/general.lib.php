@@ -92,6 +92,10 @@ function scrub_in($input)
  */
 function scrub_out($string)
 {
+    if ($string === null) {
+        return '';
+    }
+
     return htmlentities($string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
 } // scrub_out
 
@@ -131,6 +135,9 @@ function scrub_arg($arg)
  */
 function make_bool($string)
 {
+    if ($string === null) {
+        return false;
+    }
     if (strcasecmp($string, 'false') == 0 || $string == '0') {
         return false;
     }
