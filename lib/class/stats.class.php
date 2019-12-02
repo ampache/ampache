@@ -155,9 +155,9 @@ class Stats
     public static function is_already_inserted($type, $oid, $user, $count_type = 'stream', $date = null, $song_time = 0)
     {
         // We look 10 + song time seconds in the past
-        $delay = time() - (10 + $song_time);
+        $delay = time() - ($song_time - 5);
         if (is_int($date)) {
-            $delay = $date - (10 + $song_time);
+            $delay = $date - ($song_time - 5);
         }
 
         $sql = "SELECT `id` FROM `object_count` ";
