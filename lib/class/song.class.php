@@ -1004,7 +1004,7 @@ class Song extends database_object implements media, library_item
         $diff     = time() - $previous['date'];
 
         // this song was your last play and the length between plays is too short.
-        if ($previous['object_id'] == $this->id && $diff <= ($this->time + 10)) {
+        if ($previous['object_id'] == $this->id && $diff <= ($this->time - 5)) {
             debug_event('song.class', 'Repeated the same song too quickly, not recording stats', 3);
 
             return false;

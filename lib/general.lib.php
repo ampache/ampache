@@ -92,6 +92,9 @@ function scrub_in($input)
  */
 function scrub_out($string)
 {
+    if ($string === null) {
+        return '';
+    }
     return htmlentities($string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
 } // scrub_out
 
