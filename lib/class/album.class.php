@@ -388,7 +388,7 @@ class Album extends database_object implements library_item
             $sql = "SELECT MIN(`song`.`id`) AS `song_id`, " .
                    "`artist`.`name` AS `artist_name`, " .
                    "`artist`.`prefix` AS `artist_prefix`, " .
-                   "`artist`.`id` AS `artist_id` " .
+                   "MIN(`artist`.`id`) AS `artist_id` " .
                    "FROM `album` " .
                    "LEFT JOIN `song` ON `song`.`album` = `album`.`id` " .
                    "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .

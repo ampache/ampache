@@ -15,9 +15,15 @@ It's easy to use a program like github desktop to compare between branches.
 * Undo commits and tag for new version (e.g. 4.0.4)
 * Browse changes to check for things you've missed in the changelog
 * Run composer install
+* Remove broken symbolic links
+
+```shell
+  find . -xtype l -exec rm {} \;
+```
+
 * Create a zip package named "ampache-*.*.*_all.zip and add the entire ampache directory tree. (excluding git/development specific files)
 
-``` shell
+```shell
   cd ampache
   zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.0.4_all.zip ./
 ```

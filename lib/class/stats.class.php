@@ -565,10 +565,11 @@ class Stats
             }
             if ($allow_group_disks && $type == 'album') {
                 $sql .= "LEFT JOIN `album` ON `album`.`id` = `" . $base_type . "`.`album` ";
+                $rating_join = "WHERE `album`.`id` IS NOT NULL AND";
             }
             if (AmpConfig::get('catalog_disable')) {
                 $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
-                $sql .= "WHERE `catalog`.`enabled` = '1' ";
+                $sql .= $rating_join . " `catalog`.`enabled` = '1' ";
                 // can't have 2 where's
                 $rating_join = 'AND';
             }
@@ -586,7 +587,7 @@ class Stats
             }
         }
         if ($allow_group_disks && $type == 'album') {
-            $sql .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";  //TODO mysql8 test
+            $sql .= "GROUP BY $sql_type`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
         }
