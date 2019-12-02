@@ -292,29 +292,33 @@ class Artist extends database_object implements library_item
         }
 
         $sort_type = AmpConfig::get('album_sort');
+        $sort_disk = ", `album`.`disk`";
+        if (AmpConfig::get('album_group')) {
+            $sort_disk = "";
+        }
         switch ($sort_type) {
             case 'year_asc':
-                $sql_sort = '`album`.`year` ASC, `album`.`disk`';
+                $sql_sort = '`album`.`year` ASC' . $sort_disk;
                 break;
             case 'year_desc':
-                $sql_sort = '`album`.`year` DESC, `album`.`disk`';
+                $sql_sort = '`album`.`year` DESC' . $sort_disk;
                 break;
             case 'name_asc':
-                $sql_sort = '`album`.`name` ASC, `album`.`disk`';
+                $sql_sort = '`album`.`name` ASC' . $sort_disk;
                 break;
             case 'name_desc':
-                $sql_sort = '`album`.`name` DESC, `album`.`disk`';
+                $sql_sort = '`album`.`name` DESC' . $sort_disk;
                 break;
             default:
                 $sql_sort  = '`album`.`name`, `album`.`disk`, `album`.`year`';
         }
 
-        $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-            "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid`, `album`.`disk` ORDER BY $sql_sort";
+        $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+            "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
 
         if (AmpConfig::get('album_group')) {
-            $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
-                    "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `album`.`disk` ORDER BY $sql_sort"; //TODO mysql8 test
+            $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+                    "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort"; //TODO mysql8 test
         }
         //debug_event('artist.class', 'get_albums ' . $sql, 5);
 
