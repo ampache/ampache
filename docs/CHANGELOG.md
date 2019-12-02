@@ -2,6 +2,12 @@
 
 ## 4.1.0-develop
 
+* Reduce the time for repeated track playback (Song length - 5)
+* Filter playlists in API, Web and Subsonic correctly for regular users vs admins
+* Fix album count for Artists when the album is missing data
+
+## 4.0.3
+
 * Fixes for Api::get_indexes, Api::playlists, Api::playlist, Api::playlist_songs
 * Fix Access::check to allow all public lists
 * Filter playlists by access in subsonic
