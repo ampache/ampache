@@ -1029,7 +1029,7 @@ class Api
         }
 
         $uid = Playlist::create($name, $type, $user->id);
-        echo XML_Data::playlists(array($uid));
+        echo XML_Data::playlists(array($uid), true);
         Session::extend($input['auth']);
     } // playlist_create
 
