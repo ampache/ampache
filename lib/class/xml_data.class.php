@@ -682,7 +682,7 @@ class XML_Data
                 $playlist_type  = $playlist->type;
             }
             // don't allow unlimited smartlists or empty playlists into xml unless it was recently created
-            if ((int) $playitem_total > 0 || $create = true) {
+            if ((int) $playitem_total > 0 || $create) {
                 // Build this element
                 $string .= "<playlist id=\"$playlist_id\">\n" .
                         "\t<name><![CDATA[$playlist_name]]></name>\n" .
