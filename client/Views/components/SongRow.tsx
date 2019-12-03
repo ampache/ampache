@@ -2,6 +2,7 @@ import React from 'react';
 import useContextMenu from 'react-use-context-menu';
 import { Song } from '../../logic/Song';
 import { Link } from 'react-router-dom';
+import {PLAYERSTATUS} from "../../enum/PlayerStatus";
 
 interface SongRowProps {
     song: Song;
@@ -19,7 +20,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
         bindMenu,
         bindMenuItems,
         useContextTrigger,
-        { setVisible }
+        { setVisible, setCoords }
     ] = useContextMenu();
     const [bindTrigger] = useContextTrigger();
 
@@ -27,6 +28,13 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
     const seconds: string = (props.song.time % 60).toString();
     const paddedSeconds: string =
         seconds.length === 1 ? seconds + '0' : seconds;
+
+    const showContextMenu = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCoords(0,0);
+        setVisible(true);
+    };
 
     return (
         <>
@@ -37,6 +45,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                 {...bindTrigger}
                 onClick={props.startPlaying}
             >
+                <span className='verticleMenu' onClick={(e) => {showContextMenu(e)} }/>
                 <span className='title'>{props.song.title}</span>
                 {props.showArtist && (
                     <div onClick={(e) => e.stopPropagation()}>

@@ -12,9 +12,16 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
         bindMenu,
         bindMenuItems,
         useContextTrigger,
-        { setVisible }
+        { setVisible, setCoords }
     ] = useContextMenu();
     const [bindTrigger] = useContextTrigger();
+
+    const showContextMenu = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCoords(0,0);
+        setVisible(true);
+    };
 
     return (
         <>
@@ -23,6 +30,7 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
                 to={`/playlist/${props.playlist.id}`}
                 {...bindTrigger}
             >
+                <span className='verticleMenu' onClick={(e) => {showContextMenu(e)} }/>
                 <span className='name'>{props.playlist.name}</span>
                 <span className='itemCount'>{props.playlist.items}</span>
                 <span className='owner'>{props.playlist.owner}</span>

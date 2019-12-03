@@ -315,10 +315,10 @@ class Api
                 $vcounts    = Dba::fetch_assoc($db_results);
 
                 // We consider playlists and smartlists to be playlists
-                $sql        = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`";
+                $sql        = "SELECT COUNT(`id`) AS `playlist` FROM `playlist` WHERE `type` = 'public' OR `user` = " . $user_id;
                 $db_results = Dba::read($sql);
                 $playlist   = Dba::fetch_assoc($db_results);
-                $sql        = "SELECT COUNT(`id`) AS `smartlist` FROM `search` WHERE `limit` > 0";
+                $sql        = "SELECT COUNT(`id`) AS `smartlist` FROM `search` WHERE `type` = 'public' OR `user` = " . $user_id;
                 $db_results = Dba::read($sql);
                 $smartlist  = Dba::fetch_assoc($db_results);
 
@@ -329,14 +329,14 @@ class Api
                 $outputArray = array(
                     'auth' => $token,
                     'api' => self::$version,
-                    'session_expire' => date("c",time() + AmpConfig::get('session_length') - 60),
-                    'update' => date("c",$row['update']),
-                    'add' => date("c",$row['add']),
-                    'clean' => date("c",$row['clean']),
+                    'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
+                    'update' => date("c", $row['update']),
+                    'add' => date("c", $row['add']),
+                    'clean' => date("c", $row['clean']),
                     'songs' => $song['song'],
                     'albums' => $album['album'],
                     'artists' => $artist['artist'],
-                    'playlists' => $playlist['playlist'],
+                    'playlists' => ((int) $playlist['playlist'] + (int) $smartlist['smartlist']),
                     'videos' => $vcounts['video'],
                     'catalogs' => $catalog['catalog']
                 );
@@ -435,14 +435,21 @@ class Api
 
     /**
      * artist
+     * MINIMUM_API_VERSION=380001
+     *
      * This returns a single artist based on the UID of said artist
-     * //DEPRECATED
+     *
      * @param array $input
+     * 'filter'  (string) Alpha-numeric search term
+     * 'include' (array) 'albums'|'songs' //optional
      */
     public static function artist($input)
     {
-        $uid = scrub_in($input['filter']);
-        echo XML_Data::artists(array($uid));
+        $uid  = scrub_in($input['filter']);
+        $user = User::get_from_username(Session::username($input['auth']));
+        echo XML_Data::artists(array($uid), $input['include'], true, $user->id);
+        Session::extend($input['auth']);
+        //TODO: JSON
     } // artist
 
     /**
