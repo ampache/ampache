@@ -390,7 +390,7 @@ class vainfo
             $info['mb_albumid_group'] = $info['mb_albumid_group'] ?: trim($tags['mb_albumid_group']);
             $info['mb_artistid']      = $info['mb_artistid'] ?: trim($tags['mb_artistid']);
             $info['mb_albumartistid'] = $info['mb_albumartistid'] ?: trim($tags['mb_albumartistid']);
-            if (trim($tags['release_type'] !== '')) {
+            if (trim((string) $tags['release_type']) !== '') {
                 $info['release_type'] = $info['release_type'] ?: trim($tags['release_type']);
             }
 
