@@ -807,6 +807,9 @@ class Artist extends database_object implements library_item
             $name   = T_('Unknown (Orphaned)');
             $prefix = null;
         }
+        if ($name == 'Various Artists') {
+            $mbid = '';
+        }
 
         if (isset(self::$_mapcache[$name][$prefix][$mbid])) {
             return self::$_mapcache[$name][$prefix][$mbid];
