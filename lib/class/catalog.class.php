@@ -1678,64 +1678,72 @@ abstract class Catalog extends database_object
      */
     public static function update_song_from_tags($results, Song $song)
     {
-        /* Setup the vars */
-        $new_song              = new Song();
-        $new_song->file        = $results['file'];
-        $new_song->title       = $results['title'];
-        $new_song->year        = (strlen((string) $results['year']) > 4) ? (int) substr($results['year'], -4, 4) : (int) ($results['year']);
+        // info for the song table. This is all the primary file data that is song related
+        $new_song           = new Song();
+        $new_song->file     = $results['file'];
+        $new_song->year     = (strlen((string) $results['year']) > 4) ? (int) substr($results['year'], -4, 4) : (int) ($results['year']);
+        $new_song->title    = $results['title'];
+        $new_song->bitrate  = $results['bitrate'];
+        $new_song->rate     = $results['rate'];
+        $new_song->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
+        $new_song->size     = $results['size'];
+        $new_song->time     = (strlen((string) $results['time']) > 5) ? (int) substr($results['time'], -5, 5) : (int) ($results['time']);
+        $new_song->track    = (strlen((string) $results['track']) > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']);
+        $new_song->mbid     = $results['mb_trackid'];
+        $new_song->composer = $results['composer'];
+        $new_song->mime     = $results['mime'];
+
+        // info for the song_data table. used in Song::update_song
         $new_song->comment     = $results['comment'];
-        $new_song->language    = $results['language'];
         $new_song->lyrics      = str_replace(
                         array("\r\n", "\r", "\n"),
                         '<br />',
                         strip_tags($results['lyrics']));
-        $new_song->bitrate               = $results['bitrate'];
-        $new_song->rate                  = $results['rate'];
-        $new_song->mode                  = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
-        $new_song->size                  = $results['size'];
-        $new_song->time                  = (strlen((string) $results['time']) > 5) ? (int) substr($results['time'], -5, 5) : (int) ($results['time']);
-        $new_song->mime                  = $results['mime'];
-        $new_song->track                 = (strlen((string) $results['track']) > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']);
-        $new_song->mbid                  = $results['mb_trackid'];
         $new_song->label                 = $results['publisher'];
-        $new_song->composer              = $results['composer'];
+        $new_song->language              = $results['language'];
         $new_song->replaygain_track_gain = floatval($results['replaygain_track_gain']);
         $new_song->replaygain_track_peak = floatval($results['replaygain_track_peak']);
         $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
         $new_song->replaygain_album_peak = floatval($results['replaygain_album_peak']);
-        $tags                            = Tag::get_object_tags('song', $song->id);
+        
+        // genre is used in the tag and tag_map tables
+        $new_song->tags = $results['genre'];
+        $tags           = Tag::get_object_tags('song', $song->id);
         if ($tags) {
             foreach ($tags as $tag) {
                 $song->tags[] = $tag['name'];
             }
         }
-        $new_song->tags   = $results['genre'];
+        // info for the artist table.
         $artist           = $results['artist'];
         $artist_mbid      = $results['mb_artistid'];
-        $albumartist      = $results['albumartist'] ?: $results['band'];
-        $albumartist      = $albumartist ?: null;
         $albumartist_mbid = $results['mb_albumartistid'];
+
+        // info for the album table.
         $album            = $results['album'];
         $album_mbid       = $results['mb_albumid'];
-        $album_mbid_group = $results['mb_albumid_group'];
         $disk             = $results['disk'];
+        // year is also included in album
+        $album_mbid_group = $results['mb_albumid_group'];
         $releasetype      = $results['releasetype'];
+        $albumartist      = $results['albumartist'] ?: $results['band'];
+        $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
         $barcode          = $results['barcode'];
         $catalog_number   = $results['catalog_number'];
 
-        /*
-        * We have the artist/genre/album name need to check it in the tables
-        * If found then add & return id, else return id
-        */
+        // check whether this artist exists (and the album_artist)
         $new_song->artist = Artist::check($artist, $artist_mbid);
         if ($albumartist) {
             $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
         }
+
+        // check whether this album exists
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
                                         $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
-        $update_time = time();
+
         // set `song`.`update_time` when artist or album details change
+        $update_time = time();
         if (self::migrate('artist', $song->artist, $new_song->artist) ||
                 self::migrate('album', $song->album, $new_song->album)) {
             Song::update_utime($song->id, $update_time);
@@ -1745,11 +1753,9 @@ abstract class Catalog extends database_object
         if ($artist_mbid) {
             $new_song->artist_mbid = $artist_mbid;
         }
-
         if ($album_mbid) {
             $new_song->album_mbid = $album_mbid;
         }
-
         if ($albumartist_mbid) {
             $new_song->albumartist_mbid = $albumartist_mbid;
         }
@@ -1789,6 +1795,7 @@ abstract class Catalog extends database_object
         if ($info['change']) {
             debug_event('catalog.class', "$song->file : differences found, updating database", 4);
 
+            // Update song_data table
             Song::update_song($song->id, $new_song);
 
             if ($song->tags != $new_song->tags) {
