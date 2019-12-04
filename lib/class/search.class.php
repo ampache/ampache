@@ -39,7 +39,7 @@ class Search extends playlist_object
 
     public $link;
     public $f_link;
-    
+
     public $search_user;
 
     /**
@@ -1387,7 +1387,6 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
-                    $group[] = "`album`.`id`";
                     $where[] = "(`album`.`name` $sql_match_operator '$input' " .
                                 " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
                                 "' ', `album`.`name`)) $sql_match_operator '$input')";
@@ -1736,12 +1735,12 @@ class Search extends playlist_object
         $sql_logic_operator = $this->logic_operator;
         $userid             = $this->search_user->id;
 
-        $where        = array();
-        $table        = array();
-        $join         = array();
-        $group        = array();
-        $having       = array();
-        $join['tag']  = array();
+        $where       = array();
+        $table       = array();
+        $join        = array();
+        $group       = array();
+        $having      = array();
+        $join['tag'] = array();
 
         foreach ($this->rules as $rule) {
             $type          = $this->name_to_basetype($rule[0]);
@@ -1800,10 +1799,9 @@ class Search extends playlist_object
                     $where[] = "`song`.`title` $sql_match_operator '$input'";
                 break;
                 case 'album':
-                    $group[]       = "`album`.`id`";
-                    $where[]       = "(`album`.`name` $sql_match_operator '$input' " .
-                                     " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
-                                     "' ', `album`.`name`)) $sql_match_operator '$input')";
+                    $where[] = "(`album`.`name` $sql_match_operator '$input' " .
+                               " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
+                               "' ', `album`.`name`)) $sql_match_operator '$input')";
                     $join['album'] = true;
                 break;
                 case 'artist':
