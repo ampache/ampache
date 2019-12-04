@@ -955,7 +955,7 @@ class Api
             //Smartlists
             $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
 
             return;
@@ -988,7 +988,7 @@ class Api
             //Smartlists
             $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
 
             return;
@@ -1055,7 +1055,7 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
 
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
 
             return;
@@ -1083,7 +1083,7 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id)) {
+        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             $playlist->delete();
@@ -1109,7 +1109,7 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
-        if (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id)) {
+        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
 
             return;
@@ -1142,7 +1142,7 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id)) {
+        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             if ($input['song']) {

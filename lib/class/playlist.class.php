@@ -504,6 +504,20 @@ class Playlist extends playlist_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
+        // check for duplicates
+        $results    = array();
+        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = '" . Dba::escape($name) . "'" .
+                      " AND `user` = " . $user_id .
+                      " AND `type` = '" . Dba::escape($type) . "'";
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+        //return the duplicate ID
+        if (!empty($results)) {
+            return $results[0];
+        }
         if (!is_int($date)) {
             $date = time();
         }
