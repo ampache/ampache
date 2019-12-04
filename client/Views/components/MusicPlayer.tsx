@@ -10,6 +10,7 @@ const MusicPlayer: React.FC = () => {
             <img
                 className='songArt'
                 src={musicContext.currentPlayingSong?.art}
+                alt='cover art'
             />
             <div
                 className={
@@ -21,6 +22,7 @@ const MusicPlayer: React.FC = () => {
                 <div className='previousSong'>
                     <img
                         src='https://img.icons8.com/flat_round/50/000000/back--v2.png'
+                        alt='Back'
                         onClick={() => {
                             musicContext.playPrevious();
                         }}
@@ -48,6 +50,7 @@ const MusicPlayer: React.FC = () => {
                 <div className='nextSong'>
                     <img
                         src='https://img.icons8.com/flat_round/50/000000/circled-chevron-right.png'
+                        alt='Next'
                         onClick={() => {
                             musicContext.playNext();
                         }}

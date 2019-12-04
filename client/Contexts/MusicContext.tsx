@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PLAYERSTATUS } from '../enum/PlayerStatus';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { AuthKey } from '../logic/Auth';
@@ -33,7 +33,23 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const [songQueueIndex, setSongQueueIndex] = useState(-1);
     const [userQCount, setUserQCount] = useState(0);
 
-    const audioRef = React.useRef(null);
+    const audioRef: React.MutableRefObject<HTMLAudioElement> = React.useRef(
+        null
+    );
+
+    useEffect(() => {
+        if (!currentPlayingSong) return;
+        //This seems to work, but there is a slight delay if you spam next or previous.
+        //Don't know if there is a better way.
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('nexttrack', () => {
+                playNext();
+            });
+            navigator.mediaSession.setActionHandler('previoustrack', () => {
+                playPrevious();
+            });
+        }
+    }, [currentPlayingSong]);
 
     useHotkeys(
         'space',
@@ -45,20 +61,18 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     );
 
     const playPause = () => {
-        console.log(playerStatus, audioRef.current);
-        if (playerStatus === PLAYERSTATUS.PLAYING) {
-            audioRef.current.pause();
-            setPlayerStatus(PLAYERSTATUS.PAUSED);
-        } else if (playerStatus === PLAYERSTATUS.PAUSED) {
+        const isPaused = audioRef.current?.paused;
+        if (isPaused) {
             audioRef.current.play();
-            setPlayerStatus(PLAYERSTATUS.PLAYING);
+            return;
+        } else {
+            audioRef.current.pause();
         }
     };
 
     const playPrevious = () => {
         const previousSong = songQueue[songQueueIndex - 1];
         setSongQueueIndex(songQueueIndex - 1);
-
         _playSong(previousSong);
     };
 
@@ -71,21 +85,31 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     };
 
     const _playSong = async (song: Song) => {
+        if (!song) {
+            return console.error(
+                'Playing an undefined song, something is wrong.'
+            );
+        }
+        audioRef.current.src = song.url;
+        audioRef.current.title = `${song.artist.name} - ${song.title}`;
+        audioRef.current.play();
         setCurrentPlayingSong(song);
-        setPlayerStatus(PLAYERSTATUS.PLAYING);
         if ('mediaSession' in navigator) {
-            // @ts-ignore TODO
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: song.title,
                 artist: song.artist.name,
                 album: song.album.name,
-                // artwork: song.art
+                artwork: [{ src: song.art }]
             });
 
-            // navigator.mediaSession.setActionHandler('previoustrack', () => {playPrevious()});
-            // navigator.mediaSession.setActionHandler('nexttrack', () => {playNext()});
+            navigator.mediaSession.setActionHandler('play', () => {
+                playPause();
+            });
+            navigator.mediaSession.setActionHandler('pause', () => {
+                playPause();
+            });
         }
-        };
+    };
 
     const songIsOver = () => {
         if (songQueueIndex === songQueue.length - 1) {
@@ -101,10 +125,9 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
 
         const queueIndex = newQueue.findIndex((o) => o.id === song.id);
 
-        _playSong(song);
         setSongQueue(newQueue);
-        setSongQueueIndex(queueIndex);
-        console.log(newQueue, queueIndex);
+        setSongQueueIndex(queueIndex); // TODO Reduce these two sets?
+        _playSong(song);
     };
 
     const addToQueue = (song: Song, next: Boolean) => {
@@ -139,9 +162,13 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         >
             <audio
                 ref={audioRef}
-                onEnded={() => songIsOver()}
-                src={currentPlayingSong?.url}
-                autoPlay
+                onEnded={songIsOver}
+                onPause={() => {
+                    setPlayerStatus(PLAYERSTATUS.PAUSED);
+                }}
+                onPlay={() => {
+                    setPlayerStatus(PLAYERSTATUS.PLAYING);
+                }}
             />
             {props.children}
         </MusicContext.Provider>
