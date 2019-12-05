@@ -348,7 +348,7 @@ class Album extends database_object implements library_item
                 "COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
                 "COUNT(`song`.`id`) AS `song_count`, " .
                 "SUM(`song`.`time`) AS `total_duration`, " .
-                "`song`.`catalog` AS `catalog_id`";
+                "`song`.`catalog` AS `catalog_id` ";
 
         $suite_array = $this->album_suite;
         if (!count($suite_array)) {
@@ -375,7 +375,7 @@ class Album extends database_object implements library_item
         if ($this->allow_group_disks) {
             $sqlw .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `catalog_id`"; //TODO mysql8 test
         } else {
-            $sqlw .= "GROUP BY `song`.`artist`, `catalog_id`";
+            $sqlw .= "GROUP BY `song`.`album`, `catalog_id`";
         }
         $sql .= $sqlj . $sqlw;
         $db_results = Dba::read($sql);
