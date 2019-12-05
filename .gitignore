@@ -29,6 +29,10 @@ cs_fixer_tmp_*
 .env
 .project
 .settings/
+
+components/
+node_modules/
+vendor/
 .vscode/
 bootstrap/
 components/

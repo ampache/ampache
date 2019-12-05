@@ -79,7 +79,7 @@ if ((Core::get_request('action') != 'handshake') && (Core::get_request('action')
     if (isset($_REQUEST['user'])) {
         $GLOBALS['user'] = User::get_from_username(Core::get_request('user'));
     } else {
-        debug_event('xml.server', 'API [' . Core::get_request('auth') . ']', 3);
+        debug_event('xml.server', 'API session [' . Core::get_request('auth') . ']', 3);
         $GLOBALS['user'] = User::get_from_username(Session::username(Core::get_request('auth')));
     }
 }

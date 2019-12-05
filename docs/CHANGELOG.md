@@ -2,9 +2,26 @@
 
 ## 4.1.0-develop
 
-* Reduce the time for repeated track playback (Song length - 5)
+* Bump API version to 400003 (4.0.0 build 003)
+* Api::playlist_edit - filter mandatory. name and type now optional
+* Playlist::create - Return duplicate playlist ID instead of creating a new one
+* Artist::check - Remove MBID from Various Artists's
+* Fix Api relating to playlist access
+* Fix Song::update_song for label
+* Fix comparison bugs found during static type testing
+* Translation update from Transifex
+
+## 4.0.4
+
+* Finalize release procedure to make these updates a bit smoother
+* Reduce the time for repeated track playback (Song length - 5 sec)
 * Filter playlists in API, Web and Subsonic correctly for regular users vs admins
 * Fix album count for Artists when the album is missing data
+* Fix searches / searchbox for MYSQL8
+* Fix some invalid returns in lib/*
+* Send correct the function in ajax.server when deleting from playlist
+* Hide some lines from the mashup to make it a bit nicer
+* Remove the old logo from the main install page
 
 ## 4.0.3
 

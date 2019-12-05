@@ -1387,6 +1387,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                    $group[] = "`album`.`id`";
                     $where[] = "(`album`.`name` $sql_match_operator '$input' " .
                                 " OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
                                 "' ', `album`.`name`)) $sql_match_operator '$input')";

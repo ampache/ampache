@@ -930,7 +930,7 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        echo XML_Data::playlists($playlist_ids);
+        echo XML_Data::playlists($playlist_ids, $user->id);
         Session::extend($input['auth']);
     } // playlists
 
@@ -993,6 +993,8 @@ class Api
 
             return;
         }
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) || !Access::check('interface', 100, $user->id))) {
+            echo XML_Data::error('401', T_('Access denied to this playlist'));
 
         $items = $playlist->get_items();
         $songs = array();

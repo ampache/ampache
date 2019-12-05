@@ -36,4 +36,3 @@ It's easy to use a program like github desktop to compare between branches.
 * After setting version and title, save as draft
 * Commit your waiting update to master
 * Publish the new release
-
