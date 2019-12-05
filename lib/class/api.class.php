@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -80,7 +79,7 @@ class Api
      */
     public static function set_filter($filter, $value)
     {
-        if (!strlen($value)) {
+        if (!strlen((string) $value)) {
             return false;
         }
 
@@ -167,7 +166,7 @@ class Api
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
         }
-        $username = trim($input['user']);
+        $username = trim((string) $input['user']);
         $user_ip  = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
         if (isset($input['version'])) {
             // If version is provided, use it
@@ -310,9 +309,9 @@ class Api
                 echo XML_Data::keyed_array(array('auth' => $token,
                     'api' => self::$version,
                     'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-                    'update' => date("c", $row['update']),
-                    'add' => date("c", $row['add']),
-                    'clean' => date("c", $row['clean']),
+                    'update' => date("c", (int) $row['update']),
+                    'add' => date("c", (int) $row['add']),
+                    'clean' => date("c", (int) $row['clean']),
                     'songs' => $song['song'],
                     'albums' => $album['album'],
                     'artists' => $artist['artist'],
@@ -347,7 +346,7 @@ class Api
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
+            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
         debug_event('api.class', 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
@@ -1256,7 +1255,7 @@ class Api
         if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'artist';
-            $array['rule_' . $rule_count . '_input']    = trim(trim($artist->prefix) . ' ' . trim($artist->name));
+            $array['rule_' . $rule_count . '_input']    = trim(trim((string) $artist->prefix) . ' ' . trim((string) $artist->name));
             $array['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
@@ -2402,7 +2401,7 @@ class Api
                 $thumb         = $art->get_thumb($dim);
                 if (!empty($thumb)) {
                     header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen($thumb['thumb']));
+                    header('Content-Length: ' . strlen((string) $thumb['thumb']));
                     echo $thumb['thumb'];
 
                     return;
@@ -2410,7 +2409,7 @@ class Api
             }
 
             header('Content-type: ' . $art->raw_mime);
-            header('Content-Length: ' . strlen($art->raw));
+            header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
         }
         Session::extend($input['auth']);

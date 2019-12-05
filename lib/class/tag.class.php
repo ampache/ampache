@@ -148,7 +148,7 @@ class Tag extends database_object implements library_item
 
         $cleaned_value = $value;
 
-        if (!strlen($cleaned_value)) {
+        if (!strlen((string) $cleaned_value)) {
             return false;
         }
 
@@ -184,7 +184,7 @@ class Tag extends database_object implements library_item
      */
     public static function add_tag($value)
     {
-        if (!strlen($value)) {
+        if (!strlen((string) $value)) {
             return false;
         }
 
@@ -203,7 +203,7 @@ class Tag extends database_object implements library_item
      */
     public function update(array $data)
     {
-        if (!strlen($data['name'])) {
+        if (!strlen((string) $data['name'])) {
             return false;
         }
         debug_event('tag.class', 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
@@ -601,7 +601,7 @@ class Tag extends database_object implements library_item
             $results .= ', ';
         }
 
-        $results = rtrim($results, ', ');
+        $results = rtrim((string) $results, ', ');
 
         return $results;
     } // get_display
@@ -676,7 +676,7 @@ class Tag extends database_object implements library_item
 
         $ret = array();
         foreach ($taglist as $tag) {
-            $tag = trim($tag);
+            $tag = trim((string) $tag);
             if (!empty($tag)) {
                 if (self::tag_exists($tag)) {
                     $ret[] = $tag;
@@ -846,7 +846,7 @@ class Tag extends database_object implements library_item
      */
     public function get_description()
     {
-        return null;
+        return '';
     }
 
     /**

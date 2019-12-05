@@ -478,14 +478,14 @@ abstract class Catalog extends database_object
 
             // Populate the filecache
             while ($results = Dba::fetch_assoc($db_results)) {
-                $this->_filecache[strtolower($results['file'])] = $results['id'];
+                $this->_filecache[strtolower((string) $results['file'])] = $results['id'];
             }
 
             $sql        = 'SELECT `id`, `file` FROM `video` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
 
             while ($results = Dba::fetch_assoc($db_results)) {
-                $this->_filecache[strtolower($results['file'])] = 'v_' . $results['id'];
+                $this->_filecache[strtolower((string) $results['file'])] = 'v_' . $results['id'];
             }
         }
 
@@ -523,7 +523,7 @@ abstract class Catalog extends database_object
         }
 
         /* Can't update to blank */
-        if (!strlen(trim($value))) {
+        if (!strlen(trim((string) $value))) {
             return false;
         }
 
@@ -546,13 +546,13 @@ abstract class Catalog extends database_object
         $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->name) . '">' .
             scrub_out($this->f_name) . '</a>';
         $this->f_update = $this->last_update
-            ? date('d/m/Y h:i', $this->last_update)
+            ? date('d/m/Y h:i', (int) $this->last_update)
             : T_('Never');
         $this->f_add = $this->last_add
-            ? date('d/m/Y h:i', $this->last_add)
+            ? date('d/m/Y h:i', (int) $this->last_add)
             : T_('Never');
         $this->f_clean = $this->last_clean
-            ? date('d/m/Y h:i', $this->last_clean)
+            ? date('d/m/Y h:i', (int) $this->last_clean)
             : T_('Never');
     }
 
@@ -1278,7 +1278,7 @@ abstract class Catalog extends database_object
         foreach ($results as $result) {
             // Pull the string representation from the source
             $image = Art::get_from_source($result, $type);
-            if (strlen($image) > '5') {
+            if (strlen((string) $image) > '5') {
                 $inserted = $art->insert($image, $result['mime']);
                 // If they've enabled resizing of images generate a thumbnail
                 if (AmpConfig::get('resize_images')) {
@@ -1608,7 +1608,7 @@ abstract class Catalog extends database_object
                 //do nothing
             } elseif ($info['change']) {
                 if ($info['element'][$type]) {
-                    $change = explode(' --> ', $info['element'][$type]);
+                    $change = explode(' --> ', (string) $info['element'][$type]);
                     $result = $change[1];
                 }
                 $file   = scrub_out($song->file);
@@ -2061,8 +2061,8 @@ abstract class Catalog extends database_object
         preg_match($prefix_pattern, $string, $matches);
 
         if (count($matches)) {
-            $string = trim($matches[2]);
-            $prefix = trim($matches[1]);
+            $string = trim((string) $matches[2]);
+            $prefix = trim((string) $matches[1]);
         } else {
             $prefix = null;
         }
@@ -2095,15 +2095,15 @@ abstract class Catalog extends database_object
         $first = '';
         if ($string) {
             $items = explode("\x00", $string);
-            $first = trim($items[0]);
+            $first = trim((string) $items[0]);
             //if first is the same as string, nothing was exploded, try other delimiters
             if ($first === $string) {
                 //try splitting with ; and then /
                 $items = explode(";", $string);
-                $first = trim($items[0]);
+                $first = trim((string) $items[0]);
                 if ($first === $string) {
                     $items = explode("/", $string);
-                    $first = trim($items[0]);
+                    $first = trim((string) $items[0]);
                 }
             }
         }
@@ -2134,7 +2134,7 @@ abstract class Catalog extends database_object
      */
     public static function check_title($title, $file = '')
     {
-        if (strlen(trim($title)) < 1) {
+        if (strlen(trim((string) $title)) < 1) {
             $title = Dba::escape($file);
         }
 
@@ -2164,7 +2164,7 @@ abstract class Catalog extends database_object
         $pinfo = pathinfo($playlist);
         if (isset($files)) {
             foreach ($files as $file) {
-                $file = trim($file);
+                $file = trim((string) $file);
                 // Check to see if it's a url from this ampache instance
                 if (substr($file, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
                     $data       = Stream_URL::parse($file);
@@ -2274,7 +2274,7 @@ abstract class Catalog extends database_object
         $results = explode("\n", $data);
 
         foreach ($results as $value) {
-            $value = trim($value);
+            $value = trim((string) $value);
             if (!empty($value) && substr($value, 0, 1) != '#') {
                 $files[] = $value;
             }
@@ -2295,9 +2295,9 @@ abstract class Catalog extends database_object
         $results = explode("\n", $data);
 
         foreach ($results as $value) {
-            $value = trim($value);
+            $value = trim((string) $value);
             if (preg_match("/file[0-9]+[\s]*\=(.*)/i", $value, $matches)) {
-                $file = trim($matches[1]);
+                $file = trim((string) $matches[1]);
                 if (!empty($file)) {
                     $files[] = $file;
                 }
@@ -2320,7 +2320,7 @@ abstract class Catalog extends database_object
 
         if ($xml) {
             foreach ($xml->entry as $entry) {
-                $file = trim($entry->ref['href']);
+                $file = trim((string) $entry->ref['href']);
                 if (!empty($file)) {
                     $files[] = $file;
                 }
@@ -2342,7 +2342,7 @@ abstract class Catalog extends database_object
         $xml   = simplexml_load_string($data);
         if ($xml) {
             foreach ($xml->trackList->track as $track) {
-                $file = trim($track->location);
+                $file = trim((string) $track->location);
                 if (!empty($file)) {
                     $files[] = $file;
                 }
@@ -2435,7 +2435,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Total Time']   = (int) ($song->time) * 1000; // iTunes uses milliseconds
                     $xml['dict']['Track Number'] = (int) ($song->track);
                     $xml['dict']['Year']         = (int) ($song->year);
-                    $xml['dict']['Date Added']   = date("Y-m-d\TH:i:s\Z", $song->addition_time);
+                    $xml['dict']['Date Added']   = date("Y-m-d\TH:i:s\Z", (int) $song->addition_time);
                     $xml['dict']['Bit Rate']     = (int) ($song->bitrate / 1000);
                     $xml['dict']['Sample Rate']  = (int) ($song->rate);
                     $xml['dict']['Play Count']   = (int) ($song->played);
@@ -2459,7 +2459,7 @@ abstract class Catalog extends database_object
                         $song->f_time . '","' .
                         $song->f_track . '","' .
                         $song->year . '","' .
-                        date("Y-m-d\TH:i:s\Z", $song->addition_time) . '","' .
+                        date("Y-m-d\TH:i:s\Z", (int) $song->addition_time) . '","' .
                         $song->f_bitrate . '","' .
                         $song->played . '","' .
                         $song->file . '"' . "\n";
@@ -2597,7 +2597,7 @@ abstract class Catalog extends database_object
             case 'update_from':
                 $catalog_id = 0;
                 // First see if we need to do an add
-                if ($options['add_path'] != '/' && strlen($options['add_path'])) {
+                if ($options['add_path'] != '/' && strlen((string) $options['add_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($options['add_path'])) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
@@ -2607,7 +2607,7 @@ abstract class Catalog extends database_object
                 } // end if add
 
                 // Now check for an update
-                if ($options['update_path'] != '/' && strlen($options['update_path'])) {
+                if ($options['update_path'] != '/' && strlen((string) $options['update_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
                         $songs = Song::get_from_path($options['update_path']);
                         foreach ($songs as $song_id) {

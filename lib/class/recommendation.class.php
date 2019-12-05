@@ -39,7 +39,7 @@ class Recommendation
      */
     public static function get_lastfm_results($method, $query)
     {
-        $lang     =  AmpConfig::get('lang');
+        $lang     = (string) AmpConfig::get('lang');
         $resp     = explode('_', $lang);
         $api_key  = AmpConfig::get('lastfm_api_key');
         $api_base = "http://ws.audioscrobbler.com/2.0/?method=";

@@ -502,7 +502,7 @@ class Graph
         } else {
             $user_id      = Core::get_request('user_id');
             $end_date     = $_REQUEST['end_date'] ? strtotime($_REQUEST['end_date']) : time();
-            $f_end_date   = date("Y-m-d H:i", $end_date);
+            $f_end_date   = date("Y-m-d H:i", (int) $end_date);
             $start_date   = $_REQUEST['start_date'] ? strtotime($_REQUEST['start_date']) : ($end_date - 864000);
             $f_start_date = date("Y-m-d H:i", $start_date);
             $zoom         = $_REQUEST['zoom'] ?: 'day';

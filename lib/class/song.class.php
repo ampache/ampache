@@ -328,7 +328,7 @@ class Song extends database_object implements media, library_item
                 $this->$key = $value;
             }
             $data       = pathinfo($this->file);
-            $this->type = strtolower($data['extension']);
+            $this->type = strtolower((string) $data['extension']);
             $this->mime = self::type_to_mime($this->type);
         } else {
             $this->id = null;
@@ -350,7 +350,7 @@ class Song extends database_object implements media, library_item
     {
         $catalog               = $results['catalog'];
         $file                  = $results['file'];
-        $title                 = trim($results['title']) ?: $file;
+        $title                 = trim((string) $results['title']) ?: $file;
         $artist                = $results['artist'];
         $album                 = $results['album'];
         $albumartist           = $results['albumartist'] ?: $results['band'];
@@ -446,7 +446,7 @@ class Song extends database_object implements media, library_item
         }
         if (is_array($tags)) {
             foreach ($tags as $tag) {
-                $tag = trim($tag);
+                $tag = trim((string) $tag);
                 if (!empty($tag)) {
                     Tag::add('song', $song_id, $tag, false);
                     Tag::add('album', $album_id, $tag, false);
@@ -961,7 +961,7 @@ class Song extends database_object implements media, library_item
         if ($album_artist->prefix) {
             return $album_artist->prefix . " " . $album_artist->name;
         } else {
-            return $album_artist->name;
+            return (string) $album_artist->name;
         }
     } // get_album_artist_name
 
@@ -1054,7 +1054,7 @@ class Song extends database_object implements media, library_item
 
         // Foreach them
         foreach ($fields as $key => $value) {
-            $key = trim($key);
+            $key = trim((string) $key);
             if (empty($key) || in_array($key, $skip_array)) {
                 continue;
             }
@@ -1118,7 +1118,7 @@ class Song extends database_object implements media, library_item
         $value = trim(stripslashes(preg_replace('/\s+/', ' ', $value)));
 
         // Strings containing  only UTF-8 BOM = empty string
-        if (strlen($value) == 2 && (ord($value[0]) == 0xFF || ord($value[0]) == 0xFE)) {
+        if (strlen((string) $value) == 2 && (ord($value[0]) == 0xFF || ord($value[0]) == 0xFE)) {
             $value = "";
         }
 
@@ -1540,7 +1540,7 @@ class Song extends database_object implements media, library_item
         }
 
         /* Can't update to blank */
-        if (!strlen(trim($value)) && $field != 'comment') {
+        if (!strlen(trim((string) $value)) && $field != 'comment') {
             return false;
         }
 
@@ -1620,7 +1620,7 @@ class Song extends database_object implements media, library_item
         }
 
         // Format the Bitrate
-        $this->f_bitrate = (int) ($this->bitrate / 1000) . "-" . strtoupper($this->mode);
+        $this->f_bitrate = (int) ($this->bitrate / 1000) . "-" . strtoupper((string) $this->mode);
 
         // Format the Time
         $min            = floor($this->time / 60);

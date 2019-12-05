@@ -263,7 +263,7 @@ class Useractivity extends database_object
         $libitem->format();
 
         echo '<div>';
-        $fdate = date('Y/m/d H:i:s', $this->activity_date);
+        $fdate = date('Y/m/d H:i:s', (int) $this->activity_date);
         /*
         echo '<div class="shoutbox-date">';
         if ($user->f_avatar_mini) {

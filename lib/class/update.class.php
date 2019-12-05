@@ -91,9 +91,9 @@ class Update
     public static function format_version($data)
     {
         $new_version =
-            substr($data, 0, strlen($data) - 5) . '.' .
-            substr($data, strlen($data) - 5, 1) . ' Build:' .
-            substr($data, strlen($data) - 4, strlen($data));
+            substr($data, 0, strlen((string) $data) - 5) . '.' .
+            substr($data, strlen((string) $data) - 5, 1) . ' Build:' .
+            substr($data, strlen((string) $data) - 4, strlen((string) $data));
 
         return $new_version;
     }

@@ -85,7 +85,7 @@ class TVShow_Episode extends Video
 
         if (is_array($tags)) {
             foreach ($tags as $tag) {
-                $tag = trim($tag);
+                $tag = trim((string) $tag);
                 if (!empty($tag)) {
                     Tag::add('tvshow_season', $tvshow_season, $tag, false);
                     Tag::add('tvshow', $tvshow, $tag, false);

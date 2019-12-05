@@ -162,7 +162,7 @@ switch ($_REQUEST['action']) {
 
         if (!AmpConfig::get('user_no_email_confirm')) {
             $client     = new User($new_user);
-            $validation = md5(uniqid(rand(), true));
+            $validation = md5(uniqid((string) rand(), true));
             $client->update_validation($validation);
 
             // Notify user and/or admins

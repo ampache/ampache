@@ -35,7 +35,7 @@ interface media
      * Returns an array of strings; current types are 'native'
      * and 'transcode'
      */
-    public function get_stream_types($player = null);
+    public function get_stream_types($player = array());
 
     /**
      * play_url

@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -66,7 +65,7 @@ class Subsonic_Api
         if ($encpwd !== false) {
             $hex    = substr($password, 4);
             $decpwd = '';
-            for ($count = 0; $count < strlen($hex); $count += 2) {
+            for ($count = 0; $count < strlen((string) $hex); $count += 2) {
                 $decpwd .= chr((int) hexdec(substr($hex, $count, 2)));
             }
             $password = $decpwd;
@@ -81,12 +80,12 @@ class Subsonic_Api
         echo $data;
         ob_flush();
 
-        return strlen($data);
+        return strlen((string) $data);
     }
 
     public static function output_header($curl, $header)
     {
-        $rheader = trim($header);
+        $rheader = trim((string) $header);
         $rhpart  = explode(':', $rheader);
         if (!empty($rheader) && count($rhpart) > 1) {
             if ($rhpart[0] != "Transfer-Encoding") {
@@ -99,7 +98,7 @@ class Subsonic_Api
             }
         }
 
-        return strlen($header);
+        return strlen((string) $header);
     }
 
     /**
@@ -155,10 +154,10 @@ class Subsonic_Api
 
     public static function setHeader($filetype)
     {
-        if (strtolower($filetype) == "json") {
+        if (strtolower((string) $filetype) == "json") {
             header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
             Subsonic_XML_Data::$enable_json_checks = true;
-        } elseif (strtolower($filetype) == "jsonp") {
+        } elseif (strtolower((string) $filetype) == "jsonp") {
             header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
             Subsonic_XML_Data::$enable_json_checks = true;
         } else {
@@ -175,7 +174,7 @@ class Subsonic_Api
     {
         $type     = $input['f'];
         $callback = $input['callback'];
-        self::apiOutput2(strtolower($type), $xml, $callback, $alwaysArray);
+        self::apiOutput2(strtolower((string) $type), $xml, $callback, $alwaysArray);
     }
 
     /**
@@ -768,7 +767,7 @@ class Subsonic_Api
         $songs    = array();
         $operator = 0;
 
-        if (strlen($query) > 1) {
+        if (strlen((string) $query) > 1) {
             if (substr($query, -1) == "*") {
                 $query    = substr($query, 0, -1);
                 $operator = 2; // Start with
@@ -1123,7 +1122,7 @@ class Subsonic_Api
                 $thumb         = $art->get_thumb($dim);
                 if (!empty($thumb)) {
                     header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen($thumb['thumb']));
+                    header('Content-Length: ' . strlen((string) $thumb['thumb']));
                     echo $thumb['thumb'];
 
                     return;
@@ -1131,7 +1130,7 @@ class Subsonic_Api
             }
 
             header('Content-type: ' . $art->raw_mime);
-            header('Content-Length: ' . strlen($art->raw));
+            header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
         }
     }
@@ -1406,7 +1405,7 @@ class Subsonic_Api
                     $expire_days = 0;
                 } else {
                     // Parse as a string to work on 32-bit computers
-                    if (strlen($expires) > 3) {
+                    if (strlen((string) $expires) > 3) {
                         $expires = (int) (substr($expires, 0, - 3));
                     }
                     $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
@@ -1480,7 +1479,7 @@ class Subsonic_Api
                 if (isset($input['expires'])) {
                     // Parse as a string to work on 32-bit computers
                     $expires = $input['expires'];
-                    if (strlen($expires) > 3) {
+                    if (strlen((string) $expires) > 3) {
                         $expires = (int) (substr($expires, 0, - 3));
                     }
                     if ($expires > 0) {

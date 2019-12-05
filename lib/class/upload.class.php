@@ -50,7 +50,7 @@ class Upload
                     debug_event('upload.class', '$_FILES[upl] ' . $_FILES['upl']['name'], 5);
                     $extension = pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION);
 
-                    if (!in_array(strtolower($extension), $allowed)) {
+                    if (!in_array(strtolower((string) $extension), $allowed)) {
                         debug_event('upload.class', 'File extension `' . $extension . '` not allowed.', 2);
 
                         return self::rerror();

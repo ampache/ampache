@@ -44,7 +44,7 @@ class AutoUpdate
      */
     protected static function is_develop()
     {
-        $version         = AmpConfig::get('version');
+        $version         = (string) AmpConfig::get('version');
         $vspart          = explode('-', $version);
         $git_branch      = self::is_force_git_branch();
 
@@ -107,7 +107,7 @@ class AutoUpdate
                 return null;
             }
 
-            return json_decode($request->body);
+            return json_decode((string) $request->body);
         } catch (Exception $error) {
             debug_event('autoupdate.class', 'Request error: ' . $error->getMessage(), 1);
 

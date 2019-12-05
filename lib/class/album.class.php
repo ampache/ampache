@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -248,7 +247,7 @@ class Album extends database_object implements library_item
         }
 
         // Little bit of formatting here
-        $this->full_name = trim(trim($info['prefix']) . ' ' . trim($info['name']));
+        $this->full_name = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
 
         // Looking for other albums with same mbid, ordering by disk ascending
         if (AmpConfig::get('album_group')) {
@@ -335,7 +334,7 @@ class Album extends database_object implements library_item
         $artist       = "is null";
 
         if ($this->release_type) {
-            $release_type = "= '" . ucwords($this->release_type) . "'";
+            $release_type = "= '" . ucwords((string) $this->release_type) . "'";
         }
         if ($this->mbid) {
             $mbid = "= '$this->mbid'";
@@ -479,7 +478,7 @@ class Album extends database_object implements library_item
      */
     public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false, $original_year = 0, $barcode = null, $catalog_number = null)
     {
-        $trimmed        = Catalog::trim_prefix(trim($name));
+        $trimmed        = Catalog::trim_prefix(trim((string) $name));
         $name           = $trimmed['string'];
         $prefix         = $trimmed['prefix'];
         $album_artist   = (int) $album_artist;
@@ -581,7 +580,7 @@ class Album extends database_object implements library_item
         }
         $sql .= "WHERE `song`.`album` = ? ";
         $params = array($this->id);
-        if (strlen($artist)) {
+        if (strlen((string) $artist)) {
             $sql .= "AND `artist` = ? ";
             $params[] = $artist;
         }
@@ -650,7 +649,7 @@ class Album extends database_object implements library_item
         $year         = (string) $this->year;
 
         if ($this->release_type) {
-            $release_type = "= '" . ucwords($this->release_type) . "'";
+            $release_type = "= '" . ucwords((string) $this->release_type) . "'";
         }
         if ($this->mbid) {
             $mbid = "= '$this->mbid'";
@@ -724,7 +723,7 @@ class Album extends database_object implements library_item
     {
         $web_path = AmpConfig::get('web_path');
 
-        $this->f_release_type = ucwords($this->release_type);
+        $this->f_release_type = ucwords((string) $this->release_type);
 
         if ($details) {
             /* Pull the advanced information */
@@ -760,7 +759,7 @@ class Album extends database_object implements library_item
 
         $this->f_title = $this->full_name;
         if ($this->artist_count == '1') {
-            $artist              = trim(trim($this->artist_prefix) . ' ' . trim($this->artist_name));
+            $artist              = trim(trim((string) $this->artist_prefix) . ' ' . trim((string) $this->artist_name));
             $this->f_artist_name = $artist;
             $this->f_artist_link = "<a href=\"$web_path/artists.php?action=show&artist=" . $this->artist_id . "\" title=\"" . scrub_out($this->artist_name) . "\">" . $artist . "</a>";
             $this->f_artist      = $artist;
@@ -1231,7 +1230,7 @@ class Album extends database_object implements library_item
         $alphabet = range('A', 'Z');
         if ((int) $disk == 0) {
             // A is 0 but we want to start at disk 1
-            $disk = (int) array_search(strtoupper($disk), $alphabet) + 1;
+            $disk = (int) array_search(strtoupper((string) $disk), $alphabet) + 1;
         }
 
         return (int) $disk;

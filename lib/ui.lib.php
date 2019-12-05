@@ -36,7 +36,6 @@
  * @param    string    $text    The details of the message
  * @param    string    $next_url    Where to go next
  * @param    integer    $cancel    T/F show a cancel button that uses return_referrer()
- * @return    void
  */
 function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = 'confirmation', $visible = true)
 {
@@ -87,10 +86,10 @@ function return_referer()
     } else {
         $file = basename($referer);
         /* Strip off the filename */
-        $referer = substr($referer, 0, strlen($referer) - strlen($file));
+        $referer = substr($referer, 0, strlen((string) $referer) - strlen((string) $file));
     }
 
-    if (substr($referer, strlen($referer) - 6, 6) == 'admin/') {
+    if (substr($referer, strlen((string) $referer) - 6, 6) == 'admin/') {
         $file = 'admin/' . $file;
     }
 
@@ -112,7 +111,7 @@ function get_location()
 {
     $location = array();
 
-    if (strlen($_SERVER['PHP_SELF'])) {
+    if (strlen((string) $_SERVER['PHP_SELF'])) {
         $source = $_SERVER['PHP_SELF'];
     } else {
         $source = $_SERVER['REQUEST_URI'];
@@ -239,7 +238,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
 
     while ($row = Dba::fetch_assoc($db_results)) {
         $selected   = '';
-        $album_name = trim($row['prefix'] . " " . $row['name']);
+        $album_name = trim((string) $row['prefix'] . " " . $row['name']);
         if (!AmpConfig::get('album_group') && (int) $count > 1) {
             $album_name .= " [" . T_('Disk') . " " . $row['disk'] . "]";
         }
@@ -295,7 +294,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
 
     while ($row = Dba::fetch_assoc($db_results)) {
         $selected    = '';
-        $artist_name = trim($row['prefix'] . " " . $row['name']);
+        $artist_name = trim((string) $row['prefix'] . " " . $row['name']);
         if ($row['id'] == $artist_id) {
             $selected = "selected=\"selected\"";
         }

@@ -74,7 +74,7 @@ class XML_Data
             return false;
         }
 
-        if (strtolower($limit) == "none") {
+        if (strtolower((string) $limit) == "none") {
             self::$limit = null;
         } else {
             self::$limit = (int) ($limit);
@@ -1158,7 +1158,7 @@ class XML_Data
             //$xmlink = $xitem->addChild("link", htmlentities($media->link));
             $xitem->addChild("guid", htmlentities($media->link));
             if ($media->addition_time) {
-                $xitem->addChild("pubDate", date("r", $media->addition_time));
+                $xitem->addChild("pubDate", date("r", (int) $media->addition_time));
             }
             $description = $media->get_description();
             if (!empty($description)) {
@@ -1168,8 +1168,8 @@ class XML_Data
             if ($media->mime) {
                 $surl  = $media_info['object_type']::play_url($media_info['object_id'], '', 'api', false, $user_id);
                 $xencl = $xitem->addChild("enclosure");
-                $xencl->addAttribute("type", $media->mime);
-                $xencl->addAttribute("length", $media->size);
+                $xencl->addAttribute("type", (string) $media->mime);
+                $xencl->addAttribute("length", (string) $media->size);
                 $xencl->addAttribute("url", $surl);
             }
         }

@@ -112,7 +112,7 @@ function check_can_zip($object_type)
         $allowed       = false;
         $allowed_types = explode(',', AmpConfig::get('allow_zip_types'));
         foreach ($allowed_types as $atype) {
-            if (trim($atype) == $object_type) {
+            if (trim((string) $atype) == $object_type) {
                 $allowed = true;
                 break;
             }
