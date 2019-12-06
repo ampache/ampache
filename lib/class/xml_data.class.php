@@ -904,9 +904,9 @@ class XML_Data
             $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n" .
                        "\t<email><![CDATA[" . $user->email . "]]></email>\n" .
                        "\t<access><![CDATA[" . (string) $user->access . "]]></access>\n" .
-                       "\t<fullname_public><![CDATA[" . (string) $user->fullname_public . "</fullname_public>\n" .
+                       "\t<fullname_public><![CDATA[" . (string) $user->fullname_public . "]]></fullname_public>\n" .
                        "\t<validation><![CDATA[" . $user->validation . "]]></validation>\n" .
-                       "\t<disabled<![CDATA[>" . (string) $user->disabled . "]]></disabled>\n";
+                       "\t<disabled><![CDATA[" . (string) $user->disabled . "]]></disabled>\n";
         }
         $string .= "\t<create_date><![CDATA[" . (string) $user->create_date . "]]></create_date>\n" .
                 "\t<last_seen><![CDATA[" . (string) $user->last_seen . "]]></last_seen>\n" .
