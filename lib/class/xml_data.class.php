@@ -898,16 +898,15 @@ class XML_Data
     public static function user(User $user, $fullinfo)
     {
         $user->format();
-        $user->
         $string = "<user id=\"" . (string) $user->id . "\">\n" .
                   "\t<username><![CDATA[" . $user->username . "]]></username>\n";
         if ($fullinfo) {
             $string .= "\t<auth>" . $user->apikey . "</auth>\n" .
-            $string .= "\t<email>" . $user->email . "</email>\n" .
-            $string .= "\t<access>" . (string) $user->access . "</access>\n" .
-            $string .= "\t<fullname_public>" . (string) $user->fullname_public . "</fullname_public>\n" .
-            $string .= "\t<validation>" . $user->validation . "</validation>\n" .
-            $string .= "\t<disabled>" . (string) $user->disabled . "</disabled>\n";
+                       "\t<email>" . $user->email . "</email>\n" .
+                       "\t<access>" . (string) $user->access . "</access>\n" .
+                       "\t<fullname_public>" . (string) $user->fullname_public . "</fullname_public>\n" .
+                       "\t<validation>" . $user->validation . "</validation>\n" .
+                       "\t<disabled>" . (string) $user->disabled . "</disabled>\n";
         }
         $string .= "\t<create_date>" . (string) $user->create_date . "</create_date>\n" .
                 "\t<last_seen>" . (string) $user->last_seen . "</last_seen>\n" .
