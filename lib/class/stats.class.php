@@ -558,7 +558,7 @@ class Stats
             $type = $type . '`.`id';
             $sql  = "SELECT `$type` as `id`, MAX(`playlist`.`last_update`) AS `real_atime` FROM `playlist` ";
         } else {
-            $sql = "SELECT DISTINCT(`$type`) as `id`, MAX(`song`.`addition_time`) AS `real_atime` FROM `" . $base_type . "` ";
+            $sql = "SELECT MAX(`$type`) as `id`, MAX(`song`.`addition_time`) AS `real_atime` FROM `" . $base_type . "` ";
             if ($input_type === 'song') {
                 $sql = "SELECT DISTINCT(`$type`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
             }
@@ -586,9 +586,9 @@ class Stats
         }
         if ($allow_group_disks && $type == 'album') {
             if ($rating_join == 'AND') {
-                $sql .= "AND `album`.`id` IS NOT NULL GROUP BY `$sql_type`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
+                $sql .= "AND `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
             } else {
-                $sql .= "WHERE `album`.`id` IS NOT NULL GROUP BY `$sql_type`, `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
+                $sql .= "WHERE `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
             }
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
