@@ -889,23 +889,34 @@ class XML_Data
     /**
      * user
      *
-     * This handles creating an xml document for an user
+     * This handles creating an xml document for a user
      *
-     * @param    User    $user    User
-     * @return    string    return xml
+     * @param  User   $user User
+     * @param  bool   $fullinfo
+     * @return string return xml
      */
-    public static function user(User $user)
+    public static function user(User $user, $fullinfo)
     {
         $user->format();
-
-        $string = "<user id=\"" . $user->id . "\">\n" .
-                "\t<username><![CDATA[" . $user->username . "]]></username>\n" .
-                "\t<create_date>" . $user->create_date . "</create_date>\n" .
-                "\t<last_seen>" . $user->last_seen . "</last_seen>\n" .
+        $user->
+        $string = "<user id=\"" . (string) $user->id . "\">\n" .
+                  "\t<username><![CDATA[" . $user->username . "]]></username>\n";
+        if ($fullinfo) {
+            $string .= "\t<auth>" . $user->apikey . "</auth>\n" .
+            $string .= "\t<email>" . $user->email . "</email>\n" .
+            $string .= "\t<access>" . (string) $user->access . "</access>\n" .
+            $string .= "\t<fullname_public>" . (string) $user->fullname_public . "</fullname_public>\n" .
+            $string .= "\t<validation>" . $user->validation . "</validation>\n" .
+            $string .= "\t<disabled>" . (string) $user->disabled . "</disabled>\n" .
+            $string .= "\t<ip_history>" . $user->ip_history . "</ip_history>\n";
+        }
+        $string .= "\t<create_date>" . (string) $user->create_date . "</create_date>\n" .
+                "\t<last_seen>" . (string) $user->last_seen . "</last_seen>\n" .
+                "\t<link><![CDATA[" . $user->link . "]]></link>\n" .
                 "\t<website><![CDATA[" . $user->website . "]]></website>\n" .
                 "\t<state><![CDATA[" . $user->state . "]]></state>\n" .
                 "\t<city><![CDATA[" . $user->city . "]]></city>\n";
-        if ($user->fullname_public) {
+        if ($user->fullname_public || $fullinfo) {
             $string .= "\t<fullname><![CDATA[" . $user->fullname . "]]></fullname>\n";
         }
         $string .= "</user>\n";

@@ -1479,7 +1479,7 @@ class Api
      * user
      * MINIMUM_API_VERSION=380001
      *
-     * This get an user public information
+     * This get a user's public information
      *
      * @param array $input
      * username = (string) $username)
@@ -1493,8 +1493,14 @@ class Api
         if (!empty($username)) {
             $user = User::get_from_username($username);
             if ($user !== null) {
+                $apiuser  = User::get_from_username(Session::username($input['auth']));
+                $fullinfo = false;
+                // get full infor when you're an admin or searching yourself
+                if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
+                    $fullinfo = true;
+                }
                 ob_end_clean();
-                echo XML_Data::user($user);
+                echo XML_Data::user($user, $fullinfo);
             } else {
                 debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
             }
@@ -1667,9 +1673,14 @@ class Api
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
-                    $users = $user->get_followers();
+                    $users    = $user->get_followers();
+                    $apiuser  = User::get_from_username(Session::username($input['auth']));
+                    $fullinfo = false;
+                    if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
+                        $fullinfo = true;
+                    }
                     ob_end_clean();
-                    echo XML_Data::users($users);
+                    echo XML_Data::users($users, $fullinfo);
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 }
@@ -1701,8 +1712,16 @@ class Api
                 if ($user !== null) {
                     $users = $user->get_following();
                     debug_event('api.class', 'User is following:  ' . print_r($users), 1);
+                    $apiuser  = User::get_from_username(Session::username($input['auth']));
+                    $fullinfo = false;
+                    if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
+                        $fullinfo = true;
+                    }
                     ob_end_clean();
-                    echo XML_Data::users([(int) $user]);
+                    foreach ($users as $user_id) {
+                        $user = new User($user);
+                        echo XML_Data::users($user, $fullinfo);
+                    }
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 }

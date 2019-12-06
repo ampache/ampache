@@ -1210,7 +1210,6 @@ class Search extends playlist_object
         $this->rules = array();
         foreach ($data as $rule => $value) {
             if ($value == 'name' && preg_match('/^rule_[0|1|2|3|4|5|6|7|8|9]*$/', $rule)) {
-                debug_event('search.class', "parse_rules: WARNING, " . $rule . "['name'] is depreciated. use 'title' for all name searches", 2);
                 $value = 'title';
             }
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
