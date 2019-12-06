@@ -35,7 +35,7 @@
  * @param    string    $title    The Title of the message
  * @param    string    $text    The details of the message
  * @param    string    $next_url    Where to go next
- * @param    integer    $cancel    T/F show a cancel button that uses return_referrer()
+ * @param    integer    $cancel    T/F show a cancel button that uses return_referer()
  */
 function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = 'confirmation', $visible = true)
 {
@@ -72,8 +72,8 @@ function sse_worker($url)
 }
 
 /**
- * return_referrer
- * returns the script part of the referrer address passed by the web browser
+ * return_referer
+ * returns the script part of the referer address passed by the web browser
  * this is not %100 accurate. Also because this is not passed by us we need
  * to clean it up, take the filename then check for a /admin/ and dump the rest
  * @return string

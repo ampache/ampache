@@ -39,6 +39,11 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
     } else {
         echo T_('Artists');
     } ?></td>
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'playlist') {
+        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=playlist"><?php echo T_('Playlists'); ?></a><?php
+    } else {
+        echo T_('Playlists');
+    } ?></td>
     <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
         <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) != 'video') { ?>
             <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') {
