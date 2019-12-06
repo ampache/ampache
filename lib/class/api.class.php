@@ -937,21 +937,24 @@ class Api
     {
         $name = $input['name'];
         $type = $input['type'];
+        $user = User::get_from_username(Session::username($input['auth']));
         if ($type != 'private') {
             $type = 'public';
         }
 
-        $uid = Playlist::create($name, $type);
+        $uid = Playlist::create($name, $type, $user->id);
+        Session::extend($input['auth']);
 
         //Whatever format the user wants
         $outputFormat = $input['format'];
 
         if ($outputFormat == 'json') {
-            echo JSON_Data::playlists(array($uid));
+            echo JSON_Data::playlists(array($uid), true);
         } else {  // Defaults to XML
-            echo XML_Data::playlists(array($uid));
+            echo XML_Data::playlists(array($uid), true);
         }
-    }
+    } // playlist_create
+
 
     /**
      * playlist_delete

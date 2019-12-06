@@ -641,7 +641,7 @@ class XML_Data
      * @param    array    $playlists    (description here...)
      * @return    string    return xml
      */
-    public static function playlists($playlists)
+    public static function playlists($playlists, $create = false)
     {
         if (count($playlists) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
@@ -681,8 +681,8 @@ class XML_Data
                 $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
-            // don't allow unlimited smartlists or empty playlists into xml
-            if ((int) $playitem_total > 0) {
+            // don't allow unlimited smartlists or empty playlists into xml unless it was recently created
+            if ((int) $playitem_total > 0 || $create) {
                 // Build this element
                 $string .= "<playlist id=\"$playlist_id\">\n" .
                         "\t<name><![CDATA[$playlist_name]]></name>\n" .

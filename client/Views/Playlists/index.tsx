@@ -1,8 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
-import { getPlaylists, Playlist } from '../../logic/Playlist';
+import {
+    addToPlaylist,
+    createPlaylist,
+    getPlaylists,
+    Playlist
+} from '../../logic/Playlist';
 import PlaylistRow from '../components/PlaylistRow';
+import Plus from '/images/icons/svg/plus.svg';
+import InputModal from '../components/InputModal';
 
 interface PlaylistsViewProps {
     user: User;
@@ -11,6 +18,9 @@ interface PlaylistsViewProps {
 const PlaylistsView: React.FC<PlaylistsViewProps> = (props) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
+
+    const modalRootRef = useRef(null);
+
     useEffect(() => {
         getPlaylists(props.user.authKey)
             .then((data) => {
@@ -20,6 +30,24 @@ const PlaylistsView: React.FC<PlaylistsViewProps> = (props) => {
                 setError(error);
             });
     }, []);
+
+    const handleNewPlaylist = () => {
+        InputModal({
+            modalName: 'New Playlist',
+            parent: modalRootRef
+        })
+            .then((playlistName) => {
+                createPlaylist(playlistName, props.user.authKey).catch(
+                    (err) => {
+                        //TODO
+                        console.log(err);
+                    }
+                );
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     if (error) {
         return (
@@ -37,7 +65,9 @@ const PlaylistsView: React.FC<PlaylistsViewProps> = (props) => {
     }
     return (
         <div className='playlistsPage'>
+            <div className='modalRoot' ref={modalRootRef} />
             <h1>Playlists</h1>
+            <img src={Plus} alt='Add Playlist' onClick={handleNewPlaylist} />
             <div className='playlists'>
                 {playlists.map((playlist) => {
                     return (

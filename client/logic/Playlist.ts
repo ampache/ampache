@@ -89,3 +89,24 @@ export const removeFromPlaylistWithSongID = async (
             return true;
         });
 };
+
+export const createPlaylist = async (
+    name: string,
+    authKey: AuthKey,
+    type: string = 'public'
+) => {
+    return axios
+        .get(
+            `${process.env.ServerURL}/server/json.server.php?action=playlist_create&name=${name}&type=${type}&auth=${authKey}&version=400001`
+        )
+        .then((response) => {
+            const JSONData = response.data;
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
+            if (JSONData.error) {
+                throw new AmpacheError(JSONData.error);
+            }
+            return JSONData as Playlist;
+        });
+};

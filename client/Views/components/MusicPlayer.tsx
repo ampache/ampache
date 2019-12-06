@@ -1,6 +1,7 @@
 import { PLAYERSTATUS } from '../../enum/PlayerStatus';
 import React, { useContext } from 'react';
 import { MusicContext } from '../../Contexts/MusicContext';
+import CDImage from '/images/icons/svg/CD.svg';
 
 const MusicPlayer: React.FC = () => {
     const musicContext = useContext(MusicContext);
@@ -9,7 +10,7 @@ const MusicPlayer: React.FC = () => {
         <div className='player'>
             <img
                 className='songArt'
-                src={musicContext.currentPlayingSong?.art}
+                src={musicContext.currentPlayingSong?.art || CDImage}
                 alt='cover art'
             />
             <div
