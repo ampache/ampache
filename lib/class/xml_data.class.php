@@ -907,8 +907,7 @@ class XML_Data
             $string .= "\t<access>" . (string) $user->access . "</access>\n" .
             $string .= "\t<fullname_public>" . (string) $user->fullname_public . "</fullname_public>\n" .
             $string .= "\t<validation>" . $user->validation . "</validation>\n" .
-            $string .= "\t<disabled>" . (string) $user->disabled . "</disabled>\n" .
-            $string .= "\t<ip_history>" . $user->ip_history . "</ip_history>\n";
+            $string .= "\t<disabled>" . (string) $user->disabled . "</disabled>\n";
         }
         $string .= "\t<create_date>" . (string) $user->create_date . "</create_date>\n" .
                 "\t<last_seen>" . (string) $user->last_seen . "</last_seen>\n" .
