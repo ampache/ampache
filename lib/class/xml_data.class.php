@@ -901,15 +901,15 @@ class XML_Data
         $string = "<user id=\"" . (string) $user->id . "\">\n" .
                   "\t<username><![CDATA[" . $user->username . "]]></username>\n";
         if ($fullinfo) {
-            $string .= "\t<auth>" . $user->apikey . "</auth>\n" .
-                       "\t<email>" . $user->email . "</email>\n" .
-                       "\t<access>" . (string) $user->access . "</access>\n" .
-                       "\t<fullname_public>" . (string) $user->fullname_public . "</fullname_public>\n" .
-                       "\t<validation>" . $user->validation . "</validation>\n" .
-                       "\t<disabled>" . (string) $user->disabled . "</disabled>\n";
+            $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n" .
+                       "\t<email><![CDATA[" . $user->email . "]]></email>\n" .
+                       "\t<access><![CDATA[" . (string) $user->access . "]]></access>\n" .
+                       "\t<fullname_public><![CDATA[" . (string) $user->fullname_public . "</fullname_public>\n" .
+                       "\t<validation><![CDATA[" . $user->validation . "]]></validation>\n" .
+                       "\t<disabled<![CDATA[>" . (string) $user->disabled . "]]></disabled>\n";
         }
-        $string .= "\t<create_date>" . (string) $user->create_date . "</create_date>\n" .
-                "\t<last_seen>" . (string) $user->last_seen . "</last_seen>\n" .
+        $string .= "\t<create_date><![CDATA[" . (string) $user->create_date . "]]></create_date>\n" .
+                "\t<last_seen><![CDATA[" . (string) $user->last_seen . "]]></last_seen>\n" .
                 "\t<link><![CDATA[" . $user->link . "]]></link>\n" .
                 "\t<website><![CDATA[" . $user->website . "]]></website>\n" .
                 "\t<state><![CDATA[" . $user->state . "]]></state>\n" .
