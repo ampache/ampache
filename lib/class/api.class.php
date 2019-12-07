@@ -1674,13 +1674,8 @@ class Api
                 $user = User::get_from_username($username);
                 if ($user !== null) {
                     $users    = $user->get_followers();
-                    $apiuser  = User::get_from_username(Session::username($input['auth']));
-                    $fullinfo = false;
-                    if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
-                        $fullinfo = true;
-                    }
                     ob_end_clean();
-                    echo XML_Data::users($users, $fullinfo);
+                    echo XML_Data::users($users);
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 }
@@ -1712,15 +1707,10 @@ class Api
                 if ($user !== null) {
                     $users = $user->get_following();
                     debug_event('api.class', 'User is following:  ' . print_r($users), 1);
-                    $apiuser  = User::get_from_username(Session::username($input['auth']));
-                    $fullinfo = false;
-                    if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
-                        $fullinfo = true;
-                    }
                     ob_end_clean();
                     foreach ($users as $user_id) {
                         $user = new User($user);
-                        echo XML_Data::users($user, $fullinfo);
+                        echo XML_Data::users($user);
                     }
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
