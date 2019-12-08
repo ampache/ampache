@@ -1,10 +1,22 @@
 import React, { MutableRefObject } from 'react';
 import ReactDOM from 'react-dom';
 import closeWindowIcon from '/images/icons/svg/close-window.svg';
+import { EventEmitter } from 'events';
 
 interface PlaylistSelectorParams {
     parent: MutableRefObject<any>;
     modalName: string;
+    cancelList?: CancelList;
+}
+
+class CancelList extends EventEmitter {
+    on(handler: () => void) {
+        super.on('cleanup', handler);
+    }
+    use(dependencies: unknown[] = []) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        React.useEffect(() => () => this.emit('cleanup'), dependencies);
+    }
 }
 
 const InputModal = async (props: PlaylistSelectorParams) => {
@@ -35,6 +47,12 @@ const InputModal = async (props: PlaylistSelectorParams) => {
     );
 
     return new Promise(async (resolve: (value?: string) => void) => {
+        if (props.cancelList) {
+            props.cancelList.on(() => {
+                close();
+            });
+        }
+
         const returnData = (data: string) => {
             close();
             return resolve(data);
@@ -89,4 +107,10 @@ const InputModal = async (props: PlaylistSelectorParams) => {
     });
 };
 
-export default InputModal;
+export function useInputModal() {
+    const { current: cancelList } = React.useRef(new CancelList());
+    cancelList.use();
+    return React.useCallback((opts: PlaylistSelectorParams) => {
+        return InputModal({ ...opts, cancelList });
+    }, []);
+}

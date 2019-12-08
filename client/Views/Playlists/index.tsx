@@ -9,7 +9,7 @@ import {
 } from '../../logic/Playlist';
 import PlaylistRow from '../components/PlaylistRow';
 import Plus from '/images/icons/svg/plus.svg';
-import InputModal from '../components/InputModal';
+import { useInputModal } from '../components/InputModal';
 
 interface PlaylistsViewProps {
     user: User;
@@ -20,6 +20,7 @@ const PlaylistsView: React.FC<PlaylistsViewProps> = (props) => {
     const [error, setError] = useState<Error | AmpacheError>(null);
 
     const modalRootRef = useRef(null);
+    const InputModal = useInputModal();
 
     useEffect(() => {
         getPlaylists(props.user.authKey)
