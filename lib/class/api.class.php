@@ -853,7 +853,7 @@ class Api
      * This returns playlists based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
+     * 'filter'  (string) Alpha-numeric search term (match all if missing) //optional
      * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
      * 'add'     self::set_filter(date) //optional
      * 'update'  self::set_filter(date) //optional
@@ -872,6 +872,7 @@ class Api
         // merge with the smartlists
         $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
 
+        ob_end_clean();
 
         //Whatever format the user wants
         $outputFormat = $input['format'];
@@ -886,7 +887,6 @@ class Api
             XML_Data::set_limit($input['limit']);
             echo XML_Data::playlists($playlist_ids);
         }
-        ob_end_clean();
         Session::extend($input['auth']);
     } // playlists
 

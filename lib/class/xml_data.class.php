@@ -74,7 +74,7 @@ class XML_Data
             return false;
         }
 
-        if (strtolower($limit) == "none") {
+        if (strtolower((string) $limit) == "none") {
             self::$limit = null;
         } else {
             self::$limit = (int) ($limit);
@@ -641,7 +641,7 @@ class XML_Data
      * @param    array    $playlists    (description here...)
      * @return    string    return xml
      */
-    public static function playlists($playlists, $create = false)
+    public static function playlists($playlists)
     {
         if (count($playlists) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
@@ -681,16 +681,13 @@ class XML_Data
                 $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
-            // don't allow unlimited smartlists or empty playlists into xml unless it was recently created
-            if ((int) $playitem_total > 0 || $create) {
-                // Build this element
-                $string .= "<playlist id=\"$playlist_id\">\n" .
-                        "\t<name><![CDATA[$playlist_name]]></name>\n" .
-                        "\t<owner><![CDATA[$playlist_user]]></owner>\n" .
-                        "\t<items>$playitem_total</items>\n" .
-                        "\t<type>$playlist_type</type>\n" .
-                        "</playlist>\n";
-            }
+            // Build this element
+            $string .= "<playlist id=\"$playlist_id\">\n" .
+                    "\t<name><![CDATA[$playlist_name]]></name>\n" .
+                    "\t<owner><![CDATA[$playlist_user]]></owner>\n" .
+                    "\t<items>$playitem_total</items>\n" .
+                    "\t<type>$playlist_type</type>\n" .
+                    "</playlist>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -889,23 +886,32 @@ class XML_Data
     /**
      * user
      *
-     * This handles creating an xml document for an user
+     * This handles creating an xml document for a user
      *
-     * @param    User    $user    User
-     * @return    string    return xml
+     * @param  User   $user User
+     * @param  bool   $fullinfo
+     * @return string return xml
      */
-    public static function user(User $user)
+    public static function user(User $user, $fullinfo)
     {
         $user->format();
-
-        $string = "<user id=\"" . $user->id . "\">\n" .
-                "\t<username><![CDATA[" . $user->username . "]]></username>\n" .
-                "\t<create_date>" . $user->create_date . "</create_date>\n" .
-                "\t<last_seen>" . $user->last_seen . "</last_seen>\n" .
+        $string = "<user id=\"" . (string) $user->id . "\">\n" .
+                  "\t<username><![CDATA[" . $user->username . "]]></username>\n";
+        if ($fullinfo) {
+            $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n" .
+                       "\t<email><![CDATA[" . $user->email . "]]></email>\n" .
+                       "\t<access><![CDATA[" . (string) $user->access . "]]></access>\n" .
+                       "\t<fullname_public><![CDATA[" . (string) $user->fullname_public . "]]></fullname_public>\n" .
+                       "\t<validation><![CDATA[" . $user->validation . "]]></validation>\n" .
+                       "\t<disabled><![CDATA[" . (string) $user->disabled . "]]></disabled>\n";
+        }
+        $string .= "\t<create_date><![CDATA[" . (string) $user->create_date . "]]></create_date>\n" .
+                "\t<last_seen><![CDATA[" . (string) $user->last_seen . "]]></last_seen>\n" .
+                "\t<link><![CDATA[" . $user->link . "]]></link>\n" .
                 "\t<website><![CDATA[" . $user->website . "]]></website>\n" .
                 "\t<state><![CDATA[" . $user->state . "]]></state>\n" .
                 "\t<city><![CDATA[" . $user->city . "]]></city>\n";
-        if ($user->fullname_public) {
+        if ($user->fullname_public || $fullinfo) {
             $string .= "\t<fullname><![CDATA[" . $user->fullname . "]]></fullname>\n";
         }
         $string .= "</user>\n";
@@ -1158,7 +1164,7 @@ class XML_Data
             //$xmlink = $xitem->addChild("link", htmlentities($media->link));
             $xitem->addChild("guid", htmlentities($media->link));
             if ($media->addition_time) {
-                $xitem->addChild("pubDate", date("r", $media->addition_time));
+                $xitem->addChild("pubDate", date("r", (int) $media->addition_time));
             }
             $description = $media->get_description();
             if (!empty($description)) {
@@ -1168,8 +1174,8 @@ class XML_Data
             if ($media->mime) {
                 $surl  = $media_info['object_type']::play_url($media_info['object_id'], '', 'api', false, $user_id);
                 $xencl = $xitem->addChild("enclosure");
-                $xencl->addAttribute("type", $media->mime);
-                $xencl->addAttribute("length", $media->size);
+                $xencl->addAttribute("type", (string) $media->mime);
+                $xencl->addAttribute("length", (string) $media->size);
                 $xencl->addAttribute("url", $surl);
             }
         }
