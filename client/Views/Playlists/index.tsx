@@ -37,6 +37,7 @@ const PlaylistsView: React.FC<PlaylistsViewProps> = (props) => {
             parent: modalRootRef
         })
             .then((playlistName) => {
+                console.log(playlistName);
                 createPlaylist(playlistName, props.user.authKey).catch(
                     (err) => {
                         //TODO

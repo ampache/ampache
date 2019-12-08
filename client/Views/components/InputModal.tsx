@@ -1,7 +1,6 @@
-import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
+import React, { MutableRefObject } from 'react';
 import ReactDOM from 'react-dom';
 import closeWindowIcon from '/images/icons/svg/close-window.svg';
-import { PLAYERSTATUS } from '../../enum/PlayerStatus';
 
 interface PlaylistSelectorParams {
     parent: MutableRefObject<any>;
@@ -23,7 +22,7 @@ const InputModal = async (props: PlaylistSelectorParams) => {
     }
 
     ReactDOM.render(
-        //TODO: Make pretty and merge with PlaylistSelector... this doesn't work right now
+        //TODO: Make pretty and merge with PlaylistSelector
         <div
             className='inputModal'
             onClick={() => {
@@ -36,6 +35,11 @@ const InputModal = async (props: PlaylistSelectorParams) => {
     );
 
     return new Promise(async (resolve: (value?: string) => void) => {
+        const returnData = (data: string) => {
+            close();
+            return resolve(data);
+        };
+
         const selector = (
             <div
                 className='inputModal'
@@ -59,19 +63,27 @@ const InputModal = async (props: PlaylistSelectorParams) => {
                         />
                     </div>
                     <form>
-                        <input placeholder={props.modalName} />
+                        <input
+                            id='inputModal-inputField'
+                            placeholder={props.modalName}
+                        />
                     </form>
                     <div>
-                        <button onClick={select}>Submit</button>
+                        <button
+                            onClick={() =>
+                                returnData(
+                                    (document.getElementById(
+                                        'inputModal-inputField'
+                                    ) as HTMLInputElement).value
+                                )
+                            }
+                        >
+                            Submit
+                        </button>
                     </div>
                 </div>
             </div>
         );
-
-        function select() {
-            close();
-            return resolve('');
-        }
 
         ReactDOM.render(selector, props.parent.current);
     });
