@@ -8,17 +8,21 @@ interface MusicContextProps {
     authKey: AuthKey;
 }
 
+interface MusicContext {
+    playerStatus: PLAYERSTATUS;
+    currentPlayingSong: Song;
+    songQueueIndex: number;
+    songQueue: Song[];
+    playPause: () => void;
+    playPrevious: () => void;
+    playNext: () => void;
+    startPlayingWithNewQueue: (song: Song, newQueue: Song[]) => {};
+    addToQueue: (song: Song, next: boolean) => void;
+}
+
 export const MusicContext = React.createContext({
-    playerStatus: PLAYERSTATUS.STOPPED,
-    currentPlayingSong: {} as Song,
-    songQueueIndex: -1,
-    songQueue: [] as Song[],
-    playPause: () => {},
-    playPrevious: () => {},
-    playNext: () => {},
-    startPlayingWithNewQueue: (song: Song, newQueue: Song[]) => {},
-    addToQueue: (song: Song, next: Boolean) => {}
-});
+    playerStatus: PLAYERSTATUS.STOPPED
+} as MusicContext);
 
 export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const [playerStatus, setPlayerStatus] = useState(PLAYERSTATUS.STOPPED);
@@ -130,8 +134,8 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         _playSong(song);
     };
 
-    const addToQueue = (song: Song, next: Boolean) => {
-        let newQueue = [...songQueue];
+    const addToQueue = (song: Song, next: boolean) => {
+        const newQueue = [...songQueue];
         console.log('ADD', userQCount);
         if (next) {
             //splice starts at 1, so we don't need +2 //TODO make this comment more clear!

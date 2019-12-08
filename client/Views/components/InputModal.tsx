@@ -1,10 +1,10 @@
-import React, { MutableRefObject } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import closeWindowIcon from '/images/icons/svg/close-window.svg';
 import { EventEmitter } from 'events';
 
 interface PlaylistSelectorParams {
-    parent: MutableRefObject<any>;
+    parent: HTMLElement;
     modalName: string;
     cancelList?: CancelList;
 }
@@ -14,12 +14,16 @@ class CancelList extends EventEmitter {
         super.on('cleanup', handler);
     }
     use(dependencies: unknown[] = []) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         React.useEffect(() => () => this.emit('cleanup'), dependencies);
     }
 }
 
-const InputModal = async (props: PlaylistSelectorParams) => {
+const InputModal = (props: PlaylistSelectorParams) => {
+    function close() {
+        document.removeEventListener('keydown', escFunction, false);
+        ReactDOM.unmountComponentAtNode(props.parent);
+    }
+
     function escFunction(event) {
         if (event.keyCode === 27) {
             close();
@@ -28,25 +32,15 @@ const InputModal = async (props: PlaylistSelectorParams) => {
 
     document.addEventListener('keydown', escFunction, false);
 
-    function close() {
-        document.removeEventListener('keydown', escFunction, false);
-        ReactDOM.unmountComponentAtNode(props.parent.current);
-    }
-
     ReactDOM.render(
         //TODO: Make pretty and merge with PlaylistSelector
-        <div
-            className='inputModal'
-            onClick={() => {
-                close();
-            }}
-        >
+        <div className='inputModal' onClick={close}>
             Loading...
         </div>,
-        props.parent.current
+        props.parent
     );
 
-    return new Promise(async (resolve: (value?: string) => void) => {
+    return new Promise((resolve: (value: string) => void) => {
         if (props.cancelList) {
             props.cancelList.on(() => {
                 close();
@@ -59,12 +53,7 @@ const InputModal = async (props: PlaylistSelectorParams) => {
         };
 
         const selector = (
-            <div
-                className='inputModal'
-                onClick={() => {
-                    close();
-                }}
-            >
+            <div className='inputModal' onClick={close}>
                 <div
                     className='content'
                     onClick={(e) => {
@@ -77,7 +66,7 @@ const InputModal = async (props: PlaylistSelectorParams) => {
                             className='close'
                             src={closeWindowIcon}
                             alt='Close'
-                            onClick={() => close()}
+                            onClick={close}
                         />
                     </div>
                     <form>
@@ -88,7 +77,7 @@ const InputModal = async (props: PlaylistSelectorParams) => {
                     </form>
                     <div>
                         <button
-                            onClick={() =>
+                            onClick={(): void =>
                                 returnData(
                                     (document.getElementById(
                                         'inputModal-inputField'
@@ -103,7 +92,7 @@ const InputModal = async (props: PlaylistSelectorParams) => {
             </div>
         );
 
-        ReactDOM.render(selector, props.parent.current);
+        ReactDOM.render(selector, props.parent);
     });
 };
 

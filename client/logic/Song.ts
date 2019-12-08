@@ -41,7 +41,7 @@ type Song = {
     replaygain_album_peak: number;
     replaygain_track_gain: number;
     replaygain_track_peak: number;
-    tags: Array<String>;
+    tags: Array<string>;
 };
 
 export { Song };

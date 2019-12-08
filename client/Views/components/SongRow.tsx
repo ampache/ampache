@@ -10,7 +10,7 @@ interface SongRowProps {
     showAlbum?: boolean;
     removeFromPlaylist?: (trackID: number) => void;
     addToPlaylist?: (trackID: number) => void;
-    addToQueue: (next: Boolean) => void;
+    addToQueue: (next: boolean) => void;
     startPlaying: () => void;
 }
 

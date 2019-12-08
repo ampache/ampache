@@ -1,9 +1,8 @@
-import React, { MutableRefObject, useState } from 'react';
+import React, { MutableRefObject } from 'react';
 import ReactDOM from 'react-dom';
 import { getPlaylists, Playlist } from '../../logic/Playlist';
 import { AuthKey } from '../../logic/Auth';
 import closeWindowIcon from '/images/icons/svg/close-window.svg';
-import { PLAYERSTATUS } from '../../enum/PlayerStatus';
 
 interface PlaylistSelectorParams {
     parent: MutableRefObject<any>;

@@ -10,7 +10,7 @@ import {
 import { AuthKey } from '../../logic/Auth';
 import PlaylistSelector from './PlaylistSelector';
 import AmpacheError from '../../logic/AmpacheError';
-import { getAlbum, getAlbumSongs } from '../../logic/Album';
+import { getAlbumSongs } from '../../logic/Album';
 
 interface SongListProps {
     showArtist?: boolean;

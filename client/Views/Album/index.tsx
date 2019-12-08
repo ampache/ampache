@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Album, getAlbum, getAlbumSongs } from '../../logic/Album';
+import { Album, getAlbum } from '../../logic/Album';
 import { User } from '../../logic/User';
-import { Song } from '../../logic/Song';
 import AmpacheError from '../../logic/AmpacheError';
 import { Link } from 'react-router-dom';
 import SongList from '../components/SongList';

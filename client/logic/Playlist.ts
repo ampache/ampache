@@ -93,7 +93,7 @@ export const removeFromPlaylistWithSongID = async (
 export const createPlaylist = async (
     name: string,
     authKey: AuthKey,
-    type: string = 'public'
+    type = 'public'
 ) => {
     return axios
         .get(

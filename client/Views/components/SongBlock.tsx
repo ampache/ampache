@@ -4,7 +4,7 @@ import React from 'react';
 
 interface SongBlockProps {
     song: Song;
-    currentlyPlaying: Boolean;
+    currentlyPlaying: boolean;
     playSong: (song: Song) => void;
 }
 
