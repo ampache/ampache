@@ -80,7 +80,7 @@ class Api
      */
     public static function set_filter($filter, $value)
     {
-        if (!strlen($value)) {
+        if (!strlen((string) $value)) {
             return false;
         }
 
@@ -175,7 +175,7 @@ class Api
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
         }
-        $username = trim($input['user']);
+        $username = trim((string) $input['user']);
         $user_ip  = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
         if (isset($input['version'])) {
             // If version is provided, use it
@@ -447,9 +447,16 @@ class Api
     {
         $uid  = scrub_in($input['filter']);
         $user = User::get_from_username(Session::username($input['auth']));
-        echo XML_Data::artists(array($uid), $input['include'], true, $user->id);
+
+        //Whatever format the user wants
+        $outputFormat = $input['format'];
+
+        if ($outputFormat == 'json') {
+            echo JSON_Data::artists(array($uid), $input['include'], true, $user->id);
+        } else {
+            echo XML_Data::artists(array($uid), $input['include'], true, $user->id);
+        }
         Session::extend($input['auth']);
-        //TODO: JSON
     } // artist
 
     /**
@@ -840,21 +847,31 @@ class Api
     }
 
     /**
-      * playlists
+     * playlists
+     * MINIMUM_API_VERSION=380001
+     *
      * This returns playlists based on the specified filter
+     *
      * @param array $input
+     * 'filter'  (string) Alpha-numeric search term
+     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
+     * 'add'     self::set_filter(date) //optional
+     * 'update'  self::set_filter(date) //optional
+     * 'offset'  (integer) //optional
+     * 'limit'   (integer) //optional
      */
     public static function playlists($input)
     {
-        self::$browse->reset_filters();
-        self::$browse->set_type('playlist');
-        self::$browse->set_sort('name','ASC');
+        $user   = User::get_from_username(Session::username($input['auth']));
+        $method = $input['exact'] ? false : true;
+        $userid = (!Access::check('interface', 100)) ? $user->id : -1;
+        $public = (!Access::check('interface', 100)) ? true : false;
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method,$input['filter']);
-        self::$browse->set_filter('playlist_type', '1');
+        // regular playlists
+        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
+        // merge with the smartlists
+        $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
 
-        $playlist_ids = self::$browse->get_objects();
 
         //Whatever format the user wants
         $outputFormat = $input['format'];
@@ -863,15 +880,14 @@ class Api
             JSON_Data::set_offset($input['offset']);
             JSON_Data::set_limit($input['limit']);
 
-            ob_end_clean();
             echo JSON_Data::playlists($playlist_ids);
         } else {  // Defaults to XML
             XML_Data::set_offset($input['offset']);
             XML_Data::set_limit($input['limit']);
-
-            ob_end_clean();
             echo XML_Data::playlists($playlist_ids);
         }
+        ob_end_clean();
+        Session::extend($input['auth']);
     } // playlists
 
     /**
@@ -881,12 +897,28 @@ class Api
      */
     public static function playlist($input)
     {
-        $uid = scrub_in($input['filter']);
-
-        ob_end_clean();
+        $user = User::get_from_username(Session::username($input['auth']));
+        $uid  = scrub_in($input['filter']);
 
         //Whatever format the user wants
         $outputFormat = $input['format'];
+
+        if (str_replace('smart_', '', $uid) === $uid) {
+            // Playlists
+            $playlist = new Playlist($uid);
+        } else {
+            //Smartlists
+            $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
+        }
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
+            if ($outputFormat == 'json') {
+                echo JSON_Data::error('401', T_('Access denied to this playlist'));
+            } else {  // Defaults to XML
+                echo XML_Data::error('401', T_('Access denied to this playlist'));
+            }
+            return;
+        }
+        ob_end_clean();
 
         if ($outputFormat == 'json') {
             echo JSON_Data::playlists(array($uid));
