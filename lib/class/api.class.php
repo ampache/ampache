@@ -907,7 +907,7 @@ class Api
      * This returns playlists based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
+     * 'filter'  (string) Alpha-numeric search term (match all if missing) //optional
      * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
      * 'add'     self::set_filter(date) //optional
      * 'update'  self::set_filter(date) //optional
@@ -944,6 +944,9 @@ class Api
      */
     public static function playlist($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'playlist_edit')) {
+            return false;
+        }
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
 
@@ -1028,7 +1031,7 @@ class Api
         }
 
         $uid = Playlist::create($name, $type, $user->id);
-        echo XML_Data::playlists(array($uid), true);
+        echo XML_Data::playlists(array($uid));
         Session::extend($input['auth']);
     } // playlist_create
 
