@@ -51,12 +51,12 @@ function update_preferences($user_id = 0)
         $apply_to_all    = 'check_' . $data['name'];
         $new_level       = 'level_' . $data['name'];
         $pref_id         = $data['id'];
-        $value           = scrub_in($_REQUEST[$name]);
+        $value           = (string) scrub_in($_REQUEST[$name]);
 
         /* Some preferences require some extra checks to be performed */
         switch ($name) {
             case 'transcode_bitrate':
-                $value = Stream::validate_bitrate($value);
+                $value = (string) Stream::validate_bitrate($value);
             break;
             default:
             break;

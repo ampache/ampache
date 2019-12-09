@@ -438,6 +438,7 @@ class Tag extends database_object implements library_item
      * get_top_tags
      * This gets the top tags for the specified object using limit
      * @param string $type
+     * @return array
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
     {
@@ -548,7 +549,7 @@ class Tag extends database_object implements library_item
             "WHERE `tag`.`is_hidden` = false " .
             "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         if (!empty($type)) {
-            $sql .= "AND `tag_map`.`object_type` = '" . scrub_in($type) . "' ";
+            $sql .= "AND `tag_map`.`object_type` = '" . (string) scrub_in($type) . "' ";
         }
         $order = "`" . $order . "`";
         if ($order == 'count') {
@@ -624,26 +625,24 @@ class Tag extends database_object implements library_item
         $filter      = str_replace(';',', ', $filterunder);
         $editedTags  = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
 
-        if (is_array($ctags)) {
-            foreach ($ctags as $ctid => $ctv) {
-                if ($ctv['id'] != '') {
-                    $ctag  = new Tag($ctv['id']);
-                    $found = false;
+        foreach ($ctags as $ctid => $ctv) {
+            if ($ctv['id'] != '') {
+                $ctag  = new Tag($ctv['id']);
+                $found = false;
 
-                    foreach ($editedTags as  $tk => $tv) {
-                        if ($ctag->name == $tv) {
-                            $found = true;
-                            break;
-                        }
+                foreach ($editedTags as  $tk => $tv) {
+                    if ($ctag->name == $tv) {
+                        $found = true;
+                        break;
                     }
+                }
 
-                    if ($found) {
-                        unset($editedTags[$ctag->name]);
-                    } else {
-                        if ($overwrite) {
-                            debug_event('tag.class', 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
-                            $ctag->remove_map($type, $object_id, false);
-                        }
+                if ($found) {
+                    unset($editedTags[$ctag->name]);
+                } else {
+                    if ($overwrite) {
+                        debug_event('tag.class', 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
+                        $ctag->remove_map($type, $object_id, false);
                     }
                 }
             }

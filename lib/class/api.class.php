@@ -1853,7 +1853,7 @@ class Api
         $flag      = $input['flag'];
         $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
-        if ((int) $user-id > 0) {
+        if ((int) $user->id > 0) {
             $user_id = $user->id;
         }
         // confirm the correct data
