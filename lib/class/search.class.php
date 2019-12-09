@@ -33,6 +33,7 @@ class Search extends playlist_object
     public $type           = 'public';
     public $random         = false;
     public $limit          = 0;
+    public $last_count     = 0;
 
     public $basetypes;
     public $types;
@@ -1122,8 +1123,21 @@ class Search extends playlist_object
                 'object_type' => $this->searchtype
             );
         }
+        $this->set_last_count(count($results));
 
         return $results;
+    }
+
+    /**
+     * set_last_count
+     *
+     * Returns the name of the saved search corresponding to the given ID
+     * @param integer $count
+     */
+    private function set_last_count($count)
+    {
+        $sql = "Update `search` SET `last_count`=" . $count . " WHERE `id`=" . $this->id;
+        Dba::write($sql);
     }
 
     /**
