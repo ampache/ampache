@@ -33,6 +33,7 @@ class Search extends playlist_object
     public $type           = 'public';
     public $random         = false;
     public $limit          = 0;
+    public $last_count     = 0;
 
     public $basetypes;
     public $types;
