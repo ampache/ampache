@@ -1122,7 +1122,7 @@ class Search extends playlist_object
                 'object_type' => $this->searchtype
             );
         }
-        self::set_last_count(count($results));
+        $this->set_last_count(count($results));
 
         return $results;
     }
