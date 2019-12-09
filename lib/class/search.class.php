@@ -1138,7 +1138,6 @@ class Search extends playlist_object
     {
         $sql = "Update `search` SET `last_count`=" . $count . " WHERE `id`=" . $this->id;
         Dba::write($sql);
-
     }
 
     /**
