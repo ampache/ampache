@@ -5,6 +5,7 @@ import AmpacheError from '../../logic/AmpacheError';
 import { Link } from 'react-router-dom';
 import SongList from '../components/SongList';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
 
 interface AlbumViewProps {
     user: User;
@@ -26,6 +27,7 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
                     setTheAlbum(data);
                 })
                 .catch((error) => {
+                    toast.error('😞 Something went wrong getting the album.');
                     setError(error);
                 });
         }

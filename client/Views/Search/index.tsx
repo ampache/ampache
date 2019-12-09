@@ -6,6 +6,7 @@ import AmpacheError from '../../logic/AmpacheError';
 import { MusicContext } from '../../Contexts/MusicContext';
 import SongBlock from '../components/SongBlock';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
 
 interface SearchProps {
     user: User;
@@ -29,6 +30,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
                     setSearchResults(Songs);
                 })
                 .catch((error) => {
+                    toast.error('😞 Something went wrong during the search.');
                     setError(error);
                 });
         }

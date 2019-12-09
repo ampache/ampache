@@ -7,6 +7,7 @@ import AlbumDisplay from '../components/AlbumDisplay';
 import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
 import { MusicContext } from '../../Contexts/MusicContext';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
 
 interface ArtistViewProps {
     user: User;
@@ -30,6 +31,9 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                     setAlbums(data);
                 })
                 .catch((error) => {
+                    toast.error(
+                        '😞 Something went wrong getting albums from artist.'
+                    );
                     setError(error);
                 });
         }

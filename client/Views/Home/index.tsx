@@ -7,6 +7,7 @@ import { MusicContext } from '../../Contexts/MusicContext';
 import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
 import { Song } from '../../logic/Song';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
 
 interface HomeViewProps {
     user: User;
@@ -24,6 +25,7 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
                 setRandomAlbums(albums);
             })
             .catch((error) => {
+                toast.error('😞 Something went wrong getting random albums.');
                 setError(error);
             });
     }, []);

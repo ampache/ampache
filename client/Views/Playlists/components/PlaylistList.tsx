@@ -11,6 +11,7 @@ import AmpacheError from '../../../logic/AmpacheError';
 import Plus from '/images/icons/svg/plus.svg';
 import { ModalType, useModal } from '../../../Modal/Modal';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
 
 interface PlaylistListProps {
     authKey?: AuthKey;
@@ -28,6 +29,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 setPlaylists(data);
             })
             .catch((error) => {
+                toast.error('😞 Something went getting playlists.');
                 setError(error);
             });
     }, []);
@@ -40,8 +42,12 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                     (playlist) => playlist.id != playlistID
                 );
                 setPlaylists(newPlaylists);
+                toast.success('Deleted Playlist.');
             })
             .catch((error) => {
+                toast.error(
+                    '😞 Something went wrong trying to delete playlist.'
+                );
                 setError(error);
             });
     };
@@ -60,8 +66,10 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 const newPlaylists = [...playlists];
                 newPlaylists.push(newPlaylist);
                 setPlaylists(newPlaylists);
+                toast.success('Created Playlist.');
             })
             .catch((err) => {
+                toast.error('😞 Something went wrong creating new playlist.');
                 setError(err);
             });
     };

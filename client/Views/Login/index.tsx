@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import logo from '/images/ampache-dark.png';
 import AmpacheError from '../../logic/AmpacheError';
+import { toast } from 'react-toastify';
 
 interface LoginProps {
     handleLogin: (
@@ -17,7 +18,6 @@ const LoginView: React.FC<LoginProps> = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         props.handleLogin(username, password).catch((e) => {
-            console.log(e);
             setError(e);
         });
     };

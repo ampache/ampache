@@ -12,6 +12,7 @@ import AmpacheError from '../../logic/AmpacheError';
 import { getAlbumSongs } from '../../logic/Album';
 import { ModalType, useModal } from '../../Modal/Modal';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
 
 interface SongListProps {
     showArtist?: boolean;
@@ -35,6 +36,9 @@ const SongList: React.FC<SongListProps> = (props) => {
                     setSongs(data);
                 })
                 .catch((error) => {
+                    toast.error(
+                        '😞 Something went wrong getting playlist songs.'
+                    );
                     setError(error);
                 });
         } else if (props.inAlbumID) {
@@ -43,6 +47,7 @@ const SongList: React.FC<SongListProps> = (props) => {
                     setSongs(songs);
                 })
                 .catch((error) => {
+                    toast.error('😞 Something went wrong getting album songs.');
                     setError(error);
                 });
         } else {
@@ -74,6 +79,7 @@ const SongList: React.FC<SongListProps> = (props) => {
                 addToPlaylist(playlistID, songID, props.authKey)
             )
             .catch((err) => {
+                toast.error('😞 Something went wrong adding to playlist.');
                 setError(err);
             });
     };

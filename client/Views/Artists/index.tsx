@@ -4,6 +4,7 @@ import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import ArtistDisplay from '../components/ArtistDisplay';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
 
 interface ArtistsViewProps {
     user: User;
@@ -19,6 +20,7 @@ const ArtistsView: React.FC<ArtistsViewProps> = (props: ArtistsViewProps) => {
                 setArtists(data);
             })
             .catch((error) => {
+                toast.error('😞 Something went wrong getting the artist.');
                 setError(error);
             });
     }, []);

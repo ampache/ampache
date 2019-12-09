@@ -4,6 +4,7 @@ import { AuthKey } from '../../logic/Auth';
 import closeWindowIcon from '/images/icons/svg/close-window.svg';
 import AmpacheError from '../../logic/AmpacheError';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
 
 interface PlaylistSelectorProps {
     returnData: (data: number) => void;
@@ -21,6 +22,7 @@ const PlaylistSelector = (props: PlaylistSelectorProps) => {
                 setPlaylists(data);
             })
             .catch((error) => {
+                toast.error('😞 Something went wrong getting playlists.');
                 setError(error);
             });
     }, []);
