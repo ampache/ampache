@@ -1,10 +1,11 @@
 import React from 'react';
 import useContextMenu from 'react-use-context-menu';
-import { Playlist } from '../../logic/Playlist';
+import { Playlist } from '../../../logic/Playlist';
 import { Link } from 'react-router-dom';
 
 interface PlaylistRowProps {
     playlist: Playlist;
+    deletePlaylist?: (playlistID: number) => void;
 }
 
 const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
@@ -48,6 +49,15 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
                     }}
                 >
                     Start
+                </div>
+                <div
+                    {...bindMenuItems}
+                    onClick={() => {
+                        setVisible(false);
+                        props.deletePlaylist(props.playlist.id);
+                    }}
+                >
+                    Delete Playlist
                 </div>
             </div>
         </>

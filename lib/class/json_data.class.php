@@ -363,8 +363,6 @@ class JSON_Data
                 $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
-            // don't allow unlimited smartlists or empty playlists into xml unless it was recently created
-            if ((int) $playitem_total > 0 || $create) {
                 // Build this element
                 array_push($allPlaylists, [
                     "id" => $playlist_id,
@@ -372,7 +370,6 @@ class JSON_Data
                     "owner" => $playlist_user,
                     "items" => $playitem_total,
                     "type" => $playlist_type]);
-            }
         } // end foreach
 
         return json_encode($allPlaylists, JSON_PRETTY_PRINT);

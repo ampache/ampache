@@ -897,6 +897,9 @@ class Api
      */
     public static function playlist($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'playlist_edit')) {
+            return false;
+        }
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
 
@@ -990,31 +993,38 @@ class Api
 
     /**
      * playlist_delete
-     * This delete a playlist
+     * MINIMUM_API_VERSION=380001
+     *
+     * This deletes a playlist
+     *
      * @param array $input
+     * 'filter' (string) UID of playlist
      */
     public static function playlist_delete($input)
     {
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
 
         //Whatever format the user wants
         $outputFormat = $input['format'];
 
-        if (!$playlist->has_access()) {
+        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             if ($outputFormat == 'json') {
-                echo JSON_Data::error('401', T_('Access denied to this playlist.'));
+                echo JSON_Data::error('401', T_('Access denied to this playlist'));
             } else {  // Defaults to XML
-                echo XML_Data::error('401', T_('Access denied to this playlist.'));
+                echo XML_Data::error('401', T_('Access denied to this playlist'));
             }
         } else {
             $playlist->delete();
+
             if ($outputFormat == 'json') {
-                echo JSON_Data::single_string('success');
+                echo JSON_Data::success('playlist deleted');
             } else {  // Defaults to XML
-                echo XML_Data::single_string('success');
+                echo XML_Data::success('playlist deleted');
             }
         }
+        Session::extend($input['auth']);
     } // playlist_delete
 
     /**
@@ -1088,7 +1098,7 @@ class Api
 
                     return;
                 }
-                $playlist->delete_track($track);
+                $playlist->delete_song($track);
                 $playlist->regenerate_track_numbers();
             } else {
                 $track = scrub_in($input['track']);

@@ -68,16 +68,11 @@ const SongList: React.FC<SongListProps> = (props) => {
             parent: modalRootRef,
             authKey: props.authKey
         })
-            .then((playlistID) => {
-                addToPlaylist(playlistID, songID, props.authKey).catch(
-                    (err) => {
-                        //TODO
-                        console.log(err);
-                    }
-                );
-            })
+            .then((playlistID) =>
+                addToPlaylist(playlistID, songID, props.authKey)
+            )
             .catch((err) => {
-                console.log(err);
+                setError(err);
             });
     };
 

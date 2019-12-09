@@ -107,6 +107,23 @@ export const createPlaylist = async (
             if (JSONData.error) {
                 throw new AmpacheError(JSONData.error);
             }
-            return JSONData as Playlist;
+            return JSONData[0] as Playlist;
+        });
+};
+
+export const deletePlaylist = async (playlistID: number, authKey: AuthKey) => {
+    return axios
+        .get(
+            `${process.env.ServerURL}/server/json.server.php?action=playlist_delete&filter=${playlistID}&auth=${authKey}&version=400001`
+        )
+        .then((response) => {
+            const JSONData = response.data;
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
+            if (JSONData.error) {
+                throw new AmpacheError(JSONData.error);
+            }
+            return true;
         });
 };
