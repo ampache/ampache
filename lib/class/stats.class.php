@@ -300,7 +300,7 @@ class Stats
         if (!$threshold) {
             $threshold = AmpConfig::get('stats_threshold');
         }
-        $allow_group_disks = (AmpConfig::get('album_group') ? true : false;
+        $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
         $date              = time() - (86400 * (int) $threshold);
 
         if ($type == 'playlist') {

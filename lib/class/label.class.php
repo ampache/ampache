@@ -483,7 +483,7 @@ class Label extends database_object implements library_item
                 if ($found) {
                     debug_event('label.class', 'Already found. Do nothing.', 5);
                     unset($editedLabels[$lstring]);
-                } else if ($overwrite) {
+                } elseif ($overwrite) {
                     debug_event('label.class', 'Not found in the new list. Delete it.', 5);
                     $clabel->remove_artist_assoc($artist_id);
                 }
