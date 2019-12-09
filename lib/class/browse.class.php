@@ -193,7 +193,7 @@ class Browse extends Query
         // Set the correct classes based on type
         $class = "box browse_" . $type;
 
-        $argument_param = ($argument ? '&argument=' . scrub_in($argument) : '');
+        $argument_param = ($argument ? '&argument=' . (string) scrub_in($argument) : '');
 
         debug_event('browse.class', 'Show objects called for type {' . $type . '}', 5);
 

@@ -1194,8 +1194,7 @@ class Subsonic_XML_Data
         $tracks = $localplay->get();
         foreach ($tracks as $track) {
             if ($track['oid']) {
-                $song = new Song($track['oid']);
-                self::addSong($xjbox, $song, false, 'entry');
+                self::addSong($xjbox, (int) $track['oid'], false, 'entry');
             }
         }
     }

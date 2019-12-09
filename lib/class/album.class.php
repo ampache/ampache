@@ -531,7 +531,7 @@ class Album extends database_object implements library_item
             // cache the album id against it's details
             self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist] = $album_id;
 
-            return $album_id;
+            return (int) $album_id;
         }
 
         if ($readonly) {

@@ -704,15 +704,14 @@ class Subsonic_Api
      */
     public static function gettopsongs($input)
     {
-        $artist = Artist::get_from_name(urldecode(self::check_parameter($input, 'artist')));
+        $artist = self::check_parameter($input, 'artist');
         $count  = (int) $input['count'];
+        $songs  = array();
         if ($count <= 0) {
             $count = 50;
         }
-        if ($artist->id) {
-            $songs = Artist::get_top_songs($artist->id, $count);
-        } else {
-            $songs = array();
+        if ($artist) {
+            $songs = Artist::get_top_songs(Artist::get_from_name(urldecode($artist))->id, $count);
         }
         $response = Subsonic_XML_Data::createSuccessResponse('gettopsongs');
         Subsonic_XML_Data::addTopSongs($response, $songs);

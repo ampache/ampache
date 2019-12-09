@@ -362,7 +362,7 @@ class Podcast extends database_object implements library_item
                 }
             }
             if (!empty($arturl)) {
-                $art = new Art($podcast_id, 'podcast');
+                $art = new Art((int) $podcast_id, 'podcast');
                 $art->insert_url($arturl);
             }
             if (count($episodes) > 0) {

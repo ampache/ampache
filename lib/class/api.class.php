@@ -1150,7 +1150,7 @@ class Api
             echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             if ($input['song']) {
-                $track = scrub_in($input['song']);
+                $track = (int) scrub_in($input['song']);
                 if (!$playlist->has_item($track)) {
                     echo XML_Data::error('404', T_('Song not found in playlist'));
 
@@ -1160,7 +1160,7 @@ class Api
                 $playlist->regenerate_track_numbers();
                 echo XML_Data::success('song removed from playlist');
             } else {
-                $track = scrub_in($input['track']);
+                $track = (int) scrub_in($input['track']);
                 if (!$playlist->has_item(null, $track)) {
                     echo XML_Data::error('404', T_('Track ID not found in playlist'));
 
@@ -1409,8 +1409,8 @@ class Api
         $limit  = $input['limit'];
         // original method only searched albums and had poor method inputs
         if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'))) {
-            $type   = 'album';
-            $filter = $type;
+            $type            = 'album';
+            $input['filter'] = $type;
         }
         if (!$limit) {
             $limit = AmpConfig::get('popular_threshold');
@@ -1711,10 +1711,7 @@ class Api
                     $users = $user->get_following();
                     debug_event('api.class', 'User is following:  ' . print_r($users), 1);
                     ob_end_clean();
-                    foreach ($users as $user_id) {
-                        $user = new User($user);
-                        echo XML_Data::users($user);
-                    }
+                    echo XML_Data::users($users);
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 }
@@ -1856,7 +1853,7 @@ class Api
         $flag      = $input['flag'];
         $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
-        if ($user) {
+        if ((int) $user-id > 0) {
             $user_id = $user->id;
         }
         // confirm the correct data
@@ -1932,7 +1929,7 @@ class Api
         debug_event('api.class', 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        $item->set_played(user_id, $agent, array(), time());
+        $item->set_played($user_id, $agent, array(), time());
 
         //scrobble plugins
         User::save_mediaplay($user, $item);
@@ -2015,7 +2012,7 @@ class Api
             debug_event('api.class', 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
-            $item->set_played(user_id, $agent, array(), time());
+            $item->set_played($user_id, $agent, array(), time());
 
             //scrobble plugins
             User::save_mediaplay($user, $item);

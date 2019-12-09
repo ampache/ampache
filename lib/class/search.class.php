@@ -1299,7 +1299,7 @@ class Search extends playlist_object
         }
 
         if (!$this->id) {
-            return false;
+            return 0;
         }
 
         $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ? WHERE `id` = ?";
@@ -1783,6 +1783,7 @@ class Search extends playlist_object
                         $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                     }
+                break;
                 case 'artist_tag':
                     $key            = md5($input . $sql_match_operator);
                     $join['artist'] = true;
