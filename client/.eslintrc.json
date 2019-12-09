@@ -21,10 +21,12 @@
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
-    "plugins": ["react", "@typescript-eslint"],
+    "plugins": ["react", "@typescript-eslint", "react-hooks"],
     "rules": {
         "@typescript-eslint/explicit-function-return-type": 0,
-        "@typescript-eslint/no-use-before-define": 0
+        "@typescript-eslint/no-use-before-define": 0,
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn"
     },
     "overrides": [
         {
