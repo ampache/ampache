@@ -5,6 +5,7 @@ import { Song } from '../../logic/Song';
 import AmpacheError from '../../logic/AmpacheError';
 import { MusicContext } from '../../Contexts/MusicContext';
 import SongBlock from '../components/SongBlock';
+import ReactLoading from 'react-loading';
 
 interface SearchProps {
     user: User;
@@ -47,7 +48,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
     if (!searchResults) {
         return (
             <div className='searchPage'>
-                <span>Searching...</span>
+                <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }

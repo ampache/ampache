@@ -15,6 +15,7 @@
         "react": "^16.12.0",
         "react-dom": "npm:@hot-loader/react-dom",
         "react-hotkeys-hook": "^1.5.3",
+        "react-loading": "^2.0.3",
         "react-router-dom": "^5.1.2",
         "react-use-context-menu": "^0.1.3"
     },

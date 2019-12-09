@@ -3,6 +3,7 @@ import '/stylus/main.styl';
 import Sidebar from './components/Sidebar';
 import { User } from '../logic/User';
 import Header from './components/Header';
+import ReactLoading from 'react-loading';
 
 interface AppViewProps {
     user: User;
@@ -35,7 +36,7 @@ class AppView extends Component<AppViewProps, AppViewStates> {
         }
 
         if (this.props.user == null) {
-            return <span>Loading...</span>;
+            return <ReactLoading color='#FF9D00' type={'bubbles'} />;
         }
 
         return (

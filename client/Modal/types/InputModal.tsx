@@ -4,6 +4,7 @@ import closeWindowIcon from '/images/icons/svg/close-window.svg';
 interface PlaylistSelectorParams {
     returnData: (data: string) => void;
     modalName: string;
+    close: () => void;
 }
 
 const InputModal = (props: PlaylistSelectorParams) => {
@@ -21,7 +22,7 @@ const InputModal = (props: PlaylistSelectorParams) => {
                         className='close'
                         src={closeWindowIcon}
                         alt='Close'
-                        onClick={close}
+                        onClick={props.close}
                     />
                 </div>
                 <form>

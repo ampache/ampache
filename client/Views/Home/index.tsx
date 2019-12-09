@@ -6,6 +6,7 @@ import AmpacheError from '../../logic/AmpacheError';
 import { MusicContext } from '../../Contexts/MusicContext';
 import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
 import { Song } from '../../logic/Song';
+import ReactLoading from 'react-loading';
 
 interface HomeViewProps {
     user: User;
@@ -14,7 +15,7 @@ interface HomeViewProps {
 const HomeView: React.FC<HomeViewProps> = (props) => {
     const musicContext = useContext(MusicContext);
 
-    const [randomAlbums, setRandomAlbums] = useState<Album[]>([]);
+    const [randomAlbums, setRandomAlbums] = useState<Album[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
     useEffect(() => {
@@ -39,7 +40,10 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
             <section>
                 <h1>Random Albums</h1>
                 <div className='randomAlbums'>
-                    {randomAlbums.map((theAlbum) => {
+                    {!randomAlbums && (
+                        <ReactLoading color='#FF9D00' type={'bubbles'} />
+                    )}
+                    {randomAlbums?.map((theAlbum) => {
                         return (
                             <AlbumDisplay
                                 album={theAlbum}

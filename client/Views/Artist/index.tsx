@@ -6,6 +6,7 @@ import { Album } from '../../logic/Album';
 import AlbumDisplay from '../components/AlbumDisplay';
 import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
 import { MusicContext } from '../../Contexts/MusicContext';
+import ReactLoading from 'react-loading';
 
 interface ArtistViewProps {
     user: User;
@@ -44,7 +45,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
     if (!albums) {
         return (
             <div className='artistPage'>
-                <span>Loading...</span>
+                <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }

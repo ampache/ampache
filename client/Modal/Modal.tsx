@@ -4,6 +4,7 @@ import { EventEmitter } from 'events';
 import InputModal from './types/InputModal';
 import PlaylistSelector from './types/PlaylistSelector';
 import { AuthKey } from '../logic/Auth';
+import ReactLoading from 'react-loading';
 
 export enum ModalType {
     InputModal,
@@ -50,7 +51,7 @@ const Modal = (props: ModalProps) => {
 
     ReactDOM.render(
         <div className='imperativeModal' onClick={close}>
-            Loading...
+            <ReactLoading color='#FF9D00' type={'bubbles'} />
         </div>,
         props.parent
     );
@@ -72,6 +73,7 @@ const Modal = (props: ModalProps) => {
                 <InputModal
                     modalName={props.modalName}
                     returnData={returnData}
+                    close={close}
                 />,
                 props.parent
             );
@@ -80,6 +82,7 @@ const Modal = (props: ModalProps) => {
                 <PlaylistSelector
                     returnData={returnData}
                     authKey={props.authKey}
+                    close={close}
                 />,
                 props.parent
             );

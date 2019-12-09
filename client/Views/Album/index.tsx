@@ -4,6 +4,7 @@ import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import { Link } from 'react-router-dom';
 import SongList from '../components/SongList';
+import ReactLoading from 'react-loading';
 
 interface AlbumViewProps {
     user: User;
@@ -40,7 +41,7 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
     if (!theAlbum) {
         return (
             <div className='albumPage'>
-                <span>Loading...</span>
+                <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }

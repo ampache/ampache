@@ -11,6 +11,7 @@ import { AuthKey } from '../../logic/Auth';
 import AmpacheError from '../../logic/AmpacheError';
 import { getAlbumSongs } from '../../logic/Album';
 import { ModalType, useModal } from '../../Modal/Modal';
+import ReactLoading from 'react-loading';
 
 interface SongListProps {
     showArtist?: boolean;
@@ -87,7 +88,7 @@ const SongList: React.FC<SongListProps> = (props) => {
     if (!songs) {
         return (
             <div className='songList'>
-                <span>Loading...</span>
+                <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }

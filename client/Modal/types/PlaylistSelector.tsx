@@ -3,9 +3,11 @@ import { getPlaylists, Playlist } from '../../logic/Playlist';
 import { AuthKey } from '../../logic/Auth';
 import closeWindowIcon from '/images/icons/svg/close-window.svg';
 import AmpacheError from '../../logic/AmpacheError';
+import ReactLoading from 'react-loading';
 
 interface PlaylistSelectorProps {
     returnData: (data: number) => void;
+    close: () => void;
     authKey: AuthKey;
 }
 
@@ -25,24 +27,14 @@ const PlaylistSelector = (props: PlaylistSelectorProps) => {
 
     if (!playlists) {
         return (
-            <div
-                className='playlistSelector'
-                onClick={() => {
-                    close();
-                }}
-            >
-                Loading...
+            <div className='playlistSelector' onClick={props.close}>
+                <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }
 
     return (
-        <div
-            className='playlistSelector'
-            onClick={() => {
-                close();
-            }}
-        >
+        <div className='playlistSelector' onClick={props.close}>
             <div
                 className='content'
                 onClick={(e) => {
@@ -55,7 +47,7 @@ const PlaylistSelector = (props: PlaylistSelectorProps) => {
                         className='close'
                         src={closeWindowIcon}
                         alt='Close'
-                        onClick={() => close()}
+                        onClick={props.close}
                     />
                 </div>
                 <ul className='playlists'>

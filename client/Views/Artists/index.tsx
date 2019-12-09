@@ -3,6 +3,7 @@ import { Artist, getArtists } from '../../logic/Artist';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import ArtistDisplay from '../components/ArtistDisplay';
+import ReactLoading from 'react-loading';
 
 interface ArtistsViewProps {
     user: User;
@@ -32,7 +33,7 @@ const ArtistsView: React.FC<ArtistsViewProps> = (props: ArtistsViewProps) => {
     if (!artists) {
         return (
             <div className='artistsPage'>
-                <span>Loading...</span>
+                <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }

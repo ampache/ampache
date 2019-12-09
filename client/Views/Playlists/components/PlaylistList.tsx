@@ -10,6 +10,7 @@ import { AuthKey } from '../../../logic/Auth';
 import AmpacheError from '../../../logic/AmpacheError';
 import Plus from '/images/icons/svg/plus.svg';
 import { ModalType, useModal } from '../../../Modal/Modal';
+import ReactLoading from 'react-loading';
 
 interface PlaylistListProps {
     authKey?: AuthKey;
@@ -75,7 +76,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     if (!playlists) {
         return (
             <div className='playlistList'>
-                <span>Loading...</span>
+                <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }
