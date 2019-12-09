@@ -505,7 +505,7 @@ if (!$cpaction && !$original) {
     if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'podcast_episode') {
         if ($transcode_to) {
             $transcode = true;
-            debug_event('play/index', 'Transcoding due to explicit request for ' . $transcode_to, 5);
+            debug_event('play/index', 'Transcoding due to explicit request for ' . (string) $transcode_to, 5);
         } else {
             if ($transcode_cfg == 'always') {
                 $transcode = true;

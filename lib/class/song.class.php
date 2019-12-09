@@ -1902,7 +1902,7 @@ class Song extends database_object implements media, library_item
             return '';
         }
 
-        if (!$uid) {
+        if ((int) $uid < 1) {
             $uid  = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
         }
         $type = $media->type;
@@ -1948,7 +1948,7 @@ class Song extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = 0, $original = false)
     {
         return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid, $original);
     }
