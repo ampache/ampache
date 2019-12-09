@@ -292,10 +292,7 @@ class Artist extends database_object implements library_item
         }
 
         $sort_type = AmpConfig::get('album_sort');
-        $sort_disk = ", `album`.`disk`";
-        if (AmpConfig::get('album_group')) {
-            $sort_disk = "";
-        }
+        $sort_disk = (AmpConfig::get('album_group')) ? "" : ", `album`.`disk`";
         switch ($sort_type) {
             case 'year_asc':
                 $sql_sort = '`album`.`year` ASC' . $sort_disk;

@@ -483,11 +483,9 @@ class Label extends database_object implements library_item
                 if ($found) {
                     debug_event('label.class', 'Already found. Do nothing.', 5);
                     unset($editedLabels[$lstring]);
-                } else {
-                    if ($overwrite) {
-                        debug_event('label.class', 'Not found in the new list. Delete it.', 5);
-                        $clabel->remove_artist_assoc($artist_id);
-                    }
+                } else if ($overwrite) {
+                    debug_event('label.class', 'Not found in the new list. Delete it.', 5);
+                    $clabel->remove_artist_assoc($artist_id);
                 }
             }
         }
@@ -519,13 +517,8 @@ class Label extends database_object implements library_item
      */
     public static function clean_to_existing($labels)
     {
-        if (is_array($labels)) {
-            $array = $labels;
-        } else {
-            $array = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
-        }
-
-        $ret = array();
+        $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
+        $ret   = array();
         foreach ($array as $label) {
             $label = trim((string) $label);
             if (!empty($label)) {
