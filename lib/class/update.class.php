@@ -1031,7 +1031,7 @@ class Update
     public static function update_400005()
     {
         $retval = true;
-        $sql    = "ALTER TABLE `search` ADD `last_count` INT(1) NULL;";
+        $sql    = "ALTER TABLE `search` ADD `last_count` INT(11) NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;
