@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
-import { createPlaylist, getPlaylists, Playlist } from '../../logic/Playlist';
-import PlaylistRow from './components/PlaylistRow';
 import PlaylistList from './components/PlaylistList';
 
 interface PlaylistsViewProps {

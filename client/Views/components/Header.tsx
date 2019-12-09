@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import logo from '/images/ampache-dark.png';
 import userIcon from '/images/icons/svg/user.svg';
-import { withRouter } from 'react-router-dom';
 
 interface HeaderProps {
     history: any;

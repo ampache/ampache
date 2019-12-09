@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MusicContext } from '../../Contexts/MusicContext';
 import { Song } from '../../logic/Song';
 import SongRow from './SongRow';
@@ -8,9 +8,9 @@ import {
     removeFromPlaylistWithSongID
 } from '../../logic/Playlist';
 import { AuthKey } from '../../logic/Auth';
-import PlaylistSelector from './PlaylistSelector';
 import AmpacheError from '../../logic/AmpacheError';
 import { getAlbumSongs } from '../../logic/Album';
+import { ModalType, useModal } from '../../Modal/Modal';
 
 interface SongListProps {
     showArtist?: boolean;
@@ -25,7 +25,7 @@ const SongList: React.FC<SongListProps> = (props) => {
     const [songs, setSongs] = useState<Song[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
-    const modalRootRef = useRef(null);
+    const Modal = useModal();
 
     useEffect(() => {
         if (props.inPlaylistID) {
@@ -63,12 +63,13 @@ const SongList: React.FC<SongListProps> = (props) => {
     };
     const handleAddToPlaylist = (songID: number) => {
         console.log(songID);
-        PlaylistSelector({
-            //TODO: this might be an awful idea, possibly needing to be refactored. But it's cool I got it to work!
-            parent: modalRootRef,
+        Modal({
+            parent: document.getElementById('modalView'),
+            modalName: 'Add To Playlist',
+            modalType: ModalType.PlaylistSelectorModal,
             authKey: props.authKey
         })
-            .then((playlistID) =>
+            .then((playlistID: number) =>
                 addToPlaylist(playlistID, songID, props.authKey)
             )
             .catch((err) => {
@@ -92,7 +93,6 @@ const SongList: React.FC<SongListProps> = (props) => {
     }
     return (
         <div className='songList'>
-            <div className='modalRoot' ref={modalRootRef} />
             <ul>
                 {songs.map((song: Song) => {
                     return (

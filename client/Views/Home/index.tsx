@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getRandomAlbums, Album } from '../../logic/Album';
+import { Album, getRandomAlbums } from '../../logic/Album';
 import AlbumDisplay from '../components/AlbumDisplay';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     createPlaylist,
     deletePlaylist,
@@ -9,7 +9,7 @@ import PlaylistRow from './PlaylistRow';
 import { AuthKey } from '../../../logic/Auth';
 import AmpacheError from '../../../logic/AmpacheError';
 import Plus from '/images/icons/svg/plus.svg';
-import { useInputModal } from '../../components/InputModal';
+import { ModalType, useModal } from '../../../Modal/Modal';
 
 interface PlaylistListProps {
     authKey?: AuthKey;
@@ -19,8 +19,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
-    const modalRootRef = useRef(null);
-    const InputModal = useInputModal();
+    const Modal = useModal();
 
     useEffect(() => {
         getPlaylists(props.authKey)
@@ -47,11 +46,14 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     };
 
     const handleNewPlaylist = () => {
-        InputModal({
+        Modal({
+            parent: document.getElementById('modalView'),
             modalName: 'New Playlist',
-            parent: document.getElementById('modalView')
+            modalType: ModalType.InputModal
         })
-            .then((playlistName) => createPlaylist(playlistName, props.authKey))
+            .then((playlistName: string) =>
+                createPlaylist(playlistName, props.authKey)
+            )
             .then((newPlaylist) => {
                 console.log(newPlaylist);
                 const newPlaylists = [...playlists];
@@ -79,7 +81,6 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     }
     return (
         <div className='playlistList'>
-            <div className='modalRoot' ref={modalRootRef} />
             <img src={Plus} alt='Add Playlist' onClick={handleNewPlaylist} />
             <ul>
                 {playlists.map((playlist: Playlist) => {
