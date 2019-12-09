@@ -400,7 +400,6 @@ class Stats
 
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $user_sql = (!empty($user_id)) ? " AND `user` = '" . $user_id . "'" : '';
-        }
 
         $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM `object_count`" .
                 " WHERE `object_type` = '" . $type . "'" . $user_sql;
@@ -527,7 +526,7 @@ class Stats
         $base_type         = 'song';
         $rating_join       = 'WHERE';
         $sql_type          = ($input_type === 'song' || $input_type === 'playlist') ? $input_type . '`.`id' : $base_type . "`.`" . $type;
-        $allow_group_disks = (AmpConfig::get('album_group') ? true : false;
+        $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
 
         // add playlists to mashup browsing
         if ($type == 'playlist') {
