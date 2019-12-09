@@ -1178,6 +1178,7 @@ class Song extends database_object implements media, library_item
                     if (self::isCustomMetadataEnabled()) {
                         $this->updateMetadata($value);
                     }
+                break;
                 default:
                 break;
             } // end whitelist
@@ -1890,6 +1891,8 @@ class Song extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
+     * @param integer $uid
+     * @param boolean $original
      * @return string
      */
     public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = false, $original = false)
@@ -1941,7 +1944,8 @@ class Song extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param boolean $uid
+     * @param integer $uid
+     * @param boolean $original
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)

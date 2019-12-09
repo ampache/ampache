@@ -66,7 +66,7 @@ switch ($_REQUEST['action']) {
         break;
     case 'match':
     case 'Match':
-        $match = scrub_in($_REQUEST['match']);
+        $match = (string) scrub_in($_REQUEST['match']);
         if ($match == "Browse") {
             $chr = "";
         } else {

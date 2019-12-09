@@ -161,7 +161,7 @@ abstract class Catalog extends database_object
      */
     abstract public function get_rel_path($file_path);
     /**
-     * @param Song $media
+     * @param Song|Podcast_Episode|Song_Preview|Video $media
      * @return media|null
      */
     abstract public function prepare_media($media);
@@ -500,7 +500,7 @@ abstract class Catalog extends database_object
      */
     public static function update_enabled($new_enabled, $catalog_id)
     {
-        self::_update_item('enabled', $new_enabled, $catalog_id, '75');
+        self::_update_item('enabled', make_bool($new_enabled), $catalog_id, '75');
     } // update_enabled
 
     /**
@@ -1604,9 +1604,7 @@ abstract class Catalog extends database_object
             $song = new Song($song_id);
             $info = self::update_media_from_tags($song);
             // don't echo useless info when using api
-            if ($api) {
-                //do nothing
-            } elseif ($info['change']) {
+            if (($info['change']) && (!$api)) {
                 if ($info['element'][$type]) {
                     $change = explode(' --> ', (string) $info['element'][$type]);
                     $result = $change[1];
@@ -1886,7 +1884,7 @@ abstract class Catalog extends database_object
     /**
      *
      * @param library_item $libraryItem
-     * @param type $metadata
+     * @param array $metadata
      */
     public static function add_metadata(library_item $libraryItem, $metadata)
     {

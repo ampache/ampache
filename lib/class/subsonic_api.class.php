@@ -542,7 +542,7 @@ class Subsonic_Api
         $response     = Subsonic_XML_Data::createSuccessResponse('getalbumlist');
         $errorOccured = false;
         $albums       = array();
-        $user         = User::get_from_username($username);
+        $user         = User::get_from_username((string) $username);
 
         switch ($type) {
             case "random":
@@ -671,7 +671,7 @@ class Subsonic_Api
             $search['rule_' . $count . '']          = $ftype;
             ++$count;
         }
-        $user = User::get_from_username($username);
+        $user = User::get_from_username((string) $username);
         if ($count > 0) {
             $songs = Random::advanced('song', $search);
         } else {
@@ -768,7 +768,7 @@ class Subsonic_Api
 
         if (strlen((string) $query) > 1) {
             if (substr($query, -1) == "*") {
-                $query    = substr($query, 0, -1);
+                $query    = substr((string) $query, 0, -1);
                 $operator = 2; // Start with
             }
         }
@@ -842,7 +842,7 @@ class Subsonic_Api
     {
         $response = Subsonic_XML_Data::createSuccessResponse('getplaylists');
         $username = $input['username'];
-        $user     = User::get_from_username($username);
+        $user     = User::get_from_username((string) $username);
         $userid   = (!Access::check('interface', 100)) ? $user->id : -1;
         $public   = (!Access::check('interface', 100)) ? true : false;
 
@@ -1295,7 +1295,7 @@ class Subsonic_Api
             if ($myuser->username == $username) {
                 $user = $myuser;
             } else {
-                $user = User::get_from_username($username);
+                $user = User::get_from_username((string) $username);
             }
             Subsonic_XML_Data::addUser($response, $user);
         } else {
@@ -1337,7 +1337,7 @@ class Subsonic_Api
             if ($myuser->username == $username) {
                 $user = $myuser;
             } else {
-                $user = User::get_from_username($username);
+                $user = User::get_from_username((string) $username);
             }
 
             if ($user !== null) {
@@ -1518,7 +1518,7 @@ class Subsonic_Api
     {
         $username     = self::check_parameter($input, 'username');
         $password     = self::check_parameter($input, 'password');
-        $email        = urldecode(self::check_parameter($input, 'email'));
+        $email        = urldecode((string) self::check_parameter($input, 'email'));
         $adminRole    = ($input['adminRole'] == 'true');
         $downloadRole = ($input['downloadRole'] == 'true');
         $uploadRole   = ($input['uploadRole'] == 'true');
@@ -1592,7 +1592,7 @@ class Subsonic_Api
                 $access = 75;
             }
             // identify the user to modify
-            $user    = User::get_from_username($username);
+            $user    = User::get_from_username((string) $username);
             $user_id = $user->id;
 
             if ($user_id > 0) {
@@ -1638,7 +1638,7 @@ class Subsonic_Api
     {
         $username = self::check_parameter($input, 'username');
         if (Access::check('interface', 100)) {
-            $user = User::get_from_username($username);
+            $user = User::get_from_username((string) $username);
             if ($user->id) {
                 $user->delete();
                 $response = Subsonic_XML_Data::createSuccessResponse('deleteuser');
@@ -1665,7 +1665,7 @@ class Subsonic_Api
         $myuser       = User::get_from_username($input['u']);
 
         if ($myuser->username == $username || Access::check('interface', 100)) {
-            $user = User::get_from_username($username);
+            $user = User::get_from_username((string) $username);
             if ($user->id) {
                 $user->update_password($password);
                 $response = Subsonic_XML_Data::createSuccessResponse('changepassword');
@@ -1896,7 +1896,7 @@ class Subsonic_Api
      */
     public static function getartistinfo2($input)
     {
-        return self::getartistinfo($input);
+        self::getartistinfo($input);
     }
 
     /**

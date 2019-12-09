@@ -480,7 +480,6 @@ class Query
             case 'min_count':
             case 'unplayed':
             case 'rated':
-
             break;
             case 'add_lt':
             case 'add_gt':
