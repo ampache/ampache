@@ -184,6 +184,8 @@ class Update
         $update_string = "* Delete upload_user_artist database settings<br />";
         $version[]     = array('version' => '400004', 'description' => $update_string);
 
+        $update_string = "* Add a last_count to search table to speed up access requests<br />";
+        $version[]     = array('version' => '400005', 'description' => $update_string);
         return $version;
     }
 
@@ -1016,6 +1018,19 @@ class Update
 
         $sql = "DELETE FROM `preference` " .
                "WHERE `preference`.`name` = 'upload_user_artist';";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    /**
+     * update_400005
+     *
+     * Add a last_count to searches to speed up access requests
+     */
+    public static function update_400005()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `search` ADD `last_count` INT(1) NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;

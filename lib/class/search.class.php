@@ -1122,8 +1122,22 @@ class Search extends playlist_object
                 'object_type' => $this->searchtype
             );
         }
+        self::set_last_count(count($results));
 
         return $results;
+    }
+
+    /**
+     * set_last_count
+     *
+     * Returns the name of the saved search corresponding to the given ID
+     * @param integer $search count
+     */
+    private function set_last_count($count)
+    {
+        $sql = "Update `search` SET `last_count`=". $count . " WHERE `id`=" . $this->id;
+        Dba::write($sql);
+
     }
 
     /**
