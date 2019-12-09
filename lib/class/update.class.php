@@ -186,6 +186,7 @@ class Update
 
         $update_string = "* Add a last_count to search table to speed up access requests<br />";
         $version[]     = array('version' => '400005', 'description' => $update_string);
+
         return $version;
     }
 
