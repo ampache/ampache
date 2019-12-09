@@ -1000,6 +1000,9 @@ class Song extends database_object implements media, library_item
      */
     public function check_play_history($user)
     {
+        if ($user == -1) {
+            return false;
+        }
         $previous = Stats::get_last_song($user);
         $diff     = time() - $previous['date'];
 
