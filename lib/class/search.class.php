@@ -1131,7 +1131,7 @@ class Search extends playlist_object
      * set_last_count
      *
      * Returns the name of the saved search corresponding to the given ID
-     * @param integer $search count
+     * @param integer $count
      */
     private function set_last_count($count)
     {
