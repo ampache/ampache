@@ -187,6 +187,10 @@ class Update
         $update_string = "* Add a last_count to search table to speed up access requests<br />";
         $version[]     = array('version' => '400005', 'description' => $update_string);
 
+        $update_string = "* Add a user_queue, user_queue_data to database (Allow save and retrieval of play queue)<br />" .
+                         "* This will initially only cover subsonic but is to be extended<br />";
+        $version[]     = array('version' => '400006', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1023,6 +1027,7 @@ class Update
 
         return $retval;
     }
+ 
     /**
      * update_400005
      *
@@ -1032,6 +1037,36 @@ class Update
     {
         $retval = true;
         $sql    = "ALTER TABLE `search` ADD `last_count` INT(11) NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+ 
+    /**
+     * update_400006
+     *
+     * Add user_queue, user_queue_data to database
+     */
+    public static function update_400006()
+    {
+        $retval = true;
+        $sql    = "CREATE TABLE IF NOT EXISTS `user_queue` " .
+                  "(`user_queue` int(11) unsigned NOT NULL AUTO_INCREMENT, " .
+                  "`current` int(11) unsigned NOT NULL, " .
+                  "`position` int(11) unsigned NOT NULL, " .
+                  "`username` varchar(255) CHARACTER SET utf8 DEFAULT NULL, " .
+                  "`changed` int(11) unsigned NOT NULL, " .
+                  "PRIMARY KEY (`user_queue`), " .
+                  "KEY `date` (`date`), " .
+                  "KEY `session` (`username`));";
+        $retval &= Dba::write($sql);
+        $sql    = "CREATE TABLE IF NOT EXISTS `user_queue_data` " .
+                  "(`id` int(11) unsigned NOT NULL AUTO_INCREMENT, " .
+                  "`user_queue` int(11) unsigned NOT NULL, " .
+                  "`object_type` varchar(32) CHARACTER SET utf8 DEFAULT NULL, " .
+                  "`object_id` int(11) unsigned NOT NULL, " .
+                  "PRIMARY KEY (`id`), " .
+                  "KEY `user_queue` (`user_queue`))";
         $retval &= Dba::write($sql);
 
         return $retval;
