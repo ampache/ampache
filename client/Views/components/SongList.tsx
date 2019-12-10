@@ -75,9 +75,10 @@ const SongList: React.FC<SongListProps> = (props) => {
             modalType: ModalType.PlaylistSelectorModal,
             authKey: props.authKey
         })
-            .then((playlistID: number) =>
-                addToPlaylist(playlistID, songID, props.authKey)
-            )
+            .then((playlistID: number) => {
+                addToPlaylist(playlistID, songID, props.authKey);
+                toast.success('Added song to playlist');
+            })
             .catch((err) => {
                 toast.error('😞 Something went wrong adding to playlist.');
                 setError(err);
