@@ -52,8 +52,8 @@ class User_Queue extends database_object
             return false;
         }
 
-        $this->user_queue     = (int) ($playlist_id);
-        $info         = $this->has_info();
+        $this->user_queue = (int) ($playlist_id);
+        $info             = $this->has_info();
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
