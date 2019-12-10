@@ -52,7 +52,7 @@ class User_Queue extends database_object
             return false;
         }
 
-        $this->id     = (int) ($playlist_id);
+        $this->user_queue     = (int) ($playlist_id);
         $info         = $this->has_info();
 
         foreach ($info as $key => $value) {
@@ -70,7 +70,7 @@ class User_Queue extends database_object
      */
     private function has_info()
     {
-        $sql        = "SELECT * FROM `user_queue` WHERE `user_queue`='" . Dba::escape($this->id) . "'";
+        $sql        = "SELECT * FROM `user_queue` WHERE `user_queue`='" . Dba::escape($this->user_queue) . "'";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_assoc($db_results);
@@ -108,7 +108,7 @@ class User_Queue extends database_object
         $sql = "SELECT `object_type`, `id`, `object_id` " .
             "FROM `user_queue_data` " .
             "WHERE `user_queue` = ? ORDER BY `id` ASC";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($this->user_queue));
 
         /* Define the array */
         $items = array();
@@ -133,7 +133,7 @@ class User_Queue extends database_object
      */
     public function count_items()
     {
-        $id = Dba::escape($this->id);
+        $id = Dba::escape($this->user_queue);
 
         $sql = "SELECT COUNT(`id`) FROM `user_queue_data` WHERE " .
             "`user_queue`='$id'";
@@ -151,7 +151,7 @@ class User_Queue extends database_object
     public function clear()
     {
         $sql = "DELETE FROM `user_queue_data` WHERE `user_queue` = ?";
-        Dba::write($sql, array($this->id));
+        Dba::write($sql, array($this->user_queue));
 
         return true;
     } // clear
