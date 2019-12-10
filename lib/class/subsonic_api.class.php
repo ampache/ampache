@@ -2248,7 +2248,7 @@ class Subsonic_Api
         $previous = Stats::get_last_song($user_id);
         $song     = new Song($song_id);
         //only record repeated play stats using this method (repeates aren't processed the same way.)
-        if ($previous['object_id'] == $song_id && $position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song_time)) {
+        if ($previous['object_id'] == $song_id && $position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song->time)) {
             self::scrobble(array('u' => $username, 'id' => $current, 'submission' => 'false'));
             self::scrobble(array('u' => $username, 'id' => $current, 'submission' => 'true'));
         }
