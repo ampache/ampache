@@ -217,6 +217,8 @@ switch ($action) {
             Userflag::show(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
             echo "</div>";
         }
+        $results['action_buttons'] = ob_get_contents();
+        ob_end_clean();
         $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $user_id     = Core::get_global('user')->id;
@@ -226,8 +228,6 @@ switch ($action) {
             self::scrobble(array('u' => $input['u'], 'id' => $current, 'submission' => 'false'));
             self::scrobble(array('u' => $input['u'], 'id' => $current, 'submission' => 'true'));
         }
-        $results['action_buttons'] = ob_get_contents();
-        ob_end_clean();
     break;
     default:
         $results['rfc3514'] = '0x1';
