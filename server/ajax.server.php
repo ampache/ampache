@@ -219,6 +219,14 @@ switch ($action) {
         }
         $results['action_buttons'] = ob_get_contents();
         ob_end_clean();
+        $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $user        = Core::get_global('user');
+        $previous    = Stats::get_last_song($user->id);
+        $song        = new Song($object_id);
+        if ($object_type == 'song' && $previous['object_id'] == $object_id && !stats::is_already_inserted($object_type, $object_id, $user->id, 'stream', time(), $song->time)) {
+            User::save_mediaplay($user, $song);
+        }
     break;
     default:
         $results['rfc3514'] = '0x1';

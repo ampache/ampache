@@ -300,11 +300,8 @@ class Stats
         if (!$threshold) {
             $threshold = AmpConfig::get('stats_threshold');
         }
-        $allow_group_disks = false;
-        if (AmpConfig::get('album_group')) {
-            $allow_group_disks = true;
-        }
-        $date = time() - (86400 * (int) $threshold);
+        $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
+        $date              = time() - (86400 * (int) $threshold);
 
         if ($type == 'playlist') {
             $sql = "SELECT `id` as `id`, `last_update` FROM `playlist`" .
@@ -370,14 +367,8 @@ class Stats
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');
         }
-
-        if (!$offset) {
-            $limit = $count;
-        } else {
-            $limit = $offset . "," . $count;
-        }
-
-        $sql = '';
+        $limit = (!$offset) ? $count : $offset . "," . $count;
+        $sql   = '';
         if ($user_id !== null) {
             $sql = self::get_top_sql($type, $threshold, 'stream', $user_id, $random);
         }
@@ -408,10 +399,7 @@ class Stats
         $type = self::validate_type($input_type);
 
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
-        $user_sql = '';
-        if (!empty($user_id)) {
-            $user_sql = " AND `user` = '" . $user_id . "'";
-        }
+        $user_sql = (!empty($user_id)) ? " AND `user` = '" . $user_id . "'" : '';
 
         $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM `object_count`" .
                 " WHERE `object_type` = '" . $type . "'" . $user_sql;
@@ -453,14 +441,10 @@ class Stats
         }
 
         $count = (int) ($count);
-        $type  = self::validate_type($input_type);
-        if (!$offset) {
-            $limit = $count;
-        } else {
-            $limit = (int) ($offset) . "," . $count;
-        }
+        $limit = (!$offset) ? $count : (int) ($offset) . "," . $count;
 
-        $sql = self::get_recent_sql($type, null, $newest);
+        $type = self::validate_type($input_type);
+        $sql  = self::get_recent_sql($type, null, $newest);
         $sql .= "LIMIT $limit";
         $db_results = Dba::read($sql);
 
@@ -479,17 +463,14 @@ class Stats
      * @param string $input_count
      * @param string $input_type
      * @param integer $user
+     * @param integer $full
      */
-    public static function get_user($input_count, $input_type, $user, $full = '')
+    public static function get_user($input_count, $input_type, $user, $full = 0)
     {
         $type  = self::validate_type($input_type);
 
         /* If full then don't limit on date */
-        if ($full) {
-            $date = '0';
-        } else {
-            $date = time() - (86400 * AmpConfig::get('stats_threshold'));
-        }
+        $date = ($full > 0) ? '0' : time() - (86400 * AmpConfig::get('stats_threshold'));
 
         /* Select Objects based on user */
         //FIXME:: Requires table scan, look at improving
@@ -542,16 +523,10 @@ class Stats
     {
         $type = self::validate_type($input_type);
 
-        $base_type   = 'song';
-        $sql_type    = $base_type . "`.`" . $type;
-        $rating_join = 'WHERE';
-        if ($input_type === 'song' || $input_type === 'playlist') {
-            $sql_type = $input_type . '`.`id';
-        }
-        $allow_group_disks = false;
-        if (AmpConfig::get('album_group')) {
-            $allow_group_disks = true;
-        }
+        $base_type         = 'song';
+        $rating_join       = 'WHERE';
+        $sql_type          = ($input_type === 'song' || $input_type === 'playlist') ? $input_type . '`.`id' : $base_type . "`.`" . $type;
+        $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
 
         // add playlists to mashup browsing
         if ($type == 'playlist') {

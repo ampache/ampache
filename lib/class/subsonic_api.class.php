@@ -2233,6 +2233,29 @@ class Subsonic_Api
         self::apiOutput($input, $response);
     }
 
+    /**
+     * savePlayQueue
+     * Save the state of the play queue for the authenticated user.
+     * Takes multiple song id in parameter with optional current id playing song and position.
+     */
+    public static function saveplayqueue($input)
+    {
+        $current  = (int) $input['current'];
+        $position = (int) $input['position'];
+        $username = (string) $input['u'];
+        $user_id  = User::get_from_username($username)->id;
+        $song_id  = Subsonic_XML_Data::getAmpacheId($current);
+        $previous = Stats::get_last_song($user_id);
+        $song     = new Song($song_id);
+        //only record repeated play stats using this method (repeates aren't processed the same way.)
+        if ($previous['object_id'] == $song_id && $position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song->time)) {
+            self::scrobble(array('u' => $username, 'id' => $current, 'submission' => 'false'));
+            self::scrobble(array('u' => $username, 'id' => $current, 'submission' => 'true'));
+        }
+        // continue to fail saving the queue
+        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
+        self::apiOutput($input, $response);
+    }
     /*     * **   CURRENT UNSUPPORTED FUNCTIONS   *** */
 
     /**
@@ -2244,18 +2267,6 @@ class Subsonic_Api
     public static function getplayqueue($input)
     {
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'getplayqueue');
-        self::apiOutput($input, $response);
-    }
-
-    /**
-     * savePlayQueue
-     * Save the state of the play queue for the authenticated user.
-     * Takes multiple song id in parameter with optional current id playing song and position.
-     * Not supported.
-     */
-    public static function saveplayqueue($input)
-    {
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
         self::apiOutput($input, $response);
     }
 }

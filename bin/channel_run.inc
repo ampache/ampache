@@ -43,15 +43,15 @@ if ($cargv > 1) {
 
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
             $chanid = (int) $_SERVER['argv'][++$x];
-            $operations_string .= '\n\t' . T_('Channel') . ' ' . $chanid;
+            $operations_string .= "\n\t" . T_('Channel') . ' ' . $chanid;
         }
         elseif ($_SERVER['argv'][$x] == "-v") {
-            $operations_string .= '\n\t' . T_('Verbose');
+            $operations_string .= "\n\t" . T_('Verbose');
             $verbose = true;
         }
         elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
             $port = (int) $_SERVER['argv'][++$x];
-            $operations_string .= '\n\t' . T_('Port') . ' ' . $port;
+            $operations_string .= "\n\t" . T_('Port') . ' ' . $port;
         }
     }
 }
