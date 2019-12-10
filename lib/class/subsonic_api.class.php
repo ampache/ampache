@@ -2243,13 +2243,14 @@ class Subsonic_Api
         $current  = (int) $input['current'];
         $position = (int) $input['position'];
         $username = (string) $input['u'];
+        $user_id  = User::get_from_username($username)->id;
         $song_id  = Subsonic_XML_Data::getAmpacheId($current);
-        $previous = Stats::get_last_song(User::get_from_username($username)->id);
+        $previous = Stats::get_last_song($user_id);
         $song     = new Song($song_id);
         //only record repeated play stats using this method (repeates aren't processed the same way.)
-        if ($previous['object_id'] == $song_id && $position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user, 'stream', time(), $song_time)) {
-            self::scrobble(array('u' => $input['u'], 'id' => $current, 'submission' => 'false'));
-            self::scrobble(array('u' => $input['u'], 'id' => $current, 'submission' => 'true'));
+        if ($previous['object_id'] == $song_id && $position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song_time)) {
+            self::scrobble(array('u' => $username, 'id' => $current, 'submission' => 'false'));
+            self::scrobble(array('u' => $username, 'id' => $current, 'submission' => 'true'));
         }
         // continue to fail saving the queue
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
