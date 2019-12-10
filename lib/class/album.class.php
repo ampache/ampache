@@ -1202,15 +1202,16 @@ class Album extends database_object implements library_item
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $sql .= " AND `album`.`id` NOT IN" .
-                    " (SELECT `object_id` FROM `rating`" .
-                    " WHERE `rating`.`object_type` = 'album'" .
-                    " AND `rating`.`rating` <=" . $rating_filter .
+            $sql .= "AND `album`.`id` NOT IN " .
+                    "(SELECT `object_id` FROM `rating` " .
+                    "WHERE `rating`.`object_type` = 'album' " .
+                    "AND `rating`.`rating` <=" . $rating_filter .
                     " AND `rating`.`user` = " . $user_id . ") ";
         }
 
         $sql .= "ORDER BY RAND() LIMIT " . (string) $count;
         $db_results = Dba::read($sql);
+        //debug_event('album.class', 'get_random ' . $sql, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];

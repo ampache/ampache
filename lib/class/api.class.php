@@ -1498,7 +1498,7 @@ class Api
             if ($user !== null) {
                 $apiuser  = User::get_from_username(Session::username($input['auth']));
                 $fullinfo = false;
-                // get full infor when you're an admin or searching yourself
+                // get full info when you're an admin or searching for yourself
                 if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
                     $fullinfo = true;
                 }

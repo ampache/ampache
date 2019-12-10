@@ -3,13 +3,20 @@
 ## 4.1.0-develop
 
 * Bump API version to 400003 (4.0.0 build 003)
+* Api::playlist - filter mandatory
 * Api::playlist_edit - filter mandatory. name and type now optional
+* Api::user - Extend return values to include more user fields
+* Api - Do not limit smartlists based on item count
+* Api/Databse - Add last_count for search table to speed up access in API
 * Playlist::create - Return duplicate playlist ID instead of creating a new one
-* Artist::check - Remove MBID from Various Artists's
+* Artist::check - Remove MBID from Various Artist objects
 * Fix Api relating to playlist access
 * Fix Song::update_song for label
 * Fix comparison bugs found during static type testing
+* Fix enable/disable song ajax
 * Translation update from Transifex
+* Add playlist into main search page. (Songs, Albums, Artists, Playlists, Videos)
+* Typo in login page HTTP_REFERER
 
 ## 4.0.4
 
