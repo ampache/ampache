@@ -1057,7 +1057,6 @@ class Update
                   "`username` varchar(255) CHARACTER SET utf8 DEFAULT NULL, " .
                   "`changed` int(11) unsigned NOT NULL, " .
                   "PRIMARY KEY (`user_queue`), " .
-                  "KEY `date` (`date`), " .
                   "KEY `session` (`username`));";
         $retval &= Dba::write($sql);
         $sql    = "CREATE TABLE IF NOT EXISTS `user_queue_data` " .
