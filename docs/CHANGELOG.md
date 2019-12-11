@@ -26,7 +26,7 @@
 * Fix album count for Artists when the album is missing data
 * Fix searches / searchbox for MYSQL8
 * Fix some invalid returns in lib/*
-* Send correct the function in ajax.server when deleting from playlist
+* Send the correct function in ajax.server when deleting from playlist
 * Hide some lines from the mashup to make it a bit nicer
 * Remove the old logo from the main install page
 

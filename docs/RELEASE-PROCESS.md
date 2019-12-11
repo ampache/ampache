@@ -8,7 +8,7 @@ It's easy to use a program like github desktop to compare between branches.
 * Open Github Desktop and pull latest develop / master
 * Change to master branch
 * Go to Branch Menu -> Update from develop
-* Fix Merge issues
+* Fix merge issues
   * lib/init.php (Set release version)
   * docs/CHANGELOG.md (Update for release)
 * Commit merge but do not push!
@@ -36,3 +36,11 @@ It's easy to use a program like github desktop to compare between branches.
 * After setting version and title, save as draft
 * Commit your waiting update to master
 * Publish the new release
+
+## Additional requirements
+
+* Update ampache-docker README.md with the current version. (This will kick off a build with the new version)
+* Update config file in docker (ampache.cfg.php.dist) if it's changed as well
+* Update and make a release for python3-ampache if api has changed
+  * Use a test file (test.py?) for some basic API function.
+  * FIXME what should it test?
