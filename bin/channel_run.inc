@@ -425,6 +425,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" . "\n";
                     $xsl .= "<title>" . T_("Icecast Streaming Media Server") . " - " . T_("Ampache") . "</title>" . "\n";
                     $xsl .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />" . "\n";
+                    $xsl .= "<link rel=\"shortcut icon\" href=\"../../channel/favicon.ico\" />";
                     $xsl .= "</head>" . "\n";
                     $xsl .= "<body>" . "\n";
                     $xsl .= "<div class=\"main\">" . "\n";
@@ -440,7 +441,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "<colgroup align=\"left\"></colgroup>" . "\n";
                     $xsl .= "<colgroup align=\"right\" width=\"300\"></colgroup>" . "\n";
                     $xsl .= "<tr>" . "\n";
-                    $xsl .= "<td><h3>Mount Point /stream." . $channel->stream_type . "</h3></td>" . "\n";
+                    $xsl .= "<td><h3>Mount Point: <a href=\"stream.". $channel->stream_type . "\">stream.". $channel->stream_type . "</a></h3></td>" . "\n";
                     $xsl .= "<td align=\"right\">" . "\n";
                     $xsl .= "<a href=\"stream.". $channel->stream_type .".m3u\">M3U</a>" . "\n";
                     $xsl .= "</td>" . "\n";
