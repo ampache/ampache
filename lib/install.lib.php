@@ -186,7 +186,7 @@ function install_rewrite_rules($file, $web_path, $download)
  * Inserts the database using the values from Config.
  * @return boolean
  */
-function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $mysql8 = false)
+function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true)
 {
     $database = (string) AmpConfig::get('database_name');
     // Make sure that the database name is valid
@@ -236,12 +236,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
             $sql_user .= "@'localhost'";
         }
-        // force native password if using mysql 8+
-        if ($mysql8) {
-            $sql_user .= " IDENTIFIED WITH mysql_native_password BY '" . Dba::escape($db_pass) . "'";
-        } else {
-            $sql_user .= " IDENTIFIED BY '" . Dba::escape($db_pass) . "'";
-        }
+        $sql_user .= " IDENTIFIED BY '" . Dba::escape($db_pass) . "'";
         if (!Dba::write($sql_user)) {
             AmpError::add('general', sprintf(
                 /* HINT: %1 user, %2 database, %3 host, %4 error message */

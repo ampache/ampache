@@ -17,6 +17,7 @@
 * Translation update from Transifex
 * Add playlist into main search page. (Songs, Albums, Artists, Playlists, Videos)
 * Typo in login page HTTP_REFERER
+* Roll back mysql8 workarounds. (Orace MySQL supported on php7.4+ only)
 
 ## 4.0.4
 
