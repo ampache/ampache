@@ -1703,7 +1703,7 @@ abstract class Catalog extends database_object
         $new_song->replaygain_track_peak = floatval($results['replaygain_track_peak']);
         $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
         $new_song->replaygain_album_peak = floatval($results['replaygain_album_peak']);
-        
+
         // genre is used in the tag and tag_map tables
         $new_song->tags = $results['genre'];
         $tags           = Tag::get_object_tags('song', $song->id);

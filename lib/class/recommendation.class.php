@@ -388,7 +388,7 @@ class Recommendation
 
         return $results;
     } // get_artist_info
-    
+
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type

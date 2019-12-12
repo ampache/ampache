@@ -1,7 +1,7 @@
 /* global THREE */
 
 ATUtil = {
-    
+
     getRandVec3D(minVal, maxVal) {
         return new THREE.Vector3(ATUtil.getRand(minVal, maxVal), ATUtil.getRand(minVal, maxVal), ATUtil.getRand(minVal, maxVal));
     },
