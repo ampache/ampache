@@ -3,7 +3,8 @@ sudo: false
 php:
  - 7.1
  - 7.3
-
+ - 7.4
+ 
 before_install:
  - export PATH="$PATH:$HOME/.composer/vendor/bin"
  - composer global require friendsofphp/php-cs-fixer:~2.15.0

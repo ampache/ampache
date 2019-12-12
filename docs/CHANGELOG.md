@@ -6,15 +6,15 @@
 * Api::playlist - filter mandatory
 * Api::playlist_edit - filter mandatory. name and type now optional
 * Api::user - Extend return values to include more user fields
-* Api - Do not limit smartlists based on item count
-* Api/Databse - Add last_count for search table to speed up access in API
+* Api - Do not limit smartlists based on item count (return everything you can access)
+* Api/Database - Add last_count for search table to speed up access in API
 * Playlist::create - Return duplicate playlist ID instead of creating a new one
 * Artist::check - Remove MBID from Various Artist objects
 * Fix Api relating to playlist access
 * Fix Song::update_song for label
 * Fix comparison bugs found during static type testing
 * Fix enable/disable song ajax
-* Translation update from Transifex
+* December translation update from Transifex
 * Add playlist into main search page. (Songs, Albums, Artists, Playlists, Videos)
 * Typo in login page HTTP_REFERER
 * Roll back mysql8 workarounds. (Orace MySQL supported on php7.4+ only)
