@@ -1451,7 +1451,6 @@ class Search extends playlist_object
     {
         $sql_logic_operator = $this->logic_operator;
         $userid             = $this->search_user->id;
-        $other_userid       = -1;
 
         $where       = array();
         $table       = array();
@@ -1552,6 +1551,7 @@ class Search extends playlist_object
                     } else {
                         $join['other_rating'] = true;
                         $where[]              = $sql_match_operator .
+                                   " AND `rating`.`user` = $other_userid " .
                                    " AND `rating`.`object_type` = 'album'";
                     }
                 break;
@@ -1635,7 +1635,6 @@ class Search extends playlist_object
         }
         if ($join['other_rating']) {
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
-            $table['rating'] .= "`rating`.`user`='" . $other_userid . "' AND ";
             $table['rating'] .= "`rating`.`object_id`=`album`.`id`";
         }
         if ($join['myrating']) {
@@ -1681,7 +1680,6 @@ class Search extends playlist_object
     {
         $sql_logic_operator = $this->logic_operator;
         $userid             = $this->search_user->id;
-        $other_userid       = -1;
 
         $where              = array();
         $table              = array();
@@ -1778,6 +1776,7 @@ class Search extends playlist_object
                     } else {
                         $join['other_rating'] = true;
                         $where[]              = $sql_match_operator .
+                                   " AND `rating`.`user` = $other_userid " .
                                    " AND `rating`.`object_type` = 'artist'";
                     }
                 break;
@@ -1833,7 +1832,6 @@ class Search extends playlist_object
         }
         if ($join['other_rating']) {
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
-            $table['rating'] .= "`rating`.`user`='" . $other_userid . "' AND ";
             $table['rating'] .= "`rating`.`object_id`=`artist`.`id`";
         }
         if ($join['myrating']) {
@@ -1877,7 +1875,6 @@ class Search extends playlist_object
     {
         $sql_logic_operator = $this->logic_operator;
         $userid             = $this->search_user->id;
-        $other_userid       = -1;
 
         $where       = array();
         $table       = array();
@@ -2067,6 +2064,7 @@ class Search extends playlist_object
                     } else {
                         $join['other_rating'] = true;
                         $where[]              = $sql_match_operator .
+                                   " AND `rating`.`user` = $other_userid " .
                                    " AND `rating`.`object_type` = 'song'";
                     }
                 break;
@@ -2079,6 +2077,7 @@ class Search extends playlist_object
                     } else {
                         $join['other_rating_album'] = true;
                         $where[]                    = $sql_match_operator .
+                                   " AND `rating`.`user` = $other_userid " .
                                    " AND `rating`.`object_type` = 'album'";
                     }
                 break;
@@ -2091,6 +2090,7 @@ class Search extends playlist_object
                     } else {
                         $join['other_rating_artist'] = true;
                         $where[]                     = $sql_match_operator .
+                                   " AND `rating`.`user` = $other_userid " .
                                    " AND `rating`.`object_type` = 'artist'";
                     }
                 break;
@@ -2104,9 +2104,15 @@ class Search extends playlist_object
                     $where[]               = "`playlist_data`.`playlist` $sql_match_operator '$input'";
                 break;
                 case 'smartplaylist':
-                    $subsearch = new Search($input, 'song', $this->search_user);
-                    $subsql    = $subsearch->to_sql();
-                    $where[]   = "$sql_match_operator (" . $subsql['where_sql'] . ")";
+                    $subsearch    = new Search($input, 'song', $this->search_user);
+                    $subsql       = $subsearch->to_sql();
+                    $results      = $subsearch->get_items();
+                    $itemstring   = '';
+                    foreach ($results as $item) {
+                        $itemstring .= ' ' . $item['object_id'] . ',';
+                    }
+                    
+                    $where[]      = "$sql_match_operator `song`.`id` IN (" .  substr($itemstring, 0, -1) . ")";
                     // HACK: array_merge would potentially lose tags, since it
                     // overwrites. Save our merged tag joins in a temp variable,
                     // even though that's ugly.
@@ -2219,18 +2225,15 @@ class Search extends playlist_object
             $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
         }
         if ($join['other_rating']) {
-            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";
-            $table['rating'] .= "`rating`.`user`='" . $other_userid . "' AND ";
+            $table['rating'] = "LEFT JOIN `rating` AS `rating` ON `rating`.`object_type`='song' AND ";
             $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
         }
         if ($join['other_rating_album']) {
-            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
-            $table['rating'] .= "`rating`.`user`='" . $other_userid . "' AND ";
+            $table['rating'] = "LEFT JOIN `rating` AS `rating` ON `rating`.`object_type`='album' AND ";
             $table['rating'] .= "`rating`.`object_id`=`song`.`album`";
         }
         if ($join['other_rating_artist']) {
-            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
-            $table['rating'] .= "`rating`.`user`='" . $other_userid . "' AND ";
+            $table['rating'] = "LEFT JOIN `rating` AS `rating` ON `rating`.`object_type`='artist' AND ";
             $table['rating'] .= "`rating`.`object_id`=`song`.`artist`";
         }
         if ($join['object_count']) {
