@@ -2112,7 +2112,7 @@ class Search extends playlist_object
                         $itemstring .= ' ' . $item['object_id'] . ',';
                     }
                     
-                    $where[]      = "$sql_match_operator `song`.`id` IN (" .  substr($itemstring, 0, -1) . ")";
+                    $where[]      = "$sql_match_operator `song`.`id` IN (" . substr($itemstring, 0, -1) . ")";
                     // HACK: array_merge would potentially lose tags, since it
                     // overwrites. Save our merged tag joins in a temp variable,
                     // even though that's ugly.
