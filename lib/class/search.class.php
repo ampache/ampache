@@ -735,6 +735,18 @@ class Search extends playlist_object
             'type' => 'user_numeric',
             'widget' => array('select', $users)
         );
+        $this->types[] = array(
+            'name' => 'other_user_album',
+            'label' => T_('Another User (Album)'),
+            'type' => 'user_numeric',
+            'widget' => array('select', $users)
+        );
+        $this->types[] = array(
+            'name' => 'other_user_artist',
+            'label' => T_('Another User (Artist)'),
+            'type' => 'user_numeric',
+            'widget' => array('select', $users)
+        );
 
         $this->types[] = array(
             'name' => 'playlist_name',
@@ -2058,6 +2070,30 @@ class Search extends playlist_object
                                    " AND `rating`.`object_type` = 'song'";
                     }
                 break;
+                case 'other_user_album':
+                    $other_userid = $input;
+                    if ($sql_match_operator == 'userflag') {
+                        $join['other_user_flag_album'] = true;
+                        $where[]                       = "`user_flag`.`user` = $other_userid " .
+                                   " AND `user_flag`.`object_type` = 'album'";
+                    } else {
+                        $join['other_rating_album'] = true;
+                        $where[]                    = $sql_match_operator .
+                                   " AND `rating`.`object_type` = 'album'";
+                    }
+                break;
+                case 'other_user_artist':
+                    $other_userid = $input;
+                    if ($sql_match_operator == 'userflag') {
+                        $join['other_user_flag_artist'] = true;
+                        $where[]                        = "`user_flag`.`user` = $other_userid " .
+                                   " AND `user_flag`.`object_type` = 'artist'";
+                    } else {
+                        $join['other_rating_artist'] = true;
+                        $where[]                     = $sql_match_operator .
+                                   " AND `rating`.`object_type` = 'artist'";
+                    }
+                break;
                 case 'playlist_name':
                     $join['playlist']      = true;
                     $join['playlist_data'] = true;
@@ -2171,6 +2207,12 @@ class Search extends playlist_object
         if ($join['other_user_flag']) {
             $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`id`=`user_flag`.`object_id` ";
         }
+        if ($join['other_user_flag_album']) {
+            $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`album`=`user_flag`.`object_id` ";
+        }
+        if ($join['other_user_flag_artist']) {
+            $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`artist`=`user_flag`.`object_id` ";
+        }
         if ($join['myrating']) {
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";
             $table['rating'] .= "`rating`.`user`='" . $userid . "' AND ";
@@ -2180,6 +2222,16 @@ class Search extends playlist_object
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";
             $table['rating'] .= "`rating`.`user`='" . $other_userid . "' AND ";
             $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
+        }
+        if ($join['other_rating_album']) {
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
+            $table['rating'] .= "`rating`.`user`='" . $other_userid . "' AND ";
+            $table['rating'] .= "`rating`.`object_id`=`song`.`album`";
+        }
+        if ($join['other_rating_artist']) {
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
+            $table['rating'] .= "`rating`.`user`='" . $other_userid . "' AND ";
+            $table['rating'] .= "`rating`.`object_id`=`song`.`artist`";
         }
         if ($join['object_count']) {
             $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
