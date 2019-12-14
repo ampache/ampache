@@ -120,7 +120,7 @@ abstract class OAuthSignatureMethod
             return false;
         }
 
-        // Avoid a timing leak with a (hopefully) time insensitive compare
+        // Avoid a timing leak with a (hopefully) time insensitive compare --- replaced curly braces with brackets in line 126
         $result = 0;
         for ($count = 0; $count < strlen($signature); $count++) {
             $result |= ord($built[$count]) ^ ord($signature[$count]);
