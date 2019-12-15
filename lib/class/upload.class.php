@@ -102,7 +102,35 @@ class Upload
                         if (filter_has_var(INPUT_POST, 'license')) {
                             $options['license'] = Core::get_post('license');
                         }
+                        $artist_id = (int) (Core::get_request('artist'));
+                        $album_id  = (int) (Core::get_request('album'));
 
+                        // Try to create a new artist
+                        if (Core::get_request('artist_name') !== '') {
+                            $artist_id = Artist::check(Core::get_request('artist_name'), null, true);
+                            if ($artist_id !== null && !Access::check('interface', 50)) {
+                                debug_event('upload.class', 'An artist with the same name already exists, uploaded song skipped.', 3);
+                                return self::rerror($targetfile);
+                            }
+                        }
+                        if (!Access::check('interface', 50) && ($artist_id === null)) {
+                            debug_event('upload.class', 'Artist information required, uploaded song skipped.', 3);
+                            return self::rerror($targetfile);
+                        }
+                        // Try to create a new album
+                        if (Core::get_request('album_name') !== '') {
+                            $album_id = Album::check(Core::get_request('album_name'), 0, 0, null, null, $artist_id);
+                        }
+                        if (!Access::check('interface', 50) && ($album_id === null)) {
+                            debug_event('upload.class', 'Album information required, uploaded song skipped.', 3);
+                            return self::rerror($targetfile);
+                        }
+                        if ($artist_id !== null) {
+                            $options['artist_id'] = $artist_id;
+                        }
+                        if ($album_id !== null) {
+                            $options['album_id'] = $album_id;
+                        }
                         if (AmpConfig::get('upload_catalog_pattern')) {
                             $options['move_match_pattern'] = true;
                         }

@@ -23,7 +23,9 @@
  // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 UI::show_box_top(T_('Upload'));
-$ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php'; ?>
+$ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';
+$artist = (int) (Core::get_request('artist'));
+$album  = (int) (Core::get_request('album')); ?>
 <div id="container" role="main">
     <div id="tree"></div>
     <div id="data">
@@ -164,6 +166,28 @@ if ($upload_max > 0) { ?>
 <?php
 } ?>
 <table class="tabledata">
+<?php if (Access::check('interface', 50)) {
+    ?>
+<tr>
+    <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
+    <td>
+        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
+        <div id="artist_select_album_1">
+            <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
+    <td>
+        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
+        <div id="album_select_upload_1">
+            <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
+        </div>
+    </td>
+</tr>
+<?php
+} ?>
 <?php if (AmpConfig::get('licensing')) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
