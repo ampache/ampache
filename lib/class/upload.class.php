@@ -110,11 +110,13 @@ class Upload
                             $artist_id = Artist::check(Core::get_request('artist_name'), null, true);
                             if ($artist_id !== null && !Access::check('interface', 50)) {
                                 debug_event('upload.class', 'An artist with the same name already exists, uploaded song skipped.', 3);
+
                                 return self::rerror($targetfile);
                             }
                         }
                         if (!Access::check('interface', 50) && ($artist_id === null)) {
                             debug_event('upload.class', 'Artist information required, uploaded song skipped.', 3);
+
                             return self::rerror($targetfile);
                         }
                         // Try to create a new album
@@ -123,6 +125,7 @@ class Upload
                         }
                         if (!Access::check('interface', 50) && ($album_id === null)) {
                             debug_event('upload.class', 'Album information required, uploaded song skipped.', 3);
+
                             return self::rerror($targetfile);
                         }
                         if ($artist_id !== null) {
