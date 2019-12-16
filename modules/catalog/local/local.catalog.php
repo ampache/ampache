@@ -558,7 +558,7 @@ class Catalog_local extends Catalog
         $changed = 0;
 
         $sql = "SELECT `id`, `file` FROM `$media_type` " .
-            "WHERE `catalog`='$this->id' ORDER BY `$media_type`.`update_time` ASC, `$media_type`.`file` LIMIT $count,$chunk_size";
+            "WHERE `catalog`='$this->id' ORDER BY `$media_type`.`update_time` ASC, `$media_type`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         if (AmpConfig::get('memory_cache')) {
@@ -663,7 +663,7 @@ class Catalog_local extends Catalog
         $count = $chunk * $chunk_size;
 
         $sql = "SELECT `id`, `file` FROM `$media_type` " .
-            "WHERE `catalog`='$this->id' LIMIT $count,$chunk_size";
+            "WHERE `catalog`='$this->id' LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         while ($results = Dba::fetch_assoc($db_results)) {
