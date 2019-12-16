@@ -107,7 +107,7 @@ class Upload
 
                         // Try to create a new artist
                         if (Core::get_request('artist_name') !== '') {
-                            $artist_id = Artist::check(Core::get_request('artist_name'), null, true);
+                            $artist_id = Artist::check(Core::get_request('artist_name'), null);
                             if ($artist_id !== null && !Access::check('interface', 50)) {
                                 debug_event('upload.class', 'An artist with the same name already exists, uploaded song skipped.', 3);
 
