@@ -200,6 +200,8 @@ if ($upload_max > 0) { ?>
 </tr>
 <?php
 } ?>
+</table>
+<table class="tabledata">
 <tr>
     <td>
         <?php echo T_('Files'); ?>
