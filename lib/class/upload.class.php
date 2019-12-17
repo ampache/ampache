@@ -113,27 +113,40 @@ class Upload
 
                                 return self::rerror($targetfile);
                             }
+                            $artist = new Artist($artist_id);
+                            if (!$artist->get_user_owner()) {
+                                $artist->update_artist_user($options['user_upload']);
+                            }
                         }
-                        if (!Access::check('interface', 50) && ($artist_id === null)) {
+                        if ($artist_id === null) {
                             debug_event('upload.class', 'Artist information required, uploaded song skipped.', 3);
 
                             return self::rerror($targetfile);
                         }
+                        if (!Access::check('interface', 50) && $artist->get_user_owner() != $options['user_upload']) {
+                            debug_event('upload.class', "Artist owner doesn't match the current user.", 3);
+
+                            return self::rerror($targetfile);
+                        }
+                        
                         // Try to create a new album
                         if (Core::get_request('album_name') !== '') {
                             $album_id = Album::check(Core::get_request('album_name'), 0, 0, null, null, $artist_id);
                         }
-                        if (!Access::check('interface', 50) && ($album_id === null)) {
+                        if ($album_id === null) {
                             debug_event('upload.class', 'Album information required, uploaded song skipped.', 3);
 
                             return self::rerror($targetfile);
                         }
-                        if ($artist_id !== null) {
-                            $options['artist_id'] = $artist_id;
+                        $album = new Album($album_id);
+                        if ($album->get_user_owner() != $options['user_upload']) {
+                            debug_event('upload.class', "Album owner doesn't match the current user.", 3);
+
+                            return self::rerror($targetfile);
                         }
-                        if ($album_id !== null) {
-                            $options['album_id'] = $album_id;
-                        }
+                        $options['artist_id'] = $artist_id;
+                        $options['album_id']  = $album_id;
+
                         if (AmpConfig::get('upload_catalog_pattern')) {
                             $options['move_match_pattern'] = true;
                         }
