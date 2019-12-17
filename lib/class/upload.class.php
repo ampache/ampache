@@ -123,6 +123,7 @@ class Upload
 
                             return self::rerror($targetfile);
                         }
+                        $artist = new Artist($artist_id);
                         if (!Access::check('interface', 50) && $artist->get_user_owner() != $options['user_upload']) {
                             debug_event('upload.class', "Artist owner doesn't match the current user.", 3);
 
