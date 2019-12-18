@@ -140,7 +140,7 @@ class Upload
                             return self::rerror($targetfile);
                         }
                         $album = new Album($album_id);
-                        if ($album->get_user_owner() != $options['user_upload']) {
+                        if (!Access::check('interface', 50) && $album->get_user_owner() != $options['user_upload']) {
                             debug_event('upload.class', "Album owner doesn't match the current user.", 3);
 
                             return self::rerror($targetfile);
