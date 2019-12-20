@@ -1155,11 +1155,19 @@ class Song extends database_object implements media, library_item
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
                 break;
+                case 'artist':
+                case 'album':
+                    // You need to keep the old ID when updating artist and album
+                    if ($new_id != $this->$key) {
+                        $old_id = $this->$key;
+                        $function = 'update_' . $key;
+                        self::$function($new_id, $this->id, $old_id);
+                        $this->$key = $new_id;
+                    }
+                break;
                 case 'year':
                 case 'title':
                 case 'track':
-                case 'artist':
-                case 'album':
                 case 'mbid':
                 case 'license':
                 case 'composer':

@@ -20,6 +20,16 @@
 * Roll back mysql8 workarounds. (Orace MySQL supported on php7.4+ only)
 * Fix bin\*.inc text issues with newline
 * Add docs/examples/channel_run.service for sunning background processes as a service
+* New search option "Another User" allows searching other user ratings and favorites
+* user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods])>
+* Updates to support php7.4 (Ampache supports 7.1-7.4)
+* Fix bug in UI when enabling/disabling songs
+* Checks in Subsonic/WebUI for recording repeated plays
+* Update channel status pages (/channel/$CHANNELID/status.xsl)
+* Fix smartlists when searching sub-lists (Ampache was trying to create one gian query that didn't scale well)
+* composer & php-cs-fixer updates
+* Fix "Add New..." in album edit
+* Revert changes in 4.0.0 and allow manual choices for artist/album on upload again.
 
 ## 4.0.4
 

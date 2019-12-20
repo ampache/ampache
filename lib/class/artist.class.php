@@ -859,10 +859,6 @@ class Artist extends database_object implements library_item
             return (int) $artist_id;
         }
 
-        if ($readonly) {
-            return null;
-        }
-
         $sql = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) ' .
             'VALUES(?, ?, ?)';
 
