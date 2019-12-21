@@ -1142,16 +1142,16 @@ class Song extends database_object implements media, library_item
 
             switch ($key) {
                 case 'artist_name':
-                    // Wenn dies hier passiert, wird ein neuer Artist erzeugt
+                    // Create new artist name and id
                     $old_artist_id = Artist::check($value);
                     debug_event('song.class-artist_name', 'old_artist_id = ' . $old_artist_id, 5);
                     $new_artist_id = $this->artist; 
                     debug_event('song.class-artist_name', 'new_artist_id = ' . $new_artist_id, 5);
-                    // $this->artist  = $new_artist_id;
+                    $this->artist  = $new_artist_id;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
                 break;
                 case 'album_name':
-                    // Need to create new album according the name
+                    // Create new album name and id
                     $old_album_id = $this->album;
                     debug_event('song.class-album_name', $old_album_id . '=' . $value, 5);
                     $new_album_id = Album::check($value);
@@ -1160,35 +1160,20 @@ class Song extends database_object implements media, library_item
                     self::update_album($new_album_id, $this->id, $old_album_id);
                 break;
                 case 'artist':
-                    // Wenn dies hier passiert, wird ein neuer Artist erzeugt
+                    // Change artist
                     $old_artist_id = $this->artist;
-                    debug_event('song.class-artist_name', 'old_artist_id = ' . $old_artist_id, 5);
-                    // $new_artist_id = $this->artist; 
-                    // debug_event('song.class-artist_name', 'new_artist_id = ' . $new_artist_id, 5);
-                    // $this->artist  = $new_artist_id;
+                    debug_event('song.class-artist', 'old_artist_id = ' . $old_artist_id, 5);
+                    $new_artist_id = $value;
+                    debug_event('song.class-artist', 'new_artist_id = ' . $new_artist_id, 5);
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
-
-                    
-                    //  You need to keep the old ID when updating artist and album
-                    if ($new_id != $this->$key) {
-                        debug_event('song.class-artist', $new_id . '=' . $value, 5);
-                    // $old_id = $this->$key;
-                    //     debug_event('song.class-artist', $old_id . '=' . $value, 5);
-                    // $function = 'update_' . $key;
-                    //     self::$function($new_id, $this->id, $old_id);
-                    //     $this->$key = $new_id;
-                     }
                 break;
                 case 'album':
-                    // You need to keep the old ID when updating artist and album
-                    if ($new_id != $this->$key) {
-                        debug_event('song.class-album', $new_id . '=' . $value, 5);
-                    $old_id = $this->$key;
-                        debug_event('song.class-album', $old_id . '=' . $value, 5);
-                    $function = 'update_' . $key;
-                        self::$function($new_id, $this->id, $old_id);
-                        $this->$key = $new_id;
-                    }
+                    // Change album
+                    $old_album_id = $this->album;
+                    debug_event('song.class-album', 'old_album_id = ' . $old_album_id, 5);
+                    $new_album_id = $value;
+                    debug_event('song.class-album', 'new_album_id = ' . $new_album_id, 5);
+                    self::update_album($new_album_id, $this->id, $old_album_id);
                 break;
                 case 'year':
                 case 'title':
