@@ -1143,9 +1143,9 @@ class Song extends database_object implements media, library_item
             switch ($key) {
                 case 'artist_name':
                     // Create new artist name and id
-                    $old_artist_id = Artist::check($value);
+                    $old_artist_id = $this->artist; 
                     debug_event('song.class-artist_name', 'old_artist_id = ' . $old_artist_id, 5);
-                    $new_artist_id = $this->artist; 
+                    $new_artist_id = Artist::check($value);
                     debug_event('song.class-artist_name', 'new_artist_id = ' . $new_artist_id, 5);
                     $this->artist  = $new_artist_id;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
@@ -1160,7 +1160,7 @@ class Song extends database_object implements media, library_item
                     self::update_album($new_album_id, $this->id, $old_album_id);
                 break;
                 case 'artist':
-                    // Change artist
+                    // Change artist the song is assigned to
                     $old_artist_id = $this->artist;
                     debug_event('song.class-artist', 'old_artist_id = ' . $old_artist_id, 5);
                     $new_artist_id = $value;
@@ -1168,7 +1168,7 @@ class Song extends database_object implements media, library_item
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
                 break;
                 case 'album':
-                    // Change album
+                    // Change album the song is assigned to
                     $old_album_id = $this->album;
                     debug_event('song.class-album', 'old_album_id = ' . $old_album_id, 5);
                     $new_album_id = $value;
