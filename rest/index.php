@@ -172,4 +172,4 @@ foreach ($methods as $method) {
 
 // If we manage to get here, we still need to hand out an XML document
 ob_end_clean();
-echo Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, 'subsonic_api', $version)->asXml();
+Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, 'subsonic_api', $version), $callback);
