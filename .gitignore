@@ -42,8 +42,3 @@ web.config
 *.swp
 *.v11.suo
 *~
-php-cs-fixer
-.stash/bin/channel_run.inc
-.stash/lib/class/api.class.php
-.stash/lib/javascript/tools.js
-.stash/templates/show_login_form.inc.php
