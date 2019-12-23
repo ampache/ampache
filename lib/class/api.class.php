@@ -386,13 +386,7 @@ class Api
                 echo json_encode($xmldata, JSON_PRETTY_PRINT);
             break;
             default:
-                switch ($input['format']) {
-                    case 'json':
-                        echo json_encode($xmldata, JSON_PRETTY_PRINT);
-                    break;
-                    default:
-                        echo XML_Data::keyed_array($xmldata);
-                }
+                echo XML_Data::keyed_array($xmldata);
         }
     } // ping
 
@@ -524,6 +518,7 @@ class Api
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
                 echo XML_Data::indexes($objects, $type);
+        }
         Session::extend($input['auth']);
     } // get_indexes
 
@@ -2606,12 +2601,12 @@ class Api
                         $activities = Useractivity::get_activities($user->id, $limit, $since);
                         ob_end_clean();
                         switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::timeline($activities);
-                    break;
-                    default:
-                        echo XML_Data::timeline($activities);
-                }
+                            case 'json':
+                                echo JSON_Data::timeline($activities);
+                            break;
+                            default:
+                                echo XML_Data::timeline($activities);
+                        }
                     }
                 }
             }
