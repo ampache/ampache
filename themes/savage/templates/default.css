@@ -1077,6 +1077,10 @@ table.disablegv td.cel_rating {
     width: 20%;
 }
 
+.upload_select {
+    display: grid;
+}
+
 /***********************************************
            Content (info-box)
 ***********************************************/
