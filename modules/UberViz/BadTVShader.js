@@ -42,7 +42,7 @@ THREE.BadTVShader = {
         "uniform float speed;",
         "uniform float rollSpeed;",
         "varying vec2 vUv;",
-        
+
         // Start Ashima 2D Simplex Noise
 
         "vec3 mod289(vec3 x) {",

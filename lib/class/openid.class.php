@@ -66,7 +66,7 @@ class Openid
 
     public static function get_policies()
     {
-        $openid_required_pape = AmpConfig::get('openid_required_pape');
+        $openid_required_pape = (string) AmpConfig::get('openid_required_pape');
         $policies             = array();
         if (!empty($openid_required_pape)) {
             $papes = explode(',', $openid_required_pape);

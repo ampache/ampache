@@ -155,7 +155,7 @@ function debug_event($type, $message, $level, $file = '', $username = '')
     }
 
     // If the message is multiple lines, make multiple log lines
-    foreach (explode("\n", $message) as $line) {
+    foreach (explode("\n", (string) $message) as $line) {
         log_event($username, $type, $line, $file);
     }
 

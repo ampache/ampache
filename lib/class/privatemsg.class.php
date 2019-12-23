@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -119,7 +118,7 @@ class PrivateMsg extends database_object
         unset($details); //dead code but called from other format calls
         $this->f_subject       = scrub_out($this->subject);
         $this->f_message       = scrub_out($this->message);
-        $this->f_creation_date = date("Y/m/d H:i:s", $this->creation_date);
+        $this->f_creation_date = date("Y/m/d H:i:s", (int) $this->creation_date);
         $from_user             = new User($this->from_user);
         $from_user->format();
         $this->f_from_user_link = $from_user->f_link;

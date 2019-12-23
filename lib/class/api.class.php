@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -39,7 +38,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '400002';
+    public static $version = '400003';
 
     /**
      *  @var Browse $browse
@@ -80,7 +79,7 @@ class Api
      */
     public static function set_filter($filter, $value)
     {
-        if (!strlen($value)) {
+        if (!strlen((string) $value)) {
             return false;
         }
 
@@ -167,7 +166,7 @@ class Api
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
         }
-        $username = trim($input['user']);
+        $username = trim((string) $input['user']);
         $user_ip  = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
         if (isset($input['version'])) {
             // If version is provided, use it
@@ -296,10 +295,10 @@ class Api
                 $vcounts    = Dba::fetch_assoc($db_results);
 
                 // We consider playlists and smartlists to be playlists
-                $sql        = "SELECT COUNT(`id`) AS `playlist` FROM `playlist`";
+                $sql        = "SELECT COUNT(`id`) AS `playlist` FROM `playlist` WHERE `type` = 'public' OR `user` = " . $user_id;
                 $db_results = Dba::read($sql);
                 $playlist   = Dba::fetch_assoc($db_results);
-                $sql        = "SELECT COUNT(`id`) AS `smartlist` FROM `search` WHERE `limit` > 0";
+                $sql        = "SELECT COUNT(`id`) AS `smartlist` FROM `search` WHERE `type` = 'public' OR `user` = " . $user_id;
                 $db_results = Dba::read($sql);
                 $smartlist  = Dba::fetch_assoc($db_results);
 
@@ -310,13 +309,13 @@ class Api
                 echo XML_Data::keyed_array(array('auth' => $token,
                     'api' => self::$version,
                     'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-                    'update' => date("c", $row['update']),
-                    'add' => date("c", $row['add']),
-                    'clean' => date("c", $row['clean']),
+                    'update' => date("c", (int) $row['update']),
+                    'add' => date("c", (int) $row['add']),
+                    'clean' => date("c", (int) $row['clean']),
                     'songs' => $song['song'],
                     'albums' => $album['album'],
                     'artists' => $artist['artist'],
-                    'playlists' => ($playlist['playlist'] + $smartlist['smartlist']),
+                    'playlists' => ((int) $playlist['playlist'] + (int) $smartlist['smartlist']),
                     'videos' => $vcounts['video'],
                     'catalogs' => $catalog['catalog']));
 
@@ -347,7 +346,7 @@ class Api
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
+            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
         debug_event('api.class', 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
@@ -423,6 +422,7 @@ class Api
         if (!self::check_parameter($input, array('type'), 'get_indexes')) {
             return false;
         }
+        $user = User::get_from_username(Session::username($input['auth']));
         $type = (string) $input['type'];
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
@@ -444,7 +444,8 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         if ($type == 'playlist') {
-            $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists());
+            self::$browse->set_filter('playlist_type', $user->id);
+            $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
         } else {
             $objects = self::$browse->get_objects();
         }
@@ -906,7 +907,7 @@ class Api
      * This returns playlists based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
+     * 'filter'  (string) Alpha-numeric search term (match all if missing) //optional
      * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
      * 'add'     self::set_filter(date) //optional
      * 'update'  self::set_filter(date) //optional
@@ -915,15 +916,15 @@ class Api
      */
     public static function playlists($input)
     {
-        self::$browse->reset_filters();
-        self::$browse->set_type('playlist');
-        self::$browse->set_sort('name', 'ASC');
+        $user   = User::get_from_username(Session::username($input['auth']));
+        $method = $input['exact'] ? false : true;
+        $userid = (!Access::check('interface', 100)) ? $user->id : -1;
+        $public = (!Access::check('interface', 100)) ? true : false;
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        self::set_filter($method, $input['filter']);
-        self::$browse->set_filter('playlist_type', '1');
-
-        $playlist_ids = array_merge(self::$browse->get_objects(), Playlist::get_smartlists());
+        // regular playlists
+        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
+        // merge with the smartlists
+        $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
 
@@ -943,8 +944,24 @@ class Api
      */
     public static function playlist($input)
     {
-        $uid = scrub_in($input['filter']);
+        if (!self::check_parameter($input, array('filter'), 'playlist_edit')) {
+            return false;
+        }
+        $user = User::get_from_username(Session::username($input['auth']));
+        $uid  = scrub_in($input['filter']);
 
+        if (str_replace('smart_', '', $uid) === $uid) {
+            // Playlists
+            $playlist = new Playlist($uid);
+        } else {
+            //Smartlists
+            $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
+        }
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
+            echo XML_Data::error('401', T_('Access denied to this playlist'));
+
+            return;
+        }
         ob_end_clean();
         echo XML_Data::playlists(array($uid));
         Session::extend($input['auth']);
@@ -964,17 +981,22 @@ class Api
     public static function playlist_songs($input)
     {
         $user = User::get_from_username(Session::username($input['auth']));
+        $uid  = scrub_in($input['filter']);
         debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], '5');
-        if (str_replace('smart_', '', (string) $input['filter']) === (string) $input['filter']) {
+        if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
-            $playlist = new Playlist($input['filter']);
-            $items    = $playlist->get_items();
+            $playlist = new Playlist($uid);
         } else {
             //Smartlists
-            $playlist = new Search(str_replace('smart_', '', $input['filter']), 'song', $user);
-            $items    = $playlist->get_items();
+            $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
+        }
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
+            echo XML_Data::error('401', T_('Access denied to this playlist'));
+
+            return;
         }
 
+        $items = $playlist->get_items();
         $songs = array();
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
@@ -1016,17 +1038,19 @@ class Api
     /**
      * playlist_edit
      * MINIMUM_API_VERSION=400001
+     * CHANGED_IN_API_VERSION=400003
      *
-     * This modifies name and type of playlist
+     * This modifies name and type of playlist.
+     * Changed name and type to optional and the playlist id is mandatory
      *
      * @param array $input
      * 'filter' (string) UID of playlist
-     * 'name'   (string)
-     * 'type'   (string) 'public', 'private'
+     * 'name'   (string) 'new playlist name' //optional
+     * 'type'   (string) 'public', 'private' //optional
      */
     public static function playlist_edit($input)
     {
-        if (!self::check_parameter($input, array('name', 'type'), 'playlist_edit')) {
+        if (!self::check_parameter($input, array('filter'), 'playlist_edit')) {
             return false;
         }
         $name = $input['name'];
@@ -1035,16 +1059,17 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
 
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 75, $user->id)) {
+        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
-        } else {
-            $array = [
-                "name" => $name,
-                "pl_type" => $type,
-            ];
-            $playlist->update($array);
-            echo XML_Data::success('playlist changes saved');
+
+            return;
         }
+        $array = [
+            "name" => $name,
+            "pl_type" => $type,
+        ];
+        $playlist->update($array);
+        echo XML_Data::success('playlist changes saved');
         Session::extend($input['auth']);
     } // playlist_edit
 
@@ -1062,7 +1087,7 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 75, $user->id)) {
+        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             $playlist->delete();
@@ -1088,7 +1113,7 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 75, $user->id)) {
+        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
 
             return;
@@ -1114,31 +1139,31 @@ class Api
      * @param array $input
      * 'filter' (string) UID of playlist
      * 'song'   (string) UID of song to remove from the playlist //optional
-     * 'track'  (string) track number to remove from the playlist //optionak
+     * 'track'  (string) track number to remove from the playlist //optional
      */
     public static function playlist_remove_song($input)
     {
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 75, $user->id)) {
+        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             echo XML_Data::error('401', T_('Access denied to this playlist'));
         } else {
             if ($input['song']) {
-                $track = scrub_in($input['song']);
+                $track = (int) scrub_in($input['song']);
                 if (!$playlist->has_item($track)) {
                     echo XML_Data::error('404', T_('Song not found in playlist'));
-    
+
                     return;
                 }
-                $playlist->delete_track($track);
+                $playlist->delete_song($track);
                 $playlist->regenerate_track_numbers();
                 echo XML_Data::success('song removed from playlist');
             } else {
-                $track = scrub_in($input['track']);
+                $track = (int) scrub_in($input['track']);
                 if (!$playlist->has_item(null, $track)) {
                     echo XML_Data::error('404', T_('Track ID not found in playlist'));
-    
+
                     return;
                 }
                 $playlist->delete_track_number($track);
@@ -1233,7 +1258,7 @@ class Api
         if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'artist';
-            $array['rule_' . $rule_count . '_input']    = trim(trim($artist->prefix) . ' ' . trim($artist->name));
+            $array['rule_' . $rule_count . '_input']    = trim(trim((string) $artist->prefix) . ' ' . trim((string) $artist->name));
             $array['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
@@ -1384,8 +1409,8 @@ class Api
         $limit  = $input['limit'];
         // original method only searched albums and had poor method inputs
         if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'))) {
-            $type   = 'album';
-            $filter = $type;
+            $type            = 'album';
+            $input['filter'] = $type;
         }
         if (!$limit) {
             $limit = AmpConfig::get('popular_threshold');
@@ -1457,7 +1482,7 @@ class Api
      * user
      * MINIMUM_API_VERSION=380001
      *
-     * This get an user public information
+     * This get a user's public information
      *
      * @param array $input
      * username = (string) $username)
@@ -1471,8 +1496,14 @@ class Api
         if (!empty($username)) {
             $user = User::get_from_username($username);
             if ($user !== null) {
+                $apiuser  = User::get_from_username(Session::username($input['auth']));
+                $fullinfo = false;
+                // get full info when you're an admin or searching for yourself
+                if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
+                    $fullinfo = true;
+                }
                 ob_end_clean();
-                echo XML_Data::user($user);
+                echo XML_Data::user($user, $fullinfo);
             } else {
                 debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
             }
@@ -1645,7 +1676,7 @@ class Api
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
-                    $users = $user->get_followers();
+                    $users    = $user->get_followers();
                     ob_end_clean();
                     echo XML_Data::users($users);
                 } else {
@@ -1680,7 +1711,7 @@ class Api
                     $users = $user->get_following();
                     debug_event('api.class', 'User is following:  ' . print_r($users), 1);
                     ob_end_clean();
-                    echo XML_Data::users([(int) $user]);
+                    echo XML_Data::users($users);
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 }
@@ -1822,7 +1853,7 @@ class Api
         $flag      = $input['flag'];
         $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
-        if ($user) {
+        if ((int) $user->id > 0) {
             $user_id = $user->id;
         }
         // confirm the correct data
@@ -1898,7 +1929,7 @@ class Api
         debug_event('api.class', 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        $item->set_played(user_id, $agent, array(), time());
+        $item->set_played($user_id, $agent, array(), time());
 
         //scrobble plugins
         User::save_mediaplay($user, $item);
@@ -1981,7 +2012,7 @@ class Api
             debug_event('api.class', 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
-            $item->set_played(user_id, $agent, array(), time());
+            $item->set_played($user_id, $agent, array(), time());
 
             //scrobble plugins
             User::save_mediaplay($user, $item);
@@ -2379,7 +2410,7 @@ class Api
                 $thumb         = $art->get_thumb($dim);
                 if (!empty($thumb)) {
                     header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen($thumb['thumb']));
+                    header('Content-Length: ' . strlen((string) $thumb['thumb']));
                     echo $thumb['thumb'];
 
                     return;
@@ -2387,7 +2418,7 @@ class Api
             }
 
             header('Content-type: ' . $art->raw_mime);
-            header('Content-Length: ' . strlen($art->raw));
+            header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
         }
         Session::extend($input['auth']);

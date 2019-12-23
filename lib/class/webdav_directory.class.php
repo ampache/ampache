@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -69,8 +68,8 @@ class WebDAV_Directory extends DAV\Collection
     {
         // Clean song name
         if (strtolower(get_class($this->libitem)) === "album") {
-            $splitname = explode('-', $name, 3);
-            $name      = trim($splitname[count($splitname) - 1]);
+            $splitname = explode('-', (string) $name, 3);
+            $name      = trim((string) $splitname[count($splitname) - 1]);
             $nameinfo  = pathinfo($name);
             $name      = $nameinfo['filename'];
         }
@@ -120,6 +119,6 @@ class WebDAV_Directory extends DAV\Collection
      */
     public function getName()
     {
-        return $this->libitem->get_fullname();
+        return (string) $this->libitem->get_fullname();
     }
 }

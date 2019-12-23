@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -66,7 +65,7 @@ class Subsonic_Api
         if ($encpwd !== false) {
             $hex    = substr($password, 4);
             $decpwd = '';
-            for ($count = 0; $count < strlen($hex); $count += 2) {
+            for ($count = 0; $count < strlen((string) $hex); $count += 2) {
                 $decpwd .= chr((int) hexdec(substr($hex, $count, 2)));
             }
             $password = $decpwd;
@@ -81,12 +80,12 @@ class Subsonic_Api
         echo $data;
         ob_flush();
 
-        return strlen($data);
+        return strlen((string) $data);
     }
 
     public static function output_header($curl, $header)
     {
-        $rheader = trim($header);
+        $rheader = trim((string) $header);
         $rhpart  = explode(':', $rheader);
         if (!empty($rheader) && count($rhpart) > 1) {
             if ($rhpart[0] != "Transfer-Encoding") {
@@ -99,7 +98,7 @@ class Subsonic_Api
             }
         }
 
-        return strlen($header);
+        return strlen((string) $header);
     }
 
     /**
@@ -155,10 +154,10 @@ class Subsonic_Api
 
     public static function setHeader($filetype)
     {
-        if (strtolower($filetype) == "json") {
+        if (strtolower((string) $filetype) == "json") {
             header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
             Subsonic_XML_Data::$enable_json_checks = true;
-        } elseif (strtolower($filetype) == "jsonp") {
+        } elseif (strtolower((string) $filetype) == "jsonp") {
             header("Content-type: text/javascript; charset=" . AmpConfig::get('site_charset'));
             Subsonic_XML_Data::$enable_json_checks = true;
         } else {
@@ -175,7 +174,7 @@ class Subsonic_Api
     {
         $type     = $input['f'];
         $callback = $input['callback'];
-        self::apiOutput2(strtolower($type), $xml, $callback, $alwaysArray);
+        self::apiOutput2(strtolower((string) $type), $xml, $callback, $alwaysArray);
     }
 
     /**
@@ -543,7 +542,7 @@ class Subsonic_Api
         $response     = Subsonic_XML_Data::createSuccessResponse('getalbumlist');
         $errorOccured = false;
         $albums       = array();
-        $user         = User::get_from_username($username);
+        $user         = User::get_from_username((string) $username);
 
         switch ($type) {
             case "random":
@@ -672,7 +671,7 @@ class Subsonic_Api
             $search['rule_' . $count . '']          = $ftype;
             ++$count;
         }
-        $user = User::get_from_username($username);
+        $user = User::get_from_username((string) $username);
         if ($count > 0) {
             $songs = Random::advanced('song', $search);
         } else {
@@ -705,15 +704,14 @@ class Subsonic_Api
      */
     public static function gettopsongs($input)
     {
-        $artist = Artist::get_from_name(urldecode(self::check_parameter($input, 'artist')));
+        $artist = self::check_parameter($input, 'artist');
         $count  = (int) $input['count'];
+        $songs  = array();
         if ($count <= 0) {
             $count = 50;
         }
-        if ($artist->id) {
-            $songs = Artist::get_top_songs($artist->id, $count);
-        } else {
-            $songs = array();
+        if ($artist) {
+            $songs = Artist::get_top_songs(Artist::get_from_name(urldecode($artist))->id, $count);
         }
         $response = Subsonic_XML_Data::createSuccessResponse('gettopsongs');
         Subsonic_XML_Data::addTopSongs($response, $songs);
@@ -768,9 +766,9 @@ class Subsonic_Api
         $songs    = array();
         $operator = 0;
 
-        if (strlen($query) > 1) {
+        if (strlen((string) $query) > 1) {
             if (substr($query, -1) == "*") {
-                $query    = substr($query, 0, -1);
+                $query    = substr((string) $query, 0, -1);
                 $operator = 2; // Start with
             }
         }
@@ -844,18 +842,12 @@ class Subsonic_Api
     {
         $response = Subsonic_XML_Data::createSuccessResponse('getplaylists');
         $username = $input['username'];
+        $user     = User::get_from_username((string) $username);
+        $userid   = (!Access::check('interface', 100)) ? $user->id : -1;
+        $public   = (!Access::check('interface', 100)) ? true : false;
 
         // Don't allow playlist listing for another user
-        if (empty($username) || $username == $input['u']) {
-            Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists(), Search::get_searches());
-        } else {
-            $user = User::get_from_username($username);
-            if ($user->id) {
-                Subsonic_XML_Data::addPlaylists($response, Playlist::get_users($user->id));
-            } else {
-                Subsonic_XML_Data::addPlaylists($response, array());
-            }
-        }
+        Subsonic_XML_Data::addPlaylists($response, Playlist::get_playlists($public, $userid), Playlist::get_smartlists($public, $userid));
         self::apiOutput($input, $response);
     }
 
@@ -1129,7 +1121,7 @@ class Subsonic_Api
                 $thumb         = $art->get_thumb($dim);
                 if (!empty($thumb)) {
                     header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen($thumb['thumb']));
+                    header('Content-Length: ' . strlen((string) $thumb['thumb']));
                     echo $thumb['thumb'];
 
                     return;
@@ -1137,7 +1129,7 @@ class Subsonic_Api
             }
 
             header('Content-type: ' . $art->raw_mime);
-            header('Content-Length: ' . strlen($art->raw));
+            header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
         }
     }
@@ -1303,7 +1295,7 @@ class Subsonic_Api
             if ($myuser->username == $username) {
                 $user = $myuser;
             } else {
-                $user = User::get_from_username($username);
+                $user = User::get_from_username((string) $username);
             }
             Subsonic_XML_Data::addUser($response, $user);
         } else {
@@ -1345,7 +1337,7 @@ class Subsonic_Api
             if ($myuser->username == $username) {
                 $user = $myuser;
             } else {
-                $user = User::get_from_username($username);
+                $user = User::get_from_username((string) $username);
             }
 
             if ($user !== null) {
@@ -1412,7 +1404,7 @@ class Subsonic_Api
                     $expire_days = 0;
                 } else {
                     // Parse as a string to work on 32-bit computers
-                    if (strlen($expires) > 3) {
+                    if (strlen((string) $expires) > 3) {
                         $expires = (int) (substr($expires, 0, - 3));
                     }
                     $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
@@ -1486,7 +1478,7 @@ class Subsonic_Api
                 if (isset($input['expires'])) {
                     // Parse as a string to work on 32-bit computers
                     $expires = $input['expires'];
-                    if (strlen($expires) > 3) {
+                    if (strlen((string) $expires) > 3) {
                         $expires = (int) (substr($expires, 0, - 3));
                     }
                     if ($expires > 0) {
@@ -1526,7 +1518,7 @@ class Subsonic_Api
     {
         $username     = self::check_parameter($input, 'username');
         $password     = self::check_parameter($input, 'password');
-        $email        = urldecode(self::check_parameter($input, 'email'));
+        $email        = urldecode((string) self::check_parameter($input, 'email'));
         $adminRole    = ($input['adminRole'] == 'true');
         $downloadRole = ($input['downloadRole'] == 'true');
         $uploadRole   = ($input['uploadRole'] == 'true');
@@ -1600,7 +1592,7 @@ class Subsonic_Api
                 $access = 75;
             }
             // identify the user to modify
-            $user    = User::get_from_username($username);
+            $user    = User::get_from_username((string) $username);
             $user_id = $user->id;
 
             if ($user_id > 0) {
@@ -1646,7 +1638,7 @@ class Subsonic_Api
     {
         $username = self::check_parameter($input, 'username');
         if (Access::check('interface', 100)) {
-            $user = User::get_from_username($username);
+            $user = User::get_from_username((string) $username);
             if ($user->id) {
                 $user->delete();
                 $response = Subsonic_XML_Data::createSuccessResponse('deleteuser');
@@ -1673,7 +1665,7 @@ class Subsonic_Api
         $myuser       = User::get_from_username($input['u']);
 
         if ($myuser->username == $username || Access::check('interface', 100)) {
-            $user = User::get_from_username($username);
+            $user = User::get_from_username((string) $username);
             if ($user->id) {
                 $user->update_password($password);
                 $response = Subsonic_XML_Data::createSuccessResponse('changepassword');
@@ -1904,7 +1896,7 @@ class Subsonic_Api
      */
     public static function getartistinfo2($input)
     {
-        return self::getartistinfo($input);
+        self::getartistinfo($input);
     }
 
     /**
@@ -2241,6 +2233,29 @@ class Subsonic_Api
         self::apiOutput($input, $response);
     }
 
+    /**
+     * savePlayQueue
+     * Save the state of the play queue for the authenticated user.
+     * Takes multiple song id in parameter with optional current id playing song and position.
+     */
+    public static function saveplayqueue($input)
+    {
+        $current  = (int) $input['current'];
+        $position = (int) $input['position'];
+        $username = (string) $input['u'];
+        $user_id  = User::get_from_username($username)->id;
+        $song_id  = Subsonic_XML_Data::getAmpacheId($current);
+        $previous = Stats::get_last_song($user_id);
+        $song     = new Song($song_id);
+        //only record repeated play stats using this method (repeates aren't processed the same way.)
+        if ($previous['object_id'] == $song_id && $position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song->time)) {
+            self::scrobble(array('u' => $username, 'id' => $current, 'submission' => 'false'));
+            self::scrobble(array('u' => $username, 'id' => $current, 'submission' => 'true'));
+        }
+        // continue to fail saving the queue
+        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
+        self::apiOutput($input, $response);
+    }
     /*     * **   CURRENT UNSUPPORTED FUNCTIONS   *** */
 
     /**
@@ -2252,18 +2267,6 @@ class Subsonic_Api
     public static function getplayqueue($input)
     {
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'getplayqueue');
-        self::apiOutput($input, $response);
-    }
-
-    /**
-     * savePlayQueue
-     * Save the state of the play queue for the authenticated user.
-     * Takes multiple song id in parameter with optional current id playing song and position.
-     * Not supported.
-     */
-    public static function saveplayqueue($input)
-    {
-        $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
         self::apiOutput($input, $response);
     }
 }

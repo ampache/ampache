@@ -292,18 +292,19 @@ class Artist extends database_object implements library_item
         }
 
         $sort_type = AmpConfig::get('album_sort');
+        $sort_disk = (AmpConfig::get('album_group')) ? "" : ", `album`.`disk`";
         switch ($sort_type) {
             case 'year_asc':
-                $sql_sort = '`album`.`year` ASC, `album`.`disk`';
+                $sql_sort = '`album`.`year` ASC' . $sort_disk;
                 break;
             case 'year_desc':
-                $sql_sort = '`album`.`year` DESC, `album`.`disk`';
+                $sql_sort = '`album`.`year` DESC' . $sort_disk;
                 break;
             case 'name_asc':
-                $sql_sort = '`album`.`name` ASC, `album`.`disk`';
+                $sql_sort = '`album`.`name` ASC' . $sort_disk;
                 break;
             case 'name_desc':
-                $sql_sort = '`album`.`name` DESC, `album`.`disk`';
+                $sql_sort = '`album`.`name` DESC' . $sort_disk;
                 break;
             default:
                 $sql_sort  = '`album`.`name`, `album`.`disk`, `album`.`year`';
@@ -329,7 +330,7 @@ class Artist extends database_object implements library_item
                 }
                 $results[$rtype][] = $row['id'];
 
-                $sort = AmpConfig::get('album_release_type_sort');
+                $sort = (string) AmpConfig::get('album_release_type_sort');
                 if ($sort) {
                     $results_sort = array();
                     $asort        = explode(',', $sort);
@@ -501,10 +502,14 @@ class Artist extends database_object implements library_item
         } else {
             $params = array($this->id);
             // Calculation
-            $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT `song`.`album`) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+            $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, " .
+                    "COUNT(DISTINCT `song`.`album`) AS `album_count`, " .
+                    "SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
             $sqlw = "WHERE `song`.`artist` = ? ";
             if (AmpConfig::get('album_group')) {
-                $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, COUNT(DISTINCT CONCAT(`album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year`)) AS `album_count`, SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` ";
+                $sql  = "SELECT COUNT(DISTINCT `song`.`id`) AS `song_count`, " .
+                        "COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count`, " .
+                        "SUM(`song`.`time`) AS `time` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `album`.`id` = `song`.`album` ";
                 $sqlw = "WHERE `song`.`artist` = ? ";
             }
             if ($catalog) {
@@ -552,9 +557,9 @@ class Artist extends database_object implements library_item
     public function format($details = true, $limit_threshold = '')
     {
         /* Combine prefix and name, trim then add ... if needed */
-        $name              = trim($this->prefix . " " . $this->name);
+        $name              = trim((string) $this->prefix . " " . $this->name);
         $this->f_name      = $name;
-        $this->f_full_name = trim(trim($this->prefix) . ' ' . trim($this->name));
+        $this->f_full_name = trim(trim((string) $this->prefix) . ' ' . trim((string) $this->name));
 
         // If this is a memory-only object, we're done here
         if (!$this->id) {
@@ -579,7 +584,7 @@ class Artist extends database_object implements library_item
             $sec   = sprintf("%02d", ($extra_info['time'] % 60));
             $hours = floor($extra_info['time'] / 3600);
 
-            $this->f_time = ltrim($hours . ':' . $min . ':' . $sec, '0:');
+            $this->f_time = ltrim((string) $hours . ':' . $min . ':' . $sec, '0:');
 
             $this->tags   = Tag::get_top_tags('artist', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'artist');
@@ -785,7 +790,7 @@ class Artist extends database_object implements library_item
      */
     public static function check($name, $mbid = '', $readonly = false)
     {
-        $trimmed = Catalog::trim_prefix(trim($name));
+        $trimmed = Catalog::trim_prefix(trim((string) $name));
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
         // If Ampache support multiple artists per song one day, we should also handle other artists here
@@ -798,6 +803,9 @@ class Artist extends database_object implements library_item
         if (!$name) {
             $name   = T_('Unknown (Orphaned)');
             $prefix = null;
+        }
+        if ($name == 'Various Artists') {
+            $mbid = '';
         }
 
         if (isset(self::$_mapcache[$name][$prefix][$mbid])) {
@@ -849,10 +857,6 @@ class Artist extends database_object implements library_item
             self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
             return (int) $artist_id;
-        }
-
-        if ($readonly) {
-            return null;
         }
 
         $sql = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) ' .
@@ -931,7 +935,7 @@ class Artist extends database_object implements library_item
         }
 
         // Update artist name (if we don't want to use the MusicBrainz name)
-        $trimmed = Catalog::trim_prefix(trim($name));
+        $trimmed = Catalog::trim_prefix(trim((string) $name));
         $name    = $trimmed['string'];
         if ($name != '' && $name != $this->name) {
             $sql = 'UPDATE `artist` SET `name` = ? WHERE `id` = ?';

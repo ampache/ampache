@@ -78,7 +78,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                     </div>
                     <div class="formValidation">
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
-                        <input type="hidden" name="referrer" value="<?php echo scrub_out(Core::get_server('HTTP_REFERRER')); ?>" />
+                        <input type="hidden" name="referrer" value="<?php echo scrub_out(Core::get_server('HTTP_REFERER')); ?>" />
                         <input type="hidden" name="action" value="login" />
                         <?php echo AmpConfig::get('login_message'); ?>
                     </div>

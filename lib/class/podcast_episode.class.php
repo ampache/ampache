@@ -79,7 +79,7 @@ class Podcast_Episode extends database_object implements media, library_item
             }
             if (!empty($this->file)) {
                 $data          = pathinfo($this->file);
-                $this->type    = strtolower($data['extension']);
+                $this->type    = strtolower((string) $data['extension']);
                 $this->mime    = Song::type_to_mime($this->type);
                 $this->enabled = true;
             }
@@ -125,7 +125,7 @@ class Podcast_Episode extends database_object implements media, library_item
         $this->f_author      = scrub_out($this->author);
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
-        $this->f_pubdate     = date("m\/d\/Y - H:i", $this->pubdate);
+        $this->f_pubdate     = date("m\/d\/Y - H:i", (int) $this->pubdate);
         $this->f_state       = ucfirst($this->state);
 
         // Format the Time
@@ -322,7 +322,7 @@ class Podcast_Episode extends database_object implements media, library_item
         }
 
         /* Can't update to blank */
-        if (!strlen(trim($value))) {
+        if (!strlen(trim((string) $value))) {
             return false;
         }
 

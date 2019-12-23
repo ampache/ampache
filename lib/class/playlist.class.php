@@ -22,7 +22,6 @@
 
 /**
  * Playlist Class
- *
  * This class handles playlists in ampache. it references the playlist* tables
  *
  */
@@ -92,10 +91,12 @@ class Playlist extends playlist_object
      * get_playlists
      * Returns a list of playlists accessible by the user.
      * @param boolean $incl_public
-     * @param int $user_id
+     * @param integer $user_id
+     * @param string $playlist_name
+     * @param boolean $like
      * @return array
      */
-    public static function get_playlists($incl_public = true, $user_id = -1, $playlist_name = '')
+    public static function get_playlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
     {
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
@@ -119,10 +120,11 @@ class Playlist extends playlist_object
         }
 
         if ($playlist_name !== '') {
+            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
             if (count($params) > 0 || $incl_public) {
-                $sql .= " AND `name` = '" . $playlist_name . "'";
+                $sql .= " AND `name` " . $playlist_name;
             } else {
-                $sql .= " WHERE `name` = '" . $playlist_name . "'";
+                $sql .= " WHERE `name` " . $playlist_name;
             }
         }
         $sql .= ' ORDER BY `name`';
@@ -140,11 +142,15 @@ class Playlist extends playlist_object
     /**
      * get_smartlists
      * Returns a list of playlists accessible by the user.
+     * @param boolean $incl_public
+     * @param integer $user_id
+     * @param string $playlist_name
+     * @param boolean $like
      * @return array
      */
-    public static function get_smartlists($incl_public = true, $user_id = null)
+    public static function get_smartlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
     {
-        if ($user_id === null) {
+        if (!$user_id) {
             $user_id = Core::get_global('user')->id;
         }
 
@@ -165,7 +171,16 @@ class Playlist extends playlist_object
             $sql .= "`type` = 'public'";
         }
 
+        if ($playlist_name !== '') {
+            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
+            if (count($params) > 0 || $incl_public) {
+                $sql .= " AND `name` " . $playlist_name;
+            } else {
+                $sql .= " WHERE `name` " . $playlist_name;
+            }
+        }
         $sql .= ' ORDER BY `name`';
+        //debug_event('playlist.class', 'get_smartlists ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();
@@ -187,8 +202,8 @@ class Playlist extends playlist_object
         $this->link   = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
 
-        $this->f_date        = $this->date ? date('d/m/Y h:i', $this->date) : T_('Unknown');
-        $this->f_last_update = $this->last_update ? date('d/m/Y h:i', $this->last_update) : T_('Unknown');
+        $this->f_date        = $this->date ? date('d/m/Y h:i', (int) $this->date) : T_('Unknown');
+        $this->f_last_update = $this->last_update ? date('d/m/Y h:i', (int) $this->last_update) : T_('Unknown');
     } // format
 
     /**
@@ -266,6 +281,7 @@ class Playlist extends playlist_object
 
         $sql         = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
         $db_results  = Dba::read($sql, array($this->id));
+        //debug_event('playlist.class', 'get_songs ' . $sql . ' ' . $this->id, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];
@@ -488,6 +504,20 @@ class Playlist extends playlist_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
+        // check for duplicates
+        $results    = array();
+        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = '" . Dba::escape($name) . "'" .
+                      " AND `user` = " . $user_id .
+                      " AND `type` = '" . Dba::escape($type) . "'";
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+        //return the duplicate ID
+        if (!empty($results)) {
+            return $results[0];
+        }
         if (!is_int($date)) {
             $date = time();
         }
@@ -510,13 +540,29 @@ class Playlist extends playlist_object
     } // set_items
 
     /**
-     * delete_track
+     * delete_song
      * this deletes a single track, you specify the playlist_data.id here
      */
-    public function delete_track($object_id)
+    public function delete_song($object_id)
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $object_id));
+        debug_event('playlist.class', 'Delete object_id: ' . $object_id . ' from ' . $this->id, 5);
+
+        $this->update_last_update();
+
+        return true;
+    } // delete_track
+
+    /**
+     * delete_track
+     * this deletes a single track, you specify the playlist_data.id here
+     */
+    public function delete_track($item_id)
+    {
+        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
+        Dba::write($sql, array($this->id, $item_id));
+        debug_event('playlist.class', 'Delete item_id: ' . $item_id . ' from ' . $this->id, 5);
 
         $this->update_last_update();
 
@@ -531,6 +577,7 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $track));
+        debug_event('playlist.class', 'Delete track: ' . $track . ' from ' . $this->id, 5);
 
         $this->update_last_update();
 

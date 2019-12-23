@@ -357,7 +357,7 @@ class Stream
         $sql = 'REPLACE INTO `now_playing` ' .
             '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
             'VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($sid, $oid, strtolower($type), $uid, (int) (time() + (int) $length), time()));
+        Dba::write($sql, array($sid, $oid, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
     }
 
     /**

@@ -154,7 +154,7 @@ function charset_directory_correct($path) {
             if (!Core::get_global('i_am_crazy')) {
                 echo T_("Rename File (Y/N):");
                 $input = trim(fgets(STDIN));
-                if (strcasecmp($input,'Y') == 0) { charset_rename_file($full_file,$translated_filename); }
+                if (strcasecmp((string) $input,'Y') == 0) { charset_rename_file($full_file,$translated_filename); }
                 else { echo "\n\t"; echo T_('Not renaming...'); echo "\n\n"; }
             }
             else {

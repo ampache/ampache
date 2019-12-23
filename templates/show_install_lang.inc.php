@@ -22,9 +22,7 @@
 
 require $prefix . '/templates/install_header.inc.php'; ?>
         <!-- Main jumbotron for a primary marketing message or call to action -->
-        <div class="jumbotron">
-            <h1 id="headerlogo"><img src="./images/ampache.png" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>"></h1>
-        </div>
+        <br><br>
         <div class="page-header">
             <h1><?php echo T_('Choose Installation Language'); ?></h1>
         </div>

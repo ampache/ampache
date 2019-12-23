@@ -1,9 +1,67 @@
 # CHANGELOG
 
-## 4.1.0
+## 4.1.0-develop
 
+* Bump API version to 400003 (4.0.0 build 003)
+* Api::playlist - filter mandatory
+* Api::playlist_edit - filter mandatory. name and type now optional
+* Api::user - Extend return values to include more user fields
+* Playlist::create - Return duplicate playlist ID instead of creating a new one
+* Artist::check - Remove MBID from Various Artist objects
+* Fix Song::update_song for label
+* Api - Do not limit smartlists based on item count (return everything you can access)
+* Api/Database - Add last_count for search table to speed up access in API
+* Fix Api issues relating to playlist access
+* Fix comparison bugs found during static type testing
+* Fix enable/disable song ajax
+* December translation update from Transifex
+* Add playlist into main search page. (Songs, Albums, Artists, Playlists, Videos)
+* Typo in login page HTTP_REFERER
+* Roll back mysql8 workarounds. (Orace MySQL supported on php7.4+ only)
+* Fix bin\*.inc text issues with newline
+* Add docs/examples/channel_run.service for sunning background processes as a service
+* New search option "Another User" allows searching other user ratings and favorites
+* user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods])>
+* Updates to support php7.4 (Ampache supports 7.1-7.4)
+* Fix bug in UI when enabling/disabling songs
+* Checks in Subsonic/WebUI for recording repeated plays
+* Update channel status pages (/channel/$CHANNELID/status.xsl)
+* Fix smartlists when searching sub-lists (Ampache was trying to create one gian query that didn't scale well)
+* composer & php-cs-fixer updates
+* Fix "Add New..." in album edit
+* Revert changes in 4.0.0 and allow manual choices for artist/album on upload again.
+
+## 4.0.4
+
+* Finalize release procedure to make these updates a bit smoother
+* Reduce the time for repeated track playback (Song length - 5 sec)
+* Filter playlists in API, Web and Subsonic correctly for regular users vs admins
+* Fix album count for Artists when the album is missing data
+* Fix searches / searchbox for MYSQL8
+* Fix some invalid returns in lib/*
+* Send the correct function in ajax.server when deleting from playlist
+* Hide some lines from the mashup to make it a bit nicer
+* Remove the old logo from the main install page
+
+## 4.0.3
+
+* Fixes for Api::get_indexes, Api::playlists, Api::playlist, Api::playlist_songs
+* Fix Access::check to allow all public lists
+* Filter playlists by access in subsonic
+* Fail check_php_verison() when using less than php7.1
+* Fix global user connecting through the API with an API key.
+
+## 4.0.2
+
+* Bump API version to 400002 (4.0.0 build 002)
 * Extend Api::playlist_generate (add new mode 'unplayed')
-* Bump API version to 400002 because of this extension
+* Fix API playlist commands and access checks relating to playlists
+* Access::check should be passing user id from the API
+* SQL query fixes for Album, Playlist methods
+* Remove spaces from play url extensions (Should help nginx users)
+* Translate typo in show_test.inc
+* Trim massive year, time and track when importing new songs
+* Set play_type correctly in preferences pages
 
 ## 4.0.1
 

@@ -39,6 +39,8 @@ function load_gettext()
         $gettext->loadTranslations($translations);
     }
     $gettext->register();
+
+    return true;
 } // load_gettext
 
 /*

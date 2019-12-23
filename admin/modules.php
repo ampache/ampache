@@ -143,7 +143,7 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_plugin':
-        $plugin = scrub_in($_REQUEST['plugin']);
+        $plugin = (string) scrub_in($_REQUEST['plugin']);
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
         $title  = T_('Are You Sure?');
         $body   = T_('This will disable the Plugin and remove your settings');

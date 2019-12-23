@@ -111,7 +111,7 @@ class Repository
         $tableName = preg_replace_callback(
                 '/(?<=.)([A-Z])/',
                 function ($name) {
-                    return '_' . strtolower($name[0]);
+                    return '_' . strtolower((string) $name[0]);
                 }, end($nameParts));
 
         return lcfirst($tableName);

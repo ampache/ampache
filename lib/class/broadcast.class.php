@@ -329,7 +329,7 @@ class Broadcast extends database_object implements library_item
     public static function generate_key()
     {
         // Should be improved for security reasons!
-        return md5(uniqid(rand(), true));
+        return md5(uniqid((string) rand(), true));
     }
 
     /**

@@ -23,8 +23,9 @@
 // Minimal init for use in install
 
 // Do a check for PHP5.4 because nothing will work without it
-if (version_compare(phpversion(), '5.4.0', '<')) {
-    echo T_("Ampache requires PHP version >= 5.4");
+if (version_compare(phpversion(), '7.1.0', '<')) {
+    echo T_("Ampache requires PHP version >= 7.1");
+    throw new \RuntimeException(T_("Ampache requires PHP version >= 7.1"));
 
     return false;
 }

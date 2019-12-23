@@ -37,7 +37,7 @@ ob_end_clean();
 $uid            = scrub_in($_REQUEST['uid']);
 $oid            = scrub_in($_REQUEST['oid']);
 $sid            = scrub_in($_REQUEST['ssid']);
-$type           = scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+$type           = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 $cache          = scrub_in($_REQUEST['cache']);
 $format         = scrub_in($_REQUEST['format']);
 $original       = ($format == 'raw') ? true : false;
@@ -223,7 +223,7 @@ if (!$share_id) {
 /* If we are in demo mode.. die here */
 
 $prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['preferences']['allow_stream_playback'];
-if (AmpConfig::get('demo_mode') || (!Access::check('interface', $prefs))) {
+if (AmpConfig::get('demo_mode') || !$prefs) {
     debug_event('play/index', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . Core::get_global('user')->access, 3);
     UI::access_denied();
 
@@ -492,7 +492,7 @@ $transcode = false;
 // transcode_to should only have an effect if the media is the wrong format
 $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
 if ($transcode_to) {
-    debug_event('play/index', 'Transcode to {' . $transcode_to . '}', 5);
+    debug_event('play/index', 'Transcode to {' . (string) $transcode_to . '}', 5);
 }
 
 // If custom play action, do not try to transcode
@@ -505,7 +505,7 @@ if (!$cpaction && !$original) {
     if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'podcast_episode') {
         if ($transcode_to) {
             $transcode = true;
-            debug_event('play/index', 'Transcoding due to explicit request for ' . $transcode_to, 5);
+            debug_event('play/index', 'Transcoding due to explicit request for ' . (string) $transcode_to, 5);
         } else {
             if ($transcode_cfg == 'always') {
                 $transcode = true;
@@ -724,7 +724,7 @@ $bytes_streamed = 0;
 // Actually do the streaming
 $buf_all = '';
 $r_arr   = array($filepointer);
-$w_arr   = $e_arr   = null;
+$w_arr   = $e_arr   = array();
 $status  = stream_select($r_arr, $w_arr, $e_arr, 2);
 if ($status === false) {
     debug_event('play/index', 'stream_select failed.', 1);

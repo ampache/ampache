@@ -197,7 +197,7 @@ while ($row = Dba::fetch_row($db_results)) {
     }
 
 ob_end_flush();
-echo '\n';
+echo "\n";
 
 function ob_html_strip($string) {
 

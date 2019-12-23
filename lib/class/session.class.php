@@ -84,7 +84,7 @@ class Session
      */
     public static function destroy($key)
     {
-        if (!strlen($key)) {
+        if (!strlen((string) $key)) {
             return false;
         }
 
@@ -95,13 +95,13 @@ class Session
 
         $session_name  = AmpConfig::get('session_name');
         $cookie_path   = AmpConfig::get('cookie_path');
-        $cookie_domain = null;
-        $cookie_secure = AmpConfig::get('cookie_secure');
+        $cookie_domain = '';
+        $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
 
         // Destroy our cookie!
-        setcookie($session_name, null, -1, $cookie_path, $cookie_domain, $cookie_secure);
-        setcookie($session_name . '_user', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
-        setcookie($session_name . '_lang', null, -1, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name, '', -1, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_user', '', -1, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_lang', '', -1, $cookie_path, $cookie_domain, $cookie_secure);
 
         return true;
     }
@@ -194,12 +194,12 @@ class Session
             case 'api':
                 $key = isset($data['apikey'])
                     ? md5(((string) $data['apikey'] . (string) time()))
-                    : md5(uniqid(rand(), true));
+                    : md5(uniqid((string) rand(), true));
                 break;
             case 'stream':
                 $key = isset($data['sid'])
                     ? $data['sid']
-                    : md5(uniqid(rand(), true));
+                    : md5(uniqid((string) rand(), true));
             break;
             case 'mysql':
             default:
@@ -240,7 +240,7 @@ class Session
             $geoname = $data['geo_name'];
         }
 
-        if (!strlen($value)) {
+        if (!strlen((string) $value)) {
             $value = ' ';
         }
 
@@ -284,7 +284,7 @@ class Session
             AmpConfig::get('cookie_life'),
             AmpConfig::get('cookie_path'),
             AmpConfig::get('cookie_domain'),
-            AmpConfig::get('cookie_secure'));
+            make_bool(AmpConfig::get('cookie_secure')));
         session_write_close();
 
         // Set name
@@ -460,7 +460,7 @@ class Session
         $cookie_life   = AmpConfig::get('cookie_life');
         $cookie_path   = AmpConfig::get('cookie_path');
         $cookie_domain = null;
-        $cookie_secure = AmpConfig::get('cookie_secure');
+        $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
 
         if (isset($_SESSION)) {
             setcookie(session_name(), session_id(), $cookie_life);
@@ -488,8 +488,8 @@ class Session
         $cookie_life   = AmpConfig::get('cookie_life');
         $session_name  = AmpConfig::get('session_name');
         $cookie_path   = AmpConfig::get('cookie_path');
-        $cookie_domain = null;
-        $cookie_secure = AmpConfig::get('cookie_secure');
+        $cookie_domain = '';
+        $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
 
         setcookie($session_name . '_user', $username, $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
@@ -521,7 +521,7 @@ class Session
      */
     public static function generateRandomToken()
     {
-        return md5(uniqid(mt_rand(), true));
+        return md5(uniqid((string) mt_rand(), true));
     }
 
     /**

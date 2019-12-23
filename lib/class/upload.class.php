@@ -50,7 +50,7 @@ class Upload
                     debug_event('upload.class', '$_FILES[upl] ' . $_FILES['upl']['name'], 5);
                     $extension = pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION);
 
-                    if (!in_array(strtolower($extension), $allowed)) {
+                    if (!in_array(strtolower((string) $extension), $allowed)) {
                         debug_event('upload.class', 'File extension `' . $extension . '` not allowed.', 2);
 
                         return self::rerror();
@@ -102,6 +102,51 @@ class Upload
                         if (filter_has_var(INPUT_POST, 'license')) {
                             $options['license'] = Core::get_post('license');
                         }
+                        $artist_id = (int) (Core::get_request('artist'));
+                        $album_id  = (int) (Core::get_request('album'));
+
+                        // Try to create a new artist
+                        if (Core::get_request('artist_name') !== '') {
+                            $artist_id = Artist::check(Core::get_request('artist_name'), null, true);
+                            if ($artist_id !== null && !Access::check('interface', 50)) {
+                                debug_event('upload.class', 'An artist with the same name already exists, uploaded song skipped.', 3);
+
+                                return self::rerror($targetfile);
+                            }
+                            $artist = new Artist($artist_id);
+                            if (!$artist->get_user_owner()) {
+                                $artist->update_artist_user($options['user_upload']);
+                            }
+                        }
+                        if ($artist_id === null) {
+                            debug_event('upload.class', 'Artist information required, uploaded song skipped.', 3);
+
+                            return self::rerror($targetfile);
+                        }
+                        $artist = new Artist($artist_id);
+                        if (!Access::check('interface', 25) && $artist->get_user_owner() != $options['user_upload']) {
+                            debug_event('upload.class', "Artist owner doesn't match the current user.", 3);
+
+                            return self::rerror($targetfile);
+                        }
+                        
+                        // Try to create a new album
+                        if (Core::get_request('album_name') !== '') {
+                            $album_id = Album::check(Core::get_request('album_name'), 0, 0, null, null, $artist_id);
+                        }
+                        if ($album_id === null) {
+                            debug_event('upload.class', 'Album information required, uploaded song skipped.', 3);
+
+                            return self::rerror($targetfile);
+                        }
+                        $album = new Album($album_id);
+                        if (!Access::check('interface', 25) && $album->get_user_owner() != $options['user_upload']) {
+                            debug_event('upload.class', "Album owner doesn't match the current user.", 3);
+
+                            return self::rerror($targetfile);
+                        }
+                        $options['artist_id'] = $artist_id;
+                        $options['album_id']  = $album_id;
 
                         if (AmpConfig::get('upload_catalog_pattern')) {
                             $options['move_match_pattern'] = true;

@@ -199,7 +199,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
      * to redirect them back into an admin section
      */
     $web_path = AmpConfig::get('web_path');
-    if ((substr($_POST['referrer'], 0, strlen($web_path)) == $web_path) &&
+    if ((substr($_POST['referrer'], 0, strlen((string) $web_path)) == $web_path) &&
         strpos($_POST['referrer'], 'install.php') === false &&
         strpos($_POST['referrer'], 'login.php') === false &&
         strpos($_POST['referrer'], 'logout.php') === false &&
