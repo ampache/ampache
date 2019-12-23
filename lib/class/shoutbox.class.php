@@ -169,7 +169,7 @@ class Shoutbox
         $object = new $type($object_id);
 
         if ($object->id > 0) {
-            if (strtolower($type) === 'song') {
+            if (strtolower((string) $type) === 'song') {
                 if (!$object->enabled) {
                     $object = null;
                 }
@@ -211,7 +211,7 @@ class Shoutbox
         $date       = (int) ($data['date'] ?: time());
         $comment    = strip_tags($data['comment']);
 
-        $sql = "INSERT INTO `user_shout` (`user`,`date`,`text`,`sticky`,`object_id`,`object_type`, `data`) " .
+        $sql = "INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) " .
             "VALUES (? , ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
 
@@ -220,7 +220,7 @@ class Shoutbox
         $insert_id = Dba::insert_id();
 
         // Never send email in case of user impersonation
-        if (!isset($data['user']) && $insert_id) {
+        if (!isset($data['user']) && $insert_id !== null) {
             $libitem       = new $data['object_type']($data['object_id']);
             $item_owner_id = $libitem->get_user_owner();
             if ($item_owner_id) {
@@ -268,7 +268,7 @@ class Shoutbox
     public function format()
     {
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
-        $this->f_date = date("m\/d\/Y - H:i", $this->date);
+        $this->f_date = date("m\/d\/Y - H:i", (int) $this->date);
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
 
         return true;
@@ -300,7 +300,7 @@ class Shoutbox
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
             $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
-            $html .= "<div class='shoutbox-date'>" . date("Y/m/d H:i:s", $this->date) . "</div>";
+            $html .= "<div class='shoutbox-date'>" . date("Y/m/d H:i:s", (int) $this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . $this->f_text . "</div>";
         $html .= "</div>";

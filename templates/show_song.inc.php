@@ -99,8 +99,17 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <?php
         } ?>
         <?php if (Access::check_function('download')) { ?>
-        <a class="nohtml" href="<?php echo Song::play_url($song->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
+        <a class="nohtml" href="<?php echo Song::play_url($song->id, '&action=download', '', false, 0, true); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+        <?php
+        } ?>
+        <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface', '50')) {
+            ?>
+            <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
+                ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=song&object_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+            <?php
+            } ?>
         <?php
         } ?>
         <?php if (Access::check('interface', '50') || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
@@ -175,7 +184,6 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         $owner->format();
         $songprops[T_('Uploaded by')]  = $owner->f_link;
     }
-
 
     foreach ($songprops as $key => $value) {
         if (trim($value)) {

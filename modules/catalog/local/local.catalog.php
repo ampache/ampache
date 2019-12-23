@@ -135,7 +135,7 @@ class Catalog_local extends Catalog
     public static function get_from_path($path)
     {
         // First pull a list of all of the paths for the different catalogs
-        $sql        = "SELECT `catalog_id`,`path` FROM `catalog_local`";
+        $sql        = "SELECT `catalog_id`, `path` FROM `catalog_local`";
         $db_results = Dba::read($sql);
 
         $catalog_paths  = array();
@@ -558,7 +558,7 @@ class Catalog_local extends Catalog
         $changed = 0;
 
         $sql = "SELECT `id`, `file` FROM `$media_type` " .
-            "WHERE `catalog`='$this->id' ORDER BY `$media_type`.`update_time` ASC, `$media_type`.`file` LIMIT $count,$chunk_size";
+            "WHERE `catalog`='$this->id' ORDER BY `$media_type`.`update_time` ASC, `$media_type`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         if (AmpConfig::get('memory_cache')) {
@@ -663,7 +663,7 @@ class Catalog_local extends Catalog
         $count = $chunk * $chunk_size;
 
         $sql = "SELECT `id`, `file` FROM `$media_type` " .
-            "WHERE `catalog`='$this->id' LIMIT $count,$chunk_size";
+            "WHERE `catalog`='$this->id' LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         while ($results = Dba::fetch_assoc($db_results)) {

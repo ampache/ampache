@@ -150,7 +150,7 @@ class UI
               $clean = preg_replace($regex, '$1', $string); */
 
             if ($clean) {
-                return rtrim($clean);
+                return rtrim((string) $clean);
             }
 
             debug_event('ui.class', 'Charset cleanup failed, something might break', 1);
@@ -183,7 +183,7 @@ class UI
     public static function format_bytes($value, $precision = 2)
     {
         $pass = 0;
-        while (strlen(floor($value)) > 3) {
+        while (strlen((string) floor($value)) > 3) {
             $value /= 1024;
             $pass++;
         }
@@ -220,11 +220,11 @@ class UI
      */
     public static function unformat_bytes($value)
     {
-        if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', $value, $matches)) {
+        if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', (string) $value, $matches)) {
             $value = $matches[1];
             $unit  = strtolower(substr($matches[2], 0, 1));
         } else {
-            return $value;
+            return (string) $value;
         }
 
         switch ($unit) {
@@ -245,7 +245,7 @@ class UI
             // Intentional break fall-through
         }
 
-        return $value;
+        return (string) $value;
     }
 
     /**
@@ -299,10 +299,10 @@ class UI
             $tag = '<img src="' . $icon_url . '" ';
             $tag .= 'alt="' . $title . '" ';
             $tag .= 'title="' . $title . '" ';
-            if ($id_attrib) {
+            if ($id_attrib !== null) {
                 $tag .= 'id="' . $id_attrib . '" ';
             }
-            if ($class_attrib) {
+            if ($class_attrib !== null) {
                 $tag .= 'class="' . $class_attrib . '" ';
             }
             if (isset($hover_name) && isset($hover_url)) {
@@ -397,10 +397,10 @@ class UI
             $tag = '<img src="' . $image_url . '" ';
             $tag .= 'alt="' . $title . '" ';
             $tag .= 'title="' . $title . '" ';
-            if ($id_attrib) {
+            if ($id_attrib !== null) {
                 $tag .= 'id="' . $id_attrib . '" ';
             }
-            if ($class_attrib) {
+            if ($class_attrib !== null) {
                 $tag .= 'class="' . $class_attrib . '" ';
             }
             if (isset($hover_name) && isset($hover_url)) {

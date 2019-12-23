@@ -103,6 +103,7 @@ class Label extends database_object implements library_item
 
     public function format($details = true)
     {
+        unset($details);
         $this->f_name       = scrub_out($this->name);
         $this->link         = AmpConfig::get('web_path') . '/labels.php?action=show&label=' . scrub_out($this->id);
         $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name;
@@ -283,15 +284,15 @@ class Label extends database_object implements library_item
                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date));
 
-        $id = Dba::insert_id();
+        $label_id = Dba::insert_id();
 
-        return $id;
+        return $label_id;
     }
 
     public static function lookup(array $data, $id = 0)
     {
         $ret  = -1;
-        $name = trim($data['name']);
+        $name = trim((string) $data['name']);
         if (!empty($name)) {
             $ret    = 0;
             $sql    = "SELECT `id` FROM `label` WHERE `name` = ?";
@@ -446,7 +447,7 @@ class Label extends database_object implements library_item
             $results .= ', ';
         }
 
-        $results = rtrim($results, ', ');
+        $results = rtrim((string) $results, ', ');
 
         return $results;
     } // get_display
@@ -462,7 +463,7 @@ class Label extends database_object implements library_item
         debug_event('label.class', 'Updating labels for values {' . $labels_comma . '} artist {' . $artist_id . '}', 5);
 
         $clabels      = Label::get_labels($artist_id);
-        $editedLabels = explode(",", $labels_comma);
+        $editedLabels = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels_comma));
 
         foreach ($clabels as $clid => $clv) {
             if ($clid) {
@@ -482,11 +483,9 @@ class Label extends database_object implements library_item
                 if ($found) {
                     debug_event('label.class', 'Already found. Do nothing.', 5);
                     unset($editedLabels[$lstring]);
-                } else {
-                    if ($overwrite) {
-                        debug_event('label.class', 'Not found in the new list. Delete it.', 5);
-                        $clabel->remove_artist_assoc($artist_id);
-                    }
+                } elseif ($overwrite) {
+                    debug_event('label.class', 'Not found in the new list. Delete it.', 5);
+                    $clabel->remove_artist_assoc($artist_id);
                 }
             }
         }
@@ -518,15 +517,10 @@ class Label extends database_object implements library_item
      */
     public static function clean_to_existing($labels)
     {
-        if (is_array($labels)) {
-            $array = $labels;
-        } else {
-            $array = explode(",", $labels);
-        }
-
-        $ret = array();
+        $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
+        $ret   = array();
         foreach ($array as $label) {
-            $label = trim($label);
+            $label = trim((string) $label);
             if (!empty($label)) {
                 if (Label::lookup(array('name' => $label)) > 0) {
                     $ret[] = $label;

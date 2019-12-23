@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -240,7 +239,7 @@ class Access
         $enabled = make_bool($data['enabled']) ? 1 : 0;
 
         $sql = 'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, ' .
-                '`user`,`type`,`enabled`) VALUES (?, ?, ?, ?, ?, ?, ?)';
+                '`user`, `type`, `enabled`) VALUES (?, ?, ?, ?, ?, ?, ?)';
         Dba::write($sql, array($name, $level, $start, $end, $user, $type, $enabled));
 
         return true;
@@ -368,7 +367,7 @@ class Access
 
         $params = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
 
-        if (strlen($user) && $user != '-1') {
+        if (strlen((string) $user) && $user != '-1') {
             $sql .= " AND `user` IN(?, '-1')";
             $params[] = $user;
         } else {

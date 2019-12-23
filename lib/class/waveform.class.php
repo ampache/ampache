@@ -277,21 +277,21 @@ class Waveform
                 // draw this data point
                 // relative value based on height of image being generated
                 // data values can range between 0 and 255
-                $v = (int) ($data / 255 * $height);
+                $value = (int) ($data / 255 * $height);
 
                 // don't print flat values on the canvas if not necessary
-                if (!($v / $height == 0.5 && !$draw_flat)) {
-                    // draw the line on the image using the $v value and centering it vertically on the canvas
+                if (!($value / $height == 0.5 && !$draw_flat)) {
+                    // draw the line on the image using the $value and centering it vertically on the canvas
                     imageline(
                   $img,
                   // x1
                   (int) ($data_point / $detail),
-                  // y1: height of the image minus $v as a percentage of the height for the wave amplitude
-                  $height - $v,
+                  // y1: height of the image minus  as a percentage of the height for the wave amplitude
+                  $height - $value,
                   // x2
                   (int) ($data_point / $detail),
                   // y2: same as y1, but from the bottom of the image
-                  $height - ($height - $v),
+                  $height - ($height - $value),
                   imagecolorallocate($img, $red, $green, $blue)
                 );
                 }

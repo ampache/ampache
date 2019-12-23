@@ -35,6 +35,7 @@ class Stream
      * This overrides the normal session value, without adding
      * an additional session into the database, should be called
      * with care
+     * @param integer $sid
      */
     public static function set_session($sid)
     {
@@ -326,17 +327,17 @@ class Stream
     }
 
     /**
-     * gc_now_playing
+     * garbage_collection
      *
      * This will garbage collect the Now Playing data,
      * this is done on every play start.
      */
-    public static function gc_now_playing()
+    public static function garbage_collection()
     {
         // Remove any Now Playing entries for sessions that have been GC'd
         $sql = "DELETE FROM `now_playing` USING `now_playing` " .
             "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
-            "WHERE `session`.`id` IS NULL OR `now_playing`.`expire` < '" . time() . "'";
+            "WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
         Dba::write($sql);
     }
 
@@ -344,14 +345,19 @@ class Stream
      * insert_now_playing
      *
      * This will insert the Now Playing data.
+     * @param integer $oid
+     * @param integer $uid
+     * @param integer $length
+     * @param string $sid
+     * @param string $type
      */
     public static function insert_now_playing($oid, $uid, $length, $sid, $type)
     {
         // Ensure that this client only has a single row
         $sql = 'REPLACE INTO `now_playing` ' .
-            '(`id`,`object_id`,`object_type`, `user`, `expire`, `insertion`) ' .
+            '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
             'VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($sid, $oid, strtolower($type), $uid, (int) (time() + $length), time()));
+        Dba::write($sql, array($sid, $oid, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
     }
 
     /**

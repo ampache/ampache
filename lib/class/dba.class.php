@@ -480,7 +480,7 @@ class Dba
     public static function translate_to_mysqlcharset($charset)
     {
         // Translate real charset names into fancy MySQL land names
-        switch (strtoupper($charset)) {
+        switch (strtoupper((string) $charset)) {
             case 'CP1250':
             case 'WINDOWS-1250':
                 $target_charset   = 'cp1250';

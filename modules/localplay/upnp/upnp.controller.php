@@ -119,7 +119,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function add_instance($data)
     {
-        $sql = "INSERT INTO `localplay_upnp` (`name`,`url`, `owner`) " .
+        $sql = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) " .
             "VALUES (?, ?, ?)";
         $db_results = Dba::query($sql, array($data['name'], $data['url'], Core::get_global('user')->id));
 

@@ -19,6 +19,7 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
     $requestRaw = file_get_contents('php://input');
     if ($requestRaw != '') {
         $upnpRequest = Upnp_Api::parseUPnPRequest($requestRaw);
+
     //!!debug_event('control-reply', 'Request: ' . $requestRaw, 5);
     } else {
         echo T_('Received an empty UPnP request');

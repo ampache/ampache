@@ -15,32 +15,34 @@ assignees: ''
 
 ## Description
 
-**Describe the bug**
+### Describe the bug
 <!-- Explain in detail what is happening. -->
 
-**To reproduce**
+### To reproduce
+
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
+### Expected behavior
 <!-- What you believe should have happened -->
 
-**Screenshots**
+### Screenshots
 <!-- If applicable, add screenshots to help explain your problem. -->
 
 ## Environment
 
-* Ampache version: 
+* Ampache version:
 * Web server + version:
 * Server operating system:
 * Client operating system:
 
 <!-- Keep only the affected clients in the list below. Add the client application name and version to the right of the client type used. -->
 
-**Client type:**
+### Client type
 
 * Web
 * Ampache

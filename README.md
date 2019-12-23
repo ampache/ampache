@@ -5,11 +5,10 @@
 [www.ampache.org](http://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
 
-**Current News:**
+**News:**
 
-* Video features are considered a low priority feature.
-* A major string update is here which means new translations! Join us on [Transifex](https://www.transifex.com/ampache/ampache).
-* Subsonic API 1.13.0 and Ampache API 400001 are ready for testing!
+* Try out the new python library, fully compatible with the latest api on the [pypi project page](https://pypi.org/project/ampache/)
+* Make sure you read over the changelog and check out [Release News](https://github.com/ampache/ampache/wiki/changelog) to get a handle on all the new features.
 
 ## Basics
 
@@ -41,13 +40,13 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
 
 ## Requirements
 
-* A web server. All of the following have been used, though Apache receives the most testing:
+* A web server. All of the following have been used, though Apache receives the most testing with Apache:
   * Apache
   * lighttpd
   * nginx
   * IIS
 
-* PHP 5.6 or greater.
+* PHP 7.1 or greater. (Currently tested on php7.4-fpm)
 
 * PHP modules:
   * PDO

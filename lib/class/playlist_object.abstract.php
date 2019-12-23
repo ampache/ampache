@@ -80,17 +80,23 @@ abstract class playlist_object extends database_object implements library_item
      * has_access
      * This function returns true or false if the current user
      * has access to this playlist
+     * @param integer $user_id
+     * @return boolean
      */
-    public function has_access()
+    public function has_access($user_id = null)
     {
         if (!Access::check('interface', 25)) {
             return false;
         }
-        if ($this->user == Core::get_global('user')->id) {
+        if (Access::check('interface', 100)) {
             return true;
-        } else {
-            return Access::check('interface', 75);
         }
+        // allow the owner
+        if (($this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
+            return true;
+        }
+
+        return false;
     } // has_access
 
     public function get_medias($filter_type = null)

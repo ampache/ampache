@@ -103,7 +103,7 @@ class Share extends database_object
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $secret     = '';
         for ($count = 0; $count < $length; $count++) {
-            $secret .= $characters[rand(0, strlen($characters) - 1)];
+            $secret .= $characters[rand(0, strlen((string) $characters) - 1)];
         }
 
         return $secret;
@@ -157,9 +157,9 @@ class Share extends database_object
         $params = array(Core::get_global('user')->id, $object_type, $object_id, time(), $allow_stream ?: 0, $allow_download ?: 0, $expire, $secret, 0, $max_counter, $description);
         Dba::write($sql, $params);
 
-        $id = Dba::insert_id();
+        $share_id = Dba::insert_id();
 
-        $url = self::get_url($id, $secret);
+        $url = self::get_url($share_id, $secret);
         // Get a shortener url if any available
         foreach (Plugin::get_plugins('shortener') as $plugin_name) {
             try {
@@ -176,9 +176,9 @@ class Share extends database_object
             }
         }
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
-        Dba::write($sql, array($url, $id));
+        Dba::write($sql, array($url, $share_id));
 
-        return $id;
+        return $share_id;
     }
 
     /**
@@ -248,6 +248,9 @@ class Share extends database_object
     {
         if ($this->id) {
             if (Core::get_global('user')->has_access('75') || $this->user == (int) Core::get_global('user')->id) {
+                if ($this->allow_download) {
+                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . UI::get_icon('download', T_('Download')) . "</a>";
+                }
                 echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
@@ -267,8 +270,8 @@ class Share extends database_object
         }
         $this->f_allow_stream   = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
-        $this->f_creation_date  = date("Y-m-d H:i:s", $this->creation_date);
-        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", $this->creation_date) : '';
+        $this->f_creation_date  = date("Y-m-d H:i:s", (int) $this->creation_date);
+        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", (int) $this->creation_date) : '';
     }
 
     /**
@@ -444,7 +447,7 @@ class Share extends database_object
         echo "<li style='padding-top: 8px; text-align: right;'>";
         $plugins = Plugin::get_plugins('external_share');
         foreach ($plugins as $plugin_name) {
-            echo "<a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . UI::get_icon('share_' . strtolower($plugin_name), $plugin_name) . "</a>&nbsp;";
+            echo "<a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . UI::get_icon('share_' . strtolower((string) $plugin_name), $plugin_name) . "</a>&nbsp;";
         }
         echo "</li>";
         echo "</ul>";

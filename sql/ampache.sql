@@ -739,7 +739,7 @@ CREATE TABLE IF NOT EXISTS `rating` (
   `object_id` int(11) unsigned NOT NULL DEFAULT '0',
   `rating` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_rating` (`user`,`object_type`,`object_id`),
+  UNIQUE KEY `unique_rating` (`user`, `object_type`, `object_id`),
   KEY `object_id` (`object_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
@@ -828,7 +828,7 @@ CREATE TABLE IF NOT EXISTS `session_remember` (
   `username` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `token` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `expire` int(11) DEFAULT NULL,
-  PRIMARY KEY (`username`,`token`)
+  PRIMARY KEY (`username`, `token`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1023,7 +1023,7 @@ DROP TABLE IF EXISTS `tag_merge`;
 CREATE TABLE IF NOT EXISTS `tag_merge` (
   `tag_id` int(11) NOT NULL,
   `merged_to` int(11) NOT NULL,
-  PRIMARY KEY (`tag_id`,`merged_to`),
+  PRIMARY KEY (`tag_id`, `merged_to`),
   KEY `merged_to` (`merged_to`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1039,7 +1039,7 @@ CREATE TABLE IF NOT EXISTS `tmp_browse` (
   `sid` varchar(128) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `data` longtext COLLATE utf8_unicode_ci NOT NULL,
   `object_data` longtext COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`sid`,`id`)
+  PRIMARY KEY (`sid`, `id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1199,7 +1199,7 @@ CREATE TABLE IF NOT EXISTS `user_flag` (
   `object_type` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
   `date` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`),
+  UNIQUE KEY `unique_userflag` (`user`, `object_type`, `object_id`),
   KEY `object_id` (`object_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
@@ -1419,7 +1419,7 @@ CREATE TABLE IF NOT EXISTS `wanted` (
   `date` int(11) unsigned NOT NULL DEFAULT '0',
   `accepted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_wanted` (`user`,`artist`,`mbid`)
+  UNIQUE KEY `unique_wanted` (`user`, `artist`, `mbid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1539,8 +1539,8 @@ CREATE TABLE IF NOT EXISTS `metadata` (
   KEY `field` (`field`),
   KEY `object_id` (`object_id`),
   KEY `type` (`type`),
-  KEY `objecttype` (`object_id`,`type`),
-  KEY `objectfield` (`object_id`,`field`,`type`),
+  KEY `objecttype` (`object_id`, `type`),
+  KEY `objectfield` (`object_id`, `field`, `type`),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 

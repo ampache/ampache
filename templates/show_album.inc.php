@@ -161,6 +161,13 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php if (($owner_id > 0 && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', '50')) {
         $saveorder  = T_('Save Track Order'); ?>
+        <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
+            <li>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>"><?php echo T_('Graphs'); ?></a>
+            </li>
+        <?php
+        } ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table_<?php echo $album->id; ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
@@ -175,6 +182,16 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php if ($album->can_edit()) {
         $albumedit  = T_('Album Edit'); ?>
+        <?php if (AmpConfig::get('allow_upload')) {
+            $t_upload = T_('Upload'); ?>
+                <li>
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ? $album->album_artist : $album->artist_id); ?>&album=<?php echo $album->id ?>">
+                        <?php echo UI::get_icon('upload', $t_upload); ?>
+                        &nbsp;&nbsp;<?php echo $t_upload; ?>
+                    </a>
+                </li>
+            <?php
+        } ?>
         <li>
             <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>

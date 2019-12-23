@@ -164,7 +164,7 @@ class User extends database_object
         }
 
         // Make sure the Full name is always filled
-        if (strlen($this->fullname) < 1) {
+        if (strlen((string) $this->fullname) < 1) {
             $this->fullname = $this->username;
         }
     } // Constructor
@@ -281,7 +281,7 @@ class User extends database_object
      */
     public static function get_from_apikey($apikey)
     {
-        $apikey    = trim($apikey);
+        $apikey    = trim((string) $apikey);
         if (!empty($apikey)) {
             // check for legacy unencrypted apikey
             $sql        = "SELECT `id` FROM `user` WHERE `apikey` = ?";
@@ -338,7 +338,7 @@ class User extends database_object
      */
     public static function get_from_website($website)
     {
-        $website    = rtrim($website, "/");
+        $website    = rtrim((string) $website, "/");
         $sql        = "SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1";
         $db_results = Dba::read($sql, array($website));
         $users      = array();
@@ -412,7 +412,7 @@ class User extends database_object
                 $admin = true;
             }
             $type_array[$type][$row['name']] = array('name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'], 'value' => $row['value'], 'subcategory' => $row['subcatagory']);
-            $results[$type]                  = array('title' => ucwords($type), 'admin' => $admin, 'prefs' => $type_array[$type]);
+            $results[$type]                  = array('title' => ucwords((string) $type), 'admin' => $admin, 'prefs' => $type_array[$type]);
         } // end while
 
         return $results;
@@ -557,7 +557,7 @@ class User extends database_object
     {
         $username = Dba::escape($this->username);
 
-        $sql = "SELECT `id`,`ip` FROM `session` WHERE `username`='$username'" .
+        $sql = "SELECT `id`, `ip` FROM `session` WHERE `username`='$username'" .
             " AND `expire` > " . time();
         $db_results = Dba::read($sql);
 
@@ -740,7 +740,7 @@ class User extends database_object
      */
     public function update_website($new_website)
     {
-        $new_website = rtrim($new_website, "/");
+        $new_website = rtrim((string) $new_website, "/");
         $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
 
         debug_event('user.class', 'Updating website', 4);
@@ -885,7 +885,7 @@ class User extends database_object
      * updates the playcount mojo for this specific user
      * @param string $media_type
      */
-    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $noscrobble = false, $date = null)
+    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $date = null)
     {
         debug_event('user.class', 'Updating stats for {' . $media_type . '/' . $media_id . '} {' . $agent . '}...', 5);
         $media = new $media_type($media_id);
@@ -893,28 +893,23 @@ class User extends database_object
         $user_id = $this->id;
 
         // We shouldn't test on file only
-        if (!strlen($media->file)) {
+        if (!strlen((string) $media->file)) {
             return false;
         }
 
-        if (!$noscrobble) {
-            $this->set_preferences();
-            // If pthreads available, we call save_mediaplay in a new thread to quickly return
-            if (class_exists("Thread", false)) {
-                debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
-                $thread = new scrobbler_async(Core::get_global('user'), $media);
-                if ($thread->start()) {
-                    //$thread->join();
-                } else {
-                    debug_event('user.class', 'Error when starting the thread.', 1);
-                }
+        $this->set_preferences();
+        // If pthreads available, we call save_mediaplay in a new thread to quickly return
+        if (class_exists("Thread", false)) {
+            debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
+            $thread = new scrobbler_async(Core::get_global('user'), $media);
+            if ($thread->start()) {
+                //$thread->join();
             } else {
-                self::save_mediaplay(Core::get_global('user'), $media);
+                debug_event('user.class', 'Error when starting the thread.', 1);
             }
         } else {
-            debug_event('user.class', 'Scrobbling explicitly skipped', 5);
+            self::save_mediaplay(Core::get_global('user'), $media);
         }
-
         $media->set_played($user_id, $agent, $location, $date);
 
         return true;
@@ -966,12 +961,12 @@ class User extends database_object
             $sip   = $sipar['host'];
         }
 
-        $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim($sip, "[]"))) : '';
+        $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim((string) $sip, "[]"))) : '';
         $date    = time();
         $user_id = $this->id;
         $agent   = Dba::escape(Core::get_server('HTTP_USER_AGENT'));
 
-        $sql = "INSERT INTO `ip_history` (`ip`,`user`,`date`,`agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
+        $sql = "INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
         Dba::write($sql);
 
         /* Clean up old records... sometimes  */
@@ -992,7 +987,7 @@ class User extends database_object
      */
     public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false, $encrypted = false)
     {
-        $website = rtrim($website, "/");
+        $website = rtrim((string) $website, "/");
         if (!$encrypted) {
             $password = hash('sha256', $password);
         }
@@ -1083,14 +1078,14 @@ class User extends database_object
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
         } else {
-            $this->f_last_seen = date("m\/d\/Y - H:i", $this->last_seen);
+            $this->f_last_seen = date("m\/d\/Y - H:i", (int) $this->last_seen);
         }
 
         /* If they have a create date */
         if (!$this->create_date) {
             $this->f_create_date = T_('Unknown');
         } else {
-            $this->f_create_date = date("m\/d\/Y - H:i", $this->create_date);
+            $this->f_create_date = date("m\/d\/Y - H:i", (int) $this->create_date);
         }
 
         $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);
@@ -1215,7 +1210,7 @@ class User extends database_object
 
         /* If we aren't the -1 user before we continue grab the -1 users values */
         if ($user_id != '-1') {
-            $sql = "SELECT `user_preference`.`preference`,`user_preference`.`value` FROM `user_preference`,`preference` " .
+            $sql = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` " .
                 "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
@@ -1244,7 +1239,7 @@ class User extends database_object
                     $row['value'] = $zero_results[$key];
                 }
                 $value = Dba::escape($row['value']);
-                $sql   = "INSERT INTO user_preference (`user`,`preference`,`value`) VALUES ('$user_id', '$key', '$value')";
+                $sql   = "INSERT INTO user_preference (`user`, `preference`, `value`) VALUES ('$user_id', '$key', '$value')";
                 Dba::write($sql);
             }
         } // while preferences
@@ -1273,7 +1268,7 @@ class User extends database_object
         // simple deletion queries.
         $user_tables = array('playlist', 'object_count', 'ip_history',
             'access_list', 'rating', 'tag_map',
-            'user_preference', 'user_vote', '');
+            'user_preference', 'user_vote');
         foreach ($user_tables as $table_id) {
             $sql = "DELETE FROM `" . $table_id . "` WHERE `user` = ?";
             Dba::write($sql, array($this->id));
@@ -1330,16 +1325,20 @@ class User extends database_object
     /**
      * get_recently_played
      * This gets the recently played items for this user respecting
-     * the limit passed
+     * the limit passed. ger recent by default or oldest if $newest is false.
+     * @param string $limit
+     * @param string $type
+     * @param boolean $newest
      */
-    public function get_recently_played($limit, $type = '')
+    public function get_recently_played($limit, $type = '', $newest = true)
     {
         if (!$type) {
             $type = 'song';
         }
+        $ordersql = ($newest === true) ? 'DESC' : 'ASC';
 
-        $sql = "SELECT * FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
-            "ORDER BY `date` DESC LIMIT " . $limit;
+        $sql = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
+            "ORDER BY `date` " . $ordersql . " LIMIT " . $limit;
         $db_results = Dba::read($sql, array($type, $this->id));
 
         $results = array();
@@ -1372,7 +1371,7 @@ class User extends database_object
         }
 
         /* Select ip history */
-        $sql = "SELECT `ip`,`date` FROM `ip_history`" .
+        $sql = "SELECT `ip`, `date` FROM `ip_history`" .
             " WHERE `user`='$username'" .
             " $group_sql ORDER BY `date` DESC $limit_sql";
         $db_results = Dba::read($sql);
@@ -1623,7 +1622,7 @@ class User extends database_object
      */
     public function get_display_follow($user_id = null)
     {
-        if (!$user_id) {
+        if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
 

@@ -74,7 +74,7 @@ class Clip extends Video
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
         }
 
-        return Artist::check($data['artist'],$artist_mbid);
+        return Artist::check($data['artist'], $artist_mbid);
     } // _get_artist_id
     /**
      * create
@@ -90,7 +90,7 @@ class Clip extends Video
         }
         if ($artist_id || $song_id) {
             debug_event('clips.class', 'insert ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
-            $sql = "INSERT INTO `clip` (`id`,`artist`,`song`) " .
+            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) " .
           "VALUES (?, ?, ?)";
             Dba::write($sql, array($data['id'], $artist_id, $song_id));
         }

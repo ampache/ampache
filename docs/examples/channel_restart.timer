@@ -1,0 +1,9 @@
+[Unit]
+Description=restart channel_run.service
+
+[Timer]
+OnCalendar=23:23:00
+Unit=channel_restart.service
+
+[Install]
+WantedBy=timer.target

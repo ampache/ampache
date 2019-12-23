@@ -112,9 +112,9 @@ class Ajax
         }
 
         if ($post) {
-            $ajax_string = "ajaxPost('$url', '$post',$source_txt)";
+            $ajax_string = "ajaxPost('$url', '$post', $source_txt)";
         } else {
-            $ajax_string = "ajaxPut('$url',$source_txt)";
+            $ajax_string = "ajaxPut('$url', $source_txt)";
         }
 
         return $ajax_string;

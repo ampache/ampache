@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -100,12 +99,15 @@ class Random
      * This just randomly picks a song at whim from all catalogs
      * nothing special here...
      */
-    public static function get_default($limit = '')
+    public static function get_default($limit = '', $user_id = null)
     {
         $results = array();
 
         if (empty($limit)) {
             $limit = AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25';
+        }
+        if ((int) $user_id < 1) {
+            $user_id = Core::get_global('user')->id;
         }
 
         $rating_join = 'WHERE';
@@ -116,8 +118,7 @@ class Random
             $rating_join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
-            $user_id = Core::get_global('user')->id;
+        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
             $sql .= " " . $rating_join . " `song`.`artist` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .
@@ -138,6 +139,50 @@ class Random
 
         return $results;
     } // get_default
+
+    /**
+     * get_flagged
+     * This just randomly picks songs based on whether the artist, album, song is flagged by the user.
+     * @param string $type
+     * @param integer $limit
+     * @param integer $user_id
+     */
+    public static function get_flagged($type = 'song', $limit = '', $user_id = null)
+    {
+        $results = array();
+
+        if (empty($limit)) {
+            $limit = AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25';
+        }
+        if ((int) $user_id < 1) {
+            $user_id = Core::get_global('user')->id;
+        }
+        $type_sql = '`song`.`' . $type . '`';
+        if ($type == 'song') {
+            $type_sql = '`song`.`id`';
+        }
+        $flag_join = 'WHERE';
+        $sql       = "SELECT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " .
+                    "WHERE `catalog`.`enabled` = '1' ";
+            $flag_join = 'AND';
+        }
+        if ($user_id !== null) {
+            $sql .= " " . $flag_join . " " . $type_sql . " IN" .
+                    " (SELECT `object_id` FROM `user_flag`" .
+                    " WHERE `user_flag`.`object_type` = '" . $type . "'" .
+                    " AND `user_flag`.`user` = " . $user_id . ") ";
+        }
+        $sql .= "ORDER BY RAND() LIMIT $limit";
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    } // get_flagged
 
     /**
      * get_album
@@ -180,7 +225,7 @@ class Random
                     " AND `rating`.`user` = " . $user_id . ")";
         }
         if (AmpConfig::get('album_group')) {
-            "GROUP BY `album`.`name`, `album`.`album_artist`, `album`.`mbid`, `album`.`year` ORDER BY `rating` DESC";
+            $where_sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
         }
         $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
         //debug_event('random.class', 'get_album ' . $sql, 5);

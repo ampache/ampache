@@ -39,7 +39,7 @@
                 <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($libitem->allow_stream) ? 'checked' : ''; ?> /> <?php echo T_('Allow Stream') ?></td>
             </tr>
             <?php
-                if ((($libitem->object_type == 'song' || $libitem->object_type == 'video') && Access::check_function('download')) || Access::check_function('batch_download')) { ?>
+                if ((($libitem->object_type == 'song' || $libitem->object_type == 'video') && (Access::check_function('download')) || Access::check_function('batch_download'))) { ?>
                     <tr>
                         <td class="edit_dialog_content_header"></td>
                         <td><input type="checkbox" name="allow_download" value="1" <?php echo ($libitem->allow_download) ? 'checked' : ''; ?> /> <?php echo T_('Allow Download') ?></td>

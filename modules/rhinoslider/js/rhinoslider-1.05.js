@@ -419,10 +419,10 @@
                 if (settings.controlsPlayPause) {
                     vars.buttons.play.text(settings.playText).removeClass(vars.prefix + "pause").addClass(vars.prefix + "play");
                 }
-    
+
                 settings.callBackPause();
             },
-        
+
             //start/resume the autoplay and change the bg-image of the button to "pause"
             play = function () {
                 var vars = $slider.data("slider:vars");
@@ -433,7 +433,7 @@
                 if (settings.controlsPlayPause) {
                     vars.buttons.play.text(settings.pauseText).removeClass(vars.prefix + "play").addClass(vars.prefix + "pause");
                 }
-    
+
                 settings.callBackPlay();
             },
 
@@ -481,13 +481,13 @@
                     params.settings = settings;
                     params.animateActive = settings.animateActive;
                     params.direction = settings.slidePrevDirection;
-    
+
                     if(type0f(effects[settings.effect]) === "undefined"){
                         console.log("Preparations for " + settings.effect + " not found.");
                     }else{
                         effects[settings.effect]($slider, params, resetElements);
                     }
-    
+
                     setTimeout(function () {
                         if (settings.showBullets !== "never" && settings.changeBullets === "after") {
                             vars.navigation.find("." + vars.prefix + "active-bullet").removeClass(vars.prefix + "active-bullet");
@@ -547,14 +547,14 @@
                     params.settings = settings;
                     params.animateActive = settings.animateActive;
                     params.direction = settings.slideNextDirection;
-    
+
                     //run effect
                     if(typeof(effects[settings.effect]) === "undefined"){
                         console.log("Preparations for " + settings.effect + " not found.");
                     }else{
                         effects[settings.effect]($slider, params, resetElements);
                     }
-    
+
                     setTimeout(function () {
                         if (settings.showBullets !== "never" && settings.changeBullets === "after") {
                             vars.navigation.find("." + vars.prefix + "active-bullet").removeClass(vars.prefix + "active-bullet");

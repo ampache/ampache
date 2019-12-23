@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2019 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@ if (AmpConfig::get('now_playing_refresh_limit') > 1) {
 <body>
 <?php
 
-Stream::gc_now_playing();
+Stream::garbage_collection();
 $results = Stream::get_now_playing();
 
 if (Core::get_request('user_id') !== '') {

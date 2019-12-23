@@ -101,6 +101,7 @@ class Live_Stream extends database_object implements media, library_item
      */
     public function format($details = true)
     {
+        unset($details); //dead code but called from other format calls
         // Default link used on the rightbar
         $this->f_name         = scrub_out($this->name);
         $this->link           = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
@@ -225,14 +226,14 @@ class Live_Stream extends database_object implements media, library_item
 
         $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
 
-        $elements = explode(":", $data['url']);
+        $elements = explode(":", (string) $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('general', T_('URL is invalid, must be mms:// , https:// or http://'));
         }
 
         if (!empty($data['site_url'])) {
-            $elements = explode(":", $data['site_url']);
+            $elements = explode(":", (string) $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
                 AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
             }
@@ -256,23 +257,23 @@ class Live_Stream extends database_object implements media, library_item
     public static function create(array $data)
     {
         // Make sure we've got a name and codec
-        if (!strlen($data['name'])) {
+        if (!strlen((string) $data['name'])) {
             AmpError::add('name', T_('Name is required'));
         }
-        if (!strlen($data['codec'])) {
+        if (!strlen((string) $data['codec'])) {
             AmpError::add('codec', T_('Codec is required (e.g. MP3, OGG...)'));
         }
 
         $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
 
-        $elements = explode(":", $data['url']);
+        $elements = explode(":", (string) $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('url', T_('URL is invalid, must be http:// or https://'));
         }
 
         if (!empty($data['site_url'])) {
-            $elements = explode(":", $data['site_url']);
+            $elements = explode(":", (string) $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
                 AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
             }
@@ -289,7 +290,7 @@ class Live_Stream extends database_object implements media, library_item
         }
 
         // If we've made it this far everything must be ok... I hope
-        $sql = "INSERT INTO `live_stream` (`name`,`site_url`,`url`,`catalog`,`codec`) " .
+        $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " .
             "VALUES (?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
 
@@ -381,6 +382,12 @@ class Live_Stream extends database_object implements media, library_item
 
     public function set_played($user, $agent, $location)
     {
+        // Do nothing
+    }
+
+    public function check_play_history($user)
+    {
+        unset($user);
         // Do nothing
     }
 } // end of live_stream class

@@ -155,8 +155,8 @@ class Podcast extends database_object implements library_item
         $this->f_copyright     = scrub_out($this->copyright);
         $this->f_generator     = scrub_out($this->generator);
         $this->f_website       = scrub_out($this->website);
-        $this->f_lastbuilddate = date("m\/d\/Y - H:i", $this->lastbuilddate);
-        $this->f_lastsync      = date("m\/d\/Y - H:i", $this->lastsync);
+        $this->f_lastbuilddate = date("m\/d\/Y - H:i", (int) $this->lastbuilddate);
+        $this->f_lastsync      = date("m\/d\/Y - H:i", (int) $this->lastsync);
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
         $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
 
@@ -353,16 +353,16 @@ class Podcast extends database_object implements library_item
         $sql        = "INSERT INTO `podcast` (`feed`, `catalog`, `title`, `website`, `description`, `language`, `copyright`, `generator`, `lastbuilddate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($feed, $catalog_id, $title, $website, $description, $language, $copyright, $generator, $lastbuilddate));
         if ($db_results) {
-            $id      = Dba::insert_id();
-            $podcast = new Podcast($id);
-            $dirpath = $podcast->get_root_path();
+            $podcast_id = Dba::insert_id();
+            $podcast    = new Podcast($podcast_id);
+            $dirpath    = $podcast->get_root_path();
             if (!is_dir($dirpath)) {
                 if (mkdir($dirpath) === false) {
                     debug_event('podcast.class', 'Cannot create directory ' . $dirpath, 1);
                 }
             }
             if (!empty($arturl)) {
-                $art = new Art($id, 'podcast');
+                $art = new Art((int) $podcast_id, 'podcast');
                 $art->insert_url($arturl);
             }
             if (count($episodes) > 0) {

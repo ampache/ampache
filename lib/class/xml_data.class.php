@@ -71,7 +71,7 @@ class XML_Data
             return false;
         }
 
-        if (strtolower($limit) == "none") {
+        if (strtolower((string) $limit) == "none") {
             self::$limit = null;
         } else {
             self::$limit = (int) ($limit);
@@ -403,7 +403,7 @@ class XML_Data
                     $playlist->format();
 
                     $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
-                    $playitem_total = $playlist->limit;
+                    $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 }
                 // don't allow unlimited smartlists or empty playlists into xml
                 if ((int) $playitem_total > 0) {
@@ -469,12 +469,16 @@ class XML_Data
      * @param    array    $artists    (description here...)
      * @param    array    $include    Array of other items to include.
      * @param    bool     $full_xml  whether to return a full XML document or just the node.
+     * @param    integer $user_id
      * @return    string    return xml
      */
-    public static function artists($artists, $include = [], $full_xml = true)
+    public static function artists($artists, $include = [], $full_xml = true, $user_id = false)
     {
-        if (null == $include) {
+        if ($include == null || $include == '') {
             $include = array();
+        }
+        if (is_string($include)) {
+            $include = explode(',', $include);
         }
         $string = "<total_count>" . count($artists) . "</total_count>\n";
 
@@ -493,6 +497,7 @@ class XML_Data
             $artist->format();
 
             $rating     = new Rating($artist_id, 'artist');
+            $flag       = new Userflag($artist_id, 'artist');
             $tag_string = self::tags_string($artist->tags);
 
             // Build the Art URL, include session
@@ -516,8 +521,9 @@ class XML_Data
                     "\t<albums>" . $albums . "</albums>\n" .
                     "\t<songs>" . $songs . "</songs>\n" .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
-                    "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
-                    "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
+                    "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: 0) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating($user_id) ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                     "\t<mbid>" . $artist->mbid . "</mbid>\n" .
                     "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" .
@@ -539,10 +545,13 @@ class XML_Data
      * @param    bool     $full_xml  whether to return a full XML document or just the node.
      * @return    string    return xml
      */
-    public static function albums($albums, $include = [], $full_xml = true)
+    public static function albums($albums, $include = [], $full_xml = true, $user_id = false)
     {
         if ($include == null || $include == '') {
             $include = array();
+        }
+        if (is_string($include)) {
+            $include = explode(',', $include);
         }
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
@@ -560,7 +569,9 @@ class XML_Data
             $album = new Album($album_id);
             $album->format();
 
+            $disk   = $album->disk;
             $rating = new Rating($album_id, 'album');
+            $flag   = new Userflag($album_id, 'album');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out(Core::get_request('auth'));
@@ -581,27 +592,22 @@ class XML_Data
             if (in_array("songs", $include)) {
                 $songs = self::songs($album->get_songs(), array(), false);
             } else {
-                if (AmpConfig::get('album_group')) {
-                    $song_count = 0;
-                    $disc_ids   = $album->get_group_disks_ids();
-                    foreach ($disc_ids as $discid) {
-                        $disc = new Album($discid);
-                        $disc->format();
-                        $song_count = $song_count + $disc->song_count;
-                    }
-                    $songs = $song_count;
-                } else {
-                    $songs = $album->song_count;
-                }
+                $songs = $album->song_count;
+            }
+
+            //count multiple disks
+            if ($album->allow_group_disks) {
+                $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
             $string .= "\t<year>" . $album->year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
-                    "\t<disk>" . $album->disk . "</disk>\n" .
+                    "\t<disk>" . $disk . "</disk>\n" .
                     self::tags_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
-                    "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
-                    "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
+                    "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
+                    "\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n" .
+                    "\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n" .
                     "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
                     "\t<mbid>" . $album->mbid . "</mbid>\n" .
                     "</album>\n";
@@ -620,8 +626,6 @@ class XML_Data
      */
     public static function playlists($playlists)
     {
-        $string = "<total_count>" . count($playlists) . "</total_count>\n";
-
         if (count($playlists) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -629,6 +633,7 @@ class XML_Data
                 $playlists = array_slice($playlists, self::$offset);
             }
         }
+        $string = "<total_count>" . count($playlists) . "</total_count>\n";
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
@@ -656,19 +661,17 @@ class XML_Data
                 } else {
                     $playlist_user  = $playlist->type;
                 }
-                $playitem_total = $playlist->limit;
+                $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
+                $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
-            // don't allow unlimited smartlists or empty playlists into xml
-            if ((int) $playitem_total > 0) {
-                // Build this element
-                $string .= "<playlist id=\"$playlist_id\">\n" .
-                        "\t<name><![CDATA[$playlist_name]]></name>\n" .
-                        "\t<owner><![CDATA[$playlist_user]]></owner>\n" .
-                        "\t<items>$playitem_total</items>\n" .
-                        "\t<type>$playlist_type</type>\n" .
-                        "</playlist>\n";
-            }
+            // Build this element
+            $string .= "<playlist id=\"$playlist_id\">\n" .
+                    "\t<name><![CDATA[$playlist_name]]></name>\n" .
+                    "\t<owner><![CDATA[$playlist_user]]></owner>\n" .
+                    "\t<items>$playitem_total</items>\n" .
+                    "\t<type>$playlist_type</type>\n" .
+                    "</playlist>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -710,6 +713,7 @@ class XML_Data
             $track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string   = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating       = new Rating($song_id, 'song');
+            $flag         = new Userflag($song_id, 'song');
             $art_url      = Art::url($song->album, 'album', Core::get_request('auth'));
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
@@ -736,15 +740,16 @@ class XML_Data
                     "\t<rate>" . $song->rate . "</rate>\n" .
                     "\t<mode>" . $song->mode . "</mode>\n" .
                     "\t<mime>" . $song->mime . "</mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<mbid>" . $song->mbid . "</mbid>\n" .
                     "\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n" .
                     "\t<artist_mbid>" . $song->artist_mbid . "</artist_mbid>\n" .
                     "\t<albumartist_mbid>" . $song->albumartist_mbid . "</albumartist_mbid>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-                    "\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n" .
-                    "\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n" .
+                    "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: 0) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating($user_id) ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . (string) ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                     "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                     "\t<channels>" . $song->channels . "</channels>\n" .
@@ -845,11 +850,11 @@ class XML_Data
                     "\t<track>" . $song->track . "</track>\n" .
                     "\t<time>" . $song->time . "</time>\n" .
                     "\t<mime>" . $song->mime . "</mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-                    "\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n" .
-                    "\t<rating>" . $rating->get_user_rating() . "</rating>\n" .
+                    "\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n" .
+                    "\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n" .
                     "\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n" .
                     "\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .
                     "</song>\n";
@@ -861,23 +866,32 @@ class XML_Data
     /**
      * user
      *
-     * This handles creating an xml document for an user
+     * This handles creating an xml document for a user
      *
-     * @param    User    $user    User
-     * @return    string    return xml
+     * @param  User   $user User
+     * @param  bool   $fullinfo
+     * @return string return xml
      */
-    public static function user(User $user)
+    public static function user(User $user, $fullinfo)
     {
         $user->format();
-
-        $string = "<user id=\"" . $user->id . "\">\n" .
-                "\t<username><![CDATA[" . $user->username . "]]></username>\n" .
-                "\t<create_date>" . $user->create_date . "</create_date>\n" .
-                "\t<last_seen>" . $user->last_seen . "</last_seen>\n" .
+        $string = "<user id=\"" . (string) $user->id . "\">\n" .
+                  "\t<username><![CDATA[" . $user->username . "]]></username>\n";
+        if ($fullinfo) {
+            $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n" .
+                       "\t<email><![CDATA[" . $user->email . "]]></email>\n" .
+                       "\t<access><![CDATA[" . (string) $user->access . "]]></access>\n" .
+                       "\t<fullname_public><![CDATA[" . (string) $user->fullname_public . "]]></fullname_public>\n" .
+                       "\t<validation><![CDATA[" . $user->validation . "]]></validation>\n" .
+                       "\t<disabled><![CDATA[" . (string) $user->disabled . "]]></disabled>\n";
+        }
+        $string .= "\t<create_date><![CDATA[" . (string) $user->create_date . "]]></create_date>\n" .
+                "\t<last_seen><![CDATA[" . (string) $user->last_seen . "]]></last_seen>\n" .
+                "\t<link><![CDATA[" . $user->link . "]]></link>\n" .
                 "\t<website><![CDATA[" . $user->website . "]]></website>\n" .
                 "\t<state><![CDATA[" . $user->state . "]]></state>\n" .
                 "\t<city><![CDATA[" . $user->city . "]]></city>\n";
-        if ($user->fullname_public) {
+        if ($user->fullname_public || $fullinfo) {
             $string .= "\t<fullname><![CDATA[" . $user->fullname . "]]></fullname>\n";
         }
         $string .= "</user>\n";
@@ -991,7 +1005,7 @@ class XML_Data
     public static function rss_feed($data, $title, $date = null)
     {
         $string = "\t<title>$title</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
-        if ($date !== null) {
+        if (is_int($date)) {
             $string .= "<pubDate>" . date("r", (int) $date) . "</pubDate>\n";
         }
 
@@ -1125,7 +1139,7 @@ class XML_Data
             //$xmlink = $xitem->addChild("link", htmlentities($media->link));
             $xitem->addChild("guid", htmlentities($media->link));
             if ($media->addition_time) {
-                $xitem->addChild("pubDate", date("r", $media->addition_time));
+                $xitem->addChild("pubDate", date("r", (int) $media->addition_time));
             }
             $description = $media->get_description();
             if (!empty($description)) {
@@ -1135,8 +1149,8 @@ class XML_Data
             if ($media->mime) {
                 $surl  = $media_info['object_type']::play_url($media_info['object_id'], '', 'api', false, $user_id);
                 $xencl = $xitem->addChild("enclosure");
-                $xencl->addAttribute("type", $media->mime);
-                $xencl->addAttribute("length", $media->size);
+                $xencl->addAttribute("type", (string) $media->mime);
+                $xencl->addAttribute("length", (string) $media->size);
                 $xencl->addAttribute("url", $surl);
             }
         }

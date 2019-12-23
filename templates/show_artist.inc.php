@@ -154,8 +154,28 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
+        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', '50')) { ?>
+            <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
+                <li>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>"><?php echo T_('Graphs'); ?></a>
+                </li>
+            <?php
+        } ?>
+        <?php
+    } ?>
         <?php if ($artist->can_edit()) {
         $artistedit = T_('Artist Edit'); ?>
+        <?php if (AmpConfig::get('allow_upload')) {
+            $t_upload = T_('Upload'); ?>
+                <li>
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
+                        <?php echo UI::get_icon('upload', $t_upload); ?>
+                        &nbsp;&nbsp;<?php echo $t_upload; ?>
+                    </a>
+                </li>
+            <?php
+        } ?>
             <li>
                 <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo $artistedit ?>', '')">
                     <?php echo UI::get_icon('edit', T_('Edit')); ?>

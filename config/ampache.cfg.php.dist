@@ -40,6 +40,12 @@ config_version = 40
 ;web_path = ""
 
 ; The local http url of your server.
+; This is used to access the server from within the
+; same host where ampache is running.
+; For example, if the ampache server is not
+; directly accessed via the public domain but via a reverse
+; proxy, local_web_path would need to be changed
+; to a localhost URL.
 ; If not set, retrieved automatically from server information.
 ; DEFAULT: ""
 ;local_web_path = "http://localhost/ampache"
@@ -511,6 +517,15 @@ sociable = "true"
 ; DEFAULT: false
 ;playlist_art = "false"
 
+; Statistical Graphs * Requires PHP-GD *
+; Set this to true if you want Ampache to generate statistical graphs on usages / users.
+; This is false by default due to issues around the licencing of pchart.
+;  https://github.com/ampache/ampache/issues/1515
+;  http://www.pchart.net/license
+; REFERENCE: https://github.com/ampache/ampache/wiki/chart-faq
+; DEFAULT: false
+;statistical_graphs = "false"
+
 ; Art Gather Order
 ; Simply arrange the following in the order you would like
 ; Ampache to search. If you want to disable one of the search
@@ -653,6 +668,12 @@ show_footer_statistics = "true"
 ; DEFAULT: false
 ;allow_php_themes = "false"
 
+; Subsonic clients all seem to ignore the download method
+; This setting will not scrobble actions from stream actions.
+; (This means you can sync playlists without overloading your server)
+; Make sure you enable scrobbling in your client to keep recording stats!
+; DEFAULT: "true"
+;subsonic_stream_scrobble = "false"
 
 ;#########################################################
 ; Debugging                                              #
@@ -801,7 +822,6 @@ site_charset = UTF-8
 ; DEFAULT: member
 ;ldap_member_attribute = "member"
 ;ldap_member_attribute = "memberuid"
-
 
 
 ;#########################################################

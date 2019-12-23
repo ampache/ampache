@@ -103,7 +103,7 @@ class Art extends database_object
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
      * @param int[] $object_ids
-     * @return bool
+     * @return boolean
      */
     public static function build_cache($object_ids)
     {
@@ -175,14 +175,14 @@ class Art extends database_object
      */
     public static function extension($mime)
     {
-        $data      = explode("/", $mime);
+        $data      = explode("/", (string) $mime);
         $extension = $data['1'];
 
         if ($extension == 'jpeg') {
             $extension = 'jpg';
         }
 
-        return $extension;
+        return (string) $extension;
     } // extension
 
     /**
@@ -193,15 +193,15 @@ class Art extends database_object
      */
     public static function test_image($source)
     {
-        if (strlen($source) < 10) {
+        if (strlen((string) $source) < 10) {
             debug_event('art.class', 'Invalid image passed', 1);
 
             return false;
         }
 
         // Check image size doesn't exceed the limit
-        if (strlen($source) > AmpConfig::get('max_upload_size')) {
-            debug_event('art.class', 'Image size (' . strlen($source) . ') exceed the limit (' . AmpConfig::get('max_upload_size') . ').', 1);
+        if (strlen((string) $source) > AmpConfig::get('max_upload_size')) {
+            debug_event('art.class', 'Image size (' . strlen((string) $source) . ') exceed the limit (' . AmpConfig::get('max_upload_size') . ').', 1);
 
             return false;
         }
@@ -436,24 +436,10 @@ class Art extends database_object
         $height = (int) ($dimensions['height']);
 
         if ($width > 0 && $height > 0) {
-            $minw = AmpConfig::get('album_art_min_width');
-            $maxw = AmpConfig::get('album_art_max_width');
-            $minh = AmpConfig::get('album_art_min_height');
-            $maxh = AmpConfig::get('album_art_max_height');
-
-            // setup 'defaults' if config was not set
-            if (empty($minw)) {
-                $minw = 0;
-            }
-            if (empty($maxw)) {
-                $maxw = 0;
-            }
-            if (empty($minh)) {
-                $minh = 0;
-            }
-            if (empty($maxh)) {
-                $maxh = 0;
-            }
+            $minw = (AmpConfig::get('album_art_min_width')) ? AmpConfig::get('album_art_min_width') : 0;
+            $maxw = (AmpConfig::get('album_art_max_width')) ? AmpConfig::get('album_art_max_width') : 0;
+            $minh = (AmpConfig::get('album_art_min_height')) ? AmpConfig::get('album_art_min_height') : 0;
+            $maxh = (AmpConfig::get('album_art_max_height')) ? AmpConfig::get('album_art_max_height') : 0;
 
             // minimum width is set and current width is too low
             if ($minw > 0 && $width < $minw) {
@@ -481,6 +467,42 @@ class Art extends database_object
 
         return true;
     }
+    /**
+     * clean_art_by_dimension
+     *
+     * look for art in the image table that doesn't fit min or max dimensions and delete it
+     * @return boolean
+     */
+    public static function clean_art_by_dimension()
+    {
+        $minw = (AmpConfig::get('album_art_min_width')) ? AmpConfig::get('album_art_min_width') : null;
+        $maxw = (AmpConfig::get('album_art_max_width')) ? AmpConfig::get('album_art_max_width') : null;
+        $minh = (AmpConfig::get('album_art_min_height')) ? AmpConfig::get('album_art_min_height') : null;
+        $maxh = (AmpConfig::get('album_art_max_height')) ? AmpConfig::get('album_art_max_height') : null;
+
+        // minimum width is set and current width is too low
+        if ($minw) {
+            $sql = 'DELETE FROM `image` WHERE `width` < ? AND `width` > 0';
+            Dba::write($sql, array($minw));
+        }
+        // max width is set and current width is too high
+        if ($maxw) {
+            $sql = 'DELETE FROM `image` WHERE `width` > ? AND `width` > 0';
+            Dba::write($sql, array($maxw));
+        }
+        // min height is set and current width is too low
+        if ($minh) {
+            $sql = 'DELETE FROM `image` WHERE `height` < ? AND `height` > 0';
+            Dba::write($sql, array($minh));
+        }
+        // max height is set and current height is too high
+        if ($maxh) {
+            $sql = 'DELETE FROM `image` WHERE `height` > ? AND `height` > 0';
+            Dba::write($sql, array($maxh));
+        }
+
+        return true;
+    } //clean_art_by_dimension
 
     /**
      * get_dir_on_disk
@@ -709,8 +731,8 @@ class Art extends database_object
      */
     public function generate_thumb($image, $size, $mime)
     {
-        $data = explode("/", $mime);
-        $type = strtolower($data['1']);
+        $data = explode("/", (string) $mime);
+        $type = strtolower((string) $data['1']);
 
         if (!self::test_image($image)) {
             debug_event('art.class', 'Not trying to generate thumbnail, invalid data passed', 1);
@@ -792,7 +814,7 @@ class Art extends database_object
                 $mime_type = null;
         } // resized
 
-        if (!$mime_type) {
+        if ($mime_type === null) {
             debug_event('art.class', 'Error: No mime type found.', 2);
 
             return array();
@@ -802,7 +824,7 @@ class Art extends database_object
         ob_end_clean();
 
         imagedestroy($thumbnail);
-        if (!strlen($data)) {
+        if (!strlen((string) $data)) {
             debug_event('art.class', 'Unknown Error resizing art', 1);
 
             return array();

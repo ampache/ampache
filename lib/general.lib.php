@@ -71,11 +71,11 @@ function generate_password($length = null)
 function scrub_in($input)
 {
     if (!is_array($input)) {
-        return stripslashes(htmlspecialchars(strip_tags($input), ENT_NOQUOTES, AmpConfig::get('site_charset')));
+        return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset')));
     } else {
         $results = array();
         foreach ($input as $item) {
-            $results[] = scrub_in($item);
+            $results[] = scrub_in((string) $item);
         }
 
         return $results;
@@ -92,7 +92,11 @@ function scrub_in($input)
  */
 function scrub_out($string)
 {
-    return htmlentities($string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
+    if ($string === null) {
+        return '';
+    }
+
+    return htmlentities((string) $string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
 } // scrub_out
 
 /**
@@ -103,7 +107,7 @@ function scrub_out($string)
  */
 function unhtmlentities($string)
 {
-    return html_entity_decode($string, ENT_QUOTES, AmpConfig::get('site_charset'));
+    return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
 } //unhtmlentities
 
 /**
@@ -131,7 +135,10 @@ function scrub_arg($arg)
  */
 function make_bool($string)
 {
-    if (strcasecmp($string, 'false') == 0 || $string == '0') {
+    if ($string === null) {
+        return false;
+    }
+    if (strcasecmp((string) $string, 'false') == 0 || $string == '0') {
         return false;
     }
 
@@ -379,7 +386,7 @@ function generate_config($current)
     $dist     = fread($handle, filesize($distfile));
     fclose($handle);
 
-    $data = explode("\n", $dist);
+    $data = explode("\n", (string) $dist);
 
     $final = "";
     foreach ($data as $line) {
@@ -421,7 +428,7 @@ function write_config($current_file_path)
 
     // Start writing into the current config file
     $handle = fopen($current_file_path, 'w+');
-    fwrite($handle, $new_data, strlen($new_data));
+    fwrite($handle, $new_data, strlen((string) $new_data));
     fclose($handle);
 }
 
@@ -467,7 +474,7 @@ if (!function_exists('apache_request_headers')) {
 
 function get_current_path()
 {
-    if (strlen($_SERVER['PHP_SELF'])) {
+    if (strlen((string) $_SERVER['PHP_SELF'])) {
         $root = $_SERVER['PHP_SELF'];
     } else {
         $root = $_SERVER['REQUEST_URI'];

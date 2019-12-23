@@ -211,7 +211,7 @@ class Video extends database_object implements media, library_item
         }
 
         $data       = pathinfo($this->file);
-        $this->type = strtolower($data['extension']);
+        $this->type = strtolower((string) $data['extension']);
 
         return true;
     } // Constructor
@@ -225,7 +225,7 @@ class Video extends database_object implements media, library_item
     {
         $dtypes = self::get_derived_types();
         foreach ($dtypes as $dtype) {
-            $sql        = "SELECT `id` FROM `" . strtolower($dtype) . "` WHERE `id` = ?";
+            $sql        = "SELECT `id` FROM `" . strtolower((string) $dtype) . "` WHERE `id` = ?";
             $db_results = Dba::read($sql, array($video_id));
             $results    = Dba::fetch_assoc($db_results);
             if ($results['id']) {
@@ -276,7 +276,7 @@ class Video extends database_object implements media, library_item
         }
 
         // Format the Bitrate
-        $this->f_bitrate       = (int) ($this->bitrate / 1000) . "-" . strtoupper($this->mode);
+        $this->f_bitrate       = (int) ($this->bitrate / 1000) . "-" . strtoupper((string) $this->mode);
         $this->f_video_bitrate = (string) (int) ($this->video_bitrate / 1000);
         if ($this->frame_rate) {
             $this->f_frame_rate = $this->frame_rate . ' fps';
@@ -299,7 +299,7 @@ class Video extends database_object implements media, library_item
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
         $this->f_file   = $this->f_title . '.' . $this->type;
         if ($this->release_date) {
-            $this->f_release_date = date('Y-m-d', $this->release_date);
+            $this->f_release_date = date('Y-m-d', (int) $this->release_date);
         }
     } // format
 
@@ -493,7 +493,7 @@ class Video extends database_object implements media, library_item
     {
         $dtypes = self::get_derived_types();
         foreach ($dtypes as $dtype) {
-            if (strtolower($type) == strtolower($dtype)) {
+            if (strtolower((string) $type) == strtolower((string) $dtype)) {
                 return $type;
             }
         }
@@ -571,7 +571,7 @@ class Video extends database_object implements media, library_item
         $frame_rate     = floatval($data['frame_rate']);
         $video_bitrate  = (int) ($data['video_bitrate']);
 
-        $sql = "INSERT INTO `video` (`file`,`catalog`,`title`,`video_codec`,`audio_codec`,`resolution_x`,`resolution_y`,`size`,`time`,`mime`,`release_date`,`addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) " .
+        $sql = "INSERT INTO `video` (`file`, `catalog`, `title`, `video_codec`, `audio_codec`, `resolution_x`, `resolution_y`, `size`, `time`, `mime`, `release_date`, `addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) " .
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array($data['file'], $data['catalog'], $data['title'], $data['video_codec'], $data['audio_codec'], $rezx, $rezy, $data['size'], $data['time'], $data['mime'], $release_date, time(), $bitrate, $mode, $channels, $disx, $disy, $frame_rate, $video_bitrate);
         Dba::write($sql, $params);
@@ -579,7 +579,7 @@ class Video extends database_object implements media, library_item
 
         if (is_array($tags)) {
             foreach ($tags as $tag) {
-                $tag = trim($tag);
+                $tag = trim((string) $tag);
                 if (!empty($tag)) {
                     Tag::add('video', $vid, $tag, false);
                 }
@@ -753,6 +753,12 @@ class Video extends database_object implements media, library_item
         return true;
     } // set_played
 
+    public function check_play_history($user)
+    {
+        unset($user);
+        // Do nothing
+    }
+
     /**
      * compare_video_information
      * this compares the new ID3 tags of a file against
@@ -790,7 +796,7 @@ class Video extends database_object implements media, library_item
             $lang_name = T_("Unknown");
             if (count($psrt) >= 2) {
                 $lang_code = $psrt[count($psrt) - 2];
-                if (strlen($lang_code) == 2) {
+                if (strlen((string) $lang_code) == 2) {
                     $lang_name = $this->get_language_name($lang_code);
                 }
             }
@@ -1079,7 +1085,7 @@ class Video extends database_object implements media, library_item
         }
 
         /* Can't update to blank */
-        if (!strlen(trim($value))) {
+        if (!strlen(trim((string) $value))) {
             return false;
         }
 
@@ -1097,7 +1103,7 @@ class Video extends database_object implements media, library_item
     public static function get_item_count($type)
     {
         $type       = self::validate_type($type);
-        $sql        = 'SELECT COUNT(*) as count from `' . strtolower($type) . '`;';
+        $sql        = 'SELECT COUNT(*) as count from `' . strtolower((string) $type) . '`;';
         $db_results = Dba::read($sql,array());
         if ($results = Dba::fetch_assoc($db_results)) {
             if ($results['count']) {

@@ -67,7 +67,7 @@ class Upnp_Api
     {
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
-        socket_sendto($socket, $buf, strlen($buf), 0, $host, $port);
+        socket_sendto($socket, $buf, strlen((string) $buf), 0, $host, $port);
         socket_close($socket);
         usleep($delay * 1000);
     }
@@ -1082,7 +1082,7 @@ class Upnp_Api
             'upnp:artist' => self::_replaceSpecialSymbols($song->f_artist),
             'upnp:album' => self::_replaceSpecialSymbols($song->f_album),
             'upnp:genre' => Tag::get_display($song->tags, false, 'song'),
-            //'dc:date'                   => date("c", $song->addition_time),
+            //'dc:date'                   => date("c", (int) $song->addition_time),
             'upnp:originalTrackNumber' => $song->track,
 
             'res' => Song::play_url($song->id, '', 'api'),

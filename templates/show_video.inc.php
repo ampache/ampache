@@ -35,7 +35,7 @@ if (!$gart) {
 <div class="subtitles">
 <?php echo T_('Subtitle'); ?>:
 <select name="subtitle" id="play_setting_subtitle">
-    <option value= ''><?php echo T_("None"); ?></option>
+    <option value=''><?php echo T_("None"); ?></option>
 <?php
 $subtitles = $video->get_subtitles();
     foreach ($subtitles as $subtitle) {
@@ -105,6 +105,10 @@ $subtitles = $video->get_subtitles();
         <?php
     } ?>
         <?php if (Access::check('interface', '50')) { ?>
+            <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+            <?php
+        } ?>
             <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo T_('Video Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>

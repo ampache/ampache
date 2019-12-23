@@ -89,6 +89,7 @@ class AmpError
     /**
      * occurred
      * This returns true / false if an error has occurred anywhere
+     * @return boolean
      */
     public static function occurred()
     {
@@ -102,6 +103,7 @@ class AmpError
     /**
      * get
      * This returns an error by name
+     * @return string
      */
     public static function get($name)
     {

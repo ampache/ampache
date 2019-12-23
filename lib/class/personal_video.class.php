@@ -63,7 +63,7 @@ class Personal_Video extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        $sql = "INSERT INTO `personal_video` (`id`,`location`,`summary`) " .
+        $sql = "INSERT INTO `personal_video` (`id`, `location`, `summary`) " .
             "VALUES (?, ?, ?)";
         Dba::write($sql, array($data['id'], $data['location'], $data['summary']));
 
