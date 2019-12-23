@@ -342,6 +342,7 @@ class Api
                     default:
                         echo XML_Data::keyed_array($outarray);
                 }
+
                 return true;
             } // match
         } // end while
