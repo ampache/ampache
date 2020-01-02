@@ -131,13 +131,14 @@ class PrivateMsg extends database_object
 
     /**
      * set_is_read
+     * @param integer $read
      * @return PDOStatement|boolean
      */
     public function set_is_read($read)
     {
         $sql = "UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($read ? 1 : 0, $this->id));
+        return Dba::write($sql, array($read, $this->id));
     }
 
     /**

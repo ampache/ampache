@@ -3,13 +3,33 @@
 ## 4.1.0-develop
 
 * Bump API version to 400003 (4.0.0 build 003)
+* Api::playlist - filter mandatory
 * Api::playlist_edit - filter mandatory. name and type now optional
+* Api::user - Extend return values to include more user fields
 * Playlist::create - Return duplicate playlist ID instead of creating a new one
-* Artist::check - Remove MBID from Various Artists's
-* Fix Api relating to playlist access
+* Artist::check - Remove MBID from Various Artist objects
 * Fix Song::update_song for label
+* Api - Do not limit smartlists based on item count (return everything you can access)
+* Api/Database - Add last_count for search table to speed up access in API
+* Fix Api issues relating to playlist access
 * Fix comparison bugs found during static type testing
-* Translation update from Transifex
+* Fix enable/disable song ajax
+* December translation update from Transifex
+* Add playlist into main search page. (Songs, Albums, Artists, Playlists, Videos)
+* Typo in login page HTTP_REFERER
+* Roll back mysql8 workarounds. (Orace MySQL supported on php7.4+ only)
+* Fix bin\*.inc text issues with newline
+* Add docs/examples/channel_run.service for sunning background processes as a service
+* New search option "Another User" allows searching other user ratings and favorites
+* user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods])>
+* Updates to support php7.4 (Ampache supports 7.1-7.4)
+* Fix bug in UI when enabling/disabling songs
+* Checks in Subsonic/WebUI for recording repeated plays
+* Update channel status pages (/channel/$CHANNELID/status.xsl)
+* Fix smartlists when searching sub-lists (Ampache was trying to create one gian query that didn't scale well)
+* composer & php-cs-fixer updates
+* Fix "Add New..." in album edit
+* Revert changes in 4.0.0 and allow manual choices for artist/album on upload again.
 
 ## 4.0.4
 
@@ -19,7 +39,7 @@
 * Fix album count for Artists when the album is missing data
 * Fix searches / searchbox for MYSQL8
 * Fix some invalid returns in lib/*
-* Send correct the function in ajax.server when deleting from playlist
+* Send the correct function in ajax.server when deleting from playlist
 * Hide some lines from the mashup to make it a bit nicer
 * Remove the old logo from the main install page
 

@@ -801,7 +801,7 @@ class Song extends database_object implements media, library_item
         }
         $sql .= " INNER JOIN `artist` ON `artist`.`id` = `song`.`artist`";
         $sql .= " INNER JOIN `album` ON `album`.`id` = `song`.`album`";
-        
+
         if ($data['mb_artistid']) {
             $where .= " AND `artist`.`mbid` = ?";
             $params[] = $data['mb_albumid'];
@@ -1142,24 +1142,34 @@ class Song extends database_object implements media, library_item
 
             switch ($key) {
                 case 'artist_name':
-                    // Need to create new artist according the name
+                    // Create new artist name and id
                     $old_artist_id = $this->artist;
                     $new_artist_id = Artist::check($value);
                     $this->artist  = $new_artist_id;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
                 break;
                 case 'album_name':
-                    // Need to create new album according the name
+                    // Create new album name and id
                     $old_album_id = $this->album;
                     $new_album_id = Album::check($value);
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
                 break;
+                case 'artist':
+                    // Change artist the song is assigned to
+                    $old_artist_id = $this->artist;
+                    $new_artist_id = $value;
+                    self::update_artist($new_artist_id, $this->id, $old_artist_id);
+                break;
+                case 'album':
+                    // Change album the song is assigned to
+                    $old_album_id = $this->album;
+                    $new_album_id = $value;
+                    self::update_album($new_album_id, $this->id, $old_album_id);
+                break;
                 case 'year':
                 case 'title':
                 case 'track':
-                case 'artist':
-                case 'album':
                 case 'mbid':
                 case 'license':
                 case 'composer':

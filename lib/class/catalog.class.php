@@ -217,11 +217,8 @@ abstract class Catalog extends database_object
         $sql        = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($catalog_id));
         $results    = Dba::fetch_assoc($db_results);
-        if (!empty($results)) {
-            return self::create_catalog_type($results['catalog_type'], $catalog_id);
-        }
 
-        return null;
+        return self::create_catalog_type($results['catalog_type'], $catalog_id);
     }
 
     /**
@@ -1703,7 +1700,7 @@ abstract class Catalog extends database_object
         $new_song->replaygain_track_peak = floatval($results['replaygain_track_peak']);
         $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
         $new_song->replaygain_album_peak = floatval($results['replaygain_album_peak']);
-        
+
         // genre is used in the tag and tag_map tables
         $new_song->tags = $results['genre'];
         $tags           = Tag::get_object_tags('song', $song->id);

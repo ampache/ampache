@@ -1376,8 +1376,9 @@ class Api
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=400001
      *
-     * This get library stats for different object types.
-     * When filter is null get some random items instead
+     * Get some items based on some simple search types and filters
+     * This method has partial backwards compatibility with older api versions
+     * but should be updated to follow the current input values
      *
      * @param array $input
      * type     = (string)  'song'|'album'|'artist'
@@ -1498,7 +1499,7 @@ class Api
             if ($user !== null) {
                 $apiuser  = User::get_from_username(Session::username($input['auth']));
                 $fullinfo = false;
-                // get full infor when you're an admin or searching yourself
+                // get full info when you're an admin or searching for yourself
                 if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
                     $fullinfo = true;
                 }

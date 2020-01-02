@@ -189,9 +189,9 @@ generate_pot_utds() {
                 fi
             fi
         done
-        
+
         echo "Done for preference description"
-        
+
         mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
         while read dbprefid; do
             dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT subcatagory FROM preference where id=$dbprefid AND subcatagory IS NOT NULL")
@@ -209,9 +209,9 @@ generate_pot_utds() {
                 fi
             fi
         done
-        
+
         echo "Done for subcategory"
-        
+
         echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
         cat $tdstxt >> $potfile
         echo -e "\n\033[32m Done, you are able now to use the messages.pot for further translation tasks.\033[0m"

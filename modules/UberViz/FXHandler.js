@@ -77,7 +77,7 @@ var FXHandler = (function() {
         blendComposer.addPass( rgbPass );
         blendComposer.addPass( filmPass );
         filmPass.renderToScreen = true;
-        
+
     }
 
     function onBeat(){

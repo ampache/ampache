@@ -46,7 +46,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
   * nginx
   * IIS
 
-* PHP 7.1 or greater.
+* PHP 7.1 or greater. (Currently tested on php7.4-fpm)
 
 * PHP modules:
   * PDO

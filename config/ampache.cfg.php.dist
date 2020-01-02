@@ -40,6 +40,12 @@ config_version = 40
 ;web_path = ""
 
 ; The local http url of your server.
+; This is used to access the server from within the
+; same host where ampache is running.
+; For example, if the ampache server is not
+; directly accessed via the public domain but via a reverse
+; proxy, local_web_path would need to be changed
+; to a localhost URL.
 ; If not set, retrieved automatically from server information.
 ; DEFAULT: ""
 ;local_web_path = "http://localhost/ampache"

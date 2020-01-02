@@ -8,7 +8,7 @@ It's easy to use a program like github desktop to compare between branches.
 * Open Github Desktop and pull latest develop / master
 * Change to master branch
 * Go to Branch Menu -> Update from develop
-* Fix Merge issues
+* Fix merge issues
   * lib/init.php (Set release version)
   * docs/CHANGELOG.md (Update for release)
 * Commit merge but do not push!
@@ -36,3 +36,46 @@ It's easy to use a program like github desktop to compare between branches.
 * After setting version and title, save as draft
 * Commit your waiting update to master
 * Publish the new release
+
+## Additional requirements
+
+* Update ampache-docker README.md with the current version. (This will kick off a build with the new version)
+* Update config file in docker (ampache.cfg.php.dist) if it's changed as well
+* Update and make a release for python3-ampache if api has changed
+  * Use a test file (test.py?) for some basic API function.
+  * FIXME what should it test?
+
+## Update github docker packages
+
+Packages are also published directly on github [<https://github.com/ampache/ampache-docker/packages>]
+
+* Authenticate
+
+``` shell
+docker login docker.pkg.github.com --username lachlan-00
+```
+
+* Step 2: Build the master image
+
+``` shell
+git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker-master/
+cd ampache-docker-master/
+docker tag ampache/ampache docker.pkg.github.com/ampache/ampache-docker/ampache:latest
+docker build -t docker.pkg.github.com/ampache/ampache-docker/ampache:latest .
+```
+
+* Update the package
+
+``` shell
+docker push docker.pkg.github.com/ampache/ampache-docker/ampache:latest
+```
+
+* Do the same process for develop every month or so
+
+``` shell
+git clone -b develop https://github.com/ampache/ampache-docker.git ampache-docker-develop/
+cd ampache-docker-develop/
+docker tag ampache/ampache-develop docker.pkg.github.com/ampache/ampache-docker/ampache:develop
+docker build -t docker.pkg.github.com/ampache/ampache-docker/ampache:develop .
+docker push docker.pkg.github.com/ampache/ampache-docker/ampache:develop
+```
