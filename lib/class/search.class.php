@@ -31,7 +31,7 @@ class Search extends playlist_object
     public $rules;
     public $logic_operator = 'AND';
     public $type           = 'public';
-    public $random         = false;
+    public $random         = 0;
     public $limit          = 0;
     public $last_count     = 0;
 
@@ -1192,7 +1192,7 @@ class Search extends playlist_object
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
-        if ($this->random) {
+        if ($this->random > 0) {
             $sql .= " ORDER BY RAND()";
         }
         if ($this->limit > 0) {
@@ -1344,7 +1344,7 @@ class Search extends playlist_object
         }
 
         $sql = "INSERT INTO `search` (`name`, `type`, `user`, `rules`, `logic_operator`, `random`, `limit`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($this->name, $this->type, Core::get_global('user')->id, json_encode($this->rules), $this->logic_operator, $this->random ? 1 : 0, $this->limit));
+        Dba::write($sql, array($this->name, $this->type, Core::get_global('user')->id, json_encode($this->rules), $this->logic_operator, ($this->random > 0) ? 1 : 0, $this->limit));
         $insert_id = Dba::insert_id();
         $this->id  = (int) $insert_id;
 
@@ -1392,7 +1392,7 @@ class Search extends playlist_object
         if ($data && is_array($data)) {
             $this->name   = $data['name'];
             $this->type   = $data['pl_type'];
-            $this->random = make_bool(is_null((int) $data['random']) ? 0 : 1);
+            $this->random = ((int) $data['random'] > 0) ? 1 : 0;
             $this->limit  = $data['limit'];
         }
 

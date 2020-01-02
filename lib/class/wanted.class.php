@@ -236,6 +236,7 @@ class Wanted extends database_object
 
     /**
      * search_missing_artists
+     * @param string $name
      * @return array
      */
     public static function search_missing_artists($name)

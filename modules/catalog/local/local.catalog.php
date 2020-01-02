@@ -717,7 +717,7 @@ class Catalog_local extends Catalog
             $results['license'] = $options['license'];
         }
 
-        if (isset($options['artist_id'])) {
+        if ((int) $options['artist_id'] > 0) {
             $results['artist_id']      = $options['artist_id'];
             $results['albumartist_id'] = $options['artist_id'];
             $artist                    = new Artist($results['artist_id']);
@@ -726,7 +726,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        if (isset($options['album_id'])) {
+        if ((int) $options['album_id'] > 0) {
             $results['album_id'] = $options['album_id'];
             $album               = new Album($results['album_id']);
             if ($album->id) {

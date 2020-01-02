@@ -78,7 +78,7 @@ switch ($_REQUEST['action']) {
         foreach ($msgs as $msg_id) {
             $pvmsg = new PrivateMsg((int) ($msg_id));
             if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
-                $read = (int) ($_REQUEST['read']) !== 0;
+                $read = (int) $_REQUEST['read'];
                 $pvmsg->set_is_read($read);
             } else {
                 debug_event('pvmsg', 'Unknown or unauthorized private message `' . $pvmsg->id . '`.', 3);
@@ -130,7 +130,7 @@ switch ($_REQUEST['action']) {
         if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
             $pvmsg->format();
             if (!$pvmsg->is_read) {
-                $pvmsg->set_is_read(true);
+                $pvmsg->set_is_read(1);
             }
             require_once AmpConfig::get('prefix') . UI::find_template('show_pvmsg.inc.php');
         } else {
