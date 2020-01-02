@@ -70,6 +70,7 @@ class Playlist extends playlist_object
     /**
      * build_cache
      * This is what builds the cache from the objects
+     * @param array $ids
      */
     public static function build_cache($ids)
     {
@@ -195,6 +196,7 @@ class Playlist extends playlist_object
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
+     * @param boolean $details
      */
     public function format($details = true)
     {
@@ -226,6 +228,7 @@ class Playlist extends playlist_object
      * This returns an array of playlist medias that are in this playlist.
      * Because the same media can be on the same playlist twice they are
      * keyed by the uid from playlist_data
+     * @return array
      */
     public function get_items()
     {
@@ -249,6 +252,8 @@ class Playlist extends playlist_object
     /**
      * get_random_items
      * This is the same as before but we randomize the buggers!
+     * @param integer $limit
+     * @return integer[]
      */
     public function get_random_items($limit = '')
     {
@@ -294,6 +299,7 @@ class Playlist extends playlist_object
      * get_media_count
      * This simply returns a int of how many media elements exist in this playlist
      * For now let's consider a dyn_media a single entry
+     * @param string $type
      * @return string|null
      */
     public function get_media_count($type = '')
@@ -331,8 +337,8 @@ class Playlist extends playlist_object
 
     /**
      * get_users
-     * This returns the specified users playlists as an array of
-     * playlist ids
+     * This returns the specified users playlists as an array of playlist ids
+     * @param integer $user_id
      */
     public static function get_users($user_id)
     {
@@ -349,8 +355,10 @@ class Playlist extends playlist_object
     } // get_users
 
     /**
-      * update
+     * update
      * This function takes a key'd array of data and runs updates
+     * @param array $data
+     * @return integer
      */
     public function update(array $data)
     {
@@ -367,6 +375,7 @@ class Playlist extends playlist_object
     /**
      * update_type
      * This updates the playlist type, it calls the generic update_item function
+     * @param string $new_type
      */
     private function update_type($new_type)
     {
@@ -378,6 +387,7 @@ class Playlist extends playlist_object
     /**
      * update_name
      * This updates the playlist name, it calls the generic update_item function
+     * @param string $new_name
      */
     private function update_name($new_name)
     {
@@ -419,6 +429,7 @@ class Playlist extends playlist_object
     /**
      * update_track_number
      * This takes a playlist_data.id and a track (int) and updates the track value
+     * @param integer $track_id
      * @param integer $index
      */
     public function update_track_number($track_id, $index)
@@ -444,6 +455,8 @@ class Playlist extends playlist_object
 
     /**
      * add_songs
+     * @param array $song_ids
+     * @param boolean $ordered
      * This takes an array of song_ids and then adds it to the playlist
      */
     public function add_songs($song_ids = array(), $ordered = false)
@@ -458,6 +471,11 @@ class Playlist extends playlist_object
         $this->add_medias($medias, $ordered);
     } // add_songs
 
+    /**
+     * add_medias
+     * @param array $medias
+     * @param boolean $ordered
+     */
     public function add_medias($medias, $ordered = false)
     {
         /* We need to pull the current 'end' track and then use that to
@@ -496,6 +514,7 @@ class Playlist extends playlist_object
     /**
      * create
      * This function creates an empty playlist, gives it a name and type
+     * @param string $name
      * @param string $type
      * @param integer $user_id
      */
@@ -541,6 +560,7 @@ class Playlist extends playlist_object
 
     /**
      * delete_song
+     * @param integer $object_id
      * this deletes a single track, you specify the playlist_data.id here
      */
     public function delete_song($object_id)
@@ -556,6 +576,7 @@ class Playlist extends playlist_object
 
     /**
      * delete_track
+    * @param integer $item_id
      * this deletes a single track, you specify the playlist_data.id here
      */
     public function delete_track($item_id)
@@ -571,6 +592,7 @@ class Playlist extends playlist_object
 
     /**
     * delete_track_number
+    * @param integer $track
     * this deletes a single track by it's track #, you specify the playlist_data.track here
     */
     public function delete_track_number($track)
