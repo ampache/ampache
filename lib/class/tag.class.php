@@ -591,7 +591,7 @@ class Tag extends database_object implements library_item
      * This returns a csv formated version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
      * by the formating functions of the different objects
-     * @param array $type
+     * @param array $tags
      * @param boolean $link
      * @param string $filter_type
      */
