@@ -136,7 +136,7 @@ class Ampachelistenbrainz
                 'track_name' => $song->title,
                 'release_name' => $album->name,
             );
-        if (is_empty($additional_info)) {
+        if (empty($additional_info)) {
             $track_metadata = array_splice($track_metadata, 1);
         }
         $json = json_encode(array(
