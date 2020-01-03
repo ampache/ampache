@@ -43,7 +43,7 @@ class Upload
         define('CLI', true);
 
         $catalog_id = AmpConfig::get('upload_catalog');
-        $catalog = self::check($catalog_id);
+        $catalog    = self::check($catalog_id);
         if ($catalog !== null) {
             debug_event('upload.class', 'Uploading to catalog ID ' . $catalog_id, 4);
 
