@@ -26,10 +26,13 @@
 * Fix bug in UI when enabling/disabling songs
 * Checks in Subsonic/WebUI for recording repeated plays
 * Update channel status pages (/channel/$CHANNELID/status.xsl)
-* Fix smartlists when searching sub-lists (Ampache was trying to create one gian query that didn't scale well)
+* Fix smartlists when searching sub-lists (Ampache was trying to create one giant query that didn't scale well)
 * composer & php-cs-fixer updates
 * Fix "Add New..." in album edit
 * Revert changes in 4.0.0 and allow manual choices for artist/album on upload again.
+* Subsonic return json errors when requesting json format (previously errors were always xml)
+* Add github package guide for docker to RELEASE-PROCESS.md
+* Update ListenBrainz plugin for empty additional info. (API says remove this section from json)
 
 ## 4.0.4
 
