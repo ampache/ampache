@@ -849,6 +849,9 @@ class Api
      */
     public static function tags($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'tags')) {
+            return false;
+        }
         self::$browse->reset_filters();
         self::$browse->set_type('tag');
         self::$browse->set_sort('name', 'ASC');
@@ -883,6 +886,9 @@ class Api
      */
     public static function tag($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'tag')) {
+            return false;
+        }
         $uid = scrub_in($input['filter']);
         ob_end_clean();
         switch ($input['format']) {
@@ -908,6 +914,9 @@ class Api
      */
     public static function tag_artists($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'tag_artists')) {
+            return false;
+        }
         $artists = Tag::get_tag_objects('artist', $input['filter']);
         if ($artists) {
             $user = User::get_from_username(Session::username($input['auth']));
@@ -941,6 +950,9 @@ class Api
      */
     public static function tag_albums($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'tag_albums')) {
+            return false;
+        }
         $albums = Tag::get_tag_objects('album', $input['filter']);
         if ($albums) {
             $user = User::get_from_username(Session::username($input['auth']));
@@ -976,6 +988,9 @@ class Api
      */
     public static function tag_songs($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'tag_songs')) {
+            return false;
+        }
         $songs = Tag::get_tag_objects('song', $input['filter']);
         $user  = User::get_from_username(Session::username($input['auth']));
 
@@ -1015,6 +1030,9 @@ class Api
      */
     public static function songs($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'songs')) {
+            return false;
+        }
         self::$browse->reset_filters();
         self::$browse->set_type('song');
         self::$browse->set_sort('title', 'ASC');
@@ -1059,6 +1077,9 @@ class Api
      */
     public static function song($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'song')) {
+            return false;
+        }
         $song_id = scrub_in($input['filter']);
         $user    = User::get_from_username(Session::username($input['auth']));
 
@@ -1125,7 +1146,7 @@ class Api
      */
     public static function playlist($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'playlist_edit')) {
+        if (!self::check_parameter($input, array('filter'), 'playlist')) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
@@ -1173,6 +1194,9 @@ class Api
      */
     public static function playlist_songs($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'playlist_songs')) {
+            return false;
+        }
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
         debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], '5');
@@ -1226,10 +1250,13 @@ class Api
      *
      * @param array $input
      * 'name' (string) Alpha-numeric search term
-     * 'type' (string) if true filter is e
+     * 'type' (string) 'public'|'private'
      */
     public static function playlist_create($input)
     {
+        if (!self::check_parameter($input, array('name', 'type'), 'playlist_create')) {
+            return false;
+        }
         $name = $input['name'];
         $type = $input['type'];
         $user = User::get_from_username(Session::username($input['auth']));
@@ -1309,6 +1336,9 @@ class Api
      */
     public static function playlist_delete($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'playlist_delete')) {
+            return false;
+        }
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
@@ -1342,10 +1372,13 @@ class Api
      * @param array $input
      * 'filter' (string) UID of playlist
      * 'song' (string) UID of song to add to playlist
-     * 'check' (integer) 0|1 Check for duplicates (default = 0)
+     * 'check' (integer) 0|1 Check for duplicates (default = 0) //optional
      */
     public static function playlist_add_song($input)
     {
+        if (!self::check_parameter($input, array('filter', 'song'), 'playlist_add_song')) {
+            return false;
+        }
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
@@ -1398,6 +1431,9 @@ class Api
      */
     public static function playlist_remove_song($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'playlist_remove_song')) {
+            return false;
+        }
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
