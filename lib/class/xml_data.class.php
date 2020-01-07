@@ -938,9 +938,9 @@ class XML_Data
                     "\t\t<date>" . $shout->date . "</date>\n" .
                     "\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
             if ($user->id) {
-                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
+                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>\n";
             }
-            $string .= "\t</shout>n";
+            $string .= "\t</shout>\n";
         }
         $string .= "</shouts>\n";
 
