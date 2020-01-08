@@ -522,7 +522,7 @@ class Api
      * artist objects. This function is deprecated!
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
+     * 'filter'  (string) Alpha-numeric search term //optional
      * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
      * 'add'     self::set_filter(date) //optional
      * 'update'  self::set_filter(date) //optional
@@ -532,9 +532,6 @@ class Api
      */
     public static function artists($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'artists')) {
-            return false;
-        }
         self::$browse->reset_filters();
         self::$browse->set_type('artist');
         self::$browse->set_sort('name', 'ASC');
@@ -642,7 +639,7 @@ class Api
      * This returns albums based on the provided search filters
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
+     * 'filter'  (string) Alpha-numeric search term //optional
      * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
      * 'add'     self::set_filter(date) //optional
      * 'update'  self::set_filter(date) //optional
@@ -652,9 +649,6 @@ class Api
      */
     public static function albums($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'albums')) {
-            return false;
-        }
         self::$browse->reset_filters();
         self::$browse->set_type('album');
         self::$browse->set_sort('name', 'ASC');
