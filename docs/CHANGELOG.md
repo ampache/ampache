@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 4.1.0-develop
+## 4.1.1-develop
+
+* 
+
+## 4.1.0
 
 * Bump API version to 400003 (4.0.0 build 003)
 * Api::playlist - filter mandatory
