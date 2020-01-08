@@ -50,6 +50,12 @@ md5sum ../ampache-4.1.0_all.zip
   * Use a test file (test.py?) for some basic API function.
   * FIXME what should it test?
 
+## Update ampache-docker images on docker hub
+
+Update the official Ampache docker images [<https://hub.docker.com/r/ampache/ampache>]
+
+* To bump ampache-docker images simply update the readme file with the new version number. Docker hub will detect a change and rebuild the image. (This was broken for a while for unknown reasons)
+
 ## Update github docker packages
 
 Packages are also published directly on github [<https://github.com/ampache/ampache-docker/packages>]
