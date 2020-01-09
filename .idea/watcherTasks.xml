@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectTasksOptions">
+  <component name="ProjectTasksOptions" suppressed-tasks="Stylus">
     <TaskOptions isEnabled="true">
       <option name="arguments" value="--write $FilePathRelativeToProjectRoot$" />
       <option name="checkSyntaxErrors" value="true" />

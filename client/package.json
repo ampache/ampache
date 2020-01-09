@@ -13,6 +13,7 @@
         "images": "^3.0.2",
         "js-cookie": "^2.2.1",
         "react": "^16.12.0",
+        "react-audio-player": "^0.11.1",
         "react-dom": "npm:@hot-loader/react-dom",
         "react-hotkeys-hook": "^1.5.3",
         "react-loading": "^2.0.3",

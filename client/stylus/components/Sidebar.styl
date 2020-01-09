@@ -45,27 +45,3 @@
         width 75%
         margin 5px 0
 
-  .player
-    width sidebarWidth
-    height sidebarWidth
-    display flex
-    position sticky
-    top "calc(100% - %s)" % sidebarWidth
-    background-color #555555
-    overflow hidden
-    .songArt
-      width 100%
-    &:hover > .controls
-      display flex
-    .controls
-      display none
-      position absolute
-      bottom 0
-      justify-content space-around
-      width 100%
-      background-color rgba(0, 0, 0, 0.3)
-      img
-        cursor pointer
-    .disabled
-      filter grayscale(1)
-      pointer-events none

@@ -3,6 +3,7 @@ import { PLAYERSTATUS } from '../enum/PlayerStatus';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { AuthKey } from '../logic/Auth';
 import { Song } from '../logic/Song';
+import ReactAudioPlayer from 'react-audio-player';
 
 interface MusicContextProps {
     authKey: AuthKey;
@@ -11,6 +12,7 @@ interface MusicContextProps {
 interface MusicContext {
     playerStatus: PLAYERSTATUS;
     currentPlayingSong: Song;
+    songPosition: number;
     songQueueIndex: number;
     songQueue: Song[];
     playPause: () => void;
@@ -34,12 +36,11 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         Song[],
         React.Dispatch<React.SetStateAction<Song[]>>
     ] = useState([]);
+    const [songPosition, setSongPosition] = useState(-1);
     const [songQueueIndex, setSongQueueIndex] = useState(-1);
     const [userQCount, setUserQCount] = useState(0);
 
-    const audioRef: React.MutableRefObject<HTMLAudioElement> = React.useRef(
-        null
-    );
+    let audioRef;
 
     useEffect(() => {
         if (!currentPlayingSong) return;
@@ -65,12 +66,13 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     );
 
     const playPause = () => {
-        const isPaused = audioRef.current?.paused;
+        if (currentPlayingSong == undefined) return;
+        const isPaused = audioRef.audioEl?.paused;
         if (isPaused) {
-            audioRef.current.play();
+            audioRef.audioEl.play();
             return;
         } else {
-            audioRef.current.pause();
+            audioRef.audioEl.pause();
         }
     };
 
@@ -94,9 +96,10 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 'Playing an undefined song, something is wrong.'
             );
         }
-        audioRef.current.src = song.url;
-        audioRef.current.title = `${song.artist.name} - ${song.title}`;
-        audioRef.current.play();
+        console.log(audioRef);
+        audioRef.audioEl.src = song.url;
+        audioRef.audioEl.title = `${song.artist.name} - ${song.title}`;
+        audioRef.audioEl.play();
         setCurrentPlayingSong(song);
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
@@ -150,6 +153,12 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         setSongQueue(newQueue);
     };
 
+    const durationChange = (elapsed) => {
+        const songTime = currentPlayingSong.time;
+        const percent = (elapsed / songTime) * 100;
+        setSongPosition(percent);
+    };
+
     return (
         <MusicContext.Provider
             value={{
@@ -157,6 +166,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 currentPlayingSong,
                 songQueueIndex,
                 songQueue,
+                songPosition, //TODO: Performance concern?
                 playPause,
                 playPrevious,
                 playNext,
@@ -164,8 +174,13 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 addToQueue
             }}
         >
-            <audio
-                ref={audioRef}
+            <ReactAudioPlayer
+                ref={(element) => {
+                    if (element == undefined) return;
+                    audioRef = element;
+                }}
+                listenInterval={1000}
+                onListen={durationChange}
                 onEnded={songIsOver}
                 onPause={() => {
                     setPlayerStatus(PLAYERSTATUS.PAUSED);

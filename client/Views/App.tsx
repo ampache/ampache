@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import { User } from '../logic/User';
 import Header from './components/Header';
 import ReactLoading from 'react-loading';
+import MusicControl from './components/MusicControl';
 
 interface AppViewProps {
     user: User;
@@ -47,6 +48,7 @@ class AppView extends Component<AppViewProps, AppViewStates> {
                     <Sidebar />
                     <div className='content'>{this.props.children}</div>
                 </div>
+                <MusicControl />
             </>
         );
     }
