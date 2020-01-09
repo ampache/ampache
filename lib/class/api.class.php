@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -161,8 +161,8 @@ class Api
      * @param array $input
      * auth      = (string) $passphrase
      * user      = (string) $username //optional
-     * timestamp = (integer) UNIXTIME() //Required if login/password authentication)
-     * version   = (string) $version //optional)
+     * timestamp = (integer) UNIXTIME() //Required if login/password authentication
+     * version   = (string) $version //optional
      * @return boolean
      */
     public static function handshake($input)
@@ -367,7 +367,7 @@ class Api
      * of the server is, and what version it is running/compatible with
      *
      * @param array $input
-     * auth = (string) //optional)
+     * auth = (string) //optional
      */
     public static function ping($input)
     {
@@ -444,6 +444,9 @@ class Api
      */
     public static function url_to_song($input)
     {
+        if (!self::check_parameter($input, array('url'), 'url_to_song')) {
+            return false;
+        }
         // Don't scrub, the function needs her raw and juicy
         $data = Stream_URL::parse($input['url']);
         $user = User::get_from_username(Session::username($input['auth']));
@@ -469,7 +472,7 @@ class Api
      * add    = self::set_filter(date) //optional
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional)
+     * limit  = (integer) //optional
      */
     public static function get_indexes($input)
     {
@@ -587,7 +590,7 @@ class Api
      * artist objects. This function is deprecated!
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
+     * 'filter'  (string) Alpha-numeric search term //optional
      * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
      * 'add'     self::set_filter(date) //optional
      * 'update'  self::set_filter(date) //optional
@@ -637,6 +640,9 @@ class Api
      */
     public static function artist($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'artist')) {
+            return false;
+        }
         $uid  = scrub_in($input['filter']);
         $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['format']) {
@@ -662,6 +668,9 @@ class Api
      */
     public static function artist_albums($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'artist_albums')) {
+            return false;
+        }
         $artist = new Artist($input['filter']);
         $albums = $artist->get_albums();
         $user   = User::get_from_username(Session::username($input['auth']));
@@ -693,6 +702,9 @@ class Api
      */
     public static function artist_songs($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'artist_songs')) {
+            return false;
+        }
         $artist = new Artist($input['filter']);
         $songs  = $artist->get_songs();
         $user   = User::get_from_username(Session::username($input['auth']));
@@ -721,7 +733,7 @@ class Api
      * This returns albums based on the provided search filters
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
+     * 'filter'  (string) Alpha-numeric search term //optional
      * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
      * 'add'     self::set_filter(date) //optional
      * 'update'  self::set_filter(date) //optional
@@ -770,6 +782,9 @@ class Api
      */
     public static function album($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'album')) {
+            return false;
+        }
         $uid  = (int) scrub_in($input['filter']);
         $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['format']) {
@@ -795,6 +810,9 @@ class Api
      */
     public static function album_songs($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'album_songs')) {
+            return false;
+        }
         $album = new Album($input['filter']);
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
@@ -1712,6 +1730,9 @@ class Api
      */
     public static function video($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'video')) {
+            return false;
+        }
         $video_id = scrub_in($input['filter']);
         $user     = User::get_from_username(Session::username($input['auth']));
 
@@ -1902,7 +1923,7 @@ class Api
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password))
      * email    = (string) $email
-     * disable  = (integer) 0|1 //optional)
+     * disable  = (integer) 0|1 //optional
      */
     public static function user_create($input)
     {
@@ -2309,7 +2330,7 @@ class Api
      * @param array $input
      * type = (string) 'song'|'album'|'artist' $type
      * id   = (integer) $object_id
-     * flag = (boolean) 0|1 $flag)\
+     * flag = (boolean) 0|1 $flag
      */
     public static function flag($input)
     {
@@ -2392,7 +2413,7 @@ class Api
      * @param array $input
      * id     = (integer) $object_id
      * user   = (integer) $user_id
-     * client = (string) $agent //optional)
+     * client = (string) $agent //optional
      */
     public static function record_play($input)
     {
@@ -2470,7 +2491,7 @@ class Api
      * artistmbid = (string)  $artist_mbid //optional
      * albummbid  = (string)  $album_mbid //optional
      * date       = (integer) UNIXTIME() //optional
-     * client     = (string)  $agent //optional)
+     * client     = (string)  $agent //optional
      */
     public static function scrobble($input)
     {
@@ -2620,7 +2641,7 @@ class Api
      * @param array $input
      * username = (string)
      * limit    = (integer) //optional
-     * since    = (integer) UNIXTIME() //optional)
+     * since    = (integer) UNIXTIME() //optional
      */
     public static function timeline($input)
     {
@@ -2662,7 +2683,7 @@ class Api
      *
      * @param array $input
      * limit = (integer) //optional
-     * since = (integer) UNIXTIME() //optional)
+     * since = (integer) UNIXTIME() //optional
      */
     public static function friends_timeline($input)
     {
@@ -2940,7 +2961,7 @@ class Api
      * @param array $input
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song'|'podcast'
-     * format = (string) 'mp3'|'ogg', etc //optional)
+     * format = (string) 'mp3'|'ogg', etc //optional
      */
     public static function download($input)
     {

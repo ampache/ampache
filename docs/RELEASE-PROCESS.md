@@ -12,7 +12,7 @@ It's easy to use a program like github desktop to compare between branches.
   * lib/init.php (Set release version)
   * docs/CHANGELOG.md (Update for release)
 * Commit merge but do not push!
-* Undo commits and tag for new version (e.g. 4.0.4)
+* Undo commits and tag for new version (e.g. 4.1.0)
 * Browse changes to check for things you've missed in the changelog
 * Run composer install
 * Remove broken symbolic links
@@ -25,7 +25,7 @@ It's easy to use a program like github desktop to compare between branches.
 
 ```shell
   cd ampache
-  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.0.4_all.zip ./
+  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.1.0_all.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
@@ -36,6 +36,11 @@ It's easy to use a program like github desktop to compare between branches.
 * After setting version and title, save as draft
 * Commit your waiting update to master
 * Publish the new release
+  * get the md5hash for the release page
+
+```shell
+md5sum ../ampache-4.1.0_all.zip 
+```
 
 ## Additional requirements
 
@@ -44,6 +49,12 @@ It's easy to use a program like github desktop to compare between branches.
 * Update and make a release for python3-ampache if api has changed
   * Use a test file (test.py?) for some basic API function.
   * FIXME what should it test?
+
+## Update ampache-docker images on docker hub
+
+Update the official Ampache docker images [<https://hub.docker.com/r/ampache/ampache>]
+
+* To bump ampache-docker images simply update the readme file with the new version number. Docker hub will detect a change and rebuild the image. (This was broken for a while for unknown reasons)
 
 ## Update github docker packages
 

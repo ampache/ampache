@@ -1,4 +1,4 @@
--- Copyright 2001 - 2019 Ampache.org
+-- Copyright 2001 - 2020 Ampache.org
 -- All rights reserved.
 --
 -- This program is free software; you can redistribute it and/or

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,7 +41,7 @@
         if (AmpConfig::get('custom_text_footer')) {
             echo AmpConfig::get('custom_text_footer');
         } else { ?>
-            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © 2001 - 2019 Ampache.org"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
+            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © 2001 - 2020 Ampache.org"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
         <?php
         } ?>
         </div>

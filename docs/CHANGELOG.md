@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 4.1.0-develop
+## 4.1.1-develop
+
+* 
+
+## 4.1.0
 
 * Bump API version to 400003 (4.0.0 build 003)
 * Api::playlist - filter mandatory
@@ -19,7 +23,7 @@
 * Typo in login page HTTP_REFERER
 * Roll back mysql8 workarounds. (Orace MySQL supported on php7.4+ only)
 * Fix bin\*.inc text issues with newline
-* Add docs/examples/channel_run.service for sunning background processes as a service
+* Add docs/examples/channel_run.service for running background processes as a service
 * New search option "Another User" allows searching other user ratings and favorites
 * user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods])>
 * Updates to support php7.4 (Ampache supports 7.1-7.4)
