@@ -113,7 +113,7 @@ class JSON_Data
         }
 
         return $JSON;
-    } // single_string
+    } // success
 
     /**
      * tags_string
@@ -228,16 +228,19 @@ class JSON_Data
             $artist = new Artist($artist_id);
             $artist->format();
 
+            // Build the Art URL, include session
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
+
             $rating     = new Rating($artist_id, 'artist');
             $tag_string = self::tags_string($artist->tags);
 
             array_push($JSON, array(
-                "artist" => array(
                     id => $artist->id,
                     name => $artist->f_full_name,
                     tags => $tag_string,
                     albums => ($artist->albums ?: 0),
                     songs => ($artist->songs ?: 0),
+                    art => $art_url,
                     preciserating => ($rating->get_user_rating() ?: 0),
                     rating => ($rating->get_user_rating() ?: 0),
                     averagerating => ($rating->get_average_rating() ?: 0),
@@ -245,7 +248,7 @@ class JSON_Data
                     summary => $artist->summary,
                     yearformed => $artist->yearformed,
                     placeformed => $artist->placeformed
-            )));
+                ));
         } // end foreach artists
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
@@ -289,7 +292,7 @@ class JSON_Data
                     name => 'Various'
                 );
             } else {
-                $theArray['album']['artist'] = array(
+                $theArray['artist'] = array(
                     id => $album->artist_id,
                     name => $album->artist_name
                 );
@@ -314,32 +317,59 @@ class JSON_Data
     /**
      * playlists
      *
-     * This takes an array of playlist ids and then returns a nice pretty JSON document
+     * This takes an array of playlist ids and then returns a nice pretty XML document
      *
      * @param    array    $playlists    (description here...)
-     * @return    string    return JSON
+     * @return    string    return xml
      */
-    public static function playlists($playlists)
+    public static function playlists($playlists, $create = false)
     {
-        if (count($playlists) > self::$limit or self::$offset > 0) {
-            $playlists = array_slice($playlists, self::$offset, self::$limit);
+        if (count($playlists) > self::$limit || self::$offset > 0) {
+            if (null !== self::$limit) {
+                $playlists = array_slice($playlists, self::$offset, self::$limit);
+            } else {
+                $playlists = array_slice($playlists, self::$offset);
+            }
         }
 
         $allPlaylists = [];
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
-            $playlist = new Playlist($playlist_id);
-            $playlist->format();
-            $item_total = $playlist->get_media_count('song');
+            /**
+             * Strip smart_ from playlist id and compare to original
+             * smartlist = 'smart_1'
+             * playlist  = 1000000
+             */
+            if (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id) {
+                $playlist     = new Playlist($playlist_id);
+                $playlist_id  = $playlist->id;
+                $playlist->format();
 
-            array_push($allPlaylists, array(
-                "playlist" => array(
-                    "id" => $playlist->id,
-                    "name" => $playlist->name,
-                    "owner" => $playlist->f_user,
-                    "items" => $item_total,
-                    "type" => $playlist->type)));
+                $playlist_name  = $playlist->name;
+                $playlist_user  = $playlist->f_user;
+                $playitem_total = $playlist->get_media_count('song');
+                $playlist_type  = $playlist->type;
+            } else {
+                $playlist     = new Search(str_replace('smart_', '', (string) $playlist_id));
+                $playlist->format();
+
+                $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));
+                if ($playlist->type !== 'public') {
+                    $playlist_user  = $playlist->f_user;
+                } else {
+                    $playlist_user  = $playlist->type;
+                }
+                $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
+                $playlist_type  = $playlist->type;
+            }
+                // Build this element
+                array_push($allPlaylists, [
+                    "id" => $playlist_id,
+                    "name" => $playlist_name,
+                    "owner" => $playlist_user,
+                    "items" => $playitem_total,
+                    "type" => $playlist_type]);
         } // end foreach
 
         return json_encode($allPlaylists, JSON_PRETTY_PRINT);
