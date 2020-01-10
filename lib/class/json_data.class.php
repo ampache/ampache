@@ -363,8 +363,8 @@ class JSON_Data
                 $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
-                // Build this element
-                array_push($allPlaylists, [
+            // Build this element
+            array_push($allPlaylists, [
                     "id" => $playlist_id,
                     "name" => $playlist_name,
                     "owner" => $playlist_user,
