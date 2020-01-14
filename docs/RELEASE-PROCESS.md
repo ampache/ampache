@@ -54,39 +54,30 @@ md5sum ../ampache-4.1.0_all.zip
 
 Update the official Ampache docker images [<https://hub.docker.com/r/ampache/ampache>]
 
-* To bump ampache-docker images simply update the readme file with the new version number. Docker hub will detect a change and rebuild the image. (This was broken for a while for unknown reasons)
+* To bump ampache-docker images rebuild for arm and amd64 using buildx [<https://github.com/docker/buildx>]
+* After enabling experimental mode I installed the tools and buildx container.
 
-## Update github docker packages
-
-Packages are also published directly on github [<https://github.com/ampache/ampache-docker/packages>]
-
-* Authenticate
-
-``` shell
-docker login docker.pkg.github.com --username lachlan-00
+This should only be needed once obviously
+```bash
+aptitude install qemu qemu-user-static qemu-user binfmt-support
+docker buildx create --name mybuilder mybuilder
+docker buildx use mybuilder
+docker buildx inspect --bootstrap
 ```
 
-* Step 2: Build the master image
+Build master images and push to docker hub.
 
-``` shell
-git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker-master/
-cd ampache-docker-master/
-docker tag ampache/ampache docker.pkg.github.com/ampache/ampache-docker/ampache:latest
-docker build -t docker.pkg.github.com/ampache/ampache-docker/ampache:latest .
+latest
+```bash
+git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker/
+cd ampache-docker
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:latest --push .
 ```
 
-* Update the package
-
-``` shell
-docker push docker.pkg.github.com/ampache/ampache-docker/ampache:latest
-```
-
-* Do the same process for develop every month or so
-
-``` shell
+Build develop images and push to docker hub.
+```bash
 git clone -b develop https://github.com/ampache/ampache-docker.git ampache-docker-develop/
-cd ampache-docker-develop/
-docker tag ampache/ampache-develop docker.pkg.github.com/ampache/ampache-docker/ampache:develop
-docker build -t docker.pkg.github.com/ampache/ampache-docker/ampache:develop .
-docker push docker.pkg.github.com/ampache/ampache-docker/ampache:develop
+cd ampache-docker-develop
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:develop --push .
 ```
+
