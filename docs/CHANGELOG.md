@@ -1,8 +1,16 @@
 # CHANGELOG
 
-## 4.1.1-develop
+## 4.2.0-develop
 
-* 
+* JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
+  * Call xml as normal:
+    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400003
+  * Call the JSON server:
+    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400003
+* Fix Musicbrainz Art search
+* Update copyright year to 2020
+* Update the release process
+* Multiarch docker images available
 
 ## 4.1.0
 

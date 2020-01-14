@@ -7,6 +7,7 @@
 
 **News:**
 
+* JSON support has landed! (Documentation for the API in both formats is being written in [flatdoc](http://ricostacruz.com/flatdoc/))
 * Try out the new python library, fully compatible with the latest api on the [pypi project page](https://pypi.org/project/ampache/)
 * Make sure you read over the changelog and check out [Release News](https://github.com/ampache/ampache/wiki/changelog) to get a handle on all the new features.
 
