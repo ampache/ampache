@@ -38,7 +38,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '400003';
+    public static $version = '400004';
 
     /**
      *  @var Browse $browse
@@ -860,16 +860,13 @@ class Api
      * This returns the tags (Genres) based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
+     * 'filter'  (string) Alpha-numeric search term //optional
      * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
      * 'offset'  (integer) //optional
      * 'limit'   (integer) //optional
      */
     public static function tags($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tags')) {
-            return false;
-        }
         self::$browse->reset_filters();
         self::$browse->set_type('tag');
         self::$browse->set_sort('name', 'ASC');
