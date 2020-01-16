@@ -1708,7 +1708,7 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($results, array(), $user->id);
+                echo JSON_Data::videos($video_ids, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);

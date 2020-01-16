@@ -153,7 +153,7 @@ class JSON_Data
      * This returns the formatted 'playlistTrack' string for an JSON document
      *
      * @param Song $song
-     * @param string $playlist_data
+     * @param array $playlist_data
      */
     private static function playlist_song_tracks_string($song, $playlist_data)
     {
@@ -472,7 +472,7 @@ class JSON_Data
      * @param    array    $videos    (description here...)
      * @return    string    return JSON
      */
-    public static function videos($videos)
+    public static function videos($videos, $user_id)
     {
         if (count($videos) > self::$limit or self::$offset > 0) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -503,7 +503,7 @@ class JSON_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param    array    $object_ids    Object IDs
+     * @param    integer[]    $object_ids    Object IDs
      * @param integer $user_id
      * @return    string    return JSON
      */
