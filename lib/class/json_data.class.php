@@ -566,16 +566,33 @@ class JSON_Data
     {
         $JSON = array();
         $user->format();
-
-        $JSON['user'] = array(
-            id => $user->id,
-            username => $user->username,
-            create_date => $user->create_date,
-            last_seen => $user->last_seen,
-            website => $user->website,
-            state => $user->state,
-            city => $user->city
-        );
+        if ($fullinfo) {
+            $JSON['user'] = array(
+                id => $user->id,
+                username => $user->username,
+                auth => $user->apikey,
+                email => $user->email,
+                access => (string) $user->access,
+                fullname_public => (string) $user->fullname_public,
+                validation => $user->validation,
+                disabled => (string) $user->disabled,
+                create_date => $user->create_date,
+                last_seen => $user->last_seen,
+                website => $user->website,
+                state => $user->state,
+                city => $user->city
+            );
+        } else {
+            $JSON['user'] = array(
+                id => $user->id,
+                username => $user->username,
+                create_date => $user->create_date,
+                last_seen => $user->last_seen,
+                website => $user->website,
+                state => $user->state,
+                city => $user->city
+            );
+        }
 
         if ($user->fullname_public) {
             $JSON['user']['fullname'] = $user->fullname;
