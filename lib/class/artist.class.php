@@ -307,8 +307,8 @@ class Artist extends database_object implements library_item
                 $sql_sort = '`album`.`name` DESC' . $sort_disk;
                 break;
             default:
-		$sql_sort  = '`album`.`name`, `album`.`disk`, `album`.`year`';
-		$sort_disk = ', `album`.`disk`';
+                $sql_sort  = '`album`.`name`, `album`.`disk`, `album`.`year`';
+                $sort_disk = ', `album`.`disk`';
         }
 
         $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
