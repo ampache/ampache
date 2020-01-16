@@ -214,7 +214,7 @@ class JSON_Data
      * @param    array    $artists    (description here...)
      * @return    string    return JSON
      */
-    public static function artists($artists, $include = [])
+    public static function artists($artists, $include = [], $user_id = false)
     {
         if (count($artists) > self::$limit or self::$offset > 0) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -262,7 +262,7 @@ class JSON_Data
      * @param    array    $albums    (description here...)
      * @return    string    return JSON
      */
-    public static function albums($albums, $include = [])
+    public static function albums($albums, $include = [], $user_id = false)
     {
         if (count($albums) > self::$limit or self::$offset > 0) {
             $albums = array_splice($albums, self::$offset, self::$limit);
@@ -381,7 +381,7 @@ class JSON_Data
      * This returns a JSON document from an array of song ids.
      * (Spiffy isn't it!)
      */
-    public static function songs($songs, $playlist_data='', $user_id = false)
+    public static function songs($songs, $playlist_data=array(), $user_id = false)
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -562,7 +562,7 @@ class JSON_Data
      * @param    User    $user    User
      * @return    string    return JSON
      */
-    public static function user(User $user)
+    public static function user(User $user, $fullinfo)
     {
         $JSON = array();
         $user->format();
