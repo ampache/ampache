@@ -19,10 +19,7 @@ export type Artist = {
     placeformed: string;
 };
 
-export const getAlbumsFromArtist = async (
-    albumID: number,
-    authKey: AuthKey
-) => {
+export const getAlbumsFromArtist = (albumID: number, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=artist_albums&filter=${albumID}&auth=${authKey}&version=400001`
@@ -39,7 +36,7 @@ export const getAlbumsFromArtist = async (
         });
 };
 
-export const getArtists = async (authKey: AuthKey) => {
+export const getArtists = (authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=artists&auth=${authKey}&version=400001`

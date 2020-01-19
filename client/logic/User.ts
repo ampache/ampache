@@ -13,7 +13,7 @@ type User = {
     website: string;
 };
 
-const getUser = async (username: string, authKey: AuthKey) => {
+const getUser = (username: string, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=user&username=${username}&auth=${authKey}&version=350001`
