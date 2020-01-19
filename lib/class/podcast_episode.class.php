@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -79,7 +79,7 @@ class Podcast_Episode extends database_object implements media, library_item
             }
             if (!empty($this->file)) {
                 $data          = pathinfo($this->file);
-                $this->type    = strtolower($data['extension']);
+                $this->type    = strtolower((string) $data['extension']);
                 $this->mime    = Song::type_to_mime($this->type);
                 $this->enabled = true;
             }
@@ -125,7 +125,7 @@ class Podcast_Episode extends database_object implements media, library_item
         $this->f_author      = scrub_out($this->author);
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
-        $this->f_pubdate     = date("m\/d\/Y - H:i", $this->pubdate);
+        $this->f_pubdate     = date("m\/d\/Y - H:i", (int) $this->pubdate);
         $this->f_state       = ucfirst($this->state);
 
         // Format the Time
@@ -322,7 +322,7 @@ class Podcast_Episode extends database_object implements media, library_item
         }
 
         /* Can't update to blank */
-        if (!strlen(trim($value))) {
+        if (!strlen(trim((string) $value))) {
             return false;
         }
 

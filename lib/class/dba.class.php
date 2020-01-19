@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -480,7 +480,7 @@ class Dba
     public static function translate_to_mysqlcharset($charset)
     {
         // Translate real charset names into fancy MySQL land names
-        switch (strtoupper($charset)) {
+        switch (strtoupper((string) $charset)) {
             case 'CP1250':
             case 'WINDOWS-1250':
                 $target_charset   = 'cp1250';

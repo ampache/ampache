@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -154,7 +154,7 @@ function charset_directory_correct($path) {
             if (!Core::get_global('i_am_crazy')) {
                 echo T_("Rename File (Y/N):");
                 $input = trim(fgets(STDIN));
-                if (strcasecmp($input,'Y') == 0) { charset_rename_file($full_file,$translated_filename); }
+                if (strcasecmp((string) $input,'Y') == 0) { charset_rename_file($full_file,$translated_filename); }
                 else { echo "\n\t"; echo T_('Not renaming...'); echo "\n\n"; }
             }
             else {

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -199,7 +199,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
      * to redirect them back into an admin section
      */
     $web_path = AmpConfig::get('web_path');
-    if ((substr($_POST['referrer'], 0, strlen($web_path)) == $web_path) &&
+    if ((substr($_POST['referrer'], 0, strlen((string) $web_path)) == $web_path) &&
         strpos($_POST['referrer'], 'install.php') === false &&
         strpos($_POST['referrer'], 'login.php') === false &&
         strpos($_POST['referrer'], 'logout.php') === false &&

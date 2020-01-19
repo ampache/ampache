@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -558,7 +558,7 @@ class Catalog_local extends Catalog
         $changed = 0;
 
         $sql = "SELECT `id`, `file` FROM `$media_type` " .
-            "WHERE `catalog`='$this->id' ORDER BY `$media_type`.`update_time` ASC, `$media_type`.`file` LIMIT $count,$chunk_size";
+            "WHERE `catalog`='$this->id' ORDER BY `$media_type`.`update_time` ASC, `$media_type`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         if (AmpConfig::get('memory_cache')) {
@@ -663,7 +663,7 @@ class Catalog_local extends Catalog
         $count = $chunk * $chunk_size;
 
         $sql = "SELECT `id`, `file` FROM `$media_type` " .
-            "WHERE `catalog`='$this->id' LIMIT $count,$chunk_size";
+            "WHERE `catalog`='$this->id' LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -717,7 +717,7 @@ class Catalog_local extends Catalog
             $results['license'] = $options['license'];
         }
 
-        if (isset($options['artist_id'])) {
+        if ((int) $options['artist_id'] > 0) {
             $results['artist_id']      = $options['artist_id'];
             $results['albumartist_id'] = $options['artist_id'];
             $artist                    = new Artist($results['artist_id']);
@@ -726,7 +726,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        if (isset($options['album_id'])) {
+        if ((int) $options['album_id'] > 0) {
             $results['album_id'] = $options['album_id'];
             $album               = new Album($results['album_id']);
             if ($album->id) {

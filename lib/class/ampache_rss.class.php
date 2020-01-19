@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -191,7 +191,7 @@ class Ampache_RSS
                     'link' => $song->link,
                     'description' => $description,
                     'comments' => $client->f_name . ' - ' . $element['agent'],
-                    'pubDate' => date('r', $element['expire'])
+                    'pubDate' => date('r', (int) $element['expire'])
                     );
             $results[] = $xml_array;
         } // end foreach
@@ -267,7 +267,7 @@ class Ampache_RSS
                             'link' => str_replace('&amp;', '&', $song->link),
                             'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
                             'comments' => $client->username,
-                            'pubDate' => date("r", $item['date']));
+                            'pubDate' => date("r", (int) $item['date']));
                 $results[] = $xml_array;
             }
         } // end foreach
@@ -295,7 +295,7 @@ class Ampache_RSS
                     'description' => $album->f_artist_name . ' - ' . $album->f_name,
                     'image' => Art::url($album->id, 'album', null, 2),
                     'comments' => '',
-                    'pubDate' => date("c", $album->get_addtime_first_song())
+                    'pubDate' => date("c", (int) $album->get_addtime_first_song())
             );
             $results[] = $xml_array;
         } // end foreach
@@ -356,7 +356,7 @@ class Ampache_RSS
                         'description' => $shout->text,
                         'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
                         'comments' => '',
-                        'pubDate' => date("c", $shout->date)
+                        'pubDate' => date("c", (int) $shout->date)
                 );
                 $results[] = $xml_array;
             }

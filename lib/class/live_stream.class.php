@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -226,14 +226,14 @@ class Live_Stream extends database_object implements media, library_item
 
         $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
 
-        $elements = explode(":", $data['url']);
+        $elements = explode(":", (string) $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('general', T_('URL is invalid, must be mms:// , https:// or http://'));
         }
 
         if (!empty($data['site_url'])) {
-            $elements = explode(":", $data['site_url']);
+            $elements = explode(":", (string) $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
                 AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
             }
@@ -257,23 +257,23 @@ class Live_Stream extends database_object implements media, library_item
     public static function create(array $data)
     {
         // Make sure we've got a name and codec
-        if (!strlen($data['name'])) {
+        if (!strlen((string) $data['name'])) {
             AmpError::add('name', T_('Name is required'));
         }
-        if (!strlen($data['codec'])) {
+        if (!strlen((string) $data['codec'])) {
             AmpError::add('codec', T_('Codec is required (e.g. MP3, OGG...)'));
         }
 
         $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
 
-        $elements = explode(":", $data['url']);
+        $elements = explode(":", (string) $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('url', T_('URL is invalid, must be http:// or https://'));
         }
 
         if (!empty($data['site_url'])) {
-            $elements = explode(":", $data['site_url']);
+            $elements = explode(":", (string) $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
                 AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
             }

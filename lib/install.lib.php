@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,15 +24,16 @@
  * split_sql
  * splits up a standard SQL dump file into distinct sql queries
  * @param string $sql
+ * @return array
  */
 function split_sql($sql)
 {
-    $sql       = trim($sql);
+    $sql       = trim((string) $sql);
     $sql       = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
     $buffer    = array();
     $ret       = array();
     $in_string = false;
-    for ($count = 0; $count < strlen($sql) - 1; $count++) {
+    for ($count = 0; $count < strlen((string) $sql) - 1; $count++) {
         if ($sql[$count] == ";" && !$in_string) {
             $ret[] = substr($sql, 0, $count);
             $sql   = substr($sql, $count + 1);
@@ -60,6 +61,7 @@ function split_sql($sql)
  * this function checks to see if we actually
  * still need to install ampache. This function is
  * very important, we don't want to reinstall over top of an existing install
+ * @return boolean
  */
 function install_check_status($configfile)
 {
@@ -70,8 +72,6 @@ function install_check_status($configfile)
      */
     if (!file_exists($configfile)) {
         return true;
-    } else {
-        //AmpError::add('general', T_('Config file already exists, the install has probably completed'));
     }
 
     /**
@@ -124,7 +124,7 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
     $new_lines = array();
     $lines     = explode("\n", $htaccess);
     foreach ($lines as $line) {
-        $parts   = explode(' ', $line);
+        $parts   = explode(' ', (string) $line);
         $p_count = count($parts);
         for ($count = 0; $count < $p_count; $count++) {
             // Matching url rewriting rule syntax
@@ -158,6 +158,7 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
 /**
  * @param string $file
  * @param boolean $download
+ * @return boolean
  */
 function install_rewrite_rules($file, $web_path, $download)
 {
@@ -170,7 +171,7 @@ function install_rewrite_rules($file, $web_path, $download)
         }
     } else {
         $browser = new Horde_Browser();
-        $browser->downloadHeaders(basename($file), 'text/plain', false, strlen($final));
+        $browser->downloadHeaders(basename($file), 'text/plain', false, strlen((string) $final));
         echo $final;
 
         return false;
@@ -183,10 +184,11 @@ function install_rewrite_rules($file, $web_path, $download)
  * install_insert_db
  *
  * Inserts the database using the values from Config.
+ * @return boolean
  */
-function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $mysql8 = false)
+function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true)
 {
-    $database = AmpConfig::get('database_name');
+    $database = (string) AmpConfig::get('database_name');
     // Make sure that the database name is valid
     preg_match('/([^\d\w\_\-])/', $database, $matches);
 
@@ -227,19 +229,14 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     Dba::disconnect();
 
     // Check to see if we should create a user here
-    if (strlen($db_user) && strlen($db_pass)) {
+    if (strlen((string) $db_user) && strlen((string) $db_pass)) {
         $db_host  = AmpConfig::get('database_hostname');
         // create the user account
         $sql_user = "CREATE USER '" . Dba::escape($db_user) . "'";
         if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
             $sql_user .= "@'localhost'";
         }
-        // force native password if using mysql 8+
-        if ($mysql8) {
-            $sql_user .= " IDENTIFIED WITH mysql_native_password BY '" . Dba::escape($db_pass) . "'";
-        } else {
-            $sql_user .= " IDENTIFIED BY '" . Dba::escape($db_pass) . "'";
-        }
+        $sql_user .= " IDENTIFIED BY '" . Dba::escape($db_pass) . "'";
         if (!Dba::write($sql_user)) {
             AmpError::add('general', sprintf(
                 /* HINT: %1 user, %2 database, %3 host, %4 error message */
@@ -270,7 +267,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
         $p_count  = count($pieces);
         $errors   = array();
         for ($count = 0; $count < $p_count; $count++) {
-            $pieces[$count] = trim($pieces[$count]);
+            $pieces[$count] = trim((string) $pieces[$count]);
             if (!empty($pieces[$count]) && $pieces[$count] != '#') {
                 if (!Dba::write($pieces[$count])) {
                     $errors[] = array(Dba::error(), $pieces[$count]);
@@ -300,6 +297,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
  * install_create_config
  *
  * Attempts to write out the config file or offer it as a download.
+ * @return boolean
  */
 function install_create_config($download = false)
 {
@@ -340,7 +338,7 @@ function install_create_config($download = false)
         }
     } else {
         $browser = new Horde_Browser();
-        $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, strlen($final));
+        $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, strlen((string) $final));
         echo $final;
 
         return false;
@@ -352,10 +350,11 @@ function install_create_config($download = false)
 /**
  * install_create_account
  * this creates your initial account and sets up the preferences for the -1 user and you
+ * @return boolean
  */
 function install_create_account($username, $password, $password2)
 {
-    if (!strlen($username) || !strlen($password)) {
+    if (!strlen((string) $username) || !strlen((string) $password)) {
         AmpError::add('general', T_('No username or password was specified'));
 
         return false;
@@ -401,6 +400,7 @@ function install_create_account($username, $password, $password2)
 
 /**
  * @param string $command
+ * @return boolean
  */
 function command_exists($command)
 {
@@ -435,6 +435,7 @@ function command_exists($command)
 /**
  * install_get_transcode_modes
  * get transcode modes available on this machine.
+ * @return array
  */
 function install_get_transcode_modes()
 {

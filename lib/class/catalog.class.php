@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -161,7 +161,7 @@ abstract class Catalog extends database_object
      */
     abstract public function get_rel_path($file_path);
     /**
-     * @param Song $media
+     * @param Song|Podcast_Episode|Song_Preview|Video $media
      * @return media|null
      */
     abstract public function prepare_media($media);
@@ -217,11 +217,8 @@ abstract class Catalog extends database_object
         $sql        = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($catalog_id));
         $results    = Dba::fetch_assoc($db_results);
-        if (!empty($results)) {
-            return self::create_catalog_type($results['catalog_type'], $catalog_id);
-        }
 
-        return null;
+        return self::create_catalog_type($results['catalog_type'], $catalog_id);
     }
 
     /**
@@ -478,14 +475,14 @@ abstract class Catalog extends database_object
 
             // Populate the filecache
             while ($results = Dba::fetch_assoc($db_results)) {
-                $this->_filecache[strtolower($results['file'])] = $results['id'];
+                $this->_filecache[strtolower((string) $results['file'])] = $results['id'];
             }
 
             $sql        = 'SELECT `id`, `file` FROM `video` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
 
             while ($results = Dba::fetch_assoc($db_results)) {
-                $this->_filecache[strtolower($results['file'])] = 'v_' . $results['id'];
+                $this->_filecache[strtolower((string) $results['file'])] = 'v_' . $results['id'];
             }
         }
 
@@ -500,7 +497,7 @@ abstract class Catalog extends database_object
      */
     public static function update_enabled($new_enabled, $catalog_id)
     {
-        self::_update_item('enabled', $new_enabled, $catalog_id, '75');
+        self::_update_item('enabled', make_bool($new_enabled), $catalog_id, '75');
     } // update_enabled
 
     /**
@@ -523,7 +520,7 @@ abstract class Catalog extends database_object
         }
 
         /* Can't update to blank */
-        if (!strlen(trim($value))) {
+        if (!strlen(trim((string) $value))) {
             return false;
         }
 
@@ -546,13 +543,13 @@ abstract class Catalog extends database_object
         $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->name) . '">' .
             scrub_out($this->f_name) . '</a>';
         $this->f_update = $this->last_update
-            ? date('d/m/Y h:i', $this->last_update)
+            ? date('d/m/Y h:i', (int) $this->last_update)
             : T_('Never');
         $this->f_add = $this->last_add
-            ? date('d/m/Y h:i', $this->last_add)
+            ? date('d/m/Y h:i', (int) $this->last_add)
             : T_('Never');
         $this->f_clean = $this->last_clean
-            ? date('d/m/Y h:i', $this->last_clean)
+            ? date('d/m/Y h:i', (int) $this->last_clean)
             : T_('Never');
     }
 
@@ -1278,7 +1275,7 @@ abstract class Catalog extends database_object
         foreach ($results as $result) {
             // Pull the string representation from the source
             $image = Art::get_from_source($result, $type);
-            if (strlen($image) > '5') {
+            if (strlen((string) $image) > '5') {
                 $inserted = $art->insert($image, $result['mime']);
                 // If they've enabled resizing of images generate a thumbnail
                 if (AmpConfig::get('resize_images')) {
@@ -1604,11 +1601,9 @@ abstract class Catalog extends database_object
             $song = new Song($song_id);
             $info = self::update_media_from_tags($song);
             // don't echo useless info when using api
-            if ($api) {
-                //do nothing
-            } elseif ($info['change']) {
+            if (($info['change']) && (!$api)) {
                 if ($info['element'][$type]) {
-                    $change = explode(' --> ', $info['element'][$type]);
+                    $change = explode(' --> ', (string) $info['element'][$type]);
                     $result = $change[1];
                 }
                 $file   = scrub_out($song->file);
@@ -1678,64 +1673,72 @@ abstract class Catalog extends database_object
      */
     public static function update_song_from_tags($results, Song $song)
     {
-        /* Setup the vars */
-        $new_song              = new Song();
-        $new_song->file        = $results['file'];
-        $new_song->title       = $results['title'];
-        $new_song->year        = (strlen($results['year'] > 4) ? (int) substr($results['year'], -4, 4) : (int) ($results['year']));
+        // info for the song table. This is all the primary file data that is song related
+        $new_song           = new Song();
+        $new_song->file     = $results['file'];
+        $new_song->year     = (strlen((string) $results['year']) > 4) ? (int) substr($results['year'], -4, 4) : (int) ($results['year']);
+        $new_song->title    = $results['title'];
+        $new_song->bitrate  = $results['bitrate'];
+        $new_song->rate     = $results['rate'];
+        $new_song->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
+        $new_song->size     = $results['size'];
+        $new_song->time     = (strlen((string) $results['time']) > 5) ? (int) substr($results['time'], -5, 5) : (int) ($results['time']);
+        $new_song->track    = (strlen((string) $results['track']) > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']);
+        $new_song->mbid     = $results['mb_trackid'];
+        $new_song->composer = $results['composer'];
+        $new_song->mime     = $results['mime'];
+
+        // info for the song_data table. used in Song::update_song
         $new_song->comment     = $results['comment'];
-        $new_song->language    = $results['language'];
         $new_song->lyrics      = str_replace(
                         array("\r\n", "\r", "\n"),
                         '<br />',
                         strip_tags($results['lyrics']));
-        $new_song->bitrate               = $results['bitrate'];
-        $new_song->rate                  = $results['rate'];
-        $new_song->mode                  = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
-        $new_song->size                  = $results['size'];
-        $new_song->time                  = (strlen($results['time'] > 5) ? (int) substr($results['time'], -5, 5) : (int) ($results['time']));
-        $new_song->mime                  = $results['mime'];
-        $new_song->track                 = (strlen($results['track'] > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']));
-        $new_song->mbid                  = $results['mb_trackid'];
         $new_song->label                 = $results['publisher'];
-        $new_song->composer              = $results['composer'];
+        $new_song->language              = $results['language'];
         $new_song->replaygain_track_gain = floatval($results['replaygain_track_gain']);
         $new_song->replaygain_track_peak = floatval($results['replaygain_track_peak']);
         $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
         $new_song->replaygain_album_peak = floatval($results['replaygain_album_peak']);
-        $tags                            = Tag::get_object_tags('song', $song->id);
+
+        // genre is used in the tag and tag_map tables
+        $new_song->tags = $results['genre'];
+        $tags           = Tag::get_object_tags('song', $song->id);
         if ($tags) {
             foreach ($tags as $tag) {
                 $song->tags[] = $tag['name'];
             }
         }
-        $new_song->tags   = $results['genre'];
+        // info for the artist table.
         $artist           = $results['artist'];
         $artist_mbid      = $results['mb_artistid'];
-        $albumartist      = $results['albumartist'] ?: $results['band'];
-        $albumartist      = $albumartist ?: null;
         $albumartist_mbid = $results['mb_albumartistid'];
+
+        // info for the album table.
         $album            = $results['album'];
         $album_mbid       = $results['mb_albumid'];
-        $album_mbid_group = $results['mb_albumid_group'];
         $disk             = $results['disk'];
+        // year is also included in album
+        $album_mbid_group = $results['mb_albumid_group'];
         $releasetype      = $results['releasetype'];
+        $albumartist      = $results['albumartist'] ?: $results['band'];
+        $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
         $barcode          = $results['barcode'];
         $catalog_number   = $results['catalog_number'];
 
-        /*
-        * We have the artist/genre/album name need to check it in the tables
-        * If found then add & return id, else return id
-        */
+        // check whether this artist exists (and the album_artist)
         $new_song->artist = Artist::check($artist, $artist_mbid);
         if ($albumartist) {
             $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
         }
+
+        // check whether this album exists
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
                                         $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
-        $update_time = time();
+
         // set `song`.`update_time` when artist or album details change
+        $update_time = time();
         if (self::migrate('artist', $song->artist, $new_song->artist) ||
                 self::migrate('album', $song->album, $new_song->album)) {
             Song::update_utime($song->id, $update_time);
@@ -1745,11 +1748,9 @@ abstract class Catalog extends database_object
         if ($artist_mbid) {
             $new_song->artist_mbid = $artist_mbid;
         }
-
         if ($album_mbid) {
             $new_song->album_mbid = $album_mbid;
         }
-
         if ($albumartist_mbid) {
             $new_song->albumartist_mbid = $albumartist_mbid;
         }
@@ -1789,6 +1790,7 @@ abstract class Catalog extends database_object
         if ($info['change']) {
             debug_event('catalog.class', "$song->file : differences found, updating database", 4);
 
+            // Update song_data table
             Song::update_song($song->id, $new_song);
 
             if ($song->tags != $new_song->tags) {
@@ -1879,7 +1881,7 @@ abstract class Catalog extends database_object
     /**
      *
      * @param library_item $libraryItem
-     * @param type $metadata
+     * @param array $metadata
      */
     public static function add_metadata(library_item $libraryItem, $metadata)
     {
@@ -2054,8 +2056,8 @@ abstract class Catalog extends database_object
         preg_match($prefix_pattern, $string, $matches);
 
         if (count($matches)) {
-            $string = trim($matches[2]);
-            $prefix = trim($matches[1]);
+            $string = trim((string) $matches[2]);
+            $prefix = trim((string) $matches[1]);
         } else {
             $prefix = null;
         }
@@ -2088,15 +2090,15 @@ abstract class Catalog extends database_object
         $first = '';
         if ($string) {
             $items = explode("\x00", $string);
-            $first = trim($items[0]);
+            $first = trim((string) $items[0]);
             //if first is the same as string, nothing was exploded, try other delimiters
             if ($first === $string) {
                 //try splitting with ; and then /
                 $items = explode(";", $string);
-                $first = trim($items[0]);
+                $first = trim((string) $items[0]);
                 if ($first === $string) {
                     $items = explode("/", $string);
-                    $first = trim($items[0]);
+                    $first = trim((string) $items[0]);
                 }
             }
         }
@@ -2127,7 +2129,7 @@ abstract class Catalog extends database_object
      */
     public static function check_title($title, $file = '')
     {
-        if (strlen(trim($title)) < 1) {
+        if (strlen(trim((string) $title)) < 1) {
             $title = Dba::escape($file);
         }
 
@@ -2157,7 +2159,7 @@ abstract class Catalog extends database_object
         $pinfo = pathinfo($playlist);
         if (isset($files)) {
             foreach ($files as $file) {
-                $file = trim($file);
+                $file = trim((string) $file);
                 // Check to see if it's a url from this ampache instance
                 if (substr($file, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
                     $data       = Stream_URL::parse($file);
@@ -2267,7 +2269,7 @@ abstract class Catalog extends database_object
         $results = explode("\n", $data);
 
         foreach ($results as $value) {
-            $value = trim($value);
+            $value = trim((string) $value);
             if (!empty($value) && substr($value, 0, 1) != '#') {
                 $files[] = $value;
             }
@@ -2288,9 +2290,9 @@ abstract class Catalog extends database_object
         $results = explode("\n", $data);
 
         foreach ($results as $value) {
-            $value = trim($value);
+            $value = trim((string) $value);
             if (preg_match("/file[0-9]+[\s]*\=(.*)/i", $value, $matches)) {
-                $file = trim($matches[1]);
+                $file = trim((string) $matches[1]);
                 if (!empty($file)) {
                     $files[] = $file;
                 }
@@ -2313,7 +2315,7 @@ abstract class Catalog extends database_object
 
         if ($xml) {
             foreach ($xml->entry as $entry) {
-                $file = trim($entry->ref['href']);
+                $file = trim((string) $entry->ref['href']);
                 if (!empty($file)) {
                     $files[] = $file;
                 }
@@ -2335,7 +2337,7 @@ abstract class Catalog extends database_object
         $xml   = simplexml_load_string($data);
         if ($xml) {
             foreach ($xml->trackList->track as $track) {
-                $file = trim($track->location);
+                $file = trim((string) $track->location);
                 if (!empty($file)) {
                     $files[] = $file;
                 }
@@ -2428,7 +2430,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Total Time']   = (int) ($song->time) * 1000; // iTunes uses milliseconds
                     $xml['dict']['Track Number'] = (int) ($song->track);
                     $xml['dict']['Year']         = (int) ($song->year);
-                    $xml['dict']['Date Added']   = date("Y-m-d\TH:i:s\Z", $song->addition_time);
+                    $xml['dict']['Date Added']   = date("Y-m-d\TH:i:s\Z", (int) $song->addition_time);
                     $xml['dict']['Bit Rate']     = (int) ($song->bitrate / 1000);
                     $xml['dict']['Sample Rate']  = (int) ($song->rate);
                     $xml['dict']['Play Count']   = (int) ($song->played);
@@ -2452,7 +2454,7 @@ abstract class Catalog extends database_object
                         $song->f_time . '","' .
                         $song->f_track . '","' .
                         $song->year . '","' .
-                        date("Y-m-d\TH:i:s\Z", $song->addition_time) . '","' .
+                        date("Y-m-d\TH:i:s\Z", (int) $song->addition_time) . '","' .
                         $song->f_bitrate . '","' .
                         $song->played . '","' .
                         $song->file . '"' . "\n";
@@ -2590,7 +2592,7 @@ abstract class Catalog extends database_object
             case 'update_from':
                 $catalog_id = 0;
                 // First see if we need to do an add
-                if ($options['add_path'] != '/' && strlen($options['add_path'])) {
+                if ($options['add_path'] != '/' && strlen((string) $options['add_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($options['add_path'])) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
@@ -2600,7 +2602,7 @@ abstract class Catalog extends database_object
                 } // end if add
 
                 // Now check for an update
-                if ($options['update_path'] != '/' && strlen($options['update_path'])) {
+                if ($options['update_path'] != '/' && strlen((string) $options['update_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
                         $songs = Song::get_from_path($options['update_path']);
                         foreach ($songs as $song_id) {

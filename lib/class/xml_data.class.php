@@ -1,10 +1,9 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,8 +42,7 @@ class XML_Data
     private function __construct()
     {
         // Rien a faire
-    }
-    // constructor
+    } // constructor
 
     /**
      * set_offset
@@ -57,8 +55,7 @@ class XML_Data
     public static function set_offset($offset)
     {
         self::$offset = (int) $offset;
-    }
-    // set_offset
+    } // set_offset
 
     /**
      * set_limit
@@ -79,8 +76,7 @@ class XML_Data
         } else {
             self::$limit = (int) ($limit);
         }
-    }
-    // set_limit
+    } // set_limit
 
     /**
      * set_type
@@ -97,8 +93,7 @@ class XML_Data
         }
 
         self::$type = $type;
-    }
-    // set_type
+    } // set_type
 
     /**
      * error
@@ -115,8 +110,7 @@ class XML_Data
         $xml_string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
 
         return self::output_xml($xml_string);
-    }
-    // error
+    } // error
 
     /**
      * success
@@ -132,8 +126,7 @@ class XML_Data
         $xml_string = "\t<success code=\"1\"><![CDATA[$string]]></success>";
 
         return self::output_xml($xml_string);
-    }
-    // success
+    } // success
 
     /**
      * header
@@ -146,8 +139,7 @@ class XML_Data
     public static function header($title = null)
     {
         return self::_header($title);
-    }
-    // header
+    } // header
 
     /**
      * footer
@@ -160,8 +152,7 @@ class XML_Data
     public static function footer()
     {
         return self::_footer();
-    }
-    // footer
+    } // footer
 
     /**
      * tags_string
@@ -193,8 +184,7 @@ class XML_Data
         }
 
         return $string;
-    }
-    // tags_string
+    } // tags_string
 
     /**
      * playlist_song_tracks_string
@@ -217,8 +207,7 @@ class XML_Data
         }
 
         return "";
-    }
-    // playlist_song_tracks_string
+    } // playlist_song_tracks_string
 
     /**
      * output_xml_from_array
@@ -313,13 +302,12 @@ class XML_Data
     public static function keyed_array($array, $callback = '')
     {
         $string = '';
-
         // Foreach it
         foreach ($array as $key => $value) {
             $attribute = '';
             // See if the key has attributes
-            if (is_array($value) && isset($value['<attributes>'])) {
-                $attribute = ' ' . $value['<attributes>'];
+            if (is_array($value) and isset($value['attributes'])) {
+                $attribute = ' ' . $value['attributes'];
                 $key       = $value['value'];
             }
 
@@ -337,8 +325,7 @@ class XML_Data
         }
 
         return $string;
-    }
-    // keyed_array
+    } // keyed_array
 
     /**
      * indexes
@@ -434,8 +421,7 @@ class XML_Data
         } // end foreach objects
 
         return self::output_xml($string, $full_xml);
-    }
-    // indexes
+    } // indexes
 
     /**
      * tags
@@ -472,8 +458,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // tags
+    } // tags
 
     /**
      * artists
@@ -548,8 +533,7 @@ class XML_Data
         } // end foreach artists
 
         return self::output_xml($string, $full_xml);
-    }
-    // artists
+    } // artists
 
     /**
      * albums
@@ -630,8 +614,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string, $full_xml);
-    }
-    // albums
+    } // albums
 
     /**
      * playlists
@@ -678,7 +661,8 @@ class XML_Data
                 } else {
                     $playlist_user  = $playlist->type;
                 }
-                $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
+                $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
+                $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
             // Build this element
@@ -691,8 +675,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // playlists
+    } // playlists
 
     /**
      * songs
@@ -786,8 +769,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string, $full_xml);
-    }
-    // songs
+    } // songs
 
     /**
      * videos
@@ -826,8 +808,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // videos
+    } // videos
 
     /**
      * democratic
@@ -880,8 +861,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // democratic
+    } // democratic
 
     /**
      * user
@@ -917,8 +897,7 @@ class XML_Data
         $string .= "</user>\n";
 
         return self::output_xml($string);
-    }
-    // user
+    } // user
 
     /**
      * users
@@ -938,8 +917,7 @@ class XML_Data
         $string .= "</users>\n";
 
         return self::output_xml($string);
-    }
-    // users
+    } // users
 
     /**
      * shouts
@@ -960,9 +938,9 @@ class XML_Data
                     "\t\t<date>" . $shout->date . "</date>\n" .
                     "\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
             if ($user->id) {
-                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
+                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>\n";
             }
-            $string .= "\t</shout>n";
+            $string .= "\t</shout>\n";
         }
         $string .= "</shouts>\n";
 
@@ -1012,8 +990,7 @@ class XML_Data
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-    }
-    // timeline
+    } // timeline
 
     /**
      * rss_feed
@@ -1041,8 +1018,7 @@ class XML_Data
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-    }
-    // rss_feed
+    } // rss_feed
 
     /**
      * _header
@@ -1090,8 +1066,7 @@ class XML_Data
         } // end switch
 
         return $header;
-    }
-    // _header
+    } // _header
 
     /**
      * _footer

@@ -1,10 +1,9 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -119,7 +118,7 @@ class PrivateMsg extends database_object
         unset($details); //dead code but called from other format calls
         $this->f_subject       = scrub_out($this->subject);
         $this->f_message       = scrub_out($this->message);
-        $this->f_creation_date = date("Y/m/d H:i:s", $this->creation_date);
+        $this->f_creation_date = date("Y/m/d H:i:s", (int) $this->creation_date);
         $from_user             = new User($this->from_user);
         $from_user->format();
         $this->f_from_user_link = $from_user->f_link;
@@ -132,13 +131,14 @@ class PrivateMsg extends database_object
 
     /**
      * set_is_read
+     * @param integer $read
      * @return PDOStatement|boolean
      */
     public function set_is_read($read)
     {
         $sql = "UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($read ? 1 : 0, $this->id));
+        return Dba::write($sql, array($read, $this->id));
     }
 
     /**

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,8 +23,9 @@
 // Minimal init for use in install
 
 // Do a check for PHP5.4 because nothing will work without it
-if (version_compare(phpversion(), '5.4.0', '<')) {
-    echo T_("Ampache requires PHP version >= 5.4");
+if (version_compare(phpversion(), '7.1.0', '<')) {
+    echo T_("Ampache requires PHP version >= 7.1");
+    throw new \RuntimeException(T_("Ampache requires PHP version >= 7.1"));
 
     return false;
 }

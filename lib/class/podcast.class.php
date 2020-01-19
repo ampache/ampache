@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -155,8 +155,8 @@ class Podcast extends database_object implements library_item
         $this->f_copyright     = scrub_out($this->copyright);
         $this->f_generator     = scrub_out($this->generator);
         $this->f_website       = scrub_out($this->website);
-        $this->f_lastbuilddate = date("m\/d\/Y - H:i", $this->lastbuilddate);
-        $this->f_lastsync      = date("m\/d\/Y - H:i", $this->lastsync);
+        $this->f_lastbuilddate = date("m\/d\/Y - H:i", (int) $this->lastbuilddate);
+        $this->f_lastsync      = date("m\/d\/Y - H:i", (int) $this->lastsync);
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
         $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
 
@@ -362,7 +362,7 @@ class Podcast extends database_object implements library_item
                 }
             }
             if (!empty($arturl)) {
-                $art = new Art($podcast_id, 'podcast');
+                $art = new Art((int) $podcast_id, 'podcast');
                 $art->insert_url($arturl);
             }
             if (count($episodes) > 0) {

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,7 +56,7 @@ class Plugin
             if (is_dir($basedir . '/' . $cname)) {
                 $name = $cname;
             } else {
-                $name = 'ampache-' . strtolower($cname);
+                $name = 'ampache-' . strtolower((string) $cname);
             }
 
             /* Require the file we want */
@@ -163,13 +163,13 @@ class Plugin
     public function is_valid()
     {
         /* Check the plugin to make sure it's got the needed vars */
-        if (!strlen($this->_plugin->name)) {
+        if (!strlen((string) $this->_plugin->name)) {
             return false;
         }
-        if (!strlen($this->_plugin->description)) {
+        if (!strlen((string) $this->_plugin->description)) {
             return false;
         }
-        if (!strlen($this->_plugin->version)) {
+        if (!strlen((string) $this->_plugin->version)) {
             return false;
         }
 

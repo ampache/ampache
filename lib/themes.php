@@ -1,10 +1,9 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -64,11 +63,11 @@ function get_theme($name)
 {
     static $_mapcache = array();
 
-    if (strlen($name) < 1) {
+    if (strlen((string) $name) < 1) {
         return false;
     }
 
-    $name = strtolower($name);
+    $name = strtolower((string) $name);
 
     if (isset($_mapcache[$name])) {
         return $_mapcache[$name];
@@ -78,12 +77,12 @@ function get_theme($name)
     if (file_exists($config_file)) {
         $results         = parse_ini_file($config_file);
         $results['path'] = $name;
-        $results['base'] = explode(',', $results['base']);
+        $results['base'] = explode(',', (string) $results['base']);
         $nbbases         = count($results['base']);
         for ($count = 0; $count < $nbbases; $count++) {
             $results['base'][$count] = explode('|', $results['base'][$count]);
         }
-        $results['colors'] = explode(',', $results['colors']);
+        $results['colors'] = explode(',', (string) $results['colors']);
     } else {
         $results = null;
     }

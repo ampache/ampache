@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -78,7 +78,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                     </div>
                     <div class="formValidation">
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
-                        <input type="hidden" name="referrer" value="<?php echo scrub_out(Core::get_server('HTTP_REFERRER')); ?>" />
+                        <input type="hidden" name="referrer" value="<?php echo scrub_out(Core::get_server('HTTP_REFERER')); ?>" />
                         <input type="hidden" name="action" value="login" />
                         <?php echo AmpConfig::get('login_message'); ?>
                     </div>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -86,7 +86,7 @@ class scrobbler
         if ($method == 'POST') {
             $opts['http']['content']  = $params;
             $opts['http']['header'][] = 'Content-type: application/x-www-form-urlencoded';
-            $opts['http']['header'][] = 'Content-length: ' . strlen($params);
+            $opts['http']['header'][] = 'Content-length: ' . strlen((string) $params);
             $params                   = '';
         }
         $context = stream_context_create($opts);

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -329,7 +329,7 @@ class Broadcast extends database_object implements library_item
     public static function generate_key()
     {
         // Should be improved for security reasons!
-        return md5(uniqid(rand(), true));
+        return md5(uniqid((string) rand(), true));
     }
 
     /**

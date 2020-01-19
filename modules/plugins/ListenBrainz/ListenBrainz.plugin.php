@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -130,17 +130,21 @@ class Ampachelistenbrainz
         if ($artist->mbid) {
             $additional_info['artist_mbid'] = $artist->mbid;
         }
+        $track_metadata =  array(
+                'additional_info' => $additional_info,
+                'artist_name' => $artist->name,
+                'track_name' => $song->title,
+                'release_name' => $album->name,
+            );
+        if (empty($additional_info)) {
+            $track_metadata = array_splice($track_metadata, 1);
+        }
         $json = json_encode(array(
             'listen_type' => 'single',
             'payload' => array(
                 array(
                     'listened_at' => time(),
-                    'track_metadata' => array(
-                        'additional_info' => $additional_info,
-                        'artist_name' => $artist->name,
-                        'track_name' => $song->title,
-                        'release_name' => $album->name,
-                    )
+                    'track_metadata' => $track_metadata
                 )
             )
         ));

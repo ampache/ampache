@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -111,7 +111,7 @@ class Repository
         $tableName = preg_replace_callback(
                 '/(?<=.)([A-Z])/',
                 function ($name) {
-                    return '_' . strtolower($name[0]);
+                    return '_' . strtolower((string) $name[0]);
                 }, end($nameParts));
 
         return lcfirst($tableName);

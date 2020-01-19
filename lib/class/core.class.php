@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -227,7 +227,7 @@ class Core
     private static function getNamespacedPaths($class)
     {
         $possiblePaths   = array();
-        $namespaceParts  = explode('\\', $class);
+        $namespaceParts  = explode('\\', (string) $class);
         $possiblePaths[] = AmpConfig::get('prefix') . '/modules/' . implode('/', $namespaceParts) . '.php';
 
         $classedPath = array('path' => AmpConfig::get('prefix')) +
@@ -246,7 +246,7 @@ class Core
     {
         $possiblePaths   = array();
         $possiblePaths[] = AmpConfig::get('prefix') . '/lib/class/' .
-                strtolower($class) . '.class.php';
+                strtolower((string) $class) . '.class.php';
 
         return $possiblePaths;
     }
@@ -259,7 +259,7 @@ class Core
     public static function form_register($name, $type = 'post')
     {
         // Make ourselves a nice little sid
-        $sid    =  md5(uniqid(rand(), true));
+        $sid    =  md5(uniqid((string) rand(), true));
         $window = AmpConfig::get('session_length');
         $expire = time() + $window;
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -169,7 +169,7 @@ class Shoutbox
         $object = new $type($object_id);
 
         if ($object->id > 0) {
-            if (strtolower($type) === 'song') {
+            if (strtolower((string) $type) === 'song') {
                 if (!$object->enabled) {
                     $object = null;
                 }
@@ -268,7 +268,7 @@ class Shoutbox
     public function format()
     {
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
-        $this->f_date = date("m\/d\/Y - H:i", $this->date);
+        $this->f_date = date("m\/d\/Y - H:i", (int) $this->date);
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
 
         return true;
@@ -300,7 +300,7 @@ class Shoutbox
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
             $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
-            $html .= "<div class='shoutbox-date'>" . date("Y/m/d H:i:s", $this->date) . "</div>";
+            $html .= "<div class='shoutbox-date'>" . date("Y/m/d H:i:s", (int) $this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . $this->f_text . "</div>";
         $html .= "</div>";

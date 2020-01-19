@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -88,11 +88,12 @@ abstract class playlist_object extends database_object implements library_item
         if (!Access::check('interface', 25)) {
             return false;
         }
+        if (Access::check('interface', 100)) {
+            return true;
+        }
         // allow the owner
         if (($this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
             return true;
-        } else {
-            return Access::check('interface', 75, $user_id);
         }
 
         return false;

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,9 @@
  // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 UI::show_box_top(T_('Upload'));
-$ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php'; ?>
+$ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';
+$artist = (int) (Core::get_request('artist'));
+$album  = (int) (Core::get_request('album')); ?>
 <div id="container" role="main">
     <div id="tree"></div>
     <div id="data">
@@ -164,10 +166,37 @@ if ($upload_max > 0) { ?>
 <?php
 } ?>
 <table class="tabledata">
+<?php if (Access::check('interface', 50)) {
+    ?>
+    <tr>
+    <h5><?php echo T_('Leave the artist and album fields blank to read file tags') ?></h5>
+    </tr>
+</table>
+<table class="tabledata">
+<tr>
+    <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
+    <td class="upload_select">
+        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
+        <div id="artist_select_album_1">
+            <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
+    <td class="upload_select">
+        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
+        <div id="album_select_upload_1">
+            <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
+        </div>
+    </td>
+</tr>
+<?php
+} ?>
 <?php if (AmpConfig::get('licensing')) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
-    <td>
+    <td class="upload_select">
         <?php show_license_select('license', '', '0'); ?>
         <div id="album_select_license_<?php echo $song->license ?>">
             <?php echo Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")'); ?>
@@ -176,6 +205,8 @@ if ($upload_max > 0) { ?>
 </tr>
 <?php
 } ?>
+</table>
+<table class="tabledata">
 <tr>
     <td>
         <?php echo T_('Files'); ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
 
         //Return the new Ajax::button
         $id           = 'button_flip_state_' . $song->id;
-        if ($catalog->enabled) {
+        if ($new_enabled) {
             $button     = 'disable';
             $buttontext = T_('Disable');
         } else {

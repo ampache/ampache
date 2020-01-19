@@ -113,7 +113,7 @@ class JSON_Data
         }
 
         return $JSON;
-    } // single_string
+    } // success
 
     /**
      * tags_string
@@ -153,7 +153,7 @@ class JSON_Data
      * This returns the formatted 'playlistTrack' string for an JSON document
      *
      * @param Song $song
-     * @param string $playlist_data
+     * @param array $playlist_data
      */
     private static function playlist_song_tracks_string($song, $playlist_data)
     {
@@ -214,7 +214,7 @@ class JSON_Data
      * @param    array    $artists    (description here...)
      * @return    string    return JSON
      */
-    public static function artists($artists, $include = [])
+    public static function artists($artists, $include = [], $user_id = false)
     {
         if (count($artists) > self::$limit or self::$offset > 0) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -262,7 +262,7 @@ class JSON_Data
      * @param    array    $albums    (description here...)
      * @return    string    return JSON
      */
-    public static function albums($albums, $include = [])
+    public static function albums($albums, $include = [], $user_id = false)
     {
         if (count($albums) > self::$limit or self::$offset > 0) {
             $albums = array_splice($albums, self::$offset, self::$limit);
@@ -363,8 +363,8 @@ class JSON_Data
                 $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
-                // Build this element
-                array_push($allPlaylists, [
+            // Build this element
+            array_push($allPlaylists, [
                     "id" => $playlist_id,
                     "name" => $playlist_name,
                     "owner" => $playlist_user,
@@ -381,7 +381,7 @@ class JSON_Data
      * This returns a JSON document from an array of song ids.
      * (Spiffy isn't it!)
      */
-    public static function songs($songs, $playlist_data='', $user_id = false)
+    public static function songs($songs, $playlist_data=array(), $user_id = false)
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -472,7 +472,7 @@ class JSON_Data
      * @param    array    $videos    (description here...)
      * @return    string    return JSON
      */
-    public static function videos($videos)
+    public static function videos($videos, $user_id)
     {
         if (count($videos) > self::$limit or self::$offset > 0) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -503,7 +503,7 @@ class JSON_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param    array    $object_ids    Object IDs
+     * @param    integer[]    $object_ids    Object IDs
      * @param integer $user_id
      * @return    string    return JSON
      */
@@ -562,20 +562,37 @@ class JSON_Data
      * @param    User    $user    User
      * @return    string    return JSON
      */
-    public static function user(User $user)
+    public static function user(User $user, $fullinfo)
     {
         $JSON = array();
         $user->format();
-
-        $JSON['user'] = array(
-            id => $user->id,
-            username => $user->username,
-            create_date => $user->create_date,
-            last_seen => $user->last_seen,
-            website => $user->website,
-            state => $user->state,
-            city => $user->city
-        );
+        if ($fullinfo) {
+            $JSON['user'] = array(
+                id => $user->id,
+                username => $user->username,
+                auth => $user->apikey,
+                email => $user->email,
+                access => (string) $user->access,
+                fullname_public => (string) $user->fullname_public,
+                validation => $user->validation,
+                disabled => (string) $user->disabled,
+                create_date => $user->create_date,
+                last_seen => $user->last_seen,
+                website => $user->website,
+                state => $user->state,
+                city => $user->city
+            );
+        } else {
+            $JSON['user'] = array(
+                id => $user->id,
+                username => $user->username,
+                create_date => $user->create_date,
+                last_seen => $user->last_seen,
+                website => $user->website,
+                state => $user->state,
+                city => $user->city
+            );
+        }
 
         if ($user->fullname_public) {
             $JSON['user']['fullname'] = $user->fullname;

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 
 /**
  *
@@ -148,7 +147,7 @@ class Auth
      */
     private static function mysql_auth($username, $password)
     {
-        if (strlen($password) && strlen($username)) {
+        if (strlen((string) $password) && strlen((string) $username)) {
             $sql        = 'SELECT `password` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
 
@@ -496,7 +495,7 @@ class Auth
     public static function token_check($username, $token, $salt)
     {
         // subsonic token auth with apikey
-        if (strlen($token) && strlen($salt) && strlen($username)) {
+        if (strlen((string) $token) && strlen((string) $salt) && strlen((string) $username)) {
             $sql        = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
             $row        = Dba::fetch_assoc($db_results);

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -193,7 +193,7 @@ function check_config_values($conf)
 function check_php_memory()
 {
     $current_memory = ini_get('memory_limit');
-    $current_memory = substr($current_memory, 0, strlen($current_memory) - 1);
+    $current_memory = substr($current_memory, 0, strlen((string) $current_memory) - 1);
 
     if ((int) ($current_memory) < 48) {
         return false;
@@ -238,7 +238,7 @@ function check_override_memory()
 {
     /* Check memory */
     $current_memory = ini_get('memory_limit');
-    $current_memory = substr($current_memory, 0, strlen($current_memory) - 1);
+    $current_memory = substr($current_memory, 0, strlen((string) $current_memory) - 1);
     $new_limit      = ($current_memory + 16) . "M";
 
     /* Bump it by 16 megs (for getid3)*/
@@ -311,8 +311,8 @@ function check_php_gd()
  */
 function return_bytes($val)
 {
-    $val  = trim($val);
-    $last = strtolower($val[strlen($val) - 1]);
+    $val  = trim((string) $val);
+    $last = strtolower((string) $val[strlen((string) $val) - 1]);
     switch ($last) {
         // The 'G' modifier is available since PHP 5.1.0
         case 'g':

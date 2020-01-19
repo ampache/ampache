@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -65,7 +65,7 @@ class Movie extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        $trimmed = Catalog::trim_prefix(trim($data['original_name']));
+        $trimmed = Catalog::trim_prefix(trim((string) $data['original_name']));
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
 
@@ -85,7 +85,7 @@ class Movie extends Video
         parent::update($data);
 
         if (isset($data['original_name'])) {
-            $trimmed = Catalog::trim_prefix(trim($data['original_name']));
+            $trimmed = Catalog::trim_prefix(trim((string) $data['original_name']));
             $name    = $trimmed['string'];
             $prefix  = $trimmed['prefix'];
         } else {
@@ -115,7 +115,7 @@ class Movie extends Video
     {
         parent::format($details);
 
-        $this->f_original_name = trim($this->prefix . " " . $this->f_title);
+        $this->f_original_name = trim((string) $this->prefix . " " . $this->f_title);
         $this->f_title         = ($this->f_original_name ?: $this->f_title);
         $this->f_full_title    = $this->f_title;
         $this->f_link          = '<a href="' . $this->link . '">' . $this->f_title . '</a>';

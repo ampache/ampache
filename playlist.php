@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,7 +47,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $playlist_name = scrub_in($_REQUEST['playlist_name']);
+        $playlist_name = (string) scrub_in($_REQUEST['playlist_name']);
         $playlist_type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $playlist_id                     = Playlist::create($playlist_name, $playlist_type);

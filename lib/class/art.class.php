@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,7 +103,7 @@ class Art extends database_object
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
      * @param int[] $object_ids
-     * @return bool
+     * @return boolean
      */
     public static function build_cache($object_ids)
     {
@@ -175,14 +175,14 @@ class Art extends database_object
      */
     public static function extension($mime)
     {
-        $data      = explode("/", $mime);
+        $data      = explode("/", (string) $mime);
         $extension = $data['1'];
 
         if ($extension == 'jpeg') {
             $extension = 'jpg';
         }
 
-        return $extension;
+        return (string) $extension;
     } // extension
 
     /**
@@ -193,15 +193,15 @@ class Art extends database_object
      */
     public static function test_image($source)
     {
-        if (strlen($source) < 10) {
+        if (strlen((string) $source) < 10) {
             debug_event('art.class', 'Invalid image passed', 1);
 
             return false;
         }
 
         // Check image size doesn't exceed the limit
-        if (strlen($source) > AmpConfig::get('max_upload_size')) {
-            debug_event('art.class', 'Image size (' . strlen($source) . ') exceed the limit (' . AmpConfig::get('max_upload_size') . ').', 1);
+        if (strlen((string) $source) > AmpConfig::get('max_upload_size')) {
+            debug_event('art.class', 'Image size (' . strlen((string) $source) . ') exceed the limit (' . AmpConfig::get('max_upload_size') . ').', 1);
 
             return false;
         }
@@ -731,8 +731,8 @@ class Art extends database_object
      */
     public function generate_thumb($image, $size, $mime)
     {
-        $data = explode("/", $mime);
-        $type = strtolower($data['1']);
+        $data = explode("/", (string) $mime);
+        $type = strtolower((string) $data['1']);
 
         if (!self::test_image($image)) {
             debug_event('art.class', 'Not trying to generate thumbnail, invalid data passed', 1);
@@ -824,7 +824,7 @@ class Art extends database_object
         ob_end_clean();
 
         imagedestroy($thumbnail);
-        if (!strlen($data)) {
+        if (!strlen((string) $data)) {
             debug_event('art.class', 'Unknown Error resizing art', 1);
 
             return array();
@@ -1120,6 +1120,9 @@ class Art extends database_object
                     case 'gather_google':
                         $data = $this->{$method_name}($limit, $options);
                     break;
+                    case 'gather_musicbrainz':
+                        $data = $this->{$method_name}($limit, $options);
+                    break;
                     default:
                         $data = $this->{$method_name}($limit);
                     break;
@@ -1179,8 +1182,8 @@ class Art extends database_object
             return $images;
         }
 
-        if ($data['mbid']) {
-            debug_event('art.class', "gather_musicbrainz Album MBID: " . $data['mbid'], 5);
+        if ($data['mb_albumid']) {
+            debug_event('art.class', "gather_musicbrainz Album MBID: " . $data['mb_albumid'], 5);
         } else {
             return $images;
         }
@@ -1190,7 +1193,7 @@ class Art extends database_object
             'url-rels'
         );
         try {
-            $release = $mb->lookup('release', $data['mbid'], $includes);
+            $release = $mb->lookup('release', $data['mb_albumid'], $includes);
         } catch (Exception $error) {
             debug_event('art.class', "gather_musicbrainz exception: " . $error, 3);
 

@@ -1,10 +1,9 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -126,12 +125,12 @@ class Daap_Api
         echo $data;
         ob_flush();
 
-        return strlen($data);
+        return strlen((string) $data);
     }
 
     public static function output_header($curl, $header)
     {
-        $rheader = trim($header);
+        $rheader = trim((string) $header);
         $rhpart  = explode(':', $rheader);
         if (! empty($rheader) && count($rhpart) > 1) {
             if ($rhpart[0] != "Transfer-Encoding") {
@@ -139,7 +138,7 @@ class Daap_Api
             }
         }
 
-        return strlen($header);
+        return strlen((string) $header);
     }
 
     /**
@@ -255,9 +254,9 @@ class Daap_Api
         if (! empty($pass)) {
             $headers = apache_request_headers();
             $auth    = $headers['Authorization'];
-            if (strpos(strtolower($auth), 'basic') === 0) {
+            if (strpos(strtolower((string) $auth), 'basic') === 0) {
                 $decauth  = base64_decode(substr($auth, 6));
-                $userpass = explode(':', $decauth);
+                $userpass = explode(':', (string) $decauth);
                 if (count($userpass) == 2) {
                     if ($userpass[1] == $pass) {
                         $authenticated = true;
@@ -389,7 +388,7 @@ class Daap_Api
         } elseif (count($input) == 3) {
             // Stream
             if ($input[1] == 'items') {
-                $finfo = explode('.', $input[2]);
+                $finfo = explode('.', (string) $input[2]);
                 if (count($finfo) == 2) {
                     $object_id = (int) ($finfo[0]);
                     $type      = $finfo[1];
@@ -596,7 +595,7 @@ class Daap_Api
                     break;
             }
 
-            return $code . pack("N", strlen($value)) . $value;
+            return $code . pack("N", strlen((string) $value)) . $value;
         } else {
             debug_event('daap_api.class', 'Unknown DAAP tag `' . $tag . '`.', 3);
         }
@@ -606,7 +605,7 @@ class Daap_Api
 
     private static function tlv_string($tag, $value)
     {
-        return $tag . pack("N", strlen($value)) . $value;
+        return $tag . pack("N", strlen((string) $value)) . $value;
     }
 
     private static function tlv_long($tag, $value)
@@ -816,7 +815,7 @@ class Daap_Api
         self::setHeaders();
 
         if (Core::get_server('REQUEST_METHOD') != 'OPTIONS') {
-            header("Content-length: " . strlen($string));
+            header("Content-length: " . strlen((string) $string));
             echo $string;
         } else {
             header("Content-type: text/plain", true);

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -131,10 +131,10 @@ class Wanted extends database_object
             $albums = $artist->get_albums();
             foreach ($albums as $albumid) {
                 $album = new Album($albumid);
-                if (trim($album->mbid_group)) {
+                if (trim((string) $album->mbid_group)) {
                     $owngroups[] = $album->mbid_group;
                 } else {
-                    if (trim($album->mbid)) {
+                    if (trim((string) $album->mbid)) {
                         $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
                         if ($malbum->{'release-group'}) {
                             if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
@@ -153,12 +153,12 @@ class Wanted extends database_object
 
         $results = array();
         foreach ($martist->{'release-groups'} as $group) {
-            if (in_array(strtolower($group->{'primary-type'}), $types)) {
+            if (in_array(strtolower((string) $group->{'primary-type'}), $types)) {
                 $add     = true;
                 $g_count = count($group->{'secondary-types'});
 
                 for ($i = 0; $i < $g_count && $add; ++$i) {
-                    $add = in_array(strtolower($group->{'secondary-types'}[$i]), $types);
+                    $add = in_array(strtolower((string) $group->{'secondary-types'}[$i]), $types);
                 }
 
                 if ($add) {
@@ -177,7 +177,7 @@ class Wanted extends database_object
                             }
                             $wanted->name = $group->title;
                             if (!empty($group->{'first-release-date'})) {
-                                if (strlen($group->{'first-release-date'}) == 4) {
+                                if (strlen((string) $group->{'first-release-date'}) == 4) {
                                     $wanted->year = $group->{'first-release-date'};
                                 } else {
                                     $wanted->year = date("Y", strtotime($group->{'first-release-date'}));
@@ -236,6 +236,7 @@ class Wanted extends database_object
 
     /**
      * search_missing_artists
+     * @param string $name
      * @return array
      */
     public static function search_missing_artists($name)

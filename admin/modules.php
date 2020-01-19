@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -143,7 +143,7 @@ switch ($_REQUEST['action']) {
         show_confirmation($title, $body, $url);
     break;
     case 'confirm_uninstall_plugin':
-        $plugin = scrub_in($_REQUEST['plugin']);
+        $plugin = (string) scrub_in($_REQUEST['plugin']);
         $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=uninstall_plugin&amp;plugin=' . $plugin;
         $title  = T_('Are You Sure?');
         $body   = T_('This will disable the Plugin and remove your settings');

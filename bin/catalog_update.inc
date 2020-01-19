@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -197,7 +197,7 @@ while ($row = Dba::fetch_row($db_results)) {
     }
 
 ob_end_flush();
-echo '\n';
+echo "\n";
 
 function ob_html_strip($string) {
 

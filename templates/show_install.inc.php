@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -87,12 +87,6 @@ require $prefix . '/templates/install_header.inc.php'; ?>
     </div>
     <div class="form-group">
         <label for="mysql8" class="col-sm-4 control-label"><?php echo T_('MySQL 8 host?') . ' ' . '<a href="https://github.com/ampache/ampache/wiki/mysql-faq' . '" target="_blank">' . T_('Oracle MySQL FAQ') . '</a>'; ?></label>
-        <div class="col-sm-8">
-            <input
-                type="checkbox" value="1"
-                id="mysql8" name="mysql8"
-            />
-        </div>
     </div>
     <div class="form-group" id="overwrite_db_div">
         <label for="overwrite_db" class="col-sm-4 control-label"><?php echo T_('Overwrite if Database Already Exists'); ?></label>

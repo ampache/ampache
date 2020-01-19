@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -164,8 +164,8 @@ class Stream_Playlist
                 $url['url'] = $object->file;
                 // Relative path
                 if (!empty($additional_params) && strpos($url['url'], $additional_params) === 0) {
-                    $url['url'] = substr($url['url'], strlen($additional_params));
-                    if (strlen($url['url']) < 1) {
+                    $url['url'] = substr($url['url'], strlen((string) $additional_params));
+                    if (strlen((string) $url['url']) < 1) {
                         return null;
                     }
                     if ($url['url'][0] == DIRECTORY_SEPARATOR) {

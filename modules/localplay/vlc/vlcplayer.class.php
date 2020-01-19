@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -499,7 +499,7 @@ class VlcPlayer
                     $repeated_tag_index[$tag . '_' . $level]++;
                 } else {
                     //This section will make the value an array if multiple tags with the same name appear together
-                    $current[$tag]                           = array($current[$tag],$result);//This will combine the existing item and the new item together to make an array
+                    $current[$tag]                           = array($current[$tag], $result);//This will combine the existing item and the new item together to make an array
                     $repeated_tag_index[$tag . '_' . $level] = 2;
 
                     if (isset($current[$tag . '_attr'])) { //The attribute of the last(0th) tag must be moved as well
@@ -530,7 +530,7 @@ class VlcPlayer
                     }
                     $repeated_tag_index[$tag . '_' . $level]++;
                 } else { //If it is not an array...
-                    $current[$tag]                           = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
+                    $current[$tag]                           = array($current[$tag], $result); //...Make it an array using using the existing value and the new value
                     $repeated_tag_index[$tag . '_' . $level] = 1;
                     if ($priority == 'tag' && $get_attributes) {
                         if (isset($current[$tag . '_attr'])) { //The attribute of the last(0th) tag must be moved as well

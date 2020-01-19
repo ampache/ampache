@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -164,7 +164,7 @@ class User extends database_object
         }
 
         // Make sure the Full name is always filled
-        if (strlen($this->fullname) < 1) {
+        if (strlen((string) $this->fullname) < 1) {
             $this->fullname = $this->username;
         }
     } // Constructor
@@ -281,7 +281,7 @@ class User extends database_object
      */
     public static function get_from_apikey($apikey)
     {
-        $apikey    = trim($apikey);
+        $apikey    = trim((string) $apikey);
         if (!empty($apikey)) {
             // check for legacy unencrypted apikey
             $sql        = "SELECT `id` FROM `user` WHERE `apikey` = ?";
@@ -338,7 +338,7 @@ class User extends database_object
      */
     public static function get_from_website($website)
     {
-        $website    = rtrim($website, "/");
+        $website    = rtrim((string) $website, "/");
         $sql        = "SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1";
         $db_results = Dba::read($sql, array($website));
         $users      = array();
@@ -412,7 +412,7 @@ class User extends database_object
                 $admin = true;
             }
             $type_array[$type][$row['name']] = array('name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'], 'value' => $row['value'], 'subcategory' => $row['subcatagory']);
-            $results[$type]                  = array('title' => ucwords($type), 'admin' => $admin, 'prefs' => $type_array[$type]);
+            $results[$type]                  = array('title' => ucwords((string) $type), 'admin' => $admin, 'prefs' => $type_array[$type]);
         } // end while
 
         return $results;
@@ -740,7 +740,7 @@ class User extends database_object
      */
     public function update_website($new_website)
     {
-        $new_website = rtrim($new_website, "/");
+        $new_website = rtrim((string) $new_website, "/");
         $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
 
         debug_event('user.class', 'Updating website', 4);
@@ -893,7 +893,7 @@ class User extends database_object
         $user_id = $this->id;
 
         // We shouldn't test on file only
-        if (!strlen($media->file)) {
+        if (!strlen((string) $media->file)) {
             return false;
         }
 
@@ -961,7 +961,7 @@ class User extends database_object
             $sip   = $sipar['host'];
         }
 
-        $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim($sip, "[]"))) : '';
+        $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim((string) $sip, "[]"))) : '';
         $date    = time();
         $user_id = $this->id;
         $agent   = Dba::escape(Core::get_server('HTTP_USER_AGENT'));
@@ -987,7 +987,7 @@ class User extends database_object
      */
     public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false, $encrypted = false)
     {
-        $website = rtrim($website, "/");
+        $website = rtrim((string) $website, "/");
         if (!$encrypted) {
             $password = hash('sha256', $password);
         }
@@ -1078,14 +1078,14 @@ class User extends database_object
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
         } else {
-            $this->f_last_seen = date("m\/d\/Y - H:i", $this->last_seen);
+            $this->f_last_seen = date("m\/d\/Y - H:i", (int) $this->last_seen);
         }
 
         /* If they have a create date */
         if (!$this->create_date) {
             $this->f_create_date = T_('Unknown');
         } else {
-            $this->f_create_date = date("m\/d\/Y - H:i", $this->create_date);
+            $this->f_create_date = date("m\/d\/Y - H:i", (int) $this->create_date);
         }
 
         $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);

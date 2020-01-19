@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -193,7 +193,7 @@ class Browse extends Query
         // Set the correct classes based on type
         $class = "box browse_" . $type;
 
-        $argument_param = ($argument ? '&argument=' . scrub_in($argument) : '');
+        $argument_param = ($argument ? '&argument=' . (string) scrub_in($argument) : '');
 
         debug_event('browse.class', 'Show objects called for type {' . $type . '}', 5);
 
@@ -394,7 +394,7 @@ class Browse extends Query
     {
         foreach ($request as $key => $value) {
             //reinterpret v as a list of int
-            $list = explode(',', $value);
+            $list = explode(',', (string) $value);
             $ok   = true;
             foreach ($list as $item) {
                 if (!is_numeric($item)) {
@@ -427,7 +427,7 @@ class Browse extends Query
         if ((filter_has_var(INPUT_COOKIE, $name))) {
             $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
         } else {
-            $default_alpha = explode(",", AmpConfig::get('libitem_browse_alpha'));
+            $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",", AmpConfig::get('libitem_browse_alpha'));
             if (in_array($type, $default_alpha)) {
                 $this->set_use_alpha(true, false);
             }
@@ -470,7 +470,7 @@ class Browse extends Query
      */
     public function is_use_pages()
     {
-        return $this->_state['use_pages'];
+        return make_bool($this->_state['use_pages']);
     }
 
     /**
@@ -491,7 +491,7 @@ class Browse extends Query
      */
     public function is_grid_view()
     {
-        return $this->_state['grid_view'];
+        return make_bool($this->_state['grid_view']);
     }
 
     /**
@@ -520,7 +520,7 @@ class Browse extends Query
      */
     public function is_use_alpha()
     {
-        return $this->_state['use_alpha'];
+        return make_bool($this->_state['use_alpha']);
     }
 
     /**
@@ -547,7 +547,7 @@ class Browse extends Query
      */
     public function is_show_header()
     {
-        return $this->show_header;
+        return make_bool($this->show_header);
     }
 
     /**
@@ -556,7 +556,7 @@ class Browse extends Query
      */
     public function is_update_session()
     {
-        return $this->_state['update_session'];
+        return make_bool($this->_state['update_session']);
     }
 
     /**
@@ -574,7 +574,7 @@ class Browse extends Query
      */
     public function get_threshold()
     {
-        return $this->_state['threshold'];
+        return (string) $this->_state['threshold'];
     }
 
     /**

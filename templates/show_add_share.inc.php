@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,7 +56,7 @@
         <input type="checkbox" name="allow_stream" value="1" <?php echo ($_REQUEST['allow_stream'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> />
     </td>
 </tr>
-<?php if (((Core::get_request('type') == 'song' || Core::get_request('type') == 'video') && Access::check_function('download')) || Access::check_function('batch_download')) { ?>
+<?php if (((Core::get_request('type') == 'song' || Core::get_request('type') == 'video') && (Access::check_function('download')) || Access::check_function('batch_download'))) { ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
     <td>

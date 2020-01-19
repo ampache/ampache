@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,6 +38,11 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
         ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a><?php
     } else {
         echo T_('Artists');
+    } ?></td>
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'playlist') {
+        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=playlist"><?php echo T_('Playlists'); ?></a><?php
+    } else {
+        echo T_('Playlists');
     } ?></td>
     <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
         <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) != 'video') { ?>

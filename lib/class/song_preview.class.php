@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,7 +61,7 @@ class Song_Preview extends database_object implements media, playable_item
                 $this->$key = $value;
             }
             $data       = pathinfo($this->file);
-            $this->type = strtolower($data['extension']) ?: 'mp3';
+            $this->type = strtolower((string) $data['extension']) ?: 'mp3';
             $this->mime = Song::type_to_mime($this->type);
         } else {
             $this->id = null;

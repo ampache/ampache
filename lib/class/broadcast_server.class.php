@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -78,9 +78,9 @@ class Broadcast_Server implements MessageComponentInterface
      */
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        $commands = explode(';', $msg);
+        $commands = explode(';', (string) $msg);
         foreach ($commands as $command) {
-            $command = trim($command);
+            $command = trim((string) $command);
             if (!empty($command)) {
                 $cmdinfo = explode(':', $command, 2);
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -91,9 +91,9 @@ class Update
     public static function format_version($data)
     {
         $new_version =
-            substr($data, 0, strlen($data) - 5) . '.' .
-            substr($data, strlen($data) - 5, 1) . ' Build:' .
-            substr($data, strlen($data) - 4, strlen($data));
+            substr($data, 0, strlen((string) $data) - 5) . '.' .
+            substr($data, strlen((string) $data) - 5, 1) . ' Build:' .
+            substr($data, strlen((string) $data) - 4, strlen((string) $data));
 
         return $new_version;
     }
@@ -183,6 +183,9 @@ class Update
 
         $update_string = "* Delete upload_user_artist database settings<br />";
         $version[]     = array('version' => '400004', 'description' => $update_string);
+
+        $update_string = "* Add a last_count to search table to speed up access requests<br />";
+        $version[]     = array('version' => '400005', 'description' => $update_string);
 
         return $version;
     }
@@ -1016,6 +1019,19 @@ class Update
 
         $sql = "DELETE FROM `preference` " .
                "WHERE `preference`.`name` = 'upload_user_artist';";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    /**
+     * update_400005
+     *
+     * Add a last_count to searches to speed up access requests
+     */
+    public static function update_400005()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `search` ADD `last_count` INT(11) NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;

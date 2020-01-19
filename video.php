@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $video_id = scrub_in(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
+        $video_id = (string) scrub_in(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
         show_confirmation(T_('Are You Sure?'), T_("The Video will be deleted"),
             AmpConfig::get('web_path') . "/video.php?action=confirm_delete&video_id=" . $video_id,
             1,

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -79,7 +79,7 @@ if ((Core::get_request('action') != 'handshake') && (Core::get_request('action')
     if (isset($_REQUEST['user'])) {
         $GLOBALS['user'] = User::get_from_username(Core::get_request('user'));
     } else {
-        debug_event('xml.server', 'API [' . Core::get_request('auth') . ']', 3);
+        debug_event('xml.server', 'API session [' . Core::get_request('auth') . ']', 3);
         $GLOBALS['user'] = User::get_from_username(Session::username(Core::get_request('auth')));
     }
 }
@@ -102,6 +102,7 @@ foreach ($methods as $method) {
     // If the method is the same as the action being called
     // Then let's call this function!
     if ($_GET['action'] == $method) {
+        $_GET['format'] = 'xml';
         call_user_func(array('api', $method), $_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
         return false;

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,7 +103,7 @@ class Share extends database_object
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $secret     = '';
         for ($count = 0; $count < $length; $count++) {
-            $secret .= $characters[rand(0, strlen($characters) - 1)];
+            $secret .= $characters[rand(0, strlen((string) $characters) - 1)];
         }
 
         return $secret;
@@ -270,8 +270,8 @@ class Share extends database_object
         }
         $this->f_allow_stream   = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
-        $this->f_creation_date  = date("Y-m-d H:i:s", $this->creation_date);
-        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", $this->creation_date) : '';
+        $this->f_creation_date  = date("Y-m-d H:i:s", (int) $this->creation_date);
+        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", (int) $this->creation_date) : '';
     }
 
     /**
@@ -447,7 +447,7 @@ class Share extends database_object
         echo "<li style='padding-top: 8px; text-align: right;'>";
         $plugins = Plugin::get_plugins('external_share');
         foreach ($plugins as $plugin_name) {
-            echo "<a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . UI::get_icon('share_' . strtolower($plugin_name), $plugin_name) . "</a>&nbsp;";
+            echo "<a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . UI::get_icon('share_' . strtolower((string) $plugin_name), $plugin_name) . "</a>&nbsp;";
         }
         echo "</li>";
         echo "</ul>";

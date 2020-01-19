@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -112,7 +112,7 @@ function check_can_zip($object_type)
         $allowed       = false;
         $allowed_types = explode(',', AmpConfig::get('allow_zip_types'));
         foreach ($allowed_types as $atype) {
-            if (trim($atype) == $object_type) {
+            if (trim((string) $atype) == $object_type) {
                 $allowed = true;
                 break;
             }

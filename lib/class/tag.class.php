@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,6 +52,7 @@ class Tag extends database_object implements library_item
     /**
      * construct_from_name
      * This attempts to construct the tag from a name, rather then the ID
+     * @param string $name
      */
     public static function construct_from_name($name)
     {
@@ -66,6 +67,7 @@ class Tag extends database_object implements library_item
      * build_cache
      * This takes an array of object ids and caches all of their information
      * in a single query, cuts down on the connections
+     * @params array $ids
      */
     public static function build_cache($ids)
     {
@@ -135,20 +137,22 @@ class Tag extends database_object implements library_item
      * This is a wrapper function, it figures out what we need to add, be it a tag
      * and map, or just the mapping
      * @param string $type
+     * @param integer $object_id
+     * @param string $value
      */
-    public static function add($type, $id, $value, $user = true)
+    public static function add($type, $object_id, $value, $user = true)
     {
         if (!Core::is_library_item($type)) {
             return false;
         }
 
-        if (!is_numeric($id)) {
+        if (!is_numeric($object_id)) {
             return false;
         }
 
         $cleaned_value = $value;
 
-        if (!strlen($cleaned_value)) {
+        if (!strlen((string) $cleaned_value)) {
             return false;
         }
 
@@ -171,8 +175,8 @@ class Tag extends database_object implements library_item
         }
 
         // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
-        if (!$map_id = self::tag_map_exists($type, $id, $tag_id, $uid)) {
-            $map_id = self::add_tag_map($type, $id, $tag_id, $uid);
+        if (!$map_id = self::tag_map_exists($type, $object_id, $tag_id, $uid)) {
+            $map_id = self::add_tag_map($type, $object_id, $tag_id, $uid);
         }
 
         return $map_id;
@@ -181,10 +185,11 @@ class Tag extends database_object implements library_item
     /**
      * add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
+     * @param string $value
      */
     public static function add_tag($value)
     {
-        if (!strlen($value)) {
+        if (!strlen((string) $value)) {
             return false;
         }
 
@@ -200,10 +205,11 @@ class Tag extends database_object implements library_item
     /**
      * update
      * Update the name of the tag
+     * @param array $data
      */
     public function update(array $data)
     {
-        if (!strlen($data['name'])) {
+        if (!strlen((string) $data['name'])) {
             return false;
         }
         debug_event('tag.class', 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
@@ -242,6 +248,7 @@ class Tag extends database_object implements library_item
     /**
      * merge
      * merges this tag to another one.
+     * @param integer $merge_to
      * @param boolean $is_persistent
      */
     public function merge($merge_to, $is_persistent)
@@ -393,6 +400,7 @@ class Tag extends database_object implements library_item
     /**
      * tag_exists
      * This checks to see if a tag exists, this has nothing to do with objects or maps
+     * @param string $value
      */
     public static function tag_exists($value)
     {
@@ -415,6 +423,8 @@ class Tag extends database_object implements library_item
      * This looks to see if the current mapping of the current object of the current tag of the current
      * user exists, lots of currents... taste good in scones.
      * @param string $type
+     * @param integer $object_id
+     * @param integer $tag_id
      * @param integer $user
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
@@ -438,6 +448,9 @@ class Tag extends database_object implements library_item
      * get_top_tags
      * This gets the top tags for the specified object using limit
      * @param string $type
+     * @param integer $object_id
+     * @param integer $limit
+     * @return array
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
     {
@@ -467,10 +480,10 @@ class Tag extends database_object implements library_item
     /**
      * get_object_tags
      * Display all tags that apply to matching target type of the specified id
-     *
      * @param string $type
+     * @param integer $object_id
      */
-    public static function get_object_tags($type, $id)
+    public static function get_object_tags($type, $object_id)
     {
         if (!Core::is_library_item($type)) {
             return false;
@@ -481,7 +494,7 @@ class Tag extends database_object implements library_item
             "WHERE `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ?";
 
         $results    = array();
-        $db_results = Dba::read($sql, array($type, $id));
+        $db_results = Dba::read($sql, array($type, $object_id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row;
@@ -528,9 +541,12 @@ class Tag extends database_object implements library_item
     } // get_tag_objects
 
     /**
-      * get_tags
+     * get_tags
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
+     * @param array $type
+     * @param integer $limit
+     * @param string $order
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
@@ -548,7 +564,7 @@ class Tag extends database_object implements library_item
             "WHERE `tag`.`is_hidden` = false " .
             "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         if (!empty($type)) {
-            $sql .= "AND `tag_map`.`object_type` = '" . scrub_in($type) . "' ";
+            $sql .= "AND `tag_map`.`object_type` = '" . (string) scrub_in($type) . "' ";
         }
         $order = "`" . $order . "`";
         if ($order == 'count') {
@@ -575,6 +591,9 @@ class Tag extends database_object implements library_item
      * This returns a csv formated version of the tags that we are given
      * it also takes a type so that it knows how to return it, this is used
      * by the formating functions of the different objects
+     * @param array $tags
+     * @param boolean $link
+     * @param string $filter_type
      */
     public static function get_display($tags, $link = false, $filter_type = '')
     {
@@ -601,7 +620,7 @@ class Tag extends database_object implements library_item
             $results .= ', ';
         }
 
-        $results = rtrim($results, ', ');
+        $results = rtrim((string) $results, ', ');
 
         return $results;
     } // get_display
@@ -610,6 +629,7 @@ class Tag extends database_object implements library_item
      * update_tag_list
      * Update the tags list based on a comma-separated list
      *  (ex. tag1,tag2,tag3,..)
+     * @param string $tags_comma
      * @param string $type
      * @param integer $object_id
      * @param boolean $overwrite
@@ -624,26 +644,24 @@ class Tag extends database_object implements library_item
         $filter      = str_replace(';',', ', $filterunder);
         $editedTags  = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
 
-        if (is_array($ctags)) {
-            foreach ($ctags as $ctid => $ctv) {
-                if ($ctv['id'] != '') {
-                    $ctag  = new Tag($ctv['id']);
-                    $found = false;
+        foreach ($ctags as $ctid => $ctv) {
+            if ($ctv['id'] != '') {
+                $ctag  = new Tag($ctv['id']);
+                $found = false;
 
-                    foreach ($editedTags as  $tk => $tv) {
-                        if ($ctag->name == $tv) {
-                            $found = true;
-                            break;
-                        }
+                foreach ($editedTags as  $tk => $tv) {
+                    if ($ctag->name == $tv) {
+                        $found = true;
+                        break;
                     }
+                }
 
-                    if ($found) {
-                        unset($editedTags[$ctag->name]);
-                    } else {
-                        if ($overwrite) {
-                            debug_event('tag.class', 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
-                            $ctag->remove_map($type, $object_id, false);
-                        }
+                if ($found) {
+                    unset($editedTags[$ctag->name]);
+                } else {
+                    if ($overwrite) {
+                        debug_event('tag.class', 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
+                        $ctag->remove_map($type, $object_id, false);
                     }
                 }
             }
@@ -676,7 +694,7 @@ class Tag extends database_object implements library_item
 
         $ret = array();
         foreach ($taglist as $tag) {
-            $tag = trim($tag);
+            $tag = trim((string) $tag);
             if (!empty($tag)) {
                 if (self::tag_exists($tag)) {
                     $ret[] = $tag;
@@ -691,6 +709,8 @@ class Tag extends database_object implements library_item
      * count
      * This returns the count for the all objects associated with this tag
      * If a type is specific only counts for said type are returned
+     * @param string $type
+     * @param integer $user_id
      */
     public function count($type = '', $user_id = 0)
     {
@@ -846,7 +866,7 @@ class Tag extends database_object implements library_item
      */
     public function get_description()
     {
-        return null;
+        return '';
     }
 
     /**

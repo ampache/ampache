@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -147,8 +147,8 @@ abstract class Catalog extends \Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_id = Album::check($song['album'],$song['year'],$song['disc'],$song['mbid'],
-                $song['mb_releasegroupid'],$song['album_artist'], null, null );
+            $album_id = Album::check($song['album'], $song['year'], $song['disc'], $song['mbid'],
+                $song['mb_releasegroupid'], $song['album_artist'], null, null );
             $song['album_id'] = $album_id;
             $songId = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {

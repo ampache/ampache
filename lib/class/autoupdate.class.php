@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,7 +44,7 @@ class AutoUpdate
      */
     protected static function is_develop()
     {
-        $version         = AmpConfig::get('version');
+        $version         = (string) AmpConfig::get('version');
         $vspart          = explode('-', $version);
         $git_branch      = self::is_force_git_branch();
 
@@ -107,7 +107,7 @@ class AutoUpdate
                 return null;
             }
 
-            return json_decode($request->body);
+            return json_decode((string) $request->body);
         } catch (Exception $error) {
             debug_event('autoupdate.class', 'Request error: ' . $error->getMessage(), 1);
 

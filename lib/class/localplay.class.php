@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -652,7 +652,7 @@ class Localplay
         /* This is a cheezball fix for when we were unable to find a
          * artist/album (or one wasn't provided)
          */
-        $track_name = ltrim(ltrim($track_name, ' - '), ' - ');
+        $track_name = ltrim(ltrim((string) $track_name, ' - '), ' - ');
 
         $track_name = "[" . $status['track'] . "] - " . $track_name;
 

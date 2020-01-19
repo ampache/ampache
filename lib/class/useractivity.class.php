@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -263,7 +263,7 @@ class Useractivity extends database_object
         $libitem->format();
 
         echo '<div>';
-        $fdate = date('Y/m/d H:i:s', $this->activity_date);
+        $fdate = date('Y/m/d H:i:s', (int) $this->activity_date);
         /*
         echo '<div class="shoutbox-date">';
         if ($user->f_avatar_mini) {

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -295,7 +295,7 @@ class Preference extends database_object
     public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null)
     {
         if ($subcategory !== null) {
-            $subcategory = strtolower($subcategory);
+            $subcategory = strtolower((string) $subcategory);
         }
         $sql = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) " .
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -377,17 +377,17 @@ class Preference extends database_object
         );
 
         foreach ($arrays as $item) {
-            $results[$item] = trim($results[$item])
+            $results[$item] = trim((string) $results[$item])
                 ? explode(',', $results[$item])
                 : array();
         }
 
         foreach ($results as $key => $data) {
             if (!is_array($data)) {
-                if (strcasecmp($data, "true") == "0") {
+                if (strcasecmp((string) $data, "true") == "0") {
                     $results[$key] = 1;
                 }
-                if (strcasecmp($data, "false") == "0") {
+                if (strcasecmp((string) $data, "false") == "0") {
                     $results[$key] = 0;
                 }
             }
@@ -477,7 +477,7 @@ class Preference extends database_object
         } // end while sys prefs
 
         /* Set the Theme mojo */
-        if (strlen($results['theme_name']) > 0) {
+        if (strlen((string) $results['theme_name']) > 0) {
             // In case the theme was removed
             if (!Core::is_readable(AmpConfig::get('prefix') . '/themes/' . $results['theme_name'])) {
                 unset($results['theme_name']);
@@ -497,7 +497,7 @@ class Preference extends database_object
         $themecfg                  = get_theme($results['theme_name']);
         $results['theme_css_base'] = $themecfg['base'];
 
-        if (strlen($results['theme_color']) > 0) {
+        if (strlen((string) $results['theme_color']) > 0) {
             // In case the color was removed
             if (!Core::is_readable(AmpConfig::get('prefix') . '/themes/' . $results['theme_name'] . '/templates/' . $results['theme_color'] . '.css')) {
                 unset($results['theme_color']);
@@ -506,7 +506,7 @@ class Preference extends database_object
             unset($results['theme_color']);
         }
         if (!isset($results['theme_color'])) {
-            $results['theme_color'] = strtolower($themecfg['colors'][0]);
+            $results['theme_color'] = strtolower((string) $themecfg['colors'][0]);
         }
 
         AmpConfig::set_by_array($results, true);
