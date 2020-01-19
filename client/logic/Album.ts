@@ -32,7 +32,7 @@ const getRandomAlbums = async (
 ) => {
     return axios
         .get(
-            `${process.env.ServerURL}/server/json.server.php?action=stats&username=${username}&limit=${count}&auth=${authKey}&version=400001`
+            `${process.env.ServerURL}/server/json.server.php?action=stats&username=${username}&type=album&filter=random&limit=${count}&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;

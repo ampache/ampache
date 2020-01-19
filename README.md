@@ -23,15 +23,11 @@ Run a PHP server locally on port 8080: `/bin/php -S localhost:8080 -t {PATH TO B
 
 
 ### Existing Ampach drop-in
-If you wish to run the client on an existing copy of Ampache. There will be one file needing to be replaced since Ampache does not natively support JSON, if you rely on the current API, before that since my file is rather outdated compared to [origin/develop](https://github.com/ampache/ampache/tree/develop), you may cause some features to break in external clients that rely on those features. I suggest backing up your files.
+If you wish to run the client on an existing copy of Ampache. 
 
-First put the `newclient` folder into your base directory. 
+Put the `newclient` folder into your base directory. 
 
-Second replace `lib/class/api.class.php` with this [file](https://github.com/AshotN/ampache/blob/ReactClient/lib/class/api.class.php)
-
-Also add `json_data.class.php` into `/lib/class/`. [File](https://github.com/AshotN/ampache/blob/ReactClient/lib/class/json_data.class.php)
-
-Lastly add `json.server.php` into `/server/`. [File](https://github.com/AshotN/ampache/blob/ReactClient/server/json.server.php)
+####Since version 4.1.0 JSON support is now built in Ampache!
 
 ## FAQ(not really)
 
@@ -40,7 +36,7 @@ Lastly add `json.server.php` into `/server/`. [File](https://github.com/AshotN/a
 
 If you enable CORS and change the .env file and build.
 
-**Can you priotize X feature!** 
+**Can you prioritize X feature!** 
 
 Open an issue about it please!
 
