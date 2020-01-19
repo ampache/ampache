@@ -2,7 +2,13 @@ import React, { useContext } from 'react';
 import { PLAYERSTATUS } from '../../enum/PlayerStatus';
 import { MusicContext } from '../../Contexts/MusicContext';
 
-const MusicControl: React.FC = () => {
+import listIcon from '/images/icons/svg/list.svg';
+
+interface MusicControlProps {
+    toggleQueueBar: () => void;
+}
+
+const MusicControl: React.FC<MusicControlProps> = (props) => {
     const musicContext = useContext(MusicContext);
 
     return (
@@ -57,6 +63,9 @@ const MusicControl: React.FC = () => {
                     className='filled'
                     style={{ width: musicContext.songPosition + '%' }}
                 />
+            </div>
+            <div className='queueIcon' onClick={props.toggleQueueBar}>
+                <img src={listIcon} alt={'Show Queue'} />
             </div>
         </div>
     );

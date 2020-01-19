@@ -14,12 +14,19 @@ interface AppViewProps {
 
 interface AppViewStates {
     error: Error;
+    QueueBarVisible: boolean;
 }
 
 class AppView extends Component<AppViewProps, AppViewStates> {
+    private readonly toggleQueueBarVisible: () => void;
+
     constructor(props) {
         super(props);
-        this.state = { error: null };
+        this.state = { error: null, QueueBarVisible: true };
+
+        this.toggleQueueBarVisible = () => {
+            this.setState({ QueueBarVisible: !this.state.QueueBarVisible });
+        };
     }
 
     componentDidCatch(error: Error, errorInfo) {
@@ -48,9 +55,9 @@ class AppView extends Component<AppViewProps, AppViewStates> {
                 <div className='container'>
                     <Sidebar />
                     <div className='content'>{this.props.children}</div>
-                    <QueueBar />
+                    <QueueBar visible={this.state.QueueBarVisible} />
                 </div>
-                <MusicControl />
+                <MusicControl toggleQueueBar={this.toggleQueueBarVisible} />
             </>
         );
     }
