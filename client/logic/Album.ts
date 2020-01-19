@@ -47,6 +47,7 @@ const getRandomAlbums = async (
 };
 
 const getAlbumSongs = async (albumID: number, authKey: AuthKey) => {
+    //TODO: I'm pretty sure this async, and all like it are redundant and pointless.
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=album_songs&filter=${albumID}&auth=${authKey}&version=400001`

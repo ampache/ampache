@@ -63,23 +63,6 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
                     })}
                 </div>
             </section>
-            <section>
-                <span>{musicContext.songQueueIndex}</span>
-                {musicContext.songQueue.map((song: Song) => {
-                    return (
-                        <div
-                            key={song.id}
-                            style={
-                                musicContext.currentPlayingSong?.id === song.id
-                                    ? { color: 'orange' }
-                                    : {}
-                            }
-                        >
-                            {song.title}
-                        </div>
-                    );
-                })}
-            </section>
         </div>
     );
 };

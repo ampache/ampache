@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { PLAYERSTATUS } from '../enum/PlayerStatus';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { AuthKey } from '../logic/Auth';
@@ -40,7 +40,72 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const [songQueueIndex, setSongQueueIndex] = useState(-1);
     const [userQCount, setUserQCount] = useState(0);
 
-    let audioRef;
+    let audioRef = undefined;
+
+    useHotkeys(
+        'space',
+        (e) => {
+            e.preventDefault();
+            playPause();
+        },
+        [playerStatus]
+    );
+
+    const playPause = useCallback(() => {
+        if (currentPlayingSong == undefined) return;
+        const isPaused = audioRef.audioEl?.paused;
+        if (isPaused) {
+            audioRef.audioEl.play();
+            return;
+        } else {
+            audioRef.audioEl.pause();
+        }
+    }, [audioRef, currentPlayingSong]);
+
+    const _playSong = useCallback(
+        async (song: Song) => {
+            if (!song) {
+                return console.error(
+                    'Playing an undefined song, something is wrong.'
+                );
+            }
+            console.log(audioRef);
+            audioRef.audioEl.src = song.url;
+            audioRef.audioEl.title = `${song.artist.name} - ${song.title}`;
+            audioRef.audioEl.play();
+            setCurrentPlayingSong(song);
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: song.title,
+                    artist: song.artist.name,
+                    album: song.album.name,
+                    artwork: [{ src: song.art }]
+                });
+
+                navigator.mediaSession.setActionHandler('play', () => {
+                    playPause();
+                });
+                navigator.mediaSession.setActionHandler('pause', () => {
+                    playPause();
+                });
+            }
+        },
+        [audioRef, playPause]
+    );
+
+    const playPrevious = useCallback(() => {
+        const previousSong = songQueue[songQueueIndex - 1];
+        setSongQueueIndex(songQueueIndex - 1);
+        _playSong(previousSong);
+    }, [_playSong, songQueue, songQueueIndex]);
+
+    const playNext = useCallback(() => {
+        console.log(songQueueIndex);
+        const nextSong = songQueue[songQueueIndex + 1];
+        setSongQueueIndex(songQueueIndex + 1);
+        if (userQCount > 0) setUserQCount(userQCount - 1);
+        _playSong(nextSong);
+    }, [_playSong, songQueue, songQueueIndex, userQCount]);
 
     useEffect(() => {
         if (!currentPlayingSong) return;
@@ -54,69 +119,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 playPrevious();
             });
         }
-    }, [currentPlayingSong]);
-
-    useHotkeys(
-        'space',
-        (e) => {
-            e.preventDefault();
-            playPause();
-        },
-        [playerStatus]
-    );
-
-    const playPause = () => {
-        if (currentPlayingSong == undefined) return;
-        const isPaused = audioRef.audioEl?.paused;
-        if (isPaused) {
-            audioRef.audioEl.play();
-            return;
-        } else {
-            audioRef.audioEl.pause();
-        }
-    };
-
-    const playPrevious = () => {
-        const previousSong = songQueue[songQueueIndex - 1];
-        setSongQueueIndex(songQueueIndex - 1);
-        _playSong(previousSong);
-    };
-
-    const playNext = () => {
-        console.log(songQueueIndex);
-        const nextSong = songQueue[songQueueIndex + 1];
-        setSongQueueIndex(songQueueIndex + 1);
-        if (userQCount > 0) setUserQCount(userQCount - 1);
-        _playSong(nextSong);
-    };
-
-    const _playSong = async (song: Song) => {
-        if (!song) {
-            return console.error(
-                'Playing an undefined song, something is wrong.'
-            );
-        }
-        console.log(audioRef);
-        audioRef.audioEl.src = song.url;
-        audioRef.audioEl.title = `${song.artist.name} - ${song.title}`;
-        audioRef.audioEl.play();
-        setCurrentPlayingSong(song);
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: song.title,
-                artist: song.artist.name,
-                album: song.album.name,
-                artwork: [{ src: song.art }]
-            });
-
-            navigator.mediaSession.setActionHandler('play', () => {
-                playPause();
-            });
-            navigator.mediaSession.setActionHandler('pause', () => {
-                playPause();
-            });
-        }
-    };
+    }, [currentPlayingSong, playNext, playPrevious]);
 
     const songIsOver = () => {
         if (songQueueIndex === songQueue.length - 1) {
@@ -160,7 +163,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     };
 
     return (
-        <MusicContext.Provider
+        <MusicContext.Provider //TODO: Should this provider be split into multiple providers?
             value={{
                 playerStatus,
                 currentPlayingSong,
@@ -174,7 +177,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 addToQueue
             }}
         >
-            <ReactAudioPlayer
+            <ReactAudioPlayer //TODO: If this doesn't get updated soon, remove it.
                 ref={(element) => {
                     if (element == undefined) return;
                     audioRef = element;
