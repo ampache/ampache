@@ -470,6 +470,7 @@ class JSON_Data
      * This builds the JSON document for displaying video objects
      *
      * @param    array    $videos    (description here...)
+     * @param integer $user_id
      * @return    string    return JSON
      */
     public static function videos($videos, $user_id)
@@ -503,9 +504,9 @@ class JSON_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param    integer[]    $object_ids    Object IDs
-     * @param integer $user_id
-     * @return    string    return JSON
+     * @param  integer[] $object_ids    Object IDs
+     * @param  integer   $user_id
+     * @return string    return JSON
      */
     public static function democratic($object_ids=array(), $user_id)
     {
@@ -557,10 +558,11 @@ class JSON_Data
     /**
      * user
      *
-     * This handles creating an JSON document for an user
+     * This handles creating an JSON document for a user
      *
-     * @param    User    $user    User
-     * @return    string    return JSON
+     * @param  User    $user    User
+     * @param  boolean $fullinfo
+     * @return string  return JSON
      */
     public static function user(User $user, $fullinfo)
     {
