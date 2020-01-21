@@ -25,9 +25,8 @@ $total_images = count($images); ?>
 <?php UI::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <?php
-$i_ima=0;
-$column=0;
-$row=0;
+$i_ima  = 0;
+$column = 0;
 while ($i_ima < $total_images) {
     $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $i_ima . '&cache_bust=' . date('YmdHis') . mt_rand();
     $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$i_ima], $object_type));
