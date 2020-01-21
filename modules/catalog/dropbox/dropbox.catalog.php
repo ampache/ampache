@@ -255,6 +255,8 @@ class Catalog_dropbox extends Catalog
         $dropbox         = new Dropbox($app);
         $this->count     = 0;
         $this->add_files($dropbox, $this->path);
+        /* Update the Catalog last_add */
+        $this->update_last_add();
 
         UI::update_text('', sprintf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count));
  
