@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Album, getAlbum } from '../../logic/Album';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import SongList from '../components/SongList';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
+import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
+import { MusicContext } from '../../Contexts/MusicContext';
 
 interface AlbumViewProps {
     user: User;
@@ -17,6 +19,8 @@ interface AlbumViewProps {
 }
 
 const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
+    const musicContext = useContext(MusicContext);
+
     const [theAlbum, setTheAlbum] = useState<Album>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
@@ -50,7 +54,17 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
     return (
         <div className='albumPage'>
             <div className='album'>
-                <div className='imageContainer'>
+                <div
+                    className='imageContainer'
+                    onClick={() =>
+                        playSongFromAlbum(
+                            theAlbum.id,
+                            false,
+                            props.user.authKey,
+                            musicContext
+                        )
+                    }
+                >
                     <img src={theAlbum.art} alt={'Album Cover'} />
                 </div>
                 <div className='details'>

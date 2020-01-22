@@ -9,8 +9,20 @@
     .imageContainer
       height inherit
       margin-right: 10px;
+      transition background-size 0.1s
+      background-size 0
       img
         height inherit
+        transition filter 0.2s
+      &:hover
+        background-image url("/images/icons/svg/circled-play.svg")
+        background-size: 130px;
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor pointer
+        img
+          filter brightness(0.2)
+          z-index -1
     .details
       color white
       .albumName
