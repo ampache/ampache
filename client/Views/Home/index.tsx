@@ -5,7 +5,6 @@ import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import { MusicContext } from '../../Contexts/MusicContext';
 import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
-import { Song } from '../../logic/Song';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
@@ -28,7 +27,7 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
                 toast.error('😞 Something went wrong getting random albums.');
                 setError(error);
             });
-    }, []);
+    }, [props.user.authKey, props.user.username]);
 
     if (error) {
         return (

@@ -32,7 +32,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 toast.error('😞 Something went getting playlists.');
                 setError(error);
             });
-    }, []);
+    }, [props.authKey]);
 
     const handleDeletePlaylist = (playlistID: number) => {
         deletePlaylist(playlistID, props.authKey)

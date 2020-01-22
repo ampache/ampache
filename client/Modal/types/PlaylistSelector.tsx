@@ -25,7 +25,7 @@ const PlaylistSelector = (props: PlaylistSelectorProps) => {
                 toast.error('😞 Something went wrong getting playlists.');
                 setError(error);
             });
-    }, []);
+    }, [props.authKey]);
 
     if (!playlists) {
         return (

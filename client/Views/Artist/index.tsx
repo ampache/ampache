@@ -37,7 +37,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                     setError(error);
                 });
         }
-    }, []);
+    }, [props.match.params.artistID, props.user.authKey]);
 
     if (error) {
         return (

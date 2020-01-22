@@ -23,7 +23,7 @@ const ArtistsView: React.FC<ArtistsViewProps> = (props: ArtistsViewProps) => {
                 toast.error('😞 Something went wrong getting the artist.');
                 setError(error);
             });
-    }, []);
+    }, [props.user.authKey]);
 
     if (error) {
         return (

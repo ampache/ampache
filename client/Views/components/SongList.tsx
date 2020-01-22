@@ -53,7 +53,7 @@ const SongList: React.FC<SongListProps> = (props) => {
         } else {
             throw new Error('Missing inPlaylistID and inAlbumID.');
         }
-    }, []);
+    }, [props.authKey, props.inAlbumID, props.inPlaylistID]);
 
     const handleRemoveFromPlaylist = (songID: number) => {
         removeFromPlaylistWithSongID(
@@ -76,8 +76,9 @@ const SongList: React.FC<SongListProps> = (props) => {
             authKey: props.authKey
         })
             .then((playlistID: number) => {
-                addToPlaylist(playlistID, songID, props.authKey);
-                toast.success('Added song to playlist');
+                addToPlaylist(playlistID, songID, props.authKey).then(() =>
+                    toast.success('Added song to playlist')
+                );
             })
             .catch((err) => {
                 toast.error('😞 Something went wrong adding to playlist.');

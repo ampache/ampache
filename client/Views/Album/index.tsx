@@ -35,7 +35,7 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
                     setError(error);
                 });
         }
-    }, []);
+    }, [props.match.params.albumID, props.user.authKey]);
 
     if (error) {
         return (
