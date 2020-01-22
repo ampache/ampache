@@ -426,7 +426,7 @@ class JSON_Data
             $ourSong['filename']              = $song->file;
             $ourSong['track']                 = $song->track;
             $ourSong['playlisttrack']         = $playlist_track_string;
-            $ourSong['time']                  = $song->time;
+            $ourSong['time']                  = (int) $song->time;
             $ourSong['year']                  = $song->year;
             $ourSong['bitrate']               = $song->bitrate;
             $ourSong['rate']                  = $song->rate;

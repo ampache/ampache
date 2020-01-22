@@ -20,6 +20,7 @@ interface MusicContext {
     playNext: () => void;
     startPlayingWithNewQueue: (song: Song, newQueue: Song[]) => {};
     addToQueue: (song: Song, next: boolean) => void;
+    seekSongTo: (newPosition: number) => void;
 }
 
 export const MusicContext = React.createContext({
@@ -36,7 +37,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         Song[],
         React.Dispatch<React.SetStateAction<Song[]>>
     ] = useState([]);
-    const [songPosition, setSongPosition] = useState(-1);
+    const [songPosition, setSongPosition] = useState(0);
     const [songQueueIndex, setSongQueueIndex] = useState(-1);
     const [userQCount, setUserQCount] = useState(0);
 
@@ -157,9 +158,12 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     };
 
     const durationChange = (elapsed) => {
-        const songTime = currentPlayingSong.time;
-        const percent = (elapsed / songTime) * 100;
-        setSongPosition(percent);
+        setSongPosition(elapsed);
+    };
+
+    const seekSongTo = (newPosition: number) => {
+        audioRef.audioEl.currentTime = newPosition;
+        setSongPosition(newPosition);
     };
 
     return (
@@ -174,7 +178,8 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 playPrevious,
                 playNext,
                 startPlayingWithNewQueue,
-                addToQueue
+                addToQueue,
+                seekSongTo
             }}
         >
             <ReactAudioPlayer //TODO: If this doesn't get updated soon, remove it.
