@@ -13,7 +13,6 @@
 /rest/.htaccess
 /tmp/
 bootstrap/
-components/
 core/
 cs_fixer_tmp_*
 develop/

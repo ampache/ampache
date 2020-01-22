@@ -1,0 +1,62 @@
+@import "./reset"
+@import "sizes"
+@import "color"
+
+html
+  height 100%
+  #root
+    height 100%
+  body
+    font-family 'Open Sans', Helvetica, Arial, sans-serif
+    font-weight normal
+    font-size 16px
+    line-height 1.5em
+    height: 100%;
+    background-color bodyBackgroundColor
+    color #e1e1e1
+    .container
+      display flex
+      min-height "calc(100% - %s)" % headerHeight
+
+      & > .content
+        flex 1
+        margin-left 10px
+        position relative
+        &::after
+          content ''
+          display block
+          height musicPlayerHeight
+a
+  text-decoration: none;
+  cursor: pointer;
+  color white
+  &:hover
+    color linkHoverColor
+
+
+
+//Pages
+@import "./pages/Home"
+@import "./pages/Search"
+@import "./pages/Artist"
+@import "./pages/Artists"
+@import "./pages/Album"
+@import "./pages/Playlists"
+@import "./pages/Login"
+@import "./pages/Account"
+
+//Components
+@import './components/Header'
+@import './components/Sidebar'
+@import './components/QueueBar'
+@import './components/AlbumDisplay'
+@import './components/ArtistDisplay'
+@import './components/MusicArt'
+@import './components/MusicControl'
+@import './components/SongBlock'
+@import './components/SongRow'
+@import './components/PlaylistRow'
+@import './components/PlaylistList'
+@import './components/ContextMenu'
+@import './components/PlaylistSelector'
+@import './components/InputModal'

@@ -1,0 +1,31 @@
+.songRow
+  background-color #4d4d4d
+  padding 10px
+  display flex
+  justify-content space-between
+  border 1px solid transparent
+  cursor pointer
+  .verticleMenu
+    width 8px
+    background-image url('/images/icons/svg/menu-verticle.svg')
+    background-size contain
+    background-repeat: no-repeat;
+    margin-right 15px
+    &:hover
+      filter invert(1)
+  .title
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    flex 4
+  .time
+    text-align right
+    flex 1
+  &:nth-child(odd)
+    background-color #333
+  &:hover
+    color linkHoverColor
+    border 1px solid linkHoverColor
+  &.playing
+    color currentlyPlayingColor
+    border 1px solid navajowhite

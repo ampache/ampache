@@ -1,0 +1,47 @@
+.sidebar
+  width sidebarWidth
+  min-height 100%
+  background-color #1a1a1a
+  font-size 18px
+  section
+    padding-left 10px
+    padding-top 10px
+    margin 10px 0
+    h4
+      color grey
+      font-size 20px
+      display inline
+      &:before
+        content ''
+        background-image url('../images/icons/svg/music.svg')
+        filter invert(0.8)
+        background-repeat no-repeat
+        padding-left 25px
+        background-size 14px
+        background-position-y center
+        background-position-x 5px
+
+    ul
+      padding-left 15px
+      padding-top 4px
+      li
+        &:before
+          content ''
+          background-image url('../images/icons/svg/music.svg')
+          filter invert(0.8)
+          background-repeat no-repeat
+          padding-left 25px
+          background-size 14px
+          background-position-y center
+          background-position-x 5px
+        a
+          color #cdcdcd
+
+    form
+      display flex
+      flex-direction column
+      padding-top 5px
+      input, select
+        width 75%
+        margin 5px 0
+

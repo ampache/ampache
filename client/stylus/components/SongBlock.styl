@@ -1,0 +1,23 @@
+.songBlock
+  display flex
+  width 450px
+  height 90px
+  cursor pointer
+  img
+    width 20%
+  &:hover
+    background-color lighten(bodyBackgroundColor, 10%)
+    color linkHoverColor
+  .details
+    padding-left 10px
+    display flex
+    flex-direction column
+    justify-content space-around
+    .bottom
+      color #878787
+      a
+        clear:both;
+        float:left;
+        color inherit
+        &:hover
+          color linkHoverColor
