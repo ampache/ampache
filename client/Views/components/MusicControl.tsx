@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { PLAYERSTATUS } from '../../enum/PlayerStatus';
 import { MusicContext } from '../../Contexts/MusicContext';
 import InputRange from 'react-input-range';
-import 'react-input-range/lib/css/index.css';
 
 import listIcon from '/images/icons/svg/list.svg';
 
