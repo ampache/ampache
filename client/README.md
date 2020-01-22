@@ -1,1 +1,0 @@
-This is a client for Ampache written using React and TypeScript. Server IP is hardcoded right now, so if you are trying to test this out, you'll need to change it to whatever your local is. Also Ampache JSON API is required, which is included in this branch, nut not in the origin.
