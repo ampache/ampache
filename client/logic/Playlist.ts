@@ -11,7 +11,7 @@ export type Playlist = {
     type: string;
 };
 
-export const getPlaylists = async (authKey: AuthKey) => {
+export const getPlaylists = (authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=playlists&auth=${authKey}&version=400001`
@@ -28,10 +28,7 @@ export const getPlaylists = async (authKey: AuthKey) => {
         });
 };
 
-export const getPlaylistSongs = async (
-    playlistID: number,
-    authKey: AuthKey
-) => {
+export const getPlaylistSongs = (playlistID: number, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=playlist_songs&filter=${playlistID}&auth=${authKey}&version=400001`
@@ -48,7 +45,7 @@ export const getPlaylistSongs = async (
         });
 };
 
-export const addToPlaylist = async (
+export const addToPlaylist = (
     playlistID: number,
     songID: number,
     authKey: AuthKey
@@ -69,7 +66,7 @@ export const addToPlaylist = async (
         });
 };
 
-export const removeFromPlaylistWithSongID = async (
+export const removeFromPlaylistWithSongID = (
     playlistID: number,
     songID: number,
     authKey: AuthKey
@@ -90,7 +87,7 @@ export const removeFromPlaylistWithSongID = async (
         });
 };
 
-export const createPlaylist = async (
+export const createPlaylist = (
     name: string,
     authKey: AuthKey,
     type = 'public'
@@ -111,7 +108,7 @@ export const createPlaylist = async (
         });
 };
 
-export const deletePlaylist = async (playlistID: number, authKey: AuthKey) => {
+export const deletePlaylist = (playlistID: number, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=playlist_delete&filter=${playlistID}&auth=${authKey}&version=400001`

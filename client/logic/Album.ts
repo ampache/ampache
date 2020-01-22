@@ -25,11 +25,7 @@ type Album = {
     mbid: string;
 };
 
-const getRandomAlbums = async (
-    username: string,
-    count: number,
-    authKey: AuthKey
-) => {
+const getRandomAlbums = (username: string, count: number, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=stats&username=${username}&type=album&filter=random&limit=${count}&auth=${authKey}&version=400001`
@@ -46,8 +42,7 @@ const getRandomAlbums = async (
         });
 };
 
-const getAlbumSongs = async (albumID: number, authKey: AuthKey) => {
-    //TODO: I'm pretty sure this async, and all like it are redundant and pointless.
+const getAlbumSongs = (albumID: number, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=album_songs&filter=${albumID}&auth=${authKey}&version=400001`
@@ -64,7 +59,7 @@ const getAlbumSongs = async (albumID: number, authKey: AuthKey) => {
         });
 };
 
-const getAlbum = async (albumID: number, authKey: AuthKey) => {
+const getAlbum = (albumID: number, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=album&filter=${albumID}&auth=${authKey}&version=400001`
