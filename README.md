@@ -9,6 +9,7 @@
 
 * JSON support has landed! (Documentation for the API in both formats is being written in [flatdoc](http://ricostacruz.com/flatdoc/))
 * Ampache is getting social! Check out:
+  * [r/Ampache](https://www.reddit.com/r/ampache/)
   * [Our Telegram Group](https://t.me/ampache)
   * [Official Twitter](https://twitter.com/ampache)
   * [Official Mastodon](https://fosstodon.org/@ampache)
