@@ -50,32 +50,32 @@ Open an issue about it please!
 Hopefully 
 
 ## Progress
-###What we have
+### What we have
 
-####Basics
+#### Basics
 - [x] Previous/Next/Pause/Resume
 - [x] Seeking
 - [ ] Volume control
 
-####Playlists
+#### Playlists
 - [x] Create
 - [x] Delete
 - [ ] Rename
 - [ ] Duplicate? (Do we want this?)
 - [ ] Smart Playlists
 
-####Queue
+#### Queue
 - [x] Exists
 - [ ] Refined
 - [ ] Shuffle
 - [ ] Repeat
 
 
-####Search
+#### Search
 - [x] Basic Search
 - [ ] Advanced Search
 - [ ] Random
 - [ ] Filters
 
-####Management
+#### Management
 None, no API support currently.
