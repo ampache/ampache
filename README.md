@@ -32,7 +32,7 @@ Put the `newclient` folder into your base directory.
 Access via `/newclient`
 
 
-####Since version 4.1.0 JSON support is now built in Ampache!
+#### Since version 4.1.0 JSON support is now built in Ampache!
 
 ## FAQ(not really)
 
