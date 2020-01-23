@@ -1,19 +1,24 @@
 .queueBar
   width 0
-  height "calc(100vh - %s - %s)" % (headerHeight musicPlayerHeight)
-  overflow-y scroll
   position sticky
   top 0
   transition 0.2s width
   user-select: none;
+  titleHeight = 44px
   &.visible
     width queueBarWidth
   .title
     text-align center
     font-size 24px
-    margin 10px 0
+    height titleHeight
+    box-sizing border-box
+    padding 10px 0
     white-space nowrap
   .songs
+    height "calc(100vh - %s - %s - %s)" % (headerHeight musicPlayerHeight titleHeight)
+    overflow-y scroll
+    position sticky
+    top 0
     display flex
     flex-direction column
     white-space nowrap

@@ -30,8 +30,10 @@ a
   text-decoration: none;
   cursor: pointer;
   color white
+  &.disabled
+   pointer-events none
   &:hover
-    color linkHoverColor
+    color linkHoverColor !important
 
 
 
@@ -51,7 +53,7 @@ a
 @import './components/QueueBar'
 @import './components/AlbumDisplay'
 @import './components/ArtistDisplay'
-@import './components/MusicArt'
+@import './components/CurrentPlaying'
 @import './components/MusicControl'
 @import './components/SongBlock'
 @import './components/SongRow'

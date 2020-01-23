@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import MusicPlayer from './MusicPlayer';
+import CurrentPlaying from './CurrentPlaying';
 
 const Sidebar: React.FC = () => {
     return (
@@ -45,7 +45,6 @@ const Sidebar: React.FC = () => {
                     <select />
                 </form>
             </section>
-            <MusicPlayer />
         </div>
     );
 };

@@ -25,7 +25,12 @@ Run a PHP server locally on port 8080: `/bin/php -S localhost:8080 -t {PATH TO B
 ### Existing Ampach drop-in
 If you wish to run the client on an existing copy of Ampache. 
 
+Put the `client` folder into your base directory. 
+
 Put the `newclient` folder into your base directory. 
+
+Access via `/newclient`
+
 
 ####Since version 4.1.0 JSON support is now built in Ampache!
 
@@ -43,3 +48,34 @@ Open an issue about it please!
 **Will these instructions work?** 
 
 Hopefully 
+
+## Progress
+###What we have
+
+####Basics
+- [x] Previous/Next/Pause/Resume
+- [x] Seeking
+- [ ] Volume control
+
+####Playlists
+- [x] Create
+- [x] Delete
+- [ ] Rename
+- [ ] Duplicate? (Do we want this?)
+- [ ] Smart Playlists
+
+####Queue
+- [x] Exists
+- [ ] Refined
+- [ ] Shuffle
+- [ ] Repeat
+
+
+####Search
+- [x] Basic Search
+- [ ] Advanced Search
+- [ ] Random
+- [ ] Filters
+
+####Management
+None, no API support currently.

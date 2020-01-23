@@ -4,6 +4,7 @@ import { MusicContext } from '../../Contexts/MusicContext';
 import InputRange from 'react-input-range';
 
 import listIcon from '/images/icons/svg/list.svg';
+import CurrentPlaying from './CurrentPlaying';
 
 interface MusicControlProps {
     toggleQueueBar: () => void;
@@ -17,6 +18,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
 
     return (
         <div className='musicControl'>
+            <CurrentPlaying />
             <div className='controls'>
                 <div className='buttons'>
                     <div className='previousSong'>

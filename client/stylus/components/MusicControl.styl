@@ -1,18 +1,21 @@
 .musicControl
   position: fixed;
   bottom: 0;
-  background-color: gray;
-  display: flex;
-  width "calc(100% - %s)" % sidebarWidth
+  background-color: rgba(16, 16, 16, 0.9);
+  display: grid;
+  width 100%
   right: 0;
   align-items center
   height musicPlayerHeight
+  grid-template-columns: 300px auto 300px;
   .controls
     display flex
+    width 50%
     flex-direction: column;
-    flex 1
+    justify-self center
     .buttons
       display flex
+      justify-content center
       img
         width 32px
       .disabled
@@ -20,6 +23,6 @@
         filter grayscale(1)
   .queueIcon
     height 32px
-    margin 0 15px 0 auto
     img
       height 100%
+      filter invert(.8) //TODO: Replace this image
