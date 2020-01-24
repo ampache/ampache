@@ -33,7 +33,7 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
                 {...bindTrigger}
             >
                 <span
-                    className='verticleMenu'
+                    className='verticalMenu'
                     onClick={(e) => {
                         showContextMenu(e);
                     }}

@@ -1,18 +1,18 @@
 .playlistSelector
-  position: fixed;
-  top: 0;
-  left: 0;
-  width:100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  position fixed
+  top 0
+  left 0
+  width:100%
+  height 100%
+  background rgba(0, 0, 0, 0.6)
   .content
-    position:fixed;
-    background-color: gray;
-    width: 40%;
-    height: 85%
-    top:50%;
-    left:50%;
-    transform: translate(-50%,-50%);
+    position:fixed
+    background-color gray
+    width 40%
+    height 85%
+    top:50%
+    left:50%
+    transform translate(-50%,-50%)
     .header
       width 100%
       height 50px
@@ -34,7 +34,7 @@
       display flex
       flex-direction column
       height calc(100% - 50px)
-      overflow-y: scroll;
+      overflow-y scroll
       background-color @background-color
       .playlist
         cursor pointer
@@ -48,8 +48,8 @@
         &.newPlaylist
           background-color lighten(bodyBackgroundColor, 10%)
           text-align center
-          margin-top: auto;
-          margin-bottom: 0;
+          margin-top auto
+          margin-bottom 0
 
         &:hover
           color linkHoverColor

@@ -6,17 +6,17 @@ header
   display flex
   position relative
   .logoContainer
-    width: 100px
+    width 100px
     height 100%
     display flex
-    align-items: center;
+    align-items center
     .logo
       height 100%
       padding-right 5px
       img
         height 100%
   .search
-    align-self: center;
+    align-self center
     form
       input
         border-radius 3px
@@ -62,11 +62,11 @@ header
 
     &:hover
       & > img
-        filter invert(56%) sepia(96%) saturate(1211%) hue-rotate(0deg) brightness(103%) contrast(104%); //make orange
+        filter invert(56%) sepia(96%) saturate(1211%) hue-rotate(0deg) brightness(103%) contrast(104%) //make orange
       & > .options
         display block
         opacity 1
-        animation: fadeInFromNone 0.3s ease;
+        animation fadeInFromNone 0.3s ease
 
     .options
       animation-direction reverse
@@ -80,16 +80,16 @@ header
       font-size 18px
       width 100%
       &:after
-        content: '';
-        display: block;
-        position: absolute;
-        bottom: 100%;
+        content ''
+        display block
+        position absolute
+        bottom 100%
         right 17px
-        width: 0;
-        height: 0;
-        border-bottom: 10px solid #3d3d3d;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
+        width 0
+        height 0
+        border-bottom 10px solid #3d3d3d
+        border-left 10px solid transparent
+        border-right 10px solid transparent
       li
         color gray
         a

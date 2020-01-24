@@ -45,7 +45,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                 onClick={props.startPlaying}
             >
                 <span
-                    className='verticleMenu'
+                    className='verticalMenu'
                     onClick={(e) => {
                         showContextMenu(e);
                     }}
