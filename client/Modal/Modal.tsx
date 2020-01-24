@@ -17,6 +17,8 @@ interface ModalProps {
     modalType: ModalType;
     authKey?: AuthKey;
     cancelList?: CancelList;
+    submitButtonText?: string;
+    inputInitialValue?: string;
 }
 
 class CancelList extends EventEmitter {
@@ -72,6 +74,8 @@ const Modal = (props: ModalProps) => {
             ReactDOM.render(
                 <InputModal
                     modalName={props.modalName}
+                    submitButtonText={props.submitButtonText ?? 'Submit'}
+                    inputInitialValue={props.inputInitialValue ?? ''}
                     returnData={returnData}
                     close={close}
                 />,

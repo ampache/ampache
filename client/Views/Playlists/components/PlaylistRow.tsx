@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 interface PlaylistRowProps {
     playlist: Playlist;
     deletePlaylist?: (playlistID: number) => void;
+    editPlaylist?: (playlistID: number, playlistCurrentName: string) => void;
 }
 
 const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
@@ -41,6 +42,7 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
                 <span className='itemCount'>{props.playlist.items}</span>
                 <span className='owner'>{props.playlist.owner}</span>
             </Link>
+
             <div {...bindMenu} className='contextMenu'>
                 <div
                     {...bindMenuItems}
@@ -50,15 +52,31 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
                 >
                     Start
                 </div>
-                <div
-                    {...bindMenuItems}
-                    onClick={() => {
-                        setVisible(false);
-                        props.deletePlaylist(props.playlist.id);
-                    }}
-                >
-                    Delete Playlist
-                </div>
+                {props.editPlaylist && (
+                    <div
+                        {...bindMenuItems}
+                        onClick={() => {
+                            setVisible(false);
+                            props.editPlaylist(
+                                props.playlist.id,
+                                props.playlist.name
+                            );
+                        }}
+                    >
+                        Edit Playlist
+                    </div>
+                )}
+                {props.deletePlaylist && (
+                    <div
+                        {...bindMenuItems}
+                        onClick={() => {
+                            setVisible(false);
+                            props.deletePlaylist(props.playlist.id);
+                        }}
+                    >
+                        Delete Playlist
+                    </div>
+                )}
             </div>
         </>
     );

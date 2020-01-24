@@ -108,6 +108,27 @@ export const createPlaylist = (
         });
 };
 
+export const renamePlaylist = (
+    playlistID: number,
+    newName: string,
+    authKey: AuthKey
+) => {
+    return axios
+        .get(
+            `${process.env.ServerURL}/server/json.server.php?action=playlist_edit&filter=${playlistID}&name=${newName}&auth=${authKey}&version=400001`
+        )
+        .then((response) => {
+            const JSONData = response.data;
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
+            if (JSONData.error) {
+                throw new AmpacheError(JSONData.error);
+            }
+            return true;
+        });
+};
+
 export const deletePlaylist = (playlistID: number, authKey: AuthKey) => {
     return axios
         .get(

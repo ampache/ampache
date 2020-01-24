@@ -3,7 +3,8 @@ import {
     createPlaylist,
     deletePlaylist,
     getPlaylists,
-    Playlist
+    Playlist,
+    renamePlaylist
 } from '../../../logic/Playlist';
 import PlaylistRow from './PlaylistRow';
 import { AuthKey } from '../../../logic/Auth';
@@ -44,11 +45,11 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 setPlaylists(newPlaylists);
                 toast.success('Deleted Playlist.');
             })
-            .catch((error) => {
+            .catch((err) => {
                 toast.error(
                     '😞 Something went wrong trying to delete playlist.'
                 );
-                setError(error);
+                console.error(err);
             });
     };
 
@@ -56,7 +57,8 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
         Modal({
             parent: document.getElementById('modalView'),
             modalName: 'New Playlist',
-            modalType: ModalType.InputModal
+            modalType: ModalType.InputModal,
+            submitButtonText: 'Create Playlist'
         })
             .then((playlistName: string) =>
                 createPlaylist(playlistName, props.authKey)
@@ -64,13 +66,43 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
             .then((newPlaylist) => {
                 console.log(newPlaylist);
                 const newPlaylists = [...playlists];
-                newPlaylists.push(newPlaylist);
+                newPlaylists.unshift(newPlaylist);
                 setPlaylists(newPlaylists);
                 toast.success('Created Playlist.');
             })
             .catch((err) => {
                 toast.error('😞 Something went wrong creating new playlist.');
-                setError(err);
+                console.error(err);
+            });
+    };
+
+    const handleEditPlaylist = (
+        playlistID: number,
+        playlistCurrentName: string
+    ) => {
+        Modal({
+            parent: document.getElementById('modalView'),
+            modalName: 'Edit Playlist',
+            modalType: ModalType.InputModal,
+            inputInitialValue: playlistCurrentName
+        })
+            .then(async (newName: string) => {
+                await renamePlaylist(playlistID, newName, props.authKey);
+
+                const newPlaylists = playlists.map((playlist) => {
+                    if (playlist.id === playlistID) {
+                        playlist.name = newName;
+                        return playlist;
+                    }
+                    return playlist;
+                });
+
+                setPlaylists(newPlaylists);
+                toast.success('Renamed Playlist.');
+            })
+            .catch((err) => {
+                toast.error('😞 Something went wrong editing playlist.');
+                console.error(err);
             });
     };
 
@@ -97,6 +129,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                         <PlaylistRow
                             playlist={playlist}
                             deletePlaylist={handleDeletePlaylist}
+                            editPlaylist={handleEditPlaylist}
                             key={playlist.id}
                         />
                     );
