@@ -22,7 +22,7 @@ Run Parcel to build: `yarn run build`
 Run a PHP server locally on port 8080: `/bin/php -S localhost:8080 -t {PATH TO BASE FOLDER}`
 
 
-### Existing Ampach drop-in
+### Existing Ampache drop-in
 If you wish to run the client on an existing copy of Ampache. 
 
 Put the `client` folder into your base directory. 
@@ -56,20 +56,28 @@ Hopefully
 - [x] Previous/Next/Pause/Resume
 - [x] Seeking
 - [ ] Volume control
+- [ ] Minimum API version
+- [ ] Nice login page
+
+#### Songs
+- [ ] Tags
+- [ ] Favorite
 
 #### Playlists
 - [x] Create
 - [x] Delete
-- [ ] Rename
-- [ ] Duplicate? (Do we want this?)
+- [x] Rename
+- [ ] Handle duplicate song
+- [ ] Public/Private
+- [ ] Duplicate Playlist? (Do we want this?)
 - [ ] Smart Playlists
+- [ ] Forgotten/Recent/Random
 
 #### Queue
 - [x] Exists
 - [ ] Refined
 - [ ] Shuffle
 - [ ] Repeat
-
 
 #### Search
 - [x] Basic Search
@@ -78,4 +86,10 @@ Hopefully
 - [ ] Filters
 
 #### Management
-None, no API support currently.
+- [ ] Create User
+- [ ] Delete User
+- [ ] Edit User
+- [ ] Catalog Clean/Update
+
+#### Social
+- [ ] Following
