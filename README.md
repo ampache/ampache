@@ -90,6 +90,7 @@ Hopefully
 - [ ] Delete User
 - [ ] Edit User
 - [ ] Catalog Clean/Update
+- [ ] Multi-Catalog [#223](https://github.com/ampache/ampache/issues/223)
 
 #### Social
 - [ ] Following
