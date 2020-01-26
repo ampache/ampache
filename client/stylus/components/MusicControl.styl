@@ -21,8 +21,13 @@
       .disabled
         pointer-events none
         filter grayscale(1)
-  .queueIcon
-    height 32px
-    img
-      height 100%
-      filter invert(.8) //TODO: Replace this image
+  .volumeSide
+    display flex
+    justify-content space-around
+    .queueIcon
+      height 32px
+      img
+        height 100%
+        filter invert(.8) //TODO: Replace this image
+    .input-range
+      width 50%

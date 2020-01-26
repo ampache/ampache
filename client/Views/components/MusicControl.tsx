@@ -89,8 +89,19 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                     value={isSeeking ? seekPosition : musicContext.songPosition}
                 />
             </div>
-            <div className='queueIcon' onClick={props.toggleQueueBar}>
-                <img src={listIcon} alt={'Show Queue'} />
+            <div className='volumeSide'>
+                <div className='queueIcon' onClick={props.toggleQueueBar}>
+                    <img src={listIcon} alt={'Show Queue'} />
+                </div>
+                <InputRange
+                    name='volume'
+                    onChange={(value: number) => {
+                        musicContext.setVolume(value);
+                    }}
+                    maxValue={100}
+                    minValue={0}
+                    value={musicContext.volume}
+                />
             </div>
         </div>
     );

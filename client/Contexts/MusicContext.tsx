@@ -13,6 +13,7 @@ interface MusicContext {
     playerStatus: PLAYERSTATUS;
     currentPlayingSong: Song;
     songPosition: number;
+    volume: number;
     songQueueIndex: number;
     songQueue: Song[];
     playPause: () => void;
@@ -21,6 +22,7 @@ interface MusicContext {
     startPlayingWithNewQueue: (song: Song, newQueue: Song[]) => {};
     addToQueue: (song: Song, next: boolean) => void;
     seekSongTo: (newPosition: number) => void;
+    setVolume: (newVolume: number) => void;
 }
 
 export const MusicContext = React.createContext({
@@ -40,6 +42,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const [songPosition, setSongPosition] = useState(0);
     const [songQueueIndex, setSongQueueIndex] = useState(-1);
     const [userQCount, setUserQCount] = useState(0);
+    const [volume, setVolume] = useState(100);
 
     let audioRef = undefined;
 
@@ -174,12 +177,14 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 songQueueIndex,
                 songQueue,
                 songPosition, //TODO: Performance concern?
+                volume,
                 playPause,
                 playPrevious,
                 playNext,
                 startPlayingWithNewQueue,
                 addToQueue,
-                seekSongTo
+                seekSongTo,
+                setVolume
             }}
         >
             <ReactAudioPlayer //TODO: If this doesn't get updated soon, remove it.
@@ -187,6 +192,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                     if (element == undefined) return;
                     audioRef = element;
                 }}
+                volume={volume / 100}
                 listenInterval={1000}
                 onListen={durationChange}
                 onEnded={songIsOver}
