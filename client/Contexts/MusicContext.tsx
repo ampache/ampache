@@ -158,7 +158,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     };
 
     const durationChange = (elapsed) => {
-        setSongPosition(elapsed);
+        setSongPosition(~~elapsed);
     };
 
     const seekSongTo = (newPosition: number) => {

@@ -78,6 +78,10 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                         setIsSeeking(false);
                         musicContext.seekSongTo(e);
                     }}
+                    formatLabel={(s) => {
+                        return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
+                        //https://stackoverflow.com/a/37770048
+                    }}
                     disabled={musicContext.currentPlayingSong == undefined}
                     allowSameValues={true}
                     maxValue={musicContext.currentPlayingSong?.time ?? 0}
