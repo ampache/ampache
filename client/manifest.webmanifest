@@ -1,0 +1,13 @@
+{
+  "name": "Ampache",
+  "short_name": "Ampache",
+  "icons": [{
+    "src": "/images/ampache-dark.png",
+    "sizes": "256x256",
+    "type": "image/png"
+  }],
+  "start_url": "/newclient/",
+  "display": "standalone",
+  "background_color": "#3E4EB8",
+  "theme_color": "#2F3BA2"
+}

@@ -22,7 +22,7 @@ class AppView extends Component<AppViewProps, AppViewStates> {
 
     constructor(props) {
         super(props);
-        this.state = { error: null, QueueBarVisible: true };
+        this.state = { error: null, QueueBarVisible: false };
 
         this.toggleQueueBarVisible = () => {
             this.setState({ QueueBarVisible: !this.state.QueueBarVisible });

@@ -28,7 +28,10 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
             >
                 <div {...bindTrigger} className='albumDisplay'>
                     <div className='imageContainer'>
-                        <img src={props.album.art} alt='Album Cover' />
+                        <img
+                            src={props.album.art + '&thumb=true'}
+                            alt='Album Cover'
+                        />
                     </div>
                     <span>{props.album.name}</span>
                 </div>

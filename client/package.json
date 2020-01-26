@@ -4,7 +4,7 @@
     "description": "Client side for Ampache server",
     "repository": "https://github.com/ampache/ampache/tree/react-client",
     "author": "Ashot Nazaryan",
-    "license": "AGPLv3",
+    "license": "AGPL-3.0-only",
     "dependencies": {
         "@babel/runtime": "^7.7.4",
         "@types/wicg-mediasession": "^1.0.3",

@@ -17,11 +17,13 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
 
     const [randomAlbums, setRandomAlbums] = useState<Album[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getRandomAlbums(props.user.username, 6, props.user.authKey)
             .then((albums: Album[]) => {
                 setRandomAlbums(albums);
+                setLoading(false);
             })
             .catch((error) => {
                 toast.error('😞 Something went wrong getting random albums.');
@@ -35,6 +37,9 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
                 <span>Error: {error.message}</span>
             </div>
         );
+    }
+    if (loading) {
+        return <ReactLoading color='#FF9D00' type={'bubbles'} />;
     }
     return (
         <div className='homePage'>
