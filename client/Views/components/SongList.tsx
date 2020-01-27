@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MusicContext } from '../../Contexts/MusicContext';
-import { Song } from '../../logic/Song';
+import { flagSong, Song } from '../../logic/Song';
 import SongRow from './SongRow';
 import {
     addToPlaylist,
@@ -86,6 +86,35 @@ const SongList: React.FC<SongListProps> = (props) => {
             });
     };
 
+    const handleFlagSong = (songID: number, favorite: boolean) => {
+        flagSong(songID, favorite, props.authKey)
+            .then(() => {
+                const newSongs = songs.map((song) => {
+                    if (song.id === songID) {
+                        song.flag = !song.flag;
+                    }
+                    return song;
+                });
+                setSongs(newSongs);
+                if (favorite) {
+                    return toast.success('Song added to favorites');
+                }
+                toast.success('Song removed from favorites');
+            })
+            .catch((err) => {
+                if (favorite) {
+                    toast.error(
+                        '😞 Something went wrong adding song to favorites.'
+                    );
+                } else {
+                    toast.error(
+                        '😞 Something went wrong removing song from favorites.'
+                    );
+                }
+                setError(err);
+            });
+    };
+
     if (error) {
         return (
             <div className='songList'>
@@ -127,6 +156,7 @@ const SongList: React.FC<SongListProps> = (props) => {
                                     songs
                                 )
                             }
+                            flagSong={handleFlagSong}
                             key={song.id}
                         />
                     );

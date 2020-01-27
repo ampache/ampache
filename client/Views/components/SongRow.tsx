@@ -2,6 +2,7 @@ import React from 'react';
 import useContextMenu from 'react-use-context-menu';
 import { Song } from '../../logic/Song';
 import { Link } from 'react-router-dom';
+import heartIcon from '/images/icons/svg/heart.svg';
 
 interface SongRowProps {
     song: Song;
@@ -12,6 +13,7 @@ interface SongRowProps {
     addToPlaylist?: (trackID: number) => void;
     addToQueue: (next: boolean) => void;
     startPlaying: () => void;
+    flagSong: (songID: number, favorite: boolean) => void;
 }
 
 const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
@@ -50,6 +52,19 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                         showContextMenu(e);
                     }}
                 />
+                <span
+                    className={
+                        props.song.flag
+                            ? 'heartIconWrapper fav'
+                            : 'heartIconWrapper'
+                    }
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        props.flagSong(props.song.id, !props.song.flag);
+                    }}
+                >
+                    <img src={heartIcon} alt='Favorite song' />
+                </span>
                 <span className='title'>{props.song.title}</span>
                 {props.showArtist && (
                     <div onClick={(e) => e.stopPropagation()}>

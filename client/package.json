@@ -25,7 +25,7 @@
         "start": "parcel start index.html",
         "build": "parcel build index.html",
         "prod": "rm -rf dist && parcel build index.html --no-source-maps",
-        "watch": "parcel watch index.html"
+        "watch": "parcel watch index.html --no-cache"
     },
     "eslintConfig": {
         "extends": "react-app"

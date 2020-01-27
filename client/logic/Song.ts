@@ -1,3 +1,8 @@
+import { AuthKey } from './Auth';
+import axios from 'axios';
+import AmpacheError from './AmpacheError';
+import { Playlist } from './Playlist';
+
 type Song = {
     id: number;
     title: string;
@@ -29,6 +34,7 @@ type Song = {
     artist_mbid: string;
     albumartist_mbid: string;
     art: string;
+    flag: boolean;
     preciserating: number;
     rating: number;
     averagerating: number;
@@ -42,6 +48,27 @@ type Song = {
     replaygain_track_gain: number;
     replaygain_track_peak: number;
     tags: Array<string>;
+};
+
+export const flagSong = (
+    songID: number,
+    favorite: boolean,
+    authKey: AuthKey
+) => {
+    return axios
+        .get(
+            `${process.env.ServerURL}/server/json.server.php?action=flag&type=song&id=${songID}&flag=${favorite}&auth=${authKey}&version=400001`
+        )
+        .then((response) => {
+            const JSONData = response.data;
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
+            if (JSONData.error) {
+                throw new AmpacheError(JSONData.error);
+            }
+            return true;
+        });
 };
 
 export { Song };
