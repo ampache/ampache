@@ -2093,8 +2093,10 @@ class Api
     /**
      * followers
      * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=400004
      *
-     * This get an user followers
+     * This gets followers of the user
+     * Error when user not found or no followers
      *
      * @param array $input
      * username = (string) $username
@@ -2110,16 +2112,33 @@ class Api
                 $user = User::get_from_username($username);
                 if ($user !== null) {
                     $users    = $user->get_followers();
-                    ob_end_clean();
-                    switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::users($users);
-                    break;
-                    default:
-                        echo XML_Data::users($users);
-                }
+                    if (!count($users)) {
+                        switch ($input['format']) {
+                            case 'json':
+                                echo JSON_Data::error('400', 'User `' . $username . '` has no followers.');
+                            break;
+                            default:
+                                echo XML_Data::error('400', 'User `' . $username . '` has no followers.');
+                        }
+                    } else {
+                        ob_end_clean();
+                        switch ($input['format']) {
+                            case 'json':
+                                echo JSON_Data::users($users);
+                            break;
+                            default:
+                                echo XML_Data::users($users);
+                        }
+                    }
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                    switch ($input['format']) {
+                        case 'json':
+                            echo JSON_Data::error('400', 'User `' . $username . '` cannot be found.');
+                        break;
+                        default:
+                            echo XML_Data::error('400', 'User `' . $username . '` cannot be found.');
+                    }
                 }
             }
         } else {
@@ -2131,8 +2150,10 @@ class Api
     /**
      * following
      * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=400004
      *
-     * This get the user list followed by an user
+     * Get users followed by the user
+     * Error when user not found or no followers
      *
      * @param array $input
      * username = (string) $username
@@ -2148,17 +2169,34 @@ class Api
                 $user = User::get_from_username($username);
                 if ($user !== null) {
                     $users = $user->get_following();
-                    debug_event('api.class', 'User is following:  ' . print_r($users), 1);
-                    ob_end_clean();
-                    switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::users($users);
-                    break;
-                    default:
-                        echo XML_Data::users($users);
-                }
+                    if (!count($users)) {
+                        switch ($input['format']) {
+                            case 'json':
+                                echo JSON_Data::error('400', 'User `' . $username . '` does not follow anyone.');
+                            break;
+                            default:
+                                echo XML_Data::error('400', 'User `' . $username . '` does not follow anyone.');
+                        }
+                    } else {
+                        debug_event('api.class', 'User is following:  ' . print_r($users), 1);
+                        ob_end_clean();
+                        switch ($input['format']) {
+                            case 'json':
+                                echo JSON_Data::users($users);
+                            break;
+                            default:
+                                echo XML_Data::users($users);
+                        }
+                    }
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                    switch ($input['format']) {
+                        case 'json':
+                            echo JSON_Data::error('400', 'User `' . $username . '` cannot be found.');
+                        break;
+                        default:
+                            echo XML_Data::error('400', 'User `' . $username . '` cannot be found.');
+                    }
                 }
             }
         } else {
