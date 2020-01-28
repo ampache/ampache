@@ -305,7 +305,7 @@ class Artist extends database_object implements library_item
                 break;
             case 'name_desc':
                 $sql_sort = '`album`.`name` DESC' . $sort_disk;
-		break;
+                break;
             default:
                 $sql_sort  = '`album`.`name`' . $sort_disk . ', `album`.`year`';
         }

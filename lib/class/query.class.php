@@ -2350,7 +2350,7 @@ class Query
             $group_sql = " GROUP BY `" . $this->get_type() . '`.`id`';
             $order_sql = " ORDER BY ";
 
-	    foreach ($this->_state['sort'] as $key => $value) {
+            foreach ($this->_state['sort'] as $key => $value) {
               $sql_sort = $this->sql_sort($key, $value);
               $order_sql .= $sql_sort;
               $group_sql .= ", " . substr($sql_sort, 0, strpos($sql_sort, " "));
