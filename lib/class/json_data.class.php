@@ -467,7 +467,7 @@ class JSON_Data
 
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
-                    $meta_name = $metadata->getField()->getName();
+                    $meta_name           = $metadata->getField()->getName();
                     $ourSong[$meta_name] = $metadata->getData();
                 }
             }
