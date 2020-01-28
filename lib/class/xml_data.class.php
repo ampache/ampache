@@ -761,6 +761,12 @@ class XML_Data
                     . "\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n"
                     . "\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n"
                     . "\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n";
+            if (Song::isCustomMetadataEnabled()) {
+                foreach ($song->getMetadata() as $metadata) {
+                    $meta_name = $metadata->getField()->getName();
+                    $string .= "\t<" . $meta_name . "><![CDATA[" . $metadata->getData() . "]]></" . $meta_name . ">\n";
+                }
+            }
             foreach ($song->tags as $tag) {
                 $string .= "\t<genre><![CDATA[" . $tag['name'] . "]]></genre>\n";
             }
