@@ -1613,7 +1613,9 @@ abstract class Catalog extends database_object
                 echo "</td>\n</tr>\n";
                 flush();
             } else {
-                echo '<tr class="' . UI::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
+                if (!$api) {
+                    echo '<tr class="' . UI::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
+                }
                 flush();
             }
         } // foreach songs
