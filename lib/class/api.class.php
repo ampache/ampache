@@ -484,11 +484,11 @@ class Api
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
             switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::error('401', T_('Wrong object type ' . $type));
-            break;
-            default:
-                echo XML_Data::error('401', T_('Wrong object type ' . $type));
+                case 'json':
+                    echo JSON_Data::error('401', T_('Wrong object type ' . $type));
+                break;
+                default:
+                    echo XML_Data::error('401', T_('Wrong object type ' . $type));
             }
 
             return;
@@ -557,9 +557,6 @@ class Api
     {
         ob_end_clean();
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
         $user    = User::get_from_username(Session::username($input['auth']));
         $results = Search::run($input, $user);
 
@@ -568,16 +565,36 @@ class Api
             $type = $input['type'];
         }
 
-        switch ($type) {
-            case 'artist':
-                echo XML_Data::artists($results, array(), true, $user->id);
-                break;
-            case 'album':
-                echo XML_Data::albums($results, array(), true, $user->id);
-                break;
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                switch ($type) {
+                    case 'artist':
+                        echo JSON_Data::artists($results, array(), true, $user->id);
+                        break;
+                    case 'album':
+                        echo JSON_Data::albums($results, array(), true, $user->id);
+                        break;
+                    default:
+                        echo JSON_Data::songs($results, array(), true, $user->id);
+                        break;
+                }
+            break;
             default:
-                echo XML_Data::songs($results, array(), true, $user->id);
-                break;
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+            switch ($type) {
+                case 'artist':
+                    echo XML_Data::artists($results, array(), true, $user->id);
+                    break;
+                case 'album':
+                    echo XML_Data::albums($results, array(), true, $user->id);
+                    break;
+                default:
+                    echo XML_Data::songs($results, array(), true, $user->id);
+                    break;
+            }
         }
         Session::extend($input['auth']);
     } // advanced_search

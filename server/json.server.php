@@ -84,7 +84,7 @@ $internal_functions = array('set_filter');
 
 // Recurse through them and see if we're calling one of them
 foreach ($methods as $method) {
-    if (in_array($method,$internal_functions)) {
+    if (in_array($method, $internal_functions)) {
         continue;
     }
 
@@ -92,7 +92,7 @@ foreach ($methods as $method) {
     // Then let's call this function!
     if ($_GET['action'] == $method) {
         $_GET['format'] = 'json';
-        call_user_func(array('api',$method),$_GET);
+        call_user_func(array('api', $method),$_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit;
     }

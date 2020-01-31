@@ -146,7 +146,6 @@ class JSON_Data
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // tags_string
 
-
     /**
      * playlist_song_tracks_string
      *
@@ -170,6 +169,33 @@ class JSON_Data
 
         return "";
     } // playlist_song_tracks_string
+
+    /**
+     * indexes
+     *
+     * This returns tags to the user, in a pretty JSON document with the information
+     *
+     * @param    array    $objects    (description here...)
+     * @param    string    $type    (description here...)
+     * @return    string    return json
+     */
+    public static function indexes($objects, $type)
+    {
+        //here is where we call the object type
+        //'song', 'album', 'artist', 'playlist'
+        switch ($input['format']) {
+            case 'song':
+                return self::songs($objects);
+            case 'album':
+                return self::albums($objects);
+            case 'artist':
+                return self::artists($objects);
+            case 'playlist':
+                return self::playlists($objects);
+            default:
+                return self::error('401', T_('Wrong object type ' . $type));
+        }
+    }
 
     /**
      * tags
