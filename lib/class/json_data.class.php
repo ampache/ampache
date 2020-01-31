@@ -183,7 +183,7 @@ class JSON_Data
     {
         //here is where we call the object type
         //'song', 'album', 'artist', 'playlist'
-        switch ($input['format']) {
+        switch ($type) {
             case 'song':
                 return self::songs($objects);
             case 'album':

@@ -571,13 +571,13 @@ class Api
                 JSON_Data::set_limit($input['limit']);
                 switch ($type) {
                     case 'artist':
-                        echo JSON_Data::artists($results, array(), true, $user->id);
+                        echo JSON_Data::artists($results, array(), $user->id);
                         break;
                     case 'album':
-                        echo JSON_Data::albums($results, array(), true, $user->id);
+                        echo JSON_Data::albums($results, array(), $user->id);
                         break;
                     default:
-                        echo JSON_Data::songs($results, array(), true, $user->id);
+                        echo JSON_Data::songs($results, array(), $user->id);
                         break;
                 }
             break;
