@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2019-12-03 20:25+0100\n"
-"PO-Revision-Date: 2019-11-28 11:46+0000\n"
+"POT-Creation-Date: 2020-02-01 02:03+0100\n"
+"PO-Revision-Date: 2019-12-12 15:44+0000\n"
 "Last-Translator: Nite <shunite@gmail.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/ampache/ampache/"
 "language/hu_HU/)\n"
@@ -110,7 +110,7 @@ msgstr "Ezzel véglegesen törlöd a Katalógust"
 #: ../../admin/catalog.php:128
 msgid "Song has been enabled"
 msgid_plural "Songs have been enabled"
-msgstr[0] "A Dalok engedélyezve lettek"
+msgstr[0] "A Dal engedélyezve"
 msgstr[1] "A Dalok engedélyezve"
 
 #: ../../admin/catalog.php:130
@@ -312,7 +312,7 @@ msgid "Guest"
 msgstr "Vendég"
 
 #: ../../admin/users.php:182 ../../lib/class/user.class.php:1172
-#: ../../lib/preferences.php:310
+#: ../../lib/preferences.php:309
 #: ../../modules/plugins/Flattr/Flattr.plugin.php:93
 #: ../../modules/plugins/Paypal/Paypal.plugin.php:96
 #: ../../templates/show_access_list.inc.php:52
@@ -349,7 +349,7 @@ msgid "Catalog Manager"
 msgstr "Katalógus kezelő"
 
 #: ../../admin/users.php:191 ../../lib/class/user.class.php:1166
-#: ../../lib/preferences.php:312 ../../templates/show_add_user.inc.php:88
+#: ../../lib/preferences.php:311 ../../templates/show_add_user.inc.php:88
 #: ../../templates/show_create_democratic.inc.php:53
 #: ../../templates/show_democratic_playlist.inc.php:62
 #: ../../templates/show_democratic_playlist.inc.php:111
@@ -889,7 +889,7 @@ msgstr "Fájl áthelyezve..."
 
 #: ../../bin/install/add_user.inc:37 ../../lib/class/registration.class.php:63
 #: ../../lib/class/registration.class.php:77
-#: ../../lib/class/search.class.php:916
+#: ../../lib/class/search.class.php:1001
 #: ../../modules/catalog/remote/remote.catalog.php:103
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:103
 #: ../../modules/localplay/xbmc/xbmc.controller.php:189
@@ -904,7 +904,7 @@ msgstr "Fájl áthelyezve..."
 #: ../../templates/show_user_registration.inc.php:83
 #: ../../templates/show_users.inc.php:46 ../../templates/show_users.inc.php:80
 msgid "Username"
-msgstr "Felhasználónév"
+msgstr "Felhasználó"
 
 #: ../../bin/install/add_user.inc:38
 #: ../../templates/show_preference_box.inc.php:46
@@ -925,7 +925,7 @@ msgstr "Elérési szint"
 #: ../../templates/show_install_account.inc.php:58
 #: ../../templates/show_install_config.inc.php:99
 #: ../../templates/show_install.inc.php:75
-#: ../../templates/show_install.inc.php:134
+#: ../../templates/show_install.inc.php:128
 #: ../../templates/show_login_form.inc.php:70
 #: ../../templates/show_user_registration.inc.php:136
 msgid "Password"
@@ -956,8 +956,8 @@ msgstr "E-mail"
 msgid "Website"
 msgstr "Weboldal"
 
-#: ../../bin/install/add_user.inc:42 ../../lib/class/search.class.php:748
-#: ../../lib/class/search.class.php:880 ../../lib/class/search.class.php:895
+#: ../../bin/install/add_user.inc:42 ../../lib/class/search.class.php:809
+#: ../../lib/class/search.class.php:965 ../../lib/class/search.class.php:980
 #: ../../templates/cookie_disclaimer.inc.php:16
 #: ../../templates/show_access_list.inc.php:48
 #: ../../templates/show_add_access.inc.php:31
@@ -1104,7 +1104,7 @@ msgstr "Nyers eredmények:"
 msgid "Final results seen by Ampache using %s:"
 msgstr "Végleges eredmények, ahogy az Ampache látja %s használatával:"
 
-#: ../../bin/print_tags.inc:79 ../../lib/class/update.class.php:214
+#: ../../bin/print_tags.inc:79 ../../lib/class/update.class.php:217
 #: ../../templates/show_catalog_types.inc.php:30
 #: ../../templates/show_catalog_types.inc.php:67
 #: ../../templates/show_localplay_controllers.inc.php:30
@@ -1226,7 +1226,10 @@ msgstr ""
 
 #: ../../bin/write_playlists.inc:102 ../../lib/class/browse.class.php:239
 #: ../../lib/class/upnp_api.class.php:411 ../../server/search.ajax.php:149
-#: ../../templates/header.inc.php:36 ../../templates/show_user.inc.php:115
+#: ../../templates/header.inc.php:36
+#: ../../templates/show_search_form.inc.php:43
+#: ../../templates/show_search_form.inc.php:45
+#: ../../templates/show_user.inc.php:115
 #: ../../templates/sidebar_home.inc.php:27
 msgid "Playlists"
 msgstr "Lejátszási listák"
@@ -1276,7 +1279,7 @@ msgstr "A Csatorna törölve lesz"
 msgid "The Channel has been deleted"
 msgstr "A Csatorna törölve"
 
-#: ../../daap/index.php:27 ../../lib/preferences.php:309
+#: ../../daap/index.php:27 ../../lib/preferences.php:308
 #: ../../rest/index.php:27 ../../templates/show_install_config.inc.php:263
 #: ../../upnp/cm-control-reply.php:6 ../../upnp/control-reply.php:6
 #: ../../upnp/index.php:6 ../../upnp/MediaServerServiceDesc.php:6
@@ -1316,20 +1319,20 @@ msgstr "A Címke hozzáadva"
 msgid "The Label cannot be found"
 msgstr "A Címke nem található"
 
-#: ../../lib/class/access.class.php:164 ../../lib/class/access.class.php:169
+#: ../../lib/class/access.class.php:163 ../../lib/class/access.class.php:168
 msgid "An Invalid IPv4 / IPv6 Address was entered"
 msgstr "Érvénytelen IPv4 / IPv6 cím került megadásra"
 
-#: ../../lib/class/access.class.php:173 ../../lib/class/access.class.php:174
+#: ../../lib/class/access.class.php:172 ../../lib/class/access.class.php:173
 msgid "IP Address version mismatch"
 msgstr "IP cím verzió nem egyezik"
 
-#: ../../lib/class/access.class.php:229
+#: ../../lib/class/access.class.php:228
 msgid "Duplicate ACL entry defined"
 msgstr "Ilyen ACL bejegyzés már létezik"
 
-#: ../../lib/class/access.class.php:479 ../../lib/class/access.class.php:501
-#: ../../lib/ui.lib.php:486 ../../templates/browse_filters.inc.php:81
+#: ../../lib/class/access.class.php:478 ../../lib/class/access.class.php:500
+#: ../../lib/ui.lib.php:485 ../../templates/browse_filters.inc.php:81
 #: ../../templates/list_header.inc.php:119
 #: ../../templates/show_add_access.inc.php:27
 #: ../../templates/show_edit_access.inc.php:27
@@ -1339,7 +1342,7 @@ msgstr "Ilyen ACL bejegyzés már létezik"
 msgid "All"
 msgstr "Mind"
 
-#: ../../lib/class/access.class.php:482 ../../templates/list_header.inc.php:125
+#: ../../lib/class/access.class.php:481 ../../templates/list_header.inc.php:125
 #: ../../templates/show_add_access.inc.php:39
 #: ../../templates/show_edit_access.inc.php:40
 #: ../../templates/show_graphs.inc.php:79
@@ -1347,50 +1350,50 @@ msgstr "Mind"
 msgid "View"
 msgstr "Nézet"
 
-#: ../../lib/class/access.class.php:485
+#: ../../lib/class/access.class.php:484
 #: ../../templates/show_add_access.inc.php:40
 #: ../../templates/show_edit_access.inc.php:41
 msgid "Read"
 msgstr "Olvasás"
 
-#: ../../lib/class/access.class.php:488
+#: ../../lib/class/access.class.php:487
 #: ../../templates/show_add_access.inc.php:41
 #: ../../templates/show_edit_access.inc.php:42
 msgid "Read/Write"
 msgstr "Olvasás/Írás"
 
-#: ../../lib/class/access.class.php:519
+#: ../../lib/class/access.class.php:518
 #: ../../templates/show_add_access.inc.php:24
 #: ../../templates/show_edit_access.inc.php:24
 msgid "API/RPC"
 msgstr "API/RPC"
 
-#: ../../lib/class/access.class.php:521
+#: ../../lib/class/access.class.php:520
 #: ../../templates/show_add_access.inc.php:25
 #: ../../templates/show_edit_access.inc.php:25
 msgid "Local Network Definition"
 msgstr "Helyi Hálózati Definíció"
 
-#: ../../lib/class/access.class.php:523
+#: ../../lib/class/access.class.php:522
 #: ../../templates/show_add_access.inc.php:72
 #: ../../templates/show_edit_access.inc.php:58
 msgid "Web Interface"
 msgstr "Web Interfész"
 
-#: ../../lib/class/access.class.php:526
+#: ../../lib/class/access.class.php:525
 #: ../../templates/show_add_access.inc.php:26
 #: ../../templates/show_edit_access.inc.php:26
 msgid "Stream Access"
 msgstr "Stream Hozzáférés"
 
-#: ../../lib/class/album.class.php:496 ../../lib/class/artist.class.php:807
+#: ../../lib/class/album.class.php:495 ../../lib/class/artist.class.php:804
 #: ../../templates/show_album_group_disks.inc.php:50
 #: ../../templates/show_lyrics.inc.php:31
 msgid "Unknown (Orphaned)"
 msgstr "Ismeretlen (Árva)"
 
-#: ../../lib/class/album.class.php:756
-#: ../../lib/class/subsonic_xml_data.class.php:738 ../../lib/ui.lib.php:244
+#: ../../lib/class/album.class.php:755
+#: ../../lib/class/subsonic_xml_data.class.php:738 ../../lib/ui.lib.php:243
 #: ../../server/search.ajax.php:88 ../../templates/show_add_catalog.inc.php:42
 #: ../../templates/show_album_group_disks.inc.php:118
 #: ../../templates/show_album.inc.php:31
@@ -1400,8 +1403,8 @@ msgstr "Ismeretlen (Árva)"
 msgid "Disk"
 msgstr "Lemez"
 
-#: ../../lib/class/album.class.php:768 ../../lib/class/browse.class.php:229
-#: ../../lib/class/upnp_api.class.php:339 ../../lib/ui.lib.php:184
+#: ../../lib/class/album.class.php:767 ../../lib/class/browse.class.php:229
+#: ../../lib/class/upnp_api.class.php:339 ../../lib/ui.lib.php:183
 #: ../../server/search.ajax.php:58 ../../templates/header.inc.php:34
 #: ../../templates/show_label.inc.php:96 ../../templates/show_labels.inc.php:45
 #: ../../templates/show_labels.inc.php:75
@@ -1414,25 +1417,26 @@ msgstr "Lemez"
 msgid "Artists"
 msgstr "Előadó"
 
-#: ../../lib/class/album.class.php:768 ../../lib/class/album.class.php:769
+#: ../../lib/class/album.class.php:767 ../../lib/class/album.class.php:768
 #: ../../templates/show_edit_album_row.inc.php:37
 #: ../../templates/show_install_config.inc.php:63
 msgid "Various"
 msgstr "Különféle"
 
-#: ../../lib/class/album.class.php:789
+#: ../../lib/class/album.class.php:788
 msgid "Album MusicBrainzID"
 msgstr "Album MusicBrainzID"
 
-#: ../../lib/class/album.class.php:792
+#: ../../lib/class/album.class.php:791
 msgid "Release Group MusicBrainzID"
 msgstr "Kiadó Csoport MusicBrainzID"
 
-#: ../../lib/class/album.class.php:795 ../../lib/class/artist.class.php:617
-#: ../../lib/class/clip.class.php:154 ../../lib/class/search.class.php:515
-#: ../../lib/class/search.class.php:805 ../../lib/class/song.class.php:1671
+#: ../../lib/class/album.class.php:794 ../../lib/class/artist.class.php:614
+#: ../../lib/class/clip.class.php:154 ../../lib/class/search.class.php:552
+#: ../../lib/class/search.class.php:878 ../../lib/class/song.class.php:1687
 #: ../../templates/browse_filters.inc.php:72
 #: ../../templates/show_add_catalog.inc.php:38
+#: ../../templates/show_add_upload.inc.php:177
 #: ../../templates/show_albums.inc.php:41
 #: ../../templates/show_albums.inc.php:110
 #: ../../templates/show_artists.inc.php:39
@@ -1466,8 +1470,9 @@ msgstr "Kiadó Csoport MusicBrainzID"
 msgid "Artist"
 msgstr "Előadó"
 
-#: ../../lib/class/album.class.php:798 ../../lib/class/search.class.php:508
+#: ../../lib/class/album.class.php:797 ../../lib/class/search.class.php:545
 #: ../../templates/show_add_catalog.inc.php:37
+#: ../../templates/show_add_upload.inc.php:186
 #: ../../templates/show_albums.inc.php:39
 #: ../../templates/show_albums.inc.php:108
 #: ../../templates/show_democratic_playlist.inc.php:58
@@ -1560,113 +1565,128 @@ msgstr "évekkel ezelőtt"
 msgid "on"
 msgstr "-"
 
-#: ../../lib/class/ampconfig.class.php:106
+#: ../../lib/class/ampconfig.class.php:105
 #, php-format
 msgid "Tried to clobber '%s' without setting clobber"
 msgstr "'%s' nem üthető felül \"clobber\" beállítása nélkül"
 
-#: ../../lib/class/api.class.php:140
+#: ../../lib/class/api.class.php:141 ../../lib/class/api.class.php:144
 msgid "Missing mandatory parameter"
 msgstr "Kötelező paraméter hiányzik"
 
-#: ../../lib/class/api.class.php:186
+#: ../../lib/class/api.class.php:191
 msgid "Login failed, API version is too old"
 msgstr "A belépés sikertelen, az API verzió túl régi"
 
-#: ../../lib/class/api.class.php:215 ../../lib/class/api.class.php:216
+#: ../../lib/class/api.class.php:220 ../../lib/class/api.class.php:223
+#: ../../lib/class/api.class.php:226 ../../lib/class/api.class.php:242
 msgid "Login failed, timestamp is out of range"
 msgstr "A belépés sikertelen, az időbélyeg nincs a tartományon belül"
 
-#: ../../lib/class/api.class.php:216 ../../lib/class/api.class.php:229
-#: ../../lib/class/api.class.php:328
+#: ../../lib/class/api.class.php:223 ../../lib/class/api.class.php:226
+#: ../../lib/class/api.class.php:242 ../../lib/class/api.class.php:245
+#: ../../lib/class/api.class.php:353 ../../lib/class/api.class.php:356
 msgid "Received Invalid Handshake"
 msgstr "Érvénytelen Handshake érkezett"
 
-#: ../../lib/class/api.class.php:228 ../../lib/class/api.class.php:229
-#: ../../lib/class/api.class.php:328 ../../lib/login.php:82
+#: ../../lib/class/api.class.php:239 ../../lib/class/api.class.php:245
+#: ../../lib/class/api.class.php:353 ../../lib/class/api.class.php:356
+#: ../../lib/login.php:82
 msgid "Incorrect username or password"
 msgstr "Hibás felhasználónév vagy jelszó"
 
-#: ../../lib/class/api.class.php:430 ../../lib/class/api.class.php:1801
-#: ../../lib/class/api.class.php:1851 ../../lib/class/api.class.php:2354
+#: ../../lib/class/api.class.php:488 ../../lib/class/api.class.php:491
+#: ../../lib/class/api.class.php:2276 ../../lib/class/api.class.php:2279
+#: ../../lib/class/api.class.php:2350 ../../lib/class/api.class.php:2353
+#: ../../lib/class/api.class.php:3027 ../../lib/class/api.class.php:3030
 msgid "Wrong object type "
 msgstr "Nem megfelelő objektumtípus"
 
-#: ../../lib/class/api.class.php:959 ../../lib/class/api.class.php:992
-#: ../../lib/class/api.class.php:1059 ../../lib/class/api.class.php:1087
-#: ../../lib/class/api.class.php:1113 ../../lib/class/api.class.php:1146
+#: ../../lib/class/api.class.php:1180 ../../lib/class/api.class.php:1183
+#: ../../lib/class/api.class.php:1228 ../../lib/class/api.class.php:1231
+#: ../../lib/class/api.class.php:1320 ../../lib/class/api.class.php:1323
+#: ../../lib/class/api.class.php:1363 ../../lib/class/api.class.php:1366
+#: ../../lib/class/api.class.php:1404 ../../lib/class/api.class.php:1407
+#: ../../lib/class/api.class.php:1458 ../../lib/class/api.class.php:1461
 msgid "Access denied to this playlist"
 msgstr "Hozzáférés megtagadva ehhez a lejátszási listához"
 
-#: ../../lib/class/api.class.php:1118
+#: ../../lib/class/api.class.php:1415 ../../lib/class/api.class.php:1418
 msgid "Can't add a duplicate item when check is enabled"
 msgstr ""
+"Nem lehet duplikált elemet hozzáadni, ha az ellenőrzés be van kapcsolva"
 
-#: ../../lib/class/api.class.php:1151
-#, fuzzy
+#: ../../lib/class/api.class.php:1467
 msgid "Song not found in playlist"
-msgstr "Nincs érvényes dal a lejátszásilista-fájlban"
+msgstr "A Dal nem található a lejátszási listában"
 
-#: ../../lib/class/api.class.php:1161
-#, fuzzy
+#: ../../lib/class/api.class.php:1485 ../../lib/class/api.class.php:1488
 msgid "Track ID not found in playlist"
-msgstr "Nincs érvényes dal a lejátszásilista-fájlban"
+msgstr "Track ID nem található a lejátszási listában"
 
-#: ../../lib/class/api.class.php:1807 ../../lib/class/api.class.php:1857
+#: ../../lib/class/api.class.php:2288 ../../lib/class/api.class.php:2291
+#: ../../lib/class/api.class.php:2362 ../../lib/class/api.class.php:2365
 msgid "Wrong library item type"
 msgstr "Nem megfelelő könyvtárbejegyzés típus"
 
-#: ../../lib/class/api.class.php:1811 ../../lib/class/api.class.php:1861
-#: ../../lib/class/api.class.php:1915 ../../lib/class/api.class.php:1998
+#: ../../lib/class/api.class.php:2298 ../../lib/class/api.class.php:2301
+#: ../../lib/class/api.class.php:2372 ../../lib/class/api.class.php:2375
+#: ../../lib/class/api.class.php:2450 ../../lib/class/api.class.php:2453
+#: ../../lib/class/api.class.php:2563 ../../lib/class/api.class.php:2566
 msgid "Library item not found"
 msgstr "Könyvtárbejegyzés nem található"
 
-#: ../../lib/class/api.class.php:1901 ../../lib/class/api.class.php:1972
+#: ../../lib/class/api.class.php:2430 ../../lib/class/api.class.php:2433
+#: ../../lib/class/api.class.php:2519 ../../lib/class/api.class.php:2522
 msgid "User_id not found"
 msgstr "User_id nem található"
 
-#: ../../lib/class/api.class.php:1980
+#: ../../lib/class/api.class.php:2533 ../../lib/class/api.class.php:2536
 msgid "Invalid input options"
 msgstr "Érvénytelen beviteli lehetőségek"
 
-#: ../../lib/class/api.class.php:1994
+#: ../../lib/class/api.class.php:2553 ../../lib/class/api.class.php:2556
 msgid "Failed to scrobble: No item found!"
 msgstr "Scrobble meghiúsult: Nincs ilyen bejegyzés!"
 
-#: ../../lib/class/api.class.php:2032
+#: ../../lib/class/api.class.php:2609 ../../lib/class/api.class.php:2612
 msgid "Wrong catalog task "
 msgstr "Nem megfelelő katalógusfeladat"
 
-#: ../../lib/class/api.class.php:2130 ../../lib/class/api.class.php:2205
+#: ../../lib/class/api.class.php:2731 ../../lib/class/api.class.php:2734
+#: ../../lib/class/api.class.php:2842 ../../lib/class/api.class.php:2845
 msgid "Wrong item type "
 msgstr "Nem megfelelő bejegyzéstípus"
 
-#: ../../lib/class/api.class.php:2136 ../../lib/class/api.class.php:2165
-#: ../../lib/class/api.class.php:2211
+#: ../../lib/class/api.class.php:2743 ../../lib/class/api.class.php:2746
+#: ../../lib/class/api.class.php:2784 ../../lib/class/api.class.php:2787
+#: ../../lib/class/api.class.php:2854 ../../lib/class/api.class.php:2857
 msgid "The requested item was not found"
 msgstr "A kért bejegyzés nem található"
 
-#: ../../lib/class/api.class.php:2179
+#: ../../lib/class/api.class.php:2810 ../../lib/class/api.class.php:2813
 msgid "failed to update_artist_info for "
 msgstr "nem sikerült az update_artist_info a következőnek:"
 
-#: ../../lib/class/api.class.php:2223
+#: ../../lib/class/api.class.php:2878 ../../lib/class/api.class.php:2881
 msgid "failed to update_art for "
 msgstr "nem sikerült az update_art a következőnek:"
 
-#: ../../lib/class/api.class.php:2443 ../../lib/class/api.class.php:2512
+#: ../../lib/class/api.class.php:3128 ../../lib/class/api.class.php:3131
+#: ../../lib/class/api.class.php:3239 ../../lib/class/api.class.php:3242
 msgid "Invalid request"
 msgstr "Érvénytelen kérés"
 
-#: ../../lib/class/api.class.php:2471 ../../lib/class/api.class.php:2489
+#: ../../lib/class/api.class.php:3162 ../../lib/class/api.class.php:3165
+#: ../../lib/class/api.class.php:3192 ../../lib/class/api.class.php:3195
 msgid "Media object invalid or not specified"
 msgstr "Médiaobjektum érvénytelen vagy nincs megadva"
 
-#: ../../lib/class/art.class.php:1375
+#: ../../lib/class/art.class.php:1378
 msgid "Unable to open"
 msgstr "Megnyitás nem lehetséges"
 
-#: ../../lib/class/art.class.php:1888 ../../lib/class/shoutbox.class.php:312
+#: ../../lib/class/art.class.php:1891 ../../lib/class/shoutbox.class.php:312
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:123
 #: ../../templates/header.inc.php:33
 #: ../../templates/show_album_group_disks.inc.php:76
@@ -1702,19 +1722,19 @@ msgstr "Megnyitás nem lehetséges"
 msgid "Play"
 msgstr "Lejátszás"
 
-#: ../../lib/class/art.class.php:1897
+#: ../../lib/class/art.class.php:1900
 msgid "Edit/Find Art"
 msgstr "Borító szerkesztése/keresése"
 
-#: ../../lib/class/art.class.php:1900
+#: ../../lib/class/art.class.php:1903
 msgid "Do you really want to reset art?"
 msgstr "Biztosan vissza akarod állítani a borítót?"
 
-#: ../../lib/class/art.class.php:1901
+#: ../../lib/class/art.class.php:1904
 msgid "Reset Art"
 msgstr "Borító visszaállítása"
 
-#: ../../lib/class/artist.class.php:614
+#: ../../lib/class/artist.class.php:611
 msgid "Artist MusicBrainzID"
 msgstr "Előadó MusicBrainzID"
 
@@ -1731,7 +1751,7 @@ msgstr "Módosítások megtekintése"
 #: ../../templates/show_album_group_disks.inc.php:101
 #: ../../templates/show_album_group_disks.inc.php:102
 #: ../../templates/show_album_group_disks.inc.php:152
-#: ../../templates/show_album.inc.php:196
+#: ../../templates/show_album.inc.php:206
 #: ../../templates/show_artist.inc.php:150
 #: ../../templates/show_install_config.inc.php:208
 #: ../../templates/show_install_config.inc.php:225
@@ -1774,9 +1794,9 @@ msgstr "Műsorszórás szerkesztése"
 #: ../../lib/class/channel.class.php:241 ../../lib/class/share.class.php:254
 #: ../../templates/show_access_list.inc.php:71
 #: ../../templates/show_album_group_disks.inc.php:164
-#: ../../templates/show_album.inc.php:187
+#: ../../templates/show_album.inc.php:197
 #: ../../templates/show_album_row.inc.php:108
-#: ../../templates/show_artist.inc.php:171
+#: ../../templates/show_artist.inc.php:181
 #: ../../templates/show_artist_row.inc.php:90
 #: ../../templates/show_label.inc.php:74
 #: ../../templates/show_license_row.inc.php:27
@@ -1807,9 +1827,9 @@ msgstr "Szerkesztés"
 #: ../../templates/rightbar.inc.php:122
 #: ../../templates/show_access_list.inc.php:72
 #: ../../templates/show_account.inc.php:99
-#: ../../templates/show_album.inc.php:204
+#: ../../templates/show_album.inc.php:214
 #: ../../templates/show_album_row.inc.php:114
-#: ../../templates/show_artist.inc.php:180
+#: ../../templates/show_artist.inc.php:190
 #: ../../templates/show_artist_row.inc.php:96
 #: ../../templates/show_catalog_row.inc.php:53
 #: ../../templates/show_democratic_playlist.inc.php:94
@@ -1874,9 +1894,9 @@ msgid "Songs"
 msgstr "Dalok"
 
 #: ../../lib/class/browse.class.php:211 ../../lib/class/upnp_api.class.php:363
-#: ../../lib/ui.lib.php:180 ../../server/search.ajax.php:91
+#: ../../lib/ui.lib.php:179 ../../server/search.ajax.php:91
 #: ../../templates/browse_filters.inc.php:69 ../../templates/header.inc.php:35
-#: ../../templates/show_artist.inc.php:194
+#: ../../templates/show_artist.inc.php:204
 #: ../../templates/show_artists.inc.php:42
 #: ../../templates/show_artists.inc.php:112
 #: ../../templates/show_random.inc.php:32
@@ -1924,8 +1944,8 @@ msgid "Shoutbox Records"
 msgstr "Shoutbox Bejegyzések"
 
 #: ../../lib/class/browse.class.php:271
-#: ../../templates/show_search_form.inc.php:45
-#: ../../templates/show_search_form.inc.php:47
+#: ../../templates/show_search_form.inc.php:50
+#: ../../templates/show_search_form.inc.php:52
 #: ../../templates/show_stats.inc.php:36 ../../templates/show_stats.inc.php:82
 #: ../../templates/sidebar_home.inc.php:114
 msgid "Videos"
@@ -1997,8 +2017,8 @@ msgid "Personal Videos"
 msgstr "Személyes videók"
 
 #: ../../lib/class/browse.class.php:331 ../../server/search.ajax.php:179
-#: ../../templates/show_artist.inc.php:208
-#: ../../templates/show_artist.inc.php:268
+#: ../../templates/show_artist.inc.php:218
+#: ../../templates/show_artist.inc.php:278
 #: ../../templates/show_edit_artist_row.inc.php:58
 #: ../../templates/show_search_bar.inc.php:38
 #: ../../templates/sidebar_home.inc.php:43
@@ -2023,57 +2043,57 @@ msgstr "Podcast epizódok"
 msgid "More"
 msgstr "Több"
 
-#: ../../lib/class/catalog.class.php:283 ../../templates/show_arts.inc.php:51
+#: ../../lib/class/catalog.class.php:280 ../../templates/show_arts.inc.php:51
 #: ../../templates/show_disabled_songs.inc.php:27
 #: ../../templates/show_disabled_songs.inc.php:55
 #: ../../templates/show_pvmsg_row.inc.php:23
 msgid "Select"
 msgstr "Kiválaszt"
 
-#: ../../lib/class/catalog.class.php:550 ../../lib/class/catalog.class.php:553
-#: ../../lib/class/catalog.class.php:556 ../../lib/class/user.class.php:1079
-#: ../../lib/preferences.php:354 ../../templates/show_user.inc.php:23
+#: ../../lib/class/catalog.class.php:547 ../../lib/class/catalog.class.php:550
+#: ../../lib/class/catalog.class.php:553 ../../lib/class/user.class.php:1079
+#: ../../lib/preferences.php:353 ../../templates/show_user.inc.php:23
 #: ../../templates/show_users.inc.php:70
 msgid "Never"
 msgstr "Soha"
 
-#: ../../lib/class/catalog.class.php:636
+#: ../../lib/class/catalog.class.php:633
 msgid "day"
 msgid_plural "days"
-msgstr[0] "napok"
-msgstr[1] "nap"
+msgstr[0] "nap"
+msgstr[1] "napok"
 
-#: ../../lib/class/catalog.class.php:638
+#: ../../lib/class/catalog.class.php:635
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] "órák"
-msgstr[1] "óra"
+msgstr[0] "óra"
+msgstr[1] "órák"
 
-#: ../../lib/class/catalog.class.php:683
+#: ../../lib/class/catalog.class.php:680
 msgid "Failed to create the catalog, check the debug logs"
 msgstr "Nem sikerült a katalógus létrehozása, ellenőrizd a debug logokat"
 
-#: ../../lib/class/catalog.class.php:1452
+#: ../../lib/class/catalog.class.php:1449
 msgid "Starting Album Art Dump"
 msgstr "Albumborító lerakat létrehozása"
 
 #. HINT: count of files written
-#: ../../lib/class/catalog.class.php:1503
+#: ../../lib/class/catalog.class.php:1500
 #, php-format
 msgid "Art files written: %s"
 msgstr "Borítófájlok kiírva: %s"
 
 #. HINT: filename (file path)
-#: ../../lib/class/catalog.class.php:1510
+#: ../../lib/class/catalog.class.php:1507
 #, php-format
 msgid "Couldn't get write to create art file: %s"
 msgstr "Nem sikerült a borítófájl kiírása: %s"
 
-#: ../../lib/class/catalog.class.php:1517
+#: ../../lib/class/catalog.class.php:1514
 msgid "Album Art Dump Complete"
 msgstr "Albumborító lerakat elkészült"
 
-#: ../../lib/class/catalog.class.php:1600
+#: ../../lib/class/catalog.class.php:1597
 #: ../../templates/show_duplicates.inc.php:27
 #: ../../templates/show_duplicates.inc.php:70
 #: ../../templates/show_lyrics.inc.php:37
@@ -2085,54 +2105,54 @@ msgstr "Albumborító lerakat elkészült"
 msgid "Song"
 msgstr "Dal"
 
-#: ../../lib/class/catalog.class.php:1600
+#: ../../lib/class/catalog.class.php:1597
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:59 ../../templates/show_user.inc.php:94
 msgid "Status"
 msgstr "Állapot"
 
-#: ../../lib/class/catalog.class.php:1616 ../../lib/class/search.class.php:659
+#: ../../lib/class/catalog.class.php:1611 ../../lib/class/search.class.php:696
 #: ../../modules/catalog/remote/remote.catalog.php:285
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:308
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:273
 msgid "Updated"
 msgstr "Frissítve"
 
-#: ../../lib/class/catalog.class.php:1621 ../../lib/class/update.class.php:231
+#: ../../lib/class/catalog.class.php:1616 ../../lib/class/update.class.php:234
 msgid "No Update Needed"
 msgstr "Frissítés nem szükséges"
 
-#: ../../lib/class/catalog.class.php:1983
+#: ../../lib/class/catalog.class.php:1989
 msgid "Catalog Cleaned"
 msgstr "Katalógus megtisztítva"
 
-#: ../../lib/class/catalog.class.php:1983
+#: ../../lib/class/catalog.class.php:1989
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] "%d fájl eltávolítva."
 msgstr[1] "%d fájl eltávolítva."
 
-#: ../../lib/class/catalog.class.php:2008
+#: ../../lib/class/catalog.class.php:2014
 msgid "Catalog Verified"
 msgstr "Katalógus ellenőrizve"
 
-#: ../../lib/class/catalog.class.php:2008
+#: ../../lib/class/catalog.class.php:2014
 #, php-format
 msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] "%d fájl frissítve."
 msgstr[1] "%d fájl frissítve."
 
-#: ../../lib/class/catalog.class.php:2233
+#: ../../lib/class/catalog.class.php:2239
 msgid "Failed to create playlist"
 msgstr "Nem sikerült a lejátszási lista létrehozása"
 
-#: ../../lib/class/catalog.class.php:2254
+#: ../../lib/class/catalog.class.php:2260
 msgid "No valid songs found in playlist file"
 msgstr "Nincs érvényes dal a lejátszásilista-fájlban"
 
-#: ../../lib/class/catalog.class.php:2613
+#: ../../lib/class/catalog.class.php:2619
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
@@ -2170,7 +2190,7 @@ msgstr "perc"
 msgid "Primary"
 msgstr "Elsődleges"
 
-#: ../../lib/class/label.class.php:155 ../../lib/class/search.class.php:589
+#: ../../lib/class/label.class.php:155 ../../lib/class/search.class.php:626
 #: ../../templates/show_edit_song_row.inc.php:76
 #: ../../templates/show_labels.inc.php:43
 #: ../../templates/show_labels.inc.php:73 ../../templates/show_song.inc.php:150
@@ -2205,8 +2225,8 @@ msgid "Paused"
 msgstr "Szüneteltetve"
 
 #: ../../lib/class/localplay.class.php:636
-#: ../../lib/class/playlist.class.php:205
-#: ../../lib/class/playlist.class.php:206 ../../lib/class/podcast.class.php:312
+#: ../../lib/class/playlist.class.php:207
+#: ../../lib/class/playlist.class.php:208 ../../lib/class/podcast.class.php:312
 #: ../../lib/class/tvshow_episode.class.php:71
 #: ../../lib/class/user.class.php:1086 ../../lib/class/user.class.php:1176
 #: ../../lib/class/video.class.php:796
@@ -2251,8 +2271,8 @@ msgid "Can not read the feed"
 msgstr "A feed nem olvasható"
 
 #: ../../lib/class/podcast_episode.class.php:164
-#: ../../lib/class/search.class.php:501 ../../lib/class/search.class.php:798
-#: ../../lib/class/song.class.php:1674 ../../lib/class/video.class.php:314
+#: ../../lib/class/search.class.php:538 ../../lib/class/search.class.php:871
+#: ../../lib/class/song.class.php:1690 ../../lib/class/video.class.php:314
 #: ../../templates/show_democratic_playlist.inc.php:57
 #: ../../templates/show_democratic_playlist.inc.php:106
 #: ../../templates/show_disabled_songs.inc.php:28
@@ -2347,116 +2367,140 @@ msgstr "Egy új felhasználó lett engedélyezve. %s"
 msgid "You can log in at the following address %s"
 msgstr "A következő címen jelentkezhetsz be: %s"
 
-#: ../../lib/class/search.class.php:102
+#: ../../lib/class/search.class.php:103
 msgid "is greater than or equal to"
 msgstr "nagyobb vagy egyenlő"
 
-#: ../../lib/class/search.class.php:108
+#: ../../lib/class/search.class.php:109
 msgid "is less than or equal to"
 msgstr "kisebb vagy egyenlő"
 
-#: ../../lib/class/search.class.php:114 ../../lib/class/search.class.php:182
-#: ../../lib/class/search.class.php:237 ../../lib/class/search.class.php:249
-#: ../../lib/class/search.class.php:261
+#: ../../lib/class/search.class.php:115 ../../lib/class/search.class.php:183
+#: ../../lib/class/search.class.php:238 ../../lib/class/search.class.php:250
+#: ../../lib/class/search.class.php:262
 msgid "is"
 msgstr "pontosan"
 
-#: ../../lib/class/search.class.php:120 ../../lib/class/search.class.php:188
-#: ../../lib/class/search.class.php:243 ../../lib/class/search.class.php:255
-#: ../../lib/class/search.class.php:267
+#: ../../lib/class/search.class.php:121 ../../lib/class/search.class.php:189
+#: ../../lib/class/search.class.php:244 ../../lib/class/search.class.php:256
+#: ../../lib/class/search.class.php:268
 msgid "is not"
 msgstr "nem egyezik"
 
-#: ../../lib/class/search.class.php:126
+#: ../../lib/class/search.class.php:127
 msgid "is greater than"
 msgstr "nagyobb"
 
-#: ../../lib/class/search.class.php:132
+#: ../../lib/class/search.class.php:133
 msgid "is less than"
 msgstr "kisebb"
 
-#: ../../lib/class/search.class.php:138
+#: ../../lib/class/search.class.php:139
 msgid "is true"
 msgstr "igaz"
 
-#: ../../lib/class/search.class.php:144
+#: ../../lib/class/search.class.php:145
 msgid "is false"
 msgstr "hamis"
 
-#: ../../lib/class/search.class.php:150 ../../lib/class/search.class.php:205
+#: ../../lib/class/search.class.php:151 ../../lib/class/search.class.php:206
 msgid "contains"
 msgstr "tartalmaz"
 
-#: ../../lib/class/search.class.php:158 ../../lib/class/search.class.php:213
+#: ../../lib/class/search.class.php:159 ../../lib/class/search.class.php:214
 msgid "does not contain"
 msgstr "nem tartalmaz"
 
-#: ../../lib/class/search.class.php:166 ../../lib/class/search.class.php:221
+#: ../../lib/class/search.class.php:167 ../../lib/class/search.class.php:222
 msgid "starts with"
-msgstr "kezdődik"
+msgstr "a kezdete"
 
-#: ../../lib/class/search.class.php:174 ../../lib/class/search.class.php:229
+#: ../../lib/class/search.class.php:175 ../../lib/class/search.class.php:230
 msgid "ends with"
 msgstr "végződik"
 
-#: ../../lib/class/search.class.php:194
+#: ../../lib/class/search.class.php:195
 msgid "sounds like"
 msgstr "hasonlít"
 
-#: ../../lib/class/search.class.php:200
+#: ../../lib/class/search.class.php:201
 msgid "does not sound like"
 msgstr "nem hasonlít"
 
-#: ../../lib/class/search.class.php:273
+#: ../../lib/class/search.class.php:274
 msgid "before"
 msgstr "előtt"
 
-#: ../../lib/class/search.class.php:279
+#: ../../lib/class/search.class.php:280
 msgid "after"
 msgstr "után"
 
-#: ../../lib/class/search.class.php:285
+#: ../../lib/class/search.class.php:286
 msgid "before (x) days ago"
 msgstr "(x) nappal előtte"
 
-#: ../../lib/class/search.class.php:291
+#: ../../lib/class/search.class.php:292
 msgid "after (x) days ago"
 msgstr "(x) nappal utána"
 
-#: ../../lib/class/search.class.php:307
+#: ../../lib/class/search.class.php:298
+msgid "has loved"
+msgstr ""
+
+#: ../../lib/class/search.class.php:304
+msgid "has rated 5 stars"
+msgstr ""
+
+#: ../../lib/class/search.class.php:310
+msgid "has rated 4 stars"
+msgstr ""
+
+#: ../../lib/class/search.class.php:316
+msgid "has rated 3 stars"
+msgstr ""
+
+#: ../../lib/class/search.class.php:322
+msgid "has rated 2 stars"
+msgstr ""
+
+#: ../../lib/class/search.class.php:328
+msgid "has rated 1 star"
+msgstr ""
+
+#: ../../lib/class/search.class.php:344
 msgid "Length (in minutes)"
 msgstr "Hossz (percben)"
 
-#: ../../lib/class/search.class.php:322
+#: ../../lib/class/search.class.php:359
 msgid "My Rating (Artist)"
 msgstr "Értékelésem (Előadó)"
 
-#: ../../lib/class/search.class.php:346
+#: ../../lib/class/search.class.php:383
 msgid "My Rating (Album)"
 msgstr "Értékelésem (Album)"
 
-#: ../../lib/class/search.class.php:370
+#: ../../lib/class/search.class.php:407
 msgid "Image Height"
 msgstr "Kép magasság"
 
-#: ../../lib/class/search.class.php:385
+#: ../../lib/class/search.class.php:422
 msgid "Image Width"
 msgstr "Kép szélesség"
 
-#: ../../lib/class/search.class.php:400
+#: ../../lib/class/search.class.php:437
 msgid "My Last Play"
 msgstr "Utolsó Lejátszásom"
 
-#: ../../lib/class/search.class.php:415
+#: ../../lib/class/search.class.php:452
 msgid "Rating (Average)"
 msgstr "Értékelés (Átlag)"
 
-#: ../../lib/class/search.class.php:439
+#: ../../lib/class/search.class.php:476
 msgid "My Rating"
 msgstr "Értékelésem"
 
 #. HINT: Number of times object has been played
-#: ../../lib/class/search.class.php:464 ../../templates/show_albums.inc.php:45
+#: ../../lib/class/search.class.php:501 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:114
 #: ../../templates/show_artists.inc.php:45
 #: ../../templates/show_artists.inc.php:115
@@ -2468,23 +2512,23 @@ msgstr "Értékelésem"
 msgid "# Played"
 msgstr "# Lejátszva"
 
-#: ../../lib/class/search.class.php:479 ../../templates/header.inc.php:38
+#: ../../lib/class/search.class.php:516 ../../templates/header.inc.php:38
 #: ../../templates/sidebar_home.inc.php:163
 msgid "Favorites"
 msgstr "Kedvencek"
 
-#: ../../lib/class/search.class.php:494
+#: ../../lib/class/search.class.php:531
 msgid "Any searchable text"
 msgstr "Bármely kereshető szöveg"
 
-#: ../../lib/class/search.class.php:522
+#: ../../lib/class/search.class.php:559
 #: ../../templates/show_edit_song_row.inc.php:68
 #: ../../templates/show_song.inc.php:141
 msgid "Composer"
 msgstr "Szerző"
 
-#: ../../lib/class/search.class.php:529 ../../lib/class/search.class.php:754
-#: ../../lib/class/search.class.php:812
+#: ../../lib/class/search.class.php:566 ../../lib/class/search.class.php:815
+#: ../../lib/class/search.class.php:885
 #: ../../templates/show_add_catalog.inc.php:45
 #: ../../templates/show_albums.inc.php:43
 #: ../../templates/show_albums.inc.php:112
@@ -2505,21 +2549,20 @@ msgstr "Szerző"
 msgid "Year"
 msgstr "Év"
 
-#: ../../lib/class/search.class.php:543 ../../lib/class/search.class.php:770
-#: ../../lib/class/search.class.php:834 ../../lib/class/tag.class.php:758
+#: ../../lib/class/search.class.php:580 ../../lib/class/search.class.php:831
+#: ../../lib/class/search.class.php:919 ../../lib/class/tag.class.php:778
 msgid "Tag"
 msgstr "Címke"
 
-#: ../../lib/class/search.class.php:550
+#: ../../lib/class/search.class.php:587
 msgid "Album tag"
 msgstr "Album címke"
 
-#: ../../lib/class/search.class.php:557
-#, fuzzy
+#: ../../lib/class/search.class.php:594
 msgid "Artist tag"
-msgstr "Előadó szerkesztés"
+msgstr "Előadócímke"
 
-#: ../../lib/class/search.class.php:564 ../../lib/class/search.class.php:865
+#: ../../lib/class/search.class.php:601 ../../lib/class/search.class.php:950
 #: ../../templates/show_disabled_songs.inc.php:31
 #: ../../templates/show_disabled_songs.inc.php:59
 #: ../../templates/show_duplicates.inc.php:33
@@ -2529,7 +2572,7 @@ msgstr "Előadó szerkesztés"
 msgid "Filename"
 msgstr "Fájlnév"
 
-#: ../../lib/class/search.class.php:582
+#: ../../lib/class/search.class.php:619
 #: ../../templates/show_add_catalog.inc.php:39
 #: ../../templates/show_edit_catalog.inc.php:34
 #: ../../templates/show_edit_song_row.inc.php:72
@@ -2539,7 +2582,7 @@ msgstr "Fájlnév"
 msgid "Comment"
 msgstr "Megjegyzés"
 
-#: ../../lib/class/search.class.php:597
+#: ../../lib/class/search.class.php:634
 #: ../../templates/show_add_channel.inc.php:101
 #: ../../templates/show_channels.inc.php:38
 #: ../../templates/show_duplicates.inc.php:31
@@ -2549,29 +2592,29 @@ msgstr "Megjegyzés"
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: ../../lib/class/search.class.php:624 ../../templates/show_album.inc.php:78
+#: ../../lib/class/search.class.php:661 ../../templates/show_album.inc.php:78
 #: ../../templates/show_artist.inc.php:72
 msgid "Played"
 msgstr "Lejátszva"
 
-#: ../../lib/class/search.class.php:631
+#: ../../lib/class/search.class.php:668
 msgid "Played by Me"
 msgstr "Általam lejátszva"
 
-#: ../../lib/class/search.class.php:638
+#: ../../lib/class/search.class.php:675
 msgid "Played by Me (Album)"
 msgstr "Általam lejátszva (Album)"
 
-#: ../../lib/class/search.class.php:645
+#: ../../lib/class/search.class.php:682
 msgid "Played by Me (Artist)"
 msgstr "Általam lejátszva (Előadó)"
 
-#: ../../lib/class/search.class.php:652 ../../templates/show_song.inc.php:168
+#: ../../lib/class/search.class.php:689 ../../templates/show_song.inc.php:168
 #: ../../templates/show_video.inc.php:144
 msgid "Added"
 msgstr "Hozzáadva"
 
-#: ../../lib/class/search.class.php:672 ../../lib/class/search.class.php:847
+#: ../../lib/class/search.class.php:709 ../../lib/class/search.class.php:932
 #: ../../templates/browse_filters.inc.php:79
 #: ../../templates/show_add_live_stream.inc.php:54
 #: ../../templates/show_add_podcast.inc.php:33
@@ -2579,7 +2622,7 @@ msgstr "Hozzáadva"
 msgid "Catalog"
 msgstr "Katalógus"
 
-#: ../../lib/class/search.class.php:685 ../../lib/ui.lib.php:139
+#: ../../lib/class/search.class.php:722 ../../lib/ui.lib.php:138
 #: ../../templates/show_manage_democratic.inc.php:26
 #: ../../templates/show_playlist_title.inc.php:23
 #: ../../templates/sidebar_home.inc.php:100
@@ -2588,7 +2631,21 @@ msgstr "Katalógus"
 msgid "Playlist"
 msgstr "Lejátszási lista"
 
-#: ../../lib/class/search.class.php:692
+#: ../../lib/class/search.class.php:734 ../../lib/class/search.class.php:847
+#: ../../lib/class/search.class.php:912
+#, fuzzy
+msgid "Another User"
+msgstr "Újabb szabály hozzáadása"
+
+#: ../../lib/class/search.class.php:740
+msgid "Another User (Album)"
+msgstr ""
+
+#: ../../lib/class/search.class.php:746
+msgid "Another User (Artist)"
+msgstr ""
+
+#: ../../lib/class/search.class.php:753
 #: ../../templates/show_playlists_dialog.inc.php:25
 #: ../../templates/show_playlists.inc.php:33
 #: ../../templates/show_playlists.inc.php:81
@@ -2597,27 +2654,27 @@ msgstr "Lejátszási lista"
 msgid "Playlist Name"
 msgstr "Lejátszási lista neve"
 
-#: ../../lib/class/search.class.php:706
+#: ../../lib/class/search.class.php:767
 msgid "Smart Playlist"
 msgstr "Okos Lejátszási lista"
 
-#: ../../lib/class/search.class.php:718
+#: ../../lib/class/search.class.php:779
 msgid "Metadata"
 msgstr "Metaadat"
 
-#: ../../lib/class/search.class.php:732
-#: ../../templates/show_add_upload.inc.php:169
+#: ../../lib/class/search.class.php:793
+#: ../../templates/show_add_upload.inc.php:198
 #: ../../templates/show_edit_song_row.inc.php:92
 msgid "Music License"
 msgstr "Zene Licensz"
 
-#: ../../lib/class/search.class.php:764
+#: ../../lib/class/search.class.php:825
 #: ../../templates/show_concerts.inc.php:27
 #: ../../templates/show_concerts.inc.php:53
 msgid "Place"
 msgstr "Hely"
 
-#: ../../lib/class/search.class.php:901
+#: ../../lib/class/search.class.php:986
 #: ../../templates/show_add_label.inc.php:33
 #: ../../templates/show_edit_label_row.inc.php:30
 #: ../../templates/show_edit_podcast_episode_row.inc.php:42
@@ -2687,12 +2744,12 @@ msgstr "Shout küldése"
 msgid "by"
 msgstr "tőle:"
 
-#: ../../lib/class/song.class.php:1639
+#: ../../lib/class/song.class.php:1655
 #: ../../templates/show_html5_player.inc.php:157
 msgid "Show Lyrics"
 msgstr "Dalszöveg mutatása"
 
-#: ../../lib/class/song.class.php:1668
+#: ../../lib/class/song.class.php:1684
 msgid "Track MusicBrainzID"
 msgstr "Szám MusicBrainzID"
 
@@ -2735,7 +2792,7 @@ msgstr "Évad"
 msgid "Episode"
 msgstr "Epizód"
 
-#: ../../lib/class/update.class.php:233
+#: ../../lib/class/update.class.php:236
 msgid "Return to main page"
 msgstr "Vissza a főoldalra"
 
@@ -2780,7 +2837,7 @@ msgstr "valamit módosított"
 msgid "Username is required"
 msgstr "Felhasználónév szükséges"
 
-#: ../../lib/class/user.class.php:623 ../../lib/install.lib.php:365
+#: ../../lib/class/user.class.php:623 ../../lib/install.lib.php:364
 #: ../../register.php:127
 msgid "Passwords do not match"
 msgstr "A jelszavak nem egyeznek"
@@ -3541,19 +3598,19 @@ msgstr "Zulu"
 msgid "Unknown Artist"
 msgstr "Ismeretlen Előadó"
 
-#: ../../lib/class/wanted.class.php:414
+#: ../../lib/class/wanted.class.php:415
 msgid "Accept"
 msgstr "Elfogad"
 
-#: ../../lib/class/wanted.class.php:418 ../../lib/javascript/search-data.php:52
+#: ../../lib/class/wanted.class.php:419 ../../lib/javascript/search-data.php:52
 msgid "Remove"
 msgstr "Eltávolít"
 
-#: ../../lib/class/wanted.class.php:421
+#: ../../lib/class/wanted.class.php:422
 msgid "Add to wanted list"
 msgstr "Hozzáadás a keresett listához"
 
-#: ../../lib/class/xml_data.class.php:1055
+#: ../../lib/class/xml_data.class.php:1037
 msgid "Ampache XSPF Playlist"
 msgstr "Ampache XSPF Lejátszási lista"
 
@@ -3572,8 +3629,9 @@ msgstr "Hiba"
 msgid "Unknown %s"
 msgstr "Ismeretlen %s"
 
-#: ../../lib/init-tiny.php:27
-msgid "Ampache requires PHP version >= 5.4"
+#: ../../lib/init-tiny.php:27 ../../lib/init-tiny.php:28
+#, fuzzy
+msgid "Ampache requires PHP version >= 7.1"
 msgstr "Az Ampache futtatásához 5.4 vagy nagyobb PHP verzió szükséges"
 
 #: ../../lib/install.lib.php:85
@@ -3589,33 +3647,33 @@ msgstr "Az adatbázis lekérdezése nem sikerült, ellenőrizd az Ampache config
 msgid "Existing database was detected, unable to continue the installation"
 msgstr "Már létező adatbázis észlelve, a telepítés nem folytatható"
 
-#: ../../lib/install.lib.php:167
+#: ../../lib/install.lib.php:168
 msgid "Failed to write config file"
 msgstr "Nem sikerült a config fájl írása"
 
-#: ../../lib/install.lib.php:194
+#: ../../lib/install.lib.php:196
 msgid "Database name is invalid"
 msgstr "Az adatbázis neve érvénytelen"
 
 #. HINT: Database error message
-#: ../../lib/install.lib.php:201
+#: ../../lib/install.lib.php:203
 #, php-format
 msgid "Unable to connect to the database: %s"
 msgstr "Nem sikerült az adatbázishoz kapcsolódni: %s"
 
-#: ../../lib/install.lib.php:212
+#: ../../lib/install.lib.php:214
 msgid "Database already exists and \"overwrite\" was not checked"
 msgstr ""
 "Az adatbázis már létezik és a felülírás (\"overwrite\") nem volt bekapcsolva"
 
 #. HINT: Database error message
-#: ../../lib/install.lib.php:221
+#: ../../lib/install.lib.php:223
 #, php-format
 msgid "Unable to create the database: %s"
 msgstr "Nem sikerült az adatbázis létrehozása: %s"
 
 #. HINT: %1 user, %2 database, %3 host, %4 error message
-#: ../../lib/install.lib.php:246
+#: ../../lib/install.lib.php:243
 #, php-format
 msgid ""
 "Unable to create the user \"%1$s\" with permissions to \"%2$s\" on \"%3$s\": "
@@ -3625,7 +3683,7 @@ msgstr ""
 "itt: \"%3$s\" -  %4$s"
 
 #. HINT: %1 database, %2 user, %3 host, %4 error message
-#: ../../lib/install.lib.php:260
+#: ../../lib/install.lib.php:257
 #, php-format
 msgid ""
 "Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": "
@@ -3634,45 +3692,45 @@ msgstr ""
 "Nem sikerült a \"%1$s\" jogosultság hozzárendelése \"%2$s\" felhasználóhoz "
 "itt: \"%3$s\" - %4$s"
 
-#: ../../lib/install.lib.php:313
+#: ../../lib/install.lib.php:311
 msgid "Invalid configuration settings"
 msgstr "Érvénytelen konfigurációs beállítás"
 
-#: ../../lib/install.lib.php:320
+#: ../../lib/install.lib.php:318
 msgid ""
 "Connection to the database failed: Check hostname, username and password"
 msgstr ""
 "Nem sikerült kapcsolódni az adatbázishoz. Ellenőrizd a kiszolgáló nevét, a "
 "felhasználónevet és a jelszót"
 
-#: ../../lib/install.lib.php:330
+#: ../../lib/install.lib.php:328
 msgid "Config file is not writable"
 msgstr "A config fájl nem írható"
 
-#: ../../lib/install.lib.php:336
+#: ../../lib/install.lib.php:334
 msgid "Failed writing config file"
 msgstr "Nem sikerült a config fájl írása"
 
-#: ../../lib/install.lib.php:359
+#: ../../lib/install.lib.php:358
 #: ../../modules/catalog/remote/remote.catalog.php:150
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:152
 msgid "No username or password was specified"
 msgstr "Nem volt megadva felhasználónév vagy jelszó"
 
 #. HINT: Database error message
-#: ../../lib/install.lib.php:372
+#: ../../lib/install.lib.php:371
 #, php-format
 msgid "Connection to the database failed: %s"
 msgstr "A kapcsolódás az adatbázishoz sikertelen: %s"
 
 #. HINT: Database error message
-#: ../../lib/install.lib.php:379
+#: ../../lib/install.lib.php:378
 #, php-format
 msgid "Database select failed: %s"
 msgstr "Adatbázis kiválasztása nem sikerült: %s"
 
 #. HINT: Database error message
-#: ../../lib/install.lib.php:391
+#: ../../lib/install.lib.php:390
 #, php-format
 msgid "Administrative user creation failed: %s"
 msgstr "Adminisztratív felhasználó létrehozása nem sikerült: %s"
@@ -3689,7 +3747,7 @@ msgstr "A felhasználó már belépett"
 msgid "Unable to create a local account"
 msgstr "Nem sikerült a helyi fiók létrehozása"
 
-#: ../../lib/preferences.php:221 ../../lib/preferences.php:368
+#: ../../lib/preferences.php:220 ../../lib/preferences.php:367
 #: ../../server/catalog.ajax.php:52 ../../server/song.ajax.php:52
 #: ../../templates/show_catalog_row.inc.php:30
 #: ../../templates/show_disabled_songs.inc.php:65
@@ -3702,7 +3760,7 @@ msgstr "Nem sikerült a helyi fiók létrehozása"
 msgid "Enable"
 msgstr "Engedélyez"
 
-#: ../../lib/preferences.php:222 ../../lib/preferences.php:369
+#: ../../lib/preferences.php:221 ../../lib/preferences.php:368
 #: ../../server/catalog.ajax.php:49 ../../server/song.ajax.php:49
 #: ../../templates/show_catalog_row.inc.php:27
 #: ../../templates/show_catalog_types.inc.php:44
@@ -3717,8 +3775,8 @@ msgstr "Engedélyez"
 msgid "Disable"
 msgstr "Letilt"
 
-#: ../../lib/preferences.php:247 ../../lib/preferences.php:284
-#: ../../lib/ui.lib.php:421 ../../lib/ui.lib.php:512
+#: ../../lib/preferences.php:246 ../../lib/preferences.php:283
+#: ../../lib/ui.lib.php:420 ../../lib/ui.lib.php:511
 #: ../../templates/show_adds_catalog.inc.php:27
 #: ../../templates/show_gather_art.inc.php:25
 #: ../../templates/show_install_config.inc.php:140
@@ -3728,13 +3786,13 @@ msgstr "Letilt"
 msgid "None"
 msgstr "Nincs"
 
-#: ../../lib/preferences.php:249 ../../templates/show_edit_user.inc.php:155
+#: ../../lib/preferences.php:248 ../../templates/show_edit_user.inc.php:155
 #: ../../templates/show_live_stream.inc.php:47
 #: ../../templates/show_playtype_switch.inc.php:33
 msgid "Stream"
 msgstr "Stream"
 
-#: ../../lib/preferences.php:252
+#: ../../lib/preferences.php:251
 #: ../../modules/localplay/httpq/httpq.controller.php:482
 #: ../../modules/localplay/mpd/mpd.controller.php:460
 #: ../../modules/localplay/vlc/vlc.controller.php:489
@@ -3744,7 +3802,7 @@ msgstr "Stream"
 msgid "Democratic"
 msgstr "Demokratikus"
 
-#: ../../lib/preferences.php:255 ../../lib/ui.lib.php:133
+#: ../../lib/preferences.php:254 ../../lib/ui.lib.php:132
 #: ../../templates/show_edit_user.inc.php:153
 #: ../../templates/show_playtype_switch.inc.php:39
 #: ../../templates/sidebar_home.inc.php:142 ../../templates/sidebar.inc.php:34
@@ -3752,186 +3810,188 @@ msgstr "Demokratikus"
 msgid "Localplay"
 msgstr "Localplay"
 
-#: ../../lib/preferences.php:257
+#: ../../lib/preferences.php:256
 #: ../../templates/show_playtype_switch.inc.php:50
 msgid "Web Player"
 msgstr "Web Lejátszó"
 
-#: ../../lib/preferences.php:264
+#: ../../lib/preferences.php:263
 msgid "M3U"
 msgstr "M3U"
 
-#: ../../lib/preferences.php:265
+#: ../../lib/preferences.php:264
 msgid "Simple M3U"
 msgstr "Egyszerű M3U"
 
-#: ../../lib/preferences.php:266
+#: ../../lib/preferences.php:265
 msgid "PLS"
 msgstr "PLS"
 
-#: ../../lib/preferences.php:267
+#: ../../lib/preferences.php:266
 msgid "Asx"
 msgstr "Asx"
 
-#: ../../lib/preferences.php:268
+#: ../../lib/preferences.php:267
 msgid "RAM"
 msgstr "RAM"
 
-#: ../../lib/preferences.php:269
+#: ../../lib/preferences.php:268
 msgid "XSPF"
 msgstr "XSPF"
 
-#: ../../lib/preferences.php:311
+#: ../../lib/preferences.php:310
 msgid "Manager"
 msgstr "Menedzser"
 
-#: ../../lib/preferences.php:345
+#: ../../lib/preferences.php:344
 msgid "Send on Add"
 msgstr "Küldés hozzáadáskor"
 
-#: ../../lib/preferences.php:346
+#: ../../lib/preferences.php:345
 msgid "Send and Clear on Add"
 msgstr "Küldés és eltüntetés hozzáadáskor"
 
-#: ../../lib/preferences.php:347
+#: ../../lib/preferences.php:346
 msgid "Clear on Send"
 msgstr "Eltüntetés hozzáadáskor"
 
-#: ../../lib/preferences.php:348 ../../lib/preferences.php:355
-#: ../../lib/preferences.php:391
+#: ../../lib/preferences.php:347 ../../lib/preferences.php:354
+#: ../../lib/preferences.php:390
 #: ../../templates/show_install_config.inc.php:114
 #: ../../templates/show_manage_democratic.inc.php:30
 msgid "Default"
 msgstr "Alapértelmezett"
 
-#: ../../lib/preferences.php:356
+#: ../../lib/preferences.php:355
 msgid "Always"
 msgstr "Mindig"
 
-#: ../../lib/preferences.php:392
+#: ../../lib/preferences.php:391
 msgid "Year ascending"
 msgstr "Év növekvő"
 
-#: ../../lib/preferences.php:393
+#: ../../lib/preferences.php:392
 msgid "Year descending"
 msgstr "Év csökkenő"
 
-#: ../../lib/preferences.php:394
+#: ../../lib/preferences.php:393
 msgid "Name ascending"
 msgstr "Név növekvő"
 
-#: ../../lib/preferences.php:395
+#: ../../lib/preferences.php:394
 msgid "Name descending"
 msgstr "Név csökkenő"
 
 #. HINT: Plugin Name
-#: ../../lib/preferences.php:417
+#: ../../lib/preferences.php:416
 #, php-format
 msgid "Click to grant %s access to Ampache"
 msgstr "Klikkelj a %s jogosultság hozzáadásához az Ampache-hoz"
 
-#: ../../lib/rating.lib.php:44
+#: ../../lib/rating.lib.php:43
 msgid "Don't Play"
 msgstr "Ne játszd le"
 
-#: ../../lib/rating.lib.php:46
+#: ../../lib/rating.lib.php:45
 msgid "It's Pretty Bad"
 msgstr "Elég rossz"
 
-#: ../../lib/rating.lib.php:48
+#: ../../lib/rating.lib.php:47
 msgid "It's Ok"
 msgstr "Elmegy"
 
-#: ../../lib/rating.lib.php:50
+#: ../../lib/rating.lib.php:49
 msgid "It's Pretty Good"
 msgstr "Egész jó"
 
-#: ../../lib/rating.lib.php:52
+#: ../../lib/rating.lib.php:51
 msgid "I Love It!"
 msgstr "Szeretem!"
 
-#: ../../lib/rating.lib.php:54
+#: ../../lib/rating.lib.php:53
 msgid "It's Insane"
 msgstr "Őrületes"
 
-#: ../../lib/rating.lib.php:57
+#: ../../lib/rating.lib.php:56
 msgid "Off the Charts!"
 msgstr "Nincs rá szó!"
 
-#: ../../lib/ui.lib.php:127 ../../templates/header.inc.php:32
+#: ../../lib/ui.lib.php:126 ../../templates/header.inc.php:32
 msgid "Home"
 msgstr "Kezdőlap"
 
-#: ../../lib/ui.lib.php:130 ../../templates/header.inc.php:39
+#: ../../lib/ui.lib.php:129 ../../templates/header.inc.php:39
 #: ../../templates/show_add_upload.inc.php:25
+#: ../../templates/show_album.inc.php:186
+#: ../../templates/show_artist.inc.php:170
 #: ../../templates/sidebar_home.inc.php:63
 msgid "Upload"
 msgstr "Feltöltés"
 
-#: ../../lib/ui.lib.php:136
+#: ../../lib/ui.lib.php:135
 msgid "Random Play"
 msgstr "Véletlenszerű lejátszás"
 
-#: ../../lib/ui.lib.php:142 ../../templates/show_search_bar.inc.php:23
-#: ../../templates/show_search_form.inc.php:80
+#: ../../lib/ui.lib.php:141 ../../templates/show_search_bar.inc.php:23
+#: ../../templates/show_search_form.inc.php:85
 #: ../../templates/sidebar_home.inc.php:30
 msgid "Search"
 msgstr "Keresés"
 
-#: ../../lib/ui.lib.php:145 ../../templates/show_preference_admin.inc.php:23
+#: ../../lib/ui.lib.php:144 ../../templates/show_preference_admin.inc.php:23
 #: ../../templates/show_user.inc.php:62
 #: ../../templates/show_user_row.inc.php:67 ../../templates/sidebar.inc.php:36
 #: ../../templates/sidebar_preferences.inc.php:29
 msgid "Preferences"
 msgstr "Beállítások"
 
-#: ../../lib/ui.lib.php:148 ../../lib/ui.lib.php:152
+#: ../../lib/ui.lib.php:147 ../../lib/ui.lib.php:151
 msgid "Admin-Catalog"
 msgstr "Admin-Katalógus"
 
-#: ../../lib/ui.lib.php:156
+#: ../../lib/ui.lib.php:155
 msgid "Admin-User Management"
 msgstr "Admin-Felhasználókezelés"
 
-#: ../../lib/ui.lib.php:160
+#: ../../lib/ui.lib.php:159
 msgid "Admin-Mail Users"
 msgstr "Admin-Levelezés felhasználók"
 
-#: ../../lib/ui.lib.php:164
+#: ../../lib/ui.lib.php:163
 msgid "Admin-Manage Access Lists"
 msgstr "Admin-Elérési listák kezelése"
 
-#: ../../lib/ui.lib.php:168
+#: ../../lib/ui.lib.php:167
 msgid "Admin-Site Preferences"
 msgstr "Admin-Weboldal beállításai"
 
-#: ../../lib/ui.lib.php:172
+#: ../../lib/ui.lib.php:171
 msgid "Admin-Manage Modules"
 msgstr "Admin-Modulok kezelése"
 
-#: ../../lib/ui.lib.php:176 ../../templates/sidebar_home.inc.php:32
+#: ../../lib/ui.lib.php:175 ../../templates/sidebar_home.inc.php:32
 msgid "Browse Music"
 msgstr "Zene böngészése"
 
-#: ../../lib/ui.lib.php:188 ../../templates/show_stats.inc.php:25
+#: ../../lib/ui.lib.php:187 ../../templates/show_stats.inc.php:25
 #: ../../templates/sidebar_home.inc.php:180
 msgid "Statistics"
 msgstr "Statisztikák"
 
-#: ../../lib/ui.lib.php:255 ../../lib/ui.lib.php:308 ../../lib/ui.lib.php:353
-#: ../../lib/ui.lib.php:394
+#: ../../lib/ui.lib.php:254 ../../lib/ui.lib.php:307 ../../lib/ui.lib.php:352
+#: ../../lib/ui.lib.php:393
 msgid "Add New"
 msgstr "Új hozzáadása"
 
-#: ../../lib/ui.lib.php:475
+#: ../../lib/ui.lib.php:474
 msgid "View License"
 msgstr "Licensz megtekintése"
 
-#: ../../lib/ui.lib.php:666
+#: ../../lib/ui.lib.php:665
 msgid "On"
 msgstr "Be"
 
-#: ../../lib/ui.lib.php:668
+#: ../../lib/ui.lib.php:667
 msgid "Off"
 msgstr "Ki"
 
@@ -4048,7 +4108,7 @@ msgstr ""
 "Hiba: API Key, Secret és Access Token szükséges a Dropbox Katalógusokhoz"
 
 #: ../../modules/catalog/dropbox/dropbox.catalog.php:188
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:492
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:502
 msgid "Invalid \"API key\", \"secret\", or \"access token\": "
 msgstr "Érvénytelen \"API key\", \"secret\" vagy \"Access token\":"
 
@@ -4065,31 +4125,27 @@ msgstr "Hiba: a Katalógus %s már létezik"
 msgid "Running Dropbox Remote Update"
 msgstr "Dropbox távoli frissítés futtatása"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:259
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:261
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr "Katalógusfrissítés befejeződött. Összes média: [%s]"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:261
-msgid "No media updated, do you respect the patterns?"
-msgstr "Média nem lett frissítve, megfelelsz a mintáknak?"
-
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:478
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:488
 #, php-format
 msgid "Updated song \"%s\""
 msgstr "A \"%s\" Dal frissítve"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:481
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:491
 #, php-format
 msgid "Song up to date: \"%s\""
 msgstr "A Dal naprakész: \"%s\""
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:485
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:495
 #, php-format
 msgid "Removing song \"%s\""
 msgstr "\"%s\" Dal eltávolítása"
 
-#: ../../modules/catalog/dropbox/dropbox.catalog.php:521
+#: ../../modules/catalog/dropbox/dropbox.catalog.php:531
 msgid "API Error: cannot connect to Dropbox."
 msgstr "API Hiba: nem sikerült csatlakozni a Dropbox-hoz"
 
@@ -5033,7 +5089,7 @@ msgstr "Meg kell adnod egy jelszót"
 msgid "Failed to create user"
 msgstr "Nem sikerült a felhasználó létrehozása"
 
-#: ../../rest/index.php:48
+#: ../../rest/index.php:48 ../../server/json.server.php:43
 msgid "Access Control not Enabled"
 msgstr "Hozzáférés Szabályzás nincs engedélyezve"
 
@@ -5057,6 +5113,18 @@ msgstr ""
 "Nincs még Katalógus beállítva. Ahhoz, hogy a médiádat elérd, %1$s létre kell "
 "hoznod egy Katalógust %2$s"
 
+#: ../../server/json.server.php:54 ../../server/xml.server.php:55
+msgid "Session Expired"
+msgstr "A munkamenet lejárt"
+
+#: ../../server/json.server.php:67 ../../server/xml.server.php:73
+msgid "Unauthorized access attempt to API - ACL Error"
+msgstr "Jogosulatlan hozzáférési kísérlet az API-hoz - ACL Hiba"
+
+#: ../../server/json.server.php:103 ../../server/xml.server.php:114
+msgid "Invalid Request"
+msgstr "Érvénytelen kérés"
+
 #: ../../server/player.ajax.php:47
 #: ../../templates/show_html5_player.inc.php:454
 msgid "My Broadcast"
@@ -5079,18 +5147,6 @@ msgstr "Felhasználók"
 #: ../../server/xml.server.php:43
 msgid "Access Control not enabled"
 msgstr "Hozzáférés Szabályzás nincs engedélyezve"
-
-#: ../../server/xml.server.php:55
-msgid "Session Expired"
-msgstr "A munkamenet lejárt"
-
-#: ../../server/xml.server.php:73
-msgid "Unauthorized access attempt to API - ACL Error"
-msgstr "Jogosulatlan hozzáférési kísérlet az API-hoz - ACL Hiba"
-
-#: ../../server/xml.server.php:113
-msgid "Invalid Request"
-msgstr "Érvénytelen kérés"
 
 #: ../../share.php:79
 msgid "Share created"
@@ -5146,7 +5202,7 @@ msgstr "Szűrők"
 
 #: ../../templates/browse_filters.inc.php:33
 msgid "Starts With"
-msgstr "Kezdődik"
+msgstr "A kezdete"
 
 #: ../../templates/browse_filters.inc.php:41
 msgid "Minimum Count"
@@ -6010,24 +6066,28 @@ msgstr "Megjegyzés kiragasztása"
 msgid "Shoutbox"
 msgstr "Shoutbox"
 
-#: ../../templates/show_add_upload.inc.php:33
-#: ../../templates/show_add_upload.inc.php:151
+#: ../../templates/show_add_upload.inc.php:35
+#: ../../templates/show_add_upload.inc.php:153
 msgid "Target folder"
 msgstr "Cél mappa"
 
-#: ../../templates/show_add_upload.inc.php:181
+#: ../../templates/show_add_upload.inc.php:172
+msgid "Leave the artist and album fields blank to read file tags"
+msgstr ""
+
+#: ../../templates/show_add_upload.inc.php:212
 msgid "Files"
 msgstr "Fájlok"
 
-#: ../../templates/show_add_upload.inc.php:187
+#: ../../templates/show_add_upload.inc.php:218
 msgid "Allowed file type"
 msgstr "Engedélyezett fájltípusok"
 
-#: ../../templates/show_add_upload.inc.php:194
+#: ../../templates/show_add_upload.inc.php:225
 msgid "Drop File Here"
 msgstr "Fájlok dobása ide"
 
-#: ../../templates/show_add_upload.inc.php:195
+#: ../../templates/show_add_upload.inc.php:226
 msgid "Browse"
 msgstr "Böngészés"
 
@@ -6172,9 +6232,9 @@ msgstr "Feltöltötte"
 #: ../../templates/show_song.inc.php:110 ../../templates/show_user.inc.php:87
 #: ../../templates/show_video.inc.php:109
 msgid "Graphs"
-msgstr ""
+msgstr "Grafikonok"
 
-#: ../../templates/show_album.inc.php:190
+#: ../../templates/show_album.inc.php:200
 msgid "Edit Album"
 msgstr "Album szerkesztése"
 
@@ -6286,10 +6346,10 @@ msgid "No Album found"
 msgstr "Album nem található"
 
 #: ../../templates/show_artist.inc.php:47
-#: ../../templates/show_artist.inc.php:239
 #: ../../templates/show_artist.inc.php:249
 #: ../../templates/show_artist.inc.php:259
 #: ../../templates/show_artist.inc.php:269
+#: ../../templates/show_artist.inc.php:279
 #: ../../templates/show_index.inc.php:45 ../../templates/show_index.inc.php:54
 #: ../../templates/show_label.inc.php:110
 #: ../../templates/show_missing_artist.inc.php:30
@@ -6354,26 +6414,26 @@ msgstr "Összes átmeneti lejátszási listára véletlenszerűen"
 msgid "Artist Edit"
 msgstr "Előadó szerkesztés"
 
-#: ../../templates/show_artist.inc.php:174
+#: ../../templates/show_artist.inc.php:184
 msgid "Edit Artist"
 msgstr "Előadó szerkesztése"
 
-#: ../../templates/show_artist.inc.php:196
-#: ../../templates/show_artist.inc.php:238
+#: ../../templates/show_artist.inc.php:206
+#: ../../templates/show_artist.inc.php:248
 #: ../../templates/show_missing_albums.inc.php:22
 msgid "Missing Albums"
 msgstr "Hiányzó Albumok"
 
-#: ../../templates/show_artist.inc.php:200
-#: ../../templates/show_artist.inc.php:248
+#: ../../templates/show_artist.inc.php:210
+#: ../../templates/show_artist.inc.php:258
 #: ../../templates/show_now_playing_row.inc.php:80
 #: ../../templates/show_now_playing_similar.inc.php:26
 #: ../../templates/show_recommended_artists.inc.php:24
 msgid "Similar Artists"
 msgstr "Hasonló Előadók"
 
-#: ../../templates/show_artist.inc.php:204
-#: ../../templates/show_artist.inc.php:258
+#: ../../templates/show_artist.inc.php:214
+#: ../../templates/show_artist.inc.php:268
 msgid "Events"
 msgstr "Események"
 
@@ -7338,7 +7398,7 @@ msgid "MySQL Port (optional)"
 msgstr "MySQL Port (nem kötelező)"
 
 #: ../../templates/show_install_config.inc.php:99
-#: ../../templates/show_install.inc.php:134
+#: ../../templates/show_install.inc.php:128
 msgid "required"
 msgstr "szükséges"
 
@@ -7516,7 +7576,7 @@ msgid "Recheck Config"
 msgstr "Config újraellenőrzése"
 
 #: ../../templates/show_install_config.inc.php:285
-#: ../../templates/show_install.inc.php:138
+#: ../../templates/show_install.inc.php:132
 msgid "Skip"
 msgstr "Átugrás"
 
@@ -7552,29 +7612,29 @@ msgstr "MySQL 8 kiszolgáló?"
 
 #: ../../templates/show_install.inc.php:89
 msgid "Oracle MySQL FAQ"
-msgstr ""
+msgstr "Oracle MySQL GYIK"
 
-#: ../../templates/show_install.inc.php:98
+#: ../../templates/show_install.inc.php:92
 msgid "Overwrite if Database Already Exists"
 msgstr "Felülírás, ha az adatbázis létezik"
 
-#: ../../templates/show_install.inc.php:107
+#: ../../templates/show_install.inc.php:101
 msgid "Create Tables"
 msgstr "Táblák létrehozása"
 
-#: ../../templates/show_install.inc.php:116
+#: ../../templates/show_install.inc.php:110
 msgid "Create Database User"
 msgstr "Adatbázis-felhasználó létrehozása"
 
-#: ../../templates/show_install.inc.php:126
+#: ../../templates/show_install.inc.php:120
 msgid "Ampache Database Username"
 msgstr "Ampache adatbázis felhasználónév"
 
-#: ../../templates/show_install.inc.php:132
+#: ../../templates/show_install.inc.php:126
 msgid "Ampache Database User Password"
 msgstr "Ampache adatbázis-felhasználó jelszava"
 
-#: ../../templates/show_install.inc.php:141
+#: ../../templates/show_install.inc.php:135
 msgid "Insert Database"
 msgstr "Adatbázis beszúrása"
 
@@ -7854,9 +7914,8 @@ msgid "Similar Songs"
 msgstr "Hasonló Dalok"
 
 #: ../../templates/show_object_rating.inc.php:46
-#, fuzzy
 msgid "Current rating"
-msgstr "Jelenlegi értékelés:"
+msgstr "Jelenlegi értékelés"
 
 #: ../../templates/show_object_rating.inc.php:48
 msgid "not rated yet"
@@ -8076,7 +8135,7 @@ msgstr "Véletlenszerűen kiválasztottak lejátszása"
 
 #: ../../templates/show_random.inc.php:71
 #: ../../templates/show_random.inc.php:94
-#: ../../templates/show_search_form.inc.php:59
+#: ../../templates/show_search_form.inc.php:64
 msgid "Unlimited"
 msgstr "Korlátlan"
 
@@ -8105,7 +8164,7 @@ msgstr "Várakozókhoz ad"
 #: ../../templates/show_recently_played.inc.php:35
 #: ../../templates/show_recently_played.inc.php:142
 msgid "Last Played"
-msgstr "Utoljára lejátszva"
+msgstr "Lejátszva"
 
 #: ../../templates/show_recently_played.inc.php:60
 #, php-format
@@ -8243,11 +8302,11 @@ msgstr "Okos Lejátszási lista nem található"
 msgid "Search Ampache"
 msgstr "Ampache keresése"
 
-#: ../../templates/show_search_form.inc.php:56
+#: ../../templates/show_search_form.inc.php:61
 msgid "Maximum Results"
 msgstr "Eredmények max. száma"
 
-#: ../../templates/show_search_form.inc.php:82
+#: ../../templates/show_search_form.inc.php:87
 msgid "Save as Smart Playlist"
 msgstr "Mentés Okos Lejátszási listaként"
 
@@ -9095,7 +9154,7 @@ msgstr "Nem sikerült a Videó törlése"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 09.11.2019 23:26:14 CET
+# Last Update: 03.12.2019 20:25:37 CET
 #
 #: Database preference table id 1
 msgid "Allow Downloads"
