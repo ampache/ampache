@@ -440,7 +440,7 @@ class Api
      * This takes a url and returns the song object in question
      *
      * @param array $input
-     * 'url' = (string) $url
+     * url = (string) $url
      */
     public static function url_to_song($input)
     {
@@ -590,13 +590,13 @@ class Api
      * artist objects. This function is deprecated!
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term //optional
-     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
-     * 'add'     self::set_filter(date) //optional
-     * 'update'  self::set_filter(date) //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
-     * 'include' (array) 'albums'|'songs' //optional
+     * filter  = (string) Alpha-numeric search term //optional
+     * exact   = (boolean) if true filter is exact rather then fuzzy //optional
+     * add     = self::set_filter(date) //optional
+     * update  = self::set_filter(date) //optional
+     * offset  = (integer) //optional
+     * limit   = (integer) //optional
+     * include = (array) 'albums'|'songs' //optional
      */
     public static function artists($input)
     {
@@ -635,8 +635,8 @@ class Api
      * This returns a single artist based on the UID of said artist
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
-     * 'include' (array) 'albums'|'songs' //optional
+     * filter  = (string) Alpha-numeric search term
+     * include = (array) 'albums'|'songs' //optional
      */
     public static function artist($input)
     {
@@ -662,9 +662,9 @@ class Api
      * This returns the albums of an artist
      *
      * @param array $input
-     * 'filter' (string) UID of artist
-     * 'offset' (integer) //optional
-     * 'limit'  (integer) //optional
+     * filter = (string) UID of artist
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function artist_albums($input)
     {
@@ -696,9 +696,9 @@ class Api
      * This returns the songs of the specified artist
      *
      * @param array $input
-     * 'filter' (string) UID of Artist
-     * 'offset' (integer) //optional
-     * 'limit'  (integer) //optional
+     * filter = (string) UID of Artist
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function artist_songs($input)
     {
@@ -733,13 +733,13 @@ class Api
      * This returns albums based on the provided search filters
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term //optional
-     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
-     * 'add'     self::set_filter(date) //optional
-     * 'update'  self::set_filter(date) //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
-     * 'include' (array) 'songs' //optional
+     * filter  = (string) Alpha-numeric search term //optional
+     * exact   = (boolean) if true filter is exact rather then fuzzy //optional
+     * add     = self::set_filter(date) //optional
+     * update  = self::set_filter(date) //optional
+     * offset  = (integer) //optional
+     * limit   = (integer) //optional
+     * include = (array) 'songs' //optional
      */
     public static function albums($input)
     {
@@ -776,8 +776,8 @@ class Api
      * This returns a single album based on the UID provided
      *
      * @param array $input
-     * 'filter'  (string) UID of Album
-     * 'include' (array) 'songs' //optional
+     * filter  = (string) UID of Album
+     * include = (array) 'songs' //optional
 
      */
     public static function album($input)
@@ -804,9 +804,9 @@ class Api
      * This returns the songs of a specified album
      *
      * @param array $input
-     * 'filter' (string) UID of Album
-     * 'offset' (integer) //optional
-     * 'limit'  (integer) //optional
+     * filter = (string) UID of Album
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function album_songs($input)
     {
@@ -860,10 +860,10 @@ class Api
      * This returns the tags (Genres) based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term //optional
-     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact  = (boolean) if true filter is exact rather then fuzzy //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function tags($input)
     {
@@ -897,7 +897,7 @@ class Api
      * This returns a single tag based on UID
      *
      * @param array $input
-     * 'filter' (string) UID of Tag
+     * filter = (string) UID of Tag
      */
     public static function tag($input)
     {
@@ -923,9 +923,9 @@ class Api
      * This returns the artists associated with the tag in question as defined by the UID
      *
      * @param array $input
-     * 'filter' (string) UID of Album
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) UID of Album
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function tag_artists($input)
     {
@@ -959,9 +959,9 @@ class Api
      * This returns the albums associated with the tag in question
      *
      * @param array $input
-     * 'filter' (string) UID of Tag
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) UID of Tag
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function tag_albums($input)
     {
@@ -997,9 +997,9 @@ class Api
      * returns the songs for this tag
      *
      * @param array $input
-     * 'filter' (string) UID of Tag
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) UID of Tag
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function tag_songs($input)
     {
@@ -1036,18 +1036,15 @@ class Api
      * Returns songs based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
-     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
-     * 'add'     self::set_filter(date) //optional
-     * 'update'  self::set_filter(date) //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact  = (boolean) if true filter is exact rather then fuzzy //optional
+     * add    = self::set_filter(date) //optional
+     * update = self::set_filter(date) //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function songs($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'songs')) {
-            return false;
-        }
         self::$browse->reset_filters();
         self::$browse->set_type('song');
         self::$browse->set_sort('title', 'ASC');
@@ -1088,7 +1085,7 @@ class Api
      * return a single song
      *
      * @param array $input
-     * 'filter'  (string) UID of song
+     * filter = (string) UID of song
      */
     public static function song($input)
     {
@@ -1116,12 +1113,12 @@ class Api
      * This returns playlists based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term (match all if missing) //optional
-     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
-     * 'add'     self::set_filter(date) //optional
-     * 'update'  self::set_filter(date) //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) Alpha-numeric search term (match all if missing) //optional
+     * exact  = (boolean) if true filter is exact rather then fuzzy //optional
+     * add    = self::set_filter(date) //optional
+     * update = self::set_filter(date) //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function playlists($input)
     {
@@ -1157,7 +1154,7 @@ class Api
      * This returns a single playlist
      *
      * @param array $input
-     * 'filter'  (string) UID of playlist
+     * filter = (string) UID of playlist
      */
     public static function playlist($input)
     {
@@ -1203,9 +1200,9 @@ class Api
      * This returns the songs for a playlist
      *
      * @param array $input
-     * 'filter'  (string) UID of playlist
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) UID of playlist
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function playlist_songs($input)
     {
@@ -1264,8 +1261,8 @@ class Api
      * This create a new playlist and return it
      *
      * @param array $input
-     * 'name' (string) Alpha-numeric search term
-     * 'type' (string) 'public'|'private'
+     * name = (string) Alpha-numeric search term
+     * type = (string) 'public'|'private'
      */
     public static function playlist_create($input)
     {
@@ -1299,9 +1296,9 @@ class Api
      * Changed name and type to optional and the playlist id is mandatory
      *
      * @param array $input
-     * 'filter' (string) UID of playlist
-     * 'name'   (string) 'new playlist name' //optional
-     * 'type'   (string) 'public', 'private' //optional
+     * filter = (string) UID of playlist
+     * name   = (string) 'new playlist name' //optional
+     * type   = (string) 'public', 'private' //optional
      */
     public static function playlist_edit($input)
     {
@@ -1347,7 +1344,7 @@ class Api
      * This deletes a playlist
      *
      * @param array $input
-     * 'filter' (string) UID of playlist
+     * filter = (string) UID of playlist
      */
     public static function playlist_delete($input)
     {
@@ -1385,9 +1382,9 @@ class Api
      * This adds a song to a playlist
      *
      * @param array $input
-     * 'filter' (string) UID of playlist
-     * 'song' (string) UID of song to add to playlist
-     * 'check' (integer) 0|1 Check for duplicates (default = 0) //optional
+     * filter = (string) UID of playlist
+     * song   = (string) UID of song to add to playlist
+     * check  = (integer) 0|1 Check for duplicates (default = 0) //optional
      */
     public static function playlist_add_song($input)
     {
@@ -1440,9 +1437,9 @@ class Api
      * Pre-400001 the api required 'track' instead of 'song'.
      *
      * @param array $input
-     * 'filter' (string) UID of playlist
-     * 'song'   (string) UID of song to remove from the playlist //optional
-     * 'track'  (string) track number to remove from the playlist //optional
+     * filter = (string) UID of playlist
+     * song   = (string) UID of song to remove from the playlist //optional
+     * track  = (string) track number to remove from the playlist //optional
      */
     public static function playlist_remove_song($input)
     {
@@ -1515,14 +1512,14 @@ class Api
      * 'unplayed' added in 400002 for searching unplayed tracks.
      *
      * @param array $input
-     * mode    = (string)  'recent'|'forgotten'|'unplayed'|'random' //optional, default = 'random'
-     * filter  = (string)  $filter                       //optional, LIKE matched to song title
-     * album   = (integer) $album_id                     //optional
-     * artist  = (integer) $artist_id                    //optional
-     * flag    = (integer) 0|1                           //optional, default = 0
-     * format  = (string)  'song'|'index'|'id'           //optional, default = 'song'
-     * offset  = (integer)                               //optional
-     * limit   = (integer)                               //optional
+     * mode   = (string)  'recent'|'forgotten'|'unplayed'|'random' //optional, default = 'random'
+     * filter = (string)  $filter                       //optional, LIKE matched to song title
+     * album  = (integer) $album_id                     //optional
+     * artist = (integer) $artist_id                    //optional
+     * flag   = (integer) 0|1                           //optional, default = 0
+     * format = (string)  'song'|'index'|'id'           //optional, default = 'song'
+     * offset = (integer)                               //optional
+     * limit  = (integer)                               //optional
      */
     public static function playlist_generate($input)
     {
@@ -1646,9 +1643,9 @@ class Api
      * This searches the songs and returns... songs
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) Alpha-numeric search term
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function search_songs($input)
     {
@@ -1684,16 +1681,13 @@ class Api
      * This returns video objects!
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
-     * 'exact'   (boolean) Whether to match the exact term or not //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact  = (boolean) Whether to match the exact term or not //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function videos($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'videos')) {
-            return false;
-        }
         self::$browse->reset_filters();
         self::$browse->set_type('video');
         self::$browse->set_sort('title', 'ASC');
@@ -1723,7 +1717,7 @@ class Api
      * This returns a single video
      *
      * @param array $input
-     * 'filter'  (string) UID of video
+     * filter = (string) UID of video
      */
     public static function video($input)
     {
