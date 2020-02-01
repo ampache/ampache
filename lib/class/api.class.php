@@ -1681,16 +1681,13 @@ class Api
      * This returns video objects!
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
+     * 'filter'  (string) Alpha-numeric search term //optional
      * 'exact'   (boolean) Whether to match the exact term or not //optional
      * 'offset'  (integer) //optional
      * 'limit'   (integer) //optional
      */
     public static function videos($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'videos')) {
-            return false;
-        }
         self::$browse->reset_filters();
         self::$browse->set_type('video');
         self::$browse->set_sort('title', 'ASC');
