@@ -1036,7 +1036,7 @@ class Api
      * Returns songs based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
+     * 'filter'  (string) Alpha-numeric search term //optional
      * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
      * 'add'     self::set_filter(date) //optional
      * 'update'  self::set_filter(date) //optional
@@ -1045,9 +1045,6 @@ class Api
      */
     public static function songs($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'songs')) {
-            return false;
-        }
         self::$browse->reset_filters();
         self::$browse->set_type('song');
         self::$browse->set_sort('title', 'ASC');
