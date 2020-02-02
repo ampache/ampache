@@ -1683,6 +1683,10 @@ abstract class Catalog extends database_object
         $new_song->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
         $new_song->size     = $results['size'];
         $new_song->time     = (strlen((string) $results['time']) > 5) ? (int) substr($results['time'], -5, 5) : (int) ($results['time']);
+        if ($new_song->time < 0) {
+            // fall back to last time if you fail to scan correctly
+            $new_song->time = $song->time;
+        }
         $new_song->track    = (strlen((string) $results['track']) > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']);
         $new_song->mbid     = $results['mb_trackid'];
         $new_song->composer = $results['composer'];

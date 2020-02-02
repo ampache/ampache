@@ -205,7 +205,7 @@ class Catalog_dropbox extends Catalog
         $db_results = Dba::read($sql, array($apikey));
 
         if (Dba::num_rows($db_results)) {
-            debug_event('catalog', 'Cannot add catalog with duplicate key ' . $apikey, 1);
+            debug_event('dropbox.catalog', 'Cannot add catalog with duplicate key ' . $apikey, 1);
             AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $apikey));
 
             return false;
@@ -255,11 +255,10 @@ class Catalog_dropbox extends Catalog
         $dropbox         = new Dropbox($app);
         $this->count     = 0;
         $this->add_files($dropbox, $this->path);
+        /* Update the Catalog last_add */
+        $this->update_last_add();
 
         UI::update_text('', sprintf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count));
-        if ($this->count == 0) {
-            AmpError::add('general', T_('No media updated, do you respect the patterns?'));
-        }
  
         return true;
     }
@@ -271,9 +270,20 @@ class Catalog_dropbox extends Catalog
      */
     public function add_files($dropbox, $path)
     {
+        debug_event('dropbox.catalog', "List contents for " . $path, 5);
         $listFolderContents = $dropbox->listFolder($path, ['recursive' => true]);
 
+        // Fetch items on the first page
+        $items = $listFolderContents->getItems();
+        foreach ($items as $item) {
+            if ($item->getDataProperty('.tag') == "file") {
+                $subpath = $item->getDataProperty('path_display');
+                $this->add_file($dropbox, $subpath);
+            }
+        }
 
+        // Dropbox lists items in pages so you need to set your current
+        // position then re-fetch the list from that cursor position.
         if ($listFolderContents->hasMoreItems()) {
             do {
                 $cursor             = $listFolderContents->getCursor();
@@ -301,7 +311,7 @@ class Catalog_dropbox extends Catalog
                 if (count($this->get_gather_types('music')) > 0) {
                     $this->insert_song($dropbox, $path);
                 } else {
-                    debug_event('read', $path . " ignored, bad media type for this catalog.", 5);
+                    debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this catalog.", 5);
 
                     return false;
                 }
@@ -310,14 +320,14 @@ class Catalog_dropbox extends Catalog
                     if ($is_video_file) {
                         $this->insert_video($dropbox, $path);
                     } else {
-                        debug_event('read', $path . " ignored, bad media type for this video catalog.", 5);
+                        debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
 
                         return false;
                     }
                 }
             }
         } else {
-            debug_event('read', $path . " ignored, 0 bytes", 5);
+            debug_event('dropbox.catalog', "read " . $path . " ignored, 0 bytes", 5);
         }
     }
 
@@ -331,14 +341,14 @@ class Catalog_dropbox extends Catalog
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
         } else {
-            $islocal = true;
-            $meta    = $dropbox->getMetadata($path);
-            $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+            $readfile = true;
+            $meta     = $dropbox->getMetadata($path);
+            $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
             //Download File
 
             $this->download($dropbox, $path, -1, $outfile);
 
-            $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
+            $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
             $vainfo->get_info();
 
             $key     = vainfo::get_tag_type($vainfo->tags);
@@ -359,7 +369,7 @@ class Catalog_dropbox extends Catalog
                 $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                 Dba::write($sql, array($results['file'], $song_id));
             } else {
-                debug_event('results', $results['file'] . " ignored because it is an orphan songs. Please check your catalog patterns.", 5);
+                debug_event('dropbox.catalog', $results['file'] . " ignored because it is an orphan songs. Please check your catalog patterns.", 5);
             }
             unlink($outfile);
 
@@ -382,16 +392,16 @@ class Catalog_dropbox extends Catalog
         } else {
 
             /* Create the vainfo object and get info */
-            $islocal = true;
-            $meta    = $dropbox->getMetadata($path);
-            $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+            $readfile = true;
+            $meta     = $dropbox->getMetadata($path);
+            $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
             //Download File
 
             $res = $this->download($dropbox, $path, 40960, $outfile);
 
             if ($res) {
                 $gtypes      = $this->get_gather_types('video');
-                $vainfo      = new vainfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
+                $vainfo      = new vainfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
                 $vainfo->get_info();
 
                 $tag_name           = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
@@ -416,7 +426,7 @@ class Catalog_dropbox extends Catalog
 
                 return $video_id;
             } else {
-                debug_event('dropbox-download', 'failed to download file', 5, 'ampache-catalog');
+                debug_event('dropbox.catalog', 'failed to download file', 5, 'ampache-catalog');
             }
         } // insert_video
     }
@@ -453,19 +463,19 @@ class Catalog_dropbox extends Catalog
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $updated['total']++;
-                debug_event('Dropbox-verify', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+                debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
                 $path     = $row['file'];
-                $islocal  = true;
+                $readfile = true;
                 $filesize = 40960;
                 $meta     = $dropbox->getMetadata($path);
                 $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
                 $res = $this->download($dropbox, $path, $filesize, $outfile);
                 if ($res) {
-                    debug_event('dropbox-verify', 'updating song', 5, 'ampache-catalog');
+                    debug_event('dropbox.catalog', 'updating song', 5, 'ampache-catalog');
                     $song = new Song($row['id']);
 
-                    $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $islocal);
+                    $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
                     $vainfo->forceSize($filesize);
                     $vainfo->get_info();
 
@@ -481,7 +491,7 @@ class Catalog_dropbox extends Catalog
                         UI::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
                 } else {
-                    debug_event('dropbox-verify', 'removing song', 5, 'ampache-catalog');
+                    debug_event('dropbox.catalog', 'removing song', 5, 'ampache-catalog');
                     UI::update_text('', sprintf(T_('Removing song "%s"'), $row['title']));
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                 }
@@ -509,7 +519,7 @@ class Catalog_dropbox extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('dropbox-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+            debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
             $file     = $row['file'];
             try {
                 $metadata = $dropbox->getMetadata($file, ["include_deleted" => true]);
@@ -593,7 +603,7 @@ class Catalog_dropbox extends Catalog
             // Generate browser class for sending headers
             fclose($outfile);
         } catch (DropboxClientException $e) {
-            debug_event('play', 'File not found on Dropbox: ' . $media->file, 5);
+            debug_event('dropbox.catalog', 'File not found on Dropbox: ' . $media->file, 5);
         }
 
         return $media;
@@ -614,7 +624,7 @@ class Catalog_dropbox extends Catalog
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');
         if (!count($art_order)) {
-            debug_event('gather_art', 'art_order not set, Catalog::gather_art aborting', 3);
+            debug_event('dropbox.catalog', 'art_order not set, Catalog::gather_art aborting', 3);
 
             return true;
         }
