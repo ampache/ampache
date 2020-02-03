@@ -2386,7 +2386,7 @@ class Api
         ob_end_clean();
         $type      = $input['type'];
         $object_id = $input['id'];
-        $flag      = $input['flag'];
+        $flag      = (bool) $input['flag'];
         $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
         if ((int) $user->id > 0) {
@@ -2863,6 +2863,7 @@ class Api
         }
         Session::extend($input['auth']);
     } // update_artist_info
+
     /**
      * update_art
      * MINIMUM_API_VERSION=400001
