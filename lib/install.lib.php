@@ -468,8 +468,8 @@ function install_config_transcode_mode($mode)
     if ($mode == 'ffmpeg' || $mode == 'avconv') {
         $trconfig['transcode_cmd']          = $mode;
         $trconfig['transcode_input']        = '-i %FILE%';
-        $trconfig['waveform']               = 'true';
-        $trconfig['generate_video_preview'] = 'true';
+        $trconfig['waveform']               = '1';
+        $trconfig['generate_video_preview'] = '1';
 
         AmpConfig::set_by_array($trconfig, true);
     }
@@ -478,17 +478,17 @@ function install_config_transcode_mode($mode)
 function install_config_use_case($case)
 {
     $trconfig = array(
-        'use_auth' => 'true',
-        'ratings' => 'true',
-        'userflags' => 'true',
-        'sociable' => 'true',
-        'licensing' => 'false',
-        'wanted' => 'false',
-        'channel' => 'false',
-        'live_stream' => 'true',
-        'allow_public_registration' => 'false',
-        'cookie_disclaimer' => 'false',
-        'share' => 'false'
+        'use_auth' => '1',
+        'ratings' => '1',
+        'userflags' => '1',
+        'sociable' => '1',
+        'licensing' => '0',
+        'wanted' => '0',
+        'channel' => '0',
+        'live_stream' => '1',
+        'allow_public_registration' => '0',
+        'cookie_disclaimer' => '0',
+        'share' => '0'
     );
 
     $dbconfig = array(
@@ -501,29 +501,29 @@ function install_config_use_case($case)
 
     switch ($case) {
         case 'minimalist':
-            $trconfig['ratings']     = 'false';
-            $trconfig['userflags']   = 'false';
-            $trconfig['sociable']    = 'false';
-            $trconfig['wanted']      = 'false';
-            $trconfig['channel']     = 'false';
-            $trconfig['live_stream'] = 'false';
+            $trconfig['ratings']     = '0';
+            $trconfig['userflags']   = '0';
+            $trconfig['sociable']    = '0';
+            $trconfig['wanted']      = '0';
+            $trconfig['channel']     = '0';
+            $trconfig['live_stream'] = '0';
 
             $dbconfig['download']    = '0';
             $dbconfig['allow_video'] = '0';
 
             // Default local UI preferences to have a better 'minimalist first look'.
             setcookie('sidebar_state', 'collapsed', time() + (30 * 24 * 60 * 60), '/');
-            setcookie('browse_album_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
-            setcookie('browse_artist_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
+            setcookie('browse_album_grid_view', '0', time() + (30 * 24 * 60 * 60), '/');
+            setcookie('browse_artist_grid_view', '0', time() + (30 * 24 * 60 * 60), '/');
             break;
         case 'community':
-            $trconfig['use_auth']                  = 'false';
-            $trconfig['licensing']                 = 'true';
-            $trconfig['wanted']                    = 'false';
-            $trconfig['live_stream']               = 'false';
-            $trconfig['allow_public_registration'] = 'true';
-            $trconfig['cookie_disclaimer']         = 'true';
-            $trconfig['share']                     = 'true';
+            $trconfig['use_auth']                  = '0';
+            $trconfig['licensing']                 = '1';
+            $trconfig['wanted']                    = '0';
+            $trconfig['live_stream']               = '0';
+            $trconfig['allow_public_registration'] = '1';
+            $trconfig['cookie_disclaimer']         = '1';
+            $trconfig['share']                     = '1';
 
             $dbconfig['download']             = '0';
             $dbconfig['share']                = '1';
