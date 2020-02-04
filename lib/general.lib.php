@@ -396,8 +396,8 @@ function generate_config($current)
             $key       = $matches[1];
             $raw_value = $matches[2];
             // filter true and fals into sql boolean values
-            $value     = str_replace(array('\"true\"', 'true'), 1, strtolower($raw_value));
-            $value     = str_replace(array('\"false\"', 'false'), 0, strtolower($value));
+            $value     = str_replace(array('"true"', 'true'), 1, strtolower($raw_value));
+            $value     = str_replace(array('"false"', 'false'), 0, strtolower($value));
 
             // Put in the current value
             if ($key == 'config_version') {
