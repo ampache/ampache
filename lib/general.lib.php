@@ -391,7 +391,7 @@ function generate_config($current)
     $final = "";
     foreach ($data as $line) {
         // set sql defaults for old config files 
-        if (preg_match("/^;?\s?[Dd][Ee][Ff][Aa][Uu][Ll][Tt]\:\s?\w*$/", $line, $matches) {
+        if (preg_match("/^;?\s?[Dd][Ee][Ff][Aa][Uu][Ll][Tt]\:\s?\w*$/", $line, $matches)) {
             $line = str_replace(';Default', '; DEFAULT', $line);
             $line = str_replace('; Default', '; DEFAULT', $line);
             $line = str_replace('true', '1', $line);
