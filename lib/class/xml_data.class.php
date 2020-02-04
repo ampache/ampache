@@ -763,7 +763,7 @@ class XML_Data
                     . "\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n";
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
-                    $meta_name = $metadata->getField()->getName();
+                    $meta_name = str_replace(array(' ', '(', ')'), '_', $metadata->getField()->getName());
                     $string .= "\t<" . $meta_name . "><![CDATA[" . $metadata->getData() . "]]></" . $meta_name . ">\n";
                 }
             }
