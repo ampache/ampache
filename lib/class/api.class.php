@@ -2604,6 +2604,8 @@ class Api
                 default:
                     echo XML_Data::error('401', T_('Failed to scrobble: No item found!'));
             }
+
+            return;
         } else {
             $item = new Song((int) $scrobble_id);
             if (!$item->id) {
