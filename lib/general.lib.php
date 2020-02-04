@@ -412,7 +412,7 @@ function generate_config($current)
                 // filter true and fals into sql boolean values
                 $current_value = str_replace(array('"true"', 'true'), 1, strtolower($current[$key]));
                 $current_value = str_replace(array('"false"', 'false'), 0, strtolower($current[$key]));
-                $line          = $key . ' = "' . escape_ini(current_value) . '"';
+                $line          = $key . ' = "' . escape_ini($current_value) . '"';
                 unset($current[$key]);
             }
         }
