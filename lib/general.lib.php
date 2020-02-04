@@ -390,14 +390,21 @@ function generate_config($current)
 
     $final = "";
     foreach ($data as $line) {
+        // set sql defaults for old config files 
+        if (preg_match("/^;?\s?[Dd][Ee][Ff][Aa][Uu][Ll][Tt]\:\s?\w*$/", $line, $matches) {
+            $line = str_replace(';Default', '; DEFAULT', $line);
+            $line = str_replace('; Default', '; DEFAULT', $line);
+            $line = str_replace('true', '1', $line);
+            $line = str_replace('false', '0', $line);
+        }
+        // look for config_item = "$value"
         if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
             || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)) {
             $key       = $matches[1];
-            $raw_value = $matches[2];
-            // filter true and fals into sql boolean values
-            $value     = str_replace(array('"true"', 'true'), 1, strtolower($raw_value));
-            $value     = str_replace(array('"false"', 'false'), 0, strtolower($value));
+            // filter true and false values into sql boolean values
+            $value     = str_replace('true', '1', strtolower($matches[2]));
+            $value     = str_replace('false', '0', strtolower($value));
 
             // Put in the current value
             if ($key == 'config_version') {
@@ -410,8 +417,8 @@ function generate_config($current)
                 // Else, unable to generate a cryptographically secure token, use the default one
             } elseif (isset($current[$key])) {
                 // filter true and fals into sql boolean values
-                $current_value = str_replace(array('"true"', 'true'), 1, strtolower($current[$key]));
-                $current_value = str_replace(array('"false"', 'false'), 0, strtolower($current[$key]));
+                $current_value = str_replace('true', '1', strtolower($current[$key]));
+                $current_value = str_replace('false', '0', strtolower($current[$key]));
                 $line          = $key . ' = "' . escape_ini($current_value) . '"';
                 unset($current[$key]);
             }

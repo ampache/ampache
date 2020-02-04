@@ -659,7 +659,7 @@ show_footer_statistics = 1
 ; RSS Feeds
 ; Set this to true to enable rss feeds.
 ; (latest albums, shouts, albums of artist, ...)
-;DEFAULT: 0
+; DEFAULT: 0
 ;use_rss = 0
 
 ; This setting allows themes to overwrite PHP template files. This can be really
@@ -1083,7 +1083,7 @@ encode_ss_duration = "-t %DURATION%"
 ;proxy_pass = ""
 
 ; If Ampache is behind an https reverse proxy, force use HTTPS protocol.
-;Default: false
+; DEFAULT: false
 ;force_ssl = 1
 
 
@@ -1128,7 +1128,7 @@ encode_ss_duration = "-t %DURATION%"
 ;  sendmail Settings                                     #
 ;#########################################################
 
-;DEFAULT: /usr/sbin/sendmail
+; DEFAULT: /usr/sbin/sendmail
 ;sendmail_path = "/usr/sbin/sendmail"
 
 
