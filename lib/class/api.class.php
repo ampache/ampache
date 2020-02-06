@@ -608,7 +608,7 @@ class Api
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (boolean) if true filter is exact rather then fuzzy //optional
+     * exact   = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
@@ -751,7 +751,7 @@ class Api
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (boolean) if true filter is exact rather then fuzzy //optional
+     * exact   = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
@@ -878,7 +878,7 @@ class Api
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (boolean) if true filter is exact rather then fuzzy //optional
+     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
@@ -1054,7 +1054,7 @@ class Api
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (boolean) if true filter is exact rather then fuzzy //optional
+     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
      * add    = self::set_filter(date) //optional
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
@@ -1131,7 +1131,7 @@ class Api
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact  = (boolean) if true filter is exact rather then fuzzy //optional
+     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
      * add    = self::set_filter(date) //optional
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
@@ -1699,7 +1699,7 @@ class Api
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (boolean) Whether to match the exact term or not //optional
+     * exact  = (boolean) 0|1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
@@ -1852,7 +1852,7 @@ class Api
             if ($type === 'song') {
                 switch ($input['format']) {
                     case 'json':
-                        echo JSON_Datasongs($results, array(), true, $user->id);
+                        echo JSON_Data::songs($results, array(), true, $user->id);
                     break;
                     default:
                         echo XML_Data::songs($results, array(), true, $user->id);
@@ -1942,7 +1942,7 @@ class Api
         $fullname = $input['fullname'] ?: $username;
         $email    = $input['email'];
         $password = $input['password'];
-        $disable  = ((int) $input['disable'] == 1);
+        $disable  = (bool) $input['disable'];
 
         if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
             $access  = 25;
@@ -1984,7 +1984,7 @@ class Api
      * website    = (string) $website //optional
      * state      = (string) $state //optional
      * city       = (string) $city //optional
-     * disable    = (integer) 0|1 //optional
+     * disable    = (integer) 0|1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
      */
     public static function user_update($input)
@@ -2037,9 +2037,9 @@ class Api
             if ($city) {
                 $user->update_city($city);
             }
-            if ((int) $disable == 1) {
+            if ($disable === '1') {
                 $user->disable();
-            } elseif ((int)$disable == 0) {
+            } elseif ($disable === '0') {
                 $user->enable();
             }
             if ((int) $maxbitrate > 0) {
@@ -2330,6 +2330,17 @@ class Api
 
             return;
         }
+        if (!in_array($rating, array('0', '1', '2', '3', '4', '5'))) {
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::error('401', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'));
+                break;
+                default:
+                    echo XML_Data::error('401', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'));
+            }
+
+            return;
+        }
 
         if (!Core::is_library_item($type) || !$object_id) {
             switch ($input['format']) {
@@ -2356,10 +2367,10 @@ class Api
             $rate->set_rating($rating, $user->id);
             switch ($input['format']) {
                 case 'json':
-                    echo JSON_Data::success('rating set ' . $object_id);
+                    echo JSON_Data::success('rating set to ' . $rating . ' for ' . $object_id);
                 break;
                 default:
-                    echo XML_Data::success('rating set ' . $object_id);
+                    echo XML_Data::success('rating set to ' . $rating . ' for ' . $object_id);
             }
         }
         Session::extend($input['auth']);
@@ -2428,12 +2439,13 @@ class Api
             }
             $userflag = new Userflag($object_id, $type);
             if ($userflag->set_flag($flag, $user_id)) {
+                $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
                 switch ($input['format']) {
                     case 'json':
-                        echo JSON_Data::success('flag set ' . $object_id);
+                        echo JSON_Data::success($message . $object_id);
                     break;
                     default:
-                        echo XML_Data::success('flag set ' . $object_id);
+                        echo XML_Data::success($message . $object_id);
                 }
 
                 return;
