@@ -134,7 +134,7 @@ class Api
     private static function check_parameter($input, $parameters, $method = '')
     {
         foreach ($parameters as $parameter) {
-            if (empty($input[$parameter])) {
+            if (empty($input[$parameter]) && !$input[$parameter] == 0) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
                 switch ($input['format']) {
                     case 'json':
