@@ -411,10 +411,6 @@ msgstr ""
 msgid "player"
 msgstr ""
 
-#: Database preference subcategory table id 72
-msgid "shoutcast"
-msgstr ""
-
 #: Database preference subcategory table id 78
 msgid "lastfm"
 msgstr ""
