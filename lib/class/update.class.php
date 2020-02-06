@@ -1049,21 +1049,21 @@ class Update
      */
     public static function update_400006()
     {
-       $retval = true;
+        $retval = true;
 
-       $sql = "DELETE FROM `user_preference` " .
+        $sql = "DELETE FROM `user_preference` " .
               "WHERE `user_preference`.`preference` IN  " .
               "(SELECT `preference`.`id` FROM `preference`  " .
               "WHERE `preference`.`name` = 'shoutcast_active');";
-       $retval &= Dba::write($sql);
+        $retval &= Dba::write($sql);
 
-       $sql = "DELETE FROM `preference` " .
+        $sql = "DELETE FROM `preference` " .
               "WHERE `preference`.`name` = 'shoutcast_active';";
-       $retval &= Dba::write($sql);
+        $retval &= Dba::write($sql);
 
-       $sql = "DROP TABLE IF EXISTS `localplay_shoutcast`";
-       $retval &= Dba::write($sql);
+        $sql = "DROP TABLE IF EXISTS `localplay_shoutcast`";
+        $retval &= Dba::write($sql);
 
-       return $retval;
+        return $retval;
     }
 }
