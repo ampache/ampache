@@ -188,7 +188,7 @@ class Update
         $version[]     = array('version' => '400005', 'description' => $update_string);
 
         $update_string = "* Drop shoutcast_active preferences. (Feature has not existed for years)<br />" .
-                         "* Drop localplay_shoutcast table if present.<br />";
+
         $version[]     = array('version' => '400006', 'description' => $update_string);
 
         return $version;
