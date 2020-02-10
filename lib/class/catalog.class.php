@@ -1225,6 +1225,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param integer $id
      * @param boolean $db_art_first
+     * @return boolean
      */
     public static function gather_art_item($type, $id, $db_art_first = false, $api = false)
     {
@@ -1234,7 +1235,8 @@ abstract class Catalog extends database_object
         } else {
             $libitem = new $type($id);
         }
-        $options = array();
+        $inserted = false;
+        $options  = array();
         $libitem->format();
         if ($libitem->id) {
             if (count($options) == 0) {
@@ -1302,6 +1304,11 @@ abstract class Catalog extends database_object
         if (UI::check_ticker() && !$api) {
             UI::update_text('read_art_' . $id, $libitem->get_fullname());
         }
+        if ($inserted) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

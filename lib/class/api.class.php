@@ -152,6 +152,35 @@ class Api
     }
 
     /**
+     * check_access
+     *
+     * This function checks the user can perform the function requested
+     * 'interface', 100, User::get_from_username(Session::username($input['auth']))->id)
+     *
+     * @param string $type
+     * @param integer $level
+     * @param integer $user_id
+     * @param string $method
+     * @return boolean
+     */
+    private static function check_access($type, $level, $user_id, $method = '')
+    {
+        if (!Access::check($type, $level, $user_id)) {
+            debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::error('400', 'User does not have access to this function');
+                break;
+                default:
+                    echo XML_Data::error('400', 'User does not have access to this function');
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+    /**
      * handshake
      * MINIMUM_API_VERSION=380001
      *
@@ -1938,27 +1967,28 @@ class Api
         if (!self::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
             return false;
         }
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create')) {
+            return false;
+		}
         $username = $input['username'];
         $fullname = $input['fullname'] ?: $username;
         $email    = $input['email'];
         $password = $input['password'];
         $disable  = (bool) $input['disable'];
+		$access   = 25;
+		$user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
 
-        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
-            $access  = 25;
-            $user_id = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
-            if ($user_id > 0) {
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::success('successfully created: ' . $username);
-                    break;
-                    default:
-                        echo XML_Data::success('successfully created: ' . $username);
-                }
+		if ($user_id > 0) {
+			switch ($input['format']) {
+				case 'json':
+					echo JSON_Data::success('successfully created: ' . $username);
+				break;
+				default:
+					echo XML_Data::success('successfully created: ' . $username);
+			}
 
-                return true;
-            }
-        }
+			return true;
+		}
         switch ($input['format']) {
             case 'json':
                 echo JSON_Data::error('400', 'failed to create: ' . $username);
@@ -1992,6 +2022,9 @@ class Api
         if (!self::check_parameter($input, array('username'), 'user_update')) {
             return false;
         }
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create')) {
+            return false;
+		}
         $username   = $input['username'];
         $fullname   = $input['fullname'];
         $email      = $input['email'];
@@ -2018,7 +2051,7 @@ class Api
             return false;
         }
 
-        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id) && $user_id > 0) {
+        if ($user_id > 0) {
             if ($password) {
                 $user->update_password('', $password);
             }
@@ -2080,22 +2113,23 @@ class Api
         if (!self::check_parameter($input, array('username'), 'user_delete')) {
             return false;
         }
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create')) {
+            return false;
+		}
         $username = $input['username'];
-        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
-            $user = User::get_from_username($username);
-            // don't delete yourself or admins
-            if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
-                $user->delete();
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::success('successfully deleted: ' . $username);
-                    break;
-                    default:
-                        echo XML_Data::success('successfully deleted: ' . $username);
-                }
-
-                return true;
+        $user     = User::get_from_username($username);
+        // don't delete yourself or admins
+        if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
+            $user->delete();
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::success('successfully deleted: ' . $username);
+                break;
+                default:
+                    echo XML_Data::success('successfully deleted: ' . $username);
             }
+
+            return true;
         }
         switch ($input['format']) {
             case 'json':
@@ -2839,6 +2873,9 @@ class Api
         if (!self::check_parameter($input, array('id'), 'update_artist_info')) {
             return false;
         }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'user_create')) {
+            return false;
+		}
         $object = (int) $input['id'];
         $item   = new Artist($object);
         if (!$item->id) {
@@ -2853,11 +2890,8 @@ class Api
             return;
         }
         // update your object
-        //need at least catalog_manager access to the db
-        if (Access::check('interface', 75, User::get_from_username(Session::username($input['auth']))->id)) {
-            Recommendation::get_artist_info($object);
-            Recommendation::get_artists_like($object);
-
+        // need at least catalog_manager access to the db
+        if (!empty(Recommendation::get_artist_info($object) || !empty(Recommendation::get_artists_like($object)))) {
             switch ($input['format']) {
                 case 'json':
                     echo JSON_Data::success('Updated artist info: ' . (string) $object);
@@ -2870,10 +2904,10 @@ class Api
         }
         switch ($input['format']) {
             case 'json':
-                echo JSON_Data::error('400', T_('failed to update_artist_info for ' . (string) $object));
+                echo JSON_Data::error('400', T_('failed to update_artist_info or recommendations for ' . (string) $object));
             break;
             default:
-                echo XML_Data::error('400', T_('failed to update_artist_info for ' . (string) $object));
+                echo XML_Data::error('400', T_('failed to update_artist_info or recommendations for ' . (string) $object));
         }
         Session::extend($input['auth']);
     } // update_artist_info
@@ -2895,6 +2929,9 @@ class Api
         if (!self::check_parameter($input, array('type', 'id'), 'update_art')) {
             return false;
         }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'user_create')) {
+            return false;
+		}
         $type      = (string) $input['type'];
         $object    = (int) $input['id'];
         $overwrite = ((int) $input['overwrite'] == 0) ? true : false;
@@ -2924,19 +2961,17 @@ class Api
             return;
         }
         // update your object
-        if (Access::check('interface', 75, User::get_from_username(Session::username($input['auth']))->id)) {
-            Catalog::gather_art_item($type, $object, $overwrite, true);
+        if (Catalog::gather_art_item($type, $object, $overwrite, true)) {
             switch ($input['format']) {
                 case 'json':
-                    echo JSON_Data::success('Gathered art for: ' . (string) $object . ' (' . $type . ')');
+                    echo JSON_Data::success('Gathered new art for: ' . (string) $object . ' (' . $type . ')');
                 break;
                 default:
-                    echo XML_Data::success('Gathered art for: ' . (string) $object . ' (' . $type . ')');
+                    echo XML_Data::success('Gathered new art for: ' . (string) $object . ' (' . $type . ')');
             }
 
             return;
         }
-        //need at least catalog_manager access to the db
         switch ($input['format']) {
             case 'json':
                 echo JSON_Data::error('400', T_('failed to update_art for ' . (string) $object));
