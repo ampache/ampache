@@ -1852,7 +1852,7 @@ class Api
             if ($type === 'song') {
                 switch ($input['format']) {
                     case 'json':
-                        echo JSON_Data::songs($results, array(), true, $user->id);
+                        echo JSON_Data::songs($results, array(), $user->id);
                     break;
                     default:
                         echo XML_Data::songs($results, array(), true, $user->id);
