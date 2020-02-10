@@ -984,9 +984,9 @@ class XML_Data
             if ($user->id) {
                 $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }
-            $string .= "\t</activity>n";
+            $string .= "\n\t</activity>\n";
         }
-        $string .= "</timeline>\n";
+        $string .= "</timeline>";
 
         $final = self::_header() . $string . self::_footer();
 

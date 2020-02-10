@@ -161,13 +161,14 @@ class Api
      * @param integer $level
      * @param integer $user_id
      * @param string $method
+     * @param string $format
      * @return boolean
      */
-    private static function check_access($type, $level, $user_id, $method = '')
+    private static function check_access($type, $level, $user_id, $method = '', $format = 'xml')
     {
         if (!Access::check($type, $level, $user_id)) {
-            debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
-            switch ($input['format']) {
+            debug_event('api.class', $type. " '" . $level . "' required on " . $method . " function call.", 2);
+            switch ($format) {
                 case 'json':
                     echo JSON_Data::error('400', 'User does not have access to this function');
                 break;
@@ -1967,7 +1968,7 @@ class Api
         if (!self::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
             return false;
         }
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create')) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['format'])) {
             return false;
 		}
         $username = $input['username'];
@@ -2022,7 +2023,7 @@ class Api
         if (!self::check_parameter($input, array('username'), 'user_update')) {
             return false;
         }
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create')) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_update', $input['format'])) {
             return false;
 		}
         $username   = $input['username'];
@@ -2113,7 +2114,7 @@ class Api
         if (!self::check_parameter($input, array('username'), 'user_delete')) {
             return false;
         }
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create')) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['format'])) {
             return false;
 		}
         $username = $input['username'];
@@ -2873,7 +2874,7 @@ class Api
         if (!self::check_parameter($input, array('id'), 'update_artist_info')) {
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'user_create')) {
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_artist_info', $input['format'])) {
             return false;
 		}
         $object = (int) $input['id'];
@@ -2929,7 +2930,7 @@ class Api
         if (!self::check_parameter($input, array('type', 'id'), 'update_art')) {
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'user_create')) {
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_art', $input['format'])) {
             return false;
 		}
         $type      = (string) $input['type'];
