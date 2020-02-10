@@ -107,4 +107,4 @@ abstract class localplay_controller
 
         return $data;
     } // parse_url
-} // end localplay_controller interface
+} // end localplay_controller.abstract

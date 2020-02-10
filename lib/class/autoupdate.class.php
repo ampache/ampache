@@ -320,4 +320,4 @@ class AutoUpdate
         echo T_('Done') . '<br />';
         ob_flush();
     }
-}
+} // end autoupdate.class

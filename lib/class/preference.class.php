@@ -513,4 +513,4 @@ class Preference extends database_object
         $_SESSION['userdata']['preferences'] = $results;
         $_SESSION['userdata']['uid']         = $user_id;
     } // init
-} // end Preference class
+} // end preference.class

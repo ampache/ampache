@@ -512,7 +512,7 @@ class Catalog_local extends Catalog
      */
     public function verify_catalog_proc()
     {
-        debug_event('verify', 'Starting on ' . $this->name, 5);
+        debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
         $stats         = self::get_stats($this->id);
@@ -541,7 +541,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        debug_event('verify', "Finished, $total_updated updated in " . $this->name, 5);
+        debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
 
         return array('total' => $number, 'updated' => $total_updated);
     } // verify_catalog_proc
@@ -553,7 +553,7 @@ class Catalog_local extends Catalog
      */
     private function _verify_chunk($media_type, $chunk, $chunk_size)
     {
-        debug_event('verify', "Starting chunk $chunk", 5);
+        debug_event('local.catalog', "Verify starting chunk $chunk", 5);
         $count   = $chunk * $chunk_size;
         $changed = 0;
 

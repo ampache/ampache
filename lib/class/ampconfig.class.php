@@ -124,4 +124,4 @@ class AmpConfig
             self::set($name, $value, $clobber);
         }
     }
-}
+} // end ampconfig.class

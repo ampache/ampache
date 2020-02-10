@@ -431,4 +431,4 @@ class Broadcast_Server implements MessageComponentInterface
             echo $message;
         }
     }
-} // end of broadcast_server class
+} // end broadcast_server.class

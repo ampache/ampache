@@ -242,7 +242,7 @@ class Catalog_Seafile extends Catalog
         if ($this->seafile->prepare()) {
             $count = $this->seafile->for_all_files(function ($file) {
                 if ($file->size == 0) {
-                    debug_event('read', $file->name . " ignored, 0 bytes", 5);
+                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, 0 bytes", 5);
 
                     return 0;
                 }
@@ -257,9 +257,9 @@ class Catalog_Seafile extends Catalog
                 } elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
                     // TODO $this->insert_video()
                 } elseif (!$is_audio_file && !$is_video_file) {
-                    debug_event('read', $file->name . " ignored, unknown media file type", 5);
+                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
                 } else {
-                    debug_event('read', $file->name . " ignored, bad media type for this catalog.", 5);
+                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, bad media type for this catalog.", 5);
                 }
 
                 return 0;
@@ -311,7 +311,7 @@ class Catalog_Seafile extends Catalog
                 return $added;
             } catch (Exception $error) {
                 /* HINT: %1 filename (File path), %2 error message */
-                debug_event('seafile_add', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
+                debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
                 /* HINT: filename (File path) */
                 UI::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
             }
@@ -366,7 +366,7 @@ class Catalog_Seafile extends Catalog
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results['total']++;
-                debug_event('seafile-verify', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+                debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
                 $fileinfo = $this->seafile->from_virtual_path($row['file']);
 
                 $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
@@ -378,7 +378,7 @@ class Catalog_Seafile extends Catalog
                 }
 
                 if ($metadata !== null) {
-                    debug_event('seafile-verify', 'updating song', 5, 'ampache-catalog');
+                    debug_event('seafile_catalog', 'Verify updating song', 5, 'ampache-catalog');
                     $song = new Song($row['id']);
                     $info = self::update_song_from_tags($metadata, $song);
                     if ($info['change']) {
@@ -388,7 +388,7 @@ class Catalog_Seafile extends Catalog
                         UI::update_text('', sprintf(T_('Song up to date: %s'), $row['title']));
                     }
                 } else {
-                    debug_event('seafile-verify', 'removing song', 5, 'ampache-catalog');
+                    debug_event('seafile_catalog', 'Verify removing song', 5, 'ampache-catalog');
                     UI::update_text('', sprintf(T_('Removing song: %s'), $row['title']));
                     //$dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
@@ -431,7 +431,7 @@ class Catalog_Seafile extends Catalog
             $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
-                debug_event('seafile-clean', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
+                debug_event('seafile_catalog', 'Clean starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
                 $file     = $this->seafile->from_virtual_path($row['file']);
 
                 try {
@@ -440,19 +440,19 @@ class Catalog_Seafile extends Catalog
                     UI::update_text(T_("There Was a Problem"),
                             /* HINT: %1 filename (File path), %2 Error Message */
                             sprintf(T_('There was an error while checking this song "%1$s": %2$s'), $file['filename'], $error->getMessage()));
-                    debug_event('seafile-clean', 'Exception: ' . $error->getMessage(), 2);
+                    debug_event('seafile_catalog', 'Clean Exception: ' . $error->getMessage(), 2);
 
                     continue;
                 }
 
                 if ($exists) {
-                    debug_event('seafile-clean', 'keeping song', 5);
+                    debug_event('seafile_catalog', 'Clean keeping song', 5);
                     /* HINT: filename (File path) */
                     UI::update_text('', sprintf(T_('Keeping song: %s'), $file['filename']));
                 } else {
                     /* HINT: filename (File path) */
                     UI::update_text('', sprintf(T_('Removing song: %s'), $file['filename']));
-                    debug_event('seafile-clean', 'removing song', 5);
+                    debug_event('seafile_catalog', 'Clean removing song', 5);
                     $dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                 }

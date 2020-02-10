@@ -223,4 +223,4 @@ class Mailer
 
         return $this->send($mail);
     }
-} // Mailer class
+} // end mailer.class

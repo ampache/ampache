@@ -1286,4 +1286,4 @@ class Upnp_Api
             '3gp' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
         );
     }
-}
+} // end upnp_api.class

@@ -239,4 +239,4 @@ class Repository
     {
         return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', '_$1', $string));
     }
-}
+} // end repository

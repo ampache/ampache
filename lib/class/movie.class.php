@@ -157,4 +157,4 @@ class Movie extends Video
 
         return $deleted;
     }
-} // Movie class
+} // end movie.class

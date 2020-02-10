@@ -584,4 +584,4 @@ class Session
 
         return true;
     }
-}
+} // end session.class

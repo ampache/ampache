@@ -716,4 +716,4 @@ class Channel extends database_object implements media, library_item
 
         return($string);
     }
-} // end of channel class
+} // end channel.class

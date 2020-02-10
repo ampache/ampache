@@ -544,4 +544,4 @@ class Podcast extends database_object implements library_item
 
         return $catalog->path . DIRECTORY_SEPARATOR . $dirname;
     }
-}
+} // end podcast.class

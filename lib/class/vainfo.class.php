@@ -1339,4 +1339,4 @@ class vainfo
 
         return $data;
     }
-} // end class vainfo
+} // end vainfo.class

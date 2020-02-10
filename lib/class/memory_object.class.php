@@ -52,4 +52,4 @@ class memory_object
 
         return isset($this->_data[$name]) ? $this->_data[$name] : null;
     }
-}
+} // end memory_object.class

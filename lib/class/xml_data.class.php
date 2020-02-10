@@ -1167,6 +1167,4 @@ class XML_Data
             return $xmlstr;
         }
     }
-}
-
-// XML_Data
+} // end xml_data.class

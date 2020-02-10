@@ -2695,4 +2695,4 @@ abstract class Catalog extends database_object
 
         return false;
     }
-} // end of catalog class
+} // end catalog.class

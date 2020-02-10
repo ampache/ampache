@@ -3309,4 +3309,4 @@ class Api
         } // switch on method
         Session::extend($input['auth']);
     } // democratic
-} // API class
+} // end api.class

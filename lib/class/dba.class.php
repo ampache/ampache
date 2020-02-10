@@ -594,4 +594,4 @@ class Dba
             self::write($sql);
         }
     }
-}
+} // end dba.class

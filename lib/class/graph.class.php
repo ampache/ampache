@@ -534,7 +534,7 @@ class Graph
             require_once AmpConfig::get('prefix') . UI::find_template('show_graphs.inc.php');
         }
     }
-}
+} // end graph.class
 
 // Need to create a function to pass to pGraph objects
 function pGraph_Yformat_bytes($value)

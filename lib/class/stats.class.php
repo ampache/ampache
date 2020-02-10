@@ -599,4 +599,4 @@ class Stats
 
         return $items;
     } // get_newest
-} // Stats class
+} // end stats.class
