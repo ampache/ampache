@@ -24,6 +24,11 @@ class Graph
 {
     public function __construct()
     {
+        if (!AmpConfig::get('statistical_graphs') || !is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
+            debug_event('graph', 'Access denied, statistical graph disabled.', 1);
+
+            return false;
+        }
         require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Data.php';
         require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Draw.php';
         require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Image.php';
@@ -534,7 +539,7 @@ class Graph
             require_once AmpConfig::get('prefix') . UI::find_template('show_graphs.inc.php');
         }
     }
-} // end graph.class
+}
 
 // Need to create a function to pass to pGraph objects
 function pGraph_Yformat_bytes($value)

@@ -94,6 +94,12 @@ class AmpacheStreamHits
         if ($this->hits_max < 0) {
             return true;
         }
+        // if using free software only you can't use this plugin
+        if (!AmpConfig::get('statistical_graphs') || !is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
+            debug_event('streamhits.plugin', 'Access denied, statistical graph disabled.', 1);
+
+            return true;
+        }
 
         $next_total = count($media_ids);
 
