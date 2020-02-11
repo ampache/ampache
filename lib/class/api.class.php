@@ -2714,14 +2714,29 @@ class Api
         }
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
-        if ($catalog && ($task === 'add_to_catalog' || $task === 'clean_catalog')) {
-            $catalog->process_action($task, (int) $input['catalog']);
+        if ($catalog) {
+            switch ($task) {
+                case 'clean_catalog':
+                    $catalog->clean_catalog();
+                break;
+                case 'add_to_catalog':
+                    $catalog->add_to_catalog();
+                break;
+            }
             switch ($input['format']) {
                 case 'json':
                     echo JSON_Data::success('successfully started: ' . $task);
                 break;
                 default:
-                    echo XML_Data::success('successfully started: ' . $task);
+                   echo XML_Data::success('successfully started: ' . $task);
+            }
+        } else {
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::error('404', T_('The requested item was not found'));
+                break;
+                default:
+                   echo XML_Data::error('404', T_('The requested item was not found'));
             }
         }
         Session::extend($input['auth']);
