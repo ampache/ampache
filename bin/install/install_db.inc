@@ -130,4 +130,4 @@ function install_usage() {
     echo T_('Force installation'), "\n";
 
     exit(1);
-} ?>
+}

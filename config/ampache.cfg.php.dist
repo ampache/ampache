@@ -519,10 +519,12 @@ sociable = 1
 
 ; Statistical Graphs * Requires PHP-GD *
 ; Set this to true if you want Ampache to generate statistical graphs on usages / users.
-; This is false by default due to issues around the licencing of pchart.
+; This is false by default due to issues around the licensing of c-pchart.
 ;  https://github.com/ampache/ampache/issues/1515
 ;  http://www.pchart.net/license
 ; REFERENCE: https://github.com/ampache/ampache/wiki/chart-faq
+; You can enable c-chart with the following command
+;  composer require 'szymach/c-pchart'
 ; DEFAULT: 0
 ;statistical_graphs = 0
 
@@ -659,6 +661,7 @@ show_footer_statistics = 1
 ; RSS Feeds
 ; Set this to true to enable rss feeds.
 ; (latest albums, shouts, albums of artist, ...)
+; use_rss = false (values true | false)
 ; DEFAULT: 0
 ;use_rss = 0
 
@@ -791,12 +794,12 @@ site_charset = UTF-8
 ;ldap_require_group = "cn=yourgroup,ou=yourorg,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
 
 ; LDAP name field
-; DEFAULT = "cn"
+; DEFAULT: = "cn"
 ;ldap_name_field = "cn"
 ;ldap_name_field = "displayName"
 
 ; LDAP email field
-; DEFAULT = "mail"
+; DEFAULT: = "mail"
 ;ldap_email_field = "mail"
 
 ; LDAP avatar field
@@ -1083,7 +1086,7 @@ encode_ss_duration = "-t %DURATION%"
 ;proxy_pass = ""
 
 ; If Ampache is behind an https reverse proxy, force use HTTPS protocol.
-; DEFAULT: false
+; DEFAULT: 1
 ;force_ssl = 1
 
 

@@ -727,4 +727,4 @@ class JSON_Data
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // timeline
-} // JSON_Data
+} // end json_data.class

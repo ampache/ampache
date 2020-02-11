@@ -638,4 +638,4 @@ class Democratic extends Tmp_Playlist
 
         return $voters;
     } // get_voters
-} // Democratic class
+} // end democratic.class

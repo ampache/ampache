@@ -546,4 +546,4 @@ class Wanted extends database_object
 
         return $results;
     }
-} // end of wanted class
+} // end wanted.class

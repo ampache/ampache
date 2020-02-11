@@ -453,4 +453,4 @@ class Podcast_Episode extends database_object implements media, library_item
     {
         return Song::type_to_mime($type);
     }
-}
+} // end podcast_episode.class

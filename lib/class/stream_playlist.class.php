@@ -663,4 +663,4 @@ class Stream_Playlist
             echo $url->url . "\n";
         }
     } // create_ram
-}
+} // end stream_playlist.class

@@ -238,6 +238,7 @@ class Channel extends database_object implements media, library_item
             if (Core::get_global('user')->has_access('75')) {
                 echo Ajax::button('?page=index&action=start_channel&id=' . $this->id, 'run', T_('Start Channel'), 'channel_start_' . $this->id);
                 echo " " . Ajax::button('?page=index&action=stop_channel&id=' . $this->id, 'stop', T_('Stop Channel'), 'channel_stop_' . $this->id);
+                echo " <a href=\"" . $this->get_stream_proxy_url_status() . "\" target=\"_blank\">" . UI::get_icon('view', T_('Status')) . "</a>";
                 echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel Edit') . "', 'channel_row_', 'refresh_channel')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/channel.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
             }
@@ -378,6 +379,9 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_stream_url
+     * show the internal interface used for the stream
+     * e.g. http://0.0.0.0:8200/stream.mp3
+     *
      * @return string
      */
     public function get_stream_url()
@@ -385,9 +389,28 @@ class Channel extends database_object implements media, library_item
         return "http://" . $this->interface . ":" . $this->port . "/stream." . $this->stream_type;
     }
 
+    /**
+     * get_stream_proxy_url
+     * show the external address used for the stream
+     * e.g. https://music.com.au/channel/6/stream.mp3
+     *
+     * @return string
+     */
     public function get_stream_proxy_url()
     {
         return AmpConfig::get('web_path') . '/channel/' . $this->id . '/stream.' . $this->stream_type;
+    }
+
+    /**
+     * get_stream_proxy_url_status
+     * show the external address used for the stream
+     * e.g. https://music.com.au/channel/6/status.xsl
+     *
+     * @return string
+     */
+    public function get_stream_proxy_url_status()
+    {
+        return AmpConfig::get('web_path') . '/channel/' . $this->id . '/status.xsl';
     }
 
     /**
@@ -716,4 +739,4 @@ class Channel extends database_object implements media, library_item
 
         return($string);
     }
-} // end of channel class
+} // end channel.class

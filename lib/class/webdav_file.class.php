@@ -86,4 +86,4 @@ class WebDAV_File extends DAV\File
     {
         return md5(get_class($this->libitem) . "_" . $this->libitem->id . "_" . $this->libitem->update_time);
     }
-}
+} // end webdav_file.class

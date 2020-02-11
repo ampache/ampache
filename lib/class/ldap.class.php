@@ -326,4 +326,4 @@ class LDAP
 
         return $return_value;
     }
-}
+} // end ldap.class

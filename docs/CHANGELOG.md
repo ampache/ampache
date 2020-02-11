@@ -7,10 +7,23 @@
     * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400003
   * Call the JSON server:
     * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400003
+
+## 4.1.1
+* Bump API version to 400004 (4.0.0 build 004)
+* Api - Fix parameters using 0
+* Api - Get the correct total_count in xml when you set a limit
+* Api - Fix many XML formatting issues
+* Api - Add Api::check_access to warn when you can't access a function
+* Remove non-free lib/composer.* files.
+  * You can enable c-pchart with (composer require 'szymach/c-pchart')
+* Hide localplay in the sidebar when you disable all the plugins
+* Extend Shouts to 2000 characters; Labels to 250
+* Remove shoutcast table and preferences. (Dead code)
+* Add a status icon to the channel list pointing to the channel/ID/status.xsl
 * Fix Musicbrainz Art search
-* Update copyright year to 2020
-* Update the release process
-* Multiarch docker images available
+* Fix tmp_playlist bug removing items
+* Fix Dropbox catalog errors when using a small library
+* Fix some bugs getting invalid time/date when reading tags
 
 ## 4.1.0
 

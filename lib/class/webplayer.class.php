@@ -299,4 +299,4 @@ class WebPlayer
 
         return json_encode($js);
     }
-}
+} // end webplayer.class

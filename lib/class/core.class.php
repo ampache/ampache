@@ -574,4 +574,4 @@ class Core
 
         return $tmp_dir;
     }
-} // Core
+} // end core.class

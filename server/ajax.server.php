@@ -111,7 +111,7 @@ switch ($action) {
     case 'current_playlist':
         switch ($_REQUEST['type']) {
             case 'delete':
-                Core::get_global('user')->playlist->delete_track_number($_REQUEST['id']);
+                Core::get_global('user')->playlist->delete_track($_REQUEST['id']);
             break;
         } // end switch
 

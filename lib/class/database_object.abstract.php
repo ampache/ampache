@@ -144,4 +144,4 @@ abstract class database_object
     {
         self::$_enabled = AmpConfig::get('memory_cache');
     } // _auto_init
-} // end database_object
+} // end database_object.abstract

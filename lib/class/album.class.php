@@ -1236,4 +1236,4 @@ class Album extends database_object implements library_item
 
         return (int) $disk;
     }
-} // end of album class
+} // end album.class

@@ -341,4 +341,4 @@ class Waveform
 
         return Dba::write($sql, array($waveform, $song_id));
     }
-} // Waveform class
+} // end waveform.class

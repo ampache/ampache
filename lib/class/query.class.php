@@ -2450,4 +2450,4 @@ class Query
     {
         $this->_state['ak'] = $ak;
     }
-} // query
+} // end query.class

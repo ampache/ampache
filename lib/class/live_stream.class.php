@@ -390,4 +390,4 @@ class Live_Stream extends database_object implements media, library_item
         unset($user);
         // Do nothing
     }
-} // end of live_stream class
+} // end live_stream.class

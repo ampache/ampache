@@ -131,4 +131,4 @@ class Registration
         /* Scrub and show */
         echo $data;
     } // show_agreement
-} // end registration class
+} // end registration.class

@@ -340,8 +340,6 @@ class XML_Data
      */
     public static function indexes($objects, $object_type, $full_xml = true)
     {
-        $string = "<total_count>" . count($objects) . "</total_count>\n";
-
         if (count($objects) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $objects = array_splice($objects, self::$offset, self::$limit);
@@ -349,6 +347,7 @@ class XML_Data
                 $objects = array_splice($objects, self::$offset);
             }
         }
+        $string = "<total_count>" . count($objects) . "</total_count>\n";
 
         foreach ($objects as $object_id) {
             // 'artist'|'album'|'song'|'playlist'
@@ -433,8 +432,6 @@ class XML_Data
      */
     public static function tags($tags)
     {
-        $string = "<total_count>" . count($tags) . "</total_count>\n";
-
         if (count($tags) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $tags = array_splice($tags, self::$offset, self::$limit);
@@ -442,6 +439,7 @@ class XML_Data
                 $tags = array_splice($tags, self::$offset);
             }
         }
+        $string = "<total_count>" . count($tags) . "</total_count>\n";
 
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
@@ -480,8 +478,6 @@ class XML_Data
         if (is_string($include)) {
             $include = explode(',', $include);
         }
-        $string = "<total_count>" . count($artists) . "</total_count>\n";
-
         if (count($artists) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $artists = array_splice($artists, self::$offset, self::$limit);
@@ -489,6 +485,7 @@ class XML_Data
                 $artists = array_splice($artists, self::$offset);
             }
         }
+        $string = "<total_count>" . count($artists) . "</total_count>\n";
 
         Rating::build_cache('artist', $artists);
 
@@ -553,7 +550,6 @@ class XML_Data
         if (is_string($include)) {
             $include = explode(',', $include);
         }
-        $string = "<total_count>" . count($albums) . "</total_count>\n";
 
         if (count($albums) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
@@ -562,6 +558,7 @@ class XML_Data
                 $albums = array_splice($albums, self::$offset);
             }
         }
+        $string = "<total_count>" . count($albums) . "</total_count>\n";
 
         Rating::build_cache('album', $albums);
 
@@ -687,8 +684,6 @@ class XML_Data
      */
     public static function songs($songs, $playlist_data = array(), $full_xml = true, $user_id = false)
     {
-        $string = "<total_count>" . count($songs) . "</total_count>\n";
-
         if (count($songs) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $songs = array_slice($songs, self::$offset, self::$limit);
@@ -696,6 +691,7 @@ class XML_Data
                 $songs = array_slice($songs, self::$offset);
             }
         }
+        $string = "<total_count>" . count($songs) . "</total_count>\n";
 
         Song::build_cache($songs);
         Stream::set_session(Core::get_request('auth'));
@@ -787,8 +783,6 @@ class XML_Data
      */
     public static function videos($videos, $user_id = false)
     {
-        $string = '<total_count>' . count($videos) . "</total_count>\n";
-
         if (count($videos) > self::$limit or self::$offset > 0) {
             if (null !== self::$limit) {
                 $videos = array_slice($videos, self::$offset, self::$limit);
@@ -796,6 +790,7 @@ class XML_Data
                 $videos = array_slice($videos, self::$offset);
             }
         }
+        $string = '<total_count>' . count($videos) . "</total_count>\n";
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
@@ -989,9 +984,9 @@ class XML_Data
             if ($user->id) {
                 $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }
-            $string .= "\t</activity>n";
+            $string .= "\n\t</activity>\n";
         }
-        $string .= "</timeline>\n";
+        $string .= "</timeline>";
 
         $final = self::_header() . $string . self::_footer();
 
@@ -1172,6 +1167,4 @@ class XML_Data
             return $xmlstr;
         }
     }
-}
-
-// XML_Data
+} // end xml_data.class

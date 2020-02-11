@@ -440,7 +440,7 @@ class Preference extends database_object
                     'allow_stream_playback', 'allow_democratic_playback',
                     'use_auth', 'allow_localplay_playback', 'debug', 'lock_songs',
                     'transcode_m4a', 'transcode_mp3', 'transcode_ogg', 'transcode_flac',
-                    'shoutcast_active', 'httpq_active', 'show_lyrics');
+                    'httpq_active', 'show_lyrics');
 
         if (in_array($key, $boolean_array)) {
             return true;
@@ -513,4 +513,4 @@ class Preference extends database_object
         $_SESSION['userdata']['preferences'] = $results;
         $_SESSION['userdata']['uid']         = $user_id;
     } // init
-} // end Preference class
+} // end preference.class

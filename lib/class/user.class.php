@@ -1710,4 +1710,4 @@ class User extends database_object
 
         return true;
     }
-} //end user class
+} // end user.class

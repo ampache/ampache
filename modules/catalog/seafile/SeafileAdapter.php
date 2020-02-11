@@ -150,7 +150,7 @@ class SeafileAdapter
 
                 $secs = intval($matches[1][0]);
 
-                debug_event('seafile', sprintf('Throttled by Seafile, waiting %d seconds.', $secs), 5);
+                debug_event('SeafileAdapter', sprintf('Throttled by Seafile, waiting %d seconds.', $secs), 5);
                 sleep($secs + 1);
             }
         }
