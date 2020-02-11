@@ -226,11 +226,13 @@ class Stats
      * if we should re-submit or if this is a duplicate / if it's too soon. This takes an
      * optional user_id because when streaming we don't have $GLOBALS()
      */
-    public static function get_last_song($user_id = '')
+    public static function get_last_song($user_id = '', $agent = '')
     {
         if ($user_id === '') {
             $user_id = Core::get_global('user')->id;
         }
+
+        $sqlres = array($user_id);
 
         $sql = "SELECT * FROM `object_count` " .
                 "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
@@ -241,13 +243,29 @@ class Stats
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
+        if (!$agent === '') {
+            $sql .= "AND `object_count`.`agent` = ? ";
+            array_push($sqlres, $agent);
+        }
         $sql .= "ORDER BY `object_count`.`date` DESC LIMIT 1";
-        $db_results = Dba::read($sql, array($user_id));
+        $db_results = Dba::read($sql, $sqlres);
 
         $results = Dba::fetch_assoc($db_results);
 
         return $results;
     } // get_last_song
+
+    /**
+     * set_to_skipped
+     * this sets the object_counts count type to skipped
+     * Gets called when the next song is played in quick succession
+     */
+    public static function set_to_skipped($id)
+    {
+        $sql = "UPDATE `object_count` SET `count_type` = 'skipped' WHERE `object_count`.`id` = ?";
+        $db_results = Dba::read($sql, array($id));
+    }
+
 
     /**
      * get_object_history

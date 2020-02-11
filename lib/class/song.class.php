@@ -977,7 +977,7 @@ class Song extends database_object implements media, library_item
      */
     public function set_played($user, $agent, $location, $date = null)
     {
-        if ($this->check_play_history($user)) {
+        if ($this->check_play_history($user, $agent)) {
             Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
             Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date, $this->time);
             Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date, $this->time);
@@ -996,14 +996,15 @@ class Song extends database_object implements media, library_item
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
      * @param integer $user
+     * @param string $agent
      * @return boolean
      */
-    public function check_play_history($user)
+    public function check_play_history($user, $agent='')
     {
         if ($user == -1) {
             return false;
         }
-        $previous = Stats::get_last_song($user);
+        $previous = Stats::get_last_song($user, $agent);
         $diff     = time() - $previous['date'];
 
         // this song was your last play and the length between plays is too short.
@@ -1016,7 +1017,7 @@ class Song extends database_object implements media, library_item
         // try to keep a difference between recording stats but also allowing short songs
         if ($diff < 20 && !$this->time < 20) {
             debug_event('song.class', 'Last song played within ' . $diff . ' seconds, not recording stats', 3);
-
+            Stats::set_to_skipped($previous['id']);
             return false;
         }
 
