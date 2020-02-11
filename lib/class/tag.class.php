@@ -927,4 +927,4 @@ class Tag extends database_object implements library_item
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
-} // end of Tag class
+} // end tag.class

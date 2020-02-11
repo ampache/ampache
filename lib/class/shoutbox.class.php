@@ -363,4 +363,4 @@ class Shoutbox
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
-} // Shoutbox class
+} // end shoutbox.class

@@ -246,7 +246,7 @@ class AmpacheVlc extends localplay_controller
     public function delete_track($object_id)
     {
         if ($this->_vlc->delete_pos($object_id) === null) {
-            debug_event('vlc_del', 'ERROR Unable to delete ' . $object_id . ' from VLC', 1);
+            debug_event('vlc.controller', 'ERROR Unable to delete ' . $object_id . ' from VLC', 1);
 
             return false;
         }

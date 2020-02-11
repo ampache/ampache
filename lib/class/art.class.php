@@ -1120,6 +1120,9 @@ class Art extends database_object
                     case 'gather_google':
                         $data = $this->{$method_name}($limit, $options);
                     break;
+                    case 'gather_musicbrainz':
+                        $data = $this->{$method_name}($limit, $options);
+                    break;
                     default:
                         $data = $this->{$method_name}($limit);
                     break;
@@ -1179,8 +1182,8 @@ class Art extends database_object
             return $images;
         }
 
-        if ($data['mbid']) {
-            debug_event('art.class', "gather_musicbrainz Album MBID: " . $data['mbid'], 5);
+        if ($data['mb_albumid']) {
+            debug_event('art.class', "gather_musicbrainz Album MBID: " . $data['mb_albumid'], 5);
         } else {
             return $images;
         }
@@ -1190,7 +1193,7 @@ class Art extends database_object
             'url-rels'
         );
         try {
-            $release = $mb->lookup('release', $data['mbid'], $includes);
+            $release = $mb->lookup('release', $data['mb_albumid'], $includes);
         } catch (Exception $error) {
             debug_event('art.class', "gather_musicbrainz exception: " . $error, 3);
 
@@ -1909,4 +1912,4 @@ class Art extends database_object
 
         return true;
     }
-} // Art
+} // end art.class

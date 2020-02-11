@@ -355,4 +355,4 @@ class TVShow_Season extends database_object implements library_item
 
         return Dba::write($sql, array($tvshow_id, $season_id));
     }
-} // end of tvshow_season class
+} // end tvshow_season.class

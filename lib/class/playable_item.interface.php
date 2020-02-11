@@ -78,4 +78,4 @@ interface playable_item
      * @return integer[]
      */
     public function get_catalogs();
-} // end interface
+} // end playable_item.interface

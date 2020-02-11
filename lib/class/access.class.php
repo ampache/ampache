@@ -525,4 +525,4 @@ class Access
                 return T_('Stream Access');
         }
     }
-}
+} // end access.class

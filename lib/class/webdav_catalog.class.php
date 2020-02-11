@@ -100,4 +100,4 @@ class WebDAV_Catalog extends DAV\Collection
 
         return AmpConfig::get('site_title');
     }
-}
+} // end webdav_catalog.class

@@ -173,4 +173,4 @@ class Bookmark extends database_object
         $user         = new User($this->user);
         $this->f_user = $user->username;
     }
-} //end bookmark class
+} // end bookmark.class

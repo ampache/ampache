@@ -145,4 +145,4 @@ class License
 
         return $results;
     } // get_licenses
-} // License class
+} // end license.class

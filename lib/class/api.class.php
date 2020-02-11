@@ -38,7 +38,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '400003';
+    public static $version = '400004';
 
     /**
      *  @var Browse $browse
@@ -134,7 +134,7 @@ class Api
     private static function check_parameter($input, $parameters, $method = '')
     {
         foreach ($parameters as $parameter) {
-            if (empty($input[$parameter])) {
+            if (empty($input[$parameter]) && !$input[$parameter] == 0) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
                 echo XML_Data::error('401', T_('Missing mandatory parameter') . " '" . $parameter . "'");
 
@@ -145,6 +145,29 @@ class Api
         return true;
     }
 
+    /**
+     * check_access
+     *
+     * This function checks the user can perform the function requested
+     *
+     * @param string $type
+     * @param integer $level
+     * @param integer $user_id
+     * @param string $method
+     * @param string $format
+     * @return boolean
+     */
+    private static function check_access($type, $level, $user_id, $method = '', $format = 'xml')
+    {
+        if (!Access::check($type, $level, $user_id)) {
+            debug_event('api.class', $type . " '" . $level . "' required on " . $method . " function call.", 2);
+            echo XML_Data::error('400', 'User does not have access to this function');
+
+            return false;
+        }
+
+        return true;
+    }
     /**
      * handshake
      * MINIMUM_API_VERSION=380001
@@ -305,19 +328,19 @@ class Api
                 $sql        = "SELECT COUNT(`id`) AS `catalog` FROM `catalog` WHERE `catalog_type`='local'";
                 $db_results = Dba::read($sql);
                 $catalog    = Dba::fetch_assoc($db_results);
-
-                echo XML_Data::keyed_array(array('auth' => $token,
-                    'api' => self::$version,
-                    'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-                    'update' => date("c", (int) $row['update']),
-                    'add' => date("c", (int) $row['add']),
-                    'clean' => date("c", (int) $row['clean']),
-                    'songs' => $song['song'],
-                    'albums' => $album['album'],
-                    'artists' => $artist['artist'],
-                    'playlists' => ((int) $playlist['playlist'] + (int) $smartlist['smartlist']),
-                    'videos' => $vcounts['video'],
-                    'catalogs' => $catalog['catalog']));
+                $outarray   = array('auth' => $token,
+                                    'api' => self::$version,
+                                    'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
+                                    'update' => date("c", (int) $row['update']),
+                                    'add' => date("c", (int) $row['add']),
+                                    'clean' => date("c", (int) $row['clean']),
+                                    'songs' => $song['song'],
+                                    'albums' => $album['album'],
+                                    'artists' => $artist['artist'],
+                                    'playlists' => ((int) $playlist['playlist'] + (int) $smartlist['smartlist']),
+                                    'videos' => $vcounts['video'],
+                                    'catalogs' => $catalog['catalog']);
+                echo XML_Data::keyed_array($outarray);
 
                 return true;
             } // match
@@ -392,7 +415,7 @@ class Api
      * This takes a url and returns the song object in question
      *
      * @param array $input
-     * 'url' = (string) $url
+     * url = (string) $url
      */
     public static function url_to_song($input)
     {
@@ -443,8 +466,6 @@ class Api
         self::set_filter('update', $input['update']);
 
         // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
 
         if ($type == 'playlist') {
             self::$browse->set_filter('playlist_type', $user->id);
@@ -454,6 +475,8 @@ class Api
         }
         // echo out the resulting xml document
         ob_end_clean();
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
         echo XML_Data::indexes($objects, $type);
         Session::extend($input['auth']);
     } // get_indexes
@@ -489,9 +512,6 @@ class Api
     {
         ob_end_clean();
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
         $user    = User::get_from_username(Session::username($input['auth']));
         $results = Search::run($input, $user);
 
@@ -500,6 +520,8 @@ class Api
             $type = $input['type'];
         }
 
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
         switch ($type) {
             case 'artist':
                 echo XML_Data::artists($results, array(), true, $user->id);
@@ -522,13 +544,13 @@ class Api
      * artist objects. This function is deprecated!
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term //optional
-     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
-     * 'add'     self::set_filter(date) //optional
-     * 'update'  self::set_filter(date) //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
-     * 'include' (array) 'albums'|'songs' //optional
+     * filter  = (string) Alpha-numeric search term //optional
+     * exact   = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * add     = self::set_filter(date) //optional
+     * update  = self::set_filter(date) //optional
+     * offset  = (integer) //optional
+     * limit   = (integer) //optional
+     * include = (array) 'albums'|'songs' //optional
      */
     public static function artists($input)
     {
@@ -541,14 +563,12 @@ class Api
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
         $artists = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
         // echo out the resulting xml document
         ob_end_clean();
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
         echo XML_Data::artists($artists, $input['include'], true, $user->id);
         Session::extend($input['auth']);
     } // artists
@@ -560,8 +580,8 @@ class Api
      * This returns a single artist based on the UID of said artist
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
-     * 'include' (array) 'albums'|'songs' //optional
+     * filter  = (string) Alpha-numeric search term
+     * include = (array) 'albums'|'songs' //optional
      */
     public static function artist($input)
     {
@@ -581,9 +601,9 @@ class Api
      * This returns the albums of an artist
      *
      * @param array $input
-     * 'filter' (string) UID of artist
-     * 'offset' (integer) //optional
-     * 'limit'  (integer) //optional
+     * filter = (string) UID of artist
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function artist_albums($input)
     {
@@ -609,9 +629,9 @@ class Api
      * This returns the songs of the specified artist
      *
      * @param array $input
-     * 'filter' (string) UID of Artist
-     * 'offset' (integer) //optional
-     * 'limit'  (integer) //optional
+     * filter = (string) UID of Artist
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function artist_songs($input)
     {
@@ -622,11 +642,10 @@ class Api
         $songs  = $artist->get_songs();
         $user   = User::get_from_username(Session::username($input['auth']));
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-        ob_end_clean();
         if (!empty($songs)) {
+            ob_end_clean();
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
             echo XML_Data::songs($songs, array(), true, $user->id);
         }
         Session::extend($input['auth']);
@@ -639,13 +658,13 @@ class Api
      * This returns albums based on the provided search filters
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term //optional
-     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
-     * 'add'     self::set_filter(date) //optional
-     * 'update'  self::set_filter(date) //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
-     * 'include' (array) 'songs' //optional
+     * filter  = (string) Alpha-numeric search term //optional
+     * exact   = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * add     = self::set_filter(date) //optional
+     * update  = self::set_filter(date) //optional
+     * offset  = (integer) //optional
+     * limit   = (integer) //optional
+     * include = (array) 'songs' //optional
      */
     public static function albums($input)
     {
@@ -660,10 +679,9 @@ class Api
         $albums = self::$browse->get_objects();
         $user   = User::get_from_username(Session::username($input['auth']));
 
-        // Set the offset
+        ob_end_clean();
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
-        ob_end_clean();
         echo XML_Data::albums($albums, $input['include'], true, $user->id);
         Session::extend($input['auth']);
     } // albums
@@ -675,8 +693,8 @@ class Api
      * This returns a single album based on the UID provided
      *
      * @param array $input
-     * 'filter'  (string) UID of Album
-     * 'include' (array) 'songs' //optional
+     * filter  = (string) UID of Album
+     * include = (array) 'songs' //optional
 
      */
     public static function album($input)
@@ -697,9 +715,9 @@ class Api
      * This returns the songs of a specified album
      *
      * @param array $input
-     * 'filter' (string) UID of Album
-     * 'offset' (integer) //optional
-     * 'limit'  (integer) //optional
+     * filter = (string) UID of Album
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function album_songs($input)
     {
@@ -731,6 +749,8 @@ class Api
             $songs = $album->get_songs();
         }
         if (!empty($songs)) {
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
             echo XML_Data::songs($songs, array(), true, $user->id);
         }
         Session::extend($input['auth']);
@@ -743,16 +763,13 @@ class Api
      * This returns the tags (Genres) based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
-     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function tags($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tags')) {
-            return false;
-        }
         self::$browse->reset_filters();
         self::$browse->set_type('tag');
         self::$browse->set_sort('name', 'ASC');
@@ -761,11 +778,9 @@ class Api
         self::set_filter($method, $input['filter']);
         $tags = self::$browse->get_objects();
 
-        // Set the offset
+        ob_end_clean();
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
-
-        ob_end_clean();
         echo XML_Data::tags($tags);
         Session::extend($input['auth']);
     } // tags
@@ -777,7 +792,7 @@ class Api
      * This returns a single tag based on UID
      *
      * @param array $input
-     * 'filter' (string) UID of Tag
+     * filter = (string) UID of Tag
      */
     public static function tag($input)
     {
@@ -797,9 +812,9 @@ class Api
      * This returns the artists associated with the tag in question as defined by the UID
      *
      * @param array $input
-     * 'filter' (string) UID of Album
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) UID of Album
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function tag_artists($input)
     {
@@ -809,10 +824,10 @@ class Api
         $artists = Tag::get_tag_objects('artist', $input['filter']);
         if ($artists) {
             $user = User::get_from_username(Session::username($input['auth']));
-            XML_Data::set_offset($input['offset']);
-            XML_Data::set_limit($input['limit']);
 
             ob_end_clean();
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
             echo XML_Data::artists($artists, array(), true, $user->id);
         }
         Session::extend($input['auth']);
@@ -825,9 +840,9 @@ class Api
      * This returns the albums associated with the tag in question
      *
      * @param array $input
-     * 'filter' (string) UID of Tag
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) UID of Tag
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function tag_albums($input)
     {
@@ -841,6 +856,8 @@ class Api
             XML_Data::set_limit($input['limit']);
 
             ob_end_clean();
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
             echo XML_Data::albums($albums, array(), true, $user->id);
         }
         Session::extend($input['auth']);
@@ -853,9 +870,9 @@ class Api
      * returns the songs for this tag
      *
      * @param array $input
-     * 'filter' (string) UID of Tag
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) UID of Tag
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function tag_songs($input)
     {
@@ -870,6 +887,8 @@ class Api
 
         ob_end_clean();
         if ($songs) {
+            XML_Data::set_offset($input['offset']);
+            XML_Data::set_limit($input['limit']);
             echo XML_Data::songs($songs, array(), true, $user->id);
         }
         Session::extend($input['auth']);
@@ -882,18 +901,15 @@ class Api
      * Returns songs based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
-     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
-     * 'add'     self::set_filter(date) //optional
-     * 'update'  self::set_filter(date) //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * add    = self::set_filter(date) //optional
+     * update = self::set_filter(date) //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function songs($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'songs')) {
-            return false;
-        }
         self::$browse->reset_filters();
         self::$browse->set_type('song');
         self::$browse->set_sort('title', 'ASC');
@@ -913,6 +929,8 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
         echo XML_Data::songs($songs, array(), true, $user->id);
         Session::extend($input['auth']);
     } // songs
@@ -924,7 +942,7 @@ class Api
      * return a single song
      *
      * @param array $input
-     * 'filter'  (string) UID of song
+     * filter = (string) UID of song
      */
     public static function song($input)
     {
@@ -946,12 +964,12 @@ class Api
      * This returns playlists based on the specified filter
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term (match all if missing) //optional
-     * 'exact'   (boolean) if true filter is exact rather then fuzzy //optional
-     * 'add'     self::set_filter(date) //optional
-     * 'update'  self::set_filter(date) //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) Alpha-numeric search term (match all if missing) //optional
+     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * add    = self::set_filter(date) //optional
+     * update = self::set_filter(date) //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function playlists($input)
     {
@@ -964,10 +982,10 @@ class Api
         $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
         // merge with the smartlists
         $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
         echo XML_Data::playlists($playlist_ids);
         Session::extend($input['auth']);
     } // playlists
@@ -979,7 +997,7 @@ class Api
      * This returns a single playlist
      *
      * @param array $input
-     * 'filter'  (string) UID of playlist
+     * filter = (string) UID of playlist
      */
     public static function playlist($input)
     {
@@ -1013,9 +1031,9 @@ class Api
      * This returns the songs for a playlist
      *
      * @param array $input
-     * 'filter'  (string) UID of playlist
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) UID of playlist
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function playlist_songs($input)
     {
@@ -1046,9 +1064,9 @@ class Api
             }
         } // end foreach
 
+        ob_end_clean();
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
-        ob_end_clean();
         echo XML_Data::songs($songs, $items, true, $user->id);
         Session::extend($input['auth']);
     } // playlist_songs
@@ -1060,8 +1078,8 @@ class Api
      * This create a new playlist and return it
      *
      * @param array $input
-     * 'name' (string) Alpha-numeric search term
-     * 'type' (string) 'public'|'private'
+     * name = (string) Alpha-numeric search term
+     * type = (string) 'public'|'private'
      */
     public static function playlist_create($input)
     {
@@ -1089,9 +1107,9 @@ class Api
      * Changed name and type to optional and the playlist id is mandatory
      *
      * @param array $input
-     * 'filter' (string) UID of playlist
-     * 'name'   (string) 'new playlist name' //optional
-     * 'type'   (string) 'public', 'private' //optional
+     * filter = (string) UID of playlist
+     * name   = (string) 'new playlist name' //optional
+     * type   = (string) 'public', 'private' //optional
      */
     public static function playlist_edit($input)
     {
@@ -1125,7 +1143,7 @@ class Api
      * This deletes a playlist
      *
      * @param array $input
-     * 'filter' (string) UID of playlist
+     * filter = (string) UID of playlist
      */
     public static function playlist_delete($input)
     {
@@ -1151,9 +1169,9 @@ class Api
      * This adds a song to a playlist
      *
      * @param array $input
-     * 'filter' (string) UID of playlist
-     * 'song' (string) UID of song to add to playlist
-     * 'check' (integer) 0|1 Check for duplicates (default = 0) //optional
+     * filter = (string) UID of playlist
+     * song   = (string) UID of song to add to playlist
+     * check  = (integer) 0|1 Check for duplicates (default = 0) //optional
      */
     public static function playlist_add_song($input)
     {
@@ -1188,9 +1206,9 @@ class Api
      * Pre-400001 the api required 'track' instead of 'song'.
      *
      * @param array $input
-     * 'filter' (string) UID of playlist
-     * 'song'   (string) UID of song to remove from the playlist //optional
-     * 'track'  (string) track number to remove from the playlist //optional
+     * filter = (string) UID of playlist
+     * song   = (string) UID of song to remove from the playlist //optional
+     * track  = (string) track number to remove from the playlist //optional
      */
     public static function playlist_remove_song($input)
     {
@@ -1239,14 +1257,14 @@ class Api
      * 'unplayed' added in 400002 for searching unplayed tracks.
      *
      * @param array $input
-     * mode    = (string)  'recent'|'forgotten'|'unplayed'|'random' //optional, default = 'random'
-     * filter  = (string)  $filter                       //optional, LIKE matched to song title
-     * album   = (integer) $album_id                     //optional
-     * artist  = (integer) $artist_id                    //optional
-     * flag    = (integer) 0|1                           //optional, default = 0
-     * format  = (string)  'song'|'index'|'id'           //optional, default = 'song'
-     * offset  = (integer)                               //optional
-     * limit   = (integer)                               //optional
+     * mode   = (string)  'recent'|'forgotten'|'unplayed'|'random' //optional, default = 'random'
+     * filter = (string)  $filter                       //optional, LIKE matched to song title
+     * album  = (integer) $album_id                     //optional
+     * artist = (integer) $artist_id                    //optional
+     * flag   = (integer) 0|1                           //optional, default = 0
+     * format = (string)  'song'|'index'|'id'           //optional, default = 'song'
+     * offset = (integer)                               //optional
+     * limit  = (integer)                               //optional
      */
     public static function playlist_generate($input)
     {
@@ -1352,9 +1370,9 @@ class Api
      * This searches the songs and returns... songs
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) Alpha-numeric search term
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function search_songs($input)
     {
@@ -1367,13 +1385,12 @@ class Api
         $array['rule_1_input']    = $input['filter'];
         $array['rule_1_operator'] = 0;
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
         $results = Search::run($array);
         $user    = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
+        XML_Data::set_offset($input['offset']);
+        XML_Data::set_limit($input['limit']);
         echo XML_Data::songs($results, array(), true, $user->id);
         Session::extend($input['auth']);
     } // search_songs
@@ -1383,16 +1400,13 @@ class Api
      * This returns video objects!
      *
      * @param array $input
-     * 'filter'  (string) Alpha-numeric search term
-     * 'exact'   (boolean) Whether to match the exact term or not //optional
-     * 'offset'  (integer) //optional
-     * 'limit'   (integer) //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact  = (boolean) 0|1, Whether to match the exact term or not //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      */
     public static function videos($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'videos')) {
-            return false;
-        }
         self::$browse->reset_filters();
         self::$browse->set_type('video');
         self::$browse->set_sort('title', 'ASC');
@@ -1405,7 +1419,6 @@ class Api
 
         XML_Data::set_offset($input['offset']);
         XML_Data::set_limit($input['limit']);
-
         echo XML_Data::videos($video_ids, $user->id);
         Session::extend($input['auth']);
     } // videos
@@ -1415,7 +1428,7 @@ class Api
      * This returns a single video
      *
      * @param array $input
-     * 'filter'  (string) UID of video
+     * filter = (string) UID of video
      */
     public static function video($input)
     {
@@ -1426,6 +1439,7 @@ class Api
         $user     = User::get_from_username(Session::username($input['auth']));
 
         echo XML_Data::videos(array($video_id), $user->id);
+        Session::extend($input['auth']);
     } // video
 
     /**
@@ -1517,7 +1531,7 @@ class Api
                         break;
                     case 'album':
                         $results = Album::get_random($limit, false, $user_id);
-                    }
+                }
         }
 
         if ($results !== null) {
@@ -1588,20 +1602,21 @@ class Api
         if (!self::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
             return false;
         }
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['format'])) {
+            return false;
+        }
         $username = $input['username'];
         $fullname = $input['fullname'] ?: $username;
         $email    = $input['email'];
         $password = $input['password'];
-        $disable  = ((int) $input['disable'] == 1);
+        $disable  = (bool) $input['disable'];
+        $access   = 25;
+        $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
 
-        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
-            $access  = 25;
-            $user_id = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
-            if ($user_id > 0) {
-                echo XML_Data::success('successfully created: ' . $username);
+        if ($user_id > 0) {
+            echo XML_Data::success('successfully created: ' . $username);
 
-                return true;
-            }
+            return true;
         }
         echo XML_Data::error('400', 'failed to create: ' . $username);
         Session::extend($input['auth']);
@@ -1622,12 +1637,15 @@ class Api
      * website    = (string) $website //optional
      * state      = (string) $state //optional
      * city       = (string) $city //optional
-     * disable    = (integer) 0|1 //optional
+     * disable    = (integer) 0|1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
      */
     public static function user_update($input)
     {
         if (!self::check_parameter($input, array('username'), 'user_update')) {
+            return false;
+        }
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_update', $input['format'])) {
             return false;
         }
         $username   = $input['username'];
@@ -1650,7 +1668,7 @@ class Api
             return false;
         }
 
-        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id) && $user_id > 0) {
+        if ($user_id > 0) {
             if ($password) {
                 $user->update_password('', $password);
             }
@@ -1669,9 +1687,9 @@ class Api
             if ($city) {
                 $user->update_city($city);
             }
-            if ((int) $disable == 1) {
+            if ($disable === '1') {
                 $user->disable();
-            } elseif ((int)$disable == 0) {
+            } elseif ($disable === '0') {
                 $user->enable();
             }
             if ((int) $maxbitrate > 0) {
@@ -1700,16 +1718,17 @@ class Api
         if (!self::check_parameter($input, array('username'), 'user_delete')) {
             return false;
         }
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['format'])) {
+            return false;
+        }
         $username = $input['username'];
-        if (Access::check('interface', 100, User::get_from_username(Session::username($input['auth']))->id)) {
-            $user = User::get_from_username($username);
-            // don't delete yourself or admins
-            if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
-                $user->delete();
-                echo XML_Data::success('successfully deleted: ' . $username);
+        $user     = User::get_from_username($username);
+        // don't delete yourself or admins
+        if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
+            $user->delete();
+            echo XML_Data::success('successfully deleted: ' . $username);
 
-                return true;
-            }
+            return true;
         }
         echo XML_Data::error('400', 'failed to delete: ' . $username);
         Session::extend($input['auth']);
@@ -1718,8 +1737,10 @@ class Api
     /**
      * followers
      * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=400004
      *
-     * This get an user followers
+     * This gets followers of the user
+     * Error when user not found or no followers
      *
      * @param array $input
      * username = (string) $username
@@ -1735,10 +1756,15 @@ class Api
                 $user = User::get_from_username($username);
                 if ($user !== null) {
                     $users    = $user->get_followers();
-                    ob_end_clean();
-                    echo XML_Data::users($users);
+                    if (!count($users)) {
+                        echo XML_Data::error('400', 'User `' . $username . '` has no followers.');
+                    } else {
+                        ob_end_clean();
+                        echo XML_Data::users($users);
+                    }
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                    echo XML_Data::error('400', 'User `' . $username . '` cannot be found.');
                 }
             }
         } else {
@@ -1750,8 +1776,10 @@ class Api
     /**
      * following
      * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=400004
      *
-     * This get the user list followed by an user
+     * Get users followed by the user
+     * Error when user not found or no followers
      *
      * @param array $input
      * username = (string) $username
@@ -1767,11 +1795,16 @@ class Api
                 $user = User::get_from_username($username);
                 if ($user !== null) {
                     $users = $user->get_following();
-                    debug_event('api.class', 'User is following:  ' . print_r($users), 1);
-                    ob_end_clean();
-                    echo XML_Data::users($users);
+                    if (!count($users)) {
+                        echo XML_Data::error('400', 'User `' . $username . '` does not follow anyone.');
+                    } else {
+                        debug_event('api.class', 'User is following:  ' . print_r($users), 1);
+                        ob_end_clean();
+                        echo XML_Data::users($users);
+                    }
                 } else {
                     debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                    echo XML_Data::error('400', 'User `' . $username . '` cannot be found.');
                 }
             }
         } else {
@@ -1809,7 +1842,6 @@ class Api
         }
         Session::extend($input['auth']);
     } // toggle_follow
-
 
     /**
      * last_shouts
@@ -1870,6 +1902,11 @@ class Api
 
             return;
         }
+        if (!in_array($rating, array('0', '1', '2', '3', '4', '5'))) {
+            echo XML_Data::error('401', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'));
+
+            return;
+        }
 
         if (!Core::is_library_item($type) || !$object_id) {
             echo XML_Data::error('401', T_('Wrong library item type'));
@@ -1882,7 +1919,7 @@ class Api
             }
             $rate = new Rating($object_id, $type);
             $rate->set_rating($rating, $user->id);
-            echo XML_Data::success('rating set ' . $object_id);
+            echo XML_Data::success('rating set to ' . $rating . ' for ' . $object_id);
         }
         Session::extend($input['auth']);
     } // rate
@@ -1908,7 +1945,7 @@ class Api
         ob_end_clean();
         $type      = $input['type'];
         $object_id = $input['id'];
-        $flag      = $input['flag'];
+        $flag      = (bool) $input['flag'];
         $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
         if ((int) $user->id > 0) {
@@ -1932,7 +1969,8 @@ class Api
             }
             $userflag = new Userflag($object_id, $type);
             if ($userflag->set_flag($flag, $user_id)) {
-                echo XML_Data::success('flag set ' . $object_id);
+                $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
+                echo XML_Data::success($message . $object_id);
 
                 return;
             }
@@ -2060,6 +2098,8 @@ class Api
 
         if ($scrobble_id === '') {
             echo XML_Data::error('401', T_('Failed to scrobble: No item found!'));
+
+            return;
         } else {
             $item = new Song((int) $scrobble_id);
             if (!$item->id) {
@@ -2103,9 +2143,18 @@ class Api
         }
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
-        if ($catalog && ($task === 'add_to_catalog' || $task === 'clean_catalog')) {
-            $catalog->process_action($task, (int) $input['catalog']);
+        if ($catalog) {
+            switch ($task) {
+                case 'clean_catalog':
+                    $catalog->clean_catalog();
+                break;
+                case 'add_to_catalog':
+                    $catalog->add_to_catalog();
+                break;
+            } // end switch on command
             echo XML_Data::success('successfully started: ' . $task);
+        } else {
+            echo XML_Data::error('404', T_('The requested item was not found'));
         }
         Session::extend($input['auth']);
     } // catalog_action
@@ -2227,6 +2276,9 @@ class Api
         if (!self::check_parameter($input, array('id'), 'update_artist_info')) {
             return false;
         }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_artist_info', $input['format'])) {
+            return false;
+        }
         $object = (int) $input['id'];
         $item   = new Artist($object);
         if (!$item->id) {
@@ -2235,18 +2287,16 @@ class Api
             return;
         }
         // update your object
-        //need at least catalog_manager access to the db
-        if (Access::check('interface', 75, User::get_from_username(Session::username($input['auth']))->id)) {
-            Recommendation::get_artist_info($object);
-            Recommendation::get_artists_like($object);
-
+        // need at least catalog_manager access to the db
+        if (!empty(Recommendation::get_artist_info($object) || !empty(Recommendation::get_artists_like($object)))) {
             echo XML_Data::success('Updated artist info: ' . (string) $object);
 
             return;
         }
-        echo XML_Data::error('400', T_('failed to update_artist_info for ' . (string) $object));
+        echo XML_Data::error('400', T_('failed to update_artist_info or recommendations for ' . (string) $object));
         Session::extend($input['auth']);
     } // update_artist_info
+
     /**
      * update_art
      * MINIMUM_API_VERSION=400001
@@ -2262,6 +2312,9 @@ class Api
     public static function update_art($input)
     {
         if (!self::check_parameter($input, array('type', 'id'), 'update_art')) {
+            return false;
+        }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_art', $input['format'])) {
             return false;
         }
         $type      = (string) $input['type'];
@@ -2281,13 +2334,11 @@ class Api
             return;
         }
         // update your object
-        if (Access::check('interface', 75, User::get_from_username(Session::username($input['auth']))->id)) {
-            Catalog::gather_art_item($type, $object, $overwrite, true);
-            echo XML_Data::success('Gathered art for: ' . (string) $object . ' (' . $type . ')');
+        if (Catalog::gather_art_item($type, $object, $overwrite, true)) {
+            echo XML_Data::success('Gathered new art for: ' . (string) $object . ' (' . $type . ')');
 
             return;
         }
-        //need at least catalog_manager access to the db
         echo XML_Data::error('400', T_('failed to update_art for ' . (string) $object));
         Session::extend($input['auth']);
     } // update_art
@@ -2537,6 +2588,7 @@ class Api
                 $media = new Song($input['oid']);
                 if (!$media->id) {
                     echo XML_Data::error('400', T_('Media object invalid or not specified'));
+
                     break;
                 }
                 $democratic->add_vote(array(
@@ -2582,4 +2634,4 @@ class Api
         } // switch on method
         Session::extend($input['auth']);
     } // democratic
-} // API class
+} // end api.class

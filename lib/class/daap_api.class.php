@@ -859,4 +859,4 @@ class Daap_Api
 
         return false;
     }
-}
+} // end daap_api.class

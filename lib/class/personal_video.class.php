@@ -111,4 +111,4 @@ class Personal_Video extends Video
 
         return $deleted;
     }
-} // Personal_Video class
+} // end personal_video.class

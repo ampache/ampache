@@ -85,4 +85,4 @@ class Artist_Event
 
         return false;
     }
-} // end of artist_event class
+} // end artist_event.class

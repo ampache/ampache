@@ -377,7 +377,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; Username and password. If this is set to false then Ampache
 ; will not ask you for a username and password. false is only
 ; recommended for internal only instances
-; DEFAULT true
+; DEFAULT: true
 use_auth = "true"
 
 ; Default Auth Level
@@ -519,10 +519,12 @@ sociable = "true"
 
 ; Statistical Graphs * Requires PHP-GD *
 ; Set this to true if you want Ampache to generate statistical graphs on usages / users.
-; This is false by default due to issues around the licencing of pchart.
+; This is false by default due to issues around the licensing of c-pchart.
 ;  https://github.com/ampache/ampache/issues/1515
 ;  http://www.pchart.net/license
 ; REFERENCE: https://github.com/ampache/ampache/wiki/chart-faq
+; You can enable c-chart with the following command
+;  composer require 'szymach/c-pchart'
 ; DEFAULT: false
 ;statistical_graphs = "false"
 
@@ -660,7 +662,7 @@ show_footer_statistics = "true"
 ; Set this to true to enable rss feeds.
 ; (latest albums, shouts, albums of artist, ...)
 ; use_rss = false (values true | false)
-;DEFAULT: use_rss = false
+; DEFAULT: use_rss = false
 ;use_rss = "false"
 
 ; This setting allows themes to overwrite PHP template files. This can be really
@@ -792,12 +794,12 @@ site_charset = UTF-8
 ;ldap_require_group = "cn=yourgroup,ou=yourorg,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
 
 ; LDAP name field
-; DEFAULT = "cn"
+; DEFAULT: = "cn"
 ;ldap_name_field = "cn"
 ;ldap_name_field = "displayName"
 
 ; LDAP email field
-; DEFAULT = "mail"
+; DEFAULT: = "mail"
 ;ldap_email_field = "mail"
 
 ; LDAP avatar field
@@ -1068,7 +1070,7 @@ encode_ss_duration = "-t %DURATION%"
 ; Useful if you are having issues streaming the full track.
 ; You can set it for all streams or a specific player
 ; POSSIBLE VALUES: true webplayer api
-; DEFAULT = false
+; DEFAULT: = false
 ;send_full_stream = "webplayer"
 
 ;#########################################################
@@ -1084,7 +1086,7 @@ encode_ss_duration = "-t %DURATION%"
 ;proxy_pass = ""
 
 ; If Ampache is behind an https reverse proxy, force use HTTPS protocol.
-;Default: false
+; DEFAULT: false
 ;force_ssl = "true"
 
 
@@ -1129,7 +1131,7 @@ encode_ss_duration = "-t %DURATION%"
 ;  sendmail Settings                                     #
 ;#########################################################
 
-;DEFAULT: /usr/sbin/sendmail
+; DEFAULT: /usr/sbin/sendmail
 ;sendmail_path = "/usr/sbin/sendmail"
 
 

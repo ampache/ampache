@@ -36,4 +36,4 @@ class WebDAV_Auth extends DAV\Auth\Backend\AbstractBasic
 
         return $auth['success'];
     }
-}
+} // end webdav_auth.class

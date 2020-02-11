@@ -1,6 +1,23 @@
 # CHANGELOG
 
-## 4.1.0-release
+## 4.1.1
+* Bump API version to 400004 (4.0.0 build 004)
+* Api - Fix parameters using 0
+* Api - Get the correct total_count in xml when you set a limit
+* Api - Fix many XML formatting issues
+* Api - Add Api::check_access to warn when you can't access a function
+* Remove non-free lib/composer.* files.
+  * You can enable c-pchart with (composer require 'szymach/c-pchart')
+* Hide localplay in the sidebar when you disable all the plugins
+* Extend Shouts to 2000 characters; Labels to 250
+* Remove shoutcast table and preferences. (Dead code)
+* Add a status icon to the channel list pointing to the channel/ID/status.xsl
+* Fix Musicbrainz Art search
+* Fix tmp_playlist bug removing items
+* Fix Dropbox catalog errors when using a small library
+* Fix some bugs getting invalid time/date when reading tags
+
+## 4.1.0
 
 * Bump API version to 400003 (4.0.0 build 003)
 * Api::playlist - filter mandatory
@@ -19,7 +36,7 @@
 * Typo in login page HTTP_REFERER
 * Roll back mysql8 workarounds. (Orace MySQL supported on php7.4+ only)
 * Fix bin\*.inc text issues with newline
-* Add docs/examples/channel_run.service for sunning background processes as a service
+* Add docs/examples/channel_run.service for running background processes as a service
 * New search option "Another User" allows searching other user ratings and favorites
 * user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods])>
 * Updates to support php7.4 (Ampache supports 7.1-7.4)

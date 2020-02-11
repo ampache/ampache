@@ -12,7 +12,7 @@ It's easy to use a program like github desktop to compare between branches.
   * lib/init.php (Set release version)
   * docs/CHANGELOG.md (Update for release)
 * Commit merge but do not push!
-* Undo commits and tag for new version (e.g. 4.0.4)
+* Undo commits and tag for new version (e.g. 4.1.1)
 * Browse changes to check for things you've missed in the changelog
 * Run composer install
 * Remove broken symbolic links
@@ -25,7 +25,7 @@ It's easy to use a program like github desktop to compare between branches.
 
 ```shell
   cd ampache
-  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.0.4_all.zip ./
+  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.1.1_all.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
@@ -36,6 +36,11 @@ It's easy to use a program like github desktop to compare between branches.
 * After setting version and title, save as draft
 * Commit your waiting update to master
 * Publish the new release
+  * get the md5hash for the release page
+
+```shell
+md5sum ../ampache-4.1.1_all.zip
+```
 
 ## Additional requirements
 
@@ -45,37 +50,36 @@ It's easy to use a program like github desktop to compare between branches.
   * Use a test file (test.py?) for some basic API function.
   * FIXME what should it test?
 
-## Update github docker packages
+## Update ampache-docker images on docker hub
 
-Packages are also published directly on github [<https://github.com/ampache/ampache-docker/packages>]
+Update the official Ampache docker images [<https://hub.docker.com/r/ampache/ampache>]
 
-* Authenticate
+* To bump ampache-docker images rebuild for arm and amd64 using buildx [<https://github.com/docker/buildx>]
+* After enabling experimental mode I installed the tools and buildx container.
 
-``` shell
-docker login docker.pkg.github.com --username lachlan-00
+This should only be needed once obviously
+
+```bash
+aptitude install qemu qemu-user-static qemu-user binfmt-support
+docker buildx create --name mybuilder mybuilder
+docker buildx use mybuilder
+docker buildx inspect --bootstrap
 ```
 
-* Step 2: Build the master image
+Build master images and push to docker hub.
 
-``` shell
-git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker-master/
-cd ampache-docker-master/
-docker tag ampache/ampache docker.pkg.github.com/ampache/ampache-docker/ampache:latest
-docker build -t docker.pkg.github.com/ampache/ampache-docker/ampache:latest .
+latest
+
+```bash
+git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker/
+cd ampache-docker
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:latest --push .
 ```
 
-* Update the package
+Build develop images and push to docker hub.
 
-``` shell
-docker push docker.pkg.github.com/ampache/ampache-docker/ampache:latest
-```
-
-* Do the same process for develop every month or so
-
-``` shell
+```bash
 git clone -b develop https://github.com/ampache/ampache-docker.git ampache-docker-develop/
-cd ampache-docker-develop/
-docker tag ampache/ampache-develop docker.pkg.github.com/ampache/ampache-docker/ampache:develop
-docker build -t docker.pkg.github.com/ampache/ampache-docker/ampache:develop .
-docker push docker.pkg.github.com/ampache/ampache-docker/ampache:develop
+cd ampache-docker-develop
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:develop --push .
 ```

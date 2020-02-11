@@ -36,7 +36,7 @@ $boxtitle = T_('Post to Shoutbox');
     <td><strong><?php echo T_('Comment:'); ?></strong>
 </tr>
 <tr>
-    <td><textarea rows="5" cols="35" maxlength="140" name="comment"></textarea></td>
+    <td><textarea rows="5" cols="35" maxlength="2000" name="comment"></textarea></td>
 </tr>
 <?php if (Access::check('interface', '50')) { ?>
 <tr>

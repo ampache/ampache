@@ -39,4 +39,4 @@ abstract class scrobbler_async extends Thread
             User::save_mediaplay($this->user, $this->song_info);
         }
     }
-}
+} // end scrobbler_async.class

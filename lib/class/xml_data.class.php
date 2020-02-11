@@ -1,5 +1,4 @@
 <?php
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -43,8 +42,7 @@ class XML_Data
     private function __construct()
     {
         // Rien a faire
-    }
-    // constructor
+    } // constructor
 
     /**
      * set_offset
@@ -57,8 +55,7 @@ class XML_Data
     public static function set_offset($offset)
     {
         self::$offset = (int) $offset;
-    }
-    // set_offset
+    } // set_offset
 
     /**
      * set_limit
@@ -79,8 +76,7 @@ class XML_Data
         } else {
             self::$limit = (int) ($limit);
         }
-    }
-    // set_limit
+    } // set_limit
 
     /**
      * set_type
@@ -97,8 +93,7 @@ class XML_Data
         }
 
         self::$type = $type;
-    }
-    // set_type
+    } // set_type
 
     /**
      * error
@@ -115,8 +110,7 @@ class XML_Data
         $xml_string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
 
         return self::output_xml($xml_string);
-    }
-    // error
+    } // error
 
     /**
      * success
@@ -132,8 +126,7 @@ class XML_Data
         $xml_string = "\t<success code=\"1\"><![CDATA[$string]]></success>";
 
         return self::output_xml($xml_string);
-    }
-    // success
+    } // success
 
     /**
      * header
@@ -146,8 +139,7 @@ class XML_Data
     public static function header($title = null)
     {
         return self::_header($title);
-    }
-    // header
+    } // header
 
     /**
      * footer
@@ -160,8 +152,7 @@ class XML_Data
     public static function footer()
     {
         return self::_footer();
-    }
-    // footer
+    } // footer
 
     /**
      * tags_string
@@ -193,8 +184,7 @@ class XML_Data
         }
 
         return $string;
-    }
-    // tags_string
+    } // tags_string
 
     /**
      * playlist_song_tracks_string
@@ -217,8 +207,7 @@ class XML_Data
         }
 
         return "";
-    }
-    // playlist_song_tracks_string
+    } // playlist_song_tracks_string
 
     /**
      * output_xml_from_array
@@ -313,13 +302,12 @@ class XML_Data
     public static function keyed_array($array, $callback = '')
     {
         $string = '';
-
         // Foreach it
         foreach ($array as $key => $value) {
             $attribute = '';
             // See if the key has attributes
-            if (is_array($value) && isset($value['<attributes>'])) {
-                $attribute = ' ' . $value['<attributes>'];
+            if (is_array($value) and isset($value['attributes'])) {
+                $attribute = ' ' . $value['attributes'];
                 $key       = $value['value'];
             }
 
@@ -337,8 +325,7 @@ class XML_Data
         }
 
         return $string;
-    }
-    // keyed_array
+    } // keyed_array
 
     /**
      * indexes
@@ -353,8 +340,6 @@ class XML_Data
      */
     public static function indexes($objects, $object_type, $full_xml = true)
     {
-        $string = "<total_count>" . count($objects) . "</total_count>\n";
-
         if (count($objects) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $objects = array_splice($objects, self::$offset, self::$limit);
@@ -362,6 +347,7 @@ class XML_Data
                 $objects = array_splice($objects, self::$offset);
             }
         }
+        $string = "<total_count>" . count($objects) . "</total_count>\n";
 
         foreach ($objects as $object_id) {
             // 'artist'|'album'|'song'|'playlist'
@@ -434,8 +420,7 @@ class XML_Data
         } // end foreach objects
 
         return self::output_xml($string, $full_xml);
-    }
-    // indexes
+    } // indexes
 
     /**
      * tags
@@ -447,8 +432,6 @@ class XML_Data
      */
     public static function tags($tags)
     {
-        $string = "<total_count>" . count($tags) . "</total_count>\n";
-
         if (count($tags) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $tags = array_splice($tags, self::$offset, self::$limit);
@@ -456,6 +439,7 @@ class XML_Data
                 $tags = array_splice($tags, self::$offset);
             }
         }
+        $string = "<total_count>" . count($tags) . "</total_count>\n";
 
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
@@ -472,8 +456,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // tags
+    } // tags
 
     /**
      * artists
@@ -495,8 +478,6 @@ class XML_Data
         if (is_string($include)) {
             $include = explode(',', $include);
         }
-        $string = "<total_count>" . count($artists) . "</total_count>\n";
-
         if (count($artists) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $artists = array_splice($artists, self::$offset, self::$limit);
@@ -504,6 +485,7 @@ class XML_Data
                 $artists = array_splice($artists, self::$offset);
             }
         }
+        $string = "<total_count>" . count($artists) . "</total_count>\n";
 
         Rating::build_cache('artist', $artists);
 
@@ -548,8 +530,7 @@ class XML_Data
         } // end foreach artists
 
         return self::output_xml($string, $full_xml);
-    }
-    // artists
+    } // artists
 
     /**
      * albums
@@ -569,7 +550,6 @@ class XML_Data
         if (is_string($include)) {
             $include = explode(',', $include);
         }
-        $string = "<total_count>" . count($albums) . "</total_count>\n";
 
         if (count($albums) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
@@ -578,6 +558,7 @@ class XML_Data
                 $albums = array_splice($albums, self::$offset);
             }
         }
+        $string = "<total_count>" . count($albums) . "</total_count>\n";
 
         Rating::build_cache('album', $albums);
 
@@ -630,8 +611,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string, $full_xml);
-    }
-    // albums
+    } // albums
 
     /**
      * playlists
@@ -692,8 +672,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // playlists
+    } // playlists
 
     /**
      * songs
@@ -705,8 +684,6 @@ class XML_Data
      */
     public static function songs($songs, $playlist_data = array(), $full_xml = true, $user_id = false)
     {
-        $string = "<total_count>" . count($songs) . "</total_count>\n";
-
         if (count($songs) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
                 $songs = array_slice($songs, self::$offset, self::$limit);
@@ -714,6 +691,7 @@ class XML_Data
                 $songs = array_slice($songs, self::$offset);
             }
         }
+        $string = "<total_count>" . count($songs) . "</total_count>\n";
 
         Song::build_cache($songs);
         Stream::set_session(Core::get_request('auth'));
@@ -779,6 +757,12 @@ class XML_Data
                     . "\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n"
                     . "\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n"
                     . "\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n";
+            if (Song::isCustomMetadataEnabled()) {
+                foreach ($song->getMetadata() as $metadata) {
+                    $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_', $metadata->getField()->getName());
+                    $string .= "\t<" . $meta_name . "><![CDATA[" . $metadata->getData() . "]]></" . $meta_name . ">\n";
+                }
+            }
             foreach ($song->tags as $tag) {
                 $string .= "\t<genre><![CDATA[" . $tag['name'] . "]]></genre>\n";
             }
@@ -787,8 +771,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string, $full_xml);
-    }
-    // songs
+    } // songs
 
     /**
      * videos
@@ -800,8 +783,6 @@ class XML_Data
      */
     public static function videos($videos, $user_id = false)
     {
-        $string = '<total_count>' . count($videos) . "</total_count>\n";
-
         if (count($videos) > self::$limit or self::$offset > 0) {
             if (null !== self::$limit) {
                 $videos = array_slice($videos, self::$offset, self::$limit);
@@ -809,6 +790,7 @@ class XML_Data
                 $videos = array_slice($videos, self::$offset);
             }
         }
+        $string = '<total_count>' . count($videos) . "</total_count>\n";
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
@@ -827,8 +809,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // videos
+    } // videos
 
     /**
      * democratic
@@ -881,8 +862,7 @@ class XML_Data
         } // end foreach
 
         return self::output_xml($string);
-    }
-    // democratic
+    } // democratic
 
     /**
      * user
@@ -918,8 +898,7 @@ class XML_Data
         $string .= "</user>\n";
 
         return self::output_xml($string);
-    }
-    // user
+    } // user
 
     /**
      * users
@@ -939,8 +918,7 @@ class XML_Data
         $string .= "</users>\n";
 
         return self::output_xml($string);
-    }
-    // users
+    } // users
 
     /**
      * shouts
@@ -1006,15 +984,14 @@ class XML_Data
             if ($user->id) {
                 $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
             }
-            $string .= "\t</activity>n";
+            $string .= "\n\t</activity>\n";
         }
-        $string .= "</timeline>\n";
+        $string .= "</timeline>";
 
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-    }
-    // timeline
+    } // timeline
 
     /**
      * rss_feed
@@ -1042,8 +1019,7 @@ class XML_Data
         $final = self::_header() . $string . self::_footer();
 
         return $final;
-    }
-    // rss_feed
+    } // rss_feed
 
     /**
      * _header
@@ -1091,8 +1067,7 @@ class XML_Data
         } // end switch
 
         return $header;
-    }
-    // _header
+    } // _header
 
     /**
      * _footer
@@ -1192,6 +1167,4 @@ class XML_Data
             return $xmlstr;
         }
     }
-}
-
-// XML_Data
+} // end xml_data.class

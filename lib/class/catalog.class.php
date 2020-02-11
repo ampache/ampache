@@ -1225,6 +1225,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param integer $id
      * @param boolean $db_art_first
+     * @return boolean
      */
     public static function gather_art_item($type, $id, $db_art_first = false, $api = false)
     {
@@ -1234,7 +1235,8 @@ abstract class Catalog extends database_object
         } else {
             $libitem = new $type($id);
         }
-        $options = array();
+        $inserted = false;
+        $options  = array();
         $libitem->format();
         if ($libitem->id) {
             if (count($options) == 0) {
@@ -1302,6 +1304,11 @@ abstract class Catalog extends database_object
         if (UI::check_ticker() && !$api) {
             UI::update_text('read_art_' . $id, $libitem->get_fullname());
         }
+        if ($inserted) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -1613,7 +1620,9 @@ abstract class Catalog extends database_object
                 echo "</td>\n</tr>\n";
                 flush();
             } else {
-                echo '<tr class="' . UI::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
+                if (!$api) {
+                    echo '<tr class="' . UI::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
+                }
                 flush();
             }
         } // foreach songs
@@ -1683,6 +1692,10 @@ abstract class Catalog extends database_object
         $new_song->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
         $new_song->size     = $results['size'];
         $new_song->time     = (strlen((string) $results['time']) > 5) ? (int) substr($results['time'], -5, 5) : (int) ($results['time']);
+        if ($new_song->time < 0) {
+            // fall back to last time if you fail to scan correctly
+            $new_song->time = $song->time;
+        }
         $new_song->track    = (strlen((string) $results['track']) > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']);
         $new_song->mbid     = $results['mb_trackid'];
         $new_song->composer = $results['composer'];
@@ -2689,4 +2702,4 @@ abstract class Catalog extends database_object
 
         return false;
     }
-} // end of catalog class
+} // end catalog.class
