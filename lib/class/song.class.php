@@ -999,7 +999,7 @@ class Song extends database_object implements media, library_item
      * @param string $agent
      * @return boolean
      */
-    public function check_play_history($user, $agent='')
+    public function check_play_history($user, $agent)
     {
         if ($user == -1) {
             return false;
@@ -1016,9 +1016,8 @@ class Song extends database_object implements media, library_item
 
         // try to keep a difference between recording stats but also allowing short songs
         if ($diff < 20 && !$this->time < 20) {
-            debug_event('song.class', 'Last song played within ' . $diff . ' seconds, not recording stats', 3);
-            Stats::set_to_skipped($previous['id']);
-            return false;
+            debug_event('song.class', 'Last song played within ' . $diff . ' seconds, skipping ' . $previous['id'], 3);
+            Stats::skip_last_song($previous['id']);
         }
 
         return true;

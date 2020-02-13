@@ -63,5 +63,5 @@ interface media
 
     public function set_played($user, $agent, $location);
 
-    public function check_play_history($user);
+    public function check_play_history($user, $agent);
 } // end media.interface

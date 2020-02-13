@@ -239,7 +239,7 @@ class Stats
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`count_type`='stream' ";
+        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`count_type` IN ('stream', 'skip') ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
@@ -256,14 +256,17 @@ class Stats
     } // get_last_song
 
     /**
-     * set_to_skipped
+     * skip_last_song
      * this sets the object_counts count type to skipped
      * Gets called when the next song is played in quick succession
+     * 
+     * @param integer $object_id
      */
-    public static function set_to_skipped($id)
+    public static function skip_last_song($object_id)
     {
-        $sql = "UPDATE `object_count` SET `count_type` = 'skipped' WHERE `object_count`.`id` = ?";
-        $db_results = Dba::read($sql, array($id));
+        $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `object_count`.`object_id` = ? ORDER BY `object_count`.`date` DESC LIMIT 1";
+
+        return Dba::write($sql, array($object_id));
     }
 
 

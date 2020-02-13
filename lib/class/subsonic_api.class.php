@@ -2243,9 +2243,10 @@ class Subsonic_Api
         $current  = (int) $input['current'];
         $position = (int) $input['position'];
         $username = (string) $input['u'];
+        $client   = (string) $input['c'];
         $user_id  = User::get_from_username($username)->id;
         $song_id  = Subsonic_XML_Data::getAmpacheId($current);
-        $previous = Stats::get_last_song($user_id);
+        $previous = Stats::get_last_song($user_id, $client);
         $song     = new Song($song_id);
         //only record repeated play stats using this method (repeates aren't processed the same way.)
         if ($previous['object_id'] == $song_id && $position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song->time)) {
