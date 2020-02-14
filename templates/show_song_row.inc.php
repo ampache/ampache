@@ -70,6 +70,7 @@ if ($libitem->enabled || Access::check('interface', '50')) { ?>
 
 <?php if (AmpConfig::get('show_played_times')) { ?>
 <td class="cel_counter"><?php echo $libitem->object_cnt ?></td>
+<td class="cel_counter"><?php echo $libitem->skip_cnt ?></td>
 <?php
     }
     if (User::is_registered()) {
