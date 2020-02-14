@@ -1020,6 +1020,7 @@ class Song extends database_object implements media, library_item
         if ($diff < 20 && !$this->time < 20) {
             debug_event('song.class', 'Last song played within ' . $diff . ' seconds, skipping ' . $previous['id'], 3);
             Stats::skip_last_song($previous['id']);
+            Useractivity::del_activity($previous['id']);
         }
 
         return true;
