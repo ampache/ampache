@@ -519,6 +519,7 @@ class Song extends database_object implements media, library_item
         while ($row = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold);
+                $row['skip_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold, $count_type = 'skip');
             }
             parent::add_to_cache('song', $row['id'], $row);
             $artists[$row['artist']] = $row['artist'];
@@ -578,6 +579,7 @@ class Song extends database_object implements media, library_item
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
                 $results['object_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold);
+                $results['skip_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold, $count_type='skip');
             }
 
             parent::add_to_cache('song', $id, $results);
@@ -1038,7 +1040,7 @@ class Song extends database_object implements media, library_item
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
         $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album');
-        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt', 'albumartist', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group');
+        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt', 'skip_cnt', 'albumartist', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group');
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
     } // compare_song_information
