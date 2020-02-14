@@ -188,7 +188,7 @@ class Useractivity extends database_object
 
     /**
      * del_activity
-     * Deletes last acticity
+     * Deletes last activity
      * @param integer $object_id
      * @param string $object_type
      */
