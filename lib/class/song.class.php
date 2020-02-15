@@ -1016,8 +1016,19 @@ class Song extends database_object implements media, library_item
             return false;
         }
 
-        // try to keep a difference between recording stats but also allowing short songs
-        if ($diff < 20 && !$this->time < 20) {
+        $timekeeper = 0.1;
+
+        if ($timekeeper > 1) {
+            $skiptime = $timekeeper;
+        } elseif ($timekeeper < 1) {
+            $skiptime = intval($previous["time"] * $timekeeper);
+        } else {
+            debug_event('song.class', $timekeeper . ' for the timekeeper value is an invalid option. Choose another one. There will be no playcount update.', 3);
+            return false;
+        }
+
+        // when the difference between recordings is too short, the song has been skipped, so note that
+        if ($diff < $skiptime && !$previous["time"] < $skiptime) {
             debug_event('song.class', 'Last song played within ' . $diff . ' seconds, skipping ' . $previous['id'], 3);
             Stats::skip_last_song($previous['id']);
             Useractivity::del_activity($previous['id']);
