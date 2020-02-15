@@ -1020,7 +1020,7 @@ class Song extends database_object implements media, library_item
 
         if ($timekeeper > 1) {
             $skiptime = $timekeeper;
-        } elseif ($timekeeper < 1) {
+        } elseif ($timekeeper < 1 && $timekeeper > 0) {
             $skiptime = intval($previous["time"] * $timekeeper);
         } else {
             debug_event('song.class', $timekeeper . ' for the timekeeper value is an invalid option. Choose another one. There will be no playcount update.', 3);
