@@ -259,21 +259,22 @@ class Stats
      * skip_last_song
      * this sets the object_counts count type to skipped
      * Gets called when the next song is played in quick succession
-     * 
+     *
      * @param integer $object_id
      */
     public static function skip_last_song($object_id)
     {
-        $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `object_id` = ? ORDER BY `date` DESC LIMIT 1";
+        $sql        = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `object_id` = ? ORDER BY `date` DESC LIMIT 1";
         $db_results = Dba::write($sql, array($object_id));
         
         //Now the just updated skipped value is taken
-        $sql = "SELECT * FROM `object_count` WHERE `count_type` = 'skip' ORDER BY `object_count`.`date` DESC LIMIT 1";
+        $sql        = "SELECT * FROM `object_count` WHERE `count_type` = 'skip' ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::write($sql, array());
-        $skipped = Dba::fetch_assoc($db_results);
+        $skipped    = Dba::fetch_assoc($db_results);
         
         //To remove associated album and artist entries
         $sql = "DELETE FROM `object_count` WHERE (`object_type` = 'album' OR `object_type` = 'artist') AND `agent` = ? AND `date` BETWEEN ? AND ?";
+
         return Dba::write($sql, array($skipped['agent'], $skipped['date'] - 2, $skipped['date'] + 2));
     }
 

@@ -519,7 +519,7 @@ class Song extends database_object implements media, library_item
         while ($row = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold);
-                $row['skip_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold, $count_type = 'skip');
+                $row['skip_cnt']   = Stats::get_object_count('song', $row['id'], $limit_threshold, $count_type = 'skip');
             }
             parent::add_to_cache('song', $row['id'], $row);
             $artists[$row['artist']] = $row['artist'];
@@ -579,7 +579,7 @@ class Song extends database_object implements media, library_item
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
                 $results['object_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold);
-                $results['skip_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold, $count_type='skip');
+                $results['skip_cnt']   = Stats::get_object_count('song', $results['id'], $limit_threshold, $count_type='skip');
             }
 
             parent::add_to_cache('song', $id, $results);
@@ -1024,6 +1024,7 @@ class Song extends database_object implements media, library_item
             $skiptime = intval($previous["time"] * $timekeeper);
         } else {
             debug_event('song.class', $timekeeper . ' for the timekeeper value is an invalid option. Choose another one. There will be no playcount update.', 3);
+
             return false;
         }
 
