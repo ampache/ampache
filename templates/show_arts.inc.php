@@ -34,6 +34,9 @@ while ($count <= $rows) {
         $key        = $count * 4 + $j;
         $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . mt_rand();
         $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
+        if ((int) $dimensions['width'] == 0 || (int) $dimensions['height'] == 0) {
+            $image_url = AmpConfig::get('web_path') . '/images/blankalbum.png';
+        }
         if (!isset($images[$key]) || !Art::check_dimensions($dimensions)) {
             echo "<td>&nbsp;</td>\n";
         } else { ?>
@@ -41,14 +44,14 @@ while ($count <= $rows) {
                 <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="175" width="175" /></a>
                 <br />
                 <p>
-                <?php if (is_array($dimensions)) { ?>
+                <?php if (is_array($dimensions) && (!(int) $dimensions['width'] == 0 || !(int) $dimensions['height'] == 0)) { ?>
                 [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
+                [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 <?php
             } else { ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>
                 <?php
             } ?>
-                [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 </p>
             </td>
 <?php
@@ -64,3 +67,4 @@ while ($count <= $rows) {
 } // end while?>
 </table>
 <?php UI::show_box_bottom(); ?>
+
