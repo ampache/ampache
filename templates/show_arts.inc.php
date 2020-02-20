@@ -21,44 +21,50 @@
  */
 
 // Gotta do some math here!
-$total_images = count($images); ?>
+$total_images = count($images);
+$rows         = floor($total_images / 4);
+$count        = 0; ?>
 <?php UI::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
+<tr>
 <?php
-$i_ima  = 0;
-$column = 0;
-while ($i_ima < $total_images) {
-    $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $i_ima . '&cache_bust=' . date('YmdHis') . mt_rand();
-    $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$i_ima], $object_type));
-    if (isset($images[$i_ima]) && Art::check_dimensions($dimensions)) {
-        if ($column == 0) {
-            echo "<tr>";
+while ($count <= $rows) {
+    $j=0;
+    while ($j < 4) {
+        $key        = $count * 4 + $j;
+        $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . mt_rand();
+        $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
+        if ((int) $dimensions['width'] == 0 || (int) $dimensions['height'] == 0) {
+            $image_url = AmpConfig::get('web_path') . '/images/blankalbum.png';
         }
-        if ($column >= 4) {
-            echo "</tr>";
-            $column = 0;
-        } ?>
-        <td>
-            <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$i_ima]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="175" width="175" /></a>
-            <br />
-            <p>
-            <?php if (is_array($dimensions)) { ?>
-            [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
-            <?php
+        if (!isset($images[$key]) || !Art::check_dimensions($dimensions)) {
+            echo "<td>&nbsp;</td>\n";
         } else { ?>
-            <span class="error"><?php echo T_('Invalid'); ?></span>
-            <?php
-        } ?>
-            [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $i_ima; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
-            </p>
-        </td>
+            <td>
+                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="175" width="175" /></a>
+                <br />
+                <p>
+                <?php if (is_array($dimensions) && (!(int) $dimensions['width'] == 0 || !(int) $dimensions['height'] == 0)) { ?>
+                [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
+                [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
+                <?php
+            } else { ?>
+                <span class="error"><?php echo T_('Invalid'); ?></span>
+                <?php
+            } ?>
+                </p>
+            </td>
 <?php
-        $column++;
-    } // end if
-    $i_ima++;
-} // end while cells
-if ($column >= 4) {
-    echo "</tr>";
-} ?>
+        } // end else
+        $j++;
+    } // end while cells
+    if ($count < $rows) {
+        echo "</tr>\n<tr>";
+    } else {
+        echo "</tr>";
+    }
+    $count++;
+} // end while?>
 </table>
 <?php UI::show_box_bottom(); ?>
+
