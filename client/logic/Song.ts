@@ -57,7 +57,11 @@ export const flagSong = (
 ) => {
     return axios
         .get(
-            `${process.env.ServerURL}/server/json.server.php?action=flag&type=song&id=${songID}&flag=${favorite}&auth=${authKey}&version=400001`
+            `${
+                process.env.ServerURL
+            }/server/json.server.php?action=flag&type=song&id=${songID}&flag=${Number(
+                favorite
+            )}&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;
