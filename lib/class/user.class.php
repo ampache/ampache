@@ -1540,7 +1540,7 @@ class User extends database_object
         $db_results = Dba::read($sql, array($this->id));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['user'];
+            $results[] = (int) $row['user'];
         }
 
         return $results;
@@ -1557,7 +1557,7 @@ class User extends database_object
         $db_results = Dba::read($sql, array($this->id));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['follow_user'];
+            $results[] = (int) $row['follow_user'];
         }
 
         return $results;
@@ -1710,4 +1710,4 @@ class User extends database_object
 
         return true;
     }
-} //end user class
+} // end user.class

@@ -364,7 +364,7 @@ class Stats
      */
     public static function get_top($type, $count = null, $threshold = '', $offset = '', $user_id = null, $random = false)
     {
-        if (!$count) {
+        if (count($count) <= 0) {
             $count = AmpConfig::get('popular_threshold');
         }
         $limit = (!$offset) ? $count : $offset . "," . $count;
@@ -599,4 +599,4 @@ class Stats
 
         return $items;
     } // get_newest
-} // Stats class
+} // end stats.class

@@ -293,4 +293,4 @@ class scrobbler
             return false;
         }
     } // love
-} // end audioscrobbler class
+} // end scrobbler.class

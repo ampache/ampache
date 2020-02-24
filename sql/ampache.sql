@@ -419,24 +419,6 @@ CREATE TABLE IF NOT EXISTS `localplay_mpd` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `localplay_shoutcast`
---
-
-DROP TABLE IF EXISTS `localplay_shoutcast`;
-CREATE TABLE IF NOT EXISTS `localplay_shoutcast` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
-  `owner` int(11) NOT NULL,
-  `pid` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `playlist` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `local_root` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `access` smallint(4) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `movie`
 --
 
@@ -658,7 +640,6 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'),
 (70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'),
 (71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'),
-(72, 'shoutcast_active', '0', 'Shoutcast Active Instance', 25, 'integer', 'internal', 'shoutcast'),
 (77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'),
 (78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm'),
 (102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature'),

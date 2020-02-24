@@ -262,4 +262,4 @@ class TVShow_Episode extends Video
 
         return $deleted;
     }
-}
+} // end tvshow_episode.class

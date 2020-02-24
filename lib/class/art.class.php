@@ -1912,4 +1912,4 @@ class Art extends database_object
 
         return true;
     }
-} // Art
+} // end art.class

@@ -291,4 +291,4 @@ class PrivateMsg extends database_object
         $sql .= "`creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL " . (string) $days . " day))";
         Dba::write($sql);
     }
-} // end of privatemsg class
+} // end privatemsg.class

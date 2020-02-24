@@ -94,6 +94,12 @@ class AmpacheStreamTime
         if ($this->time_max < 0) {
             return true;
         }
+        // if using free software only you can't use this plugin
+        if (!AmpConfig::get('statistical_graphs') || !is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
+            debug_event('streamtime.plugin', 'Access denied, statistical graph disabled.', 1);
+
+            return true;
+        }
 
         // Calculate all media time
         $next_total = 0;

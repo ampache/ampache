@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 03.12.2019 20:25:37 CET 
+ # Last Update: 01.02.2020 02:03:32 CET 
 
  #######################################################################
 
@@ -409,10 +409,6 @@ msgstr ""
 
 #: Database preference subcategory table id 69
 msgid "player"
-msgstr ""
-
-#: Database preference subcategory table id 72
-msgid "shoutcast"
 msgstr ""
 
 #: Database preference subcategory table id 78

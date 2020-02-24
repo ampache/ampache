@@ -2351,7 +2351,9 @@ class Query
             $order_sql = " ORDER BY ";
 
             foreach ($this->_state['sort'] as $key => $value) {
-                $order_sql .= $this->sql_sort($key, $value);
+                $sql_sort = $this->sql_sort($key, $value);
+                $order_sql .= $sql_sort;
+                $group_sql .= ", " . substr($sql_sort, 0, strpos($sql_sort, " "));
             }
             // Clean her up
             $order_sql = rtrim((string) $order_sql, "ORDER BY ");
@@ -2450,4 +2452,4 @@ class Query
     {
         $this->_state['ak'] = $ak;
     }
-} // query
+} // end query.class

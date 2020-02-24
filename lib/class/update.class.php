@@ -187,6 +187,10 @@ class Update
         $update_string = "* Add a last_count to search table to speed up access requests<br />";
         $version[]     = array('version' => '400005', 'description' => $update_string);
 
+        $update_string = "* Drop shoutcast_active preferences. (Feature has not existed for years)<br />" .
+                         "* Drop localplay_shoutcast table if present.<br />";
+        $version[]     = array('version' => '400006', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1023,6 +1027,7 @@ class Update
 
         return $retval;
     }
+
     /**
      * update_400005
      *
@@ -1036,4 +1041,29 @@ class Update
 
         return $retval;
     }
-}
+
+    /**
+     * update_400006
+     *
+     * drop shoutcast_active preferences and localplay_shoutcast table
+     */
+    public static function update_400006()
+    {
+        $retval = true;
+
+        $sql = "DELETE FROM `user_preference` " .
+              "WHERE `user_preference`.`preference` IN  " .
+              "(SELECT `preference`.`id` FROM `preference`  " .
+              "WHERE `preference`.`name` = 'shoutcast_active');";
+        $retval &= Dba::write($sql);
+
+        $sql = "DELETE FROM `preference` " .
+              "WHERE `preference`.`name` = 'shoutcast_active';";
+        $retval &= Dba::write($sql);
+
+        $sql = "DROP TABLE IF EXISTS `localplay_shoutcast`";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+} // end update.class

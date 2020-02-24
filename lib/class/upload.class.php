@@ -240,4 +240,4 @@ class Upload
 
         return $rootdir;
     }
-} // Upload class
+} // end upload.class

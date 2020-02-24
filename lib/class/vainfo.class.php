@@ -846,6 +846,9 @@ class vainfo
                 case 'catalognumber':
                     $parsed['catalog_number'] = $data[0];
                     break;
+                case 'rating':
+                    $parsed['rating'][-1] = floor($data[0] * 5 / 100);
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
@@ -1339,4 +1342,4 @@ class vainfo
 
         return $data;
     }
-} // end class vainfo
+} // end vainfo.class

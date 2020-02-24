@@ -530,4 +530,4 @@ class Label extends database_object implements library_item
 
         return (is_array($labels) ? $ret : implode(",", $ret));
     }
-}
+} // end label.class

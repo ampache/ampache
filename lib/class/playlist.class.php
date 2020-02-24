@@ -691,4 +691,4 @@ class Playlist extends playlist_object
 
         return true;
     } // sort_tracks
-} // class Playlist
+} // end playlist.class

@@ -385,4 +385,4 @@ class Rating extends database_object
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
-} //end rating class
+} // end rating.class

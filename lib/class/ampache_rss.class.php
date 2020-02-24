@@ -378,4 +378,4 @@ class Ampache_RSS
 
         return $element['date'];
     } // pubdate_recently_played
-} // end Ampache_RSS class
+} // end ampache_rss.class

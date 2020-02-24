@@ -39,7 +39,7 @@ It's easy to use a program like github desktop to compare between branches.
   * get the md5hash for the release page
 
 ```shell
-md5sum ../ampache-4.1.0_all.zip 
+md5sum ../ampache-4.1.0_all.zip
 ```
 
 ## Additional requirements
@@ -58,6 +58,7 @@ Update the official Ampache docker images [<https://hub.docker.com/r/ampache/amp
 * After enabling experimental mode I installed the tools and buildx container.
 
 This should only be needed once obviously
+
 ```bash
 aptitude install qemu qemu-user-static qemu-user binfmt-support
 docker buildx create --name mybuilder mybuilder
@@ -68,6 +69,7 @@ docker buildx inspect --bootstrap
 Build master images and push to docker hub.
 
 latest
+
 ```bash
 git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker/
 cd ampache-docker
@@ -75,9 +77,9 @@ docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/a
 ```
 
 Build develop images and push to docker hub.
+
 ```bash
 git clone -b develop https://github.com/ampache/ampache-docker.git ampache-docker-develop/
 cd ampache-docker-develop
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:develop --push .
 ```
-

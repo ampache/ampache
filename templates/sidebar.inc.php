@@ -30,7 +30,7 @@ if (User::is_registered()) {
 
      // List of buttons ( id, title, icon, access level)
      $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
-     if (AmpConfig::get('allow_localplay_playback')) {
+     if (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check('localplay', '5')) {
          $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
      }
      $sidebar_items[] = array('id' => 'preferences', 'title' => T_('Preferences'), 'icon' => 'edit', 'access' => 5);

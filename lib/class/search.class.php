@@ -2566,4 +2566,4 @@ class Search extends playlist_object
 
         return $search;
     }
-}
+} // end search.class

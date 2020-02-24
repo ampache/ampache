@@ -146,7 +146,6 @@ class JSON_Data
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // tags_string
 
-
     /**
      * playlist_song_tracks_string
      *
@@ -170,6 +169,33 @@ class JSON_Data
 
         return "";
     } // playlist_song_tracks_string
+
+    /**
+     * indexes
+     *
+     * This returns tags to the user, in a pretty JSON document with the information
+     *
+     * @param    array    $objects    (description here...)
+     * @param    string    $type    (description here...)
+     * @return    string    return json
+     */
+    public static function indexes($objects, $type)
+    {
+        //here is where we call the object type
+        //'song', 'album', 'artist', 'playlist'
+        switch ($type) {
+            case 'song':
+                return self::songs($objects);
+            case 'album':
+                return self::albums($objects);
+            case 'artist':
+                return self::artists($objects);
+            case 'playlist':
+                return self::playlists($objects);
+            default:
+                return self::error('401', T_('Wrong object type ' . $type));
+        }
+    }
 
     /**
      * tags
@@ -307,7 +333,7 @@ class JSON_Data
             if ($album->allow_group_disks) {
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
-
+            
             $theArray['year']          = $album->year;
             $theArray['tracks']        = $album->song_count;
             $theArray['disk']          = $disk;
@@ -465,6 +491,12 @@ class JSON_Data
             $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
             $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
 
+            if (Song::isCustomMetadataEnabled()) {
+                foreach ($song->getMetadata() as $metadata) {
+                    $meta_name           = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_', $metadata->getField()->getName());
+                    $ourSong[$meta_name] = $metadata->getData();
+                }
+            }
             $tags = [];
             foreach ($song->tags as $tag) {
                 array_push($tags, $tag['name']);
@@ -695,4 +727,4 @@ class JSON_Data
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // timeline
-} // JSON_Data
+} // end json_data.class

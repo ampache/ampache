@@ -374,4 +374,4 @@ class Song_Preview extends database_object implements media, playable_item
 
         return Dba::write($sql);
     }
-} // end of song_preview class
+} // end song_preview.class

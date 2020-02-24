@@ -94,6 +94,12 @@ class AmpacheStreamBandwidth
         if ($this->bandwidth_max < 0) {
             return true;
         }
+        // if using free software only you can't use this plugin
+        if (!AmpConfig::get('statistical_graphs') || !is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
+            debug_event('streambandwidth.plugin', 'Access denied, statistical graph disabled.', 1);
+
+            return true;
+        }
 
         // Calculate all media size
         $next_total = 0;

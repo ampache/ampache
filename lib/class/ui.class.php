@@ -588,4 +588,4 @@ class UI
 
         return $isgv;
     }
-}
+} // end ui.class

@@ -353,4 +353,4 @@ class Tmp_Playlist extends database_object
 
         return true;
     } // delete_track
-} // class Tmp_Playlist
+} // end tmp_playlist.class

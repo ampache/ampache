@@ -487,7 +487,7 @@ class Album extends database_object implements library_item
         $mbid_group     = empty($mbid_group) ? null : $mbid_group;
         $release_type   = empty($release_type) ? null : $release_type;
         $disk           = (self::sanitize_disk($disk) <= 0) ? 1 : self::sanitize_disk($disk);
-        $original_year  = ((int) $original_year <= 0) ? null : $original_year;
+        $original_year  = ((int) substr($original_year, 0, 4) <= 0) ? null : substr($original_year, 0, 4);
         $barcode        = empty($barcode) ? null : $barcode;
         $catalog_number = empty($catalog_number) ? null : $catalog_number;
 
@@ -1236,4 +1236,4 @@ class Album extends database_object implements library_item
 
         return (int) $disk;
     }
-} // end of album class
+} // end album.class

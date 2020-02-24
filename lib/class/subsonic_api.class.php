@@ -2269,4 +2269,4 @@ class Subsonic_Api
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'getplayqueue');
         self::apiOutput($input, $response);
     }
-}
+} // end subsonic_api.class

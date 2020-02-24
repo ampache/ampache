@@ -145,4 +145,4 @@ class AmpError
             self::add($key, $error);
         }
     } // auto_init
-} // Error
+} // end amperror.class

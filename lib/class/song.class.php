@@ -2345,4 +2345,4 @@ class Song extends database_object implements media, library_item
 
         return $deleted;
     }
-} // end of song class
+} // end song.class

@@ -402,4 +402,4 @@ class Recommendation
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
-} // end of recommendation class
+} // end recommendation.class
