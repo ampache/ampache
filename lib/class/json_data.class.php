@@ -228,11 +228,13 @@ class JSON_Data
             $artist = new Artist($artist_id);
             $artist->format();
 
-            // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
 
             $rating     = new Rating($artist_id, 'artist');
+            $flag       = new Userflag($artist_id, 'artist');
             $tag_string = self::tags_string($artist->tags);
+
+            // Build the Art URL, include session
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
 
             array_push($JSON, array(
                     id => $artist->id,
@@ -241,6 +243,7 @@ class JSON_Data
                     albums => ($artist->albums ?: 0),
                     songs => ($artist->songs ?: 0),
                     art => $art_url,
+                    flag => ($flag->get_flag($user_id, false) ? 1 : 0),
                     preciserating => ($rating->get_user_rating() ?: 0),
                     rating => ($rating->get_user_rating() ?: 0),
                     averagerating => ($rating->get_average_rating() ?: 0),
@@ -275,7 +278,9 @@ class JSON_Data
             $album = new Album($album_id);
             $album->format();
 
+            $disk   = $album->disk;
             $rating = new Rating($album_id, 'album');
+            $flag   = new Userflag($album_id, 'album');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
@@ -298,11 +303,17 @@ class JSON_Data
                 );
             }
 
+            //count multiple disks
+            if ($album->allow_group_disks) {
+                $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
+            }
+
             $theArray['year']          = $album->year;
             $theArray['tracks']        = $album->song_count;
-            $theArray['disk']          = $album->disk;
+            $theArray['disk']          = $disk;
             $theArray['tags']          = self::tags_string($album->tags);
             $theArray['art']           = $art_url;
+            $theArray['flag']          = ($flag->get_flag($user_id, false) ? 1 : 0);
             $theArray['preciserating'] = $rating->get_user_rating();
             $theArray['rating']        = $rating->get_user_rating();
             $theArray['averagerating'] = $rating->get_average_rating();
@@ -404,6 +415,7 @@ class JSON_Data
             $song->format();
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $rating                = new Rating($song_id, 'song');
+            $flag                  = new Userflag($song_id, 'song');
             $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
 
             $ourSong = array(
@@ -439,6 +451,7 @@ class JSON_Data
             $ourSong['artist_mbid']           = $song->artist_mbid;
             $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
             $ourSong['art']                   = $art_url;
+            $ourSong['flag']                  = ($flag->get_flag($user_id, false) ? 1 : 0);
             $ourSong['preciserating']         = ($rating->get_user_rating() ?: 0);
             $ourSong['rating']                = ($rating->get_user_rating() ?: 0);
             $ourSong['averagerating']         = ($rating->get_average_rating() ?: 0);

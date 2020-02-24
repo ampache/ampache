@@ -25,7 +25,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
     ] = useContextMenu();
     const [bindTrigger] = useContextTrigger();
 
-    const minutes: number = Math.round(props.song.time / 60);
+    const minutes: number = Math.floor(props.song.time / 60);
     const seconds: string = (props.song.time % 60).toString();
     const paddedSeconds: string =
         seconds.length === 1 ? seconds + '0' : seconds;

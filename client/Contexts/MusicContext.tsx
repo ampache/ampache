@@ -127,7 +127,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
 
     const songIsOver = () => {
         if (songQueueIndex === songQueue.length - 1) {
-            setCurrentPlayingSong({} as Song);
+            setCurrentPlayingSong(null);
             setPlayerStatus(PLAYERSTATUS.STOPPED);
             return;
         }
