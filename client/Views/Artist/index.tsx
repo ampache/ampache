@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getAlbumsFromArtist } from '../../logic/Artist';
+import { Artist, getAlbumsFromArtist, getArtist } from '../../logic/Artist';
 import { User } from '../../logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import { Album } from '../../logic/Album';
@@ -21,11 +21,22 @@ interface ArtistViewProps {
 const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
     const musicContext = useContext(MusicContext);
 
+    const [artist, setArtist] = useState<Artist>(null);
     const [albums, setAlbums] = useState<Album[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
     useEffect(() => {
         if (props.match.params.artistID != null) {
+            getArtist(props.match.params.artistID, props.user.authKey)
+                .then((data) => {
+                    setArtist(data);
+                })
+                .catch((error) => {
+                    toast.error(
+                        '😞 Something went wrong getting information about the artist.'
+                    );
+                    setError(error);
+                });
             getAlbumsFromArtist(props.match.params.artistID, props.user.authKey)
                 .then((data) => {
                     setAlbums(data);
@@ -46,43 +57,44 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
             </div>
         );
     }
-    if (!albums) {
-        return (
-            <div className='artistPage'>
-                <ReactLoading color='#FF9D00' type={'bubbles'} />
-            </div>
-        );
-    }
     return (
         <div className='artistPage'>
-            <div className='details'>
-                {/*<div className='imageContainer'>*/}
-                {/*    <img*/}
-                {/*        src={this.state.theArtist.art}*/}
-                {/*        alt={'Album Cover'}*/}
-                {/*    />*/}
-                {/*</div>*/}
-                {/*Name: {this.state.theArtist.name}*/}
-            </div>
+            {!artist && <ReactLoading color='#FF9D00' type={'bubbles'} />}
+            {artist && (
+                <div className='artistInfo'>
+                    <div className='imageContainer'>
+                        <img src={artist.art} alt={`Photo of ${artist.name}`} />
+                    </div>
+                    <div className='details'>
+                        <div className='name'>{artist.name}</div>
+                        <div className='summary'>{artist.summary}</div>
+                        <div className='playRandom'>
+                            <button>Play</button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <h1>Albums</h1>
             <div className='albums'>
-                {albums.map((theAlbum) => {
-                    return (
-                        <AlbumDisplay
-                            album={theAlbum}
-                            playSongFromAlbum={(albumID, random) => {
-                                playSongFromAlbum(
-                                    theAlbum.id,
-                                    random,
-                                    props.user.authKey,
-                                    musicContext
-                                );
-                            }}
-                            showGoToAlbum={false}
-                            key={theAlbum.id}
-                        />
-                    );
-                })}
+                {!albums && <ReactLoading color='#FF9D00' type={'bubbles'} />}
+                {albums &&
+                    albums.map((theAlbum) => {
+                        return (
+                            <AlbumDisplay
+                                album={theAlbum}
+                                playSongFromAlbum={(albumID, random) => {
+                                    playSongFromAlbum(
+                                        theAlbum.id,
+                                        random,
+                                        props.user.authKey,
+                                        musicContext
+                                    );
+                                }}
+                                showGoToAlbum={false}
+                                key={theAlbum.id}
+                            />
+                        );
+                    })}
             </div>
         </div>
     );

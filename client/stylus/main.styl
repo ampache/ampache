@@ -10,7 +10,6 @@ html
     font-family 'Open Sans', Helvetica, Arial, sans-serif
     font-weight normal
     font-size 16px
-    line-height 1.5em
     height 100%
     background-color bodyBackgroundColor
     color #e1e1e1
@@ -20,7 +19,6 @@ html
       position relative
       & > .content
         flex 1
-        margin-left 10px
         position relative
         &::after
           content ''
@@ -34,6 +32,8 @@ a
    pointer-events none
   &:hover
     color linkHoverColor !important
+
+@import './components/Button'
 
 
 //Pages

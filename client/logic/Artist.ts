@@ -52,3 +52,20 @@ export const getArtists = (authKey: AuthKey) => {
             return JSONData as Artist[];
         });
 };
+
+export const getArtist = (artistID: number, authKey: AuthKey) => {
+    return axios
+        .get(
+            `${process.env.ServerURL}/server/json.server.php?action=artist&filter=${artistID}&auth=${authKey}&version=400001`
+        )
+        .then((response) => {
+            const JSONData = response.data;
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
+            if (JSONData.error) {
+                throw new AmpacheError(JSONData.error);
+            }
+            return JSONData[0] as Artist;
+        });
+};
