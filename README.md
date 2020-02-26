@@ -13,11 +13,11 @@ This client is mean to replace the Reborn interface. Using modern technologies a
 To build this project you will need [Yarn](https://yarnpkg.com/lang/en/docs/install/). In addition to the requirements of Ampache itself.
 
 ### Build
-Clone the repo: `git clone https://github.com/AshotN/ampache/tree/ReactClient`
+Clone the repo: `git clone https://github.com/ampache/ampache/ -b react-client`
 
 Use yarn to download all needed packages: `yarn`
 
-Run Parcel to build: `yarn run build`
+Run Parcel to build: `yarn build`
 
 Run a PHP server locally on port 8080: `/bin/php -S localhost:8080 -t {PATH TO BASE FOLDER}`
 
@@ -55,13 +55,13 @@ Hopefully
 #### Basics
 - [x] Previous/Next/Pause/Resume
 - [x] Seeking
-- [ ] Volume control
+- [x] Volume control
 - [ ] Minimum API version
 - [ ] Nice login page
 
 #### Songs
 - [ ] Tags
-- [ ] Favorite
+- [x] Favorite
 
 #### Playlists
 - [x] Create
