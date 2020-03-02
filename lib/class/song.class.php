@@ -1016,16 +1016,12 @@ class Song extends database_object implements media, library_item
             return false;
         }
 
-        $timekeeper = 0.1;
-
-        if ($timekeeper > 1) {
+        $timekeeper = AmpConfig::get('skip_timer');
+        $skiptime   = 20;
+        if ((int) $timekeeper > 1) {
             $skiptime = $timekeeper;
         } elseif ($timekeeper < 1 && $timekeeper > 0) {
-            $skiptime = intval($previous["time"] * $timekeeper);
-        } else {
-            debug_event('song.class', $timekeeper . ' for the timekeeper value is an invalid option. Choose another one. There will be no playcount update.', 3);
-
-            return false;
+            $skiptime = (int) ($previous['time'] * $timekeeper);
         }
 
         // when the difference between recordings is too short, the song has been skipped, so note that
