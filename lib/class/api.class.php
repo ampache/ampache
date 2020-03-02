@@ -2720,7 +2720,11 @@ class Api
                     $catalog->clean_catalog();
                 break;
                 case 'add_to_catalog':
-                    $catalog->add_to_catalog();
+                    $options = array(
+                        'gather_art' => false,
+                        'parse_playlist' => false
+                    );
+                    $catalog->add_to_catalog($options);
                 break;
             }
             switch ($input['format']) {
