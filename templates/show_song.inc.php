@@ -168,6 +168,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     $songprops[T_('Added')]   = date("d/m/Y H:i", $song->addition_time);
     if (AmpConfig::get('show_played_times')) {
         $songprops[T_('# Played')]   = scrub_out($song->object_cnt);
+    }
+    if (AmpConfig::get('show_skipped_times')) {
         $songprops[T_('# Skipped')]  = scrub_out($song->skip_cnt);
     }
 
