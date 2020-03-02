@@ -1629,6 +1629,9 @@ abstract class Catalog extends database_object
         if (!$api) {
             echo "</tbody></table>\n";
         }
+        // Cleanup old objects that are no longer needed
+        Album::garbage_collection();
+        Artist::garbage_collection();
 
         return $result;
     } // update_single_item
@@ -1661,10 +1664,6 @@ abstract class Catalog extends database_object
         $function = 'update_' . $name . '_from_tags';
 
         $return = call_user_func(array('Catalog', $function), $results, $media);
-
-        // Cleanup old objects that are no longer needed
-        Album::garbage_collection();
-        Artist::garbage_collection();
 
         return $return;
     } // update_media_from_tags

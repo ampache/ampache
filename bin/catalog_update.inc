@@ -116,13 +116,11 @@ if ($tmpmemlimoff == 1) {
 
 //$options = array(); // for $catadd
 if ($artadd == 1) {
-    echo "- " . T_("Gathering art") . " - \n";
     $options['gather_art'] = true;
     } else {
     $options['gather_art'] = false;
 }
 if ($plimp == 1) {
-    echo "- " . T_("Parsing playlists") . " - \n";
     $options['parse_playlist'] = true;
     } else {
     $options['parse_playlist'] = false;
