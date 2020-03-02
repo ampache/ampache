@@ -336,9 +336,13 @@ class Access
         }
 
         // Clean incoming variables
-        $user_ip = filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')
-            ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
-            : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
+            $user_ip = (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+                ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+                : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP));
+        } else {
+            $user_ip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        }
 
         switch ($type) {
             case 'init-api':
