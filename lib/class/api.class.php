@@ -2715,6 +2715,8 @@ class Api
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog) {
+            define('API', true);
+            define('SSE_OUTPUT', true);
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog();

@@ -535,6 +535,9 @@ class UI
      */
     public static function update_text($field, $value)
     {
+        if (defined('API')) {
+            return;
+        }
         if (defined('CLI')) {
             echo $value . "\n";
 
