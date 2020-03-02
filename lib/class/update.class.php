@@ -191,7 +191,8 @@ class Update
                          "* Drop localplay_shoutcast table if present.<br />";
         $version[]     = array('version' => '400006', 'description' => $update_string);
 
-        $update_string = "* Add ui option for skip_count display.<br />";
+        $update_string = "* Add ui option for skip_count display.<br />" .
+                         "* Add ui option for displaying dates in a custom format.<br />";
         $version[]     = array('version' => '400007', 'description' => $update_string);
 
         return $version;
@@ -1074,13 +1075,21 @@ class Update
      * update_400007
      *
      * Add ui option for skip_count display
+     * Add ui option for displaying dates in a custom format
      */
     public static function update_400007()
     {
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES ('show_skipped_times', '0', 'Show # skipped',0, 'boolean', 'interface', 'library')";
+            "VALUES ('show_skipped_times', '0', 'Show # skipped', 0, 'boolean', 'interface', 'library')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
