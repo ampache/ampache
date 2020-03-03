@@ -519,6 +519,8 @@ class Song extends database_object implements media, library_item
         while ($row = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold);
+            }
+            if (AmpConfig::get('show_skipped_times')) {
                 $row['skip_cnt']   = Stats::get_object_count('song', $row['id'], $limit_threshold, 'skip');
             }
             parent::add_to_cache('song', $row['id'], $row);
@@ -579,6 +581,8 @@ class Song extends database_object implements media, library_item
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
                 $results['object_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold);
+            }
+            if (AmpConfig::get('show_skipped_times')) {
                 $results['skip_cnt']   = Stats::get_object_count('song', $results['id'], $limit_threshold, 'skip');
             }
 
