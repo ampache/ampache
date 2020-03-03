@@ -103,6 +103,8 @@ $thcount  = 8; ?>
             } ?>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <?php } ?>
+            <?php if (AmpConfig::get('show_skipped_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Skipped'); ?></th>
             <?php
             } ?>
