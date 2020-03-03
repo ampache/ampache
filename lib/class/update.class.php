@@ -1092,7 +1092,7 @@ class Update
             "VALUES ('custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
         $retval &= Dba::write($sql, array($row_id));
 
         return $retval;
