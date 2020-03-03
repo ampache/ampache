@@ -297,7 +297,7 @@ class User extends database_object
             $results    = Dba::fetch_assoc($db_results);
 
             if ($results['username']) {
-                return new User($results['username']);
+                return User::get_from_username($results['username']);
             }
             // check for sha256 hashed apikey for client
             // https://github.com/ampache/ampache/wiki/XML-API

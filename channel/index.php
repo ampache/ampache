@@ -49,14 +49,16 @@ if (!function_exists('curl_version')) {
 // Authenticate the user here
 if ($channel->is_private) {
     $is_auth = false;
-    if (filter_has_var(INPUT_SERVER, 'PHP_AUTH_USER')) {
+    if (isset($_SERVER['PHP_AUTH_USER'])) {
         $htusername = Core::get_server('PHP_AUTH_USER');
         $htpassword = Core::get_server('PHP_AUTH_PW');
 
         $auth = Auth::login($htusername, $htpassword);
+        debug_event('channel/index', 'Auth Attempt for ' . $htusername, 5);
         if ($auth['success']) {
+            debug_event('channel/index', 'Auth SUCCESS', 3);
             $username        = $auth['username'];
-            $GLOBALS['user'] = new User($username);
+            $GLOBALS['user'] = User::get_from_username($username);
             $is_auth         = true;
             Preference::init();
 
@@ -73,6 +75,7 @@ if ($channel->is_private) {
     }
 
     if (!$is_auth) {
+        debug_event('channel/index', 'Auth FAILURE', 3);
         header('WWW-Authenticate: Basic realm="Ampache Channel Authentication"');
         header('HTTP/1.0 401 Unauthorized');
         echo T_('Unauthorized');
