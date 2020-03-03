@@ -1082,7 +1082,7 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES ('show_skipped_times', '0', 'Show # skipped', 0, 'boolean', 'interface', 'library')";
+            "VALUES ('show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'library')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
