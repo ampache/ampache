@@ -273,9 +273,9 @@ class Stats
         $skipped    = Dba::fetch_assoc($db_results);
         
         //To remove associated album and artist entries
-        $sql = "DELETE FROM `object_count` WHERE (`object_type` = 'album' OR `object_type` = 'artist') AND `agent` = ? AND `date` BETWEEN ? AND ?";
+        $sql = "DELETE FROM `object_count` WHERE (`object_type` = 'album' OR `object_type` = 'artist') AND `agent` = ? AND `date` = ?";
 
-        return Dba::write($sql, array($skipped['agent'], $skipped['date'] - 2, $skipped['date'] + 2));
+        return Dba::write($sql, array($skipped['agent'], $skipped['date']));
     }
 
 
