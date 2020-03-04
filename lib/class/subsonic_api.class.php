@@ -1793,7 +1793,6 @@ class Subsonic_Api
             $oid   = $rid;
         }
 
-        $counter = 0;
         foreach ($oid as $object) {
             $aid   = Subsonic_XML_Data::getAmpacheId($object);
             $type  = Subsonic_XML_Data::getAmpacheType($object);
