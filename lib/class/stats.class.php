@@ -226,28 +226,58 @@ class Stats
      * if we should re-submit or if this is a duplicate / if it's too soon. This takes an
      * optional user_id because when streaming we don't have $GLOBALS()
      */
-    public static function get_last_song($user_id = '')
+    public static function get_last_song($user_id = '', $agent = '')
     {
         if ($user_id === '') {
             $user_id = Core::get_global('user')->id;
         }
+
+        $sqlres = array($user_id);
 
         $sql = "SELECT * FROM `object_count` " .
                 "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`count_type`='stream' ";
+        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`count_type` IN ('stream', 'skip') ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
+        if (!$agent === '') {
+            $sql .= "AND `object_count`.`agent` = ? ";
+            array_push($sqlres, $agent);
+        }
         $sql .= "ORDER BY `object_count`.`date` DESC LIMIT 1";
-        $db_results = Dba::read($sql, array($user_id));
+        $db_results = Dba::read($sql, $sqlres);
 
         $results = Dba::fetch_assoc($db_results);
 
         return $results;
     } // get_last_song
+
+    /**
+     * skip_last_song
+     * this sets the object_counts count type to skipped
+     * Gets called when the next song is played in quick succession
+     *
+     * @param integer $object_id
+     */
+    public static function skip_last_song($object_id)
+    {
+        $sql        = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `object_id` = ? ORDER BY `date` DESC LIMIT 1";
+        $db_results = Dba::write($sql, array($object_id));
+        
+        //Now the just updated skipped value is taken
+        $sql        = "SELECT * FROM `object_count` WHERE `count_type` = 'skip' ORDER BY `object_count`.`date` DESC LIMIT 1";
+        $db_results = Dba::write($sql, array());
+        $skipped    = Dba::fetch_assoc($db_results);
+        
+        //To remove associated album and artist entries
+        $sql = "DELETE FROM `object_count` WHERE (`object_type` = 'album' OR `object_type` = 'artist') AND `agent` = ? AND `date` = ?";
+
+        return Dba::write($sql, array($skipped['agent'], $skipped['date']));
+    }
+
 
     /**
      * get_object_history

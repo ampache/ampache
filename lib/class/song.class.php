@@ -520,6 +520,9 @@ class Song extends database_object implements media, library_item
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold);
             }
+            if (AmpConfig::get('show_skipped_times')) {
+                $row['skip_cnt']   = Stats::get_object_count('song', $row['id'], $limit_threshold, 'skip');
+            }
             parent::add_to_cache('song', $row['id'], $row);
             $artists[$row['artist']] = $row['artist'];
             $albums[$row['album']]   = $row['album'];
@@ -578,6 +581,9 @@ class Song extends database_object implements media, library_item
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
                 $results['object_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold);
+            }
+            if (AmpConfig::get('show_skipped_times')) {
+                $results['skip_cnt']   = Stats::get_object_count('song', $results['id'], $limit_threshold, 'skip');
             }
 
             parent::add_to_cache('song', $id, $results);
@@ -977,7 +983,7 @@ class Song extends database_object implements media, library_item
      */
     public function set_played($user, $agent, $location, $date = null)
     {
-        if ($this->check_play_history($user)) {
+        if ($this->check_play_history($user, $agent)) {
             Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
             Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date, $this->time);
             Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date, $this->time);
@@ -996,14 +1002,15 @@ class Song extends database_object implements media, library_item
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
      * @param integer $user
+     * @param string $agent
      * @return boolean
      */
-    public function check_play_history($user)
+    public function check_play_history($user, $agent)
     {
         if ($user == -1) {
             return false;
         }
-        $previous = Stats::get_last_song($user);
+        $previous = Stats::get_last_song($user, $agent);
         $diff     = time() - $previous['date'];
 
         // this song was your last play and the length between plays is too short.
@@ -1013,11 +1020,19 @@ class Song extends database_object implements media, library_item
             return false;
         }
 
-        // try to keep a difference between recording stats but also allowing short songs
-        if ($diff < 20 && !$this->time < 20) {
-            debug_event('song.class', 'Last song played within ' . $diff . ' seconds, not recording stats', 3);
+        $timekeeper = AmpConfig::get('skip_timer');
+        $skiptime   = 20;
+        if ((int) $timekeeper > 1) {
+            $skiptime = $timekeeper;
+        } elseif ($timekeeper < 1 && $timekeeper > 0) {
+            $skiptime = (int) ($previous['time'] * $timekeeper);
+        }
 
-            return false;
+        // when the difference between recordings is too short, the song has been skipped, so note that
+        if ($diff < $skiptime && !$previous["time"] < $skiptime) {
+            debug_event('song.class', 'Last song played within ' . $diff . ' seconds, skipping ' . $previous['id'], 3);
+            Stats::skip_last_song($previous['id']);
+            Useractivity::del_activity($previous['id']);
         }
 
         return true;
@@ -1038,7 +1053,7 @@ class Song extends database_object implements media, library_item
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
         $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album');
-        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt', 'albumartist', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group');
+        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt', 'skip_cnt', 'albumartist', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group');
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
     } // compare_song_information

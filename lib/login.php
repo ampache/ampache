@@ -194,6 +194,8 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     if (AmpConfig::get('autoupdate') && Access::check('interface', '100')) {
         AutoUpdate::is_update_available(true);
     }
+    // fix preferences that are missing for user
+    User::fix_preferences($user->id);
 
     /* Make sure they are actually trying to get to this site and don't try
      * to redirect them back into an admin section

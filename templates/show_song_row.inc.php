@@ -65,11 +65,12 @@ if ($libitem->enabled || Access::check('interface', '50')) { ?>
 <td class="cel_time"><?php echo $libitem->f_time ?></td>
 <?php if (AmpConfig::get('licensing')) { ?>
 <td class="cel_license"><?php echo $libitem->f_license ?></td>
-<?php
-    } ?>
-
+<?php } ?>
 <?php if (AmpConfig::get('show_played_times')) { ?>
 <td class="cel_counter"><?php echo $libitem->object_cnt ?></td>
+<?php } ?>
+<?php if (AmpConfig::get('show_skipped_times')) { ?>
+<td class="cel_counter"><?php echo $libitem->skip_cnt ?></td>
 <?php
     }
     if (User::is_registered()) {

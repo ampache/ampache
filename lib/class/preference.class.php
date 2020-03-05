@@ -433,7 +433,7 @@ class Preference extends database_object
                     'access_control', 'require_localnet_session',
                     'downsample_remote', 'track_user_ip',
                     'xml_rpc', 'allow_zip_download', 'ratings',
-                    'shoutbox', 'resize_images',
+                    'shoutbox', 'resize_images', 'show_played_times', 'show_skipped_times',
                     'show_album_art', 'allow_public_registration',
                     'captcha_public_reg', 'admin_notify_reg',
                     'use_rss', 'download', 'force_http_play', 'cookie_secure',
