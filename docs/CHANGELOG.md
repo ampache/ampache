@@ -7,6 +7,12 @@
     * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400003
   * Call the JSON server:
     * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400003
+* Fix channel authentication
+* Fix ip checks when sending null proxy values
+* Fix Extra text in catalog API calls
+* Fix Gather art page layout
+* Fix Read vorbis rating correctly
+* Added skips to the database and interface
 
 ## 4.1.1
 * Bump API version to 400004 (4.0.0 build 004)
