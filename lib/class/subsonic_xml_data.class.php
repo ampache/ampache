@@ -142,9 +142,9 @@ class Subsonic_XML_Data
     private static function cleanId($objectid)
     {
         // Remove all al-, ar-, ... prefixs
-        $tpos = strpos($objectid, "-");
+        $tpos = strpos((string) $objectid, "-");
         if ($tpos !== false) {
-            $objectid = (int) (substr($objectid, $tpos + 1));
+            $objectid = (int) (substr((string) $objectid, $tpos + 1));
         }
 
         return $objectid;
@@ -648,7 +648,7 @@ class Subsonic_XML_Data
                 $results['object_cnt'] = Stats::get_object_count('song', (string) $results['id'], null);
             }
         }
-        $extension       = pathinfo($results['file'], PATHINFO_EXTENSION);
+        $extension       = pathinfo((string) $results['file'], PATHINFO_EXTENSION);
         $results['type'] = strtolower((string) $extension);
         $results['mime'] = Song::type_to_mime($results['type']);
 

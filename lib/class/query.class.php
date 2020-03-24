@@ -442,7 +442,7 @@ class Query
         return json_encode($data);
     }
 
-    /*
+    /**
      * _unserialize
      *
      * Reverses serialization.

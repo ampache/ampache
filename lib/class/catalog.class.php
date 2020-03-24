@@ -103,13 +103,13 @@ abstract class Catalog extends database_object
      */
     public $enabled;
 
-    /*
+    /**
      * This is a private var that's used during catalog builds
      * @var array $_playlists
      */
     protected $_playlists = array();
 
-    /*
+    /**
      * Cache all files in catalog for quick lookup during add
      * @var array $_filecache
      */

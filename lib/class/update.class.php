@@ -38,7 +38,7 @@ class Update
     public $value;
     public static $versions; // array containing version information
 
-    /*
+    /**
      * Constructor
      *
      * This should never be called

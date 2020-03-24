@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 class AutoUpdate
 {
-    /*
+    /**
      * Constructor
      *
      * This should never be called

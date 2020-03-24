@@ -80,9 +80,7 @@ class UPnPPlaylist
      */
     public function CurrentItem()
     {
-        $item = $this->_songs[$this->_current];
-
-        return $item;
+        return $this->_songs[$this->_current];
     }
 
     /**

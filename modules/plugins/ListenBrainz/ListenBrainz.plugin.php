@@ -186,6 +186,7 @@ class Ampachelistenbrainz
         debug_event('listenbrainz.plugin', 'Submission option: ' . json_encode($opts), 5);
         $context = stream_context_create($opts);
         $target  = $this->scheme . '://' . $this->api_host . $url;
+
         return file_get_contents($target, false, $context);
     } // call_url
 

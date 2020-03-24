@@ -410,7 +410,7 @@ class Core
         return array('width' => $width, 'height' => $height);
     } // image_dimensions
 
-    /*
+    /**
      * is_readable
      *
      * Replacement function because PHP's is_readable is buggy:
@@ -472,7 +472,7 @@ class Core
         return $size;
     }
 
-    /*
+    /**
      * conv_lc_file
      *
      * Convert site charset filename to local charset filename for file operations
@@ -493,7 +493,7 @@ class Core
         return $lc_filename;
     }
 
-    /*
+    /**
      * is_session_started
      *
      * Universal function for checking session status.

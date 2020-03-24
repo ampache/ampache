@@ -306,6 +306,7 @@ class Live_Stream extends database_object implements media, library_item
         // If we've made it this far everything must be ok... I hope
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " .
             "VALUES (?, ?, ?, ?, ?)";
+
         return Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
     } // create
 

@@ -178,11 +178,8 @@ class TVShow_Episode extends Video
         return true;
     }
 
-    /*
-     * get_keywords
-     * @return array
-     */
     /**
+     * get_keywords
      * @return array
      */
     public function get_keywords()

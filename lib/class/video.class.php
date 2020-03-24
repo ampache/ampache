@@ -693,15 +693,11 @@ class Video extends database_object implements media, library_item
         );
     }
 
-    /*
+    /**
      * generate_preview
      * Generate video preview image from a video file
      * @param int $video_id
      * @param bool  $overwrite
-     */
-    /**
-     * @param $video_id
-     * @param bool $overwrite
      */
     public static function generate_preview($video_id, $overwrite = false)
     {

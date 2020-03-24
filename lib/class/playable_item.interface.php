@@ -66,7 +66,7 @@ interface playable_item
      */
     public function search_childrens($name);
 
-    /*
+    /**
      * get_medias
      *
      * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.

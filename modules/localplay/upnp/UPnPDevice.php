@@ -24,10 +24,8 @@ class UPnPDevice
         }
     }
 
-    /*
-     * Reads description URL from session
-     */
     /**
+     * Reads description URL from session
      * @param $descriptionUrl
      * @return bool
      */
@@ -181,12 +179,10 @@ class UPnPDevice
     public function instanceOnly($command, $type = 'AVTransport', $id = 0)
     {
         $args     = array( 'InstanceID' => $id );
-        $response = $this->sendRequestToDevice($command, $args, $type);
-
         ///$response = \Format::forge($response, 'xml:ns')->to_array();
         ///return $response['s:Body']['u:' . $command . 'Response'];
 
-        return $response;
+        return $this->sendRequestToDevice($command, $args, $type);
     }
 
 

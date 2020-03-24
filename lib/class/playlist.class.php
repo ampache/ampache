@@ -427,6 +427,7 @@ class Playlist extends playlist_object
         }
 
         $sql        = "UPDATE `playlist` SET `$field` = ? WHERE `id` = ?";
+
         return Dba::write($sql, array($value, $this->id));
     } // update_item
 

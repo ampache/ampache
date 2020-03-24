@@ -425,7 +425,7 @@ class Broadcast extends database_object implements library_item
     {
     }
 
-    /*
+    /**
      * Get play url.
      *
      * @param int $oid

@@ -944,14 +944,10 @@ class User extends database_object
         return true;
     } // update_stats
 
-    /*
+    /**
      * save_mediaplay
      * @param User $user
      * @param Song $media
-     */
-    /**
-     * @param $user
-     * @param $media
      */
     public static function save_mediaplay($user, $media)
     {

@@ -142,9 +142,8 @@ class AmpacheMpd extends localplay_controller
 
         $sql = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) " .
             "VALUES ('$name', '$host', '$port', '$password', '$user_id')";
-        $db_results = Dba::write($sql);
 
-        return $db_results;
+        return Dba::write($sql);
     } // add_instance
 
     /**
@@ -198,9 +197,7 @@ class AmpacheMpd extends localplay_controller
         $sql        = "SELECT * FROM `localplay_mpd` WHERE `id`='$instance'";
         $db_results = Dba::read($sql);
 
-        $row = Dba::fetch_assoc($db_results);
-
-        return $row;
+        return Dba::fetch_assoc($db_results);
     } // get_instance
 
     /**

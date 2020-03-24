@@ -148,11 +148,8 @@ class TVShow_Season extends database_object implements library_item
         return true;
     }
 
-    /*
-     * get_keywords
-     * @return array
-     */
     /**
+     * get_keywords
      * @return array|mixed
      */
     public function get_keywords()
