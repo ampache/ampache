@@ -20,11 +20,9 @@
  *
  */
 
-/*
+/**
  * log_event
  * Logs an event to a defined log file based on config options
- */
-/**
  * @param string $username
  * @param string $event_name
  * @param string $event_description
@@ -61,7 +59,7 @@ function log_event($username, $event_name, $event_description, $log_name)
     }
 } // log_event
 
-/*
+/**
  * ampache_error_handler
  *
  * An error handler for ampache that traps as many errors as it can and logs

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -19,6 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+use Lib\Metadata\Repository\Metadata;
+use Lib\Metadata\Repository\MetadataField;
 
 /**
  * Catalog Class
@@ -149,9 +153,23 @@ abstract class Catalog extends database_object
      * @return boolean
      */
     abstract public function install();
+
+    /**
+     * @param null $options
+     * @return mixed
+     */
     abstract public function add_to_catalog($options = null);
+
+    /**
+     * @return mixed
+     */
     abstract public function verify_catalog_proc();
+
+    /**
+     * @return mixed
+     */
     abstract public function clean_catalog_proc();
+
     /**
      * @return array
      */
@@ -162,6 +180,7 @@ abstract class Catalog extends database_object
      * @return string
      */
     abstract public function get_rel_path($file_path);
+
     /**
      * @param Song|Podcast_Episode|Song_Preview|Video $media
      * @return media|null
@@ -1840,6 +1859,11 @@ abstract class Catalog extends database_object
         return $info;
     } // update_song_from_tags
 
+    /**
+     * @param $results
+     * @param Video $video
+     * @return array
+     */
     public static function update_video_from_tags($results, Video $video)
     {
         /* Setup the vars */
@@ -2062,8 +2086,8 @@ abstract class Catalog extends database_object
         Tag::garbage_collection();
 
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
-        \Lib\Metadata\Repository\Metadata::garbage_collection();
-        \Lib\Metadata\Repository\MetadataField::garbage_collection();
+        Metadata::garbage_collection();
+        MetadataField::garbage_collection();
         debug_event('catalog.class', 'Database cleanup ended', 4);
     }
 
@@ -2088,6 +2112,10 @@ abstract class Catalog extends database_object
         return array('string' => $string, 'prefix' => $prefix);
     } // trim_prefix
 
+    /**
+     * @param $year
+     * @return int
+     */
     public static function normalize_year($year)
     {
         if (empty($year)) {
@@ -2528,6 +2556,11 @@ abstract class Catalog extends database_object
         return $tags;
     }
 
+    /**
+     * @param $libitem
+     * @param null $user
+     * @return bool
+     */
     public static function can_remove($libitem, $user = null)
     {
         if (!$user) {
@@ -2545,6 +2578,11 @@ abstract class Catalog extends database_object
         return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
     }
 
+    /**
+     * @param $action
+     * @param $catalogs
+     * @param null $options
+     */
     public static function process_action($action, $catalogs, $options = null)
     {
         if (!$options || !is_array($options)) {

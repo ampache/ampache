@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -209,6 +210,11 @@ class Live_Stream extends database_object implements media, library_item
         return null;
     }
 
+    /**
+     * @param int $thumb
+     * @param bool $force
+     * @return mixed|void
+     */
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'live_stream') || $force) {
@@ -367,6 +373,10 @@ class Live_Stream extends database_object implements media, library_item
         return false;
     }
 
+    /**
+     * @param null $catalog
+     * @return array
+     */
     public static function get_all_radios($catalog = null)
     {
         $sql = "SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` ";
@@ -391,16 +401,30 @@ class Live_Stream extends database_object implements media, library_item
         return $radios;
     }
 
+    /**
+     * @return mixed|void
+     */
     public static function garbage_collection()
     {
         // Do nothing
     }
 
+    /**
+     * @param $user
+     * @param $agent
+     * @param $location
+     * @return mixed|void
+     */
     public function set_played($user, $agent, $location)
     {
         // Do nothing
     }
 
+    /**
+     * @param $user
+     * @param $agent
+     * @return mixed|void
+     */
     public function check_play_history($user, $agent)
     {
         unset($user, $agent);

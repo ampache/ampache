@@ -202,7 +202,7 @@ if (!defined('INSTALL')) { ?>
     <td>
     <?php echo debug_result(is_readable($configfile)); ?>
     </td>
-    <td width="350px">
+    <td>
     <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?>
     </td>
 </tr>

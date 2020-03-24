@@ -161,7 +161,7 @@ class JsonHandler extends Handler
      *
      * @param string $char
      * @param string $string
-     * @return type
+     * @return int
      */
     public function countChar($char, $string)
     {
@@ -171,7 +171,7 @@ class JsonHandler extends Handler
     /**
      * convert the json string into a song array
      * @param string $item
-     * @return type
+     * @return array
      */
     public function parse($item)
     {

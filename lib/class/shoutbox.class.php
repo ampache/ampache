@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -131,6 +132,10 @@ class Shoutbox
         return $shouts;
     } // get_top
 
+    /**
+     * @param $time
+     * @return array
+     */
     public static function get_shouts_since($time)
     {
         $sql        = "SELECT * FROM `user_shout` WHERE `date` > ? ORDER BY `date` DESC";
@@ -300,6 +305,11 @@ class Shoutbox
         Dba::write($sql);
     } // delete
 
+    /**
+     * @param bool $details
+     * @param bool $jsbuttons
+     * @return string
+     */
     public function get_display($details = true, $jsbuttons = false)
     {
         $object = Shoutbox::get_object($this->object_type, $this->object_id);
@@ -350,6 +360,11 @@ class Shoutbox
         return $html;
     }
 
+    /**
+     * @param $object_type
+     * @param $object_id
+     * @return array
+     */
     public static function get_shouts($object_type, $object_id)
     {
         $sql        = "SELECT `id` FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC";

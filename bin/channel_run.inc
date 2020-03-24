@@ -451,11 +451,11 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "<div class=\"newscontent\">" . "\n";
                     $xsl .= "<div class=\"streamheader\">" . "\n";
                     $xsl .= "<table>" . "\n";
-                    $xsl .= "<colgroup align=\"left\"></colgroup>" . "\n";
-                    $xsl .= "<colgroup align=\"right\" width=\"300\"></colgroup>" . "\n";
+                    $xsl .= "<colgroup></colgroup>" . "\n";
+                    $xsl .= "<colgroup></colgroup>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td><h3>Mount Point: <a href=\"stream.". $channel->stream_type . "\">stream.". $channel->stream_type . "</a></h3></td>" . "\n";
-                    $xsl .= "<td align=\"right\">" . "\n";
+                    $xsl .= "<td>" . "\n";
                     $xsl .= "<a href=\"stream.". $channel->stream_type .".m3u\">M3U</a>" . "\n";
                     $xsl .= "</td>" . "\n";
                     $xsl .= "</tr>" . "\n";

@@ -50,6 +50,11 @@ function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = '
     require AmpConfig::get('prefix') . UI::find_template('show_confirmation.inc.php');
 } // show_confirmation
 
+/**
+ * @param $action
+ * @param null $catalogs
+ * @param null $options
+ */
 function catalog_worker($action, $catalogs = null, $options = null)
 {
     if (AmpConfig::get('ajax_load')) {
@@ -375,6 +380,14 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
     echo "</select>\n";
 } // show_tvshow_select
 
+/**
+ * @param $name
+ * @param $season_id
+ * @param bool $allow_add
+ * @param int $video_id
+ * @param bool $allow_none
+ * @return bool
+ */
 function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false)
 {
     if (!$season_id) {
@@ -578,6 +591,12 @@ function xoutput_headers()
     header("Pragma: no-cache");
 }
 
+/**
+ * @param $array
+ * @param bool $callback
+ * @param string $type
+ * @return false|mixed|string
+ */
 function xoutput_from_array($array, $callback = false, $type = '')
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
@@ -592,6 +611,12 @@ function xoutput_from_array($array, $callback = false, $type = '')
     }
 }
 
+/**
+ * @param $array
+ * @param bool $callback
+ * @param string $type
+ * @return false|string
+ */
 function json_from_array($array, $callback = false, $type = '')
 {
     return json_encode($array);
@@ -719,6 +744,10 @@ function show_now_playing()
     require_once AmpConfig::get('prefix') . UI::find_template('show_now_playing.inc.php');
 } // show_now_playing
 
+/**
+ * @param bool $render
+ * @param bool $force
+ */
 function show_table_render($render = false, $force = false)
 {
     // Include table render javascript only once

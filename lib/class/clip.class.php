@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -171,6 +172,9 @@ class Clip extends Video
         return $keywords;
     }
 
+    /**
+     * @return array|null
+     */
     public function get_parent()
     {
         if ($this->artist) {

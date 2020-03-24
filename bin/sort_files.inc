@@ -83,8 +83,8 @@ while ($row = Dba::fetch_row($db_results)) {
         /* Find this poor song a home */
         $song->format();
         // sort_find_home will replace the % with the correct values.
-        $directory = sort_find_home($song, $catalog->sort_pattern, $catalog->path);
-        $filename  = sort_find_home($song, $catalog->rename_pattern, null);
+        $directory = sort_find_home($song, $catalog->sort_pattern, $catalog->path, $various_artist);
+        $filename  = sort_find_home($song, $catalog->rename_pattern, null, $various_artist);
         if ($directory === false || $filename === false) {
             $fullpath = $song->file;
         } else {
@@ -121,7 +121,7 @@ while ($row = Dba::fetch_row($db_results)) {
  * @param string $base
  * @return bool|string
  */
-function sort_find_home($song, $sort_pattern, $base = null) {
+function sort_find_home($song, $sort_pattern, $base = null, $various_artist) {
 
     $home = '';
     if ($base) {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -190,6 +191,9 @@ class TVShow extends database_object implements library_item
      * get_keywords
      * @return array
      */
+    /**
+     * @return array|mixed
+     */
     public function get_keywords()
     {
         $keywords           = array();
@@ -204,21 +208,34 @@ class TVShow extends database_object implements library_item
         return $keywords;
     }
 
+    /**
+     * @return mixed
+     */
     public function get_fullname()
     {
         return $this->f_name;
     }
 
+    /**
+     * @return |null
+     */
     public function get_parent()
     {
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function get_childrens()
     {
         return array('tvshow_season' => $this->get_seasons());
     }
 
+    /**
+     * @param $name
+     * @return array
+     */
     public function search_childrens($name)
     {
         debug_event('tvshow.class', 'search_childrens ' . $name, 5);
@@ -226,6 +243,10 @@ class TVShow extends database_object implements library_item
         return array();
     }
 
+    /**
+     * @param null $filter_type
+     * @return array|mixed
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -253,21 +274,35 @@ class TVShow extends database_object implements library_item
         return array($this->catalog_id);
     }
 
+    /**
+     * @return mixed|null
+     */
     public function get_user_owner()
     {
         return null;
     }
 
+    /**
+     * @return mixed|string
+     */
     public function get_default_art_kind()
     {
         return 'default';
     }
 
+    /**
+     * @return mixed
+     */
     public function get_description()
     {
         return $this->summary;
     }
 
+    /**
+     * @param int $thumb
+     * @param bool $force
+     * @return mixed|void
+     */
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'tvshow') || $force) {
@@ -425,6 +460,9 @@ class TVShow extends database_object implements library_item
         }
     }
 
+    /**
+     * @return bool|PDOStatement
+     */
     public function remove_from_disk()
     {
         $deleted    = true;

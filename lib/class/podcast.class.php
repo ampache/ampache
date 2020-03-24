@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -186,21 +187,34 @@ class Podcast extends database_object implements library_item
         return $keywords;
     }
 
+    /**
+     * @return mixed
+     */
     public function get_fullname()
     {
         return $this->f_title;
     }
 
+    /**
+     * @return |null
+     */
     public function get_parent()
     {
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function get_childrens()
     {
         return array('podcast_episode' => $this->get_episodes());
     }
 
+    /**
+     * @param $name
+     * @return array
+     */
     public function search_childrens($name)
     {
         debug_event('podcast.class', 'search_childrens ' . $name, 5);
@@ -208,6 +222,10 @@ class Podcast extends database_object implements library_item
         return array();
     }
 
+    /**
+     * @param null $filter_type
+     * @return array|mixed
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -224,11 +242,17 @@ class Podcast extends database_object implements library_item
         return $medias;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function get_user_owner()
     {
         return null;
     }
 
+    /**
+     * @return string
+     */
     public function get_default_art_kind()
     {
         return 'default';
