@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -223,6 +224,12 @@ class Dba
         return $result;
     }
 
+    /**
+     * @param $resource
+     * @param string $class
+     * @param bool $finish
+     * @return array
+     */
     public static function fetch_object($resource, $class = 'stdClass', $finish = true)
     {
         if (!$resource) {

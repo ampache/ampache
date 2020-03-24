@@ -1,5 +1,8 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+use Lib\Metadata\Repository\MetadataField;
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
@@ -404,7 +407,7 @@ function create_preference_input($name, $value)
         case 'disabled_custom_metadata_fields':
             $ids             = explode(',', $value);
             $options         = array();
-            $fieldRepository = new \Lib\Metadata\Repository\MetadataField();
+            $fieldRepository = new MetadataField();
             foreach ($fieldRepository->findAll() as $field) {
                 $selected  = in_array($field->getId(), $ids) ? ' selected="selected"' : '';
                 $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';

@@ -100,6 +100,9 @@ class Catalog_soundcloud extends Catalog
         return true;
     } // install
 
+    /**
+     * @return array|mixed
+     */
     public function catalog_fields()
     {
         $fields['userid']      = array('description' => T_('User ID'), 'type' => 'text');
@@ -108,6 +111,9 @@ class Catalog_soundcloud extends Catalog
         return $fields;
     }
 
+    /**
+     * @return bool
+     */
     public function isReady()
     {
         return (!empty($this->authtoken));
@@ -152,6 +158,9 @@ class Catalog_soundcloud extends Catalog
         }
     }
 
+    /**
+     * @return string
+     */
     protected function getRedirectUri()
     {
         return AmpConfig::get('web_path') . "/show_get.php?param_name=code";
@@ -251,6 +260,9 @@ class Catalog_soundcloud extends Catalog
         return true;
     } // add_to_catalog
 
+    /**
+     * @return Services_Soundcloud|null
+     */
     public function createClient()
     {
         if ($this->authcode) {
@@ -333,6 +345,9 @@ class Catalog_soundcloud extends Catalog
         return true;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function verify_catalog_proc()
     {
         return array('total' => 0, 'updated' => 0);
@@ -362,7 +377,7 @@ class Catalog_soundcloud extends Catalog
                             $remove = true;
                         }
                     } catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $error) {
-                        if ($e->getHttpCode() == '404') {
+                        if ($error->getHttpCode() == '404') {
                             $remove = true;
                         } else {
                             debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
@@ -390,6 +405,10 @@ class Catalog_soundcloud extends Catalog
         return $dead;
     }
 
+    /**
+     * @param $url
+     * @return int|mixed
+     */
     public function url_to_track($url)
     {
         $track = 0;
@@ -401,6 +420,10 @@ class Catalog_soundcloud extends Catalog
         return $track;
     }
 
+    /**
+     * @param string $file_path
+     * @return string
+     */
     public function get_rel_path($file_path)
     {
         return $file_path;
@@ -440,6 +463,10 @@ class Catalog_soundcloud extends Catalog
         $this->f_full_info = $this->userid;
     }
 
+    /**
+     * @param Podcast_Episode|Song|Song_Preview|Video $media
+     * @return media|null
+     */
     public function prepare_media($media)
     {
         try {

@@ -364,7 +364,7 @@ class easy_captcha
          '<div id="captcha" class="captcha">' .
          $error .
          '<input type="hidden" id="' . $p_id . '" name="' . $p_id . '" value="' . $id . '" />' .
-         '<img src="' . $img_url . '&" width="' . $this->image->width . '" height="' . $this->image->height . '" alt="' . $alt_text . '" align="middle" ' . $onClick . ' title="' . CAPTCHA_REDRAW_TEXT . '" />' .
+         '<img src="' . $img_url . '&" width="' . $this->image->width . '" height="' . $this->image->height . '" alt="' . $alt_text . $onClick . ' title="' . CAPTCHA_REDRAW_TEXT . '" />' .
          '&nbsp;' .
          $add_text .
          '<input title="' . CAPTCHA_PROMPT_TEXT . '" type="text" ' . $onKeyDown . ' id="' . $p_input . '" name="' . $p_input . '" value="' . (isset($_REQUEST[$p_input])?htmlentities($_REQUEST[$p_input]):"") .

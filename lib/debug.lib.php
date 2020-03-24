@@ -46,7 +46,7 @@ function check_php()
 /*
  * check_php_version
  * check for required php version
- * @return boolean
+ * @return bool
  */
 function check_php_version()
 {
@@ -60,7 +60,7 @@ function check_php_version()
 /*
  * check_php_hash
  * check for required function exists
- * @return boolean
+ * @return bool
  */
 function check_php_hash()
 {
@@ -70,7 +70,7 @@ function check_php_hash()
 /*
  * check_php_hash_algo
  * check for required function exists
- * @return boolean
+ * @return bool
  */
 function check_php_hash_algo()
 {
@@ -80,7 +80,7 @@ function check_php_hash_algo()
 /*
  * check_php_json
  * check for required function exists
- * @return boolean
+ * @return bool
  */
 function check_php_json()
 {
@@ -90,7 +90,7 @@ function check_php_json()
 /*
  * check_php_curl
  * check for required function exists
- * @return boolean
+ * @return bool
  */
 function check_php_curl()
 {
@@ -100,7 +100,7 @@ function check_php_curl()
 /*
  * check_php_session
  * check for required function exists
- * @return boolean
+ * @return bool
  */
 function check_php_session()
 {
@@ -110,7 +110,7 @@ function check_php_session()
 /*
  * check_php_pdo
  * check for required function exists
- * @return boolean
+ * @return bool
  */
 function check_php_pdo()
 {
@@ -120,7 +120,7 @@ function check_php_pdo()
 /*
  * check_php_pdo_mysql
  * check for required function exists
- * @return boolean
+ * @return bool
  */
 function check_php_pdo_mysql()
 {
@@ -130,7 +130,7 @@ function check_php_pdo_mysql()
 /*
  * check_mbstring_func_overload
  * check for required function exists
- * @return boolean
+ * @return bool
  */
 function check_mbstring_func_overload()
 {
@@ -145,7 +145,7 @@ function check_mbstring_func_overload()
  * check_config_values
  * checks to make sure that they have at least set the needed variables
  * @param array $conf
- * @return boolean
+ * @return bool
  */
 function check_config_values($conf)
 {
@@ -286,21 +286,33 @@ function check_upload_size()
     return (($upload_max >= $mini || $upload_max <= 0) && ($post_max >= $mini || $post_max <= 0));
 }
 
+/**
+ * @return bool
+ */
 function check_php_int_size()
 {
     return (PHP_INT_SIZE > 4);
 }
 
+/**
+ * @return bool
+ */
 function check_php_zlib()
 {
     return function_exists('gzcompress');
 }
 
+/**
+ * @return bool
+ */
 function check_php_simplexml()
 {
     return function_exists('simplexml_load_string');
 }
 
+/**
+ * @return bool
+ */
 function check_php_gd()
 {
     return (extension_loaded('gd') || extension_loaded('gd2'));
@@ -330,6 +342,9 @@ function return_bytes($val)
     return $val;
 }
 
+/**
+ * @return bool
+ */
 function check_dependencies_folder()
 {
     return file_exists(AmpConfig::get('prefix') . '/lib/vendor');
@@ -347,18 +362,27 @@ function check_config_writable()
         || (!file_exists(AmpConfig::get('prefix') . '/config/ampache.cfg.php') && is_writeable(AmpConfig::get('prefix') . '/config/')));
 }
 
+/**
+ * @return bool
+ */
 function check_htaccess_channel_writable()
 {
     return ((file_exists(AmpConfig::get('prefix') . '/channel/.htaccess') && is_writable(AmpConfig::get('prefix') . '/channel/.htaccess'))
         || (!file_exists(AmpConfig::get('prefix') . '/channel/.htaccess') && is_writeable(AmpConfig::get('prefix') . '/channel/')));
 }
 
+/**
+ * @return bool
+ */
 function check_htaccess_rest_writable()
 {
     return ((file_exists(AmpConfig::get('prefix') . '/rest/.htaccess') && is_writable(AmpConfig::get('prefix') . '/rest/.htaccess'))
         || (!file_exists(AmpConfig::get('prefix') . '/rest/.htaccess') && is_writeable(AmpConfig::get('prefix') . '/rest/')));
 }
 
+/**
+ * @return bool
+ */
 function check_htaccess_play_writable()
 {
     return ((file_exists(AmpConfig::get('prefix') . '/play/.htaccess') && is_writable(AmpConfig::get('prefix') . '/play/.htaccess'))

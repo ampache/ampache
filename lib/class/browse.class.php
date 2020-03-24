@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -375,6 +376,9 @@ class Browse extends Query
         Ajax::end_container();
     } // show_object
 
+    /**
+     * @param null $argument
+     */
     public function show_next_link($argument = null)
     {
         $limit       = $this->get_offset();

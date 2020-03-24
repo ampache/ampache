@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -405,11 +406,19 @@ class Video extends database_object implements media, library_item
         return 'preview';
     }
 
+    /**
+     * @return mixed|string
+     */
     public function get_description()
     {
         return '';
     }
 
+    /**
+     * @param int $thumb
+     * @param bool $force
+     * @return mixed|void
+     */
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'video') || $force) {
@@ -690,6 +699,10 @@ class Video extends database_object implements media, library_item
      * @param int $video_id
      * @param bool  $overwrite
      */
+    /**
+     * @param $video_id
+     * @param bool $overwrite
+     */
     public static function generate_preview($video_id, $overwrite = false)
     {
         if ($overwrite || !Art::has_db($video_id, 'video', 'preview')) {
@@ -756,6 +769,11 @@ class Video extends database_object implements media, library_item
         return true;
     } // set_played
 
+    /**
+     * @param $user
+     * @param $agent
+     * @return mixed|void
+     */
     public function check_play_history($user, $agent)
     {
         unset($user, $agent);

@@ -237,6 +237,10 @@ class AmpacheUPnP extends localplay_controller
     }
 
 
+    /**
+     * @param Stream_URL $url
+     * @return bool|mixed
+     */
     public function add_url(Stream_URL $url)
     {
         debug_event('upnp.controller', 'add_url: ' . $url->title . " | " . $url->url, 5);

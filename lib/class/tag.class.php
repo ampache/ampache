@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -782,6 +783,9 @@ class Tag extends database_object implements library_item
         return true;
     } // remove_map
 
+    /**
+     * @param bool $details
+     */
     public function format($details = true)
     {
         unset($details); //dead code but called from other format calls
@@ -810,11 +814,17 @@ class Tag extends database_object implements library_item
         return $this->name;
     }
 
+    /**
+     * @return |null
+     */
     public function get_parent()
     {
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function get_childrens()
     {
         return array();
@@ -866,6 +876,9 @@ class Tag extends database_object implements library_item
         return array();
     }
 
+    /**
+     * @return mixed|null
+     */
     public function get_user_owner()
     {
         return null;

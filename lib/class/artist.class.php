@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -768,7 +769,7 @@ class Artist extends database_object implements library_item
      * @param int $user_id
      * @return bool
      */
-    public function can_edit($user = null)
+    public function can_edit($user_id = null)
     {
         if (!$user_id) {
             $user_id = Core::get_global('user')->id;
@@ -779,7 +780,7 @@ class Artist extends database_object implements library_item
         }
 
         if (AmpConfig::get('upload_allow_edit')) {
-            if ($this->user !== null && $user == $this->user) {
+            if ($this->user !== null && $user_id == $this->user) {
                 return true;
             }
         }
@@ -1035,6 +1036,9 @@ class Artist extends database_object implements library_item
         return Dba::write($sql, array($user, $this->id));
     }
 
+    /**
+     * @return bool|PDOStatement
+     */
     public function remove_from_disk()
     {
         $deleted   = true;

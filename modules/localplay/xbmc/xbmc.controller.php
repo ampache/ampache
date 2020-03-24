@@ -247,6 +247,10 @@ class AmpacheXbmc extends localplay_controller
     {
     } // get_active_instance
 
+    /**
+     * @param Stream_URL $url
+     * @return bool|mixed
+     */
     public function add_url(Stream_URL $url)
     {
         if (!$this->_xbmc) {

@@ -80,6 +80,9 @@ class Catalog_beetsremote extends Beets\Catalog
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function catalog_fields()
     {
         $fields['uri'] = array('description' => T_('Beets Server URI'), 'type' => 'url');
@@ -124,6 +127,9 @@ class Catalog_beetsremote extends Beets\Catalog
         return true;
     }
 
+    /**
+     * Get the parser class like CliHandler or JsonHandler
+     */
     protected function getParser()
     {
         return new Beets\JsonHandler($this->uri);

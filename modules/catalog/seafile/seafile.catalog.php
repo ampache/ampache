@@ -29,6 +29,9 @@
 
 require_once('SeafileAdapter.php');
 
+/**
+ * Class Catalog_Seafile
+ */
 class Catalog_Seafile extends Catalog
 {
     private static $version     = '000001';
@@ -220,6 +223,10 @@ class Catalog_Seafile extends Catalog
         }
     }
 
+    /**
+     * @param string $file_path
+     * @return string
+     */
     public function get_rel_path($file_path)
     {
         $arr = $this->seafile->from_virtual_path($file_path);
@@ -328,6 +335,13 @@ class Catalog_Seafile extends Catalog
         return false;
     }
 
+    /**
+     * @param $file
+     * @param string $sort_pattern
+     * @param string $rename_pattern
+     * @param null $gather_types
+     * @return array
+     */
     private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null)
     {
         // Check for patterns
@@ -363,6 +377,9 @@ class Catalog_Seafile extends Catalog
         return $results;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function verify_catalog_proc()
     {
         $results = array('total' => 0, 'updated' => 0);
@@ -409,6 +426,13 @@ class Catalog_Seafile extends Catalog
         return $results;
     }
 
+    /**
+     * @param media $media
+     * @param $gather_types
+     * @param string $sort_pattern
+     * @param string $rename_pattern
+     * @return array|null
+     */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
         if ($this->seafile->prepare()) {
@@ -511,6 +535,10 @@ class Catalog_Seafile extends Catalog
         }
     }
 
+    /**
+     * @param Podcast_Episode|Song|Song_Preview|Video $media
+     * @return media|Podcast_Episode|Song|Song_Preview|Video|null
+     */
     public function prepare_media($media)
     {
         if ($this->seafile->prepare()) {

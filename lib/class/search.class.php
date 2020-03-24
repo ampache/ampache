@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -19,6 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+use Lib\Metadata\Repository\MetadataField;
 
 /**
  * Search Class
@@ -770,7 +773,7 @@ class Search extends playlist_object
         );
 
         $metadataFields          = array();
-        $metadataFieldRepository = new \Lib\Metadata\Repository\MetadataField();
+        $metadataFieldRepository = new MetadataField();
         foreach ($metadataFieldRepository->findAll() as $metadata) {
             $metadataFields[$metadata->getId()] = $metadata->getName();
         }
@@ -1403,6 +1406,9 @@ class Search extends playlist_object
         return $this->id;
     }
 
+    /**
+     * @return mixed|void
+     */
     public static function garbage_collection()
     {
     }

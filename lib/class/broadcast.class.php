@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -176,6 +177,9 @@ class Broadcast extends database_object implements library_item
         return $this->id;
     }
 
+    /**
+     * @param bool $details
+     */
     public function format($details = true)
     {
         $this->f_name = $this->name;
@@ -282,11 +286,19 @@ class Broadcast extends database_object implements library_item
         return 'default';
     }
 
+    /**
+     * @return mixed|null
+     */
     public function get_description()
     {
         return null;
     }
 
+    /**
+     * @param int $thumb
+     * @param bool $force
+     * @return mixed|void
+     */
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'broadcast') || $force) {
@@ -406,6 +418,9 @@ class Broadcast extends database_object implements library_item
         return $broadcasts;
     }
 
+    /**
+     * @return mixed|void
+     */
     public static function garbage_collection()
     {
     }

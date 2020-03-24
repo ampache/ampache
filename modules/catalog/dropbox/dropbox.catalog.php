@@ -110,6 +110,9 @@ class Catalog_dropbox extends Catalog
         return true;
     } // install
 
+    /**
+     * @return array|mixed
+     */
     public function catalog_fields()
     {
         $fields['apikey']        = array('description' => T_('API Key'), 'type' => 'text');
@@ -121,6 +124,9 @@ class Catalog_dropbox extends Catalog
         return $fields;
     }
 
+    /**
+     * @return bool
+     */
     public function isReady()
     {
         return (!empty($this->authtoken));
@@ -305,6 +311,11 @@ class Catalog_dropbox extends Catalog
         }
     }
 
+    /**
+     * @param $dropbox
+     * @param $path
+     * @return bool
+     */
     public function add_file($dropbox, $path)
     {
         $file     = $dropbox->getMetadata($path, ["include_media_info" => true, "include_deleted" => true]);
@@ -443,6 +454,13 @@ class Catalog_dropbox extends Catalog
         } // insert_video
     }
 
+    /**
+     * @param $dropbox
+     * @param $path
+     * @param $maxlen
+     * @param null $dropboxFile
+     * @return bool
+     */
     public function download($dropbox, $path, $maxlen, $dropboxFile = null)
     {
         //Path cannot be null
@@ -462,6 +480,9 @@ class Catalog_dropbox extends Catalog
         return false;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function verify_catalog_proc()
     {
         $updated = array('total' => 0, 'updated' => 0);
@@ -574,11 +595,19 @@ class Catalog_dropbox extends Catalog
         return false;
     }
 
+    /**
+     * @param $file
+     * @return string
+     */
     public function get_virtual_path($file)
     {
         return $this->apikey . '|' . $file;
     }
 
+    /**
+     * @param string $file_path
+     * @return false|string
+     */
     public function get_rel_path($file_path)
     {
         $path = strpos($file_path, "|");
@@ -601,6 +630,10 @@ class Catalog_dropbox extends Catalog
         $this->f_full_info = $this->apikey;
     }
 
+    /**
+     * @param Podcast_Episode|Song|Song_Preview|Video $media
+     * @return media|Podcast_Episode|Song|Song_Preview|Video|null
+     */
     public function prepare_media($media)
     {
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);

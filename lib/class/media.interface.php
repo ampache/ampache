@@ -68,7 +68,18 @@ interface media
      */
     public function get_stream_name();
 
+    /**
+     * @param $user
+     * @param $agent
+     * @param $location
+     * @return mixed
+     */
     public function set_played($user, $agent, $location);
 
+    /**
+     * @param $user
+     * @param $agent
+     * @return mixed
+     */
     public function check_play_history($user, $agent);
 } // end media.interface
