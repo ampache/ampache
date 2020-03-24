@@ -27,6 +27,10 @@ class memory_object
     private $_data = array();
     public $properties;
 
+    /**
+     * memory_object constructor.
+     * @param $data
+     */
     public function __construct($data)
     {
         foreach ($data as $key => $value) {
@@ -36,6 +40,11 @@ class memory_object
         }
     }
 
+    /**
+     * @param $name
+     * @param $value
+     * @return bool
+     */
     public function __set($name, $value)
     {
         if (!in_array($name, $this->properties)) {
@@ -44,6 +53,10 @@ class memory_object
         $this->_data[$name] = $value;
     }
 
+    /**
+     * @param $name
+     * @return bool|mixed|null
+     */
     public function __get($name)
     {
         if (!in_array($name, $this->properties)) {

@@ -32,10 +32,12 @@
  *
  * shows a confirmation of an action
  *
- * @param    string    $title    The Title of the message
- * @param    string    $text    The details of the message
- * @param    string    $next_url    Where to go next
- * @param    integer    $cancel    T/F show a cancel button that uses return_referer()
+ * @param string $title The Title of the message
+ * @param string $text The details of the message
+ * @param string $next_url Where to go next
+ * @param int $cancel T/F show a cancel button that uses return_referer()
+ * @param string $form_name
+ * @param bool $visible
  */
 function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = 'confirmation', $visible = true)
 {
@@ -197,6 +199,7 @@ function get_location()
 /**
  * show_preference_box
  * This shows the preference box for the preferences pages.
+ * @param $preferences
  */
 function show_preference_box($preferences)
 {
@@ -207,6 +210,12 @@ function show_preference_box($preferences)
  * show_album_select
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
+ * @param string $name
+ * @param int $album_id
+ * @param bool $allow_add
+ * @param int $song_id
+ * @param bool $allow_none
+ * @param string $user
  */
 function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
 {
@@ -265,8 +274,14 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
  * show_artist_select
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
+ * @param string $name
+ * @param int $artist_id
+ * @param bool $allow_add
+ * @param int $song_id
+ * @param bool $allow_none
+ * @param int $user_id
  */
-function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
+function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
 {
     static $artist_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -278,9 +293,9 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
 
     $sql    = "SELECT `id`, `name`, `prefix` FROM `artist` ";
     $params = array();
-    if ($user) {
+    if ($user_id) {
         $sql .= "WHERE `user` = ? ";
-        $params[] = $user;
+        $params[] = $user_id;
     }
     $sql .= "ORDER BY `name`";
     $db_results = Dba::read($sql, $params);
@@ -318,6 +333,11 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
  * show_tvshow_select
  * This is the same as show_album_select except it's *gasp* for tvshows! How
  * inventive!
+ * @param string $name
+ * @param int $tvshow_id
+ * @param bool $allow_add
+ * @param int $season_id
+ * @param bool $allow_none
  */
 function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false)
 {
@@ -401,7 +421,10 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  * @param string $name
- * @param integer $catalog_id
+ * @param int $catalog_id
+ * @param string $style
+ * @param bool $allow_none
+ * @param string $filter_type
  */
 function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = '')
 {
@@ -436,6 +459,9 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
  * show_album_select
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
+ * @param string $name
+ * @param int $license_id
+ * @param int $song_id
  */
 function show_license_select($name, $license_id = 0, $song_id = 0)
 {
@@ -478,6 +504,9 @@ function show_license_select($name, $license_id = 0, $song_id = 0)
  * show_user_select
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
+ * @param string $name
+ * @param string $selected
+ * @param string $style
  */
 function show_user_select($name, $selected = '', $style = '')
 {
@@ -504,6 +533,9 @@ function show_user_select($name, $selected = '', $style = '')
 /**
  * show_playlist_select
  * This one is for playlists!
+ * @param string $name
+ * @param string $selected
+ * @param string $style
  */
 function show_playlist_select($name, $selected = '', $style = '')
 {
@@ -569,12 +601,13 @@ function json_from_array($array, $callback = false, $type = '')
  * xml_get_header
  * This takes the type and returns the correct xml header
  * @param string $type
+ * @return string
  */
 function xml_get_header($type)
 {
     switch ($type) {
         case 'itunes':
-            $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
                 "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
                 "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
                 "<plist version=\"1.0\">\n" .
@@ -586,17 +619,15 @@ function xml_get_header($type)
                 "       <key>Show Content Ratings</key><true/>\n" .
                 "       <key>Tracks</key>\n" .
                 "       <dict>\n";
-
-            return $header;
         case 'xspf':
             $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
             "<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->";
-            "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n " .
-            "<title>" . T("Ampache XSPF Playlist") . "</title>\n" .
-            "<creator>" . AmpConfig::get('site_title') . "</creator>\n" .
-            "<annotation>" . AmpConfig::get('site_title') . "</annotation>\n" .
-            "<info>" . AmpConfig::get('web_path') . "</info>\n" .
-                "<trackList>\n\n\n\n";
+            //"<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n " .
+            //"<title>" . T("Ampache XSPF Playlist") . "</title>\n" .
+            //"<creator>" . AmpConfig::get('site_title') . "</creator>\n" .
+            //"<annotation>" . AmpConfig::get('site_title') . "</annotation>\n" .
+            //"<info>" . AmpConfig::get('web_path') . "</info>\n" .
+            //    "<trackList>\n\n\n\n";
 
             return $header;
         default:
@@ -610,16 +641,15 @@ function xml_get_header($type)
  * xml_get_footer
  * This takes the type and returns the correct xml footer
  * @param string $type
+ * @return string
  */
 function xml_get_footer($type)
 {
     switch ($type) {
         case 'itunes':
-            $footer = "      </dict>\n" .
+            return "      </dict>\n" .
                 "</dict>\n" .
                 "</plist>\n";
-
-            return $footer;
         case 'xspf':
             $footer = "      </trackList>\n" .
                 "</playlist>\n";
@@ -634,6 +664,7 @@ function xml_get_footer($type)
 /**
  * toggle_visible
  * This is identical to the javascript command that it actually calls
+ * @param $element
  */
 function toggle_visible($element)
 {
@@ -646,6 +677,7 @@ function toggle_visible($element)
  * display_notification
  * Show a javascript notification to the user
  * @param string $message
+ * @param int $timeout
  */
 function display_notification($message, $timeout = 5000)
 {
@@ -658,6 +690,8 @@ function display_notification($message, $timeout = 5000)
  * print_bool
  * This function takes a boolean value and then prints out a friendly text
  * message.
+ * @param $value
+ * @return string
  */
 function print_bool($value)
 {

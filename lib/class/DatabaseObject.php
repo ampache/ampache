@@ -56,6 +56,9 @@ abstract class DatabaseObject
     //    return $this->originalData->$property !== $this->$property;
     //}
 
+    /**
+     * @return bool
+     */
     public function isDirty()
     {
         return true;
@@ -91,6 +94,10 @@ abstract class DatabaseObject
         }
     }
 
+    /**
+     * @param $properties
+     * @return array
+     */
     protected function fromCamelCase($properties)
     {
         $data = array();

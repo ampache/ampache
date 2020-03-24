@@ -70,15 +70,13 @@ class Catalog_dropbox extends Catalog
      */
     public function get_create_help()
     {
-        $help = "<ul><li>" . T_("Go to https://www.dropbox.com/developers/apps/create") . "</li>" .
+        return "<ul><li>" . T_("Go to https://www.dropbox.com/developers/apps/create") . "</li>" .
             "<li>" . T_("Select 'Dropbox API app'") . "</li>" .
             "<li>" . T_("Select 'Full Dropbox'") . "</li>" .
             "<li>" . T_("Give a name to your application and create it") . "</li>" .
             "<li>" . T_("Click the 'Generate' button to create an Access Token") . "</li>" .
             "<li>" . T_("Copy your App key and App secret and Access Token into the following fields.") . "</li>" .
             "</ul>";
-
-        return $help;
     } // get_create_help
 
     /**
@@ -149,6 +147,7 @@ class Catalog_dropbox extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
+     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -168,6 +167,9 @@ class Catalog_dropbox extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
+     * @param $catalog_id
+     * @param array $data
+     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -221,6 +223,8 @@ class Catalog_dropbox extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
+     * @param array $options
+     * @return bool
      */
     public function add_to_catalog($options = null)
     {
@@ -267,6 +271,8 @@ class Catalog_dropbox extends Catalog
      * add_files
      *
      * Recurses through directories and pulls out all media files
+     * @param $dropbox
+     * @param $path
      */
     public function add_files($dropbox, $path)
     {
@@ -335,6 +341,9 @@ class Catalog_dropbox extends Catalog
      * _insert_local_song
      *
      * Insert a song that isn't already in the database.
+     * @param $dropbox
+     * @param $path
+     * @return bool
      */
     private function insert_song($dropbox, $path)
     {
@@ -384,6 +393,9 @@ class Catalog_dropbox extends Catalog
      * This inserts a video file into the video file table the tag
      * information we can get is super sketchy so it's kind of a crap shoot
      * here
+     * @param $dropbox
+     * @param $path
+     * @return int
      */
     public function insert_video($dropbox, $path)
     {
@@ -543,6 +555,8 @@ class Catalog_dropbox extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
+     * @param $file
+     * @return bool|mixed
      */
     public function check_remote_file($file)
     {
@@ -617,6 +631,7 @@ class Catalog_dropbox extends Catalog
      * to find the art for them from the mp3s
      * @param int[]|null $songs
      * @param int[]|null $videos
+     * @return bool
      */
     public function gather_art($songs = null, $videos = null)
     {

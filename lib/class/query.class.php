@@ -64,7 +64,7 @@ class Query
      * constructor
      * This should be called
      * @param integer|null $query_id
-     * @param boolean $cached
+     * @param bool  $cached
      */
     public function __construct($query_id = null, $cached = true)
     {
@@ -644,7 +644,7 @@ class Query
     /**
      * set_total
      * This sets the total number of objects
-     * @param integer $total
+     * @param int $total
      */
     public function set_total($total)
     {
@@ -761,6 +761,7 @@ class Query
      * This sets the current sort(s)
      * @param string $sort
      * @param string $order
+     * @return bool
      */
     public function set_sort($sort, $order = '')
     {
@@ -791,7 +792,7 @@ class Query
     /**
      * set_offset
      * This sets the current offset of this query
-     * @param integer $offset
+     * @param int $offset
      */
     public function set_offset($offset)
     {
@@ -800,7 +801,7 @@ class Query
 
     /**
      *
-     * @param integer $catalog_number
+     * @param int $catalog_number
      */
     public function set_catalog($catalog_number)
     {
@@ -827,7 +828,7 @@ class Query
      * @param string $table
      * @param string $source
      * @param string $dest
-     * @param integer $priority
+     * @param int $priority
      */
     public function set_join($type, $table, $source, $dest, $priority)
     {
@@ -850,7 +851,7 @@ class Query
      * This sets the start point for our show functions
      * We need to store this in the session so that it can be pulled
      * back, if they hit the back button
-     * @param integer $start
+     * @param int $start
      */
     public function set_start($start)
     {
@@ -862,7 +863,7 @@ class Query
      * set_is_simple
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
-     * @param boolean $value
+     * @param bool  $value
      */
     public function set_is_simple($value)
     {
@@ -875,7 +876,7 @@ class Query
      * This sets true/false if the content of this browse
      * should be static, if they are then content filtering/altering
      * methods will be skipped
-     * @param boolean $value
+     * @param bool  $value
      */
     public function set_static_content($value)
     {
@@ -970,8 +971,9 @@ class Query
     /**
      * set_base_sql
      * This saves the base sql statement we are going to use.
-     * @param boolean $force
+     * @param bool  $force
      * @param string $custom_base
+     * @return bool
      */
     private function set_base_sql($force = false, $custom_base = '')
     {
@@ -1113,9 +1115,7 @@ class Query
      */
     private function get_select()
     {
-        $select_string = implode(", ", $this->_state['select']);
-
-        return $select_string;
+        return implode(", ", $this->_state['select']);
     } // get_select
 
     /**
@@ -1126,9 +1126,7 @@ class Query
      */
     private function get_base_sql()
     {
-        $sql = str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
-
-        return $sql;
+        return str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
     } // get_base_sql
 
     /**
@@ -1206,9 +1204,7 @@ class Query
             return '';
         }
 
-        $sql = ' LIMIT ' . (string) ($this->get_start()) . ', ' . (string) ($this->get_offset());
-
-        return $sql;
+        return ' LIMIT ' . (string) ($this->get_start()) . ', ' . (string) ($this->get_offset());
     } // get_limit_sql
 
     /**
@@ -1240,9 +1236,7 @@ class Query
      */
     public function get_having_sql()
     {
-        $sql = isset($this->_state['having']) ? $this->_state['having'] : '';
-
-        return $sql;
+        return isset($this->_state['having']) ? $this->_state['having'] : '';
     } // get_having_sql
 
     /**
@@ -1250,7 +1244,7 @@ class Query
      * This returns the sql statement we are going to use this has to be run
      * every time we get the objects because it depends on the filters and
      * the type of object we are currently browsing.
-     * @param boolean $limit
+     * @param bool  $limit
      * @return string
      */
     public function get_sql($limit = true)
@@ -1874,7 +1868,7 @@ class Query
      * these should be limited as they are often intensive and
      * require additional queries per object... :(
      *
-     * @param integer $object_id
+     * @param int $object_id
      * @return boolean
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -1896,7 +1890,7 @@ class Query
     private function sql_sort($field, $order)
     {
         if ($order != 'DESC') {
-            $order == 'ASC';
+            $order = 'ASC';
         }
 
         // Depending on the type of browsing we are doing we can apply

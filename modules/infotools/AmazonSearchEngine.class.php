@@ -57,6 +57,10 @@ class AmazonSearch
 
     /**
      * Class Constructor
+     * @param $public_key
+     * @param $private_key
+     * @param $associate_tag
+     * @param string $base_url_param
      */
     public function __construct($public_key, $private_key, $associate_tag, $base_url_param = '')
     {
@@ -102,6 +106,10 @@ class AmazonSearch
      * The parameters are the proxy's hostname or IP address (a string)
      * port, username, and password. These are passed directly to the
      * Requests class when the search is done.
+     * @param string $host
+     * @param string $port
+     * @param string $user
+     * @param string $pass
      */
     public function setProxy($host = '', $port = '', $user = '', $pass = '')
     {
@@ -189,7 +197,7 @@ class AmazonSearch
      *
      * @param array() $terms The search terms to include within the query.
      * @param string $type The type of result desired.
-     * @return string
+     * @return array
      */
     public function search($terms, $type = 'Music')
     {
@@ -254,6 +262,7 @@ class AmazonSearch
      *
      * @param string $asin The 'Amazon standard Identification Number'
      * @param string $type The category of results desired from the web service.
+     * @return array
      */
     public function lookup($asin, $type = 'Music')
     {
@@ -328,6 +337,9 @@ class AmazonSearch
 
     /**
      * Start XML Element.
+     * @param $parser
+     * @param $tag
+     * @param $attributes
      */
     public function startElement($parser, $tag, $attributes)
     {
@@ -352,6 +364,8 @@ class AmazonSearch
 
     /**
      * CDATA handler.
+     * @param $parser
+     * @param $cdata
      */
     public function cdata($parser, $cdata)
     {
@@ -380,6 +394,8 @@ class AmazonSearch
 
     /**
      * End XML Element
+     * @param $parser
+     * @param $tag
      */
     public function endElement($parser, $tag)
     {

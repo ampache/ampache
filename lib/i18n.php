@@ -49,6 +49,10 @@ function load_gettext()
  * @param string $msgid
  * @return string
  */
+/**
+ * @param $msgid
+ * @return mixed
+ */
 function T_($msgid)
 {
     if (function_exists('__')) {
@@ -58,6 +62,12 @@ function T_($msgid)
     return $msgid;
 }
 
+/**
+ * @param $original
+ * @param $plural
+ * @param $value
+ * @return mixed
+ */
 function nT_($original, $plural, $value)
 {
     if (function_exists('n__')) {

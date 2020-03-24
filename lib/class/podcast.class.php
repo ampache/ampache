@@ -50,6 +50,7 @@ class Podcast extends database_object implements library_item
     /**
      * Podcast
      * Takes the ID of the podcast and pulls the info from the db
+     * @param string $podcast_id
      */
     public function __construct($podcast_id = '')
     {
@@ -91,6 +92,8 @@ class Podcast extends database_object implements library_item
     /**
      * get_episodes
      * gets all episodes for this podcast
+     * @param string $state_filter
+     * @return array
      */
     public function get_episodes($state_filter = '')
     {
@@ -146,6 +149,8 @@ class Podcast extends database_object implements library_item
     /**
      * format
      * this function takes the object and reformats some values
+     * @param bool $details
+     * @return bool
      */
     public function format($details = true)
     {
@@ -240,8 +245,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param type $force
+     * @param int $thumb
+     * @param bool $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -253,6 +258,7 @@ class Podcast extends database_object implements library_item
     /**
      * update
      * This takes a key'd array of data and updates the current podcast
+     * @param array $data
      */
     public function update(array $data)
     {
@@ -376,8 +382,8 @@ class Podcast extends database_object implements library_item
     /**
      * add_episodes
      * @param SimpleXMLElement $episodes
-     * @param integer $afterdate
-     * @param boolean $gather
+     * @param int $afterdate
+     * @param bool  $gather
      */
     public function add_episodes($episodes, $afterdate = 0, $gather = false)
     {
@@ -420,7 +426,7 @@ class Podcast extends database_object implements library_item
     /**
      * add_episode
      * @param SimpleXMLElement $episode
-     * @param integer $afterdate
+     * @param int $afterdate
      * @return PDOStatement|boolean
      */
     private function add_episode(SimpleXMLElement $episode, $afterdate = 0)
@@ -468,7 +474,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * update_lastsync
-     * @param integer $time
+     * @param int $time
      * @return PDOStatement|boolean
      */
     private function update_lastsync($time)
@@ -480,7 +486,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * sync_episodes
-     * @param boolean $gather
+     * @param bool  $gather
      * @return PDOStatement|boolean
      */
     public function sync_episodes($gather = false)

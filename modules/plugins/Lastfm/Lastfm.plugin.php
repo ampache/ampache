@@ -107,6 +107,8 @@ class AmpacheLastfm
     /**
      * save_mediaplay
      * This takes care of queueing and then submitting the tracks.
+     * @param Song $song
+     * @return bool
      */
     public function save_mediaplay($song)
     {
@@ -162,6 +164,9 @@ class AmpacheLastfm
     /**
      * set_flag
      * This takes care of spreading your love on Last.fm
+     * @param Song $song
+     * @param bool $flagged
+     * @return bool
      */
     public function set_flag($song, $flagged)
     {
@@ -187,6 +192,9 @@ class AmpacheLastfm
      * get_session
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
+     * @param string $user_id
+     * @param string $token
+     * @return bool
      */
     public function get_session($user_id, $token)
     {
@@ -211,6 +219,7 @@ class AmpacheLastfm
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return bool
      */
     public function load($user)
     {
@@ -231,4 +240,3 @@ class AmpacheLastfm
         return true;
     } // load
 } // end AmpacheLastfm
-;

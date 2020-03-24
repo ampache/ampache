@@ -42,6 +42,12 @@ class Registration
      * This sends the confirmation e-mail for the specified user
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param string $username
+     * @param string $fullname
+     * @param string $email
+     * @param string $website
+     * @param string $validation
+     * @return bool
      */
     public static function send_confirmation($username, $fullname, $email, $website, $validation)
     {
@@ -88,7 +94,9 @@ class Registration
      * send_account_enabled
      * This sends the account enabled email for the specified user
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param string $username
+     * @param string $fullname
+     * @param $email
      */
     public static function send_account_enabled($username, $fullname, $email)
     {

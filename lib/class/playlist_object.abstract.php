@@ -63,6 +63,7 @@ abstract class playlist_object extends database_object implements library_item
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -80,7 +81,7 @@ abstract class playlist_object extends database_object implements library_item
      * has_access
      * This function returns true or false if the current user
      * has access to this playlist
-     * @param integer $user_id
+     * @param int $user_id
      * @return boolean
      */
     public function has_access($user_id = null)

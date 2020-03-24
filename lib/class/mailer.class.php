@@ -66,6 +66,8 @@ class Mailer
      * validate_address
      *
      * Checks whether what we have looks like a valid address.
+     * @param $address
+     * @return
      */
     public static function validate_address($address)
     {
@@ -100,9 +102,11 @@ class Mailer
     } // set_default_sender
 
     /**
-      * get_users
+     * get_users
      * This returns an array of userids for people who have e-mail
      * addresses based on the passed filter
+     * @param $filter
+     * @return array
      */
     public static function get_users($filter)
     {
@@ -137,6 +141,8 @@ class Mailer
     /**
      * send
      * This actually sends the mail, how amazing
+     * @param PHPMailer $phpmailer
+     * @return bool
      */
     public function send($phpmailer = null)
     {

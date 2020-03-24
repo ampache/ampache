@@ -85,6 +85,10 @@ class AmpacheBitly
         return true;
     } // upgrade
 
+    /**
+     * @param string $url
+     * @return bool|string
+     */
     public function shortener($url)
     {
         if (empty($this->bitly_username) || empty($this->bitly_api_key)) {
@@ -114,6 +118,7 @@ class AmpacheBitly
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return bool
      */
     public function load($user)
     {
@@ -144,4 +149,3 @@ class AmpacheBitly
         return true;
     } // load
 } // end AmpacheBitly
-;

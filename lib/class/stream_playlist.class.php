@@ -39,7 +39,7 @@ class Stream_Playlist
     /**
      * Stream_Playlist constructor
      * If an ID is passed, it should be a stream session ID.
-     * @param integer $session_id
+     * @param int $session_id
      */
     public function __construct($session_id = null)
     {
@@ -108,6 +108,8 @@ class Stream_Playlist
     /**
      * media_to_urlarray
      * Formats the URL and media information and adds it to the object
+     * @param $media
+     * @param string $additional_params
      * @return array
      */
     public static function media_to_urlarray($media, $additional_params = '')
@@ -125,6 +127,9 @@ class Stream_Playlist
 
     /**
      * media_to_url
+     * @param $media
+     * @param string $additional_params
+     * @param string $urltype
      * @return Stream_URL
      */
     public static function media_to_url($media, $additional_params = '', $urltype = 'web')
@@ -147,6 +152,9 @@ class Stream_Playlist
 
     /**
      * media_object_to_url
+     * @param $object
+     * @param string $additional_params
+     * @param string $urltype
      * @return Stream_URL
      */
     public static function media_object_to_url($object, $additional_params = '', $urltype = 'web')
@@ -323,10 +331,12 @@ class Stream_Playlist
     /**
      * add
      * Adds an array of media
+     * @param array $media
+     * @param string $additional_params
      */
     public function add($media = array(), $additional_params = '')
     {
-        $urls = $this->media_to_urlarray($media, $additional_params);
+        $urls = self::media_to_urlarray($media, $additional_params);
         foreach ($urls as $url) {
             $this->_add_url($url);
         }
@@ -336,6 +346,8 @@ class Stream_Playlist
      * add_urls
      * Add an array of urls. This is used for things that aren't coming
      * from media objects
+     * @param array $urls
+     * @return bool
      */
     public function add_urls($urls = array())
     {

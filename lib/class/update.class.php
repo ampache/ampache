@@ -86,16 +86,14 @@ class Update
      * format_version
      *
      * Make the version number pretty.
+     * @param string $data
      * @return string
      */
     public static function format_version($data)
     {
-        $new_version =
-            substr($data, 0, strlen((string) $data) - 5) . '.' .
-            substr($data, strlen((string) $data) - 5, 1) . ' Build:' .
-            substr($data, strlen((string) $data) - 4, strlen((string) $data));
-
-        return $new_version;
+        return substr($data, 0, strlen((string) $data) - 5) . '.' .
+        substr($data, strlen((string) $data) - 5, 1) . ' Build:' .
+        substr($data, strlen((string) $data) - 4, strlen((string) $data));
     }
 
     /**
@@ -316,6 +314,7 @@ class Update
      * This updates the 'update_info' which is used by the updater
      * and plugins
      * @param string $key
+     * @param $value
      */
     private static function set_version($key, $value)
     {

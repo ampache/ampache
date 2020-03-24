@@ -90,6 +90,8 @@ class Ampachelistenbrainz
     /**
      * save_mediaplay
      * This takes care of queuing and then submitting the tracks.
+     * @param Song $song
+     * @return bool
      */
     public function save_mediaplay($song)
     {
@@ -166,6 +168,7 @@ class Ampachelistenbrainz
      * This is a generic poster for HTTP requests
      * @param string $url
      * @param string $content
+     * @return false|string
      */
     private function post_json_url($url, $content)
     {
@@ -183,14 +186,15 @@ class Ampachelistenbrainz
         debug_event('listenbrainz.plugin', 'Submission option: ' . json_encode($opts), 5);
         $context = stream_context_create($opts);
         $target  = $this->scheme . '://' . $this->api_host . $url;
-        $buffer  = file_get_contents($target, false, $context);
-
-        return $buffer;
+        return file_get_contents($target, false, $context);
     } // call_url
 
     /**
      * set_flag
      * This takes care of spreading your love on ListenBrainz
+     * @param $song
+     * @param $flagged
+     * @return bool
      */
     public function set_flag($song, $flagged)
     {
@@ -202,6 +206,7 @@ class Ampachelistenbrainz
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return bool
      */
     public function load($user)
     {

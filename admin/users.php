@@ -174,6 +174,7 @@ switch ($_REQUEST['action']) {
         $user = new User($user_id);
         $user->upload_avatar();
 
+        $useraccess = '';
         switch ($access) {
             case 5:
                 $useraccess = T_('Guest');
