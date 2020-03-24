@@ -301,7 +301,7 @@ class Stream
             );
 
             if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-                stream_set_blocking($pipes[2], 0); // Be sure stderr is non-blocking
+                stream_set_blocking($pipes[2], false); // Be sure stderr is non-blocking
             }
         }
 

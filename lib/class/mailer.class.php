@@ -47,7 +47,7 @@ class Mailer
         // Eh bien.
     } // Constructor
 
-    /*
+    /**
      * is_mail_enabled
      *
      * Check that the mail feature is enabled

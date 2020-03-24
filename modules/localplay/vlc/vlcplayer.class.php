@@ -431,9 +431,7 @@ class VlcPlayer
         fclose($fsock);
 
         // send to xml parser and make an array
-        $result = $this->xmltoarray($data);
-
-        return $result;
+        return $this->xmltoarray($data);
     } // sendCommand
 
     //this function parses the xml page into an array thx to bin-co

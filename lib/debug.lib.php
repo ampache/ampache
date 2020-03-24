@@ -264,7 +264,7 @@ function check_override_memory()
 function check_override_exec_time()
 {
     $current = ini_get('max_execution_time');
-    set_time_limit($current + 60);
+    set_time_limit((int) $current + 60);
 
     if ($current == ini_get('max_execution_time')) {
         return false;

@@ -542,8 +542,8 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         if (!$y) {
             $x = strtok(CAPTCHA_IMAGE_SIZE, "x,|/*;:");
             $y = strtok(",.");
-            $x = rand($x * 0.9, $x * 1.2);
-            $y = rand($y - 5, $y + 15);
+            $x = rand((int) $x * 0.9, (int) $x * 1.2);
+            $y = rand((int) $y - 5, (int) $y + 15);
         }
         $this->width    = $x;
         $this->height   = $y;
@@ -1201,8 +1201,8 @@ class easy_captcha_persistent_grant extends easy_captcha
     {
         if (!headers_sent()) {
             setcookie($this->cookie(), $this->validity_token(), time() + 175 * CAPTCHA_TIMEOUT);
-        } else {
-            // $this->log("::grant", "COOKIES", "too late for cookies");
+        //} else {
+        //    // $this->log("::grant", "COOKIES", "too late for cookies");
         }
     }
 

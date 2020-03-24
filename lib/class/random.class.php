@@ -92,6 +92,7 @@ class Random
             $method_name = 'get_default';
         }
         $song_ids = self::$method_name(1);
+
         return array_pop($song_ids);
     } // get_single_song
 

@@ -183,7 +183,7 @@ class Recommendation
                     $local_id = null;
 
                     $artist_name   = $child->artist->name;
-                    $s_artist_name = Catalog::trim_prefix($artist_name);
+                    $s_artist_name = Catalog::trim_prefix((string) $artist_name);
 
                     $sql = "SELECT `song`.`id` FROM `song` " .
                         "LEFT JOIN `artist` ON " .
@@ -267,7 +267,7 @@ class Recommendation
             $xml = self::get_lastfm_results('artist.getsimilar', $query);
 
             foreach ($xml->similarartists->children() as $child) {
-                $name     = $child->name;
+                $name     = (string) $child->name;
                 $mbid     = (string) $child->mbid;
                 $local_id = null;
 

@@ -59,6 +59,7 @@ class Upnp_Api
         // Create uuid based on host
         $key     = 'ampache_' . AmpConfig::get('http_host');
         $hash    = hash('md5', $key);
+
         return substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20);
     }
 

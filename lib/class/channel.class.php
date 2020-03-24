@@ -87,7 +87,7 @@ class Channel extends database_object implements media, library_item
 
         $this->start_date = $start_date;
         $this->interface  = $address;
-        $this->port       = $port;
+        $this->port       = (int) $port;
         $this->pid        = $pid;
     }
 
@@ -387,7 +387,7 @@ class Channel extends database_object implements media, library_item
      */
     public function get_stream_url()
     {
-        return "http://" . $this->interface . ":" . $this->port . "/stream." . $this->stream_type;
+        return "http://" . $this->interface . ":" . (string) $this->port . "/stream." . $this->stream_type;
     }
 
     /**
@@ -475,7 +475,7 @@ class Channel extends database_object implements media, library_item
     {
         $check = false;
         if ($this->interface && $this->port) {
-            $connection = @fsockopen($this->interface, $this->port);
+            $connection = @fsockopen($this->interface, (int) $this->port);
             if (is_resource($connection)) {
                 $check = true;
                 fclose($connection);

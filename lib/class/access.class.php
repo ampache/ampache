@@ -323,7 +323,7 @@ class Access
      * @param string $apikey
      * @return boolean
      */
-    public static function check_network($type, $user = null, $level, $user_ip = null, $apikey = null)
+    public static function check_network($type, $user = null, $level = 25, $user_ip = null, $apikey = null)
     {
         if (!AmpConfig::get('access_control')) {
             switch ($type) {

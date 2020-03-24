@@ -21,9 +21,6 @@ declare(strict_types=1);
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
-/**
  * Class mpd
  */
 class mpd
@@ -180,8 +177,6 @@ class mpd
     /* Constructor
      * Builds the MPD object, connects to the server, and refreshes all
      * local object properties.
-     */
-    /**
      * mpd constructor.
      * @param $server
      * @param $port
@@ -247,8 +242,6 @@ class mpd
      *
      * NOTE: This is called automatically upon object instantiation; you
      * should not need to call this directly.
-     */
-    /**
      * @return bool|false|string
      */
     public function Connect()
@@ -299,8 +292,6 @@ class mpd
      * Sends a generic command to the MPD server. Several command constants
      * are pre-defined for use (see self::COMMAND_* constant definitions
      * above).
-     */
-    /**
      * @param $command
      * @param null $arguments
      * @param bool $refresh_info
@@ -366,8 +357,6 @@ class mpd
      * CommandQueue can hold as many commands as needed, and are sent all
      * at once, in the order they were queued, using the SendCommandQueue
      * method. The syntax for queueing commands is identical to SendCommand.
-     */
-    /**
      * @param $command
      * @param string $arguments
      * @return bool
@@ -405,8 +394,6 @@ class mpd
     /* SendCommandQueue
      *
      * Sends all commands in the Command Queue to the MPD server.
-     */
-    /**
      * @return bool|string
      */
     public function SendCommandQueue()
@@ -434,8 +421,6 @@ class mpd
      *
      * Updates all class properties with the values from the MPD server.
      * NOTE: This function is automatically called on Connect()
-     */
-    /**
      * @return bool
      */
     public function RefreshInfo()
@@ -465,8 +450,6 @@ class mpd
      *
      * Adjusts the mixer volume on the MPD by <value>, which can be a
      * positive (volume increase) or negative (volume decrease) value.
-     */
-    /**
      * @param $value
      * @return bool|string
      */
@@ -491,8 +474,6 @@ class mpd
     /* SetVolume
      *
      * Sets the mixer volume to <value>, which should be between 1 - 100.
-     */
-    /**
      * @param $value
      * @return bool|string
      */
@@ -535,8 +516,6 @@ class mpd
      * Retrieves a database directory listing of the <dir> directory and
      * places the results into a multidimensional array. If no directory is
      * specified the directory listing is at the base of the MPD music path.
-     */
-    /**
      * @param string $dir
      * @return array|bool
      */
@@ -555,8 +534,6 @@ class mpd
      * Adds each track listed in a single-dimensional <trackArray>, which
      * contains filenames of tracks to add to the end of the playlist. This
      * is used to add many, many tracks to the playlist in one swoop.
-     */
-    /**
      * @param $trackArray
      * @return bool|string
      */
@@ -577,8 +554,6 @@ class mpd
      *
      * Adds the file <file> to the end of the playlist. <file> must be a
      * track in the MPD database.
-     */
-    /**
      * @param string $filename
      * @return bool|string
      */
@@ -595,8 +570,6 @@ class mpd
      *
      * Moves track number <current_position> to position <new_position> in
      * the playlist. This is used to reorder the songs in the playlist.
-     */
-    /**
      * @param $current_position
      * @param $new_position
      * @return bool|string
@@ -629,8 +602,6 @@ class mpd
     /* PLShuffle
      *
      * Randomly reorders the songs in the playlist.
-     */
-    /**
      * @return bool|string
      */
     public function PLShuffle()
@@ -646,8 +617,6 @@ class mpd
      *
      * Retrieves the playlist from <file>.m3u and loads it into the current
      * playlist.
-     */
-    /**
      * @param $file
      * @return bool|string
      */
@@ -664,8 +633,6 @@ class mpd
      *
      * Saves the playlist to <file>.m3u for later retrieval. The file is
      * saved in the MPD playlist directory.
-     */
-    /**
      * @param $file
      * @return bool|string
      */
@@ -681,8 +648,6 @@ class mpd
     /* PLClear
      *
      * Empties the playlist.
-     */
-    /**
      * @return bool|string
      */
     public function PLClear()
@@ -697,8 +662,6 @@ class mpd
     /* PLRemove
      *
      * Removes track <id> from the playlist.
-     */
-    /**
      * @param $id
      * @return bool|string
      */
@@ -719,8 +682,6 @@ class mpd
      *
      * Enables 'loop' mode -- tells MPD continually loop the playlist. The
      * <repVal> parameter is either 1 (on) or 0 (off).
-     */
-    /**
      * @param $value
      * @return bool|string
      */
@@ -738,8 +699,6 @@ class mpd
      *
      * Enables 'randomize' mode -- tells MPD to play songs in the playlist
      * in random order. The parameter is either 1 (on) or 0 (off).
-     */
-    /**
      * @param $value
      * @return bool|string
      */
@@ -758,8 +717,6 @@ class mpd
      * Shuts down the MPD server (aka sends the KILL command). This closes
      * the current connection and prevents future communication with the
      * server.
-     */
-    /**
      * @return bool|string
      */
     public function Shutdown()
@@ -782,8 +739,6 @@ class mpd
      * Tells MPD to rescan the music directory for new tracks and refresh
      * the Database. Tracks cannot be played unless they are in the MPD
      * database.
-     */
-    /**
      * @return bool|string
      */
     public function DBRefresh()
@@ -798,8 +753,6 @@ class mpd
     /* Play
      *
      * Begins playing the songs in the MPD playlist.
-     */
-    /**
      * @return bool|string
      */
     public function Play()
@@ -814,8 +767,6 @@ class mpd
     /* Stop
      *
      * Stops playback.
-     */
-    /**
      * @return bool|string
      */
     public function Stop()
@@ -830,8 +781,6 @@ class mpd
     /* Pause
      *
      * Toggles pausing.
-     */
-    /**
      * @return bool|string
      */
     public function Pause()
@@ -846,8 +795,6 @@ class mpd
     /* SeekTo
      *
      * Skips directly to the <idx> song in the MPD playlist.
-     */
-    /**
      * @param $idx
      * @return bool
      */
@@ -872,8 +819,6 @@ class mpd
      * to locate. The <track> argument, if supplied, is the track number in
      * the playlist. If <track> is not specified, the current track is
      * assumed.
-     */
-    /**
      * @param $pos
      * @param int $track
      * @return bool
@@ -905,8 +850,6 @@ class mpd
      *
      * Skips to the next song in the MPD playlist. If not playing, returns
      * an error.
-     */
-    /**
      * @return bool|string
      */
     public function Next()
@@ -922,8 +865,6 @@ class mpd
      *
      * Skips to the previous song in the MPD playlist. If not playing,
      * returns an error.
-     */
-    /**
      * @return bool|string
      */
     public function Previous()
@@ -942,8 +883,6 @@ class mpd
      *     self::SEARCH_ARTIST, self::SEARCH_TITLE, self::SEARCH_ALBUM
      * The search <string> is a case-insensitive locator string. Anything
      * that contains <string> will be returned in the results.
-     */
-    /**
      * @param $type
      * @param $string
      * @return array|bool
@@ -979,8 +918,6 @@ class mpd
      *    self::SEARCH_ARTIST, self::SEARCH_TITLE, self::SEARCH_ALBUM
      * The find <string> is a case-insensitive locator string. Anything that
      * exactly matches <string> will be returned in the results.
-     */
-    /**
      * @param $type
      * @param $string
      * @return array|bool
@@ -1027,8 +964,6 @@ class mpd
     /* GetArtists
      *
      * Returns the list of artists in the database in an associative array.
-     */
-    /**
      * @return array|bool
      */
     public function GetArtists()
@@ -1057,8 +992,6 @@ class mpd
      * Returns the list of albums in the database in an associative array.
      * Optional parameter is an artist Name which will list all albums by a
      * particular artist.
-     */
-    /**
      * @param null $artist
      * @return array|bool
      */
@@ -1093,8 +1026,6 @@ class mpd
      *
      * Computes numeric value from a version string
      *
-     */
-    /**
      * @param $string
      * @return float|int|mixed
      */
@@ -1109,8 +1040,6 @@ class mpd
      *
      * Check MPD command compatibility against our internal table of
      * incompatibilities.
-     */
-    /**
      * @param $cmd
      * @param $mpd_version
      * @return bool
@@ -1149,8 +1078,6 @@ class mpd
     /* _parseFileListResponse
      *
      * Builds a multidimensional array with MPD response lists.
-     */
-    /**
      * @param $response
      * @return array|bool
      */
@@ -1177,8 +1104,6 @@ class mpd
 
     /* _parseResponse
      * Turns a response into an array
-     */
-    /**
      * @param $response
      * @return array|bool
      */
@@ -1202,22 +1127,19 @@ class mpd
     /* _error
      *
      * Set error state
+     * @param string $source
+     * @param string $message
+     * @param int $level
      */
-    /**
-     * @param $source
-     * @param $message
-     */
-    private function _error($source, $message)
+    private function _error($source, $message, $level = 1)
     {
         $this->err_str = "$source: $message";
-        $this->_debug($source, $message, 1);
+        $this->_debug($source, $message, $level);
     }
 
     /* _debug
      *
      * Do the debugging boogaloo
-     */
-    /**
      * @param $source
      * @param $message
      * @param $level

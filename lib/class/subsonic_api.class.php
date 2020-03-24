@@ -2022,8 +2022,8 @@ class Subsonic_Api
             // randomize and slice
             shuffle($songs);
             $songs = array_slice($songs, 0, $count);
-        } elseif (Subsonic_XML_Data::isAlbum($id)) {
-            // TODO: support similar songs for albums
+        //} elseif (Subsonic_XML_Data::isAlbum($id)) {
+        //    // TODO: support similar songs for albums
         } elseif (Subsonic_XML_Data::isSong($id)) {
             $songs = Recommendation::get_songs_like(Subsonic_XML_Data::getAmpacheId($id), $count);
         }

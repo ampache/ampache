@@ -58,6 +58,7 @@ function generate_password($length = null)
     $strong   = true;
     $string   = openssl_random_pseudo_bytes((int) ceil($length * 0.67), $strong);
     $encode   = str_replace('=', '', base64_encode($string));
+
     return strtr($encode, '+/', '^*');
 } // generate_password
 
@@ -508,5 +509,6 @@ function get_current_path()
 function get_web_path()
 {
     $root = get_current_path();
+
     return preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
 }

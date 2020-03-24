@@ -131,9 +131,8 @@ class AmpacheXbmc extends localplay_controller
     {
         $sql = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) " .
             "VALUES (?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['user'], $data['pass'], Core::get_global('user')->id));
 
-        return $db_results;
+        return Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['user'], $data['pass'], Core::get_global('user')->id));
     } // add_instance
 
     /**
@@ -211,9 +210,7 @@ class AmpacheXbmc extends localplay_controller
         $sql        = "SELECT * FROM `localplay_xbmc` WHERE `id` = ?";
         $db_results = Dba::query($sql, array($instance));
 
-        $row = Dba::fetch_assoc($db_results);
-
-        return $row;
+        return Dba::fetch_assoc($db_results);
     } // get_instance
 
     /**
