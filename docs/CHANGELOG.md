@@ -7,11 +7,15 @@
     * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400003
   * Call the JSON server:
     * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400003
+* API - Don't gather art when adding songs
 * Fix channel authentication
 * Fix ip checks when sending null proxy values
 * Fix Extra text in catalog API calls
 * Fix Gather art page layout
 * Fix Read vorbis rating correctly
+* Fix Search rules in UI failling to load with custom_metadata
+* Update Composer requirements
+* Allow searching play times without requiring UI option
 * Added skips to the database and interface
 
 ## 4.1.1

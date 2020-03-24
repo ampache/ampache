@@ -114,6 +114,7 @@ class Catalog_remote extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
+     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -133,6 +134,9 @@ class Catalog_remote extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
+     * @param $catalog_id
+     * @param array $data
+     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -175,6 +179,8 @@ class Catalog_remote extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
+     * @param array $options
+     * @return bool
      */
     public function add_to_catalog($options = null)
     {
@@ -229,6 +235,8 @@ class Catalog_remote extends Catalog
      *
      * Pulls the data from a remote catalog and adds any missing songs to the
      * database.
+     * @param int $type
+     * @return bool
      */
     public function update_remote_catalog($type = 0)
     {
@@ -339,6 +347,8 @@ class Catalog_remote extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
+     * @param array $song
+     * @return bool|mixed
      */
     public function check_remote_song($song)
     {

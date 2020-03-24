@@ -161,7 +161,7 @@ class Artist extends database_object implements library_item
      * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
      * @param integer|null $artist_id
-     * @param integer $catalog_init
+     * @param int $catalog_init
      */
     public function __construct($artist_id = null, $catalog_init = 0)
     {
@@ -218,7 +218,8 @@ class Artist extends database_object implements library_item
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
      * @param int[] $ids
-     * @param boolean $extra
+     * @param bool  $extra
+     * @param string $limit_threshold
      * @return boolean
      */
     public static function build_cache($ids, $extra = false, $limit_threshold = '')
@@ -267,9 +268,7 @@ class Artist extends database_object implements library_item
 
         $row = Dba::fetch_assoc($db_results);
 
-        $object = new Artist($row['id']);
-
-        return $object;
+        return new Artist($row['id']);
     } // get_from_name
 
     /**
@@ -277,7 +276,7 @@ class Artist extends database_object implements library_item
      * gets the album ids that this artist is a part
      * of
      * @param integer|null $catalog
-     * @param boolean $group_release_type
+     * @param bool  $group_release_type
      * @return integer[]
      */
     public function get_albums($catalog = null, $group_release_type = false)
@@ -381,7 +380,8 @@ class Artist extends database_object implements library_item
     /**
      * get_top_songs
      * gets the songs for this artist
-     * @param integer $artist
+     * @param int $artist
+     * @param int $count
      * @return integer[]
      */
     public static function get_top_songs($artist, $count = 50)
@@ -439,9 +439,9 @@ class Artist extends database_object implements library_item
      * get_random
      *
      * This returns a number of random artists.
-     * @param integer $count
-     * @param boolean $with_art
-     * @param integer $user_id
+     * @param int $count
+     * @param bool  $with_art
+     * @param int $user_id
      * @return integer[]
      */
     public static function get_random($count = 1, $with_art = false, $user_id = null)
@@ -491,7 +491,8 @@ class Artist extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
-     * @param integer $catalog
+     * @param int $catalog
+     * @param string $limit_threshold
      * @return array
      */
     private function _get_extra_info($catalog = 0, $limit_threshold = '')
@@ -552,8 +553,10 @@ class Artist extends database_object implements library_item
      * information and reformats the relevent values
      * so they can be displayed in a table for example
      * it changes the title into a full link.
+     * @param bool $details
+     * @param string $limit_threshold
      * @return boolean
-      */
+     */
     public function format($details = true, $limit_threshold = '')
     {
         /* Combine prefix and name, trim then add ... if needed */
@@ -742,8 +745,8 @@ class Artist extends database_object implements library_item
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool  $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -760,13 +763,18 @@ class Artist extends database_object implements library_item
         }
     }
 
+    /**
+     * can_edit
+     * @param int $user_id
+     * @return bool
+     */
     public function can_edit($user = null)
     {
-        if (!$user) {
-            $user = Core::get_global('user')->id;
+        if (!$user_id) {
+            $user_id = Core::get_global('user')->id;
         }
 
-        if (!$user) {
+        if (!$user_id) {
             return false;
         }
 
@@ -776,7 +784,7 @@ class Artist extends database_object implements library_item
             }
         }
 
-        return Access::check('interface', 50, $user);
+        return Access::check('interface', 50, $user_id);
     }
 
     /**
@@ -785,7 +793,7 @@ class Artist extends database_object implements library_item
      * Checks for an existing artist; if none exists, insert one.
      * @param string $name
      * @param string $mbid
-     * @param boolean $readonly
+     * @param bool  $readonly
      * @return int|null
      */
     public static function check($name, $mbid = '', $readonly = false)
@@ -973,9 +981,10 @@ class Artist extends database_object implements library_item
      *
      * Update tags of artists and/or albums
      * @param string $tags_comma
-     * @param boolean $override_childs
+     * @param bool  $override_childs
+     * @param bool  $add_to_childs
      * @param integer|null $current_id
-     * @param boolean $add_to_childs
+     * @param bool $force_update
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
@@ -998,7 +1007,8 @@ class Artist extends database_object implements library_item
      * Update artist information.
      * @param string $summary
      * @param string $placeformed
-     * @param integer $yearformed
+     * @param int $yearformed
+     * @param bool $manual
      * @return PDOStatement|boolean
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
@@ -1015,7 +1025,7 @@ class Artist extends database_object implements library_item
 
     /**
      * Update artist associated user.
-     * @param integer $user
+     * @param int $user
      * @return PDOStatement|boolean
      */
     public function update_artist_user($user)

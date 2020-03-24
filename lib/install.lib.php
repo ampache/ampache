@@ -61,6 +61,7 @@ function split_sql($sql)
  * this function checks to see if we actually
  * still need to install ampache. This function is
  * very important, we don't want to reinstall over top of an existing install
+ * @param $configfile
  * @return boolean
  */
 function install_check_status($configfile)
@@ -112,6 +113,8 @@ function install_check_server_apache()
 
 /**
  * @param string $file
+ * @param $web_path
+ * @param bool $fix
  * @return boolean|string
  */
 function install_check_rewrite_rules($file, $web_path, $fix = false)
@@ -157,7 +160,8 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
 
 /**
  * @param string $file
- * @param boolean $download
+ * @param $web_path
+ * @param bool  $download
  * @return boolean
  */
 function install_rewrite_rules($file, $web_path, $download)
@@ -184,7 +188,12 @@ function install_rewrite_rules($file, $web_path, $download)
  * install_insert_db
  *
  * Inserts the database using the values from Config.
- * @return boolean
+ * @param string $db_user
+ * @param string $db_pass
+ * @param bool $create_db
+ * @param bool $overwrite
+ * @param bool $create_tables
+ * @return bool
  */
 function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true)
 {
@@ -297,7 +306,9 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
  * install_create_config
  *
  * Attempts to write out the config file or offer it as a download.
+ * @param bool $download
  * @return boolean
+ * @throws Exception
  */
 function install_create_config($download = false)
 {
@@ -350,6 +361,9 @@ function install_create_config($download = false)
 /**
  * install_create_account
  * this creates your initial account and sets up the preferences for the -1 user and you
+ * @param string $username
+ * @param string $password
+ * @param string $password2
  * @return boolean
  */
 function install_create_account($username, $password, $password2)

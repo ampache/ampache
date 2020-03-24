@@ -41,7 +41,10 @@ class Subsonic_Api
 
     /**
      * check_parameter
+     * @param array $input
      * @param string $parameter
+     * @param bool $addheader
+     * @return bool|mixed
      */
     public static function check_parameter($input, $parameter, $addheader = false)
     {
@@ -168,7 +171,9 @@ class Subsonic_Api
 
     /**
      * apiOutput
+     * @param array $input
      * @param SimpleXMLElement $xml
+     * @param array $alwaysArray
      */
     public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'))
     {
@@ -179,8 +184,10 @@ class Subsonic_Api
 
     /**
      * apiOutput2
-     * @param SimpleXMLElement $xml
      * @param string $outputtype
+     * @param SimpleXMLElement $xml
+     * @param string $callback
+     * @param array $alwaysArray
      */
     public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'))
     {
@@ -209,6 +216,8 @@ class Subsonic_Api
      * [based from http://outlandish.com/blog/xml-to-json/]
      * Because we cannot use only json_encode to respect JSON Subsonic API
      * @param SimpleXMLElement $xml
+     * @param array $input_options
+     * @return array
      */
     private static function xml2json($xml, $input_options = array())
     {
@@ -312,6 +321,7 @@ class Subsonic_Api
     /**
      * has_Nested_Array
      * Used for xml2json to detect a sub-array
+     * @param $properties
      * @return boolean
      */
     private static function has_Nested_Array($properties)
@@ -329,6 +339,7 @@ class Subsonic_Api
      * ping
      * Simple server ping to test connectivity with the server.
      * Takes no parameter.
+     * @param array $input
      */
     public static function ping($input)
     {
@@ -341,6 +352,7 @@ class Subsonic_Api
      * getLicense
      * Get details about the software license. Always return a valid default license.
      * Takes no parameter.
+     * @param array $input
      */
     public static function getlicense($input)
     {
@@ -353,6 +365,7 @@ class Subsonic_Api
      * getMusicFolders
      * Get all configured top-level music folders (= Ampache catalogs).
      * Takes no parameter.
+     * @param array $input
      */
     public static function getmusicfolders($input)
     {
@@ -365,6 +378,7 @@ class Subsonic_Api
      * getIndexes
      * Get an indexed structure of all artists.
      * Takes optional musicFolderId and optional ifModifiedSince in parameters.
+     * @param array $input
      */
     public static function getindexes($input)
     {
@@ -420,6 +434,7 @@ class Subsonic_Api
      * getMusicDirectory
      * Get a list of all files in a music directory.
      * Takes the directory id in parameters.
+     * @param array $input
      */
     public static function getmusicdirectory($input)
     {
@@ -442,6 +457,7 @@ class Subsonic_Api
      * getGenres
      * Get all genres.
      * Takes no parameter.
+     * @param array $input
      */
     public static function getgenres($input)
     {
@@ -454,6 +470,7 @@ class Subsonic_Api
      * getArtists
      * Get all artists.
      * Takes no parameter.
+     * @param array $input
      */
     public static function getartists($input)
     {
@@ -467,6 +484,7 @@ class Subsonic_Api
      * getArtist
      * Get details for an artist, including a list of albums.
      * Takes the artist id in parameter.
+     * @param array $input
      */
     public static function getartist($input)
     {
@@ -486,6 +504,7 @@ class Subsonic_Api
      * getAlbum
      * Get details for an album, including a list of songs.
      * Takes the album id in parameter.
+     * @param array $input
      */
     public static function getalbum($input)
     {
@@ -508,6 +527,7 @@ class Subsonic_Api
      * getVideos
      * Get all videos.
      * Takes no parameter.
+     * @param array $input
      */
     public static function getvideos($input)
     {
@@ -521,6 +541,8 @@ class Subsonic_Api
      * getAlbumList
      * Get a list of random, newest, highest rated etc. albums.
      * Takes the list type with optional size and offset in parameters.
+     * @param array $input
+     * @param string $elementName
      */
     public static function getalbumlist($input, $elementName = "albumList")
     {
@@ -576,7 +598,7 @@ class Subsonic_Api
                 if ($fromYear || $toYear) {
                     $search = Search::year_search($fromYear, $toYear, $size, $offset);
                     $query  = new Search(null, 'album');
-                    $albums = $query->run($search);
+                    $albums = Search::run($search);
                 }
                 break;
             case "byGenre":
@@ -601,6 +623,7 @@ class Subsonic_Api
     /**
      * getAlbumList2
      * See getAlbumList.
+     * @param array $input
      */
     public static function getalbumlist2($input)
     {
@@ -611,6 +634,7 @@ class Subsonic_Api
      * getRandomSongs
      * Get random songs matching the given criteria.
      * Takes the optional size, genre, fromYear, toYear and music folder id in parameters.
+     * @param array $input
      */
     public static function getrandomsongs($input)
     {
@@ -687,6 +711,7 @@ class Subsonic_Api
      * getSong
      * Get details for a song
      * Takes the song id in parameter.
+     * @param array $input
      */
     public static function getsong($input)
     {
@@ -701,6 +726,7 @@ class Subsonic_Api
      * getTopSongs
      * Get most popular songs for a given artist.
      * Takes the genre with optional count and offset in parameters.
+     * @param array $input
      */
     public static function gettopsongs($input)
     {
@@ -722,6 +748,7 @@ class Subsonic_Api
      * getSongsByGenre
      * Get songs in a given genre.
      * Takes the genre with optional count and offset in parameters.
+     * @param array $input
      */
     public static function getsongsbygenre($input)
     {
@@ -744,6 +771,7 @@ class Subsonic_Api
      * getNowPlaying
      * Get what is currently being played by all users.
      * Takes no parameter.
+     * @param array $input
      */
     public static function getnowplaying($input)
     {
@@ -757,6 +785,8 @@ class Subsonic_Api
      * search2
      * Get albums, artists and songs matching the given criteria.
      * Takes query with optional artist count, artist offset, album count, album offset, song count and song offset in parameters.
+     * @param array $input
+     * @param string $elementName
      */
     public static function search2($input, $elementName = "searchResult2")
     {
@@ -827,6 +857,7 @@ class Subsonic_Api
     /**
      * search3
      * See search2.
+     * @param array $input
      */
     public static function search3($input)
     {
@@ -837,6 +868,7 @@ class Subsonic_Api
      * getPlaylists
      * Get all playlists a user is allowed to play.
      * Takes optional user in parameter.
+     * @param array $input
      */
     public static function getplaylists($input)
     {
@@ -855,6 +887,7 @@ class Subsonic_Api
      * getPlaylist
      * Get the list of files in a saved playlist.
      * Takes the playlist id in parameters.
+     * @param array $input
      */
     public static function getplaylist($input)
     {
@@ -875,6 +908,7 @@ class Subsonic_Api
      * createPlaylist
      * Create (or updates) a playlist.
      * Takes playlist id in parameter if updating, name in parameter if creating and a list of song id for the playlist.
+     * @param array $input
      */
     public static function createplaylist($input)
     {
@@ -939,6 +973,7 @@ class Subsonic_Api
      * updatePlaylist
      * Update a playlist.
      * Takes playlist id in parameter with optional name, comment, public level and a list of song id to add/remove.
+     * @param array $input
      */
     public static function updateplaylist($input)
     {
@@ -964,6 +999,7 @@ class Subsonic_Api
      * deletePlaylist
      * Delete a saved playlist.
      * Takes playlist id in parameter.
+     * @param array $input
      */
     public static function deleteplaylist($input)
     {
@@ -985,6 +1021,7 @@ class Subsonic_Api
      * stream
      * Streams a given media file.
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
+     * @param array $input
      */
     public static function stream($input)
     {
@@ -1029,6 +1066,7 @@ class Subsonic_Api
      * download
      * Downloads a given media file.
      * Takes the file id in parameter.
+     * @param array $input
      */
     public static function download($input)
     {
@@ -1042,6 +1080,7 @@ class Subsonic_Api
      * hls
      * Create an HLS playlist.
      * Takes the file id in parameter with optional max bit rate.
+     * @param array $input
      */
     public static function hls($input)
     {
@@ -1071,6 +1110,7 @@ class Subsonic_Api
      * getCoverArt
      * Get a cover art image.
      * Takes the cover art id in parameter.
+     * @param array $input
      */
     public static function getcoverart($input)
     {
@@ -1138,6 +1178,7 @@ class Subsonic_Api
      * setRating
      * Sets the rating for a music file.
      * Takes the file id and rating in parameters.
+     * @param array $input
      */
     public static function setrating($input)
     {
@@ -1173,6 +1214,8 @@ class Subsonic_Api
      * Get starred songs, albums and artists.
      * Takes no parameter.
      * Not supported.
+     * @param array $input
+     * @param string $elementName
      */
     public static function getstarred($input, $elementName = "starred")
     {
@@ -1186,6 +1229,7 @@ class Subsonic_Api
     /**
      * getStarred2
      * See getStarred.
+     * @param array $input
      */
     public static function getstarred2($input)
     {
@@ -1197,6 +1241,7 @@ class Subsonic_Api
      * Attaches a star to a song, album or artist.
      * Takes the optional file id, album id or artist id in parameters.
      * Not supported.
+     * @param array $input
      */
     public static function star($input)
     {
@@ -1208,6 +1253,7 @@ class Subsonic_Api
      * Removes the star from a song, album or artist.
      * Takes the optional file id, album id or artist id in parameters.
      * Not supported.
+     * @param array $input
      */
     public static function unstar($input)
     {
@@ -1215,7 +1261,8 @@ class Subsonic_Api
     }
 
     /**
-     * @param boolean $star
+     * @param array $input
+     * @param bool  $star
      */
     private static function _setStar($input, $star)
     {
@@ -1284,6 +1331,7 @@ class Subsonic_Api
      * Get details about a given user.
      * Takes the username in parameter.
      * Not supported.
+     * @param array $input
      */
     public static function getuser($input)
     {
@@ -1309,6 +1357,7 @@ class Subsonic_Api
      * Get details about a given user.
      * Takes no parameter.
      * Not supported.
+     * @param array $input
      */
     public static function getusers($input)
     {
@@ -1326,6 +1375,7 @@ class Subsonic_Api
     /**
      * getAvatar
      * Return the user avatar in bytes.
+     * @param array $input
      */
     public static function getavatar($input)
     {
@@ -1364,6 +1414,7 @@ class Subsonic_Api
      * getInternetRadioStations
      * Get all internet radio stations
      * Takes no parameter.
+     * @param array $input
      */
     public static function getinternetradiostations($input)
     {
@@ -1377,6 +1428,7 @@ class Subsonic_Api
      * getShares
      * Get information about shared media this user is allowed to manage.
      * Takes no parameter.
+     * @param array $input
      */
     public static function getshares($input)
     {
@@ -1390,6 +1442,7 @@ class Subsonic_Api
      * createShare
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
+     * @param array $input
      */
     public static function createshare($input)
     {
@@ -1443,6 +1496,7 @@ class Subsonic_Api
      * deleteShare
      * Delete an existing share.
      * Takes the share id to delete in parameters.
+     * @param array $input
      */
     public static function deleteshare($input)
     {
@@ -1465,6 +1519,7 @@ class Subsonic_Api
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
      * Not supported.
+     * @param array $input
      */
     public static function updateshare($input)
     {
@@ -1513,6 +1568,7 @@ class Subsonic_Api
      * createUser
      * Create a new user.
      * Takes the username, password and email with optional roles in parameters.
+     * @param array $input
      */
     public static function createuser($input)
     {
@@ -1569,6 +1625,7 @@ class Subsonic_Api
      * updateUser
      * Update an existing user.
      * Takes the username with optional parameters.
+     * @param array $input
      */
     public static function updateuser($input)
     {
@@ -1633,6 +1690,7 @@ class Subsonic_Api
      * deleteUser
      * Delete an existing user.
      * Takes the username in parameter.
+     * @param array $input
      */
     public static function deleteuser($input)
     {
@@ -1656,6 +1714,7 @@ class Subsonic_Api
      * change password
      * Change the password of an existing user.
      * Takes the username with new password in parameters.
+     * @param array $input
      */
     public static function changepassword($input)
     {
@@ -1683,6 +1742,7 @@ class Subsonic_Api
      * Control the jukebox.
      * Takes the action with optional index, offset, song id and volume gain in parameters.
      * Not supported.
+     * @param array $input
      */
     public static function jukeboxcontrol($input)
     {
@@ -1779,6 +1839,7 @@ class Subsonic_Api
      * scrobble
      * Scrobbles a given music file on last.fm.
      * Takes the file id with optional time and submission parameters.
+     * @param array $input
      */
     public static function scrobble($input)
     {
@@ -1822,6 +1883,7 @@ class Subsonic_Api
      * getLyrics
      * Searches and returns lyrics for a given song.
      * Takes the optional artist and title in parameters.
+     * @param array $input
      */
     public static function getlyrics($input)
     {
@@ -1851,7 +1913,7 @@ class Subsonic_Api
             }
 
             $query = new Search(null, 'song');
-            $songs = $query->run($search);
+            $songs = Search::run($search);
 
             $response = Subsonic_XML_Data::createSuccessResponse('getlyrics');
             if (count($songs) > 0) {
@@ -1866,6 +1928,7 @@ class Subsonic_Api
      * getArtistInfo
      * Returns artist info with biography, image URLs and similar artists, using data from last.fm.
      * Takes artist id in parameter with optional similar artist count and if not present similar artist should be returned.
+     * @param array $input
      */
     public static function getartistinfo($input)
     {
@@ -1889,6 +1952,7 @@ class Subsonic_Api
     /**
      * getArtistInfo2
      * See getArtistInfo.
+     * @param array $input
      */
     public static function getartistinfo2($input)
     {
@@ -1899,6 +1963,7 @@ class Subsonic_Api
      * getSimilarSongs
      * Returns a random collection of songs from the given artist and similar artists, using data from last.fm. Typically used for artist radio features.
      * Takes song/album/artist id in parameter with optional similar songs count.
+     * @param array $input
      */
     public static function getsimilarsongs($input)
     {
@@ -1951,6 +2016,7 @@ class Subsonic_Api
     /**
      * getSimilarSongs2
      * See getSimilarSongs.
+     * @param array $input
      */
     public static function getsimilarsongs2($input)
     {
@@ -1961,6 +2027,7 @@ class Subsonic_Api
      * getPodcasts
      * Get all podcast channels.
      * Takes the optional includeEpisodes and channel id in parameters
+     * @param array $input
      */
     public static function getpodcasts($input)
     {
@@ -1991,6 +2058,7 @@ class Subsonic_Api
      * getNewestPodcasts
      * Get the most recently published podcast episodes.
      * Takes the optional count in parameters
+     * @param array $input
      */
     public static function getnewestpodcasts($input)
     {
@@ -2010,6 +2078,7 @@ class Subsonic_Api
      * refreshPodcasts
      * Request the server to check for new podcast episodes.
      * Takes no parameters.
+     * @param array $input
      */
     public static function refreshpodcasts($input)
     {
@@ -2029,6 +2098,7 @@ class Subsonic_Api
      * createPodcastChannel
      * Add a new podcast channel.
      * Takes the podcast url in parameter.
+     * @param array $input
      */
     public static function createpodcastchannel($input)
     {
@@ -2058,6 +2128,7 @@ class Subsonic_Api
      * deletePodcastChannel
      * Delete an existing podcast channel
      * Takes the podcast id in parameter.
+     * @param array $input
      */
     public static function deletepodcastchannel($input)
     {
@@ -2084,6 +2155,7 @@ class Subsonic_Api
      * deletePodcastEpisode
      * Delete a podcast episode
      * Takes the podcast episode id in parameter.
+     * @param array $input
      */
     public static function deletepodcastepisode($input)
     {
@@ -2110,6 +2182,7 @@ class Subsonic_Api
      * downloadPodcastEpisode
      * Request the server to download a podcast episode
      * Takes the podcast episode id in parameter.
+     * @param array $input
      */
     public static function downloadpodcastepisode($input)
     {
@@ -2134,6 +2207,7 @@ class Subsonic_Api
      * Get all user bookmarks.
      * Takes no parameter.
      * Not supported.
+     * @param array $input
      */
     public static function getbookmarks($input)
     {
@@ -2148,6 +2222,7 @@ class Subsonic_Api
      * Creates or updates a bookmark.
      * Takes the file id and position with optional comment in parameters.
      * Not supported.
+     * @param array $input
      */
     public static function createbookmark($input)
     {
@@ -2180,6 +2255,7 @@ class Subsonic_Api
      * Delete an existing bookmark.
      * Takes the file id in parameter.
      * Not supported.
+     * @param array $input
      */
     public static function deletebookmark($input)
     {
@@ -2201,6 +2277,7 @@ class Subsonic_Api
      * Get the current chat messages.
      * Takes no parameter.
      * Not supported.
+     * @param array $input
      */
     public static function getchatmessages($input)
     {
@@ -2216,6 +2293,7 @@ class Subsonic_Api
      * Add a message to the chat.
      * Takes the message in parameter.
      * Not supported.
+     * @param array $input
      */
     public static function addchatmessage($input)
     {
@@ -2233,6 +2311,7 @@ class Subsonic_Api
      * savePlayQueue
      * Save the state of the play queue for the authenticated user.
      * Takes multiple song id in parameter with optional current id playing song and position.
+     * @param array $input
      */
     public static function saveplayqueue($input)
     {
@@ -2260,6 +2339,7 @@ class Subsonic_Api
      * Returns the state of the play queue for the authenticated user.
      * Takes no parameter.
      * Not supported.
+     * @param array $input
      */
     public static function getplayqueue($input)
     {

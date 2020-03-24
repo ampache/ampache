@@ -36,6 +36,7 @@ class Recommendation
      * Runs a last.fm query and returns the parsed results
      * @param string $method
      * @param string $query
+     * @return SimpleXMLElement
      */
     public static function get_lastfm_results($method, $query)
     {
@@ -50,6 +51,7 @@ class Recommendation
 
     /**
      * @param string $url
+     * @return SimpleXMLElement
      */
     public static function query_lastfm($url)
     {
@@ -81,7 +83,9 @@ class Recommendation
 
     /**
      * @param string $type
-     * @param integer $id
+     * @param int $id
+     * @param bool $get_items
+     * @return array
      */
     protected static function get_recommendation_cache($type, $id, $get_items = false)
     {
@@ -111,7 +115,7 @@ class Recommendation
 
     /**
      * @param string $type
-     * @param integer $id
+     * @param int $id
      */
     protected static function delete_recommendation_cache($type, $id)
     {
@@ -124,7 +128,8 @@ class Recommendation
 
     /**
      * @param string $type
-     * @param integer $id
+     * @param int $id
+     * @param $recommendations
      */
     protected static function update_recommendation_cache($type, $id, $recommendations)
     {
@@ -143,7 +148,10 @@ class Recommendation
     /**
      * get_songs_like
      * Returns a list of similar songs
-     * @param integer $song_id
+     * @param int $song_id
+     * @param int $limit
+     * @param bool $local_only
+     * @return array
      */
     public static function get_songs_like($song_id, $limit = 5, $local_only = true)
     {
@@ -232,7 +240,10 @@ class Recommendation
     /**
      * get_artists_like
      * Returns a list of similar artists
-     * @param integer $artist_id
+     * @param int $artist_id
+     * @param int $limit
+     * @param bool $local_only
+     * @return array
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
     {
@@ -329,7 +340,9 @@ class Recommendation
     /**
      * get_artist_info
      * Returns artist information
-     * @param integer $artist_id
+     * @param int $artist_id
+     * @param string $fullname
+     * @return array
      */
     public static function get_artist_info($artist_id, $fullname = '')
     {
@@ -392,7 +405,7 @@ class Recommendation
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
+     * @param int $old_object_id
      * @param string $new_object_id
      * @return boolean|PDOStatement
      */

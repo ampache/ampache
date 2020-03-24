@@ -51,7 +51,7 @@ class Stats
      * clear
      *
      * This clears all stats for _everything_.
-     * @param integer $user
+     * @param int $user
      */
     public static function clear($user = 0)
     {
@@ -78,8 +78,8 @@ class Stats
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
+     * @param int $old_object_id
+     * @param int $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
@@ -94,10 +94,14 @@ class Stats
      * This inserts a new record for the specified object
      * with the specified information, amazing!
      * @param string $input_type
-     * @param integer $oid
-     * @param integer $user
-     * @param integer $date
-     * @param integer $song_time
+     * @param int $oid
+     * @param int $user
+     * @param string $agent
+     * @param array $location
+     * @param string $count_type
+     * @param int $date
+     * @param int $song_time
+     * @return bool
      */
     public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
     {
@@ -146,9 +150,11 @@ class Stats
      * is_already_inserted
      * Check if the same stat has not already been inserted within a graceful delay
      * @param string $type
-     * @param integer $user
-     * @param integer $oid
-     * @param integer $date
+     * @param int $oid
+     * @param int $user
+     * @param string $count_type
+     * @param int $date
+     * @param int $song_time
      * @return boolean
      */
     public static function is_already_inserted($type, $oid, $user, $count_type = 'stream', $date = null, $song_time = 0)
@@ -185,7 +191,10 @@ class Stats
      * get_object_count
      * Get count for an object
      * @param string $object_type
+     * @param $object_id
      * @param string $threshold
+     * @param string $count_type
+     * @return mixed
      */
     public static function get_object_count($object_type, $object_id, $threshold = null, $count_type = 'stream')
     {
@@ -225,6 +234,9 @@ class Stats
      * was played, this is used by, among other things, the LastFM plugin to figure out
      * if we should re-submit or if this is a duplicate / if it's too soon. This takes an
      * optional user_id because when streaming we don't have $GLOBALS()
+     * @param string $user_id
+     * @param string $agent
+     * @return array
      */
     public static function get_last_song($user_id = '', $agent = '')
     {
@@ -250,9 +262,7 @@ class Stats
         $sql .= "ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::read($sql, $sqlres);
 
-        $results = Dba::fetch_assoc($db_results);
-
-        return $results;
+        return Dba::fetch_assoc($db_results);
     } // get_last_song
 
     /**
@@ -260,7 +270,8 @@ class Stats
      * this sets the object_counts count type to skipped
      * Gets called when the next song is played in quick succession
      *
-     * @param integer $object_id
+     * @param int $object_id
+     * @return bool|PDOStatement
      */
     public static function skip_last_song($object_id)
     {
@@ -283,6 +294,10 @@ class Stats
      * get_object_history
      * This returns the objects that have happened for $user_id sometime after $time
      * used primarily by the democratic cooldown code
+     * @param int $user_id
+     * @param int $time
+     * @param bool $newest
+     * @return array
      */
     public static function get_object_history($user_id, $time, $newest = true)
     {
@@ -318,8 +333,8 @@ class Stats
      * @param string $input_type
      * @param string $threshold
      * @param string $count_type
-     * @param integer $user_id
-     * @param boolean $random
+     * @param int $user_id
+     * @param bool  $random
      * @return string
      */
     public static function get_top_sql($input_type, $threshold = '', $count_type = 'stream', $user_id = null, $random = false)
@@ -388,8 +403,8 @@ class Stats
      * @param string $count
      * @param string $threshold
      * @param string $offset
-     * @param integer $user_id
-     * @param boolean $random
+     * @param int $user_id
+     * @param bool  $random
      * @return array
      */
     public static function get_top($type, $count = null, $threshold = '', $offset = '', $user_id = null, $random = false)
@@ -422,7 +437,8 @@ class Stats
      * This returns the get_recent sql
      * @param string $input_type
      * @param string $user_id
-     * @param boolean $newest
+     * @param bool  $newest
+     * @return string
      */
     public static function get_recent_sql($input_type, $user_id = '', $newest = true)
     {
@@ -463,6 +479,10 @@ class Stats
      * get_recent
      * This returns the recent X for type Y
      * @param string $input_type
+     * @param string $count
+     * @param string $offset
+     * @param bool $newest
+     * @return array
      */
     public static function get_recent($input_type, $count = '', $offset = '', $newest = true)
     {
@@ -492,8 +512,9 @@ class Stats
      * If full is passed, doesn't limit based on date
      * @param string $input_count
      * @param string $input_type
-     * @param integer $user
-     * @param integer $full
+     * @param int $user
+     * @param int $full
+     * @return array
      */
     public static function get_user($input_count, $input_type, $user, $full = 0)
     {
@@ -548,6 +569,8 @@ class Stats
      * get_newest_sql
      * This returns the get_newest sql
      * @param string $input_type
+     * @param int $catalog
+     * @return string
      */
     public static function get_newest_sql($input_type, $catalog = 0)
     {
@@ -605,6 +628,10 @@ class Stats
      * This returns an array of the newest artists/albums/whatever
      * in this Ampache instance
      * @param string $type
+     * @param string $count
+     * @param string $offset
+     * @param int $catalog
+     * @return array
      */
     public static function get_newest($type, $count = '', $offset = '', $catalog = 0)
     {

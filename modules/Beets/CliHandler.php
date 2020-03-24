@@ -124,7 +124,7 @@ class CliHandler extends Handler
     /**
      * Assemble the command for CLI
      * @param string $command beets command (e.g. 'ls myArtist')
-     * @param boolean $disableCostomFields disables the -f switch for this time
+     * @param bool  $disableCostomFields disables the -f switch for this time
      * @return type
      */
     protected function assembleCommand($command, $disableCostomFields = false)
@@ -154,7 +154,7 @@ class CliHandler extends Handler
     /**
      * Parse the output string from beets into a song
      * @param string $item
-     * @return array
+     * @return type
      */
     protected function parse($item)
     {

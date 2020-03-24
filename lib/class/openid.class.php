@@ -30,8 +30,14 @@ require_once "Auth/OpenID/FileStore.php";
 require_once "Auth/OpenID/SReg.php";
 require_once "Auth/OpenID/PAPE.php";
 
+/**
+ * Class Openid
+ */
 class Openid
 {
+    /**
+     * @return Auth_OpenID_FileStore|null
+     */
     public static function get_store()
     {
         $store      = null;
@@ -48,6 +54,9 @@ class Openid
         return $store;
     }
 
+    /**
+     * @return Auth_OpenID_Consumer|null
+     */
     public static function get_consumer()
     {
         $consumer = null;
@@ -59,11 +68,17 @@ class Openid
         return $consumer;
     }
 
+    /**
+     * @return string
+     */
     public static function get_return_url()
     {
         return AmpConfig::get('web_path') . '/login.php?auth_mod=openid&step=2';
     }
 
+    /**
+     * @return array
+     */
     public static function get_policies()
     {
         $openid_required_pape = (string) AmpConfig::get('openid_required_pape');

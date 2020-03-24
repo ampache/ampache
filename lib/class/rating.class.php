@@ -36,6 +36,8 @@ class Rating extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the rating for
+     * @param $rating_id
+     * @param $type
      */
     public function __construct($rating_id, $type)
     {
@@ -50,6 +52,7 @@ class Rating extends database_object
      *
      * Remove ratings for items that no longer exist.
      * @param string $object_type
+     * @param int $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -74,6 +77,8 @@ class Rating extends database_object
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
      * @param string $type
+     * @param $ids
+     * @return bool
      */
     public static function build_cache($type, $ids)
     {
@@ -128,6 +133,7 @@ class Rating extends database_object
      * get_user_rating
      * Get a user's rating.  If no userid is passed in, we use the currently
      * logged in user.
+     * @param int $user_id
      * @return double
      */
     public function get_user_rating($user_id = null)
@@ -183,6 +189,7 @@ class Rating extends database_object
      * get_highest_sql
      * Get highest sql
      * @param string $type
+     * @return string
      */
     public static function get_highest_sql($type)
     {
@@ -210,6 +217,9 @@ class Rating extends database_object
      * get_highest
      * Get objects with the highest average rating.
      * @param string $type
+     * @param string $count
+     * @param string $offset
+     * @return array
      */
     public static function get_highest($type, $count = '', $offset = '')
     {
@@ -242,6 +252,7 @@ class Rating extends database_object
      * This function sets the rating for the current object.
      * If no user_id is passed in, we use the currently logged in user.
      * @param string $rating
+     * @param int $user_id
      * @return boolean
      */
     public function set_rating($rating, $user_id = null)
@@ -294,8 +305,9 @@ class Rating extends database_object
      * set_rating_for_group
      * This function sets the rating for the current object.
      * This is currently only for grouped disk albums!
-     * @param array $album
      * @param string $rating
+     * @param array $album
+     * @param string $user_id
      * @return boolean
      */
     private static function set_rating_for_group($rating, $album, $user_id = null)
@@ -355,6 +367,10 @@ class Rating extends database_object
      * show
      * This takes an id and a type and displays the rating if ratings are
      * enabled.  If $static is true, the rating won't be editable.
+     * @param $object_id
+     * @param $type
+     * @param bool $static
+     * @return bool
      */
     public static function show($object_id, $type, $static = false)
     {
@@ -375,8 +391,8 @@ class Rating extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
+     * @param int $old_object_id
+     * @param int $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

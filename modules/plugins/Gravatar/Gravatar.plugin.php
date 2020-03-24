@@ -70,6 +70,11 @@ class AmpacheGravatar
         return true;
     } // upgrade
 
+    /**
+     * @param User $user
+     * @param int $size
+     * @return string
+     */
     public function get_avatar_url($user, $size = 80)
     {
         $url = "";
@@ -93,6 +98,7 @@ class AmpacheGravatar
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return bool
      */
     public function load($user)
     {
@@ -101,4 +107,3 @@ class AmpacheGravatar
         return true;
     } // load
 } // end AmpacheGravatar
-;

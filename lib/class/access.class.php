@@ -125,9 +125,7 @@ class Access
         $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($this->id));
 
-        $results = Dba::fetch_assoc($db_results);
-
-        return $results;
+        return Dba::fetch_assoc($db_results);
     }
 
     /**
@@ -275,7 +273,7 @@ class Access
      * delete
      *
      * deletes the specified access_list entry
-     * @param integer $user_id
+     * @param int $user_id
      */
     public static function delete($user_id)
     {
@@ -319,8 +317,9 @@ class Access
      * are allowed. The IP is passed as a dotted quad.
      * @param string $type
      * @param integer|string $user
-     * @param integer $level
+     * @param int $level
      * @param string $user_ip
+     * @param string $apikey
      * @return boolean
      */
     public static function check_network($type, $user = null, $level, $user_ip = null, $apikey = null)
@@ -399,7 +398,7 @@ class Access
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
      * @param string $type
-     * @param integer $level
+     * @param int $level
      * @param integer|null $user_id
      * @return boolean
      */

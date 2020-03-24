@@ -37,6 +37,7 @@ class TVShow_Episode extends Video
      * Constructor
      * This pulls the tv show episode information from the database and returns
      * a constructed object
+     * @param $episode_id
      */
     public function __construct($episode_id)
     {
@@ -64,6 +65,10 @@ class TVShow_Episode extends Video
     /**
      * insert
      * Insert a new tv show episode and related entities.
+     * @param array $data
+     * @param array $gtypes
+     * @param array $options
+     * @return
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
@@ -104,6 +109,8 @@ class TVShow_Episode extends Video
     /**
      * create
      * This takes a key'd array of data as input and inserts a new tv show episode entry, it returns the record id
+     * @param array $data
+     * @return
      */
     public static function create($data)
     {
@@ -117,6 +124,8 @@ class TVShow_Episode extends Video
     /**
      * update
      * This takes a key'd array of data as input and updates a tv show episode entry
+     * @param array $data
+     * @return int
      */
     public function update(array $data)
     {
@@ -141,6 +150,8 @@ class TVShow_Episode extends Video
     /**
      * format
      * this function takes the object and reformats some values
+     * @param bool $details
+     * @return bool
      */
     public function format($details = true)
     {

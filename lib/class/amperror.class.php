@@ -56,6 +56,9 @@ class AmpError
      * add
      * This is a public static function it adds a new error message to the array
      * It can optionally clobber rather then adding to the error message
+     * @param string $name
+     * @param string $message
+     * @param int $clobber
      */
     public static function add($name, $message, $clobber = 0)
     {
@@ -103,6 +106,7 @@ class AmpError
     /**
      * get
      * This returns an error by name
+     * @param string $name
      * @return string
      */
     public static function get($name)
@@ -119,6 +123,7 @@ class AmpError
      * This prints the error out with a standard Error class span
      * Ben Goska: Renamed from print to display, print is reserved
      * @param string $name
+     * @return string
      */
     public static function display($name)
     {

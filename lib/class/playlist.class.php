@@ -44,6 +44,7 @@ class Playlist extends playlist_object
      * Constructor
      * This takes a playlist_id as an optional argument and gathers the information
      * if not playlist_id is passed returns false (or if it isn't found
+     * @param $object_id
      */
     public function __construct($object_id)
     {
@@ -71,6 +72,7 @@ class Playlist extends playlist_object
      * build_cache
      * This is what builds the cache from the objects
      * @param array $ids
+     * @return bool
      */
     public static function build_cache($ids)
     {
@@ -91,10 +93,10 @@ class Playlist extends playlist_object
     /**
      * get_playlists
      * Returns a list of playlists accessible by the user.
-     * @param boolean $incl_public
-     * @param integer $user_id
+     * @param bool  $incl_public
+     * @param int $user_id
      * @param string $playlist_name
-     * @param boolean $like
+     * @param bool  $like
      * @return array
      */
     public static function get_playlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
@@ -143,10 +145,10 @@ class Playlist extends playlist_object
     /**
      * get_smartlists
      * Returns a list of playlists accessible by the user.
-     * @param boolean $incl_public
-     * @param integer $user_id
+     * @param bool  $incl_public
+     * @param int $user_id
      * @param string $playlist_name
-     * @param boolean $like
+     * @param bool  $like
      * @return array
      */
     public static function get_smartlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
@@ -196,7 +198,7 @@ class Playlist extends playlist_object
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
-     * @param boolean $details
+     * @param bool  $details
      */
     public function format($details = true)
     {
@@ -212,15 +214,15 @@ class Playlist extends playlist_object
      * get_track
      * Returns the single item on the playlist and all of it's information, restrict
      * it to this Playlist
+     * @param $track_id
+     * @return array
      */
     public function get_track($track_id)
     {
         $sql        = "SELECT * FROM `playlist_data` WHERE `id` = ? AND `playlist` = ?";
         $db_results = Dba::read($sql, array($track_id, $this->id));
 
-        $row = Dba::fetch_assoc($db_results);
-
-        return $row;
+        return Dba::fetch_assoc($db_results);
     } // get_track
 
     /**
@@ -252,7 +254,7 @@ class Playlist extends playlist_object
     /**
      * get_random_items
      * This is the same as before but we randomize the buggers!
-     * @param integer $limit
+     * @param string $limit
      * @return integer[]
      */
     public function get_random_items($limit = '')
@@ -338,7 +340,8 @@ class Playlist extends playlist_object
     /**
      * get_users
      * This returns the specified users playlists as an array of playlist ids
-     * @param integer $user_id
+     * @param int $user_id
+     * @return array
      */
     public static function get_users($user_id)
     {
@@ -412,7 +415,9 @@ class Playlist extends playlist_object
      * _update_item
      * This is the generic update function, it does the escaping and error checking
      * @param string $field
-     * @param integer $level
+     * @param $value
+     * @param int $level
+     * @return bool|PDOStatement
      */
     private function _update_item($field, $value, $level)
     {
@@ -421,16 +426,14 @@ class Playlist extends playlist_object
         }
 
         $sql        = "UPDATE `playlist` SET `$field` = ? WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($value, $this->id));
-
-        return $db_results;
+        return Dba::write($sql, array($value, $this->id));
     } // update_item
 
     /**
      * update_track_number
      * This takes a playlist_data.id and a track (int) and updates the track value
-     * @param integer $track_id
-     * @param integer $index
+     * @param int $track_id
+     * @param int $index
      */
     public function update_track_number($track_id, $index)
     {
@@ -456,7 +459,7 @@ class Playlist extends playlist_object
     /**
      * add_songs
      * @param array $song_ids
-     * @param boolean $ordered
+     * @param bool  $ordered
      * This takes an array of song_ids and then adds it to the playlist
      */
     public function add_songs($song_ids = array(), $ordered = false)
@@ -474,7 +477,7 @@ class Playlist extends playlist_object
     /**
      * add_medias
      * @param array $medias
-     * @param boolean $ordered
+     * @param bool  $ordered
      */
     public function add_medias($medias, $ordered = false)
     {
@@ -516,7 +519,9 @@ class Playlist extends playlist_object
      * This function creates an empty playlist, gives it a name and type
      * @param string $name
      * @param string $type
-     * @param integer $user_id
+     * @param int $user_id
+     * @param int $date
+     * @return mixed|string|null
      */
     public static function create($name, $type, $user_id = null, $date = null)
     {
@@ -544,9 +549,7 @@ class Playlist extends playlist_object
         $sql = "INSERT INTO `playlist` (`name`, `user`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $user_id, $type, $date, $date));
 
-        $insert_id = Dba::insert_id();
-
-        return $insert_id;
+        return Dba::insert_id();
     } // create
 
     /**
@@ -560,8 +563,9 @@ class Playlist extends playlist_object
 
     /**
      * delete_song
-     * @param integer $object_id
+     * @param int $object_id
      * this deletes a single track, you specify the playlist_data.id here
+     * @return bool
      */
     public function delete_song($object_id)
     {
@@ -576,8 +580,9 @@ class Playlist extends playlist_object
 
     /**
      * delete_track
-    * @param integer $item_id
+     * @param int $item_id
      * this deletes a single track, you specify the playlist_data.id here
+     * @return bool
      */
     public function delete_track($item_id)
     {
@@ -591,10 +596,11 @@ class Playlist extends playlist_object
     } // delete_track
 
     /**
-    * delete_track_number
-    * @param integer $track
-    * this deletes a single track by it's track #, you specify the playlist_data.track here
-    */
+     * delete_track_number
+     * @param int $track
+     * this deletes a single track by it's track #, you specify the playlist_data.track here
+     * @return bool
+     */
     public function delete_track_number($track)
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
@@ -609,8 +615,8 @@ class Playlist extends playlist_object
     /**
     * has_item
     * look for the track id or the object id in a playlist
-    * @param integer $object
-    * @param integer $track
+    * @param int $object
+    * @param int $track
     * @return boolean
     */
     public function has_item($object = null, $track = null)

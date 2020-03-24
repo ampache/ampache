@@ -47,6 +47,7 @@ class Share extends database_object
 
     /**
      * Constructor
+     * @param $share_id
      */
     public function __construct($share_id)
     {
@@ -63,6 +64,7 @@ class Share extends database_object
 
     /**
      * delete_share
+     * @param $id
      * @return PDOStatement|boolean
      */
     public static function delete_share($id)
@@ -79,7 +81,7 @@ class Share extends database_object
 
     /**
      * garbage_collection
-     * @return PDOStatement|boolean
+     * @return void
      */
     public static function garbage_collection()
     {
@@ -89,7 +91,9 @@ class Share extends database_object
 
     /**
      * delete_shares
-     * @return PDOStatement|boolean
+     * @param $object_type
+     * @param $object_id
+     * @return void
      */
     public static function delete_shares($object_type, $object_id)
     {
@@ -128,7 +132,14 @@ class Share extends database_object
 
     /**
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
+     * @param bool $allow_stream
+     * @param bool $allow_download
+     * @param int $expire
+     * @param string $secret
+     * @param int $max_counter
+     * @param string $description
+     * @return string|null
      */
     public static function create_share($object_type, $object_id, $allow_stream = true, $allow_download = true, $expire = 0, $secret = '', $max_counter = 0, $description = '')
     {
@@ -185,6 +196,7 @@ class Share extends database_object
      * get_url
      * @param string $secret
      * @param string|null $share_id
+     * @return string
      */
     public static function get_url($share_id, $secret)
     {
@@ -230,6 +242,8 @@ class Share extends database_object
 
     /**
      * get_shares
+     * @param $object_type
+     * @param $object_id
      * @return array
      */
     public static function get_shares($object_type, $object_id)
@@ -276,6 +290,7 @@ class Share extends database_object
 
     /**
      * update
+     * @param array $data
      * @return PDOStatement|boolean
      */
     public function update(array $data)
@@ -310,6 +325,8 @@ class Share extends database_object
 
     /**
      * is_valid
+     * @param $secret
+     * @param $action
      * @return boolean
      */
     public function is_valid($secret, $action)
@@ -456,8 +473,8 @@ class Share extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
+     * @param int $old_object_id
+     * @param int $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

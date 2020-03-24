@@ -42,6 +42,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * TV Show
      * Takes the ID of the tv show season and pulls the info from the db
+     * @param $show_id
      */
     public function __construct($show_id)
     {
@@ -124,6 +125,8 @@ class TVShow_Season extends database_object implements library_item
     /**
      * format
      * this function takes the object and reformats some values
+     * @param bool $details
+     * @return bool
      */
     public function format($details = true)
     {
@@ -189,6 +192,7 @@ class TVShow_Season extends database_object implements library_item
 
     /**
      * get_medias
+     * @param string $filter_type
      * @return array
      */
     public function get_medias($filter_type = null)
@@ -260,6 +264,9 @@ class TVShow_Season extends database_object implements library_item
      * check
      *
      * Checks for an existing tv show season; if none exists, insert one.
+     * @param $tvshow
+     * @param $season_number
+     * @param bool $readonly
      * @return string|null
      */
     public static function check($tvshow, $season_number, $readonly = false)
@@ -312,6 +319,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * update
      * This takes a key'd array of data and updates the current tv show
+     * @param array $data
      */
     public function update(array $data)
     {

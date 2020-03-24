@@ -36,6 +36,9 @@ class HttpQPlayer
      * HttpQPlayer
      * This is the constructor, it defaults to localhost
      * with port 4800
+     * @param string $host
+     * @param string $password
+     * @param int $port
      */
     public function __construct($host = "localhost", $password = '', $port = 4800)
     {
@@ -48,7 +51,10 @@ class HttpQPlayer
      * add
      * append a song to the playlist
      * $name    Name to be shown in the playlist
-     * $url        URL of the song
+     * $url     URL of the song
+     * @param string $name
+     * @param string $url
+     * @return mixed|null
      */
     public function add($name, $url)
     {
@@ -134,6 +140,8 @@ class HttpQPlayer
     /**
      * skip
      * This skips to POS in the playlist
+     * @param $pos
+     * @return bool|null
      */
     public function skip($pos)
     {
@@ -200,8 +208,10 @@ class HttpQPlayer
     } // stop
 
     /**
-      * repeat
+     * repeat
      * This toggles the repeat state of HttpQ
+     * @param $value
+     * @return mixed|null
      */
     public function repeat($value)
     {
@@ -218,6 +228,8 @@ class HttpQPlayer
     /**
      * random
      * this toggles the random state of HttpQ
+     * @param $value
+     * @return mixed|null
      */
     public function random($value)
     {
@@ -234,6 +246,8 @@ class HttpQPlayer
     /**
      * delete_pos
      * This deletes a specific track
+     * @param $track
+     * @return mixed|null
      */
     public function delete_pos($track)
     {
@@ -324,6 +338,8 @@ class HttpQPlayer
      * set_volume
      * This sets the volume as best it can, we go from a resolution
      * of 100 --> 255 so it's a little fuzzy
+     * @param $value
+     * @return bool|null
      */
     public function set_volume($value)
     {
@@ -416,9 +432,12 @@ class HttpQPlayer
     } // get_tracks
 
     /**
-      * sendCommand
+     * sendCommand
      * This is the core of this library it takes care of sending the HTTP
      * request to the HttpQ server and getting the response
+     * @param $cmd
+     * @param $args
+     * @return mixed|null
      */
     private function sendCommand($cmd, $args)
     {

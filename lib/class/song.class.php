@@ -309,6 +309,7 @@ class Song extends database_object implements media, library_item
      *
      * Song class, for modifying a song.
      * @param integer|null $songid
+     * @param string $limit_threshold
      */
     public function __construct($songid = null, $limit_threshold = '')
     {
@@ -479,6 +480,7 @@ class Song extends database_object implements media, library_item
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
      * @param int[] $song_ids
+     * @param string $limit_threshold
      * @return boolean
      */
     public static function build_cache($song_ids, $limit_threshold = '')
@@ -558,6 +560,7 @@ class Song extends database_object implements media, library_item
 
     /**
      * has_info
+     * @param string $limit_threshold
      * @return array|boolean
      */
     private function has_info($limit_threshold = '')
@@ -601,6 +604,9 @@ class Song extends database_object implements media, library_item
      * @param string $song_name
      * @param string $artist_name
      * @param string $album_name
+     * @param string $song_mbid
+     * @param string $artist_mbid
+     * @param string $album_mbid
      * @return string
      */
     public static function can_scrobble($song_name, $artist_name, $album_name, $song_mbid = '', $artist_mbid = '', $album_mbid = '')
@@ -690,9 +696,6 @@ class Song extends database_object implements media, library_item
             case 'wma':
             case 'asf':
                 return 'audio/x-ms-wma';
-            case 'mp3':
-            case 'mpeg3':
-                return 'audio/mpeg';
             case 'rm':
             case 'ra':
                 return 'audio/x-realaudio';
@@ -710,6 +713,8 @@ class Song extends database_object implements media, library_item
                 return 'audio/x-musepack';
             case 'mkv':
                 return 'audio/x-matroska';
+            case 'mpeg3':
+            case 'mp3':
             default:
                 return 'audio/mpeg';
         }
@@ -719,7 +724,7 @@ class Song extends database_object implements media, library_item
      * get_disabled
      *
      * Gets a list of the disabled songs for and returns an array of Songs
-     * @param integer $count
+     * @param int $count
      * @return integer[]
      */
     public static function get_disabled($count = 0)
@@ -869,7 +874,7 @@ class Song extends database_object implements media, library_item
     /**
      * get_album_name
      * gets the name of $this->album, allows passing of id
-     * @param integer $album_id
+     * @param int $album_id
      * @return string
      */
     public function get_album_name($album_id = 0)
@@ -888,7 +893,7 @@ class Song extends database_object implements media, library_item
     /**
      * get_album_catalog_number
      * gets the catalog_number of $this->album, allows passing of id
-     * @param integer $album_id
+     * @param int $album_id
      * @return string
      */
     public function get_album_catalog_number($album_id = null)
@@ -904,7 +909,7 @@ class Song extends database_object implements media, library_item
     /**
      * get_album_original_year
      * gets the original_year of $this->album, allows passing of id
-     * @param integer $album_id
+     * @param int $album_id
      * @return integer
      */
     public function get_album_original_year($album_id = null)
@@ -920,7 +925,7 @@ class Song extends database_object implements media, library_item
     /**
      * get_album_barcode
      * gets the barcode of $this->album, allows passing of id
-     * @param integer $album_id
+     * @param int $album_id
      * @return string
      */
     public function get_album_barcode($album_id = null)
@@ -936,7 +941,7 @@ class Song extends database_object implements media, library_item
     /**
      * get_artist_name
      * gets the name of $this->artist, allows passing of id
-     * @param integer $artist_id
+     * @param int $artist_id
      * @return string
      */
     public function get_artist_name($artist_id = 0)
@@ -955,7 +960,7 @@ class Song extends database_object implements media, library_item
     /**
      * get_album_artist_name
      * gets the name of $this->albumartist, allows passing of id
-     * @param integer $album_artist_id
+     * @param int $album_artist_id
      * @return string
      */
     public function get_album_artist_name($album_artist_id = 0)
@@ -975,10 +980,10 @@ class Song extends database_object implements media, library_item
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param integer $user
+     * @param int $user
      * @param string $agent
      * @param array $location
-     * @param integer $date
+     * @param int $date
      * @return boolean
      */
     public function set_played($user, $agent, $location, $date = null)
@@ -1001,7 +1006,7 @@ class Song extends database_object implements media, library_item
      * check_play_history
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param integer $user
+     * @param int $user
      * @param string $agent
      * @return boolean
      */
@@ -1044,8 +1049,8 @@ class Song extends database_object implements media, library_item
      * the ones in the database to see if they have changed
      * it returns false if nothing has changes, or the true
      * if they have. Static because it doesn't need this
-     * @param \Song $song
-     * @param \Song $new_song
+     * @param Song $song
+     * @param Song $new_song
      * @return array
      */
     public static function compare_song_information(Song $song, Song $new_song)
@@ -1060,8 +1065,11 @@ class Song extends database_object implements media, library_item
 
     /**
      * compare_media_information
+     * @param $media
+     * @param $new_media
      * @param string[] $string_array
      * @param string[] $skip_array
+     * @return array
      */
     public static function compare_media_information($media, $new_media, $string_array, $skip_array)
     {
@@ -1245,7 +1253,7 @@ class Song extends database_object implements media, library_item
     /**
      * write_id3_for_song
      * Write id3 metadata to the file for the excepted song id
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function write_id3_for_song($song_id)
     {
@@ -1262,8 +1270,8 @@ class Song extends database_object implements media, library_item
      * calls a whole bunch of mini functions to update
      * each little part of the song... lastly it updates
      * the "update_time" of the song
-     * @param integer $song_id
-     * @param \Song $new_song
+     * @param int $song_id
+     * @param Song $new_song
      */
     public static function update_song($song_id, Song $new_song)
     {
@@ -1288,8 +1296,8 @@ class Song extends database_object implements media, library_item
     /**
      * update_year
      * update the year tag
-     * @param integer $new_year
-     * @param integer $song_id
+     * @param int $new_year
+     * @param int $song_id
      */
     public static function update_year($new_year, $song_id)
     {
@@ -1300,7 +1308,7 @@ class Song extends database_object implements media, library_item
      * update_label
      * This updates the label tag of the song
      * @param string $new_value
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_label($new_value, $song_id)
     {
@@ -1311,7 +1319,7 @@ class Song extends database_object implements media, library_item
      * update_language
      * This updates the language tag of the song
      * @param string $new_lang
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_language($new_lang, $song_id)
     {
@@ -1322,7 +1330,7 @@ class Song extends database_object implements media, library_item
      * update_comment
      * updates the comment field
      * @param string $new_comment
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_comment($new_comment, $song_id)
     {
@@ -1333,7 +1341,7 @@ class Song extends database_object implements media, library_item
      * update_lyrics
      * updates the lyrics field
      * @param string $new_lyrics
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_lyrics($new_lyrics, $song_id)
     {
@@ -1344,7 +1352,7 @@ class Song extends database_object implements media, library_item
      * update_title
      * updates the title field
      * @param string $new_title
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_title($new_title, $song_id)
     {
@@ -1355,7 +1363,7 @@ class Song extends database_object implements media, library_item
      * update_composer
      * updates the composer field
      * @param string $new_value
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_composer($new_value, $song_id)
     {
@@ -1366,7 +1374,7 @@ class Song extends database_object implements media, library_item
      * update_publisher
      * updates the publisher field
      * @param string $new_value
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_publisher($new_value, $song_id)
     {
@@ -1376,8 +1384,8 @@ class Song extends database_object implements media, library_item
     /**
      * update_bitrate
      * updates the bitrate field
-     * @param integer $new_bitrate
-     * @param integer $song_id
+     * @param int $new_bitrate
+     * @param int $song_id
      */
     public static function update_bitrate($new_bitrate, $song_id)
     {
@@ -1387,8 +1395,8 @@ class Song extends database_object implements media, library_item
     /**
      * update_rate
      * updates the rate field
-     * @param integer $new_rate
-     * @param integer $song_id
+     * @param int $new_rate
+     * @param int $song_id
      */
     public static function update_rate($new_rate, $song_id)
     {
@@ -1399,7 +1407,7 @@ class Song extends database_object implements media, library_item
      * update_mode
      * updates the mode field
      * @param string $new_mode
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_mode($new_mode, $song_id)
     {
@@ -1409,8 +1417,8 @@ class Song extends database_object implements media, library_item
     /**
      * update_size
      * updates the size field
-     * @param integer $new_size
-     * @param integer $song_id
+     * @param int $new_size
+     * @param int $song_id
      */
     public static function update_size($new_size, $song_id)
     {
@@ -1420,8 +1428,8 @@ class Song extends database_object implements media, library_item
     /**
      * update_time
      * updates the time field
-     * @param integer $new_time
-     * @param integer $song_id
+     * @param int $new_time
+     * @param int $song_id
      */
     public static function update_time($new_time, $song_id)
     {
@@ -1431,8 +1439,8 @@ class Song extends database_object implements media, library_item
     /**
      * update_track
      * this updates the track field
-     * @param integer $new_track
-     * @param integer $song_id
+     * @param int $new_track
+     * @param int $song_id
      */
     public static function update_track($new_track, $song_id)
     {
@@ -1443,7 +1451,7 @@ class Song extends database_object implements media, library_item
      * update_mbid
      * updates mbid field
      * @param string $new_mbid
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_mbid($new_mbid, $song_id)
     {
@@ -1454,7 +1462,7 @@ class Song extends database_object implements media, library_item
      * update_license
      * updates license field
      * @param string $new_license
-     * @param integer $song_id
+     * @param int $song_id
      */
     public static function update_license($new_license, $song_id)
     {
@@ -1464,9 +1472,9 @@ class Song extends database_object implements media, library_item
     /**
      * update_artist
      * updates the artist field
-     * @param integer $new_artist
-     * @param integer $song_id
-     * @param integer $old_artist
+     * @param int $new_artist
+     * @param int $song_id
+     * @param int $old_artist
      */
     public static function update_artist($new_artist, $song_id, $old_artist)
     {
@@ -1487,9 +1495,9 @@ class Song extends database_object implements media, library_item
     /**
      * update_album
      * updates the album field
-     * @param integer $new_album
-     * @param integer $song_id
-     * @param integer $old_album
+     * @param int $new_album
+     * @param int $song_id
+     * @param int $old_album
      */
     public static function update_album($new_album, $song_id, $old_album)
     {
@@ -1510,8 +1518,8 @@ class Song extends database_object implements media, library_item
     /**
      * update_utime
      * sets a new update time
-     * @param integer $song_id
-     * @param integer $time
+     * @param int $song_id
+     * @param int $time
      */
     public static function update_utime($song_id, $time = 0)
     {
@@ -1525,8 +1533,8 @@ class Song extends database_object implements media, library_item
     /**
      * update_played
      * sets the played flag
-     * @param boolean $new_played
-     * @param integer $song_id
+     * @param bool  $new_played
+     * @param int $song_id
      */
     public static function update_played($new_played, $song_id)
     {
@@ -1536,8 +1544,8 @@ class Song extends database_object implements media, library_item
     /**
      * update_enabled
      * sets the enabled flag
-     * @param boolean $new_enabled
-     * @param integer $song_id
+     * @param bool  $new_enabled
+     * @param int $song_id
      */
     public static function update_enabled($new_enabled, $song_id)
     {
@@ -1552,9 +1560,9 @@ class Song extends database_object implements media, library_item
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
      * @param mixed $value
-     * @param integer $song_id
-     * @param integer $level
-     * @param boolean $check_owner
+     * @param int $song_id
+     * @param int $level
+     * @param bool  $check_owner
      * @return PDOStatement|boolean
      */
     private static function _update_item($field, $value, $song_id, $level, $check_owner = false)
@@ -1586,9 +1594,9 @@ class Song extends database_object implements media, library_item
      * These are items that aren't used normally, and often large/informational only
      * @param string $field
      * @param string $value
-     * @param integer $song_id
-     * @param integer $level
-     * @param boolean $check_owner
+     * @param int $song_id
+     * @param int $level
+     * @param bool  $check_owner
      * @return PDOStatement|boolean
      */
     private static function _update_ext_item($field, $value, $song_id, $level, $check_owner = false)
@@ -1615,6 +1623,7 @@ class Song extends database_object implements media, library_item
      * This takes the current song object
      * and does a ton of formating on it creating f_??? variables on the current
      * object
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -1816,8 +1825,8 @@ class Song extends database_object implements media, library_item
 
     /**
      * display_art
-     * @param integer $thumb
-     * @param boolean $force
+     * @param int $thumb
+     * @param bool  $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -1893,7 +1902,7 @@ class Song extends database_object implements media, library_item
      * @discussion    returns the path of the song file stripped of the catalog path
      *        used for mpd playback
      * @param string $file_path
-     * @param integer $catalog_id
+     * @param int $catalog_id
      * @return string
      */
     public function get_rel_path($file_path = null, $catalog_id = 0)
@@ -1917,12 +1926,12 @@ class Song extends database_object implements media, library_item
     /**
      * Generate generic play url.
      * @param string $object_type
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
-     * @param integer $uid
-     * @param boolean $original
+     * @param bool  $local
+     * @param bool $uid
+     * @param bool  $original
      * @return string
      */
     public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = false, $original = false)
@@ -1970,12 +1979,12 @@ class Song extends database_object implements media, library_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
-     * @param integer $oid
+     * @param int $oid
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
-     * @param integer $uid
-     * @param boolean $original
+     * @param bool  $local
+     * @param int $uid
+     * @param bool  $original
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = 0, $original = false)
@@ -1997,7 +2006,7 @@ class Song extends database_object implements media, library_item
      * This function returns the last X songs that have been played
      * it uses the popular threshold to figure out how many to pull
      * it will only return unique object
-     * @param integer $user_id
+     * @param int $user_id
      * @return array
      */
     public static function get_recently_played($user_id = 0)
@@ -2042,6 +2051,7 @@ class Song extends database_object implements media, library_item
 
     /**
      * Get stream types.
+     * @param string $player
      * @return array
      */
     public function get_stream_types($player = null)
@@ -2083,6 +2093,7 @@ class Song extends database_object implements media, library_item
      *
      * @param string $source
      * @param string $target
+     * @param string $player
      * @param string $media_type
      * @param array $options
      * @return array|boolean
@@ -2161,6 +2172,7 @@ class Song extends database_object implements media, library_item
     /**
      * Get transcode settings.
      * @param string $target
+     * @param string $player
      * @param array $options
      * @return array|boolean
      */
@@ -2194,7 +2206,7 @@ class Song extends database_object implements media, library_item
 
     /**
      * Run custom play action.
-     * @param integer $action_index
+     * @param int $action_index
      * @param string $codec
      * @return array
      */
@@ -2319,11 +2331,11 @@ class Song extends database_object implements media, library_item
 
     /**
      * Update Metadata from array
-     * @param array $value
+     * @param array $meta_value
      */
-    public function updateMetadata($value)
+    public function updateMetadata($meta_value)
     {
-        foreach ($value as $metadataId => $value) {
+        foreach ($meta_value as $metadataId => $value) {
             $metadata = $this->metadataRepository->findById($metadataId);
             if (!$metadata || $value != $metadata->getData()) {
                 $metadata->setData($value);

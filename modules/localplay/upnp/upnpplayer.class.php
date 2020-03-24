@@ -68,6 +68,8 @@ class UPnPPlayer
     /**
      * UPnPPlayer
      * This is the constructor,
+     * @param string $name
+     * @param string $description_url
      */
     public function __construct($name = "noname", $description_url = "http://localhost")
     {
@@ -85,6 +87,9 @@ class UPnPPlayer
      * append a song to the playlist
      * $name    Name to be shown in the playlist
      * $link    URL of the song
+     * @param $name
+     * @param $link
+     * @return bool
      */
     public function PlayListAdd($name, $link)
     {
@@ -96,6 +101,8 @@ class UPnPPlayer
     /**
      * delete_pos
      * This deletes a specific track
+     * @param $track
+     * @return bool
      */
     public function PlaylistRemove($track)
     {
@@ -104,6 +111,9 @@ class UPnPPlayer
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function PlaylistClear()
     {
         $this->Playlist()->Clear();
@@ -121,11 +131,17 @@ class UPnPPlayer
         return $this->Playlist()->AllItems();
     }
 
+    /**
+     * @return mixed
+     */
     public function GetCurrentItem()
     {
         return $this->Playlist()->CurrentItem();
     }
 
+    /**
+     * @return SimpleXMLElement
+     */
     public function GetState()
     {
         $response    = $this->Device()->instanceOnly('GetTransportInfo');
@@ -140,6 +156,8 @@ class UPnPPlayer
     /**
      * next
      * go to next song
+     * @param bool $forcePlay
+     * @return bool
      */
     public function Next($forcePlay = true)
     {
@@ -174,6 +192,8 @@ class UPnPPlayer
     /**
      * skip
      * This skips to POS in the playlist
+     * @param $pos
+     * @return bool
      */
     public function Skip($pos)
     {
@@ -186,6 +206,11 @@ class UPnPPlayer
         return false;
     }
 
+    /**
+     * @param $song
+     * @param $prefix
+     * @return array|null
+     */
     private function prepareURIRequest($song, $prefix)
     {
         if ($song == null) {
@@ -208,6 +233,9 @@ class UPnPPlayer
         );
     }
 
+    /**
+     * @param $url
+     */
     private function CallAsyncURL($url)
     {
         $curl = curl_init();
@@ -286,6 +314,8 @@ class UPnPPlayer
     /**
      * Repeat
      * This toggles the repeat state
+     * @param $value
+     * @return bool
      */
     public function Repeat($value)
     {
@@ -296,6 +326,8 @@ class UPnPPlayer
     /**
      * Random
      * this toggles the random state
+     * @param $value
+     * @return bool
      */
     public function Random($value)
     {
@@ -338,6 +370,8 @@ class UPnPPlayer
 
     /**
      * SetVolume
+     * @param $value
+     * @return bool
      */
     public function SetVolume($value)
     {
@@ -375,6 +409,9 @@ class UPnPPlayer
     }
 
 
+    /**
+     * @param $state
+     */
     private function SetIntState($state)
     {
         $this->_intState = $state;

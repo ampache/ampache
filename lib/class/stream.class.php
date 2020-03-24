@@ -35,7 +35,7 @@ class Stream
      * This overrides the normal session value, without adding
      * an additional session into the database, should be called
      * with care
-     * @param integer $sid
+     * @param int $sid
      */
     public static function set_session($sid)
     {
@@ -138,6 +138,10 @@ class Stream
      *
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
+     * @param $media
+     * @param string $type
+     * @param string $player
+     * @param array $options
      * @return array|false
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
@@ -258,6 +262,8 @@ class Stream
 
     /**
      * start_process
+     * @param $command
+     * @param array $settings
      * @return array
      */
     private static function start_process($command, $settings = array())
@@ -316,14 +322,13 @@ class Stream
     /**
      * validate_bitrate
      * this function takes a bitrate and returns a valid one
+     * @param $bitrate
      * @return integer
      */
     public static function validate_bitrate($bitrate)
     {
         /* Round to standard bitrates */
-        $bit_rate = (int) (16 * (floor((int) $bitrate / 16)));
-
-        return $bit_rate;
+        return (int) (16 * (floor((int) $bitrate / 16)));
     }
 
     /**
@@ -345,9 +350,9 @@ class Stream
      * insert_now_playing
      *
      * This will insert the Now Playing data.
-     * @param integer $oid
-     * @param integer $uid
-     * @param integer $length
+     * @param int $oid
+     * @param int $uid
+     * @param int $length
      * @param string $sid
      * @param string $type
      */
@@ -431,7 +436,7 @@ class Stream
      * check_lock_media
      *
      * This checks to see if the media is already being played.
-     * @param integer $media_id
+     * @param int $media_id
      * @param string $type
      * @return boolean
      */
@@ -488,6 +493,8 @@ class Stream
     /**
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
+     * @param bool $local
+     * @return string
      */
     public static function get_base_url($local = false)
     {
@@ -515,8 +522,6 @@ class Stream
             }
         }
 
-        $url = $web_path . "/play/index.php?$session_string";
-
-        return $url;
+        return $web_path . "/play/index.php?$session_string";
     } // get_base_url
 } // end stream.class
