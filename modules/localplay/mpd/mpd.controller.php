@@ -150,7 +150,7 @@ class AmpacheMpd extends localplay_controller
      * delete_instance
      * This takes a UID and deletes the instance in question
      * @param $uid
-     * @return bool
+     * @return boolean
      */
     public function delete_instance($uid)
     {
@@ -205,7 +205,7 @@ class AmpacheMpd extends localplay_controller
      * This takes an ID and an array of data and updates the instance specified
      * @param $uid
      * @param array $data
-     * @return bool
+     * @return boolean
      */
     public function update_instance($uid, $data)
     {
@@ -241,7 +241,7 @@ class AmpacheMpd extends localplay_controller
      * This sets the specified instance as the 'active' one
      * @param $uid
      * @param string $user_id
-     * @return bool
+     * @return boolean
      */
     public function set_active_instance($uid, $user_id = '')
     {
@@ -271,7 +271,7 @@ class AmpacheMpd extends localplay_controller
      * add_url
      * This is the new hotness
      * @param Stream_URL $url
-     * @return bool
+     * @return boolean
      */
     public function add_url(Stream_URL $url)
     {
@@ -340,7 +340,7 @@ class AmpacheMpd extends localplay_controller
      * skip
      * This tells MPD to skip to the specified song
      * @param $song
-     * @return bool
+     * @return boolean
      */
     public function skip($song)
     {

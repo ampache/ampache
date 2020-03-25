@@ -90,7 +90,7 @@ class UPnPPlayer
      * $link    URL of the song
      * @param $name
      * @param $link
-     * @return bool
+     * @return boolean
      */
     public function PlayListAdd($name, $link)
     {
@@ -103,7 +103,7 @@ class UPnPPlayer
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return bool
+     * @return boolean
      */
     public function PlaylistRemove($track)
     {
@@ -113,7 +113,7 @@ class UPnPPlayer
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function PlaylistClear()
     {
@@ -157,8 +157,8 @@ class UPnPPlayer
     /**
      * next
      * go to next song
-     * @param bool $forcePlay
-     * @return bool
+     * @param boolean$forcePlay
+     * @return boolean
      */
     public function Next($forcePlay = true)
     {
@@ -194,7 +194,7 @@ class UPnPPlayer
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return bool
+     * @return boolean
      */
     public function Skip($pos)
     {
@@ -316,7 +316,7 @@ class UPnPPlayer
      * Repeat
      * This toggles the repeat state
      * @param $value
-     * @return bool
+     * @return boolean
      */
     public function Repeat($value)
     {
@@ -328,7 +328,7 @@ class UPnPPlayer
      * Random
      * this toggles the random state
      * @param $value
-     * @return bool
+     * @return boolean
      */
     public function Random($value)
     {
@@ -372,7 +372,7 @@ class UPnPPlayer
     /**
      * SetVolume
      * @param $value
-     * @return bool
+     * @return boolean
      */
     public function SetVolume($value)
     {

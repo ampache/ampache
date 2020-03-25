@@ -93,7 +93,7 @@ class SeafileAdapter
     // do we have all the info we need?
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function ready()
     {
@@ -106,7 +106,7 @@ class SeafileAdapter
     // create API client object & find library
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function prepare()
     {
@@ -300,7 +300,7 @@ class SeafileAdapter
 
     /**
      * @param $file
-     * @param bool $partial
+     * @param boolean$partial
      * @return string
      */
     public function download($file, $partial = false)

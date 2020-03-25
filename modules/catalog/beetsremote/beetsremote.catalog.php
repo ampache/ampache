@@ -98,7 +98,7 @@ class Catalog_beetsremote extends Beets\Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return bool
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     { // TODO: This Method should be required / provided by parent

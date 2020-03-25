@@ -117,8 +117,8 @@ class Movie extends Video
     /**
      * format
      * this function takes the object and reformats some values
-     * @param bool $details
-     * @return bool
+     * @param boolean$details
+     * @return boolean
      */
 
     public function format($details = true)

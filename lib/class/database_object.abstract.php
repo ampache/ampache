@@ -83,7 +83,7 @@ abstract class database_object
      * this checks the cache to see if the specified object is there
      * @param $index
      * @param $object_id
-     * @return bool
+     * @return boolean
      */
     public static function is_cached($index, $object_id)
     {
@@ -120,7 +120,7 @@ abstract class database_object
      * @param $index
      * @param $object_id
      * @param array $data
-     * @return bool
+     * @return boolean
      */
     public static function add_to_cache($index, $object_id, $data)
     {

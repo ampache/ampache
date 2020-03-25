@@ -161,7 +161,7 @@ class Graph
      * @param int $start_date
      * @param int $end_date
      * @param string $zoom
-     * @param bool $show_total
+     * @param boolean$show_total
      * @return
      */
     protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $user_id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)

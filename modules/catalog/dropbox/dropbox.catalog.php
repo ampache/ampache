@@ -125,7 +125,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function isReady()
     {
@@ -175,7 +175,7 @@ class Catalog_dropbox extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return bool
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     {
@@ -230,7 +230,7 @@ class Catalog_dropbox extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return bool
+     * @return boolean
      */
     public function add_to_catalog($options = null)
     {
@@ -314,7 +314,7 @@ class Catalog_dropbox extends Catalog
     /**
      * @param $dropbox
      * @param $path
-     * @return bool
+     * @return boolean
      */
     public function add_file($dropbox, $path)
     {
@@ -354,7 +354,7 @@ class Catalog_dropbox extends Catalog
      * Insert a song that isn't already in the database.
      * @param $dropbox
      * @param $path
-     * @return bool
+     * @return boolean
      */
     private function insert_song($dropbox, $path)
     {
@@ -459,7 +459,7 @@ class Catalog_dropbox extends Catalog
      * @param $path
      * @param $maxlen
      * @param null $dropboxFile
-     * @return bool
+     * @return boolean
      */
     public function download($dropbox, $path, $maxlen, $dropboxFile = null)
     {
@@ -664,7 +664,7 @@ class Catalog_dropbox extends Catalog
      * to find the art for them from the mp3s
      * @param int[]|null $songs
      * @param int[]|null $videos
-     * @return bool
+     * @return boolean
      */
     public function gather_art($songs = null, $videos = null)
     {

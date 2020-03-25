@@ -195,7 +195,7 @@ class scrobbler
      * @param $timestamp
      * @param $length
      * @param $track
-     * @return bool
+     * @return boolean
      */
     public function queue_track($artist, $album, $title, $timestamp, $length, $track)
     {
@@ -280,12 +280,12 @@ class scrobbler
      * love
      * This takes care of spreading your love to the world
      * It passed the API key, session key combinted with the signature
-     * @param bool $is_loved
+     * @param boolean$is_loved
      * @param $type
      * @param string $artist
      * @param string $title
      * @param string $album
-     * @return bool
+     * @return boolean
      */
     public function love($is_loved, $type, $artist = '', $title = '', $album = '')
     {

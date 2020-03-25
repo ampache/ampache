@@ -139,7 +139,7 @@ class AmpacheXbmc extends localplay_controller
      * delete_instance
      * This takes a UID and deletes the instance in question
      * @param $uid
-     * @return bool
+     * @return boolean
      */
     public function delete_instance($uid)
     {
@@ -172,7 +172,7 @@ class AmpacheXbmc extends localplay_controller
      * This takes an ID and an array of data and updates the instance specified
      * @param $uid
      * @param array $data
-     * @return bool
+     * @return boolean
      */
     public function update_instance($uid, $data)
     {
@@ -218,7 +218,7 @@ class AmpacheXbmc extends localplay_controller
      * This sets the specified instance as the 'active' one
      * @param $uid
      * @param string $user_id
-     * @return bool
+     * @return boolean
      */
     public function set_active_instance($uid, $user_id = '')
     {
@@ -272,7 +272,7 @@ class AmpacheXbmc extends localplay_controller
      * delete_track
      * Delete a track from the xbmc playlist
      * @param $track
-     * @return bool
+     * @return boolean
      */
     public function delete_track($track)
     {
@@ -403,7 +403,7 @@ class AmpacheXbmc extends localplay_controller
      * skip
      * This tells XBMC to skip to the specified song
      * @param $song
-     * @return bool
+     * @return boolean
      */
     public function skip($song)
     {
@@ -521,7 +521,7 @@ class AmpacheXbmc extends localplay_controller
      * volume
      * This tells XBMC to set the volume to the specified amount
      * @param $volume
-     * @return bool
+     * @return boolean
      */
     public function volume($volume)
     {
@@ -546,7 +546,7 @@ class AmpacheXbmc extends localplay_controller
      * repeat
      * This tells XBMC to set the repeating the playlist (i.e. loop) to either on or off
      * @param $state
-     * @return bool
+     * @return boolean
      */
     public function repeat($state)
     {
@@ -572,7 +572,7 @@ class AmpacheXbmc extends localplay_controller
      * random
      * This tells XBMC to turn on or off the playing of songs from the playlist in random order
      * @param $onoff
-     * @return bool
+     * @return boolean
      */
     public function random($onoff)
     {

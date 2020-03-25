@@ -598,7 +598,7 @@ class UI
 
     /**
      * @param $type
-     * @return bool
+     * @return boolean
      */
     public static function is_grid_view($type)
     {

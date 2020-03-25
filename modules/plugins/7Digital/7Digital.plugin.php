@@ -128,7 +128,7 @@ class Ampache7digital
 
     /**
      * @param $file
-     * @return bool
+     * @return boolean
      */
     public function stream_song_preview($file)
     {
@@ -151,7 +151,7 @@ class Ampache7digital
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
+     * @return boolean
      */
     public function load($user)
     {

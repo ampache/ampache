@@ -240,7 +240,7 @@ class JSON_Data
      *
      * @param array $artists (description here...)
      * @param array $include
-     * @param bool $user_id
+     * @param boolean$user_id
      * @return    string    return JSON
      */
     public static function artists($artists, $include = [], $user_id = false)
@@ -293,7 +293,7 @@ class JSON_Data
      *
      * @param array $albums (description here...)
      * @param array $include
-     * @param bool $user_id
+     * @param boolean$user_id
      * @return    string    return JSON
      */
     public static function albums($albums, $include = [], $user_id = false)
@@ -362,7 +362,7 @@ class JSON_Data
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
      * @param array $playlists (description here...)
-     * @param bool $create
+     * @param boolean$create
      * @return    string    return xml
      */
     public static function playlists($playlists, $create = false)
@@ -425,7 +425,7 @@ class JSON_Data
      * (Spiffy isn't it!)
      * @param $songs
      * @param array $playlist_data
-     * @param bool $user_id
+     * @param boolean$user_id
      * @return false|string
      */
     public static function songs($songs, $playlist_data=array(), $user_id = false)
@@ -560,7 +560,7 @@ class JSON_Data
      * due to the votes and all of that
      *
      * @param integer[] $object_ids Object IDs
-     * @param bool $user_id
+     * @param boolean$user_id
      * @return string    return JSON
      */
     public static function democratic($object_ids=array(), $user_id = false)

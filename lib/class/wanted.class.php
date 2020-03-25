@@ -429,7 +429,7 @@ class Wanted extends database_object
 
     /**
      * Load wanted release data.
-     * @param bool  $track_details
+     * @param boolean $track_details
      */
     public function load_all($track_details = true)
     {

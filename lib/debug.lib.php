@@ -46,7 +46,7 @@ function check_php()
 /*
  * check_php_version
  * check for required php version
- * @return bool
+ * @return boolean
  */
 function check_php_version()
 {
@@ -60,7 +60,7 @@ function check_php_version()
 /*
  * check_php_hash
  * check for required function exists
- * @return bool
+ * @return boolean
  */
 function check_php_hash()
 {
@@ -70,7 +70,7 @@ function check_php_hash()
 /*
  * check_php_hash_algo
  * check for required function exists
- * @return bool
+ * @return boolean
  */
 function check_php_hash_algo()
 {
@@ -80,7 +80,7 @@ function check_php_hash_algo()
 /*
  * check_php_json
  * check for required function exists
- * @return bool
+ * @return boolean
  */
 function check_php_json()
 {
@@ -90,7 +90,7 @@ function check_php_json()
 /*
  * check_php_curl
  * check for required function exists
- * @return bool
+ * @return boolean
  */
 function check_php_curl()
 {
@@ -100,7 +100,7 @@ function check_php_curl()
 /*
  * check_php_session
  * check for required function exists
- * @return bool
+ * @return boolean
  */
 function check_php_session()
 {
@@ -110,7 +110,7 @@ function check_php_session()
 /*
  * check_php_pdo
  * check for required function exists
- * @return bool
+ * @return boolean
  */
 function check_php_pdo()
 {
@@ -120,7 +120,7 @@ function check_php_pdo()
 /*
  * check_php_pdo_mysql
  * check for required function exists
- * @return bool
+ * @return boolean
  */
 function check_php_pdo_mysql()
 {
@@ -130,7 +130,7 @@ function check_php_pdo_mysql()
 /*
  * check_mbstring_func_overload
  * check for required function exists
- * @return bool
+ * @return boolean
  */
 function check_mbstring_func_overload()
 {
@@ -145,7 +145,7 @@ function check_mbstring_func_overload()
  * check_config_values
  * checks to make sure that they have at least set the needed variables
  * @param array $conf
- * @return bool
+ * @return boolean
  */
 function check_config_values($conf)
 {
@@ -287,7 +287,7 @@ function check_upload_size()
 }
 
 /**
- * @return bool
+ * @return boolean
  */
 function check_php_int_size()
 {
@@ -295,7 +295,7 @@ function check_php_int_size()
 }
 
 /**
- * @return bool
+ * @return boolean
  */
 function check_php_zlib()
 {
@@ -303,7 +303,7 @@ function check_php_zlib()
 }
 
 /**
- * @return bool
+ * @return boolean
  */
 function check_php_simplexml()
 {
@@ -311,7 +311,7 @@ function check_php_simplexml()
 }
 
 /**
- * @return bool
+ * @return boolean
  */
 function check_php_gd()
 {
@@ -343,7 +343,7 @@ function return_bytes($val)
 }
 
 /**
- * @return bool
+ * @return boolean
  */
 function check_dependencies_folder()
 {
@@ -363,7 +363,7 @@ function check_config_writable()
 }
 
 /**
- * @return bool
+ * @return boolean
  */
 function check_htaccess_channel_writable()
 {
@@ -372,7 +372,7 @@ function check_htaccess_channel_writable()
 }
 
 /**
- * @return bool
+ * @return boolean
  */
 function check_htaccess_rest_writable()
 {
@@ -381,7 +381,7 @@ function check_htaccess_rest_writable()
 }
 
 /**
- * @return bool
+ * @return boolean
  */
 function check_htaccess_play_writable()
 {
@@ -413,7 +413,7 @@ function debug_result($status = false, $value = null, $comment = '')
  * debug_wresult
  *
  * Convenience function to format the output.
- * @param bool $status
+ * @param boolean$status
  * @param string $value
  * @param string $comment
  * @return string

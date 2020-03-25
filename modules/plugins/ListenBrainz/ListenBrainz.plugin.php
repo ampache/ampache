@@ -91,7 +91,7 @@ class Ampachelistenbrainz
      * save_mediaplay
      * This takes care of queuing and then submitting the tracks.
      * @param Song $song
-     * @return bool
+     * @return boolean
      */
     public function save_mediaplay($song)
     {
@@ -195,7 +195,7 @@ class Ampachelistenbrainz
      * This takes care of spreading your love on ListenBrainz
      * @param $song
      * @param $flagged
-     * @return bool
+     * @return boolean
      */
     public function set_flag($song, $flagged)
     {
@@ -207,7 +207,7 @@ class Ampachelistenbrainz
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
+     * @return boolean
      */
     public function load($user)
     {

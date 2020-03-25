@@ -63,7 +63,7 @@ class vainfo
      * @param string $encoding_id3v2
      * @param string $dir_pattern
      * @param string $file_pattern
-     * @param bool $islocal
+     * @param boolean$islocal
      */
     public function __construct($file, $gather_types = array(), $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern = '', $islocal = true)
     {

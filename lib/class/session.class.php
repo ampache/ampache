@@ -63,7 +63,7 @@ class Session
      * This saves the session information into the database.
      * @param $key
      * @param $value
-     * @return bool
+     * @return boolean
      */
     public static function write($key, $value)
     {
@@ -85,7 +85,7 @@ class Session
      *
      * This removes the specified session from the database.
      * @param string $key
-     * @return bool
+     * @return boolean
      */
     public static function destroy($key)
     {
@@ -318,7 +318,7 @@ class Session
      * based on the type.
      * @param string $type
      * @param $key
-     * @return bool
+     * @return boolean
      */
     public static function exists($type, $key)
     {

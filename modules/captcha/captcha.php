@@ -115,7 +115,7 @@ class captcha
 
    #-- tests submitted CAPTCHA solution against tracking data
     /**
-     * @return bool
+     * @return boolean
      */
     public static function solved()
     {
@@ -125,7 +125,7 @@ class captcha
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public static function check()
     {
@@ -239,7 +239,7 @@ class easy_captcha
     #-- examine if captcha data is fresh
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function is_valid()
     {
@@ -267,7 +267,7 @@ class easy_captcha
 
     /**
      * @param null $input
-     * @return bool
+     * @return boolean
      */
     public function solved($input = null/*parameter only used in subclasses*/)
     {
@@ -381,7 +381,7 @@ class easy_captcha
      * @param $error
      * @param $category
      * @param $message
-     * @return bool
+     * @return boolean
      */
     public function log($error, $category, $message)
     {
@@ -424,7 +424,7 @@ class easy_captcha
     #-- remove $this data file
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function delete()
     {
@@ -508,7 +508,7 @@ class easy_captcha_fuzzy extends easy_captcha
 
     /**
      * @param null $input
-     * @return bool
+     * @return boolean
      */
     public function solved($input = null)
     {
@@ -1087,7 +1087,7 @@ class easy_captcha_text_math_formula extends easy_captcha
 
     /**
      * @param null $result
-     * @return bool
+     * @return boolean
      */
     public function solved($result = null)
     {
@@ -1163,7 +1163,7 @@ class easy_captcha_text_disable extends easy_captcha
 
     /**
      * @param null $input
-     * @return bool
+     * @return boolean
      */
     public function solved($input = null)
     {
@@ -1187,7 +1187,7 @@ class easy_captcha_persistent_grant extends easy_captcha
 
     /**
      * @param int $ignore
-     * @return bool
+     * @return boolean
      */
     public function solved($ignore = 0)
     {
@@ -1239,7 +1239,7 @@ class easy_captcha_spamfree_no_new_urls
     #   - for simple comment submission forms, this default however suffices:
     /**
      * @param int $ignore
-     * @return bool
+     * @return boolean
      */
     public function solved($ignore = 0)
     {
@@ -1288,7 +1288,7 @@ class easy_captcha_utility
     #-- script was called directly
 
     /**
-     * @return bool
+     * @return boolean
      */
     public static function API()
     {

@@ -210,7 +210,7 @@ class LDAP
      * @param $link
      * @param $base_dn
      * @param string $filter
-     * @param bool  $only_one_result
+     * @param boolean $only_one_result
      * @return array
      * @throws LDAPException
      * @throws LDAPException

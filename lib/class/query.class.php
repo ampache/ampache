@@ -65,7 +65,7 @@ class Query
      * constructor
      * This should be called
      * @param integer|null $query_id
-     * @param bool  $cached
+     * @param boolean $cached
      */
     public function __construct($query_id = null, $cached = true)
     {
@@ -762,7 +762,7 @@ class Query
      * This sets the current sort(s)
      * @param string $sort
      * @param string $order
-     * @return bool
+     * @return boolean
      */
     public function set_sort($sort, $order = '')
     {
@@ -864,7 +864,7 @@ class Query
      * set_is_simple
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
-     * @param bool  $value
+     * @param boolean $value
      */
     public function set_is_simple($value)
     {
@@ -877,7 +877,7 @@ class Query
      * This sets true/false if the content of this browse
      * should be static, if they are then content filtering/altering
      * methods will be skipped
-     * @param bool  $value
+     * @param boolean $value
      */
     public function set_static_content($value)
     {
@@ -972,9 +972,9 @@ class Query
     /**
      * set_base_sql
      * This saves the base sql statement we are going to use.
-     * @param bool  $force
+     * @param boolean $force
      * @param string $custom_base
-     * @return bool
+     * @return boolean
      */
     private function set_base_sql($force = false, $custom_base = '')
     {
@@ -1245,7 +1245,7 @@ class Query
      * This returns the sql statement we are going to use this has to be run
      * every time we get the objects because it depends on the filters and
      * the type of object we are currently browsing.
-     * @param bool  $limit
+     * @param boolean $limit
      * @return string
      */
     public function get_sql($limit = true)

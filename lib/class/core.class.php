@@ -298,7 +298,7 @@ class Core
      * continue
      * @param $name
      * @param string $type
-     * @return bool
+     * @return boolean
      */
     public static function form_verify($name, $type = 'post')
     {
@@ -418,7 +418,7 @@ class Core
      *
      * @param string $path
      * @param $path
-     * @return bool
+     * @return boolean
      */
     public static function is_readable($path)
     {
@@ -497,7 +497,7 @@ class Core
      * is_session_started
      *
      * Universal function for checking session status.
-     * @return bool
+     * @return boolean
      */
     public static function is_session_started()
     {
@@ -517,7 +517,7 @@ class Core
      *
      * @param $classname
      * @param string $typeofname
-     * @return bool
+     * @return boolean
      */
     private static function is_class_typeof($classname, $typeofname)
     {
@@ -530,7 +530,7 @@ class Core
 
     /**
      * @param $classname
-     * @return bool
+     * @return boolean
      */
     public static function is_playable_item($classname)
     {
@@ -539,7 +539,7 @@ class Core
 
     /**
      * @param $classname
-     * @return bool
+     * @return boolean
      */
     public static function is_library_item($classname)
     {
@@ -548,7 +548,7 @@ class Core
 
     /**
      * @param $classname
-     * @return bool
+     * @return boolean
      */
     public static function is_media($classname)
     {

@@ -172,7 +172,7 @@ class Dba
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
      * @param $resource
-     * @param bool $finish
+     * @param boolean$finish
      * @return array
      */
     public static function fetch_assoc($resource, $finish = true)
@@ -202,7 +202,7 @@ class Dba
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
      * @param $resource
-     * @param bool $finish
+     * @param boolean$finish
      * @return array
      */
     public static function fetch_row($resource, $finish = true)
@@ -227,7 +227,7 @@ class Dba
     /**
      * @param $resource
      * @param string $class
-     * @param bool $finish
+     * @param boolean$finish
      * @return array
      */
     public static function fetch_object($resource, $class = 'stdClass', $finish = true)
@@ -341,7 +341,7 @@ class Dba
      * _setup_dbh
      * @param $dbh
      * @param string $database
-     * @return bool
+     * @return boolean
      */
     private static function _setup_dbh($dbh, $database)
     {

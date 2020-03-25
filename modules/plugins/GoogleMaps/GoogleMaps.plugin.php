@@ -104,7 +104,7 @@ class AmpacheGoogleMaps
 
     /**
      * @param $pts
-     * @return bool
+     * @return boolean
      */
     public function display_map($pts)
     {
@@ -160,7 +160,7 @@ class AmpacheGoogleMaps
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
+     * @return boolean
      */
     public function load($user)
     {

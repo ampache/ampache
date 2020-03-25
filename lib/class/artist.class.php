@@ -219,7 +219,7 @@ class Artist extends database_object implements library_item
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
      * @param int[] $ids
-     * @param bool  $extra
+     * @param boolean $extra
      * @param string $limit_threshold
      * @return boolean
      */
@@ -277,7 +277,7 @@ class Artist extends database_object implements library_item
      * gets the album ids that this artist is a part
      * of
      * @param integer|null $catalog
-     * @param bool  $group_release_type
+     * @param boolean $group_release_type
      * @return integer[]
      */
     public function get_albums($catalog = null, $group_release_type = false)
@@ -441,7 +441,7 @@ class Artist extends database_object implements library_item
      *
      * This returns a number of random artists.
      * @param int $count
-     * @param bool  $with_art
+     * @param boolean $with_art
      * @param int $user_id
      * @return integer[]
      */
@@ -554,7 +554,7 @@ class Artist extends database_object implements library_item
      * information and reformats the relevent values
      * so they can be displayed in a table for example
      * it changes the title into a full link.
-     * @param bool $details
+     * @param boolean$details
      * @param string $limit_threshold
      * @return boolean
      */
@@ -747,7 +747,7 @@ class Artist extends database_object implements library_item
     /**
      * display_art
      * @param int $thumb
-     * @param bool  $force
+     * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -767,7 +767,7 @@ class Artist extends database_object implements library_item
     /**
      * can_edit
      * @param int $user_id
-     * @return bool
+     * @return boolean
      */
     public function can_edit($user_id = null)
     {
@@ -794,7 +794,7 @@ class Artist extends database_object implements library_item
      * Checks for an existing artist; if none exists, insert one.
      * @param string $name
      * @param string $mbid
-     * @param bool  $readonly
+     * @param boolean $readonly
      * @return int|null
      */
     public static function check($name, $mbid = '', $readonly = false)
@@ -982,10 +982,10 @@ class Artist extends database_object implements library_item
      *
      * Update tags of artists and/or albums
      * @param string $tags_comma
-     * @param bool  $override_childs
-     * @param bool  $add_to_childs
+     * @param boolean $override_childs
+     * @param boolean $add_to_childs
      * @param integer|null $current_id
-     * @param bool $force_update
+     * @param boolean$force_update
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
@@ -1009,7 +1009,7 @@ class Artist extends database_object implements library_item
      * @param string $summary
      * @param string $placeformed
      * @param int $yearformed
-     * @param bool $manual
+     * @param boolean$manual
      * @return PDOStatement|boolean
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)

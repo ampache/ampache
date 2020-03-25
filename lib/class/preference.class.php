@@ -76,9 +76,9 @@ class Preference extends database_object
      * @param string $preference
      * @param string $user_id
      * @param array|string $value
-     * @param bool $applytoall
-     * @param bool $applytodefault
-     * @return bool
+     * @param boolean$applytoall
+     * @param boolean$applytodefault
+     * @return boolean
      */
     public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false)
     {
@@ -128,7 +128,7 @@ class Preference extends database_object
      * This takes a preference ID and updates the level required to update it (performed by an admin)
      * @param $preference
      * @param $level
-     * @return bool
+     * @return boolean
      */
     public static function update_level($preference, $level)
     {
@@ -153,7 +153,7 @@ class Preference extends database_object
      * This takes a preference id and a value and updates all users with the new info
      * @param $preference_id
      * @param $value
-     * @return bool
+     * @return boolean
      */
     public static function update_all($preference_id, $value)
     {
@@ -189,7 +189,7 @@ class Preference extends database_object
      * This checks to see if the current user has access to modify this preference
      * as defined by the preference name
      * @param $preference
-     * @return bool
+     * @return boolean
      */
     public static function has_access($preference)
     {
@@ -315,7 +315,7 @@ class Preference extends database_object
      * @param string $type
      * @param string $category
      * @param string $subcategory
-     * @return bool
+     * @return boolean
      */
     public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null)
     {
@@ -429,7 +429,7 @@ class Preference extends database_object
      * load_from_session
      * This loads the preferences from the session rather then creating a connection to the database
      * @param int $uid
-     * @return bool
+     * @return boolean
      */
     public static function load_from_session($uid = -1)
     {
@@ -458,7 +458,7 @@ class Preference extends database_object
      * This is currently only used by the debug view, could be used other places.. wouldn't be a half
      * bad idea
      * @param $key
-     * @return bool
+     * @return boolean
      */
     public static function is_boolean($key)
     {

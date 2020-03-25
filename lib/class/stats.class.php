@@ -102,7 +102,7 @@ class Stats
      * @param string $count_type
      * @param int $date
      * @param int $song_time
-     * @return bool
+     * @return boolean
      */
     public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
     {
@@ -302,7 +302,7 @@ class Stats
      * used primarily by the democratic cooldown code
      * @param int $user_id
      * @param int $time
-     * @param bool $newest
+     * @param boolean$newest
      * @return array
      */
     public static function get_object_history($user_id, $time, $newest = true)
@@ -340,7 +340,7 @@ class Stats
      * @param string $threshold
      * @param string $count_type
      * @param int $user_id
-     * @param bool  $random
+     * @param boolean $random
      * @return string
      */
     public static function get_top_sql($input_type, $threshold = '', $count_type = 'stream', $user_id = null, $random = false)
@@ -410,7 +410,7 @@ class Stats
      * @param string $threshold
      * @param string $offset
      * @param int $user_id
-     * @param bool  $random
+     * @param boolean $random
      * @return array
      */
     public static function get_top($type, $count = 0, $threshold = '', $offset = '', $user_id = null, $random = false)
@@ -443,7 +443,7 @@ class Stats
      * This returns the get_recent sql
      * @param string $input_type
      * @param string $user_id
-     * @param bool  $newest
+     * @param boolean $newest
      * @return string
      */
     public static function get_recent_sql($input_type, $user_id = '', $newest = true)
@@ -487,7 +487,7 @@ class Stats
      * @param string $input_type
      * @param string $count
      * @param string $offset
-     * @param bool $newest
+     * @param boolean$newest
      * @return array
      */
     public static function get_recent($input_type, $count = '', $offset = '', $newest = true)

@@ -99,7 +99,7 @@ abstract class Catalog extends \Catalog
      * @param string $prefix Prefix like add, updated, verify and clean
      * @param int $count song count
      * @param array $song Song array
-     * @param bool  $ignoreTicker ignoring the ticker for the last update
+     * @param boolean $ignoreTicker ignoring the ticker for the last update
      */
     protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false)
     {

@@ -48,7 +48,7 @@ class Registration
      * @param string $email
      * @param string $website
      * @param string $validation
-     * @return bool
+     * @return boolean
      */
     public static function send_confirmation($username, $fullname, $email, $website, $validation)
     {

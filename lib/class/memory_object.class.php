@@ -44,7 +44,7 @@ class memory_object
     /**
      * @param $name
      * @param $value
-     * @return bool
+     * @return boolean
      */
     public function __set($name, $value)
     {
