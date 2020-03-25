@@ -291,19 +291,13 @@ while(true)
 ob_end_flush();
 echo "\n";
 
-/**
- * @param Channel $channel
- * @param $client_socks
- * @param $stream_clients
- * @param $sock
- */
 function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
 {
     $key = array_search($sock, $client_socks);
     unset($client_socks[$key]);
     unset($stream_clients[$key]);
     if (fclose($sock) === false) {
-        throw new RuntimeException('The file handle ' . $sock . ' could not be closed');
+        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed');
     }
     $channel->update_listeners(count($client_socks));
     debug_event('channel_run', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', 4);
@@ -328,13 +322,6 @@ function channel_usage()
     echo "\n";
 }
 
-/**
- * @param $channel
- * @param $client_socks
- * @param $stream_clients
- * @param $read_socks
- * @param $sock
- */
 function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $sock)
 {
     $data = fread($sock, 1024);
@@ -451,11 +438,11 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "<div class=\"newscontent\">" . "\n";
                     $xsl .= "<div class=\"streamheader\">" . "\n";
                     $xsl .= "<table>" . "\n";
-                    $xsl .= "<colgroup></colgroup>" . "\n";
-                    $xsl .= "<colgroup></colgroup>" . "\n";
+                    $xsl .= "<colgroup align=\"left\"></colgroup>" . "\n";
+                    $xsl .= "<colgroup align=\"right\" width=\"300\"></colgroup>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td><h3>Mount Point: <a href=\"stream.". $channel->stream_type . "\">stream.". $channel->stream_type . "</a></h3></td>" . "\n";
-                    $xsl .= "<td>" . "\n";
+                    $xsl .= "<td align=\"right\">" . "\n";
                     $xsl .= "<a href=\"stream.". $channel->stream_type .".m3u\">M3U</a>" . "\n";
                     $xsl .= "</td>" . "\n";
                     $xsl .= "</tr>" . "\n";
@@ -588,10 +575,6 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
     }
 }
 
-/**
- * @param $x
- * @return string
- */
 function strtohex($x) {
     $s='';
     foreach (str_split($x) as $c) {

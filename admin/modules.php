@@ -127,7 +127,7 @@ switch ($_REQUEST['action']) {
         if (!$plugin->install()) {
             debug_event('modules', 'Error: Plugin Install Failed, ' . Core::get_request('plugin'), 1);
             $url    = AmpConfig::get('web_path') . '/admin/modules.php?action=show_plugins';
-            $title  = T_('There Was a Problem');
+            $title  = T_("There Was a Problem");
             $body   = T_('Unable to install this Plugin');
             show_confirmation($title, $body, $url);
             break;

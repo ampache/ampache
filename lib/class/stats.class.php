@@ -413,7 +413,7 @@ class Stats
      * @param bool  $random
      * @return array
      */
-    public static function get_top($type, $count = null, $threshold = '', $offset = '', $user_id = null, $random = false)
+    public static function get_top($type, $count = 0, $threshold = '', $offset = '', $user_id = null, $random = false)
     {
         if (count($count) <= 0) {
             $count = AmpConfig::get('popular_threshold');
