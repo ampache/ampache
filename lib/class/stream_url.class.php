@@ -52,7 +52,7 @@ class Stream_URL extends memory_object
             }
         }
 
-        $query    = parse_url($url, PHP_URL_QUERY);
+        $query    = (string) parse_url($url, PHP_URL_QUERY);
         $elements = explode('&', $query);
         $results  = array();
 

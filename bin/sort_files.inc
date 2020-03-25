@@ -83,12 +83,12 @@ while ($row = Dba::fetch_row($db_results)) {
         /* Find this poor song a home */
         $song->format();
         // sort_find_home will replace the % with the correct values.
-        $directory = sort_find_home($song, $catalog->sort_pattern, $catalog->path, $various_artist);
-        $filename  = sort_find_home($song, $catalog->rename_pattern, null, $various_artist);
+        $directory = sort_find_home($song, $catalog->sort_pattern, $catalog->path);
+        $filename  = sort_find_home($song, $catalog->rename_pattern, null);
         if ($directory === false || $filename === false) {
             $fullpath = $song->file;
         } else {
-            $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
+            $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);;
         }
 
         /* We need to actually do the moving (fake it if we are testing)
@@ -116,12 +116,8 @@ while ($row = Dba::fetch_row($db_results)) {
  * sort_find_home
  * Get the directory for this file from the catalog and the song info using the sort_pattern
  * takes into account various artists and the alphabet_prefix
- * @param Song $song
- * @param string $sort_pattern
- * @param string $base
- * @return bool|string
  */
-function sort_find_home($song, $sort_pattern, $base = null, $various_artist) {
+function sort_find_home($song, $sort_pattern, $base = null) {
 
     $home = '';
     if ($base) {
@@ -188,8 +184,6 @@ function sort_find_home($song, $sort_pattern, $base = null, $various_artist) {
  * This is run on every individual element of the search
  * Before it is put together, this removes / and \ and also
  * once I figure it out, it'll clean other stuff
- * @param string $string
- * @return string|string[]|null
  */
 function sort_clean_name($string) {
 
@@ -211,10 +205,6 @@ function sort_clean_name($string) {
  * sure that the directories exist, once the dirs exist then we do a copy
  * and unlink.. This is a little unsafe, and as such it verifies the copy
  * worked by doing a filesize() before unlinking.
- * @param Song $song
- * @param string $fullname
- * @param bool $test_mode
- * @return bool
  */
 function sort_move_file($song, $fullname, $test_mode) {
 
@@ -291,7 +281,7 @@ function sort_move_file($song, $fullname, $test_mode) {
 
         debug_event('sort_files.inc', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
         if (copy($old_art, $folder_art) === false) {
-            throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
+            throw new \RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
         }
 
         /* HINT: filename (File path) */
