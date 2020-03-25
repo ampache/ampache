@@ -60,7 +60,7 @@ class fs
     }
 
     /**
-     * @param $fs_id
+     * @param string $fs_id
      * @return false|string|string[]
      * @throws Exception
      */
