@@ -147,7 +147,7 @@ class Catalog_Seafile extends Catalog
      * This creates a new catalog type entry for a catalog
      * @param $catalog_id
      * @param array $data
-     * @return bool
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     {
@@ -239,7 +239,7 @@ class Catalog_Seafile extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return bool
+     * @return boolean
      */
     public function add_to_catalog($options = null)
     {

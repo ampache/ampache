@@ -138,8 +138,8 @@ class Share extends database_object
     /**
      * @param string $object_type
      * @param int $object_id
-     * @param bool $allow_stream
-     * @param bool $allow_download
+     * @param boolean$allow_stream
+     * @param boolean$allow_download
      * @param int $expire
      * @param string $secret
      * @param int $max_counter
@@ -277,7 +277,7 @@ class Share extends database_object
     }
 
     /**
-     * @param bool $details
+     * @param boolean$details
      */
     public function format($details = true)
     {
@@ -416,7 +416,7 @@ class Share extends database_object
 
     /**
      * @param $media_id
-     * @return bool
+     * @return boolean
      */
     public function is_shared_media($media_id)
     {
@@ -452,7 +452,7 @@ class Share extends database_object
     /**
      * @param $object_type
      * @param $object_id
-     * @param bool $show_text
+     * @param boolean$show_text
      */
     public static function display_ui($object_type, $object_id, $show_text = true)
     {

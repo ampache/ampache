@@ -89,7 +89,7 @@ class SubsonicClient
     /**
      * @param $action
      * @param array $object
-     * @param bool $rawAnswer
+     * @param boolean$rawAnswer
      * @return array|bool|object|string
      */
     public function querySubsonic($action, $object = array(), $rawAnswer = false)
@@ -112,7 +112,7 @@ class SubsonicClient
     /**
      * @param $action
      * @param array $o
-     * @param bool $rawAnswer
+     * @param boolean$rawAnswer
      * @return array|bool|object|string
      */
     protected function _querySubsonic($action, $o = array(), $rawAnswer = false)
@@ -217,7 +217,7 @@ class SubsonicClient
 
     /**
      * @param $command
-     * @return bool
+     * @return boolean
      */
     public function isCommand($command)
     {

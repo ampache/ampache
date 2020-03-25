@@ -91,7 +91,7 @@ class AmpacheHeadphones
      * process_wanted
      * This takes care of auto-download accepted Wanted List albums
      * @param $wanted
-     * @return bool
+     * @return boolean
      */
     public function process_wanted($wanted)
     {
@@ -123,7 +123,7 @@ class AmpacheHeadphones
     /**
      * @param $command
      * @param $params
-     * @return bool
+     * @return boolean
      */
     protected function headphones_call($command, $params)
     {
@@ -158,7 +158,7 @@ class AmpacheHeadphones
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
+     * @return boolean
      */
     public function load($user)
     {

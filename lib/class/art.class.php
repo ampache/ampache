@@ -92,7 +92,7 @@ class Art extends database_object
 
     /**
      * @param string $type
-     * @return bool
+     * @return boolean
      */
     public static function is_valid_type($type)
     {
@@ -155,7 +155,7 @@ class Art extends database_object
     /**
      * set_enabled
      * Changes the value of enabled
-     * @param bool |null $value
+     * @param boolean|null $value
      */
     public static function set_enabled($value = null)
     {
@@ -234,7 +234,7 @@ class Art extends database_object
      * look in the database and will return the thumb if it
      * exists, if it doesn't depending on settings it will try
      * to create it.
-     * @param bool  $raw
+     * @param boolean $raw
      * @return string
      */
     public function get($raw = false)
@@ -511,7 +511,7 @@ class Art extends database_object
      * @param string $type
      * @param string $uid
      * @param string $kind
-     * @param bool  $autocreate
+     * @param boolean $autocreate
      * @return false|string
      */
     public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
@@ -558,7 +558,7 @@ class Art extends database_object
      * @param string $type
      * @param int $uid
      * @param $kind
-     * @return bool
+     * @return boolean
      */
     private static function write_to_dir($source, $sizetext, $type, $uid, $kind)
     {
@@ -663,7 +663,7 @@ class Art extends database_object
      * @param string $source
      * @param string $mime
      * @param array $size
-     * @return bool
+     * @return boolean
      */
     public function save_thumb($source, $mime, $size)
     {
@@ -1847,7 +1847,7 @@ class Art extends database_object
      * @param string $name
      * @param int $thumb
      * @param string $link
-     * @param bool  $show_default
+     * @param boolean $show_default
      * @param string $kind
      * @return boolean
      */

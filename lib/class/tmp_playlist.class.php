@@ -235,7 +235,7 @@ class Tmp_Playlist extends database_object
      * update_playlist
      * This updates the base_playlist on this tmp_playlist
      * @param $playlist_id
-     * @return bool
+     * @return boolean
      */
     public function update_playlist($playlist_id)
     {
@@ -252,7 +252,7 @@ class Tmp_Playlist extends database_object
      * session
      * @param $sessid
      * @param string|null $id
-     * @return bool
+     * @return boolean
      */
     public static function session_clean($sessid, $id)
     {
@@ -314,7 +314,7 @@ class Tmp_Playlist extends database_object
      * it takes an optional type, default is song
      * @param $object_id
      * @param $object_type
-     * @return bool
+     * @return boolean
      */
     public function add_object($object_id, $object_type)
     {
@@ -356,7 +356,7 @@ class Tmp_Playlist extends database_object
      * delete_track
      * This deletes a track from the tmpplaylist
      * @param $id
-     * @return bool
+     * @return boolean
      */
     public function delete_track($id)
     {

@@ -184,7 +184,7 @@ class Localplay
      * This returns true or false depending on if the specified controller
      * is currently enabled
      * @param $controller
-     * @return bool
+     * @return boolean
      */
     public static function is_enabled($controller)
     {
@@ -278,7 +278,7 @@ class Localplay
     /**
      * add
      * @param $object
-     * @return bool
+     * @return boolean
      */
     public function add($object)
     {
@@ -291,7 +291,7 @@ class Localplay
      * add_url
      * This directly adds an URL to the Localplay module.  Is more betterer.
      * @param Stream_URL $url
-     * @return bool
+     * @return boolean
      */
     public function add_url(Stream_URL $url)
     {
@@ -308,7 +308,7 @@ class Localplay
      * repeat
      * This turns the repeat feature of a Localplay method on or
      * off, takes a 0/1 value
-     * @param bool  $state
+     * @param boolean $state
      * @return
      */
     public function repeat($state)
@@ -326,7 +326,7 @@ class Localplay
      * random
      * This turns on the random feature of a Localplay method
      * It takes a 0/1 value
-     * @param bool  $state
+     * @param boolean $state
      * @return
      */
     public function random($state)
@@ -383,7 +383,7 @@ class Localplay
      * as passed in the variable it is a 0 - 100 scale the controller is
      * responsible for adjusting the scale if nessecary
      * @param $value
-     * @return bool
+     * @return boolean
      */
     public function volume_set($value)
     {
@@ -456,7 +456,7 @@ class Localplay
      * skip
      * This isn't a required function, it tells the daemon to skip to the specified song
      * @param $track_id
-     * @return bool
+     * @return boolean
      */
     public function skip($track_id)
     {
@@ -597,7 +597,7 @@ class Localplay
      * This removes songs from the players playlist it takes a single ID as provided
      * by the get command
      * @param $object_id
-     * @return bool
+     * @return boolean
      */
     public function delete_track($object_id)
     {

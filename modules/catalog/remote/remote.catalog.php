@@ -139,7 +139,7 @@ class Catalog_remote extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return bool
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     {
@@ -183,7 +183,7 @@ class Catalog_remote extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return bool
+     * @return boolean
      */
     public function add_to_catalog($options = null)
     {
@@ -239,7 +239,7 @@ class Catalog_remote extends Catalog
      * Pulls the data from a remote catalog and adds any missing songs to the
      * database.
      * @param int $type
-     * @return bool
+     * @return boolean
      */
     public function update_remote_catalog($type = 0)
     {

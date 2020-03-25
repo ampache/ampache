@@ -73,7 +73,7 @@ class Playlist extends playlist_object
      * build_cache
      * This is what builds the cache from the objects
      * @param array $ids
-     * @return bool
+     * @return boolean
      */
     public static function build_cache($ids)
     {
@@ -94,10 +94,10 @@ class Playlist extends playlist_object
     /**
      * get_playlists
      * Returns a list of playlists accessible by the user.
-     * @param bool  $incl_public
+     * @param boolean $incl_public
      * @param int $user_id
      * @param string $playlist_name
-     * @param bool  $like
+     * @param boolean $like
      * @return array
      */
     public static function get_playlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
@@ -146,10 +146,10 @@ class Playlist extends playlist_object
     /**
      * get_smartlists
      * Returns a list of playlists accessible by the user.
-     * @param bool  $incl_public
+     * @param boolean $incl_public
      * @param int $user_id
      * @param string $playlist_name
-     * @param bool  $like
+     * @param boolean $like
      * @return array
      */
     public static function get_smartlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
@@ -199,7 +199,7 @@ class Playlist extends playlist_object
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
-     * @param bool  $details
+     * @param boolean $details
      */
     public function format($details = true)
     {
@@ -461,7 +461,7 @@ class Playlist extends playlist_object
     /**
      * add_songs
      * @param array $song_ids
-     * @param bool  $ordered
+     * @param boolean $ordered
      * This takes an array of song_ids and then adds it to the playlist
      */
     public function add_songs($song_ids = array(), $ordered = false)
@@ -479,7 +479,7 @@ class Playlist extends playlist_object
     /**
      * add_medias
      * @param array $medias
-     * @param bool  $ordered
+     * @param boolean $ordered
      */
     public function add_medias($medias, $ordered = false)
     {
@@ -567,7 +567,7 @@ class Playlist extends playlist_object
      * delete_song
      * @param int $object_id
      * this deletes a single track, you specify the playlist_data.id here
-     * @return bool
+     * @return boolean
      */
     public function delete_song($object_id)
     {
@@ -584,7 +584,7 @@ class Playlist extends playlist_object
      * delete_track
      * @param int $item_id
      * this deletes a single track, you specify the playlist_data.id here
-     * @return bool
+     * @return boolean
      */
     public function delete_track($item_id)
     {
@@ -601,7 +601,7 @@ class Playlist extends playlist_object
      * delete_track_number
      * @param int $track
      * this deletes a single track by it's track #, you specify the playlist_data.track here
-     * @return bool
+     * @return boolean
      */
     public function delete_track_number($track)
     {

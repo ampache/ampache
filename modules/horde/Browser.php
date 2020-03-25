@@ -787,7 +787,7 @@ class Horde_Browser
     /**
      * Set this browser as a mobile device.
      *
-     * @param bool  $mobile  True if the browser is a mobile device.
+     * @param boolean $mobile  True if the browser is a mobile device.
      */
     public function setMobile($mobile)
     {
@@ -809,7 +809,7 @@ class Horde_Browser
      *
      * @since 2.1.0
      *
-     * @param bool  $tablet  True if the browser is a tablet device.
+     * @param boolean $tablet  True if the browser is a tablet device.
      */
     public function setTablet($tablet)
     {
@@ -919,7 +919,7 @@ class Horde_Browser
      *   - scrollbar_in_way
      *   - scroll_tds
      *   - windowed_controls
-     * @param bool $value Special behavior parameter.
+     * @param boolean$value Special behavior parameter.
      */
     public function setQuirk($quirk, $value = true)
     {
@@ -982,7 +982,7 @@ class Horde_Browser
      *   - utf
      *   - wml
      *   - xmlhttpreq
-     * @param bool $value Special capability parameter.
+     * @param boolean$value Special capability parameter.
      */
     public function setFeature($feature, $value = true)
     {
@@ -1172,7 +1172,7 @@ class Horde_Browser
      *
      * @param string $filename  The filename of the download.
      * @param string $cType     The content-type description of the file.
-     * @param bool  $inline   True if inline, false if attachment.
+     * @param boolean $inline   True if inline, false if attachment.
      * @param string $cLength   The content-length of this file.
      */
     public function downloadHeaders($filename = 'unknown', $cType = null,

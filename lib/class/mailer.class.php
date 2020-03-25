@@ -51,7 +51,7 @@ class Mailer
      * is_mail_enabled
      *
      * Check that the mail feature is enabled
-     * @return bool
+     * @return boolean
      */
     public static function is_mail_enabled()
     {
@@ -143,7 +143,7 @@ class Mailer
      * send
      * This actually sends the mail, how amazing
      * @param PHPMailer $phpmailer
-     * @return bool
+     * @return boolean
      */
     public function send($phpmailer = null)
     {
@@ -219,7 +219,7 @@ class Mailer
 
     /**
      * @param $group_name
-     * @return bool
+     * @return boolean
      */
     public function send_to_group($group_name)
     {

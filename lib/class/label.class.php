@@ -98,7 +98,7 @@ class Label extends database_object implements library_item
 
     /**
      * @param $thumb
-     * @param bool $force
+     * @param boolean$force
      * @return mixed|void
      */
     public function display_art($thumb, $force = false)
@@ -109,7 +109,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @param bool $details
+     * @param boolean$details
      */
     public function format($details = true)
     {
@@ -204,7 +204,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return |null
+     * @return null
      */
     public function get_parent()
     {
@@ -481,7 +481,7 @@ class Label extends database_object implements library_item
      * get_display
      * This returns a csv formated version of the labels that we are given
      * @param $labels
-     * @param bool $link
+     * @param boolean$link
      * @return string
      */
     public static function get_display($labels, $link = false)
@@ -514,8 +514,8 @@ class Label extends database_object implements library_item
      * Update the labels list based on commated list (ex. label1,label2,label3,..)
      * @param $labels_comma
      * @param int $artist_id
-     * @param bool  $overwrite
-     * @return bool
+     * @param boolean $overwrite
+     * @return boolean
      */
     public static function update_label_list($labels_comma, $artist_id, $overwrite)
     {

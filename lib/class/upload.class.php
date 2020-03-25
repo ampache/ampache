@@ -192,7 +192,7 @@ class Upload
     /**
      * rerror
      * @param string $file
-     * @return bool
+     * @return boolean
      */
     public static function rerror($file = null)
     {

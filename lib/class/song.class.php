@@ -1537,7 +1537,7 @@ class Song extends database_object implements media, library_item
     /**
      * update_played
      * sets the played flag
-     * @param bool  $new_played
+     * @param boolean $new_played
      * @param int $song_id
      */
     public static function update_played($new_played, $song_id)
@@ -1548,7 +1548,7 @@ class Song extends database_object implements media, library_item
     /**
      * update_enabled
      * sets the enabled flag
-     * @param bool  $new_enabled
+     * @param boolean $new_enabled
      * @param int $song_id
      */
     public static function update_enabled($new_enabled, $song_id)
@@ -1566,7 +1566,7 @@ class Song extends database_object implements media, library_item
      * @param mixed $value
      * @param int $song_id
      * @param int $level
-     * @param bool  $check_owner
+     * @param boolean $check_owner
      * @return PDOStatement|boolean
      */
     private static function _update_item($field, $value, $song_id, $level, $check_owner = false)
@@ -1600,7 +1600,7 @@ class Song extends database_object implements media, library_item
      * @param string $value
      * @param int $song_id
      * @param int $level
-     * @param bool  $check_owner
+     * @param boolean $check_owner
      * @return PDOStatement|boolean
      */
     private static function _update_ext_item($field, $value, $song_id, $level, $check_owner = false)
@@ -1627,7 +1627,7 @@ class Song extends database_object implements media, library_item
      * This takes the current song object
      * and does a ton of formating on it creating f_??? variables on the current
      * object
-     * @param bool $details
+     * @param boolean$details
      */
     public function format($details = true)
     {
@@ -1830,7 +1830,7 @@ class Song extends database_object implements media, library_item
     /**
      * display_art
      * @param int $thumb
-     * @param bool  $force
+     * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -1933,9 +1933,9 @@ class Song extends database_object implements media, library_item
      * @param int $object_id
      * @param string $additional_params
      * @param string $player
-     * @param bool  $local
-     * @param bool $uid
-     * @param bool  $original
+     * @param boolean $local
+     * @param boolean$uid
+     * @param boolean $original
      * @return string
      */
     public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = false, $original = false)
@@ -1986,9 +1986,9 @@ class Song extends database_object implements media, library_item
      * @param int $oid
      * @param string $additional_params
      * @param string $player
-     * @param bool  $local
+     * @param boolean $local
      * @param int $uid
-     * @param bool  $original
+     * @param boolean $original
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = 0, $original = false)

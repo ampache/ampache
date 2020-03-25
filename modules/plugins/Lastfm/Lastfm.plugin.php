@@ -108,7 +108,7 @@ class AmpacheLastfm
      * save_mediaplay
      * This takes care of queueing and then submitting the tracks.
      * @param Song $song
-     * @return bool
+     * @return boolean
      */
     public function save_mediaplay($song)
     {
@@ -165,8 +165,8 @@ class AmpacheLastfm
      * set_flag
      * This takes care of spreading your love on Last.fm
      * @param Song $song
-     * @param bool $flagged
-     * @return bool
+     * @param boolean$flagged
+     * @return boolean
      */
     public function set_flag($song, $flagged)
     {
@@ -194,7 +194,7 @@ class AmpacheLastfm
      * This requires a userid so it knows whose crap to update.
      * @param string $user_id
      * @param string $token
-     * @return bool
+     * @return boolean
      */
     public function get_session($user_id, $token)
     {
@@ -219,7 +219,7 @@ class AmpacheLastfm
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
+     * @return boolean
      */
     public function load($user)
     {

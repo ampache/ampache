@@ -131,7 +131,7 @@ class AutoUpdate
 
     /**
      * Get latest available version from GitHub.
-     * @param bool  $force
+     * @param boolean $force
      * @return string
      */
     public static function get_latest_version($force = false)
@@ -220,7 +220,7 @@ class AutoUpdate
 
     /**
      * Check if an update is available.
-     * @param bool  $force
+     * @param boolean $force
      * @return boolean
      */
     public static function is_update_available($force = false)

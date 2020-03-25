@@ -528,7 +528,7 @@ abstract class Catalog extends database_object
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param bool  $value
+     * @param boolean $value
      * @param int $catalog_id
      * @param int $level
      * @return PDOStatement|boolean
@@ -1251,8 +1251,8 @@ abstract class Catalog extends database_object
      * gather_art_item
      * @param string $type
      * @param int $id
-     * @param bool  $db_art_first
-     * @param bool $api
+     * @param boolean $db_art_first
+     * @param boolean$api
      * @return boolean
      */
     public static function gather_art_item($type, $id, $db_art_first = false, $api = false)
@@ -1347,7 +1347,7 @@ abstract class Catalog extends database_object
      * to find the art for them from the mp3s
      * @param int[]|null $songs
      * @param int[]|null $videos
-     * @return bool
+     * @return boolean
      */
     public function gather_art($songs = null, $videos = null)
     {
@@ -1604,7 +1604,7 @@ abstract class Catalog extends database_object
      * this can be done by 75+
      * @param string $type
      * @param int $object_id
-     * @param bool $api
+     * @param boolean$api
      * @return int|mixed
      */
     public static function update_single_item($type, $object_id, $api = false)
@@ -2402,7 +2402,7 @@ abstract class Catalog extends database_object
      * Deletes the catalog and everything associated with it
      * it takes the catalog id
      * @param int $catalog_id
-     * @return bool
+     * @return boolean
      */
     public static function delete($catalog_id)
     {
@@ -2559,7 +2559,7 @@ abstract class Catalog extends database_object
     /**
      * @param $libitem
      * @param null $user
-     * @return bool
+     * @return boolean
      */
     public static function can_remove($libitem, $user = null)
     {

@@ -127,7 +127,7 @@ class CliHandler extends Handler
     /**
      * Assemble the command for CLI
      * @param string $command beets command (e.g. 'ls myArtist')
-     * @param bool  $disableCostomFields disables the -f switch for this time
+     * @param boolean $disableCostomFields disables the -f switch for this time
      * @return string
      */
     protected function assembleCommand($command, $disableCostomFields = false)

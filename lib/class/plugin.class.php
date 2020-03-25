@@ -51,7 +51,7 @@ class Plugin
      * This actually loads the config file for the plugin the name of the
      * class contained within the config file must be Plugin[NAME OF FILE]
      * @param $cname
-     * @return bool
+     * @return boolean
      */
     public function has_info($cname)
     {
@@ -312,7 +312,7 @@ class Plugin
      * set_plugin_version
      * This sets the plugin version in the update_info table
      * @param $version
-     * @return bool
+     * @return boolean
      */
     public function set_plugin_version($version)
     {

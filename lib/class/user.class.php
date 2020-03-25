@@ -387,7 +387,7 @@ class User extends database_object
      * []['prefs'] = array(array('name', 'display', 'value'));
      * []['admin'] = t/f value if this is an admin only section
      * @param int $type
-     * @param bool $system
+     * @param boolean$system
      * @return array
      */
     public function get_preferences($type = 0, $system = false)
@@ -586,7 +586,7 @@ class User extends database_object
      * this function checks to see if this user has access
      * to the passed action (pass a level requirement)
      * @param int $needed_level
-     * @return bool
+     * @return boolean
      */
     public function has_access($needed_level)
     {
@@ -873,7 +873,7 @@ class User extends database_object
      * update_access
      * updates their access level
      * @param $new_access
-     * @return bool
+     * @return boolean
      */
     public function update_access($new_access)
     {
@@ -912,7 +912,7 @@ class User extends database_object
      * @param string $agent
      * @param array $location
      * @param int $date
-     * @return bool
+     * @return boolean
      */
     public function update_stats($media_type, $media_id, $agent = '', $location = array(), $date = null)
     {
@@ -1019,8 +1019,8 @@ class User extends database_object
      * @param int $access
      * @param string $state
      * @param string $city
-     * @param bool $disabled
-     * @param bool $encrypted
+     * @param boolean$disabled
+     * @param boolean$encrypted
      * @return bool|string|null
      */
     public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false, $encrypted = false)
@@ -1108,7 +1108,7 @@ class User extends database_object
      * This function sets up the extra variables we need when we are displaying a
      * user for an admin, these should not be normally called when creating a
      * user object
-     * @param bool $details
+     * @param boolean$details
      */
     public function format($details = true)
     {
@@ -1345,7 +1345,7 @@ class User extends database_object
      * calcs difference between now and last_seen
      * if less than delay, we consider them still online
      * @param int $delay
-     * @return bool
+     * @return boolean
      */
     public function is_online($delay = 1200)
     {
@@ -1374,7 +1374,7 @@ class User extends database_object
      * the limit passed. ger recent by default or oldest if $newest is false.
      * @param string $limit
      * @param string $type
-     * @param bool  $newest
+     * @param boolean $newest
      * @return array
      */
     public function get_recently_played($limit, $type = '', $newest = true)
@@ -1447,7 +1447,7 @@ class User extends database_object
     /**
      * get_avatar
      * Get the user avatar
-     * @param bool $local
+     * @param boolean$local
      * @param array $session
      * @return array
      */

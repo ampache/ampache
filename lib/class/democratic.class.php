@@ -67,7 +67,7 @@ class Democratic extends Tmp_Playlist
      * build_vote_cache
      * This builds a vote cache of the objects we've got in the playlist
      * @param $ids
-     * @return bool
+     * @return boolean
      */
     public static function build_vote_cache($ids)
     {
@@ -353,7 +353,7 @@ class Democratic extends Tmp_Playlist
      * This checks to see if the current user has already voted on this object
      * @param $object_id
      * @param string $type
-     * @return bool
+     * @return boolean
      */
     public function has_vote($object_id, $type = 'song')
     {
@@ -388,7 +388,7 @@ class Democratic extends Tmp_Playlist
      * This takes a object id and user and actually inserts the row
      * @param $object_id
      * @param string $object_type
-     * @return bool
+     * @return boolean
      */
     private function _add_vote($object_id, $object_type = 'song')
     {
@@ -427,7 +427,7 @@ class Democratic extends Tmp_Playlist
      * As that's what we'll have most the time, no need to check if they've got an existing
      * vote for this, just remove anything that is there
      * @param $row_id
-     * @return bool
+     * @return boolean
      */
     public function remove_vote($row_id)
     {
@@ -452,7 +452,7 @@ class Democratic extends Tmp_Playlist
      * delete_votes
      * This removes the votes for the specified object on the current playlist
      * @param $row_id
-     * @return bool
+     * @return boolean
      */
     public function delete_votes($row_id)
     {
@@ -472,7 +472,7 @@ class Democratic extends Tmp_Playlist
      * This takes an OID and type and removes the object from the democratic playlist
      * @param $oid
      * @param $object_type
-     * @return bool
+     * @return boolean
      */
     public function delete_from_oid($oid, $object_type)
     {
@@ -491,7 +491,7 @@ class Democratic extends Tmp_Playlist
      * delete
      * This deletes a democratic playlist
      * @param $democratic_id
-     * @return bool
+     * @return boolean
      */
     public static function delete($democratic_id)
     {
@@ -512,7 +512,7 @@ class Democratic extends Tmp_Playlist
      * update
      * This updates an existing democratic playlist item. It takes a key'd array just like the create
      * @param array $data
-     * @return bool
+     * @return boolean
      */
     public function update(array $data)
     {

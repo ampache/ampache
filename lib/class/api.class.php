@@ -431,7 +431,7 @@ class Api
      *
      * @param array $input
      * auth = (string))
-     * @return bool
+     * @return boolean
      */
     public static function goodbye($input)
     {
@@ -474,7 +474,7 @@ class Api
      *
      * @param array $input
      * url = (string) $url
-     * @return bool
+     * @return boolean
      */
     public static function url_to_song($input)
     {
@@ -689,7 +689,7 @@ class Api
      * @param array $input
      * filter  = (string) Alpha-numeric search term
      * include = (array) 'albums'|'songs' //optional
-     * @return bool
+     * @return boolean
      */
     public static function artist($input)
     {
@@ -718,7 +718,7 @@ class Api
      * filter = (string) UID of artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function artist_albums($input)
     {
@@ -753,7 +753,7 @@ class Api
      * filter = (string) UID of Artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function artist_songs($input)
     {
@@ -833,7 +833,7 @@ class Api
      * @param array $input
      * filter  = (string) UID of Album
      * include = (array) 'songs' //optional
-     * @return bool
+     * @return boolean
      */
     public static function album($input)
     {
@@ -862,7 +862,7 @@ class Api
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function album_songs($input)
     {
@@ -954,7 +954,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of Tag
-     * @return bool
+     * @return boolean
      */
     public static function tag($input)
     {
@@ -983,7 +983,7 @@ class Api
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function tag_artists($input)
     {
@@ -1020,7 +1020,7 @@ class Api
      * filter = (string) UID of Tag
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function tag_albums($input)
     {
@@ -1059,7 +1059,7 @@ class Api
      * filter = (string) UID of Tag
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function tag_songs($input)
     {
@@ -1146,7 +1146,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of song
-     * @return bool
+     * @return boolean
      */
     public static function song($input)
     {
@@ -1326,7 +1326,7 @@ class Api
      * @param array $input
      * name = (string) Alpha-numeric search term
      * type = (string) 'public'|'private'
-     * @return bool
+     * @return boolean
      */
     public static function playlist_create($input)
     {
@@ -1410,7 +1410,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of playlist
-     * @return bool
+     * @return boolean
      */
     public static function playlist_delete($input)
     {
@@ -1714,7 +1714,7 @@ class Api
      * filter = (string) Alpha-numeric search term
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function search_songs($input)
     {
@@ -1787,7 +1787,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of video
-     * @return bool
+     * @return boolean
      */
     public static function video($input)
     {
@@ -1823,7 +1823,7 @@ class Api
      * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function stats($input)
     {
@@ -1942,7 +1942,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username)
-     * @return bool
+     * @return boolean
      */
     public static function user($input)
     {
@@ -1987,7 +1987,7 @@ class Api
      * password = (string) hash('sha256', $password))
      * email    = (string) $email
      * disable  = (integer) 0|1 //optional
-     * @return bool
+     * @return boolean
      */
     public static function user_create($input)
     {
@@ -2043,7 +2043,7 @@ class Api
      * city       = (string) $city //optional
      * disable    = (integer) 0|1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
-     * @return bool
+     * @return boolean
      */
     public static function user_update($input)
     {
@@ -2135,7 +2135,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username)
-     * @return bool
+     * @return boolean
      */
     public static function user_delete($input)
     {
@@ -2180,7 +2180,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username
-     * @return bool
+     * @return boolean
      */
     public static function followers($input)
     {
@@ -2238,7 +2238,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username
-     * @return bool
+     * @return boolean
      */
     public static function following($input)
     {
@@ -2295,7 +2295,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username
-     * @return bool
+     * @return boolean
      */
     public static function toggle_follow($input)
     {
@@ -2794,7 +2794,7 @@ class Api
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
-     * @return bool
+     * @return boolean
      */
     public static function timeline($input)
     {
@@ -3058,7 +3058,7 @@ class Api
      * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
      * offset  = (integer) time offset in seconds
      * length  = (boolean) 0|1
-     * @return bool
+     * @return boolean
      */
     public static function stream($input)
     {
@@ -3121,7 +3121,7 @@ class Api
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song'|'podcast'
      * format = (string) 'mp3'|'ogg', etc //optional
-     * @return bool
+     * @return boolean
      */
     public static function download($input)
     {

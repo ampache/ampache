@@ -141,7 +141,7 @@ class Catalog_subsonic extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return bool
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     {
@@ -184,7 +184,7 @@ class Catalog_subsonic extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return bool
+     * @return boolean
      */
     public function add_to_catalog($options = null)
     {
@@ -305,7 +305,7 @@ class Catalog_subsonic extends Catalog
     /**
      * @param $data
      * @param $song_Id
-     * @return bool
+     * @return boolean
      */
     public function insertArt($data, $song_Id)
     {

@@ -92,7 +92,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast state.
-     * @param bool  $started
+     * @param boolean $started
      * @param string $key
      */
     public function update_state($started, $key =  '')
@@ -178,7 +178,7 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * @param bool $details
+     * @param boolean$details
      */
     public function format($details = true)
     {
@@ -296,7 +296,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * @param int $thumb
-     * @param bool $force
+     * @param boolean$force
      * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
@@ -431,7 +431,7 @@ class Broadcast extends database_object implements library_item
      * @param int $oid
      * @param string $additional_params
      * @param string $player
-     * @param bool  $local
+     * @param boolean $local
      * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

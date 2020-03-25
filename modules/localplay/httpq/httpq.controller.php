@@ -139,7 +139,7 @@ class AmpacheHttpq extends localplay_controller
      * delete_instance
      * This takes a UID and deletes the instance in question
      * @param $uid
-     * @return bool
+     * @return boolean
      */
     public function delete_instance($uid)
     {
@@ -175,7 +175,7 @@ class AmpacheHttpq extends localplay_controller
      * This takes an ID and an array of data and updates the instance specified
      * @param $uid
      * @param array $data
-     * @return bool
+     * @return boolean
      */
     public function update_instance($uid, $data)
     {
@@ -228,7 +228,7 @@ class AmpacheHttpq extends localplay_controller
      * This sets the specified instance as the 'active' one
      * @param $uid
      * @param string $user_id
-     * @return bool
+     * @return boolean
      */
     public function set_active_instance($uid, $user_id = '')
     {
@@ -258,7 +258,7 @@ class AmpacheHttpq extends localplay_controller
      * add_url
      * This is the new hotness
      * @param Stream_URL $url
-     * @return bool
+     * @return boolean
      */
     public function add_url(Stream_URL $url)
     {
@@ -276,7 +276,7 @@ class AmpacheHttpq extends localplay_controller
      * This must take an ID (as returned by our get function)
      * and delete it from httpQ
      * @param $object_id
-     * @return bool
+     * @return boolean
      */
     public function delete_track($object_id)
     {
@@ -342,7 +342,7 @@ class AmpacheHttpq extends localplay_controller
      * skip
      * This tells httpQ to skip to the specified song
      * @param $song
-     * @return bool
+     * @return boolean
      */
     public function skip($song)
     {
@@ -421,7 +421,7 @@ class AmpacheHttpq extends localplay_controller
      * This tells httpQ to set the volume to the specified amount this
      * is 0-100
      * @param $volume
-     * @return bool
+     * @return boolean
      */
     public function volume($volume)
     {
@@ -437,7 +437,7 @@ class AmpacheHttpq extends localplay_controller
      * This tells httpQ to set the repeating the playlist (i.e. loop) to
      * either on or off
      * @param $state
-     * @return bool
+     * @return boolean
      */
     public function repeat($state)
     {
@@ -453,7 +453,7 @@ class AmpacheHttpq extends localplay_controller
      * This tells httpQ to turn on or off the playing of songs from the
      * playlist in random order
      * @param $onoff
-     * @return bool
+     * @return boolean
      */
     public function random($onoff)
     {

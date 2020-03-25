@@ -241,7 +241,7 @@ class Video extends database_object implements media, library_item
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
      * @param int[] $ids
-     * @return bool
+     * @return boolean
      */
     public static function build_cache($ids = array())
     {
@@ -262,7 +262,7 @@ class Video extends database_object implements media, library_item
     /**
      * format
      * This formats a video object so that it is human readable
-     * @param bool $details
+     * @param boolean$details
      */
     public function format($details = true)
     {
@@ -416,7 +416,7 @@ class Video extends database_object implements media, library_item
 
     /**
      * @param int $thumb
-     * @param bool $force
+     * @param boolean$force
      * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
@@ -458,8 +458,8 @@ class Video extends database_object implements media, library_item
      * @param int $oid
      * @param string $additional_params
      * @param string $player
-     * @param bool  $local
-     * @param bool $uid
+     * @param boolean $local
+     * @param boolean$uid
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
@@ -697,7 +697,7 @@ class Video extends database_object implements media, library_item
      * generate_preview
      * Generate video preview image from a video file
      * @param int $video_id
-     * @param bool  $overwrite
+     * @param boolean $overwrite
      */
     public static function generate_preview($video_id, $overwrite = false)
     {
@@ -1074,7 +1074,7 @@ class Video extends database_object implements media, library_item
     /**
      * update_played
      * sets the played flag
-     * @param bool  $new_played
+     * @param boolean $new_played
      * @param int $song_id
      */
     public static function update_played($new_played, $song_id)

@@ -217,7 +217,7 @@ class XML_Data
      * This takes a one dimensional array and creates a XML document from it. For
      * use primarily by the ajax mojo.
      * @param $array
-     * @param bool $callback
+     * @param boolean$callback
      * @param string $type
      * @return string
      */
@@ -472,8 +472,8 @@ class XML_Data
      *
      * @param array $artists (description here...)
      * @param array $include Array of other items to include.
-     * @param bool $full_xml whether to return a full XML document or just the node.
-     * @param bool $user_id
+     * @param boolean$full_xml whether to return a full XML document or just the node.
+     * @param boolean$user_id
      * @return    string    return xml
      */
     public static function artists($artists, $include = [], $full_xml = true, $user_id = false)
@@ -545,8 +545,8 @@ class XML_Data
      *
      * @param integer[] $albums (description here...)
      * @param array $include Array of other items to include.
-     * @param bool $full_xml whether to return a full XML document or just the node.
-     * @param bool $user_id
+     * @param boolean$full_xml whether to return a full XML document or just the node.
+     * @param boolean$user_id
      * @return    string    return xml
      */
     public static function albums($albums, $include = [], $full_xml = true, $user_id = false)
@@ -688,8 +688,8 @@ class XML_Data
      * (Spiffy isn't it!)
      * @param integer[] $songs
      * @param array $playlist_data
-     * @param bool $full_xml
-     * @param bool $user_id
+     * @param boolean$full_xml
+     * @param boolean$user_id
      * @return string    return xml
      */
     public static function songs($songs, $playlist_data = array(), $full_xml = true, $user_id = false)
@@ -789,7 +789,7 @@ class XML_Data
      * This builds the xml document for displaying video objects
      *
      * @param array $videos (description here...)
-     * @param bool $user_id
+     * @param boolean$user_id
      * @return   string   return xml
      */
     public static function videos($videos, $user_id = false)
@@ -829,7 +829,7 @@ class XML_Data
      * due to the votes and all of that
      *
      * @param integer[] $object_ids Object IDs
-     * @param bool $user_id
+     * @param boolean$user_id
      * @return   string     return xml
      */
     public static function democratic($object_ids = array(), $user_id = false)
@@ -962,7 +962,7 @@ class XML_Data
 
     /**
      * @param $string
-     * @param bool $full_xml
+     * @param boolean$full_xml
      * @return string
      */
     public static function output_xml($string, $full_xml = true)
@@ -1115,7 +1115,7 @@ class XML_Data
 
     /**
      * @param library_item $libitem
-     * @param bool $user_id
+     * @param boolean$user_id
      * @return mixed|string
      */
     public static function podcast(library_item $libitem, $user_id = false)

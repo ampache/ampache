@@ -41,7 +41,7 @@ class Browse extends Query
      * Constructor.
      *
      * @param integer|null $browse_id
-     * @param bool  $cached
+     * @param boolean $cached
      */
     public function __construct($browse_id = null, $cached = true)
     {
@@ -60,7 +60,7 @@ class Browse extends Query
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
      *
-     * @param bool  $value
+     * @param boolean $value
      */
     public function set_simple_browse($value)
     {
@@ -73,7 +73,7 @@ class Browse extends Query
      *
      * @param string $class
      * @param int $uid
-     * @return bool
+     * @return boolean
      */
     public function add_supplemental_object($class, $uid)
     {
@@ -135,7 +135,7 @@ class Browse extends Query
      * type that we are currently browsing
      *
      * @param array $object_ids
-     * @param bool |array $argument
+     * @param boolean|array $argument
      */
     public function show_objects($object_ids = array(), $argument = false)
     {
@@ -459,8 +459,8 @@ class Browse extends Query
 
     /**
      *
-     * @param bool  $use_pages
-     * @param bool $savecookie
+     * @param boolean $use_pages
+     * @param boolean$savecookie
      */
     public function set_use_pages($use_pages, $savecookie = true)
     {
@@ -481,8 +481,8 @@ class Browse extends Query
 
     /**
      *
-     * @param bool  $grid_view
-     * @param bool $savecookie
+     * @param boolean $grid_view
+     * @param boolean$savecookie
      */
     public function set_grid_view($grid_view, $savecookie = true)
     {
@@ -503,8 +503,8 @@ class Browse extends Query
 
     /**
      *
-     * @param bool  $use_alpha
-     * @param bool $savecookie
+     * @param boolean $use_alpha
+     * @param boolean$savecookie
      */
     public function set_use_alpha($use_alpha, $savecookie = true)
     {
@@ -533,7 +533,7 @@ class Browse extends Query
 
     /**
      *
-     * @param bool  $show_header
+     * @param boolean $show_header
      */
     public function set_show_header($show_header)
     {
@@ -542,7 +542,7 @@ class Browse extends Query
 
     /**
      * Allow the current page to be save into the current session
-     * @param bool  $update_session
+     * @param boolean $update_session
      */
     public function set_update_session($update_session)
     {

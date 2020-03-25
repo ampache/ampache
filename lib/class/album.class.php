@@ -475,7 +475,7 @@ class Album extends database_object implements library_item
      * @param string $mbid_group
      * @param string $album_artist
      * @param string $release_type
-     * @param bool  $readonly
+     * @param boolean $readonly
      * @param int $original_year
      * @param string $barcode
      * @param string $catalog_number
@@ -722,7 +722,7 @@ class Album extends database_object implements library_item
      * This is the format function for this object. It sets cleaned up
      * album information with the base required
      * f_link, f_name
-     * @param bool $details
+     * @param boolean$details
      * @param string $limit_threshold
      */
     public function format($details = true, $limit_threshold = '')
@@ -939,7 +939,7 @@ class Album extends database_object implements library_item
     /**
      * display_art
      * @param int $thumb
-     * @param bool  $force
+     * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -1106,10 +1106,10 @@ class Album extends database_object implements library_item
      *
      * Update tags of albums and/or songs
      * @param string $tags_comma
-     * @param bool  $override_childs
-     * @param bool  $add_to_childs
+     * @param boolean $override_childs
+     * @param boolean $add_to_childs
      * @param integer|null $current_id
-     * @param bool $force_update
+     * @param boolean$force_update
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
@@ -1179,7 +1179,7 @@ class Album extends database_object implements library_item
      *
      * This returns a number of random albums.
      * @param int $count
-     * @param bool  $with_art
+     * @param boolean $with_art
      * @param int $user_id
      * @return integer[]
      */

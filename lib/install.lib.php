@@ -107,7 +107,7 @@ function install_check_status($configfile)
 } // install_check_status
 
 /**
- * @return bool
+ * @return boolean
  */
 function install_check_server_apache()
 {
@@ -117,7 +117,7 @@ function install_check_server_apache()
 /**
  * @param string $file
  * @param $web_path
- * @param bool $fix
+ * @param boolean$fix
  * @return boolean|string
  */
 function install_check_rewrite_rules($file, $web_path, $fix = false)
@@ -164,7 +164,7 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
 /**
  * @param string $file
  * @param $web_path
- * @param bool  $download
+ * @param boolean $download
  * @return boolean
  */
 function install_rewrite_rules($file, $web_path, $download)
@@ -193,10 +193,10 @@ function install_rewrite_rules($file, $web_path, $download)
  * Inserts the database using the values from Config.
  * @param string $db_user
  * @param string $db_pass
- * @param bool $create_db
- * @param bool $overwrite
- * @param bool $create_tables
- * @return bool
+ * @param boolean$create_db
+ * @param boolean$overwrite
+ * @param boolean$create_tables
+ * @return boolean
  */
 function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true)
 {
@@ -309,7 +309,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
  * install_create_config
  *
  * Attempts to write out the config file or offer it as a download.
- * @param bool $download
+ * @param boolean$download
  * @return boolean
  * @throws Exception
  */
