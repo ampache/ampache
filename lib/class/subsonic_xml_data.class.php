@@ -442,7 +442,7 @@ class Subsonic_XML_Data
      * addArtistsRoot
      * @param SimpleXMLElement $xml
      * @param Artist[] $artists
-     * @param boolean$albumsSet
+     * @param boolean $albumsSet
      */
     public static function addArtistsRoot($xml, $artists, $albumsSet = false)
     {
@@ -455,8 +455,8 @@ class Subsonic_XML_Data
      * addArtists
      * @param SimpleXMLElement $xml
      * @param Artist[] $artists
-     * @param boolean$extra
-     * @param boolean$albumsSet
+     * @param boolean $extra
+     * @param boolean $albumsSet
      */
     public static function addArtists($xml, $artists, $extra = false, $albumsSet = false)
     {
@@ -552,8 +552,8 @@ class Subsonic_XML_Data
      * addAlbum
      * @param SimpleXMLElement $xml
      * @param Album $album
-     * @param boolean$songs
-     * @param boolean$addAmpacheInfo
+     * @param boolean $songs
+     * @param boolean $addAmpacheInfo
      * @param string $elementName
      */
     public static function addAlbum($xml, $album, $songs = false, $addAmpacheInfo = false, $elementName = "album")
@@ -611,7 +611,7 @@ class Subsonic_XML_Data
      * addSong
      * @param SimpleXMLElement $xml
      * @param int $songId
-     * @param boolean$addAmpacheInfo
+     * @param boolean $addAmpacheInfo
      * @param string $elementName
      * @return SimpleXMLElement
      */
@@ -724,7 +724,7 @@ class Subsonic_XML_Data
      * @param $albumData
      * @param $artistData
      * @param $catalogData
-     * @param boolean$addAmpacheInfo
+     * @param boolean $addAmpacheInfo
      * @param string $elementName
      * @return SimpleXMLElement
      */
@@ -983,7 +983,7 @@ class Subsonic_XML_Data
      * addPlaylist
      * @param SimpleXMLElement $xml
      * @param Playlist $playlist
-     * @param boolean$songs
+     * @param boolean $songs
      */
     public static function addPlaylist($xml, $playlist, $songs = false)
     {
@@ -1012,7 +1012,7 @@ class Subsonic_XML_Data
      * addSmartPlaylist
      * @param SimpleXMLElement $xml
      * @param Search $playlist
-     * @param boolean$songs
+     * @param boolean $songs
      */
     public static function addSmartPlaylist($xml, $playlist, $songs = false)
     {
@@ -1393,7 +1393,7 @@ class Subsonic_XML_Data
      * addPodcasts
      * @param SimpleXMLElement $xml
      * @param Podcast[] $podcasts
-     * @param boolean$includeEpisodes
+     * @param boolean $includeEpisodes
      */
     public static function addPodcasts($xml, $podcasts, $includeEpisodes = false)
     {

@@ -919,7 +919,7 @@ class Horde_Browser
      *   - scrollbar_in_way
      *   - scroll_tds
      *   - windowed_controls
-     * @param boolean$value Special behavior parameter.
+     * @param boolean $value Special behavior parameter.
      */
     public function setQuirk($quirk, $value = true)
     {
@@ -982,7 +982,7 @@ class Horde_Browser
      *   - utf
      *   - wml
      *   - xmlhttpreq
-     * @param boolean$value Special capability parameter.
+     * @param boolean $value Special capability parameter.
      */
     public function setFeature($feature, $value = true)
     {

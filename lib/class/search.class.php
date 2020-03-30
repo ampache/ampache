@@ -1158,7 +1158,7 @@ class Search extends playlist_object
     /**
      * format
      * Gussy up the data
-     * @param boolean$details
+     * @param boolean $details
      */
     public function format($details = true)
     {

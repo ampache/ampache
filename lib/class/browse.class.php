@@ -460,7 +460,7 @@ class Browse extends Query
     /**
      *
      * @param boolean $use_pages
-     * @param boolean$savecookie
+     * @param boolean $savecookie
      */
     public function set_use_pages($use_pages, $savecookie = true)
     {
@@ -482,7 +482,7 @@ class Browse extends Query
     /**
      *
      * @param boolean $grid_view
-     * @param boolean$savecookie
+     * @param boolean $savecookie
      */
     public function set_grid_view($grid_view, $savecookie = true)
     {
@@ -504,7 +504,7 @@ class Browse extends Query
     /**
      *
      * @param boolean $use_alpha
-     * @param boolean$savecookie
+     * @param boolean $savecookie
      */
     public function set_use_alpha($use_alpha, $savecookie = true)
     {

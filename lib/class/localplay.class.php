@@ -309,7 +309,7 @@ class Localplay
      * This turns the repeat feature of a Localplay method on or
      * off, takes a 0/1 value
      * @param boolean $state
-     * @return
+     * @return boolean
      */
     public function repeat($state)
     {
@@ -327,7 +327,7 @@ class Localplay
      * This turns on the random feature of a Localplay method
      * It takes a 0/1 value
      * @param boolean $state
-     * @return
+     * @return boolean
      */
     public function random($state)
     {

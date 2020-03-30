@@ -115,7 +115,7 @@ class PrivateMsg extends database_object
     }
 
     /**
-     * @param boolean$details
+     * @param boolean $details
      */
     public function format($details = true)
     {

@@ -676,7 +676,7 @@ class Channel extends database_object implements media, library_item
      * @param int $oid
      * @param string $additional_params
      * @param string $player
-     * @param boolean$local
+     * @param boolean $local
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = null, $local = false)

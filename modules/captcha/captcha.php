@@ -1129,7 +1129,7 @@ class easy_captcha_text_math_formula extends easy_captcha
 
     /**
      * @param $formula
-     * @return int|mixed
+     * @return integer
      */
     public function calculate_formula($formula)
     {

@@ -166,7 +166,7 @@ class Ampachelibrefm
      * set_flag
      * This takes care of spreading your love on Libre.fm
      * @param Song $song
-     * @param boolean$flagged
+     * @param boolean $flagged
      * @return boolean
      */
     public function set_flag($song, $flagged)

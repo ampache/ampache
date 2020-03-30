@@ -33,7 +33,7 @@ interface playable_item
      * format
      *
      * Creates member variables for output
-     * @param boolean$details
+     * @param boolean $details
      */
     public function format($details = true);
 

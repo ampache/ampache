@@ -169,7 +169,7 @@ class TVShow extends database_object implements library_item
     /**
      * format
      * this function takes the object and reformats some values
-     * @param boolean$details
+     * @param boolean $details
      * @return boolean
      */
     public function format($details = true)
@@ -280,7 +280,7 @@ class TVShow extends database_object implements library_item
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function get_default_art_kind()
     {
@@ -297,7 +297,7 @@ class TVShow extends database_object implements library_item
 
     /**
      * @param int $thumb
-     * @param boolean$force
+     * @param boolean $force
      * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
@@ -314,8 +314,8 @@ class TVShow extends database_object implements library_item
      * @param $name
      * @param $year
      * @param $tvshow_summary
-     * @param boolean$readonly
-     * @return int|mixed|string|null
+     * @param boolean $readonly
+     * @return integer|string|null
      */
     public static function check($name, $year, $tvshow_summary, $readonly = false)
     {
@@ -368,7 +368,7 @@ class TVShow extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current tv show
      * @param array $data
-     * @return int|mixed|string|null
+     * @return integer|string|null
      */
     public function update(array $data)
     {
@@ -398,7 +398,6 @@ class TVShow extends database_object implements library_item
                 Userflag::migrate('tvshow', $this->id, $tvshow_id);
                 Rating::migrate('tvshow', $this->id, $tvshow_id);
                 Art::migrate('tvshow', $this->id, $tvshow_id);
-                self::garbage_collection();
             } // end if it changed
         }
 
@@ -439,7 +438,7 @@ class TVShow extends database_object implements library_item
      * @param boolean $override_childs
      * @param boolean $add_to_childs
      * @param int $current_id
-     * @param boolean$force_update
+     * @param boolean $force_update
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {

@@ -90,13 +90,11 @@ class Recommendation
     /**
      * @param string $type
      * @param int $id
-     * @param boolean$get_items
+     * @param boolean $get_items
      * @return array
      */
     protected static function get_recommendation_cache($type, $id, $get_items = false)
     {
-        self::garbage_collection();
-
         $sql        = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($type, $id));
 
@@ -156,7 +154,7 @@ class Recommendation
      * Returns a list of similar songs
      * @param int $song_id
      * @param int $limit
-     * @param boolean$local_only
+     * @param boolean $local_only
      * @return array
      */
     public static function get_songs_like($song_id, $limit = 5, $local_only = true)
@@ -248,7 +246,7 @@ class Recommendation
      * Returns a list of similar artists
      * @param int $artist_id
      * @param int $limit
-     * @param boolean$local_only
+     * @param boolean $local_only
      * @return array
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true)

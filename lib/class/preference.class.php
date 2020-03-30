@@ -76,8 +76,8 @@ class Preference extends database_object
      * @param string $preference
      * @param string $user_id
      * @param array|string $value
-     * @param boolean$applytoall
-     * @param boolean$applytodefault
+     * @param boolean $applytoall
+     * @param boolean $applytodefault
      * @return boolean
      */
     public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false)

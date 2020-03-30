@@ -221,19 +221,18 @@ class Ajax
      * the html needed to start a container that can be replaced by Ajax.
      * @param string $name
      * @param string $class
-     * @return boolean
      */
     public static function start_container($name, $class = '')
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
+        } else {
+            echo '<div id="' . scrub_out($name) . '"';
+            if (!empty($class)) {
+                echo ' class="' . scrub_out($class) . '"';
+            }
+            echo '>';
         }
-
-        echo '<div id="' . scrub_out($name) . '"';
-        if (!empty($class)) {
-            echo ' class="' . scrub_out($class) . '"';
-        }
-        echo '>';
     } // start_container
 
     /**
@@ -244,10 +243,9 @@ class Ajax
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
+        } else {
+            echo "</div>";
+            self::$include_override = false;
         }
-
-        echo "</div>";
-
-        self::$include_override = false;
     } // end_container
 } // end ajax.class

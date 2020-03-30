@@ -1627,7 +1627,7 @@ class Song extends database_object implements media, library_item
      * This takes the current song object
      * and does a ton of formating on it creating f_??? variables on the current
      * object
-     * @param boolean$details
+     * @param boolean $details
      */
     public function format($details = true)
     {
@@ -1934,7 +1934,7 @@ class Song extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param boolean$uid
+     * @param boolean $uid
      * @param boolean $original
      * @return string
      */

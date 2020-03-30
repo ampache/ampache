@@ -37,8 +37,7 @@ $web_path = AmpConfig::get('web_path'); ?>
                 <th class="cel_add essential"></th>
                 <th class="cel_time optional"><?php echo T_('Time'); ?></th>
                 <?php if (User::is_registered()) { ?>
-                    <?php if (AmpConfig::get('ratings')) {
-    ; ?>
+                    <?php if (AmpConfig::get('ratings')) { ?>
                         <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                     <?php
 } ?>

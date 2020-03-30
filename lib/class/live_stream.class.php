@@ -99,7 +99,7 @@ class Live_Stream extends database_object implements media, library_item
      * format
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
-     * @param boolean$details
+     * @param boolean $details
      * @return true
      */
     public function format($details = true)
@@ -212,7 +212,7 @@ class Live_Stream extends database_object implements media, library_item
 
     /**
      * @param int $thumb
-     * @param boolean$force
+     * @param boolean $force
      * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
@@ -340,7 +340,7 @@ class Live_Stream extends database_object implements media, library_item
      * @param $oid
      * @param string $additional_params
      * @param string $player
-     * @param boolean$local
+     * @param boolean $local
      * @param string $sid
      * @param string $force_http
      * @return string

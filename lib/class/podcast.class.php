@@ -150,7 +150,7 @@ class Podcast extends database_object implements library_item
     /**
      * format
      * this function takes the object and reformats some values
-     * @param boolean$details
+     * @param boolean $details
      * @return boolean
      */
     public function format($details = true)
@@ -270,7 +270,7 @@ class Podcast extends database_object implements library_item
     /**
      * display_art
      * @param int $thumb
-     * @param boolean$force
+     * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
     {

@@ -407,7 +407,7 @@ class Catalog_soundcloud extends Catalog
 
     /**
      * @param $url
-     * @return int|mixed
+     * @return integer
      */
     public function url_to_track($url)
     {

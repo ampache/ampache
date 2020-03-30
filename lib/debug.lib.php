@@ -43,7 +43,7 @@ function check_php()
     return false;
 }
 
-/*
+/**
  * check_php_version
  * check for required php version
  * @return boolean
@@ -57,7 +57,7 @@ function check_php_version()
     return true;
 }
 
-/*
+/**
  * check_php_hash
  * check for required function exists
  * @return boolean
@@ -67,7 +67,7 @@ function check_php_hash()
     return function_exists('hash_algos');
 }
 
-/*
+/**
  * check_php_hash_algo
  * check for required function exists
  * @return boolean
@@ -77,7 +77,7 @@ function check_php_hash_algo()
     return function_exists('hash_algos') ? in_array('sha256', hash_algos()) : false;
 }
 
-/*
+/**
  * check_php_json
  * check for required function exists
  * @return boolean
@@ -87,7 +87,7 @@ function check_php_json()
     return function_exists('json_encode');
 }
 
-/*
+/**
  * check_php_curl
  * check for required function exists
  * @return boolean
@@ -97,7 +97,7 @@ function check_php_curl()
     return function_exists('curl_version');
 }
 
-/*
+/**
  * check_php_session
  * check for required function exists
  * @return boolean
@@ -107,7 +107,7 @@ function check_php_session()
     return function_exists('session_set_save_handler');
 }
 
-/*
+/**
  * check_php_pdo
  * check for required function exists
  * @return boolean
@@ -117,7 +117,7 @@ function check_php_pdo()
     return class_exists('PDO');
 }
 
-/*
+/**
  * check_php_pdo_mysql
  * check for required function exists
  * @return boolean
@@ -127,7 +127,7 @@ function check_php_pdo_mysql()
     return class_exists('PDO') ? in_array('mysql', PDO::getAvailableDrivers()) : false;
 }
 
-/*
+/**
  * check_mbstring_func_overload
  * check for required function exists
  * @return boolean
@@ -413,7 +413,7 @@ function debug_result($status = false, $value = null, $comment = '')
  * debug_wresult
  *
  * Convenience function to format the output.
- * @param boolean$status
+ * @param boolean $status
  * @param string $value
  * @param string $comment
  * @return string
