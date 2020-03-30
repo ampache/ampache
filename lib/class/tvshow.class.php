@@ -398,6 +398,9 @@ class TVShow extends database_object implements library_item
                 Userflag::migrate('tvshow', $this->id, $tvshow_id);
                 Rating::migrate('tvshow', $this->id, $tvshow_id);
                 Art::migrate('tvshow', $this->id, $tvshow_id);
+                if (!AmpConfig::get('cron_cache')) {
+                    self::garbage_collection();
+                }
             } // end if it changed
         }
 
