@@ -262,7 +262,7 @@ class Video extends database_object implements media, library_item
     /**
      * format
      * This formats a video object so that it is human readable
-     * @param boolean$details
+     * @param boolean $details
      */
     public function format($details = true)
     {
@@ -407,7 +407,7 @@ class Video extends database_object implements media, library_item
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function get_description()
     {
@@ -416,7 +416,7 @@ class Video extends database_object implements media, library_item
 
     /**
      * @param int $thumb
-     * @param boolean$force
+     * @param boolean $force
      * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
@@ -459,7 +459,7 @@ class Video extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param boolean$uid
+     * @param boolean $uid
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)

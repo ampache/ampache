@@ -554,7 +554,7 @@ class Artist extends database_object implements library_item
      * information and reformats the relevent values
      * so they can be displayed in a table for example
      * it changes the title into a full link.
-     * @param boolean$details
+     * @param boolean $details
      * @param string $limit_threshold
      * @return boolean
      */
@@ -924,17 +924,12 @@ class Artist extends database_object implements library_item
                 Userflag::migrate('artist', $this->id, $artist_id);
                 Rating::migrate('artist', $this->id, $artist_id);
                 Art::migrate('artist', $this->id, $artist_id);
-                self::garbage_collection();
             } // end if it changed
 
             if ($updated) {
                 foreach ($songs as $song_id) {
                     Song::update_utime($song_id);
                 }
-                Stats::garbage_collection();
-                Rating::garbage_collection();
-                Userflag::garbage_collection();
-                Useractivity::garbage_collection();
             } // if updated
         } else {
             if ($this->mbid != $mbid) {
@@ -985,7 +980,7 @@ class Artist extends database_object implements library_item
      * @param boolean $override_childs
      * @param boolean $add_to_childs
      * @param integer|null $current_id
-     * @param boolean$force_update
+     * @param boolean $force_update
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
@@ -1009,7 +1004,7 @@ class Artist extends database_object implements library_item
      * @param string $summary
      * @param string $placeformed
      * @param int $yearformed
-     * @param boolean$manual
+     * @param boolean $manual
      * @return PDOStatement|boolean
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)

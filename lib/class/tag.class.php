@@ -144,7 +144,7 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param int $object_id
      * @param string $value
-     * @param boolean$user
+     * @param boolean $user
      * @return bool|mixed|string|null
      */
     public static function add($type, $object_id, $value, $user = true)
@@ -310,7 +310,7 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param integer|string $object_id
      * @param integer|string $tag_id
-     * @param boolean$user
+     * @param boolean $user
      * @return bool|string|null
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
@@ -762,7 +762,7 @@ class Tag extends database_object implements library_item
      * This will only remove tag maps for the current user
      * @param string $type
      * @param int $object_id
-     * @param boolean$user
+     * @param boolean $user
      * @return boolean
      */
     public function remove_map($type, $object_id, $user = true)
@@ -784,7 +784,7 @@ class Tag extends database_object implements library_item
     } // remove_map
 
     /**
-     * @param boolean$details
+     * @param boolean $details
      */
     public function format($details = true)
     {

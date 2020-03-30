@@ -579,4 +579,3 @@ class VlcPlayer
         return($bigxml_array);
     }   //end xml parser
 } // End VLCPlayer Class
-;

@@ -306,8 +306,8 @@ class Shoutbox
     } // delete
 
     /**
-     * @param boolean$details
-     * @param boolean$jsbuttons
+     * @param boolean $details
+     * @param boolean $jsbuttons
      * @return string
      */
     public function get_display($details = true, $jsbuttons = false)

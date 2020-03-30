@@ -351,7 +351,7 @@ class Daap_Api
     /**
      * databases
      * @param $input
-     * @return boolean
+     * @return false|null
      */
     public static function databases($input)
     {

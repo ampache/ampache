@@ -45,7 +45,7 @@ interface media
      * @param $oid
      * @param string $additional_params
      * @param string $player
-     * @param boolean$local
+     * @param boolean $local
      */
     public static function play_url($oid, $additional_params = '', $player = null, $local = false);
 

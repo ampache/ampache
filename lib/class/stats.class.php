@@ -302,7 +302,7 @@ class Stats
      * used primarily by the democratic cooldown code
      * @param int $user_id
      * @param int $time
-     * @param boolean$newest
+     * @param boolean $newest
      * @return array
      */
     public static function get_object_history($user_id, $time, $newest = true)
@@ -487,7 +487,7 @@ class Stats
      * @param string $input_type
      * @param string $count
      * @param string $offset
-     * @param boolean$newest
+     * @param boolean $newest
      * @return array
      */
     public static function get_recent($input_type, $count = '', $offset = '', $newest = true)

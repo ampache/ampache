@@ -300,7 +300,7 @@ class SeafileAdapter
 
     /**
      * @param $file
-     * @param boolean$partial
+     * @param boolean $partial
      * @return string
      */
     public function download($file, $partial = false)

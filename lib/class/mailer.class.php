@@ -67,8 +67,8 @@ class Mailer
      * validate_address
      *
      * Checks whether what we have looks like a valid address.
-     * @param $address
-     * @return
+     * @param string $address
+     * @return boolean
      */
     public static function validate_address($address)
     {

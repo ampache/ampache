@@ -500,7 +500,7 @@ class Stream
     /**
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
-     * @param boolean$local
+     * @param boolean $local
      * @return string
      */
     public static function get_base_url($local = false)

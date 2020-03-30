@@ -490,6 +490,8 @@ class Access
         if ($this->level == '50') {
             return T_('Read/Write');
         }
+
+        return '';
     }
 
     /**

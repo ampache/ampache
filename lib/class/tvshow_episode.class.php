@@ -69,7 +69,7 @@ class TVShow_Episode extends Video
      * @param array $data
      * @param array $gtypes
      * @param array $options
-     * @return
+     * @return integer
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
@@ -111,7 +111,7 @@ class TVShow_Episode extends Video
      * create
      * This takes a key'd array of data as input and inserts a new tv show episode entry, it returns the record id
      * @param array $data
-     * @return
+     * @return integer
      */
     public static function create($data)
     {
@@ -151,7 +151,7 @@ class TVShow_Episode extends Video
     /**
      * format
      * this function takes the object and reformats some values
-     * @param boolean$details
+     * @param boolean $details
      * @return boolean
      */
     public function format($details = true)
@@ -225,7 +225,7 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
     public function get_description()
     {
@@ -240,7 +240,7 @@ class TVShow_Episode extends Video
 
     /**
      * @param int $thumb
-     * @param boolean$force
+     * @param boolean $force
      * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)

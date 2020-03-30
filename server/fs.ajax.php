@@ -103,7 +103,7 @@ class fs
 
     /**
      * @param $fs_id
-     * @param boolean$with_root
+     * @param boolean $with_root
      * @return array
      * @throws Exception
      */
@@ -194,7 +194,7 @@ class fs
     /**
      * @param $fs_id
      * @param $name
-     * @param boolean$mkdir
+     * @param boolean $mkdir
      * @return array
      * @throws Exception
      */

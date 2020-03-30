@@ -97,7 +97,7 @@ function get_theme($name)
  * @function get_theme_author
  * @discussion returns the author of this theme
  * @param string $theme_name
- * @return
+ * @return string
  */
 function get_theme_author($theme_name)
 {

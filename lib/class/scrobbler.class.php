@@ -280,7 +280,7 @@ class scrobbler
      * love
      * This takes care of spreading your love to the world
      * It passed the API key, session key combinted with the signature
-     * @param boolean$is_loved
+     * @param boolean $is_loved
      * @param $type
      * @param string $artist
      * @param string $title

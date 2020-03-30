@@ -291,6 +291,12 @@ while(true)
 ob_end_flush();
 echo "\n";
 
+/**
+ * @param $channel
+ * @param $client_socks
+ * @param $stream_clients
+ * @param $sock
+ */
 function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
 {
     $key = array_search($sock, $client_socks);
@@ -322,6 +328,13 @@ function channel_usage()
     echo "\n";
 }
 
+/**
+ * @param $channel
+ * @param $client_socks
+ * @param $stream_clients
+ * @param $read_socks
+ * @param $sock
+ */
 function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $sock)
 {
     $data = fread($sock, 1024);
@@ -575,6 +588,10 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
     }
 }
 
+/**
+ * @param string $x
+ * @return string
+ */
 function strtohex($x) {
     $s='';
     foreach (str_split($x) as $c) {
