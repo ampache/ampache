@@ -162,6 +162,7 @@ class Waveform
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
             debug_event('waveform.class', 'local_metadata_dir setting is required to store waveform on disk.', 1);
+
             return false;
         }
         // Create subdirectory based on the 2 last digit of the SongID. We prevent having thousands of file in one directory.
@@ -169,6 +170,7 @@ class Waveform
         if (! file_exists($path)) {
             mkdir($path, 0755, true);
         }
+
         return $path . $song_id . ".png";
     }
 
@@ -183,6 +185,7 @@ class Waveform
         if ($file !== false && file_exists($file)) {
             return file_get_contents($file);
         }
+
         return false;
     }
 
@@ -195,6 +198,7 @@ class Waveform
     public static function save_to_file($song_id, $waveform)
     {
         $file = self::get_filepath($song_id);
+
         return file_put_contents($file, $waveform);
     }
 

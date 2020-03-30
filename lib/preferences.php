@@ -219,6 +219,7 @@ function create_preference_input($name, $value)
         case 'catalog_check_duplicate':
         case 'browse_filter':
         case 'sidebar_light':
+        case 'cron_cache':
             $is_true  = '';
             $is_false = '';
             if ($value == '1') {
