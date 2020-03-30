@@ -924,11 +924,20 @@ class Artist extends database_object implements library_item
                 Userflag::migrate('artist', $this->id, $artist_id);
                 Rating::migrate('artist', $this->id, $artist_id);
                 Art::migrate('artist', $this->id, $artist_id);
+                if (!AmpConfig::get('cron_cache')) {
+                    self::garbage_collection();
+                }
             } // end if it changed
 
             if ($updated) {
                 foreach ($songs as $song_id) {
                     Song::update_utime($song_id);
+                }
+                if (!AmpConfig::get('cron_cache')) {
+                    Stats::garbage_collection();
+                    Rating::garbage_collection();
+                    Userflag::garbage_collection();
+                    Useractivity::garbage_collection();
                 }
             } // if updated
         } else {

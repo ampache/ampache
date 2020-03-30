@@ -95,6 +95,10 @@ class Recommendation
      */
     protected static function get_recommendation_cache($type, $id, $get_items = false)
     {
+        if (!AmpConfig::get('cron_cache')) {
+            self::garbage_collection();
+        }
+
         $sql        = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($type, $id));
 
