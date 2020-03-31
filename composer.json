@@ -131,7 +131,7 @@
                     }
                 },
                 "require": {
-                    "oomphinc/composer-installers-extender": "*"
+                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -154,7 +154,7 @@
                     }
                 },
                 "require": {
-                    "oomphinc/composer-installers-extender": "*"
+                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -183,7 +183,7 @@
                     }
                 },
                 "require": {
-                    "oomphinc/composer-installers-extender": "*"
+                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -209,7 +209,7 @@
                     }
                 },
                 "require": {
-                    "oomphinc/composer-installers-extender": "*"
+                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -235,7 +235,7 @@
                     }
                 },
                 "require": {
-                    "oomphinc/composer-installers-extender": "*"
+                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -263,7 +263,7 @@
                     }
                 },
                 "require": {
-                    "oomphinc/composer-installers-extender": "*"
+                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -286,7 +286,7 @@
                     }
                 },
                 "require": {
-                    "oomphinc/composer-installers-extender": "*"
+                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -312,7 +312,7 @@
                     }
                 },
                 "require": {
-                    "oomphinc/composer-installers-extender": "*"
+                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -335,7 +335,7 @@
                     }
                 },
                 "require": {
-                    "oomphinc/composer-installers-extender": "*"
+                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -366,7 +366,7 @@
                     }
                 },
                 "require": {
-                    "oomphinc/composer-installers-extender": "*"
+                    "robloach/component-installer": "*"
                 }
             }
         }
