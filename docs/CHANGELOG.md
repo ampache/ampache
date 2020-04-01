@@ -4,19 +4,34 @@
 
 * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
   * Call xml as normal:
-    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400003
+    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400004
   * Call the JSON server:
-    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400003
+    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400004
+* NEW db options
+  * cron_cache: Speed up the interface by allowing background caching of data
+  * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
+  * custom_datetime:
+* NEW config options
+  * skip_timer: Add Skip Timer Threshold to the config
+* NEW files
+  * bin/compute_cache.inc: Cache object_count data to speed up access
+  * bin/cron.inc: Perform garbage_collection functions outside of main functions
+* NEW examples
+  * docs/examples/ampache_cron.service
+  * docs/examples/ampache_cron.timer
 * API - Don't gather art when adding songs
-* Fix channel authentication
-* Fix ip checks when sending null proxy values
+* Fix Channel authentication
+* Fix IP checks when sending null proxy values
 * Fix Extra text in catalog API calls
 * Fix Gather art page layout
 * Fix Read vorbis rating correctly
-* Fix Search rules in UI failling to load with custom_metadata
+* Fix Search rules in UI failing to load with custom_metadata
+* Fix Warn correctly when inserting art fails
+* Fix insert missing user preferences on login
 * Update Composer requirements
 * Allow searching play times without requiring UI option
-* Added skips to the database and interface
+* Added declare(strict_types=1); to lib/* and lib/class/*
+* Fixed a lot of incorrectly typed function calls and code documentation
 
 ## 4.1.1
 * Bump API version to 400004 (4.0.0 build 004)
