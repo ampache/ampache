@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "31e63c6c93eaf6c23943781b0613a835",
+    "content-hash": "146cdf1152d17af6dbfdb3e3c099f21b",
     "packages": [
         {
             "name": "Afterster/php-echonest-api",
@@ -741,45 +741,6 @@
             "time": "2019-10-30T14:39:59+00:00"
         },
         {
-            "name": "dropbox/dropbox-sdk",
-            "version": "v1.1.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dropbox/dropbox-sdk-php.git",
-                "reference": "0f1a178ca9c0271bca6426dde8f5a2241578deae"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dropbox/dropbox-sdk-php/zipball/0f1a178ca9c0271bca6426dde8f5a2241578deae",
-                "reference": "0f1a178ca9c0271bca6426dde8f5a2241578deae",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">= 5.3"
-            },
-            "require-dev": {
-                "apigen/apigen": "4.1.2",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "2.0.0RC3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Dropbox": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Dropbox SDK for PHP",
-            "keywords": [
-                "dropbox"
-            ],
-            "time": "2016-08-08T23:48:49+00:00"
-        },
-        {
             "name": "evenement/evenement",
             "version": "v2.1.0",
             "source": {
@@ -1293,12 +1254,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "646c1ab041de751f80146651cb5eb7f2cbdca3d5"
+                "reference": "9c679416351c286aa90001fbb55309f6542371b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/646c1ab041de751f80146651cb5eb7f2cbdca3d5",
-                "reference": "646c1ab041de751f80146651cb5eb7f2cbdca3d5",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/9c679416351c286aa90001fbb55309f6542371b4",
+                "reference": "9c679416351c286aa90001fbb55309f6542371b4",
                 "shasum": ""
             },
             "require": {
@@ -1348,7 +1309,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2019-12-13T15:05:41+00:00"
+            "time": "2020-03-15T13:38:58+00:00"
         },
         {
             "name": "jeromeetienne/jquery-qrcode",
@@ -1662,12 +1623,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikealmond/MusicBrainz.git",
-                "reference": "072717cb264c18e3b1eb7bfb2edf2e1e80202dbc"
+                "reference": "98d1aa1c57dbb609d71db9d3d1487a5729f149de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikealmond/MusicBrainz/zipball/072717cb264c18e3b1eb7bfb2edf2e1e80202dbc",
-                "reference": "072717cb264c18e3b1eb7bfb2edf2e1e80202dbc",
+                "url": "https://api.github.com/repos/mikealmond/MusicBrainz/zipball/98d1aa1c57dbb609d71db9d3d1487a5729f149de",
+                "reference": "98d1aa1c57dbb609d71db9d3d1487a5729f149de",
                 "shasum": ""
             },
             "require": {
@@ -1712,7 +1673,7 @@
                 "musicbrainz",
                 "php"
             ],
-            "time": "2017-09-13T14:27:15+00:00"
+            "time": "2020-02-14T19:39:17+00:00"
         },
         {
             "name": "moinax/tvdb",
@@ -2840,6 +2801,7 @@
                 }
             ],
             "description": "Allows installation of Components via Composer.",
+            "abandoned": "oomphinc/composer-installers-extender",
             "time": "2015-08-10T12:35:38+00:00"
         },
         {
@@ -2847,12 +2809,12 @@
             "version": "v1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/rene-s/Seafile-PHP-SDK.git",
+                "url": "https://github.com/Schmidt-DevOps/Seafile-PHP-SDK.git",
                 "reference": "dade78e83bda373ca6e83cb04b8ac203871d0121"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rene-s/Seafile-PHP-SDK/zipball/dade78e83bda373ca6e83cb04b8ac203871d0121",
+                "url": "https://api.github.com/repos/Schmidt-DevOps/Seafile-PHP-SDK/zipball/dade78e83bda373ca6e83cb04b8ac203871d0121",
                 "reference": "dade78e83bda373ca6e83cb04b8ac203871d0121",
                 "shasum": ""
             },
