@@ -142,9 +142,9 @@ $db_results = Dba::read($sql);
 
 ob_start("ob_html_strip",'1024',true);
 
-while ($row = Dba::fetch_row($db_results)) {
+while ($row = Dba::fetch_assoc($db_results)) {
 
-    $catalog = Catalog::create_from_id($row['0']);
+    $catalog = Catalog::create_from_id($row['id']);
     /* HINT: Catalog Name */
     printf(T_('Reading Catalog: "%s"'), $catalog->name);
     ob_flush();
