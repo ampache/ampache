@@ -109,8 +109,6 @@ class AmpacheTheaudiodb
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('theaudiodb.plugin', 'Getting metadata from TheAudioDb...', 5);
-
         // Music metadata only
         if (!in_array('music', $gather_types)) {
             debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', 5);
@@ -120,6 +118,7 @@ class AmpacheTheaudiodb
 
         try {
             if (in_array('album', $gather_types)) {
+                debug_event('theaudiodb.plugin', 'Getting album metadata from TheAudioDb...', 5);
                 $release = null;
                 if ($media_info['mb_albumid_group']) {
                     $album = $this->get_album($media_info['mb_albumid_group']);
@@ -138,6 +137,7 @@ class AmpacheTheaudiodb
                     $results['title'] = $release->strAlbum;
                 }
             } elseif (in_array('artist', $gather_types)) {
+                debug_event('theaudiodb.plugin', 'Getting artist metadata from TheAudioDb...', 5);
                 $release = null;
                 if ($media_info['mb_artistid']) {
                     $artist = $this->get_artist($media_info['mb_artistid']);
