@@ -402,7 +402,7 @@ function install_create_account($username, $password, $password2)
 
     $insert_id = User::create($username, 'Administrator', '', '', $password, '100');
 
-    if ($insert_id === null) {
+    if ($insert_id < 1) {
         /* HINT: Database error message */
         AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
 
