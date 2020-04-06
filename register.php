@@ -154,7 +154,7 @@ switch ($_REQUEST['action']) {
 
         $new_user = User::create($username, $fullname, $email, (string) $website, $pass1, $access, (string) $state, (string) $city, AmpConfig::get('admin_enable_required'));
 
-        if ($new_user !== null) {
+        if ($new_user > 0) {
             AmpError::add('duplicate_user', T_("Failed to create user"));
             require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
             break;

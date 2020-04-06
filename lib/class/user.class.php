@@ -1020,12 +1020,12 @@ class User extends database_object
      * @param string $email
      * @param string $website
      * @param string $password
-     * @param int $access
+     * @param integer $access
      * @param string $state
      * @param string $city
      * @param boolean $disabled
      * @param boolean $encrypted
-     * @return string|null
+     * @return integer
      */
     public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false, $encrypted = false)
     {
@@ -1078,7 +1078,7 @@ class User extends database_object
         /* Populates any missing preferences, in this case all of them */
         self::fix_preferences($insert_id);
 
-        return $insert_id;
+        return (int) $insert_id;
     } // create
 
     /**
