@@ -1311,8 +1311,9 @@ class Search extends playlist_object
                 $value = 'title';
             }
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
-                $ruleID = $ruleID[1];
-                foreach (explode('|', $data['rule_' . $ruleID . '_input']) as $input) {
+                $ruleID     = (string) $ruleID[1];
+                $input_rule = (string) $data['rule_' . $ruleID . '_input'];
+                foreach (explode('|', $input_rule) as $input) {
                     $this->rules[] = array(
                         $value,
                         $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'],
