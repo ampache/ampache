@@ -65,10 +65,10 @@ class Graph
 
     /**
      * @param integer $user
-     * @param null $object_type
+     * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @return string
      */
     protected function get_user_sql_where($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null)
@@ -103,8 +103,8 @@ class Graph
      * @param string $object_type
      * @param integer $object_id
      * @param integer $catalog
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @return string
      */
     protected function get_catalog_sql_where($object_type = 'song', $object_id = 0, $catalog = 0, $start_date = null, $end_date = null)
@@ -265,8 +265,8 @@ class Graph
      * @param integer $user
      * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      * @return array
      */
@@ -290,8 +290,8 @@ class Graph
      * @param integer $user
      * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      * @param string $column
      * @return array
@@ -331,8 +331,8 @@ class Graph
      * @param integer $user
      * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      * @return array
      */
@@ -345,8 +345,8 @@ class Graph
      * @param integer $catalog
      * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      * @return array
      */
@@ -371,8 +371,8 @@ class Graph
      * @param integer $catalog
      * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      * @return array
      */
@@ -395,19 +395,19 @@ class Graph
 
     /**
      * @param integer $user
-     * @param null $object_type
+     * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      * @return array
      */
-    protected function get_geolocation_pts($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    protected function get_geolocation_pts($user = 0, $object_type = '', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $pts = array();
 
         $where = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
-        if ($object_type == null) {
+        if ($object_type === '') {
             $where .= " AND `object_type` IN ('song', 'video')";
         }
         $sql = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` " .
@@ -518,8 +518,8 @@ class Graph
      * @param integer $user
      * @param $object_type
      * @param $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      * @param integer $width
      * @param integer $height
@@ -537,10 +537,10 @@ class Graph
 
     /**
      * @param integer $user
-     * @param null $object_type
+     * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      * @param integer $width
      * @param integer $height
@@ -558,8 +558,8 @@ class Graph
 
     /**
      * @param integer $user
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @return int
      */
     public function get_total_bandwidth($user = 0, $start_date = null, $end_date = null)
@@ -575,8 +575,8 @@ class Graph
 
     /**
      * @param integer $user
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @return int
      */
     public function get_total_time($user = 0, $start_date = null, $end_date = null)
@@ -592,8 +592,8 @@ class Graph
 
     /**
      * @param integer $user
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @return int
      */
     public function get_total_hits($user = 0, $start_date = null, $end_date = null)
@@ -609,10 +609,10 @@ class Graph
 
     /**
      * @param integer $catalog
-     * @param null $object_type
+     * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      * @param integer $width
      * @param integer $height
@@ -630,10 +630,10 @@ class Graph
 
     /**
      * @param integer $catalog
-     * @param null $object_type
+     * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      * @param integer $width
      * @param integer $height
@@ -652,10 +652,10 @@ class Graph
 
     /**
      * @param integer $user
-     * @param null $object_type
+     * @param string $object_type
      * @param integer $object_id
-     * @param null $start_date
-     * @param null $end_date
+     * @param integer $start_date
+     * @param integer $end_date
      * @param string $zoom
      */
     public function display_map($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')

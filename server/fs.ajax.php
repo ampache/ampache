@@ -61,7 +61,7 @@ class fs
 
     /**
      * @param string $fs_id
-     * @return false|string|string[]
+     * @return false|string
      * @throws Exception
      */
     protected function path($fs_id)
@@ -109,7 +109,7 @@ class fs
      */
     public function lst($fs_id, $with_root = false)
     {
-        $dir = $this->path($fs_id);
+        $dir = (string) $this->path($fs_id);
         $lst = @scandir($dir);
         if (!$lst) {
             throw new Exception('Could not list path: ' . $dir);

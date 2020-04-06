@@ -145,6 +145,8 @@ class Stats
         } else {
             debug_event('stats.class', 'Statistics insertion ignored due to graceful delay.', 3);
         }
+
+        return true;
     } // insert
 
     /**
@@ -423,10 +425,10 @@ class Stats
      * This returns the top X for type Y from the
      * last stats_threshold days
      * @param string $type
-     * @param string $count
+     * @param integer $count
      * @param string $threshold
      * @param string $offset
-     * @param int $user_id
+     * @param integer $user_id
      * @param boolean $random
      * @return array
      */

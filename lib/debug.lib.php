@@ -401,7 +401,7 @@ function debug_result($status = false, $value = null, $comment = '')
 {
     $class = $status ? 'success' : 'danger';
 
-    if (!$value) {
+    if ($value === null) {
         $value = $status ? T_('OK') : T_('Error');
     }
 
@@ -422,7 +422,7 @@ function debug_wresult($status = false, $value = null, $comment = '')
 {
     $class = $status ? 'success' : 'warning';
 
-    if (!$value) {
+    if ($value === null) {
         $value = $status ? T_('OK') : T_('WARNING');
     }
 

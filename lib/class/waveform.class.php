@@ -155,7 +155,7 @@ class Waveform
     /**
      * Return full path of the Waveform file.
      * @param integer $song_id
-     * @return string|boolean
+     * @return false|string
      */
     public static function get_filepath($song_id)
     {
@@ -177,7 +177,7 @@ class Waveform
     /**
      * Return content of a Waveform file.
      * @param integer $song_id
-     * @return binary|boolean
+     * @return string|false
      */
     public static function get_from_file($song_id)
     {
@@ -192,7 +192,7 @@ class Waveform
     /**
      * Save content of a Waveform into a file.
      * @param integer $song_id
-     * @param binary waveform
+     * @param string $waveform
      * @return integer|boolean
      */
     public static function save_to_file($song_id, $waveform)

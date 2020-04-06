@@ -42,7 +42,7 @@ $htaccess_channel_file = AmpConfig::get('prefix') . '/channel/.htaccess';
 
 // Clean up incoming variables
 $web_path   = scrub_in($_REQUEST['web_path']);
-$username   = scrub_in($_REQUEST['local_username']);
+$username   = (string) scrub_in($_REQUEST['local_username']);
 $password   = $_REQUEST['local_pass'];
 $hostname   = scrub_in($_REQUEST['local_host']);
 $database   = scrub_in($_REQUEST['local_db']);

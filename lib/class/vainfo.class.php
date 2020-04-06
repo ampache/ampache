@@ -317,7 +317,7 @@ class vainfo
      * file and tries to figure out which tag type(s) it should use. If your
      * tag_order doesn't match anything then it throws up its hands and uses
      * everything in random order.
-     * @param $results
+     * @param array $results
      * @param string $config_key
      * @return array
      */
@@ -711,7 +711,7 @@ class vainfo
 
     /**
      * @param $string
-     * @return string|string[]|null
+     * @return string
      */
     private function trimAscii($string)
     {

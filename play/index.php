@@ -62,7 +62,7 @@ if (isset($_REQUEST['player'])) {
 }
 
 if (AmpConfig::get('transcode_player_customize') && !$original) {
-    $transcode_to = scrub_in($_REQUEST['transcode_to']);
+    $transcode_to = (string) scrub_in($_REQUEST['transcode_to']) == '' ? null : (string) scrub_in($_REQUEST['transcode_to']);
     $bitrate      = (int) ($_REQUEST['bitrate']);
 
     // Trick to avoid LimitInternalRecursion reconfiguration

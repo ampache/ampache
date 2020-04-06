@@ -339,7 +339,7 @@ class Catalog_Seafile extends Catalog
      * @param $file
      * @param string $sort_pattern
      * @param string $rename_pattern
-     * @param null $gather_types
+     * @param $gather_types
      * @return array
      */
     private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null)
