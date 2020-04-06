@@ -933,10 +933,9 @@ class User extends database_object
         $this->set_preferences();
         // If pthreads available, we call save_mediaplay in a new thread to quickly return
         if (class_exists("Thread", false)) {
-            debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
             $thread = new scrobbler_async(Core::get_global('user'), $media);
             if ($thread->start()) {
-                //$thread->join();
+                debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
             } else {
                 debug_event('user.class', 'Error when starting the thread.', 1);
             }
@@ -1238,7 +1237,8 @@ class User extends database_object
         $sql        = "SELECT * FROM `user_preference` WHERE `user`='$user_id'";
         $db_results = Dba::read($sql);
 
-        $results = array();
+        $results      = array();
+        $zero_results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $pref_id = $row['preference'];
@@ -1260,7 +1260,6 @@ class User extends database_object
                 "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
-            $zero_results = array();
             while ($row = Dba::fetch_assoc($db_results)) {
                 $key                = $row['preference'];
                 $zero_results[$key] = $row['value'];

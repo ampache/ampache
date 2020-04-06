@@ -209,6 +209,26 @@ class Core
     }
 
     /**
+     * get_user_ip
+     * check for the ip of the request
+     *
+     * @return string
+     */
+    public static function get_user_ip()
+    {
+        $user_ip = '';
+        // Clean incoming variables
+        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
+            $user_ip = (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+                ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+                : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP));
+        } else {
+            $user_ip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        }
+
+        return $user_ip;
+    }
+    /**
      * Place a new key on a specific position in array
      * @param array $array
      * @param int $position

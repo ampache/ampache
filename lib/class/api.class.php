@@ -205,7 +205,7 @@ class Api
             $passphrase = Core::get_post('auth');
         }
         $username = trim((string) $input['user']);
-        $user_ip  = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        $user_ip  = Core::get_user_ip();
         if (isset($input['version'])) {
             // If version is provided, use it
             $version = $input['version'];
@@ -240,7 +240,7 @@ class Api
         // Log this attempt
         debug_event('api.class', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
-        if ($user_id > 0 && Access::check_network('api', $user_id, 5, $user_ip)) {
+        if ($user_id > 0 && Access::check_network('api', $user_id, 5)) {
 
             // Authentication with user/password, we still need to check the password
             if ($username) {

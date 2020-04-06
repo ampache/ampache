@@ -1525,6 +1525,7 @@ class Art extends database_object
     {
         $mtype  = strtolower(get_class($media));
         $data   = array();
+        $id3    = array();
         $getID3 = new getID3();
         try {
             $id3 = $getID3->analyze($media->file);
