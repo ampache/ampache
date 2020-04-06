@@ -875,7 +875,7 @@ class User extends database_object
      * update_access
      * updates their access level
      * @param $new_access
-     * @return false|null
+     * @return boolean
      */
     public function update_access($new_access)
     {

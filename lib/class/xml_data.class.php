@@ -64,7 +64,7 @@ class XML_Data
      * This sets the limit for any ampache transactions
      *
      * @param    integer    $limit    (description here...)
-     * @return    false|null
+     * @return    boolean
      */
     public static function set_limit($limit)
     {
@@ -87,7 +87,7 @@ class XML_Data
      * This sets the type of XML_Data we are working on
      *
      * @param    string    $type    XML_Data type
-     * @return    false|null
+     * @return    boolean
      */
     public static function set_type($type)
     {
