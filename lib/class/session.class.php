@@ -296,9 +296,9 @@ class Session
         // Set up the cookie params before we start the session.
         // This is vital
         session_set_cookie_params(
-            AmpConfig::get('cookie_life'),
-            AmpConfig::get('cookie_path'),
-            AmpConfig::get('cookie_domain'),
+            (int) AmpConfig::get('cookie_life'),
+            (string) AmpConfig::get('cookie_path'),
+            (string) AmpConfig::get('cookie_domain'),
             make_bool(AmpConfig::get('cookie_secure')));
         session_write_close();
 
@@ -479,9 +479,9 @@ class Session
     public static function create_cookie()
     {
         // Set up the cookie prefs before we throw down, this is very important
-        $cookie_life   = AmpConfig::get('cookie_life');
-        $cookie_path   = AmpConfig::get('cookie_path');
-        $cookie_domain = null;
+        $cookie_life   = (int) AmpConfig::get('cookie_life');
+        $cookie_path   = (string) AmpConfig::get('cookie_path');
+        $cookie_domain = '';
         $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
 
         if (isset($_SESSION)) {
