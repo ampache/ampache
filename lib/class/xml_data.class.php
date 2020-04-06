@@ -77,6 +77,8 @@ class XML_Data
         } else {
             self::$limit = (int) ($limit);
         }
+
+        return true;
     } // set_limit
 
     /**
@@ -94,6 +96,8 @@ class XML_Data
         }
 
         self::$type = $type;
+
+        return true;
     } // set_type
 
     /**
@@ -195,7 +199,7 @@ class XML_Data
      * This returns the formatted 'playlistTrack' string for an xml document
      *
      * @param Song $song
-     * @param int[] $playlist_data
+     * @param integer[] $playlist_data
      * @return string
      */
     private static function playlist_song_tracks_string($song, $playlist_data)
@@ -917,7 +921,7 @@ class XML_Data
      *
      * This handles creating an xml document for an user list
      *
-     * @param    int[]    $users    User identifier list
+     * @param    integer[]    $users    User identifier list
      * @return    string    return xml
      */
     public static function users($users)
@@ -937,7 +941,7 @@ class XML_Data
      *
      * This handles creating an xml document for a shout list
      *
-     * @param    int[]    $shouts    Shout identifier list
+     * @param    integer[]    $shouts    Shout identifier list
      * @return    string    return xml
      */
     public static function shouts($shouts)
@@ -984,7 +988,7 @@ class XML_Data
      *
      * This handles creating an xml document for an activity list
      *
-     * @param    int[]    $activities    Activity identifier list
+     * @param    integer[]    $activities    Activity identifier list
      * @return    string    return xml
      */
     public static function timeline($activities)

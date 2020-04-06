@@ -712,9 +712,9 @@ class Subsonic_XML_Data
             $result          = Dba::fetch_assoc($db_results);
             $catalog_path    = rtrim((string) $result['path'], "/");
             $results['path'] = str_replace($catalog_path . "/", "", $file_Path);
-
-            return $results;
         }
+
+        return $results;
     }
 
     /**

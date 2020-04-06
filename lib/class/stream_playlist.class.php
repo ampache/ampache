@@ -273,7 +273,7 @@ class Stream_Playlist
     /**
      * @param $type
      * @param boolean $redirect
-     * @return false|null
+     * @return boolean
      */
     public function generate_playlist($type, $redirect = false)
     {
@@ -339,6 +339,8 @@ class Stream_Playlist
         }
 
         $this->{'create_' . $type}();
+
+        return true;
     }
 
     /**
@@ -360,7 +362,7 @@ class Stream_Playlist
      * Add an array of urls. This is used for things that aren't coming
      * from media objects
      * @param array $urls
-     * @return false|null
+     * @return boolean
      */
     public function add_urls($urls = array())
     {
@@ -376,6 +378,8 @@ class Stream_Playlist
                 'time' => '-1'
             )));
         }
+
+        return true;
     }
 
     /**

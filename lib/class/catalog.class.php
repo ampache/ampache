@@ -604,7 +604,7 @@ abstract class Catalog extends database_object
 
     /**
      * Get last catalogs update.
-     * @param int[]|null $catalogs
+     * @param integer[]|null $catalogs
      * @return integer
      */
     public static function getLastUpdate($catalogs = null)
@@ -887,7 +887,7 @@ abstract class Catalog extends database_object
 
     /**
      *
-     * @param int[]|null $catalogs
+     * @param integer[]|null $catalogs
      * @param string $type
      * @return Video[]
      */
@@ -959,7 +959,7 @@ abstract class Catalog extends database_object
 
     /**
      *
-     * @param int[]|null $catalogs
+     * @param integer[]|null $catalogs
      * @return TVShow[]
      */
     public static function get_tvshows($catalogs = null)
@@ -1082,7 +1082,7 @@ abstract class Catalog extends database_object
      * Returns an array of ids of albums that have songs in the catalogs parameter
      * @param int $size
      * @param int $offset
-     * @param int[]|null $catalogs
+     * @param integer[]|null $catalogs
      * @return integer[]
     */
     public static function get_albums($size = 0, $offset = 0, $catalogs = null)
@@ -1121,7 +1121,7 @@ abstract class Catalog extends database_object
      * Returns an array of ids of albums that have songs in the catalogs parameter, grouped by artist
      * @param int $size
      * @param int $offset
-     * @param int[]|null $catalogs
+     * @param integer[]|null $catalogs
      * @return integer[]
      * @oaram int $offset
      */
@@ -1179,7 +1179,7 @@ abstract class Catalog extends database_object
 
     /**
      *
-     * @param int[]|null $catalogs
+     * @param integer[]|null $catalogs
      * @return Podcast[]
      */
     public static function get_podcasts($catalogs = null)
@@ -1345,8 +1345,8 @@ abstract class Catalog extends database_object
      * This runs through all of the albums and finds art for them
      * This runs through all of the needs art albums and tries
      * to find the art for them from the mp3s
-     * @param int[]|null $songs
-     * @param int[]|null $videos
+     * @param integer[]|null $songs
+     * @param integer[]|null $videos
      * @return boolean
      */
     public function gather_art($songs = null, $videos = null)

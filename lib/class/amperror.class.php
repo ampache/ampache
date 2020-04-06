@@ -124,16 +124,13 @@ class AmpError
      * This prints the error out with a standard Error class span
      * Ben Goska: Renamed from print to display, print is reserved
      * @param string $name
-     * @return string
      */
     public static function display($name)
     {
         // Be smart about this, if no error don't print
-        if (!isset(AmpError::$errors[$name])) {
-            return '';
+        if (isset(AmpError::$errors[$name])) {
+            echo '<p class="alert alert-danger">' . T_(AmpError::$errors[$name]) . '</p>';
         }
-
-        echo '<p class="alert alert-danger">' . T_(AmpError::$errors[$name]) . '</p>';
     } // display
 
     /**
@@ -142,13 +139,11 @@ class AmpError
      */
     public static function auto_init()
     {
-        if (!is_array($_SESSION['errors'])) {
-            return false;
-        }
-
-        // Re-insert them
-        foreach ($_SESSION['errors'] as $key => $error) {
-            self::add($key, $error);
+        if (is_array($_SESSION['errors'])) {
+            // Re-insert them
+            foreach ($_SESSION['errors'] as $key => $error) {
+                self::add($key, $error);
+            }
         }
     } // auto_init
 } // end amperror.class

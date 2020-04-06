@@ -113,6 +113,8 @@ class Repository
                     $this->resolveObjects($arguments)
             );
         }
+
+        return array();
     }
 
     /**

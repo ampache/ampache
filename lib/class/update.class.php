@@ -310,6 +310,8 @@ class Update
 
         // Let's also clean up the preferences unconditionally
         User::rebuild_all_preferences();
+
+        return true;
     } // run_update
 
     /**

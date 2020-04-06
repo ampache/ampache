@@ -80,13 +80,11 @@ class Localplay
      */
     public function format()
     {
-        if (!is_object($this->_player)) {
-            return false;
+        if (is_object($this->_player)) {
+            $this->f_name            = ucfirst($this->type);
+            $this->f_description     = $this->_player->get_description();
+            $this->f_version         = $this->_player->get_version();
         }
-
-        $this->f_name            = ucfirst($this->type);
-        $this->f_description     = $this->_player->get_description();
-        $this->f_version         = $this->_player->get_version();
     } // format
 
     /**
@@ -120,6 +118,8 @@ class Localplay
                 return false;
             }
         }
+
+        return true;
     } // _load_player
 
     /**
@@ -553,7 +553,7 @@ class Localplay
      * This updates the specified instance with a named array of data (_POST most likely)
      * @param $uid
      * @param array $data
-     * @return
+     * @return array
      */
     public function update_instance($uid, $data)
     {
@@ -642,7 +642,7 @@ class Localplay
      * This function returns a user friendly version
      * of the current player state
      * @param $state
-     * @return
+     * @return string
      */
     public function get_user_state($state)
     {

@@ -221,6 +221,7 @@ class Ajax
      * the html needed to start a container that can be replaced by Ajax.
      * @param string $name
      * @param string $class
+     * @return boolean
      */
     public static function start_container($name, $class = '')
     {
@@ -233,11 +234,14 @@ class Ajax
             }
             echo '>';
         }
+
+        return false;
     } // start_container
 
     /**
      * end_container
      * This ends the container if we're not doing the AJAX thing
+     * @return boolean
      */
     public static function end_container()
     {
@@ -247,5 +251,7 @@ class Ajax
             echo "</div>";
             self::$include_override = false;
         }
+
+        return false;
     } // end_container
 } // end ajax.class

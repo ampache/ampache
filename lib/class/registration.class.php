@@ -119,6 +119,7 @@ class Registration
     /**
       * show_agreement
      * This shows the registration agreement, /config/registration_agreement.php
+     * @return boolean
      */
     public static function show_agreement()
     {
@@ -139,5 +140,7 @@ class Registration
 
         /* Scrub and show */
         echo $data;
+
+        return true;
     } // show_agreement
 } // end registration.class

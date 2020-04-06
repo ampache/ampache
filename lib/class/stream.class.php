@@ -495,6 +495,8 @@ class Stream
         echo "<script>";
         echo Core::get_reloadutil() . "('" . $_SESSION['iframe']['target'] . "');";
         echo "</script>";
+
+        return true;
     } // run_playlist_method
 
     /**

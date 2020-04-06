@@ -341,7 +341,7 @@ class Dba
      * _setup_dbh
      * @param null|PDO $dbh
      * @param string $database
-     * @return false|null
+     * @return boolean
      */
     private static function _setup_dbh($dbh, $database)
     {
@@ -365,6 +365,8 @@ class Dba
             $dbh->exec('SET profiling_history_size=50');
             $dbh->exec('SET query_cache_type=0');
         }
+
+        return true;
     }
 
     /**

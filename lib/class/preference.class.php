@@ -486,6 +486,7 @@ class Preference extends database_object
       * init
      * This grabs the preferences and then loads them into conf it should be run on page load
      * to initialize the needed variables
+     * @return boolean
      */
     public static function init()
     {
@@ -545,5 +546,7 @@ class Preference extends database_object
         AmpConfig::set_by_array($results, true);
         $_SESSION['userdata']['preferences'] = $results;
         $_SESSION['userdata']['uid']         = $user_id;
+
+        return true;
     } // init
 } // end preference.class
