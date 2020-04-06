@@ -342,7 +342,7 @@ class vainfo
         // If we didn't find anything then default to everything.
         if (!isset($returned_keys)) {
             $returned_keys = array_keys($results);
-            $returned_keys = sort($returned_keys);
+            sort($returned_keys);
         }
 
         // Unless they explicitly set it, add bitrate/mode/mime/etc.
