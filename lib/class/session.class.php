@@ -466,6 +466,8 @@ class Session
         // Make sure session_write_close is called during the early part of
         // shutdown, to avoid issues with object destruction.
         register_shutdown_function('session_write_close');
+
+        return true;
     }
 
     /**

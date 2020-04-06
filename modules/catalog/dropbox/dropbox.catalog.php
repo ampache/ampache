@@ -662,8 +662,8 @@ class Catalog_dropbox extends Catalog
      * This runs through all of the albums and finds art for them
      * This runs through all of the needs art albums and trys
      * to find the art for them from the mp3s
-     * @param int[]|null $songs
-     * @param int[]|null $videos
+     * @param integer[]|null $songs
+     * @param integer[]|null $videos
      * @return boolean
      */
     public function gather_art($songs = null, $videos = null)

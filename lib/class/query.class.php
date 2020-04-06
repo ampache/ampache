@@ -2393,7 +2393,7 @@ class Query
      * save_objects
      * This takes the full array of object ids, often passed into show and
      * if necessary it saves them
-     * @param int[] $object_ids
+     * @param integer[] $object_ids
      * @return boolean
      */
     public function save_objects($object_ids)

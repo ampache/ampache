@@ -169,6 +169,8 @@ class User extends database_object
         if (strlen((string) $this->fullname) < 1) {
             $this->fullname = $this->username;
         }
+
+        return true;
     } // Constructor
 
     /**
@@ -892,6 +894,8 @@ class User extends database_object
         debug_event('user.class', 'Updating access level', 4);
 
         Dba::write($sql);
+
+        return true;
     } // update_access
 
     /*!

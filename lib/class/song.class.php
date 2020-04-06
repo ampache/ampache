@@ -483,7 +483,7 @@ class Song extends database_object implements media, library_item
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
-     * @param int[] $song_ids
+     * @param integer[] $song_ids
      * @param string $limit_threshold
      * @return boolean
      */

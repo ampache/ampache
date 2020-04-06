@@ -160,6 +160,8 @@ class UI
 
             debug_event('ui.class', 'Charset cleanup failed, something might break', 1);
         }
+
+        return '';
     }
 
     /**

@@ -111,8 +111,9 @@ class AmpConfig
 
             return false;
         }
-
         self::$_global[$name] = $value;
+
+        return true;
     }
 
     /**

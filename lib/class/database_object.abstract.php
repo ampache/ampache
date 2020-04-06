@@ -134,6 +134,8 @@ abstract class database_object
         }
 
         self::$object_cache[$index][$object_id] = $value;
+
+        return true;
     }
     // add_to_cache
 
