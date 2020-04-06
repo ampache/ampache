@@ -375,7 +375,7 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     /**
-     * @param null $catalog
+     * @param $catalog
      * @return array
      */
     public static function get_all_radios($catalog = null)

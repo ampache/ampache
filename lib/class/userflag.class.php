@@ -118,7 +118,7 @@ class Userflag extends database_object
 
     /**
      * get_flag
-     * @param boolean|integer $user_id
+     * @param integer $user_id
      * @param boolean $get_date
      * @return boolean|array
      */
@@ -357,8 +357,8 @@ class Userflag extends database_object
      * show
      * This takes an id and a type and displays the flag state
      * enabled.
-     * @param $object_id
-     * @param $type
+     * @param integer $object_id
+     * @param string $type
      * @return boolean
      */
     public static function show($object_id, $type)
@@ -370,6 +370,8 @@ class Userflag extends database_object
 
         $userflag = new Userflag($object_id, $type);
         require AmpConfig::get('prefix') . UI::find_template('show_object_userflag.inc.php');
+
+        return true;
     } // show
 
     /**

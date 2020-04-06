@@ -52,7 +52,7 @@ class Search extends playlist_object
      * @param string $searchtype
      * @param User $user
      */
-    public function __construct($search_id = null, $searchtype = 'song', $user = null)
+    public function __construct($search_id = 0, $searchtype = 'song', $user = null)
     {
         if ($user) {
             $this->search_user = $user;
@@ -60,7 +60,7 @@ class Search extends playlist_object
             $this->search_user = Core::get_global('user');
         }
         $this->searchtype = $searchtype;
-        if ($search_id) {
+        if ($search_id > 0) {
             $info = $this->get_info($search_id);
             foreach ($info as $key => $value) {
                 $this->$key = $value;

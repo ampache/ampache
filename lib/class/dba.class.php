@@ -127,7 +127,7 @@ class Dba
      * @param array $params
      * @return bool|PDOStatement
      */
-    public static function read($sql, $params = null)
+    public static function read($sql, $params = array())
     {
         return self::query($sql, $params);
     }
@@ -138,7 +138,7 @@ class Dba
      * @param array $params
      * @return PDOStatement|boolean
      */
-    public static function write($sql, $params = null)
+    public static function write($sql, $params = array())
     {
         return self::query($sql, $params);
     }

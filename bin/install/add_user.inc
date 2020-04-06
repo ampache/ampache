@@ -52,7 +52,7 @@ $email = isset($options['e']) ? $options['e'] : '';
 $website = isset($options['w']) ? $options['w'] : '';
 $name = isset($options['n']) ? $options['n'] : '';
 
-if (User::create($username, $name, $email, $website, $password, $access)) {
+if ((int) User::create($username, $name, $email, $website, $password, $access) < 1) {
     /* HINT: %1 Access Level (Administrator/User/etc), %2 Username, %3 password */
     printf(T_('Created %1$s user %2$s with password %3$s'), User::access_level_to_name((string) $access), $username, $password);
     echo "\n";

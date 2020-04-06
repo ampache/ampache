@@ -257,6 +257,8 @@ class Video extends database_object implements media, library_item
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('video', $row['id'], $row);
         }
+
+        return true;
     } // build_cache
 
     /**

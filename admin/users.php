@@ -167,8 +167,8 @@ switch ($_REQUEST['action']) {
         }
 
         /* Attempt to create the user */
-        $user_id = User::create($username, $fullname, $email, $website, $pass1, (string) $access, $state, $city);
-        if (!$user_id) {
+        $user_id = (int) User::create($username, $fullname, $email, $website, $pass1, (string) $access, $state, $city);
+        if ($user_id < 1) {
             AmpError::add('general', T_("The new User was not created"));
         }
         $user = new User($user_id);

@@ -174,7 +174,7 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function get_fullname()
     {
@@ -209,7 +209,7 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
-     * @param null $filter_type
+     * @param $filter_type
      * @return array|mixed
      */
     public function get_medias($filter_type = null)
@@ -242,7 +242,7 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function get_description()
     {
@@ -252,7 +252,7 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * @param int $thumb
      * @param boolean $force
-     * @return mixed|void
+     * @return void
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -278,7 +278,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * update
      * This takes a key'd array of data and updates the current podcast episode
      * @param array $data
-     * @return null
+     * @return integer
      */
     public function update(array $data)
     {

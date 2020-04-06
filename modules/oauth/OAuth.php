@@ -39,7 +39,7 @@ class OAuthConsumer
      * OAuthConsumer constructor.
      * @param $key
      * @param $secret
-     * @param null $callback_url
+     * @param $callback_url
      */
     public function __construct($key, $secret, $callback_url = null)
     {
@@ -349,7 +349,7 @@ class OAuthRequest
      * OAuthRequest constructor.
      * @param $http_method
      * @param $http_url
-     * @param null $parameters
+     * @param $parameters
      */
     public function __construct($http_method, $http_url, $parameters = null)
     {
@@ -580,7 +580,7 @@ class OAuthRequest
 
     /**
      * builds the Authorization: header
-     * @param null $realm
+     * @param $realm
      * @return string
      * @throws OAuthException
      * @throws OAuthException
@@ -996,7 +996,7 @@ class OAuthDataStore
 
     /**
      * @param $consumer
-     * @param null $callback
+     * @param $callback
      */
     public function new_request_token($consumer, $callback = null)
     {
@@ -1006,7 +1006,7 @@ class OAuthDataStore
     /**
      * @param $token
      * @param $consumer
-     * @param null $verifier
+     * @param $verifier
      */
     public function new_access_token($token, $consumer, $verifier = null)
     {

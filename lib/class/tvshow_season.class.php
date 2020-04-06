@@ -170,7 +170,7 @@ class TVShow_Season extends database_object implements library_item
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function get_fullname()
     {
@@ -266,7 +266,6 @@ class TVShow_Season extends database_object implements library_item
     /**
      * @param int $thumb
      * @param boolean $force
-     * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
     {

@@ -72,7 +72,7 @@ interface playable_item
      * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.
      */
     /**
-     * @param null $filter_type
+     * @param $filter_type
      * @return mixed
      */
     public function get_medias($filter_type = null);

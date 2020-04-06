@@ -618,13 +618,15 @@ class Art extends database_object
     {
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, $kind);
-            self::delete_rec_dir($path);
+            if ($path !== false) {
+                self::delete_rec_dir($path);
+            }
         }
     }
 
     /**
      * delete_rec_dir
-     * @param false|string $path
+     * @param string $path
      */
     private static function delete_rec_dir($path)
     {
@@ -687,6 +689,8 @@ class Art extends database_object
         }
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
+
+        return true;
     } // save_thumb
 
     /**

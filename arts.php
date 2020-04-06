@@ -130,10 +130,12 @@ switch ($_REQUEST['action']) {
         }
         $images = array_merge($cover_url, $images);
 
+        debug_event('arts', 'HOW MANY IMAGES?:' . (string) count($images), 3);
         // If we've found anything then go for it!
         if (count($images)) {
             // We don't want to store raw's in here so we need to strip them out into a separate array
             foreach ($images as $index => $image) {
+                debug_event('arts', 'IMAGE URL?:' . (string) $images[$index]['url'], 3);
                 if ($image['raw']) {
                     unset($images[$index]['raw']);
                 }

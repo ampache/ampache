@@ -164,7 +164,7 @@ class easy_captcha
    #-- init data
     /**
      * easy_captcha constructor.
-     * @param null $captcha_id
+     * @param $captcha_id
      * @param int $ignore_expiration
      */
     public function __construct($captcha_id = null, $ignore_expiration = 0)
@@ -266,7 +266,7 @@ class easy_captcha
     #-- check backends for correctness of solution
 
     /**
-     * @param null $input
+     * @param $input
      * @return boolean
      */
     public function solved($input = null/*parameter only used in subclasses*/)
@@ -466,7 +466,7 @@ class easy_captcha
     #-- where's the storage?
 
     /**
-     * @param null $object_id
+     * @param $object_id
      * @return string
      */
     public function data_file($object_id = null)
@@ -507,7 +507,7 @@ class easy_captcha_fuzzy extends easy_captcha
     #-- compare
 
     /**
-     * @param null $input
+     * @param $input
      * @return boolean
      */
     public function solved($input = null)
@@ -534,8 +534,8 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
    #-- config
     /**
      * easy_captcha_graphic constructor.
-     * @param null $x
-     * @param null $y
+     * @param $x
+     * @param $y
      */
     public function __construct($x = null, $y = null)
     {
@@ -1086,7 +1086,7 @@ class easy_captcha_text_math_formula extends easy_captcha
     #-- simple IS-EQUAL check
 
     /**
-     * @param null $result
+     * @param $result
      * @return boolean
      */
     public function solved($result = null)
@@ -1162,7 +1162,7 @@ class easy_captcha_text_disable extends easy_captcha
     public $question = '';
 
     /**
-     * @param null $input
+     * @param $input
      * @return boolean
      */
     public function solved($input = null)

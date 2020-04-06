@@ -181,8 +181,8 @@ class mpd
      * mpd constructor.
      * @param $server
      * @param $port
-     * @param null $password
-     * @param null $debug_callback
+     * @param $password
+     * @param $debug_callback
      */
     public function __construct($server, $port, $password = null, $debug_callback = null)
     {
@@ -296,7 +296,7 @@ class mpd
      * are pre-defined for use (see self::COMMAND_* constant definitions
      * above).
      * @param $command
-     * @param null $arguments
+     * @param $arguments
      * @param boolean $refresh_info
      * @return bool|string
      */
@@ -1021,7 +1021,7 @@ class mpd
      * Returns the list of albums in the database in an associative array.
      * Optional parameter is an artist Name which will list all albums by a
      * particular artist.
-     * @param null $artist
+     * @param $artist
      * @return array|bool
      */
     public function GetAlbums($artist = null)

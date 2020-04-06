@@ -84,7 +84,7 @@ class Repository
      * @param array|string $value
      * @return array
      */
-    private function getRecords($table, $field = null, $value = null)
+    private function getRecords($table, $field = array(), $value = null)
     {
         $data = array();
         $sql  = $this->assembleQuery($table, $field);

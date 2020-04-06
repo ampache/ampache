@@ -128,7 +128,7 @@ class Mailer
             break;
         } // end filter switch
 
-        $db_results = Dba::read($sql, isset($inactive) ? array($inactive) : null);
+        $db_results = Dba::read($sql, isset($inactive) ? array($inactive) : array());
 
         $results = array();
 
