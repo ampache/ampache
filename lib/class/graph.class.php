@@ -516,15 +516,15 @@ class Graph
 
     /**
      * @param integer $user
-     * @param $object_type
-     * @param $object_id
+     * @param string $object_type
+     * @param integer $object_id
      * @param integer $start_date
      * @param integer $end_date
      * @param string $zoom
      * @param integer $width
      * @param integer $height
      */
-    public function render_user_hits($user = 0, $object_type, $object_id, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
+    public function render_user_hits($user, $object_type, $object_id, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
         $MyData = new CpChart\Chart\Data();
         $this->get_user_all_pts('get_user_hits_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);

@@ -207,7 +207,7 @@ class Tag extends database_object implements library_item
         Dba::write($sql, array($value));
         $insert_id = Dba::insert_id();
 
-        parent::add_to_cache('tag_name', $value, $insert_id);
+        parent::add_to_cache('tag_name', $value, array($insert_id));
 
         return $insert_id;
     } // add_tag

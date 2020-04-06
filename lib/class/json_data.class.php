@@ -274,7 +274,7 @@ class JSON_Data
                     albums => ($artist->albums ?: 0),
                     songs => ($artist->songs ?: 0),
                     art => $art_url,
-                    flag => ($flag->get_flag($user_id, false) ? 1 : 0),
+                    flag => (!$flag->get_flag($user_id, false) ? 0 : 1),
                     preciserating => ($rating->get_user_rating() ?: 0),
                     rating => ($rating->get_user_rating() ?: 0),
                     averagerating => ($rating->get_average_rating() ?: 0),
@@ -346,7 +346,7 @@ class JSON_Data
             $theArray['disk']          = $disk;
             $theArray['tags']          = self::tags_string($album->tags);
             $theArray['art']           = $art_url;
-            $theArray['flag']          = ($flag->get_flag($user_id, false) ? 1 : 0);
+            $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
             $theArray['preciserating'] = $rating->get_user_rating();
             $theArray['rating']        = $rating->get_user_rating();
             $theArray['averagerating'] = $rating->get_average_rating();
@@ -489,7 +489,7 @@ class JSON_Data
             $ourSong['artist_mbid']           = $song->artist_mbid;
             $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
             $ourSong['art']                   = $art_url;
-            $ourSong['flag']                  = ($flag->get_flag($user_id, false) ? 1 : 0);
+            $ourSong['flag']                  = (!$flag->get_flag($user_id, false) ? 0 : 1);
             $ourSong['preciserating']         = ($rating->get_user_rating() ?: 0);
             $ourSong['rating']                = ($rating->get_user_rating() ?: 0);
             $ourSong['averagerating']         = ($rating->get_average_rating() ?: 0);

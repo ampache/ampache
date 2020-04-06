@@ -100,7 +100,7 @@ abstract class database_object
      * This attempts to retrieve the specified object from the cache we've got here
      * @param int $index
      * @param int $object_id
-     * @return array|mixed
+     * @return array
      */
     public static function get_from_cache($index, $object_id)
     {

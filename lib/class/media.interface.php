@@ -42,12 +42,12 @@ interface media
      * play_url
      *
      * Returns the url to stream the specified object
-     * @param $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      */
-    public static function play_url($oid, $additional_params = '', $player = null, $local = false);
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false);
 
     /**
      * get_transcode_settings
