@@ -73,6 +73,21 @@ Podcast_Episode::garbage_collection();
 Bookmark::garbage_collection();
 Recommendation::garbage_collection();
 
+if (AmpConfig::get('memory_cache')) {
+    //album::build_cache($ids)
+    //playlist::build_cache($ids)
+    //art::build_cache($object_ids)
+    //song_preview::build_cache($song_ids)
+    //tag::build_cache($ids)
+    //useractivity::build_cache($ids)
+    //video::build_cache($ids = array())
+    //song::build_cache($song_ids, $limit_threshold = '')
+    //artist::build_cache($ids, $extra = false, $limit_threshold = '')
 
-debug_event('cron', 'finished cron process', 4);
-
+    // artist, album, song, playlist, podcast, podcast_episode
+    foreach (User::get_valid_users() as $user_id) {
+        //rating::build_cache($type, $ids, $user_id = null)
+        //userflag::build_cache($type, $ids, $user_id = null)
+    } //end foreach $user_id
+}
+    debug_event('cron', 'finished cron process', 4);
