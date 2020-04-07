@@ -913,6 +913,8 @@ class Subsonic_Api
             if (!is_array($songsIdToAdd)) {
                 $songsIdToAdd       = array($songsIdToAdd);
                 $songsIdToAdd_count = count($songsIdToAdd);
+            } else {
+                $songsIdToAdd_count = count($songsIdToAdd);
             }
             if ($songsIdToAdd_count > 0) {
                 for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
@@ -922,13 +924,14 @@ class Subsonic_Api
             }
         }
 
-        if (!empty($songIndexToRemove)) {
+        if (isset($songIndexToRemove)) {
+            $playlist->regenerate_track_numbers(); // cant delete one first call when not triggered..why?
             if (!is_array($songIndexToRemove)) {
                 $songIndexToRemove = array($songIndexToRemove);
             }
             if (count($songIndexToRemove) > 0) {
                 foreach ($songIndexToRemove as $track) {
-                    $playlist->delete_track_number($track);
+                    $playlist->delete_track_number(( $track + 1 ));
                 }
                 $playlist->regenerate_track_numbers();
             }
