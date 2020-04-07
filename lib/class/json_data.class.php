@@ -347,8 +347,8 @@ class JSON_Data
             $theArray['tags']          = self::tags_string($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
-            $theArray['preciserating'] = $rating->get_user_rating();
-            $theArray['rating']        = $rating->get_user_rating();
+            $theArray['preciserating'] = ($rating->get_user_rating() ?: 0);
+            $theArray['rating']        = ($rating->get_user_rating() ?: 0);
             $theArray['averagerating'] = $rating->get_average_rating();
             $theArray['mbid']          = $album->mbid;
 
