@@ -129,14 +129,19 @@ class Userflag extends database_object
 
         $key = 'userflag_' . $this->type . '_user' . $user_id;
         if (parent::is_cached($key, $this->id)) {
-            return parent::get_from_cache($key, $this->id)[0];
+            $object = parent::get_from_cache($key, $this->id);
+            if (empty($object) || !$object[0]) {
+                return false;
+            }
+
+            return $object;
         }
 
         $sql = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? " .
             "AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
-        $flagged = array(false);
+        $flagged = false;
         if ($row = Dba::fetch_assoc($db_results)) {
             if ($get_date) {
                 $flagged = array(1, $row['date']);
