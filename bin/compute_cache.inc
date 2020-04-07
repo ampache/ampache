@@ -22,7 +22,7 @@
 
 define('NO_SESSION','1');
 define('NO_CRON_CACHE','1');
-$path = dirname(__FILE__); 
+$path   = dirname(__FILE__); 
 $prefix = realpath($path . '/../'); 
 require_once $prefix . '/lib/init.php';
 
@@ -31,13 +31,12 @@ ob_end_clean();
 
 echo "This file compute cache data for object_count.\n\n";
 
-$thresholds = [ 0, AmpConfig::get('stats_threshold'), AmpConfig::get('popular_threshold') ];
-$count_types = [ 'stream', 'download' ];
+$thresholds   = [ 0, AmpConfig::get('stats_threshold'), AmpConfig::get('popular_threshold') ];
+$count_types  = [ 'stream', 'download' ];
 $object_types = [ 'album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast_episode' ];
 foreach ($thresholds as $threshold) {
     foreach ($count_types as $count_type) {
-        foreach ($object_types as $object_type)
-        {
+        foreach ($object_types as $object_type) {
             echo "Computing object_count stats for threshold `" . $threshold . "`, count_type `" . $count_type . "` and object_type `" . $object_type . "` ...\n";
             
             $sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
