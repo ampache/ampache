@@ -231,8 +231,6 @@ class Repository
      * @param string $property
      * @param string|null $value
      * @throws ReflectionException
-     * @throws ReflectionException
-     * @throws ReflectionException
      */
     protected function setPrivateProperty(Model $object, $property, $value)
     {

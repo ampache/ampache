@@ -117,10 +117,6 @@ class LDAP
      * connection as soon as one is needed.
      * @return resource|false
      * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
      */
     private static function connect()
     {
@@ -151,7 +147,6 @@ class LDAP
      * @param $link
      * @param string $username
      * @param string $password
-     * @throws LDAPException
      * @throws LDAPException
      */
     private static function bind($link, $username = null, $password = null)
@@ -186,8 +181,6 @@ class LDAP
      * @param string $filter
      * @return mixed
      * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
      */
     private static function read($link, $dn, $attrs = [], $filter = 'objectClass=*')
     {
@@ -212,9 +205,6 @@ class LDAP
      * @param string $filter
      * @param boolean $only_one_result
      * @return array
-     * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
      * @throws LDAPException
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true)

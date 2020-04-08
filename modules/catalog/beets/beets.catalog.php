@@ -141,7 +141,6 @@ class Catalog_beets extends Beets\Catalog
      * @param array $song
      * @return boolean
      * @throws Exception
-     * @throws Exception
      */
     public function checkSong($song)
     {
