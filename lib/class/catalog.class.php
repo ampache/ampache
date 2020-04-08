@@ -1470,6 +1470,26 @@ abstract class Catalog extends database_object
 
         return $results;
     }
+    /**
+     * get_song_ids
+     *
+     * Returns an array of song ids.
+     * @return integer[]
+     */
+    public function get_song_ids()
+    {
+        $songs   = array();
+        $results = array();
+
+        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
+        $db_results = Dba::read($sql, array($this->id));
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $songs[] = $row['id'];
+        }
+
+        return $songs;
+    }
 
     /**
      * dump_album_art
