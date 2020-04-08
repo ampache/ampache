@@ -70,8 +70,8 @@ class Useractivity extends database_object
             return false;
         }
 
-        $idlist = '(' . implode(',', $ids) . ')';
-
+        debug_event('useractivity.class', 'Begin build_cache.', 4);
+        $idlist     = '(' . implode(',', $ids) . ')';
         $sql        = "SELECT * FROM `user_activity` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 

@@ -492,13 +492,14 @@ class Song extends database_object implements media, library_item
         if (!is_array($song_ids) || !count($song_ids)) {
             return false;
         }
-
         $idlist = '(' . implode(',', $song_ids) . ')';
 
         // Callers might have passed array(false) because they are dumb
         if ($idlist == '()') {
             return false;
         }
+
+        debug_event('song.class', 'Begin build_cache.', 4);
 
         // Song data cache
         $sql = 'SELECT `song`.`id`, `file`, `catalog`, `album`, ' .

@@ -80,8 +80,8 @@ class Tag extends database_object implements library_item
             return false;
         }
 
-        $idlist = '(' . implode(',', $ids) . ')';
-
+        debug_event('tag.class', 'Begin build_cache.', 4);
+        $idlist     = '(' . implode(',', $ids) . ')';
         $sql        = "SELECT * FROM `tag` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 

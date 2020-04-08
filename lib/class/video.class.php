@@ -249,8 +249,8 @@ class Video extends database_object implements media, library_item
             return false;
         }
 
-        $idlist = '(' . implode(',', $ids) . ')';
-
+        debug_event('video.class', 'Begin build_cache.', 4);
+        $idlist     = '(' . implode(',', $ids) . ')';
         $sql        = "SELECT * FROM `video` WHERE `video`.`id` IN $idlist";
         $db_results = Dba::read($sql);
 
