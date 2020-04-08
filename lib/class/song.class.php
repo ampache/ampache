@@ -499,8 +499,6 @@ class Song extends database_object implements media, library_item
             return false;
         }
 
-        debug_event('song.class', 'Begin build_cache.', 4);
-
         // Song data cache
         $sql = 'SELECT `song`.`id`, `file`, `catalog`, `album`, ' .
             '`year`, `artist`, `title`, `bitrate`, `rate`, ' .

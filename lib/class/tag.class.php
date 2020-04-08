@@ -79,8 +79,6 @@ class Tag extends database_object implements library_item
         if (!is_array($ids) || !count($ids)) {
             return false;
         }
-
-        debug_event('tag.class', 'Begin build_cache.', 4);
         $idlist     = '(' . implode(',', $ids) . ')';
         $sql        = "SELECT * FROM `tag` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
@@ -505,7 +503,7 @@ class Tag extends database_object implements library_item
         }
 
         $params = array($type);
-        $sql = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
+        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
             "WHERE `tag_map`.`object_type` = ?";
         if ($object_id !== null) {
@@ -562,6 +560,44 @@ class Tag extends database_object implements library_item
         return $results;
     } // get_tag_objects
 
+    /**
+     * get_tag_ids
+     * This gets the objects from a specified tag and returns an array of object ids, nothing more
+     * @param string $type
+     * @param string $count
+     * @param string $offset
+     * @return integer[]
+     */
+    public static function get_tag_ids($type, $count = '', $offset = '')
+    {
+        if (!Core::is_library_item($type)) {
+            return array();
+        }
+
+        $limit_sql = "";
+        if ($count) {
+            $limit_sql = " LIMIT ";
+            if ($offset) {
+                $limit_sql .= (string) ($offset) . ', ';
+            }
+            $limit_sql .= (string) ($count);
+        }
+
+        $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` " .
+            "WHERE `tag_map`.`object_type` = ? ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`') . $limit_sql;
+        }
+        $db_results = Dba::read($sql, array($type));
+
+        $results = array();
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['tag_id'];
+        }
+
+        return $results;
+    } // get_tag_ids
     /**
      * get_tags
      * This is a non-object non type dependent function that just returns tags
