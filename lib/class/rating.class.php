@@ -90,7 +90,7 @@ class Rating extends database_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        debug_event('rating.class', 'Begin build_cache ' . (string) (count($ids)) . ' '. $type . '\'s for user ' .$user_id, 4);
+        debug_event('rating.class', 'Begin build_cache ' . (string) (count($ids)) . ' ' . $type . '\'s for user ' . $user_id, 4);
         $ratings      = array();
         $user_ratings = array();
 

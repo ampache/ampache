@@ -82,9 +82,9 @@ if (AmpConfig::get('memory_cache')) {
     debug_event('cron', 'Filling memory cache', 4);
     $catalogs = Catalog::get_catalogs();
     $users    = User::get_valid_users();
-    debug_event('cron', 'Catalog memory cache', 4);
 
     foreach ($catalogs as $catalog_id) {
+        debug_event('cron', 'Catalog memory cache for ' . (string) $catalog_id, 4);
         $catalog = Catalog::create_from_id($catalog_id);
         // cache album details
         $albums = $catalog->get_album_ids();
@@ -101,18 +101,17 @@ if (AmpConfig::get('memory_cache')) {
         //UserActivity::build_cache($ids)
         //Video::build_cache($ids)
         //Song::build_cache($song_ids, $limit_threshold = '')
-    } // end foreach $catalogs
 
-    debug_event('cron', 'User memory cache', 5);
-    // artist, album, song, playlist, podcast, podcast_episode
-    foreach ($users as $user_id) {
-        // artists
-        Rating::build_cache('artist', $artists, $user_id);
-        Userflag::build_cache('artist', $artists, $user_id);
-        // albums
-        Rating::build_cache('album', $albums, $user_id);
-        Userflag::build_cache('album', $albums, $user_id);
-    } // end foreach $user_id
+        // artist, album, song, playlist, podcast, podcast_episode
+        foreach ($users as $user_id) {
+            // artists
+            Rating::build_cache('artist', $artists, $user_id);
+            Userflag::build_cache('artist', $artists, $user_id);
+            // albums
+            Rating::build_cache('album', $albums, $user_id);
+            Userflag::build_cache('album', $albums, $user_id);
+        } // end foreach $user_id
+    } // end foreach $catalogs
     debug_event('cron', 'Completed filling memory cache', 5);
 }
 debug_event('cron', 'finished cron process', 4);
