@@ -86,7 +86,7 @@ if (AmpConfig::get('memory_cache')) {
     $users    = User::get_valid_users();
 
     foreach ($catalogs as $catalog_id) {
-        debug_event('cron', 'Catalog memory cache for  catalog ' . (string) $catalog_id, 4);
+        debug_event('cron', 'Catalog memory cache for catalog ' . (string) $catalog_id, 4);
         $catalog = Catalog::create_from_id($catalog_id);
         // cache album details
         $albums = $catalog->get_album_ids();
@@ -149,7 +149,7 @@ if (AmpConfig::get('memory_cache')) {
                     Userflag::build_cache('podcast', $podcasts, $user_id);
                     // podcast_episodes
                     $podcast = New Podcast($podcast_id);
-                    $podcast_episodes = $podcast->get_podcast_ids();
+                    $podcast_episodes = $catalog->get_podcast_ids();
                     foreach ($podcast_episodes as $podcast_id) {
                         Rating::build_cache('podcast_episode', $podcast_episodes, $user_id);
                         Userflag::build_cache('podcast_episode', $podcast_episodes, $user_id);
