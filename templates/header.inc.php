@@ -156,7 +156,7 @@ $t_logout    = T_('Log out'); ?>
                             itemhtml += "<a>";
                         }
                         if (item.image != '') {
-                            itemhtml += "<img src='" + item.image + "' loading="lazy" class='searchart' />";
+                            itemhtml += "<img src='" + item.image + "' class='searchart' />";
                         }
                         itemhtml += "<span class='searchitemtxt'>" + item.label + ((item.rels == '') ? "" : " - " + item.rels)  + "</span>";
                         itemhtml += "</a>";
