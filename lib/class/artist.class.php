@@ -228,7 +228,6 @@ class Artist extends database_object implements library_item
         if (!is_array($ids) || !count($ids)) {
             return false;
         }
-        debug_event('artist.class', 'Begin build_cache.', 4);
         $idlist     = '(' . implode(',', $ids) . ')';
         $sql        = "SELECT * FROM `artist` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
