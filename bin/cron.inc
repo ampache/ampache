@@ -29,7 +29,7 @@ require_once $prefix . '/lib/init.php';
 
 ob_end_flush();
 
-debug_event('cron', 'started cron process', 4);
+debug_event('cron', 'started cron process', 3);
 
 /**
  * Catalog garbage_collection covers these functions
@@ -73,21 +73,46 @@ Podcast_Episode::garbage_collection();
 Bookmark::garbage_collection();
 Recommendation::garbage_collection();
 
-if (AmpConfig::get('memory_cache')) {
-    //album::build_cache($ids)
-    //playlist::build_cache($ids)
-    //art::build_cache($object_ids)
-    //song_preview::build_cache($song_ids)
-    //tag::build_cache($ids)
-    //useractivity::build_cache($ids)
-    //video::build_cache($ids = array())
-    //song::build_cache($song_ids, $limit_threshold = '')
-    //artist::build_cache($ids, $extra = false, $limit_threshold = '')
+/**
+ * Run compute_cache
+ */
+require_once $prefix . '/bin/compute_cache.inc';
 
+if (AmpConfig::get('memory_cache')) {
+    debug_event('cron', 'Filling memory cache', 4);
+    $catalogs = Catalog::get_catalogs();
+    $users    = User::get_valid_users();
+    debug_event('cron', 'Catalog memory cache', 4);
+
+    foreach ($catalogs as $catalog_id) {
+        $catalog = Catalog::create_from_id($catalog_id);
+        // cache album details
+        $albums = $catalog->get_album_ids();
+        Album::build_cache($albums);
+
+        // cache artist details
+        $artists = $catalog->get_artist_ids();
+        Artist::build_cache($artists, true, '');
+
+        //Playlist::build_cache($ids)
+        //Art::build_cache($object_ids)
+        //Song_preview::build_cache($song_ids)
+        //Tag::build_cache($ids)
+        //UserActivity::build_cache($ids)
+        //Video::build_cache($ids)
+        //Song::build_cache($song_ids, $limit_threshold = '')
+    } // end foreach $catalogs
+
+    debug_event('cron', 'User memory cache', 5);
     // artist, album, song, playlist, podcast, podcast_episode
-    foreach (User::get_valid_users() as $user_id) {
-        //rating::build_cache($type, $ids, $user_id = null)
-        //userflag::build_cache($type, $ids, $user_id = null)
-    } //end foreach $user_id
+    foreach ($users as $user_id) {
+        // artists
+        Rating::build_cache('artist', $artists, $user_id);
+        Userflag::build_cache('artist', $artists, $user_id);
+        // albums
+        Rating::build_cache('album', $albums, $user_id);
+        Userflag::build_cache('album', $albums, $user_id);
+    } // end foreach $user_id
+    debug_event('cron', 'Completed filling memory cache', 5);
 }
-    debug_event('cron', 'finished cron process', 4);
+debug_event('cron', 'finished cron process', 4);

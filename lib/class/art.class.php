@@ -111,6 +111,7 @@ class Art extends database_object
         if (!count($object_ids)) {
             return false;
         }
+        debug_event('art.class', 'Begin build_cache.', 4);
         $uidlist    = '(' . implode(',', $object_ids) . ')';
         $sql        = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN $uidlist";
         $db_results = Dba::read($sql);
