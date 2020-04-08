@@ -116,7 +116,7 @@ class Art extends database_object
         $uidlist    = '(' . implode(',', $object_ids) . ')';
         $sql        = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN $uidlist";
         if ($type !== null) {
-            $sql .= " and `object_type` = $type";
+            $sql .= " and `object_type` = '$type'";
         }
         $db_results = Dba::read($sql);
 
