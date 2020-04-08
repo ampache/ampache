@@ -583,7 +583,6 @@ class OAuthRequest
      * @param $realm
      * @return string
      * @throws OAuthException
-     * @throws OAuthException
      */
     public function to_header($realm = null)
     {
@@ -751,10 +750,6 @@ class OAuthServer
      * @param $request
      * @return array
      * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
      */
     public function verify_request(&$request)
     {
@@ -772,7 +767,6 @@ class OAuthServer
      * version 1
      * @param $request
      * @return string
-     * @throws OAuthException
      * @throws OAuthException
      */
     private function get_version(&$request)
@@ -794,8 +788,6 @@ class OAuthServer
      * figure out the signature with some defaults
      * @param $request
      * @return mixed
-     * @throws OAuthException
-     * @throws OAuthException
      * @throws OAuthException
      */
     private function get_signature_method($request)
@@ -872,10 +864,6 @@ class OAuthServer
      * @param $consumer
      * @param $token
      * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
      */
     private function check_signature($request, $consumer, $token)
     {
@@ -909,8 +897,6 @@ class OAuthServer
      * check that the timestamp is new enough
      * @param $timestamp
      * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
      */
     private function check_timestamp($timestamp)
     {
@@ -935,8 +921,6 @@ class OAuthServer
      * @param $token
      * @param $nonce
      * @param $timestamp
-     * @throws OAuthException
-     * @throws OAuthException
      * @throws OAuthException
      */
     private function check_nonce($consumer, $token, $nonce, $timestamp)

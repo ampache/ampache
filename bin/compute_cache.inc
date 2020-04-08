@@ -44,7 +44,7 @@ foreach ($users as $user_id) {
         foreach ($count_types as $count_type) {
             foreach ($object_types as $object_type) {
                 //debug_event('compute_cache', "Computing object_count stats for threshold `" . $threshold . "`, count_type `" . $count_type . "` and object_type `" . $object_type . "` ...", 5);
-                
+
                 $sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
                 $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, $user_id);
                 $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
