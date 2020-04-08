@@ -20,7 +20,7 @@ use Lib\Metadata\Repository\MetadataField;
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * @param int $user_id
+ * @param integer $user_id
  */
 
 /*
@@ -92,9 +92,9 @@ function update_preferences($user_id = 0)
 /**
  * update_preference
  * This function updates a single preference and is called by the update_preferences function
- * @param int $user_id
+ * @param integer $user_id
  * @param string $name
- * @param int $pref_id
+ * @param integer $pref_id
  * @param string $value
  * @return boolean
  */

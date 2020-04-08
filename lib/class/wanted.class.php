@@ -93,7 +93,7 @@ class Wanted extends database_object
 
     /**
      * Constructor
-     * @param int $wanted_id
+     * @param integer $wanted_id
      */
     public function __construct($wanted_id)
     {
@@ -326,9 +326,9 @@ class Wanted extends database_object
 
     /**
      * Delete a wanted release by name.
-     * @param int $artist
+     * @param integer $artist
      * @param string $album_name
-     * @param int $year
+     * @param integer $year
      */
     public static function delete_wanted_by_name($artist, $album_name, $year)
     {
@@ -365,7 +365,7 @@ class Wanted extends database_object
     /**
      * Check if a release mbid is already marked as wanted
      * @param string $mbid
-     * @param int $userid
+     * @param integer $userid
      * @return boolean|integer
      */
     public static function has_wanted($mbid, $userid = 0)
@@ -387,10 +387,10 @@ class Wanted extends database_object
     /**
      * Add a new wanted release.
      * @param string $mbid
-     * @param int $artist
+     * @param integer $artist
      * @param string $artist_mbid
      * @param string $name
-     * @param int $year
+     * @param integer $year
      */
     public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {

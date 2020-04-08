@@ -554,7 +554,7 @@ class Session
      * storeTokenForUser
      * @param string $username
      * @param string $token
-     * @param int $remember_length
+     * @param integer $remember_length
      * @return PDOStatement|boolean
      */
     public static function storeTokenForUser($username, $token, $remember_length)

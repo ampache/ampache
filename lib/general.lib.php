@@ -46,7 +46,7 @@ function set_memory_limit($new_limit)
  * This generates a random password of the specified length
  * or will use a random length between 14-20
  *
- * @param int $length (optional)
+ * @param integer $length (optional)
  * @return string
  */
 function generate_password($length = null)

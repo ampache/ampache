@@ -69,7 +69,7 @@ class UPnPFind
      *
      * Thanks to artheus (https://github.com/artheus/PHP-UPnP/blob/master/phpupnp.class.php)
      *
-     * @param int $timeout Timeout to wait for responses
+     * @param integer $timeout Timeout to wait for responses
      *
      * @return array  Response
      */

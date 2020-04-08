@@ -160,8 +160,8 @@ class Api
      * 'interface', 100, User::get_from_username(Session::username($input['auth']))->id)
      *
      * @param string $type
-     * @param int $level
-     * @param int $user_id
+     * @param integer $level
+     * @param integer $user_id
      * @param string $method
      * @param string $format
      * @return boolean

@@ -145,7 +145,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  * calls log event if both requirements are met.
  * @param string $type
  * @param string $message
- * @param int $level
+ * @param integer $level
  * @param string $file
  * @param string $username
  * @return boolean

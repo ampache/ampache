@@ -36,7 +36,7 @@ class Stream
      * This overrides the normal session value, without adding
      * an additional session into the database, should be called
      * with care
-     * @param int $sid
+     * @param integer $sid
      */
     public static function set_session($sid)
     {
@@ -357,9 +357,9 @@ class Stream
      * insert_now_playing
      *
      * This will insert the Now Playing data.
-     * @param int $oid
-     * @param int $uid
-     * @param int $length
+     * @param integer $oid
+     * @param integer $uid
+     * @param integer $length
      * @param string $sid
      * @param string $type
      */
@@ -443,7 +443,7 @@ class Stream
      * check_lock_media
      *
      * This checks to see if the media is already being played.
-     * @param int $media_id
+     * @param integer $media_id
      * @param string $type
      * @return boolean
      */

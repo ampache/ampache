@@ -274,7 +274,7 @@ class Access
      * delete
      *
      * deletes the specified access_list entry
-     * @param int $user_id
+     * @param integer $user_id
      */
     public static function delete($user_id)
     {
@@ -318,7 +318,7 @@ class Access
      * are allowed. The IP is passed as a dotted quad.
      * @param string $type
      * @param integer|string $user
-     * @param int $level
+     * @param integer $level
      * @param string $apikey
      * @return boolean
      */
@@ -390,7 +390,7 @@ class Access
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
      * @param string $type
-     * @param int $level
+     * @param integer $level
      * @param integer|null $user_id
      * @return boolean
      */

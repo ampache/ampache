@@ -83,7 +83,7 @@ abstract class Handler
      * For example: 'ls added:2014-10-02..'
      * @param string $command
      * @param string $tag
-     * @param int $time
+     * @param integer $time
      * @return string
      */
     public function getTimedCommand($command, $tag, $time)

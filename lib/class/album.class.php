@@ -433,7 +433,7 @@ class Album extends database_object implements library_item
 
     /**
      * can_edit
-     * @param int $user
+     * @param integer $user
      * @return boolean
      */
     public function can_edit($user = null)
@@ -468,14 +468,14 @@ class Album extends database_object implements library_item
      *
      * Searches for an album; if none is found, insert a new one.
      * @param string $name
-     * @param int $year
-     * @param int $disk
+     * @param integer $year
+     * @param integer $disk
      * @param string $mbid
      * @param string $mbid_group
      * @param string $album_artist
      * @param string $release_type
      * @param boolean $readonly
-     * @param int $original_year
+     * @param integer $original_year
      * @param string $barcode
      * @param string $catalog_number
      * @return integer|null
@@ -570,7 +570,7 @@ class Album extends database_object implements library_item
      * gets the songs for this album takes an optional limit
      * and an optional artist, if artist is passed it only gets
      * songs with this album + specified artist
-     * @param int $limit
+     * @param integer $limit
      * @param string $artist
      * @return integer[]
      */
@@ -639,7 +639,7 @@ class Album extends database_object implements library_item
     /**
      * get_album_suite
      * gets the album ids with the same musicbrainz identifier
-     * @param int $catalog
+     * @param integer $catalog
      * return integer[]
      * @return array
      */
@@ -937,7 +937,7 @@ class Album extends database_object implements library_item
 
     /**
      * display_art
-     * @param int $thumb
+     * @param integer $thumb
      * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
@@ -1167,7 +1167,7 @@ class Album extends database_object implements library_item
      * Update an album field.
      * @param string $field
      * @param $value
-     * @param int $album_id
+     * @param integer $album_id
      * @return PDOStatement|boolean
      */
     private static function update_field($field, $value, $album_id)
@@ -1181,9 +1181,9 @@ class Album extends database_object implements library_item
      * get_random
      *
      * This returns a number of random albums.
-     * @param int $count
+     * @param integer $count
      * @param boolean $with_art
-     * @param int $user_id
+     * @param integer $user_id
      * @return integer[]
      */
     public static function get_random($count = 1, $with_art = false, $user_id = null)

@@ -250,7 +250,7 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
-     * @param int $thumb
+     * @param integer $thumb
      * @param boolean $force
      * @return void
      */
@@ -304,7 +304,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user
+     * @param integer $user
      * @param string $agent
      * @param array $location
      * @return boolean
@@ -339,7 +339,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * update_played
      * sets the played flag
      * @param boolean $new_played
-     * @param int $id
+     * @param integer $id
      */
     public static function update_played($new_played, $id)
     {
@@ -353,9 +353,9 @@ class Podcast_Episode extends database_object implements media, library_item
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param int $value
-     * @param int $song_id
-     * @param int $level
+     * @param integer $value
+     * @param integer $song_id
+     * @param integer $level
      * @return boolean
      */
     private static function _update_item($field, $value, $song_id, $level)
@@ -402,7 +402,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param string $player
      * @param boolean $local

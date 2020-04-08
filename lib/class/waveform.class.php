@@ -67,7 +67,7 @@ class Waveform
 
     /**
      * Get a song waveform.
-     * @param int $song_id
+     * @param integer $song_id
      * @return binary|string|null
      */
     public static function get($song_id)
@@ -390,7 +390,7 @@ class Waveform
 
     /**
      * Save waveform to db.
-     * @param int $song_id
+     * @param integer $song_id
      * @param string $waveform
      * @return boolean|PDOStatement
      */

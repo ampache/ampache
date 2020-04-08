@@ -239,7 +239,7 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * @param int $thumb
+     * @param integer $thumb
      * @param boolean $force
      * @return mixed|void
      */

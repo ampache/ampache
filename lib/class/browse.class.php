@@ -72,7 +72,7 @@ class Browse extends Query
      * Legacy function, need to find a better way to do that
      *
      * @param string $class
-     * @param int $uid
+     * @param integer $uid
      * @return boolean
      */
     public function add_supplemental_object($class, $uid)

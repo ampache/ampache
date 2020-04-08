@@ -145,7 +145,7 @@ class User extends database_object
      * Constructor
      * This function is the constructor object for the user
      * class, it currently takes a username
-     * @param int $user_id
+     * @param integer $user_id
      */
     public function __construct($user_id = 0)
     {
@@ -390,7 +390,7 @@ class User extends database_object
      * []['title'] = ucased type name
      * []['prefs'] = array(array('name', 'display', 'value'));
      * []['admin'] = t/f value if this is an admin only section
-     * @param int $type
+     * @param integer $type
      * @param boolean $system
      * @return array
      */
@@ -589,7 +589,7 @@ class User extends database_object
      * has_access
      * this function checks to see if this user has access
      * to the passed action (pass a level requirement)
-     * @param int $needed_level
+     * @param integer $needed_level
      * @return boolean
      */
     public function has_access($needed_level)
@@ -917,7 +917,7 @@ class User extends database_object
      * @param $media_id
      * @param string $agent
      * @param array $location
-     * @param int $date
+     * @param integer $date
      * @return boolean
      */
     public function update_stats($media_type, $media_id, $agent = '', $location = array(), $date = null)
@@ -1229,7 +1229,7 @@ class User extends database_object
      * Remove Duplicates from user, add in missing
      * If -1 is passed it also removes duplicates from the `preferences`
      * table.
-     * @param int $user_id
+     * @param integer $user_id
      */
     public static function fix_preferences($user_id)
     {
@@ -1349,7 +1349,7 @@ class User extends database_object
      * delay how long since last_seen in seconds default of 20 min
      * calcs difference between now and last_seen
      * if less than delay, we consider them still online
-     * @param int $delay
+     * @param integer $delay
      * @return boolean
      */
     public function is_online($delay = 1200)
@@ -1626,7 +1626,7 @@ class User extends database_object
     /**
      * is_followed_by
      * Get if an user is followed by this user
-     * @param int $user_id
+     * @param integer $user_id
      * @return boolean
      */
     public function is_followed_by($user_id)
@@ -1640,7 +1640,7 @@ class User extends database_object
     /**
      * is_following
      * Get if this user is following an user
-     * @param int $user_id
+     * @param integer $user_id
      * @return boolean
      */
     public function is_following($user_id)
@@ -1653,7 +1653,7 @@ class User extends database_object
 
     /**
      * toggle_follow
-     * @param int $user_id
+     * @param integer $user_id
      * @return boolean
      */
     public function toggle_follow($user_id)
@@ -1678,7 +1678,7 @@ class User extends database_object
     /**
      * get_display_follow
      * Get html code to display the follow/unfollow link
-     * @param int $user_id
+     * @param integer $user_id
      * @return string
      */
     public function get_display_follow($user_id = null)

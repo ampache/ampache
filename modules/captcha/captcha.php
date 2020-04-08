@@ -165,7 +165,7 @@ class easy_captcha
     /**
      * easy_captcha constructor.
      * @param $captcha_id
-     * @param int $ignore_expiration
+     * @param integer $ignore_expiration
      */
     public function __construct($captcha_id = null, $ignore_expiration = 0)
     {
@@ -479,8 +479,8 @@ class easy_captcha
 
     /**
      * @param $text
-     * @param int $dtime
-     * @param int $length
+     * @param integer $dtime
+     * @param integer $length
      * @return string
      */
     public function hash($text, $dtime = 0, $length = 1)
@@ -1186,7 +1186,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     #-- give ok, if captach had already been solved recently
 
     /**
-     * @param int $ignore
+     * @param integer $ignore
      * @return boolean
      */
     public function solved($ignore = 0)
@@ -1209,7 +1209,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     #-- pseudo password (time-bombed)
 
     /**
-     * @param int $deviation
+     * @param integer $deviation
      * @return string
      */
     public function validity_token($deviation = 0)
@@ -1238,7 +1238,7 @@ class easy_captcha_spamfree_no_new_urls
    #-- you have to adapt this, to check for newly added URLs only, in Wikis e.g.
     #   - for simple comment submission forms, this default however suffices:
     /**
-     * @param int $ignore
+     * @param integer $ignore
      * @return boolean
      */
     public function solved($ignore = 0)

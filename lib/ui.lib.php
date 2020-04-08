@@ -35,7 +35,7 @@
  * @param string $title The Title of the message
  * @param string $text The details of the message
  * @param string $next_url Where to go next
- * @param int $cancel T/F show a cancel button that uses return_referer()
+ * @param integer $cancel T/F show a cancel button that uses return_referer()
  * @param string $form_name
  * @param boolean $visible
  */
@@ -216,9 +216,9 @@ function show_preference_box($preferences)
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  * @param string $name
- * @param int $album_id
+ * @param integer $album_id
  * @param boolean $allow_add
- * @param int $song_id
+ * @param integer $song_id
  * @param boolean $allow_none
  * @param string $user
  */
@@ -280,11 +280,11 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
  * @param string $name
- * @param int $artist_id
+ * @param integer $artist_id
  * @param boolean $allow_add
- * @param int $song_id
+ * @param integer $song_id
  * @param boolean $allow_none
- * @param int $user_id
+ * @param integer $user_id
  */
 function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
 {
@@ -339,9 +339,9 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
  * This is the same as show_album_select except it's *gasp* for tvshows! How
  * inventive!
  * @param string $name
- * @param int $tvshow_id
+ * @param integer $tvshow_id
  * @param boolean $allow_add
- * @param int $season_id
+ * @param integer $season_id
  * @param boolean $allow_none
  */
 function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false)
@@ -384,7 +384,7 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
  * @param $name
  * @param $season_id
  * @param boolean $allow_add
- * @param int $video_id
+ * @param integer $video_id
  * @param boolean $allow_none
  * @return boolean
  */
@@ -436,7 +436,7 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
  * Yet another one of these buggers. this shows a drop down of all of your
  * catalogs.
  * @param string $name
- * @param int $catalog_id
+ * @param integer $catalog_id
  * @param string $style
  * @param boolean $allow_none
  * @param string $filter_type
@@ -475,8 +475,8 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  * @param string $name
- * @param int $license_id
- * @param int $song_id
+ * @param integer $license_id
+ * @param integer $song_id
  */
 function show_license_select($name, $license_id = 0, $song_id = 0)
 {
@@ -691,7 +691,7 @@ function toggle_visible($element)
  * display_notification
  * Show a javascript notification to the user
  * @param string $message
- * @param int $timeout
+ * @param integer $timeout
  */
 function display_notification($message, $timeout = 5000)
 {

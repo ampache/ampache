@@ -190,7 +190,7 @@ class Song_Preview extends database_object implements media, playable_item
     /**
      * get_artist_name
      * gets the name of $this->artist, allows passing of id
-     * @param int $artist_id
+     * @param integer $artist_id
      * @return string
      */
     public function get_artist_name($artist_id = 0)

@@ -214,7 +214,7 @@ class AmpacheTmdb
     /**
      * @param $type
      * @param array $options
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather_arts($type, $options = array(), $limit = 5)
