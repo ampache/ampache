@@ -498,18 +498,22 @@ class Tag extends database_object implements library_item
      * @param integer $object_id
      * @return array|bool
      */
-    public static function get_object_tags($type, $object_id)
+    public static function get_object_tags($type, $object_id = null)
     {
         if (!Core::is_library_item($type)) {
             return false;
         }
 
+        $params = array($type);
         $sql = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
-            "WHERE `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ?";
-
+            "WHERE `tag_map`.`object_type` = ?";
+        if ($object_id !== null) {
+            $sql .= " AND `tag_map`.`object_id` = ?";
+            $params[] = $object_id;
+        }
         $results    = array();
-        $db_results = Dba::read($sql, array($type, $object_id));
+        $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row;
