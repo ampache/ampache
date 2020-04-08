@@ -42,7 +42,7 @@ class VlcPlayer
      * i would change this to another value then standard 8080, it gets used by more things
      * @param string $h
      * @param string $pw
-     * @param int $p
+     * @param integer $p
      */
     public function __construct($h = 'localhost', $pw = '', $p = 8080)
     {
@@ -438,7 +438,7 @@ class VlcPlayer
     //warning VLC returns it's complete media lib if asked for playlist
     /**
      * @param $contents
-     * @param int $get_attributes
+     * @param integer $get_attributes
      * @param string $priority
      * @return array|void
      */

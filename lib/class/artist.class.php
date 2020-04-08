@@ -162,7 +162,7 @@ class Artist extends database_object implements library_item
      * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
      * @param integer|null $artist_id
-     * @param int $catalog_init
+     * @param integer $catalog_init
      */
     public function __construct($artist_id = null, $catalog_init = 0)
     {
@@ -380,8 +380,8 @@ class Artist extends database_object implements library_item
     /**
      * get_top_songs
      * gets the songs for this artist
-     * @param int $artist
-     * @param int $count
+     * @param integer $artist
+     * @param integer $count
      * @return integer[]
      */
     public static function get_top_songs($artist, $count = 50)
@@ -439,9 +439,9 @@ class Artist extends database_object implements library_item
      * get_random
      *
      * This returns a number of random artists.
-     * @param int $count
+     * @param integer $count
      * @param boolean $with_art
-     * @param int $user_id
+     * @param integer $user_id
      * @return integer[]
      */
     public static function get_random($count = 1, $with_art = false, $user_id = null)
@@ -491,7 +491,7 @@ class Artist extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
-     * @param int $catalog
+     * @param integer $catalog
      * @param string $limit_threshold
      * @return array
      */
@@ -745,7 +745,7 @@ class Artist extends database_object implements library_item
 
     /**
      * display_art
-     * @param int $thumb
+     * @param integer $thumb
      * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
@@ -765,7 +765,7 @@ class Artist extends database_object implements library_item
 
     /**
      * can_edit
-     * @param int $user_id
+     * @param integer $user_id
      * @return boolean
      */
     public function can_edit($user_id = null)
@@ -1011,7 +1011,7 @@ class Artist extends database_object implements library_item
      * Update artist information.
      * @param string $summary
      * @param string $placeformed
-     * @param int $yearformed
+     * @param integer $yearformed
      * @param boolean $manual
      * @return PDOStatement|boolean
      */
@@ -1029,7 +1029,7 @@ class Artist extends database_object implements library_item
 
     /**
      * Update artist associated user.
-     * @param int $user
+     * @param integer $user
      * @return PDOStatement|boolean
      */
     public function update_artist_user($user)

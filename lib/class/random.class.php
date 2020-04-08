@@ -101,7 +101,7 @@ class Random
      * This just randomly picks a song at whim from all catalogs
      * nothing special here...
      * @param string $limit
-     * @param int $user_id
+     * @param integer $user_id
      * @return array
      */
     public static function get_default($limit = '', $user_id = null)
@@ -150,7 +150,7 @@ class Random
      * This just randomly picks songs based on whether the artist, album, song is flagged by the user.
      * @param string $type
      * @param string $limit
-     * @param int $user_id
+     * @param integer $user_id
      * @return array
      */
     public static function get_flagged($type = 'song', $limit = '', $user_id = null)

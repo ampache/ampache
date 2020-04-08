@@ -144,7 +144,7 @@ class Tag extends database_object implements library_item
      * This is a wrapper function, it figures out what we need to add, be it a tag
      * and map, or just the mapping
      * @param string $type
-     * @param int $object_id
+     * @param integer $object_id
      * @param string $value
      * @param boolean $user
      * @return bool|mixed|string|null
@@ -259,7 +259,7 @@ class Tag extends database_object implements library_item
     /**
      * merge
      * merges this tag to another one.
-     * @param int $merge_to
+     * @param integer $merge_to
      * @param boolean $is_persistent
      */
     public function merge($merge_to, $is_persistent)
@@ -436,9 +436,9 @@ class Tag extends database_object implements library_item
      * This looks to see if the current mapping of the current object of the current tag of the current
      * user exists, lots of currents... taste good in scones.
      * @param string $type
-     * @param int $object_id
-     * @param int $tag_id
-     * @param int $user
+     * @param integer $object_id
+     * @param integer $tag_id
+     * @param integer $user
      * @return bool|mixed
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
@@ -462,8 +462,8 @@ class Tag extends database_object implements library_item
      * get_top_tags
      * This gets the top tags for the specified object using limit
      * @param string $type
-     * @param int $object_id
-     * @param int $limit
+     * @param integer $object_id
+     * @param integer $limit
      * @return array
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
@@ -495,7 +495,7 @@ class Tag extends database_object implements library_item
      * get_object_tags
      * Display all tags that apply to matching target type of the specified id
      * @param string $type
-     * @param int $object_id
+     * @param integer $object_id
      * @return array|bool
      */
     public static function get_object_tags($type, $object_id)
@@ -563,7 +563,7 @@ class Tag extends database_object implements library_item
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
      * @param string $type
-     * @param int $limit
+     * @param integer $limit
      * @param string $order
      * @return array|mixed
      */
@@ -651,7 +651,7 @@ class Tag extends database_object implements library_item
      *  (ex. tag1,tag2,tag3,..)
      * @param string $tags_comma
      * @param string $type
-     * @param int $object_id
+     * @param integer $object_id
      * @param boolean $overwrite
      */
     public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
@@ -730,7 +730,7 @@ class Tag extends database_object implements library_item
      * This returns the count for the all objects associated with this tag
      * If a type is specific only counts for said type are returned
      * @param string $type
-     * @param int $user_id
+     * @param integer $user_id
      * @return array
      */
     public function count($type = '', $user_id = 0)
@@ -763,7 +763,7 @@ class Tag extends database_object implements library_item
      * remove_map
      * This will only remove tag maps for the current user
      * @param string $type
-     * @param int $object_id
+     * @param integer $object_id
      * @param boolean $user
      * @return boolean
      */
@@ -904,7 +904,7 @@ class Tag extends database_object implements library_item
 
     /**
      * display_art
-     * @param int $thumb
+     * @param integer $thumb
      * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
@@ -917,7 +917,7 @@ class Tag extends database_object implements library_item
     /**
      * can_edit_tag_map
      * @param string $object_type
-     * @param int $object_id
+     * @param integer $object_id
      * @param string|boolean $user
      * @return boolean
      */
@@ -950,8 +950,8 @@ class Tag extends database_object implements library_item
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

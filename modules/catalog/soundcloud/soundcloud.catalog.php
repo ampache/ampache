@@ -138,7 +138,7 @@ class Catalog_soundcloud extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param int $catalog_id
+     * @param integer $catalog_id
      * @throws Exception
      * @throws Exception
      */

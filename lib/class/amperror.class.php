@@ -59,7 +59,7 @@ class AmpError
      * It can optionally clobber rather then adding to the error message
      * @param string $name
      * @param string $message
-     * @param int $clobber
+     * @param integer $clobber
      */
     public static function add($name, $message, $clobber = 0)
     {

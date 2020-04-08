@@ -205,7 +205,7 @@ class Democratic extends Tmp_Playlist
      *
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
-     * @param int $limit
+     * @param integer $limit
      * @return integer[]
      */
     public function get_items($limit = null)
@@ -260,7 +260,7 @@ class Democratic extends Tmp_Playlist
      * Most of the time this will just be the top entry, but if there is a
      * base_playlist and no items in the playlist then it returns a random
      * entry from the base_playlist
-     * @param int $offset
+     * @param integer $offset
      * @return integer|null
      */
     public function get_next_object($offset = 0)
@@ -621,7 +621,7 @@ class Democratic extends Tmp_Playlist
     /**
      * get_vote
      * This returns the current count for a specific song
-     * @param int $id
+     * @param integer $id
      * @return array|mixed
      */
     public function get_vote($id)

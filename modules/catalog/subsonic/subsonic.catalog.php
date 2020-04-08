@@ -117,7 +117,7 @@ class Catalog_subsonic extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param int $catalog_id
+     * @param integer $catalog_id
      */
     public function __construct($catalog_id = null)
     {

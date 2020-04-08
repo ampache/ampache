@@ -84,7 +84,7 @@ abstract class playlist_object extends database_object implements library_item
      * has_access
      * This function returns true or false if the current user
      * has access to this playlist
-     * @param int $user_id
+     * @param integer $user_id
      * @return boolean
      */
     public function has_access($user_id = null)
@@ -200,7 +200,7 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @param int $thumb
+     * @param integer $thumb
      * @param boolean $force
      * @return mixed|void
      */

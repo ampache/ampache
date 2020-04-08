@@ -52,7 +52,7 @@ class Stats
      * clear
      *
      * This clears all stats for _everything_.
-     * @param int $user
+     * @param integer $user
      */
     public static function clear($user = 0)
     {
@@ -79,8 +79,8 @@ class Stats
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
@@ -95,13 +95,13 @@ class Stats
      * This inserts a new record for the specified object
      * with the specified information, amazing!
      * @param string $input_type
-     * @param int $oid
-     * @param int $user
+     * @param integer $oid
+     * @param integer $user
      * @param string $agent
      * @param array $location
      * @param string $count_type
-     * @param int $date
-     * @param int $song_time
+     * @param integer $date
+     * @param integer $song_time
      * @return boolean
      */
     public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
@@ -153,11 +153,11 @@ class Stats
      * is_already_inserted
      * Check if the same stat has not already been inserted within a graceful delay
      * @param string $type
-     * @param int $oid
-     * @param int $user
+     * @param integer $oid
+     * @param integer $user
      * @param string $count_type
-     * @param int $date
-     * @param int $song_time
+     * @param integer $date
+     * @param integer $song_time
      * @return boolean
      */
     public static function is_already_inserted($type, $oid, $user, $count_type = 'stream', $date = null, $song_time = 0)
@@ -281,7 +281,7 @@ class Stats
      * this sets the object_counts count type to skipped
      * Gets called when the next song is played in quick succession
      *
-     * @param int $object_id
+     * @param integer $object_id
      * @return bool|PDOStatement
      */
     public static function skip_last_song($object_id)
@@ -305,8 +305,8 @@ class Stats
      * get_object_history
      * This returns the objects that have happened for $user_id sometime after $time
      * used primarily by the democratic cooldown code
-     * @param int $user_id
-     * @param int $time
+     * @param integer $user_id
+     * @param integer $time
      * @param boolean $newest
      * @return array
      */
@@ -344,7 +344,7 @@ class Stats
      * @param string $input_type
      * @param string $threshold
      * @param string $count_type
-     * @param int $user_id
+     * @param integer $user_id
      * @param boolean $random
      * @return string
      */
@@ -536,8 +536,8 @@ class Stats
      * If full is passed, doesn't limit based on date
      * @param string $input_count
      * @param string $input_type
-     * @param int $user
-     * @param int $full
+     * @param integer $user
+     * @param integer $full
      * @return array
      */
     public static function get_user($input_count, $input_type, $user, $full = 0)
@@ -593,7 +593,7 @@ class Stats
      * get_newest_sql
      * This returns the get_newest sql
      * @param string $input_type
-     * @param int $catalog
+     * @param integer $catalog
      * @return string
      */
     public static function get_newest_sql($input_type, $catalog = 0)
@@ -654,7 +654,7 @@ class Stats
      * @param string $type
      * @param string $count
      * @param string $offset
-     * @param int $catalog
+     * @param integer $catalog
      * @return array
      */
     public static function get_newest($type, $count = '', $offset = '', $catalog = 0)

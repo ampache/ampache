@@ -231,7 +231,7 @@ class Core
     /**
      * Place a new key on a specific position in array
      * @param array $array
-     * @param int $position
+     * @param integer $position
      * @param array $add
      * @return array
      */

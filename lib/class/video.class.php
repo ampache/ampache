@@ -219,7 +219,7 @@ class Video extends database_object implements media, library_item
 
     /**
      * Create a video strongly typed object from its id.
-     * @param int $video_id
+     * @param integer $video_id
      * @return Video
      */
     public static function create_from_id($video_id)
@@ -417,7 +417,7 @@ class Video extends database_object implements media, library_item
     }
 
     /**
-     * @param int $thumb
+     * @param integer $thumb
      * @param boolean $force
      * @return mixed|void
      */
@@ -457,7 +457,7 @@ class Video extends database_object implements media, library_item
      * play_url
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -668,7 +668,7 @@ class Video extends database_object implements media, library_item
     } // update
 
     /**
-     * @param int $video_id
+     * @param integer $video_id
      * @param Video $new_video
      */
     public static function update_video($video_id, Video $new_video)
@@ -698,7 +698,7 @@ class Video extends database_object implements media, library_item
     /**
      * generate_preview
      * Generate video preview image from a video file
-     * @param int $video_id
+     * @param integer $video_id
      * @param boolean $overwrite
      */
     public static function generate_preview($video_id, $overwrite = false)
@@ -715,7 +715,7 @@ class Video extends database_object implements media, library_item
      * get_random
      *
      * This returns a number of random videos.
-     * @param int $count
+     * @param integer $count
      * @return integer[]
      */
     public static function get_random($count = 1)
@@ -748,7 +748,7 @@ class Video extends database_object implements media, library_item
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user
+     * @param integer $user
      * @param string $agent
      * @param array $location
      * @return boolean
@@ -1077,7 +1077,7 @@ class Video extends database_object implements media, library_item
      * update_played
      * sets the played flag
      * @param boolean $new_played
-     * @param int $song_id
+     * @param integer $song_id
      */
     public static function update_played($new_played, $song_id)
     {
@@ -1091,9 +1091,9 @@ class Video extends database_object implements media, library_item
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param int $value
-     * @param int $song_id
-     * @param int $level
+     * @param integer $value
+     * @param integer $song_id
+     * @param integer $level
      * @return boolean
      */
     private static function _update_item($field, $value, $song_id, $level)

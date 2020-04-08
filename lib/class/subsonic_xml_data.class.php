@@ -91,7 +91,7 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param int $videoid
+     * @param integer $videoid
      * @return int
      */
     public static function getVideoId($videoid)
@@ -100,7 +100,7 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param int $plistid
+     * @param integer $plistid
      * @return int
      */
     public static function getSmartPlId($plistid)
@@ -127,7 +127,7 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param int $plistid
+     * @param integer $plistid
      * @return int
      */
     public static function getPlaylistId($plistid)
@@ -610,7 +610,7 @@ class Subsonic_XML_Data
     /**
      * addSong
      * @param SimpleXMLElement $xml
-     * @param int $songId
+     * @param integer $songId
      * @param boolean $addAmpacheInfo
      * @param string $elementName
      * @return SimpleXMLElement
@@ -628,7 +628,7 @@ class Subsonic_XML_Data
 
     /**
      * getSongData
-     * @param int $songId
+     * @param integer $songId
      * @return array
      */
     public static function getSongData($songId)
@@ -657,7 +657,7 @@ class Subsonic_XML_Data
 
     /**
      * getAlbumData
-     * @param int $albumId
+     * @param integer $albumId
      * @return array
      */
     public static function getAlbumData($albumId)
@@ -674,7 +674,7 @@ class Subsonic_XML_Data
 
     /**
      * getArtistData
-     * @param int $artistId
+     * @param integer $artistId
      * @return array
      */
     public static function getArtistData($artistId)
@@ -696,7 +696,7 @@ class Subsonic_XML_Data
 
     /**
      * getCatalogData
-     * @param int $catalogId
+     * @param integer $catalogId
      * @param string $file_Path
      * @return array
      */

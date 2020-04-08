@@ -89,7 +89,7 @@ class Recommendation
 
     /**
      * @param string $type
-     * @param int $id
+     * @param integer $id
      * @param boolean $get_items
      * @return array
      */
@@ -123,7 +123,7 @@ class Recommendation
 
     /**
      * @param string $type
-     * @param int $id
+     * @param integer $id
      */
     protected static function delete_recommendation_cache($type, $id)
     {
@@ -136,7 +136,7 @@ class Recommendation
 
     /**
      * @param string $type
-     * @param int $id
+     * @param integer $id
      * @param $recommendations
      */
     protected static function update_recommendation_cache($type, $id, $recommendations)
@@ -156,8 +156,8 @@ class Recommendation
     /**
      * get_songs_like
      * Returns a list of similar songs
-     * @param int $song_id
-     * @param int $limit
+     * @param integer $song_id
+     * @param integer $limit
      * @param boolean $local_only
      * @return array
      */
@@ -248,8 +248,8 @@ class Recommendation
     /**
      * get_artists_like
      * Returns a list of similar artists
-     * @param int $artist_id
-     * @param int $limit
+     * @param integer $artist_id
+     * @param integer $limit
      * @param boolean $local_only
      * @return array
      */
@@ -348,7 +348,7 @@ class Recommendation
     /**
      * get_artist_info
      * Returns artist information
-     * @param int $artist_id
+     * @param integer $artist_id
      * @param string $fullname
      * @return array
      */
@@ -413,7 +413,7 @@ class Recommendation
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param int $old_object_id
+     * @param integer $old_object_id
      * @param string $new_object_id
      * @return boolean|PDOStatement
      */

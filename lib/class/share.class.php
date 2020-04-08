@@ -104,7 +104,7 @@ class Share extends database_object
     }
 
     /**
-     * @param int $length
+     * @param integer $length
      * @return string
      */
     public static function generate_secret($length = 8)
@@ -137,12 +137,12 @@ class Share extends database_object
 
     /**
      * @param string $object_type
-     * @param int $object_id
+     * @param integer $object_id
      * @param boolean $allow_stream
      * @param boolean $allow_download
-     * @param int $expire
+     * @param integer $expire
      * @param string $secret
-     * @param int $max_counter
+     * @param integer $max_counter
      * @param string $description
      * @return string|null
      */
@@ -500,8 +500,8 @@ class Share extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

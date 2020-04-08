@@ -98,8 +98,8 @@ abstract class database_object
     /**
      * get_from_cache
      * This attempts to retrieve the specified object from the cache we've got here
-     * @param int $index
-     * @param int $object_id
+     * @param integer $index
+     * @param integer $object_id
      * @return array
      */
     public static function get_from_cache($index, $object_id)

@@ -296,7 +296,7 @@ class TVShow extends database_object implements library_item
     }
 
     /**
-     * @param int $thumb
+     * @param integer $thumb
      * @param boolean $force
      * @return mixed|void
      */
@@ -440,7 +440,7 @@ class TVShow extends database_object implements library_item
      * @param $tags_comma
      * @param boolean $override_childs
      * @param boolean $add_to_childs
-     * @param int $current_id
+     * @param integer $current_id
      * @param boolean $force_update
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)

@@ -428,7 +428,7 @@ class Preference extends database_object
     /**
      * load_from_session
      * This loads the preferences from the session rather then creating a connection to the database
-     * @param int $uid
+     * @param integer $uid
      * @return boolean
      */
     public static function load_from_session($uid = -1)

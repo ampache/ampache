@@ -188,7 +188,7 @@ class UI
      *
      * Turns a size in bytes into the best human-readable value
      * @param $value
-     * @param int $precision
+     * @param integer $precision
      * @return string
      */
     public static function format_bytes($value, $precision = 2)

@@ -48,7 +48,7 @@ class Search extends playlist_object
 
     /**
      * constructor
-     * @param int $search_id
+     * @param integer $search_id
      * @param string $searchtype
      * @param User $user
      */
@@ -1215,7 +1215,7 @@ class Search extends playlist_object
      * set_last_count
      *
      * Returns the name of the saved search corresponding to the given ID
-     * @param int $count
+     * @param integer $count
      */
     private function set_last_count($count)
     {
@@ -1228,7 +1228,7 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function get_random_items($limit = null)

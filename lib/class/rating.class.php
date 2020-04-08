@@ -53,7 +53,7 @@ class Rating extends database_object
      *
      * Remove ratings for items that no longer exist.
      * @param string $object_type
-     * @param int $object_id
+     * @param integer $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -79,7 +79,7 @@ class Rating extends database_object
      * single query, saving on connection overhead
      * @param string $type
      * @param $ids
-     * @param int $user_id
+     * @param integer $user_id
      * @return boolean
      */
     public static function build_cache($type, $ids, $user_id = null)
@@ -90,7 +90,7 @@ class Rating extends database_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        debug_event('rating.class', 'Begin build_cache ' . (string) (count($ids)) . ' ' . $type . '\'s for user ' . $user_id, 4);
+        //debug_event('rating.class', 'Begin build_cache ' . (string) (count($ids)) . ' ' . $type . '\'s for user ' . $user_id, 4);
         $ratings      = array();
         $user_ratings = array();
 
@@ -138,7 +138,7 @@ class Rating extends database_object
      * get_user_rating
      * Get a user's rating.  If no userid is passed in, we use the currently
      * logged in user.
-     * @param int $user_id
+     * @param integer $user_id
      * @return double
      */
     public function get_user_rating($user_id = null)
@@ -256,7 +256,7 @@ class Rating extends database_object
      * This function sets the rating for the current object.
      * If no user_id is passed in, we use the currently logged in user.
      * @param string $rating
-     * @param int $user_id
+     * @param integer $user_id
      * @return boolean
      */
     public function set_rating($rating, $user_id = null)
@@ -397,8 +397,8 @@ class Rating extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

@@ -527,7 +527,7 @@ class JSON_Data
      * This builds the JSON document for displaying video objects
      *
      * @param    array    $videos    (description here...)
-     * @param int $user_id
+     * @param integer $user_id
      * @return    string    return JSON
      */
     public static function videos($videos, $user_id)

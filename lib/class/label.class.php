@@ -328,7 +328,7 @@ class Label extends database_object implements library_item
 
     /**
      * @param array $data
-     * @param int $id
+     * @param integer $id
      * @return integer
      */
     public static function lookup(array $data, $id = 0)
@@ -377,7 +377,7 @@ class Label extends database_object implements library_item
 
     /**
      * add_artist_assoc
-     * @param int $artist_id
+     * @param integer $artist_id
      * @return boolean|PDOStatement
      */
     public function add_artist_assoc($artist_id)
@@ -389,7 +389,7 @@ class Label extends database_object implements library_item
 
     /**
      * remove_artist_assoc
-     * @param int $artist_id
+     * @param integer $artist_id
      * @return boolean|PDOStatement
      */
     public function remove_artist_assoc($artist_id)
@@ -460,7 +460,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @param int $artist_id
+     * @param integer $artist_id
      * @return array
      */
     public static function get_labels($artist_id)
@@ -513,7 +513,7 @@ class Label extends database_object implements library_item
      * update_label_list
      * Update the labels list based on commated list (ex. label1,label2,label3,..)
      * @param $labels_comma
-     * @param int $artist_id
+     * @param integer $artist_id
      * @param boolean $overwrite
      * @return boolean
      */

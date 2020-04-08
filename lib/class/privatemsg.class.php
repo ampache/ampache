@@ -102,7 +102,7 @@ class PrivateMsg extends database_object
 
     /**
      * __construct
-     * @param int $pm_id
+     * @param integer $pm_id
      */
     public function __construct($pm_id)
     {
@@ -135,7 +135,7 @@ class PrivateMsg extends database_object
 
     /**
      * set_is_read
-     * @param int $read
+     * @param integer $read
      * @return PDOStatement|boolean
      */
     public function set_is_read($read)
@@ -213,9 +213,9 @@ class PrivateMsg extends database_object
     /**
      * get_private_msgs
      * Get the user received private messages.
-     * @param int $to_user
+     * @param integer $to_user
      * @param boolean $unread_only
-     * @param int $from_user
+     * @param integer $from_user
      * @return integer[]
      */
     public static function get_private_msgs($to_user, $unread_only = false, $from_user = 0)
@@ -242,7 +242,7 @@ class PrivateMsg extends database_object
      * send_chat_msgs
      * Get the subsonic chat messages.
      * @param string message
-     * @param int $user_id
+     * @param integer $user_id
      * @return string|null
      */
     public static function send_chat_msg($message, $user_id)
@@ -264,7 +264,7 @@ class PrivateMsg extends database_object
     /**
      * get_chat_msgs
      * Get the subsonic chat messages.
-     * @param int $since
+     * @param integer $since
      * @return array
      */
     public static function get_chat_msgs($since = 0)
@@ -290,7 +290,7 @@ class PrivateMsg extends database_object
     /**
      * clean_chat_msgs
      * Clear old messages from the subsonic chat message list.
-     * @param int $days
+     * @param integer $days
      */
     public static function clean_chat_msgs($days = 30)
     {

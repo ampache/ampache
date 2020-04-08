@@ -75,7 +75,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Constructor
-     * @param int $broadcast_id
+     * @param integer $broadcast_id
      */
     public function __construct($broadcast_id)
     {
@@ -105,7 +105,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast listeners.
-     * @param int $listeners
+     * @param integer $listeners
      */
     public function update_listeners($listeners)
     {
@@ -117,7 +117,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast current song.
-     * @param int $song_id
+     * @param integer $song_id
      */
     public function update_song($song_id)
     {
@@ -295,7 +295,7 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * @param int $thumb
+     * @param integer $thumb
      * @param boolean $force
      * @return mixed|void
      */
@@ -387,7 +387,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get unbroadcast link.
-     * @param int $broadcast_id
+     * @param integer $broadcast_id
      * @return string
      */
     public static function get_unbroadcast_link($broadcast_id)
@@ -402,7 +402,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get broadcasts from an user.
-     * @param int $user_id
+     * @param integer $user_id
      * @return integer[]
      */
     public static function get_broadcasts($user_id)
@@ -428,7 +428,7 @@ class Broadcast extends database_object implements library_item
     /**
      * Get play url.
      *
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
