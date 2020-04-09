@@ -3,10 +3,10 @@ import { Song } from './Song';
 import { AuthKey } from './Auth';
 
 //Broken
-export const getSongsFromArtist = (artistID: number, authKey: AuthKey) => {
+export const generateSongsFromArtist = (artistID: number, authKey: AuthKey) => {
     return axios
         .get(
-            `${process.env.ServerURL}/server/json.server.php?action=generate_playlist&artist=${artistID}&auth=${authKey}&version=400001`
+            `${process.env.ServerURL}/server/json.server.php?action=playlist_generate&artist=${artistID}&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;
@@ -20,10 +20,10 @@ export const getSongsFromArtist = (artistID: number, authKey: AuthKey) => {
         });
 };
 
-export const getSongsFromAlbum = (albumID: number, authKey: AuthKey) => {
+export const generateSongsFromAlbum = (albumID: number, authKey: AuthKey) => {
     return axios
         .get(
-            `${process.env.ServerURL}/server/json.server.php?action=generate_playlist&artist=${albumID}&auth=${authKey}&version=400001`
+            `${process.env.ServerURL}/server/json.server.php?action=playlist_generate&album=${albumID}&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;

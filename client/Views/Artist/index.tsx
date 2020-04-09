@@ -8,6 +8,7 @@ import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
 import { MusicContext } from '../../Contexts/MusicContext';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
+import { generateSongsFromArtist } from '../../logic/Playlist_Generate';
 
 interface ArtistViewProps {
     user: User;
@@ -50,6 +51,19 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
         }
     }, [props.match.params.artistID, props.user.authKey]);
 
+    const playRandomArtistSongs = () => {
+        generateSongsFromArtist(artist.id, props.user.authKey)
+            .then((songs) => {
+                console.log(songs);
+            })
+            .catch((error) => {
+                toast.error(
+                    '😞 Something went wrong generating songs from artist.'
+                );
+                setError(error);
+            });
+    };
+
     if (error) {
         return (
             <div className='artistPage'>
@@ -69,7 +83,9 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                         <div className='name'>{artist.name}</div>
                         <div className='summary'>{artist.summary}</div>
                         <div className='playRandom'>
-                            <button>Play</button>
+                            <button onClick={playRandomArtistSongs}>
+                                Play
+                            </button>
                         </div>
                     </div>
                 </div>
