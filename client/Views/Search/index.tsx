@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { User } from '../../logic/User';
-import { searchSongs } from '../../logic/Search';
-import { Song } from '../../logic/Song';
-import AmpacheError from '../../logic/AmpacheError';
-import { MusicContext } from '../../Contexts/MusicContext';
-import SongBlock from '../components/SongBlock';
+import { User } from '~logic/User';
+import { searchSongs } from '~logic/Search';
+import { Song } from '~logic/Song';
+import AmpacheError from '~logic/AmpacheError';
+import { MusicContext } from '~Contexts/MusicContext';
+import SongBlock from '~components/SongBlock';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 

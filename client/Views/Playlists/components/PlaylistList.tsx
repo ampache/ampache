@@ -5,12 +5,12 @@ import {
     getPlaylists,
     Playlist,
     renamePlaylist
-} from '../../../logic/Playlist';
+} from '~logic/Playlist';
 import PlaylistRow from './PlaylistRow';
-import { AuthKey } from '../../../logic/Auth';
-import AmpacheError from '../../../logic/AmpacheError';
-import Plus from '/images/icons/svg/plus.svg';
-import { ModalType, useModal } from '../../../Modal/Modal';
+import { AuthKey } from '~logic/Auth';
+import AmpacheError from '~logic/AmpacheError';
+import Plus from '~images/icons/svg/plus.svg';
+import { ModalType, useModal } from '~Modal/Modal';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getPlaylists, Playlist } from '../../logic/Playlist';
-import { AuthKey } from '../../logic/Auth';
+import { getPlaylists, Playlist } from '~logic/Playlist';
+import { AuthKey } from '~logic/Auth';
 import closeWindowIcon from '/images/icons/svg/close-window.svg';
-import AmpacheError from '../../logic/AmpacheError';
+import AmpacheError from '~logic/AmpacheError';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 

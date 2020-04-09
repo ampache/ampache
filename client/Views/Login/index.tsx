@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import logo from '/images/ampache-dark.png';
-import AmpacheError from '../../logic/AmpacheError';
+import logo from '~images/ampache-dark.png';
+import AmpacheError from '~logic/AmpacheError';
 
 interface LoginProps {
     handleLogin: (

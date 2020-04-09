@@ -1,5 +1,5 @@
 import React from 'react';
-import { Song } from '../../../../logic/Song';
+import { Song } from '../../../logic/Song';
 import { Link } from 'react-router-dom';
 
 interface QueueSongProps {

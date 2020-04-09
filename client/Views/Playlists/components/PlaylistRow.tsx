@@ -1,6 +1,6 @@
 import React from 'react';
 import useContextMenu from 'react-use-context-menu';
-import { Playlist } from '../../../logic/Playlist';
+import { Playlist } from '~logic/Playlist';
 import { Link } from 'react-router-dom';
 
 interface PlaylistRowProps {

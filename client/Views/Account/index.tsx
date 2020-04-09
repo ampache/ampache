@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { User } from 'logic/User';
-import { updateCatalog } from '../../logic/Catalog';
+import { User } from '~logic/User';
+import { updateCatalog } from '~logic/Catalog';
 import { toast } from 'react-toastify';
 
 interface AccountProps {

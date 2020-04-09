@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Artist, getAlbumsFromArtist, getArtist } from '../../logic/Artist';
-import { User } from '../../logic/User';
-import AmpacheError from '../../logic/AmpacheError';
-import { Album } from '../../logic/Album';
-import AlbumDisplay from '../components/AlbumDisplay';
-import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
-import { MusicContext } from '../../Contexts/MusicContext';
+import { User } from '~logic/User';
+import AmpacheError from '~logic/AmpacheError';
+import { Album } from '~logic/Album';
+import AlbumDisplay from '~components/AlbumDisplay';
+import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
+import { MusicContext } from '~Contexts/MusicContext';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
-import { generateSongsFromArtist } from '../../logic/Playlist_Generate';
+import { generateSongsFromArtist } from '~logic/Playlist_Generate';
 
 interface ArtistViewProps {
     user: User;
@@ -55,6 +55,8 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
         generateSongsFromArtist(artist.id, props.user.authKey)
             .then((songs) => {
                 console.log(songs);
+
+                //TODO: When working
             })
             .catch((error) => {
                 toast.error(

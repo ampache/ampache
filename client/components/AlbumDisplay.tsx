@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Album } from '../../logic/Album';
+import { Album } from '../logic/Album';
 import useContextMenu from 'react-use-context-menu';
 
 interface AlbumDisplayProps {

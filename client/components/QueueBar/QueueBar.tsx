@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { Song } from '../../../logic/Song';
-import { MusicContext } from '../../../Contexts/MusicContext';
+import { Song } from '../../logic/Song';
+import { MusicContext } from '../../Contexts/MusicContext';
 import QueueSong from './components/QueueSong';
 
 interface QueueBarProps {

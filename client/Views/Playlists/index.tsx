@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from '../../logic/User';
+import { User } from '~logic/User';
 import PlaylistList from './components/PlaylistList';
 
 interface PlaylistsViewProps {

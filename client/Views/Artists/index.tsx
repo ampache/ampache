@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Artist, getArtists } from '../../logic/Artist';
-import { User } from '../../logic/User';
-import AmpacheError from '../../logic/AmpacheError';
-import ArtistDisplay from '../components/ArtistDisplay';
+import { Artist, getArtists } from '~logic/Artist';
+import { User } from '~logic/User';
+import AmpacheError from '~logic/AmpacheError';
+import ArtistDisplay from '~components/ArtistDisplay';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 

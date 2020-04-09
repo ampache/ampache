@@ -1,6 +1,6 @@
 import React from 'react';
-import { User } from '../../logic/User';
-import SongList from '../components/SongList';
+import { User } from '~logic/User';
+import SongList from '~components/SongList';
 
 interface PlaylistViewProps {
     user: User;

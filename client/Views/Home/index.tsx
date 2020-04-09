@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Album, getRandomAlbums } from '../../logic/Album';
-import AlbumDisplay from '../components/AlbumDisplay';
-import { User } from '../../logic/User';
+import { Album, getRandomAlbums } from '~logic/Album';
+import AlbumDisplay from '~components/AlbumDisplay';
+import { User } from '~logic/User';
 import AmpacheError from '../../logic/AmpacheError';
-import { MusicContext } from '../../Contexts/MusicContext';
-import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
+import { MusicContext } from '~Contexts/MusicContext';
+import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 

@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Album, getAlbum } from '../../logic/Album';
-import { User } from '../../logic/User';
-import AmpacheError from '../../logic/AmpacheError';
+import { Album, getAlbum } from '~logic/Album';
+import { User } from '~logic/User';
+import AmpacheError from '~logic/AmpacheError';
 import { Link } from 'react-router-dom';
-import SongList from '../components/SongList';
+import SongList from '~components/SongList';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
-import { playSongFromAlbum } from '../../Helpers/playAlbumHelper';
-import { MusicContext } from '../../Contexts/MusicContext';
+import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
+import { MusicContext } from '~Contexts/MusicContext';
 
 interface AlbumViewProps {
     user: User;

@@ -11,7 +11,7 @@
         "allowJs": true,
         "baseUrl": ".",
         "paths": {
-            "@logic/*": ["./logic/"]
+            "~*": ["./*"]
         }
     },
     "exclude": ["node_modules"]
