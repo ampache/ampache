@@ -285,9 +285,9 @@ class Podcast_Episode extends database_object implements media, library_item
         return true;
     } // set_played
 
-    public function check_play_history($user)
+    public function check_play_history($user, $agent)
     {
-        unset($user);
+        unset($user, $agent);
         // Do nothing
     }
 

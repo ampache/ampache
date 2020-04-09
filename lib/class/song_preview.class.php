@@ -342,9 +342,9 @@ class Song_Preview extends database_object implements media, playable_item
         // Do nothing
     }
 
-    public function check_play_history($user)
+    public function check_play_history($user, $agent)
     {
-        unset($user);
+        unset($user, $agent);
         // Do nothing
     }
 

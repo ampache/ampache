@@ -32,7 +32,7 @@ function arrayToJSON($array)
         } else {
             // Make sure to strip backslashes and convert things to
             // entities in our output
-            $json .= '"' . scrub_out(str_replace('\\', '', $value)) . '"';
+            $json .= '"' . scrub_out(str_replace(['"', '\\'], '', $value)) . '"';
         }
         $json .= ' , ';
     }

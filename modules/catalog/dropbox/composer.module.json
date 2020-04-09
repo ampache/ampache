@@ -6,6 +6,5 @@
 	"type": "ampache-catalog",
 	"license": "GPL-2.0",
     "require": {
-		"dropbox/dropbox-sdk": "1.*"
     }
 }

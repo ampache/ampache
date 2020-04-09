@@ -42,6 +42,9 @@ $thcount  = 8; ?>
 } ?>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <?php } ?>
+            <?php if (AmpConfig::get('show_skipped_times')) { ?>
+            <th class="cel_counter optional"><?php echo T_('# Skipped'); ?></th>
             <?php
     } ?>
             <?php if (User::is_registered()) { ?>
@@ -100,8 +103,10 @@ $thcount  = 8; ?>
             } ?>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
-            <?php
-            } ?>
+            <?php } ?>
+            <?php if (AmpConfig::get('show_skipped_times')) { ?>
+            <th class="cel_counter optional"><?php echo T_('# Skipped'); ?></th>
+            <?php } ?>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating"><?php echo T_('Rating'); ?></th>

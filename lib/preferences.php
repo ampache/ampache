@@ -164,6 +164,7 @@ function create_preference_input($name, $value)
         case 'ajax_load':
         case 'now_playing_per_user':
         case 'show_played_times':
+        case 'show_skipped_times':
         case 'song_page_title':
         case 'subsonic_backend':
         case 'plex_backend':

@@ -2715,12 +2715,18 @@ class Api
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog) {
+            define('API', true);
+            define('SSE_OUTPUT', true);
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog();
                 break;
                 case 'add_to_catalog':
-                    $catalog->add_to_catalog();
+                    $options = array(
+                        'gather_art' => false,
+                        'parse_playlist' => false
+                    );
+                    $catalog->add_to_catalog($options);
                 break;
             }
             switch ($input['format']) {

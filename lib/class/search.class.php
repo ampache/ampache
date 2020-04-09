@@ -609,10 +609,7 @@ class Search extends playlist_object
             $this->favorite();
         }
 
-
-        if (AmpConfig::get('show_played_times')) {
-            $this->played_times();
-        }
+        $this->played_times();
 
         $this->types[] = array(
             'name' => 'comment',
@@ -851,10 +848,7 @@ class Search extends playlist_object
 
         $this->last_play();
         $this->total_time();
-
-        if (AmpConfig::get('show_played_times')) {
-            $this->played_times();
-        }
+        $this->played_times();
         $this->image_width();
         $this->image_height();
     }
@@ -892,9 +886,7 @@ class Search extends playlist_object
             $this->rating();
             $this->artistrating();
         }
-        if (AmpConfig::get('show_played_times')) {
-            $this->played_times();
-        }
+        $this->played_times();
         $this->last_play();
         $this->total_time();
 

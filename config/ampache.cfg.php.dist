@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 40
+config_version = 41
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
@@ -394,6 +394,15 @@ default_auth_level = "guest"
 ; POSSIBLE VALUES: false true
 ; DEFAULT: true
 ratings = "true"
+
+; Skip Timer Threshold
+; This allows custom times to decide when a track is skipped
+; Allows an integer to denote seconds, or a float to denote percentage
+; POSSIBLE VALUES:
+; 20  = 20 seconds.
+; 0.3 = 30%
+; DEFAULT: 20
+;skip_timer = 20
 
 ; Enable filtering on browse pages for artists and albums.
 ; If you enable this setting the get_random and browse pages
