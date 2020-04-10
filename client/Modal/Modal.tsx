@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { EventEmitter } from 'events';
 import InputModal from './types/InputModal';
 import PlaylistSelector from './types/PlaylistSelector';
-import { AuthKey } from '../logic/Auth';
+import { AuthKey } from '~logic/Auth';
 import ReactLoading from 'react-loading';
 
 export enum ModalType {

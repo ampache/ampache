@@ -22,8 +22,9 @@
     },
     "scripts": {
         "start": "parcel start index.html",
-        "build": "parcel build index.html",
-        "prod": "rm -rf dist && parcel build index.html --no-source-maps",
+        "clean": "rm -rf dist .parcel-cache",
+        "build": "yarn clean && parcel build index.html",
+        "prod": "yarn clean && parcel build index.html --no-source-maps",
         "watch": "parcel watch index.html --no-cache"
     },
     "eslintConfig": {
@@ -35,23 +36,9 @@
             "publicUrl": "/client/dist/"
         }
     },
-    "browserslist": {
-        "production": [
-            "last 1 version",
-            "> 1%",
-            "not dead"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "postcss": {
-        "plugins": {
-            "autoprefixer": true
-        }
-    },
+    "browserslist": [
+        "defaults"
+    ],
     "devDependencies": {
         "@babel/core": "^7.8.3",
         "@babel/plugin-proposal-class-properties": "^7.8.3",

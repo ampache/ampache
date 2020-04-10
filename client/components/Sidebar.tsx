@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import CurrentPlaying from './CurrentPlaying';
 
 const Sidebar: React.FC = () => {
     return (

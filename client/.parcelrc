@@ -1,0 +1,7 @@
+{
+	"extends": "@parcel/config-default",
+	"transformers": {
+		"*.png": ["@parcel/transformer-raw"],
+		"*.svg": ["@parcel/transformer-raw"]
+	}
+}

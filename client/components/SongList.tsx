@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { MusicContext } from '../Contexts/MusicContext';
-import { flagSong, Song } from '../logic/Song';
+import { MusicContext } from '~Contexts/MusicContext';
+import { flagSong, Song } from '~logic/Song';
 import SongRow from './SongRow';
 import {
     addToPlaylist,
     getPlaylistSongs,
     removeFromPlaylistWithSongID
-} from '../logic/Playlist';
-import { AuthKey } from '../logic/Auth';
+} from '~logic/Playlist';
+import { AuthKey } from '~logic/Auth';
 import AmpacheError from '../logic/AmpacheError';
-import { getAlbumSongs } from '../logic/Album';
-import { ModalType, useModal } from '../Modal/Modal';
+import { getAlbumSongs } from '~logic/Album';
+import { ModalType, useModal } from '~Modal/Modal';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 

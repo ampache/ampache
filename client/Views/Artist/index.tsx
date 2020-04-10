@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Artist, getAlbumsFromArtist, getArtist } from '../../logic/Artist';
+import { Artist, getAlbumsFromArtist, getArtist } from '~logic/Artist';
 import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
 import { Album } from '~logic/Album';

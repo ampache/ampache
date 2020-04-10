@@ -1,4 +1,4 @@
-import { Song } from '../logic/Song';
+import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import React from 'react';
 

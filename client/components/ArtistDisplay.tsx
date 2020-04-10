@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Artist } from '../logic/Artist';
+import { Artist } from '~logic/Artist';
 
 interface ArtistDisplayProps {
     artist: Artist;

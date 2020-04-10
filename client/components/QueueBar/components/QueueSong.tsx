@@ -1,5 +1,5 @@
 import React from 'react';
-import { Song } from '../../../logic/Song';
+import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
 
 interface QueueSongProps {
@@ -15,7 +15,7 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
             onClick={props.onClick}
         >
             <div className='imageWrapper'>
-                <img src={props.song.art} />
+                <img src={props.song.art} alt='Album Cover' />
             </div>
             <div className='details'>
                 <div className='songName'>{props.song.title}</div>

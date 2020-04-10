@@ -1,7 +1,6 @@
 import { AuthKey } from './Auth';
 import axios from 'axios';
 import AmpacheError from './AmpacheError';
-import { Playlist } from './Playlist';
 
 type Song = {
     id: number;

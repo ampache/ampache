@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { PLAYERSTATUS } from '../enum/PlayerStatus';
+import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { AuthKey } from '../logic/Auth';
-import { Song } from '../logic/Song';
+import { AuthKey } from '~logic/Auth';
+import { Song } from '~logic/Song';
 import ReactAudioPlayer from 'react-audio-player';
 
 interface MusicContextProps {

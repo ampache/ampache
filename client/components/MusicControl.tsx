@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { PLAYERSTATUS } from '../enum/PlayerStatus';
-import { MusicContext } from '../Contexts/MusicContext';
+import { PLAYERSTATUS } from '~enum/PlayerStatus';
+import { MusicContext } from '~Contexts/MusicContext';
 import InputRange from 'react-input-range';
 
-import listIcon from '/images/icons/svg/list.svg';
+import listIcon from '~images/icons/svg/list.svg';
 import CurrentPlaying from './CurrentPlaying';
 
 interface MusicControlProps {

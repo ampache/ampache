@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { MusicContext } from '../Contexts/MusicContext';
+import { MusicContext } from '~Contexts/MusicContext';
 import CDImage from '/images/icons/svg/CD.svg';
 import { Link } from 'react-router-dom';
 

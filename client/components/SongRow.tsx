@@ -1,6 +1,6 @@
 import React from 'react';
 import useContextMenu from 'react-use-context-menu';
-import { Song } from '../logic/Song';
+import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import heartIcon from '/images/icons/svg/heart.svg';
 
@@ -21,7 +21,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
         bindMenu,
         bindMenuItems,
         useContextTrigger,
-        { setVisible, setCoords, coords }
+        { setVisible, setCoords }
     ] = useContextMenu();
     const [bindTrigger] = useContextTrigger();
 
