@@ -157,7 +157,7 @@ const SongList: React.FC<SongListProps> = (props) => {
                                 )
                             }
                             flagSong={handleFlagSong}
-                            key={song.id}
+                            key={song.playlisttrack}
                         />
                     );
                 })}

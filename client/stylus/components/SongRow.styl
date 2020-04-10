@@ -1,12 +1,11 @@
 .songRow
   background-color #4d4d4d
   display grid
-  justify-content space-between
   border 1px solid transparent
   cursor pointer
   height 45px
-  grid-template-columns 30px 30px 1fr 1fr 1fr 1fr
-  text-align center
+  grid-template-columns: 30px 30px auto;
+  grid-auto-flow: column;
   align-items center
   .verticalMenu
     width 8px
@@ -20,7 +19,8 @@
       filter invert(1)
   .heartIconWrapper
     width 100%
-    margin-right: 10px;
+    display flex
+    align-items center
     &.fav
       filter: invert(66%) sepia(95%) saturate(2455%) hue-rotate(359deg) brightness(101%) contrast(107%);
       &:hover
@@ -33,10 +33,10 @@
     text-overflow ellipsis
     overflow hidden
     white-space nowrap
-    flex 4
+    padding-left 20px
   .time
     text-align right
-    flex 1
+    padding-right 20px
   &:nth-child(odd)
     background-color #333
   &:hover
