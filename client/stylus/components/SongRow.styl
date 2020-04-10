@@ -1,22 +1,25 @@
 .songRow
   background-color #4d4d4d
-  padding 10px
-  display flex
+  display grid
   justify-content space-between
   border 1px solid transparent
   cursor pointer
-  box-sizing: border-box;
-  height: 45px;
+  height 45px
+  grid-template-columns 30px 30px 1fr 1fr 1fr 1fr
+  text-align center
+  align-items center
   .verticalMenu
     width 8px
     background-image url('/images/icons/svg/menu-verticle.svg')
     background-size contain
     background-repeat no-repeat
-    margin-right 15px
+    height 25px
+    justify-self center
+    align-self center
     &:hover
       filter invert(1)
   .heartIconWrapper
-    height 100%
+    width 100%
     margin-right: 10px;
     &.fav
       filter: invert(66%) sepia(95%) saturate(2455%) hue-rotate(359deg) brightness(101%) contrast(107%);
@@ -25,7 +28,7 @@
     &:not(&.fav):hover
       filter: invert(66%) sepia(95%) saturate(2455%) hue-rotate(359deg) brightness(101%) contrast(107%);
     img
-      height 100%
+      width 100%
   .title
     text-overflow ellipsis
     overflow hidden
