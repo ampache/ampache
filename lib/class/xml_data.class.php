@@ -187,29 +187,6 @@ class XML_Data
     } // tags_string
 
     /**
-     * playlist_song_tracks_string
-     *
-     * This returns the formatted 'playlistTrack' string for an xml document
-     *
-     * @param Song $song
-     * @param int[] $playlist_data
-     * @return string
-     */
-    private static function playlist_song_tracks_string($song, $playlist_data)
-    {
-        if (empty($playlist_data)) {
-            return "";
-        }
-        foreach ($playlist_data as $playlist) {
-            if ($playlist["object_id"] == $song->id) {
-                return "\t<playlisttrack>" . $playlist["track"] . "</playlisttrack>\n";
-            }
-        }
-
-        return "";
-    } // playlist_song_tracks_string
-
-    /**
      * output_xml_from_array
      * This takes a one dimensional array and creates a XML document from it. For
      * use primarily by the ajax mojo.
@@ -696,6 +673,8 @@ class XML_Data
         Song::build_cache($songs);
         Stream::set_session(Core::get_request('auth'));
 
+        $playlisttrack = 0;
+
         // Foreach the ids!
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
@@ -705,8 +684,11 @@ class XML_Data
                 continue;
             }
 
+            if (!empty($playlist_data)) {
+                $playlisttrack++;
+            }
+
             $song->format();
-            $track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string   = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating       = new Rating($song_id, 'song');
             $flag         = new Userflag($song_id, 'song');
@@ -729,7 +711,7 @@ class XML_Data
             $string .= $tag_string .
                     "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" .
                     "\t<track>" . $song->track . "</track>\n" .
-                    $track_string .
+                    "\t<playlisttrack>" . $playlisttrack . "</playlisttrack>\n" .
                     "\t<time>" . $song->time . "</time>\n" .
                     "\t<year>" . $song->year . "</year>\n" .
                     "\t<bitrate>" . $song->bitrate . "</bitrate>\n" .

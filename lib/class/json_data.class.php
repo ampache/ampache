@@ -147,30 +147,6 @@ class JSON_Data
     } // tags_string
 
     /**
-     * playlist_song_tracks_string
-     *
-     * This returns the formatted 'playlistTrack' string for an JSON document
-     *
-     * @param Song $song
-     * @param array $playlist_data
-     */
-    private static function playlist_song_tracks_string($song, $playlist_data)
-    {
-        if (empty($playlist_data)) {
-            return "";
-        }
-        $playlist_track = "";
-
-        foreach ($playlist_data as $playlist) {
-            if ($playlist["object_id"] == $song->id) {
-                return $playlist["track"];
-            }
-        }
-
-        return "";
-    } // playlist_song_tracks_string
-
-    /**
      * indexes
      *
      * This returns tags to the user, in a pretty JSON document with the information
@@ -429,6 +405,8 @@ class JSON_Data
 
         $JSON = [];
 
+        $playlisttrack = 0;
+
         // Foreach the ids!
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
@@ -438,8 +416,11 @@ class JSON_Data
                 continue;
             }
 
+            if (!empty($playlist_data)) {
+                $playlisttrack++;
+            }
+
             $song->format();
-            $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $rating                = new Rating($song_id, 'song');
             $flag                  = new Userflag($song_id, 'song');
             $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
@@ -463,7 +444,7 @@ class JSON_Data
 
             $ourSong['filename']              = $song->file;
             $ourSong['track']                 = $song->track;
-            $ourSong['playlisttrack']         = $playlist_track_string;
+            $ourSong['playlisttrack']         = $playlisttrack;
             $ourSong['time']                  = (int) $song->time;
             $ourSong['year']                  = $song->year;
             $ourSong['bitrate']               = $song->bitrate;
