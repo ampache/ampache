@@ -52,6 +52,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
             e.preventDefault();
             playPause();
         },
+        {},
         [playerStatus]
     );
 
