@@ -177,4 +177,7 @@ if (AmpConfig::get('memory_cache')) {
 
     debug_event('cron', 'Completed filling memory cache', 5);
 }
+
+// mark the date this cron was completed.
+set_cron_date();
 debug_event('cron', 'finished cron process', 4);
