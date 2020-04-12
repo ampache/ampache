@@ -512,3 +512,19 @@ function get_web_path()
 
     return preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
 }
+
+/**
+ * get_datetime
+ * @param string $date
+ * @param integer $time
+ * @return string
+ */
+function get_datetime($date, $time)
+{
+    if (empty($date)) {
+        $date = 'm/d/Y H:i';
+    }
+    $date_string = date($date, $time);
+
+    return $date_string;
+}

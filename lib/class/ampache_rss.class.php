@@ -193,7 +193,7 @@ class Ampache_RSS
                     'link' => $song->link,
                     'description' => $description,
                     'comments' => $client->f_name . ' - ' . $element['agent'],
-                    'pubDate' => date('r', (int) $element['expire'])
+                    'pubDate' => date("r", (int) $element['expire'])
                     );
             $results[] = $xml_array;
         } // end foreach

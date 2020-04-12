@@ -101,7 +101,8 @@ if (Core::is_playable_item($object_type)) {
                     break;
                 } // switch on type
             } // foreach media_id
-            $name = 'Batch-' . date("dmY", time());
+            $time_format = AmpConfig::get('custom_datetime') ? preg_replace("/[^dmY\s]/", "", (string) AmpConfig::get('custom_datetime')) : "m-d-Y";
+            $name        = 'Batch-' . get_datetime($time_format, time());
         default:
             // Rien a faire
         break;

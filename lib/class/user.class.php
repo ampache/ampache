@@ -1120,18 +1120,19 @@ class User extends database_object
         if (!$this->id) {
             return;
         }
+        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         /* If they have a last seen date */
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
         } else {
-            $this->f_last_seen = date("m\/d\/Y - H:i", (int) $this->last_seen);
+            $this->f_last_seen = get_datetime($time_format, (int) $this->last_seen);
         }
 
         /* If they have a create date */
         if (!$this->create_date) {
             $this->f_create_date = T_('Unknown');
         } else {
-            $this->f_create_date = date("m\/d\/Y - H:i", (int) $this->create_date);
+            $this->f_create_date = get_datetime($time_format, (int) $this->create_date);
         }
 
         $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);

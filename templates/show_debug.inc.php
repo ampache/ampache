@@ -59,7 +59,8 @@
 
 <?php if ((string) AmpConfig::get('cron_cache') !== '') { ?>
     <?php UI::show_box_top(T_('Ampache Cron Details'), 'box'); ?>
-        <div><?php echo T_('Cron was last completed'); ?>: <?php echo date("dmY", get_cron_date()); ?>.</div>
+        <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime($time_format, get_cron_date()); ?></div>
+        <br />
     <?php UI::show_box_bottom();
 } ?>
     <?php UI::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>

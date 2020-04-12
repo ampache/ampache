@@ -40,7 +40,7 @@
                     <td class="cel_album"><?php echo $song->get_album_name($song->album); ?></td>
                     <td class="cel_artist"><?php echo $song->get_artist_name($song->album); ?></td>
                     <td class="cel_filename"><?php echo $song->file; ?></td>
-                    <td class="cel_additiontime"><?php echo date("h:i:s, m/d/y", $song->addition_time); ?></td>
+                    <td class="cel_additiontime"><?php echo get_datetime($time_format, (int) $song->addition_time); ?></td>
                 </tr>
             <?php
 } if (!count($songs)) { ?>

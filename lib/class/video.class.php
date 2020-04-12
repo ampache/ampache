@@ -303,7 +303,8 @@ class Video extends database_object implements media, library_item
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
         $this->f_file   = $this->f_title . '.' . $this->type;
         if ($this->release_date) {
-            $this->f_release_date = date('Y-m-d', (int) $this->release_date);
+            $time_format          = AmpConfig::get('custom_datetime') ? preg_replace("/[^dmY\s]/", "", (string) AmpConfig::get('custom_datetime')) : "m-d-Y";
+            $this->f_release_date = get_datetime($time_format, (int) $this->release_date);
         }
     } // format
 

@@ -278,7 +278,8 @@ class Useractivity extends database_object
         $libitem->format();
 
         echo '<div>';
-        $fdate = date('Y/m/d H:i:s', (int) $this->activity_date);
+        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
+        $fdate       = get_datetime($time_format, (int) $this->activity_date);
         /*
         echo '<div class="shoutbox-date">';
         if ($user->f_avatar_mini) {

@@ -67,8 +67,9 @@ $web_path = AmpConfig::get('web_path');
 foreach ($object_ids as $user_id) {
         $libitem = new User($user_id);
         $libitem->format();
-        $last_seen      = $libitem->last_seen ? date("m\/d\/Y - H:i", $libitem->last_seen) : T_('Never');
-        $create_date    = $libitem->create_date ? date("m\/d\/Y - H:i", $libitem->create_date) : T_('Unknown'); ?>
+        $format         = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
+        $last_seen      = $libitem->last_seen ? get_datetime($time_format, $libitem->last_seen) : T_('Never');
+        $create_date    = $libitem->create_date ? get_datetime($time_format, $libitem->create_date) : T_('Unknown'); ?>
 <tr class="<?php echo UI::flip_class(); ?>" id="admin_user_<?php echo $libitem->id; ?>">
     <?php require AmpConfig::get('prefix') . UI::find_template('show_user_row.inc.php'); ?>
 </tr>
