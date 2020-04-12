@@ -931,7 +931,7 @@ class Subsonic_Api
             }
             if (count($songIndexToRemove) > 0) {
                 foreach ($songIndexToRemove as $track) {
-                    $playlist->delete_track_number(( $track + 1 ));
+                    $playlist->delete_track_number(($track + 1));
                 }
                 $playlist->regenerate_track_numbers();
             }
