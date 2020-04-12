@@ -687,11 +687,12 @@ class Graph
         if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', '50')) {
             UI::access_denied();
         } else {
+            $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
             $user_id      = Core::get_request('user_id');
             $end_date     = $_REQUEST['end_date'] ? strtotime($_REQUEST['end_date']) : time();
-            $f_end_date   = date("Y-m-d H:i", (int) $end_date);
+            $f_end_date   = get_datetime($time_format, (int) $end_date);
             $start_date   = $_REQUEST['start_date'] ? strtotime($_REQUEST['start_date']) : ($end_date - 864000);
-            $f_start_date = date("Y-m-d H:i", $start_date);
+            $f_start_date = get_datetime($time_format, (int) $start_date);
             $zoom         = $_REQUEST['zoom'] ?: 'day';
 
             $gtypes   = array();

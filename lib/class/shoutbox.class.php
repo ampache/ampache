@@ -285,7 +285,8 @@ class Shoutbox
     public function format()
     {
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
-        $this->f_date = date("m\/d\/Y - H:i", (int) $this->date);
+        $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
+        $this->f_date = get_datetime($time_format, (int) $this->date);
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
 
         return true;
@@ -322,8 +323,9 @@ class Shoutbox
         }
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
+            $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
             $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
-            $html .= "<div class='shoutbox-date'>" . date("Y/m/d H:i:s", (int) $this->date) . "</div>";
+            $html .= "<div class='shoutbox-date'>" . get_datetime($time_format, (int) $this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . $this->f_text . "</div>";
         $html .= "</div>";

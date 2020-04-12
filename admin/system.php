@@ -55,6 +55,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_debug':
         $configuration = AmpConfig::get_all();
+        $time_format   = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         if (Core::get_request('autoupdate') == 'force') {
             $version = AutoUpdate::get_latest_version(true);
         }

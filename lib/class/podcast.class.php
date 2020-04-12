@@ -161,8 +161,9 @@ class Podcast extends database_object implements library_item
         $this->f_copyright     = scrub_out($this->copyright);
         $this->f_generator     = scrub_out($this->generator);
         $this->f_website       = scrub_out($this->website);
-        $this->f_lastbuilddate = date("m\/d\/Y - H:i", (int) $this->lastbuilddate);
-        $this->f_lastsync      = date("m\/d\/Y - H:i", (int) $this->lastsync);
+        $time_format           = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
+        $this->f_lastbuilddate = get_datetime($time_format, (int) $this->lastbuilddate);
+        $this->f_lastsync      = get_datetime($time_format, (int) $this->lastsync);
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
         $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
 

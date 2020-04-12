@@ -1336,7 +1336,8 @@ class Search extends playlist_object
     {
         // Make sure we have a unique name
         if (! $this->name) {
-            $this->name = Core::get_global('user')->username . ' - ' . date('Y-m-d H:i:s', time());
+            $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
+            $this->name  = Core::get_global('user')->username . ' - ' . get_datetime($time_format, time());
         }
         $sql        = "SELECT `id` FROM `search` WHERE `name` = ?";
         $db_results = Dba::read($sql, array($this->name));

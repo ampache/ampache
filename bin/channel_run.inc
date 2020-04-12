@@ -476,7 +476,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Mount Start:</td>" . "\n";
-                    $xsl .= "<td class=\"streamdata\">" . date("c", $channel->start_date) . "</td>" . "\n";
+                    $xsl .= "<td class=\"streamdata\">" . get_datetime((string) AmpConfig::get('custom_datetime'), $channel->start_date) . "</td>" . "\n";
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Bitrate:</td>" . "\n";

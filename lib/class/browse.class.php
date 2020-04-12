@@ -200,6 +200,7 @@ class Browse extends Query
         debug_event('browse.class', 'Show objects called for type {' . $type . '}', 5);
 
         $limit_threshold = $this->get_threshold();
+        $time_format     = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
 
         // Switch on the type of browsing we're doing
         switch ($type) {
