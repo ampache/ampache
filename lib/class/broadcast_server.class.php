@@ -349,7 +349,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param Broadcast $broadcast
-     * @return ConnectionInterface
+     * @return ConnectionInterface[]
      */
     protected function getListeners(Broadcast $broadcast)
     {
