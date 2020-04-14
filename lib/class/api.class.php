@@ -1695,7 +1695,6 @@ class Api
             $array['rule_' . $rule_count]               = 'artist';
             $array['rule_' . $rule_count . '_input']    = trim(trim((string) $artist->prefix) . ' ' . trim((string) $artist->name));
             $array['rule_' . $rule_count . '_operator'] = 4;
-            $rule_count++;
         }
 
         ob_end_clean();
@@ -2770,7 +2769,7 @@ class Api
             debug_event('api.class', 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
-            $item->set_played($user_id, $agent, array(), time());
+            $item->set_played($user_id, $agent, array(), $date);
 
             //scrobble plugins
             User::save_mediaplay($user, $item);

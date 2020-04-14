@@ -68,9 +68,6 @@ class Stream_URL extends memory_object
                     if (make_bool($value)) {
                         $results['type'] = 'video';
                     }
-                // Intentional break fall-through
-                default:
-                    // Nothing
                 break;
             }
             $results[$key] = $value;

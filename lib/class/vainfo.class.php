@@ -214,6 +214,7 @@ class vainfo
      * get_info
      *
      * This function runs the various steps to gathering the metadata
+     * @throws Exception
      */
     public function get_info()
     {
