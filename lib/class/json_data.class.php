@@ -243,7 +243,7 @@ class JSON_Data
      * @param array $artists (description here...)
      * @param array $include
      * @param boolean $user_id
-     * @return    string    return JSON
+     * @return string return JSON
      */
     public static function artists($artists, $include = [], $user_id = false)
     {
@@ -364,10 +364,9 @@ class JSON_Data
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
      * @param array $playlists (description here...)
-     * @param boolean $create
-     * @return    string    return xml
+     * @return string return xml
      */
-    public static function playlists($playlists, $create = false)
+    public static function playlists($playlists)
     {
         if (count($playlists) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
