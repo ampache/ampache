@@ -194,8 +194,8 @@ class AmpacheMpd extends localplay_controller
         $instance = $instance ? $instance : AmpConfig::get('mpd_active');
         $instance = Dba::escape($instance);
 
-        $sql        = "SELECT * FROM `localplay_mpd` WHERE `id`='$instance'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT * FROM `localplay_mpd` WHERE `id`= ?";
+        $db_results = Dba::query($sql, array($instance));
 
         return Dba::fetch_assoc($db_results);
     } // get_instance
