@@ -76,9 +76,10 @@ abstract class localplay_controller
 
     /**
      * @param $uid
+     * @param $user_id
      * @return mixed
      */
-    abstract public function set_active_instance($uid);
+    abstract public function set_active_instance($uid, $user_id);
     abstract public function get_active_instance();
 
     /**

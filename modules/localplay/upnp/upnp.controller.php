@@ -219,8 +219,8 @@ class AmpacheUPnP extends localplay_controller
         $user_id = $user_id ? $user_id : Core::get_global('user')->id;
         debug_event('upnp.controller', 'set_active_instance userid: ' . $user_id, 5);
 
-        Preference::update('upnp_active', $user_id, (int) ($uid));
-        AmpConfig::set('upnp_active', (int) ($uid), true);
+        Preference::update('upnp_active', $user_id, $uid);
+        AmpConfig::set('upnp_active', $uid, true);
 
         return true;
     }
