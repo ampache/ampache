@@ -192,9 +192,8 @@ class AmpacheMpd extends localplay_controller
     public function get_instance($instance = '')
     {
         $instance = is_numeric($instance) ? $instance : AmpConfig::get('mpd_active');
-        $instance = Dba::escape($instance);
         $sql      = "SELECT * FROM `localplay_mpd` WHERE `id`= ?";
-        // if you only have one MPD instance just default to that!
+        // if you only have one instance just default to that!
         if (!is_numeric($instance) && count(self::get_instances()) === 1) {
             $sql = "SELECT * FROM `localplay_mpd`";
         }
