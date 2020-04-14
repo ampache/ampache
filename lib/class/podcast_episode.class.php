@@ -72,7 +72,7 @@ class Podcast_Episode extends database_object implements media, library_item
             return false;
         }
 
-        $this->id = (int) ($podcastep_id);
+        $this->id = (int) $podcastep_id;
 
         if ($info = $this->get_info($this->id)) {
             foreach ($info as $key => $value) {

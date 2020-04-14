@@ -34,7 +34,7 @@ use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 class Art extends database_object
 {
     /**
-     *  @var int $id
+     *  @var integer $id
      */
     public $id;
     /**
@@ -42,7 +42,7 @@ class Art extends database_object
      */
     public $type;
     /**
-     *  @var int $uid
+     *  @var integer $uid
      */
     public $uid; // UID of the object not ID because it's not the ART.ID
     /**
@@ -285,7 +285,7 @@ class Art extends database_object
                     $this->raw_mime = $results['mime'];
                 }
             }
-            $this->id = $results['id'];
+            $this->id = (int) $results['id'];
         }
         // If we get nothing return false
         if (!$this->raw) {

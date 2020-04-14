@@ -37,7 +37,7 @@ class Query
     public $id;
 
     /**
-     * @var int $catalog
+     * @var integer $catalog
      */
     public $catalog;
 

@@ -24,7 +24,7 @@ declare(strict_types=1);
 class License
 {
     /**
-     * @var int $id
+     * @var integer $id
      */
     public $id;
     /**

@@ -33,7 +33,7 @@ class Wanted extends database_object
     /* Variables from DB */
 
     /**
-     * @var int $id
+     * @var integer $id
      */
     public $id;
     /**
@@ -41,7 +41,7 @@ class Wanted extends database_object
      */
     public $mbid;
     /**
-     * @var int $artist
+     * @var integer $artist
      */
     public $artist;
     /**
@@ -65,7 +65,7 @@ class Wanted extends database_object
      */
     public $release_mbid;
     /**
-     * @var int $user
+     * @var integer $user
      */
     public $user;
 
