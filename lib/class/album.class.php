@@ -33,7 +33,7 @@ class Album extends database_object implements library_item
     /* Variables from DB */
 
     /**
-     *  @var int $id
+     *  @var integer $id
      */
     public $id;
 
@@ -43,17 +43,17 @@ class Album extends database_object implements library_item
     public $name;
 
     /**
-     *  @var int $album_artist
+     *  @var integer $album_artist
      */
     public $album_artist;
 
     /**
-     *  @var int $disk
+     *  @var integer $disk
      */
     public $disk;
 
     /**
-     *  @var int $year
+     *  @var integer $year
      */
     public $year;
 
@@ -88,17 +88,17 @@ class Album extends database_object implements library_item
     public $barcode;
 
     /**
-     *  @var int $original_year
+     *  @var integer $original_year
      */
     public $original_year;
 
     /**
-     * @var int $catalog_id
+     * @var integer $catalog_id
      */
     public $catalog_id;
 
     /**
-     *  @var int $song_count
+     *  @var integer $song_count
      */
     public $song_count;
 
@@ -113,7 +113,7 @@ class Album extends database_object implements library_item
     public $artist_name;
 
     /**
-     *  @var int $artist_id
+     *  @var integer $artist_id
      */
     public $artist_id;
 
@@ -128,7 +128,7 @@ class Album extends database_object implements library_item
     public $full_name; // Prefix + Name, generated
 
     /**
-     *  @var int $artist_count
+     *  @var integer $artist_count
      */
     public $artist_count;
 
@@ -235,7 +235,7 @@ class Album extends database_object implements library_item
      * to this album from the database it does not
      * pull the album or thumb art by default or
      * get any of the counts.
-     * @param integer|null $album_id
+     * @param integer $album_id
      */
     public function __construct($album_id)
     {

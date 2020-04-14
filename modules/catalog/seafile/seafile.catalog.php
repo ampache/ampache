@@ -202,7 +202,7 @@ class Catalog_Seafile extends Catalog
         }
 
         $sql = "INSERT INTO `catalog_seafile` (`server_uri`, `api_key`, `library_name`, `api_call_delay`, `catalog_id`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($server_uri, $api_key, $library_name, intval($api_call_delay), $catalog_id));
+        Dba::write($sql, array($server_uri, $api_key, $library_name, (int) ($api_call_delay), $catalog_id));
 
         return true;
     }
@@ -216,7 +216,7 @@ class Catalog_Seafile extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = intval($catalog_id);
+            $this->id = (int) $catalog_id;
             $info     = $this->get_info($catalog_id);
 
             $this->seafile = new SeafileAdapter($info['server_uri'], $info['library_name'], $info['api_call_delay'], $info['api_key']);
@@ -365,7 +365,7 @@ class Catalog_Seafile extends Catalog
         $key = vainfo::get_tag_type($vainfo->tags);
 
         // maybe fix stat-ing-nonexistent-file bug?
-        $vainfo->tags['general']['size'] = intval($file->size);
+        $vainfo->tags['general']['size'] = (int) ($file->size);
 
         $results = vainfo::clean_tag_info($vainfo->tags, $key, $file->name);
 

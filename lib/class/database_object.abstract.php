@@ -39,9 +39,9 @@ abstract class database_object
     /**
      * get_info
      * retrieves the info from the database and puts it in the cache
-     * @param int|string $object_id
+     * @param integer $object_id
      * @param string $table_name
-     * @return array|mixed
+     * @return array
      */
     public function get_info($object_id, $table_name = '')
     {

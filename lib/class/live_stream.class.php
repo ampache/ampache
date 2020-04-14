@@ -33,7 +33,7 @@ class Live_Stream extends database_object implements media, library_item
     /* DB based variables */
 
     /**
-     *  @var int $id
+     *  @var integer $id
      */
     public $id;
     /**
@@ -58,7 +58,7 @@ class Live_Stream extends database_object implements media, library_item
      */
     public $codec;
     /**
-     *  @var int $catalog
+     *  @var integer $catalog
      */
     public $catalog;
 

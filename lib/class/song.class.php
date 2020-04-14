@@ -31,7 +31,7 @@ class Song extends database_object implements media, library_item
     /* Variables from DB */
 
     /**
-     * @var int $id
+     * @var integer $id
      */
     public $id;
     /**
@@ -39,11 +39,11 @@ class Song extends database_object implements media, library_item
      */
     public $file;
     /**
-     * @var int $album
+     * @var integer $album
      */
     public $album;
     /**
-     * @var int $artist
+     * @var integer $artist
      */
     public $artist;
     /**
@@ -51,15 +51,15 @@ class Song extends database_object implements media, library_item
      */
     public $title;
     /**
-     * @var int $year
+     * @var integer $year
      */
     public $year;
     /**
-     * @var int $bitrate
+     * @var integer $bitrate
      */
     public $bitrate;
     /**
-     * @var int $rate
+     * @var integer $rate
      */
     public $rate;
     /**
@@ -67,15 +67,15 @@ class Song extends database_object implements media, library_item
      */
     public $mode;
     /**
-     * @var int $size
+     * @var integer $size
      */
     public $size;
     /**
-     * @var int $time
+     * @var integer $time
      */
     public $time;
     /**
-     * @var int $track
+     * @var integer $track
      */
     public $track;
     /**
@@ -107,11 +107,11 @@ class Song extends database_object implements media, library_item
      */
     public $enabled;
     /**
-     * @var int $addition_time
+     * @var integer $addition_time
      */
     public $addition_time;
     /**
-     * @var int $update_time
+     * @var integer $update_time
      */
     public $update_time;
     /**
@@ -120,7 +120,7 @@ class Song extends database_object implements media, library_item
      */
     public $mbid;
     /**
-     * @var int $catalog
+     * @var integer $catalog
      */
     public $catalog;
     /**
@@ -144,7 +144,7 @@ class Song extends database_object implements media, library_item
      */
     public $catalog_number;
     /**
-     * @var int $channels
+     * @var integer $channels
      */
     public $channels;
 
@@ -201,7 +201,7 @@ class Song extends database_object implements media, library_item
      */
     public $f_artist_full;
     /**
-     * @var int $albumartist
+     * @var integer $albumartist
      */
     public $albumartist;
     /**
@@ -279,7 +279,7 @@ class Song extends database_object implements media, library_item
      */
     public $f_pattern;
     /**
-     * @var int $count
+     * @var integer $count
      */
     public $count;
     /**

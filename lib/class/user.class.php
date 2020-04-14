@@ -33,7 +33,7 @@ class User extends database_object
 {
     //Basic Components
     /**
-     * @var int $id
+     * @var integer $id
      */
     public $id;
     /**
@@ -49,7 +49,7 @@ class User extends database_object
      */
     public $fullname_public;
     /**
-     * @var int $access
+     * @var integer $access
      */
     public $access;
     /**
@@ -61,11 +61,11 @@ class User extends database_object
      */
     public $email;
     /**
-     * @var int $last_seen
+     * @var integer $last_seen
      */
     public $last_seen;
     /**
-     * @var int $create_date
+     * @var integer $create_date
      */
     public $create_date;
     /**
