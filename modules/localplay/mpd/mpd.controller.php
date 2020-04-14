@@ -191,10 +191,13 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance = $instance ? $instance : AmpConfig::get('mpd_active');
+        $instance = is_numeric($instance) ? $instance : AmpConfig::get('mpd_active');
         $instance = Dba::escape($instance);
-
-        $sql        = "SELECT * FROM `localplay_mpd` WHERE `id`= ?";
+        $sql      = "SELECT * FROM `localplay_mpd` WHERE `id`= ?";
+        // if you only have one MPD instance just default to that!
+        if (!is_numeric($instance) && count(self::get_instances()) === 1) {
+            $sql = "SELECT * FROM `localplay_mpd`";
+        }
         $db_results = Dba::query($sql, array($instance));
 
         return Dba::fetch_assoc($db_results);
@@ -239,7 +242,7 @@ class AmpacheMpd extends localplay_controller
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
-     * @param $uid
+     * @param string $uid
      * @param string $user_id
      * @return boolean
      */
@@ -252,8 +255,9 @@ class AmpacheMpd extends localplay_controller
 
         $user_id = $user_id ? $user_id : Core::get_global('user')->id;
 
-        Preference::update('mpd_active', $user_id, (int) ($uid));
-        AmpConfig::set('mpd_active', (int) ($uid), true);
+        Preference::update('mpd_active', $user_id, $uid);
+        AmpConfig::set('mpd_active', $uid, true);
+        debug_event('mdp.controller', 'set_active_instance: ' . $uid . ' ' . $user_id, 5);
 
         return true;
     } // set_active_instance
