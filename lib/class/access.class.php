@@ -319,10 +319,11 @@ class Access
      * @param string $type
      * @param integer|string $user
      * @param int $level
+     * @param string $user_ip
      * @param string $apikey
      * @return boolean
      */
-    public static function check_network($type, $user = null, $level = 25, $apikey = null)
+    public static function check_network($type, $user = null, $level = 25, $user_ip = null, $apikey = null)
     {
         if (!AmpConfig::get('access_control')) {
             switch ($type) {
@@ -332,6 +333,15 @@ class Access
                 default:
                     return false;
             }
+        }
+
+        // Clean incoming variables
+        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
+            $user_ip = (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+                ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+                : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP));
+        } else {
+            $user_ip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
         }
 
         switch ($type) {
@@ -359,8 +369,7 @@ class Access
                 'WHERE `start` <= ? AND `end` >= ? ' .
                 'AND `level` >= ? AND `type` = ?';
 
-        $user_ip = Core::get_user_ip();
-        $params  = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
+        $params = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
 
         if (strlen((string) $user) && $user != '-1') {
             $sql .= " AND `user` IN(?, '-1')";

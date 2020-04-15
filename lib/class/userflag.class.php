@@ -70,21 +70,22 @@ class Userflag extends database_object
         $userflags = array();
 
         $idlist = '(' . implode(',', $ids) . ')';
-        $sql    = "SELECT `object_id`, `date` FROM `user_flag` " .
+        $sql    = "SELECT `object_id` FROM `user_flag` " .
             "WHERE `user` = ? AND `object_id` IN $idlist " .
             "AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $userflags[$row['object_id']] = $row['date'];
+            $userflags[$row['object_id']] = true;
         }
 
         foreach ($ids as $objectid) {
-            if (isset($userflags[$objectid])) {
-                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, array(1, $userflags[$objectid]));
+            if (!isset($userflags[$objectid])) {
+                $userflag = 0;
             } else {
-                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, array(false));
+                $userflag = (int) ($userflags[$objectid]);
             }
+            parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, $userflag);
         }
 
         return true;
@@ -129,21 +130,22 @@ class Userflag extends database_object
 
         $key = 'userflag_' . $this->type . '_user' . $user_id;
         if (parent::is_cached($key, $this->id)) {
-            return parent::get_from_cache($key, $this->id)[0];
+            return parent::get_from_cache($key, $this->id);
         }
 
         $sql = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? " .
             "AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
-        $flagged = array(false);
+        $flagged = false;
         if ($row = Dba::fetch_assoc($db_results)) {
             if ($get_date) {
-                $flagged = array(1, $row['date']);
+                return array(true, $row['date']);
             } else {
-                $flagged = array(1);
+                $flagged = true;
             }
         }
+
         parent::add_to_cache($key, $this->id, $flagged);
 
         return $flagged;
@@ -183,18 +185,17 @@ class Userflag extends database_object
                 "`object_type` = ? AND " .
                 "`user` = ?";
             $params = array($this->id, $this->type, $user_id);
-            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(false));
         } else {
-            $date = time();
-            $sql  = "REPLACE INTO `user_flag` " .
-                "(`object_id`, `object_type`, `user`, `date`) " .
-                "VALUES (?, ?, ?, ?)";
-            $params = array($this->id, $this->type, $user_id, $date);
-            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(1, $date));
+            $sql = "REPLACE INTO `user_flag` " .
+            "(`object_id`, `object_type`, `user`, `date`) " .
+            "VALUES (?, ?, ?, ?)";
+            $params = array($this->id, $this->type, $user_id, time());
 
             Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id);
         }
         Dba::write($sql, $params);
+
+        parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, $flagged);
 
         // Forward flag to last.fm and Libre.fm (song only)
         if ($this->type == 'song') {
@@ -267,7 +268,7 @@ class Userflag extends database_object
                 Dba::write($sql, $params);
             }
 
-            parent::add_to_cache('userflag_album_user' . $user_id, $album_id, array($flagged));
+            parent::add_to_cache('userflag_album_user' . $user_id, $album_id, $flagged);
         }
 
         return true;

@@ -116,7 +116,7 @@ class Rating extends database_object
             } else {
                 $rating = (int) $user_ratings[$objectid];
             }
-            parent::add_to_cache('rating_' . $type . '_user' . Core::get_global('user')->id, $objectid, array($rating));
+            parent::add_to_cache('rating_' . $type . '_user' . Core::get_global('user')->id, $objectid, $rating);
 
             // Then store the average
             if (!isset($ratings[$objectid])) {
@@ -124,7 +124,7 @@ class Rating extends database_object
             } else {
                 $rating = round($ratings[$objectid], 1);
             }
-            parent::add_to_cache('rating_' . $type . '_all', $objectid, array($rating));
+            parent::add_to_cache('rating_' . $type . '_all', $objectid, $rating);
         }
 
         return true;
@@ -145,7 +145,7 @@ class Rating extends database_object
 
         $key = 'rating_' . $this->type . '_user' . $user_id;
         if (parent::is_cached($key, $this->id)) {
-            return (double) parent::get_from_cache($key, $this->id)[0];
+            return parent::get_from_cache($key, $this->id);
         }
 
         $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? " .
@@ -290,7 +290,7 @@ class Rating extends database_object
         }
         Dba::write($sql, $params);
 
-        parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, array($rating));
+        parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, $rating);
 
         foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
@@ -351,7 +351,7 @@ class Rating extends database_object
                 $params = array($album_id, 'album', $rating, $user_id);
                 Dba::write($sql, $params);
 
-                parent::add_to_cache('rating_' . 'album' . '_user' . (int) $user_id, $album_id, array($rating));
+                parent::add_to_cache('rating_' . 'album' . '_user' . (int) $user_id, $album_id, $rating);
             }
             foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
