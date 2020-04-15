@@ -162,7 +162,7 @@ class Rating extends database_object
 
         parent::add_to_cache($key, $this->id, $rating);
 
-        return (double) $rating;
+        return $rating;
     } // get_user_rating
 
     /**
@@ -185,7 +185,7 @@ class Rating extends database_object
 
         parent::add_to_cache('rating_' . $this->type . '_all', $this->id, $results['rating']);
 
-        return (double) $results['rating'];
+        return $results['rating'];
     } // get_average_rating
 
     /**

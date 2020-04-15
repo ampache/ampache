@@ -297,8 +297,6 @@ class Catalog_local extends Catalog
 
         /* Close the dir handle */
         @closedir($handle);
-
-        return true;
     } // add_files
 
     /**

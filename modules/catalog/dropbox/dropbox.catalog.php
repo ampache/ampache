@@ -346,8 +346,6 @@ class Catalog_dropbox extends Catalog
         } else {
             debug_event('dropbox.catalog', "read " . $path . " ignored, 0 bytes", 5);
         }
-
-        return true;
     }
 
     /**
@@ -409,7 +407,7 @@ class Catalog_dropbox extends Catalog
      * here
      * @param $dropbox
      * @param $path
-     * @return integer
+     * @return int
      * @throws DropboxClientException
      */
     public function insert_video($dropbox, $path)
@@ -456,8 +454,6 @@ class Catalog_dropbox extends Catalog
                 debug_event('dropbox.catalog', 'failed to download file', 5, 'ampache-catalog');
             }
         } // insert_video
-
-        return 0;
     }
 
     /**
@@ -724,7 +720,5 @@ class Catalog_dropbox extends Catalog
 
         // One last time for good measure
         UI::update_text('count_art_' . $this->id, $search_count);
-
-        return true;
     }
 } // end of dropbox.catalog class

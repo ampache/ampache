@@ -62,11 +62,9 @@ class Song_Preview extends database_object implements media, playable_item
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
-            if ($this->file) {
-                $data       = pathinfo($this->file);
-                $this->type = strtolower((string) $data['extension']) ?: 'mp3';
-                $this->mime = Song::type_to_mime($this->type);
-            }
+            $data       = pathinfo($this->file);
+            $this->type = strtolower((string) $data['extension']) ?: 'mp3';
+            $this->mime = Song::type_to_mime($this->type);
         } else {
             $this->id = null;
 
