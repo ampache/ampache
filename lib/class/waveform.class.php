@@ -202,12 +202,6 @@ class Waveform
         return file_put_contents($file, $waveform);
     }
 
-    /**
-     * findValues
-     * @param $byte1
-     * @param $byte2
-     * @return float|int
-     */
     protected static function findValues($byte1, $byte2)
     {
         $byte1 = hexdec(bin2hex($byte1));
