@@ -24,7 +24,7 @@ declare(strict_types=1);
 class Broadcast extends database_object implements library_item
 {
     /**
-     *  @var integer $id
+     *  @var int $id
      */
     public $id;
     /**
@@ -32,15 +32,15 @@ class Broadcast extends database_object implements library_item
      */
     public $started;
     /**
-     *  @var integer $listeners
+     *  @var int $listeners
      */
     public $listeners;
     /**
-     *  @var integer $song
+     *  @var int $song
      */
     public $song;
     /**
-     *  @var integer $song_position
+     *  @var int $song_position
      */
     public $song_position;
     /**
@@ -48,7 +48,7 @@ class Broadcast extends database_object implements library_item
      */
     public $name;
     /**
-     *  @var integer $user
+     *  @var int $user
      */
     public $user;
 

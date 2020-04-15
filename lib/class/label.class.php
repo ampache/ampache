@@ -32,7 +32,7 @@ class Label extends database_object implements library_item
     /* Variables from DB */
 
     /**
-     *  @var integer $id
+     *  @var int $id
      */
     public $id;
     /**
@@ -60,7 +60,7 @@ class Label extends database_object implements library_item
      */
     public $summary;
     /**
-     *  @var integer $user
+     *  @var int $user
      */
     public $user;
 
@@ -77,7 +77,7 @@ class Label extends database_object implements library_item
      */
     public $f_link;
     /**
-     * @var integer $artists
+     * @var int $artists
      */
     public $artists;
 

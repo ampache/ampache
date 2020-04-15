@@ -28,7 +28,7 @@ abstract class playlist_object extends database_object implements library_item
 {
     // Database variables
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -36,7 +36,7 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $name;
     /**
-     * @var integer $user
+     * @var int $user
      */
     public $user;
     /**

@@ -34,7 +34,7 @@ use Lib\Metadata\Repository\MetadataField;
 abstract class Catalog extends database_object
 {
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -42,15 +42,15 @@ abstract class Catalog extends database_object
      */
     public $name;
     /**
-     * @var integer $last_update
+     * @var int $last_update
      */
     public $last_update;
     /**
-     * @var integer $last_add
+     * @var int $last_add
      */
     public $last_add;
     /**
-     * @var integer $last_clean
+     * @var int $last_clean
      */
     public $last_clean;
     /**
@@ -99,7 +99,7 @@ abstract class Catalog extends database_object
      */
     public $f_clean;
     /**
-     * @var integer $enabled
+     * @var int $enabled
      */
     public $enabled;
 

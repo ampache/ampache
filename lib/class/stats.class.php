@@ -197,7 +197,7 @@ class Stats
      * @param $object_id
      * @param string $threshold
      * @param string $count_type
-     * @return integer
+     * @return mixed
      */
     public static function get_object_count($object_type, $object_id, $threshold = null, $count_type = 'stream')
     {
@@ -218,11 +218,10 @@ class Stats
         $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int) $results['object_cnt'];
+        return $results['object_cnt'];
     } // get_object_count
 
     /**
-     * get_cached_place_name
      * @param $latitude
      * @param $longitude
      * @return mixed|null

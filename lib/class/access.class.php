@@ -32,7 +32,7 @@ class Access
 {
     // Variables from DB
     /**
-     *  @var integer $id
+     *  @var int $id
      */
     public $id;
 
@@ -52,12 +52,12 @@ class Access
     public $end;
 
     /**
-     *  @var integer $level
+     *  @var int $level
      */
     public $level;
 
     /**
-     *  @var integer $user
+     *  @var int $user
      */
     public $user;
 

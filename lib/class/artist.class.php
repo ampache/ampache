@@ -26,7 +26,7 @@ class Artist extends database_object implements library_item
     /* Variables from DB */
 
     /**
-     *  @var integer $id
+     *  @var int $id
      */
     public $id;
 
@@ -46,22 +46,22 @@ class Artist extends database_object implements library_item
     public $placeformed;
 
     /**
-     *  @var integer $yearformed
+     *  @var int $yearformed
      */
     public $yearformed;
 
     /**
-     *  @var integer $last_update
+     *  @var int $last_update
      */
     public $last_update;
 
     /**
-     *  @var integer $songs
+     *  @var int $songs
      */
     public $songs;
 
     /**
-     *  @var integer $albums
+     *  @var int $albums
      */
     public $albums;
 
@@ -76,17 +76,17 @@ class Artist extends database_object implements library_item
     public $mbid; // MusicBrainz ID
 
     /**
-     *  @var integer $catalog_id
+     *  @var int $catalog_id
      */
     public $catalog_id;
 
     /**
-     *  @var integer $time
+     *  @var int $time
      */
     public $time;
 
     /**
-     *  @var integer $user
+     *  @var int $user
      */
     public $user;
 
@@ -117,7 +117,7 @@ class Artist extends database_object implements library_item
     public $f_labels;
 
     /**
-     *  @var integer $object_cnt
+     *  @var int $object_cnt
      */
     public $object_cnt;
 

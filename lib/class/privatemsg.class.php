@@ -31,7 +31,7 @@ class PrivateMsg extends database_object
 {
     /* Variables from DB */
     /**
-     *  @var integer $id
+     *  @var int $id
      */
     public $id;
 

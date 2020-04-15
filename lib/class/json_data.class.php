@@ -103,7 +103,7 @@ class JSON_Data
      *
      * @param    string    $key    (description here...)
      * @param    string    $string    JSON data
-     * @return string return JSON
+     * @return    string    return JSON
      */
     public static function success($key, $string='')
     {
@@ -180,7 +180,7 @@ class JSON_Data
      *
      * @param    array    $objects    (description here...)
      * @param    string    $type    (description here...)
-     * @return string return JSON
+     * @return    string    return json
      */
     public static function indexes($objects, $type)
     {
@@ -206,7 +206,7 @@ class JSON_Data
      * This returns tags to the user, in a pretty JSON document with the information
      *
      * @param    array    $tags    (description here...)
-     * @return string return JSON
+     * @return    string    return json
      */
     public static function tags($tags)
     {
@@ -296,7 +296,7 @@ class JSON_Data
      * @param array $albums (description here...)
      * @param array $include
      * @param boolean $user_id
-     * @return string return JSON
+     * @return    string    return JSON
      */
     public static function albums($albums, $include = [], $user_id = false)
     {
@@ -527,7 +527,7 @@ class JSON_Data
      *
      * @param    array    $videos    (description here...)
      * @param integer $user_id
-     * @return string return JSON
+     * @return    string    return JSON
      */
     public static function videos($videos, $user_id)
     {
@@ -665,7 +665,7 @@ class JSON_Data
      * This handles creating an JSON document for an user list
      *
      * @param    integer[]    $users    User identifier list
-     * @return string return JSON
+     * @return    string    return JSON
      */
     public static function users($users)
     {
@@ -684,7 +684,7 @@ class JSON_Data
      * This handles creating an JSON document for a shout list
      *
      * @param    integer[]    $shouts    Shout identifier list
-     * @return string return JSON
+     * @return    string    return JSON
      */
     public static function shouts($shouts)
     {
@@ -713,7 +713,7 @@ class JSON_Data
      * This handles creating an JSON document for an activity list
      *
      * @param    integer[]    $activities    Activity identifier list
-     * @return string return JSON
+     * @return    string    return JSON
      */
     public static function timeline($activities)
     {

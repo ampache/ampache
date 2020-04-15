@@ -24,7 +24,7 @@ declare(strict_types=1);
 class Video extends database_object implements media, library_item
 {
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -44,7 +44,7 @@ class Video extends database_object implements media, library_item
      */
     public $file;
     /**
-     * @var integer $size
+     * @var int $size
      */
     public $size;
     /**
@@ -56,15 +56,15 @@ class Video extends database_object implements media, library_item
      */
     public $audio_codec;
     /**
-     * @var integer $resolution_x
+     * @var int $resolution_x
      */
     public $resolution_x;
     /**
-     * @var integer $resolution_y
+     * @var int $resolution_y
      */
     public $resolution_y;
     /**
-     * @var integer $time
+     * @var int $time
      */
     public $time;
     /**
@@ -72,15 +72,15 @@ class Video extends database_object implements media, library_item
      */
     public $mime;
     /**
-     * @var integer $release_date
+     * @var int $release_date
      */
     public $release_date;
     /**
-     * @var integer $catalog
+     * @var int $catalog
      */
     public $catalog;
     /**
-     * @var integer $bitrate
+     * @var int $bitrate
      */
     public $bitrate;
     /**
@@ -88,15 +88,15 @@ class Video extends database_object implements media, library_item
      */
     public $mode;
     /**
-     * @var integer $channels
+     * @var int $channels
      */
     public $channels;
     /**
-     * @var integer $display_x
+     * @var int $display_x
      */
     public $display_x;
     /**
-     * @var integer $display_x
+     * @var int $display_x
      */
     public $display_y;
     /**
@@ -104,7 +104,7 @@ class Video extends database_object implements media, library_item
      */
     public $frame_rate;
     /**
-     * @var integer $video_bitrate
+     * @var int $video_bitrate
      */
     public $video_bitrate;
 

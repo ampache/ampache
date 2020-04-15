@@ -178,7 +178,7 @@ class SeafileAdapter
 
                 preg_match('(\d+) sec', $error, $matches);
 
-                $secs = (int) $matches[1][0];
+                $secs = intval($matches[1][0]);
 
                 debug_event('SeafileAdapter', sprintf('Throttled by Seafile, waiting %d seconds.', $secs), 5);
                 sleep($secs + 1);
