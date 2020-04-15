@@ -22,8 +22,9 @@
 
 define('NO_SESSION','1');
 
-$path = dirname(__FILE__);
-$prefix = realpath($path . '/../');
+$path    = dirname(__FILE__);
+$prefix  = realpath($path . '/../');
+$dirname = '';
 require_once($prefix . '/lib/init.php');
 
 $valid_exts = array ('m3u', 'xspf', 'pls');
