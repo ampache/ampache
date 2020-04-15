@@ -117,7 +117,7 @@ class Catalog_remote extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param integer $catalog_id
+     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -238,7 +238,7 @@ class Catalog_remote extends Catalog
      *
      * Pulls the data from a remote catalog and adds any missing songs to the
      * database.
-     * @param integer $type
+     * @param int $type
      * @return boolean
      */
     public function update_remote_catalog($type = 0)

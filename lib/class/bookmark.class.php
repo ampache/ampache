@@ -45,9 +45,9 @@ class Bookmark extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull for
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $object_type
-     * @param integer $user_id
+     * @param int $user_id
      */
     public function __construct($object_id, $object_type = null, $user_id = null)
     {
@@ -159,7 +159,7 @@ class Bookmark extends database_object
 
     /**
      * update
-     * @param integer $position
+     * @param int $position
      * @return boolean|PDOStatement
      */
     public function update($position)

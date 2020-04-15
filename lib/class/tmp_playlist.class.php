@@ -109,7 +109,7 @@ class Tmp_Playlist extends database_object
      * get_from_userid
      * This returns a tmp playlist object based on a userid passed
      * this is used for the user profiles page
-     * @param integer $user_id
+     * @param int $user_id
      * @return mixed
      */
     public static function get_from_userid($user_id)

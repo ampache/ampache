@@ -101,7 +101,7 @@ class Metadata extends DatabaseObject implements Model
 
     /**
      *
-     * @param integer $object
+     * @param int $object
      */
     public function setObjectId($object)
     {

@@ -49,7 +49,7 @@ class License
      * Constructor
      * This pulls the license information from the database and returns
      * a constructed object
-     * @param integer $license_id
+     * @param int $license_id
      */
     public function __construct($license_id)
     {
@@ -62,7 +62,7 @@ class License
     /**
      * has_info
      * does the db call, reads from the license table
-     * @param integer $id
+     * @param int $id
      * @return boolean
      */
     private function has_info($id)
@@ -121,7 +121,7 @@ class License
     /**
      * delete
      * this function deletes a specific license entry
-     * @param integer $license_id
+     * @param int $license_id
      */
     public static function delete($license_id)
     {

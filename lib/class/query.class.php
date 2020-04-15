@@ -645,7 +645,7 @@ class Query
     /**
      * set_total
      * This sets the total number of objects
-     * @param integer $total
+     * @param int $total
      */
     public function set_total($total)
     {
@@ -795,7 +795,7 @@ class Query
     /**
      * set_offset
      * This sets the current offset of this query
-     * @param integer $offset
+     * @param int $offset
      */
     public function set_offset($offset)
     {
@@ -804,7 +804,7 @@ class Query
 
     /**
      *
-     * @param integer $catalog_number
+     * @param int $catalog_number
      */
     public function set_catalog($catalog_number)
     {
@@ -831,7 +831,7 @@ class Query
      * @param string $table
      * @param string $source
      * @param string $dest
-     * @param integer $priority
+     * @param int $priority
      */
     public function set_join($type, $table, $source, $dest, $priority)
     {
@@ -854,7 +854,7 @@ class Query
      * This sets the start point for our show functions
      * We need to store this in the session so that it can be pulled
      * back, if they hit the back button
-     * @param integer $start
+     * @param int $start
      */
     public function set_start($start)
     {
@@ -1873,7 +1873,7 @@ class Query
      * these should be limited as they are often intensive and
      * require additional queries per object... :(
      *
-     * @param integer $object_id
+     * @param int $object_id
      * @return boolean
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

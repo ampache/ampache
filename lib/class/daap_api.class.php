@@ -937,7 +937,7 @@ class Daap_Api
 
     /**
      * @param string $tag
-     * @param integer $code
+     * @param int $code
      * @param string $msg
      * @return boolean
      */

@@ -216,7 +216,7 @@ class AmpacheDiscogs
     /**
      * @param string $type
      * @param array $options
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function gather_arts($type, $options = array(), $limit = 5)

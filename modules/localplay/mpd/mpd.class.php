@@ -842,7 +842,7 @@ class mpd
      * the playlist. If <track> is not specified, the current track is
      * assumed.
      * @param $pos
-     * @param integer $track
+     * @param int $track
      * @return boolean
      */
     public function SeekTo($pos, $track = -1)
@@ -1163,7 +1163,7 @@ class mpd
      * Set error state
      * @param string $source
      * @param string $message
-     * @param integer $level
+     * @param int $level
      */
     private function _error($source, $message, $level = 1)
     {

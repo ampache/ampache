@@ -54,7 +54,7 @@ class Userflag extends database_object
      * single query, saving on connection overhead
      * @param string $type
      * @param array $ids
-     * @param integer $user_id
+     * @param int $user_id
      * @return boolean
      */
     public static function build_cache($type, $ids, $user_id = null)
@@ -65,7 +65,8 @@ class Userflag extends database_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        //debug_event('userflag.class', 'Begin build_cache ' . (string) (count($ids)) . ' ' . $type . '\'s for user ' . $user_id, 4);
+
+        debug_event('userflag.class', 'Begin build_cache ' . (string) (count($ids)) . ' ' . $type . '\'s for user ' . $user_id, 4);
         $userflags = array();
 
         $idlist = '(' . implode(',', $ids) . ')';
@@ -158,7 +159,7 @@ class Userflag extends database_object
      * This function sets the user flag for the current object.
      * If no user_id is passed in, we use the currently logged in user.
      * @param boolean $flagged
-     * @param integer $user_id
+     * @param int $user_id
      * @return boolean
      */
     public function set_flag($flagged, $user_id = null)
@@ -227,7 +228,7 @@ class Userflag extends database_object
      * This function sets the user flag for an album group.
      * @param boolean $flagged
      * @param $album
-     * @param integer $user_id
+     * @param int $user_id
      * @return boolean
      */
     public static function set_flag_for_group($flagged, $album, $user_id = null)
@@ -380,8 +381,8 @@ class Userflag extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param integer $old_object_id
-     * @param integer $new_object_id
+     * @param int $old_object_id
+     * @param int $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

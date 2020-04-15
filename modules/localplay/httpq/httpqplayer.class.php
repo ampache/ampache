@@ -39,7 +39,7 @@ class HttpQPlayer
      * with port 4800
      * @param string $host
      * @param string $password
-     * @param integer $port
+     * @param int $port
      */
     public function __construct($host = "localhost", $password = '', $port = 4800)
     {

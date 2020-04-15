@@ -72,7 +72,7 @@ class AmpacheGravatar
 
     /**
      * @param User $user
-     * @param integer $size
+     * @param int $size
      * @return string
      */
     public function get_avatar_url($user, $size = 80)

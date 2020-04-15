@@ -92,7 +92,7 @@ class Playlist extends playlist_object
      * get_playlists
      * Returns a list of playlists accessible by the user.
      * @param boolean $incl_public
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $playlist_name
      * @param boolean $like
      * @return array
@@ -144,7 +144,7 @@ class Playlist extends playlist_object
      * get_smartlists
      * Returns a list of playlists accessible by the user.
      * @param boolean $incl_public
-     * @param integer $user_id
+     * @param int $user_id
      * @param string $playlist_name
      * @param boolean $like
      * @return array
@@ -338,7 +338,7 @@ class Playlist extends playlist_object
     /**
      * get_users
      * This returns the specified users playlists as an array of playlist ids
-     * @param integer $user_id
+     * @param int $user_id
      * @return array
      */
     public static function get_users($user_id)
@@ -414,7 +414,7 @@ class Playlist extends playlist_object
      * This is the generic update function, it does the escaping and error checking
      * @param string $field
      * @param $value
-     * @param integer $level
+     * @param int $level
      * @return bool|PDOStatement
      */
     private function _update_item($field, $value, $level)
@@ -431,8 +431,8 @@ class Playlist extends playlist_object
     /**
      * update_track_number
      * This takes a playlist_data.id and a track (int) and updates the track value
-     * @param integer $track_id
-     * @param integer $index
+     * @param int $track_id
+     * @param int $index
      */
     public function update_track_number($track_id, $index)
     {
@@ -518,8 +518,8 @@ class Playlist extends playlist_object
      * This function creates an empty playlist, gives it a name and type
      * @param string $name
      * @param string $type
-     * @param integer $user_id
-     * @param integer $date
+     * @param int $user_id
+     * @param int $date
      * @return string|null
      */
     public static function create($name, $type, $user_id = null, $date = null)
@@ -562,7 +562,7 @@ class Playlist extends playlist_object
 
     /**
      * delete_song
-     * @param integer $object_id
+     * @param int $object_id
      * this deletes a single track, you specify the playlist_data.id here
      * @return boolean
      */
@@ -579,7 +579,7 @@ class Playlist extends playlist_object
 
     /**
      * delete_track
-     * @param integer $item_id
+     * @param int $item_id
      * this deletes a single track, you specify the playlist_data.id here
      * @return boolean
      */
@@ -596,7 +596,7 @@ class Playlist extends playlist_object
 
     /**
      * delete_track_number
-     * @param integer $track
+     * @param int $track
      * this deletes a single track by it's track #, you specify the playlist_data.track here
      * @return boolean
      */
@@ -614,8 +614,8 @@ class Playlist extends playlist_object
     /**
     * has_item
     * look for the track id or the object id in a playlist
-    * @param integer $object
-    * @param integer $track
+    * @param int $object
+    * @param int $track
     * @return boolean
     */
     public function has_item($object = null, $track = null)

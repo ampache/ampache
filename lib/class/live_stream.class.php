@@ -211,7 +211,7 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     /**
-     * @param integer $thumb
+     * @param int $thumb
      * @param boolean $force
      * @return mixed|void
      */

@@ -124,7 +124,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param integer $song_id
+     * @param int $song_id
      * @return string
      */
     protected function getSongJS($song_id)
@@ -142,7 +142,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param ConnectionInterface $from
-     * @param integer $song_id
+     * @param int $song_id
      */
     protected function notifySong(ConnectionInterface $from, $song_id)
     {
@@ -164,7 +164,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param ConnectionInterface $from
-     * @param integer $song_position
+     * @param int $song_position
      */
     protected function notifySongPosition(ConnectionInterface $from, $song_position)
     {
@@ -253,7 +253,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param integer $broadcast_id
+     * @param int $broadcast_id
      * @return Broadcast
      */
     protected function getRunningBroadcast($broadcast_id)
@@ -272,7 +272,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param ConnectionInterface $from
-     * @param integer $broadcast_id
+     * @param int $broadcast_id
      */
     protected function registerListener(ConnectionInterface $from, $broadcast_id)
     {

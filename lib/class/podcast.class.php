@@ -271,7 +271,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * display_art
-     * @param integer $thumb
+     * @param int $thumb
      * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
@@ -408,7 +408,7 @@ class Podcast extends database_object implements library_item
     /**
      * add_episodes
      * @param SimpleXMLElement $episodes
-     * @param integer $afterdate
+     * @param int $afterdate
      * @param boolean $gather
      */
     public function add_episodes($episodes, $afterdate = 0, $gather = false)
@@ -452,7 +452,7 @@ class Podcast extends database_object implements library_item
     /**
      * add_episode
      * @param SimpleXMLElement $episode
-     * @param integer $afterdate
+     * @param int $afterdate
      * @return PDOStatement|boolean
      */
     private function add_episode(SimpleXMLElement $episode, $afterdate = 0)
@@ -500,7 +500,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * update_lastsync
-     * @param integer $time
+     * @param int $time
      * @return PDOStatement|boolean
      */
     private function update_lastsync($time)

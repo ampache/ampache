@@ -158,7 +158,7 @@ class UPnPDevice
      * Filters response HTTP-Code from response headers
      * @param $command
      * @param string $type
-     * @param integer $id
+     * @param int $id
      * @return mixed             Response code (int) or null if not found
      */
     /*
