@@ -308,12 +308,10 @@ class User extends database_object
             $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
-                if ($row['apikey'] && $row['username']) {
-                    $key        = hash('sha256', $row['apikey']);
-                    $passphrase = hash('sha256', $row['username'] . $key);
-                    if ($passphrase == $apikey) {
-                        return new User($row['id']);
-                    }
+                $key        = hash('sha256', $row['apikey']);
+                $passphrase = hash('sha256', $row['username'] . $key);
+                if ($passphrase == $apikey) {
+                    return new User($row['id']);
                 }
             }
         }
