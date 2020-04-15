@@ -1116,7 +1116,7 @@ class mpd
      */
     private static function _parseFileListResponse($response)
     {
-        if (is_bool($response)) {
+        if (!$response) {
             return false;
         }
 
