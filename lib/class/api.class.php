@@ -489,10 +489,10 @@ class Api
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
-                echo JSON_Data::songs(array($data['id']), array(), $user->id);
+                echo JSON_Data::songs(array($data['id']), $user->id);
             break;
             default:
-                echo XML_Data::songs(array($data['id']), array(), true, $user->id);
+                echo XML_Data::songs(array($data['id']), true, $user->id);
         }
 
         return true;
@@ -618,7 +618,7 @@ class Api
                         echo JSON_Data::albums($results, array(), $user->id);
                         break;
                     default:
-                        echo JSON_Data::songs($results, array(), $user->id);
+                        echo JSON_Data::songs($results, $user->id);
                         break;
                 }
             break;
@@ -633,7 +633,7 @@ class Api
                     echo XML_Data::albums($results, array(), true, $user->id);
                     break;
                 default:
-                    echo XML_Data::songs($results, array(), true, $user->id);
+                    echo XML_Data::songs($results, true, $user->id);
                     break;
             }
         }
@@ -780,12 +780,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($songs, array(), $user->id);
+                echo JSON_Data::songs($songs, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::songs($songs, array(), true, $user->id);
+                echo XML_Data::songs($songs, true, $user->id);
             }
         }
         Session::extend($input['auth']);
@@ -912,12 +912,12 @@ class Api
                 case 'json':
                     JSON_Data::set_offset($input['offset']);
                     JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, array(), $user->id);
+                    echo JSON_Data::songs($songs, $user->id);
                 break;
                 default:
                     XML_Data::set_offset($input['offset']);
                     XML_Data::set_limit($input['limit']);
-                    echo XML_Data::songs($songs, array(), true, $user->id);
+                    echo XML_Data::songs($songs, true, $user->id);
             }
         }
         Session::extend($input['auth']);
@@ -1100,12 +1100,12 @@ class Api
                 case 'json':
                     JSON_Data::set_offset($input['offset']);
                     JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, array(), $user->id);
+                    echo JSON_Data::songs($songs, $user->id);
                 break;
                 default:
                     XML_Data::set_offset($input['offset']);
                     XML_Data::set_limit($input['limit']);
-                    echo XML_Data::songs($songs, array(), true, $user->id);
+                    echo XML_Data::songs($songs, true, $user->id);
             }
         }
         Session::extend($input['auth']);
@@ -1152,12 +1152,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($songs, array(), $user->id);
+                echo JSON_Data::songs($songs, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::songs($songs, array(), true, $user->id);
+                echo XML_Data::songs($songs, true, $user->id);
         }
         Session::extend($input['auth']);
     } // songs
@@ -1183,10 +1183,10 @@ class Api
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
-                echo JSON_Data::songs(array((int) $song_id), array(), $user->id);
+                echo JSON_Data::songs(array((int) $song_id), $user->id);
             break;
             default:
-                echo XML_Data::songs(array((int) $song_id), array(), true, $user->id);
+                echo XML_Data::songs(array((int) $song_id), true, $user->id);
         }
         Session::extend($input['auth']);
 
@@ -1335,12 +1335,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($songs, $items, $user->id);
+                echo JSON_Data::songs($songs, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::songs($songs, $items, true, $user->id);
+                echo XML_Data::songs($songs, true, $user->id);
         }
         Session::extend($input['auth']);
 
@@ -1734,10 +1734,10 @@ class Api
             default:
                 switch ($input['format']) {
                     case 'json':
-                        echo JSON_Data::songs($song_ids, array(), $user->id);
+                        echo JSON_Data::songs($song_ids, $user->id);
                     break;
                     default:
-                        echo XML_Data::songs($song_ids, array(), true, $user->id);
+                        echo XML_Data::songs($song_ids, true, $user->id);
                 }
         }
         Session::extend($input['auth']);
@@ -1774,12 +1774,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($results, array(), $user->id);
+                echo JSON_Data::songs($results, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::songs($results, array(), true, $user->id);
+                echo XML_Data::songs($results, true, $user->id);
         }
         Session::extend($input['auth']);
 
@@ -1949,10 +1949,10 @@ class Api
             if ($type === 'song') {
                 switch ($input['format']) {
                     case 'json':
-                        echo JSON_Data::songs($results, array(), $user->id);
+                        echo JSON_Data::songs($results, $user->id);
                     break;
                     default:
-                        echo XML_Data::songs($results, array(), true, $user->id);
+                        echo XML_Data::songs($results, true, $user->id);
                 }
             }
             if ($type === 'artist') {

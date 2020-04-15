@@ -379,13 +379,13 @@ class XML_Data
             }
             if ($object_type == 'playlist') {
                 if (str_replace('smart_', '', (string) $object_id) === (string) $object_id) {
-                    $playlist     = new Playlist($object_id);
+                    $playlist = new Playlist($object_id);
                     $playlist->format();
 
                     $playlist_name  = $playlist->name;
                     $playitem_total = $playlist->get_media_count('song');
                 } else {
-                    $playlist     = new Search(str_replace('smart_', '', (string) $object_id));
+                    $playlist = new Search(str_replace('smart_', '', (string) $object_id));
                     $playlist->format();
 
                     $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
@@ -396,9 +396,11 @@ class XML_Data
                     $songs = $playlist->get_items();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
+                    $playlist_track = 0;
                     foreach ($songs as $song_id) {
                         if ($song_id['object_type'] == 'song') {
-                            $string .= "\t\t<playlisttrack>" . $song_id['object_id'] . "</playlisttrack>\n";
+                            $playlist_track++;
+                            $string .= "\t\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n";
                         }
                     }
                     $string .= "</$object_type>\n";
@@ -687,7 +689,7 @@ class XML_Data
         Song::build_cache($songs);
         Stream::set_session(Core::get_request('auth'));
 
-        $playlisttrack = 0;
+        $playlist_track = 0;
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
@@ -698,15 +700,13 @@ class XML_Data
                 continue;
             }
 
-            if (!empty($playlist_data)) {
-                $playlisttrack++;
-            }
 
             $song->format();
-            $tag_string   = self::tags_string(Tag::get_top_tags('song', $song_id));
-            $rating       = new Rating($song_id, 'song');
-            $flag         = new Userflag($song_id, 'song');
-            $art_url      = Art::url($song->album, 'album', Core::get_request('auth'));
+            $tag_string = self::tags_string(Tag::get_top_tags('song', $song_id));
+            $rating     = new Rating($song_id, 'song');
+            $flag       = new Userflag($song_id, 'song');
+            $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
+            $playlist_track++;
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
                     // Title is an alias for name
@@ -725,7 +725,7 @@ class XML_Data
             $string .= $tag_string .
                     "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" .
                     "\t<track>" . $song->track . "</track>\n" .
-                    "\t<playlisttrack>" . $playlisttrack . "</playlisttrack>\n" .
+                    "\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n" .
                     "\t<time>" . $song->time . "</time>\n" .
                     "\t<year>" . $song->year . "</year>\n" .
                     "\t<bitrate>" . $song->bitrate . "</bitrate>\n" .

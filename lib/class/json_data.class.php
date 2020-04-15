@@ -400,11 +400,10 @@ class JSON_Data
      * This returns a JSON document from an array of song ids.
      * (Spiffy isn't it!)
      * @param $songs
-     * @param array $playlist_data
      * @param boolean $user_id
      * @return false|string
      */
-    public static function songs($songs, $playlist_data=array(), $user_id = false)
+    public static function songs($songs, $user_id = false)
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -413,9 +412,8 @@ class JSON_Data
         Song::build_cache($songs);
         Stream::set_session($_REQUEST['auth']);
 
-        $JSON = [];
-
-        $playlisttrack = 0;
+        $JSON           = [];
+        $playlist_track = 0;
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
@@ -426,14 +424,12 @@ class JSON_Data
                 continue;
             }
 
-            if (!empty($playlist_data)) {
-                $playlisttrack++;
-            }
 
             $song->format();
-            $rating                = new Rating($song_id, 'song');
-            $flag                  = new Userflag($song_id, 'song');
-            $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $rating  = new Rating($song_id, 'song');
+            $flag    = new Userflag($song_id, 'song');
+            $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $playlist_track++;
 
             $ourSong = array(
                 id => $song->id,
@@ -454,7 +450,7 @@ class JSON_Data
 
             $ourSong['filename']              = $song->file;
             $ourSong['track']                 = $song->track;
-            $ourSong['playlisttrack']         = $playlisttrack;
+            $ourSong['playlisttrack']         = $playlist_track;
             $ourSong['time']                  = (int) $song->time;
             $ourSong['year']                  = $song->year;
             $ourSong['bitrate']               = $song->bitrate;
