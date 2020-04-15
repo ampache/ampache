@@ -131,7 +131,7 @@ class UI
      * Removes characters that aren't valid in XML (which is a subset of valid
      * UTF-8, but close enough for our purposes.)
      * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
-     * @param string $string
+     * @param array $string
      * @return string
      */
     public static function clean_utf8($string)
@@ -167,7 +167,7 @@ class UI
      *
      * First initialized with an array of two class names. Subsequent calls
      * reverse the array then return the first element.
-     * @param array $classes
+     * @param null|array $classes
      * @return mixed
      */
     public static function flip_class($classes = null)

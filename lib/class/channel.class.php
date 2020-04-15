@@ -729,8 +729,8 @@ class Channel extends database_object implements media, library_item
     }
 
     /**
-     * @param $target
-     * @param $player
+     * @param null $target
+     * @param null $player
      * @param array $options
      * @return boolean
      */

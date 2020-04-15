@@ -155,7 +155,7 @@ abstract class Catalog extends database_object
     abstract public function install();
 
     /**
-     * @param $options
+     * @param null $options
      * @return mixed
      */
     abstract public function add_to_catalog($options = null);
@@ -744,7 +744,7 @@ abstract class Catalog extends database_object
     public static function count_medias($catalog_id = null)
     {
         $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
-        $params    = $catalog_id ? array($catalog_id) : array();
+        $params    = $catalog_id ? array($catalog_id) : null;
 
         $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `song` ' .
             $where_sql;
@@ -1357,7 +1357,7 @@ abstract class Catalog extends database_object
         if (!count($art_order)) {
             debug_event('catalog.class', 'art_order not set, self::gather_art aborting', 3);
 
-            return false;
+            return true;
         }
 
         // Prevent the script from timing out
@@ -1402,10 +1402,9 @@ abstract class Catalog extends database_object
                 }
             }
         }
+
         // One last time for good measure
         UI::update_text('count_art_' . $this->id, $search_count);
-
-        return true;
     }
 
     /**
@@ -2593,7 +2592,7 @@ abstract class Catalog extends database_object
     /**
      * @param $action
      * @param $catalogs
-     * @param $options
+     * @param null $options
      */
     public static function process_action($action, $catalogs, $options = null)
     {

@@ -377,7 +377,7 @@ class Browse extends Query
     } // show_object
 
     /**
-     * @param $argument
+     * @param null $argument
      */
     public function show_next_link($argument = null)
     {

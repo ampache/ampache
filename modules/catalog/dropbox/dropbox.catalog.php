@@ -458,7 +458,7 @@ class Catalog_dropbox extends Catalog
      * @param $dropbox
      * @param $path
      * @param $maxlen
-     * @param $dropboxFile
+     * @param null $dropboxFile
      * @return boolean
      */
     public function download($dropbox, $path, $maxlen, $dropboxFile = null)

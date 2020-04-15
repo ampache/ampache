@@ -523,12 +523,12 @@ class Tag extends database_object implements library_item
      * @param $tag_id
      * @param string $count
      * @param string $offset
-     * @return integer[]
+     * @return integer[]|false
      */
     public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
     {
         if (!Core::is_library_item($type)) {
-            return array();
+            return false;
         }
 
         $limit_sql = "";
@@ -852,11 +852,13 @@ class Tag extends database_object implements library_item
         $medias = array();
         if ($filter_type) {
             $ids = self::get_tag_objects($filter_type, $this->id);
-            foreach ($ids as $objectid) {
-                $medias[] = array(
-                    'object_type' => $filter_type,
-                    'object_id' => $objectid
-                );
+            if ($ids) {
+                foreach ($ids as $objectid) {
+                    $medias[] = array(
+                        'object_type' => $filter_type,
+                        'object_id' => $objectid
+                    );
+                }
             }
         }
 

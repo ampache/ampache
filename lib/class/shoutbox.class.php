@@ -101,7 +101,7 @@ class Shoutbox
      * number of objects shown
      * @param int $limit
      * @param string $username
-     * @return integer[]
+     * @return array
      */
     public static function get_top($limit, $username = null)
     {

@@ -104,7 +104,7 @@ abstract class playlist_object extends database_object implements library_item
     } // has_access
 
     /**
-     * @param $filter_type
+     * @param null $filter_type
      * @return array|mixed
      */
     public function get_medias($filter_type = null)

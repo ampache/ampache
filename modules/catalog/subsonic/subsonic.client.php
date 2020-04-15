@@ -146,7 +146,7 @@ class SubsonicClient
 
     /**
      * @param $server
-     * @param $port
+     * @param null $port
      */
     public function setServer($server, $port = null)
     {
@@ -188,7 +188,7 @@ class SubsonicClient
 
     /**
      * @param $error
-     * @param $data
+     * @param null $data
      * @return object
      */
     protected function error($error, $data = null)

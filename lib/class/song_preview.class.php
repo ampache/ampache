@@ -243,7 +243,7 @@ class Song_Preview extends database_object implements media, playable_item
     } // format
 
     /**
-     * @return string
+     * @return mixed
      */
     public function get_fullname()
     {
@@ -279,7 +279,7 @@ class Song_Preview extends database_object implements media, playable_item
     }
 
     /**
-     * @param $filter_type
+     * @param null $filter_type
      * @return array|mixed
      */
     public function get_medias($filter_type = null)
@@ -349,10 +349,8 @@ class Song_Preview extends database_object implements media, playable_item
     }
 
     /**
-     * get_stream_types
-     *
-     * @param $player
-     * @return string[]
+     * @param null $player
+     * @return array
      */
     public function get_stream_types($player = null)
     {

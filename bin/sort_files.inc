@@ -116,8 +116,8 @@ while ($row = Dba::fetch_assoc($db_results)) {
  * takes into account various artists and the alphabet_prefix
  * @param $song
  * @param $sort_pattern
- * @param $base
- * @return false|string
+ * @param null $base
+ * @return bool|string
  */
 function sort_find_home($song, $sort_pattern, $base = null) {
 

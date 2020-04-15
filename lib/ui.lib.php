@@ -52,8 +52,8 @@ function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = '
 
 /**
  * @param $action
- * @param $catalogs
- * @param $options
+ * @param null $catalogs
+ * @param null $options
  */
 function catalog_worker($action, $catalogs = null, $options = null)
 {
@@ -235,7 +235,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
 
     $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix`, `disk` FROM `album`";
     $params = array();
-    if ($user !== null) {
+    if ($user) {
         $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
         $params[] = $user;
     }
@@ -298,7 +298,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
 
     $sql    = "SELECT `id`, `name`, `prefix` FROM `artist` ";
     $params = array();
-    if ($user_id !== null) {
+    if ($user_id) {
         $sql .= "WHERE `user` = ? ";
         $params[] = $user_id;
     }

@@ -351,8 +351,8 @@ class Core
      * This generates a cryptographically secure token.
      * Returns a token of the required bytes length, as a string. Returns false
      * if it could not generate a cryptographically secure token.
-     * @param integer $length
-     * @return false|string
+     * @param int $length
+     * @return bool|string
      * @throws Exception
      */
     public static function gen_secure_token($length)
@@ -378,7 +378,7 @@ class Core
      * false on error
      *
      * @param string $image_data
-     * @return array
+     * @return array|boolean
      */
     public static function image_dimensions($image_data)
     {
@@ -473,8 +473,8 @@ class Core
      * conv_lc_file
      *
      * Convert site charset filename to local charset filename for file operations
-     * @param string $filename
-     * @return string
+     * @param $filename
+     * @return false|string
      */
     public static function conv_lc_file($filename)
     {
@@ -561,11 +561,15 @@ class Core
     }
 
     /**
-     * @param $options
-     * @return array
+     * @param null $options
+     * @return array|null
      */
-    public static function requests_options($options = array())
+    public static function requests_options($options = null)
     {
+        if ($options === null) {
+            $options = array();
+        }
+
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
                 $proxy   = array();

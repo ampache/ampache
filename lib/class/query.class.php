@@ -788,8 +788,6 @@ class Query
         }
 
         $this->resort_objects();
-
-        return true;
     } // set_sort
 
     /**
@@ -1108,8 +1106,6 @@ class Query
         }
 
         $this->_state['base'] = $sql;
-
-        return true;
     } // set_base_sql
 
     /**
