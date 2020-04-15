@@ -358,6 +358,7 @@ class Stats
         }
         $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
         $date              = time() - (86400 * (int) $threshold);
+
         if ($type == 'playlist') {
             $sql = "SELECT `id` as `id`, `last_update` FROM `playlist`";
             if ($threshold > 0) {
@@ -383,7 +384,7 @@ class Stats
                         " AND `object_count`.`object_type` = 'album'";
             }
             if ($user_id !== null) {
-                $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . (string) $user_id;
+                $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . $user_id;
             } else {
                 $sql .= " WHERE `object_type` = '" . $type . "' ";
                 if ($threshold > 0) {
@@ -394,8 +395,8 @@ class Stats
                 $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
             }
             $rating_filter = AmpConfig::get_rating_filter();
-            if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-                //$user_id = Core::get_global('user')->id;
+            if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
+                $user_id = Core::get_global('user')->id;
                 $sql .= " AND `object_id` NOT IN" .
                         " (SELECT `object_id` FROM `rating`" .
                         " WHERE `rating`.`object_type` = '" . $type . "'" .
@@ -477,7 +478,7 @@ class Stats
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && !empty($user_id)) {
             $sql .= " AND `object_id` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = '" . $type . "'" .

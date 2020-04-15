@@ -128,6 +128,7 @@ class Song_Preview extends database_object implements media, playable_item
         if (!is_array($song_ids) || !count($song_ids)) {
             return false;
         }
+
         $idlist = '(' . implode(',', $song_ids) . ')';
 
         // Callers might have passed array(false) because they are dumb
@@ -135,7 +136,6 @@ class Song_Preview extends database_object implements media, playable_item
             return false;
         }
 
-        debug_event('song_preview.class', 'Begin build_cache.', 4);
         // Song data cache
         $sql = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' .
             'FROM `song_preview` ' .

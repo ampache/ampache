@@ -21,7 +21,6 @@
  */
 
 define('NO_SESSION','1');
-define('CLI', 1);
 define('NO_CRON_CACHE','1');
 $path   = dirname(__FILE__); 
 $prefix = realpath($path . '/../'); 
@@ -30,26 +29,20 @@ require_once $prefix . '/lib/init.php';
 // Turn off output buffering we don't need it for a command line script
 ob_end_clean(); 
 
-debug_event('compute_cache', 'started cache process', 3);
+echo "This file compute cache data for object_count.\n\n";
 
-$users        = User::get_valid_users();
 $thresholds   = [ 0, AmpConfig::get('stats_threshold'), AmpConfig::get('popular_threshold') ];
 $count_types  = [ 'stream', 'download' ];
-// TODO fix playlist sql.
-$object_types = [ 'album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast_episode' ];
-
-foreach ($users as $user_id) {
-    debug_event('compute_cache', 'started cache process for user ' . (string) $user_id, 3);
-    foreach ($thresholds as $threshold) {
-        foreach ($count_types as $count_type) {
-            foreach ($object_types as $object_type) {
-                debug_event('compute_cache', "Computing object_count stats for threshold `" . $threshold . "`, count_type `" . $count_type . "` and object_type `" . $object_type . "` ...", 5);
-                
-                $sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
-                $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, $user_id);
-                $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
-                Dba::write($sql);
-            }
+$object_types = [ 'album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast_episode' ];
+foreach ($thresholds as $threshold) {
+    foreach ($count_types as $count_type) {
+        foreach ($object_types as $object_type) {
+            echo "Computing object_count stats for threshold `" . $threshold . "`, count_type `" . $count_type . "` and object_type `" . $object_type . "` ...\n";
+            
+            $sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
+            $sql .= Stats::get_top_sql($object_type, $threshold, $count_type);
+            $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
+            Dba::write($sql);
         }
     }
 }
@@ -59,4 +52,4 @@ Dba::write($sql);
 $sql = "TRUNCATE `cache_object_count_run`";
 Dba::write($sql);
 
-debug_event('compute_cache', 'Completed cache process', 4);
+echo "Done.\n";
