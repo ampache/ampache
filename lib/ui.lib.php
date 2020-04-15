@@ -386,7 +386,7 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
  * @param boolean $allow_add
  * @param int $video_id
  * @param boolean $allow_none
- * @return boolean
+ * @return false|null
  */
 function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false)
 {
