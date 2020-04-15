@@ -1714,7 +1714,7 @@ abstract class Catalog extends database_object
     public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern = '', $rename_pattern = '')
     {
         // check for wav files
-        $invalid_exts = array ('wav');
+        $invalid_exts = array('wav');
         $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
         if (in_array($extension, $invalid_exts)) {
             debug_event('catalog.class', 'update_media_from_tags: Invalid file extension ' . $media->file, 2);
