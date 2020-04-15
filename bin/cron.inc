@@ -97,7 +97,7 @@ if (AmpConfig::get('memory_cache')) {
         Artist::build_cache($artists, true, '');
 
         // cache song details
-        $songs = $catalog->get_song_ids();
+        $songs = $catalog->get_songs();
         Song::build_cache($songs, '');
 
         // cache playlist details
