@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -103,10 +102,6 @@ class Share extends database_object
         Dba::write($sql, array($object_type, $object_id));
     }
 
-    /**
-     * @param int $length
-     * @return string
-     */
     public static function generate_secret($length = 8)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -276,9 +271,6 @@ class Share extends database_object
         }
     }
 
-    /**
-     * @param bool $details
-     */
     public function format($details = true)
     {
         if ($details) {
@@ -384,9 +376,6 @@ class Share extends database_object
         return true;
     }
 
-    /**
-     * @return Stream_Playlist
-     */
     public function create_fake_playlist()
     {
         $playlist = new Stream_Playlist(-1);
@@ -414,10 +403,6 @@ class Share extends database_object
         return $playlist;
     }
 
-    /**
-     * @param $media_id
-     * @return bool
-     */
     public function is_shared_media($media_id)
     {
         $is_shared = false;
@@ -441,19 +426,11 @@ class Share extends database_object
         return $is_shared;
     }
 
-    /**
-     * @return mixed
-     */
     public function get_user_owner()
     {
         return $this->user;
     }
 
-    /**
-     * @param $object_type
-     * @param $object_id
-     * @param bool $show_text
-     */
     public static function display_ui($object_type, $object_id, $show_text = true)
     {
         echo "<a onclick=\"showShareDialog(event, '" . $object_type . "', " . $object_id . ");\">" . UI::get_icon('share', T_('Share'));
@@ -463,10 +440,6 @@ class Share extends database_object
         echo "</a>";
     }
 
-    /**
-     * @param $object_type
-     * @param $object_id
-     */
     public static function display_ui_links($object_type, $object_id)
     {
         echo "<ul>";

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -64,11 +63,6 @@ class Recommendation
         return simplexml_load_string($content);
     }
 
-    /**
-     * @param $artist
-     * @param $album
-     * @return SimpleXMLElement
-     */
     public static function album_search($artist, $album)
     {
         $api_key = AmpConfig::get('lastfm_api_key');

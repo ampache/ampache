@@ -97,9 +97,6 @@ class Catalog_remote extends Catalog
         return true;
     } // install
 
-    /**
-     * @return array|mixed
-     */
     public function catalog_fields()
     {
         $fields['uri']           = array('description' => T_('URI'), 'type' => 'url');
@@ -301,9 +298,6 @@ class Catalog_remote extends Catalog
         return true;
     }
 
-    /**
-     * @return array|mixed
-     */
     public function verify_catalog_proc()
     {
         return array('total' => 0, 'updated' => 0);
@@ -370,10 +364,6 @@ class Catalog_remote extends Catalog
         return false;
     }
 
-    /**
-     * @param string $file_path
-     * @return string|string[]
-     */
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->uri, "/");
@@ -393,10 +383,6 @@ class Catalog_remote extends Catalog
         $this->f_full_info = $this->uri;
     }
 
-    /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return bool|media|null
-     */
     public function prepare_media($media)
     {
         $remote_handle = $this->connect();

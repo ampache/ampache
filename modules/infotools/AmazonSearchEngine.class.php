@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
  * Copyright 2001 - 2020 Ampache.org

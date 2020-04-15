@@ -1,11 +1,5 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Tmdb\ApiToken;
-use Tmdb\Client;
-use Tmdb\Helper\ImageHelper;
-use Tmdb\Repository\ConfigurationRepository;
-
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
@@ -124,11 +118,11 @@ class AmpacheTmdb
         }
 
         try {
-            $token            = new ApiToken($this->api_key);
-            $client           = new Client($token);
-            $configRepository = new ConfigurationRepository($client);
+            $token            = new \Tmdb\ApiToken($this->api_key);
+            $client           = new \Tmdb\Client($token);
+            $configRepository = new \Tmdb\Repository\ConfigurationRepository($client);
             $config           = $configRepository->load();
-            $imageHelper      = new ImageHelper($config);
+            $imageHelper      = new \Tmdb\Helper\ImageHelper($config);
 
             $title = $media_info['original_name'] ?: $media_info['title'];
 

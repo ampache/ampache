@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -96,11 +95,6 @@ class Label extends database_object implements library_item
         return true;
     }
 
-    /**
-     * @param $thumb
-     * @param bool $force
-     * @return mixed|void
-     */
     public function display_art($thumb, $force = false)
     {
         if (Art::has_db($this->id, 'label') || $force) {
@@ -108,9 +102,6 @@ class Label extends database_object implements library_item
         }
     }
 
-    /**
-     * @param bool $details
-     */
     public function format($details = true)
     {
         unset($details);
@@ -120,17 +111,11 @@ class Label extends database_object implements library_item
         $this->artists      = count($this->get_artists());
     }
 
-    /**
-     * @return array|integer[]
-     */
     public function get_catalogs()
     {
         return array();
     }
 
-    /**
-     * @return array
-     */
     public function get_childrens()
     {
         $medias  = array();
@@ -145,25 +130,16 @@ class Label extends database_object implements library_item
         return array('artist' => $medias);
     }
 
-    /**
-     * @return mixed|string
-     */
     public function get_default_art_kind()
     {
         return 'default';
     }
 
-    /**
-     * @return mixed|string
-     */
     public function get_description()
     {
         return $this->summary;
     }
 
-    /**
-     * @return string
-     */
     public function get_fullname()
     {
         return $this->f_name;
@@ -183,10 +159,6 @@ class Label extends database_object implements library_item
         return $keywords;
     }
 
-    /**
-     * @param null $filter_type
-     * @return array|mixed
-     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -203,17 +175,11 @@ class Label extends database_object implements library_item
         return $medias;
     }
 
-    /**
-     * @return |null
-     */
     public function get_parent()
     {
         return null;
     }
 
-    /**
-     * @return int|mixed
-     */
     public function get_user_owner()
     {
         return $this->user;
@@ -326,11 +292,6 @@ class Label extends database_object implements library_item
         return Dba::insert_id();
     }
 
-    /**
-     * @param array $data
-     * @param int $id
-     * @return int|mixed
-     */
     public static function lookup(array $data, $id = 0)
     {
         $ret  = -1;
@@ -352,17 +313,11 @@ class Label extends database_object implements library_item
         return $ret;
     }
 
-    /**
-     * @return mixed|void
-     */
     public static function garbage_collection()
     {
         // Don't remove labels, it could still be used as description in a search
     }
 
-    /**
-     * @return array
-     */
     public function get_artists()
     {
         $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
@@ -426,9 +381,6 @@ class Label extends database_object implements library_item
         return $results;
     } // get_songs
 
-    /**
-     * @return bool|PDOStatement
-     */
     public function remove()
     {
         $sql     = "DELETE FROM `label` WHERE `id` = ?";
@@ -444,9 +396,6 @@ class Label extends database_object implements library_item
         return $deleted;
     }
 
-    /**
-     * @return array
-     */
     public static function get_all_labels()
     {
         $sql        = "SELECT `id`, `name` FROM `label`";

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -81,10 +80,6 @@ class Subsonic_XML_Data
         return $albumid + self::AMPACHEID_ALBUM;
     }
 
-    /**
-     * @param $songid
-     * @return int
-     */
     public static function getSongId($songid)
     {
         return $songid + self::AMPACHEID_SONG;
@@ -135,10 +130,6 @@ class Subsonic_XML_Data
         return $plistid + self::AMPACHEID_PLAYLIST;
     }
 
-    /**
-     * @param $objectid
-     * @return int
-     */
     private static function cleanId($objectid)
     {
         // Remove all al-, ar-, ... prefixs
@@ -150,19 +141,11 @@ class Subsonic_XML_Data
         return $objectid;
     }
 
-    /**
-     * @param $objectid
-     * @return int
-     */
     public static function getAmpacheId($objectid)
     {
         return (self::cleanId($objectid) % self::AMPACHEID_ARTIST);
     }
 
-    /**
-     * @param $ids
-     * @return array
-     */
     public static function getAmpacheIds($ids)
     {
         $ampids = array();
@@ -173,46 +156,26 @@ class Subsonic_XML_Data
         return $ampids;
     }
 
-    /**
-     * @param $artistid
-     * @return bool
-     */
     public static function isArtist($artistid)
     {
         return (self::cleanId($artistid) >= self::AMPACHEID_ARTIST && $artistid < self::AMPACHEID_ALBUM);
     }
 
-    /**
-     * @param $albumid
-     * @return bool
-     */
     public static function isAlbum($albumid)
     {
         return (self::cleanId($albumid) >= self::AMPACHEID_ALBUM && $albumid < self::AMPACHEID_SONG);
     }
 
-    /**
-     * @param $songid
-     * @return bool
-     */
     public static function isSong($songid)
     {
         return (self::cleanId($songid) >= self::AMPACHEID_SONG && $songid < self::AMPACHEID_SMARTPL);
     }
 
-    /**
-     * @param $plistid
-     * @return bool
-     */
     public static function isSmartPlaylist($plistid)
     {
         return (self::cleanId($plistid) >= self::AMPACHEID_SMARTPL && $plistid < self::AMPACHEID_VIDEO);
     }
 
-    /**
-     * @param $videoid
-     * @return bool
-     */
     public static function isVideo($videoid)
     {
         $videoid = self::cleanId($videoid);
@@ -220,37 +183,21 @@ class Subsonic_XML_Data
         return (self::cleanId($videoid) >= self::AMPACHEID_VIDEO && $videoid < self::AMPACHEID_PODCAST);
     }
 
-    /**
-     * @param $podcastid
-     * @return bool
-     */
     public static function isPodcast($podcastid)
     {
         return (self::cleanId($podcastid) >= self::AMPACHEID_PODCAST && $podcastid < self::AMPACHEID_PODCASTEP);
     }
 
-    /**
-     * @param $episodeid
-     * @return bool
-     */
     public static function isPodcastEp($episodeid)
     {
         return (self::cleanId($episodeid) >= self::AMPACHEID_PODCASTEP && $episodeid < self::AMPACHEID_PLAYLIST);
     }
 
-    /**
-     * @param $plistid
-     * @return bool
-     */
     public static function isPlaylist($plistid)
     {
         return (self::cleanId($plistid) >= self::AMPACHEID_PLAYLIST);
     }
 
-    /**
-     * @param $objectid
-     * @return string
-     */
     public static function getAmpacheType($objectid)
     {
         if (self::isArtist($objectid)) {

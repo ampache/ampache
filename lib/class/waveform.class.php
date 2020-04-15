@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -144,11 +143,6 @@ class Waveform
         return $waveform;
     }
 
-    /**
-     * @param $byte1
-     * @param $byte2
-     * @return float|int
-     */
     protected static function findValues($byte1, $byte2)
     {
         $byte1 = hexdec(bin2hex($byte1));

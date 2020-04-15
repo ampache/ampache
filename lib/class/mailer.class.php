@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -51,7 +50,7 @@ class Mailer
      * is_mail_enabled
      *
      * Check that the mail feature is enabled
-     * @return bool
+     * @return boolean
      */
     public static function is_mail_enabled()
     {
@@ -217,10 +216,6 @@ class Mailer
         }
     } // send
 
-    /**
-     * @param $group_name
-     * @return bool
-     */
     public function send_to_group($group_name)
     {
         $mail = new PHPMailer();

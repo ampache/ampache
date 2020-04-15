@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -416,9 +415,7 @@ class Core
      * Replacement function because PHP's is_readable is buggy:
      * https://bugs.php.net/bug.php?id=49620
      *
-     * @param string $path
-     * @param $path
-     * @return bool
+     * @param string|false $path
      */
     public static function is_readable($path)
     {
@@ -476,8 +473,6 @@ class Core
      * conv_lc_file
      *
      * Convert site charset filename to local charset filename for file operations
-     * @param $filename
-     * @return false|string
      */
     public static function conv_lc_file($filename)
     {
@@ -497,7 +492,6 @@ class Core
      * is_session_started
      *
      * Universal function for checking session status.
-     * @return bool
      */
     public static function is_session_started()
     {
@@ -528,45 +522,26 @@ class Core
         return false;
     }
 
-    /**
-     * @param $classname
-     * @return bool
-     */
     public static function is_playable_item($classname)
     {
         return self::is_class_typeof($classname, 'playable_item');
     }
 
-    /**
-     * @param $classname
-     * @return bool
-     */
     public static function is_library_item($classname)
     {
         return self::is_class_typeof($classname, 'library_item');
     }
 
-    /**
-     * @param $classname
-     * @return bool
-     */
     public static function is_media($classname)
     {
         return self::is_class_typeof($classname, 'media');
     }
 
-    /**
-     * @return string
-     */
     public static function get_reloadutil()
     {
         return (AmpConfig::get('play_type') == "stream" || !AmpConfig::get('ajax_load')) ? "reloadUtil" : "reloadDivUtil";
     }
 
-    /**
-     * @param null $options
-     * @return array|null
-     */
     public static function requests_options($options = null)
     {
         if ($options === null) {

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -157,9 +156,6 @@ class Podcast_Episode extends database_object implements media, library_item
         return true;
     }
 
-    /**
-     * @return array|mixed
-     */
     public function get_keywords()
     {
         $keywords            = array();
@@ -173,34 +169,21 @@ class Podcast_Episode extends database_object implements media, library_item
         return $keywords;
     }
 
-    /**
-     * @return mixed
-     */
     public function get_fullname()
     {
         return $this->f_title;
     }
 
-    /**
-     * @return array
-     */
     public function get_parent()
     {
         return array('object_type' => 'podcast', 'object_id' => $this->podcast);
     }
 
-    /**
-     * @return array
-     */
     public function get_childrens()
     {
         return array();
     }
 
-    /**
-     * @param $name
-     * @return array
-     */
     public function search_childrens($name)
     {
         debug_event('podcast_episode.class', 'search_childrens ' . $name, 5);
@@ -208,10 +191,6 @@ class Podcast_Episode extends database_object implements media, library_item
         return array();
     }
 
-    /**
-     * @param null $filter_type
-     * @return array|mixed
-     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -225,35 +204,21 @@ class Podcast_Episode extends database_object implements media, library_item
         return $medias;
     }
 
-    /**
-     * @return mixed|null
-     */
     public function get_user_owner()
     {
         return null;
     }
 
-    /**
-     * @return mixed|string
-     */
     public function get_default_art_kind()
     {
         return 'default';
     }
 
-    /**
-     * @return mixed
-     */
     public function get_description()
     {
         return $this->f_description;
     }
 
-    /**
-     * @param int $thumb
-     * @param bool $force
-     * @return mixed|void
-     */
     public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
@@ -324,11 +289,6 @@ class Podcast_Episode extends database_object implements media, library_item
         return true;
     } // set_played
 
-    /**
-     * @param $user
-     * @param $agent
-     * @return mixed|void
-     */
     public function check_play_history($user, $agent)
     {
         unset($user, $agent);

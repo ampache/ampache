@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -43,9 +42,6 @@ class Stream
         self::$session=$sid;
     } // set_session
 
-    /**
-     * @return string
-     */
     public static function get_session()
     {
         if (!self::$session) {
@@ -308,9 +304,6 @@ class Stream
         return array_merge($parray, $settings);
     }
 
-    /**
-     * @param $transcoder
-     */
     public static function kill_process($transcoder)
     {
         $status = proc_get_status($transcoder['process']);

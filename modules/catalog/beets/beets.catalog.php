@@ -21,8 +21,6 @@
  *
  */
 
-use Beets\CliHandler;
-
 /**
  * Beets Catalog Class
  *
@@ -129,7 +127,7 @@ class Catalog_beets extends Beets\Catalog
     }
 
     /**
-     * @return CliHandler
+     * @return \Beets\CliHandler
      */
     protected function getParser()
     {

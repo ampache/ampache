@@ -57,9 +57,6 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $f_user;
 
-    /**
-     * @return mixed
-     */
     abstract public function get_items();
 
     /**
@@ -103,10 +100,6 @@ abstract class playlist_object extends database_object implements library_item
         return false;
     } // has_access
 
-    /**
-     * @param null $filter_type
-     * @return array|mixed
-     */
     public function get_medias($filter_type = null)
     {
         $medias = $this->get_items();
@@ -123,33 +116,21 @@ abstract class playlist_object extends database_object implements library_item
         return $medias;
     }
 
-    /**
-     * @return array|mixed
-     */
     public function get_keywords()
     {
         return array();
     }
 
-    /**
-     * @return string
-     */
     public function get_fullname()
     {
         return $this->f_name;
     }
 
-    /**
-     * @return |null
-     */
     public function get_parent()
     {
         return null;
     }
 
-    /**
-     * @return mixed
-     */
     public function get_childrens()
     {
         $childrens = array();
@@ -164,10 +145,6 @@ abstract class playlist_object extends database_object implements library_item
         return $this->get_items();
     }
 
-    /**
-     * @param $name
-     * @return array
-     */
     public function search_childrens($name)
     {
         debug_event('playlist_object.abstract', 'search_childrens ' . $name, 5);
@@ -175,35 +152,21 @@ abstract class playlist_object extends database_object implements library_item
         return array();
     }
 
-    /**
-     * @return int|mixed
-     */
     public function get_user_owner()
     {
         return $this->user;
     }
 
-    /**
-     * @return mixed|string
-     */
     public function get_default_art_kind()
     {
         return 'default';
     }
 
-    /**
-     * @return mixed|null
-     */
     public function get_description()
     {
         return null;
     }
 
-    /**
-     * @param int $thumb
-     * @param bool $force
-     * @return mixed|void
-     */
     public function display_art($thumb = 2, $force = false)
     {
         if (AmpConfig::get('playlist_art')) {

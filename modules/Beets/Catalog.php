@@ -25,10 +25,6 @@ namespace Beets;
 
 use Album;
 use AmpConfig;
-use Lib\Metadata\Repository\Metadata;
-use Lib\Metadata\Repository\MetadataField;
-use library_item;
-use media;
 use UI;
 use Dba;
 use Song;
@@ -84,8 +80,8 @@ abstract class Catalog extends \Catalog
 
     /**
      *
-     * @param media $media
-     * @return media
+     * @param \media $media
+     * @return \media
      */
     public function prepare_media($media)
     {
@@ -165,11 +161,7 @@ abstract class Catalog extends \Catalog
 
     }
 
-    /**
-     * @param library_item $libraryItem
-     * @param $metadata
-     */
-    public function addMetadata(library_item $libraryItem, $metadata)
+    public function addMetadata(\library_item $libraryItem, $metadata)
     {
         $tags = $this->getCleanMetadata($libraryItem, $metadata);
 
@@ -181,11 +173,11 @@ abstract class Catalog extends \Catalog
 
     /**
      * Get rid of all tags found in the libraryItem
-     * @param library_item $libraryItem
+     * @param \library_item $libraryItem
      * @param array $metadata
      * @return array
      */
-    protected function getCleanMetadata(library_item $libraryItem, $metadata)
+    protected function getCleanMetadata(\library_item $libraryItem, $metadata)
     {
         $tags = array_diff($metadata, get_object_vars($libraryItem));
         $keys = array_merge(
@@ -275,8 +267,8 @@ abstract class Catalog extends \Catalog
            $this->deleteSongs($this->songs);
         }
         if (Song::isCustomMetadataEnabled()) {
-            Metadata::garbage_collection();
-            MetadataField::garbage_collection();
+            \Lib\Metadata\Repository\Metadata::garbage_collection();
+            \Lib\Metadata\Repository\MetadataField::garbage_collection();
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
@@ -399,10 +391,6 @@ abstract class Catalog extends \Catalog
         parent::format();
     }
 
-    /**
-     * @param $song
-     * @param $tags
-     */
     public function updateMetadata($song, $tags)
     {
         foreach ($tags as $tag => $value) {

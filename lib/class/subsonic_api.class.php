@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -62,10 +61,6 @@ class Subsonic_Api
         return $input[$parameter];
     }
 
-    /**
-     * @param $password
-     * @return string
-     */
     public static function decrypt_password($password)
     {
         // Decode hex-encoded password
@@ -82,11 +77,6 @@ class Subsonic_Api
         return $password;
     }
 
-    /**
-     * @param $curl
-     * @param $data
-     * @return int
-     */
     public static function output_body($curl, $data)
     {
         unset($curl);
@@ -96,11 +86,6 @@ class Subsonic_Api
         return strlen((string) $data);
     }
 
-    /**
-     * @param $curl
-     * @param $header
-     * @return int
-     */
     public static function output_header($curl, $header)
     {
         $rheader = trim((string) $header);
@@ -170,9 +155,6 @@ class Subsonic_Api
         }
     }
 
-    /**
-     * @param $filetype
-     */
     public static function setHeader($filetype)
     {
         if (strtolower((string) $filetype) == "json") {
@@ -951,13 +933,6 @@ class Subsonic_Api
         self::apiOutput($input, $response);
     }
 
-    /**
-     * @param $id
-     * @param $name
-     * @param array $songsIdToAdd
-     * @param array $songIndexToRemove
-     * @param bool $public
-     */
     private static function _updatePlaylist($id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true)
     {
         $playlist           = new Playlist($id);

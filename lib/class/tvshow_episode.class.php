@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -182,9 +181,6 @@ class TVShow_Episode extends Video
      * get_keywords
      * @return array
      */
-    /**
-     * @return array
-     */
     public function get_keywords()
     {
         $keywords           = parent::get_keywords();
@@ -227,9 +223,6 @@ class TVShow_Episode extends Video
         );
     }
 
-    /**
-     * @return mixed|string
-     */
     public function get_description()
     {
         if (!empty($this->summary)) {
@@ -241,11 +234,6 @@ class TVShow_Episode extends Video
         return $season->get_description();
     }
 
-    /**
-     * @param int $thumb
-     * @param bool $force
-     * @return mixed|void
-     */
     public function display_art($thumb = 2, $force = false)
     {
         $id   = null;

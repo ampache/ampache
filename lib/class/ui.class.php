@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
@@ -596,10 +595,6 @@ class UI
         return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
     }
 
-    /**
-     * @param $type
-     * @return bool
-     */
     public static function is_grid_view($type)
     {
         $isgv   = true;

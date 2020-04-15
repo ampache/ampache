@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -259,7 +258,6 @@ class VlcPlayer
     {
         $args = array();
 
-        $state       = 'unknown';
         $results     = $this->sendCommand('status.xml', $args);
         $currentstat = $results['root']['state']['value'];
 
@@ -438,12 +436,6 @@ class VlcPlayer
 
     //this function parses the xml page into an array thx to bin-co
     //warning VLC returns it's complete media lib if asked for playlist
-    /**
-     * @param $contents
-     * @param int $get_attributes
-     * @param string $priority
-     * @return array|void
-     */
     private function xmltoarray($contents, $get_attributes = 1, $priority = 'attribute')
     {
         if (!$contents) {
@@ -481,10 +473,10 @@ class VlcPlayer
         unset($attributes, $value);//Remove existing values, or there will be trouble
 
         //This command will extract these variables into the foreach scope
-        // tag(string), type(string), level(int), attributes(array).
-        extract($data);//We could use the array by itself, but this cooler.
+           // tag(string), type(string), level(int), attributes(array).
+           extract($data);//We could use the array by itself, but this cooler.
 
-        $result          = array();
+           $result       = array();
         $attributes_data = array();
 
         if (isset($value)) {

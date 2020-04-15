@@ -97,9 +97,6 @@ class Catalog_subsonic extends Catalog
         return true;
     } // install
 
-    /**
-     * @return array|mixed
-     */
     public function catalog_fields()
     {
         $fields['uri']           = array('description' => T_('URI'), 'type' => 'url');
@@ -202,9 +199,6 @@ class Catalog_subsonic extends Catalog
         return true;
     } // add_to_catalog
 
-    /**
-     * @return SubsonicClient
-     */
     public function createClient()
     {
         return (new SubsonicClient($this->username, $this->password, $this->uri, null));
@@ -294,19 +288,11 @@ class Catalog_subsonic extends Catalog
         return true;
     }
 
-    /**
-     * @return array|mixed
-     */
     public function verify_catalog_proc()
     {
         return array('total' => 0, 'updated' => 0);
     }
 
-    /**
-     * @param $data
-     * @param $song_Id
-     * @return bool
-     */
     public function insertArt($data, $song_Id)
     {
         $subsonic = $this->createClient();
@@ -381,10 +367,6 @@ class Catalog_subsonic extends Catalog
         return false;
     }
 
-    /**
-     * @param string $file_path
-     * @return string|string[]
-     */
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->uri, "/");
@@ -392,10 +374,6 @@ class Catalog_subsonic extends Catalog
         return(str_replace($catalog_path . "/", "", $file_path));
     }
 
-    /**
-     * @param $url
-     * @return int|mixed
-     */
     public function url_to_songid($url)
     {
         $song_id = 0;
@@ -419,10 +397,6 @@ class Catalog_subsonic extends Catalog
         $this->f_full_info = $this->uri;
     }
 
-    /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return media|null
-     */
     public function prepare_media($media)
     {
         $subsonic = $this->createClient();

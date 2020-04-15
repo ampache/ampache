@@ -106,9 +106,6 @@ function install_check_status($configfile)
     }
 } // install_check_status
 
-/**
- * @return bool
- */
 function install_check_server_apache()
 {
     return (strpos($_SERVER['SERVER_SOFTWARE'], "Apache/") === 0);
@@ -468,9 +465,6 @@ function install_get_transcode_modes()
     return $modes;
 } // install_get_transcode_modes
 
-/**
- * @param $mode
- */
 function install_config_transcode_mode($mode)
 {
     $trconfig = array(
@@ -495,9 +489,6 @@ function install_config_transcode_mode($mode)
     }
 }
 
-/**
- * @param $case
- */
 function install_config_use_case($case)
 {
     $trconfig = array(
@@ -563,9 +554,6 @@ function install_config_use_case($case)
     }
 }
 
-/**
- * @param array $backends
- */
 function install_config_backends(array $backends)
 {
     $dbconfig = array(

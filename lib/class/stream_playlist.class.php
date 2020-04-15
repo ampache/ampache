@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -70,10 +69,6 @@ class Stream_Playlist
         return true;
     }
 
-    /**
-     * @param $url
-     * @return bool|PDOStatement
-     */
     private function _add_url($url)
     {
         debug_event("stream_playlist.class.php", "Adding url {" . json_encode($url) . "}...", 5);
@@ -101,9 +96,6 @@ class Stream_Playlist
         return Dba::write($sql, $values);
     }
 
-    /**
-     * @return bool|PDOStatement
-     */
     public static function garbage_collection()
     {
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' .
@@ -270,11 +262,6 @@ class Stream_Playlist
         return (AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player');
     }
 
-    /**
-     * @param $type
-     * @param bool $redirect
-     * @return bool
-     */
     public function generate_playlist($type, $redirect = false)
     {
         if (!count($this->urls)) {
@@ -450,7 +437,7 @@ class Stream_Playlist
     {
         $ret = '<ASX VERSION="3.0" BANNERBAR="auto">' . "\n";
         $ret .= "<TITLE>" . ($this->title ?: T_("Ampache ASX Playlist")) . "</TITLE>\n";
-        $ret .= '<PARAM NAME="Encoding" VALUE="utf-8"' . "></PARAM>\n";
+        $ret .= '<PARAM NAME="Encoding" VALUE="utf-8" />' . "\n";
 
         foreach ($this->urls as $url) {
             $ret .= "<ENTRY>\n";

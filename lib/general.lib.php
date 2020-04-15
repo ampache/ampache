@@ -455,9 +455,6 @@ function escape_ini($str)
 
 // Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
 if (!function_exists('apache_request_headers')) {
-    /**
-     * @return array
-     */
     function apache_request_headers()
     {
         $headers = array();
@@ -479,18 +476,12 @@ if (!function_exists('apache_request_headers')) {
         return $headers;
     }
 
-    /**
-     * @return array
-     */
     function getallheaders()
     {
         return apache_request_headers();
     }
 }
 
-/**
- * @return mixed
- */
 function get_current_path()
 {
     if (strlen((string) $_SERVER['PHP_SELF'])) {
@@ -502,9 +493,6 @@ function get_current_path()
     return $root;
 }
 
-/**
- * @return string|string[]|null
- */
 function get_web_path()
 {
     $root = get_current_path();

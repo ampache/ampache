@@ -20,9 +20,6 @@
  *
  */
 
-use Lib\Metadata\Repository\Metadata;
-use Lib\Metadata\Repository\MetadataField;
-
 /**
  * Local Catalog Class
  *
@@ -102,9 +99,6 @@ class Catalog_local extends Catalog
         return true;
     } // install
 
-    /**
-     * @return array|mixed
-     */
     public function catalog_fields()
     {
         $fields['path']      = array('description' => T_('Path'), 'type' => 'text');
@@ -299,11 +293,6 @@ class Catalog_local extends Catalog
         @closedir($handle);
     } // add_files
 
-    /**
-     * @param $full_file
-     * @param $options
-     * @return bool
-     */
     public function add_file($full_file, $options)
     {
         // Ensure that we've got our cache
@@ -670,8 +659,8 @@ class Catalog_local extends Catalog
             }
         }
 
-        Metadata::garbage_collection();
-        MetadataField::garbage_collection();
+        \Lib\Metadata\Repository\Metadata::garbage_collection();
+        \Lib\Metadata\Repository\MetadataField::garbage_collection();
 
         return $dead_total;
     }
@@ -915,10 +904,6 @@ class Catalog_local extends Catalog
         return false;
     } //check_local_mp3
 
-    /**
-     * @param string $file_path
-     * @return string|string[]
-     */
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->path, "/");
@@ -938,10 +923,6 @@ class Catalog_local extends Catalog
         $this->f_full_info = $this->path;
     }
 
-    /**
-     * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return media|Podcast_Episode|Song|Song_Preview|Video|null
-     */
     public function prepare_media($media)
     {
         // Do nothing, it's just file...

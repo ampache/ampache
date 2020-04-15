@@ -22,10 +22,7 @@
 
 namespace Lib;
 
-use Dba;
 use Lib\Interfaces\Model;
-use ReflectionClass;
-use ReflectionException;
 
 /**
  * Description of Repository
@@ -43,11 +40,6 @@ class Repository
      */
     protected $fieldClassRelations = array();
 
-    /**
-     * @param $fields
-     * @param $values
-     * @return array
-     */
     protected function findBy($fields, $values)
     {
         $table = $this->getTableName();
@@ -68,7 +60,7 @@ class Repository
 
     /**
      *
-     * @param $object_id
+     * @param type $object_id
      * @return DatabaseObject
      */
     public function findById($object_id)
@@ -89,8 +81,8 @@ class Repository
         $data = array();
         $sql  = $this->assembleQuery($table, $field);
 
-        $statement = Dba::read($sql, is_array($value) ? $value : array($value));
-        while ($object = Dba::fetch_object($statement, $this->modelClassName)) {
+        $statement = \Dba::read($sql, is_array($value) ? $value : array($value));
+        while ($object = \Dba::fetch_object($statement, $this->modelClassName)) {
             $data[$object->getId()] = $object;
         }
 
@@ -115,9 +107,6 @@ class Repository
         }
     }
 
-    /**
-     * @return string
-     */
     private function getTableName()
     {
         $className = get_called_class();
@@ -131,10 +120,6 @@ class Repository
         return lcfirst($tableName);
     }
 
-    /**
-     * @param DatabaseObject $object
-     * @throws ReflectionException
-     */
     public function add(DatabaseObject $object)
     {
         $properties = $object->getDirtyProperties();
@@ -145,9 +130,6 @@ class Repository
         );
     }
 
-    /**
-     * @param DatabaseObject $object
-     */
     public function update(DatabaseObject $object)
     {
         if ($object->isDirty()) {
@@ -156,62 +138,44 @@ class Repository
         }
     }
 
-    /**
-     * @param DatabaseObject $object
-     */
     public function remove(DatabaseObject $object)
     {
         $id = $object->getId();
         $this->deleteRecord($id);
     }
 
-    /**
-     * @param $properties
-     * @return string|null
-     */
     protected function insertRecord($properties)
     {
         $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ')'
                 . ' VALUES(' . implode(',', array_fill(0, count($properties), '?')) . ')';
         //print_r($properties);
-        Dba::write(
+        \Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))
         );
 
-        return Dba::insert_id();
+        return \Dba::insert_id();
     }
 
-    /**
-     * @param $id
-     * @param $properties
-     */
     protected function updateRecord($id, $properties)
     {
         $sql = 'UPDATE ' . $this->getTableName()
                 . ' SET ' . implode(',', $this->getKeyValuePairs($properties))
                 . ' WHERE id = ?';
         $properties[] = $id;
-        Dba::write(
+        \Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))
         );
     }
 
-    /**
-     * @param $object_id
-     */
     protected function deleteRecord($object_id)
     {
         $sql = 'DELETE FROM ' . $this->getTableName()
                 . ' WHERE id = ?';
-        Dba::write($sql, array($object_id));
+        \Dba::write($sql, array($object_id));
     }
 
-    /**
-     * @param $properties
-     * @return array
-     */
     protected function getKeyValuePairs($properties)
     {
         $pairs = array();
@@ -228,13 +192,13 @@ class Repository
      * @param Model $object
      * @param string $property
      * @param string|null $value
-     * @throws ReflectionException
-     * @throws ReflectionException
-     * @throws ReflectionException
+     * @throws \ReflectionException
+     * @throws \ReflectionException
+     * @throws \ReflectionException
      */
     protected function setPrivateProperty(Model $object, $property, $value)
     {
-        $reflectionClass    = new ReflectionClass(get_class($object));
+        $reflectionClass    = new \ReflectionClass(get_class($object));
         $ReflectionProperty = $reflectionClass->getProperty($property);
         $ReflectionProperty->setAccessible(true);
         $ReflectionProperty->setValue($object, $value);
@@ -277,10 +241,6 @@ class Repository
         return $sql;
     }
 
-    /**
-     * @param $string
-     * @return string
-     */
     public function camelCaseToUnderscore($string)
     {
         return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', '_$1', $string));

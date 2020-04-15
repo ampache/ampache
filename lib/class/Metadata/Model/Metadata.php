@@ -22,16 +22,12 @@
 
 namespace Lib\Metadata\Model;
 
-use Lib\DatabaseObject;
-use Lib\Interfaces\Model;
-use library_item;
-
 /**
  * Description of metadata
  *
  * @author raziel
  */
-class Metadata extends DatabaseObject implements Model
+class Metadata extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
 {
     /**
      * Database ID
@@ -41,7 +37,7 @@ class Metadata extends DatabaseObject implements Model
 
     /**
      * A library item like song or video
-     * @var library_item
+     * @var \library_item
      */
     protected $objectId;
 
@@ -74,7 +70,7 @@ class Metadata extends DatabaseObject implements Model
 
     /**
      *
-     * @return library_item
+     * @return \library_item
      */
     public function getObjectId()
     {

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -152,9 +151,6 @@ class TVShow_Season extends database_object implements library_item
      * get_keywords
      * @return array
      */
-    /**
-     * @return array|mixed
-     */
     public function get_keywords()
     {
         $keywords           = array();
@@ -172,34 +168,21 @@ class TVShow_Season extends database_object implements library_item
         return $keywords;
     }
 
-    /**
-     * @return mixed
-     */
     public function get_fullname()
     {
         return $this->f_name;
     }
 
-    /**
-     * @return array
-     */
     public function get_parent()
     {
         return array('object_type' => 'tvshow', 'object_id' => $this->tvshow);
     }
 
-    /**
-     * @return array
-     */
     public function get_childrens()
     {
         return array('tvshow_episode' => $this->get_episodes());
     }
 
-    /**
-     * @param $name
-     * @return array
-     */
     public function search_childrens($name)
     {
         debug_event('tvshow_season.class', 'search_childrens ' . $name, 5);
@@ -239,25 +222,16 @@ class TVShow_Season extends database_object implements library_item
         return array($this->catalog_id);
     }
 
-    /**
-     * @return mixed|null
-     */
     public function get_user_owner()
     {
         return null;
     }
 
-    /**
-     * @return mixed|string
-     */
     public function get_default_art_kind()
     {
         return 'default';
     }
 
-    /**
-     * @return mixed
-     */
     public function get_description()
     {
         // No season description for now, always return tvshow description
@@ -266,11 +240,6 @@ class TVShow_Season extends database_object implements library_item
         return $tvshow->get_description();
     }
 
-    /**
-     * @param int $thumb
-     * @param bool $force
-     * @return mixed|void
-     */
     public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
@@ -360,9 +329,6 @@ class TVShow_Season extends database_object implements library_item
         return $this->id;
     } // update
 
-    /**
-     * @return bool|PDOStatement
-     */
     public function remove_from_disk()
     {
         $deleted   = true;
@@ -391,11 +357,6 @@ class TVShow_Season extends database_object implements library_item
         return $deleted;
     }
 
-    /**
-     * @param $tvshow_id
-     * @param $season_id
-     * @return bool|PDOStatement
-     */
     public static function update_tvshow($tvshow_id, $season_id)
     {
         $sql = "UPDATE `tvshow_season` SET `tvshow` = ? WHERE `id` = ?";

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -326,9 +325,6 @@ class Tmp_Playlist extends database_object
         return true;
     } // add_object
 
-    /**
-     * @param $medias
-     */
     public function add_medias($medias)
     {
         foreach ($medias as $media) {

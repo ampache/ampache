@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -150,9 +149,6 @@ class vainfo
         }
     }
 
-    /**
-     * @param $size
-     */
     public function forceSize($size)
     {
         $this->_forcedSize = $size;
@@ -250,9 +246,6 @@ class vainfo
     /*
      * write_id3
      * This function runs the various steps to gathering the metadata
-     */
-    /**
-     * @param $data
      */
     public function write_id3($data)
     {
@@ -711,10 +704,6 @@ class vainfo
         return $parsed;
     }
 
-    /**
-     * @param $string
-     * @return string|string[]|null
-     */
     private function trimAscii($string)
     {
         return preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim($string));

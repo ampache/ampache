@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Class UPnPDevice
- */
 class UPnPDevice
 {
     private $_settings = array(
@@ -13,10 +10,6 @@ class UPnPDevice
     );
 
 
-    /**
-     * UPnPDevice constructor.
-     * @param $descriptionUrl
-     */
     public function __construct($descriptionUrl)
     {
         if (! $this->restoreDescriptionUrl($descriptionUrl)) {
@@ -26,10 +19,6 @@ class UPnPDevice
 
     /*
      * Reads description URL from session
-     */
-    /**
-     * @param $descriptionUrl
-     * @return bool
      */
     private function restoreDescriptionUrl($descriptionUrl)
     {
@@ -45,9 +34,6 @@ class UPnPDevice
         return false;
     }
 
-    /**
-     * @param $descriptionUrl
-     */
     private function parseDescriptionUrl($descriptionUrl)
     {
         debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
