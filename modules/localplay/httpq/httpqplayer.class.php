@@ -268,6 +268,7 @@ class HttpQPlayer
      */
     public function state()
     {
+        $state   = '';
         $args    = array();
         $results = $this->sendCommand('isplaying', $args);
 

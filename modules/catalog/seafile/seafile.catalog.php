@@ -341,6 +341,7 @@ class Catalog_Seafile extends Catalog
      * @param string $rename_pattern
      * @param $gather_types
      * @return array
+     * @throws Exception
      */
     private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null)
     {
@@ -379,6 +380,7 @@ class Catalog_Seafile extends Catalog
 
     /**
      * @return array|mixed
+     * @throws ReflectionException
      */
     public function verify_catalog_proc()
     {
