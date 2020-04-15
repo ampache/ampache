@@ -78,7 +78,7 @@ if (!$channel->id) {
 if ($port <= 0) {
     if ($channel->fixed_endpoint) {
         $address = $channel->interface;
-        $port = (int) $channel->port;
+        $port = $channel->port;
     } else {
         $address = "127.0.0.1";
         // Try to find an available port

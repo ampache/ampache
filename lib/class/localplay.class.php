@@ -540,7 +540,7 @@ class Localplay
     /**
      * get_instance
      * This returns the specified instance
-     * @param integer $uid
+     * @param $uid
      * @return array
      */
     public function get_instance($uid)
