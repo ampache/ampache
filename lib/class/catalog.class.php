@@ -851,12 +851,7 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql = 'SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `song`.`catalog` = ?';
-        if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`album`) FROM `song`" .
-                   "LEFT JOIN `image` ON `song`.`album` = `image`.`object_id` AND `object_type` = 'album'" .
-                   "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
-        }
+        $sql        = 'SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `song`.`catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -999,11 +994,6 @@ abstract class Catalog extends database_object
         $results = array();
 
         $sql        = 'SELECT DISTINCT(`song`.`artist`) FROM `song` WHERE `song`.`catalog` = ?';
-        if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`artist`) FROM `song`" .
-                "LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'" .
-                "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
-        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -2623,7 +2613,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * process_action
      * @param $action
      * @param $catalogs
      * @param $options
@@ -2634,7 +2623,7 @@ abstract class Catalog extends database_object
             $options = array();
         }
 
-        switch ($action) {
+        switch ($_REQUEST['action']) {
             case 'add_to_all_catalogs':
                 $catalogs = self::get_catalogs();
                 // intentional fall through

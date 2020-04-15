@@ -279,13 +279,15 @@ class scrobbler
     /**
      * love
      * This takes care of spreading your love to the world
-     * If passed the API key, session key combined with the signature
+     * It passed the API key, session key combinted with the signature
      * @param boolean $is_loved
+     * @param $type
      * @param string $artist
      * @param string $title
+     * @param string $album
      * @return boolean
      */
-    public function love($is_loved, $artist = '', $title = '')
+    public function love($is_loved, $type, $artist = '', $title = '', $album = '')
     {
         $vars           = array();
         $vars['track']  = $title;

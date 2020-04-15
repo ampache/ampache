@@ -541,7 +541,7 @@ class Localplay
      * get_instance
      * This returns the specified instance
      * @param $uid
-     * @return array
+     * @return
      */
     public function get_instance($uid)
     {
@@ -553,7 +553,7 @@ class Localplay
      * This updates the specified instance with a named array of data (_POST most likely)
      * @param $uid
      * @param array $data
-     * @return boolean
+     * @return array
      */
     public function update_instance($uid, $data)
     {

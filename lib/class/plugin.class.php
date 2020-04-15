@@ -265,7 +265,7 @@ class Plugin
      * load
      * This calls the plugin's load function
      * @param User $user
-     * @return boolean
+     * @return
      */
     public function load($user)
     {

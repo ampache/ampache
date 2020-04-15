@@ -401,13 +401,12 @@ class Broadcast_Server implements MessageComponentInterface
     }
 
     /**
-     * onError
+     *
      * @param ConnectionInterface $conn
      * @param Exception $error
      */
     public function onError(ConnectionInterface $conn, Exception $error)
     {
-        debug_event('broadcast_server.class', 'Broadcast error: ' . $error->getMessage(), 1);
         $conn->close();
     }
 
