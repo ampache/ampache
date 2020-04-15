@@ -92,7 +92,7 @@ class UPnPPlaylist
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function Next()
     {
@@ -107,7 +107,7 @@ class UPnPPlaylist
     }
 
     /**
-     * @return null
+     * @return |null
      */
     public function NextItem()
     {
@@ -121,7 +121,7 @@ class UPnPPlaylist
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function Prev()
     {
@@ -137,7 +137,7 @@ class UPnPPlaylist
 
     /**
      * @param $pos
-     * @return boolean
+     * @return bool
      */
     public function Skip($pos)
     {

@@ -44,7 +44,7 @@ class Subsonic_Api
      * check_parameter
      * @param array $input
      * @param string $parameter
-     * @param boolean$addheader
+     * @param bool $addheader
      * @return bool|mixed
      */
     public static function check_parameter($input, $parameter, $addheader = false)
@@ -956,7 +956,7 @@ class Subsonic_Api
      * @param $name
      * @param array $songsIdToAdd
      * @param array $songIndexToRemove
-     * @param boolean$public
+     * @param bool $public
      */
     private static function _updatePlaylist($id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true)
     {
@@ -1287,7 +1287,7 @@ class Subsonic_Api
 
     /**
      * @param array $input
-     * @param boolean $star
+     * @param bool  $star
      */
     private static function _setStar($input, $star)
     {

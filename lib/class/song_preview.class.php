@@ -211,7 +211,7 @@ class Song_Preview extends database_object implements media, playable_item
      * This takes the current song object
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
-     * @param boolean$details
+     * @param bool $details
      * @return boolean
      */
     public function format($details = true)
@@ -251,7 +251,7 @@ class Song_Preview extends database_object implements media, playable_item
     }
 
     /**
-     * @return null
+     * @return |null
      */
     public function get_parent()
     {
@@ -314,7 +314,7 @@ class Song_Preview extends database_object implements media, playable_item
      * @param $oid
      * @param string $additional_params
      * @param string $player
-     * @param boolean$local
+     * @param bool $local
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = null, $local = false)
@@ -331,7 +331,7 @@ class Song_Preview extends database_object implements media, playable_item
     } // play_url
 
     /**
-     * @return null
+     * @return |null
      */
     public function stream()
     {
@@ -364,7 +364,7 @@ class Song_Preview extends database_object implements media, playable_item
      * @param string $target
      * @param string $player
      * @param array $options
-     * @return boolean
+     * @return bool
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {

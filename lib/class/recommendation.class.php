@@ -90,7 +90,7 @@ class Recommendation
     /**
      * @param string $type
      * @param int $id
-     * @param boolean$get_items
+     * @param bool $get_items
      * @return array
      */
     protected static function get_recommendation_cache($type, $id, $get_items = false)
@@ -156,7 +156,7 @@ class Recommendation
      * Returns a list of similar songs
      * @param int $song_id
      * @param int $limit
-     * @param boolean$local_only
+     * @param bool $local_only
      * @return array
      */
     public static function get_songs_like($song_id, $limit = 5, $local_only = true)
@@ -248,7 +248,7 @@ class Recommendation
      * Returns a list of similar artists
      * @param int $artist_id
      * @param int $limit
-     * @param boolean$local_only
+     * @param bool $local_only
      * @return array
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
@@ -395,7 +395,7 @@ class Recommendation
             }
             if (!empty($results['megaphoto']) && !Art::has_db($artist_id, 'artist')) {
                 $image = Art::get_from_source(array('url' => $results['megaphoto']), 'artist');
-                $rurl  = pathinfo((string) $results['megaphoto']);
+                $rurl  = pathinfo($results['megaphoto']);
                 $mime  = 'image/' . $rurl['extension'];
                 $art   = new Art($artist->id, 'artist');
                 $art->reset();

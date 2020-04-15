@@ -118,8 +118,8 @@ class Userflag extends database_object
 
     /**
      * get_flag
-     * @param boolean|integer $user_id
-     * @param boolean $get_date
+     * @param bool |integer $user_id
+     * @param bool  $get_date
      * @return boolean|array
      */
     public function get_flag($user_id = null, $get_date = null)
@@ -155,9 +155,9 @@ class Userflag extends database_object
      * set_flag
      * This function sets the user flag for the current object.
      * If no user_id is passed in, we use the currently logged in user.
-     * @param boolean $flagged
+     * @param bool  $flagged
      * @param int $user_id
-     * @return boolean
+     * @return bool
      */
     public function set_flag($flagged, $user_id = null)
     {
@@ -222,10 +222,10 @@ class Userflag extends database_object
     /**
      * set_flag_for_group
      * This function sets the user flag for an album group.
-     * @param boolean $flagged
+     * @param bool  $flagged
      * @param $album
      * @param int $user_id
-     * @return boolean
+     * @return bool
      */
     public static function set_flag_for_group($flagged, $album, $user_id = null)
     {
@@ -359,7 +359,7 @@ class Userflag extends database_object
      * enabled.
      * @param $object_id
      * @param $type
-     * @return boolean
+     * @return bool
      */
     public static function show($object_id, $type)
     {

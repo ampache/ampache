@@ -294,7 +294,7 @@ class mpd
      * above).
      * @param $command
      * @param null $arguments
-     * @param boolean$refresh_info
+     * @param bool $refresh_info
      * @return bool|string
      */
     public function SendCommand($command, $arguments = null, $refresh_info = true)
@@ -359,7 +359,7 @@ class mpd
      * method. The syntax for queueing commands is identical to SendCommand.
      * @param $command
      * @param string $arguments
-     * @return boolean
+     * @return bool
      */
     public function QueueCommand($command, $arguments = '')
     {
@@ -421,7 +421,7 @@ class mpd
      *
      * Updates all class properties with the values from the MPD server.
      * NOTE: This function is automatically called on Connect()
-     * @return boolean
+     * @return bool
      */
     public function RefreshInfo()
     {
@@ -796,7 +796,7 @@ class mpd
      *
      * Skips directly to the <idx> song in the MPD playlist.
      * @param $idx
-     * @return boolean
+     * @return bool
      */
     public function SkipTo($idx)
     {
@@ -821,7 +821,7 @@ class mpd
      * assumed.
      * @param $pos
      * @param int $track
-     * @return boolean
+     * @return bool
      */
     public function SeekTo($pos, $track = -1)
     {
@@ -1042,7 +1042,7 @@ class mpd
      * incompatibilities.
      * @param $cmd
      * @param $mpd_version
-     * @return boolean
+     * @return bool
      */
     private function _checkCompatibility($cmd, $mpd_version)
     {

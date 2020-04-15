@@ -95,8 +95,8 @@ class Personal_Video extends Video
     /**
      * format
      * this function takes the object and reformats some values
-     * @param boolean$details
-     * @return boolean
+     * @param bool $details
+     * @return bool
      */
 
     public function format($details = true)

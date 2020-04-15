@@ -150,7 +150,7 @@ function make_bool($string)
  * invert_bool
  * This returns the opposite of what you've got
  * @param $value
- * @return boolean
+ * @return bool
  */
 function invert_bool($value)
 {

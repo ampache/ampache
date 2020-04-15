@@ -57,7 +57,7 @@ abstract class DatabaseObject
     //}
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDirty()
     {

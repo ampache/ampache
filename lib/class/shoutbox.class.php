@@ -54,7 +54,7 @@ class Shoutbox
      * has_info
      * does the db call, reads from the user_shout table
      * @param int $shout_id
-     * @return boolean
+     * @return bool
      */
     private function has_info($shout_id)
     {
@@ -306,8 +306,8 @@ class Shoutbox
     } // delete
 
     /**
-     * @param boolean$details
-     * @param boolean$jsbuttons
+     * @param bool $details
+     * @param bool $jsbuttons
      * @return string
      */
     public function get_display($details = true, $jsbuttons = false)

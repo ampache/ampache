@@ -112,7 +112,7 @@ class Catalog_soundcloud extends Catalog
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isReady()
     {
@@ -174,7 +174,7 @@ class Catalog_soundcloud extends Catalog
      * the catalog.
      * @param $catalog_id
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -238,7 +238,7 @@ class Catalog_soundcloud extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return boolean
+     * @return bool
      */
     public function add_to_catalog($options = null)
     {

@@ -79,7 +79,7 @@ class Rating extends database_object
      * single query, saving on connection overhead
      * @param string $type
      * @param $ids
-     * @return boolean
+     * @return bool
      */
     public static function build_cache($type, $ids)
     {
@@ -370,8 +370,8 @@ class Rating extends database_object
      * enabled.  If $static is true, the rating won't be editable.
      * @param $object_id
      * @param $type
-     * @param boolean$static
-     * @return boolean
+     * @param bool $static
+     * @return bool
      */
     public static function show($object_id, $type, $static = false)
     {

@@ -27,7 +27,7 @@ class UPnPDevice
     /**
      * Reads description URL from session
      * @param $descriptionUrl
-     * @return boolean
+     * @return bool
      */
     private function restoreDescriptionUrl($descriptionUrl)
     {

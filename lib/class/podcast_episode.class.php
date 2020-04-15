@@ -117,8 +117,8 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * format
      * this function takes the object and reformats some values
-     * @param boolean$details
-     * @return boolean
+     * @param bool $details
+     * @return bool
      */
     public function format($details = true)
     {
@@ -251,7 +251,7 @@ class Podcast_Episode extends database_object implements media, library_item
 
     /**
      * @param int $thumb
-     * @param boolean$force
+     * @param bool $force
      * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
@@ -338,7 +338,7 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * update_played
      * sets the played flag
-     * @param boolean $new_played
+     * @param bool  $new_played
      * @param int $id
      */
     public static function update_played($new_played, $id)
@@ -405,9 +405,9 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param int $oid
      * @param string $additional_params
      * @param string $player
-     * @param boolean $local
-     * @param boolean$uid
-     * @param boolean$original
+     * @param bool  $local
+     * @param bool $uid
+     * @param bool $original
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)

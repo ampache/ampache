@@ -51,7 +51,7 @@ interface library_item extends playable_item
 
     /**
      * @param $thumb
-     * @param boolean$force
+     * @param bool $force
      * @return mixed
      */
     public function display_art($thumb, $force = false);

@@ -70,7 +70,7 @@ class Tag extends database_object implements library_item
      * in a single query, cuts down on the connections
      * @params array $ids
      * @param $ids
-     * @return boolean
+     * @return bool
      */
     public static function build_cache($ids)
     {
@@ -95,7 +95,7 @@ class Tag extends database_object implements library_item
      * This builds a cache of the mappings for the specified object, no limit is given
      * @param string $type
      * @param $ids
-     * @return boolean
+     * @return bool
      * @params array $ids
      */
     public static function build_map_cache($type, $ids)
@@ -144,7 +144,7 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param int $object_id
      * @param string $value
-     * @param boolean$user
+     * @param bool $user
      * @return bool|mixed|string|null
      */
     public static function add($type, $object_id, $value, $user = true)
@@ -214,7 +214,7 @@ class Tag extends database_object implements library_item
      * update
      * Update the name of the tag
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public function update(array $data)
     {
@@ -258,7 +258,7 @@ class Tag extends database_object implements library_item
      * merge
      * merges this tag to another one.
      * @param int $merge_to
-     * @param boolean $is_persistent
+     * @param bool  $is_persistent
      */
     public function merge($merge_to, $is_persistent)
     {
@@ -310,7 +310,7 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param integer|string $object_id
      * @param integer|string $tag_id
-     * @param boolean$user
+     * @param bool $user
      * @return bool|string|null
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
@@ -609,7 +609,7 @@ class Tag extends database_object implements library_item
      * it also takes a type so that it knows how to return it, this is used
      * by the formating functions of the different objects
      * @param array $tags
-     * @param boolean $link
+     * @param bool  $link
      * @param string $filter_type
      * @return string
      */
@@ -650,7 +650,7 @@ class Tag extends database_object implements library_item
      * @param string $tags_comma
      * @param string $type
      * @param int $object_id
-     * @param boolean $overwrite
+     * @param bool  $overwrite
      */
     public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
@@ -762,8 +762,8 @@ class Tag extends database_object implements library_item
      * This will only remove tag maps for the current user
      * @param string $type
      * @param int $object_id
-     * @param boolean$user
-     * @return boolean
+     * @param bool $user
+     * @return bool
      */
     public function remove_map($type, $object_id, $user = true)
     {
@@ -784,7 +784,7 @@ class Tag extends database_object implements library_item
     } // remove_map
 
     /**
-     * @param boolean$details
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -815,7 +815,7 @@ class Tag extends database_object implements library_item
     }
 
     /**
-     * @return null
+     * @return |null
      */
     public function get_parent()
     {
@@ -905,7 +905,7 @@ class Tag extends database_object implements library_item
     /**
      * display_art
      * @param int $thumb
-     * @param boolean $force
+     * @param bool  $force
      */
     public function display_art($thumb = 2, $force = false)
     {

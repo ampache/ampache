@@ -186,7 +186,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param ConnectionInterface $from
-     * @param boolean $play
+     * @param bool  $play
      */
     protected function notifyPlayerPlay(ConnectionInterface $from, $play)
     {
@@ -426,7 +426,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      * echo_message
-     * @param boolean $verbose
+     * @param bool  $verbose
      * @param string $message
      */
     private static function echo_message($verbose, $message)

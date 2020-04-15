@@ -120,7 +120,7 @@ trait Metadata
     /**
      *
      * @param string $name
-     * @param boolean$public
+     * @param bool $public
      * @return MetadataField
      * @throws \ReflectionException
      */
@@ -139,7 +139,7 @@ trait Metadata
     /**
      *
      * @param string $propertie
-     * @param boolean $public
+     * @param bool  $public
      * @return Model\MetadataField
      */
     public function getField($propertie, $public = true)

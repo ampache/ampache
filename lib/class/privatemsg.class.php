@@ -115,7 +115,7 @@ class PrivateMsg extends database_object
     }
 
     /**
-     * @param boolean$details
+     * @param bool $details
      */
     public function format($details = true)
     {
@@ -214,7 +214,7 @@ class PrivateMsg extends database_object
      * get_private_msgs
      * Get the user received private messages.
      * @param int $to_user
-     * @param boolean $unread_only
+     * @param bool  $unread_only
      * @param int $from_user
      * @return integer[]
      */

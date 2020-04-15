@@ -100,8 +100,8 @@ class AmpConfig
      * This sets config values.
      * @param string $name
      * @param $value
-     * @param boolean $clobber
-     * @return boolean
+     * @param bool  $clobber
+     * @return bool
      */
     public static function set($name, $value, $clobber = false)
     {
@@ -121,7 +121,7 @@ class AmpConfig
      * This is the same as the set function except it takes an array as
      * input.
      * @param array $array
-     * @param boolean $clobber
+     * @param bool  $clobber
      */
     public static function set_by_array($array, $clobber = false)
     {

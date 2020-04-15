@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
 /**
  * @param $email
  * @param $current_ip
- * @return boolean
+ * @return bool
  */
 function send_newpassword($email, $current_ip)
 {

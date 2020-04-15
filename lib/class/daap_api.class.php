@@ -351,7 +351,7 @@ class Daap_Api
     /**
      * databases
      * @param $input
-     * @return boolean
+     * @return bool
      */
     public static function databases($input)
     {
@@ -910,7 +910,7 @@ class Daap_Api
 
     /**
      * @param $code
-     * @return boolean
+     * @return bool
      */
     public static function createError($code)
     {
@@ -937,7 +937,7 @@ class Daap_Api
      * @param string $tag
      * @param int $code
      * @param string $msg
-     * @return boolean
+     * @return bool
      */
     public static function createApiError($tag, $code, $msg = '')
     {
