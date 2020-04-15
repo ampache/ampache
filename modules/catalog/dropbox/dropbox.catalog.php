@@ -355,7 +355,6 @@ class Catalog_dropbox extends Catalog
      * @param $dropbox
      * @param $path
      * @return boolean
-     * @throws DropboxClientException
      */
     private function insert_song($dropbox, $path)
     {
@@ -408,7 +407,6 @@ class Catalog_dropbox extends Catalog
      * @param $dropbox
      * @param $path
      * @return int
-     * @throws DropboxClientException
      */
     public function insert_video($dropbox, $path)
     {
@@ -462,7 +460,6 @@ class Catalog_dropbox extends Catalog
      * @param $maxlen
      * @param $dropboxFile
      * @return boolean
-     * @throws DropboxClientException
      */
     public function download($dropbox, $path, $maxlen, $dropboxFile = null)
     {
@@ -485,7 +482,6 @@ class Catalog_dropbox extends Catalog
 
     /**
      * @return array|mixed
-     * @throws ReflectionException
      */
     public function verify_catalog_proc()
     {
@@ -669,7 +665,6 @@ class Catalog_dropbox extends Catalog
      * @param integer[]|null $songs
      * @param integer[]|null $videos
      * @return boolean
-     * @throws DropboxClientException
      */
     public function gather_art($songs = null, $videos = null)
     {

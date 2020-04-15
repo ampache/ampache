@@ -240,7 +240,6 @@ class Catalog_remote extends Catalog
      * database.
      * @param integer $type
      * @return boolean
-     * @throws Exception
      */
     public function update_remote_catalog($type = 0)
     {
@@ -397,7 +396,6 @@ class Catalog_remote extends Catalog
     /**
      * @param Podcast_Episode|Song|Song_Preview|Video $media
      * @return bool|media|null
-     * @throws Exception
      */
     public function prepare_media($media)
     {

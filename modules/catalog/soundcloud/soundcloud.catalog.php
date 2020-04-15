@@ -261,7 +261,6 @@ class Catalog_soundcloud extends Catalog
 
     /**
      * @return Services_Soundcloud|null
-     * @throws Services_Soundcloud_Missing_Client_Id_Exception
      */
     public function createClient()
     {

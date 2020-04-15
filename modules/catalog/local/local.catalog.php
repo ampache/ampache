@@ -334,7 +334,7 @@ class Catalog_local extends Catalog
 
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
-                debug_event('local.catalog', "Unable to chdir to $full_file", 2);
+                debug_event('local.catalog', "Unable to chdir to $path", 2);
                 /* HINT: directory (file path) */
                 AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $path));
             }
@@ -344,11 +344,10 @@ class Catalog_local extends Catalog
         } //it's a directory
 
         $is_audio_file = Catalog::is_audio_file($full_file);
-        $is_video_file = false;
         if (AmpConfig::get('catalog_video_pattern')) {
             $is_video_file = Catalog::is_video_file($full_file);
         }
-        $is_playlist = false;
+
         if ($options['parse_playlist'] && AmpConfig::get('catalog_playlist_pattern')) {
             $is_playlist = Catalog::is_playlist_file($full_file);
         }
@@ -478,7 +477,6 @@ class Catalog_local extends Catalog
 
         // Prevent the script from timing out and flush what we've got
         set_time_limit(0);
-        $current_time = time();
 
         // If podcast catalog, we don't want to analyze files for now
         if ($this->gather_types == "podcast") {
@@ -497,6 +495,9 @@ class Catalog_local extends Catalog
                     } // end if import worked
                 } // end foreach playlist files
             }
+
+            /* Do a little stats mojo here */
+            $current_time = time();
 
             if ($options['gather_art']) {
                 $catalog_id = $this->id;
@@ -584,7 +585,6 @@ class Catalog_local extends Catalog
         $db_results = Dba::read($sql);
 
         if (AmpConfig::get('memory_cache')) {
-            $media_ids = array();
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
@@ -728,8 +728,6 @@ class Catalog_local extends Catalog
      * @param $file
      * @param array $options
      * @return bool|int
-     * @throws Exception
-     * @throws Exception
      */
     private function insert_local_song($file, $options = array())
     {
@@ -823,7 +821,9 @@ class Catalog_local extends Catalog
                 Recommendation::get_artist_info($song->artist);
             }
             if (Song::isCustomMetadataEnabled()) {
-                $song    = new Song($id);
+                if (!$song) {
+                    $song = new Song($id);
+                }
                 $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
                 self::add_metadata($song, $results);
             }
@@ -843,8 +843,6 @@ class Catalog_local extends Catalog
      * @param $file
      * @param array $options
      * @return int
-     * @throws Exception
-     * @throws Exception
      */
     public function insert_local_video($file, $options = array())
     {

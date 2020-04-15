@@ -464,7 +464,6 @@ class AmpacheMpd extends localplay_controller
 
         /* Get the Current Playlist */
         $playlist = $this->_mpd->playlist;
-        $results  = array();
 
         foreach ($playlist as $entry) {
             $data = array();

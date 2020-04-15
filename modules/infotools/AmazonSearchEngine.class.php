@@ -273,7 +273,7 @@ class AmazonSearch
             }
         } // if array of asin's
         else {
-            $this->runSearchAsin($asin);
+            $this->runSearchAsin($url);
         } // else
 
         unset($this->results['ASIN']);
