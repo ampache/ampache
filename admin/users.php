@@ -302,13 +302,12 @@ switch ($_REQUEST['action']) {
     /* Show IP History for the Specified User */
     case 'show_ip_history':
         /* get the user and their history */
-        $working_user = new User(Core::get_request('user_id'));
-        $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
+        $working_user    = new User(Core::get_request('user_id'));
 
         if (!isset($_REQUEST['all'])) {
-            $history = $working_user->get_ip_history(0, 1);
+            $history    = $working_user->get_ip_history(0, 1);
         } else {
-            $history = $working_user->get_ip_history();
+            $history    = $working_user->get_ip_history();
         }
         require AmpConfig::get('prefix') . UI::find_template('show_ip_history.inc.php');
     break;
