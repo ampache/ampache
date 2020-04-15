@@ -29,9 +29,6 @@ require_once $prefix . '/lib/init.php';
 
 ob_end_flush();
 
-if (!AmpConfig::get('cron_cache')) {
-    throw new Exception("\n * ENABLE 'Cache computed SQL data (eg. media hits stats) using a cron'\n * In Admin -> Server Config -> System -> Catalog\n");
-}
 debug_event('cron', 'started cron process', 3);
 
 /**
@@ -137,7 +134,7 @@ if (AmpConfig::get('memory_cache')) {
                 Userflag::build_cache('video', $videos, $user_id);
             }
             // useractivities
-            $user_activities = Useractivity::get_activities($user_id, 100);
+            $user_activities = Useractivity::get_activities($user_id, 100,);
             // playlists
             $user_playlist = Playlist::get_playlists(true, $user_id);
             foreach ($user_playlist as $playlist_id) {

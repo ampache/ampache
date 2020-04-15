@@ -763,6 +763,7 @@ class vainfo
      * @param $tags
      * @return array
      * @throws Exception
+     * @throws Exception
      */
     private function _cleanup_generic($tags)
     {
@@ -827,6 +828,7 @@ class vainfo
      * Standardizes tag names from vorbis.
      * @param $tags
      * @return array
+     * @throws Exception
      * @throws Exception
      */
     private function _cleanup_vorbiscomment($tags)
@@ -921,6 +923,7 @@ class vainfo
      * Whee, v2!
      * @param $tags
      * @return array
+     * @throws Exception
      * @throws Exception
      */
     private function _cleanup_id3v2($tags)
