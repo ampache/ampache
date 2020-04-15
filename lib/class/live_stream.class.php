@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -33,7 +32,7 @@ class Live_Stream extends database_object implements media, library_item
     /* DB based variables */
 
     /**
-     *  @var integer $id
+     *  @var int $id
      */
     public $id;
     /**
@@ -58,7 +57,7 @@ class Live_Stream extends database_object implements media, library_item
      */
     public $codec;
     /**
-     *  @var integer $catalog
+     *  @var int $catalog
      */
     public $catalog;
 
@@ -83,7 +82,6 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
-     * @param $stream_id
      */
     public function __construct($stream_id)
     {
@@ -99,7 +97,6 @@ class Live_Stream extends database_object implements media, library_item
      * format
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
-     * @param boolean $details
      * @return true
      */
     public function format($details = true)
@@ -148,7 +145,6 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     /**
-     * @param $name
      * @return array
      */
     public function search_childrens($name)
@@ -159,7 +155,6 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     /**
-     * @param string $filter_type
      * @return array
      */
     public function get_medias($filter_type = null)
@@ -210,11 +205,6 @@ class Live_Stream extends database_object implements media, library_item
         return null;
     }
 
-    /**
-     * @param integer $thumb
-     * @param boolean $force
-     * @return mixed|void
-     */
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'live_stream') || $force) {
@@ -227,8 +217,6 @@ class Live_Stream extends database_object implements media, library_item
      * This is a static function that takes a key'd array for input
      * it depends on a ID element to determine which radio element it
      * should be updating
-     * @param array $data
-     * @return bool|int
      */
     public function update(array $data)
     {
@@ -265,8 +253,6 @@ class Live_Stream extends database_object implements media, library_item
      * create
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
-     * @param array $data
-     * @return bool|PDOStatement
      */
     public static function create(array $data)
     {
@@ -306,8 +292,9 @@ class Live_Stream extends database_object implements media, library_item
         // If we've made it this far everything must be ok... I hope
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " .
             "VALUES (?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
 
-        return Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
+        return $db_results;
     } // create
 
     /**
@@ -326,7 +313,6 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * get_stream_types
      * This is needed by the media interface
-     * @param string $player
      * @return array
      */
     public function get_stream_types($player = null)
@@ -337,12 +323,6 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * play_url
      * This is needed by the media interface
-     * @param $oid
-     * @param string $additional_params
-     * @param string $player
-     * @param boolean $local
-     * @param string $sid
-     * @param string $force_http
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
@@ -364,9 +344,6 @@ class Live_Stream extends database_object implements media, library_item
      * get_transcode_settings
      *
      * This will probably never be implemented
-     * @param string $target
-     * @param string $player
-     * @param array $options
      * @return false
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
@@ -374,10 +351,6 @@ class Live_Stream extends database_object implements media, library_item
         return false;
     }
 
-    /**
-     * @param $catalog
-     * @return array
-     */
     public static function get_all_radios($catalog = null)
     {
         $sql = "SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` ";
@@ -402,30 +375,16 @@ class Live_Stream extends database_object implements media, library_item
         return $radios;
     }
 
-    /**
-     * @return mixed|void
-     */
     public static function garbage_collection()
     {
         // Do nothing
     }
 
-    /**
-     * @param $user
-     * @param $agent
-     * @param $location
-     * @return mixed|void
-     */
     public function set_played($user, $agent, $location)
     {
         // Do nothing
     }
 
-    /**
-     * @param $user
-     * @param $agent
-     * @return mixed|void
-     */
     public function check_play_history($user, $agent)
     {
         unset($user, $agent);

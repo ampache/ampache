@@ -24,7 +24,6 @@
  * set_memory_limit
  * This function attempts to change the php memory limit using init_set.
  * Will never reduce it below the current setting.
- * @param $new_limit
  */
 function set_memory_limit($new_limit)
 {
@@ -58,8 +57,9 @@ function generate_password($length = null)
     $strong   = true;
     $string   = openssl_random_pseudo_bytes((int) ceil($length * 0.67), $strong);
     $encode   = str_replace('=', '', base64_encode($string));
+    $password = strtr($encode, '+/', '^*');
 
-    return strtr($encode, '+/', '^*');
+    return $password;
 } // generate_password
 
 /**
@@ -114,7 +114,6 @@ function unhtmlentities($string)
  * scrub_arg
  *
  * This function behaves like escapeshellarg, but isn't broken
- * @param $arg
  * @return string
  */
 function scrub_arg($arg)
@@ -149,8 +148,6 @@ function make_bool($string)
 /**
  * invert_bool
  * This returns the opposite of what you've got
- * @param $value
- * @return boolean
  */
 function invert_bool($value)
 {
@@ -341,7 +338,6 @@ function get_languages()
 /**
  * is_rtl
  * This checks whether to be a Right-To-Left language.
- * @param $locale
  * @return boolean
  */
 function is_rtl($locale)
@@ -354,7 +350,6 @@ function is_rtl($locale)
  * This just contains a keyed array which it checks against to give you the
  * 'tag' name that said pattern code corresponds to. It returns false if nothing
  * is found.
- * @param $code
  * @return string|false
  */
 function translate_pattern_code($code)
@@ -381,9 +376,7 @@ function translate_pattern_code($code)
  *
  * This takes an array of results and re-generates the config file
  * this is used by the installer and by the admin/system page
- * @param $current
  * @return string
- * @throws Exception
  */
 function generate_config($current)
 {
@@ -428,8 +421,6 @@ function generate_config($current)
  * write_config
  *
  * Write new configuration into the current configuration file by keeping old values.
- * @param $current_file_path
- * @throws Exception
  */
 function write_config($current_file_path)
 {
@@ -446,8 +437,6 @@ function write_config($current_file_path)
  *
  * Escape a value used for inserting into an ini file.
  * Won't quote ', like addslashes does.
- * @param string $str
- * @return string|string[]
  */
 function escape_ini($str)
 {
@@ -456,9 +445,6 @@ function escape_ini($str)
 
 // Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
 if (!function_exists('apache_request_headers')) {
-    /**
-     * @return array
-     */
     function apache_request_headers()
     {
         $headers = array();
@@ -480,18 +466,12 @@ if (!function_exists('apache_request_headers')) {
         return $headers;
     }
 
-    /**
-     * @return array
-     */
     function getallheaders()
     {
         return apache_request_headers();
     }
 }
 
-/**
- * @return mixed
- */
 function get_current_path()
 {
     if (strlen((string) $_SERVER['PHP_SELF'])) {
@@ -503,27 +483,10 @@ function get_current_path()
     return $root;
 }
 
-/**
- * @return string|string[]|null
- */
 function get_web_path()
 {
     $root = get_current_path();
+    $path = preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
 
-    return preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
-}
-
-/**
- * get_datetime
- * @param string $date
- * @param integer $time
- * @return string
- */
-function get_datetime($date, $time)
-{
-    if (empty($date)) {
-        $date = 'm/d/Y H:i';
-    }
-
-    return date($date, $time);
+    return $path;
 }

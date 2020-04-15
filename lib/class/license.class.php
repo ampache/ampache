@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -24,7 +23,7 @@ declare(strict_types=1);
 class License
 {
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**

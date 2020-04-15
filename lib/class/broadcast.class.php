@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -24,7 +23,7 @@ declare(strict_types=1);
 class Broadcast extends database_object implements library_item
 {
     /**
-     *  @var integer $id
+     *  @var int $id
      */
     public $id;
     /**
@@ -32,15 +31,15 @@ class Broadcast extends database_object implements library_item
      */
     public $started;
     /**
-     *  @var integer $listeners
+     *  @var int $listeners
      */
     public $listeners;
     /**
-     *  @var integer $song
+     *  @var int $song
      */
     public $song;
     /**
-     *  @var integer $song_position
+     *  @var int $song_position
      */
     public $song_position;
     /**
@@ -48,7 +47,7 @@ class Broadcast extends database_object implements library_item
      */
     public $name;
     /**
-     *  @var integer $user
+     *  @var int $user
      */
     public $user;
 
@@ -177,9 +176,6 @@ class Broadcast extends database_object implements library_item
         return $this->id;
     }
 
-    /**
-     * @param boolean $details
-     */
     public function format($details = true)
     {
         $this->f_name = $this->name;
@@ -286,19 +282,11 @@ class Broadcast extends database_object implements library_item
         return 'default';
     }
 
-    /**
-     * @return mixed|null
-     */
     public function get_description()
     {
         return null;
     }
 
-    /**
-     * @param integer $thumb
-     * @param boolean $force
-     * @return mixed|void
-     */
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'broadcast') || $force) {
@@ -312,7 +300,9 @@ class Broadcast extends database_object implements library_item
      */
     public static function get_broadcast_list_sql()
     {
-        return "SELECT `id` FROM `broadcast` WHERE `started` = '1' ";
+        $sql = "SELECT `id` FROM `broadcast` WHERE `started` = '1' ";
+
+        return $sql;
     }
 
     /**
@@ -418,21 +408,18 @@ class Broadcast extends database_object implements library_item
         return $broadcasts;
     }
 
-    /**
-     * @return mixed|void
-     */
     public static function garbage_collection()
     {
     }
 
-    /**
+    /*
      * Get play url.
      *
      * @param integer $oid
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @return integer
+     * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function play_url($oid, $additional_params = '', $player = null, $local = false)

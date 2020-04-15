@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -121,11 +120,6 @@ class Daap_Api
         }
     }
 
-    /**
-     * @param $curl
-     * @param $data
-     * @return int
-     */
     public static function output_body($curl, $data)
     {
         echo $data;
@@ -134,11 +128,6 @@ class Daap_Api
         return strlen((string) $data);
     }
 
-    /**
-     * @param $curl
-     * @param $header
-     * @return int
-     */
     public static function output_header($curl, $header)
     {
         $rheader = trim((string) $header);
@@ -154,7 +143,6 @@ class Daap_Api
 
     /**
      * server_info (Based on the server_info part of the forkedd-daapd project)
-     * @param $input
      */
     public static function server_info($input)
     {
@@ -193,7 +181,6 @@ class Daap_Api
 
     /**
      * content_codes
-     * @param $input
      */
     public static function content_codes($input)
     {
@@ -213,7 +200,6 @@ class Daap_Api
 
     /**
      * login
-     * @param $input
      */
     public static function login($input)
     {
@@ -260,9 +246,6 @@ class Daap_Api
         }
     }
 
-    /**
-     * @param string $code
-     */
     private static function check_auth($code = '')
     {
         $authenticated = false;
@@ -294,7 +277,6 @@ class Daap_Api
 
     /**
      * logout
-     * @param $input
      */
     public static function logout($input)
     {
@@ -311,7 +293,6 @@ class Daap_Api
 
     /**
      * update
-     * @param $input
      */
     public static function update($input)
     {
@@ -324,9 +305,6 @@ class Daap_Api
         self::apiOutput($output);
     }
 
-    /**
-     * @return string
-     */
     private static function catalog_songs()
     {
         // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -350,8 +328,6 @@ class Daap_Api
 
     /**
      * databases
-     * @param $input
-     * @return boolean
      */
     public static function databases($input)
     {
@@ -480,15 +456,8 @@ class Daap_Api
         }
 
         self::apiOutput($output);
-
-        return true;
     }
 
-    /**
-     * @param $songs
-     * @param $meta
-     * @return string
-     */
     private static function tlv_songs($songs, $meta)
     {
         if (array_search('all', $meta) > - 1) {
@@ -570,9 +539,6 @@ class Daap_Api
         return $lo;
     }
 
-    /**
-     * @return string
-     */
     public static function base_library()
     {
         $p = self::tlv('dmap.itemid', Daap_Api::BASE_LIBRARY);
@@ -585,10 +551,6 @@ class Daap_Api
         return self::tlv('dmap.listingitem', $p);
     }
 
-    /**
-     * @param $playlist
-     * @return string
-     */
     public static function tlv_playlist($playlist)
     {
         $isSmart = false;
@@ -607,11 +569,6 @@ class Daap_Api
         return self::tlv('dmap.listingitem', $p);
     }
 
-    /**
-     * @param $tag
-     * @param $value
-     * @return string
-     */
     private static function tlv($tag, $value)
     {
         if (array_key_exists($tag, self::$tags)) {
@@ -646,21 +603,11 @@ class Daap_Api
         return '';
     }
 
-    /**
-     * @param $tag
-     * @param $value
-     * @return string
-     */
     private static function tlv_string($tag, $value)
     {
         return $tag . pack("N", strlen((string) $value)) . $value;
     }
 
-    /**
-     * @param $tag
-     * @param $value
-     * @return string
-     */
     private static function tlv_long($tag, $value)
     {
         // Really?! PHP...
@@ -673,41 +620,21 @@ class Daap_Api
         return $tag . "\x00\x00\x00\x08" . pack("NN", $higher, $lower);
     }
 
-    /**
-     * @param $tag
-     * @param $value
-     * @return string
-     */
     private static function tlv_int($tag, $value)
     {
         return $tag . "\x00\x00\x00\x04" . pack("N", $value);
     }
 
-    /**
-     * @param $tag
-     * @param $value
-     * @return string
-     */
     private static function tlv_short($tag, $value)
     {
         return $tag . "\x00\x00\x00\x02" . pack("n", $value);
     }
 
-    /**
-     * @param $tag
-     * @param $value
-     * @return string
-     */
     private static function tlv_byte($tag, $value)
     {
         return $tag . "\x00\x00\x00\x01" . pack("C", $value);
     }
 
-    /**
-     * @param $tag
-     * @param $value
-     * @return string
-     */
     private static function tlv_version($tag, $value)
     {
         $v = explode('.', $value);
@@ -720,21 +647,11 @@ class Daap_Api
         return '';
     }
 
-    /**
-     * @param $tag
-     * @param $value
-     * @return string
-     */
     private static function tlv_date($tag, $value)
     {
         return self::tlv_int($tag, $value);
     }
 
-    /**
-     * @param $tag
-     * @param $value
-     * @return string
-     */
     private static function tlv_list($tag, $value)
     {
         return self::tlv_string($tag, $value);
@@ -849,10 +766,6 @@ class Daap_Api
         );
     }
 
-    /**
-     * @param $type
-     * @return int
-     */
     private static function get_type_id($type)
     {
         switch ($type) {
@@ -910,10 +823,6 @@ class Daap_Api
         }
     }
 
-    /**
-     * @param $code
-     * @return boolean
-     */
     public static function createError($code)
     {
         $error = "";
@@ -938,8 +847,6 @@ class Daap_Api
     /**
      * @param string $tag
      * @param integer $code
-     * @param string $msg
-     * @return boolean
      */
     public static function createApiError($tag, $code, $msg = '')
     {

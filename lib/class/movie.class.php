@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -35,7 +34,6 @@ class Movie extends Video
      * Constructor
      * This pulls the movie information from the database and returns
      * a constructed object
-     * @param $movie_id
      */
     public function __construct($movie_id)
     {
@@ -64,10 +62,6 @@ class Movie extends Video
     /**
      * create
      * This takes a key'd array of data as input and inserts a new movie entry, it returns the record id
-     * @param array $data
-     * @param array $gtypes
-     * @param array $options
-     * @return mixed
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
@@ -85,8 +79,6 @@ class Movie extends Video
     /**
      * update
      * This takes a key'd array of data as input and updates a movie entry
-     * @param array $data
-     * @return int
      */
     public function update(array $data)
     {
@@ -117,8 +109,6 @@ class Movie extends Video
     /**
      * format
      * this function takes the object and reformats some values
-     * @param boolean $details
-     * @return boolean
      */
 
     public function format($details = true)
@@ -149,9 +139,6 @@ class Movie extends Video
         return $keywords;
     }
 
-    /**
-     * @return string
-     */
     public function get_default_art_kind()
     {
         return 'default';

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -33,7 +32,6 @@ class Personal_Video extends Video
      * Constructor
      * This pulls the personal video information from the database and returns
      * a constructed object
-     * @param $object_id
      */
     public function __construct($object_id)
     {
@@ -62,10 +60,6 @@ class Personal_Video extends Video
     /**
      * create
      * This takes a key'd array of data as input and inserts a new personal video entry, it returns the record id
-     * @param array $data
-     * @param array $gtypes
-     * @param array $options
-     * @return mixed
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
@@ -79,8 +73,6 @@ class Personal_Video extends Video
     /**
      * update
      * This takes a key'd array of data as input and updates a personal video entry
-     * @param array $data
-     * @return int
      */
     public function update(array $data)
     {
@@ -95,8 +87,6 @@ class Personal_Video extends Video
     /**
      * format
      * this function takes the object and reformats some values
-     * @param boolean $details
-     * @return boolean
      */
 
     public function format($details = true)

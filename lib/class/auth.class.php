@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -47,7 +46,6 @@ class Auth
      * it tries to find one from the session,
      * @param string $key
      * @param boolean $relogin
-     * @return boolean
      */
     public static function logout($key = '', $relogin = true)
     {
@@ -89,8 +87,6 @@ class Auth
      * @param string $username
      * @param string $password
      * @param boolean $allow_ui
-     * @param string $token
-     * @param string $salt
      * @return array
      */
     public static function login($username, $password, $allow_ui = false, $token = null, $salt = null)

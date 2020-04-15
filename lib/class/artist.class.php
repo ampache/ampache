@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -26,7 +25,7 @@ class Artist extends database_object implements library_item
     /* Variables from DB */
 
     /**
-     *  @var integer $id
+     *  @var int $id
      */
     public $id;
 
@@ -46,22 +45,22 @@ class Artist extends database_object implements library_item
     public $placeformed;
 
     /**
-     *  @var integer $yearformed
+     *  @var int $yearformed
      */
     public $yearformed;
 
     /**
-     *  @var integer $last_update
+     *  @var int $last_update
      */
     public $last_update;
 
     /**
-     *  @var integer $songs
+     *  @var int $songs
      */
     public $songs;
 
     /**
-     *  @var integer $albums
+     *  @var int $albums
      */
     public $albums;
 
@@ -76,17 +75,17 @@ class Artist extends database_object implements library_item
     public $mbid; // MusicBrainz ID
 
     /**
-     *  @var integer $catalog_id
+     *  @var int $catalog_id
      */
     public $catalog_id;
 
     /**
-     *  @var integer $time
+     *  @var int $time
      */
     public $time;
 
     /**
-     *  @var integer $user
+     *  @var int $user
      */
     public $user;
 
@@ -117,7 +116,7 @@ class Artist extends database_object implements library_item
     public $f_labels;
 
     /**
-     *  @var integer $object_cnt
+     *  @var int $object_cnt
      */
     public $object_cnt;
 
@@ -218,9 +217,8 @@ class Artist extends database_object implements library_item
 
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
-     * @param integer[] $ids
+     * @param int[] $ids
      * @param boolean $extra
-     * @param string $limit_threshold
      * @return boolean
      */
     public static function build_cache($ids, $extra = false, $limit_threshold = '')
@@ -228,7 +226,9 @@ class Artist extends database_object implements library_item
         if (!is_array($ids) || !count($ids)) {
             return false;
         }
-        $idlist     = '(' . implode(',', $ids) . ')';
+
+        $idlist = '(' . implode(',', $ids) . ')';
+
         $sql        = "SELECT * FROM `artist` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
@@ -267,7 +267,9 @@ class Artist extends database_object implements library_item
 
         $row = Dba::fetch_assoc($db_results);
 
-        return new Artist($row['id']);
+        $object = new Artist($row['id']);
+
+        return $object;
     } // get_from_name
 
     /**
@@ -380,7 +382,6 @@ class Artist extends database_object implements library_item
      * get_top_songs
      * gets the songs for this artist
      * @param integer $artist
-     * @param integer $count
      * @return integer[]
      */
     public static function get_top_songs($artist, $count = 50)
@@ -491,7 +492,6 @@ class Artist extends database_object implements library_item
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
      * @param integer $catalog
-     * @param string $limit_threshold
      * @return array
      */
     private function _get_extra_info($catalog = 0, $limit_threshold = '')
@@ -552,10 +552,8 @@ class Artist extends database_object implements library_item
      * information and reformats the relevent values
      * so they can be displayed in a table for example
      * it changes the title into a full link.
-     * @param boolean $details
-     * @param string $limit_threshold
      * @return boolean
-     */
+      */
     public function format($details = true, $limit_threshold = '')
     {
         /* Combine prefix and name, trim then add ... if needed */
@@ -762,28 +760,23 @@ class Artist extends database_object implements library_item
         }
     }
 
-    /**
-     * can_edit
-     * @param integer $user_id
-     * @return boolean
-     */
-    public function can_edit($user_id = null)
+    public function can_edit($user = null)
     {
-        if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
+        if (!$user) {
+            $user = Core::get_global('user')->id;
         }
 
-        if (!$user_id) {
+        if (!$user) {
             return false;
         }
 
         if (AmpConfig::get('upload_allow_edit')) {
-            if ($this->user !== null && $user_id == $this->user) {
+            if ($this->user !== null && $user == $this->user) {
                 return true;
             }
         }
 
-        return Access::check('interface', 50, $user_id);
+        return Access::check('interface', 50, $user);
     }
 
     /**
@@ -922,21 +915,17 @@ class Artist extends database_object implements library_item
                 Userflag::migrate('artist', $this->id, $artist_id);
                 Rating::migrate('artist', $this->id, $artist_id);
                 Art::migrate('artist', $this->id, $artist_id);
-                if (!AmpConfig::get('cron_cache')) {
-                    self::garbage_collection();
-                }
+                self::garbage_collection();
             } // end if it changed
 
             if ($updated) {
                 foreach ($songs as $song_id) {
                     Song::update_utime($song_id);
                 }
-                if (!AmpConfig::get('cron_cache')) {
-                    Stats::garbage_collection();
-                    Rating::garbage_collection();
-                    Userflag::garbage_collection();
-                    Useractivity::garbage_collection();
-                }
+                Stats::garbage_collection();
+                Rating::garbage_collection();
+                Userflag::garbage_collection();
+                Useractivity::garbage_collection();
             } // if updated
         } else {
             if ($this->mbid != $mbid) {
@@ -985,9 +974,8 @@ class Artist extends database_object implements library_item
      * Update tags of artists and/or albums
      * @param string $tags_comma
      * @param boolean $override_childs
-     * @param boolean $add_to_childs
      * @param integer|null $current_id
-     * @param boolean $force_update
+     * @param boolean $add_to_childs
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
@@ -1011,7 +999,6 @@ class Artist extends database_object implements library_item
      * @param string $summary
      * @param string $placeformed
      * @param integer $yearformed
-     * @param boolean $manual
      * @return PDOStatement|boolean
      */
     public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
@@ -1038,9 +1025,6 @@ class Artist extends database_object implements library_item
         return Dba::write($sql, array($user, $this->id));
     }
 
-    /**
-     * @return bool|PDOStatement
-     */
     public function remove_from_disk()
     {
         $deleted   = true;

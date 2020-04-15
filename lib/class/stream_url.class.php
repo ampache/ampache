@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -52,7 +51,7 @@ class Stream_URL extends memory_object
             }
         }
 
-        $query    = (string) parse_url($url, PHP_URL_QUERY);
+        $query    = parse_url($url, PHP_URL_QUERY);
         $elements = explode('&', $query);
         $results  = array();
 
@@ -68,6 +67,9 @@ class Stream_URL extends memory_object
                     if (make_bool($value)) {
                         $results['type'] = 'video';
                     }
+                // Intentional break fall-through
+                default:
+                    // Nothing
                 break;
             }
             $results[$key] = $value;

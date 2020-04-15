@@ -90,8 +90,6 @@ class AmpacheHeadphones
     /**
      * process_wanted
      * This takes care of auto-download accepted Wanted List albums
-     * @param $wanted
-     * @return boolean
      */
     public function process_wanted($wanted)
     {
@@ -120,11 +118,6 @@ class AmpacheHeadphones
         )) == 'OK');
     } // process_wanted
 
-    /**
-     * @param $command
-     * @param $params
-     * @return boolean
-     */
     protected function headphones_call($command, $params)
     {
         if (empty($this->api_url) || empty($this->api_key)) {
@@ -158,7 +151,6 @@ class AmpacheHeadphones
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return boolean
      */
     public function load($user)
     {
@@ -189,3 +181,4 @@ class AmpacheHeadphones
         return true;
     } // load
 } // end AmpacheHeadphones
+;

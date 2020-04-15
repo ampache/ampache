@@ -43,7 +43,7 @@ function check_php()
     return false;
 }
 
-/**
+/*
  * check_php_version
  * check for required php version
  * @return boolean
@@ -57,7 +57,7 @@ function check_php_version()
     return true;
 }
 
-/**
+/*
  * check_php_hash
  * check for required function exists
  * @return boolean
@@ -67,7 +67,7 @@ function check_php_hash()
     return function_exists('hash_algos');
 }
 
-/**
+/*
  * check_php_hash_algo
  * check for required function exists
  * @return boolean
@@ -77,7 +77,7 @@ function check_php_hash_algo()
     return function_exists('hash_algos') ? in_array('sha256', hash_algos()) : false;
 }
 
-/**
+/*
  * check_php_json
  * check for required function exists
  * @return boolean
@@ -87,7 +87,7 @@ function check_php_json()
     return function_exists('json_encode');
 }
 
-/**
+/*
  * check_php_curl
  * check for required function exists
  * @return boolean
@@ -97,7 +97,7 @@ function check_php_curl()
     return function_exists('curl_version');
 }
 
-/**
+/*
  * check_php_session
  * check for required function exists
  * @return boolean
@@ -107,7 +107,7 @@ function check_php_session()
     return function_exists('session_set_save_handler');
 }
 
-/**
+/*
  * check_php_pdo
  * check for required function exists
  * @return boolean
@@ -117,7 +117,7 @@ function check_php_pdo()
     return class_exists('PDO');
 }
 
-/**
+/*
  * check_php_pdo_mysql
  * check for required function exists
  * @return boolean
@@ -127,7 +127,7 @@ function check_php_pdo_mysql()
     return class_exists('PDO') ? in_array('mysql', PDO::getAvailableDrivers()) : false;
 }
 
-/**
+/*
  * check_mbstring_func_overload
  * check for required function exists
  * @return boolean
@@ -264,7 +264,7 @@ function check_override_memory()
 function check_override_exec_time()
 {
     $current = ini_get('max_execution_time');
-    set_time_limit((int) $current + 60);
+    set_time_limit($current + 60);
 
     if ($current == ini_get('max_execution_time')) {
         return false;
@@ -286,33 +286,21 @@ function check_upload_size()
     return (($upload_max >= $mini || $upload_max <= 0) && ($post_max >= $mini || $post_max <= 0));
 }
 
-/**
- * @return boolean
- */
 function check_php_int_size()
 {
     return (PHP_INT_SIZE > 4);
 }
 
-/**
- * @return boolean
- */
 function check_php_zlib()
 {
     return function_exists('gzcompress');
 }
 
-/**
- * @return boolean
- */
 function check_php_simplexml()
 {
     return function_exists('simplexml_load_string');
 }
 
-/**
- * @return boolean
- */
 function check_php_gd()
 {
     return (extension_loaded('gd') || extension_loaded('gd2'));
@@ -320,7 +308,6 @@ function check_php_gd()
 
 /**
  * @param string $val
- * @return int|string
  */
 function return_bytes($val)
 {
@@ -342,9 +329,6 @@ function return_bytes($val)
     return $val;
 }
 
-/**
- * @return boolean
- */
 function check_dependencies_folder()
 {
     return file_exists(AmpConfig::get('prefix') . '/lib/vendor');
@@ -362,27 +346,18 @@ function check_config_writable()
         || (!file_exists(AmpConfig::get('prefix') . '/config/ampache.cfg.php') && is_writeable(AmpConfig::get('prefix') . '/config/')));
 }
 
-/**
- * @return boolean
- */
 function check_htaccess_channel_writable()
 {
     return ((file_exists(AmpConfig::get('prefix') . '/channel/.htaccess') && is_writable(AmpConfig::get('prefix') . '/channel/.htaccess'))
         || (!file_exists(AmpConfig::get('prefix') . '/channel/.htaccess') && is_writeable(AmpConfig::get('prefix') . '/channel/')));
 }
 
-/**
- * @return boolean
- */
 function check_htaccess_rest_writable()
 {
     return ((file_exists(AmpConfig::get('prefix') . '/rest/.htaccess') && is_writable(AmpConfig::get('prefix') . '/rest/.htaccess'))
         || (!file_exists(AmpConfig::get('prefix') . '/rest/.htaccess') && is_writeable(AmpConfig::get('prefix') . '/rest/')));
 }
 
-/**
- * @return boolean
- */
 function check_htaccess_play_writable()
 {
     return ((file_exists(AmpConfig::get('prefix') . '/play/.htaccess') && is_writable(AmpConfig::get('prefix') . '/play/.htaccess'))
@@ -393,15 +368,12 @@ function check_htaccess_play_writable()
  * debug_result
  * Convenience function to format the output.
  * @param string|boolean $status
- * @param string $value
- * @param string $comment
- * @return string
  */
 function debug_result($status = false, $value = null, $comment = '')
 {
     $class = $status ? 'success' : 'danger';
 
-    if ($value === null) {
+    if (!$value) {
         $value = $status ? T_('OK') : T_('Error');
     }
 
@@ -413,16 +385,12 @@ function debug_result($status = false, $value = null, $comment = '')
  * debug_wresult
  *
  * Convenience function to format the output.
- * @param boolean $status
- * @param string $value
- * @param string $comment
- * @return string
  */
 function debug_wresult($status = false, $value = null, $comment = '')
 {
     $class = $status ? 'success' : 'warning';
 
-    if ($value === null) {
+    if (!$value) {
         $value = $status ? T_('OK') : T_('WARNING');
     }
 

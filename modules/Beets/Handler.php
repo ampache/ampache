@@ -36,16 +36,8 @@ abstract class Handler
      */
     protected $commandSeperator;
 
-    /**
-     * @param $command
-     * @return mixed
-     */
     abstract protected function start($command);
 
-    /**
-     * @param Catalog $handler
-     * @param $command
-     */
     public function setHandler(Catalog $handler, $command)
     {
         $this->handler        = $handler;
@@ -64,8 +56,8 @@ abstract class Handler
 
     /**
      * Resolves the differences between Beets and Ampache properties
-     * @param array $song
-     * @return array
+     * @param type $song
+     * @return type
      */
     protected function mapFields($song)
     {

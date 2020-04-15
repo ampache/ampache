@@ -32,18 +32,10 @@ if (empty($rootdir)) {
 $rootdir .= DIRECTORY_SEPARATOR;
 ini_set('open_basedir', $rootdir);
 
-/**
- * Class fs
- */
 class fs
 {
     protected $base = null;
 
-    /**
-     * @param $path
-     * @return false|string
-     * @throws Exception
-     */
     protected function real($path)
     {
         $temp = realpath($path);
@@ -58,12 +50,6 @@ class fs
 
         return $temp;
     }
-
-    /**
-     * @param string $fs_id
-     * @return false|string
-     * @throws Exception
-     */
     protected function path($fs_id)
     {
         $fs_id = str_replace('/', DIRECTORY_SEPARATOR, $fs_id);
@@ -75,8 +61,6 @@ class fs
 
     /**
      * @param string $path
-     * @return string
-     * @throws Exception
      */
     protected function id($path)
     {
@@ -88,11 +72,6 @@ class fs
         return strlen($path) ? $path : '/';
     }
 
-    /**
-     * fs constructor.
-     * @param $base
-     * @throws Exception
-     */
     public function __construct($base)
     {
         $this->base = $this->real($base);
@@ -101,15 +80,9 @@ class fs
         }
     }
 
-    /**
-     * @param $fs_id
-     * @param boolean $with_root
-     * @return array
-     * @throws Exception
-     */
     public function lst($fs_id, $with_root = false)
     {
-        $dir = (string) $this->path($fs_id);
+        $dir = $this->path($fs_id);
         $lst = @scandir($dir);
         if (!$lst) {
             throw new Exception('Could not list path: ' . $dir);
@@ -134,11 +107,6 @@ class fs
         return $res;
     }
 
-    /**
-     * @param $fs_id
-     * @return array
-     * @throws Exception
-     */
     public function data($fs_id)
     {
         if (strpos($fs_id, ":")) {
@@ -191,13 +159,6 @@ class fs
         throw new Exception('Not a valid selection: ' . $dir);
     }
 
-    /**
-     * @param $fs_id
-     * @param $name
-     * @param boolean $mkdir
-     * @return array
-     * @throws Exception
-     */
     public function create($fs_id, $name, $mkdir = false)
     {
         $dir = $this->path($fs_id);
@@ -214,12 +175,6 @@ class fs
         return array('id' => $this->id($dir . DIRECTORY_SEPARATOR . $name));
     }
 
-    /**
-     * @param $fs_id
-     * @param $name
-     * @return array
-     * @throws Exception
-     */
     public function rename($fs_id, $name)
     {
         $dir = $this->path($fs_id);
@@ -241,11 +196,6 @@ class fs
         return array('id' => $this->id($new));
     }
 
-    /**
-     * @param $fs_id
-     * @return array
-     * @throws Exception
-     */
     public function remove($fs_id)
     {
         $dir = $this->path($fs_id);
@@ -265,12 +215,6 @@ class fs
         return array('status' => 'OK');
     }
 
-    /**
-     * @param $fs_id
-     * @param $par
-     * @return array
-     * @throws Exception
-     */
     public function move($fs_id, $par)
     {
         $dir = $this->path($fs_id);
@@ -283,12 +227,6 @@ class fs
         return array('id' => $this->id($new));
     }
 
-    /**
-     * @param $fs_id
-     * @param $par
-     * @return array
-     * @throws Exception
-     */
     public function copy($fs_id, $par)
     {
         $dir = $this->path($fs_id);

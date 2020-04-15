@@ -126,10 +126,6 @@ class Ampache7digital
         return $file;
     }
 
-    /**
-     * @param $file
-     * @return boolean
-     */
     public function stream_song_preview($file)
     {
         if (strpos($file, "7digital") !== false) {
@@ -151,7 +147,6 @@ class Ampache7digital
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return boolean
      */
     public function load($user)
     {
@@ -182,3 +177,4 @@ class Ampache7digital
         return true;
     } // load
 } // end Ampache7digital
+;

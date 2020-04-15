@@ -1,11 +1,5 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Tmdb\ApiToken;
-use Tmdb\Client;
-use Tmdb\Helper\ImageHelper;
-use Tmdb\Repository\ConfigurationRepository;
-
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
@@ -82,7 +76,6 @@ class AmpacheTmdb
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
-     * @return boolean
      */
     public function load($user)
     {
@@ -108,9 +101,6 @@ class AmpacheTmdb
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
-     * @param $gather_types
-     * @param $media_info
-     * @return array|null
      */
     public function get_metadata($gather_types, $media_info)
     {
@@ -124,11 +114,11 @@ class AmpacheTmdb
         }
 
         try {
-            $token            = new ApiToken($this->api_key);
-            $client           = new Client($token);
-            $configRepository = new ConfigurationRepository($client);
+            $token            = new \Tmdb\ApiToken($this->api_key);
+            $client           = new \Tmdb\Client($token);
+            $configRepository = new \Tmdb\Repository\ConfigurationRepository($client);
             $config           = $configRepository->load();
-            $imageHelper      = new ImageHelper($config);
+            $imageHelper      = new \Tmdb\Helper\ImageHelper($config);
 
             $title = $media_info['original_name'] ?: $media_info['title'];
 
@@ -211,12 +201,6 @@ class AmpacheTmdb
         return $results;
     } // get_metadata
 
-    /**
-     * @param $type
-     * @param array $options
-     * @param integer $limit
-     * @return array
-     */
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         debug_event('tmdb.plugin', 'gather_arts for type `' . $type . '`', 5);
@@ -224,10 +208,6 @@ class AmpacheTmdb
         return Art::gather_metadata_plugin($this, $type, $options);
     }
 
-    /**
-     * @param $release
-     * @return array
-     */
     private static function get_genres($release)
     {
         $genres = array();
@@ -242,3 +222,4 @@ class AmpacheTmdb
         return $genres;
     }
 } // end AmpacheTmdb
+;

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -37,7 +36,7 @@ class Query
     public $id;
 
     /**
-     * @var integer $catalog
+     * @var int $catalog
      */
     public $catalog;
 
@@ -442,7 +441,7 @@ class Query
         return json_encode($data);
     }
 
-    /**
+    /*
      * _unserialize
      *
      * Reverses serialization.
@@ -762,7 +761,6 @@ class Query
      * This sets the current sort(s)
      * @param string $sort
      * @param string $order
-     * @return boolean
      */
     public function set_sort($sort, $order = '')
     {
@@ -788,8 +786,6 @@ class Query
         }
 
         $this->resort_objects();
-
-        return true;
     } // set_sort
 
     /**
@@ -976,7 +972,6 @@ class Query
      * This saves the base sql statement we are going to use.
      * @param boolean $force
      * @param string $custom_base
-     * @return boolean
      */
     private function set_base_sql($force = false, $custom_base = '')
     {
@@ -1108,8 +1103,6 @@ class Query
         }
 
         $this->_state['base'] = $sql;
-
-        return true;
     } // set_base_sql
 
     /**
@@ -1120,7 +1113,9 @@ class Query
      */
     private function get_select()
     {
-        return implode(", ", $this->_state['select']);
+        $select_string = implode(", ", $this->_state['select']);
+
+        return $select_string;
     } // get_select
 
     /**
@@ -1131,7 +1126,9 @@ class Query
      */
     private function get_base_sql()
     {
-        return str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
+        $sql = str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
+
+        return $sql;
     } // get_base_sql
 
     /**
@@ -1209,7 +1206,9 @@ class Query
             return '';
         }
 
-        return ' LIMIT ' . (string) ($this->get_start()) . ', ' . (string) ($this->get_offset());
+        $sql = ' LIMIT ' . (string) ($this->get_start()) . ', ' . (string) ($this->get_offset());
+
+        return $sql;
     } // get_limit_sql
 
     /**
@@ -1241,7 +1240,9 @@ class Query
      */
     public function get_having_sql()
     {
-        return isset($this->_state['having']) ? $this->_state['having'] : '';
+        $sql = isset($this->_state['having']) ? $this->_state['having'] : '';
+
+        return $sql;
     } // get_having_sql
 
     /**
@@ -1895,7 +1896,7 @@ class Query
     private function sql_sort($field, $order)
     {
         if ($order != 'DESC') {
-            $order = 'ASC';
+            $order == 'ASC';
         }
 
         // Depending on the type of browsing we are doing we can apply
@@ -2393,7 +2394,7 @@ class Query
      * save_objects
      * This takes the full array of object ids, often passed into show and
      * if necessary it saves them
-     * @param integer[] $object_ids
+     * @param int[] $object_ids
      * @return boolean
      */
     public function save_objects($object_ids)

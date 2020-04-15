@@ -33,7 +33,8 @@ if ($object_id != $return_id) {
 $art = new Art($object_id, $type);
 if (!$art->has_db_info() && !AmpConfig::get('art_order') == 'db') {
     if (is_array($catalog_id) && $catalog_id[0] != '') {
-        Catalog::gather_art_item($type, $object_id);
+        $catalog = Catalog::create_from_id($catalog_id[0]);
+        $catalog->gather_art_item($type, $object_id);
     }
 }
  ?>

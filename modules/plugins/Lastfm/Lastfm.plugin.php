@@ -107,8 +107,6 @@ class AmpacheLastfm
     /**
      * save_mediaplay
      * This takes care of queueing and then submitting the tracks.
-     * @param Song $song
-     * @return boolean
      */
     public function save_mediaplay($song)
     {
@@ -164,9 +162,6 @@ class AmpacheLastfm
     /**
      * set_flag
      * This takes care of spreading your love on Last.fm
-     * @param Song $song
-     * @param boolean $flagged
-     * @return boolean
      */
     public function set_flag($song, $flagged)
     {
@@ -178,7 +173,7 @@ class AmpacheLastfm
         }
         // Create our scrobbler and then queue it
         $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
-        if (!$scrobbler->love($flagged, $song->f_artist_full, $song->title)) {
+        if (!$scrobbler->love($flagged, 'song', $song->f_artist_full, $song->title, $song->f_album_full)) {
             debug_event('lastfm.plugin', 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
             return false;
@@ -192,9 +187,6 @@ class AmpacheLastfm
      * get_session
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
-     * @param string $user_id
-     * @param string $token
-     * @return boolean
      */
     public function get_session($user_id, $token)
     {
@@ -219,7 +211,6 @@ class AmpacheLastfm
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return boolean
      */
     public function load($user)
     {
@@ -240,3 +231,4 @@ class AmpacheLastfm
         return true;
     } // load
 } // end AmpacheLastfm
+;

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -25,15 +24,12 @@ use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\Filters\ArtistFilter;
 
-/**
- * Class Wanted
- */
 class Wanted extends database_object
 {
     /* Variables from DB */
 
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -41,7 +37,7 @@ class Wanted extends database_object
      */
     public $mbid;
     /**
-     * @var integer $artist
+     * @var int $artist
      */
     public $artist;
     /**
@@ -65,7 +61,7 @@ class Wanted extends database_object
      */
     public $release_mbid;
     /**
-     * @var integer $user
+     * @var int $user
      */
     public $user;
 

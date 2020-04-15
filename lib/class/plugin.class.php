@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -33,7 +32,6 @@ class Plugin
      * Constructor
      * This constructor loads the Plugin config file which defines how to
      * install/uninstall the plugin from Ampache's database
-     * @param $name
      */
     public function __construct($name)
     {
@@ -50,8 +48,6 @@ class Plugin
      * has_info
      * This actually loads the config file for the plugin the name of the
      * class contained within the config file must be Plugin[NAME OF FILE]
-     * @param $cname
-     * @return boolean
      */
     public function has_info($cname)
     {
@@ -88,8 +84,6 @@ class Plugin
     /**
      * get_plugins
      * This returns an array of plugin names
-     * @param string $type
-     * @return mixed
      */
     public static function get_plugins($type = '')
     {
@@ -211,8 +205,6 @@ class Plugin
      * is_installed
      * This checks to see if the specified plugin is currently installed in
      * the database, it doesn't check the files for integrity
-     * @param $plugin_name
-     * @return bool|mixed
      */
     public static function is_installed($plugin_name)
     {
@@ -265,7 +257,6 @@ class Plugin
      * load
      * This calls the plugin's load function
      * @param User $user
-     * @return boolean
      */
     public function load($user)
     {
@@ -277,8 +268,6 @@ class Plugin
     /**
      * get_plugin_version
      * This returns the version of the specified plugin
-     * @param $plugin_name
-     * @return bool|mixed
      */
     public static function get_plugin_version($plugin_name)
     {
@@ -311,8 +300,6 @@ class Plugin
     /**
      * set_plugin_version
      * This sets the plugin version in the update_info table
-     * @param $version
-     * @return boolean
      */
     public function set_plugin_version($version)
     {

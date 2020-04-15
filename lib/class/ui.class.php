@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
@@ -42,7 +41,6 @@ class UI
      * Return the path to the template file wanted. The file can be overwriten
      * by the theme if it's not a php file, or if it is and if option
      * allow_php_themes is set to true.
-     * @param $template
      * @return string
      */
     public static function find_template($template)
@@ -61,7 +59,6 @@ class UI
      * access_denied
      *
      * Throw an error when they try to do something naughty.
-     * @param string $error
      * @return false
      */
     public static function access_denied($error = 'Access Denied')
@@ -79,7 +76,6 @@ class UI
      *
      * Does some trickery with the output buffer to return the output of a
      * template.
-     * @param $template
      * @return string
      */
     public static function ajax_include($template)
@@ -131,7 +127,6 @@ class UI
      * Removes characters that aren't valid in XML (which is a subset of valid
      * UTF-8, but close enough for our purposes.)
      * See http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
-     * @param string $string
      * @return string
      */
     public static function clean_utf8($string)
@@ -160,17 +155,13 @@ class UI
 
             debug_event('ui.class', 'Charset cleanup failed, something might break', 1);
         }
-
-        return '';
     }
 
     /**
      * flip_class
      *
-     * First initialized with an array of two class names. Subsequent calls
+     * First initialised with an array of two class names. Subsequent calls
      * reverse the array then return the first element.
-     * @param array $classes
-     * @return mixed
      */
     public static function flip_class($classes = null)
     {
@@ -187,8 +178,6 @@ class UI
      * format_bytes
      *
      * Turns a size in bytes into the best human-readable value
-     * @param $value
-     * @param integer $precision
      * @return string
      */
     public static function format_bytes($value, $precision = 2)
@@ -227,7 +216,6 @@ class UI
      * unformat_bytes
      *
      * Parses a human-readable size
-     * @param $value
      * @return string
      */
     public static function unformat_bytes($value)
@@ -331,7 +319,6 @@ class UI
      * _find_icon
      *
      * Does the finding icon thing. match svg first over png
-     * @param $name
      * @return string
      */
     private static function _find_icon($name)
@@ -430,7 +417,6 @@ class UI
      * _find_image
      *
      * Does the finding image thing. match svg first over png
-     * @param $name
      * @return string
      */
     private static function _find_image($name)
@@ -504,8 +490,6 @@ class UI
      * show_box_top
      *
      * This shows the top of the box.
-     * @param string $title
-     * @param string $class
      */
     public static function show_box_top($title = '', $class = '')
     {
@@ -548,7 +532,6 @@ class UI
      * Convenience function that, if the output is going to a browser,
      * blarfs JS to do a fancy update.  Otherwise it just outputs the text.
      * @param string $field
-     * @param $value
      */
     public static function update_text($field, $value)
     {
@@ -598,10 +581,6 @@ class UI
         return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
     }
 
-    /**
-     * @param $type
-     * @return boolean
-     */
     public static function is_grid_view($type)
     {
         $isgv   = true;

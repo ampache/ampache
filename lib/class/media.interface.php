@@ -34,7 +34,6 @@ interface media
      *
      * Returns an array of strings; current types are 'native'
      * and 'transcode'
-     * @param array $player
      */
     public function get_stream_types($player = array());
 
@@ -42,12 +41,9 @@ interface media
      * play_url
      *
      * Returns the url to stream the specified object
-     * @param integer $oid
-     * @param string $additional_params
-     * @param string $player
-     * @param boolean $local
+     *
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false);
+    public static function play_url($oid, $additional_params = '', $player = null, $local = false);
 
     /**
      * get_transcode_settings
@@ -56,9 +52,6 @@ interface media
      * Returns a raw transcode command for this item; the optional target
      * parameter can be used to request a specific format instead of the
      * default from the configuration file.
-     * @param string $target
-     * @param string $player
-     * @param array $options
      */
     public function get_transcode_settings($target = null, $player = null, $options = array());
 
@@ -68,18 +61,7 @@ interface media
      */
     public function get_stream_name();
 
-    /**
-     * @param $user
-     * @param $agent
-     * @param $location
-     * @return mixed
-     */
     public function set_played($user, $agent, $location);
 
-    /**
-     * @param $user
-     * @param $agent
-     * @return mixed
-     */
     public function check_play_history($user, $agent);
 } // end media.interface

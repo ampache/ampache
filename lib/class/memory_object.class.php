@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -28,10 +27,6 @@ class memory_object
     private $_data = array();
     public $properties;
 
-    /**
-     * memory_object constructor.
-     * @param $data
-     */
     public function __construct($data)
     {
         foreach ($data as $key => $value) {
@@ -41,21 +36,14 @@ class memory_object
         }
     }
 
-    /**
-     * @param $name
-     * @param $value
-     */
     public function __set($name, $value)
     {
-        if (in_array($name, $this->properties)) {
-            $this->_data[$name] = $value;
+        if (!in_array($name, $this->properties)) {
+            return false;
         }
+        $this->_data[$name] = $value;
     }
 
-    /**
-     * @param $name
-     * @return bool|mixed|null
-     */
     public function __get($name)
     {
         if (!in_array($name, $this->properties)) {

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -34,7 +33,7 @@ use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 class Art extends database_object
 {
     /**
-     *  @var integer $id
+     *  @var int $id
      */
     public $id;
     /**
@@ -42,7 +41,7 @@ class Art extends database_object
      */
     public $type;
     /**
-     *  @var integer $uid
+     *  @var int $uid
      */
     public $uid; // UID of the object not ID because it's not the ART.ID
     /**
@@ -82,16 +81,16 @@ class Art extends database_object
      */
     public function __construct($uid, $type = 'album', $kind = 'default')
     {
-        if (Art::is_valid_type($type)) {
-            $this->type = $type;
-            $this->uid  = (int) ($uid);
-            $this->kind = $kind;
+        if (!Art::is_valid_type($type)) {
+            return false;
         }
+        $this->type = $type;
+        $this->uid  = (int) ($uid);
+        $this->kind = $kind;
     } // constructor
 
     /**
      * @param string $type
-     * @return boolean
      */
     public static function is_valid_type($type)
     {
@@ -103,20 +102,16 @@ class Art extends database_object
      * This attempts to reduce # of queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
-     * @param integer[] $object_ids
-     * @param string $type
+     * @param int[] $object_ids
      * @return boolean
      */
-    public static function build_cache($object_ids, $type = null)
+    public static function build_cache($object_ids)
     {
         if (!count($object_ids)) {
             return false;
         }
         $uidlist    = '(' . implode(',', $object_ids) . ')';
         $sql        = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN $uidlist";
-        if ($type !== null) {
-            $sql .= " and `object_type` = '$type'";
-        }
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -224,7 +219,7 @@ class Art extends database_object
         }
         if ($test) {
             if (imagedestroy($image) === false) {
-                throw new RuntimeException('The image handle ' . $image . ' could not be destroyed');
+                throw new \RuntimeException('The image handle ' . $image . ' could not be destroyed');
             }
         }
 
@@ -285,7 +280,7 @@ class Art extends database_object
                     $this->raw_mime = $results['mime'];
                 }
             }
-            $this->id = (int) $results['id'];
+            $this->id = $results['id'];
         }
         // If we get nothing return false
         if (!$this->raw) {
@@ -557,11 +552,8 @@ class Art extends database_object
     /**
      * write_to_dir
      * @param string $source
-     * @param $sizetext
      * @param string $type
      * @param integer $uid
-     * @param $kind
-     * @return boolean
      */
     private static function write_to_dir($source, $sizetext, $type, $uid, $kind)
     {
@@ -582,11 +574,8 @@ class Art extends database_object
 
     /**
      * read_from_dir
-     * @param $sizetext
      * @param string $type
      * @param integer $uid
-     * @param $kind
-     * @return string|null
      */
     private static function read_from_dir($sizetext, $type, $uid, $kind)
     {
@@ -621,15 +610,13 @@ class Art extends database_object
     {
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, $kind);
-            if ($path !== false) {
-                self::delete_rec_dir($path);
-            }
+            self::delete_rec_dir($path);
         }
     }
 
     /**
      * delete_rec_dir
-     * @param string $path
+     * @param false|string $path
      */
     private static function delete_rec_dir($path)
     {
@@ -668,7 +655,6 @@ class Art extends database_object
      * @param string $source
      * @param string $mime
      * @param array $size
-     * @return boolean
      */
     public function save_thumb($source, $mime, $size)
     {
@@ -692,8 +678,6 @@ class Art extends database_object
         }
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
-
-        return true;
     } // save_thumb
 
     /**
@@ -881,7 +865,7 @@ class Art extends database_object
         if (isset($data['url'])) {
             $options = array();
             try {
-                $options['timeout'] = 10;
+                $options['timeout'] = 3;
                 $request            = Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw                = $request->body;
             } catch (Exception $error) {
@@ -1000,7 +984,6 @@ class Art extends database_object
      * garbage_collection
      * This cleans up art that no longer has a corresponding object
      * @param string $object_type
-     * @param string $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -1131,12 +1114,16 @@ class Art extends database_object
                     debug_event('art.class', "Method used: $method_name", 4);
                     // Some of these take options!
                     switch ($method_name) {
-                        case 'gather_google':
-                        case 'gather_musicbrainz':
-                        case 'gather_lastfm':
+                    case 'gather_lastfm':
                         $data = $this->{$method_name}($limit, $options);
                     break;
-                        default:
+                    case 'gather_google':
+                        $data = $this->{$method_name}($limit, $options);
+                    break;
+                    case 'gather_musicbrainz':
+                        $data = $this->{$method_name}($limit, $options);
+                    break;
+                    default:
                         $data = $this->{$method_name}($limit);
                     break;
                 }
@@ -1529,7 +1516,6 @@ class Art extends database_object
     {
         $mtype  = strtolower(get_class($media));
         $data   = array();
-        $id3    = array();
         $getID3 = new getID3();
         try {
             $id3 = $getID3->analyze($media->file);
@@ -1697,7 +1683,6 @@ class Art extends database_object
 
     /**
      * Gather metadata from plugin.
-     * @param $plugin
      * @param string $type
      * @param array $options
      * @return array

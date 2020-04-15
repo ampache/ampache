@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -47,7 +46,7 @@ class Mailer
         // Eh bien.
     } // Constructor
 
-    /**
+    /*
      * is_mail_enabled
      *
      * Check that the mail feature is enabled
@@ -67,8 +66,6 @@ class Mailer
      * validate_address
      *
      * Checks whether what we have looks like a valid address.
-     * @param string $address
-     * @return boolean
      */
     public static function validate_address($address)
     {
@@ -103,11 +100,9 @@ class Mailer
     } // set_default_sender
 
     /**
-     * get_users
+      * get_users
      * This returns an array of userids for people who have e-mail
      * addresses based on the passed filter
-     * @param $filter
-     * @return array
      */
     public static function get_users($filter)
     {
@@ -128,7 +123,7 @@ class Mailer
             break;
         } // end filter switch
 
-        $db_results = Dba::read($sql, isset($inactive) ? array($inactive) : array());
+        $db_results = Dba::read($sql, isset($inactive) ? array($inactive) : null);
 
         $results = array();
 
@@ -142,8 +137,6 @@ class Mailer
     /**
      * send
      * This actually sends the mail, how amazing
-     * @param PHPMailer $phpmailer
-     * @return boolean
      */
     public function send($phpmailer = null)
     {
@@ -217,10 +210,6 @@ class Mailer
         }
     } // send
 
-    /**
-     * @param $group_name
-     * @return boolean
-     */
     public function send_to_group($group_name)
     {
         $mail = new PHPMailer();

@@ -29,16 +29,7 @@
 abstract class localplay_controller
 {
     // Required Functions
-    /**
-     * @param Stream_URL $url
-     * @return mixed
-     */
     abstract public function add_url(Stream_URL $url); // Takes an array of song_ids
-
-    /**
-     * @param $object_id
-     * @return mixed
-     */
     abstract public function delete_track($object_id); // Takes a single object_id and removes it from the playlist
     abstract public function play();
     abstract public function stop();
@@ -52,41 +43,17 @@ abstract class localplay_controller
     abstract public function uninstall();
 
     // For display we need the following 'instance' functions
-
-    /**
-     * @param $data
-     * @return mixed
-     */
     abstract public function add_instance($data);
-
-    /**
-     * @param $uid
-     * @return mixed
-     */
     abstract public function delete_instance($uid);
-
-    /**
-     * @param $uid
-     * @param $post
-     * @return mixed
-     */
     abstract public function update_instance($uid, $post);
     abstract public function get_instances();
     abstract public function instance_fields();
-
-    /**
-     * @param $uid
-     * @param $user_id
-     * @return mixed
-     */
-    abstract public function set_active_instance($uid, $user_id);
+    abstract public function set_active_instance($uid);
     abstract public function get_active_instance();
 
     /**
      * get_url
      * This returns the URL for the passed object
-     * @param $object
-     * @return mixed
      */
     public function get_url($object)
     {
@@ -98,7 +65,9 @@ abstract class localplay_controller
 
         $class = get_class($object);
 
-        return call_user_func(array($class, 'play_url'), $object->id);
+        $url = call_user_func(array($class, 'play_url'), $object->id);
+
+        return $url;
     } // get_url
 
     /**
@@ -107,7 +76,6 @@ abstract class localplay_controller
      * always possible
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @param $object
      */
     public function get_file($object)
     {
@@ -117,8 +85,6 @@ abstract class localplay_controller
      * parse_url
      * This takes an Ampache URL and then returns the 'primary' part of it
      * So that it's easier for Localplay modules to return valid song information
-     * @param $url
-     * @return array
      */
     public function parse_url($url)
     {

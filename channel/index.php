@@ -109,10 +109,6 @@ curl_close($curl);
 /**
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- * @param $totaldownload
- * @param $downloaded
- * @param $us
- * @param $ud
  */
 function progress($totaldownload, $downloaded, $us, $ud)
 {
@@ -123,9 +119,6 @@ function progress($totaldownload, $downloaded, $us, $ud)
 /**
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- * @param $curl
- * @param $header
- * @return int
  */
 function output_header($curl, $header)
 {

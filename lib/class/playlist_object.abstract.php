@@ -28,7 +28,7 @@ abstract class playlist_object extends database_object implements library_item
 {
     // Database variables
     /**
-     * @var integer $id
+     * @var int $id
      */
     public $id;
     /**
@@ -36,7 +36,7 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $name;
     /**
-     * @var integer $user
+     * @var int $user
      */
     public $user;
     /**
@@ -57,16 +57,12 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $f_user;
 
-    /**
-     * @return mixed
-     */
     abstract public function get_items();
 
     /**
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
-     * @param boolean $details
      */
     public function format($details = true)
     {
@@ -103,10 +99,6 @@ abstract class playlist_object extends database_object implements library_item
         return false;
     } // has_access
 
-    /**
-     * @param $filter_type
-     * @return array|mixed
-     */
     public function get_medias($filter_type = null)
     {
         $medias = $this->get_items();
@@ -123,33 +115,21 @@ abstract class playlist_object extends database_object implements library_item
         return $medias;
     }
 
-    /**
-     * @return array|mixed
-     */
     public function get_keywords()
     {
         return array();
     }
 
-    /**
-     * @return string
-     */
     public function get_fullname()
     {
         return $this->f_name;
     }
 
-    /**
-     * @return null
-     */
     public function get_parent()
     {
         return null;
     }
 
-    /**
-     * @return mixed
-     */
     public function get_childrens()
     {
         $childrens = array();
@@ -164,10 +144,6 @@ abstract class playlist_object extends database_object implements library_item
         return $this->get_items();
     }
 
-    /**
-     * @param $name
-     * @return array
-     */
     public function search_childrens($name)
     {
         debug_event('playlist_object.abstract', 'search_childrens ' . $name, 5);
@@ -175,35 +151,21 @@ abstract class playlist_object extends database_object implements library_item
         return array();
     }
 
-    /**
-     * @return integer
-     */
     public function get_user_owner()
     {
         return $this->user;
     }
 
-    /**
-     * @return string
-     */
     public function get_default_art_kind()
     {
         return 'default';
     }
 
-    /**
-     * @return mixed|null
-     */
     public function get_description()
     {
         return null;
     }
 
-    /**
-     * @param integer $thumb
-     * @param boolean $force
-     * @return mixed|void
-     */
     public function display_art($thumb = 2, $force = false)
     {
         if (AmpConfig::get('playlist_art')) {

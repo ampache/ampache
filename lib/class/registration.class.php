@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -43,12 +42,6 @@ class Registration
      * This sends the confirmation e-mail for the specified user
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @param string $username
-     * @param string $fullname
-     * @param string $email
-     * @param string $website
-     * @param string $validation
-     * @return boolean
      */
     public static function send_confirmation($username, $fullname, $email, $website, $validation)
     {
@@ -95,9 +88,7 @@ class Registration
      * send_account_enabled
      * This sends the account enabled email for the specified user
      *
-     * @param string $username
-     * @param string $fullname
-     * @param $email
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function send_account_enabled($username, $fullname, $email)
     {
@@ -119,7 +110,6 @@ class Registration
     /**
       * show_agreement
      * This shows the registration agreement, /config/registration_agreement.php
-     * @return boolean
      */
     public static function show_agreement()
     {
@@ -140,7 +130,5 @@ class Registration
 
         /* Scrub and show */
         echo $data;
-
-        return true;
     } // show_agreement
 } // end registration.class

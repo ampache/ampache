@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -38,7 +37,6 @@ class TVShow_Episode extends Video
      * Constructor
      * This pulls the tv show episode information from the database and returns
      * a constructed object
-     * @param $episode_id
      */
     public function __construct($episode_id)
     {
@@ -66,10 +64,6 @@ class TVShow_Episode extends Video
     /**
      * insert
      * Insert a new tv show episode and related entities.
-     * @param array $data
-     * @param array $gtypes
-     * @param array $options
-     * @return integer
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
@@ -110,8 +104,6 @@ class TVShow_Episode extends Video
     /**
      * create
      * This takes a key'd array of data as input and inserts a new tv show episode entry, it returns the record id
-     * @param array $data
-     * @return integer
      */
     public static function create($data)
     {
@@ -125,8 +117,6 @@ class TVShow_Episode extends Video
     /**
      * update
      * This takes a key'd array of data as input and updates a tv show episode entry
-     * @param array $data
-     * @return int
      */
     public function update(array $data)
     {
@@ -151,8 +141,6 @@ class TVShow_Episode extends Video
     /**
      * format
      * this function takes the object and reformats some values
-     * @param boolean $details
-     * @return boolean
      */
     public function format($details = true)
     {
@@ -178,7 +166,7 @@ class TVShow_Episode extends Video
         return true;
     }
 
-    /**
+    /*
      * get_keywords
      * @return array
      */
@@ -224,9 +212,6 @@ class TVShow_Episode extends Video
         );
     }
 
-    /**
-     * @return string
-     */
     public function get_description()
     {
         if (!empty($this->summary)) {
@@ -238,11 +223,6 @@ class TVShow_Episode extends Video
         return $season->get_description();
     }
 
-    /**
-     * @param integer $thumb
-     * @param boolean $force
-     * @return mixed|void
-     */
     public function display_art($thumb = 2, $force = false)
     {
         $id   = null;

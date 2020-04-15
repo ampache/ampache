@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -33,10 +32,6 @@ class WebDAV_File extends DAV\File
 {
     private $libitem;
 
-    /**
-     * WebDAV_File constructor.
-     * @param media $libitem
-     */
     public function __construct(media $libitem)
     {
         $this->libitem = $libitem;

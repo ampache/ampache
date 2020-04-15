@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -37,7 +36,6 @@ class Recommendation
      * Runs a last.fm query and returns the parsed results
      * @param string $method
      * @param string $query
-     * @return SimpleXMLElement
      */
     public static function get_lastfm_results($method, $query)
     {
@@ -52,7 +50,6 @@ class Recommendation
 
     /**
      * @param string $url
-     * @return SimpleXMLElement
      */
     public static function query_lastfm($url)
     {
@@ -64,11 +61,6 @@ class Recommendation
         return simplexml_load_string($content);
     }
 
-    /**
-     * @param $artist
-     * @param $album
-     * @return SimpleXMLElement
-     */
     public static function album_search($artist, $album)
     {
         $api_key = AmpConfig::get('lastfm_api_key');
@@ -90,14 +82,10 @@ class Recommendation
     /**
      * @param string $type
      * @param integer $id
-     * @param boolean $get_items
-     * @return array
      */
     protected static function get_recommendation_cache($type, $id, $get_items = false)
     {
-        if (!AmpConfig::get('cron_cache')) {
-            self::garbage_collection();
-        }
+        self::garbage_collection();
 
         $sql        = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, array($type, $id));
@@ -137,7 +125,6 @@ class Recommendation
     /**
      * @param string $type
      * @param integer $id
-     * @param $recommendations
      */
     protected static function update_recommendation_cache($type, $id, $recommendations)
     {
@@ -157,9 +144,6 @@ class Recommendation
      * get_songs_like
      * Returns a list of similar songs
      * @param integer $song_id
-     * @param integer $limit
-     * @param boolean $local_only
-     * @return array
      */
     public static function get_songs_like($song_id, $limit = 5, $local_only = true)
     {
@@ -185,7 +169,7 @@ class Recommendation
                     $local_id = null;
 
                     $artist_name   = $child->artist->name;
-                    $s_artist_name = Catalog::trim_prefix((string) $artist_name);
+                    $s_artist_name = Catalog::trim_prefix($artist_name);
 
                     $sql = "SELECT `song`.`id` FROM `song` " .
                         "LEFT JOIN `artist` ON " .
@@ -249,9 +233,6 @@ class Recommendation
      * get_artists_like
      * Returns a list of similar artists
      * @param integer $artist_id
-     * @param integer $limit
-     * @param boolean $local_only
-     * @return array
      */
     public static function get_artists_like($artist_id, $limit = 10, $local_only = true)
     {
@@ -269,7 +250,7 @@ class Recommendation
             $xml = self::get_lastfm_results('artist.getsimilar', $query);
 
             foreach ($xml->similarartists->children() as $child) {
-                $name     = (string) $child->name;
+                $name     = $child->name;
                 $mbid     = (string) $child->mbid;
                 $local_id = null;
 
@@ -349,8 +330,6 @@ class Recommendation
      * get_artist_info
      * Returns artist information
      * @param integer $artist_id
-     * @param string $fullname
-     * @return array
      */
     public static function get_artist_info($artist_id, $fullname = '')
     {
@@ -397,7 +376,7 @@ class Recommendation
             }
             if (!empty($results['megaphoto']) && !Art::has_db($artist_id, 'artist')) {
                 $image = Art::get_from_source(array('url' => $results['megaphoto']), 'artist');
-                $rurl  = pathinfo((string) $results['megaphoto']);
+                $rurl  = pathinfo($results['megaphoto']);
                 $mime  = 'image/' . $rurl['extension'];
                 $art   = new Art($artist->id, 'artist');
                 $art->reset();

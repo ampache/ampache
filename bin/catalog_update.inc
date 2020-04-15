@@ -142,9 +142,9 @@ $db_results = Dba::read($sql);
 
 ob_start("ob_html_strip",'1024',true);
 
-while ($row = Dba::fetch_assoc($db_results)) {
+while ($row = Dba::fetch_row($db_results)) {
 
-    $catalog = Catalog::create_from_id($row['id']);
+    $catalog = Catalog::create_from_id($row['0']);
     /* HINT: Catalog Name */
     printf(T_('Reading Catalog: "%s"'), $catalog->name);
     ob_flush();
@@ -197,10 +197,6 @@ while ($row = Dba::fetch_assoc($db_results)) {
 ob_end_flush();
 echo "\n";
 
-/**
- * @param $string
- * @return string|string[]|null
- */
 function ob_html_strip($string) {
 
     //$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);

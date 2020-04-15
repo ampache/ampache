@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -33,7 +32,7 @@ class Album extends database_object implements library_item
     /* Variables from DB */
 
     /**
-     *  @var integer $id
+     *  @var int $id
      */
     public $id;
 
@@ -43,17 +42,17 @@ class Album extends database_object implements library_item
     public $name;
 
     /**
-     *  @var integer $album_artist
+     *  @var int $album_artist
      */
     public $album_artist;
 
     /**
-     *  @var integer $disk
+     *  @var int $disk
      */
     public $disk;
 
     /**
-     *  @var integer $year
+     *  @var int $year
      */
     public $year;
 
@@ -88,17 +87,17 @@ class Album extends database_object implements library_item
     public $barcode;
 
     /**
-     *  @var integer $original_year
+     *  @var int $original_year
      */
     public $original_year;
 
     /**
-     * @var integer $catalog_id
+     * @var int $catalog_id
      */
     public $catalog_id;
 
     /**
-     *  @var integer $song_count
+     *  @var int $song_count
      */
     public $song_count;
 
@@ -113,7 +112,7 @@ class Album extends database_object implements library_item
     public $artist_name;
 
     /**
-     *  @var integer $artist_id
+     *  @var int $artist_id
      */
     public $artist_id;
 
@@ -128,7 +127,7 @@ class Album extends database_object implements library_item
     public $full_name; // Prefix + Name, generated
 
     /**
-     *  @var integer $artist_count
+     *  @var int $artist_count
      */
     public $artist_count;
 
@@ -235,7 +234,7 @@ class Album extends database_object implements library_item
      * to this album from the database it does not
      * pull the album or thumb art by default or
      * get any of the counts.
-     * @param integer $album_id
+     * @param integer|null $album_id
      */
     public function __construct($album_id)
     {
@@ -301,7 +300,9 @@ class Album extends database_object implements library_item
         if (!is_array($ids) || !count($ids)) {
             return false;
         }
-        $idlist     = '(' . implode(',', $ids) . ')';
+
+        $idlist = '(' . implode(',', $ids) . ')';
+
         $sql        = "SELECT * FROM `album` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
@@ -316,7 +317,6 @@ class Album extends database_object implements library_item
      * _get_extra_info
      * This pulls the extra information from our tables, this is a 3 table join, which is why we don't normally
      * do it
-     * @param string $limit_threshold
      * @return array
      */
     private function _get_extra_info($limit_threshold = '')
@@ -474,9 +474,6 @@ class Album extends database_object implements library_item
      * @param string $album_artist
      * @param string $release_type
      * @param boolean $readonly
-     * @param integer $original_year
-     * @param string $barcode
-     * @param string $catalog_number
      * @return integer|null
      */
     public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $readonly = false, $original_year = 0, $barcode = null, $catalog_number = null)
@@ -490,7 +487,7 @@ class Album extends database_object implements library_item
         $mbid_group     = empty($mbid_group) ? null : $mbid_group;
         $release_type   = empty($release_type) ? null : $release_type;
         $disk           = (self::sanitize_disk($disk) <= 0) ? 1 : self::sanitize_disk($disk);
-        $original_year  = ((int) substr((string) $original_year, 0, 4) <= 0) ? null : substr((string) $original_year, 0, 4);
+        $original_year  = ((int) substr($original_year, 0, 4) <= 0) ? null : substr($original_year, 0, 4);
         $barcode        = empty($barcode) ? null : $barcode;
         $catalog_number = empty($catalog_number) ? null : $catalog_number;
 
@@ -640,7 +637,6 @@ class Album extends database_object implements library_item
      * gets the album ids with the same musicbrainz identifier
      * @param integer $catalog
      * return integer[]
-     * @return array
      */
     public function get_album_suite($catalog = 0)
     {
@@ -694,7 +690,9 @@ class Album extends database_object implements library_item
         $sql        = "SELECT `id` FROM `song` WHERE `album` = ? AND `title` = ?";
         $db_results = Dba::read($sql, array($this->id, $title));
 
-        return Dba::fetch_assoc($db_results);
+        $data = Dba::fetch_assoc($db_results);
+
+        return $data;
     } // has_track
 
     /**
@@ -720,8 +718,6 @@ class Album extends database_object implements library_item
      * This is the format function for this object. It sets cleaned up
      * album information with the base required
      * f_link, f_name
-     * @param boolean $details
-     * @param string $limit_threshold
      */
     public function format($details = true, $limit_threshold = '')
     {
@@ -1039,9 +1035,7 @@ class Album extends database_object implements library_item
             Userflag::migrate('album', $this->id, $album_id);
             Rating::migrate('album', $this->id, $album_id);
             Art::migrate('album', $this->id, $album_id);
-            if (!AmpConfig::get('cron_cache')) {
-                self::garbage_collection();
-            }
+            self::garbage_collection();
         } else {
             if (!empty($year) && $year != $this->year) {
                 self::update_field('year', $year, $album_id);
@@ -1077,12 +1071,10 @@ class Album extends database_object implements library_item
             foreach ($songs as $song_id) {
                 Song::update_utime($song_id);
             } // foreach song of album
-            if (!AmpConfig::get('cron_cache')) {
-                Stats::garbage_collection();
-                Rating::garbage_collection();
-                Userflag::garbage_collection();
-                Useractivity::garbage_collection();
-            }
+            Stats::garbage_collection();
+            Rating::garbage_collection();
+            Userflag::garbage_collection();
+            Useractivity::garbage_collection();
         } // if updated
 
         $override_childs = false;
@@ -1111,11 +1103,10 @@ class Album extends database_object implements library_item
      * @param boolean $override_childs
      * @param boolean $add_to_childs
      * @param integer|null $current_id
-     * @param boolean $force_update
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {
-        if ($current_id === null) {
+        if ($current_id == null) {
             $current_id = $this->id;
         }
 
@@ -1165,7 +1156,6 @@ class Album extends database_object implements library_item
     /**
      * Update an album field.
      * @param string $field
-     * @param $value
      * @param integer $album_id
      * @return PDOStatement|boolean
      */

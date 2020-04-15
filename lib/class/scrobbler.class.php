@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -34,11 +33,6 @@ class scrobbler
     /**
      * Constructor
      * This is the constructer it takes a username and password
-     * @param $api_key
-     * @param string $scheme
-     * @param string $host
-     * @param string $challenge
-     * @param string $secret
      */
     public function __construct($api_key, $scheme = 'https', $host = '', $challenge = '', $secret = '')
     {
@@ -55,8 +49,6 @@ class scrobbler
      * get_api_sig
      * Provide the API signature for calling Last.fm / Libre.fm services
      * It is the md5 of the <name><value> of all parameter plus API's secret
-     * @param array $vars
-     * @return string
      */
     public function get_api_sig($vars = null)
     {
@@ -76,9 +68,6 @@ class scrobbler
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
      * @param string $url
-     * @param string $method
-     * @param array $vars
-     * @return false|string
      */
     public function call_url($url, $method = 'GET', $vars = null)
     {
@@ -141,8 +130,6 @@ class scrobbler
      * get_session_key
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
-     * @param string $token
-     * @return bool|SimpleXMLElement
      */
     public function get_session_key($token = null)
     {
@@ -189,13 +176,6 @@ class scrobbler
      * This queues the LastFM / Libre.fm track by storing it in this object, it doesn't actually
      * submit the track or talk to LastFM / Libre in anyway, kind of useless for our uses but its
      * here, and that's how it is.
-     * @param $artist
-     * @param $album
-     * @param $title
-     * @param $timestamp
-     * @param $length
-     * @param $track
-     * @return boolean
      */
     public function queue_track($artist, $album, $title, $timestamp, $length, $track)
     {
@@ -279,13 +259,9 @@ class scrobbler
     /**
      * love
      * This takes care of spreading your love to the world
-     * If passed the API key, session key combined with the signature
-     * @param boolean $is_loved
-     * @param string $artist
-     * @param string $title
-     * @return boolean
+     * It passed the API key, session key combinted with the signature
      */
-    public function love($is_loved, $artist = '', $title = '')
+    public function love($is_loved, $type, $artist = '', $title = '', $album = '')
     {
         $vars           = array();
         $vars['track']  = $title;

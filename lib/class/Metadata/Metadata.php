@@ -22,9 +22,6 @@
 
 namespace Lib\Metadata;
 
-use AmpConfig;
-use Lib\Metadata\Model\MetadataField;
-
 /**
  * Description of metadata
  *
@@ -61,7 +58,7 @@ trait Metadata
      */
     protected function initializeMetadata()
     {
-        $this->metadataRepository      = new Repository\Metadata();
+        $this->metadataRepository      = new \Lib\Metadata\Repository\Metadata();
         $this->metadataFieldRepository = new \Lib\Metadata\Repository\MetadataField();
     }
 
@@ -86,13 +83,12 @@ trait Metadata
 
     /**
      *
-     * @param MetadataField $field
-     * @param string $data
-     * @throws \ReflectionException
+     * @param \Lib\Metadata\Model\MetadataField $field
+     * @param type $data
      */
-    public function addMetadata(MetadataField $field, $data)
+    public function addMetadata(\Lib\Metadata\Model\MetadataField $field, $data)
     {
-        $metadata = new Model\Metadata();
+        $metadata = new \Lib\Metadata\Model\Metadata();
         $metadata->setField($field);
         $metadata->setObjectId($this->id);
         $metadata->setType(get_class($this));
@@ -100,12 +96,7 @@ trait Metadata
         $this->metadataRepository->add($metadata);
     }
 
-    /**
-     * @param Model\MetadataField $field
-     * @param $data
-     * @throws \ReflectionException
-     */
-    public function updateOrInsertMetadata(MetadataField $field, $data)
+    public function updateOrInsertMetadata(\Lib\Metadata\Model\MetadataField $field, $data)
     {
         /* @var $metadata Model\Metadata */
         $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, get_class($this));
@@ -122,12 +113,11 @@ trait Metadata
      *
      * @param string $name
      * @param boolean $public
-     * @return MetadataField
-     * @throws \ReflectionException
+     * @return \Lib\Metadata\Model\MetadataField
      */
     protected function createField($name, $public)
     {
-        $field = new MetadataField();
+        $field = new \Lib\Metadata\Model\MetadataField();
         $field->setName($name);
         if (!$public) {
             $field->hide();
@@ -142,7 +132,6 @@ trait Metadata
      * @param string $propertie
      * @param boolean $public
      * @return Model\MetadataField
-     * @throws \ReflectionException
      */
     public function getField($propertie, $public = true)
     {
@@ -162,7 +151,7 @@ trait Metadata
      */
     public static function isCustomMetadataEnabled()
     {
-        return (boolean) AmpConfig::get('enable_custom_metadata');
+        return (boolean) \AmpConfig::get('enable_custom_metadata');
     }
 
     /**
@@ -173,7 +162,7 @@ trait Metadata
     {
         if (!$this->disabledMetadataFields) {
             $fields = array();
-            $ids    = explode(',', AmpConfig::get('disabled_custom_metadata_fields'));
+            $ids    = explode(',', \AmpConfig::get('disabled_custom_metadata_fields'));
             foreach ($ids as $metaid) {
                 $field = $this->metadataFieldRepository->findById($metaid);
                 if ($field) {
@@ -181,7 +170,7 @@ trait Metadata
                 }
             }
             $this->disabledMetadataFields = array_merge(
-                    $fields, explode(',', AmpConfig::get('disabled_custom_metadata_fields_input'))
+                    $fields, explode(',', \AmpConfig::get('disabled_custom_metadata_fields_input'))
             );
         }
 
