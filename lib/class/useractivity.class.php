@@ -61,7 +61,7 @@ class Useractivity extends database_object
 
     /**
      * this attempts to build a cache of the data from the passed activities all in one query
-     * @param integer[] $ids
+     * @param int[] $ids
      * @return boolean
      */
     public static function build_cache($ids)
@@ -323,8 +323,6 @@ class Useractivity extends database_object
          */
 
         echo '</div>';//<br />';
-
-        return true;
     } // show
 
     /**

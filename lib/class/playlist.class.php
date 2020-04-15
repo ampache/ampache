@@ -77,15 +77,17 @@ class Playlist extends playlist_object
      */
     public static function build_cache($ids)
     {
-        if (count($ids)) {
-            $idlist = '(' . implode(',', $ids) . ')';
+        if (!count($ids)) {
+            return false;
+        }
 
-            $sql        = "SELECT * FROM `playlist` WHERE `id` IN $idlist";
-            $db_results = Dba::read($sql);
+        $idlist = '(' . implode(',', $ids) . ')';
 
-            while ($row = Dba::fetch_assoc($db_results)) {
-                parent::add_to_cache('playlist', $row['id'], $row);
-            }
+        $sql        = "SELECT * FROM `playlist` WHERE `id` IN $idlist";
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            parent::add_to_cache('playlist', $row['id'], $row);
         }
     } // build_cache
 

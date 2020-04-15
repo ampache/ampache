@@ -351,7 +351,7 @@ class Daap_Api
     /**
      * databases
      * @param $input
-     * @return boolean
+     * @return false|null
      */
     public static function databases($input)
     {
@@ -480,8 +480,6 @@ class Daap_Api
         }
 
         self::apiOutput($output);
-
-        return true;
     }
 
     /**

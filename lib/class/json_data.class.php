@@ -64,7 +64,7 @@ class JSON_Data
      * This sets the limit for any ampache transactions
      *
      * @param    integer    $limit    (description here...)
-     * @return    boolean
+     * @return    false|null
      */
     public static function set_limit($limit)
     {
@@ -77,8 +77,6 @@ class JSON_Data
         } else {
             self::$limit = (int) ($limit);
         }
-
-        return true;
     } // set_limit
 
     /**
@@ -665,7 +663,7 @@ class JSON_Data
      *
      * This handles creating an JSON document for an user list
      *
-     * @param    integer[]    $users    User identifier list
+     * @param    int[]    $users    User identifier list
      * @return    string    return JSON
      */
     public static function users($users)
@@ -684,7 +682,7 @@ class JSON_Data
      *
      * This handles creating an JSON document for a shout list
      *
-     * @param    integer[]    $shouts    Shout identifier list
+     * @param    int[]    $shouts    Shout identifier list
      * @return    string    return JSON
      */
     public static function shouts($shouts)
@@ -713,7 +711,7 @@ class JSON_Data
      *
      * This handles creating an JSON document for an activity list
      *
-     * @param    integer[]    $activities    Activity identifier list
+     * @param    int[]    $activities    Activity identifier list
      * @return    string    return JSON
      */
     public static function timeline($activities)

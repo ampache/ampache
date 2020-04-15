@@ -82,11 +82,12 @@ class Art extends database_object
      */
     public function __construct($uid, $type = 'album', $kind = 'default')
     {
-        if (Art::is_valid_type($type)) {
-            $this->type = $type;
-            $this->uid  = (int) ($uid);
-            $this->kind = $kind;
+        if (!Art::is_valid_type($type)) {
+            return false;
         }
+        $this->type = $type;
+        $this->uid  = (int) ($uid);
+        $this->kind = $kind;
     } // constructor
 
     /**
@@ -103,7 +104,7 @@ class Art extends database_object
      * This attempts to reduce # of queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point
-     * @param integer[] $object_ids
+     * @param int[] $object_ids
      * @return boolean
      */
     public static function build_cache($object_ids)

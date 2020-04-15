@@ -44,12 +44,14 @@ class memory_object
     /**
      * @param $name
      * @param $value
+     * @return boolean
      */
     public function __set($name, $value)
     {
-        if (in_array($name, $this->properties)) {
-            $this->_data[$name] = $value;
+        if (!in_array($name, $this->properties)) {
+            return false;
         }
+        $this->_data[$name] = $value;
     }
 
     /**

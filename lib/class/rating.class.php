@@ -371,7 +371,7 @@ class Rating extends database_object
      * @param $object_id
      * @param $type
      * @param boolean $static
-     * @return boolean
+     * @return false|null
      */
     public static function show($object_id, $type, $static = false)
     {
@@ -387,8 +387,6 @@ class Rating extends database_object
         } else {
             require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
         }
-
-        return true;
     } // show
 
     /**

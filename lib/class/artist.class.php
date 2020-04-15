@@ -218,7 +218,7 @@ class Artist extends database_object implements library_item
 
     /**
      * this attempts to build a cache of the data from the passed albums all in one query
-     * @param integer[] $ids
+     * @param int[] $ids
      * @param boolean $extra
      * @param string $limit_threshold
      * @return boolean

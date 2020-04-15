@@ -49,8 +49,6 @@ class Tag extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         } // end foreach
-
-        return true;
     } // constructor
 
     /**

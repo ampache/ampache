@@ -148,8 +148,6 @@ class vainfo
 
             $this->_getID3->encoding_id3v1 = $this->encoding_id3v1;
         }
-
-        return true;
     }
 
     /**
@@ -247,8 +245,6 @@ class vainfo
         }
 
         $this->_get_plugin_tags();
-
-        return true;
     } // get_info
 
     /**
@@ -312,8 +308,6 @@ class vainfo
         } catch (Exception $error) {
             debug_event('vainfo.class', "Unable to read file:" . $error->getMessage(), 1);
         }
-
-        return array();
     } // read_id3
 
     /**
