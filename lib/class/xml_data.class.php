@@ -455,11 +455,11 @@ class XML_Data
      *
      * @param array $artists (description here...)
      * @param array $include Array of other items to include.
-     * @param boolean $full_xml whether to return a full XML document or just the node.
      * @param boolean $user_id
+     * @param boolean $full_xml whether to return a full XML document or just the node.
      * @return    string    return xml
      */
-    public static function artists($artists, $include = [], $full_xml = true, $user_id = false)
+    public static function artists($artists, $include = [], $user_id = false, $full_xml = true)
     {
         if ($include == null || $include == '') {
             $include = array();
@@ -528,11 +528,11 @@ class XML_Data
      *
      * @param integer[] $albums (description here...)
      * @param array $include Array of other items to include.
-     * @param boolean $full_xml whether to return a full XML document or just the node.
      * @param boolean $user_id
+     * @param boolean $full_xml whether to return a full XML document or just the node.
      * @return    string    return xml
      */
-    public static function albums($albums, $include = [], $full_xml = true, $user_id = false)
+    public static function albums($albums, $include = [], $user_id = false, $full_xml = true)
     {
         if ($include == null || $include == '') {
             $include = array();
@@ -671,11 +671,11 @@ class XML_Data
      * (Spiffy isn't it!)
      * @param integer[] $songs
      * @param array $playlist_data
-     * @param boolean $full_xml
      * @param boolean $user_id
-     * @return string    return xml
+     * @param boolean $full_xml
+     * @return string return xml
      */
-    public static function songs($songs, $playlist_data = array(), $full_xml = true, $user_id = false)
+    public static function songs($songs, $playlist_data = array(), $user_id = false, $full_xml = true)
     {
         if (count($songs) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
