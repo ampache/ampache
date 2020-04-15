@@ -359,19 +359,19 @@ class Podcast extends database_object implements library_item
             if ($xml === false) {
                 AmpError::add('feed', T_('Can not read the feed'));
             } else {
-                $title            = html_entity_decode((string) $xml->channel->title);
-                $website          = (string) $xml->channel->link;
-                $description      = html_entity_decode((string) $xml->channel->description);
-                $language         = (string) $xml->channel->language;
-                $copyright        = html_entity_decode((string) $xml->channel->copyright);
-                $generator        = html_entity_decode((string) $xml->channel->generator);
-                $lastbuilddatestr = (string) $xml->channel->lastBuildDate;
+                $title            = html_entity_decode($xml->channel->title);
+                $website          = $xml->channel->link;
+                $description      = html_entity_decode($xml->channel->description);
+                $language         = $xml->channel->language;
+                $copyright        = html_entity_decode($xml->channel->copyright);
+                $generator        = html_entity_decode($xml->channel->generator);
+                $lastbuilddatestr = $xml->channel->lastBuildDate;
                 if ($lastbuilddatestr) {
                     $lastbuilddate = strtotime($lastbuilddatestr);
                 }
 
                 if ($xml->channel->image) {
-                    $arturl = (string) $xml->channel->image->url;
+                    $arturl = $xml->channel->image->url;
                 }
 
                 $episodes = $xml->channel->item;
@@ -459,12 +459,12 @@ class Podcast extends database_object implements library_item
     {
         debug_event('podcast.class', 'Adding new episode to podcast ' . $this->id . '...', 4);
 
-        $title       = html_entity_decode((string) $episode->title);
-        $website     = (string) $episode->link;
-        $guid        = (string) $episode->guid;
-        $description = html_entity_decode((string) $episode->description);
-        $author      = html_entity_decode((string) $episode->author);
-        $category    = html_entity_decode((string) $episode->category);
+        $title       = html_entity_decode($episode->title);
+        $website     = $episode->link;
+        $guid        = $episode->guid;
+        $description = html_entity_decode($episode->description);
+        $author      = html_entity_decode($episode->author);
+        $category    = html_entity_decode($episode->category);
         $source      = null;
         $time        = 0;
         if ($episode->enclosure) {
@@ -472,11 +472,11 @@ class Podcast extends database_object implements library_item
         }
         $itunes = $episode->children('itunes', true);
         if ($itunes) {
-            $ptime = date_parse((string) $itunes->duration);
+            $ptime = date_parse($itunes->duration);
             $time  = $ptime['hour'] * 3600 + $ptime['minute'] * 60 + $ptime['second'];
         }
         $pubdate    = 0;
-        $pubdatestr = (string) $episode->pubDate;
+        $pubdatestr = $episode->pubDate;
         if ($pubdatestr) {
             $pubdate = strtotime($pubdatestr);
         }
