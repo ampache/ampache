@@ -79,17 +79,12 @@ class Rating extends database_object
      * single query, saving on connection overhead
      * @param string $type
      * @param $ids
-     * @param int $user_id
      * @return boolean
      */
-    public static function build_cache($type, $ids, $user_id = null)
+    public static function build_cache($type, $ids)
     {
         if (!is_array($ids) || !count($ids)) {
             return false;
-        }
-
-        if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
         }
 
         $ratings      = array();
@@ -99,7 +94,7 @@ class Rating extends database_object
         $sql    = "SELECT `rating`, `object_id` FROM `rating` " .
                 "WHERE `user` = ? AND `object_id` IN $idlist " .
                 "AND `object_type` = ?";
-        $db_results = Dba::read($sql, array($user_id, $type));
+        $db_results = Dba::read($sql, array(Core::get_global('user')->id, $type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $user_ratings[$row['object_id']] = $row['rating'];
@@ -121,7 +116,7 @@ class Rating extends database_object
             } else {
                 $rating = (int) $user_ratings[$objectid];
             }
-            parent::add_to_cache('rating_' . $type . '_user' . $user_id, $objectid, array($rating));
+            parent::add_to_cache('rating_' . $type . '_user' . Core::get_global('user')->id, $objectid, array($rating));
 
             // Then store the average
             if (!isset($ratings[$objectid])) {
