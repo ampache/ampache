@@ -874,7 +874,7 @@ class Art extends database_object
         if (isset($data['url'])) {
             $options = array();
             try {
-                $options['timeout'] = 10;
+                $options['timeout'] = 3;
                 $request            = Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw                = $request->body;
             } catch (Exception $error) {
