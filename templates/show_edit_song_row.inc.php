@@ -20,9 +20,7 @@
  *
  */
 
-use Lib\Metadata\Model\Metadata;
-
-?>
+use Lib\Metadata\Model\Metadata; ?>
 <div>
     <form method="post" id="edit_song_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">

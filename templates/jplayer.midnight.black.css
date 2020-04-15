@@ -16,7 +16,8 @@
  */
 
  body {
-     background: rgb(25, 25, 25) none;
+    background: none;
+    background-color: rgb(25, 25, 25);
  }
 
  div.jp-area {

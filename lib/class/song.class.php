@@ -2280,9 +2280,12 @@ class Song extends database_object implements media, library_item
         return $actions;
     }
 
-    /**
+    /*
      * get_metadata
      * Get an array of song metadata
+     * @return array
+     */
+    /**
      * @return array
      */
     public function get_metadata()

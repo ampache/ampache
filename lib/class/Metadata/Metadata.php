@@ -88,7 +88,6 @@ trait Metadata
      *
      * @param MetadataField $field
      * @param string $data
-     * @throws \ReflectionException
      */
     public function addMetadata(MetadataField $field, $data)
     {
@@ -120,9 +119,8 @@ trait Metadata
     /**
      *
      * @param string $name
-     * @param bool $public
+     * @param bool  $public
      * @return MetadataField
-     * @throws \ReflectionException
      */
     protected function createField($name, $public)
     {

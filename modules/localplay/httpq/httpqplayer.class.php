@@ -380,8 +380,9 @@ class HttpQPlayer
     public function get_repeat()
     {
         $args    = array();
+        $results = $this->sendCommand('repeat_status', $args);
 
-        return $this->sendCommand('repeat_status', $args);
+        return $results;
     } // get_repeat
 
     /**
@@ -391,8 +392,9 @@ class HttpQPlayer
     public function get_random()
     {
         $args    = array();
+        $results = $this->sendCommand('shuffle_status', $args);
 
-        return $this->sendCommand('shuffle_status', $args);
+        return $results;
     } // get_random
 
     /**
@@ -407,7 +409,9 @@ class HttpQPlayer
         $pos = $this->sendCommand('getlistpos', array());
 
         // Now get the filename
-        return $this->sendCommand('getplaylistfile', array('index' => $pos));
+        $file = $this->sendCommand('getplaylistfile', array('index' => $pos));
+
+        return $file;
     } // get_now_playing
 
     /**
@@ -466,6 +470,8 @@ class HttpQPlayer
         // Explode the results by line break and take 4th line (results)
         $data = explode("\n", $data);
 
-        return $data['4'];
+        $result = $data['4'];
+
+        return $result;
     } // sendCommand
 } // End HttpQPlayer Class

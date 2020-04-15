@@ -187,8 +187,11 @@ class TVShow extends database_object implements library_item
         return true;
     }
 
-    /**
+    /*
      * get_keywords
+     * @return array
+     */
+    /**
      * @return array|mixed
      */
     public function get_keywords()
@@ -464,11 +467,11 @@ class TVShow extends database_object implements library_item
     {
         $deleted    = true;
         $season_ids = $this->get_seasons();
-        foreach ($season_ids as $season_object) {
-            $season  = new TVShow_Season($season_object);
+        foreach ($season_ids as $season) {
+            $season  = new TVShow_Season($season);
             $deleted = $season->remove_from_disk();
             if (!$deleted) {
-                debug_event('tvshow.class', 'Error when deleting the season `' . (string) $season . '`.', 1);
+                debug_event('tvshow.class', 'Error when deleting the season `' . $season . '`.', 1);
                 break;
             }
         }
