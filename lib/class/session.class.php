@@ -118,7 +118,6 @@ class Session
      */
     public static function garbage_collection()
     {
-        debug_event('session.class', 'Session cleanup started', 4);
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
         Dba::write($sql, array(time()));
 
@@ -130,8 +129,7 @@ class Session
         Tmp_Playlist::garbage_collection();
         Stream_Playlist::garbage_collection();
         Song_Preview::garbage_collection();
-        debug_event('session.class', 'Session cleanup ended', 4);
-        
+
         return true;
     }
 
@@ -140,7 +138,7 @@ class Session
      *
      * This takes a key and returns the data from the database.
      * @param $key
-     * @return string
+     * @return mixed|string
      */
     public static function read($key)
     {
@@ -153,7 +151,7 @@ class Session
      * This returns the specified column from the session row.
      * @param $key
      * @param string $column
-     * @return string
+     * @return mixed|string
      */
     private static function _read($key, $column)
     {
@@ -187,7 +185,7 @@ class Session
      *
      * This returns the agent associated with a session ID, if any
      * @param $key
-     * @return string
+     * @return mixed|string
      */
     public static function agent($key)
     {

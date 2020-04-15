@@ -117,7 +117,7 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * format
      * this function takes the object and reformats some values
-     * @param boolean $details
+     * @param boolean$details
      * @return boolean
      */
     public function format($details = true)
@@ -234,7 +234,7 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
-     * @return string
+     * @return mixed|string
      */
     public function get_default_art_kind()
     {
@@ -251,7 +251,7 @@ class Podcast_Episode extends database_object implements media, library_item
 
     /**
      * @param int $thumb
-     * @param boolean $force
+     * @param boolean$force
      * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
@@ -406,8 +406,8 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param boolean $uid
-     * @param boolean $original
+     * @param boolean$uid
+     * @param boolean$original
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)

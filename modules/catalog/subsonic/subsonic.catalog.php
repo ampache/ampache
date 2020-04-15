@@ -394,7 +394,7 @@ class Catalog_subsonic extends Catalog
 
     /**
      * @param $url
-     * @return integer
+     * @return int|mixed
      */
     public function url_to_songid($url)
     {

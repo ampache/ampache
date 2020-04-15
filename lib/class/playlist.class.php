@@ -73,7 +73,7 @@ class Playlist extends playlist_object
      * build_cache
      * This is what builds the cache from the objects
      * @param array $ids
-     * @return false|null
+     * @return boolean
      */
     public static function build_cache($ids)
     {
@@ -523,7 +523,7 @@ class Playlist extends playlist_object
      * @param string $type
      * @param int $user_id
      * @param int $date
-     * @return string|null
+     * @return mixed|string|null
      */
     public static function create($name, $type, $user_id = null, $date = null)
     {

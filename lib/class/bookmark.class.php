@@ -106,7 +106,7 @@ class Bookmark extends database_object
     }
 
     /**
-     * @param User|null $user
+     * @param null $user
      * @return array
      */
     public static function get_bookmarks_ids($user = null)

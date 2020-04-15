@@ -157,7 +157,7 @@ class UPnPPlayer
     /**
      * next
      * go to next song
-     * @param boolean $forcePlay
+     * @param boolean$forcePlay
      * @return boolean
      */
     public function Next($forcePlay = true)
@@ -436,3 +436,4 @@ class UPnPPlayer
         debug_event('upnpplayer.class', 'ReadIndState:' . $this->_intState, 5);
     }
 } // End UPnPPlayer Class
+;

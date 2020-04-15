@@ -103,7 +103,6 @@ trait Metadata
     /**
      * @param Model\MetadataField $field
      * @param $data
-     * @throws \ReflectionException
      */
     public function updateOrInsertMetadata(MetadataField $field, $data)
     {
@@ -121,7 +120,7 @@ trait Metadata
     /**
      *
      * @param string $name
-     * @param boolean $public
+     * @param boolean$public
      * @return MetadataField
      * @throws \ReflectionException
      */
@@ -142,7 +141,6 @@ trait Metadata
      * @param string $propertie
      * @param boolean $public
      * @return Model\MetadataField
-     * @throws \ReflectionException
      */
     public function getField($propertie, $public = true)
     {

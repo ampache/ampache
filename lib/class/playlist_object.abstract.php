@@ -66,7 +66,7 @@ abstract class playlist_object extends database_object implements library_item
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
-     * @param boolean $details
+     * @param boolean$details
      */
     public function format($details = true)
     {
@@ -176,7 +176,7 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return integer
+     * @return int|mixed
      */
     public function get_user_owner()
     {
@@ -184,7 +184,7 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return string
+     * @return mixed|string
      */
     public function get_default_art_kind()
     {
@@ -201,7 +201,7 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * @param int $thumb
-     * @param boolean $force
+     * @param boolean$force
      * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)

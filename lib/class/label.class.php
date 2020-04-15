@@ -98,7 +98,7 @@ class Label extends database_object implements library_item
 
     /**
      * @param $thumb
-     * @param boolean $force
+     * @param boolean$force
      * @return mixed|void
      */
     public function display_art($thumb, $force = false)
@@ -109,7 +109,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @param boolean $details
+     * @param boolean$details
      */
     public function format($details = true)
     {
@@ -146,7 +146,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return string
+     * @return mixed|string
      */
     public function get_default_art_kind()
     {
@@ -154,7 +154,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return string
+     * @return mixed|string
      */
     public function get_description()
     {
@@ -212,7 +212,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return integer
+     * @return int|mixed
      */
     public function get_user_owner()
     {
@@ -329,7 +329,7 @@ class Label extends database_object implements library_item
     /**
      * @param array $data
      * @param int $id
-     * @return integer
+     * @return int|mixed
      */
     public static function lookup(array $data, $id = 0)
     {
@@ -481,7 +481,7 @@ class Label extends database_object implements library_item
      * get_display
      * This returns a csv formated version of the labels that we are given
      * @param $labels
-     * @param boolean $link
+     * @param boolean$link
      * @return string
      */
     public static function get_display($labels, $link = false)

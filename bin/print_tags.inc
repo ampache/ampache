@@ -73,9 +73,6 @@ printf(T_('Final results seen by Ampache using %s:'), implode(' + ', $keys));
 echo "\n\n";
 print_r($ampache_results);
 
-/**
- * @return string
- */
 function print_tags_usage() {
     global $version;
 

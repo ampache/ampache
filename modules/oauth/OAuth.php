@@ -446,7 +446,7 @@ class OAuthRequest
     /**
      * @param $name
      * @param $value
-     * @param boolean $allow_duplicates
+     * @param boolean$allow_duplicates
      */
     public function set_parameter($name, $value, $allow_duplicates = true)
     {
@@ -856,8 +856,13 @@ class OAuthServer
      */
     private function get_token($request, $consumer, $token_type="access")
     {
-        $token_field = $request instanceof OAuthRequest ? $request->get_parameter('oauth_token') : null;
-        $token = $this->data_store->lookup_token($consumer, $token_type, $token_field);
+        $token_field = $request instanceof OAuthRequest
+         ? $request->get_parameter('oauth_token')
+         : null;
+
+        $token = $this->data_store->lookup_token(
+      $consumer, $token_type, $token_field
+    );
         if (!$token) {
             throw new OAuthException("Invalid $token_type token: $token_field");
         }
@@ -1061,7 +1066,7 @@ class OAuthUtil
     //                  see http://code.google.com/p/oauth/issues/detail?id=163
     /**
      * @param $header
-     * @param boolean $only_allow_oauth_parameters
+     * @param boolean$only_allow_oauth_parameters
      * @return array
      */
     public static function split_header($header, $only_allow_oauth_parameters = true)

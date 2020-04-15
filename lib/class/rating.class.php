@@ -370,8 +370,8 @@ class Rating extends database_object
      * enabled.  If $static is true, the rating won't be editable.
      * @param $object_id
      * @param $type
-     * @param boolean $static
-     * @return false|null
+     * @param boolean$static
+     * @return boolean
      */
     public static function show($object_id, $type, $static = false)
     {

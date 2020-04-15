@@ -126,7 +126,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * format
      * this function takes the object and reformats some values
-     * @param boolean $details
+     * @param boolean$details
      * @return boolean
      */
     public function format($details = true)
@@ -245,7 +245,7 @@ class TVShow_Season extends database_object implements library_item
     }
 
     /**
-     * @return string
+     * @return mixed|string
      */
     public function get_default_art_kind()
     {
@@ -265,7 +265,7 @@ class TVShow_Season extends database_object implements library_item
 
     /**
      * @param int $thumb
-     * @param boolean $force
+     * @param boolean$force
      * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
@@ -294,7 +294,7 @@ class TVShow_Season extends database_object implements library_item
      * Checks for an existing tv show season; if none exists, insert one.
      * @param $tvshow
      * @param $season_number
-     * @param boolean $readonly
+     * @param boolean$readonly
      * @return string|null
      */
     public static function check($tvshow, $season_number, $readonly = false)

@@ -1252,7 +1252,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param int $id
      * @param boolean $db_art_first
-     * @param boolean $api
+     * @param boolean$api
      * @return boolean
      */
     public static function gather_art_item($type, $id, $db_art_first = false, $api = false)
@@ -1604,8 +1604,8 @@ abstract class Catalog extends database_object
      * this can be done by 75+
      * @param string $type
      * @param int $object_id
-     * @param boolean $api
-     * @return integer
+     * @param boolean$api
+     * @return int|mixed
      */
     public static function update_single_item($type, $object_id, $api = false)
     {
@@ -1660,6 +1660,9 @@ abstract class Catalog extends database_object
         if (!$api) {
             echo "</tbody></table>\n";
         }
+        // Cleanup old objects that are no longer needed
+        Album::garbage_collection();
+        Artist::garbage_collection();
 
         return $result;
     } // update_single_item
@@ -1713,7 +1716,6 @@ abstract class Catalog extends database_object
      * @param array $results
      * @param Song $song
      * @return array
-     * @throws ReflectionException
      */
     public static function update_song_from_tags($results, Song $song)
     {
@@ -2564,7 +2566,7 @@ abstract class Catalog extends database_object
 
     /**
      * @param $libitem
-     * @param User|null $user
+     * @param null $user
      * @return boolean
      */
     public static function can_remove($libitem, $user = null)
@@ -2698,6 +2700,9 @@ abstract class Catalog extends database_object
                 }
                 break;
         }
+
+        // Remove any orphaned artists/albums/etc.
+        self::garbage_collection();
     }
 
     /**

@@ -37,7 +37,7 @@
  * @param string $next_url Where to go next
  * @param int $cancel T/F show a cancel button that uses return_referer()
  * @param string $form_name
- * @param boolean $visible
+ * @param boolean$visible
  */
 function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = 'confirmation', $visible = true)
 {
@@ -217,9 +217,9 @@ function show_preference_box($preferences)
  * hella long). It's used by the Edit page and takes a $name and a $album_id
  * @param string $name
  * @param int $album_id
- * @param boolean $allow_add
+ * @param boolean$allow_add
  * @param int $song_id
- * @param boolean $allow_none
+ * @param boolean$allow_none
  * @param string $user
  */
 function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
@@ -281,9 +281,9 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
  * inventive!
  * @param string $name
  * @param int $artist_id
- * @param boolean $allow_add
+ * @param boolean$allow_add
  * @param int $song_id
- * @param boolean $allow_none
+ * @param boolean$allow_none
  * @param int $user_id
  */
 function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
@@ -340,9 +340,9 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
  * inventive!
  * @param string $name
  * @param int $tvshow_id
- * @param boolean $allow_add
+ * @param boolean$allow_add
  * @param int $season_id
- * @param boolean $allow_none
+ * @param boolean$allow_none
  */
 function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false)
 {
@@ -383,10 +383,10 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
 /**
  * @param $name
  * @param $season_id
- * @param boolean $allow_add
+ * @param boolean$allow_add
  * @param int $video_id
- * @param boolean $allow_none
- * @return false|null
+ * @param boolean$allow_none
+ * @return boolean
  */
 function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false)
 {
@@ -436,7 +436,7 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
  * @param string $name
  * @param int $catalog_id
  * @param string $style
- * @param boolean $allow_none
+ * @param boolean$allow_none
  * @param string $filter_type
  */
 function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = '')
@@ -593,7 +593,7 @@ function xoutput_headers()
 
 /**
  * @param $array
- * @param boolean $callback
+ * @param boolean$callback
  * @param string $type
  * @return false|mixed|string
  */
@@ -613,7 +613,7 @@ function xoutput_from_array($array, $callback = false, $type = '')
 
 /**
  * @param $array
- * @param boolean $callback
+ * @param boolean$callback
  * @param string $type
  * @return false|string
  */
@@ -731,7 +731,7 @@ function print_bool($value)
 
 /**
  * show_now_playing
- * This shows the Now Playing templates and does some garbage collection
+ * This shows the Now Playing templates and does some garbage collecion
  * this should really be somewhere else
  */
 function show_now_playing()
@@ -745,8 +745,8 @@ function show_now_playing()
 } // show_now_playing
 
 /**
- * @param boolean $render
- * @param boolean $force
+ * @param boolean$render
+ * @param boolean$force
  */
 function show_table_render($render = false, $force = false)
 {
