@@ -24,7 +24,7 @@
 $web_path = AmpConfig::get('web_path');
 $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
 $othering = false;
-$rate     = $rating->get_user_rating();
+$rate     = ($rating->get_user_rating() ?: 0);
 if (!$rate) {
     $rate     = $rating->get_average_rating();
     $othering = true;

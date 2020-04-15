@@ -61,6 +61,10 @@ class JsonHandler extends Handler
         'bitrate' => array('bitrate', '%d')
     );
 
+    /**
+     * JsonHandler constructor.
+     * @param $uri
+     */
     public function __construct($uri)
     {
         $this->uri = $uri;
@@ -157,7 +161,7 @@ class JsonHandler extends Handler
      *
      * @param string $char
      * @param string $string
-     * @return type
+     * @return int
      */
     public function countChar($char, $string)
     {

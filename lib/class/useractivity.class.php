@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -60,7 +61,7 @@ class Useractivity extends database_object
 
     /**
      * this attempts to build a cache of the data from the passed activities all in one query
-     * @param int[] $ids
+     * @param integer[] $ids
      * @return boolean
      */
     public static function build_cache($ids)
@@ -69,8 +70,7 @@ class Useractivity extends database_object
             return false;
         }
 
-        $idlist = '(' . implode(',', $ids) . ')';
-
+        $idlist     = '(' . implode(',', $ids) . ')';
         $sql        = "SELECT * FROM `user_activity` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
@@ -80,13 +80,14 @@ class Useractivity extends database_object
 
         return true;
     }
+
     /**
      * garbage_collection
      *
      * Remove activities for items that no longer exist.
      * @param string $object_type
      * @param integer $object_id
-     * @return PDOStatement|boolean
+     * @return void
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -191,6 +192,7 @@ class Useractivity extends database_object
      * Deletes last activity
      * @param integer $object_id
      * @param string $object_type
+     * @return bool|PDOStatement
      */
     public static function del_activity($object_id, $object_type = 'song')
     {
@@ -276,7 +278,8 @@ class Useractivity extends database_object
         $libitem->format();
 
         echo '<div>';
-        $fdate = date('Y/m/d H:i:s', (int) $this->activity_date);
+        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
+        $fdate       = get_datetime($time_format, (int) $this->activity_date);
         /*
         echo '<div class="shoutbox-date">';
         if ($user->f_avatar_mini) {
@@ -320,6 +323,8 @@ class Useractivity extends database_object
          */
 
         echo '</div>';//<br />';
+
+        return true;
     } // show
 
     /**

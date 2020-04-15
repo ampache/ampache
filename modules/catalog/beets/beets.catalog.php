@@ -21,6 +21,8 @@
  *
  */
 
+use Beets\CliHandler;
+
 /**
  * Beets Catalog Class
  *
@@ -47,11 +49,9 @@ class Catalog_beets extends Beets\Catalog
      */
     public function get_create_help()
     {
-        $help = "<ul>" .
+        return "<ul>" .
                 "<li>Fetch songs from beets command over CLI.</li>" .
                 "<li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessible by the Webserver.</li></ul>";
-
-        return $help;
     }
 
     /**
@@ -81,6 +81,9 @@ class Catalog_beets extends Beets\Catalog
         return true;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function catalog_fields()
     {
         $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'text');
@@ -94,6 +97,9 @@ class Catalog_beets extends Beets\Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
+     * @param $catalog_id
+     * @param array $data
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     { // TODO: This Method should be required / provided by parent
@@ -122,6 +128,9 @@ class Catalog_beets extends Beets\Catalog
         return true;
     }
 
+    /**
+     * @return CliHandler
+     */
     protected function getParser()
     {
         return new Beets\CliHandler();
@@ -131,6 +140,7 @@ class Catalog_beets extends Beets\Catalog
      * Check if a song was added before
      * @param array $song
      * @return boolean
+     * @throws Exception
      */
     public function checkSong($song)
     {
@@ -145,6 +155,9 @@ class Catalog_beets extends Beets\Catalog
         return (boolean) $this->getIdFromPath($song['file']);
     }
 
+    /**
+     * @return string
+     */
     public function getBeetsDb()
     {
         return $this->beetsdb;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -35,6 +36,7 @@ class Tag extends database_object implements library_item
     /**
      * constructor
      * This takes a tag id and returns all of the relevant information
+     * @param $tag_id
      */
     public function __construct($tag_id)
     {
@@ -47,20 +49,21 @@ class Tag extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         } // end foreach
+
+        return true;
     } // constructor
 
     /**
      * construct_from_name
      * This attempts to construct the tag from a name, rather then the ID
      * @param string $name
+     * @return Tag
      */
     public static function construct_from_name($name)
     {
         $tag_id = self::tag_exists($name);
 
-        $tag = new Tag($tag_id);
-
-        return $tag;
+        return new Tag($tag_id);
     } // construct_from_name
 
     /**
@@ -68,15 +71,15 @@ class Tag extends database_object implements library_item
      * This takes an array of object ids and caches all of their information
      * in a single query, cuts down on the connections
      * @params array $ids
+     * @param $ids
+     * @return boolean
      */
     public static function build_cache($ids)
     {
         if (!is_array($ids) || !count($ids)) {
             return false;
         }
-
-        $idlist = '(' . implode(',', $ids) . ')';
-
+        $idlist     = '(' . implode(',', $ids) . ')';
         $sql        = "SELECT * FROM `tag` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
@@ -91,6 +94,8 @@ class Tag extends database_object implements library_item
      * build_map_cache
      * This builds a cache of the mappings for the specified object, no limit is given
      * @param string $type
+     * @param $ids
+     * @return boolean
      * @params array $ids
      */
     public static function build_map_cache($type, $ids)
@@ -139,6 +144,8 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param integer $object_id
      * @param string $value
+     * @param boolean $user
+     * @return bool|mixed|string|null
      */
     public static function add($type, $object_id, $value, $user = true)
     {
@@ -186,6 +193,7 @@ class Tag extends database_object implements library_item
      * add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
      * @param string $value
+     * @return bool|string|null
      */
     public static function add_tag($value)
     {
@@ -197,7 +205,7 @@ class Tag extends database_object implements library_item
         Dba::write($sql, array($value));
         $insert_id = Dba::insert_id();
 
-        parent::add_to_cache('tag_name', $value, $insert_id);
+        parent::add_to_cache('tag_name', $value, array($insert_id));
 
         return $insert_id;
     } // add_tag
@@ -206,6 +214,7 @@ class Tag extends database_object implements library_item
      * update
      * Update the name of the tag
      * @param array $data
+     * @return boolean
      */
     public function update(array $data)
     {
@@ -301,7 +310,8 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param integer|string $object_id
      * @param integer|string $tag_id
-     * @param integer $user
+     * @param boolean $user
+     * @return bool|string|null
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
@@ -401,6 +411,7 @@ class Tag extends database_object implements library_item
      * tag_exists
      * This checks to see if a tag exists, this has nothing to do with objects or maps
      * @param string $value
+     * @return array|mixed
      */
     public static function tag_exists($value)
     {
@@ -426,6 +437,7 @@ class Tag extends database_object implements library_item
      * @param integer $object_id
      * @param integer $tag_id
      * @param integer $user
+     * @return bool|mixed
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
@@ -482,19 +494,24 @@ class Tag extends database_object implements library_item
      * Display all tags that apply to matching target type of the specified id
      * @param string $type
      * @param integer $object_id
+     * @return array|bool
      */
-    public static function get_object_tags($type, $object_id)
+    public static function get_object_tags($type, $object_id = null)
     {
         if (!Core::is_library_item($type)) {
             return false;
         }
 
-        $sql = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
+        $params = array($type);
+        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
             "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
-            "WHERE `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ?";
-
+            "WHERE `tag_map`.`object_type` = ?";
+        if ($object_id !== null) {
+            $sql .= " AND `tag_map`.`object_id` = ?";
+            $params[] = $object_id;
+        }
         $results    = array();
-        $db_results = Dba::read($sql, array($type, $object_id));
+        $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row;
@@ -507,12 +524,15 @@ class Tag extends database_object implements library_item
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      * @param string $type
-     * @return integer[]|false
+     * @param $tag_id
+     * @param string $count
+     * @param string $offset
+     * @return integer[]
      */
     public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
     {
         if (!Core::is_library_item($type)) {
-            return false;
+            return array();
         }
 
         $limit_sql = "";
@@ -541,12 +561,51 @@ class Tag extends database_object implements library_item
     } // get_tag_objects
 
     /**
+     * get_tag_ids
+     * This gets the objects from a specified tag and returns an array of object ids, nothing more
+     * @param string $type
+     * @param string $count
+     * @param string $offset
+     * @return integer[]
+     */
+    public static function get_tag_ids($type, $count = '', $offset = '')
+    {
+        if (!Core::is_library_item($type)) {
+            return array();
+        }
+
+        $limit_sql = "";
+        if ($count) {
+            $limit_sql = " LIMIT ";
+            if ($offset) {
+                $limit_sql .= (string) ($offset) . ', ';
+            }
+            $limit_sql .= (string) ($count);
+        }
+
+        $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` " .
+            "WHERE `tag_map`.`object_type` = ? ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`') . $limit_sql;
+        }
+        $db_results = Dba::read($sql, array($type));
+
+        $results = array();
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['tag_id'];
+        }
+
+        return $results;
+    } // get_tag_ids
+    /**
      * get_tags
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
-     * @param array $type
+     * @param string $type
      * @param integer $limit
      * @param string $order
+     * @return array|mixed
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
@@ -594,6 +653,7 @@ class Tag extends database_object implements library_item
      * @param array $tags
      * @param boolean $link
      * @param string $filter_type
+     * @return string
      */
     public static function get_display($tags, $link = false, $filter_type = '')
     {
@@ -711,6 +771,7 @@ class Tag extends database_object implements library_item
      * If a type is specific only counts for said type are returned
      * @param string $type
      * @param integer $user_id
+     * @return array
      */
     public function count($type = '', $user_id = 0)
     {
@@ -743,6 +804,8 @@ class Tag extends database_object implements library_item
      * This will only remove tag maps for the current user
      * @param string $type
      * @param integer $object_id
+     * @param boolean $user
+     * @return boolean
      */
     public function remove_map($type, $object_id, $user = true)
     {
@@ -762,6 +825,9 @@ class Tag extends database_object implements library_item
         return true;
     } // remove_map
 
+    /**
+     * @param boolean $details
+     */
     public function format($details = true)
     {
         unset($details); //dead code but called from other format calls
@@ -790,11 +856,17 @@ class Tag extends database_object implements library_item
         return $this->name;
     }
 
+    /**
+     * @return null
+     */
     public function get_parent()
     {
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function get_childrens()
     {
         return array();
@@ -822,13 +894,11 @@ class Tag extends database_object implements library_item
         $medias = array();
         if ($filter_type) {
             $ids = self::get_tag_objects($filter_type, $this->id);
-            if ($ids) {
-                foreach ($ids as $objectid) {
-                    $medias[] = array(
-                        'object_type' => $filter_type,
-                        'object_id' => $objectid
-                    );
-                }
+            foreach ($ids as $objectid) {
+                $medias[] = array(
+                    'object_type' => $filter_type,
+                    'object_id' => $objectid
+                );
             }
         }
 
@@ -846,6 +916,9 @@ class Tag extends database_object implements library_item
         return array();
     }
 
+    /**
+     * @return mixed|null
+     */
     public function get_user_owner()
     {
         return null;

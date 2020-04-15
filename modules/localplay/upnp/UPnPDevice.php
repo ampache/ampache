@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class UPnPDevice
+ */
 class UPnPDevice
 {
     private $_settings = array(
@@ -10,6 +13,10 @@ class UPnPDevice
     );
 
 
+    /**
+     * UPnPDevice constructor.
+     * @param $descriptionUrl
+     */
     public function __construct($descriptionUrl)
     {
         if (! $this->restoreDescriptionUrl($descriptionUrl)) {
@@ -17,8 +24,10 @@ class UPnPDevice
         }
     }
 
-    /*
+    /**
      * Reads description URL from session
+     * @param $descriptionUrl
+     * @return boolean
      */
     private function restoreDescriptionUrl($descriptionUrl)
     {
@@ -34,6 +43,9 @@ class UPnPDevice
         return false;
     }
 
+    /**
+     * @param $descriptionUrl
+     */
     private function parseDescriptionUrl($descriptionUrl)
     {
         debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
@@ -68,11 +80,13 @@ class UPnPDevice
     }
 
     /**
-    * Sending HTTP-Request and returns parsed response
-    *
-    * @param string $method     Method name
-    * @param array  $arguments  Key-Value array
-    */
+     * Sending HTTP-Request and returns parsed response
+     *
+     * @param string $method Method name
+     * @param array $arguments Key-Value array
+     * @param string $type
+     * @return bool|string
+     */
     public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl')
     {
         $body  ='<?xml version="1.0" encoding="utf-8"?>';
@@ -141,10 +155,12 @@ class UPnPDevice
     }
 
     /**
-    * Filters response HTTP-Code from response headers
-    * @param string $headers    HTTP response headers
-    * @return mixed             Response code (int) or null if not found
-    */
+     * Filters response HTTP-Code from response headers
+     * @param $command
+     * @param string $type
+     * @param integer $id
+     * @return mixed             Response code (int) or null if not found
+     */
     /*
     private function getResponseCode($headers)
     {
@@ -163,12 +179,10 @@ class UPnPDevice
     public function instanceOnly($command, $type = 'AVTransport', $id = 0)
     {
         $args     = array( 'InstanceID' => $id );
-        $response = $this->sendRequestToDevice($command, $args, $type);
-
         ///$response = \Format::forge($response, 'xml:ns')->to_array();
         ///return $response['s:Body']['u:' . $command . 'Response'];
 
-        return $response;
+        return $this->sendRequestToDevice($command, $args, $type);
     }
 
 

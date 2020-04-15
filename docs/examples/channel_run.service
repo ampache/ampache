@@ -11,7 +11,7 @@ User=www-data
 Group=www-data
 Restart=always
 RestartSec=3
-ExecStart= php -f bin/channel_run.inc -- -c 1 -v
+ExecStart= php bin/channel_run.inc -- -c 1 -v
 PIDFile=/run/php/ampache_channel_1.pid 
 ExecReload=/bin/kill -HUP $MAINPID
 WorkingDirectory=/var/www/html
@@ -19,3 +19,4 @@ ProtectSystem=yes
 
 [Install] 
 WantedBy=multi-user.target
+

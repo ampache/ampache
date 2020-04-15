@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -96,8 +97,12 @@ class Stats
      * @param string $input_type
      * @param integer $oid
      * @param integer $user
+     * @param string $agent
+     * @param array $location
+     * @param string $count_type
      * @param integer $date
      * @param integer $song_time
+     * @return boolean
      */
     public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
     {
@@ -140,15 +145,19 @@ class Stats
         } else {
             debug_event('stats.class', 'Statistics insertion ignored due to graceful delay.', 3);
         }
+
+        return true;
     } // insert
 
     /**
      * is_already_inserted
      * Check if the same stat has not already been inserted within a graceful delay
      * @param string $type
-     * @param integer $user
      * @param integer $oid
+     * @param integer $user
+     * @param string $count_type
      * @param integer $date
+     * @param integer $song_time
      * @return boolean
      */
     public static function is_already_inserted($type, $oid, $user, $count_type = 'stream', $date = null, $song_time = 0)
@@ -185,27 +194,39 @@ class Stats
      * get_object_count
      * Get count for an object
      * @param string $object_type
+     * @param $object_id
      * @param string $threshold
+     * @param string $count_type
+     * @return integer
      */
     public static function get_object_count($object_type, $object_id, $threshold = null, $count_type = 'stream')
     {
-        $date = '';
-        if ($threshold !== null && $threshold !== '') {
-            $date = time() - (86400 * (int) $threshold);
+        if ($threshold === null || $threshold === '') {
+            $threshold = 0;
         }
 
-        $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
-        if ($date !== '') {
-            $sql .= "AND `date` >= '" . $date . "'";
+        if (AmpConfig::get('cron_cache') && !defined('NO_CRON_CACHE')) {
+            $sql = "SELECT `count` AS `object_cnt` FROM `cache_object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ? AND `threshold` = " . $threshold;
+        } else {
+            $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
+            if ($threshold > 0) {
+                $date = time() - (86400 * (int) $threshold);
+                $sql .= "AND `date` >= '" . $date . "'";
+            }
         }
 
         $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
+        $results    = Dba::fetch_assoc($db_results);
 
-        $results = Dba::fetch_assoc($db_results);
-
-        return $results['object_cnt'];
+        return (int) $results['object_cnt'];
     } // get_object_count
 
+    /**
+     * get_cached_place_name
+     * @param $latitude
+     * @param $longitude
+     * @return mixed|null
+     */
     public static function get_cached_place_name($latitude, $longitude)
     {
         $name       = null;
@@ -225,6 +246,9 @@ class Stats
      * was played, this is used by, among other things, the LastFM plugin to figure out
      * if we should re-submit or if this is a duplicate / if it's too soon. This takes an
      * optional user_id because when streaming we don't have $GLOBALS()
+     * @param string $user_id
+     * @param string $agent
+     * @return array
      */
     public static function get_last_song($user_id = '', $agent = '')
     {
@@ -250,9 +274,7 @@ class Stats
         $sql .= "ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::read($sql, $sqlres);
 
-        $results = Dba::fetch_assoc($db_results);
-
-        return $results;
+        return Dba::fetch_assoc($db_results);
     } // get_last_song
 
     /**
@@ -261,17 +283,18 @@ class Stats
      * Gets called when the next song is played in quick succession
      *
      * @param integer $object_id
+     * @return bool|PDOStatement
      */
     public static function skip_last_song($object_id)
     {
         $sql        = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `object_id` = ? ORDER BY `date` DESC LIMIT 1";
         $db_results = Dba::write($sql, array($object_id));
-        
+
         //Now the just updated skipped value is taken
         $sql        = "SELECT * FROM `object_count` WHERE `count_type` = 'skip' ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::write($sql, array());
         $skipped    = Dba::fetch_assoc($db_results);
-        
+
         //To remove associated album and artist entries
         $sql = "DELETE FROM `object_count` WHERE (`object_type` = 'album' OR `object_type` = 'artist') AND `agent` = ? AND `date` = ?";
 
@@ -283,6 +306,10 @@ class Stats
      * get_object_history
      * This returns the objects that have happened for $user_id sometime after $time
      * used primarily by the democratic cooldown code
+     * @param integer $user_id
+     * @param integer $time
+     * @param boolean $newest
+     * @return array
      */
     public static function get_object_history($user_id, $time, $newest = true)
     {
@@ -327,48 +354,61 @@ class Stats
         $type = self::validate_type($input_type);
         $sql  = "";
         /* If they don't pass one, then use the preference */
-        if (!$threshold) {
+        if ($threshold === null || $threshold === '') {
             $threshold = AmpConfig::get('stats_threshold');
         }
         $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
         $date              = time() - (86400 * (int) $threshold);
-
         if ($type == 'playlist') {
-            $sql = "SELECT `id` as `id`, `last_update` FROM `playlist`" .
-                    " WHERE `last_update` >= '" . $date . "' ";
+            $sql = "SELECT `id` as `id`, `last_update` FROM `playlist`";
+            if ($threshold > 0) {
+                $sql .= " WHERE `last_update` >= '" . $date . "' ";
+            }
             $sql .= " GROUP BY `id` ORDER BY `last_update` DESC ";
             //debug_event('stats.class', 'get_top_sql ' . $sql, 5);
 
             return $sql;
         }
-        /* Select Top objects counting by # of rows for you only */
-        $sql = "SELECT MAX(`object_id`) as `id`, COUNT(*) AS `count` FROM `object_count`";
-        if ($allow_group_disks && $type == 'album') {
-            $sql .= " LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id`" .
-                    " and `object_count`.`object_type` = 'album'";
-        }
-        if ($user_id !== null) {
-            $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . $user_id;
+        if ($user_id === null && AmpConfig::get('cron_cache') && !defined('NO_CRON_CACHE')) {
+            $sql = "SELECT `object_id` as `id`, `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "'";
         } else {
-            $sql .= " WHERE `object_type` = '" . $type . "' AND `date` >= '" . $date . "'";
-        }
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
-        }
-        $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
-            $user_id = Core::get_global('user')->id;
-            $sql .= " AND `object_id` NOT IN" .
-                    " (SELECT `object_id` FROM `rating`" .
-                    " WHERE `rating`.`object_type` = '" . $type . "'" .
-                    " AND `rating`.`rating` <=" . $rating_filter .
-                    " AND `rating`.`user` = " . $user_id . ")";
-        }
-        $sql .= " AND `count_type` = '" . $count_type . "'";
-        if ($allow_group_disks && $type == 'album') {
-            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";  //TODO mysql8 test
-        } else {
-            $sql .= " GROUP BY `object_count`.`object_id`";
+            /* Select Top objects counting by # of rows for you only */
+            $sql = "SELECT MAX(`object_id`) as `id`, COUNT(*) AS `count`";
+            // Add additional columns to use the select query as insert values directly
+            if (defined('NO_CRON_CACHE')) {
+                $sql .= ", `object_type`, `count_type`, " . $threshold . " AS `threshold`";
+            }
+            $sql .= " FROM `object_count`";
+            if ($allow_group_disks && $type == 'album') {
+                $sql .= " LEFT JOIN `album` on `album`.`id` = `object_count`.`object_id`" .
+                        " AND `object_count`.`object_type` = 'album'";
+            }
+            if ($user_id !== null) {
+                $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . (string) $user_id;
+            } else {
+                $sql .= " WHERE `object_type` = '" . $type . "' ";
+                if ($threshold > 0) {
+                    $sql .= "AND `date` >= '" . $date . "'";
+                }
+            }
+            if (AmpConfig::get('catalog_disable')) {
+                $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+            }
+            $rating_filter = AmpConfig::get_rating_filter();
+            if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
+                //$user_id = Core::get_global('user')->id;
+                $sql .= " AND `object_id` NOT IN" .
+                        " (SELECT `object_id` FROM `rating`" .
+                        " WHERE `rating`.`object_type` = '" . $type . "'" .
+                        " AND `rating`.`rating` <=" . $rating_filter .
+                        " AND `rating`.`user` = " . $user_id . ")";
+            }
+            $sql .= " AND `count_type` = '" . $count_type . "'";
+            if ($allow_group_disks && $type == 'album') {
+                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";  //TODO mysql8 test
+            } else {
+                $sql .= " GROUP BY `object_count`.`object_id`";
+            }
         }
         if ($random) {
             $sql .= " ORDER BY RAND() DESC ";
@@ -385,16 +425,16 @@ class Stats
      * This returns the top X for type Y from the
      * last stats_threshold days
      * @param string $type
-     * @param string $count
+     * @param integer $count
      * @param string $threshold
      * @param string $offset
      * @param integer $user_id
      * @param boolean $random
      * @return array
      */
-    public static function get_top($type, $count = null, $threshold = '', $offset = '', $user_id = null, $random = false)
+    public static function get_top($type, $count = 0, $threshold = '', $offset = '', $user_id = null, $random = false)
     {
-        if (count($count) <= 0) {
+        if ($count <= 0) {
             $count = AmpConfig::get('popular_threshold');
         }
         $limit = (!$offset) ? $count : $offset . "," . $count;
@@ -423,6 +463,7 @@ class Stats
      * @param string $input_type
      * @param string $user_id
      * @param boolean $newest
+     * @return string
      */
     public static function get_recent_sql($input_type, $user_id = '', $newest = true)
     {
@@ -437,7 +478,7 @@ class Stats
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && !empty($user_id)) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
             $sql .= " AND `object_id` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = '" . $type . "'" .
@@ -463,6 +504,10 @@ class Stats
      * get_recent
      * This returns the recent X for type Y
      * @param string $input_type
+     * @param string $count
+     * @param string $offset
+     * @param boolean $newest
+     * @return array
      */
     public static function get_recent($input_type, $count = '', $offset = '', $newest = true)
     {
@@ -494,6 +539,7 @@ class Stats
      * @param string $input_type
      * @param integer $user
      * @param integer $full
+     * @return array
      */
     public static function get_user($input_count, $input_type, $user, $full = 0)
     {
@@ -548,6 +594,8 @@ class Stats
      * get_newest_sql
      * This returns the get_newest sql
      * @param string $input_type
+     * @param integer $catalog
+     * @return string
      */
     public static function get_newest_sql($input_type, $catalog = 0)
     {
@@ -605,6 +653,10 @@ class Stats
      * This returns an array of the newest artists/albums/whatever
      * in this Ampache instance
      * @param string $type
+     * @param string $count
+     * @param string $offset
+     * @param integer $catalog
+     * @return array
      */
     public static function get_newest($type, $count = '', $offset = '', $catalog = 0)
     {

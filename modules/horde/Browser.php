@@ -901,7 +901,7 @@ class Horde_Browser
     /**
      * Sets unique behavior for the current browser.
      *
-     * @param string $quirk  The behavior to set. Quirks:
+     * @param string $quirk The behavior to set. Quirks:
      *   - avoid_popup_windows
      *   - break_disposition_header
      *   - break_disposition_filename
@@ -919,7 +919,7 @@ class Horde_Browser
      *   - scrollbar_in_way
      *   - scroll_tds
      *   - windowed_controls
-     * @param string $value  Special behavior parameter.
+     * @param boolean $value Special behavior parameter.
      */
     public function setQuirk($quirk, $value = true)
     {
@@ -959,7 +959,7 @@ class Horde_Browser
     /**
      * Sets capabilities for the current browser.
      *
-     * @param string $feature  The capability to set. Features:
+     * @param string $feature The capability to set. Features:
      *   - accesskey
      *   - ajax
      *   - cite
@@ -982,7 +982,7 @@ class Horde_Browser
      *   - utf
      *   - wml
      *   - xmlhttpreq
-     * @param string $value    Special capability parameter.
+     * @param boolean $value Special capability parameter.
      */
     public function setFeature($feature, $value = true)
     {

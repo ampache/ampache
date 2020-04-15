@@ -85,7 +85,7 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
                         }
                         break;
                 }
-            };
+            }
             break;
     }
 

@@ -47,7 +47,8 @@ switch ($_REQUEST['action']) {
         header("Content-Transfer-Encoding: binary");
         header("Cache-control: public");
 
-        $date = date("d/m/Y", time());
+        $time_format = preg_replace("/[^dmY\s]/", "", (string) AmpConfig::get('custom_datetime'));
+        $date        = get_datetime($time_format, time());
 
         switch ($_REQUEST['export_format']) {
             case 'itunes':

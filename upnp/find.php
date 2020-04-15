@@ -3,6 +3,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+/**
+ * Class UPnPFind
+ */
 class UPnPFind
 {
     /**
@@ -105,8 +108,7 @@ class UPnPFind
      * Transforms discovery response string to key/value array
      *
      * @param string $res discovery response
-     *
-     * @return \stdObj
+     * @return stdObj
      */
     private static function discoveryReponse2Array($res)
     {

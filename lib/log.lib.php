@@ -20,23 +20,23 @@
  *
  */
 
-/*
+/**
  * log_event
  * Logs an event to a defined log file based on config options
- */
-/**
- * @param string $log_name
+ * @param string $username
  * @param string $event_name
+ * @param string $event_description
+ * @param string $log_name
  */
 function log_event($username, $event_name, $event_description, $log_name)
 {
     /* Set it up here to make sure it's _always_ the same */
-    $time        = time();
-    $log_time    = date('Y-m-d H:i:s', $time);
+    $time     = time();
+    $log_time = date("c", $time);
 
     /* must have some name */
-    $log_name    = $log_name ? $log_name : 'ampache';
-    $username    = $username ? $username : 'ampache';
+    $log_name = $log_name ? $log_name : 'ampache';
+    $username = $username ? $username : 'ampache';
 
     $log_filename = AmpConfig::get('log_filename');
     if (empty($log_filename)) {
@@ -47,9 +47,8 @@ function log_event($username, $event_name, $event_description, $log_name)
     $log_filename = str_replace("%Y", date('Y'), $log_filename);
     $log_filename = str_replace("%m", date('m'), $log_filename);
     $log_filename = str_replace("%d", date('d'), $log_filename);
-
-    $log_filename    = AmpConfig::get('log_path') . "/" . $log_filename;
-    $log_line        = "$log_time [$username] ($event_name) -> $event_description \n";
+    $log_filename = AmpConfig::get('log_path') . "/" . $log_filename;
+    $log_line     = "$log_time [$username] ($event_name) -> $event_description \n";
 
     // Do the deed
     $log_write = error_log($log_line, 3, $log_filename);
@@ -59,11 +58,15 @@ function log_event($username, $event_name, $event_description, $log_name)
     }
 } // log_event
 
-/*
+/**
  * ampache_error_handler
  *
  * An error handler for ampache that traps as many errors as it can and logs
  * them.
+ * @param $errno
+ * @param $errstr
+ * @param $errfile
+ * @param $errline
  */
 function ampache_error_handler($errno, $errstr, $errfile, $errline)
 {
@@ -142,6 +145,8 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  * @param string $type
  * @param string $message
  * @param integer $level
+ * @param string $file
+ * @param string $username
  * @return boolean
  */
 function debug_event($type, $message, $level, $file = '', $username = '')

@@ -2,17 +2,43 @@
 
 ## 4.2.0-develop
 
+A big visual change in the interface is that Ampache now defaults to US time for dates. ('Month/Day/Year')
+For everyone who isn't American you have control over date formats using custom_datetime.
+Admin -> Server Config -> Interface -> Custom datetime
+
+e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
+Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
+
 * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
   * Call xml as normal:
-    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400003
+    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400004
   * Call the JSON server:
-    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400003
-* Fix channel authentication
-* Fix ip checks when sending null proxy values
+    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400004
+* NEW db options
+  * cron_cache: Speed up the interface by allowing background caching of data
+  * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
+  * custom_datetime: Allow you to format your date strings your way.
+* NEW config options
+  * skip_timer: Add Skip Timer Threshold to the config
+* NEW files
+  * bin/compute_cache.inc: Cache object_count data to speed up access
+  * bin/cron.inc: Perform garbage_collection functions outside of main functions (includes compute_cache.inc)
+* NEW examples
+  * docs/examples/ampache_cron.service
+  * docs/examples/ampache_cron.timer
+* API - Don't gather art when adding songs
+* Fix Channel authentication
+* Fix IP checks when sending null proxy values
 * Fix Extra text in catalog API calls
 * Fix Gather art page layout
 * Fix Read vorbis rating correctly
-* Added skips to the database and interface
+* Fix Search rules in UI failing to load with custom_metadata
+* Fix Warn correctly when inserting art fails
+* Fix Insert missing user preferences on login
+* Update Composer requirements
+* Allow searching play times without requiring UI option
+* Added declare(strict_types=1); to lib/* and lib/class/*
+* Fixed a lot of incorrectly typed function calls and code documentation
 
 ## 4.1.1
 * Bump API version to 400004 (4.0.0 build 004)
@@ -52,7 +78,7 @@
 * Fix bin\*.inc text issues with newline
 * Add docs/examples/channel_run.service for running background processes as a service
 * New search option "Another User" allows searching other user ratings and favorites
-* user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods])>
+* user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods>])
 * Updates to support php7.4 (Ampache supports 7.1-7.4)
 * Fix bug in UI when enabling/disabling songs
 * Checks in Subsonic/WebUI for recording repeated plays

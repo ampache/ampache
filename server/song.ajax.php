@@ -38,7 +38,7 @@ switch ($_REQUEST['action']) {
 
         $song        = new Song($_REQUEST['song_id']);
         $new_enabled = $song->enabled ? false : true;
-        $song->update_enabled($new_enabled, $song->id);
+        Song::update_enabled($new_enabled, $song->id);
         $song->enabled = $new_enabled;
         $song->format();
 

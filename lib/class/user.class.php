@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -32,7 +33,7 @@ class User extends database_object
 {
     //Basic Components
     /**
-     * @var int $id
+     * @var integer $id
      */
     public $id;
     /**
@@ -48,7 +49,7 @@ class User extends database_object
      */
     public $fullname_public;
     /**
-     * @var int $access
+     * @var integer $access
      */
     public $access;
     /**
@@ -60,11 +61,11 @@ class User extends database_object
      */
     public $email;
     /**
-     * @var int $last_seen
+     * @var integer $last_seen
      */
     public $last_seen;
     /**
-     * @var int $create_date
+     * @var integer $create_date
      */
     public $create_date;
     /**
@@ -144,6 +145,7 @@ class User extends database_object
      * Constructor
      * This function is the constructor object for the user
      * class, it currently takes a username
+     * @param integer $user_id
      */
     public function __construct($user_id = 0)
     {
@@ -167,6 +169,8 @@ class User extends database_object
         if (strlen((string) $this->fullname) < 1) {
             $this->fullname = $this->username;
         }
+
+        return true;
     } // Constructor
 
     /**
@@ -202,8 +206,8 @@ class User extends database_object
     {
         $user_id = (int) ($this->id);
 
-        if ($this->is_cached('user', $user_id)) {
-            return $this->get_from_cache('user', $user_id);
+        if (User::is_cached('user', $user_id)) {
+            return User::get_from_cache('user', $user_id);
         }
 
         $data = array();
@@ -221,7 +225,7 @@ class User extends database_object
 
         $data = Dba::fetch_assoc($db_results);
 
-        $this->add_to_cache('user', $user_id, $data);
+        User::add_to_cache('user', $user_id, $data);
 
         return $data;
     } // has_info
@@ -269,15 +273,15 @@ class User extends database_object
         $db_results = Dba::read($sql, array($username, $username));
         $results    = Dba::fetch_assoc($db_results);
 
-        $user = new User($results['id']);
-
-        return $user;
+        return new User($results['id']);
     } // get_from_username
 
     /**
      * get_from_apikey
      * This returns a built user from an apikey. This is a
      * static function so it doesn't require an instance
+     * @param $apikey
+     * @return User|null
      */
     public static function get_from_apikey($apikey)
     {
@@ -304,10 +308,12 @@ class User extends database_object
             $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
-                $key        = hash('sha256', $row['apikey']);
-                $passphrase = hash('sha256', $row['username'] . $key);
-                if ($passphrase == $apikey) {
-                    return new User($row['id']);
+                if ($row['apikey'] && $row['username']) {
+                    $key        = hash('sha256', $row['apikey']);
+                    $passphrase = hash('sha256', $row['username'] . $key);
+                    if ($passphrase == $apikey) {
+                        return new User($row['id']);
+                    }
                 }
             }
         }
@@ -319,6 +325,8 @@ class User extends database_object
      * get_from_email
      * This returns a built user from a email. This is a
      * static function so it doesn't require an instance
+     * @param $email
+     * @return User|null
      */
     public static function get_from_email($email)
     {
@@ -335,6 +343,8 @@ class User extends database_object
     /**
      * get_from_website
      * This returns users list related to a website.
+     * @param $website
+     * @return array
      */
     public static function get_from_website($website)
     {
@@ -380,6 +390,9 @@ class User extends database_object
      * []['title'] = ucased type name
      * []['prefs'] = array(array('name', 'display', 'value'));
      * []['admin'] = t/f value if this is an admin only section
+     * @param integer $type
+     * @param boolean $system
+     * @return array
      */
     public function get_preferences($type = 0, $system = false)
     {
@@ -440,6 +453,8 @@ class User extends database_object
     /**
      * get_favorites
      * returns an array of your $type favorites
+     * @param $type
+     * @return array
      */
     public function get_favorites($type)
     {
@@ -487,6 +502,8 @@ class User extends database_object
      * get_recommendations
      * This returns recommended objects of $type. The recommendations
      * are based on voodoo economics,the phase of the moon and my current BAL.
+     * @param $type
+     * @return array
      */
     public function get_recommendations($type)
     {
@@ -562,9 +579,7 @@ class User extends database_object
         $db_results = Dba::read($sql);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            $userip = $row['ip'] ? $row['ip'] : null;
-
-            return $userip;
+            return $row['ip'] ? $row['ip'] : null;
         }
 
         return false;
@@ -575,6 +590,7 @@ class User extends database_object
      * this function checks to see if this user has access
      * to the passed action (pass a level requirement)
      * @param integer $needed_level
+     * @return boolean
      */
     public function has_access($needed_level)
     {
@@ -612,6 +628,8 @@ class User extends database_object
      * This function is an all encompassing update function that
      * calls the mini ones does all the error checking and all that
      * good stuff
+     * @param array $data
+     * @return bool|int
      */
     public function update(array $data)
     {
@@ -668,6 +686,7 @@ class User extends database_object
     /**
      * update_username
      * updates their username
+     * @param $new_username
      */
     public function update_username($new_username)
     {
@@ -684,6 +703,8 @@ class User extends database_object
      * This is used by the registration mumbojumbo
      * Use this function to update the validation key
      * NOTE: crap this doesn't have update_item the humanity of it all
+     * @param $new_validation
+     * @return bool|PDOStatement
      */
     public function update_validation($new_validation)
     {
@@ -697,6 +718,7 @@ class User extends database_object
     /**
      * update_fullname
      * updates their fullname
+     * @param $new_fullname
      */
     public function update_fullname($new_fullname)
     {
@@ -710,6 +732,7 @@ class User extends database_object
     /**
      * update_fullname_public
      * updates their fullname public
+     * @param $new_fullname_public
      */
     public function update_fullname_public($new_fullname_public)
     {
@@ -737,6 +760,7 @@ class User extends database_object
     /**
      * update_website
      * updates their website address
+     * @param $new_website
      */
     public function update_website($new_website)
     {
@@ -751,6 +775,7 @@ class User extends database_object
     /**
      * update_state
      * updates their state
+     * @param $new_state
      */
     public function update_state($new_state)
     {
@@ -764,6 +789,7 @@ class User extends database_object
     /**
      * update_city
      * updates their city
+     * @param $new_city
      */
     public function update_city($new_city)
     {
@@ -850,6 +876,8 @@ class User extends database_object
     /**
      * update_access
      * updates their access level
+     * @param $new_access
+     * @return boolean
      */
     public function update_access($new_access)
     {
@@ -868,6 +896,8 @@ class User extends database_object
         debug_event('user.class', 'Updating access level', 4);
 
         Dba::write($sql);
+
+        return true;
     } // update_access
 
     /*!
@@ -884,6 +914,11 @@ class User extends database_object
      * update_user_stats
      * updates the playcount mojo for this specific user
      * @param string $media_type
+     * @param $media_id
+     * @param string $agent
+     * @param array $location
+     * @param integer $date
+     * @return boolean
      */
     public function update_stats($media_type, $media_id, $agent = '', $location = array(), $date = null)
     {
@@ -900,10 +935,9 @@ class User extends database_object
         $this->set_preferences();
         // If pthreads available, we call save_mediaplay in a new thread to quickly return
         if (class_exists("Thread", false)) {
-            debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
             $thread = new scrobbler_async(Core::get_global('user'), $media);
             if ($thread->start()) {
-                //$thread->join();
+                debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
             } else {
                 debug_event('user.class', 'Error when starting the thread.', 1);
             }
@@ -915,7 +949,7 @@ class User extends database_object
         return true;
     } // update_stats
 
-    /*
+    /**
      * save_mediaplay
      * @param User $user
      * @param Song $media
@@ -982,8 +1016,17 @@ class User extends database_object
     /**
      * create
      * inserts a new user into Ampache
-     * @param null|string $website
+     * @param string $username
+     * @param string $fullname
      * @param string $email
+     * @param string $website
+     * @param string $password
+     * @param integer $access
+     * @param string $state
+     * @param string $city
+     * @param boolean $disabled
+     * @param boolean $encrypted
+     * @return integer
      */
     public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false, $encrypted = false)
     {
@@ -1027,7 +1070,7 @@ class User extends database_object
         $db_results = Dba::write($sql, $params);
 
         if (!$db_results) {
-            return false;
+            return null;
         }
 
         // Get the insert_id
@@ -1036,12 +1079,14 @@ class User extends database_object
         /* Populates any missing preferences, in this case all of them */
         self::fix_preferences($insert_id);
 
-        return $insert_id;
+        return (int) $insert_id;
     } // create
 
     /**
      * update_password
      * updates a users password
+     * @param string $new_password
+     * @param string $hashed_password
      */
     public function update_password($new_password, $hashed_password = null)
     {
@@ -1068,24 +1113,26 @@ class User extends database_object
      * This function sets up the extra variables we need when we are displaying a
      * user for an admin, these should not be normally called when creating a
      * user object
+     * @param boolean $details
      */
     public function format($details = true)
     {
         if (!$this->id) {
             return;
         }
+        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         /* If they have a last seen date */
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
         } else {
-            $this->f_last_seen = date("m\/d\/Y - H:i", (int) $this->last_seen);
+            $this->f_last_seen = get_datetime($time_format, (int) $this->last_seen);
         }
 
         /* If they have a create date */
         if (!$this->create_date) {
             $this->f_create_date = T_('Unknown');
         } else {
-            $this->f_create_date = date("m\/d\/Y - H:i", (int) $this->create_date);
+            $this->f_create_date = get_datetime($time_format, (int) $this->create_date);
         }
 
         $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);
@@ -1178,11 +1225,12 @@ class User extends database_object
     } // access_level_to_name
 
     /**
-      * fix_preferences
+     * fix_preferences
      * This is the new fix_preferences function, it does the following
      * Remove Duplicates from user, add in missing
      * If -1 is passed it also removes duplicates from the `preferences`
      * table.
+     * @param integer $user_id
      */
     public static function fix_preferences($user_id)
     {
@@ -1192,7 +1240,8 @@ class User extends database_object
         $sql        = "SELECT * FROM `user_preference` WHERE `user`='$user_id'";
         $db_results = Dba::read($sql);
 
-        $results = array();
+        $results      = array();
+        $zero_results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $pref_id = $row['preference'];
@@ -1214,7 +1263,6 @@ class User extends database_object
                 "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
-            $zero_results = array();
             while ($row = Dba::fetch_assoc($db_results)) {
                 $key                = $row['preference'];
                 $zero_results[$key] = $row['value'];
@@ -1302,6 +1350,8 @@ class User extends database_object
      * delay how long since last_seen in seconds default of 20 min
      * calcs difference between now and last_seen
      * if less than delay, we consider them still online
+     * @param integer $delay
+     * @return boolean
      */
     public function is_online($delay = 1200)
     {
@@ -1310,7 +1360,9 @@ class User extends database_object
 
     /**
      * get_user_validation
-     *if user exists before activation can be done.
+     * if user exists before activation can be done.
+     * @param string $username
+     * @return mixed
      */
     public static function get_validation($username)
     {
@@ -1329,6 +1381,7 @@ class User extends database_object
      * @param string $limit
      * @param string $type
      * @param boolean $newest
+     * @return array
      */
     public function get_recently_played($limit, $type = '', $newest = true)
     {
@@ -1353,6 +1406,9 @@ class User extends database_object
      * get_ip_history
      * This returns the ip_history from the
      * last AmpConfig::get('user_ip_cardinality') days
+     * @param string $count
+     * @param string $distinct
+     * @return array
      */
     public function get_ip_history($count = '', $distinct = '')
     {
@@ -1397,6 +1453,9 @@ class User extends database_object
     /**
      * get_avatar
      * Get the user avatar
+     * @param boolean $local
+     * @param array $session
+     * @return array
      */
     public function get_avatar($local = false, $session = array())
     {
@@ -1443,6 +1502,7 @@ class User extends database_object
 
     /**
      * @param string $data
+     * @param string $mime
      * @return boolean
      */
     public function update_avatar($data, $mime = '')
@@ -1484,6 +1544,7 @@ class User extends database_object
     /**
      * activate_user
      * the user from public_registration
+     * @param string $username
      */
     public static function activate_user($username)
     {
@@ -1618,6 +1679,7 @@ class User extends database_object
     /**
      * get_display_follow
      * Get html code to display the follow/unfollow link
+     * @param integer $user_id
      * @return string
      */
     public function get_display_follow($user_id = null)

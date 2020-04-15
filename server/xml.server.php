@@ -67,7 +67,7 @@ if ((Core::get_request('action') == 'handshake') && isset($_REQUEST['timestamp']
     $apikey = Core::get_request('auth');
 }
 
-if (!Access::check_network('init-api', $username, 5, null, $apikey)) {
+if (!Access::check_network('init-api', $username, 5, $apikey)) {
     debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
