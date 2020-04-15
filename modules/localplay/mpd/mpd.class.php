@@ -109,6 +109,7 @@ class mpd
     const COMMAND_KILL     = 'kill';
     const COMMAND_PASSWORD = 'password';
     const COMMAND_PING     = 'ping';
+    const COMMAND_SHUTDOWN = 'shutdown';
 
     // Deprecated commands
     const COMMAND_VOLUME      = 'volume';
