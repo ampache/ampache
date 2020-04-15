@@ -45,7 +45,6 @@ class TVShow extends database_object implements library_item
     /**
      * TV Show
      * Takes the ID of the tv show and pulls the info from the db
-     * @param $show_id
      */
     public function __construct($show_id)
     {
@@ -74,8 +73,6 @@ class TVShow extends database_object implements library_item
     /**
      * get_from_name
      * This gets a tv show object based on the tv show name
-     * @param $name
-     * @return TVShow
      */
     public static function get_from_name($name)
     {
@@ -84,7 +81,9 @@ class TVShow extends database_object implements library_item
 
         $row = Dba::fetch_assoc($db_results);
 
-        return new TVShow($row['id']);
+        $object = new TVShow($row['id']);
+
+        return $object;
     } // get_from_name
 
     /**
@@ -168,8 +167,6 @@ class TVShow extends database_object implements library_item
     /**
      * format
      * this function takes the object and reformats some values
-     * @param bool $details
-     * @return bool
      */
     public function format($details = true)
     {
@@ -279,11 +276,6 @@ class TVShow extends database_object implements library_item
      * check
      *
      * Checks for an existing tv show; if none exists, insert one.
-     * @param $name
-     * @param $year
-     * @param $tvshow_summary
-     * @param bool $readonly
-     * @return int|mixed|string|null
      */
     public static function check($name, $year, $tvshow_summary, $readonly = false)
     {
@@ -335,8 +327,6 @@ class TVShow extends database_object implements library_item
     /**
      * update
      * This takes a key'd array of data and updates the current tv show
-     * @param array $data
-     * @return int|mixed|string|null
      */
     public function update(array $data)
     {
@@ -403,11 +393,8 @@ class TVShow extends database_object implements library_item
      * update_tags
      *
      * Update tags of tv shows
-     * @param $tags_comma
-     * @param bool  $override_childs
-     * @param bool  $add_to_childs
-     * @param int $current_id
-     * @param bool $force_update
+     * @param boolean $override_childs
+     * @param boolean $add_to_childs
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
     {

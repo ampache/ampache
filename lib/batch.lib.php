@@ -71,10 +71,8 @@ function get_media_files($media_ids)
  * takes array of full paths to medias
  * zips them and sends them
  *
- * @param string $name name of the zip file to be created
- * @param array $media_files array of full paths to medias to zip create w/ call to get_media_files
- * @throws Exception
- * @throws Exception
+ * @param    string    $name    name of the zip file to be created
+ * @param    array    $media_files    array of full paths to medias to zip create w/ call to get_media_files
  */
 function send_zip($name, $media_files)
 {

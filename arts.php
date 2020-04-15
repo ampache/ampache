@@ -91,7 +91,7 @@ switch ($_REQUEST['action']) {
             $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, $object_type);
 
-            if ($image_data != '') {
+            if ($image_data['object_id']) {
                 $art->insert($image_data, $upload['0']['mime']);
                 show_confirmation(T_('No Problem'), T_('Art has been added'), $burl);
                 break;

@@ -72,9 +72,6 @@ class Repository
 
     /**
      * @param string $table
-     * @param array $field
-     * @param array|string $value
-     * @return array
      */
     private function getRecords($table, $field = null, $value = null)
     {
@@ -93,7 +90,7 @@ class Repository
      *
      * @param string $name
      * @param array $arguments
-     * @return array
+     * @return DatabaseObject
      */
     public function __call($name, $arguments)
     {
@@ -192,9 +189,6 @@ class Repository
      * @param Model $object
      * @param string $property
      * @param string|null $value
-     * @throws \ReflectionException
-     * @throws \ReflectionException
-     * @throws \ReflectionException
      */
     protected function setPrivateProperty(Model $object, $property, $value)
     {

@@ -116,8 +116,6 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * format
      * this function takes the object and reformats some values
-     * @param bool $details
-     * @return bool
      */
     public function format($details = true)
     {
@@ -242,8 +240,6 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * update
      * This takes a key'd array of data and updates the current podcast episode
-     * @param array $data
-     * @return null
      */
     public function update(array $data)
     {
@@ -269,7 +265,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user
+     * @param integer $user
      * @param string $agent
      * @param array $location
      * @return boolean
@@ -298,8 +294,8 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * update_played
      * sets the played flag
-     * @param bool  $new_played
-     * @param int $id
+     * @param boolean $new_played
+     * @param integer $id
      */
     public static function update_played($new_played, $id)
     {
@@ -313,9 +309,9 @@ class Podcast_Episode extends database_object implements media, library_item
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param int $value
-     * @param int $song_id
-     * @param int $level
+     * @param integer $value
+     * @param integer $song_id
+     * @param integer $level
      * @return boolean
      */
     private static function _update_item($field, $value, $song_id, $level)
@@ -348,7 +344,6 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * Get transcode settings.
      * @param string $target
-     * @param string $player
      * @param array $options
      * @return array|boolean
      */
@@ -362,12 +357,10 @@ class Podcast_Episode extends database_object implements media, library_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param string $player
-     * @param bool  $local
-     * @param bool $uid
-     * @param bool $original
+     * @param boolean $local
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
@@ -377,7 +370,6 @@ class Podcast_Episode extends database_object implements media, library_item
 
     /**
      * Get stream types.
-     * @param string $player
      * @return array
      */
     public function get_stream_types($player = null)

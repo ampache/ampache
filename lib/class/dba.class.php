@@ -54,8 +54,6 @@ class Dba
 
     /**
      * query
-     * @param string $sql
-     * @param array $params
      * @return PDOStatement|boolean
      */
     public static function query($sql, $params = array())
@@ -75,8 +73,6 @@ class Dba
 
     /**
      * _query
-     * @param string $sql
-     * @param $params
      * @return PDOStatement|boolean
      */
     private static function _query($sql, $params)
@@ -122,9 +118,6 @@ class Dba
 
     /**
      * read
-     * @param string $sql
-     * @param array $params
-     * @return bool|PDOStatement
      */
     public static function read($sql, $params = null)
     {
@@ -133,8 +126,6 @@ class Dba
 
     /**
      * write
-     * @param string $sql
-     * @param array $params
      * @return PDOStatement|boolean
      */
     public static function write($sql, $params = null)
@@ -147,7 +138,6 @@ class Dba
      *
      * This runs an escape on a variable so that it can be safely inserted
      * into the sql
-     * @param $var
      * @return string
      */
     public static function escape($var)
@@ -170,8 +160,6 @@ class Dba
      * We force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
-     * @param $resource
-     * @param bool $finish
      * @return array
      */
     public static function fetch_assoc($resource, $finish = true)
@@ -200,9 +188,6 @@ class Dba
      * we force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
-     * @param $resource
-     * @param bool $finish
-     * @return array
      */
     public static function fetch_row($resource, $finish = true)
     {
@@ -248,7 +233,6 @@ class Dba
      * This emulates the mysql_num_rows function which is really
      * just a count of rows returned by our select statement, this
      * doesn't work for updates or inserts.
-     * @param $resource
      * @return integer
      */
     public static function num_rows($resource)
@@ -267,7 +251,6 @@ class Dba
      * finish
      *
      * This closes a result handle and clears the memory associated with it
-     * @param $resource
      */
     public static function finish($resource)
     {
@@ -280,7 +263,6 @@ class Dba
      * affected_rows
      *
      * This emulates the mysql_affected_rows function
-     * @param $resource
      * @return integer
      */
     public static function affected_rows($resource)
@@ -332,9 +314,6 @@ class Dba
 
     /**
      * _setup_dbh
-     * @param $dbh
-     * @param string $database
-     * @return bool
      */
     private static function _setup_dbh($dbh, $database)
     {
@@ -428,8 +407,6 @@ class Dba
      *
      * This is called by the class to return the database handle
      * for the specified database, if none is found it connects
-     * @param string $database
-     * @return mixed|PDO|null
      */
     public static function dbh($database = '')
     {
@@ -455,7 +432,6 @@ class Dba
      * disconnect
      *
      * This nukes the dbh connection, this isn't used very often...
-     * @param string $database
      * @return true
      */
     public static function disconnect($database = '')
@@ -500,8 +476,6 @@ class Dba
      * translate_to_mysqlcharset
      *
      * This translates the specified charset to a mysql charset.
-     * @param $charset
-     * @return array
      */
     public static function translate_to_mysqlcharset($charset)
     {

@@ -39,7 +39,6 @@ class Shoutbox
      * Constructor
      * This pulls the shoutbox information from the database and returns
      * a constructed object, uses user_shout table
-     * @param int $shout_id
      */
     public function __construct($shout_id)
     {
@@ -52,8 +51,6 @@ class Shoutbox
     /**
      * has_info
      * does the db call, reads from the user_shout table
-     * @param int $shout_id
-     * @return bool
      */
     private function has_info($shout_id)
     {
@@ -74,7 +71,6 @@ class Shoutbox
      *
      * Cleans out orphaned shoutbox items
      * @param string $object_type
-     * @param string $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -98,9 +94,7 @@ class Shoutbox
      * get_top
      * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
      * number of objects shown
-     * @param int $limit
-     * @param string $username
-     * @return array
+     * @param integer $limit
      */
     public static function get_top($limit, $username = null)
     {
@@ -165,9 +159,6 @@ class Shoutbox
     /**
      * get_object
      * This takes a type and an ID and returns a created object
-     * @param $type
-     * @param $object_id
-     * @return null
      */
     public static function get_object($type, $object_id)
     {
@@ -208,8 +199,6 @@ class Shoutbox
     /**
      * create
      * This takes a key'd array of data as input and inserts a new shoutbox entry, it returns the auto_inc id
-     * @param array $data
-     * @return bool|string|null
      */
     public static function create(array $data)
     {
@@ -262,7 +251,6 @@ class Shoutbox
     /**
      * update
      * This takes a key'd array of data as input and updates a shoutbox entry
-     * @param array $data
      */
     public function update(array $data)
     {
@@ -289,7 +277,6 @@ class Shoutbox
     /**
      * delete
      * this function deletes a specific shoutbox entry
-     * @param int $shout_id
      */
 
     public static function delete($shout_id)
@@ -366,8 +353,8 @@ class Shoutbox
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

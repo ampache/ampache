@@ -74,7 +74,9 @@ class AutoUpdate
      */
     protected static function is_force_git_branch()
     {
-        return (string) AmpConfig::get('github_force_branch');
+        $git_branch = (string) AmpConfig::get('github_force_branch');
+
+        return $git_branch;
     }
 
     /**
@@ -130,7 +132,7 @@ class AutoUpdate
 
     /**
      * Get latest available version from GitHub.
-     * @param bool  $force
+     * @param boolean $force
      * @return string
      */
     public static function get_latest_version($force = false)
@@ -219,7 +221,7 @@ class AutoUpdate
 
     /**
      * Check if an update is available.
-     * @param bool  $force
+     * @param boolean $force
      * @return boolean
      */
     public static function is_update_available($force = false)

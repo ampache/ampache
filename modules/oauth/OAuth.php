@@ -50,8 +50,6 @@ class OAuthToken
     /**
      * key = the token
      * secret = the token secret
-     * @param $key
-     * @param $secret
      */
     public function __construct($key, $secret)
     {
@@ -183,10 +181,6 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
      *
      * Please note that the second encoding MUST NOT happen in the SignatureMethod, as
      * OAuthRequest handles this!
-     * @param $request
-     * @param $consumer
-     * @param $token
-     * @return string
      */
     public function build_signature($request, $consumer, $token)
     {
@@ -295,12 +289,7 @@ class OAuthRequest
 
 
     /**
-     * from_request
      * attempt to build up a request from what was passed to the server
-     * @param string $http_method
-     * @param string $http_url
-     * @param array $parameters
-     * @return OAuthRequest
      */
     public static function from_request($http_method = null, $http_url = null, $parameters = null)
     {
@@ -353,12 +342,6 @@ class OAuthRequest
 
     /**
      * pretty much a helper function to set up the request
-     * @param $consumer
-     * @param string $token
-     * @param string $http_method
-     * @param string $http_url
-     * @param array $parameters
-     * @return OAuthRequest
      */
     public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters = null)
     {
@@ -498,10 +481,6 @@ class OAuthRequest
 
     /**
      * builds the Authorization: header
-     * @param null $realm
-     * @return string
-     * @throws OAuthException
-     * @throws OAuthException
      */
     public function to_header($realm = null)
     {
@@ -550,7 +529,9 @@ class OAuthRequest
 
     public function build_signature($signature_method, $consumer, $token)
     {
-        return $signature_method->build_signature($this, $consumer, $token);
+        $signature = $signature_method->build_signature($this, $consumer, $token);
+
+        return $signature;
     }
 
     /**
@@ -597,9 +578,6 @@ class OAuthServer
     /**
      * process a request_token request
      * returns the request token on success
-     * @param $request
-     * @return
-     * @throws OAuthException
      */
     public function fetch_request_token(&$request)
     {
@@ -614,15 +592,14 @@ class OAuthServer
 
         // Rev A change
         $callback    = $request->get_parameter('oauth_callback');
-        return $this->data_store->new_request_token($consumer, $callback);
+        $new_token = $this->data_store->new_request_token($consumer, $callback);
+
+        return $new_token;
     }
 
     /**
      * process an access_token request
      * returns the access token on success
-     * @param $request
-     * @return
-     * @throws OAuthException
      */
     public function fetch_access_token(&$request)
     {
@@ -637,18 +614,13 @@ class OAuthServer
 
         // Rev A change
         $verifier    = $request->get_parameter('oauth_verifier');
-        return $this->data_store->new_access_token($token, $consumer, $verifier);
+        $new_token = $this->data_store->new_access_token($token, $consumer, $verifier);
+
+        return $new_token;
     }
 
     /**
      * verify an api call, checks all the parameters
-     * @param $request
-     * @return array
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
      */
     public function verify_request(&$request)
     {
@@ -661,13 +633,8 @@ class OAuthServer
     }
 
     // Internals from here
-
     /**
      * version 1
-     * @param $request
-     * @return string
-     * @throws OAuthException
-     * @throws OAuthException
      */
     private function get_version(&$request)
     {
@@ -686,11 +653,6 @@ class OAuthServer
 
     /**
      * figure out the signature with some defaults
-     * @param $request
-     * @return mixed
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
      */
     private function get_signature_method($request)
     {
@@ -718,9 +680,6 @@ class OAuthServer
 
     /**
      * try to find the consumer for the provided request's consumer key
-     * @param $request
-     * @return
-     * @throws OAuthException
      */
     private function get_consumer($request)
     {
@@ -742,11 +701,6 @@ class OAuthServer
 
     /**
      * try to find the token for the provided request's token key
-     * @param $request
-     * @param $consumer
-     * @param string $token_type
-     * @return
-     * @throws OAuthException
      */
     private function get_token($request, $consumer, $token_type="access")
     {
@@ -767,14 +721,6 @@ class OAuthServer
     /**
      * all-in-one function to check the signature on a request
      * should guess the signature method appropriately
-     * @param $request
-     * @param $consumer
-     * @param $token
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
      */
     private function check_signature($request, $consumer, $token)
     {
@@ -806,10 +752,6 @@ class OAuthServer
 
     /**
      * check that the timestamp is new enough
-     * @param $timestamp
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
      */
     private function check_timestamp($timestamp)
     {
@@ -830,13 +772,6 @@ class OAuthServer
 
     /**
      * check that the nonce is not repeated
-     * @param $consumer
-     * @param $token
-     * @param $nonce
-     * @param $timestamp
-     * @throws OAuthException
-     * @throws OAuthException
-     * @throws OAuthException
      */
     private function check_nonce($consumer, $token, $nonce, $timestamp)
     {

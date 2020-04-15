@@ -82,7 +82,6 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
-     * @param $stream_id
      */
     public function __construct($stream_id)
     {
@@ -98,7 +97,6 @@ class Live_Stream extends database_object implements media, library_item
      * format
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
-     * @param bool $details
      * @return true
      */
     public function format($details = true)
@@ -147,7 +145,6 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     /**
-     * @param $name
      * @return array
      */
     public function search_childrens($name)
@@ -158,7 +155,6 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     /**
-     * @param string $filter_type
      * @return array
      */
     public function get_medias($filter_type = null)
@@ -221,8 +217,6 @@ class Live_Stream extends database_object implements media, library_item
      * This is a static function that takes a key'd array for input
      * it depends on a ID element to determine which radio element it
      * should be updating
-     * @param array $data
-     * @return bool|int
      */
     public function update(array $data)
     {
@@ -259,8 +253,6 @@ class Live_Stream extends database_object implements media, library_item
      * create
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
-     * @param array $data
-     * @return bool|PDOStatement
      */
     public static function create(array $data)
     {
@@ -300,7 +292,9 @@ class Live_Stream extends database_object implements media, library_item
         // If we've made it this far everything must be ok... I hope
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " .
             "VALUES (?, ?, ?, ?, ?)";
-        return Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
+        $db_results = Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
+
+        return $db_results;
     } // create
 
     /**
@@ -319,7 +313,6 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * get_stream_types
      * This is needed by the media interface
-     * @param string $player
      * @return array
      */
     public function get_stream_types($player = null)
@@ -330,12 +323,6 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * play_url
      * This is needed by the media interface
-     * @param $oid
-     * @param string $additional_params
-     * @param string $player
-     * @param bool $local
-     * @param string $sid
-     * @param string $force_http
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
@@ -357,9 +344,6 @@ class Live_Stream extends database_object implements media, library_item
      * get_transcode_settings
      *
      * This will probably never be implemented
-     * @param string $target
-     * @param string $player
-     * @param array $options
      * @return false
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())

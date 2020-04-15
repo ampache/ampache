@@ -39,7 +39,6 @@ class Graph
     /**
      * @param string $field
      * @param string $zoom
-     * @return string
      */
     protected function get_sql_date_format($field, $zoom)
     {
@@ -117,13 +116,6 @@ class Graph
 
     /**
      * @param string $fct
-     * @param int $id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
-     * @return
      */
     protected function get_all_type_pts($fct, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
@@ -153,15 +145,6 @@ class Graph
 
     /**
      * @param string $fct
-     * @param \CpChart\Chart\Data $MyData
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
-     * @param bool $show_total
-     * @return
      */
     protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $user_id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
     {
@@ -177,15 +160,7 @@ class Graph
     }
 
     /**
-     * get_user_all_pts
      * @param string $fct
-     * @param \CpChart\Chart\Data $MyData
-     * @param int $user
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_user_all_pts($fct, CpChart\Chart\Data $MyData, $user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
@@ -212,13 +187,6 @@ class Graph
 
     /**
      * @param string $fct
-     * @param \CpChart\Chart\Data $MyData
-     * @param int $catalog
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_catalog_all_pts($fct, CpChart\Chart\Data $MyData, $catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
@@ -348,10 +316,7 @@ class Graph
 
     /**
      * @param string $title
-     * @param \CpChart\Chart\Data $MyData
      * @param string $zoom
-     * @param int $width
-     * @param int $height
      */
     protected function render_graph($title, CpChart\Chart\Data $MyData, $zoom, $width = 0, $height = 0)
     {

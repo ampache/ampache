@@ -39,9 +39,6 @@ class VlcPlayer
      * This is the constructor, it defaults to localhost
      * with port 8080
      * i would change this to another value then standard 8080, it gets used by more things
-     * @param string $h
-     * @param string $pw
-     * @param int $p
      */
     public function __construct($h = 'localhost', $pw = '', $p = 8080)
     {
@@ -55,9 +52,6 @@ class VlcPlayer
      * append a song to the playlist
      * $name    Name to be shown in the playlist
      * $url        URL of the song
-     * @param $name
-     * @param $url
-     * @return bool|null
      */
     public function add($name, $url)
     {
@@ -138,8 +132,6 @@ class VlcPlayer
     /**
      * skip
      * This skips to POS in the playlist
-     * @param $pos
-     * @return bool|null
      */
     public function skip($pos)
     {
@@ -200,10 +192,8 @@ class VlcPlayer
     } // stop
 
     /**
-     * repeat
+      * repeat
      * This toggles the repeat state of VLC
-     * @param $value
-     * @return bool|null
      */
     public function repeat($value)
     {
@@ -219,8 +209,6 @@ class VlcPlayer
     /**
      * random
      * this toggles the random state of VLC
-     * @param $value
-     * @return bool|null
      */
     public function random($value)
     {
@@ -236,8 +224,6 @@ class VlcPlayer
     /**
      * delete_pos
      * This deletes a specific track
-     * @param $track
-     * @return bool|null
      */
     public function delete_pos($track)
     {
@@ -324,8 +310,6 @@ class VlcPlayer
     /**
      * set_volume
      * This sets the volume as best it can, i think it's from 0 to 400, need more testing'
-     * @param $value
-     * @return bool|null
      */
     public function set_volume($value)
     {
@@ -376,12 +360,9 @@ class VlcPlayer
     } // get_tracks
 
     /**
-     * sendCommand
+      * sendCommand
      * This is the core of this library it takes care of sending the HTTP
      * request to the VLC server and getting the response
-     * @param $cmd
-     * @param $args
-     * @return array|void|null
      */
     private function sendCommand($cmd, $args)
     {

@@ -60,9 +60,6 @@ class Session
      * write
      *
      * This saves the session information into the database.
-     * @param $key
-     * @param $value
-     * @return bool
      */
     public static function write($key, $value)
     {
@@ -84,7 +81,6 @@ class Session
      *
      * This removes the specified session from the database.
      * @param string $key
-     * @return bool
      */
     public static function destroy($key)
     {
@@ -136,8 +132,6 @@ class Session
      * read
      *
      * This takes a key and returns the data from the database.
-     * @param $key
-     * @return mixed|string
      */
     public static function read($key)
     {
@@ -148,9 +142,7 @@ class Session
      * _read
      *
      * This returns the specified column from the session row.
-     * @param $key
      * @param string $column
-     * @return mixed|string
      */
     private static function _read($key, $column)
     {
@@ -171,7 +163,6 @@ class Session
      * username
      *
      * This returns the username associated with a session ID, if any
-     * @param $key
      * @return string
      */
     public static function username($key)
@@ -183,8 +174,6 @@ class Session
      * agent
      *
      * This returns the agent associated with a session ID, if any
-     * @param $key
-     * @return mixed|string
      */
     public static function agent($key)
     {
@@ -196,7 +185,6 @@ class Session
      * This is called when you want to create a new session
      * it takes care of setting the initial cookie, and inserting the first
      * chunk of data, nifty ain't it!
-     * @param array $data
      * @return string
      */
     public static function create($data)
@@ -316,8 +304,6 @@ class Session
      * exists
      * based on the type.
      * @param string $type
-     * @param $key
-     * @return bool
      */
     public static function exists($type, $key)
     {
@@ -363,9 +349,7 @@ class Session
      * extend
      *
      * This takes a SID and extends its expiration.
-     * @param $sid
      * @param string $type
-     * @return bool|PDOStatement
      */
     public static function extend($sid, $type = null)
     {
@@ -388,8 +372,6 @@ class Session
      * update_username
      *
      * This takes a SID and update associated username.
-     * @param string $sid
-     * @param string $username
      * @return PDOStatement|boolean
      */
     public static function update_username($sid, $username)
@@ -405,7 +387,6 @@ class Session
      * @param string $sid
      * @param float $latitude
      * @param float $longitude
-     * @param $name
      */
     public static function update_geolocation($sid, $latitude, $longitude, $name)
     {
@@ -501,7 +482,6 @@ class Session
      * It must be used for information only.
      *
      * It also creates a cookie to store used language.
-     * @param string $username
      */
     public static function create_user_cookie($username)
     {
@@ -519,7 +499,6 @@ class Session
      * create_remember_cookie
      *
      * This function just creates the remember me cookie, nothing special.
-     * @param string $username
      */
     public static function create_remember_cookie($username)
     {
@@ -547,9 +526,7 @@ class Session
 
     /**
      * storeTokenForUser
-     * @param string $username
      * @param string $token
-     * @param int $remember_length
      * @return PDOStatement|boolean
      */
     public static function storeTokenForUser($username, $token, $remember_length)

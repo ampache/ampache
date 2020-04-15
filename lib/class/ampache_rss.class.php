@@ -35,7 +35,6 @@ class Ampache_RSS
     /**
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
-     * @param string $type
      */
     public function __construct($type)
     {
@@ -46,7 +45,6 @@ class Ampache_RSS
      * get_xml
      * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
      * and then uses the xmlDATA class to build the document
-     * @param array $params
      * @return string
      */
     public function get_xml($params = null)
@@ -76,7 +74,9 @@ class Ampache_RSS
             }
 
             XML_Data::set_type('rss');
-            return XML_Data::rss_feed($data, $this->get_title(), $pub_date);
+            $xml_document = XML_Data::rss_feed($data, $this->get_title(), $pub_date);
+
+            return $xml_document;
         }
 
         return null;

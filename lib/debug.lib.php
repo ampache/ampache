@@ -308,7 +308,6 @@ function check_php_gd()
 
 /**
  * @param string $val
- * @return int|string
  */
 function return_bytes($val)
 {
@@ -369,9 +368,6 @@ function check_htaccess_play_writable()
  * debug_result
  * Convenience function to format the output.
  * @param string|boolean $status
- * @param string $value
- * @param string $comment
- * @return string
  */
 function debug_result($status = false, $value = null, $comment = '')
 {
@@ -389,10 +385,6 @@ function debug_result($status = false, $value = null, $comment = '')
  * debug_wresult
  *
  * Convenience function to format the output.
- * @param bool $status
- * @param string $value
- * @param string $comment
- * @return string
  */
 function debug_wresult($status = false, $value = null, $comment = '')
 {

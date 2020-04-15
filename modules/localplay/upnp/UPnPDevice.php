@@ -68,13 +68,11 @@ class UPnPDevice
     }
 
     /**
-     * Sending HTTP-Request and returns parsed response
-     *
-     * @param string $method Method name
-     * @param array $arguments Key-Value array
-     * @param string $type
-     * @return bool|string
-     */
+    * Sending HTTP-Request and returns parsed response
+    *
+    * @param string $method     Method name
+    * @param array  $arguments  Key-Value array
+    */
     public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl')
     {
         $body  ='<?xml version="1.0" encoding="utf-8"?>';
@@ -143,12 +141,10 @@ class UPnPDevice
     }
 
     /**
-     * Filters response HTTP-Code from response headers
-     * @param $command
-     * @param string $type
-     * @param int $id
-     * @return mixed             Response code (int) or null if not found
-     */
+    * Filters response HTTP-Code from response headers
+    * @param string $headers    HTTP response headers
+    * @return mixed             Response code (int) or null if not found
+    */
     /*
     private function getResponseCode($headers)
     {

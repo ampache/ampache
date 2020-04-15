@@ -112,7 +112,6 @@ class Catalog_local extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -132,8 +131,6 @@ class Catalog_local extends Catalog
      * Try to figure out which catalog path most closely resembles this one.
      * This is useful when creating a new catalog to make sure we're not
      * doubling up here.
-     * @param $path
-     * @return bool|mixed
      */
     public static function get_from_path($path)
     {
@@ -168,9 +165,6 @@ class Catalog_local extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param $catalog_id
-     * @param array $data
-     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -223,9 +217,6 @@ class Catalog_local extends Catalog
      * Recurses through $this->path and pulls out all mp3s and returns the
      * full path in an array. Passes gather_type to determine if we need to
      * check id3 information against the db.
-     * @param $path
-     * @param $options
-     * @return bool
      */
     public function add_files($path, $options)
     {
@@ -437,7 +428,6 @@ class Catalog_local extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
-     * @param array $options
      */
     public function add_to_catalog($options = null)
     {
@@ -478,7 +468,7 @@ class Catalog_local extends Catalog
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
                     debug_event('local.catalog', 'Processing playlist: ' . $full_file, 5);
-                    $result = self::import_playlist($full_file);
+                    $result = $this->import_playlist($full_file);
                     if ($result['success']) {
                         $file = basename($full_file);
                     } // end if import worked
@@ -560,10 +550,6 @@ class Catalog_local extends Catalog
      * _verify_chunk
      * This verifies a chunk of the catalog, done to save
      * memory
-     * @param $media_type
-     * @param $chunk
-     * @param $chunk_size
-     * @return int
      */
     private function _verify_chunk($media_type, $chunk, $chunk_size)
     {
@@ -669,10 +655,6 @@ class Catalog_local extends Catalog
      * _clean_chunk
      * This is the clean function, its broken into
      * said chunks to try to save a little memory
-     * @param $media_type
-     * @param $chunk
-     * @param $chunk_size
-     * @return array
      */
     private function _clean_chunk($media_type, $chunk, $chunk_size)
     {
@@ -716,9 +698,6 @@ class Catalog_local extends Catalog
      * insert_local_song
      *
      * Insert a song that isn't already in the database.
-     * @param $file
-     * @param array $options
-     * @return bool|int
      */
     private function insert_local_song($file, $options = array())
     {
@@ -831,9 +810,6 @@ class Catalog_local extends Catalog
      * This inserts a video file into the video file table the tag
      * information we can get is super sketchy so it's kind of a crap shoot
      * here
-     * @param $file
-     * @param array $options
-     * @return int
      */
     public function insert_local_video($file, $options = array())
     {
@@ -865,7 +841,7 @@ class Catalog_local extends Catalog
 
     private function sync_podcasts()
     {
-        $podcasts = self::get_podcasts();
+        $podcasts = $this->get_podcasts();
         foreach ($podcasts as $podcast) {
             $podcast->sync_episodes(false);
             $episodes = $podcast->get_episodes('pending');
@@ -880,9 +856,6 @@ class Catalog_local extends Catalog
     /**
      * check_local_mp3
      * Checks the song to see if it's there already returns true if found, false if not
-     * @param $full_file
-     * @param string $gather_type
-     * @return bool
      */
     public function check_local_mp3($full_file, $gather_type = '')
     {

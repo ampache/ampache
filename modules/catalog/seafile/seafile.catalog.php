@@ -142,9 +142,6 @@ class Catalog_Seafile extends Catalog
      * create_type
      *
      * This creates a new catalog type entry for a catalog
-     * @param $catalog_id
-     * @param array $data
-     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -190,7 +187,7 @@ class Catalog_Seafile extends Catalog
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
         } catch (Exception $error) {
             /* HINT: exception error message */
-            AmpError::add('general', sprintf(T_('There was a problem authenticating against the Seafile API: %s'), $error->getMessage()));
+            AmpError::add('general', sprintf(T_('There was a problem authenticating against the Seafile API: %s', $error->getMessage())));
             debug_event('seafile_catalog', 'Exception while Authenticating: ' . $error->getMessage(), 2);
         }
 
@@ -208,7 +205,6 @@ class Catalog_Seafile extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param int $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -231,8 +227,6 @@ class Catalog_Seafile extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
-     * @param array $options
-     * @return bool
      */
     public function add_to_catalog($options = null)
     {
@@ -295,8 +289,6 @@ class Catalog_Seafile extends Catalog
      * _insert_local_song
      *
      * Insert a song that isn't already in the database.
-     * @param $file
-     * @return bool|int
      */
     private function insert_song($file)
     {
@@ -477,8 +469,6 @@ class Catalog_Seafile extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
-     * @param $file
-     * @return bool|mixed
      */
     public function check_remote_song($file)
     {

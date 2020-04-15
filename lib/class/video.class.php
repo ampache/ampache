@@ -218,8 +218,8 @@ class Video extends database_object implements media, library_item
 
     /**
      * Create a video strongly typed object from its id.
-     * @param int $video_id
-     * @return Video
+     * @param integer $video_id
+     * @return \Video
      */
     public static function create_from_id($video_id)
     {
@@ -240,7 +240,6 @@ class Video extends database_object implements media, library_item
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
      * @param int[] $ids
-     * @return bool
      */
     public static function build_cache($ids = array())
     {
@@ -261,7 +260,6 @@ class Video extends database_object implements media, library_item
     /**
      * format
      * This formats a video object so that it is human readable
-     * @param bool $details
      */
     public function format($details = true)
     {
@@ -434,7 +432,6 @@ class Video extends database_object implements media, library_item
 
     /**
      * Get stream types.
-     * @param string $player
      * @return array
      */
     public function get_stream_types($player = null)
@@ -446,11 +443,10 @@ class Video extends database_object implements media, library_item
      * play_url
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param string $player
-     * @param bool  $local
-     * @param bool $uid
+     * @param boolean $local
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
@@ -528,6 +524,8 @@ class Video extends database_object implements media, library_item
             case 'mp4':
             case 'm4v':
                 return 'video/mp4';
+            case 'mkv':
+                return 'video/x-matroska';
             case 'mkv':
                 return 'video/x-matroska';
             case 'mov':
@@ -657,8 +655,7 @@ class Video extends database_object implements media, library_item
     } // update
 
     /**
-     * @param int $video_id
-     * @param Video $new_video
+     * @param integer $video_id
      */
     public static function update_video($video_id, Video $new_video)
     {
@@ -687,8 +684,8 @@ class Video extends database_object implements media, library_item
     /*
      * generate_preview
      * Generate video preview image from a video file
-     * @param int $video_id
-     * @param bool  $overwrite
+     * @param integer $video_id
+     * @param boolean $overwrite
      */
     public static function generate_preview($video_id, $overwrite = false)
     {
@@ -704,7 +701,7 @@ class Video extends database_object implements media, library_item
      * get_random
      *
      * This returns a number of random videos.
-     * @param int $count
+     * @param integer $count
      * @return integer[]
      */
     public static function get_random($count = 1)
@@ -737,7 +734,7 @@ class Video extends database_object implements media, library_item
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user
+     * @param integer $user
      * @param string $agent
      * @param array $location
      * @return boolean
@@ -768,8 +765,8 @@ class Video extends database_object implements media, library_item
      * the ones in the database to see if they have changed
      * it returns false if nothing has changes, or the true
      * if they have. Static because it doesn't need this
-     * @param Video $video
-     * @param Video $new_video
+     * @param \Video $video
+     * @param \Video $new_video
      * @return array
      */
     public static function compare_video_information(Video $video, Video $new_video)
@@ -1060,8 +1057,8 @@ class Video extends database_object implements media, library_item
     /**
      * update_played
      * sets the played flag
-     * @param bool  $new_played
-     * @param int $song_id
+     * @param boolean $new_played
+     * @param integer $song_id
      */
     public static function update_played($new_played, $song_id)
     {
@@ -1075,9 +1072,9 @@ class Video extends database_object implements media, library_item
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param int $value
-     * @param int $song_id
-     * @param int $level
+     * @param integer $value
+     * @param integer $song_id
+     * @param integer $level
      * @return boolean
      */
     private static function _update_item($field, $value, $song_id, $level)

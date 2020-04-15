@@ -74,7 +74,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Constructor
-     * @param int $broadcast_id
+     * @param integer $broadcast_id
      */
     public function __construct($broadcast_id)
     {
@@ -91,7 +91,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast state.
-     * @param bool  $started
+     * @param boolean $started
      * @param string $key
      */
     public function update_state($started, $key =  '')
@@ -104,7 +104,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast listeners.
-     * @param int $listeners
+     * @param integer $listeners
      */
     public function update_listeners($listeners)
     {
@@ -116,7 +116,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update broadcast current song.
-     * @param int $song_id
+     * @param integer $song_id
      */
     public function update_song($song_id)
     {
@@ -300,7 +300,9 @@ class Broadcast extends database_object implements library_item
      */
     public static function get_broadcast_list_sql()
     {
-        return "SELECT `id` FROM `broadcast` WHERE `started` = '1' ";
+        $sql = "SELECT `id` FROM `broadcast` WHERE `started` = '1' ";
+
+        return $sql;
     }
 
     /**
@@ -375,7 +377,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get unbroadcast link.
-     * @param int $broadcast_id
+     * @param integer $broadcast_id
      * @return string
      */
     public static function get_unbroadcast_link($broadcast_id)
@@ -390,7 +392,7 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get broadcasts from an user.
-     * @param int $user_id
+     * @param integer $user_id
      * @return integer[]
      */
     public static function get_broadcasts($user_id)
@@ -413,10 +415,10 @@ class Broadcast extends database_object implements library_item
     /*
      * Get play url.
      *
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
      * @param string $player
-     * @param bool  $local
+     * @param boolean $local
      * @return string
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

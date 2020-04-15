@@ -97,7 +97,7 @@ class Metadata extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
 
     /**
      *
-     * @param int $object
+     * @param integer $object
      */
     public function setObjectId($object)
     {

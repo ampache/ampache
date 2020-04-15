@@ -55,14 +55,9 @@ class vainfo
      * This function just sets up the class, it doesn't pull the information.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @param $file
-     * @param array $gather_types
      * @param string $encoding
      * @param string $encoding_id3v1
      * @param string $encoding_id3v2
-     * @param string $dir_pattern
-     * @param string $file_pattern
-     * @param bool $islocal
      */
     public function __construct($file, $gather_types = array(), $encoding = null, $encoding_id3v1 = null, $encoding_id3v2 = null, $dir_pattern = '', $file_pattern = '', $islocal = true)
     {
@@ -159,8 +154,6 @@ class vainfo
      *
      * Takes an array of tags and attempts to automatically detect their
      * encoding.
-     * @param $tags
-     * @param $mb_order
      * @return string
      */
     private static function _detect_encoding($tags, $mb_order)
@@ -312,8 +305,6 @@ class vainfo
      * file and tries to figure out which tag type(s) it should use. If your
      * tag_order doesn't match anything then it throws up its hands and uses
      * everything in random order.
-     * @param $results
-     * @param string $config_key
      * @return array
      */
     public static function get_tag_type($results, $config_key = 'metadata_order')
@@ -350,9 +341,6 @@ class vainfo
      * This function takes the array from vainfo along with the
      * key we've decided on and the filename and returns it in a
      * sanitized format that Ampache can actually use
-     * @param array $results
-     * @param array $keys
-     * @param string $filename
      * @return array
      */
     public static function clean_tag_info($results, $keys, $filename = null)
@@ -468,8 +456,6 @@ class vainfo
     /**
      * clean_array_tag
      * @param string $field
-     * @param $info
-     * @param $tags
      * @return array
      */
     private static function clean_array_tag($field, $info, $tags)
@@ -528,7 +514,6 @@ class vainfo
      *
      * This processes the raw getID3 output and bakes it.
      * @return array
-     * @throws Exception
      */
     private function _get_tags()
     {
@@ -653,7 +638,6 @@ class vainfo
      *
      * Gather and return the general information about a file (vbr/cbr,
      * sample rate, channels, etc.)
-     * @param $tags
      * @return array
      */
     private function _parse_general($tags)
@@ -712,7 +696,6 @@ class vainfo
     /**
      * _clean_type
      * This standardizes the type that we are given into a recognized type.
-     * @param $type
      * @return string
      */
     private function _clean_type($type)
@@ -745,10 +728,7 @@ class vainfo
      * _cleanup_generic
      *
      * This does generic cleanup.
-     * @param $tags
      * @return array
-     * @throws Exception
-     * @throws Exception
      */
     private function _cleanup_generic($tags)
     {
@@ -790,7 +770,6 @@ class vainfo
      * _cleanup_lyrics
      *
      * This is supposed to handle lyrics3. FIXME: does it?
-     * @param $tags
      * @return array
      */
     private function _cleanup_lyrics($tags)
@@ -811,10 +790,7 @@ class vainfo
      * _cleanup_vorbiscomment
      *
      * Standardizes tag names from vorbis.
-     * @param $tags
      * @return array
-     * @throws Exception
-     * @throws Exception
      */
     private function _cleanup_vorbiscomment($tags)
     {
@@ -886,7 +862,6 @@ class vainfo
      * _cleanup_id3v1
      *
      * Doesn't do much.
-     * @param $tags
      * @return array
      */
     private function _cleanup_id3v1($tags)
@@ -906,10 +881,7 @@ class vainfo
      * _cleanup_id3v2
      *
      * Whee, v2!
-     * @param $tags
      * @return array
-     * @throws Exception
-     * @throws Exception
      */
     private function _cleanup_id3v2($tags)
     {
@@ -1043,7 +1015,6 @@ class vainfo
 
     /**
      * _cleanup_riff
-     * @param $tags
      * @return array
      */
     private function _cleanup_riff($tags)
@@ -1066,7 +1037,6 @@ class vainfo
 
     /**
      * _cleanup_quicktime
-     * @param $tags
      * @return array
      */
     private function _cleanup_quicktime($tags)
@@ -1296,7 +1266,6 @@ class vainfo
 
     /**
      * removeCommonAbbreviations
-     * @param $name
      * @return string
      */
     private function removeCommonAbbreviations($name)
@@ -1310,12 +1279,13 @@ class vainfo
         for ($count=0; $count < $abbr_count;$count++) {
             $commonabbr[$count] = "~\[*|\(*|\<*|\{*\b(?i)" . trim($commonabbr[$count]) . "\b\]*|\)*|\>*|\}*~";
         }
-        return preg_replace($commonabbr, '', $name);
+        $string = preg_replace($commonabbr, '', $name);
+
+        return $string;
     }
 
     /**
      * formatVideoName
-     * @param $name
      * @return string
      */
     private function formatVideoName($name)

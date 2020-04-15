@@ -22,9 +22,6 @@
 
 class Slideshow
 {
-    /**
-     * @return array
-     */
     public static function get_current_slideshow()
     {
         $songs  = Song::get_recently_played((int) Core::get_global('user')->id);
@@ -38,10 +35,6 @@ class Slideshow
         return $images;
     }
 
-    /**
-     * @param $artist_name
-     * @return array
-     */
     protected static function get_images($artist_name)
     {
         $images = array();

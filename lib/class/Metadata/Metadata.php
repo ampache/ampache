@@ -58,7 +58,7 @@ trait Metadata
      */
     protected function initializeMetadata()
     {
-        $this->metadataRepository      = new Repository\Metadata();
+        $this->metadataRepository      = new \Lib\Metadata\Repository\Metadata();
         $this->metadataFieldRepository = new \Lib\Metadata\Repository\MetadataField();
     }
 
@@ -88,7 +88,7 @@ trait Metadata
      */
     public function addMetadata(\Lib\Metadata\Model\MetadataField $field, $data)
     {
-        $metadata = new Model\Metadata();
+        $metadata = new \Lib\Metadata\Model\Metadata();
         $metadata->setField($field);
         $metadata->setObjectId($this->id);
         $metadata->setType(get_class($this));
@@ -112,7 +112,7 @@ trait Metadata
     /**
      *
      * @param string $name
-     * @param bool  $public
+     * @param boolean $public
      * @return \Lib\Metadata\Model\MetadataField
      */
     protected function createField($name, $public)
@@ -130,7 +130,7 @@ trait Metadata
     /**
      *
      * @param string $propertie
-     * @param bool  $public
+     * @param boolean $public
      * @return Model\MetadataField
      */
     public function getField($propertie, $public = true)

@@ -702,7 +702,7 @@ if ($transcode && isset($transcoder)) {
         }
         fclose($transcoder['stderr']);
     }
-}
+};
 
 // If this is a democratic playlist remove the entry.
 // We do this regardless of play amount.

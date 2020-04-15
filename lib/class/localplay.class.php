@@ -37,7 +37,6 @@ class Localplay
      * This must be called with a Localplay type, it then loads the config
      * file for the specified type and attempts to load in the function
      * map, the preferences and the template
-     * @param $type
      */
     public function __construct($type)
     {
@@ -126,9 +125,6 @@ class Localplay
      * This function takes the track name and checks to see if 'skip'
      * is supported in the current player, if so it returns a 'skip to'
      * link, otherwise it returns just the text
-     * @param $name
-     * @param $id
-     * @return string
      */
     public function format_name($name, $id)
     {
@@ -182,8 +178,6 @@ class Localplay
      * is_enabled
      * This returns true or false depending on if the specified controller
      * is currently enabled
-     * @param $controller
-     * @return bool
      */
     public static function is_enabled($controller)
     {
@@ -205,7 +199,9 @@ class Localplay
     public function install()
     {
         // Run the player's installer
-        return $this->_player->install();
+        $installed = $this->_player->install();
+
+        return $installed;
     } // install
 
     /**
@@ -276,8 +272,6 @@ class Localplay
 
     /**
      * add
-     * @param $object
-     * @return bool
      */
     public function add($object)
     {
@@ -289,8 +283,6 @@ class Localplay
     /**
      * add_url
      * This directly adds an URL to the Localplay module.  Is more betterer.
-     * @param Stream_URL $url
-     * @return bool
      */
     public function add_url(Stream_URL $url)
     {
@@ -307,8 +299,7 @@ class Localplay
      * repeat
      * This turns the repeat feature of a Localplay method on or
      * off, takes a 0/1 value
-     * @param bool  $state
-     * @return
+     * @param boolean $state
      */
     public function repeat($state)
     {
@@ -322,11 +313,10 @@ class Localplay
     } // repeat
 
     /**
-     * random
+      * random
      * This turns on the random feature of a Localplay method
      * It takes a 0/1 value
-     * @param bool  $state
-     * @return
+     * @param boolean $state
      */
     public function random($state)
     {
@@ -381,8 +371,6 @@ class Localplay
      * This isn't a required function, it sets the volume to a specified value
      * as passed in the variable it is a 0 - 100 scale the controller is
      * responsible for adjusting the scale if nessecary
-     * @param $value
-     * @return bool
      */
     public function volume_set($value)
     {
@@ -454,8 +442,6 @@ class Localplay
     /**
      * skip
      * This isn't a required function, it tells the daemon to skip to the specified song
-     * @param $track_id
-     * @return bool
      */
     public function skip($track_id)
     {
@@ -522,7 +508,9 @@ class Localplay
      */
     public function get_instances()
     {
-        return $this->_player->get_instances();
+        $instances = $this->_player->get_instances();
+
+        return $instances;
     } // get_instances
 
     /**
@@ -539,20 +527,17 @@ class Localplay
     /**
      * get_instance
      * This returns the specified instance
-     * @param $uid
-     * @return
      */
     public function get_instance($uid)
     {
-        return $this->_player->get_instance($uid);
+        $data = $this->_player->get_instance($uid);
+
+        return $data;
     } // get_instance
 
     /**
      * update_instance
      * This updates the specified instance with a named array of data (_POST most likely)
-     * @param $uid
-     * @param array $data
-     * @return
      */
     public function update_instance($uid, $data)
     {
@@ -564,7 +549,6 @@ class Localplay
     /**
      * add_instance
      * This adds a new instance for the current controller type
-     * @param array $data
      */
     public function add_instance($data)
     {
@@ -574,7 +558,6 @@ class Localplay
     /**
      * delete_instance
      * This removes an instance (it actually calls the players function)
-     * @param $instance_uid
      */
     public function delete_instance($instance_uid)
     {
@@ -584,7 +567,6 @@ class Localplay
     /**
      * set_active_instance
      * This sets the active instance of the Localplay controller
-     * @param $instance
      */
     public function set_active_instance($instance)
     {
@@ -595,8 +577,6 @@ class Localplay
      * delete_track
      * This removes songs from the players playlist it takes a single ID as provided
      * by the get command
-     * @param $object_id
-     * @return bool
      */
     public function delete_track($object_id)
     {
@@ -633,15 +613,15 @@ class Localplay
      */
     public function get_instance_fields()
     {
-        return $this->_player->instance_fields();
+        $fields = $this->_player->instance_fields();
+
+        return $fields;
     } // get_instance_fields
 
     /**
      * get_user_state
      * This function returns a user friendly version
      * of the current player state
-     * @param $state
-     * @return
      */
     public function get_user_state($state)
     {

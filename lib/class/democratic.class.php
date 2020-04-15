@@ -49,7 +49,6 @@ class Democratic extends Tmp_Playlist
     /**
      * constructor
      * We need a constructor for this class. It does it's own thing now
-     * @param $democratic_id
      */
     public function __construct($democratic_id)
     {
@@ -65,8 +64,6 @@ class Democratic extends Tmp_Playlist
     /**
      * build_vote_cache
      * This builds a vote cache of the objects we've got in the playlist
-     * @param $ids
-     * @return bool
      */
     public static function build_vote_cache($ids)
     {
@@ -193,7 +190,9 @@ class Democratic extends Tmp_Playlist
             $democratic_id = $row['id'];
         }
 
-        return new Democratic($democratic_id);
+        $object = new Democratic($democratic_id);
+
+        return $object;
     } // get_current_playlist
 
     /**
@@ -204,7 +203,7 @@ class Democratic extends Tmp_Playlist
      *
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
-     * @param int $limit
+     * @param integer $limit
      * @return integer[]
      */
     public function get_items($limit = null)
@@ -259,7 +258,6 @@ class Democratic extends Tmp_Playlist
      * Most of the time this will just be the top entry, but if there is a
      * base_playlist and no items in the playlist then it returns a random
      * entry from the base_playlist
-     * @param int $offset
      * @return integer|null
      */
     public function get_next_object($offset = 0)
@@ -294,9 +292,6 @@ class Democratic extends Tmp_Playlist
     /**
      * get_uid_from_object_id
      * This takes an object_id and an object type and returns the ID for the row
-     * @param $object_id
-     * @param string $object_type
-     * @return mixed
      */
     public function get_uid_from_object_id($object_id, $object_type = 'song')
     {
@@ -324,7 +319,9 @@ class Democratic extends Tmp_Playlist
         // Convert cooldown time to a timestamp in the past
         $cool_time = time() - ($this->cooldown * 60);
 
-        return Stats::get_object_history(Core::get_global('user')->id, $cool_time);
+        $song_ids = Stats::get_object_history(Core::get_global('user')->id, $cool_time);
+
+        return $song_ids;
     } // get_cool_songs
 
     /**
@@ -333,7 +330,6 @@ class Democratic extends Tmp_Playlist
      * This adds the specified objects to the tmp_playlist and adds a 'vote'
      * by this user, naturally it checks to make sure that the user hasn't
      * already voted on any of these objects
-     * @param $items
      */
     public function add_vote($items)
     {
@@ -350,9 +346,6 @@ class Democratic extends Tmp_Playlist
     /**
      * has_vote
      * This checks to see if the current user has already voted on this object
-     * @param $object_id
-     * @param string $type
-     * @return bool
      */
     public function has_vote($object_id, $type = 'song')
     {
@@ -385,9 +378,6 @@ class Democratic extends Tmp_Playlist
     /**
      * _add_vote
      * This takes a object id and user and actually inserts the row
-     * @param $object_id
-     * @param string $object_type
-     * @return bool
      */
     private function _add_vote($object_id, $object_type = 'song')
     {
@@ -425,8 +415,6 @@ class Democratic extends Tmp_Playlist
      * This is called to remove a vote by a user for an object, it uses the object_id
      * As that's what we'll have most the time, no need to check if they've got an existing
      * vote for this, just remove anything that is there
-     * @param $row_id
-     * @return bool
      */
     public function remove_vote($row_id)
     {
@@ -450,8 +438,6 @@ class Democratic extends Tmp_Playlist
     /**
      * delete_votes
      * This removes the votes for the specified object on the current playlist
-     * @param $row_id
-     * @return bool
      */
     public function delete_votes($row_id)
     {
@@ -469,9 +455,6 @@ class Democratic extends Tmp_Playlist
     /**
      * delete_from_oid
      * This takes an OID and type and removes the object from the democratic playlist
-     * @param $oid
-     * @param $object_type
-     * @return bool
      */
     public function delete_from_oid($oid, $object_type)
     {
@@ -489,8 +472,6 @@ class Democratic extends Tmp_Playlist
     /**
      * delete
      * This deletes a democratic playlist
-     * @param $democratic_id
-     * @return bool
      */
     public static function delete($democratic_id)
     {
@@ -510,8 +491,6 @@ class Democratic extends Tmp_Playlist
     /**
      * update
      * This updates an existing democratic playlist item. It takes a key'd array just like the create
-     * @param array $data
-     * @return bool
      */
     public function update(array $data)
     {
@@ -531,7 +510,6 @@ class Democratic extends Tmp_Playlist
     /**
      * create
      * This is the democratic play create function it inserts this into the democratic table
-     * @param array $data
      * @return PDOStatement|boolean
      */
     public static function create($data)
@@ -620,8 +598,7 @@ class Democratic extends Tmp_Playlist
     /**
      * get_vote
      * This returns the current count for a specific song
-     * @param int $id
-     * @return array|mixed
+     * @param integer $id
      */
     public function get_vote($id)
     {
@@ -643,8 +620,6 @@ class Democratic extends Tmp_Playlist
      * get_voters
      * This returns the users that voted for the specified object
      * This is an array of user ids
-     * @param $object_id
-     * @return array|mixed
      */
     public function get_voters($object_id)
     {

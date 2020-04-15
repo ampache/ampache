@@ -24,7 +24,7 @@ class WebPlayer
 {
     /**
      * Check if the playlist is a radio playlist.
-     * @param Stream_Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return boolean
      */
     public static function is_playlist_radio($playlist)
@@ -42,7 +42,7 @@ class WebPlayer
 
     /**
      * Check if the playlist is a video playlist.
-     * @param Stream_Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return boolean
      */
     public static function is_playlist_video($playlist)
@@ -52,7 +52,7 @@ class WebPlayer
 
     /**
      * Get types information for an item.
-     * @param playable_item $item
+     * @param \playable_item $item
      * @param string $force_type
      * @return array
      */
@@ -165,7 +165,7 @@ class WebPlayer
 
     /**
      * Get all supplied types for a playlist.
-     * @param Stream_Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @return array
      */
     public static function get_supplied_types($playlist)
@@ -187,7 +187,7 @@ class WebPlayer
 
     /**
      * Get add_media javascript.
-     * @param Stream_Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @param string $callback_container
      * @return string
      */
@@ -208,7 +208,7 @@ class WebPlayer
 
     /**
      * Get play_next javascript.
-     * @param Stream_Playlist $playlist
+     * @param \Stream_Playlist $playlist
      * @param string $callback_container
      * @return string
      */
@@ -229,7 +229,7 @@ class WebPlayer
 
     /**
      * Get media javascript parameters.
-     * @param playable_item $item
+     * @param \playable_item $item
      * @param string $force_type
      * @return string
      */

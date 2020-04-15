@@ -119,8 +119,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * add_instance
      * This takes key'd data and inserts a new MPD instance
-     * @param array $data
-     * @return bool|PDOStatement
      */
     public function add_instance($data)
     {
@@ -148,10 +146,8 @@ class AmpacheMpd extends localplay_controller
     } // add_instance
 
     /**
-     * delete_instance
+      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param $uid
-     * @return bool
      */
     public function delete_instance($uid)
     {
@@ -187,8 +183,6 @@ class AmpacheMpd extends localplay_controller
      * get_instance
      * This returns the specified instance and all it's pretty variables
      * If no instance is passed current is used
-     * @param string $instance
-     * @return array
      */
     public function get_instance($instance = '')
     {
@@ -206,9 +200,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param $uid
-     * @param array $data
-     * @return bool
      */
     public function update_instance($uid, $data)
     {
@@ -242,9 +233,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
-     * @param $uid
-     * @param string $user_id
-     * @return bool
      */
     public function set_active_instance($uid, $user_id = '')
     {
@@ -273,8 +261,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * add_url
      * This is the new hotness
-     * @param Stream_URL $url
-     * @return bool
      */
     public function add_url(Stream_URL $url)
     {
@@ -302,8 +288,6 @@ class AmpacheMpd extends localplay_controller
      * delete_track
      * This must take a single ID (as returned by the get function)
      * and delete it from the current playlist
-     * @param $object_id
-     * @return
      */
     public function delete_track($object_id)
     {
@@ -342,8 +326,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * skip
      * This tells MPD to skip to the specified song
-     * @param $song
-     * @return bool
      */
     public function skip($song)
     {
@@ -403,11 +385,9 @@ class AmpacheMpd extends localplay_controller
 
 
     /**
-     * volume
-     * This tells MPD to set the volume to the parameter
-     * @param $volume
-     * @return
-     */
+    * volume
+    * This tells MPD to set the volume to the parameter
+    */
     public function volume($volume)
     {
         return $this->_mpd->SetVolume($volume);
@@ -416,9 +396,7 @@ class AmpacheMpd extends localplay_controller
     /**
      * repeat
      * This tells MPD to set the repeating the playlist (i.e. loop) to either
-     * on or off.
-     * @param $state
-     * @return
+    * on or off.
      */
     public function repeat($state)
     {
@@ -428,9 +406,7 @@ class AmpacheMpd extends localplay_controller
     /**
      * random
      * This tells MPD to turn on or off the playing of songs from the
-     * playlist in random order.
-     * @param $onoff
-     * @return
+    * playlist in random order.
      */
     public function random($onoff)
     {
@@ -440,9 +416,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * move
      * This tells MPD to move a song
-     * @param $source
-     * @param $destination
-     * @return
      */
     public function move($source, $destination)
     {

@@ -143,7 +143,6 @@ class Daap_Api
 
     /**
      * server_info (Based on the server_info part of the forkedd-daapd project)
-     * @param $input
      */
     public static function server_info($input)
     {
@@ -182,7 +181,6 @@ class Daap_Api
 
     /**
      * content_codes
-     * @param $input
      */
     public static function content_codes($input)
     {
@@ -202,7 +200,6 @@ class Daap_Api
 
     /**
      * login
-     * @param $input
      */
     public static function login($input)
     {
@@ -280,7 +277,6 @@ class Daap_Api
 
     /**
      * logout
-     * @param $input
      */
     public static function logout($input)
     {
@@ -297,7 +293,6 @@ class Daap_Api
 
     /**
      * update
-     * @param $input
      */
     public static function update($input)
     {
@@ -333,8 +328,6 @@ class Daap_Api
 
     /**
      * databases
-     * @param $input
-     * @return bool
      */
     public static function databases($input)
     {
@@ -853,9 +846,7 @@ class Daap_Api
 
     /**
      * @param string $tag
-     * @param int $code
-     * @param string $msg
-     * @return bool
+     * @param integer $code
      */
     public static function createApiError($tag, $code, $msg = '')
     {

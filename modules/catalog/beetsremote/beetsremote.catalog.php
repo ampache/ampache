@@ -47,10 +47,12 @@ class Catalog_beetsremote extends Beets\Catalog
      */
     public function get_create_help()
     {
-        return "<ul>" .
+        $help = "<ul>" .
                 "<li>Install Beets web plugin: http://beets.readthedocs.org/en/latest/plugins/web.html</li>" .
                 "<li>Start Beets web server</li>" .
                 "<li>Specify URI including port (like http://localhost:8337). It will be shown when starting Beets web in console.</li></ul>";
+
+        return $help;
     }
 
     /**
@@ -93,9 +95,6 @@ class Catalog_beetsremote extends Beets\Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param $catalog_id
-     * @param array $data
-     * @return bool
      */
     public static function create_type($catalog_id, $data)
     { // TODO: This Method should be required / provided by parent

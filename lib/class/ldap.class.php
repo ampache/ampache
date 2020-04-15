@@ -25,7 +25,6 @@
  *
  * @param array $array
  * @param string $callback
- * @return array
  */
 function array_filter_key($array, $callback)
 {
@@ -116,11 +115,6 @@ class LDAP
      * the given parameters are plausible and can be used to open a
      * connection as soon as one is needed.
      * @return resource|false
-     * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
      */
     private static function connect()
     {
@@ -148,11 +142,8 @@ class LDAP
 
     /**
      * Binds to the LDAP
-     * @param $link
-     * @param string $username
      * @param string $password
-     * @throws LDAPException
-     * @throws LDAPException
+     * @param string $username
      */
     private static function bind($link, $username = null, $password = null)
     {
@@ -170,7 +161,6 @@ class LDAP
 
     /**
      * Unbinds from the LDAP
-     * @param $link
      */
     private static function unbind($link)
     {
@@ -180,14 +170,6 @@ class LDAP
 
     /**
      * Read attributes for a DN from the LDAP
-     * @param $link
-     * @param $dn
-     * @param array $attrs
-     * @param string $filter
-     * @return mixed
-     * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
      */
     private static function read($link, $dn, $attrs = [], $filter = 'objectClass=*')
     {
@@ -207,15 +189,9 @@ class LDAP
 
     /**
      * Search for a DN in the LDAP
-     * @param $link
-     * @param $base_dn
      * @param string $filter
-     * @param bool  $only_one_result
+     * @param boolean $only_one_result
      * @return array
-     * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
-     * @throws LDAPException
      */
     private static function search($link, $base_dn, $filter, $only_one_result = true)
     {

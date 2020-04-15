@@ -36,8 +36,6 @@ class Userflag extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
-     * @param $object_id
-     * @param $type
      */
     public function __construct($object_id, $type)
     {
@@ -48,12 +46,10 @@ class Userflag extends database_object
     } // Constructor
 
     /**
-     * build_cache
+      * build_cache
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
      * @param string $type
-     * @param array $ids
-     * @param int $user_id
      * @return boolean
      */
     public static function build_cache($type, $ids, $user_id = null)
@@ -95,7 +91,6 @@ class Userflag extends database_object
      *
      * Remove userflag for items that no longer exist.
      * @param string $object_type
-     * @param string $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -117,8 +112,8 @@ class Userflag extends database_object
 
     /**
      * get_flag
-     * @param bool |integer $user_id
-     * @param bool  $get_date
+     * @param boolean|integer $user_id
+     * @param boolean $get_date
      * @return boolean|array
      */
     public function get_flag($user_id = null, $get_date = null)
@@ -154,9 +149,8 @@ class Userflag extends database_object
      * set_flag
      * This function sets the user flag for the current object.
      * If no user_id is passed in, we use the currently logged in user.
-     * @param bool  $flagged
-     * @param int $user_id
-     * @return bool
+     * @param boolean $flagged
+     * @param integer $user_id
      */
     public function set_flag($flagged, $user_id = null)
     {
@@ -221,10 +215,8 @@ class Userflag extends database_object
     /**
      * set_flag_for_group
      * This function sets the user flag for an album group.
-     * @param bool  $flagged
-     * @param $album
-     * @param int $user_id
-     * @return bool
+     * @param boolean $flagged
+     * @param integer $user_id
      */
     public static function set_flag_for_group($flagged, $album, $user_id = null)
     {
@@ -312,14 +304,11 @@ class Userflag extends database_object
 
         return $sql;
     }
-
     /**
      * get_latest
      * Get the latest user flagged objects
      * @param string $type
      * @param string $user_id
-     * @param string $count
-     * @param string $offset
      * @return array
      */
     public static function get_latest($type = null, $user_id = null, $count = '', $offset = '')
@@ -356,9 +345,6 @@ class Userflag extends database_object
      * show
      * This takes an id and a type and displays the flag state
      * enabled.
-     * @param $object_id
-     * @param $type
-     * @return bool
      */
     public static function show($object_id, $type)
     {
@@ -374,8 +360,8 @@ class Userflag extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

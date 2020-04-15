@@ -44,7 +44,6 @@ class Core
      * This function automatically loads any missing classes as they are
      * needed so that we don't use a million include statements which load
      * more than we need.
-     * @param $class
      */
     public static function autoload($class)
     {
@@ -83,7 +82,6 @@ class Core
      * Return a $GLOBAL variable instead of calling directly
      *
      * @param string $variable
-     * @return mixed
      */
     public static function get_global($variable)
     {
@@ -210,7 +208,7 @@ class Core
     /**
      * Place a new key on a specific position in array
      * @param array $array
-     * @param int $position
+     * @param integer $position
      * @param array $add
      * @return array
      */
@@ -257,9 +255,6 @@ class Core
      * form_register
      * This registers a form with a SID, inserts it into the session
      * variables and then returns a string for use in the HTML form
-     * @param $name
-     * @param string $type
-     * @return string
      */
     public static function form_register($name, $type = 'post')
     {
@@ -295,9 +290,6 @@ class Core
      * This takes a form name and then compares it with the posted sid, if
      * they don't match then it returns false and doesn't let the person
      * continue
-     * @param $name
-     * @param string $type
-     * @return bool
      */
     public static function form_verify($name, $type = 'post')
     {
@@ -350,11 +342,7 @@ class Core
      * This generates a cryptographically secure token.
      * Returns a token of the required bytes length, as a string. Returns false
      * if it could not generate a cryptographically secure token.
-     * @param int $length
-     * @return bool|string
-     * @return bool|string
-     * @throws Exception
-     * @throws Exception
+     * @param integer $length
      */
     public static function gen_secure_token($length)
     {
@@ -441,8 +429,6 @@ class Core
     /**
      * get_filesize
      * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
-     * @param $filename
-     * @return bool|false|float|int|string
      */
     public static function get_filesize($filename)
     {
@@ -509,9 +495,7 @@ class Core
     /**
      * is_class_typeof
      *
-     * @param $classname
      * @param string $typeofname
-     * @return bool
      */
     private static function is_class_typeof($classname, $typeofname)
     {

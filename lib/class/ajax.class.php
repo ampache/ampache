@@ -207,7 +207,7 @@ class Ajax
       * set_include_override
      * This sets the including div override, used only one place. Kind of a
      * hack.
-     * @param bool  $value
+     * @param boolean $value
      */
     public static function set_include_override($value)
     {
@@ -215,12 +215,11 @@ class Ajax
     } // set_include_override
 
     /**
-     * start_container
+      * start_container
      * This checks to see if we're AJAXin'. If we aren't then it echoes out
      * the html needed to start a container that can be replaced by Ajax.
      * @param string $name
      * @param string $class
-     * @return bool
      */
     public static function start_container($name, $class = '')
     {

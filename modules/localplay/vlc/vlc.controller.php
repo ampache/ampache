@@ -118,8 +118,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * add_instance
      * This takes key'd data and inserts a new VLC instance
-     * @param array $data
-     * @return bool|PDOStatement
      */
     public function add_instance($data)
     {
@@ -132,8 +130,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param $uid
-     * @return bool
      */
     public function delete_instance($uid)
     {
@@ -164,9 +160,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param $uid
-     * @param array $data
-     * @return bool
      */
     public function update_instance($uid, $data)
     {
@@ -192,11 +185,9 @@ class AmpacheVlc extends localplay_controller
     } // instance_fields
 
     /**
-     * get_instance
-     * This returns a single instance and all it's variables
-     * @param string $instance
-     * @return array
-     */
+    * get_instance
+    * This returns a single instance and all it's variables
+    */
     public function get_instance($instance = '')
     {
         $instance   = $instance ? $instance : AmpConfig::get('vlc_active');
@@ -211,9 +202,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
-     * @param $uid
-     * @param string $user_id
-     * @return bool
      */
     public function set_active_instance($uid, $user_id = '')
     {
@@ -254,8 +242,6 @@ class AmpacheVlc extends localplay_controller
      * delete_track
      * This must take an array of ID's (as passed by get function) from Ampache
      * and delete them from VLC webinterface
-     * @param $object_id
-     * @return bool
      */
     public function delete_track($object_id)
     {
@@ -322,8 +308,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * skip
      * This tells VLC to skip to the specified song
-     * @param $song
-     * @return bool
      */
     public function skip($song)
     {
@@ -399,12 +383,10 @@ class AmpacheVlc extends localplay_controller
     } // pause
 
     /**
-     * volume
-     * This tells VLC to set the volume to the specified amount this
-     * is 0-400 procent
-     * @param $volume
-     * @return bool
-     */
+    * volume
+    * This tells VLC to set the volume to the specified amount this
+    * is 0-400 procent
+    */
     public function volume($volume)
     {
         if ($this->_vlc->set_volume($volume) === null) {
@@ -417,8 +399,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * repeat
      * This tells VLC to set the repeating the playlist (i.e. loop) to either on or off
-     * @param $state
-     * @return bool
      */
     public function repeat($state)
     {
@@ -432,8 +412,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * random
      * This tells VLC to turn on or off the playing of songs from the playlist in random order
-     * @param $onoff
-     * @return bool
      */
     public function random($onoff)
     {

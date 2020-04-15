@@ -165,7 +165,6 @@ class Upload
     /**
      * check
      * Can you even upload?
-     * @param $catalog_id
      * @return Catalog|null
      */
     public static function check($catalog_id)
@@ -191,13 +190,12 @@ class Upload
     /**
      * rerror
      * @param string $file
-     * @return bool
      */
     public static function rerror($file = null)
     {
         if ($file !== null) {
             if (unlink($file) === false) {
-                throw new RuntimeException('The file handle ' . $file . ' could not be unlinked');
+                throw new \RuntimeException('The file handle ' . $file . ' could not be unlinked');
             }
         }
         header(Core::get_server('SERVER_PROTOCOL') . ' 500 File Upload Error', true, 500);
@@ -211,7 +209,6 @@ class Upload
     /**
      * get_root
      * @param Catalog $catalog
-     * @param string $username
      * @return string
      */
     public static function get_root($catalog = null, $username = null)

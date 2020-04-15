@@ -82,7 +82,6 @@ class Label extends database_object implements library_item
 
     /**
      * __construct
-     * @param $label_id
      */
     public function __construct($label_id)
     {
@@ -187,7 +186,6 @@ class Label extends database_object implements library_item
 
     /**
      * search_childrens
-     * @param $name
      * @return array
      */
     public function search_childrens($name)
@@ -212,31 +210,29 @@ class Label extends database_object implements library_item
 
     /**
      * can_edit
-     * @param string $user_id
      * @return boolean
      */
-    public function can_edit($user_id = null)
+    public function can_edit($user = null)
     {
-        if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
+        if (!$user) {
+            $user = Core::get_global('user')->id;
         }
 
-        if (!$user_id) {
+        if (!$user) {
             return false;
         }
 
         if (AmpConfig::get('upload_allow_edit')) {
-            if ($this->user !== null && $user_id == $this->user) {
+            if ($this->user !== null && $user == $this->user) {
                 return true;
             }
         }
 
-        return Access::check('interface', 50, $user_id);
+        return Access::check('interface', 50, $user);
     }
 
     /**
      * update
-     * @param array $data
      * @return integer
      */
     public function update(array $data)
@@ -267,7 +263,6 @@ class Label extends database_object implements library_item
 
     /**
      * create
-     * @param array $data
      * @return string
      */
     public static function create(array $data)
@@ -289,7 +284,9 @@ class Label extends database_object implements library_item
                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date));
 
-        return Dba::insert_id();
+        $label_id = Dba::insert_id();
+
+        return $label_id;
     }
 
     public static function lookup(array $data, $id = 0)
@@ -332,7 +329,7 @@ class Label extends database_object implements library_item
 
     /**
      * add_artist_assoc
-     * @param int $artist_id
+     * @param integer $artist_id
      * @return boolean|PDOStatement
      */
     public function add_artist_assoc($artist_id)
@@ -344,7 +341,7 @@ class Label extends database_object implements library_item
 
     /**
      * remove_artist_assoc
-     * @param int $artist_id
+     * @param integer $artist_id
      * @return boolean|PDOStatement
      */
     public function remove_artist_assoc($artist_id)
@@ -409,7 +406,7 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @param int $artist_id
+     * @param integer $artist_id
      * @return array
      */
     public static function get_labels($artist_id)
@@ -429,9 +426,6 @@ class Label extends database_object implements library_item
     /**
      * get_display
      * This returns a csv formated version of the labels that we are given
-     * @param $labels
-     * @param bool $link
-     * @return string
      */
     public static function get_display($labels, $link = false)
     {
@@ -461,10 +455,8 @@ class Label extends database_object implements library_item
     /**
      * update_label_list
      * Update the labels list based on commated list (ex. label1,label2,label3,..)
-     * @param $labels_comma
-     * @param int $artist_id
-     * @param bool  $overwrite
-     * @return bool
+     * @param integer $artist_id
+     * @param boolean $overwrite
      */
     public static function update_label_list($labels_comma, $artist_id, $overwrite)
     {

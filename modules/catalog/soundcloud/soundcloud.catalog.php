@@ -65,10 +65,12 @@ class Catalog_soundcloud extends Catalog
      */
     public function get_create_help()
     {
-        return "<ul><li>Go to http://soundcloud.com/you/apps/new</li>" .
+        $help = "<ul><li>Go to http://soundcloud.com/you/apps/new</li>" .
             "<li>Give a name to your application and click Register</li>" .
             "<li>Add the following OAuth redirect URIs: <i>" . $this->getRedirectUri() . "</i></li>" .
             "<li>Copy your Client ID and Secret here, and Save the app</li></ul>";
+
+        return $help;
     } // get_create_help
 
     /**
@@ -132,9 +134,6 @@ class Catalog_soundcloud extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
-     * @param int $catalog_id
-     * @throws Exception
-     * @throws Exception
      */
     public function __construct($catalog_id = null)
     {
@@ -163,9 +162,6 @@ class Catalog_soundcloud extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
-     * @param $catalog_id
-     * @param array $data
-     * @return bool
      */
     public static function create_type($catalog_id, $data)
     {
@@ -228,8 +224,6 @@ class Catalog_soundcloud extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
-     * @param array $options
-     * @return bool
      */
     public function add_to_catalog($options = null)
     {
@@ -411,8 +405,6 @@ class Catalog_soundcloud extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
-     * @param array $song
-     * @return bool|mixed
      */
     public function check_remote_song($song)
     {

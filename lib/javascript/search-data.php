@@ -22,10 +22,6 @@
 
 require_once '../init.php';
 
-/**
- * @param $array
- * @return string
- */
 function arrayToJSON($array)
 {
     $json = '{ ';

@@ -57,7 +57,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * Constructor
-     * @param int $channel_id
+     * @param integer $channel_id
      */
     public function __construct($channel_id)
     {
@@ -92,8 +92,8 @@ class Channel extends database_object implements media, library_item
 
     /**
      * update_listeners
-     * @param int $listeners
-     * @param bool  $addition
+     * @param integer $listeners
+     * @param boolean $addition
      */
     public function update_listeners($listeners, $addition = false)
     {
@@ -247,7 +247,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * format
-     * @param bool  $details
+     * @param boolean $details
      */
     public function format($details = true)
     {
@@ -352,8 +352,8 @@ class Channel extends database_object implements media, library_item
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool  $force
+     * @param integer $thumb
+     * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -364,7 +364,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_target_object
-     * @return Playlist
+     * @return \Playlist
      */
     public function get_target_object()
     {
@@ -419,7 +419,9 @@ class Channel extends database_object implements media, library_item
      */
     public static function get_channel_list_sql()
     {
-        return "SELECT `id` FROM `channel` ";
+        $sql = "SELECT `id` FROM `channel` ";
+
+        return $sql;
     }
 
     /**
@@ -672,10 +674,8 @@ class Channel extends database_object implements media, library_item
 
     /**
      * play_url
-     * @param int $oid
+     * @param integer $oid
      * @param string $additional_params
-     * @param string $player
-     * @param bool $local
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = null, $local = false)
@@ -687,7 +687,6 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_stream_types
-     * @param string $player
      * @return string[]
      */
     public function get_stream_types($player = null)

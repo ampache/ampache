@@ -31,10 +31,6 @@ class UPnPPlaylist
     /*
      * Playlist is its own for each UPnP device
      */
-    /**
-     * UPnPPlaylist constructor.
-     * @param $deviceGUID
-     */
     public function __construct($deviceGUID)
     {
         $this->_deviceGUID = $deviceGUID;
@@ -44,19 +40,12 @@ class UPnPPlaylist
         }
     }
 
-    /**
-     * @param $name
-     * @param $link
-     */
     public function Add($name, $link)
     {
         $this->_songs[] = array('name' => $name, 'link' => $link);
         $this->PlayListSave();
     }
 
-    /**
-     * @param $track
-     */
     public function RemoveTrack($track)
     {
         unset($this->_songs[$track - 1]);
@@ -75,9 +64,6 @@ class UPnPPlaylist
         return $this->_songs;
     }
 
-    /**
-     * @return mixed
-     */
     public function CurrentItem()
     {
         $item = $this->_songs[$this->_current];
@@ -85,17 +71,11 @@ class UPnPPlaylist
         return $item;
     }
 
-    /**
-     * @return int
-     */
     public function CurrentPos()
     {
         return $this->_current;
     }
 
-    /**
-     * @return bool
-     */
     public function Next()
     {
         if ($this->_current < count($this->_songs) - 1) {
@@ -108,9 +88,6 @@ class UPnPPlaylist
         return false;
     }
 
-    /**
-     * @return |null
-     */
     public function NextItem()
     {
         if ($this->_current < count($this->_songs) - 1) {
@@ -122,9 +99,6 @@ class UPnPPlaylist
         return null;
     }
 
-    /**
-     * @return bool
-     */
     public function Prev()
     {
         if ($this->_current > 0) {
@@ -137,10 +111,6 @@ class UPnPPlaylist
         return false;
     }
 
-    /**
-     * @param $pos
-     * @return bool
-     */
     public function Skip($pos)
     {
         // note that pos is started from 1 not from zero

@@ -87,7 +87,6 @@ class AmpacheFlattr
     /**
      * display_user_field
      * This display the module in user page
-     * @param library_item|null $libitem
      */
     public function display_user_field(library_item $libitem = null)
     {
@@ -102,7 +101,6 @@ class AmpacheFlattr
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
     public function load($user)
     {

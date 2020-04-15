@@ -32,10 +32,6 @@ class WebDAV_Directory extends DAV\Collection
 {
     private $libitem;
 
-    /**
-     * WebDAV_Directory constructor.
-     * @param library_item $libitem
-     */
     public function __construct(library_item $libitem)
     {
         $this->libitem = $libitem;
@@ -66,8 +62,7 @@ class WebDAV_Directory extends DAV\Collection
 
     /**
      * getChild
-     * @param $name
-     * @return WebDAV_File|WebDAV_Directory
+     * @return \WebDAV_File|\WebDAV_Directory
      */
     public function getChild($name)
     {
@@ -91,8 +86,7 @@ class WebDAV_Directory extends DAV\Collection
 
     /**
      * getChildFromArray
-     * @param $array
-     * @return WebDAV_File|WebDAV_Directory
+     * @return \WebDAV_File|\WebDAV_Directory
      */
     public static function getChildFromArray($array)
     {
@@ -110,7 +104,6 @@ class WebDAV_Directory extends DAV\Collection
 
     /**
      * childExists
-     * @param $name
      * @return boolean
      */
     public function childExists($name)

@@ -55,14 +55,13 @@ class Upnp_Api
         // Create uuid based on host
         $key     = 'ampache_' . AmpConfig::get('http_host');
         $hash    = hash('md5', $key);
-        return substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20);
+        $uuidstr = substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20);
+
+        return $uuidstr;
     }
 
     /**
      * @param string $buf
-     * @param int $delay
-     * @param string $host
-     * @param int $port
      */
     private static function udpSend($buf, $delay=15, $host="239.255.255.250", $port=1900)
     {
@@ -317,8 +316,6 @@ class Upnp_Api
 
     /**
      * @param string $prmPath
-     * @param string $prmQuery
-     * @return array|null
      */
     public static function _musicMetadata($prmPath, $prmQuery = '')
     {
@@ -734,8 +731,6 @@ class Upnp_Api
 
     /**
      * @param string $prmPath
-     * @param string $prmQuery
-     * @return array|null
      */
     public static function _videoMetadata($prmPath, $prmQuery = '')
     {
@@ -1002,7 +997,6 @@ class Upnp_Api
     /**
      * @param Artist $artist
      * @param string $parent
-     * @return array
      */
     private static function _itemArtist($artist, $parent)
     {
@@ -1019,7 +1013,6 @@ class Upnp_Api
     /**
      * @param Album $album
      * @param string $parent
-     * @return array
      */
     private static function _itemAlbum($album, $parent)
     {
@@ -1038,9 +1031,7 @@ class Upnp_Api
     }
 
     /**
-     * @param $playlist
      * @param string $parent
-     * @return array
      */
     private static function _itemPlaylist($playlist, $parent)
     {
@@ -1057,7 +1048,6 @@ class Upnp_Api
     /**
      * @param Search $playlist
      * @param string $parent
-     * @return array
      */
     private static function _itemSmartPlaylist($playlist, $parent)
     {
@@ -1072,9 +1062,7 @@ class Upnp_Api
     }
 
     /**
-     * @param Song $song
      * @param string $parent
-     * @return array
      */
     public static function _itemSong($song, $parent)
     {
@@ -1111,7 +1099,6 @@ class Upnp_Api
     /**
      * @param Live_Stream $radio
      * @param string $parent
-     * @return array
      */
     public static function _itemLiveStream($radio, $parent)
     {
@@ -1135,9 +1122,7 @@ class Upnp_Api
     }
 
     /**
-     * @param $tvshow
      * @param string $parent
-     * @return array
      */
     private static function _itemTVShow($tvshow, $parent)
     {
@@ -1154,7 +1139,6 @@ class Upnp_Api
     /**
      * @param TVShow_Season $season
      * @param string $parent
-     * @return array
      */
     private static function _itemTVShowSeason($season, $parent)
     {
@@ -1169,9 +1153,7 @@ class Upnp_Api
     }
 
     /**
-     * @param $video
      * @param string $parent
-     * @return array
      */
     private static function _itemVideo($video, $parent)
     {
@@ -1198,7 +1180,6 @@ class Upnp_Api
     }
 
     /**
-     * @param $podcast
      * @param string $parent
      * @return array
      */

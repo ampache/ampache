@@ -70,12 +70,6 @@ class AmpacheTwitter
         return true;
     } // upgrade
 
-    /**
-     * external_share
-     * @param string $url
-     * @param string $text
-     * @return string
-     */
     public function external_share($url, $text)
     {
         $share = "https://twitter.com/share";
@@ -92,7 +86,6 @@ class AmpacheTwitter
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
     public function load($user)
     {

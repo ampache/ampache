@@ -61,8 +61,6 @@ class fs
 
     /**
      * @param string $path
-     * @return string
-     * @throws Exception
      */
     protected function id($path)
     {

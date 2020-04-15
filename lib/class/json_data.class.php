@@ -90,7 +90,9 @@ class JSON_Data
      */
     public static function error($code, $string)
     {
-        return json_encode(array("error" => array("code" => $code, "message" => $string)), JSON_PRETTY_PRINT);
+        $JSON = json_encode(array("error" => array("code" => $code, "message" => $string)), JSON_PRETTY_PRINT);
+
+        return $JSON;
     } // error
 
     /**
@@ -117,8 +119,7 @@ class JSON_Data
      * tags_string
      *
      * This returns the formatted 'tags' string for an JSON document
-     * @param $tags
-     * @return false|string
+     *
      */
     private static function tags_string($tags)
     {
@@ -152,7 +153,6 @@ class JSON_Data
      *
      * @param Song $song
      * @param array $playlist_data
-     * @return mixed|string
      */
     private static function playlist_song_tracks_string($song, $playlist_data)
     {
@@ -237,9 +237,7 @@ class JSON_Data
      * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
-     * @param array $artists (description here...)
-     * @param array $include
-     * @param bool $user_id
+     * @param    array    $artists    (description here...)
      * @return    string    return JSON
      */
     public static function artists($artists, $include = [], $user_id = false)
@@ -290,9 +288,7 @@ class JSON_Data
      *
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
-     * @param array $albums (description here...)
-     * @param array $include
-     * @param bool $user_id
+     * @param    array    $albums    (description here...)
      * @return    string    return JSON
      */
     public static function albums($albums, $include = [], $user_id = false)
@@ -360,8 +356,7 @@ class JSON_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param array $playlists (description here...)
-     * @param bool $create
+     * @param    array    $playlists    (description here...)
      * @return    string    return xml
      */
     public static function playlists($playlists, $create = false)
@@ -422,10 +417,6 @@ class JSON_Data
      *
      * This returns a JSON document from an array of song ids.
      * (Spiffy isn't it!)
-     * @param $songs
-     * @param array $playlist_data
-     * @param bool $user_id
-     * @return false|string
      */
     public static function songs($songs, $playlist_data=array(), $user_id = false)
     {
@@ -524,7 +515,7 @@ class JSON_Data
      * This builds the JSON document for displaying video objects
      *
      * @param    array    $videos    (description here...)
-     * @param int $user_id
+     * @param integer $user_id
      * @return    string    return JSON
      */
     public static function videos($videos, $user_id)
@@ -558,11 +549,11 @@ class JSON_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param integer[] $object_ids Object IDs
-     * @param bool $user_id
+     * @param  integer[] $object_ids    Object IDs
+     * @param  integer   $user_id
      * @return string    return JSON
      */
-    public static function democratic($object_ids=array(), $user_id = false)
+    public static function democratic($object_ids=array(), $user_id)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();

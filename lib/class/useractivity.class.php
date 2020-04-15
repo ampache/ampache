@@ -40,7 +40,7 @@ class Useractivity extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
-     * @param int $useract_id
+     * @param integer $useract_id
      */
     public function __construct($useract_id)
     {
@@ -80,14 +80,13 @@ class Useractivity extends database_object
 
         return true;
     }
-
     /**
      * garbage_collection
      *
      * Remove activities for items that no longer exist.
      * @param string $object_type
-     * @param int $object_id
-     * @return void
+     * @param integer $object_id
+     * @return PDOStatement|boolean
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -109,11 +108,11 @@ class Useractivity extends database_object
 
     /**
      * post_activity
-     * @param int $user_id
+     * @param integer $user_id
      * @param string $action
      * @param string $object_type
-     * @param int $object_id
-     * @param int $date
+     * @param integer $object_id
+     * @param integer $date
      * @return PDOStatement|boolean
      */
     public static function post_activity($user_id, $action, $object_type, $object_id, $date = null)
@@ -190,9 +189,8 @@ class Useractivity extends database_object
     /**
      * del_activity
      * Deletes last activity
-     * @param int $object_id
+     * @param integer $object_id
      * @param string $object_type
-     * @return bool|PDOStatement
      */
     public static function del_activity($object_id, $object_type = 'song')
     {
@@ -203,9 +201,9 @@ class Useractivity extends database_object
 
     /**
      * get_activities
-     * @param int $user_id
-     * @param int $limit
-     * @param int $since
+     * @param integer $user_id
+     * @param integer $limit
+     * @param integer $since
      * @return integer[]
      */
     public static function get_activities($user_id, $limit = 0, $since = 0)
@@ -232,9 +230,9 @@ class Useractivity extends database_object
 
     /**
      * get_friends_activities
-     * @param int $user_id
-     * @param int $limit
-     * @param int $since
+     * @param integer $user_id
+     * @param integer $limit
+     * @param integer $since
      * @return integer[]
      */
     public static function get_friends_activities($user_id, $limit = 0, $since = 0)
@@ -327,8 +325,8 @@ class Useractivity extends database_object
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

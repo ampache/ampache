@@ -35,7 +35,6 @@ class Tag extends database_object implements library_item
     /**
      * constructor
      * This takes a tag id and returns all of the relevant information
-     * @param $tag_id
      */
     public function __construct($tag_id)
     {
@@ -54,13 +53,14 @@ class Tag extends database_object implements library_item
      * construct_from_name
      * This attempts to construct the tag from a name, rather then the ID
      * @param string $name
-     * @return Tag
      */
     public static function construct_from_name($name)
     {
         $tag_id = self::tag_exists($name);
 
-        return new Tag($tag_id);
+        $tag = new Tag($tag_id);
+
+        return $tag;
     } // construct_from_name
 
     /**
@@ -68,8 +68,6 @@ class Tag extends database_object implements library_item
      * This takes an array of object ids and caches all of their information
      * in a single query, cuts down on the connections
      * @params array $ids
-     * @param $ids
-     * @return bool
      */
     public static function build_cache($ids)
     {
@@ -93,8 +91,6 @@ class Tag extends database_object implements library_item
      * build_map_cache
      * This builds a cache of the mappings for the specified object, no limit is given
      * @param string $type
-     * @param $ids
-     * @return bool
      * @params array $ids
      */
     public static function build_map_cache($type, $ids)
@@ -141,10 +137,8 @@ class Tag extends database_object implements library_item
      * This is a wrapper function, it figures out what we need to add, be it a tag
      * and map, or just the mapping
      * @param string $type
-     * @param int $object_id
+     * @param integer $object_id
      * @param string $value
-     * @param bool $user
-     * @return bool|mixed|string|null
      */
     public static function add($type, $object_id, $value, $user = true)
     {
@@ -192,7 +186,6 @@ class Tag extends database_object implements library_item
      * add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
      * @param string $value
-     * @return bool|string|null
      */
     public static function add_tag($value)
     {
@@ -213,7 +206,6 @@ class Tag extends database_object implements library_item
      * update
      * Update the name of the tag
      * @param array $data
-     * @return bool
      */
     public function update(array $data)
     {
@@ -256,8 +248,8 @@ class Tag extends database_object implements library_item
     /**
      * merge
      * merges this tag to another one.
-     * @param int $merge_to
-     * @param bool  $is_persistent
+     * @param integer $merge_to
+     * @param boolean $is_persistent
      */
     public function merge($merge_to, $is_persistent)
     {
@@ -309,8 +301,7 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param integer|string $object_id
      * @param integer|string $tag_id
-     * @param bool $user
-     * @return bool|string|null
+     * @param integer $user
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
@@ -410,7 +401,6 @@ class Tag extends database_object implements library_item
      * tag_exists
      * This checks to see if a tag exists, this has nothing to do with objects or maps
      * @param string $value
-     * @return array|mixed
      */
     public static function tag_exists($value)
     {
@@ -433,10 +423,9 @@ class Tag extends database_object implements library_item
      * This looks to see if the current mapping of the current object of the current tag of the current
      * user exists, lots of currents... taste good in scones.
      * @param string $type
-     * @param int $object_id
-     * @param int $tag_id
-     * @param int $user
-     * @return bool|mixed
+     * @param integer $object_id
+     * @param integer $tag_id
+     * @param integer $user
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
@@ -459,8 +448,8 @@ class Tag extends database_object implements library_item
      * get_top_tags
      * This gets the top tags for the specified object using limit
      * @param string $type
-     * @param int $object_id
-     * @param int $limit
+     * @param integer $object_id
+     * @param integer $limit
      * @return array
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
@@ -492,8 +481,7 @@ class Tag extends database_object implements library_item
      * get_object_tags
      * Display all tags that apply to matching target type of the specified id
      * @param string $type
-     * @param int $object_id
-     * @return array|bool
+     * @param integer $object_id
      */
     public static function get_object_tags($type, $object_id)
     {
@@ -519,9 +507,6 @@ class Tag extends database_object implements library_item
      * get_tag_objects
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      * @param string $type
-     * @param $tag_id
-     * @param string $count
-     * @param string $offset
      * @return integer[]|false
      */
     public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
@@ -559,10 +544,9 @@ class Tag extends database_object implements library_item
      * get_tags
      * This is a non-object non type dependent function that just returns tags
      * we've got, it can take filters (this is used by the tag cloud)
-     * @param string $type
-     * @param int $limit
+     * @param array $type
+     * @param integer $limit
      * @param string $order
-     * @return array|mixed
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
@@ -608,9 +592,8 @@ class Tag extends database_object implements library_item
      * it also takes a type so that it knows how to return it, this is used
      * by the formating functions of the different objects
      * @param array $tags
-     * @param bool  $link
+     * @param boolean $link
      * @param string $filter_type
-     * @return string
      */
     public static function get_display($tags, $link = false, $filter_type = '')
     {
@@ -648,8 +631,8 @@ class Tag extends database_object implements library_item
      *  (ex. tag1,tag2,tag3,..)
      * @param string $tags_comma
      * @param string $type
-     * @param int $object_id
-     * @param bool  $overwrite
+     * @param integer $object_id
+     * @param boolean $overwrite
      */
     public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
@@ -727,8 +710,7 @@ class Tag extends database_object implements library_item
      * This returns the count for the all objects associated with this tag
      * If a type is specific only counts for said type are returned
      * @param string $type
-     * @param int $user_id
-     * @return array
+     * @param integer $user_id
      */
     public function count($type = '', $user_id = 0)
     {
@@ -760,9 +742,7 @@ class Tag extends database_object implements library_item
      * remove_map
      * This will only remove tag maps for the current user
      * @param string $type
-     * @param int $object_id
-     * @param bool $user
-     * @return bool
+     * @param integer $object_id
      */
     public function remove_map($type, $object_id, $user = true)
     {
@@ -891,8 +871,8 @@ class Tag extends database_object implements library_item
 
     /**
      * display_art
-     * @param int $thumb
-     * @param bool  $force
+     * @param integer $thumb
+     * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -904,7 +884,7 @@ class Tag extends database_object implements library_item
     /**
      * can_edit_tag_map
      * @param string $object_type
-     * @param int $object_id
+     * @param integer $object_id
      * @param string|boolean $user
      * @return boolean
      */
@@ -937,8 +917,8 @@ class Tag extends database_object implements library_item
     /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return boolean|PDOStatement
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

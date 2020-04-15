@@ -88,10 +88,6 @@ class AmpacheYourls
         return true;
     } // upgrade
 
-    /**
-     * @param string $url
-     * @return bool|string
-     */
     public function shortener($url)
     {
         if (empty($this->yourls_domain) || empty($this->yourls_api_key)) {
@@ -128,7 +124,6 @@ class AmpacheYourls
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
-     * @return bool
      */
     public function load($user)
     {
@@ -161,3 +156,4 @@ class AmpacheYourls
         return true;
     } // load
 } // end AmpacheYourls
+;

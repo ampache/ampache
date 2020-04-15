@@ -45,9 +45,6 @@ class Search extends playlist_object
 
     /**
      * constructor
-     * @param int $search_id
-     * @param string $searchtype
-     * @param User $user
      */
     public function __construct($search_id = null, $searchtype = 'song', $user = null)
     {
@@ -1155,7 +1152,6 @@ class Search extends playlist_object
     /**
      * format
      * Gussy up the data
-     * @param bool $details
      */
     public function format($details = true)
     {
@@ -1212,7 +1208,7 @@ class Search extends playlist_object
      * set_last_count
      *
      * Returns the name of the saved search corresponding to the given ID
-     * @param int $count
+     * @param integer $count
      */
     private function set_last_count($count)
     {
@@ -1225,7 +1221,7 @@ class Search extends playlist_object
      *
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function get_random_items($limit = null)
@@ -1279,7 +1275,6 @@ class Search extends playlist_object
      *
      * Iterates over our array of types to find out the basetype for
      * the passed string.
-     * @param $name
      * @return string|false
      */
     public function name_to_basetype($name)
@@ -1416,7 +1411,6 @@ class Search extends playlist_object
      * @param array $data
      * @param string|false $type
      * @param array $operator
-     * @return array|bool|int|string|string[]|null
      */
     private function _mangle_data($data, $type, $operator)
     {
@@ -2540,10 +2534,6 @@ class Search extends playlist_object
      * year_search
      *
      * Build search rules for year -> year searching.
-     * @param $fromYear
-     * @param $toYear
-     * @param $size
-     * @param $offset
      * @return array
      */
     public static function year_search($fromYear, $toYear, $size, $offset)

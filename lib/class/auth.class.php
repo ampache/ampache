@@ -45,8 +45,7 @@ class Auth
      * This is the function used for the Ajax logouts, if no id is passed
      * it tries to find one from the session,
      * @param string $key
-     * @param bool  $relogin
-     * @return bool
+     * @param boolean $relogin
      */
     public static function logout($key = '', $relogin = true)
     {
@@ -87,9 +86,7 @@ class Auth
      * based on what happens when we try to do the auth.
      * @param string $username
      * @param string $password
-     * @param bool  $allow_ui
-     * @param string $token
-     * @param string $salt
+     * @param boolean $allow_ui
      * @return array
      */
     public static function login($username, $password, $allow_ui = false, $token = null, $salt = null)

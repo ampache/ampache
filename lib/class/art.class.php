@@ -75,7 +75,7 @@ class Art extends database_object
      * Constructor
      * Art constructor, takes the UID of the object and the
      * object type.
-     * @param int $uid
+     * @param integer $uid
      * @param string $type
      * @param string $kind
      */
@@ -91,7 +91,6 @@ class Art extends database_object
 
     /**
      * @param string $type
-     * @return bool
      */
     public static function is_valid_type($type)
     {
@@ -154,7 +153,7 @@ class Art extends database_object
     /**
      * set_enabled
      * Changes the value of enabled
-     * @param bool |null $value
+     * @param boolean|null $value
      */
     public static function set_enabled($value = null)
     {
@@ -220,7 +219,7 @@ class Art extends database_object
         }
         if ($test) {
             if (imagedestroy($image) === false) {
-                throw new RuntimeException('The image handle ' . $image . ' could not be destroyed');
+                throw new \RuntimeException('The image handle ' . $image . ' could not be destroyed');
             }
         }
 
@@ -233,7 +232,7 @@ class Art extends database_object
      * look in the database and will return the thumb if it
      * exists, if it doesn't depending on settings it will try
      * to create it.
-     * @param bool  $raw
+     * @param boolean $raw
      * @return string
      */
     public function get($raw = false)
@@ -307,7 +306,7 @@ class Art extends database_object
 
     /**
      * This check if an object has an associated image in db.
-     * @param int $object_id
+     * @param integer $object_id
      * @param string $object_type
      * @param string $kind
      * @return boolean
@@ -510,7 +509,7 @@ class Art extends database_object
      * @param string $type
      * @param string $uid
      * @param string $kind
-     * @param bool  $autocreate
+     * @param boolean $autocreate
      * @return false|string
      */
     public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
@@ -553,11 +552,8 @@ class Art extends database_object
     /**
      * write_to_dir
      * @param string $source
-     * @param $sizetext
      * @param string $type
-     * @param int $uid
-     * @param $kind
-     * @return bool
+     * @param integer $uid
      */
     private static function write_to_dir($source, $sizetext, $type, $uid, $kind)
     {
@@ -578,11 +574,8 @@ class Art extends database_object
 
     /**
      * read_from_dir
-     * @param $sizetext
      * @param string $type
-     * @param int $uid
-     * @param $kind
-     * @return string|null
+     * @param integer $uid
      */
     private static function read_from_dir($sizetext, $type, $uid, $kind)
     {
@@ -662,7 +655,6 @@ class Art extends database_object
      * @param string $source
      * @param string $mime
      * @param array $size
-     * @return bool
      */
     public function save_thumb($source, $mime, $size)
     {
@@ -915,7 +907,7 @@ class Art extends database_object
     /**
      * url
      * This returns the constructed URL for the art in question
-     * @param int $uid
+     * @param integer $uid
      * @param string $type
      * @param string $sid
      * @param integer|null $thumb
@@ -992,7 +984,6 @@ class Art extends database_object
      * garbage_collection
      * This cleans up art that no longer has a corresponding object
      * @param string $object_type
-     * @param string $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -1033,8 +1024,8 @@ class Art extends database_object
     /**
      * Migrate an object associate images to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
@@ -1047,8 +1038,8 @@ class Art extends database_object
     /**
      * Duplicate an object associate images to a new object
      * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
+     * @param integer $old_object_id
+     * @param integer $new_object_id
      * @return PDOStatement|boolean
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
@@ -1073,7 +1064,7 @@ class Art extends database_object
      * gather
      * This tries to get the art in question
      * @param array $options
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather($options = array(), $limit = 0)
@@ -1123,12 +1114,16 @@ class Art extends database_object
                     debug_event('art.class', "Method used: $method_name", 4);
                     // Some of these take options!
                     switch ($method_name) {
-                        case 'gather_google':
-                        case 'gather_musicbrainz':
-                        case 'gather_lastfm':
+                    case 'gather_lastfm':
                         $data = $this->{$method_name}($limit, $options);
                     break;
-                        default:
+                    case 'gather_google':
+                        $data = $this->{$method_name}($limit, $options);
+                    break;
+                    case 'gather_musicbrainz':
+                        $data = $this->{$method_name}($limit, $options);
+                    break;
+                    default:
                         $data = $this->{$method_name}($limit);
                     break;
                 }
@@ -1174,7 +1169,7 @@ class Art extends database_object
      * gather_musicbrainz
      * This function retrieves art based on MusicBrainz' Advanced
      * Relationships
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      * @return array
      */
@@ -1327,7 +1322,7 @@ class Art extends database_object
      * This returns the art from the folder of the files
      * If a limit is passed or the preferred filename is found the current
      * results set is returned
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather_folder($limit = 5)
@@ -1454,7 +1449,7 @@ class Art extends database_object
      * gather_tags
      * This looks for the art in the meta-tags of the file
      * itself
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather_tags($limit = 5)
@@ -1487,7 +1482,7 @@ class Art extends database_object
 
     /**
      * Gather tags from audio files.
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
     public function gather_song_tags($limit = 5)
@@ -1566,7 +1561,7 @@ class Art extends database_object
      * gather_google
      * Raw google search to retrieve the art, not very reliable
      *
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -1630,7 +1625,7 @@ class Art extends database_object
      * gather_lastfm
      * This returns the art from lastfm. It doesn't currently require an
      * account but may in the future.
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      * @return array
      */
@@ -1688,7 +1683,6 @@ class Art extends database_object
 
     /**
      * Gather metadata from plugin.
-     * @param $plugin
      * @param string $type
      * @param array $options
      * @return array
@@ -1757,7 +1751,7 @@ class Art extends database_object
 
     /**
      * Get thumb size from thumb type.
-     * @param int $thumb
+     * @param integer $thumb
      * @return array
      */
     public static function get_thumb_size($thumb)
@@ -1830,7 +1824,7 @@ class Art extends database_object
     /**
      * Display an item art.
      * @param library_item $item
-     * @param int $thumb
+     * @param integer $thumb
      * @param string $link
      * @return boolean
      */
@@ -1842,11 +1836,11 @@ class Art extends database_object
     /**
      * Display an item art.
      * @param string $object_type
-     * @param int $object_id
+     * @param integer $object_id
      * @param string $name
-     * @param int $thumb
+     * @param integer $thumb
      * @param string $link
-     * @param bool  $show_default
+     * @param boolean $show_default
      * @param string $kind
      * @return boolean
      */
