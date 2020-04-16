@@ -58,7 +58,7 @@
     <?php UI::show_box_bottom(); ?>
 
 <?php if ((string) AmpConfig::get('cron_cache') !== '') { ?>
-    <?php UI::show_box_top(T_('Ampache Cron Details'), 'box'); ?>
+    <?php UI::show_box_top(T_('Ampache Cron'), 'box'); ?>
         <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime($time_format, get_cron_date()); ?></div>
         <br />
     <?php UI::show_box_bottom();
