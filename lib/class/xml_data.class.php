@@ -176,7 +176,7 @@ class XML_Data
             $atags = array();
             foreach ($tags as $tag_id => $data) {
                 if (array_key_exists($data['id'], $atags)) {
-                    $atags[$data['id']]['count'] ++;
+                    $atags[$data['id']]['count']++;
                 } else {
                     $atags[$data['id']] = array('name' => $data['name'],
                         'count' => 1);
@@ -328,11 +328,7 @@ class XML_Data
     public static function indexes($objects, $object_type, $full_xml = true)
     {
         if (count($objects) > self::$limit || self::$offset > 0) {
-            if (null !== self::$limit) {
-                $objects = array_splice($objects, self::$offset, self::$limit);
-            } else {
-                $objects = array_splice($objects, self::$offset);
-            }
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($objects) . "</total_count>\n";
 
@@ -464,11 +460,7 @@ class XML_Data
             $include = explode(',', $include);
         }
         if (count($artists) > self::$limit || self::$offset > 0) {
-            if (null !== self::$limit) {
-                $artists = array_splice($artists, self::$offset, self::$limit);
-            } else {
-                $artists = array_splice($artists, self::$offset);
-            }
+            $artists = array_splice($artists, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($artists) . "</total_count>\n";
 
@@ -538,11 +530,7 @@ class XML_Data
         }
 
         if (count($albums) > self::$limit || self::$offset > 0) {
-            if (null !== self::$limit) {
-                $albums = array_splice($albums, self::$offset, self::$limit);
-            } else {
-                $albums = array_splice($albums, self::$offset);
-            }
+            $albums = array_splice($albums, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($albums) . "</total_count>\n";
 
@@ -610,11 +598,7 @@ class XML_Data
     public static function playlists($playlists)
     {
         if (count($playlists) > self::$limit || self::$offset > 0) {
-            if (null !== self::$limit) {
-                $playlists = array_slice($playlists, self::$offset, self::$limit);
-            } else {
-                $playlists = array_slice($playlists, self::$offset);
-            }
+            $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($playlists) . "</total_count>\n";
 
@@ -674,11 +658,7 @@ class XML_Data
     public static function songs($songs, $playlist_data = array(), $user_id = false, $full_xml = true)
     {
         if (count($songs) > self::$limit || self::$offset > 0) {
-            if (null !== self::$limit) {
-                $songs = array_slice($songs, self::$offset, self::$limit);
-            } else {
-                $songs = array_slice($songs, self::$offset);
-            }
+            $songs = array_slice($songs, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($songs) . "</total_count>\n";
 
@@ -777,11 +757,7 @@ class XML_Data
     public static function videos($videos, $user_id = false)
     {
         if (count($videos) > self::$limit or self::$offset > 0) {
-            if (null !== self::$limit) {
-                $videos = array_slice($videos, self::$offset, self::$limit);
-            } else {
-                $videos = array_slice($videos, self::$offset);
-            }
+            $videos = array_slice($videos, self::$offset, self::$limit);
         }
         $string = '<total_count>' . count($videos) . "</total_count>\n";
 
