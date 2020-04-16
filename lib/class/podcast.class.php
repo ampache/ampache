@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -50,6 +51,7 @@ class Podcast extends database_object implements library_item
     /**
      * Podcast
      * Takes the ID of the podcast and pulls the info from the db
+     * @param string $podcast_id
      */
     public function __construct($podcast_id = '')
     {
@@ -91,6 +93,8 @@ class Podcast extends database_object implements library_item
     /**
      * get_episodes
      * gets all episodes for this podcast
+     * @param string $state_filter
+     * @return array
      */
     public function get_episodes($state_filter = '')
     {
@@ -146,6 +150,8 @@ class Podcast extends database_object implements library_item
     /**
      * format
      * this function takes the object and reformats some values
+     * @param boolean $details
+     * @return boolean
      */
     public function format($details = true)
     {
@@ -155,8 +161,9 @@ class Podcast extends database_object implements library_item
         $this->f_copyright     = scrub_out($this->copyright);
         $this->f_generator     = scrub_out($this->generator);
         $this->f_website       = scrub_out($this->website);
-        $this->f_lastbuilddate = date("m\/d\/Y - H:i", (int) $this->lastbuilddate);
-        $this->f_lastsync      = date("m\/d\/Y - H:i", (int) $this->lastsync);
+        $time_format           = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
+        $this->f_lastbuilddate = get_datetime($time_format, (int) $this->lastbuilddate);
+        $this->f_lastsync      = get_datetime($time_format, (int) $this->lastsync);
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
         $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
 
@@ -181,21 +188,36 @@ class Podcast extends database_object implements library_item
         return $keywords;
     }
 
+    /**
+     * get_fullname
+     *
+     * @return string
+     */
     public function get_fullname()
     {
         return $this->f_title;
     }
 
+    /**
+     * @return null
+     */
     public function get_parent()
     {
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function get_childrens()
     {
         return array('podcast_episode' => $this->get_episodes());
     }
 
+    /**
+     * @param $name
+     * @return array
+     */
     public function search_childrens($name)
     {
         debug_event('podcast.class', 'search_childrens ' . $name, 5);
@@ -203,6 +225,10 @@ class Podcast extends database_object implements library_item
         return array();
     }
 
+    /**
+     * @param $filter_type
+     * @return array|mixed
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -219,11 +245,17 @@ class Podcast extends database_object implements library_item
         return $medias;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function get_user_owner()
     {
         return null;
     }
 
+    /**
+     * @return string
+     */
     public function get_default_art_kind()
     {
         return 'default';
@@ -241,7 +273,7 @@ class Podcast extends database_object implements library_item
     /**
      * display_art
      * @param integer $thumb
-     * @param type $force
+     * @param boolean $force
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -253,6 +285,7 @@ class Podcast extends database_object implements library_item
     /**
      * update
      * This takes a key'd array of data and updates the current podcast
+     * @param array $data
      */
     public function update(array $data)
     {
@@ -327,19 +360,19 @@ class Podcast extends database_object implements library_item
             if ($xml === false) {
                 AmpError::add('feed', T_('Can not read the feed'));
             } else {
-                $title            = html_entity_decode($xml->channel->title);
-                $website          = $xml->channel->link;
-                $description      = html_entity_decode($xml->channel->description);
-                $language         = $xml->channel->language;
-                $copyright        = html_entity_decode($xml->channel->copyright);
-                $generator        = html_entity_decode($xml->channel->generator);
-                $lastbuilddatestr = $xml->channel->lastBuildDate;
+                $title            = html_entity_decode((string) $xml->channel->title);
+                $website          = (string) $xml->channel->link;
+                $description      = html_entity_decode((string) $xml->channel->description);
+                $language         = (string) $xml->channel->language;
+                $copyright        = html_entity_decode((string) $xml->channel->copyright);
+                $generator        = html_entity_decode((string) $xml->channel->generator);
+                $lastbuilddatestr = (string) $xml->channel->lastBuildDate;
                 if ($lastbuilddatestr) {
                     $lastbuilddate = strtotime($lastbuilddatestr);
                 }
 
                 if ($xml->channel->image) {
-                    $arturl = $xml->channel->image->url;
+                    $arturl = (string) $xml->channel->image->url;
                 }
 
                 $episodes = $xml->channel->item;
@@ -427,12 +460,12 @@ class Podcast extends database_object implements library_item
     {
         debug_event('podcast.class', 'Adding new episode to podcast ' . $this->id . '...', 4);
 
-        $title       = html_entity_decode($episode->title);
-        $website     = $episode->link;
-        $guid        = $episode->guid;
-        $description = html_entity_decode($episode->description);
-        $author      = html_entity_decode($episode->author);
-        $category    = html_entity_decode($episode->category);
+        $title       = html_entity_decode((string) $episode->title);
+        $website     = (string) $episode->link;
+        $guid        = (string) $episode->guid;
+        $description = html_entity_decode((string) $episode->description);
+        $author      = html_entity_decode((string) $episode->author);
+        $category    = html_entity_decode((string) $episode->category);
         $source      = null;
         $time        = 0;
         if ($episode->enclosure) {
@@ -440,11 +473,11 @@ class Podcast extends database_object implements library_item
         }
         $itunes = $episode->children('itunes', true);
         if ($itunes) {
-            $ptime = date_parse($itunes->duration);
+            $ptime = date_parse((string) $itunes->duration);
             $time  = $ptime['hour'] * 3600 + $ptime['minute'] * 60 + $ptime['second'];
         }
         $pubdate    = 0;
-        $pubdatestr = $episode->pubDate;
+        $pubdatestr = (string) $episode->pubDate;
         if ($pubdatestr) {
             $pubdate = strtotime($pubdatestr);
         }

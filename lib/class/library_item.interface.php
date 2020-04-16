@@ -29,17 +29,41 @@
  */
 interface library_item extends playable_item
 {
+    /**
+     * @return mixed
+     */
     public function get_keywords();
 
+    /**
+     * @return mixed
+     */
     public function get_user_owner();
 
+    /**
+     * @return mixed
+     */
     public function get_default_art_kind();
 
+    /**
+     * @return mixed
+     */
     public function get_description();
 
+    /**
+     * @param $thumb
+     * @param boolean $force
+     * @return mixed
+     */
     public function display_art($thumb, $force = false);
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
     public function update(array $data);
 
+    /**
+     * @return mixed
+     */
     public static function garbage_collection();
 } // end library_item.interface

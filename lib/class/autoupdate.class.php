@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -28,7 +29,7 @@
 
 class AutoUpdate
 {
-    /*
+    /**
      * Constructor
      *
      * This should never be called
@@ -74,9 +75,7 @@ class AutoUpdate
      */
     protected static function is_force_git_branch()
     {
-        $git_branch = (string) AmpConfig::get('github_force_branch');
-
-        return $git_branch;
+        return (string) AmpConfig::get('github_force_branch');
     }
 
     /**

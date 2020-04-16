@@ -61,6 +61,7 @@ function split_sql($sql)
  * this function checks to see if we actually
  * still need to install ampache. This function is
  * very important, we don't want to reinstall over top of an existing install
+ * @param $configfile
  * @return boolean
  */
 function install_check_status($configfile)
@@ -105,6 +106,9 @@ function install_check_status($configfile)
     }
 } // install_check_status
 
+/**
+ * @return boolean
+ */
 function install_check_server_apache()
 {
     return (strpos($_SERVER['SERVER_SOFTWARE'], "Apache/") === 0);
@@ -112,6 +116,8 @@ function install_check_server_apache()
 
 /**
  * @param string $file
+ * @param $web_path
+ * @param boolean $fix
  * @return boolean|string
  */
 function install_check_rewrite_rules($file, $web_path, $fix = false)
@@ -157,6 +163,7 @@ function install_check_rewrite_rules($file, $web_path, $fix = false)
 
 /**
  * @param string $file
+ * @param $web_path
  * @param boolean $download
  * @return boolean
  */
@@ -184,6 +191,11 @@ function install_rewrite_rules($file, $web_path, $download)
  * install_insert_db
  *
  * Inserts the database using the values from Config.
+ * @param string $db_user
+ * @param string $db_pass
+ * @param boolean $create_db
+ * @param boolean $overwrite
+ * @param boolean $create_tables
  * @return boolean
  */
 function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true)
@@ -297,7 +309,9 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
  * install_create_config
  *
  * Attempts to write out the config file or offer it as a download.
+ * @param boolean $download
  * @return boolean
+ * @throws Exception
  */
 function install_create_config($download = false)
 {
@@ -350,6 +364,9 @@ function install_create_config($download = false)
 /**
  * install_create_account
  * this creates your initial account and sets up the preferences for the -1 user and you
+ * @param string $username
+ * @param string $password
+ * @param string $password2
  * @return boolean
  */
 function install_create_account($username, $password, $password2)
@@ -385,7 +402,7 @@ function install_create_account($username, $password, $password2)
 
     $insert_id = User::create($username, 'Administrator', '', '', $password, '100');
 
-    if (!$insert_id) {
+    if ($insert_id < 1) {
         /* HINT: Database error message */
         AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
 
@@ -451,6 +468,9 @@ function install_get_transcode_modes()
     return $modes;
 } // install_get_transcode_modes
 
+/**
+ * @param $mode
+ */
 function install_config_transcode_mode($mode)
 {
     $trconfig = array(
@@ -475,6 +495,9 @@ function install_config_transcode_mode($mode)
     }
 }
 
+/**
+ * @param $case
+ */
 function install_config_use_case($case)
 {
     $trconfig = array(
@@ -540,6 +563,9 @@ function install_config_use_case($case)
     }
 }
 
+/**
+ * @param array $backends
+ */
 function install_config_backends(array $backends)
 {
     $dbconfig = array(

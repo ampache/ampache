@@ -1,0 +1,9 @@
+[Unit]
+Description=start ampache_cron.service
+
+[Timer]
+OnCalendar=*:0/15
+Unit=ampache_cron.service
+
+[Install]
+WantedBy=timer.target

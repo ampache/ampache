@@ -173,6 +173,7 @@ function charset_directory_correct($path) {
  * This just takes a source / dest and does the renaming
  * @param string $full_file
  * @param string $translated_filename
+ * @return boolean
  */
 function charset_rename_file($full_file, $translated_filename) {
 
@@ -237,14 +238,13 @@ function charset_rename_file($full_file, $translated_filename) {
  * This is run on every individual element of the search
  * Before it is put together, this removes / and \ and also
  * once I figure it out, it'll clean other stuff
+ * @param $string
+ * @return string|string[]|null
  */
 function charset_clean_name($string) {
+    /* First remove any / or \ chars */
+    $string_1 = preg_replace('/[\/\\\]/','-',$string);
+    $string_2 = str_replace(':',' ',$string_1);
 
-        /* First remove any / or \ chars */
-        $string_1 = preg_replace('/[\/\\\]/','-',$string);
-        $string_2 = str_replace(':',' ',$string_1);
-        $string_3 = preg_replace('/[\!\:\*]/','_',$string_2);
-
-        return $string_3;
-
+    return preg_replace('/[\!\:\*]/','_',$string_2);
 } // charset_clean_name

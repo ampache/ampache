@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -30,6 +31,11 @@ use Sabre\DAV;
  */
 class WebDAV_Auth extends DAV\Auth\Backend\AbstractBasic
 {
+    /**
+     * @param $username
+     * @param $password
+     * @return mixed
+     */
     protected function validateUserPass($username, $password)
     {
         $auth = Auth::login($username, $password, true);

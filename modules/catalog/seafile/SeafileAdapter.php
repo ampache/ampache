@@ -26,9 +26,19 @@ use Seafile\Client\Resource\Directory;
 use Seafile\Client\Resource\File;
 use GuzzleHttp\Exception\ClientException;
 
+/**
+ * Class SeafileAdapter
+ */
 class SeafileAdapter
 {
     // request API key from Seafile Server based on username and password
+    /**
+     * @param string $server_uri
+     * @param string $username
+     * @param string $password
+     * @return mixed
+     * @throws Exception
+     */
     public static function request_api_key($server_uri, $username, $password)
     {
         $options = array(
@@ -64,6 +74,13 @@ class SeafileAdapter
 
     private $directory_cache;
 
+    /**
+     * SeafileAdapter constructor.
+     * @param $server_uri
+     * @param $library_name
+     * @param $call_delay
+     * @param $api_key
+     */
     public function __construct($server_uri, $library_name, $call_delay, $api_key)
     {
         $this->server          = $server_uri;
@@ -74,6 +91,10 @@ class SeafileAdapter
     }
 
     // do we have all the info we need?
+
+    /**
+     * @return boolean
+     */
     public function ready()
     {
         return $this->server != null &&
@@ -83,6 +104,10 @@ class SeafileAdapter
     }
 
     // create API client object & find library
+
+    /**
+     * @return boolean
+     */
     public function prepare()
     {
         if ($this->client !== null) {
@@ -132,6 +157,11 @@ class SeafileAdapter
     }
 
     // run a function that hits the Seafile API, but catch throttling errors and retry
+
+    /**
+     * @param $func
+     * @return mixed
+     */
     private function throttle_check($func)
     {
         while (true) {
@@ -148,7 +178,7 @@ class SeafileAdapter
 
                 preg_match('(\d+) sec', $error, $matches);
 
-                $secs = intval($matches[1][0]);
+                $secs = (int) $matches[1][0];
 
                 debug_event('SeafileAdapter', sprintf('Throttled by Seafile, waiting %d seconds.', $secs), 5);
                 sleep($secs + 1);
@@ -157,12 +187,22 @@ class SeafileAdapter
     }
 
     // given a given path & filename, return the "virtual" path string which will be stored in the database
+
+    /**
+     * @param $file
+     * @return string
+     */
     public function to_virtual_path($file)
     {
         return $this->library->name . '|' . $file->dir . '|' . $file->name;
     }
 
     // given a database-stored "virtual" path, return the path & filename
+
+    /**
+     * @param string $file_path
+     * @return array
+     */
     public function from_virtual_path($file_path)
     {
         $split = explode('|', $file_path);
@@ -170,6 +210,10 @@ class SeafileAdapter
         return array('path' => $split[1], 'filename' => $split[2]);
     }
 
+    /**
+     * @param $path
+     * @return mixed|null
+     */
     private function get_cached_directory($path)
     {
         if (array_key_exists($path, $this->directory_cache)) {
@@ -204,6 +248,11 @@ class SeafileAdapter
     // the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
     // (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
     // Returns number added, or -1 on failure
+    /**
+     * @param $func
+     * @param string $path
+     * @return int
+     */
     public function for_all_files($func, $path = '/')
     {
         if ($this->client != null) {
@@ -227,6 +276,11 @@ class SeafileAdapter
         return -1;
     }
 
+    /**
+     * @param $path
+     * @param $name
+     * @return mixed|null
+     */
     public function get_file($path, $name)
     {
         $directory = $this->get_cached_directory($path);
@@ -243,6 +297,12 @@ class SeafileAdapter
     }
 
     // download a file, optionally limited to just enough to be able to read its metadata tags(currently 2MB)
+
+    /**
+     * @param $file
+     * @param boolean $partial
+     * @return string
+     */
     public function download($file, $partial = false)
     {
         $url = $this->throttle_check(function () use ($file) {
@@ -270,6 +330,9 @@ class SeafileAdapter
         return $tempfilename;
     }
 
+    /**
+     * @return string
+     */
     public function get_format_string()
     {
         return 'Seafile server "' . $this->server . '", library "' . $this->library_name . '"';

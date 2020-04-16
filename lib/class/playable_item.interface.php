@@ -33,6 +33,7 @@ interface playable_item
      * format
      *
      * Creates member variables for output
+     * @param boolean $details
      */
     public function format($details = true);
 
@@ -61,13 +62,18 @@ interface playable_item
      * search_childrens
      *
      * Search for direct childrens. Return an array of `object_type`, `object_id` childrens matching the criteria.
+     * @param $name
      */
     public function search_childrens($name);
 
-    /*
+    /**
      * get_medias
      *
      * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.
+     */
+    /**
+     * @param $filter_type
+     * @return mixed
      */
     public function get_medias($filter_type = null);
 

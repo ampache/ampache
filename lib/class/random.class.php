@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -80,6 +81,8 @@ class Random
     /**
      * get_single_song
      * This returns a single song pulled based on the passed random method
+     * @param $type
+     * @return mixed
      */
     public static function get_single_song($type)
     {
@@ -89,15 +92,17 @@ class Random
             $method_name = 'get_default';
         }
         $song_ids = self::$method_name(1);
-        $song_id  = array_pop($song_ids);
 
-        return $song_id;
+        return array_pop($song_ids);
     } // get_single_song
 
     /**
      * get_default
      * This just randomly picks a song at whim from all catalogs
      * nothing special here...
+     * @param string $limit
+     * @param integer $user_id
+     * @return array
      */
     public static function get_default($limit = '', $user_id = null)
     {
@@ -144,8 +149,9 @@ class Random
      * get_flagged
      * This just randomly picks songs based on whether the artist, album, song is flagged by the user.
      * @param string $type
-     * @param integer $limit
+     * @param string $limit
      * @param integer $user_id
+     * @return array
      */
     public static function get_flagged($type = 'song', $limit = '', $user_id = null)
     {
@@ -188,6 +194,8 @@ class Random
      * get_album
      * This looks at the last album played by the current user and
      * picks something else in the same album
+     * @param $limit
+     * @return array
      */
     public static function get_album($limit)
     {
@@ -242,6 +250,8 @@ class Random
      * get_artist
      * This looks at the last artist played and then randomly picks a song from the
      * same artist
+     * @param $limit
+     * @return array
      */
     public static function get_artist($limit)
     {

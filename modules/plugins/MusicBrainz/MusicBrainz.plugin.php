@@ -23,6 +23,9 @@
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
+/**
+ * Class AmpacheMusicBrainz
+ */
 class AmpacheMusicBrainz
 {
     public $name           = 'MusicBrainz';
@@ -67,6 +70,7 @@ class AmpacheMusicBrainz
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
@@ -78,6 +82,9 @@ class AmpacheMusicBrainz
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
+     * @param array $gather_types
+     * @param array $song_info
+     * @return array|null
      */
     public function get_metadata($gather_types, $song_info)
     {
@@ -120,4 +127,3 @@ class AmpacheMusicBrainz
         return $results;
     } // get_metadata
 } // end AmpacheMusicBrainz
-;

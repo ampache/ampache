@@ -1,5 +1,8 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+use Lib\Metadata\Repository\MetadataField;
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
@@ -17,7 +20,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * @param integer $user_id
  */
 
 /*
@@ -89,6 +92,10 @@ function update_preferences($user_id = 0)
 /**
  * update_preference
  * This function updates a single preference and is called by the update_preferences function
+ * @param integer $user_id
+ * @param string $name
+ * @param integer $pref_id
+ * @param string $value
  * @return boolean
  */
 function update_preference($user_id, $name, $pref_id, $value)
@@ -122,6 +129,8 @@ function update_preference($user_id, $name, $pref_id, $value)
 /**
  * create_preference_input
  * takes the key and then creates the correct type of input for updating it
+ * @param $name
+ * @param $value
  */
 function create_preference_input($name, $value)
 {
@@ -210,6 +219,7 @@ function create_preference_input($name, $value)
         case 'catalog_check_duplicate':
         case 'browse_filter':
         case 'sidebar_light':
+        case 'cron_cache':
             $is_true  = '';
             $is_false = '';
             if ($value == '1') {
@@ -398,7 +408,7 @@ function create_preference_input($name, $value)
         case 'disabled_custom_metadata_fields':
             $ids             = explode(',', $value);
             $options         = array();
-            $fieldRepository = new \Lib\Metadata\Repository\MetadataField();
+            $fieldRepository = new MetadataField();
             foreach ($fieldRepository->findAll() as $field) {
                 $selected  = in_array($field->getId(), $ids) ? ' selected="selected"' : '';
                 $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';

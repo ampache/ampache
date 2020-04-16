@@ -65,12 +65,10 @@ class Catalog_soundcloud extends Catalog
      */
     public function get_create_help()
     {
-        $help = "<ul><li>Go to http://soundcloud.com/you/apps/new</li>" .
+        return "<ul><li>Go to http://soundcloud.com/you/apps/new</li>" .
             "<li>Give a name to your application and click Register</li>" .
             "<li>Add the following OAuth redirect URIs: <i>" . $this->getRedirectUri() . "</i></li>" .
             "<li>Copy your Client ID and Secret here, and Save the app</li></ul>";
-
-        return $help;
     } // get_create_help
 
     /**
@@ -102,6 +100,9 @@ class Catalog_soundcloud extends Catalog
         return true;
     } // install
 
+    /**
+     * @return array|mixed
+     */
     public function catalog_fields()
     {
         $fields['userid']      = array('description' => T_('User ID'), 'type' => 'text');
@@ -110,6 +111,9 @@ class Catalog_soundcloud extends Catalog
         return $fields;
     }
 
+    /**
+     * @return boolean
+     */
     public function isReady()
     {
         return (!empty($this->authtoken));
@@ -134,6 +138,8 @@ class Catalog_soundcloud extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
+     * @param integer $catalog_id
+     * @throws Exception
      */
     public function __construct($catalog_id = null)
     {
@@ -151,6 +157,9 @@ class Catalog_soundcloud extends Catalog
         }
     }
 
+    /**
+     * @return string
+     */
     protected function getRedirectUri()
     {
         return AmpConfig::get('web_path') . "/show_get.php?param_name=code";
@@ -162,6 +171,9 @@ class Catalog_soundcloud extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
+     * @param $catalog_id
+     * @param array $data
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     {
@@ -224,6 +236,8 @@ class Catalog_soundcloud extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
+     * @param array $options
+     * @return boolean
      */
     public function add_to_catalog($options = null)
     {
@@ -245,6 +259,10 @@ class Catalog_soundcloud extends Catalog
         return true;
     } // add_to_catalog
 
+    /**
+     * @return Services_Soundcloud|null
+     * @throws Services_Soundcloud_Missing_Client_Id_Exception
+     */
     public function createClient()
     {
         if ($this->authcode) {
@@ -327,6 +345,9 @@ class Catalog_soundcloud extends Catalog
         return true;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function verify_catalog_proc()
     {
         return array('total' => 0, 'updated' => 0);
@@ -356,7 +377,7 @@ class Catalog_soundcloud extends Catalog
                             $remove = true;
                         }
                     } catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $error) {
-                        if ($e->getHttpCode() == '404') {
+                        if ($error->getHttpCode() == '404') {
                             $remove = true;
                         } else {
                             debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
@@ -384,6 +405,10 @@ class Catalog_soundcloud extends Catalog
         return $dead;
     }
 
+    /**
+     * @param $url
+     * @return integer
+     */
     public function url_to_track($url)
     {
         $track = 0;
@@ -395,6 +420,10 @@ class Catalog_soundcloud extends Catalog
         return $track;
     }
 
+    /**
+     * @param string $file_path
+     * @return string
+     */
     public function get_rel_path($file_path)
     {
         return $file_path;
@@ -405,6 +434,8 @@ class Catalog_soundcloud extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
+     * @param array $song
+     * @return bool|mixed
      */
     public function check_remote_song($song)
     {
@@ -432,6 +463,10 @@ class Catalog_soundcloud extends Catalog
         $this->f_full_info = $this->userid;
     }
 
+    /**
+     * @param Podcast_Episode|Song|Song_Preview|Video $media
+     * @return media|null
+     */
     public function prepare_media($media)
     {
         try {

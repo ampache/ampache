@@ -49,6 +49,11 @@ switch ($_REQUEST['action']) {
         require AmpConfig::get('prefix') . UI::find_template('show_lostpassword_form.inc.php');
 }
 
+/**
+ * @param $email
+ * @param $current_ip
+ * @return boolean
+ */
 function send_newpassword($email, $current_ip)
 {
     // get the Client and set the new password

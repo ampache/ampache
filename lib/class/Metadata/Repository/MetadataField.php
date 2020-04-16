@@ -22,17 +22,20 @@
 
 namespace Lib\Metadata\Repository;
 
+use Dba;
+use Lib\Repository;
+
 /**
  * Description of Metadata_field
  *
  * @author raziel
  */
-class MetadataField extends \Lib\Repository
+class MetadataField extends Repository
 {
     protected $modelClassName = '\Lib\Metadata\Model\MetadataField';
 
     public static function garbage_collection()
     {
-        \Dba::write('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL');
+        Dba::write('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL');
     }
 }

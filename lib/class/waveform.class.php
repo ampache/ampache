@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -76,8 +77,12 @@ class Waveform
 
         if ($song->id) {
             $song->format();
-            $waveform = $song->waveform;
-            if ($waveform === null) {
+            if (AmpConfig::get('album_art_store_disk')) {
+                $waveform = self::get_from_file($song_id);
+            } else {
+                $waveform = $song->waveform;
+            }
+            if ($waveform === null && $waveform !== false) {
                 $catalog = Catalog::create_from_id($song->catalog);
                 if ($catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';
@@ -119,7 +124,7 @@ class Waveform
                                 //$waveform = self::create_waveform("C:\\tmp\\test.wav");
 
                                 if (unlink($tmpfile) === false) {
-                                    throw new \RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked');
+                                    throw new RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked');
                                 }
                             } else {
                                 debug_event('waveform.class', 'transcode setting to wav required for waveform.', 3);
@@ -134,8 +139,12 @@ class Waveform
                     }
                 }
 
-                if ($waveform !== null) {
-                    self::save_to_db($song_id, $waveform);
+                if ($waveform !== null && $waveform !== false) {
+                    if (AmpConfig::get('album_art_store_disk')) {
+                        self::save_to_file($song_id, $waveform);
+                    } else {
+                        self::save_to_db($song_id, $waveform);
+                    }
                 }
             }
         }
@@ -143,6 +152,62 @@ class Waveform
         return $waveform;
     }
 
+    /**
+     * Return full path of the Waveform file.
+     * @param integer $song_id
+     * @return false|string
+     */
+    public static function get_filepath($song_id)
+    {
+        $path = AmpConfig::get('local_metadata_dir');
+        if (!$path) {
+            debug_event('waveform.class', 'local_metadata_dir setting is required to store waveform on disk.', 1);
+
+            return false;
+        }
+        // Create subdirectory based on the 2 last digit of the SongID. We prevent having thousands of file in one directory.
+        $path .= "/waveform/" . substr($song_id, -1) . "/" . substr($song_id, -2, -1) . "/";
+        if (! file_exists($path)) {
+            mkdir($path, 0755, true);
+        }
+
+        return $path . $song_id . ".png";
+    }
+
+    /**
+     * Return content of a Waveform file.
+     * @param integer $song_id
+     * @return string|false
+     */
+    public static function get_from_file($song_id)
+    {
+        $file = self::get_filepath($song_id);
+        if ($file !== false && file_exists($file)) {
+            return file_get_contents($file);
+        }
+
+        return false;
+    }
+
+    /**
+     * Save content of a Waveform into a file.
+     * @param integer $song_id
+     * @param string $waveform
+     * @return integer|boolean
+     */
+    public static function save_to_file($song_id, $waveform)
+    {
+        $file = self::get_filepath($song_id);
+
+        return file_put_contents($file, $waveform);
+    }
+
+    /**
+     * findValues
+     * @param $byte1
+     * @param $byte2
+     * @return float|int
+     */
     protected static function findValues($byte1, $byte2)
     {
         $byte1 = hexdec(bin2hex($byte1));

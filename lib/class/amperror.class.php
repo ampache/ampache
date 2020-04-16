@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -56,6 +57,9 @@ class AmpError
      * add
      * This is a public static function it adds a new error message to the array
      * It can optionally clobber rather then adding to the error message
+     * @param string $name
+     * @param string $message
+     * @param integer $clobber
      */
     public static function add($name, $message, $clobber = 0)
     {
@@ -103,6 +107,7 @@ class AmpError
     /**
      * get
      * This returns an error by name
+     * @param string $name
      * @return string
      */
     public static function get($name)
@@ -123,11 +128,9 @@ class AmpError
     public static function display($name)
     {
         // Be smart about this, if no error don't print
-        if (!isset(AmpError::$errors[$name])) {
-            return '';
+        if (isset(AmpError::$errors[$name])) {
+            echo '<p class="alert alert-danger">' . T_(AmpError::$errors[$name]) . '</p>';
         }
-
-        echo '<p class="alert alert-danger">' . T_(AmpError::$errors[$name]) . '</p>';
     } // display
 
     /**
@@ -136,13 +139,11 @@ class AmpError
      */
     public static function auto_init()
     {
-        if (!is_array($_SESSION['errors'])) {
-            return false;
-        }
-
-        // Re-insert them
-        foreach ($_SESSION['errors'] as $key => $error) {
-            self::add($key, $error);
+        if (is_array($_SESSION['errors'])) {
+            // Re-insert them
+            foreach ($_SESSION['errors'] as $key => $error) {
+                self::add($key, $error);
+            }
         }
     } // auto_init
 } // end amperror.class

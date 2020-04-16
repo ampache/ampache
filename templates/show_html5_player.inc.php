@@ -315,7 +315,7 @@ if (AmpConfig::get('webplayer_aurora')) {
     foreach ($atypes as $atype) {
         $spath = '/modules/aurora.js/' . $atype . '.js';
         if (Core::is_readable(AmpConfig::get('prefix') . $spath)) {
-            echo '<script src="' . AmpConfig::get('web_path') . $spath . '"></script>' . "\n";
+            echo '<script src="' . AmpConfig::get('web_path') . $spath . '" defer></script>' . "\n";
         }
     }
 }

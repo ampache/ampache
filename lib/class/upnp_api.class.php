@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -50,18 +51,23 @@ class Upnp_Api
     {
     }
 
+    /**
+     * @return string
+     */
     public static function get_uuidStr()
     {
         // Create uuid based on host
         $key     = 'ampache_' . AmpConfig::get('http_host');
         $hash    = hash('md5', $key);
-        $uuidstr = substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20);
 
-        return $uuidstr;
+        return substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20);
     }
 
     /**
      * @param string $buf
+     * @param integer $delay
+     * @param string $host
+     * @param integer $port
      */
     private static function udpSend($buf, $delay=15, $host="239.255.255.250", $port=1900)
     {
@@ -72,6 +78,12 @@ class Upnp_Api
         usleep($delay * 1000);
     }
 
+    /**
+     * @param integer $delay
+     * @param string $host
+     * @param integer $port
+     * @param string $prefix
+     */
     public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT")
     {
         $strHeader  = 'NOTIFY * HTTP/1.1' . "\r\n";
@@ -108,6 +120,10 @@ class Upnp_Api
         self::udpSend($buf, $delay, $host, $port);
     }
 
+    /**
+     * @param $prmRequest
+     * @return array
+     */
     public static function parseUPnPRequest($prmRequest)
     {
         $retArr = array();
@@ -171,6 +187,10 @@ class Upnp_Api
     } //end function
 
 
+    /**
+     * @param $prmItems
+     * @return DOMDocument
+     */
     public static function createDIDL($prmItems)
     {
         $xmlDoc               = new DOMDocument('1.0', 'utf-8');
@@ -278,6 +298,14 @@ class Upnp_Api
     }
 
 
+    /**
+     * @param $prmDIDL
+     * @param $prmNumRet
+     * @param $prmTotMatches
+     * @param string $prmResponseType
+     * @param string $prmUpdateID
+     * @return DOMDocument
+     */
     public static function createSOAPEnvelope($prmDIDL, $prmNumRet, $prmTotMatches, $prmResponseType = 'u:BrowseResponse', $prmUpdateID = '0')
     {
         /*
@@ -316,6 +344,8 @@ class Upnp_Api
 
     /**
      * @param string $prmPath
+     * @param string $prmQuery
+     * @return array|null
      */
     public static function _musicMetadata($prmPath, $prmQuery = '')
     {
@@ -518,6 +548,12 @@ class Upnp_Api
         return $meta;
     }
 
+    /**
+     * @param $items
+     * @param $start
+     * @param $count
+     * @return array
+     */
     private static function _slice($items, $start, $count)
     {
         $maxCount = count($items);
@@ -526,6 +562,13 @@ class Upnp_Api
         return array($maxCount, array_slice($items, $start, ($count == 0 ? $maxCount - $start : $count)));
     }
 
+    /**
+     * @param $prmPath
+     * @param $prmQuery
+     * @param $start
+     * @param $count
+     * @return array
+     */
     public static function _musicChilds($prmPath, $prmQuery, $start, $count)
     {
         $mediaItems = array();
@@ -731,6 +774,8 @@ class Upnp_Api
 
     /**
      * @param string $prmPath
+     * @param string $prmQuery
+     * @return array|null
      */
     public static function _videoMetadata($prmPath, $prmQuery = '')
     {
@@ -869,6 +914,13 @@ class Upnp_Api
         return $meta;
     }
 
+    /**
+     * @param $prmPath
+     * @param $prmQuery
+     * @param $start
+     * @param $count
+     * @return array
+     */
     public static function _videoChilds($prmPath, $prmQuery, $start, $count)
     {
         $mediaItems = array();
@@ -974,12 +1026,20 @@ class Upnp_Api
         return array($maxCount, $mediaItems);
     }
 
+    /**
+     * @param $criteria
+     * @return array
+     */
     public static function _callSearch($criteria)
     {
         // Not supported yet
         return array();
     }
 
+    /**
+     * @param $title
+     * @return string|string[]|null
+     */
     private static function _replaceSpecialSymbols($title)
     {
         ///debug_event('upnp_api.class', 'replace <<< ' . $title, 5);
@@ -997,6 +1057,7 @@ class Upnp_Api
     /**
      * @param Artist $artist
      * @param string $parent
+     * @return array
      */
     private static function _itemArtist($artist, $parent)
     {
@@ -1013,6 +1074,7 @@ class Upnp_Api
     /**
      * @param Album $album
      * @param string $parent
+     * @return array
      */
     private static function _itemAlbum($album, $parent)
     {
@@ -1031,7 +1093,9 @@ class Upnp_Api
     }
 
     /**
+     * @param $playlist
      * @param string $parent
+     * @return array
      */
     private static function _itemPlaylist($playlist, $parent)
     {
@@ -1048,6 +1112,7 @@ class Upnp_Api
     /**
      * @param Search $playlist
      * @param string $parent
+     * @return array
      */
     private static function _itemSmartPlaylist($playlist, $parent)
     {
@@ -1062,7 +1127,9 @@ class Upnp_Api
     }
 
     /**
+     * @param Song $song
      * @param string $parent
+     * @return array
      */
     public static function _itemSong($song, $parent)
     {
@@ -1099,6 +1166,7 @@ class Upnp_Api
     /**
      * @param Live_Stream $radio
      * @param string $parent
+     * @return array
      */
     public static function _itemLiveStream($radio, $parent)
     {
@@ -1122,7 +1190,9 @@ class Upnp_Api
     }
 
     /**
+     * @param $tvshow
      * @param string $parent
+     * @return array
      */
     private static function _itemTVShow($tvshow, $parent)
     {
@@ -1139,6 +1209,7 @@ class Upnp_Api
     /**
      * @param TVShow_Season $season
      * @param string $parent
+     * @return array
      */
     private static function _itemTVShowSeason($season, $parent)
     {
@@ -1153,7 +1224,9 @@ class Upnp_Api
     }
 
     /**
+     * @param $video
      * @param string $parent
+     * @return array
      */
     private static function _itemVideo($video, $parent)
     {
@@ -1180,6 +1253,7 @@ class Upnp_Api
     }
 
     /**
+     * @param $podcast
      * @param string $parent
      * @return array
      */
@@ -1227,6 +1301,9 @@ class Upnp_Api
         return $ret;
     }
 
+    /**
+     * @return array
+     */
     private static function _getFileTypes()
     {
         return array(

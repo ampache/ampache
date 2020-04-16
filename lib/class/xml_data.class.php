@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -63,7 +64,7 @@ class XML_Data
      * This sets the limit for any ampache transactions
      *
      * @param    integer    $limit    (description here...)
-     * @return    false|null
+     * @return    boolean
      */
     public static function set_limit($limit)
     {
@@ -76,6 +77,8 @@ class XML_Data
         } else {
             self::$limit = (int) ($limit);
         }
+
+        return true;
     } // set_limit
 
     /**
@@ -84,7 +87,7 @@ class XML_Data
      * This sets the type of XML_Data we are working on
      *
      * @param    string    $type    XML_Data type
-     * @return    false|null
+     * @return    boolean
      */
     public static function set_type($type)
     {
@@ -93,6 +96,8 @@ class XML_Data
         }
 
         self::$type = $type;
+
+        return true;
     } // set_type
 
     /**
@@ -133,8 +138,9 @@ class XML_Data
      *
      * This returns the header
      *
-     * @see    _header()
-     * @return    string    return xml
+     * @param string $title
+     * @return string return xml
+     * @see _header()
      */
     public static function header($title = null)
     {
@@ -159,6 +165,7 @@ class XML_Data
      *
      * This returns the formatted 'tags' string for an xml document
      * @input array $tags
+     * @param $tags
      * @return string
      */
     private static function tags_string($tags)
@@ -192,7 +199,7 @@ class XML_Data
      * This returns the formatted 'playlistTrack' string for an xml document
      *
      * @param Song $song
-     * @param int[] $playlist_data
+     * @param integer[] $playlist_data
      * @return string
      */
     private static function playlist_song_tracks_string($song, $playlist_data)
@@ -213,6 +220,9 @@ class XML_Data
      * output_xml_from_array
      * This takes a one dimensional array and creates a XML document from it. For
      * use primarily by the ajax mojo.
+     * @param $array
+     * @param boolean $callback
+     * @param string $type
      * @return string
      */
     public static function output_xml_from_array($array, $callback = false, $type = '')
@@ -464,10 +474,10 @@ class XML_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param    array    $artists    (description here...)
-     * @param    array    $include    Array of other items to include.
-     * @param    bool     $full_xml  whether to return a full XML document or just the node.
-     * @param    integer $user_id
+     * @param array $artists (description here...)
+     * @param array $include Array of other items to include.
+     * @param boolean $full_xml whether to return a full XML document or just the node.
+     * @param boolean $user_id
      * @return    string    return xml
      */
     public static function artists($artists, $include = [], $full_xml = true, $user_id = false)
@@ -518,7 +528,7 @@ class XML_Data
                     "\t<albums>" . $albums . "</albums>\n" .
                     "\t<songs>" . $songs . "</songs>\n" .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
-                    "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
+                    "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
                     "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: 0) . "</preciserating>\n" .
                     "\t<rating>" . ($rating->get_user_rating($user_id) ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
@@ -537,9 +547,10 @@ class XML_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param    integer[]    $albums    (description here...)
-     * @param    array    $include    Array of other items to include.
-     * @param    bool     $full_xml  whether to return a full XML document or just the node.
+     * @param integer[] $albums (description here...)
+     * @param array $include Array of other items to include.
+     * @param boolean $full_xml whether to return a full XML document or just the node.
+     * @param boolean $user_id
      * @return    string    return xml
      */
     public static function albums($albums, $include = [], $full_xml = true, $user_id = false)
@@ -602,7 +613,7 @@ class XML_Data
                     "\t<disk>" . $disk . "</disk>\n" .
                     self::tags_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
-                    "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
+                    "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
                     "\t<preciserating>" . $rating->get_user_rating($user_id) . "</preciserating>\n" .
                     "\t<rating>" . $rating->get_user_rating($user_id) . "</rating>\n" .
                     "\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n" .
@@ -679,7 +690,10 @@ class XML_Data
      *
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
-     * @param  integer[] $songs
+     * @param integer[] $songs
+     * @param array $playlist_data
+     * @param boolean $full_xml
+     * @param boolean $user_id
      * @return string    return xml
      */
     public static function songs($songs, $playlist_data = array(), $full_xml = true, $user_id = false)
@@ -743,7 +757,7 @@ class XML_Data
                     "\t<artist_mbid>" . $song->artist_mbid . "</artist_mbid>\n" .
                     "\t<albumartist_mbid>" . $song->albumartist_mbid . "</albumartist_mbid>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-                    "\t<flag>" . ($flag->get_flag($user_id, false) ? 1 : 0) . "</flag>\n" .
+                    "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
                     "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: 0) . "</preciserating>\n" .
                     "\t<rating>" . ($rating->get_user_rating($user_id) ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . (string) ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
@@ -778,7 +792,8 @@ class XML_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param    array    $videos    (description here...)
+     * @param array $videos (description here...)
+     * @param boolean $user_id
      * @return   string   return xml
      */
     public static function videos($videos, $user_id = false)
@@ -817,7 +832,8 @@ class XML_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param    integer[]  $object_ids    Object IDs
+     * @param integer[] $object_ids Object IDs
+     * @param boolean $user_id
      * @return   string     return xml
      */
     public static function democratic($object_ids = array(), $user_id = false)
@@ -905,7 +921,7 @@ class XML_Data
      *
      * This handles creating an xml document for an user list
      *
-     * @param    int[]    $users    User identifier list
+     * @param    integer[]    $users    User identifier list
      * @return    string    return xml
      */
     public static function users($users)
@@ -925,7 +941,7 @@ class XML_Data
      *
      * This handles creating an xml document for a shout list
      *
-     * @param    int[]    $shouts    Shout identifier list
+     * @param    integer[]    $shouts    Shout identifier list
      * @return    string    return xml
      */
     public static function shouts($shouts)
@@ -948,6 +964,11 @@ class XML_Data
         return self::output_xml($string);
     } // shouts
 
+    /**
+     * @param $string
+     * @param boolean $full_xml
+     * @return string
+     */
     public static function output_xml($string, $full_xml = true)
     {
         $xml = "";
@@ -967,7 +988,7 @@ class XML_Data
      *
      * This handles creating an xml document for an activity list
      *
-     * @param    int[]    $activities    Activity identifier list
+     * @param    integer[]    $activities    Activity identifier list
      * @return    string    return xml
      */
     public static function timeline($activities)
@@ -988,9 +1009,7 @@ class XML_Data
         }
         $string .= "</timeline>";
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::_header() . $string . self::_footer();
     } // timeline
 
     /**
@@ -1016,9 +1035,7 @@ class XML_Data
             $string .= self::keyed_array(array('item' => $item), 1);
         }
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::_header() . $string . self::_footer();
     } // rss_feed
 
     /**
@@ -1027,7 +1044,8 @@ class XML_Data
      * this returns a standard header, there are a few types
      * so we allow them to pass a type if they want to
      *
-     * @return    string    Header xml tag.
+     * @param string $title
+     * @return string Header xml tag.
      */
     private static function _header($title = null)
     {
@@ -1044,17 +1062,17 @@ class XML_Data
             case 'itunes':
                 $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
                         "<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->\n";
-                "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
-                        "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
-                        "<plist version=\"1.0\">\n" .
-                        "<dict>\n" .
-                        "       <key>Major Version</key><integer>1</integer>\n" .
-                        "       <key>Minor Version</key><integer>1</integer>\n" .
-                        "       <key>Application Version</key><string>7.0.2</string>\n" .
-                        "       <key>Features</key><integer>1</integer>\n" .
-                        "       <key>Show Content Ratings</key><true/>\n" .
-                        "       <key>Tracks</key>\n" .
-                        "       <dict>\n";
+                        //"<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
+                        //"\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
+                        //"<plist version=\"1.0\">\n" .
+                        //"<dict>\n" .
+                        //"       <key>Major Version</key><integer>1</integer>\n" .
+                        //"       <key>Minor Version</key><integer>1</integer>\n" .
+                        //"       <key>Application Version</key><string>7.0.2</string>\n" .
+                        //"       <key>Features</key><integer>1</integer>\n" .
+                        //"       <key>Show Content Ratings</key><true/>\n" .
+                        //"       <key>Tracks</key>\n" .
+                        //"       <dict>\n";
                 break;
             case 'rss':
                 $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n " .
@@ -1099,6 +1117,11 @@ class XML_Data
 
     // _footer
 
+    /**
+     * @param library_item $libitem
+     * @param boolean $user_id
+     * @return string|false
+     */
     public static function podcast(library_item $libitem, $user_id = false)
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><rss />');

@@ -47,12 +47,10 @@ class Catalog_beetsremote extends Beets\Catalog
      */
     public function get_create_help()
     {
-        $help = "<ul>" .
+        return "<ul>" .
                 "<li>Install Beets web plugin: http://beets.readthedocs.org/en/latest/plugins/web.html</li>" .
                 "<li>Start Beets web server</li>" .
                 "<li>Specify URI including port (like http://localhost:8337). It will be shown when starting Beets web in console.</li></ul>";
-
-        return $help;
     }
 
     /**
@@ -82,6 +80,9 @@ class Catalog_beetsremote extends Beets\Catalog
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function catalog_fields()
     {
         $fields['uri'] = array('description' => T_('Beets Server URI'), 'type' => 'url');
@@ -95,6 +96,9 @@ class Catalog_beetsremote extends Beets\Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
+     * @param $catalog_id
+     * @param array $data
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     { // TODO: This Method should be required / provided by parent
@@ -123,6 +127,9 @@ class Catalog_beetsremote extends Beets\Catalog
         return true;
     }
 
+    /**
+     * Get the parser class like CliHandler or JsonHandler
+     */
     protected function getParser()
     {
         return new Beets\JsonHandler($this->uri);

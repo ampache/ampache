@@ -231,6 +231,7 @@ switch ($_REQUEST['action']) {
 
         $songs = Song::get_disabled();
         if (count($songs)) {
+            $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
             require AmpConfig::get('prefix') . UI::find_template('show_disabled_songs.inc.php');
         } else {
             echo '<div class="error show-disabled">' . T_('No disabled Songs found') . '</div>';

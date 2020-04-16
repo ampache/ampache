@@ -55,7 +55,7 @@ switch ($_REQUEST['action']) {
     case 'upload_art':
         // we didn't find anything
         if (empty($_FILES['file']['tmp_name'])) {
-            show_confirmation(T_('There Was a Problem'), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'), $burl);
+            show_confirmation(T_("There Was a Problem"), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'), $burl);
             break;
         }
 
@@ -66,8 +66,11 @@ switch ($_REQUEST['action']) {
         // If we got something back insert it
         if ($image_data !== '') {
             $art = new Art($object_id, $object_type);
-            $art->insert($image_data, $_FILES['file']['type']);
-            show_confirmation(T_('No Problem'), T_('Art has been added'), $burl);
+            if ($art->insert($image_data, $_FILES['file']['type'])) {
+                show_confirmation(T_('No Problem'), T_('Art has been added'), $burl);
+            } else {
+                show_confirmation(T_("There Was a Problem"), T_('Art file failed to insert, check the dimensions are correct.'), $burl);
+            }
         }
         // Else it failed
         else {
@@ -91,9 +94,12 @@ switch ($_REQUEST['action']) {
             $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, $object_type);
 
-            if ($image_data['object_id']) {
-                $art->insert($image_data, $upload['0']['mime']);
-                show_confirmation(T_('No Problem'), T_('Art has been added'), $burl);
+            if ($image_data != '') {
+                if ($art->insert($image_data, $upload['0']['mime'])) {
+                    show_confirmation(T_('No Problem'), T_('Art has been added'), $burl);
+                } else {
+                    show_confirmation(T_("There Was a Problem"), T_('Art file failed to insert, check the dimensions are correct.'), $burl);
+                }
                 break;
             } // if image data
         } // if it's an upload
@@ -124,10 +130,12 @@ switch ($_REQUEST['action']) {
         }
         $images = array_merge($cover_url, $images);
 
+        debug_event('arts', 'HOW MANY IMAGES?:' . (string) count($images), 3);
         // If we've found anything then go for it!
         if (count($images)) {
             // We don't want to store raw's in here so we need to strip them out into a separate array
             foreach ($images as $index => $image) {
+                debug_event('arts', 'IMAGE URL?:' . (string) $images[$index]['url'], 3);
                 if ($image['raw']) {
                     unset($images[$index]['raw']);
                 }
@@ -135,10 +143,6 @@ switch ($_REQUEST['action']) {
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
             require_once AmpConfig::get('prefix') . UI::find_template('show_arts.inc.php');
-        }
-        // Else nothing
-        else {
-            show_confirmation(T_("There Was a Problem"), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'), $burl);
         }
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
@@ -152,20 +156,24 @@ switch ($_REQUEST['action']) {
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $image = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
-        $mime  = $_SESSION['form']['images'][$image_id]['mime'];
-
-        // Special case for albums, I'm not sure if we should keep it, remove it or find a generic way
-        if ($object_type == 'album') {
-            $album        = new $object_type($object_id);
-            $album_groups = $album->get_group_disks_ids();
-            foreach ($album_groups as $a_id) {
-                $art = new Art($a_id, $object_type);
+        $image      = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
+        $dimensions = Core::image_dimensions($image);
+        $mime       = $_SESSION['form']['images'][$image_id]['mime'];
+        if (!Art::check_dimensions($dimensions)) {
+            show_confirmation(T_("There Was a Problem"), T_('Art file failed size check'), $burl);
+        } else {
+            // Special case for albums, I'm not sure if we should keep it, remove it or find a generic way
+            if ($object_type == 'album') {
+                $album        = new $object_type($object_id);
+                $album_groups = $album->get_group_disks_ids();
+                foreach ($album_groups as $a_id) {
+                    $art = new Art($a_id, $object_type);
+                    $art->insert($image, $mime);
+                }
+            } else {
+                $art = new Art($object_id, $object_type);
                 $art->insert($image, $mime);
             }
-        } else {
-            $art = new Art($object_id, $object_type);
-            $art->insert($image, $mime);
         }
 
         header("Location:" . $burl);

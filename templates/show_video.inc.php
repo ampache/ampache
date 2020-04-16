@@ -139,9 +139,9 @@ if (strtolower(get_class($video)) != 'video') {
       $videoprops[T_('Filename')]   = scrub_out($video->file) . " " . $video->f_size;
   }
   if ($video->update_time) {
-      $videoprops[T_('Last Updated')]   = date("d/m/Y H:i", $video->update_time);
+      $videoprops[T_('Last Updated')]   = get_datetime($time_format, (int) $video->update_time);
   }
-  $videoprops[T_('Added')]   = date("d/m/Y H:i", $video->addition_time);
+  $videoprops[T_('Added')]   = get_datetime($time_format, (int) $video->addition_time);
   if (AmpConfig::get('show_played_times')) {
       $videoprops[T_('# Played')]   = scrub_out($video->object_cnt);
   }
