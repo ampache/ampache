@@ -422,11 +422,7 @@ class XML_Data
     public static function tags($tags)
     {
         if (count($tags) > self::$limit || self::$offset > 0) {
-            if (null !== self::$limit) {
-                $tags = array_splice($tags, self::$offset, self::$limit);
-            } else {
-                $tags = array_splice($tags, self::$offset);
-            }
+            $tags = array_splice($tags, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($tags) . "</total_count>\n";
 
