@@ -149,31 +149,6 @@ class JSON_Data
     } // tags_string
 
     /**
-     * playlist_song_tracks_string
-     *
-     * This returns the formatted 'playlistTrack' string for an JSON document
-     *
-     * @param Song $song
-     * @param array $playlist_data
-     * @return string
-     */
-    private static function playlist_song_tracks_string($song, $playlist_data)
-    {
-        if (empty($playlist_data)) {
-            return "";
-        }
-        $playlist_track = "";
-
-        foreach ($playlist_data as $playlist) {
-            if ($playlist["object_id"] == $song->id) {
-                return $playlist["track"];
-            }
-        }
-
-        return "";
-    } // playlist_song_tracks_string
-
-    /**
      * indexes
      *
      * This returns tags to the user, in a pretty JSON document with the information
@@ -425,11 +400,10 @@ class JSON_Data
      * This returns a JSON document from an array of song ids.
      * (Spiffy isn't it!)
      * @param $songs
-     * @param array $playlist_data
      * @param boolean $user_id
      * @return false|string
      */
-    public static function songs($songs, $playlist_data=array(), $user_id = false)
+    public static function songs($songs, $user_id = false)
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -438,7 +412,8 @@ class JSON_Data
         Song::build_cache($songs);
         Stream::set_session($_REQUEST['auth']);
 
-        $JSON = [];
+        $JSON           = [];
+        $playlist_track = 0;
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
@@ -449,11 +424,12 @@ class JSON_Data
                 continue;
             }
 
+
             $song->format();
-            $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
-            $rating                = new Rating($song_id, 'song');
-            $flag                  = new Userflag($song_id, 'song');
-            $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $rating  = new Rating($song_id, 'song');
+            $flag    = new Userflag($song_id, 'song');
+            $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $playlist_track++;
 
             $ourSong = array(
                 id => $song->id,
@@ -474,7 +450,7 @@ class JSON_Data
 
             $ourSong['filename']              = $song->file;
             $ourSong['track']                 = $song->track;
-            $ourSong['playlisttrack']         = $playlist_track_string;
+            $ourSong['playlisttrack']         = $playlist_track;
             $ourSong['time']                  = (int) $song->time;
             $ourSong['year']                  = $song->year;
             $ourSong['bitrate']               = $song->bitrate;

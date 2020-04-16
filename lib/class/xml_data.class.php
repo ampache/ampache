@@ -194,29 +194,6 @@ class XML_Data
     } // tags_string
 
     /**
-     * playlist_song_tracks_string
-     *
-     * This returns the formatted 'playlistTrack' string for an xml document
-     *
-     * @param Song $song
-     * @param integer[] $playlist_data
-     * @return string
-     */
-    private static function playlist_song_tracks_string($song, $playlist_data)
-    {
-        if (empty($playlist_data)) {
-            return "";
-        }
-        foreach ($playlist_data as $playlist) {
-            if ($playlist["object_id"] == $song->id) {
-                return "\t<playlisttrack>" . $playlist["track"] . "</playlisttrack>\n";
-            }
-        }
-
-        return "";
-    } // playlist_song_tracks_string
-
-    /**
      * output_xml_from_array
      * This takes a one dimensional array and creates a XML document from it. For
      * use primarily by the ajax mojo.
@@ -402,13 +379,13 @@ class XML_Data
             }
             if ($object_type == 'playlist') {
                 if (str_replace('smart_', '', (string) $object_id) === (string) $object_id) {
-                    $playlist     = new Playlist($object_id);
+                    $playlist = new Playlist($object_id);
                     $playlist->format();
 
                     $playlist_name  = $playlist->name;
                     $playitem_total = $playlist->get_media_count('song');
                 } else {
-                    $playlist     = new Search(str_replace('smart_', '', (string) $object_id));
+                    $playlist = new Search(str_replace('smart_', '', (string) $object_id));
                     $playlist->format();
 
                     $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
@@ -419,9 +396,11 @@ class XML_Data
                     $songs = $playlist->get_items();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
+                    $playlist_track = 0;
                     foreach ($songs as $song_id) {
                         if ($song_id['object_type'] == 'song') {
-                            $string .= "\t\t<playlisttrack>" . $song_id['object_id'] . "</playlisttrack>\n";
+                            $playlist_track++;
+                            $string .= "\t\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n";
                         }
                     }
                     $string .= "</$object_type>\n";
@@ -476,11 +455,11 @@ class XML_Data
      *
      * @param array $artists (description here...)
      * @param array $include Array of other items to include.
-     * @param boolean $full_xml whether to return a full XML document or just the node.
      * @param boolean $user_id
+     * @param boolean $full_xml whether to return a full XML document or just the node.
      * @return    string    return xml
      */
-    public static function artists($artists, $include = [], $full_xml = true, $user_id = false)
+    public static function artists($artists, $include = [], $user_id = false, $full_xml = true)
     {
         if ($include == null || $include == '') {
             $include = array();
@@ -549,11 +528,11 @@ class XML_Data
      *
      * @param integer[] $albums (description here...)
      * @param array $include Array of other items to include.
-     * @param boolean $full_xml whether to return a full XML document or just the node.
      * @param boolean $user_id
+     * @param boolean $full_xml whether to return a full XML document or just the node.
      * @return    string    return xml
      */
-    public static function albums($albums, $include = [], $full_xml = true, $user_id = false)
+    public static function albums($albums, $include = [], $user_id = false, $full_xml = true)
     {
         if ($include == null || $include == '') {
             $include = array();
@@ -692,11 +671,11 @@ class XML_Data
      * (Spiffy isn't it!)
      * @param integer[] $songs
      * @param array $playlist_data
-     * @param boolean $full_xml
      * @param boolean $user_id
-     * @return string    return xml
+     * @param boolean $full_xml
+     * @return string return xml
      */
-    public static function songs($songs, $playlist_data = array(), $full_xml = true, $user_id = false)
+    public static function songs($songs, $playlist_data = array(), $user_id = false, $full_xml = true)
     {
         if (count($songs) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
@@ -710,6 +689,8 @@ class XML_Data
         Song::build_cache($songs);
         Stream::set_session(Core::get_request('auth'));
 
+        $playlist_track = 0;
+
         // Foreach the ids!
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
@@ -719,12 +700,13 @@ class XML_Data
                 continue;
             }
 
+
             $song->format();
-            $track_string = self::playlist_song_tracks_string($song, $playlist_data);
-            $tag_string   = self::tags_string(Tag::get_top_tags('song', $song_id));
-            $rating       = new Rating($song_id, 'song');
-            $flag         = new Userflag($song_id, 'song');
-            $art_url      = Art::url($song->album, 'album', Core::get_request('auth'));
+            $tag_string = self::tags_string(Tag::get_top_tags('song', $song_id));
+            $rating     = new Rating($song_id, 'song');
+            $flag       = new Userflag($song_id, 'song');
+            $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
+            $playlist_track++;
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
                     // Title is an alias for name
@@ -743,7 +725,7 @@ class XML_Data
             $string .= $tag_string .
                     "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" .
                     "\t<track>" . $song->track . "</track>\n" .
-                    $track_string .
+                    "\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n" .
                     "\t<time>" . $song->time . "</time>\n" .
                     "\t<year>" . $song->year . "</year>\n" .
                     "\t<bitrate>" . $song->bitrate . "</bitrate>\n" .
