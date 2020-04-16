@@ -9,6 +9,7 @@ Admin -> Server Config -> Interface -> Custom datetime
 e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
 Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
 
+* Bump API version to 400005 (4.0.0 build 005)
 * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
   * Call xml as normal:
     * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400004
@@ -26,18 +27,19 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * NEW examples
   * docs/examples/ampache_cron.service
   * docs/examples/ampache_cron.timer
-* API - Don't gather art when adding songs
-* Fix Channel authentication
-* Fix IP checks when sending null proxy values
-* Fix Extra text in catalog API calls
-* Fix Gather art page layout
-* Fix Read vorbis rating correctly
-* Fix Search rules in UI failing to load with custom_metadata
-* Fix Warn correctly when inserting art fails
-* Fix Insert missing user preferences on login
+* API: All calls that return songs now include <playlisttrack> which can be used to identify track order.
+* API: Don't gather art when adding songs
+* Fix: Channel authentication
+* Fix: IP checks when sending null proxy values
+* Fix: Extra text in catalog API calls
+* Fix: Gather art page layout
+* Fix: Read vorbis rating correctly
+* Fix: Search rules in UI failing to load with custom_metadata
+* Fix: Warn correctly when inserting art fails
+* Fix: Insert missing user preferences on login
 * Update Composer requirements
 * Allow searching play times without requiring UI option
-* Added declare(strict_types=1); to lib/* and lib/class/*
+* Added declare(strict_types=0); to lib/* and lib/class/* (requires more work before it can be enabled)
 * Fixed a lot of incorrectly typed function calls and code documentation
 
 ## 4.1.1

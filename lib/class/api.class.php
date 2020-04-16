@@ -39,7 +39,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '400004';
+    public static $version = '400005';
 
     /**
      *  @var Browse $browse
@@ -1116,8 +1116,10 @@ class Api
     /**
      * songs
      * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=400005
      *
      * Returns songs based on the specified filter
+     * All calls that return songs now include <playlisttrack> which can be used to identify track order.
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
