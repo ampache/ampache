@@ -24,8 +24,7 @@
 $web_path = AmpConfig::get('web_path');
 $base_url = '?action=set_userflag&userflag_type=' . $userflag->type . '&object_id=' . $userflag->id;
 $othering = false;
-$flagged  = $userflag->get_flag(); ?>
-
+$flagged  = (!$userflag->get_flag()) ? false : true; ?>
 <div class="userflag">
 <?php
     if ($flagged) {

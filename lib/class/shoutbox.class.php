@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -39,6 +40,7 @@ class Shoutbox
      * Constructor
      * This pulls the shoutbox information from the database and returns
      * a constructed object, uses user_shout table
+     * @param integer $shout_id
      */
     public function __construct($shout_id)
     {
@@ -51,6 +53,8 @@ class Shoutbox
     /**
      * has_info
      * does the db call, reads from the user_shout table
+     * @param integer $shout_id
+     * @return boolean
      */
     private function has_info($shout_id)
     {
@@ -71,6 +75,7 @@ class Shoutbox
      *
      * Cleans out orphaned shoutbox items
      * @param string $object_type
+     * @param string $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -95,6 +100,8 @@ class Shoutbox
      * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
      * number of objects shown
      * @param integer $limit
+     * @param string $username
+     * @return integer[]
      */
     public static function get_top($limit, $username = null)
     {
@@ -125,6 +132,10 @@ class Shoutbox
         return $shouts;
     } // get_top
 
+    /**
+     * @param $time
+     * @return array
+     */
     public static function get_shouts_since($time)
     {
         $sql        = "SELECT * FROM `user_shout` WHERE `date` > ? ORDER BY `date` DESC";
@@ -159,6 +170,9 @@ class Shoutbox
     /**
      * get_object
      * This takes a type and an ID and returns a created object
+     * @param $type
+     * @param $object_id
+     * @return null
      */
     public static function get_object($type, $object_id)
     {
@@ -199,6 +213,8 @@ class Shoutbox
     /**
      * create
      * This takes a key'd array of data as input and inserts a new shoutbox entry, it returns the auto_inc id
+     * @param array $data
+     * @return bool|string|null
      */
     public static function create(array $data)
     {
@@ -251,6 +267,7 @@ class Shoutbox
     /**
      * update
      * This takes a key'd array of data as input and updates a shoutbox entry
+     * @param array $data
      */
     public function update(array $data)
     {
@@ -268,7 +285,8 @@ class Shoutbox
     public function format()
     {
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
-        $this->f_date = date("m\/d\/Y - H:i", (int) $this->date);
+        $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
+        $this->f_date = get_datetime($time_format, (int) $this->date);
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
 
         return true;
@@ -277,6 +295,7 @@ class Shoutbox
     /**
      * delete
      * this function deletes a specific shoutbox entry
+     * @param integer $shout_id
      */
 
     public static function delete($shout_id)
@@ -287,6 +306,11 @@ class Shoutbox
         Dba::write($sql);
     } // delete
 
+    /**
+     * @param boolean $details
+     * @param boolean $jsbuttons
+     * @return string
+     */
     public function get_display($details = true, $jsbuttons = false)
     {
         $object = Shoutbox::get_object($this->object_type, $this->object_id);
@@ -299,8 +323,9 @@ class Shoutbox
         }
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
+            $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
             $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
-            $html .= "<div class='shoutbox-date'>" . date("Y/m/d H:i:s", (int) $this->date) . "</div>";
+            $html .= "<div class='shoutbox-date'>" . get_datetime($time_format, (int) $this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . $this->f_text . "</div>";
         $html .= "</div>";
@@ -337,6 +362,11 @@ class Shoutbox
         return $html;
     }
 
+    /**
+     * @param $object_type
+     * @param $object_id
+     * @return array
+     */
     public static function get_shouts($object_type, $object_id)
     {
         $sql        = "SELECT `id` FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC";

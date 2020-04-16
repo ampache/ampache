@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -86,7 +87,7 @@ class Channel extends database_object implements media, library_item
 
         $this->start_date = $start_date;
         $this->interface  = $address;
-        $this->port       = $port;
+        $this->port       = (int) $port;
         $this->pid        = $pid;
     }
 
@@ -364,7 +365,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_target_object
-     * @return \Playlist
+     * @return Playlist
      */
     public function get_target_object()
     {
@@ -386,7 +387,7 @@ class Channel extends database_object implements media, library_item
      */
     public function get_stream_url()
     {
-        return "http://" . $this->interface . ":" . $this->port . "/stream." . $this->stream_type;
+        return "http://" . $this->interface . ":" . (string) $this->port . "/stream." . $this->stream_type;
     }
 
     /**
@@ -419,9 +420,7 @@ class Channel extends database_object implements media, library_item
      */
     public static function get_channel_list_sql()
     {
-        $sql = "SELECT `id` FROM `channel` ";
-
-        return $sql;
+        return "SELECT `id` FROM `channel` ";
     }
 
     /**
@@ -476,7 +475,7 @@ class Channel extends database_object implements media, library_item
     {
         $check = false;
         if ($this->interface && $this->port) {
-            $connection = @fsockopen($this->interface, $this->port);
+            $connection = @fsockopen($this->interface, (int) $this->port);
             if (is_resource($connection)) {
                 $check = true;
                 fclose($connection);
@@ -676,6 +675,8 @@ class Channel extends database_object implements media, library_item
      * play_url
      * @param integer $oid
      * @param string $additional_params
+     * @param string $player
+     * @param boolean $local
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = null, $local = false)
@@ -687,6 +688,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_stream_types
+     * @param string $player
      * @return string[]
      */
     public function get_stream_types($player = null)
@@ -704,22 +706,42 @@ class Channel extends database_object implements media, library_item
         return $this->get_fullname();
     }
 
+    /**
+     * @param $user
+     * @param $agent
+     * @param $location
+     * @return mixed|void
+     */
     public function set_played($user, $agent, $location)
     {
         // Do nothing
     }
 
+    /**
+     * @param $user
+     * @param $agent
+     * @return mixed|void
+     */
     public function check_play_history($user, $agent)
     {
         unset($user, $agent);
         // Do nothing
     }
 
+    /**
+     * @param $target
+     * @param $player
+     * @param array $options
+     * @return boolean
+     */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return false;
     }
 
+    /**
+     * @return mixed|void
+     */
     public static function garbage_collection()
     {
         // Do nothing

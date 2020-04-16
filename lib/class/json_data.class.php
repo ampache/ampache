@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -63,7 +64,7 @@ class JSON_Data
      * This sets the limit for any ampache transactions
      *
      * @param    integer    $limit    (description here...)
-     * @return    false|null
+     * @return    boolean
      */
     public static function set_limit($limit)
     {
@@ -76,6 +77,8 @@ class JSON_Data
         } else {
             self::$limit = (int) ($limit);
         }
+
+        return true;
     } // set_limit
 
     /**
@@ -90,9 +93,7 @@ class JSON_Data
      */
     public static function error($code, $string)
     {
-        $JSON = json_encode(array("error" => array("code" => $code, "message" => $string)), JSON_PRETTY_PRINT);
-
-        return $JSON;
+        return json_encode(array("error" => array("code" => $code, "message" => $string)), JSON_PRETTY_PRINT);
     } // error
 
     /**
@@ -102,7 +103,7 @@ class JSON_Data
      *
      * @param    string    $key    (description here...)
      * @param    string    $string    JSON data
-     * @return    string    return JSON
+     * @return string return JSON
      */
     public static function success($key, $string='')
     {
@@ -119,7 +120,8 @@ class JSON_Data
      * tags_string
      *
      * This returns the formatted 'tags' string for an JSON document
-     *
+     * @param $tags
+     * @return false|string
      */
     private static function tags_string($tags)
     {
@@ -153,7 +155,7 @@ class JSON_Data
      *
      * @param    array    $objects    (description here...)
      * @param    string    $type    (description here...)
-     * @return    string    return json
+     * @return string return JSON
      */
     public static function indexes($objects, $type)
     {
@@ -179,7 +181,7 @@ class JSON_Data
      * This returns tags to the user, in a pretty JSON document with the information
      *
      * @param    array    $tags    (description here...)
-     * @return    string    return json
+     * @return string return JSON
      */
     public static function tags($tags)
     {
@@ -213,8 +215,10 @@ class JSON_Data
      * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
-     * @param    array    $artists    (description here...)
-     * @return    string    return JSON
+     * @param array $artists (description here...)
+     * @param array $include
+     * @param boolean $user_id
+     * @return string return JSON
      */
     public static function artists($artists, $include = [], $user_id = false)
     {
@@ -245,7 +249,7 @@ class JSON_Data
                     albums => ($artist->albums ?: 0),
                     songs => ($artist->songs ?: 0),
                     art => $art_url,
-                    flag => ($flag->get_flag($user_id, false) ? 1 : 0),
+                    flag => (!$flag->get_flag($user_id, false) ? 0 : 1),
                     preciserating => ($rating->get_user_rating() ?: 0),
                     rating => ($rating->get_user_rating() ?: 0),
                     averagerating => ($rating->get_average_rating() ?: 0),
@@ -264,8 +268,10 @@ class JSON_Data
      *
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
-     * @param    array    $albums    (description here...)
-     * @return    string    return JSON
+     * @param array $albums (description here...)
+     * @param array $include
+     * @param boolean $user_id
+     * @return string return JSON
      */
     public static function albums($albums, $include = [], $user_id = false)
     {
@@ -315,9 +321,9 @@ class JSON_Data
             $theArray['disk']          = $disk;
             $theArray['tags']          = self::tags_string($album->tags);
             $theArray['art']           = $art_url;
-            $theArray['flag']          = ($flag->get_flag($user_id, false) ? 1 : 0);
-            $theArray['preciserating'] = $rating->get_user_rating();
-            $theArray['rating']        = $rating->get_user_rating();
+            $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
+            $theArray['preciserating'] = ($rating->get_user_rating() ?: 0);
+            $theArray['rating']        = ($rating->get_user_rating() ?: 0);
             $theArray['averagerating'] = $rating->get_average_rating();
             $theArray['mbid']          = $album->mbid;
 
@@ -332,10 +338,10 @@ class JSON_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param    array    $playlists    (description here...)
-     * @return    string    return xml
+     * @param array $playlists (description here...)
+     * @return string return xml
      */
-    public static function playlists($playlists, $create = false)
+    public static function playlists($playlists)
     {
         if (count($playlists) > self::$limit || self::$offset > 0) {
             if (null !== self::$limit) {
@@ -393,8 +399,11 @@ class JSON_Data
      *
      * This returns a JSON document from an array of song ids.
      * (Spiffy isn't it!)
+     * @param $songs
+     * @param boolean $user_id
+     * @return false|string
      */
-    public static function songs($songs, $playlist_data=array(), $user_id = false)
+    public static function songs($songs, $user_id = false)
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -403,9 +412,8 @@ class JSON_Data
         Song::build_cache($songs);
         Stream::set_session($_REQUEST['auth']);
 
-        $JSON = [];
-
-        $playlisttrack = 0;
+        $JSON           = [];
+        $playlist_track = 0;
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
@@ -416,14 +424,12 @@ class JSON_Data
                 continue;
             }
 
-            if (!empty($playlist_data)) {
-                $playlisttrack++;
-            }
 
             $song->format();
-            $rating                = new Rating($song_id, 'song');
-            $flag                  = new Userflag($song_id, 'song');
-            $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $rating  = new Rating($song_id, 'song');
+            $flag    = new Userflag($song_id, 'song');
+            $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $playlist_track++;
 
             $ourSong = array(
                 id => $song->id,
@@ -444,7 +450,7 @@ class JSON_Data
 
             $ourSong['filename']              = $song->file;
             $ourSong['track']                 = $song->track;
-            $ourSong['playlisttrack']         = $playlisttrack;
+            $ourSong['playlisttrack']         = $playlist_track;
             $ourSong['time']                  = (int) $song->time;
             $ourSong['year']                  = $song->year;
             $ourSong['bitrate']               = $song->bitrate;
@@ -458,7 +464,7 @@ class JSON_Data
             $ourSong['artist_mbid']           = $song->artist_mbid;
             $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
             $ourSong['art']                   = $art_url;
-            $ourSong['flag']                  = ($flag->get_flag($user_id, false) ? 1 : 0);
+            $ourSong['flag']                  = (!$flag->get_flag($user_id, false) ? 0 : 1);
             $ourSong['preciserating']         = ($rating->get_user_rating() ?: 0);
             $ourSong['rating']                = ($rating->get_user_rating() ?: 0);
             $ourSong['averagerating']         = ($rating->get_average_rating() ?: 0);
@@ -497,7 +503,7 @@ class JSON_Data
      *
      * @param    array    $videos    (description here...)
      * @param integer $user_id
-     * @return    string    return JSON
+     * @return string return JSON
      */
     public static function videos($videos, $user_id)
     {
@@ -530,11 +536,11 @@ class JSON_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param  integer[] $object_ids    Object IDs
-     * @param  integer   $user_id
+     * @param integer[] $object_ids Object IDs
+     * @param boolean $user_id
      * @return string    return JSON
      */
-    public static function democratic($object_ids=array(), $user_id)
+    public static function democratic($object_ids=array(), $user_id = false)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
@@ -634,8 +640,8 @@ class JSON_Data
      *
      * This handles creating an JSON document for an user list
      *
-     * @param    int[]    $users    User identifier list
-     * @return    string    return JSON
+     * @param    integer[]    $users    User identifier list
+     * @return string return JSON
      */
     public static function users($users)
     {
@@ -653,8 +659,8 @@ class JSON_Data
      *
      * This handles creating an JSON document for a shout list
      *
-     * @param    int[]    $shouts    Shout identifier list
-     * @return    string    return JSON
+     * @param    integer[]    $shouts    Shout identifier list
+     * @return string return JSON
      */
     public static function shouts($shouts)
     {
@@ -682,8 +688,8 @@ class JSON_Data
      *
      * This handles creating an JSON document for an activity list
      *
-     * @param    int[]    $activities    Activity identifier list
-     * @return    string    return JSON
+     * @param    integer[]    $activities    Activity identifier list
+     * @return string return JSON
      */
     public static function timeline($activities)
     {

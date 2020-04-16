@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -31,7 +32,7 @@ class Access
 {
     // Variables from DB
     /**
-     *  @var int $id
+     *  @var integer $id
      */
     public $id;
 
@@ -51,12 +52,12 @@ class Access
     public $end;
 
     /**
-     *  @var int $level
+     *  @var integer $level
      */
     public $level;
 
     /**
-     *  @var int $user
+     *  @var integer $user
      */
     public $user;
 
@@ -125,9 +126,7 @@ class Access
         $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($this->id));
 
-        $results = Dba::fetch_assoc($db_results);
-
-        return $results;
+        return Dba::fetch_assoc($db_results);
     }
 
     /**
@@ -320,10 +319,10 @@ class Access
      * @param string $type
      * @param integer|string $user
      * @param integer $level
-     * @param string $user_ip
+     * @param string $apikey
      * @return boolean
      */
-    public static function check_network($type, $user = null, $level, $user_ip = null, $apikey = null)
+    public static function check_network($type, $user = null, $level = 25, $apikey = null)
     {
         if (!AmpConfig::get('access_control')) {
             switch ($type) {
@@ -333,15 +332,6 @@ class Access
                 default:
                     return false;
             }
-        }
-
-        // Clean incoming variables
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-            $user_ip = (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
-                ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
-                : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP));
-        } else {
-            $user_ip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
         }
 
         switch ($type) {
@@ -369,7 +359,8 @@ class Access
                 'WHERE `start` <= ? AND `end` >= ? ' .
                 'AND `level` >= ? AND `type` = ?';
 
-        $params = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
+        $user_ip = Core::get_user_ip();
+        $params  = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
 
         if (strlen((string) $user) && $user != '-1') {
             $sql .= " AND `user` IN(?, '-1')";
@@ -490,6 +481,8 @@ class Access
         if ($this->level == '50') {
             return T_('Read/Write');
         }
+
+        return '';
     }
 
     /**

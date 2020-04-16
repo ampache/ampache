@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -215,37 +216,42 @@ class Ajax
     } // set_include_override
 
     /**
-      * start_container
+     * start_container
      * This checks to see if we're AJAXin'. If we aren't then it echoes out
      * the html needed to start a container that can be replaced by Ajax.
      * @param string $name
      * @param string $class
+     * @return boolean
      */
     public static function start_container($name, $class = '')
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
+        } else {
+            echo '<div id="' . scrub_out($name) . '"';
+            if (!empty($class)) {
+                echo ' class="' . scrub_out($class) . '"';
+            }
+            echo '>';
         }
 
-        echo '<div id="' . scrub_out($name) . '"';
-        if (!empty($class)) {
-            echo ' class="' . scrub_out($class) . '"';
-        }
-        echo '>';
+        return false;
     } // start_container
 
     /**
      * end_container
      * This ends the container if we're not doing the AJAX thing
+     * @return boolean
      */
     public static function end_container()
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
+        } else {
+            echo "</div>";
+            self::$include_override = false;
         }
 
-        echo "</div>";
-
-        self::$include_override = false;
+        return false;
     } // end_container
 } // end ajax.class

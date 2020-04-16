@@ -23,6 +23,8 @@
 /**
  * show_rating
  * This takes an artist id and includes the right file
+ * @param $object_id
+ * @param $type
  */
 function show_rating($object_id, $type)
 {
@@ -34,6 +36,7 @@ function show_rating($object_id, $type)
 /**
  * get_rating_name
  * This takes a score and returns the name that we should use
+ * @param string $score
  * @return string
  */
 function get_rating_name($score)

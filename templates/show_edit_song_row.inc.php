@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Lib\Metadata\Model\Metadata;
+
+?>
 <div>
     <form method="post" id="edit_song_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
@@ -107,7 +111,7 @@
                         <?php
                         $dismetas = $libitem->getDisabledMetadataFields();
                         foreach ($libitem->getMetadata() as $metadata) {
-                            /* @var $metadata \Lib\Metadata\Model\Metadata */
+                            /* @var $metadata Metadata */
                             $field = $metadata->getField();
                             if ($field->isPublic() && !in_array($field->getName(), $dismetas)) {
                                 echo '<tr>'

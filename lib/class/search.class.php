@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -19,6 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+use Lib\Metadata\Repository\MetadataField;
 
 /**
  * Search Class
@@ -45,8 +48,11 @@ class Search extends playlist_object
 
     /**
      * constructor
+     * @param integer $search_id
+     * @param string $searchtype
+     * @param User $user
      */
-    public function __construct($search_id = null, $searchtype = 'song', $user = null)
+    public function __construct($search_id = 0, $searchtype = 'song', $user = null)
     {
         if ($user) {
             $this->search_user = $user;
@@ -54,7 +60,7 @@ class Search extends playlist_object
             $this->search_user = Core::get_global('user');
         }
         $this->searchtype = $searchtype;
-        if ($search_id) {
+        if ($search_id > 0) {
             $info = $this->get_info($search_id);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
@@ -767,7 +773,7 @@ class Search extends playlist_object
         );
 
         $metadataFields          = array();
-        $metadataFieldRepository = new \Lib\Metadata\Repository\MetadataField();
+        $metadataFieldRepository = new MetadataField();
         foreach ($metadataFieldRepository->findAll() as $metadata) {
             $metadataFields[$metadata->getId()] = $metadata->getName();
         }
@@ -1152,6 +1158,7 @@ class Search extends playlist_object
     /**
      * format
      * Gussy up the data
+     * @param boolean $details
      */
     public function format($details = true)
     {
@@ -1275,6 +1282,7 @@ class Search extends playlist_object
      *
      * Iterates over our array of types to find out the basetype for
      * the passed string.
+     * @param $name
      * @return string|false
      */
     public function name_to_basetype($name)
@@ -1303,8 +1311,9 @@ class Search extends playlist_object
                 $value = 'title';
             }
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
-                $ruleID = $ruleID[1];
-                foreach (explode('|', $data['rule_' . $ruleID . '_input']) as $input) {
+                $ruleID     = (string) $ruleID[1];
+                $input_rule = (string) $data['rule_' . $ruleID . '_input'];
+                foreach (explode('|', $input_rule) as $input) {
                     $this->rules[] = array(
                         $value,
                         $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'],
@@ -1327,7 +1336,8 @@ class Search extends playlist_object
     {
         // Make sure we have a unique name
         if (! $this->name) {
-            $this->name = Core::get_global('user')->username . ' - ' . date('Y-m-d H:i:s', time());
+            $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
+            $this->name  = Core::get_global('user')->username . ' - ' . get_datetime($time_format, time());
         }
         $sql        = "SELECT `id` FROM `search` WHERE `name` = ?";
         $db_results = Dba::read($sql, array($this->name));
@@ -1398,6 +1408,9 @@ class Search extends playlist_object
         return $this->id;
     }
 
+    /**
+     * @return mixed|void
+     */
     public static function garbage_collection()
     {
     }
@@ -1411,6 +1424,7 @@ class Search extends playlist_object
      * @param array $data
      * @param string|false $type
      * @param array $operator
+     * @return array|bool|int|string|string[]|null
      */
     private function _mangle_data($data, $type, $operator)
     {
@@ -2534,6 +2548,10 @@ class Search extends playlist_object
      * year_search
      *
      * Build search rules for year -> year searching.
+     * @param $fromYear
+     * @param $toYear
+     * @param $size
+     * @param $offset
      * @return array
      */
     public static function year_search($fromYear, $toYear, $size, $offset)

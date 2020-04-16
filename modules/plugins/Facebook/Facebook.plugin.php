@@ -70,6 +70,11 @@ class AmpacheFacebook
         return true;
     } // upgrade
 
+    /**
+     * @param string $url
+     * @param string $text
+     * @return string
+     */
     public function external_share($url, $text)
     {
         $share = "https://www.facebook.com/sharer/sharer.php";
@@ -83,6 +88,7 @@ class AmpacheFacebook
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {

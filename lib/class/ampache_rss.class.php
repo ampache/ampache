@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -35,6 +36,7 @@ class Ampache_RSS
     /**
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
+     * @param string $type
      */
     public function __construct($type)
     {
@@ -45,6 +47,7 @@ class Ampache_RSS
      * get_xml
      * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
      * and then uses the xmlDATA class to build the document
+     * @param array $params
      * @return string
      */
     public function get_xml($params = null)
@@ -74,9 +77,8 @@ class Ampache_RSS
             }
 
             XML_Data::set_type('rss');
-            $xml_document = XML_Data::rss_feed($data, $this->get_title(), $pub_date);
 
-            return $xml_document;
+            return XML_Data::rss_feed($data, $this->get_title(), $pub_date);
         }
 
         return null;
@@ -191,7 +193,7 @@ class Ampache_RSS
                     'link' => $song->link,
                     'description' => $description,
                     'comments' => $client->f_name . ' - ' . $element['agent'],
-                    'pubDate' => date('r', (int) $element['expire'])
+                    'pubDate' => date("r", (int) $element['expire'])
                     );
             $results[] = $xml_array;
         } // end foreach

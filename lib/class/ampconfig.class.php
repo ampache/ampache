@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -49,6 +50,8 @@ class AmpConfig
      *
      * This returns a config value.
      * @param string $name
+     * @param string $default
+     * @return mixed|null
      */
     public static function get($name, $default = null)
     {
@@ -81,7 +84,6 @@ class AmpConfig
         $rating_filter = 0;
         if (self::get('rating_browse_filter')) {
             $rating_filter = (int) self::get('rating_browse_minimum_stars');
-            debug_event('ampconfig.class', 'Requested a ratings filter of: ' . $rating_filter . '.', 5);
         }
         if ($rating_filter > 0 && $rating_filter <= 5) {
             return $rating_filter;
@@ -96,7 +98,9 @@ class AmpConfig
      *
      * This sets config values.
      * @param string $name
+     * @param $value
      * @param boolean $clobber
+     * @return boolean
      */
     public static function set($name, $value, $clobber = false)
     {
@@ -106,8 +110,9 @@ class AmpConfig
 
             return false;
         }
-
         self::$_global[$name] = $value;
+
+        return true;
     }
 
     /**

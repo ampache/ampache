@@ -29,6 +29,14 @@ class SubsonicClient
     protected $_creds;
     protected $_commands;
 
+    /**
+     * SubsonicClient constructor.
+     * @param string $username
+     * @param string $password
+     * @param string $serverUrl
+     * @param string $port
+     * @param string $client
+     */
     public function __construct($username, $password, $serverUrl, $port = "4040", $client = "Ampache")
     {
         $this->setServer($serverUrl, $port);
@@ -78,11 +86,22 @@ class SubsonicClient
         );
     }
 
+    /**
+     * @param $action
+     * @param array $object
+     * @param boolean $rawAnswer
+     * @return array|bool|object|string
+     */
     public function querySubsonic($action, $object = array(), $rawAnswer = false)
     {
         return $this->_querySubsonic($action, $object, $rawAnswer);
     }
 
+    /**
+     * @param $url
+     * @param array $object
+     * @return string
+     */
     public function parameterize($url, $object = array())
     {
         $params = array_merge($this->_creds, $object);
@@ -90,6 +109,12 @@ class SubsonicClient
         return $url . http_build_query($params);
     }
 
+    /**
+     * @param $action
+     * @param array $o
+     * @param boolean $rawAnswer
+     * @return array|bool|object|string
+     */
     protected function _querySubsonic($action, $o = array(), $rawAnswer = false)
     {
         // Make sure the command is in the list of commands
@@ -119,6 +144,10 @@ class SubsonicClient
         }
     }
 
+    /**
+     * @param $server
+     * @param $port
+     */
     public function setServer($server, $port = null)
     {
         $protocol = "";
@@ -149,11 +178,19 @@ class SubsonicClient
         $this->_serverPort = $port;
     }
 
+    /**
+     * @return string
+     */
     public function getServer()
     {
         return $this->_serverUrl . ":" . $this->_serverPort;
     }
 
+    /**
+     * @param $error
+     * @param $data
+     * @return object
+     */
     protected function error($error, $data = null)
     {
         error_log($error . "\n" . print_r($data, true));
@@ -161,6 +198,10 @@ class SubsonicClient
         return (object) array("success" => false, "error" => $error, "data" => $data);
     }
 
+    /**
+     * @param $response
+     * @return array|object
+     */
     protected function parseResponse($response)
     {
         $arr = json_decode($response, true);
@@ -174,11 +215,20 @@ class SubsonicClient
         }
     }
 
+    /**
+     * @param $command
+     * @return boolean
+     */
     public function isCommand($command)
     {
         return in_array($command, $this->_commands);
     }
 
+    /**
+     * @param $action
+     * @param $arguments
+     * @return array|bool|object|string
+     */
     public function __call($action, $arguments)
     {
         $o = count($arguments) ? (array) $arguments[0] : array();

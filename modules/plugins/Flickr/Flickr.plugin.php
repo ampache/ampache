@@ -79,6 +79,11 @@ class Ampacheflickr
         return true;
     } // upgrade
 
+    /**
+     * @param string $search
+     * @param string $category
+     * @return array
+     */
     public function get_photos($search, $category = 'concert')
     {
         $photos = array();
@@ -100,6 +105,12 @@ class Ampacheflickr
         return $photos;
     }
 
+    /**
+     * @param $type
+     * @param array $options
+     * @param integer $limit
+     * @return array
+     */
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         if (!$limit) {
@@ -132,6 +143,7 @@ class Ampacheflickr
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
@@ -154,4 +166,3 @@ class Ampacheflickr
         return true;
     } // load
 } // end Ampacheflickr
-;

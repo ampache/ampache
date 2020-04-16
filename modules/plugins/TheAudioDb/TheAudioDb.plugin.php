@@ -77,6 +77,7 @@ class AmpacheTheaudiodb
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
@@ -102,11 +103,12 @@ class AmpacheTheaudiodb
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
+     * @param array $gather_types
+     * @param array $media_info
+     * @return null
      */
     public function get_metadata($gather_types, $media_info)
     {
-        debug_event('theaudiodb.plugin', 'Getting metadata from TheAudioDb...', 5);
-
         // Music metadata only
         if (!in_array('music', $gather_types)) {
             debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', 5);
@@ -116,6 +118,7 @@ class AmpacheTheaudiodb
 
         try {
             if (in_array('album', $gather_types)) {
+                debug_event('theaudiodb.plugin', 'Getting album metadata from TheAudioDb...', 5);
                 $release = null;
                 if ($media_info['mb_albumid_group']) {
                     $album = $this->get_album($media_info['mb_albumid_group']);
@@ -134,6 +137,7 @@ class AmpacheTheaudiodb
                     $results['title'] = $release->strAlbum;
                 }
             } elseif (in_array('artist', $gather_types)) {
+                debug_event('theaudiodb.plugin', 'Getting artist metadata from TheAudioDb...', 5);
                 $release = null;
                 if ($media_info['mb_artistid']) {
                     $artist = $this->get_artist($media_info['mb_artistid']);
@@ -170,6 +174,12 @@ class AmpacheTheaudiodb
         return $results;
     } // get_metadata
 
+    /**
+     * @param string $type
+     * @param array $options
+     * @param integer $limit
+     * @return array
+     */
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
@@ -177,6 +187,10 @@ class AmpacheTheaudiodb
         return Art::gather_metadata_plugin($this, $type, $options);
     }
 
+    /**
+     * @param string $func
+     * @return mixed|null
+     */
     private function api_call($func)
     {
         $url = 'http://www.theaudiodb.com/api/v1/json/' . $this->api_key . '/' . $func;
@@ -190,34 +204,59 @@ class AmpacheTheaudiodb
         return json_decode($request->body);
     }
 
+    /**
+     * @param string $name
+     * @return mixed|null
+     */
     private function search_artists($name)
     {
         return $this->api_call('search.php?s=' . rawurlencode($name));
     }
 
+    /**
+     * @param string $mbid
+     * @return mixed|null
+     */
     private function get_artist($mbid)
     {
         return $this->api_call('artist-mb.php?i=' . $mbid);
     }
 
+    /**
+     * @param string $artist
+     * @param string $album
+     * @return mixed|null
+     */
     private function search_album($artist, $album)
     {
         return $this->api_call('searchalbum.php?s=' . rawurlencode($artist) . '&a=' . rawurlencode($album));
     }
 
+    /**
+     * @param string $mbid
+     * @return mixed|null
+     */
     private function get_album($mbid)
     {
         return $this->api_call('album-mb.php?i=' . $mbid);
     }
 
+    /**
+     * @param string $artist
+     * @param string $title
+     * @return mixed|null
+     */
     private function search_track($artist, $title)
     {
         return $this->api_call('searchtrack.php?s=' . rawurlencode($artist) . '&t=' . rawurlencode($title));
     }
 
+    /**
+     * @param string $mbid
+     * @return mixed|null
+     */
     private function get_track($mbid)
     {
         return $this->api_call('track-mb.php?i=' . $mbid);
     }
 } // end AmpacheTheaudiodb
-;

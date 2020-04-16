@@ -32,10 +32,12 @@
  *
  * shows a confirmation of an action
  *
- * @param    string    $title    The Title of the message
- * @param    string    $text    The details of the message
- * @param    string    $next_url    Where to go next
- * @param    integer    $cancel    T/F show a cancel button that uses return_referer()
+ * @param string $title The Title of the message
+ * @param string $text The details of the message
+ * @param string $next_url Where to go next
+ * @param integer $cancel T/F show a cancel button that uses return_referer()
+ * @param string $form_name
+ * @param boolean $visible
  */
 function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = 'confirmation', $visible = true)
 {
@@ -48,6 +50,11 @@ function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = '
     require AmpConfig::get('prefix') . UI::find_template('show_confirmation.inc.php');
 } // show_confirmation
 
+/**
+ * @param $action
+ * @param $catalogs
+ * @param $options
+ */
 function catalog_worker($action, $catalogs = null, $options = null)
 {
     if (AmpConfig::get('ajax_load')) {
@@ -197,6 +204,7 @@ function get_location()
 /**
  * show_preference_box
  * This shows the preference box for the preferences pages.
+ * @param $preferences
  */
 function show_preference_box($preferences)
 {
@@ -207,6 +215,12 @@ function show_preference_box($preferences)
  * show_album_select
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
+ * @param string $name
+ * @param integer $album_id
+ * @param boolean $allow_add
+ * @param integer $song_id
+ * @param boolean $allow_none
+ * @param string $user
  */
 function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
 {
@@ -221,7 +235,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
 
     $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix`, `disk` FROM `album`";
     $params = array();
-    if ($user) {
+    if ($user !== null) {
         $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
         $params[] = $user;
     }
@@ -265,8 +279,14 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
  * show_artist_select
  * This is the same as show_album_select except it's *gasp* for artists! How
  * inventive!
+ * @param string $name
+ * @param integer $artist_id
+ * @param boolean $allow_add
+ * @param integer $song_id
+ * @param boolean $allow_none
+ * @param integer $user_id
  */
-function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user = null)
+function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id = 0, $allow_none = false, $user_id = null)
 {
     static $artist_id_cnt = 0;
     // Generate key to use for HTML element ID
@@ -278,9 +298,9 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
 
     $sql    = "SELECT `id`, `name`, `prefix` FROM `artist` ";
     $params = array();
-    if ($user) {
+    if ($user_id !== null) {
         $sql .= "WHERE `user` = ? ";
-        $params[] = $user;
+        $params[] = $user_id;
     }
     $sql .= "ORDER BY `name`";
     $db_results = Dba::read($sql, $params);
@@ -318,6 +338,11 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
  * show_tvshow_select
  * This is the same as show_album_select except it's *gasp* for tvshows! How
  * inventive!
+ * @param string $name
+ * @param integer $tvshow_id
+ * @param boolean $allow_add
+ * @param integer $season_id
+ * @param boolean $allow_none
  */
 function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false)
 {
@@ -355,6 +380,14 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
     echo "</select>\n";
 } // show_tvshow_select
 
+/**
+ * @param $name
+ * @param $season_id
+ * @param boolean $allow_add
+ * @param integer $video_id
+ * @param boolean $allow_none
+ * @return boolean
+ */
 function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false)
 {
     if (!$season_id) {
@@ -394,6 +427,8 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
     }
 
     echo "</select>\n";
+
+    return true;
 }
 
 /**
@@ -402,6 +437,9 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
  * catalogs.
  * @param string $name
  * @param integer $catalog_id
+ * @param string $style
+ * @param boolean $allow_none
+ * @param string $filter_type
  */
 function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = '')
 {
@@ -436,6 +474,9 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
  * show_album_select
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
+ * @param string $name
+ * @param integer $license_id
+ * @param integer $song_id
  */
 function show_license_select($name, $license_id = 0, $song_id = 0)
 {
@@ -478,6 +519,9 @@ function show_license_select($name, $license_id = 0, $song_id = 0)
  * show_user_select
  * This one is for users! shows a select/option statement so you can pick a user
  * to blame
+ * @param string $name
+ * @param string $selected
+ * @param string $style
  */
 function show_user_select($name, $selected = '', $style = '')
 {
@@ -504,6 +548,9 @@ function show_user_select($name, $selected = '', $style = '')
 /**
  * show_playlist_select
  * This one is for playlists!
+ * @param string $name
+ * @param string $selected
+ * @param string $style
  */
 function show_playlist_select($name, $selected = '', $style = '')
 {
@@ -546,6 +593,12 @@ function xoutput_headers()
     header("Pragma: no-cache");
 }
 
+/**
+ * @param $array
+ * @param boolean $callback
+ * @param string $type
+ * @return false|mixed|string
+ */
 function xoutput_from_array($array, $callback = false, $type = '')
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
@@ -560,6 +613,12 @@ function xoutput_from_array($array, $callback = false, $type = '')
     }
 }
 
+/**
+ * @param $array
+ * @param boolean $callback
+ * @param string $type
+ * @return false|string
+ */
 function json_from_array($array, $callback = false, $type = '')
 {
     return json_encode($array);
@@ -569,12 +628,13 @@ function json_from_array($array, $callback = false, $type = '')
  * xml_get_header
  * This takes the type and returns the correct xml header
  * @param string $type
+ * @return string
  */
 function xml_get_header($type)
 {
     switch ($type) {
         case 'itunes':
-            $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
                 "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
                 "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
                 "<plist version=\"1.0\">\n" .
@@ -586,23 +646,11 @@ function xml_get_header($type)
                 "       <key>Show Content Ratings</key><true/>\n" .
                 "       <key>Tracks</key>\n" .
                 "       <dict>\n";
-
-            return $header;
         case 'xspf':
-            $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
+            return "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
             "<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->";
-            "<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n " .
-            "<title>" . T("Ampache XSPF Playlist") . "</title>\n" .
-            "<creator>" . AmpConfig::get('site_title') . "</creator>\n" .
-            "<annotation>" . AmpConfig::get('site_title') . "</annotation>\n" .
-            "<info>" . AmpConfig::get('web_path') . "</info>\n" .
-                "<trackList>\n\n\n\n";
-
-            return $header;
         default:
-            $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-
-            return $header;
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     }
 } //xml_get_header
 
@@ -610,30 +658,27 @@ function xml_get_header($type)
  * xml_get_footer
  * This takes the type and returns the correct xml footer
  * @param string $type
+ * @return string
  */
 function xml_get_footer($type)
 {
     switch ($type) {
         case 'itunes':
-            $footer = "      </dict>\n" .
+            return "      </dict>\n" .
                 "</dict>\n" .
                 "</plist>\n";
-
-            return $footer;
         case 'xspf':
-            $footer = "      </trackList>\n" .
+            return "      </trackList>\n" .
                 "</playlist>\n";
-
-            return $footer;
         default:
-
-            break;
+            return '';
     }
 } // xml_get_footer
 
 /**
  * toggle_visible
  * This is identical to the javascript command that it actually calls
+ * @param $element
  */
 function toggle_visible($element)
 {
@@ -646,6 +691,7 @@ function toggle_visible($element)
  * display_notification
  * Show a javascript notification to the user
  * @param string $message
+ * @param integer $timeout
  */
 function display_notification($message, $timeout = 5000)
 {
@@ -658,6 +704,8 @@ function display_notification($message, $timeout = 5000)
  * print_bool
  * This function takes a boolean value and then prints out a friendly text
  * message.
+ * @param $value
+ * @return string
  */
 function print_bool($value)
 {
@@ -672,7 +720,7 @@ function print_bool($value)
 
 /**
  * show_now_playing
- * This shows the Now Playing templates and does some garbage collecion
+ * This shows the Now Playing templates and does some garbage collection
  * this should really be somewhere else
  */
 function show_now_playing()
@@ -685,6 +733,10 @@ function show_now_playing()
     require_once AmpConfig::get('prefix') . UI::find_template('show_now_playing.inc.php');
 } // show_now_playing
 
+/**
+ * @param boolean $render
+ * @param boolean $force
+ */
 function show_table_render($render = false, $force = false)
 {
     // Include table render javascript only once

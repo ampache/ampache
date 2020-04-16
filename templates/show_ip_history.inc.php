@@ -49,7 +49,7 @@
 <?php foreach ($history as $data) { ?>
 <tr class="<?php echo UI::flip_class(); ?>">
     <td class="cel_date">
-        <?php echo date("d/m/Y H\hi", $data['date']); ?>
+        <?php echo get_datetime($time_format, (int) $data['date']); ?>
     </td>
     <td class="cel_ipaddress">
         <?php echo inet_ntop($data['ip']); ?>

@@ -108,6 +108,9 @@ class CliHandler extends Handler
         }
     }
 
+    /**
+     * @param $handle
+     */
     public function iterateItems($handle)
     {
         $item = '';
@@ -125,7 +128,7 @@ class CliHandler extends Handler
      * Assemble the command for CLI
      * @param string $command beets command (e.g. 'ls myArtist')
      * @param boolean $disableCostomFields disables the -f switch for this time
-     * @return type
+     * @return string
      */
     protected function assembleCommand($command, $disableCostomFields = false)
     {

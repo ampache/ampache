@@ -47,7 +47,7 @@ function get_media_files($media_ids)
         }
         if ($media->enabled) {
             $media->format();
-            $total_size += sprintf("%.2f", ($media->size / 1048576));
+            $total_size .= sprintf("%.2f", ($media->size / 1048576));
             $dirname = '';
             $parent  = $media->get_parent();
             if ($parent != null) {
@@ -71,8 +71,9 @@ function get_media_files($media_ids)
  * takes array of full paths to medias
  * zips them and sends them
  *
- * @param    string    $name    name of the zip file to be created
- * @param    array    $media_files    array of full paths to medias to zip create w/ call to get_media_files
+ * @param string $name name of the zip file to be created
+ * @param array $media_files array of full paths to medias to zip create w/ call to get_media_files
+ * @throws Exception
  */
 function send_zip($name, $media_files)
 {

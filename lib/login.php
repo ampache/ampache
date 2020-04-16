@@ -122,7 +122,7 @@ if (!empty($username) && isset($auth)) {
         $city       = array_key_exists('city', $auth) ? $auth['city']    : '';
 
         /* Attempt to create the user */
-        if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city)) {
+        if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {
             $user = User::get_from_username($username);
 
             if (array_key_exists('avatar', $auth)) {

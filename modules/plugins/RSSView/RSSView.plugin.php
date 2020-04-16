@@ -92,8 +92,9 @@ class AmpacheRSSView
      */
     public function display_home()
     {
-        $xmlstr = file_get_contents($this->feed_url);
-        $xml    = simplexml_load_string($xmlstr);
+        $xmlstr      = file_get_contents($this->feed_url);
+        $xml         = simplexml_load_string($xmlstr);
+        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         if ($xml->channel) {
             UI::show_box_top($xml->channel->title);
             $count = 0;
@@ -102,7 +103,7 @@ class AmpacheRSSView
                 echo '<tr class="' . ((($count % 2) == 0) ? 'even' : 'odd') . '"><td>';
                 echo '<div>';
                 echo '<div style="float: left; font-weight: bold;"><a href="' . $item->link . '" target="_blank">' . $item->title . '</a></div>';
-                echo '<div style="float: right;">' . date("Y/m/d H:i:s", strtotime($item->pubDate)) . '</div>';
+                echo '<div style="float: right;">' . get_datetime($time_format, strtotime($item->pubDate)) . '</div>';
                 echo '</div><br />';
                 echo '<div style="margin-left: 30px;">';
                 if (isset($item->image)) {
@@ -127,6 +128,7 @@ class AmpacheRSSView
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -40,7 +41,9 @@ class Preference extends database_object
     /**
      * get_by_user
      * Return a preference for specific user identifier
+     * @param string $user_id
      * @param string $pref_name
+     * @return array|mixed
      */
     public static function get_by_user($user_id, $pref_name)
     {
@@ -70,6 +73,12 @@ class Preference extends database_object
     /**
      * update
      * This updates a single preference from the given name or id
+     * @param string $preference
+     * @param string $user_id
+     * @param array|string $value
+     * @param boolean $applytoall
+     * @param boolean $applytodefault
+     * @return boolean
      */
     public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false)
     {
@@ -117,6 +126,9 @@ class Preference extends database_object
     /**
      * update_level
      * This takes a preference ID and updates the level required to update it (performed by an admin)
+     * @param $preference
+     * @param $level
+     * @return boolean
      */
     public static function update_level($preference, $level)
     {
@@ -139,11 +151,14 @@ class Preference extends database_object
     /**
      * update_all
      * This takes a preference id and a value and updates all users with the new info
+     * @param integer $preference_id
+     * @param string $value
+     * @return boolean
      */
     public static function update_all($preference_id, $value)
     {
-        $preference_id = Dba::escape($preference_id);
-        $value         = Dba::escape($value);
+        $preference_id = (string) Dba::escape($preference_id);
+        $value         = (string) Dba::escape($value);
 
         $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'";
         Dba::write($sql);
@@ -157,6 +172,7 @@ class Preference extends database_object
      * exists
      * This just checks to see if a preference currently exists
      * @param string $preference
+     * @return int
      */
     public static function exists($preference)
     {
@@ -172,6 +188,8 @@ class Preference extends database_object
      * has_access
      * This checks to see if the current user has access to modify this preference
      * as defined by the preference name
+     * @param $preference
+     * @return boolean
      */
     public static function has_access($preference)
     {
@@ -196,6 +214,8 @@ class Preference extends database_object
     /**
      * id_from_name
      * This takes a name and returns the id
+     * @param $name
+     * @return array|mixed
      */
     public static function id_from_name($name)
     {
@@ -218,6 +238,8 @@ class Preference extends database_object
      * name_from_id
      * This returns the name from an id, it's the exact opposite
      * of the function above it, amazing!
+     * @param $id
+     * @return mixed
      */
     public static function name_from_id($id)
     {
@@ -255,6 +277,8 @@ class Preference extends database_object
     /**
      * get_all
      * This returns a nice flat array of all of the possible preferences for the specified user
+     * @param string $user_id
+     * @return array
      */
     public static function get_all($user_id)
     {
@@ -291,6 +315,7 @@ class Preference extends database_object
      * @param string $type
      * @param string $category
      * @param string $subcategory
+     * @return boolean
      */
     public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null)
     {
@@ -325,6 +350,7 @@ class Preference extends database_object
     /**
      * delete
      * This deletes the specified preference, a name or a ID can be passed
+     * @param $preference
      */
     public static function delete($preference)
     {
@@ -343,6 +369,8 @@ class Preference extends database_object
     /**
      * rename
      * This renames a preference in the database
+     * @param $old
+     * @param $new
      */
     public static function rename($old, $new)
     {
@@ -366,6 +394,7 @@ class Preference extends database_object
      * fix_preferences
      * This takes the preferences, explodes what needs to
      * become an array and boolean everything
+     * @param $results
      * @return array
      */
     public static function fix_preferences($results)
@@ -399,6 +428,8 @@ class Preference extends database_object
     /**
      * load_from_session
      * This loads the preferences from the session rather then creating a connection to the database
+     * @param integer $uid
+     * @return boolean
      */
     public static function load_from_session($uid = -1)
     {
@@ -426,6 +457,8 @@ class Preference extends database_object
      * This returns true / false if the preference in question is a boolean preference
      * This is currently only used by the debug view, could be used other places.. wouldn't be a half
      * bad idea
+     * @param $key
+     * @return boolean
      */
     public static function is_boolean($key)
     {
@@ -453,6 +486,7 @@ class Preference extends database_object
       * init
      * This grabs the preferences and then loads them into conf it should be run on page load
      * to initialize the needed variables
+     * @return boolean
      */
     public static function init()
     {
@@ -512,5 +546,7 @@ class Preference extends database_object
         AmpConfig::set_by_array($results, true);
         $_SESSION['userdata']['preferences'] = $results;
         $_SESSION['userdata']['uid']         = $user_id;
+
+        return true;
     } // init
 } // end preference.class

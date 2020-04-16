@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -32,6 +33,10 @@ class WebDAV_Catalog extends DAV\Collection
 {
     private $catalog_id;
 
+    /**
+     * WebDAV_Catalog constructor.
+     * @param integer $catalog_id
+     */
     public function __construct($catalog_id = 0)
     {
         $this->catalog_id = $catalog_id;
@@ -59,7 +64,8 @@ class WebDAV_Catalog extends DAV\Collection
 
     /**
      * getChild
-     * @return \WebDAV_File|\WebDAV_Directory
+     * @param $name
+     * @return WebDAV_File|WebDAV_Directory
      */
     public function getChild($name)
     {
@@ -77,6 +83,7 @@ class WebDAV_Catalog extends DAV\Collection
 
     /**
      * childExists
+     * @param $name
      * @return boolean
      */
     public function childExists($name)

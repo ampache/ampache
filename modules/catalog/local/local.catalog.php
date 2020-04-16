@@ -20,6 +20,9 @@
  *
  */
 
+use Lib\Metadata\Repository\Metadata;
+use Lib\Metadata\Repository\MetadataField;
+
 /**
  * Local Catalog Class
  *
@@ -99,6 +102,9 @@ class Catalog_local extends Catalog
         return true;
     } // install
 
+    /**
+     * @return array|mixed
+     */
     public function catalog_fields()
     {
         $fields['path']      = array('description' => T_('Path'), 'type' => 'text');
@@ -112,6 +118,7 @@ class Catalog_local extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
+     * @param integer $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -131,6 +138,8 @@ class Catalog_local extends Catalog
      * Try to figure out which catalog path most closely resembles this one.
      * This is useful when creating a new catalog to make sure we're not
      * doubling up here.
+     * @param $path
+     * @return bool|mixed
      */
     public static function get_from_path($path)
     {
@@ -165,6 +174,9 @@ class Catalog_local extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
+     * @param $catalog_id
+     * @param array $data
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     {
@@ -217,6 +229,9 @@ class Catalog_local extends Catalog
      * Recurses through $this->path and pulls out all mp3s and returns the
      * full path in an array. Passes gather_type to determine if we need to
      * check id3 information against the db.
+     * @param $path
+     * @param $options
+     * @return boolean
      */
     public function add_files($path, $options)
     {
@@ -282,8 +297,15 @@ class Catalog_local extends Catalog
 
         /* Close the dir handle */
         @closedir($handle);
+
+        return true;
     } // add_files
 
+    /**
+     * @param $full_file
+     * @param $options
+     * @return boolean
+     */
     public function add_file($full_file, $options)
     {
         // Ensure that we've got our cache
@@ -314,7 +336,7 @@ class Catalog_local extends Catalog
 
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
-                debug_event('local.catalog', "Unable to chdir to $path", 2);
+                debug_event('local.catalog', "Unable to chdir to $full_file", 2);
                 /* HINT: directory (file path) */
                 AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $path));
             }
@@ -324,10 +346,11 @@ class Catalog_local extends Catalog
         } //it's a directory
 
         $is_audio_file = Catalog::is_audio_file($full_file);
+        $is_video_file = false;
         if (AmpConfig::get('catalog_video_pattern')) {
             $is_video_file = Catalog::is_video_file($full_file);
         }
-
+        $is_playlist = false;
         if ($options['parse_playlist'] && AmpConfig::get('catalog_playlist_pattern')) {
             $is_playlist = Catalog::is_playlist_file($full_file);
         }
@@ -428,6 +451,7 @@ class Catalog_local extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
+     * @param array $options
      */
     public function add_to_catalog($options = null)
     {
@@ -456,6 +480,7 @@ class Catalog_local extends Catalog
 
         // Prevent the script from timing out and flush what we've got
         set_time_limit(0);
+        $current_time = time();
 
         // If podcast catalog, we don't want to analyze files for now
         if ($this->gather_types == "podcast") {
@@ -468,15 +493,12 @@ class Catalog_local extends Catalog
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
                     debug_event('local.catalog', 'Processing playlist: ' . $full_file, 5);
-                    $result = $this->import_playlist($full_file);
+                    $result = self::import_playlist($full_file);
                     if ($result['success']) {
                         $file = basename($full_file);
                     } // end if import worked
                 } // end foreach playlist files
             }
-
-            /* Do a little stats mojo here */
-            $current_time = time();
 
             if ($options['gather_art']) {
                 $catalog_id = $this->id;
@@ -499,9 +521,7 @@ class Catalog_local extends Catalog
 
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
-        }
-        UI::update_text(T_('Catalog Updated'), sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate));
-        if (!defined('SSE_OUTPUT')) {
+            UI::update_text(T_('Catalog Updated'), sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate));
             UI::show_box_bottom();
         }
     } // add_to_catalog
@@ -550,6 +570,10 @@ class Catalog_local extends Catalog
      * _verify_chunk
      * This verifies a chunk of the catalog, done to save
      * memory
+     * @param $media_type
+     * @param $chunk
+     * @param $chunk_size
+     * @return int
      */
     private function _verify_chunk($media_type, $chunk, $chunk_size)
     {
@@ -562,6 +586,7 @@ class Catalog_local extends Catalog
         $db_results = Dba::read($sql);
 
         if (AmpConfig::get('memory_cache')) {
+            $media_ids = array();
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
@@ -645,8 +670,8 @@ class Catalog_local extends Catalog
             }
         }
 
-        \Lib\Metadata\Repository\Metadata::garbage_collection();
-        \Lib\Metadata\Repository\MetadataField::garbage_collection();
+        Metadata::garbage_collection();
+        MetadataField::garbage_collection();
 
         return $dead_total;
     }
@@ -655,6 +680,10 @@ class Catalog_local extends Catalog
      * _clean_chunk
      * This is the clean function, its broken into
      * said chunks to try to save a little memory
+     * @param $media_type
+     * @param $chunk
+     * @param $chunk_size
+     * @return array
      */
     private function _clean_chunk($media_type, $chunk, $chunk_size)
     {
@@ -698,6 +727,11 @@ class Catalog_local extends Catalog
      * insert_local_song
      *
      * Insert a song that isn't already in the database.
+     * @param $file
+     * @param array $options
+     * @return bool|int
+     * @throws Exception
+     * @throws Exception
      */
     private function insert_local_song($file, $options = array())
     {
@@ -791,9 +825,7 @@ class Catalog_local extends Catalog
                 Recommendation::get_artist_info($song->artist);
             }
             if (Song::isCustomMetadataEnabled()) {
-                if (!$song) {
-                    $song = new Song($id);
-                }
+                $song    = new Song($id);
                 $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
                 self::add_metadata($song, $results);
             }
@@ -810,6 +842,11 @@ class Catalog_local extends Catalog
      * This inserts a video file into the video file table the tag
      * information we can get is super sketchy so it's kind of a crap shoot
      * here
+     * @param $file
+     * @param array $options
+     * @return int
+     * @throws Exception
+     * @throws Exception
      */
     public function insert_local_video($file, $options = array())
     {
@@ -841,7 +878,7 @@ class Catalog_local extends Catalog
 
     private function sync_podcasts()
     {
-        $podcasts = $this->get_podcasts();
+        $podcasts = self::get_podcasts();
         foreach ($podcasts as $podcast) {
             $podcast->sync_episodes(false);
             $episodes = $podcast->get_episodes('pending');
@@ -856,6 +893,9 @@ class Catalog_local extends Catalog
     /**
      * check_local_mp3
      * Checks the song to see if it's there already returns true if found, false if not
+     * @param $full_file
+     * @param string $gather_type
+     * @return boolean
      */
     public function check_local_mp3($full_file, $gather_type = '')
     {
@@ -877,6 +917,10 @@ class Catalog_local extends Catalog
         return false;
     } //check_local_mp3
 
+    /**
+     * @param string $file_path
+     * @return string|string[]
+     */
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->path, "/");
@@ -896,6 +940,10 @@ class Catalog_local extends Catalog
         $this->f_full_info = $this->path;
     }
 
+    /**
+     * @param Podcast_Episode|Song|Song_Preview|Video $media
+     * @return media|Podcast_Episode|Song|Song_Preview|Video|null
+     */
     public function prepare_media($media)
     {
         // Do nothing, it's just file...
