@@ -880,7 +880,7 @@ class Subsonic_Api
     {
         $playlistId = $input['playlistId'];
         $name       = $input['name'];
-        $songId     = $input['songId'];
+        $songId     = ($input['songId']) ? explode(',', $input['songId']) : array();
 
         if ($playlistId) {
             self::_updatePlaylist($playlistId, $name, $songId);
@@ -902,39 +902,24 @@ class Subsonic_Api
     private static function _updatePlaylist($id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true)
     {
         $playlist           = new Playlist($id);
-        $songsIdToAdd_count = 0;
-
+        $songsIdToAdd_count = count($songsIdToAdd);
         $newdata            = array();
         $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
         $newdata['pl_type'] = ($public) ? "public" : "private";
         $playlist->update($newdata);
 
-        if (!empty($songsIdToAdd)) {
-            if (!is_array($songsIdToAdd)) {
-                $songsIdToAdd       = array($songsIdToAdd);
-                $songsIdToAdd_count = count($songsIdToAdd);
-            } else {
-                $songsIdToAdd_count = count($songsIdToAdd);
+        if ($songsIdToAdd_count > 0) {
+            for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
+                $songsIdToAdd[$i] = Subsonic_XML_Data::getAmpacheId($songsIdToAdd[$i]);
             }
-            if ($songsIdToAdd_count > 0) {
-                for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
-                    $songsIdToAdd[$i] = Subsonic_XML_Data::getAmpacheId($songsIdToAdd[$i]);
-                }
-                $playlist->add_songs($songsIdToAdd);
-            }
+            $playlist->add_songs($songsIdToAdd);
         }
-
-        if (isset($songIndexToRemove)) {
-            $playlist->regenerate_track_numbers(); // cant delete one first call when not triggered..why?
-            if (!is_array($songIndexToRemove)) {
-                $songIndexToRemove = array($songIndexToRemove);
+        if (count($songIndexToRemove) > 0) {
+            $playlist->regenerate_track_numbers(); // make sure track indexes are in order
+            foreach ($songIndexToRemove as $track) {
+                $playlist->delete_track_number(($track + 1));
             }
-            if (count($songIndexToRemove) > 0) {
-                foreach ($songIndexToRemove as $track) {
-                    $playlist->delete_track_number(($track + 1));
-                }
-                $playlist->regenerate_track_numbers();
-            }
+            $playlist->regenerate_track_numbers(); //reorder now that the tracks are removed
         }
     }
 
@@ -951,8 +936,8 @@ class Subsonic_Api
         $public = ($input['public'] === "true");
 
         if (!Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
-            $songIdToAdd       = $input['songIdToAdd'];
-            $songIndexToRemove = $input['songIndexToRemove'];
+            $songIdToAdd       = ($input['songIdToAdd']) ? explode(',', $input['songIdToAdd']) : array();
+            $songIndexToRemove = ($input['songIndexToRemove']) ? explode(',', $input['songIndexToRemove']) : array();
 
             self::_updatePlaylist(Subsonic_XML_Data::getAmpacheId($playlistId), $name, $songIdToAdd, $songIndexToRemove, $public);
 
