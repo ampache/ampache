@@ -882,9 +882,9 @@ class Subsonic_Api
         $name       = $input['name'];
         $songId     = array();
         if (is_array($input['songId'])) {
-            $songIndexToRemove = $input['songId'];
+            $songId = $input['songId'];
         } elseif (is_string($input['songId'])) {
-            $songIndexToRemove = explode(',', $input['songId']);
+            $songId = explode(',', $input['songId']);
         }
 
         if ($playlistId) {
