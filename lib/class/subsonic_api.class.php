@@ -881,6 +881,12 @@ class Subsonic_Api
         $playlistId = $input['playlistId'];
         $name       = $input['name'];
         $songId     = (is_array($input['songId'])) ? $input['songId'] : explode(',', $input['songId']);
+        $songId  = array();
+        if (is_array($input['songId'])) {
+            $songIndexToRemove = $input['songId'];
+        } elseif (is_string($input['songId'])) {
+            $songIndexToRemove = explode(',', $input['songId']);
+        }
 
         if ($playlistId) {
             self::_updatePlaylist($playlistId, $name, $songId);
@@ -937,7 +943,12 @@ class Subsonic_Api
         $public = ($input['public'] === "true");
 
         if (!Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
-            $songIdToAdd       = (is_array($input['songIdToAdd'])) ? $input['songIdToAdd'] : explode(',', $input['songIdToAdd']);
+            $songIdToAdd = array();
+            if (is_array($input['songIdToAdd'])) {
+                $songIndexToRemove = $input['songIdToAdd'];
+            } elseif (is_string($input['songIdToAdd'])) {
+                $songIndexToRemove = explode(',', $input['songIdToAdd']);
+            }
             $songIndexToRemove = array();
             if (is_array($input['songIndexToRemove'])) {
                 $songIndexToRemove = $input['songIndexToRemove'];
