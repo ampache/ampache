@@ -880,8 +880,7 @@ class Subsonic_Api
     {
         $playlistId = $input['playlistId'];
         $name       = $input['name'];
-        $songId     = (is_array($input['songId'])) ? $input['songId'] : explode(',', $input['songId']);
-        $songId  = array();
+        $songId     = array();
         if (is_array($input['songId'])) {
             $songIndexToRemove = $input['songId'];
         } elseif (is_string($input['songId'])) {
@@ -922,6 +921,7 @@ class Subsonic_Api
         }
         if (count($songIndexToRemove) > 0) {
             $playlist->regenerate_track_numbers(); // make sure track indexes are in order
+            rsort($songIndexToRemove);
             foreach ($songIndexToRemove as $track) {
                 $playlist->delete_track_number(((int) $track + 1));
             }
