@@ -670,7 +670,7 @@ class Api
 
         $artists = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = ($input['include']) ? explode(',', $input['include']) : array();
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
         // echo out the resulting xml document
         ob_end_clean();
         switch ($input['format']) {
@@ -705,7 +705,7 @@ class Api
         }
         $uid     = scrub_in($input['filter']);
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = ($input['include']) ? explode(',', $input['include']) : array();
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
         switch ($input['format']) {
             case 'json':
                 echo JSON_Data::artists(array($uid), $include, $user->id);
@@ -822,7 +822,7 @@ class Api
 
         $albums  = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = ($input['include']) ? explode(',', $input['include']) : array();
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
 
         ob_end_clean();
         switch ($input['format']) {
@@ -857,7 +857,7 @@ class Api
         }
         $uid     = (int) scrub_in($input['filter']);
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = ($input['include']) ? explode(',', $input['include']) : array();
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
         switch ($input['format']) {
             case 'json':
                 echo JSON_Data::albums(array($uid), $include, $user->id);
