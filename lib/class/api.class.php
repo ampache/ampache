@@ -670,18 +670,19 @@ class Api
 
         $artists = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
+        $include = ($input['include']) ? explode(',', $input['include']) : array();
         // echo out the resulting xml document
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::artists($artists, $input['include'], $user->id);
+                echo JSON_Data::artists($artists, $include, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::artists($artists, $input['include'], $user->id);
+                echo XML_Data::artists($artists, $include, $user->id);
         }
         Session::extend($input['auth']);
     } // artists
@@ -702,14 +703,15 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'artist')) {
             return false;
         }
-        $uid  = scrub_in($input['filter']);
-        $user = User::get_from_username(Session::username($input['auth']));
+        $uid     = scrub_in($input['filter']);
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $include = ($input['include']) ? explode(',', $input['include']) : array();
         switch ($input['format']) {
             case 'json':
-                echo JSON_Data::artists(array($uid), $input['include'], $user->id);
+                echo JSON_Data::artists(array($uid), $include, $user->id);
             break;
             default:
-                echo XML_Data::artists(array($uid), $input['include'], $user->id);
+                echo XML_Data::artists(array($uid), $include, $user->id);
         }
         Session::extend($input['auth']);
 
@@ -818,20 +820,21 @@ class Api
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
 
-        $albums = self::$browse->get_objects();
-        $user   = User::get_from_username(Session::username($input['auth']));
+        $albums  = self::$browse->get_objects();
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $include = ($input['include']) ? explode(',', $input['include']) : array();
 
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::albums($albums, $input['include'], $user->id);
+                echo JSON_Data::albums($albums, $include, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::albums($albums, $input['include'], $user->id);
+                echo XML_Data::albums($albums, $include, $user->id);
         }
         Session::extend($input['auth']);
     } // albums
@@ -852,14 +855,15 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'album')) {
             return false;
         }
-        $uid  = (int) scrub_in($input['filter']);
-        $user = User::get_from_username(Session::username($input['auth']));
+        $uid     = (int) scrub_in($input['filter']);
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $include = ($input['include']) ? explode(',', $input['include']) : array();
         switch ($input['format']) {
             case 'json':
-                echo JSON_Data::albums(array($uid), $input['include'], $user->id);
+                echo JSON_Data::albums(array($uid), $include, $user->id);
             break;
             default:
-                echo XML_Data::albums(array($uid), $input['include'], $user->id);
+                echo XML_Data::albums(array($uid), $include, $user->id);
         }
         Session::extend($input['auth']);
 

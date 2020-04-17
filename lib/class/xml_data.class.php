@@ -453,12 +453,6 @@ class XML_Data
      */
     public static function artists($artists, $include = [], $user_id = false, $full_xml = true)
     {
-        if ($include == null || $include == '') {
-            $include = array();
-        }
-        if (is_string($include)) {
-            $include = explode(',', $include);
-        }
         if (count($artists) > self::$limit || self::$offset > 0) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
@@ -650,12 +644,11 @@ class XML_Data
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
      * @param integer[] $songs
-     * @param array $playlist_data
      * @param boolean $user_id
      * @param boolean $full_xml
      * @return string return xml
      */
-    public static function songs($songs, $playlist_data = array(), $user_id = false, $full_xml = true)
+    public static function songs($songs, $user_id = false, $full_xml = true)
     {
         if (count($songs) > self::$limit || self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
