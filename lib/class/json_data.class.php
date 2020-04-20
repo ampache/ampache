@@ -99,7 +99,7 @@ class JSON_Data
     /**
      * success
      *
-     * This generates a standard XML Success message
+     * This generates a standard JSON Success message
      * nothing fancy here...
      *
      * @param    string    $string    success message
