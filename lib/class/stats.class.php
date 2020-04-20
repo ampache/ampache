@@ -396,7 +396,6 @@ class Stats
             }
             $rating_filter = AmpConfig::get_rating_filter();
             if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-                //$user_id = Core::get_global('user')->id;
                 $sql .= " AND `object_id` NOT IN" .
                         " (SELECT `object_id` FROM `rating`" .
                         " WHERE `rating`.`object_type` = '" . $type . "'" .
@@ -465,7 +464,7 @@ class Stats
      * @param boolean $newest
      * @return string
      */
-    public static function get_recent_sql($input_type, $user_id = '', $newest = true)
+    public static function get_recent_sql($input_type, $user_id = null, $newest = true)
     {
         $type = self::validate_type($input_type);
 
@@ -478,7 +477,7 @@ class Stats
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && !empty($user_id)) {
             $sql .= " AND `object_id` NOT IN" .
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = '" . $type . "'" .
@@ -628,8 +627,8 @@ class Stats
                 $multi_where = 'AND';
             }
             $rating_filter = AmpConfig::get_rating_filter();
-            if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
-                $user_id = Core::get_global('user')->id;
+            $user_id       = (int) Core::get_global('user')->id;
+            if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
                 $sql .= $multi_where . " `" . $sql_type . "` NOT IN" .
                         " (SELECT `object_id` FROM `rating`" .
                         " WHERE `rating`.`object_type` = '" . $type . "'" .
