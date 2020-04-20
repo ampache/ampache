@@ -41,6 +41,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Allow searching play times without requiring UI option
 * Added declare(strict_types=0); to lib/* and lib/class/* (requires more work before it can be enabled)
 * Fixed a lot of incorrectly typed function calls and code documentation
+* Stop showing the average rating in the web interface.
 
 ## 4.1.1
 * Bump API version to 400004 (4.0.0 build 004)
