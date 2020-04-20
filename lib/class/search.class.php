@@ -2114,17 +2114,19 @@ class Search extends playlist_object
                     $subsql       = $subsearch->to_sql();
                     $results      = $subsearch->get_items();
                     $itemstring   = '';
-                    foreach ($results as $item) {
-                        $itemstring .= ' ' . $item['object_id'] . ',';
+                    if (count($results) > 0) {
+                        foreach ($results as $item) {
+                            $itemstring .= ' ' . $item['object_id'] . ',';
+                        }
+
+                        $where[]      = "$sql_match_operator `song`.`id` IN (" . substr($itemstring, 0, -1) . ")";
+                        // HACK: array_merge would potentially lose tags, since it
+                        // overwrites. Save our merged tag joins in a temp variable,
+                        // even though that's ugly.
+                        $tagjoin     = array_merge($subsql['join']['tag'], $join['tag']);
+                        $join        = array_merge($subsql['join'], $join);
+                        $join['tag'] = $tagjoin;
                     }
-                    
-                    $where[]      = "$sql_match_operator `song`.`id` IN (" . substr($itemstring, 0, -1) . ")";
-                    // HACK: array_merge would potentially lose tags, since it
-                    // overwrites. Save our merged tag joins in a temp variable,
-                    // even though that's ugly.
-                    $tagjoin     = array_merge($subsql['join']['tag'], $join['tag']);
-                    $join        = array_merge($subsql['join'], $join);
-                    $join['tag'] = $tagjoin;
                 break;
                 case 'license':
                     $where[] = "`song`.`license` $sql_match_operator '$input'";
