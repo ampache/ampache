@@ -19,6 +19,7 @@ interface SongListProps {
     showAlbum?: boolean;
     inPlaylistID?: number;
     inAlbumID?: number;
+    songData?: Song[];
     authKey?: AuthKey;
 }
 
@@ -28,6 +29,12 @@ const SongList: React.FC<SongListProps> = (props) => {
     const [error, setError] = useState<Error | AmpacheError>(null);
 
     const Modal = useModal();
+
+    useEffect(() => {
+        if (props.songData) {
+            setSongs(props.songData);
+        }
+    }, []);
 
     useEffect(() => {
         if (props.inPlaylistID) {
@@ -50,10 +57,12 @@ const SongList: React.FC<SongListProps> = (props) => {
                     toast.error('😞 Something went wrong getting album songs.');
                     setError(error);
                 });
-        } else {
-            throw new Error('Missing inPlaylistID and inAlbumID.');
+        } else if (!props.songData) {
+            throw new Error(
+                'Supply either inPlaylistID, inAlbumID or songData.'
+            );
         }
-    }, [props.authKey, props.inAlbumID, props.inPlaylistID]);
+    }, [props.authKey, props.inAlbumID, props.inPlaylistID, props.songData]);
 
     const handleRemoveFromPlaylist = (songID: number) => {
         removeFromPlaylistWithSongID(

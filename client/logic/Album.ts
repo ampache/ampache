@@ -11,7 +11,7 @@ type Album = {
         name: string;
     };
     year: number;
-    tracks: number;
+    tracks?: Song[];
     disk: number;
     tags: {
         id: number;
@@ -59,21 +59,23 @@ const getAlbumSongs = (albumID: number, authKey: AuthKey) => {
         });
 };
 
-const getAlbum = (albumID: number, authKey: AuthKey) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=album&filter=${albumID}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
-            }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return JSONData[0] as Album;
-        });
+//TODO: Add getAlbums
+const getAlbum = (albumID: number, authKey: AuthKey, includeSongs = false) => {
+    let includeString = '';
+    if (includeSongs) {
+        includeString += '&include[]=songs';
+    }
+    const getURL = `${process.env.ServerURL}/server/json.server.php?action=album&filter=${albumID}${includeString}&auth=${authKey}&version=400001`;
+    return axios.get(getURL).then((response) => {
+        const JSONData = response.data;
+        if (!JSONData) {
+            throw new Error('Server Error');
+        }
+        if (JSONData.error) {
+            throw new AmpacheError(JSONData.error);
+        }
+        return JSONData[0] as Album;
+    });
 };
 
 export { getRandomAlbums, Album, getAlbum, getAlbumSongs };

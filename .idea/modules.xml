@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ampache.iml" filepath="$PROJECT_DIR$/.idea/ampache.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ampache.hego.co.iml" filepath="$PROJECT_DIR$/.idea/ampache.hego.co.iml" />
     </modules>
   </component>
 </project>

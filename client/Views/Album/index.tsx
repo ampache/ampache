@@ -26,7 +26,7 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
 
     useEffect(() => {
         if (props.match.params.albumID != null) {
-            getAlbum(props.match.params.albumID, props.user.authKey)
+            getAlbum(props.match.params.albumID, props.user.authKey, true)
                 .then((data) => {
                     setTheAlbum(data);
                 })
@@ -79,7 +79,7 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
             </div>
             <div className='songs'>
                 <SongList
-                    inAlbumID={props.match.params.albumID}
+                    songData={theAlbum.tracks}
                     authKey={props.user.authKey}
                 />
             </div>
