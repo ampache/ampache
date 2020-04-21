@@ -1992,8 +1992,8 @@ class Song extends database_object implements media, library_item
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
+
         return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid, $original);
-        
     }
 
     /**
