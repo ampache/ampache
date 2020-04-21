@@ -43,6 +43,7 @@ $format         = scrub_in($_REQUEST['format']);
 $original       = ($format == 'raw') ? true : false;
 $action         = Core::get_get('action');
 $record_stats   = true;
+$use_auth       = AmpConfig::get('use_auth');
 
 // allow disabling stat recording from the play url
 if ($cache === '1' || $type == 'podcast_episode') {
@@ -151,7 +152,7 @@ if (empty($uid)) {
     header('HTTP/1.1 400 No User Specified');
 
     return false;
-} elseif ($uid == '-1' && AmpConfig::get('use_auth')) {
+} elseif ($uid == '-1' && $use_auth) {
     // Identify the user according to it's web session
     // We try to avoid the generic 'Ampache User' as much as possible
     if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
@@ -159,6 +160,9 @@ if (empty($uid)) {
         $user = User::get_from_username($_SESSION['userdata']['username']);
         $uid  = $user->id;
     }
+} else {
+    // fall back for use_auth == false
+    $uid = 0;
 }
 
 if (!$share_id) {
@@ -176,7 +180,7 @@ if (!$share_id) {
         }
 
         // If require session is set then we need to make sure we're legit
-        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+        if ($use_auth && AmpConfig::get('require_session')) {
             if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, '5')) {
                 debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
             } else {
@@ -672,7 +676,11 @@ if (!isset($_REQUEST['segment'])) {
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering stream stats for {' . $media->get_stream_name() . '}...', 4);
-                Core::get_global('user')->update_stats($type, $media->id, $agent, $location);
+                if ($use_auth) {
+                    Core::get_global('user')->update_stats($type, $media->id, $agent, $location);
+                } else {
+                    Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+                }
             }
         } elseif (!$share_id && !$record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {

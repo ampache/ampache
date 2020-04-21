@@ -1933,20 +1933,17 @@ class Song extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param boolean $uid
+     * @param integer $uid
      * @param boolean $original
      * @return string
      */
-    public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = false, $original = false)
+    public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = -1, $original = false)
     {
         $media = new $object_type($object_id);
         if (!$media->id) {
             return '';
         }
 
-        if ((int) $uid < 1) {
-            $uid  = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
-        }
         $type = $media->type;
 
         // Checking if the media is gonna be transcoded into another type
@@ -1990,9 +1987,13 @@ class Song extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = 0, $original = false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = -1, $original = false)
     {
+        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
+            $uid = -1;
+        }
         return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid, $original);
+        
     }
 
     /**
@@ -2014,22 +2015,20 @@ class Song extends database_object implements media, library_item
      */
     public static function get_recently_played($user_id = 0)
     {
-        $user_id = (int) ($user_id);
-
         $sql = "SELECT `object_id`, `user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` " .
             "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }
-        if ($user_id) {
+        if ($user_id > 0) {
             // If user is not empty, we're looking directly to user personal info (admin view)
             $sql .= "AND `user`='$user_id' ";
         } else {
             if (!Access::check('interface', '100')) {
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
                 $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
-                if ($personal_info_id) {
-                    $current_user = Core::get_global('user')->id;
+                $current_user     = (int) Core::get_global('user')->id;
+                if ($personal_info_id && $current_user > 0) {
                     $sql .= "AND `user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
                 }
             }

@@ -106,7 +106,7 @@ class Stats
      */
     public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
     {
-        if ($user < 1) {
+        if (AmpConfig::get('use_auth') && $user < 1) {
             debug_event('stats.class', 'Invalid user given ' . $user, 3);
 
             return false;
@@ -135,7 +135,7 @@ class Stats
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $db_results = Dba::write($sql, array($type, $oid, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-            if (($input_type == 'song') && ($count_type === 'stream')) {
+            if (($input_type == 'song') && ($count_type === 'stream') && $user > 1) {
                 Useractivity::post_activity($user, 'play', $type, $oid, $date);
             }
 
