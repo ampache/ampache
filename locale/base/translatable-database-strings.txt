@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 01.02.2020 02:03:32 CET 
+ # Last Update: 22.04.2020 01:22:28 CEST 
 
  #######################################################################
 
@@ -77,10 +77,6 @@ msgstr ""
 
 #: Database preference table id 53
 msgid "Playlist Method"
-msgstr ""
-
-#: Database preference table id 72
-msgid "Shoutcast Active Instance"
 msgstr ""
 
 #: Database preference table id 73
@@ -381,6 +377,18 @@ msgstr ""
 
 #: Database preference table id 157
 msgid "Alphabet browsing by default for following library items (album,artist,...)"
+msgstr ""
+
+#: Database preference table id 171
+msgid "Show # skipped"
+msgstr ""
+
+#: Database preference table id 172
+msgid "Custom datetime"
+msgstr ""
+
+#: Database preference table id 173
+msgid "Cache computed SQL data (eg. media hits stats) using a cron"
 msgstr ""
 
 #: Database preference subcategory table id 1
