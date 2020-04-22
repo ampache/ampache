@@ -153,7 +153,7 @@ if (empty($uid)) {
     header('HTTP/1.1 400 No User Specified');
 
     return false;
-} elseif ($uid == '-1' && $use_auth) {
+} elseif ($use_auth) {
     // Identify the user according to it's web session
     // We try to avoid the generic 'Ampache User' as much as possible
     if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
