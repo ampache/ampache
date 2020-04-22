@@ -369,26 +369,21 @@ class Rating extends database_object
     /**
      * show
      * This takes an id and a type and displays the rating if ratings are
-     * enabled.  If $static is true, the rating won't be editable.
-     * @param $object_id
-     * @param $type
-     * @param boolean $static
+     * enabled.  If $global_rating is true, the is the average from all users.
+     * @param integer $object_id
+     * @param string $type
+     * @param boolean $global_rating
      * @return boolean
      */
-    public static function show($object_id, $type, $static = false)
+    public static function show($object_id, $type, $global_rating = false)
     {
         // If ratings aren't enabled don't do anything
         if (!AmpConfig::get('ratings')) {
             return false;
         }
-
         $rating = new Rating($object_id, $type);
 
-        if ($static) {
-            require AmpConfig::get('prefix') . UI::find_template('show_static_object_rating.inc.php');
-        } else {
-            require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
-        }
+        require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
 
         return true;
     } // show

@@ -40,6 +40,12 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id, 'song'); ?>
         </div>
     </dd>
+    <?php $rowparity = UI::flip_class(); ?>
+    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Average Rating'); ?></dt>
+    <dd class="<?php echo $rowparity; ?>">
+        <div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id, 'song', true); ?>
+        </div>
+    </dd>
     <?php
     } ?>
 
