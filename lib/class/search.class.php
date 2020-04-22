@@ -2251,13 +2251,13 @@ class Search extends playlist_object
                     "`object_count` ON `object_count`.`object_id`=`song`.`id`";
         }
         if ($join['object_count_album']) {
-            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
+            $table['object_count_album'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
                     "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND " .
                     "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " .
                     "`object_count_album` ON `object_count_album`.`object_id`=`album`.`id`";
         }
         if ($join['object_count_artist']) {
-            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
+            $table['object_count_artist'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
                     "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND " .
                     "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " .
                     "`object_count_artist` ON `object_count_artist`.`object_id`=`artist`.`id`";
