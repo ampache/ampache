@@ -140,7 +140,8 @@ if (!empty($apikey)) {
 } elseif (!empty($username) && !empty($password)) {
     $auth = Auth::login($username, $password);
     if ($auth['success']) {
-        $GLOBALS['user'] = User::get_from_username($auth['username']);
+        $user            = User::get_from_username($auth['username']);
+        $GLOBALS['user'] = $user;
         $uid             = $user->id;
         Preference::init();
         $user_authenticated = true;
