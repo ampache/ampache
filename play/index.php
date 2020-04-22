@@ -153,7 +153,9 @@ if (empty($uid)) {
     header('HTTP/1.1 400 No User Specified');
 
     return false;
-} elseif ($use_auth) {
+}
+
+if ($use_auth) {
     // Identify the user according to it's web session
     // We try to avoid the generic 'Ampache User' as much as possible
     if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
@@ -161,15 +163,12 @@ if (empty($uid)) {
         $user = User::get_from_username($_SESSION['userdata']['username']);
         $uid  = $user->id;
     }
-} else {
-    // fall back for use_auth == false
-    $uid = 0;
 }
 
 if (!$share_id) {
     // No explicit authentication, use session
     if (!$user_authenticated) {
-        //$GLOBALS['user'] = new User($uid);
+        $GLOBALS['user'] = new User($uid);
         Preference::init();
 
         /* If the user has been disabled (true value) */
@@ -676,11 +675,12 @@ if (!isset($_REQUEST['segment'])) {
         $location   = Session::get_geolocation($sessionkey);
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                debug_event('play/index', 'Registering stream stats for {' . $media->get_stream_name() . '}...', 4);
+                debug_event('play/index', 'Registering stream stats for ' . $uid . '{' . $media->get_stream_name() . '}...', 4);
                 if ($use_auth) {
-                    Core::get_global('user')->update_stats($type, $media->id, $agent, $location);
+                    $user = new User($uid);
+                    $user->update_stats($type, $media->id, $agent, $location);
                 } else {
-                    Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+                    Stats::insert($type, $media->id, 0, $agent, $location, 'stream');
                 }
             }
         } elseif (!$share_id && !$record_stats) {
