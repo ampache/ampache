@@ -133,15 +133,15 @@ if (!empty($apikey)) {
     $user = User::get_from_apikey($apikey);
     if ($user != null) {
         $GLOBALS['user'] = $user;
-        $uid             = Core::get_global('user')->id;
+        $uid             = $user->id;
         Preference::init();
         $user_authenticated = true;
     }
 } elseif (!empty($username) && !empty($password)) {
     $auth = Auth::login($username, $password);
     if ($auth['success']) {
-        $GLOBALS['user']         = User::get_from_username($auth['username']);
-        $uid                     = Core::get_global('user')->id;
+        $GLOBALS['user'] = User::get_from_username($auth['username']);
+        $uid             = $user->id;
         Preference::init();
         $user_authenticated = true;
     }
@@ -168,7 +168,7 @@ if (empty($uid)) {
 if (!$share_id) {
     // No explicit authentication, use session
     if (!$user_authenticated) {
-        $GLOBALS['user'] = new User($uid);
+        //$GLOBALS['user'] = new User($uid);
         Preference::init();
 
         /* If the user has been disabled (true value) */
