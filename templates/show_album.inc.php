@@ -63,7 +63,7 @@ if ($directplay_limit > 0) {
             <?php Rating::show($album->id, 'album');
             /* HINT: Average rating. e.g. (average 3.7) */
             echo '(' . T_('average') . ' ' . $rating->get_average_rating() . ')'; ?>
-    </div>
+    </div></p>
     <?php
         } ?>
     <?php if (AmpConfig::get('userflags')) { ?>

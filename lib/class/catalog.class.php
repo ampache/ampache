@@ -1439,7 +1439,7 @@ abstract class Catalog extends database_object
         $searches           = array();
         if (empty($artist_list)) {
             $searches['artist'] = $this->get_artist_ids();
-        }else {
+        } else {
             $searches['artist'] = $artist_list;
         }
 
