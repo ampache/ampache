@@ -675,7 +675,7 @@ if (!isset($_REQUEST['segment'])) {
         $location   = Session::get_geolocation($sessionkey);
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                debug_event('play/index', 'Registering stream stats for ' . $uid . '{' . $media->get_stream_name() . '}...', 4);
+                debug_event('play/index', 'Registering stream stats for ' . $uid . ' {' . $media->get_stream_name() . '}...', 4);
                 if ($use_auth) {
                     $user = new User($uid);
                     $user->update_stats($type, $media->id, $agent, $location);
