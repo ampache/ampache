@@ -549,7 +549,7 @@ class Tag extends database_object implements library_item
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
-        $sql .=  $limit_sql;
+        $sql .= $limit_sql;
         $db_results = Dba::read($sql, array($tag_id, $type));
 
         $results = array();
@@ -589,7 +589,7 @@ class Tag extends database_object implements library_item
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
-        $sql .=  $limit_sql;
+        $sql .= $limit_sql;
         $db_results = Dba::read($sql, array($type));
 
         $results = array();
