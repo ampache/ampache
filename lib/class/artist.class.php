@@ -1039,6 +1039,15 @@ class Artist extends database_object implements library_item
     }
 
     /**
+     * Update artist last_update time.
+     */
+    public static function set_last_update()
+    {
+        $sql = "UPDATE `artist` SET `last_update` = ? WHERE `id` = ?";
+        Dba::write($sql, array(time(), $this->id));
+    }
+
+    /**
      * @return bool|PDOStatement
      */
     public function remove_from_disk()
