@@ -1004,6 +1004,11 @@ abstract class Catalog extends database_object
                 "LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'" .
                 "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
+        if ($filter === 'info') {
+            // only update info when you haven't done it for 6 months
+            $sql = "SELECT DISTINCT(`artist`.`id`) FROM `artist`" .
+                "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
+        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1425,14 +1430,18 @@ abstract class Catalog extends database_object
      * This runs through all of the artists and refreshes last.fm information
      * including similar artists that exist in your catalog.
      */
-    public function gather_artist_info()
+    public function gather_artist_info($artist_list = array())
     {
         // Prevent the script from timing out
         set_time_limit(0);
 
         $search_count       = 0;
         $searches           = array();
-        $searches['artist'] = $this->get_artist_ids();
+        if (empty($artist_list)) {
+            $searches['artist'] = $this->get_artist_ids();
+        }else {
+            $searches['artist'] = $artist_list;
+        }
 
         debug_event('catalog.class', 'gather_artist_info found ' . (string) count($searches) . 'items to check', 4);
         // Run through items and refresh info

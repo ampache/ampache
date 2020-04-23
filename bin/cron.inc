@@ -115,6 +115,10 @@ if (AmpConfig::get('memory_cache')) {
             $videos = $catalog->get_video_ids();
             Video::build_cache($videos);
         }
+        
+        // Update artist information and fetch similar artists from last.fm
+        $artist_info = $catalog->get_artist_ids('info');
+        $catalog->gather_artist_info($artist_info);
 
         //Song_preview::build_cache($song_ids)
 

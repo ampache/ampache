@@ -182,7 +182,8 @@ while ($row = Dba::fetch_assoc($db_results)) {
         // Look for updated artist information. (missing or < 6 months since last update)
         echo "- " . T_('Update artist information and fetch similar artists from last.fm') . " - \n";
         echo "\n";
-        $catalog->gather_artist_info();
+        $artist_info = $catalog->get_artist_ids('info');
+        $catalog->gather_artist_info($artist_info);
         echo "----------------\n\n";
     }
 }
