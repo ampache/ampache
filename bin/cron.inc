@@ -117,8 +117,8 @@ if (AmpConfig::get('memory_cache')) {
         }
         
         // Update artist information and fetch similar artists from last.fm
-        $artist_info = $catalog->get_artist_ids('info');
-        $catalog->gather_artist_info($artist_info);
+        //$artist_info = $catalog->get_artist_ids('info');
+        //$catalog->gather_artist_info($artist_info);
 
         //Song_preview::build_cache($song_ids)
 

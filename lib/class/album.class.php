@@ -1218,7 +1218,9 @@ class Album extends database_object implements library_item
                     "AND `rating`.`rating` <=" . $rating_filter .
                     " AND `rating`.`user` = " . $user_id . ") ";
         }
-
+        if (AmpConfig::get('album_group')) {
+            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
+        }
         $sql .= "ORDER BY RAND() LIMIT " . (string) $count;
         $db_results = Dba::read($sql);
         //debug_event('album.class', 'get_random ' . $sql, 5);
