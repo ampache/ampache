@@ -307,7 +307,7 @@ class Userflag extends database_object
             if ($user_id > 0) {
                 $sql .= " AND `user_flag`.`user` = '" . $user_id . "'";
             }
-            if (AmpConfig::get('catalog_disable')) {
+            if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
                 $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
             }
         }

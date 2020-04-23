@@ -1157,11 +1157,11 @@ class Query
             switch ($this->get_type()) {
                 case "video":
                 case "song":
-                    $dis = Catalog::get_enable_filter($this->get_type(), '`' . $this->get_type() . '`.`id`');
+                    $dis = Catalog::get_enable_filter('song', '`' . $this->get_type() . '`.`id`');
                     break;
 
                 case "tag":
-                    $dis = Catalog::get_enable_filter($this->get_type(), '`' . $this->get_type() . '`.`object_id`');
+                    $dis = Catalog::get_enable_filter('tag', '`' . $this->get_type() . '`.`object_id`');
                     break;
             }
         }
