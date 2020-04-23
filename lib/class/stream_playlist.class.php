@@ -625,7 +625,6 @@ class Stream_Playlist
             $localplay->delete_all();
         }
         foreach ($this->urls as $url) {
-            debug_event('stream_playlist.class', 'Adding... ' . $url, 5);
             $localplay->add_url($url);
         }
         if (!$append) {
