@@ -58,7 +58,6 @@ if (AmpConfig::get('lastfm_api_key')) {
         /* HINT: Average rating. e.g. (average 3.7) */
         echo '(' . T_('average') . ' ' . $rating->get_average_rating() . ')'; ?>
     </div>
-    </div>
     <?php
     } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
