@@ -153,10 +153,8 @@ if (AmpConfig::get('memory_cache')) {
                     // podcast_episodes
                     $podcast = New Podcast($podcast_id);
                     $podcast_episodes = $catalog->get_podcast_ids();
-                    foreach ($podcast_episodes as $podcast_id) {
-                        Rating::build_cache('podcast_episode', $podcast_episodes, $user_id);
-                        Userflag::build_cache('podcast_episode', $podcast_episodes, $user_id);
-                    } // end foreach $podcast_episodes
+                    Rating::build_cache('podcast_episode', $podcast_episodes, $user_id);
+                    Userflag::build_cache('podcast_episode', $podcast_episodes, $user_id);
                 } // end foreach $podcasts
             }
         } // end foreach $user_id
