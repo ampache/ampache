@@ -1449,7 +1449,7 @@ abstract class Catalog extends database_object
             foreach ($values as $objectid) {
                 Recommendation::get_artist_info($objectid);
                 Recommendation::get_artists_like($objectid);
-                Artist::set_last_update($object_id);
+                Artist::set_last_update($objectid);
 
                 // Stupid little cutesie thing
                 $search_count++;

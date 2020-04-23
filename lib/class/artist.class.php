@@ -1041,10 +1041,10 @@ class Artist extends database_object implements library_item
     /**
      * Update artist last_update time.
      */
-    public static function set_last_update()
+    public static function set_last_update($object_id)
     {
         $sql = "UPDATE `artist` SET `last_update` = ? WHERE `id` = ?";
-        Dba::write($sql, array(time(), $this->id));
+        Dba::write($sql, array(time(), $object_id));
     }
 
     /**
