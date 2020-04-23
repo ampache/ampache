@@ -1218,7 +1218,7 @@ class Api
         $user   = User::get_from_username(Session::username($input['auth']));
         $method = $input['exact'] ? false : true;
         $userid = (!Access::check('interface', 100)) ? $user->id : -1;
-        $public = (!Access::check('interface', 100)) ? true : false;
+        $public = !Access::check('interface', 100);
 
         // regular playlists
         $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
@@ -1923,7 +1923,7 @@ class Api
             case 'recent':
             case 'forgotten':
                 debug_event('api.class', 'stats ' . $input['filter'], 4);
-                $newest = ($input['filter'] == 'recent') ? true : false;
+                $newest = $input['filter'] == 'recent';
                 if ($user_id !== null) {
                     $results = $user->get_recently_played($limit, $type, $newest);
                 } else {
@@ -3077,7 +3077,7 @@ class Api
         }
         $type      = (string) $input['type'];
         $object    = (int) $input['id'];
-        $overwrite = ((int) $input['overwrite'] == 0) ? true : false;
+        $overwrite = (int) $input['overwrite'] == 0;
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
@@ -3154,7 +3154,7 @@ class Api
 
         $maxBitRate    = $input['bitrate'];
         $format        = $input['format']; // mp3, flv or raw
-        $original      = ($format && $format != 'raw') ? true : false;
+        $original      = $format && $format != 'raw';
         $timeOffset    = $input['offset'];
         $contentLength = (int) $input['length']; // Force content-length guessing if transcode
 
@@ -3216,7 +3216,7 @@ class Api
         $fileid   = $input['id'];
         $type     = $input['type'];
         $format   = $input['format'];
-        $original = ($format && $format != 'raw') ? true : false;
+        $original = $format && $format != 'raw';
         $user_id  = User::get_from_username(Session::username($input['auth']))->id;
 
         $url    = '';

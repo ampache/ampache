@@ -40,7 +40,7 @@ $sid            = scrub_in($_REQUEST['ssid']);
 $type           = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 $cache          = scrub_in($_REQUEST['cache']);
 $format         = scrub_in($_REQUEST['format']);
-$original       = ($format == 'raw') ? true : false;
+$original       = $format == 'raw';
 $action         = Core::get_get('action');
 $record_stats   = true;
 $use_auth       = AmpConfig::get('use_auth');
