@@ -461,11 +461,15 @@ class Video extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param boolean $uid
+     * @param integer $uid
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
     {
+        if (!$uid) {
+            $uid = Core::get_global('user')->id;
+        }
+
         return Song::generic_play_url('video', $oid, $additional_params, $player, $local, $uid);
     }
 

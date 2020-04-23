@@ -1943,6 +1943,10 @@ class Song extends database_object implements media, library_item
         if (!$media->id) {
             return '';
         }
+        // set no use when using auth
+        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
+            $uid = -1;
+        }
 
         $type = $media->type;
 
@@ -1987,10 +1991,10 @@ class Song extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = -1, $original = false)
+    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
     {
-        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
-            $uid = -1;
+        if (!$uid) {
+            $uid = Core::get_global('user')->id;
         }
 
         return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid, $original);
