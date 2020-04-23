@@ -57,9 +57,12 @@ if ($directplay_limit > 0) {
         Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) { ?>
+    <?php if (AmpConfig::get('ratings')) {
+        $rating = new Rating($album->id, 'album'); ?>
     <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
-            <?php Rating::show($album->id, 'album'); ?>
+            <?php Rating::show($album->id, 'album');
+            /* HINT: Average rating. e.g. (average 3.7) */
+            echo '(' . T_('average') . ' ' . $rating->get_average_rating() . ')'; ?>
     </div>
     <?php
         } ?>

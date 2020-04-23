@@ -35,15 +35,12 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
     <?php $rowparity = UI::flip_class(); ?>
+    <?php $rating    = new Rating($song->id, 'song'); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
-        <div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id, 'song'); ?>
-        </div>
-    </dd>
-    <?php $rowparity = UI::flip_class(); ?>
-    <dt class="<?php echo $rowparity; ?>"><?php echo T_('Average Rating'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
-        <div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id, 'song', true); ?>
+        <div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id, 'song');
+            /* HINT: Average rating. e.g. (average 3.7)*/
+            echo '(' . T_('average') . ' ' . $rating->get_average_rating() . ')'; ?> </div>
         </div>
     </dd>
     <?php
