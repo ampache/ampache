@@ -420,6 +420,60 @@ class JSON_Data
     } // playlists
 
     /**
+     * shares
+     *
+     * This returns shares to the user, in a pretty json document with the information
+     *
+     * @param array $shares (description here...)
+     * @return string return JSON
+     */
+    public static function shares($shares)
+    {
+        if (count($shares) > self::$limit || self::$offset > 0) {
+            $shares = array_splice($shares, self::$offset, self::$limit);
+        }
+
+        $allShares = [];
+        foreach ($shares as $share_id) {
+            $share = new Share($share_id);
+            $share->format();
+            $share_name = $share->f_name;
+            $share_user = $share->f_user;
+            $share_allow_stream = $share->f_allow_stream;
+            $share_allow_download = $share->f_allow_download;
+            $share_creation_date = $share->f_creation_date;
+            $share_lastvisit_date = $share->f_lastvisit_date;
+            $share_object_type = $share->object_type;
+            $share_object_id = $share->object_id;
+            $share_expire_days = $share->expire_days;
+            $share_max_counter = $share->max_counter;
+            $share_counter = $share->counter;
+            $share_secret = $share->secret;
+            $share_public_url = $share->public_url;
+            $share_description = $share->description;
+            // Build this element
+            array_push($allShares, [
+                "id" => $share_id,
+                "name" => $share_name,
+                "owner" => $share_user,
+                "allow_stream" => $share_allow_stream,
+                "allow_download" => $share_allow_download,
+                "creation_date" => $share_creation_date,
+                "lastvisit_date" => $share_lastvisit_date,
+                "object_type" => $share_object_type,
+                "object_id" => $share_object_id,
+                "expire_days" => $share_expire_days,
+                "max_counter" => $share_max_counter,
+                "counter" => $share_counter,
+                "secret" => $share_secret,
+                "public_url" => $share_public_url,
+                "description" => $share_description]);
+        } // end foreach
+
+        return json_encode($allShares, JSON_PRETTY_PRINT);
+    } // shares
+
+    /**
      * songs
      *
      * This returns an array of songs populated from an array of song ids.

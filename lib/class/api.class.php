@@ -541,15 +541,13 @@ class Api
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
 
-        // Set the offset
-
         if ($type == 'playlist') {
             self::$browse->set_filter('playlist_type', $user->id);
             $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
         } else {
             $objects = self::$browse->get_objects();
         }
-        // echo out the resulting xml document
+
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
@@ -598,6 +596,9 @@ class Api
 
             return false;
         }
+
+        $objects = array();
+        $similar = array();
         switch ($type) {
             case 'artist':
                 $similar = Recommendation::get_artists_like($filter);
@@ -605,12 +606,10 @@ class Api
             case 'song':
                 $similar = Recommendation::get_songs_like($filter);
         }
-        $objects = array();
         foreach ($similar as $child) {
             $objects[] = $child['id'];
         }
-        
-        // echo out the resulting xml document
+
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
@@ -732,7 +731,7 @@ class Api
         $artists = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
-        // echo out the resulting xml document
+
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
@@ -800,15 +799,16 @@ class Api
         $albums = $artist->get_albums();
         $user   = User::get_from_username(Session::username($input['auth']));
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
                 echo JSON_Data::albums($albums, array(), $user->id);
             break;
             default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
                 echo XML_Data::albums($albums, array(), $user->id);
         }
         Session::extend($input['auth']);
@@ -951,10 +951,6 @@ class Api
         $album = new Album($input['filter']);
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
-
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
 
@@ -1209,10 +1205,6 @@ class Api
 
         $songs = self::$browse->get_objects();
         $user  = User::get_from_username(Session::username($input['auth']));
-
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
         switch ($input['format']) {
@@ -1852,6 +1844,88 @@ class Api
 
         return true;
     } // search_songs
+
+    /**
+     * shares
+     * MINIMUM_API_VERSION=400005
+     * 
+     * Get information about shared media this user is allowed to manage.
+     * 
+     * @param array $input
+     * filter = (string) Alpha-numeric search term
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     * @return bool
+     */
+    public static function shares($input)
+    {
+        if (!AmpConfig::get('share')) {
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::error('400', T_('Access Denied: sharing features are not enabled.'));
+                break;
+                default:
+                    echo XML_Data::error('400', T_('Access Denied: sharing features are not enabled.'));
+            }
+
+            return false;
+        }
+        self::$browse->reset_filters();
+        self::$browse->set_type('share');
+        self::$browse->set_sort('title', 'ASC');
+
+        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        self::set_filter($method, $input['filter']);
+        self::set_filter('add', $input['add']);
+        self::set_filter('update', $input['update']);
+
+        $shares = self::$browse->get_objects();
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::shares($shares);
+            break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::shares($shares);
+        }
+        Session::extend($input['auth']);
+    } // shares
+
+    /**
+     * share
+     * MINIMUM_API_VERSION=400005
+     * 
+     * Get the share from it's id.
+     * 
+     * @param array $input
+     * filter = (integer) Share ID number
+     * @return bool
+     */
+    public static function share($input)
+    {
+        if (!AmpConfig::get('share')) {
+            debug_event('share', 'Access Denied: sharing features are not enabled.', 3);
+            UI::access_denied();
+
+            return false;
+        }
+        $share = array((int) $input['filter']);
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::shares($share);
+            break;
+            default:
+                echo XML_Data::shares($share);
+        }
+        Session::extend($input['auth']);
+    } // share
 
     /**
      * videos

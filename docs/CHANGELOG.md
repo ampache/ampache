@@ -17,6 +17,8 @@ Check the php manual for help making your desired string. ([<https://www.php.net
     * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400004
 * NEW API functions
   * get_similar: send artist or song id to get related objects from last.fm
+  * shares: get a list of shares you can access
+  * share: get a share by id
 * NEW db options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the ui. (disabled by default)

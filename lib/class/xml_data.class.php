@@ -639,6 +639,45 @@ class XML_Data
     } // playlists
 
     /**
+     * shares
+     *
+     * This returns shares to the user, in a pretty xml document with the information
+     *
+     * @param    array    $shares    (description here...)
+     * @return    string    return xml
+     */
+    public static function shares($shares)
+    {
+        if (count($shares) > self::$limit || self::$offset > 0) {
+            $shares = array_splice($shares, self::$offset, self::$limit);
+        }
+        $string = "<total_count>" . count($shares) . "</total_count>\n";
+
+        foreach ($shares as $share_id) {
+            $share = new Share($share_id);
+            $share->format();
+            $string .= "<share id=\"$share_id\">\n" .
+                    "\t<name><![CDATA[" . $share->f_name . "]]></name>\n" .
+                    "\t<user><![CDATA[" . $share->f_user . "]]></user>\n" .
+                    "\t<allow_stream>" . $share->f_allow_stream . "</allow_stream>\n" .
+                    "\t<allow_download>" . $share->f_allow_download . "</allow_download>\n" .
+                    "\t<creation_date><![CDATA[" . $share->f_creation_date . "]]></creation_date>\n" .
+                    "\t<lastvisit_date><![CDATA[" . $share->f_lastvisit_date . "]]></lastvisit_date>\n" .
+                    "\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n" .
+                    "\t<object_id>" . $share->object_id . "</object_id>\n" .
+                    "\t<expire_days>" . $share->expire_days . "</expire_days>\n" .
+                    "\t<max_counter>" . $share->max_counter . "</max_counter>\n" .
+                    "\t<counter>" . $share->counter . "</counter>\n" .
+                    "\t<secret><![CDATA[" . $share->secret . "]]></secret>\n" .
+                    "\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n" .
+                    "\t<description><![CDATA[" . $share->description . "]]></description>\n" .
+                    "</share>\n";
+        } // end foreach
+
+        return self::output_xml($string);
+    } // shares
+
+    /**
      * songs
      *
      * This returns an xml document from an array of song ids.
