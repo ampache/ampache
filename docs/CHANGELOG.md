@@ -15,6 +15,8 @@ Check the php manual for help making your desired string. ([<https://www.php.net
     * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400004
   * Call the JSON server:
     * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400004
+* NEW API functions
+  * get_similar: send artist or song id to get related objects from last.fm
 * NEW db options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
@@ -28,6 +30,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * docs/examples/ampache_cron.service
   * docs/examples/ampache_cron.timer
 * API: All calls that return songs now include <playlisttrack> which can be used to identify track order.
+* API: <playcount> added to objects.
 * API: Don't gather art when adding songs
 * Fix: Channel authentication
 * Fix: IP checks when sending null proxy values
@@ -36,12 +39,13 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Fix: Read vorbis rating correctly
 * Fix: Search rules in UI failing to load with custom_metadata
 * Fix: Warn correctly when inserting art fails
-* Fix: Insert missing user preferences on login
 * Update Composer requirements
+* Fix: Insert missing user preferences on login
 * Allow searching play times without requiring UI option
 * Added declare(strict_types=0); to lib/* and lib/class/* (requires more work before it can be enabled)
 * Fixed a lot of incorrectly typed function calls and code documentation
 * Stop showing the average rating in the web interface.
+* April 2020 Translation update
 
 ## 4.1.1
 * Bump API version to 400004 (4.0.0 build 004)

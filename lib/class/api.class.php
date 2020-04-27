@@ -566,6 +566,67 @@ class Api
 
         return true;
     } // get_indexes
+    /**
+     * get_similar
+     * MINIMUM_API_VERSION=400005
+     *
+     * Return similar artist id's or similar song ids compared to the input filter
+     *
+     * @param array $input
+     * type   = (string) 'song'|'artist'
+     * filter = (integer) artist id or song id
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     * @return boolean
+     */
+    public static function get_similar($input)
+    {
+        if (!self::check_parameter($input, array('type', 'filter'), 'get_similar')) {
+            return false;
+        }
+        $type   = (string) $input['type'];
+        $filter = (string) $input['filter'];
+        // confirm the correct data
+        if (!in_array($type, array('song', 'artist'))) {
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::error('401', T_('Wrong object type ' . $type));
+                break;
+                default:
+                    echo XML_Data::error('401', T_('Wrong object type ' . $type));
+            }
+
+            return false;
+        }
+        switch ($type) {
+            case 'artist':
+                $similar = Recommendation::get_artists_like($filter);
+            break;
+            case 'song':
+                $similar = Recommendation::get_songs_like($filter);
+        }
+        $objects = array();
+        foreach ($similar as $child) {
+            $objects[] = $child['id'];
+        }
+        
+        // echo out the resulting xml document
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::indexes($objects, $type);
+            break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::indexes($objects, $type);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // get_similar
 
     /**
      * advanced_search
