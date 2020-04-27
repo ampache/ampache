@@ -329,10 +329,17 @@ class Album extends database_object implements library_item
         }
 
         $full_name    = Dba::escape($this->full_name);
+        // for all the artists who love using bad strings for album titles!
         $release_type = "is null";
         $mbid         = "is null";
         $artist       = "is null";
-
+        // for all the artists who love using bad strings for album titles!
+        if (strpos($this->full_name, '>') || strpos($this->full_name, '<')) {
+            $full_name = Dba::escape(str_replace(array('<', '>'), '_', $this->full_name));
+            $name_sql  = "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '$full_name' AND ";
+        } else {
+            $name_sql = "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name' AND ";
+        }
         if ($this->release_type) {
             $release_type = "= '" . ucwords((string) $this->release_type) . "'";
         }
@@ -340,7 +347,7 @@ class Album extends database_object implements library_item
             $mbid = "= '$this->mbid'";
         }
         if ($this->album_artist) {
-            $artist = "= '$this->album_artist'";
+            $artist = "= $this->album_artist";
         }
 
         // Calculation
@@ -360,7 +367,7 @@ class Album extends database_object implements library_item
         if ($this->allow_group_disks) {
             $sql .= "FROM `album` ";
             $sqlj .= "LEFT JOIN `song` ON `song`.`album` = `album`.`id` ";
-            $sqlw = "WHERE `song`.`album` IN (SELECT `id` FROM `album` WHERE LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name') AND " .
+            $sqlw = "WHERE " . $name_sql .
                 "`song`.`album` IN (SELECT `id` FROM `album` WHERE `album`.`release_type` $release_type AND " .
                 "`album`.`mbid` $mbid AND `album`.`album_artist` $artist AND `album`.`year` = " . (string) $this->year . ") ";
         } else {
@@ -380,6 +387,10 @@ class Album extends database_object implements library_item
         $sql .= $sqlj . $sqlw;
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
+        $where_sql  = "`album`.`release_type` $release_type AND " .
+                      "`album`.`mbid` $mbid AND " .
+                      "`album`.`album_artist` $artist AND " .
+                      "`album`.`year` = " . (string) $this->year;
 
         if ($artist == "is null") {
             // no album_artist is set
@@ -391,12 +402,8 @@ class Album extends database_object implements library_item
                    "FROM `album` " .
                    "LEFT JOIN `song` ON `song`.`album` = `album`.`id` " .
                    "INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` " .
-                   "WHERE `song`.`album` IN (SELECT `id` FROM `album` " .
-                   "WHERE LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name' AND " .
-                   "`album`.`release_type` $release_type AND " .
-                   "`album`.`mbid` $mbid AND " .
-                   "`album`.`album_artist` $artist AND " .
-                   "`album`.`year` = " . (string) $this->year . ") " .
+                   "WHERE `song`.`album` IN (SELECT `id` FROM `album` WHERE " .
+                   $name_sql . $where_sql . ") " .
                    "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` " .
                    "LIMIT 1"; //TODO mysql8 test (And Shorten/merger with the other query)
         } else {
@@ -405,12 +412,8 @@ class Album extends database_object implements library_item
                    "`artist`.`prefix` AS `artist_prefix`, " .
                    "`artist`.`id` AS `artist_id` " .
                    "FROM `album` " .
-                   "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist` " .
-                   "WHERE LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name' AND " .
-                   "`album`.`release_type` $release_type AND " .
-                   "`album`.`mbid` $mbid AND " .
-                   "`album`.`album_artist` $artist AND " .
-                   "`album`.`year` = " . (string) $this->year . " " .
+                   "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist` WHERE " .
+                   $name_sql . $where_sql . " " .
                    "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`"; //TODO mysql8 test
         }
         $db_results = Dba::read($sql);
