@@ -40,7 +40,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     <dd class="<?php echo $rowparity; ?>">
         <div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id, 'song');
             /* HINT: Average rating. e.g. (average 3.7)*/
-            echo '(' . T_('average') . ' ' . $rating->get_average_rating() . ')'; ?> </div>
+            echo '(' . T_('average') . ' ' . $rating->get_average_rating() . ')'; ?>
         </div>
     </dd>
     <?php
