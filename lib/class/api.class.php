@@ -1848,9 +1848,9 @@ class Api
     /**
      * shares
      * MINIMUM_API_VERSION=400005
-     * 
+     *
      * Get information about shared media this user is allowed to manage.
-     * 
+     *
      * @param array $input
      * filter = (string) Alpha-numeric search term
      * offset = (integer) //optional
@@ -1899,9 +1899,9 @@ class Api
     /**
      * share
      * MINIMUM_API_VERSION=400005
-     * 
+     *
      * Get the share from it's id.
-     * 
+     *
      * @param array $input
      * filter = (integer) Share ID number
      * @return bool

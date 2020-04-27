@@ -437,20 +437,20 @@ class JSON_Data
         foreach ($shares as $share_id) {
             $share = new Share($share_id);
             $share->format();
-            $share_name = $share->f_name;
-            $share_user = $share->f_user;
-            $share_allow_stream = $share->f_allow_stream;
+            $share_name           = $share->f_name;
+            $share_user           = $share->f_user;
+            $share_allow_stream   = $share->f_allow_stream;
             $share_allow_download = $share->f_allow_download;
-            $share_creation_date = $share->f_creation_date;
+            $share_creation_date  = $share->f_creation_date;
             $share_lastvisit_date = $share->f_lastvisit_date;
-            $share_object_type = $share->object_type;
-            $share_object_id = $share->object_id;
-            $share_expire_days = $share->expire_days;
-            $share_max_counter = $share->max_counter;
-            $share_counter = $share->counter;
-            $share_secret = $share->secret;
-            $share_public_url = $share->public_url;
-            $share_description = $share->description;
+            $share_object_type    = $share->object_type;
+            $share_object_id      = $share->object_id;
+            $share_expire_days    = $share->expire_days;
+            $share_max_counter    = $share->max_counter;
+            $share_counter        = $share->counter;
+            $share_secret         = $share->secret;
+            $share_public_url     = $share->public_url;
+            $share_description    = $share->description;
             // Build this element
             array_push($allShares, [
                 "id" => $share_id,
