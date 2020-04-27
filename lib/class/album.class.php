@@ -334,8 +334,8 @@ class Album extends database_object implements library_item
         $mbid         = "is null";
         $artist       = "is null";
         // for all the artists who love using bad strings for album titles!
-        if (strpos($this->full_name, '>') || strpos($this->full_name, '<')) {
-            $full_name = Dba::escape(str_replace(array('<', '>'), '_', $this->full_name));
+        if (strpos($this->full_name, '>') || strpos($this->full_name, '<') || strpos($this->full_name, '\\')) {
+            $full_name = Dba::escape(str_replace(array('<', '>', '\\'), '_', $this->full_name));
             $name_sql  = "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE '$full_name' AND ";
         } else {
             $name_sql = "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name' AND ";
