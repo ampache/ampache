@@ -184,6 +184,7 @@ class Catalog_remote extends Catalog
      * existing catalog
      * @param array $options
      * @return boolean
+     * @throws Exception
      */
     public function add_to_catalog($options = null)
     {

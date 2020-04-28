@@ -329,7 +329,6 @@ class Album extends database_object implements library_item
         }
 
         $full_name    = Dba::escape($this->full_name);
-        // for all the artists who love using bad strings for album titles!
         $release_type = "is null";
         $mbid         = "is null";
         $artist       = "is null";

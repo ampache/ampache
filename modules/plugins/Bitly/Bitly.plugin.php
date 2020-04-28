@@ -97,20 +97,18 @@ class AmpacheBitly
             return false;
         }
 
-        $shorturl = '';
-
         $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
         try {
             debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
             $request  = Requests::get($apiurl, array(), Core::requests_options());
             $shorturl = json_decode($request->body)->data->url;
+
+            return $shorturl;
         } catch (Exception $error) {
             debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
 
             return false;
         }
-
-        return $shorturl;
     }
 
     /**
