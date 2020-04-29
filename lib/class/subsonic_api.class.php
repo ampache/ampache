@@ -1510,7 +1510,7 @@ class Subsonic_Api
             if (!empty($object_type)) {
                 $response = Subsonic_XML_Data::createSuccessResponse('createshare');
                 $shares   = array();
-                $shares[] = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, Share::generate_secret(), 0, $description);
+                $shares[] = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, generate_password(8), 0, $description);
                 Subsonic_XML_Data::addShares($response, $shares);
             } else {
                 $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'createshare');

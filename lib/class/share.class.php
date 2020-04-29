@@ -104,21 +104,6 @@ class Share extends database_object
     }
 
     /**
-     * @param integer $length
-     * @return string
-     */
-    public static function generate_secret($length = 8)
-    {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $secret     = '';
-        for ($count = 0; $count < $length; $count++) {
-            $secret .= $characters[rand(0, strlen((string) $characters) - 1)];
-        }
-
-        return $secret;
-    }
-
-    /**
      * @param string $type
      * @return string
      */

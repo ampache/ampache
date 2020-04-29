@@ -148,7 +148,7 @@ switch ($_REQUEST['action']) {
         $type           = Core::get_request('type');
         $share_id       = Core::get_request('id');
         $allow_download = (($type == 'song' && Access::check_function('download')) || Access::check_function('batch_download'));
-        $secret         = Share::generate_secret();
+        $secret         = generate_password(8);
 
         $share_id = Share::create_share($type, $share_id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
         $share    = new Share($share_id);

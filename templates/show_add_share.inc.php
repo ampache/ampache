@@ -33,7 +33,7 @@
 <tr>
     <td><?php echo T_('Secret'); ?></td>
     <td>
-        <input type="text" name="secret" value="<?php echo scrub_out($_REQUEST['secret'] ?: Share::generate_secret()); ?>" />
+        <input type="text" name="secret" value="<?php echo scrub_out($_REQUEST['secret'] ?: generate_password(8)); ?>" />
         <?php AmpError::display('secret'); ?>
     </td>
 </tr>
