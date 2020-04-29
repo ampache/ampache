@@ -2011,6 +2011,125 @@ class Api
     } // stats
 
     /**
+     * podcasts
+     * MINIMUM_API_VERSION=400005
+     *
+     * Get information about podcasts.
+     *
+     * @param array $input
+     * filter  = (string) Alpha-numeric search term
+     * include = (string) 'episodes' (include episodes in the response) // optional
+     * offset  = (integer) //optional
+     * limit   = (integer) //optional
+     * @return bool
+     */
+    public static function podcasts($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        self::$browse->reset_filters();
+        self::$browse->set_type('podcast');
+        self::$browse->set_sort('title', 'ASC');
+
+        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        self::set_filter($method, $input['filter']);
+        self::set_filter('add', $input['add']);
+        self::set_filter('update', $input['update']);
+
+        $podcasts = self::$browse->get_objects();
+        $episodes = ($input['include'] == 'episodes') ? true : false;
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::podcasts($podcasts, $episodes);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::podcasts($podcasts, $episodes);
+        }
+        Session::extend($input['auth']);
+    } // shares
+
+    /**
+     * podcast
+     * MINIMUM_API_VERSION=400005
+     *
+     * Get the podcast from it's id.
+     *
+     * @param array $input
+     * filter  = (integer) Share ID number
+     * include = (string) 'episodes' (include episodes in the response) // optional
+     * @return bool
+     */
+    public static function podcast($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        $podcast  = array((int) $input['filter']);
+        $episodes = ($input['include'] == 'episodes') ? true : false;
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::podcasts($podcast, $episodes);
+                break;
+            default:
+                echo XML_Data::podcasts($podcast, $episodes);
+        }
+        Session::extend($input['auth']);
+    } // share
+
+    /**
+     * podcast_episodes
+     * MINIMUM_API_VERSION=380001
+     *
+     * This returns the songs for a playlist
+     *
+     * @param array $input
+     * filter = (string) UID of podcast
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     * @return boolean
+     */
+    public static function podcast_episodes($input)
+    {
+        if (!self::check_parameter($input, array('filter'), 'podcast_episodes')) {
+            return false;
+        }
+        $user = User::get_from_username(Session::username($input['auth']));
+        $uid  = scrub_in($input['filter']);
+        debug_event('api.class', 'User ' . $user->id . ' loading podcast: ' . $input['filter'], '5');
+        $podcast = new Podcast($uid);
+        $items   = $podcast->get_episodes();
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::podcast_episodes($items, $user->id);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::podcast_episodes($items, $user->id);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // podcast_episodes
+
+    /**
      * user
      * MINIMUM_API_VERSION=380001
      *

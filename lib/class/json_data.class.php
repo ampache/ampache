@@ -154,7 +154,7 @@ class JSON_Data
     public static function indexes($objects, $type)
     {
         //here is where we call the object type
-        //'song', 'album', 'artist', 'playlist'
+        // 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
         switch ($type) {
             case 'song':
                 return self::songs($objects);
@@ -164,6 +164,10 @@ class JSON_Data
                 return self::artists($objects);
             case 'playlist':
                 return self::playlists($objects);
+            case 'share':
+                return self::shares($objects);
+            case 'podcast':
+                return self::podcasts($objects);
             default:
                 return self::error('401', T_('Wrong object type ' . $type));
         }
@@ -472,6 +476,84 @@ class JSON_Data
 
         return json_encode($allShares, JSON_PRETTY_PRINT);
     } // shares
+
+    /**
+     * podcasts
+     *
+     * This returns podcasts to the user, in a pretty json document with the information
+     *
+     * @param array $podcasts (description here...)
+     * @param boolean $episodees include the episodes of the podcast
+     * @return string return JSON
+     */
+    public static function podcasts($podcasts, $episodes = false)
+    {
+        if (count($podcasts) > self::$limit || self::$offset > 0) {
+            $podcasts = array_splice($podcasts, self::$offset, self::$limit);
+        }
+
+        $allPodcasts = [];
+        foreach ($podcasts as $podcast_id) {
+            $podcast = new Share($podcast_id);
+            $podcast->format();
+            $podcast_name           = $podcast->f_name;
+            $podcast_user           = $podcast->f_user;
+            $podcast_allow_stream   = $podcast->f_allow_stream;
+            $podcast_allow_download = $podcast->f_allow_download;
+            $podcast_creation_date  = $podcast->f_creation_date;
+            $podcast_lastvisit_date = $podcast->f_lastvisit_date;
+            $podcast_object_type    = $podcast->object_type;
+            $podcast_object_id      = $podcast->object_id;
+            $podcast_expire_days    = $podcast->expire_days;
+            $podcast_max_counter    = $podcast->max_counter;
+            $podcast_counter        = $podcast->counter;
+            $podcast_secret         = $podcast->secret;
+            $podcast_public_url     = $podcast->public_url;
+            $podcast_description    = $podcast->description;
+            $podcast_episodes       = array();
+            if ($episodes) {
+                $items = $podcast->get_episodes();
+                foreach ($items as $episode_id) {
+                    $episode = new Podcast_Episode($episode_id);
+                    $episode->format();
+                    array_push($podcast_episodes, [
+                        "id" => $episode_id,
+                        "name" => $episode->f_title,
+                        "description" => $episode->f_description,
+                        "category" => $episode->f_category,
+                        "author" => $episode->f_author,
+                        "author_full" => $episode->f_artist_full,
+                        "website" => $episode->f_website,
+                        "pubdate" => $episode->f_pubdate,
+                        "state" => $episode->f_state,
+                        "filelength" => $episode->f_time_h,
+                        "filesize" => $episode->f_size,
+                        "filename" => $episode->f_file,
+                        "url" => $episode->link]);
+                }
+            }
+            // Build this element
+            array_push($allPodcasts, [
+                "id" => $podcast_id,
+                "name" => $podcast_name,
+                "owner" => $podcast_user,
+                "allow_stream" => $podcast_allow_stream,
+                "allow_download" => $podcast_allow_download,
+                "creation_date" => $podcast_creation_date,
+                "lastvisit_date" => $podcast_lastvisit_date,
+                "object_type" => $podcast_object_type,
+                "object_id" => $podcast_object_id,
+                "expire_days" => $podcast_expire_days,
+                "max_counter" => $podcast_max_counter,
+                "counter" => $podcast_counter,
+                "secret" => $podcast_secret,
+                "public_url" => $podcast_public_url,
+                "description" => $podcast_description,
+                "podcast_episode" => $podcast_episodes]);
+        } // end foreach
+
+        return json_encode($allPodcasts, JSON_PRETTY_PRINT);
+    } // podcasts
 
     /**
      * songs

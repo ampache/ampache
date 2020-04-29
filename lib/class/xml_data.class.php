@@ -321,7 +321,7 @@ class XML_Data
      * we want
      *
      * @param    array    $objects     (description here...)
-     * @param    string   $object_type 'artist'|'album'|'song'|'playlist'
+     * @param    string   $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
      * @param    bool     $full_xml    whether to return a full XML document or just the node.
      * @return   string   return xml
      */
@@ -332,8 +332,8 @@ class XML_Data
         }
         $string = "<total_count>" . count($objects) . "</total_count>\n";
 
+        // 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
         foreach ($objects as $object_id) {
-            // 'artist'|'album'|'song'|'playlist'
             if ($object_type == 'artist') {
                 $artist = new Artist($object_id);
                 $artist->format();
@@ -343,9 +343,8 @@ class XML_Data
                 foreach ($albums as $album_id) {
                     if ($album_id) {
                         $album = new Album($album_id[0]);
-                        $album->format();
                         $string .= "\t\t<album id=\"" . $album_id[0] .
-                                '"><![CDATA[' . $album->f_name .
+                                '"><![CDATA[' . $album->full_name .
                                 "]]></album>\n";
                     }
                 }
@@ -676,6 +675,62 @@ class XML_Data
 
         return self::output_xml($string);
     } // shares
+
+    /**
+     * podcasts
+     *
+     * This returns podcasts to the user, in a pretty xml document with the information
+     *
+     * @param  array   $podcasts    (description here...)
+     * @param  boolean $episodes include the episodes of the podcast // optional
+     * @return string  return xml
+     */
+    public static function podcasts($podcasts, $episodes = false)
+    {
+        if (count($podcasts) > self::$limit || self::$offset > 0) {
+            $podcasts = array_splice($podcasts, self::$offset, self::$limit);
+        }
+        $string = "<total_count>" . count($podcasts) . "</total_count>\n";
+
+        foreach ($podcasts as $podcast_id) {
+            $podcast = new Podcast($podcast_id);
+            $podcast->format();
+            $string .= "<podcast id=\"$podcast_id\">\n" .
+                "\t<name><![CDATA[" . $podcast->f_title . "]]></name>\n" .
+                "\t<description><![CDATA[" . $podcast->description . "]]></description>\n" .
+                "\t<language><![CDATA[" . $podcast->f_language . "]]></language>\n" .
+                "\t<copyright>" . $podcast->f_copyright . "</copyright>\n" .
+                "\t<generator>" . $podcast->f_generator . "</generator>\n" .
+                "\t<website><![CDATA[" . $podcast->f_website . "]]></website>\n" .
+                "\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n" .
+                "\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n" .
+                "\t<public_url><![CDATA[" . $podcast->link . "]]></public_url>\n";
+            if ($episodes) {
+                $items = $podcast->get_episodes();
+                foreach ($items as $episode_id) {
+                    $episode = new Podcast_Episode($episode_id);
+                    $episode->format();
+                    $string .= "\t<podcast_episode id=\"$podcast_id\">\n" .
+                                "\t\t<name><![CDATA[" . $episode->f_title . "]]></name>\n" .
+                                "\t\t<description><![CDATA[" . $episode->f_description . "]]></description>\n" .
+                                "\t\t<category><![CDATA[" . $episode->f_category . "]]></category>\n" .
+                                "\t\t<author><![CDATA[" . $episode->f_author . "]]></author>\n" .
+                                "\t\t<author_full><![CDATA[" . $episode->f_artist_full . "]]></author_full>\n" .
+                                "\t\t<website><![CDATA[" . $episode->f_website . "]]></website>\n" .
+                                "\t\t<pubdate><![CDATA[" . $episode->f_pubdate . "]]></pubdate>\n" .
+                                "\t\t<state><![CDATA[" . $episode->f_state . "]]></state>\n" .
+                                "\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n" .
+                                "\t\t<filesize><![CDATA[" . $episode->f_size . "]]></filesize>\n" .
+                                "\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n" .
+                                "\t\t<url><![CDATA[" . $episode->link . "]]></url>\n";
+                        $string .= "\t</podcast_episode>\n";
+                }
+            }
+            $string .= "\t</podcast>\n";
+        } // end foreach
+
+        return self::output_xml($string);
+    } // podcasts
 
     /**
      * songs
@@ -1105,6 +1160,7 @@ class XML_Data
     // _footer
 
     /**
+     * podcast
      * @param library_item $libitem
      * @param boolean $user_id
      * @return string|false
