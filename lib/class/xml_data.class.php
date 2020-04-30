@@ -707,23 +707,8 @@ class XML_Data
                 "\t<public_url><![CDATA[" . $podcast->link . "]]></public_url>\n";
             if ($episodes) {
                 $items = $podcast->get_episodes();
-                foreach ($items as $episode_id) {
-                    $episode = new Podcast_Episode($episode_id);
-                    $episode->format();
-                    $string .= "\t<podcast_episode id=\"$podcast_id\">\n" .
-                                "\t\t<name><![CDATA[" . $episode->f_title . "]]></name>\n" .
-                                "\t\t<description><![CDATA[" . $episode->f_description . "]]></description>\n" .
-                                "\t\t<category><![CDATA[" . $episode->f_category . "]]></category>\n" .
-                                "\t\t<author><![CDATA[" . $episode->f_author . "]]></author>\n" .
-                                "\t\t<author_full><![CDATA[" . $episode->f_artist_full . "]]></author_full>\n" .
-                                "\t\t<website><![CDATA[" . $episode->f_website . "]]></website>\n" .
-                                "\t\t<pubdate><![CDATA[" . $episode->f_pubdate . "]]></pubdate>\n" .
-                                "\t\t<state><![CDATA[" . $episode->f_state . "]]></state>\n" .
-                                "\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n" .
-                                "\t\t<filesize><![CDATA[" . $episode->f_size . "]]></filesize>\n" .
-                                "\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n" .
-                                "\t\t<url><![CDATA[" . $episode->link . "]]></url>\n";
-                        $string .= "\t</podcast_episode>\n";
+                if (count($items) > 0) {
+                    $string .= self::podcast_episodes($items, false);
                 }
             }
             $string .= "\t</podcast>\n";
@@ -731,6 +716,44 @@ class XML_Data
 
         return self::output_xml($string);
     } // podcasts
+
+    /**
+     * podcast_episodes
+     *
+     * This returns podcasts to the user, in a pretty xml document with the information
+     *
+     * @param  array   $podcast_episodes    (description here...)
+     * @param  boolean $full_xml whether to return a full XML document or just the node.
+     * @return string  return xml
+     */
+    public static function podcast_episodes($podcast_episodes, $full_xml = true)
+    {
+        if (count($podcast_episodes) > self::$limit || self::$offset > 0) {
+            $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
+        }
+        $string = "<total_count>" . count($podcast_episodes) . "</total_count>\n";
+
+        foreach ($podcast_episodes as $episode_id) {
+            $episode = new Podcast_Episode($episode_id);
+            $episode->format();
+            $string .= "\t<podcast_episode id=\"$episode_id\">\n" .
+                "\t\t<name><![CDATA[" . $episode->f_title . "]]></name>\n" .
+                "\t\t<description><![CDATA[" . $episode->f_description . "]]></description>\n" .
+                "\t\t<category><![CDATA[" . $episode->f_category . "]]></category>\n" .
+                "\t\t<author><![CDATA[" . $episode->f_author . "]]></author>\n" .
+                "\t\t<author_full><![CDATA[" . $episode->f_artist_full . "]]></author_full>\n" .
+                "\t\t<website><![CDATA[" . $episode->f_website . "]]></website>\n" .
+                "\t\t<pubdate><![CDATA[" . $episode->f_pubdate . "]]></pubdate>\n" .
+                "\t\t<state><![CDATA[" . $episode->f_state . "]]></state>\n" .
+                "\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n" .
+                "\t\t<filesize><![CDATA[" . $episode->f_size . "]]></filesize>\n" .
+                "\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n" .
+                "\t\t<url><![CDATA[" . $episode->link . "]]></url>\n";
+            $string .= "\t</podcast_episode>\n";
+        } // end foreach
+
+        return self::output_xml($string, $full_xml);
+    } // podcast_episodes
 
     /**
      * songs

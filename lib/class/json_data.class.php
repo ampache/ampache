@@ -513,24 +513,7 @@ class JSON_Data
             $podcast_episodes       = array();
             if ($episodes) {
                 $items = $podcast->get_episodes();
-                foreach ($items as $episode_id) {
-                    $episode = new Podcast_Episode($episode_id);
-                    $episode->format();
-                    array_push($podcast_episodes, [
-                        "id" => $episode_id,
-                        "name" => $episode->f_title,
-                        "description" => $episode->f_description,
-                        "category" => $episode->f_category,
-                        "author" => $episode->f_author,
-                        "author_full" => $episode->f_artist_full,
-                        "website" => $episode->f_website,
-                        "pubdate" => $episode->f_pubdate,
-                        "state" => $episode->f_state,
-                        "filelength" => $episode->f_time_h,
-                        "filesize" => $episode->f_size,
-                        "filename" => $episode->f_file,
-                        "url" => $episode->link]);
-                }
+                $podcast_episodes = self::podcast_episodes($items);
             }
             // Build this element
             array_push($allPodcasts, [
@@ -554,6 +537,42 @@ class JSON_Data
 
         return json_encode($allPodcasts, JSON_PRETTY_PRINT);
     } // podcasts
+
+    /**
+     * podcast_episodes
+     *
+     * This returns podcasts to the user, in a pretty json document with the information
+     *
+     * @param  array   $podcast_episodes    (description here...)
+     * @return string  return xml
+     */
+    public static function podcast_episodes($podcast_episodes)
+    {
+        if (count($podcast_episodes) > self::$limit || self::$offset > 0) {
+            $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
+        }
+        $allEpisodes = array();
+        foreach ($podcast_episodes as $episode_id) {
+            $episode = new Podcast_Episode($episode_id);
+            $episode->format();
+            array_push($podcast_episodes, [
+                "id" => $episode_id,
+                "name" => $episode->f_title,
+                "description" => $episode->f_description,
+                "category" => $episode->f_category,
+                "author" => $episode->f_author,
+                "author_full" => $episode->f_artist_full,
+                "website" => $episode->f_website,
+                "pubdate" => $episode->f_pubdate,
+                "state" => $episode->f_state,
+                "filelength" => $episode->f_time_h,
+                "filesize" => $episode->f_size,
+                "filename" => $episode->f_file,
+                "url" => $episode->link]);
+        }
+
+        return json_encode($allEpisodes, JSON_PRETTY_PRINT);
+    } // podcast_episodes
 
     /**
      * songs

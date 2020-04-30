@@ -2055,7 +2055,7 @@ class Api
                 echo XML_Data::podcasts($podcasts, $episodes);
         }
         Session::extend($input['auth']);
-    } // shares
+    } // podcasts
 
     /**
      * podcast
@@ -2064,7 +2064,7 @@ class Api
      * Get the podcast from it's id.
      *
      * @param array $input
-     * filter  = (integer) Share ID number
+     * filter  = (integer) Podcast ID number
      * include = (string) 'episodes' (include episodes in the response) // optional
      * @return bool
      */
@@ -2087,13 +2087,13 @@ class Api
                 echo XML_Data::podcasts($podcast, $episodes);
         }
         Session::extend($input['auth']);
-    } // share
+    } // podcast
 
     /**
      * podcast_episodes
-     * MINIMUM_API_VERSION=380001
+     * MINIMUM_API_VERSION=400005
      *
-     * This returns the songs for a playlist
+     * This returns the episodes for a podcast
      *
      * @param array $input
      * filter = (string) UID of podcast
@@ -2128,6 +2128,36 @@ class Api
 
         return true;
     } // podcast_episodes
+
+    /**
+     * podcast_episode
+     * MINIMUM_API_VERSION=400005
+     *
+     * Get the podcast_episode from it's id.
+     *
+     * @param array $input
+     * filter  = (integer) podcast_episode ID number
+     * @return bool
+     */
+    public static function podcast_episode($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        $podcast_episode = array((int) $input['filter']);
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::podcast_episodes($podcast_episode);
+                break;
+            default:
+                echo XML_Data::podcast_episodes($podcast_episode);
+        }
+        Session::extend($input['auth']);
+    } // podcast
 
     /**
      * user
