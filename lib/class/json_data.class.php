@@ -512,7 +512,7 @@ class JSON_Data
             $podcast_description    = $podcast->description;
             $podcast_episodes       = array();
             if ($episodes) {
-                $items = $podcast->get_episodes();
+                $items            = $podcast->get_episodes();
                 $podcast_episodes = self::podcast_episodes($items);
             }
             // Build this element

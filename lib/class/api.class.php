@@ -1756,6 +1756,9 @@ class Api
      */
     public static function shares($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'shares')) {
+            return false;
+        }
         if (!AmpConfig::get('share')) {
             self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
 
@@ -1799,6 +1802,9 @@ class Api
      */
     public static function share($input)
     {
+        if (!self::check_parameter($input, array('filter'), 'share')) {
+            return false;
+        }
         if (!AmpConfig::get('share')) {
             self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
 
@@ -1816,6 +1822,141 @@ class Api
         }
         Session::extend($input['auth']);
     } // share
+
+    /**
+     * share_create
+     * MINIMUM_API_VERSION=400005
+     * Create a public url that can be used by anyone to stream media.
+     * Takes the file id with optional description and expires parameters.
+     *
+     * @param array $input
+     * filter      = (string) object_id
+     * type        = (string) object_type
+     * description = (string) description (will be filled for you if empty) //optional
+     * expires     = (integer) days to keep active //optional
+     */
+    public static function share_create($input)
+    {
+        if (!self::check_parameter($input, array('type', 'filter'), 'share_create')) {
+            return false;
+        }
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        $description = $input['description'];
+        $object_id   = $input['filter'];
+        $object_type = $input['type'];
+        $download    = Access::check_function('download');
+        $expire_days = Share::get_expiry($input['expires']);
+        // confirm the correct data
+        if (!in_array($object_type, array('song', 'album', 'artist'))) {
+            self::message('error', T_('Wrong object type ' . $object_type), '401', $input['format']);
+
+            return false;
+        }
+        $share = array();
+        if (!Core::is_library_item($object_type) || !$object_id) {
+            self::message('error', T_('Wrong library item type'), '401', $input['format']);
+        } else {
+            $item = new $object_type($object_id);
+            if (!$item->id) {
+                self::message('error', T_('Library item not found'), '404', $input['format']);
+
+                return false;
+            }
+            $share[] = Share::create_share($object_type, $object_id, true, $download, $expire_days, generate_password(8), 0, $description);
+        }
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::shares($share);
+                break;
+            default:
+                echo XML_Data::shares($share);
+        }
+        Session::extend($input['auth']);
+    } // share_create
+
+    /**
+     * share_delete
+     *
+     * MINIMUM_API_VERSION=400005
+     *
+     * Delete an existing share.
+     *
+     * @param array $input
+     * filter = (string) Alpha-numeric search term //optional
+     */
+    public static function share_delete($input)
+    {
+        if (!self::check_parameter($input, array('type', 'filter'), 'share_delete')) {
+            return false;
+        }
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        $object_id = $input['filter'];
+
+        if (Share::delete_share($object_id)) {
+            self::message('success', 'share ' . $object_id . ' deleted', null, $input['format']);
+        } else {
+            self::message('error', 'share ' . $object_id . ' was not deleted', '401', $input['format']);
+        }
+        Session::extend($input['auth']);
+    } // share_delete
+
+    /**
+     * share_edit
+     * MINIMUM_API_VERSION=400005
+     * Update the description and/or expiration date for an existing share.
+     * Takes the share id to update with optional description and expires parameters.
+     *
+     * @param array $input
+     * filter      = (string) Alpha-numeric search term //optional
+     * stream      = (bool) 0|1 // optional
+     * download    = (bool) 0|1 // optional
+     * expires     = (integer) number of whole days before expiry // optional
+     * description = (string) update description // optional
+     */
+    public static function share_edit($input)
+    {
+        if (!self::check_parameter($input, array('filter'), 'share_edit')) {
+            return false;
+        }
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        $share_id = $input['filter'];
+        $share    = new Share($share_id);
+        if ($share->id > 0) {
+            $description = isset($input['description']) ? $input['description'] : $share->description;
+            $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;
+            $download    = isset($input['download']) ? $input['download'] : $share->allow_download;
+            $expires     = isset($input['expires']) ? Share::get_expiry($input['expires']) : $share->expire_days;
+
+            $data = array(
+                'max_counter' => $share->max_counter,
+                'expire' => $expires,
+                'allow_stream' => $stream,
+                'allow_download' => $download,
+                'description' => $description
+            );
+            if ($share->update($data)) {
+                self::message('success', 'share ' . $share_id . ' updated', null, $input['format']);
+            } else {
+                self::message('error', 'share ' . $share_id . ' was not updated', '401', $input['format']);
+            }
+        } else {
+            self::message('error', 'share ' . $share_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+    }
 
     /**
      * videos

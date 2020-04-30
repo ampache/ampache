@@ -1479,24 +1479,8 @@ class Subsonic_Api
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
-            if (isset($input['expires'])) {
-                $expires = $input['expires'];
-                // no limit expiry
-                if ($expires == 0) {
-                    $expire_days = 0;
-                } else {
-                    // Parse as a string to work on 32-bit computers
-                    if (strlen((string) $expires) > 3) {
-                        $expires = (int) (substr($expires, 0, - 3));
-                    }
-                    $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
-                }
-            } else {
-                //fall back to config defaults
-                $expire_days = AmpConfig::get('share_expire');
-            }
-
-            $object_id = Subsonic_XML_Data::getAmpacheId($id);
+            $expire_days = Share::get_expiry($input['expires']);
+            $object_id   = Subsonic_XML_Data::getAmpacheId($id);
             if (Subsonic_XML_Data::isAlbum($id)) {
                 $object_type = 'album';
             }

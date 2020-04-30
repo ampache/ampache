@@ -436,6 +436,33 @@ class Share extends database_object
     }
 
     /**
+     * get_expiry
+     * @param integer $days
+     * @return integer
+     */
+    public static function get_expiry($days = null)
+    {
+        if (isset($days)) {
+            $expires = $days;
+            // no limit expiry
+            if ($expires == 0) {
+                $expire_days = 0;
+            } else {
+                // Parse as a string to work on 32-bit computers
+                if (strlen((string) $expires) > 3) {
+                    $expires = (int) (substr($expires, 0, - 3));
+                }
+                $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
+            }
+        } else {
+            //fall back to config defaults
+            $expire_days = AmpConfig::get('share_expire');
+        }
+
+        return (int) $expire_days;
+    }
+
+    /**
      * @param $object_type
      * @param $object_id
      * @param boolean $show_text
