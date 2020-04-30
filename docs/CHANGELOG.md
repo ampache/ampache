@@ -19,6 +19,13 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * get_similar: send artist or song id to get related objects from last.fm
   * shares: get a list of shares you can access
   * share: get a share by id
+  * share_create: create a share
+  * share_edit: edit an existing share
+  * share_delete: delete an existing share
+  * podcasts: get a list of podcasts you can access
+  * podcast: get a podcast by id
+  * podcast_episodes: get a list of podcast_episodes you can access
+  * podcast_episode: get a podcast_episode by id
 * NEW db options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the ui. (disabled by default)

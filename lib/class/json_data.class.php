@@ -508,7 +508,7 @@ class JSON_Data
             $podcast_episodes    = array();
             if ($episodes) {
                 $items            = $podcast->get_episodes();
-                $podcast_episodes = self::podcast_episodes($items);
+                $podcast_episodes = self::podcast_episodes($items, true);
             }
             // Build this element
             array_push($allPodcasts, [
@@ -534,9 +534,10 @@ class JSON_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param  array   $podcast_episodes    (description here...)
+     * @param  boolean $simple just return the data as an array for pretty somewhere else
      * @return string  return xml
      */
-    public static function podcast_episodes($podcast_episodes)
+    public static function podcast_episodes($podcast_episodes, $simple = false)
     {
         if (count($podcast_episodes) > self::$limit || self::$offset > 0) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
@@ -559,6 +560,9 @@ class JSON_Data
                 "filesize" => $episode->f_size,
                 "filename" => $episode->f_file,
                 "url" => $episode->link]);
+        }
+        if ($simple) {
+            return $allEpisodes;
         }
 
         return json_encode($allEpisodes, JSON_PRETTY_PRINT);

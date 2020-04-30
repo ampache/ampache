@@ -94,7 +94,8 @@ class Api
                     echo XML_Data::success($message);
             }
         }
-    }
+    } // message
+
     /**
      * set_filter
      * MINIMUM_API_VERSION=380001
@@ -174,7 +175,7 @@ class Api
         }
 
         return true;
-    }
+    } // check_parameter
 
     /**
      * check_access
@@ -199,7 +200,8 @@ class Api
         }
 
         return true;
-    }
+    } // check_access
+
     /**
      * handshake
      * MINIMUM_API_VERSION=380001
@@ -483,7 +485,7 @@ class Api
         }
 
         return true;
-    }
+    } // url_to_song
 
     /**
      * get_indexes
@@ -545,6 +547,7 @@ class Api
 
         return true;
     } // get_indexes
+
     /**
      * get_similar
      * MINIMUM_API_VERSION=400005
@@ -1959,7 +1962,7 @@ class Api
             self::message('error', 'share ' . $share_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
-    }
+    } // share_edit
 
     /**
      * videos
@@ -2234,6 +2237,144 @@ class Api
     } // podcast
 
     /**
+     * podcast_create
+     * MINIMUM_API_VERSION=400005
+     * Create a public url that can be used by anyone to stream media.
+     * Takes the file id with optional description and expires parameters.
+     *
+     * @param array $input
+     * filter      = (string) object_id
+     * type        = (string) object_type
+     * description = (string) description (will be filled for you if empty) //optional
+     * expires     = (integer) days to keep active //optional
+     */
+    public static function podcast_create($input)
+    {
+        if (!self::check_parameter($input, array('type', 'filter'), 'podcast_create')) {
+            return false;
+        }
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        $description = $input['description'];
+        $object_id   = $input['filter'];
+        $object_type = $input['type'];
+        $download    = Access::check_function('download');
+        $expire_days = Share::get_expiry($input['expires']);
+        // confirm the correct data
+        if (!in_array($object_type, array('song', 'album', 'artist'))) {
+            self::message('error', T_('Wrong object type ' . $object_type), '401', $input['format']);
+
+            return false;
+        }
+        $share = array();
+        if (!Core::is_library_item($object_type) || !$object_id) {
+            self::message('error', T_('Wrong library item type'), '401', $input['format']);
+        } else {
+            $item = new $object_type($object_id);
+            if (!$item->id) {
+                self::message('error', T_('Library item not found'), '404', $input['format']);
+
+                return false;
+            }
+            $share[] = Share::create_share($object_type, $object_id, true, $download, $expire_days, generate_password(8), 0, $description);
+        }
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::shares($share);
+                break;
+            default:
+                echo XML_Data::shares($share);
+        }
+        Session::extend($input['auth']);
+    } // podcast_create
+
+    /**
+     * podcast_delete
+     *
+     * MINIMUM_API_VERSION=400005
+     *
+     * Delete an existing share.
+     *
+     * @param array $input
+     * filter = (string) Alpha-numeric search term //optional
+     */
+    public static function podcast_delete($input)
+    {
+        if (!self::check_parameter($input, array('type', 'filter'), 'podcast_delete')) {
+            return false;
+        }
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        $object_id = $input['filter'];
+        if (in_array($object_id, Share::get_share_list())) {
+            if (Share::delete_share($object_id)) {
+                self::message('success', 'share ' . $object_id . ' deleted', null, $input['format']);
+            } else {
+                self::message('error', 'share ' . $object_id . ' was not deleted', '401', $input['format']);
+            }
+        } else {
+            self::message('error', 'share ' . $object_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+    } // podcast_delete
+
+    /**
+     * podcast_edit
+     * MINIMUM_API_VERSION=400005
+     * Update the description and/or expiration date for an existing share.
+     * Takes the share id to update with optional description and expires parameters.
+     *
+     * @param array $input
+     * filter      = (string) Alpha-numeric search term //optional
+     * stream      = (bool) 0|1 // optional
+     * download    = (bool) 0|1 // optional
+     * expires     = (integer) number of whole days before expiry // optional
+     * description = (string) update description // optional
+     */
+    public static function podcast_edit($input)
+    {
+        if (!self::check_parameter($input, array('filter'), 'podcast_edit')) {
+            return false;
+        }
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        $share_id = $input['filter'];
+        if (in_array($share_id, Share::get_share_list())) {
+            $share       = new Share($share_id);
+            $description = isset($input['description']) ? $input['description'] : $share->description;
+            $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;
+            $download    = isset($input['download']) ? $input['download'] : $share->allow_download;
+            $expires     = isset($input['expires']) ? Share::get_expiry($input['expires']) : $share->expire_days;
+
+            $data = array(
+                'max_counter' => $share->max_counter,
+                'expire' => $expires,
+                'allow_stream' => $stream,
+                'allow_download' => $download,
+                'description' => $description
+            );
+            if ($share->update($data)) {
+                self::message('success', 'share ' . $share_id . ' updated', null, $input['format']);
+            } else {
+                self::message('error', 'share ' . $share_id . ' was not updated', '401', $input['format']);
+            }
+        } else {
+            self::message('error', 'share ' . $share_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+    } // podcast_edit
+
+    /**
      * podcast_episodes
      * MINIMUM_API_VERSION=400005
      *
@@ -2261,12 +2402,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::podcast_episodes($items, $user->id);
+                echo JSON_Data::podcast_episodes($items);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::podcast_episodes($items, $user->id);
+                echo XML_Data::podcast_episodes($items);
         }
         Session::extend($input['auth']);
 
@@ -2301,7 +2442,7 @@ class Api
                 echo XML_Data::podcast_episodes($podcast_episode);
         }
         Session::extend($input['auth']);
-    } // podcast
+    } // podcast_episode
 
     /**
      * user
