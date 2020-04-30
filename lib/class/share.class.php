@@ -262,6 +262,7 @@ class Share extends database_object
     }
 
     /**
+     * format
      * @param boolean $details
      */
     public function format($details = true)

@@ -731,7 +731,7 @@ class XML_Data
         if (count($podcast_episodes) > self::$limit || self::$offset > 0) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($podcast_episodes) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . count($podcast_episodes) . "</total_count>\n" : '';
 
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);

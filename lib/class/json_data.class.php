@@ -494,23 +494,18 @@ class JSON_Data
 
         $allPodcasts = [];
         foreach ($podcasts as $podcast_id) {
-            $podcast = new Share($podcast_id);
+            $podcast = new Podcast($podcast_id);
             $podcast->format();
-            $podcast_name           = $podcast->f_name;
-            $podcast_user           = $podcast->f_user;
-            $podcast_allow_stream   = $podcast->f_allow_stream;
-            $podcast_allow_download = $podcast->f_allow_download;
-            $podcast_creation_date  = $podcast->f_creation_date;
-            $podcast_lastvisit_date = $podcast->f_lastvisit_date;
-            $podcast_object_type    = $podcast->object_type;
-            $podcast_object_id      = $podcast->object_id;
-            $podcast_expire_days    = $podcast->expire_days;
-            $podcast_max_counter    = $podcast->max_counter;
-            $podcast_counter        = $podcast->counter;
-            $podcast_secret         = $podcast->secret;
-            $podcast_public_url     = $podcast->public_url;
-            $podcast_description    = $podcast->description;
-            $podcast_episodes       = array();
+            $podcast_name        = $podcast->f_title;
+            $podcast_description = $podcast->description;
+            $podcast_language    = $podcast->f_language;
+            $podcast_copyright   = $podcast->f_copyright;
+            $podcast_generator   = $podcast->f_generator;
+            $podcast_website     = $podcast->f_website;
+            $podcast_build_date  = $podcast->f_lastbuilddate;
+            $podcast_sync_date   = $podcast->f_lastsync;
+            $podcast_public_url  = $podcast->link;
+            $podcast_episodes    = array();
             if ($episodes) {
                 $items            = $podcast->get_episodes();
                 $podcast_episodes = self::podcast_episodes($items);
@@ -519,19 +514,14 @@ class JSON_Data
             array_push($allPodcasts, [
                 "id" => $podcast_id,
                 "name" => $podcast_name,
-                "owner" => $podcast_user,
-                "allow_stream" => $podcast_allow_stream,
-                "allow_download" => $podcast_allow_download,
-                "creation_date" => $podcast_creation_date,
-                "lastvisit_date" => $podcast_lastvisit_date,
-                "object_type" => $podcast_object_type,
-                "object_id" => $podcast_object_id,
-                "expire_days" => $podcast_expire_days,
-                "max_counter" => $podcast_max_counter,
-                "counter" => $podcast_counter,
-                "secret" => $podcast_secret,
-                "public_url" => $podcast_public_url,
                 "description" => $podcast_description,
+                "language" => $podcast_language,
+                "copyright" => $podcast_copyright,
+                "generator" => $podcast_generator,
+                "website" => $podcast_website,
+                "build_date" => $podcast_build_date,
+                "sync_date" => $podcast_sync_date,
+                "public_url" => $podcast_public_url,
                 "podcast_episode" => $podcast_episodes]);
         } // end foreach
 
@@ -555,7 +545,7 @@ class JSON_Data
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             $episode->format();
-            array_push($podcast_episodes, [
+            array_push($allEpisodes, [
                 "id" => $episode_id,
                 "name" => $episode->f_title,
                 "description" => $episode->f_description,

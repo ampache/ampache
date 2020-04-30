@@ -1900,11 +1900,14 @@ class Api
             return false;
         }
         $object_id = $input['filter'];
-
-        if (Share::delete_share($object_id)) {
-            self::message('success', 'share ' . $object_id . ' deleted', null, $input['format']);
+        if (in_array($object_id, Share::get_share_list())) {
+            if (Share::delete_share($object_id)) {
+                self::message('success', 'share ' . $object_id . ' deleted', null, $input['format']);
+            } else {
+                self::message('error', 'share ' . $object_id . ' was not deleted', '401', $input['format']);
+            }
         } else {
-            self::message('error', 'share ' . $object_id . ' was not deleted', '401', $input['format']);
+            self::message('error', 'share ' . $object_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
     } // share_delete
@@ -1933,8 +1936,8 @@ class Api
             return false;
         }
         $share_id = $input['filter'];
-        $share    = new Share($share_id);
-        if ($share->id > 0) {
+        if (in_array($share_id, Share::get_share_list())) {
+            $share       = new Share($share_id);
             $description = isset($input['description']) ? $input['description'] : $share->description;
             $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;
             $download    = isset($input['download']) ? $input['download'] : $share->allow_download;
