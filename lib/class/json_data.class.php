@@ -478,6 +478,52 @@ class JSON_Data
     } // shares
 
     /**
+     * catalogs
+     *
+     * This returns catalogs to the user, in a pretty json document with the information
+     *
+     * @param array $catalogs (description here...)
+     * @return string return JSON
+     */
+    public static function catalogs($catalogs)
+    {
+        if (count($catalogs) > self::$limit || self::$offset > 0) {
+            $catalogs = array_splice($catalogs, self::$offset, self::$limit);
+        }
+
+        $allCatalogs = [];
+        foreach ($catalogs as $catalog_id) {
+            $catalog = Catalog::create_from_id($catalog_id);
+            $catalog->format();
+            $catalog_name           = $catalog->name;
+            $catalog_type           = $catalog->catalog_type;
+            $catalog_gather_types   = $catalog->gather_types;
+            $catalog_enabled        = $catalog->enabled;
+            $catalog_last_add       = $catalog->f_add;
+            $catalog_last_clean     = $catalog->f_clean;
+            $catalog_last_update    = $catalog->f_update;
+            $catalog_link           = $catalog->link;
+            $catalog_rename_pattern = $catalog->rename_pattern;
+            $catalog_sort_pattern   = $catalog->sort_pattern;
+            // Build this element
+            array_push($allCatalogs, [
+                "id" => $catalog_id,
+                "name" => $catalog_name,
+                "type" => $catalog_type,
+                "gather_types" => $catalog_gather_types,
+                "last_add" => $catalog_enabled,
+                "allow_download" => $catalog_last_add,
+                "last_clean" => $catalog_last_clean,
+                "last_update" => $catalog_last_update,
+                "link" => $catalog_link,
+                "rename_pattern" => $catalog_rename_pattern,
+                "sort_pattern" => $catalog_sort_pattern]);
+        } // end foreach
+
+        return json_encode($allCatalogs, JSON_PRETTY_PRINT);
+    } // catalogs
+
+    /**
      * podcasts
      *
      * This returns podcasts to the user, in a pretty json document with the information

@@ -677,6 +677,41 @@ class XML_Data
     } // shares
 
     /**
+     * catalogs
+     *
+     * This returns catalogs to the user, in a pretty xml document with the information
+     *
+     * @param    array    $catalogs    (description here...)
+     * @return    string    return xml
+     */
+    public static function catalogs($catalogs)
+    {
+        if (count($catalogs) > self::$limit || self::$offset > 0) {
+            $catalogs = array_splice($catalogs, self::$offset, self::$limit);
+        }
+        $string = "<total_count>" . count($catalogs) . "</total_count>\n";
+
+        foreach ($catalogs as $catalog_id) {
+            $catalog = Catalog::create_from_id($catalog_id);
+            $catalog->format();
+            $string .= "<catalog id=\"$catalog_id\">\n" .
+                "\t<name><![CDATA[" . $catalog->name . "]]></name>\n" .
+                "\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n" .
+                "\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n" .
+                "\t<enabled>" . $catalog->enabled . "</enabled>\n" .
+                "\t<last_add><![CDATA[" . $catalog->f_add . "]]></last_add>\n" .
+                "\t<last_clean><![CDATA[" . $catalog->f_clean . "]]></last_clean>\n" .
+                "\t<last_update><![CDATA[" . $catalog->f_update . "]]></last_update>\n" .
+                "\t<link><![CDATA[" . $catalog->link . "]]></link>\n" .
+                "\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n" .
+                "\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n" .
+                "</catalog>\n";
+        } // end foreach
+
+        return self::output_xml($string);
+    } // catalogs
+
+    /**
      * podcasts
      *
      * This returns podcasts to the user, in a pretty xml document with the information
