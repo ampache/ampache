@@ -2312,8 +2312,8 @@ class Api
     /**
      * podcast_edit
      * MINIMUM_API_VERSION=400005
-     * Update the description and/or expiration date for an existing share.
-     * Takes the share id to update with optional description and expires parameters.
+     * Update the description and/or expiration date for an existing podcast.
+     * Takes the podcast id to update with optional description and expires parameters.
      *
      * @param array $input
      * filter      = (string) Alpha-numeric search term //optional
@@ -2332,28 +2332,28 @@ class Api
 
             return false;
         }
-        $share_id = $input['filter'];
-        if (in_array($share_id, Share::get_share_list())) {
-            $share       = new Share($share_id);
-            $description = isset($input['description']) ? $input['description'] : $share->description;
-            $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;
-            $download    = isset($input['download']) ? $input['download'] : $share->allow_download;
-            $expires     = isset($input['expires']) ? Share::get_expiry($input['expires']) : $share->expire_days;
+        $podcast_id = $input['filter'];
+        if (in_array($podcast_id, Share::get_share_list())) {
+            $podcast       = new Share($podcast_id);
+            $description   = isset($input['description']) ? $input['description'] : $podcast->description;
+            $stream        = isset($input['stream']) ? $input['stream'] : $podcast->allow_stream;
+            $download      = isset($input['download']) ? $input['download'] : $podcast->allow_download;
+            $expires       = isset($input['expires']) ? podcast::get_expiry($input['expires']) : $podcast->expire_days;
 
             $data = array(
-                'max_counter' => $share->max_counter,
+                'max_counter' => $podcast->max_counter,
                 'expire' => $expires,
                 'allow_stream' => $stream,
                 'allow_download' => $download,
                 'description' => $description
             );
-            if ($share->update($data)) {
-                self::message('success', 'share ' . $share_id . ' updated', null, $input['format']);
+            if ($podcast->update($data)) {
+                self::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['format']);
             } else {
-                self::message('error', 'share ' . $share_id . ' was not updated', '401', $input['format']);
+                self::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['format']);
             }
         } else {
-            self::message('error', 'share ' . $share_id . ' was not found', '404', $input['format']);
+            self::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
     } // podcast_edit
@@ -3091,7 +3091,7 @@ class Api
      * Get the catalogs from it's id.
      *
      * @param array $input
-     * filter = (integer) Share ID number
+     * filter = (integer) Catalog ID number
      * @return bool
      */
     public static function catalog($input)
@@ -3099,15 +3099,15 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'catalog')) {
             return false;
         }
-        $share = array((int) $input['filter']);
+        $catalog = array((int) $input['filter']);
 
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
-                echo JSON_Data::catalogs($share);
+                echo JSON_Data::catalogs($catalog);
                 break;
             default:
-                echo XML_Data::catalogs($share);
+                echo XML_Data::catalogs($catalog);
         }
         Session::extend($input['auth']);
     } // catalog
@@ -3368,6 +3368,34 @@ class Api
 
         return true;
     } // update_art
+    /**
+     * update_podcast
+     * MINIMUM_API_VERSION=400005
+     *
+     * Sync and download new podcast episodes
+     *
+     * @param array $input
+     * filter = (string) UID of podcast
+     * @return boolean
+     */
+    public static function update_podcast($input)
+    {
+        if (!self::check_parameter($input, array('filter'), 'update_podcast')) {
+            return false;
+        }
+        $uid     = scrub_in($input['filter']);
+        $podcast = new Podcast($uid);
+        if ($podcast->sync_episodes()) {
+            self::message('success', 'Synced episodes for podcast: ' . (string) $uid, null, $input['format']);
+            Session::extend($input['auth']);
+
+            return true;
+        }
+        self::message('error', T_('failed to sync episodes for podcast: ' . (string) $uid), '400', $input['format']);
+        Session::extend($input['auth']);
+
+        return false;
+    } // update_podcast
 
     /**
      * stream
