@@ -55,8 +55,11 @@ if (AmpConfig::get('lastfm_api_key')) {
         $rating = new Rating($artist->id, 'artist'); ?>
     <div id="rating_<?php echo (int) ($artist->id); ?>_artist" style="display:inline;">
         <?php show_rating($artist->id, 'artist');
-        /* HINT: Average rating. e.g. (average 3.7) */
-        echo '(' . T_('average') . ' ' . $rating->get_average_rating() . ')'; ?>
+        $average = $rating->get_average_rating();
+        if ($average > 0) {
+            /* HINT: Average rating. e.g. (average 3.7) */
+            echo '(' . T_('average') . ' ' . $average . ')';
+        } ?>
     </div>
     <?php
     } ?>

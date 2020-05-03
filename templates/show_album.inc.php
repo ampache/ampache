@@ -61,8 +61,11 @@ if ($directplay_limit > 0) {
             $rating = new Rating($album->id, 'album'); ?>
     <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
             <?php Rating::show($album->id, 'album');
-            /* HINT: Average rating. e.g. (average 3.7) */
-            echo '(' . T_('average') . ' ' . $rating->get_average_rating() . ')'; ?>
+            $average = $rating->get_average_rating();
+            if ($average > 0) {
+                /* HINT: Average rating. e.g. (average 3.7) */
+                echo '(' . T_('average') . ' ' . $average . ')';
+            } ?>
     </div></p>
     <?php
         } ?>
