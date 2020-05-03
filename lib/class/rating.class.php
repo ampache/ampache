@@ -178,7 +178,8 @@ class Rating extends database_object
         }
 
         $sql = "SELECT AVG(`rating`) as `rating` FROM `rating` WHERE " .
-                "`object_id` = ? AND `object_type` = ?";
+                "`object_id` = ? AND `object_type` = ? " .
+                "HAVING COUNT(object_id) > 1";
         $db_results = Dba::read($sql, array($this->id, $this->type));
 
         $results = Dba::fetch_assoc($db_results);
