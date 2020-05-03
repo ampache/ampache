@@ -126,7 +126,7 @@ abstract class localplay_controller
         $primary_array = array('oid', 'demo_id', 'random');
         $data          = array();
 
-        $variables = parse_url($url, PHP_URL_QUERY);
+        $variables = parse_url($url, PHP_URL_QUERY); //TODO: beautiful urls have no components/arguments
         if ($variables) {
             parse_str($variables, $data);
 
