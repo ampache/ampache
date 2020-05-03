@@ -126,7 +126,28 @@ abstract class localplay_controller
         $primary_array = array('oid', 'demo_id', 'random');
         $data          = array();
 
-        $variables = parse_url($url, PHP_URL_QUERY); //TODO: beautiful urls have no components/arguments
+        //beautiful urls need their own parsing as parse_url will find nothing.
+        if (AmpConfig::get('stream_beautiful_url')) {
+            preg_match('/oid\/(.*?)\//', $url, $match);
+            if ($match[1]) {
+                return array('primary_key' => 'oid',
+                    'oid' => $match[1]
+                );
+            }
+            preg_match('/demo_id\/(.*?)\//', $url, $match);
+            if ($match[1]) {
+                return array('primary_key' => 'demo_id',
+                    'oid' => $match[1]
+                );
+            }
+            preg_match('/random\/(.*?)\//', $url, $match);
+            if ($match[1]) {
+                return array('primary_key' => 'random',
+                    'type' => $match[1]
+                );
+            }
+        }
+        $variables = parse_url($url, PHP_URL_QUERY);
         if ($variables) {
             parse_str($variables, $data);
 

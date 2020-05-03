@@ -61,6 +61,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Fixed a lot of incorrectly typed function calls and code documentation
 * Stop showing the average rating in the web interface.
 * April 2020 Translation update
+* Fix: When you had beautiful_urls enabled tracks would not parse in localplay
 
 ## 4.1.1
 * Bump API version to 400004 (4.0.0 build 004)
