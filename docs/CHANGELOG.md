@@ -9,12 +9,12 @@ Admin -> Server Config -> Interface -> Custom datetime
 e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
 Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
 
-* Bump API version to 400005 (4.0.0 build 005)
+* Bump API version to 410001 (4.1.0 build 001)
 * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
   * Call xml as normal:
-    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400004
+    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=410001
   * Call the JSON server:
-    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400004
+    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=410001
 * NEW API functions
   * get_similar: send artist or song id to get related objects from last.fm
   * shares: get a list of shares you can access
@@ -48,6 +48,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * API: All calls that return songs now include <playlisttrack> which can be used to identify track order.
 * API: <playcount> added to objects.
 * API: Don't gather art when adding songs
+* API: Added actions to catalog_action. 'verify_catalog' 'gather_art'
 * Fix: Channel authentication
 * Fix: IP checks when sending null proxy values
 * Fix: Extra text in catalog API calls

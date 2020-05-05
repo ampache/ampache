@@ -39,7 +39,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '400005';
+    public static $version = '410001';
 
     /**
      *  @var Browse $browse
@@ -1791,6 +1791,8 @@ class Api
                 echo XML_Data::shares($shares);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // shares
 
     /**
@@ -1824,6 +1826,8 @@ class Api
                 echo XML_Data::shares($share);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // share
 
     /**
@@ -1880,6 +1884,8 @@ class Api
                 echo XML_Data::shares($share);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // share_create
 
     /**
@@ -1914,6 +1920,8 @@ class Api
             self::message('error', 'share ' . $object_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // share_delete
 
     /**
@@ -2204,6 +2212,8 @@ class Api
                 echo XML_Data::podcasts($podcasts, $episodes);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // podcasts
 
     /**
@@ -2244,6 +2254,8 @@ class Api
             self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // podcast
 
     /**
@@ -2353,6 +2365,7 @@ class Api
         }
         $podcast_id = $input['filter'];
         if (in_array($podcast_id, Share::get_share_list())) {
+            $user          = User::get_from_username(Session::username($input['auth']));
             $podcast       = new Share($podcast_id);
             $description   = isset($input['description']) ? $input['description'] : $podcast->description;
             $stream        = isset($input['stream']) ? $input['stream'] : $podcast->allow_stream;
@@ -2366,7 +2379,7 @@ class Api
                 'allow_download' => $download,
                 'description' => $description
             );
-            if ($podcast->update($data)) {
+            if ($podcast->update($data, $user)) {
                 self::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['format']);
             } else {
                 self::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['format']);
@@ -2400,7 +2413,7 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = scrub_in($input['filter']);
+        $uid  = (string) scrub_in($input['filter']);
         debug_event('api.class', 'User ' . $user->id . ' loading podcast: ' . $input['filter'], '5');
         $podcast = new Podcast($uid);
         $items   = $podcast->get_episodes();
@@ -2457,6 +2470,8 @@ class Api
             self::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // podcast_episode
 
     /**
@@ -3149,7 +3164,6 @@ class Api
      * filter = (string) set $filter_type //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
      */
     public static function catalogs($input)
     {
@@ -3198,13 +3212,17 @@ class Api
                 echo XML_Data::catalogs($catalog);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // catalog
 
     /**
      * catalog_action
      * MINIMUM_API_VERSION=400001
+     * CHANGED_IN_API_VERSION=400005
      *
      * Kick off a catalog update or clean for the selected catalog
+     * Added 'verify_catalog', 'gather_art'
      *
      * @param array $input
      * task    = (string) 'add_to_catalog'|'clean_catalog'
@@ -3218,7 +3236,7 @@ class Api
         }
         $task = (string) $input['task'];
         // confirm the correct data
-        if (!in_array($task, array('add_to_catalog', 'clean_catalog'))) {
+        if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
             self::message('error', T_('Wrong catalog task ' . $task), '401', $input['format']);
 
             return false;
@@ -3232,6 +3250,12 @@ class Api
                 case 'clean_catalog':
                     $catalog->clean_catalog();
                 break;
+                case 'verify_catalog':
+                    $catalog->verify_catalog();
+                break;
+                case 'gather_art':
+                    $catalog->gather_art();
+                    break;
                 case 'add_to_catalog':
                     $options = array(
                         'gather_art' => false,
@@ -3474,7 +3498,7 @@ class Api
         if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
             return false;
         }
-        $object_id = scrub_in($input['filter']);
+        $object_id = (string) scrub_in($input['filter']);
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             if ($podcast->sync_episodes(true)) {

@@ -681,8 +681,8 @@ class XML_Data
      *
      * This returns catalogs to the user, in a pretty xml document with the information
      *
-     * @param    array    $catalogs    (description here...)
-     * @return    string    return xml
+     * @param  integer[] $catalogs group of catalog id's
+     * @return string return xml
      */
     public static function catalogs($catalogs)
     {

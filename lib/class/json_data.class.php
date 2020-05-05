@@ -482,7 +482,7 @@ class JSON_Data
      *
      * This returns catalogs to the user, in a pretty json document with the information
      *
-     * @param array $catalogs (description here...)
+     * @param integer[] $catalogs group of catalog id's
      * @return string return JSON
      */
     public static function catalogs($catalogs)
@@ -529,7 +529,7 @@ class JSON_Data
      * This returns podcasts to the user, in a pretty json document with the information
      *
      * @param array $podcasts (description here...)
-     * @param boolean $episodees include the episodes of the podcast
+     * @param boolean $episodes include the episodes of the podcast
      * @return string return JSON
      */
     public static function podcasts($podcasts, $episodes = false)
@@ -583,7 +583,7 @@ class JSON_Data
      *
      * @param  array   $podcast_episodes    (description here...)
      * @param  boolean $simple just return the data as an array for pretty somewhere else
-     * @return string  return xml
+     * @return array|string return JSON
      */
     public static function podcast_episodes($podcast_episodes, $simple = false)
     {
