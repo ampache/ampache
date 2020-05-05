@@ -550,7 +550,7 @@ class Api
 
     /**
      * get_similar
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Return similar artist id's or similar song ids compared to the input filter
      *
@@ -626,7 +626,7 @@ class Api
      * @param array $input
      * operator        = (string) 'and'|'or' (whether to match one rule or all)
      * rule_1          = (string)
-     * rule_1_operator = (integer) 0|1|2|3|4|5|6
+     * rule_1_operator = (integer) 0,1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
      * type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
      * offset          = (integer)
@@ -687,7 +687,7 @@ class Api
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
@@ -842,7 +842,7 @@ class Api
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
@@ -972,7 +972,7 @@ class Api
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
@@ -1155,14 +1155,14 @@ class Api
     /**
      * songs
      * MINIMUM_API_VERSION=380001
-     * CHANGED_IN_API_VERSION=400005
+     * CHANGED_IN_API_VERSION=410001
      *
      * Returns songs based on the specified filter
      * All calls that return songs now include <playlisttrack> which can be used to identify track order.
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add    = self::set_filter(date) //optional
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
@@ -1238,7 +1238,7 @@ class Api
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add    = self::set_filter(date) //optional
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
@@ -1420,7 +1420,7 @@ class Api
      * filter = (string) UID of playlist
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
-     * @return bool
+     * @return boolean
      */
     public static function playlist_edit($input)
     {
@@ -1457,7 +1457,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of playlist
-     * @return bool
+     * @return boolean
      */
     public static function playlist_delete($input)
     {
@@ -1487,8 +1487,8 @@ class Api
      * @param array $input
      * filter = (string) UID of playlist
      * song   = (string) UID of song to add to playlist
-     * check  = (integer) 0|1 Check for duplicates (default = 0) //optional
-     * @return bool
+     * check  = (integer) 0,1 Check for duplicates //optional, default = 0
+     * @return boolean
      */
     public static function playlist_add_song($input)
     {
@@ -1528,7 +1528,7 @@ class Api
      * filter = (string) UID of playlist
      * song   = (string) UID of song to remove from the playlist //optional
      * track  = (string) track number to remove from the playlist //optional
-     * @return bool
+     * @return boolean
      */
     public static function playlist_remove_song($input)
     {
@@ -1583,7 +1583,7 @@ class Api
      * filter = (string)  $filter                       //optional, LIKE matched to song title
      * album  = (integer) $album_id                     //optional
      * artist = (integer) $artist_id                    //optional
-     * flag   = (integer) 0|1                           //optional, default = 0
+     * flag   = (integer) 0,1                           //optional, default = 0
      * format = (string)  'song'|'index'|'id'           //optional, default = 'song'
      * offset = (integer)                               //optional
      * limit  = (integer)                               //optional
@@ -1712,7 +1712,7 @@ class Api
      * filter = (string) Alpha-numeric search term
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function search_songs($input)
     {
@@ -1747,7 +1747,7 @@ class Api
 
     /**
      * shares
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Get information about shared media this user is allowed to manage.
      *
@@ -1755,7 +1755,7 @@ class Api
      * filter = (string) Alpha-numeric search term
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function shares($input)
     {
@@ -1797,13 +1797,13 @@ class Api
 
     /**
      * share
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Get the share from it's id.
      *
      * @param array $input
      * filter = (integer) Share ID number
-     * @return bool
+     * @return boolean
      */
     public static function share($input)
     {
@@ -1832,7 +1832,7 @@ class Api
 
     /**
      * share_create
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
@@ -1841,6 +1841,7 @@ class Api
      * type        = (string) object_type
      * description = (string) description (will be filled for you if empty) //optional
      * expires     = (integer) days to keep active //optional
+     * @return boolean
      */
     public static function share_create($input)
     {
@@ -1891,12 +1892,13 @@ class Api
     /**
      * share_delete
      *
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Delete an existing share.
      *
      * @param array $input
      * filter = (string) UID of share to delete
+     * @return boolean
      */
     public static function share_delete($input)
     {
@@ -1926,16 +1928,17 @@ class Api
 
     /**
      * share_edit
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
      *
      * @param array $input
      * filter      = (string) Alpha-numeric search term
-     * stream      = (bool) 0|1 // optional
-     * download    = (bool) 0|1 // optional
+     * stream      = (boolean) 0,1 // optional
+     * download    = (boolean) 0,1 // optional
      * expires     = (integer) number of whole days before expiry // optional
      * description = (string) update description // optional
+     * @return boolean
      */
     public static function share_edit($input)
     {
@@ -1980,7 +1983,7 @@ class Api
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (boolean) 0|1, Whether to match the exact term or not //optional
+     * exact  = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
@@ -2016,7 +2019,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of video
-     * @return bool
+     * @return boolean
      */
     public static function video($input)
     {
@@ -2054,7 +2057,7 @@ class Api
      * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function stats($input)
     {
@@ -2169,7 +2172,7 @@ class Api
 
     /**
      * podcasts
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Get information about podcasts.
      *
@@ -2178,7 +2181,7 @@ class Api
      * include = (string) 'episodes' (include episodes in the response) // optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function podcasts($input)
     {
@@ -2197,7 +2200,7 @@ class Api
         self::set_filter('update', $input['update']);
 
         $podcasts = self::$browse->get_objects();
-        $episodes = ($input['include'] == 'episodes') ? true : false;
+        $episodes = $input['include'] == 'episodes';
 
         ob_end_clean();
         switch ($input['format']) {
@@ -2218,14 +2221,14 @@ class Api
 
     /**
      * podcast
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Get the podcast from it's id.
      *
      * @param array $input
      * filter  = (integer) Podcast ID number
      * include = (string) 'episodes' (include episodes in the response) // optional
-     * @return bool
+     * @return boolean
      */
     public static function podcast($input)
     {
@@ -2240,7 +2243,7 @@ class Api
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
-            $episodes = ($input['include'] == 'episodes') ? true : false;
+            $episodes = $input['include'] == 'episodes';
 
             ob_end_clean();
             switch ($input['format']) {
@@ -2260,13 +2263,14 @@ class Api
 
     /**
      * podcast_create
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
      * url     = (string) rss url for podcast
      * catalog = (string) podcast catalog
+     * @return boolean
      */
     public static function podcast_create($input)
     {
@@ -2289,10 +2293,10 @@ class Api
             ob_end_clean();
             switch ($input['format']) {
                 case 'json':
-                    echo JSON_Data::podcasts($podcast);
+                    echo JSON_Data::podcasts(array($podcast));
                     break;
                 default:
-                    echo XML_Data::podcasts($podcast);
+                    echo XML_Data::podcasts(array($podcast));
             }
         } else {
             self::message('error', T_('Failed: podcast was not created.'), '401', $input['format']);
@@ -2303,12 +2307,13 @@ class Api
     /**
      * podcast_delete
      *
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Delete an existing podcast.
      *
      * @param array $input
      * filter = (string) UID of podcast to delete
+     * @return boolean
      */
     public static function podcast_delete($input)
     {
@@ -2339,16 +2344,17 @@ class Api
 
     /**
      * podcast_edit
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      * Update the description and/or expiration date for an existing podcast.
      * Takes the podcast id to update with optional description and expires parameters.
      *
      * @param array $input
      * filter      = (string) Alpha-numeric search term //optional
-     * stream      = (bool) 0|1 // optional
-     * download    = (bool) 0|1 // optional
+     * stream      = (boolean) 0,1 // optional
+     * download    = (boolean) 0,1 // optional
      * expires     = (integer) number of whole days before expiry // optional
      * description = (string) update description // optional
+     * @return boolean
      */
     public static function podcast_edit($input)
     {
@@ -2392,7 +2398,7 @@ class Api
 
     /**
      * podcast_episodes
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * This returns the episodes for a podcast
      *
@@ -2437,13 +2443,13 @@ class Api
 
     /**
      * podcast_episode
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Get the podcast_episode from it's id.
      *
      * @param array $input
      * filter  = (integer) podcast_episode ID number
-     * @return bool
+     * @return boolean
      */
     public static function podcast_episode($input)
     {
@@ -2477,12 +2483,13 @@ class Api
     /**
      * podcast_episode_delete
      *
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Delete an existing podcast_episode.
      *
      * @param array $input
      * filter = (string) UID of podcast_episode to delete
+     * @return boolean
      */
     public static function podcast_episode_delete($input)
     {
@@ -2519,7 +2526,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username)
-     * @return bool
+     * @return boolean
      */
     public static function user($input)
     {
@@ -2565,8 +2572,8 @@ class Api
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password))
      * email    = (string) $email
-     * disable  = (integer) 0|1 //optional
-     * @return bool
+     * disable  = (integer) 0,1 //optional, default = 0
+     * @return boolean
      */
     public static function user_create($input)
     {
@@ -2610,9 +2617,9 @@ class Api
      * website    = (string) $website //optional
      * state      = (string) $state //optional
      * city       = (string) $city //optional
-     * disable    = (integer) 0|1 true to disable, false to enable //optional
+     * disable    = (integer) 0,1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
-     * @return bool
+     * @return boolean
      */
     public static function user_update($input)
     {
@@ -2688,7 +2695,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username)
-     * @return bool
+     * @return boolean
      */
     public static function user_delete($input)
     {
@@ -2723,7 +2730,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username
-     * @return bool
+     * @return boolean
      */
     public static function followers($input)
     {
@@ -2772,7 +2779,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username
-     * @return bool
+     * @return boolean
      */
     public static function following($input)
     {
@@ -2820,7 +2827,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username
-     * @return bool
+     * @return boolean
      */
     public static function toggle_follow($input)
     {
@@ -2856,6 +2863,7 @@ class Api
      * @param array $input
      * username = (string) $username //optional
      * limit = (integer) $limit //optional
+     * @return boolean
      */
     public static function last_shouts($input)
     {
@@ -2898,8 +2906,8 @@ class Api
      * @param array $input
      * type   = (string) 'song'|'album'|'artist' $type
      * id     = (integer) $object_id
-     * rating = (integer) 0|1|2|3|4|5 $rating
-     * @return bool|void
+     * rating = (integer) 0,1|2|3|4|5 $rating
+     * @return boolean|void
      */
     public static function rate($input)
     {
@@ -2957,8 +2965,8 @@ class Api
      * @param array $input
      * type = (string) 'song'|'album'|'artist' $type
      * id   = (integer) $object_id
-     * flag = (boolean) 0|1 $flag
-     * @return bool
+     * flag = (integer) 0,1 $flag
+     * @return boolean
      */
     public static function flag($input)
     {
@@ -3020,7 +3028,7 @@ class Api
      * id     = (integer) $object_id
      * user   = (integer) $user_id
      * client = (string) $agent //optional
-     * @return bool
+     * @return boolean
      */
     public static function record_play($input)
     {
@@ -3083,7 +3091,7 @@ class Api
      * albummbid  = (string)  $album_mbid //optional
      * date       = (integer) UNIXTIME() //optional
      * client     = (string)  $agent //optional
-     * @return bool
+     * @return boolean
      */
     public static function scrobble($input)
     {
@@ -3156,7 +3164,7 @@ class Api
 
     /**
      * catalogs
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Get information about catalogs this user is allowed to manage.
      *
@@ -3188,13 +3196,13 @@ class Api
 
     /**
      * catalog
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Get the catalogs from it's id.
      *
      * @param array $input
      * filter = (integer) Catalog ID number
-     * @return bool
+     * @return boolean
      */
     public static function catalog($input)
     {
@@ -3219,7 +3227,7 @@ class Api
     /**
      * catalog_action
      * MINIMUM_API_VERSION=400001
-     * CHANGED_IN_API_VERSION=400005
+     * CHANGED_IN_API_VERSION=410001
      *
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
@@ -3227,7 +3235,7 @@ class Api
      * @param array $input
      * task    = (string) 'add_to_catalog'|'clean_catalog'
      * catalog = (integer) $catalog_id)
-     * @return bool
+     * @return boolean
      */
     public static function catalog_action($input)
     {
@@ -3283,7 +3291,7 @@ class Api
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
-     * @return bool
+     * @return boolean
      */
     public static function timeline($input)
     {
@@ -3362,7 +3370,7 @@ class Api
      * @param array $input
      * type = (string) 'artist'|'album'|'song'
      * id   = (integer) $artist_id, $album_id, $song_id)
-     * @return bool
+     * @return boolean
      */
     public static function update_from_tags($input)
     {
@@ -3402,7 +3410,7 @@ class Api
      *
      * @param array $input
      * id   = (integer) $artist_id)
-     * @return bool
+     * @return boolean
      */
     public static function update_artist_info($input)
     {
@@ -3442,7 +3450,7 @@ class Api
      * @param array $input
      * type      = (string) 'artist'|'album'
      * id        = (integer) $artist_id, $album_id)
-     * overwrite = (boolean) 0|1 //optional
+     * overwrite = (integer) 0,1 //optional
      * @return boolean
      */
     public static function update_art($input)
@@ -3482,7 +3490,7 @@ class Api
     } // update_art
     /**
      * update_podcast
-     * MINIMUM_API_VERSION=400005
+     * MINIMUM_API_VERSION=410001
      *
      * Sync and download new podcast episodes
      *
@@ -3528,7 +3536,7 @@ class Api
      * bitrate = (integer) max bitrate for transcoding
      * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
      * offset  = (integer) time offset in seconds
-     * length  = (boolean) 0|1
+     * length  = (integer) 0,1
      * @return boolean
      */
     public static function stream($input)
@@ -3635,7 +3643,7 @@ class Api
      * @param array $input
      * id   = (string) $object_id
      * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast')
-     * @return bool
+     * @return boolean
      */
     public static function get_art($input)
     {

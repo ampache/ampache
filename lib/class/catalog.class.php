@@ -1429,6 +1429,7 @@ abstract class Catalog extends database_object
      *
      * This runs through all of the artists and refreshes last.fm information
      * including similar artists that exist in your catalog.
+     * @param array $artist_list
      */
     public function gather_artist_info($artist_list = array())
     {
