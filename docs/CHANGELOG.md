@@ -66,6 +66,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Fix: When you had beautiful_urls enabled tracks would not parse in localplay
 * Fix: Podcast durations aren't always correct format, prep the time before trying to insert it.
 
+
 ## 4.1.1
 * Bump API version to 400004 (4.0.0 build 004)
 * Api - Fix parameters using 0
