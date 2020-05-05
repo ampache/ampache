@@ -735,6 +735,7 @@ class XML_Data
                 "\t<description><![CDATA[" . $podcast->description . "]]></description>\n" .
                 "\t<language><![CDATA[" . $podcast->f_language . "]]></language>\n" .
                 "\t<copyright><![CDATA[" . $podcast->f_copyright . "]]></copyright>\n" .
+                "\t<feed_url><![CDATA[" . $podcast->feed . "]]></feed_url>\n" .
                 "\t<generator><![CDATA[" . $podcast->f_generator . "]]></generator>\n" .
                 "\t<website><![CDATA[" . $podcast->f_website . "]]></website>\n" .
                 "\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n" .

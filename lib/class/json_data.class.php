@@ -546,6 +546,7 @@ class JSON_Data
             $podcast_description = $podcast->description;
             $podcast_language    = $podcast->f_language;
             $podcast_copyright   = $podcast->f_copyright;
+            $podcast_feed_url    = $podcast->feed;
             $podcast_generator   = $podcast->f_generator;
             $podcast_website     = $podcast->f_website;
             $podcast_build_date  = $podcast->f_lastbuilddate;
@@ -563,6 +564,7 @@ class JSON_Data
                 "description" => $podcast_description,
                 "language" => $podcast_language,
                 "copyright" => $podcast_copyright,
+                "feed_url" => $podcast_feed_url,
                 "generator" => $podcast_generator,
                 "website" => $podcast_website,
                 "build_date" => $podcast_build_date,
