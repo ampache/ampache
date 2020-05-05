@@ -2288,7 +2288,7 @@ class Api
         $data            = array();
         $data['feed']    = $input['url'];
         $data['catalog'] = $input['catalog'];
-        $podcast         = Podcast::create($data);
+        $podcast         = Podcast::create($data, true);
         if ($podcast) {
             ob_end_clean();
             switch ($input['format']) {

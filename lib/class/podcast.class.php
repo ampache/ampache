@@ -318,9 +318,10 @@ class Podcast extends database_object implements library_item
     /**
      * create
      * @param array $data
-     * @return PDOStatement|boolean
+     * @param boolean $return_id
+     * @return PDOStatement|boolean|integer
      */
-    public static function create(array $data)
+    public static function create(array $data, $return_id = false)
     {
         $feed = $data['feed'];
         // Feed must be http/https
@@ -400,6 +401,9 @@ class Podcast extends database_object implements library_item
             }
             if (count($episodes) > 0) {
                 $podcast->add_episodes($episodes);
+            }
+            if ($return_id) {
+                return (int) $podcast_id;
             }
         }
 
