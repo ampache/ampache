@@ -2555,10 +2555,10 @@ class Api
      */
     public static function user_create($input)
     {
-        if (!self::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['format'])) {
             return false;
         }
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['format'])) {
+        if (!self::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
             return false;
         }
         $username = $input['username'];
@@ -2601,10 +2601,10 @@ class Api
      */
     public static function user_update($input)
     {
-        if (!self::check_parameter($input, array('username'), 'user_update')) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_update', $input['format'])) {
             return false;
         }
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_update', $input['format'])) {
+        if (!self::check_parameter($input, array('username'), 'user_update')) {
             return false;
         }
         $username   = $input['username'];
@@ -2677,10 +2677,10 @@ class Api
      */
     public static function user_delete($input)
     {
-        if (!self::check_parameter($input, array('username'), 'user_delete')) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['format'])) {
             return false;
         }
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['format'])) {
+        if (!self::check_parameter($input, array('username'), 'user_delete')) {
             return false;
         }
         $username = $input['username'];
@@ -2712,34 +2712,35 @@ class Api
      */
     public static function followers($input)
     {
-        if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter($input, array('username'), 'followers')) {
-                return false;
-            }
-            $username = $input['username'];
-            if (!empty($username)) {
-                $user = User::get_from_username($username);
-                if ($user !== null) {
-                    $users    = $user->get_followers();
-                    if (!count($users)) {
-                        self::message('error', 'User `' . $username . '` has no followers.', '400', $input['format']);
-                    } else {
-                        ob_end_clean();
-                        switch ($input['format']) {
-                            case 'json':
-                                echo JSON_Data::users($users);
-                            break;
-                            default:
-                                echo XML_Data::users($users);
-                        }
-                    }
+        if (!AmpConfig::get('sociable')) {
+            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('username'), 'followers')) {
+            return false;
+        }
+        $username = $input['username'];
+        if (!empty($username)) {
+            $user = User::get_from_username($username);
+            if ($user !== null) {
+                $users    = $user->get_followers();
+                if (!count($users)) {
+                    self::message('error', 'User `' . $username . '` has no followers.', '400', $input['format']);
                 } else {
-                    debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
-                    self::message('error', 'User `' . $username . '` cannot be found.', '400', $input['format']);
+                    ob_end_clean();
+                    switch ($input['format']) {
+                        case 'json':
+                            echo JSON_Data::users($users);
+                        break;
+                        default:
+                            echo XML_Data::users($users);
+                    }
                 }
+            } else {
+                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                self::message('error', 'User `' . $username . '` cannot be found.', '400', $input['format']);
             }
-        } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
 
@@ -2760,35 +2761,36 @@ class Api
      */
     public static function following($input)
     {
-        if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter($input, array('username'), 'following')) {
-                return false;
-            }
-            $username = $input['username'];
-            if (!empty($username)) {
-                $user = User::get_from_username($username);
-                if ($user !== null) {
-                    $users = $user->get_following();
-                    if (!count($users)) {
-                        self::message('error', 'User `' . $username . '` does not follow anyone.', '400', $input['format']);
-                    } else {
-                        debug_event('api.class', 'User is following:  ' . print_r($users), 1);
-                        ob_end_clean();
-                        switch ($input['format']) {
-                            case 'json':
-                                echo JSON_Data::users($users);
-                            break;
-                            default:
-                                echo XML_Data::users($users);
-                        }
-                    }
+        if (!AmpConfig::get('sociable')) {
+            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('username'), 'following')) {
+            return false;
+        }
+        $username = $input['username'];
+        if (!empty($username)) {
+            $user = User::get_from_username($username);
+            if ($user !== null) {
+                $users = $user->get_following();
+                if (!count($users)) {
+                    self::message('error', 'User `' . $username . '` does not follow anyone.', '400', $input['format']);
                 } else {
-                    debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
-                    self::message('error', 'User `' . $username . '` cannot be found.', '400', $input['format']);
+                    debug_event('api.class', 'User is following:  ' . print_r($users), 1);
+                    ob_end_clean();
+                    switch ($input['format']) {
+                        case 'json':
+                            echo JSON_Data::users($users);
+                        break;
+                        default:
+                            echo XML_Data::users($users);
+                    }
                 }
+            } else {
+                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                self::message('error', 'User `' . $username . '` cannot be found.', '400', $input['format']);
             }
-        } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
 
@@ -2807,21 +2809,22 @@ class Api
      */
     public static function toggle_follow($input)
     {
-        if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter($input, array('username'), 'toggle_follow')) {
-                return false;
+        if (!AmpConfig::get('sociable')) {
+            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('username'), 'toggle_follow')) {
+            return false;
+        }
+        $username = $input['username'];
+        if (!empty($username)) {
+            $user = User::get_from_username($username);
+            if ($user !== null) {
+                User::get_from_username(Session::username($input['auth']))->toggle_follow($user->id);
+                ob_end_clean();
+                self::message('success', 'follow toggled for: ' . $user->id, null, $input['format']);
             }
-            $username = $input['username'];
-            if (!empty($username)) {
-                $user = User::get_from_username($username);
-                if ($user !== null) {
-                    User::get_from_username(Session::username($input['auth']))->toggle_follow($user->id);
-                    ob_end_clean();
-                    self::message('success', 'follow toggled for: ' . $user->id, null, $input['format']);
-                }
-            }
-        } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
 
@@ -2841,28 +2844,32 @@ class Api
      */
     public static function last_shouts($input)
     {
+        if (!AmpConfig::get('sociable')) {
+            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('username'), 'last_shouts')) {
+            return false;
+        }
         $limit = (int) ($input['limit']);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold');
         }
-        if (AmpConfig::get('sociable')) {
-            $username = $input['username'];
-            if (!empty($username)) {
-                $shouts = Shoutbox::get_top($limit, $username);
-            } else {
-                $shouts = Shoutbox::get_top($limit);
-            }
-
-            ob_end_clean();
-            switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::shouts($shouts);
-                    break;
-                    default:
-                        echo XML_Data::shouts($shouts);
-                }
+        $username = $input['username'];
+        if (!empty($username)) {
+            $shouts = Shoutbox::get_top($limit, $username);
         } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
+            $shouts = Shoutbox::get_top($limit);
+        }
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::shouts($shouts);
+            break;
+            default:
+                echo XML_Data::shouts($shouts);
         }
         Session::extend($input['auth']);
     } // last_shouts
@@ -2881,6 +2888,11 @@ class Api
      */
     public static function rate($input)
     {
+        if (!AmpConfig::get('ratings')) {
+            self::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
         if (!self::check_parameter($input, array('type', 'id', 'rating'), 'rate')) {
             return false;
         }
@@ -2935,6 +2947,11 @@ class Api
      */
     public static function flag($input)
     {
+        if (!AmpConfig::get('userflags')) {
+            self::message('error', T_('Access Denied: UserFlag features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
         if (!self::check_parameter($input, array('type', 'id', 'flag'), 'flag')) {
             return false;
         }
