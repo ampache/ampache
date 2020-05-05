@@ -142,15 +142,6 @@
     </td>
 </tr>
 <tr>
-    <td><?php echo T_('PHP safe mode disabled'); ?></td>
-    <td>
-    <?php echo debug_result(check_php_safemode()); ?>
-    </td>
-    <td>
-    <?php echo T_('This test makes sure that PHP is not running in safe mode. Some features of Ampache will not work correctly in safe mode.'); ?>
-    </td>
-</tr>
-<tr>
     <td><?php echo T_('PHP memory limit override'); ?></td>
     <td>
     <?php echo debug_wresult(check_override_memory()); ?>
