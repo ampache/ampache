@@ -3391,18 +3391,21 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'update_podcast')) {
             return false;
         }
-        $uid     = scrub_in($input['filter']);
-        $podcast = new Podcast($uid);
-        if ($podcast->sync_episodes()) {
-            self::message('success', 'Synced episodes for podcast: ' . (string) $uid, null, $input['format']);
-            Session::extend($input['auth']);
-
-            return true;
+        $object_id = scrub_in($input['filter']);
+        $podcast   = new Podcast($object_id);
+        if ($podcast->id > 0) {
+            if ($podcast->sync_episodes()) {
+                self::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['format']);
+                Session::extend($input['auth']);
+            } else {
+                self::message('error', T_('failed to sync episodes for podcast: ' . (string) $object_id), '400', $input['format']);
+            }
+        } else {
+            self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['format']);
         }
-        self::message('error', T_('failed to sync episodes for podcast: ' . (string) $uid), '400', $input['format']);
         Session::extend($input['auth']);
 
-        return false;
+        return true;
     } // update_podcast
 
     /**
