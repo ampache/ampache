@@ -2222,6 +2222,9 @@ class Api
 
             return false;
         }
+        if (!self::check_parameter($input, array('filter'), 'podcast')) {
+            return false;
+        }
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
@@ -2253,12 +2256,15 @@ class Api
      */
     public static function podcast_create($input)
     {
-        if (!self::check_parameter($input, array('url', 'catalog'), 'podcast_create')) {
-            return false;
-        }
         if (!AmpConfig::get('podcast')) {
             self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
 
+            return false;
+        }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
+            return false;
+        }
+        if (!self::check_parameter($input, array('url', 'catalog'), 'podcast_create')) {
             return false;
         }
         $data            = array();
@@ -2292,9 +2298,6 @@ class Api
      */
     public static function podcast_delete($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'podcast_delete')) {
-            return false;
-        }
         if (!AmpConfig::get('podcast')) {
             self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
 
@@ -2303,7 +2306,10 @@ class Api
         if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
             return false;
         }
-        $object_id = $input['filter'];
+        if (!self::check_parameter($input, array('filter'), 'podcast_delete')) {
+            return false;
+        }
+        $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             if ($podcast->remove()) {
@@ -2332,12 +2338,15 @@ class Api
      */
     public static function podcast_edit($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'podcast_edit')) {
-            return false;
-        }
         if (!AmpConfig::get('podcast')) {
             self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
 
+            return false;
+        }
+        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'edit_podcast', $input['format'])) {
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'podcast_edit')) {
             return false;
         }
         $podcast_id = $input['filter'];
@@ -2380,6 +2389,11 @@ class Api
      */
     public static function podcast_episodes($input)
     {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
         if (!self::check_parameter($input, array('filter'), 'podcast_episodes')) {
             return false;
         }
@@ -2423,6 +2437,9 @@ class Api
 
             return false;
         }
+        if (!self::check_parameter($input, array('filter'), 'podcast')) {
+            return false;
+        }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
         if ($episode->id > 0) {
@@ -2452,9 +2469,6 @@ class Api
      */
     public static function podcast_episode_delete($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'podcast_episode_delete')) {
-            return false;
-        }
         if (!AmpConfig::get('podcast')) {
             self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
 
@@ -2463,7 +2477,10 @@ class Api
         if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
             return false;
         }
-        $object_id = $input['filter'];
+        if (!self::check_parameter($input, array('filter'), 'podcast_episode_delete')) {
+            return false;
+        }
+        $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
         if ($episode->id > 0) {
             if ($episode->remove()) {
