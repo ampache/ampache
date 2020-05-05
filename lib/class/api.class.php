@@ -3066,13 +3066,16 @@ class Api
      * Get information about catalogs this user is allowed to manage.
      *
      * @param array $input
+     * filter = (string) set $filter_type //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return bool
      */
     public static function catalogs($input)
     {
-        $catalogs = Catalog::get_catalogs();
+        // filter for specific catalog types
+        $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
+        $catalogs = Catalog::get_catalogs($filter);
 
         ob_end_clean();
         switch ($input['format']) {
