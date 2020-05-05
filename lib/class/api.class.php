@@ -2222,16 +2222,21 @@ class Api
 
             return false;
         }
-        $podcast  = array((int) $input['filter']);
-        $episodes = ($input['include'] == 'episodes') ? true : false;
+        $object_id = (int) $input['filter'];
+        $podcast   = new Podcast($object_id);
+        if ($podcast->id > 0) {
+            $episodes = ($input['include'] == 'episodes') ? true : false;
 
-        ob_end_clean();
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::podcasts($podcast, $episodes);
-                break;
-            default:
-                echo XML_Data::podcasts($podcast, $episodes);
+            ob_end_clean();
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::podcasts(array($object_id), $episodes);
+                    break;
+                default:
+                    echo XML_Data::podcasts(array($object_id), $episodes);
+            }
+        } else {
+            self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
     } // podcast
