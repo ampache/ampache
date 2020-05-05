@@ -702,7 +702,7 @@ class XML_Data
                 "\t<last_add><![CDATA[" . $catalog->f_add . "]]></last_add>\n" .
                 "\t<last_clean><![CDATA[" . $catalog->f_clean . "]]></last_clean>\n" .
                 "\t<last_update><![CDATA[" . $catalog->f_update . "]]></last_update>\n" .
-                "\t<link><![CDATA[" . $catalog->link . "]]></link>\n" .
+                "\t<path><![CDATA[" . $catalog->f_info . "]]></path>\n" .
                 "\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n" .
                 "\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n" .
                 "</catalog>\n";

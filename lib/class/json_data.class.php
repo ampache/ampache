@@ -502,7 +502,7 @@ class JSON_Data
             $catalog_last_add       = $catalog->f_add;
             $catalog_last_clean     = $catalog->f_clean;
             $catalog_last_update    = $catalog->f_update;
-            $catalog_link           = $catalog->link;
+            $catalog_path           = $catalog->f_info;
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
@@ -515,7 +515,7 @@ class JSON_Data
                 "allow_download" => $catalog_last_add,
                 "last_clean" => $catalog_last_clean,
                 "last_update" => $catalog_last_update,
-                "link" => $catalog_link,
+                "path" => $catalog_path,
                 "rename_pattern" => $catalog_rename_pattern,
                 "sort_pattern" => $catalog_sort_pattern]);
         } // end foreach
