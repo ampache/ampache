@@ -154,7 +154,7 @@ class JSON_Data
     public static function indexes($objects, $type)
     {
         //here is where we call the object type
-        //'song', 'album', 'artist', 'playlist'
+        // 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
         switch ($type) {
             case 'song':
                 return self::songs($objects);
@@ -164,6 +164,10 @@ class JSON_Data
                 return self::artists($objects);
             case 'playlist':
                 return self::playlists($objects);
+            case 'share':
+                return self::shares($objects);
+            case 'podcast':
+                return self::podcasts($objects);
             default:
                 return self::error('401', T_('Wrong object type ' . $type));
         }
@@ -472,6 +476,145 @@ class JSON_Data
 
         return json_encode($allShares, JSON_PRETTY_PRINT);
     } // shares
+
+    /**
+     * catalogs
+     *
+     * This returns catalogs to the user, in a pretty json document with the information
+     *
+     * @param integer[] $catalogs group of catalog id's
+     * @return string return JSON
+     */
+    public static function catalogs($catalogs)
+    {
+        if (count($catalogs) > self::$limit || self::$offset > 0) {
+            $catalogs = array_splice($catalogs, self::$offset, self::$limit);
+        }
+
+        $allCatalogs = [];
+        foreach ($catalogs as $catalog_id) {
+            $catalog = Catalog::create_from_id($catalog_id);
+            $catalog->format();
+            $catalog_name           = $catalog->name;
+            $catalog_type           = $catalog->catalog_type;
+            $catalog_gather_types   = $catalog->gather_types;
+            $catalog_enabled        = $catalog->enabled;
+            $catalog_last_add       = $catalog->f_add;
+            $catalog_last_clean     = $catalog->f_clean;
+            $catalog_last_update    = $catalog->f_update;
+            $catalog_link           = $catalog->link;
+            $catalog_rename_pattern = $catalog->rename_pattern;
+            $catalog_sort_pattern   = $catalog->sort_pattern;
+            // Build this element
+            array_push($allCatalogs, [
+                "id" => $catalog_id,
+                "name" => $catalog_name,
+                "type" => $catalog_type,
+                "gather_types" => $catalog_gather_types,
+                "last_add" => $catalog_enabled,
+                "allow_download" => $catalog_last_add,
+                "last_clean" => $catalog_last_clean,
+                "last_update" => $catalog_last_update,
+                "link" => $catalog_link,
+                "rename_pattern" => $catalog_rename_pattern,
+                "sort_pattern" => $catalog_sort_pattern]);
+        } // end foreach
+
+        return json_encode($allCatalogs, JSON_PRETTY_PRINT);
+    } // catalogs
+
+    /**
+     * podcasts
+     *
+     * This returns podcasts to the user, in a pretty json document with the information
+     *
+     * @param array $podcasts (description here...)
+     * @param boolean $episodes include the episodes of the podcast
+     * @return string return JSON
+     */
+    public static function podcasts($podcasts, $episodes = false)
+    {
+        if (count($podcasts) > self::$limit || self::$offset > 0) {
+            $podcasts = array_splice($podcasts, self::$offset, self::$limit);
+        }
+
+        $allPodcasts = [];
+        foreach ($podcasts as $podcast_id) {
+            $podcast = new Podcast($podcast_id);
+            $podcast->format();
+            $podcast_name        = $podcast->f_title;
+            $podcast_description = $podcast->description;
+            $podcast_language    = $podcast->f_language;
+            $podcast_copyright   = $podcast->f_copyright;
+            $podcast_feed_url    = $podcast->feed;
+            $podcast_generator   = $podcast->f_generator;
+            $podcast_website     = $podcast->f_website;
+            $podcast_build_date  = $podcast->f_lastbuilddate;
+            $podcast_sync_date   = $podcast->f_lastsync;
+            $podcast_public_url  = $podcast->link;
+            $podcast_episodes    = array();
+            if ($episodes) {
+                $items            = $podcast->get_episodes();
+                $podcast_episodes = self::podcast_episodes($items, true);
+            }
+            // Build this element
+            array_push($allPodcasts, [
+                "id" => $podcast_id,
+                "name" => $podcast_name,
+                "description" => $podcast_description,
+                "language" => $podcast_language,
+                "copyright" => $podcast_copyright,
+                "feed_url" => $podcast_feed_url,
+                "generator" => $podcast_generator,
+                "website" => $podcast_website,
+                "build_date" => $podcast_build_date,
+                "sync_date" => $podcast_sync_date,
+                "public_url" => $podcast_public_url,
+                "podcast_episode" => $podcast_episodes]);
+        } // end foreach
+
+        return json_encode($allPodcasts, JSON_PRETTY_PRINT);
+    } // podcasts
+
+    /**
+     * podcast_episodes
+     *
+     * This returns podcasts to the user, in a pretty json document with the information
+     *
+     * @param  array   $podcast_episodes    (description here...)
+     * @param  boolean $simple just return the data as an array for pretty somewhere else
+     * @return array|string return JSON
+     */
+    public static function podcast_episodes($podcast_episodes, $simple = false)
+    {
+        if (count($podcast_episodes) > self::$limit || self::$offset > 0) {
+            $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
+        }
+        $allEpisodes = array();
+        foreach ($podcast_episodes as $episode_id) {
+            $episode = new Podcast_Episode($episode_id);
+            $episode->format();
+            array_push($allEpisodes, [
+                "id" => $episode_id,
+                "name" => $episode->f_title,
+                "description" => $episode->f_description,
+                "category" => $episode->f_category,
+                "author" => $episode->f_author,
+                "author_full" => $episode->f_artist_full,
+                "website" => $episode->f_website,
+                "pubdate" => $episode->f_pubdate,
+                "state" => $episode->f_state,
+                "filelength" => $episode->f_time_h,
+                "filesize" => $episode->f_size,
+                "filename" => $episode->f_file,
+                "url" => $episode->link]);
+        }
+        if ($simple) {
+            return $allEpisodes;
+        }
+
+        return json_encode($allEpisodes, JSON_PRETTY_PRINT);
+    } // podcast_episodes
 
     /**
      * songs

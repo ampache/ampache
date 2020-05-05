@@ -1479,24 +1479,8 @@ class Subsonic_Api
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
-            if (isset($input['expires'])) {
-                $expires = $input['expires'];
-                // no limit expiry
-                if ($expires == 0) {
-                    $expire_days = 0;
-                } else {
-                    // Parse as a string to work on 32-bit computers
-                    if (strlen((string) $expires) > 3) {
-                        $expires = (int) (substr($expires, 0, - 3));
-                    }
-                    $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
-                }
-            } else {
-                //fall back to config defaults
-                $expire_days = AmpConfig::get('share_expire');
-            }
-
-            $object_id = Subsonic_XML_Data::getAmpacheId($id);
+            $expire_days = Share::get_expiry($input['expires']);
+            $object_id   = Subsonic_XML_Data::getAmpacheId($id);
             if (Subsonic_XML_Data::isAlbum($id)) {
                 $object_type = 'album';
             }
@@ -1510,7 +1494,7 @@ class Subsonic_Api
             if (!empty($object_type)) {
                 $response = Subsonic_XML_Data::createSuccessResponse('createshare');
                 $shares   = array();
-                $shares[] = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, Share::generate_secret(), 0, $description);
+                $shares[] = Share::create_share($object_type, $object_id, true, Access::check_function('download'), $expire_days, generate_password(8), 0, $description);
                 Subsonic_XML_Data::addShares($response, $shares);
             } else {
                 $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'createshare');
@@ -1529,10 +1513,11 @@ class Subsonic_Api
      */
     public static function deleteshare($input)
     {
-        $id = self::check_parameter($input, 'id');
-
+        $username = self::check_parameter($input, 'username');
+        $user     = User::get_from_username((string) $username);
+        $id       = self::check_parameter($input, 'id');
         if (AmpConfig::get('share')) {
-            if (Share::delete_share($id)) {
+            if (Share::delete_share($id, $user)) {
                 $response = Subsonic_XML_Data::createSuccessResponse('deleteshare');
             } else {
                 $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'deleteshare');
@@ -1552,7 +1537,9 @@ class Subsonic_Api
      */
     public static function updateshare($input)
     {
+        $username    = self::check_parameter($input, 'username');
         $id          = self::check_parameter($input, 'id');
+        $user        = User::get_from_username((string) $username);
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
@@ -1578,7 +1565,7 @@ class Subsonic_Api
                     'allow_download' => $share->allow_download,
                     'description' => $description ?: $share->description,
                 );
-                if ($share->update($data)) {
+                if ($share->update($data, $user)) {
                     $response = Subsonic_XML_Data::createSuccessResponse('updateshare');
                 } else {
                     $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', 'updateshare');

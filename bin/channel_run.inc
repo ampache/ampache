@@ -313,19 +313,12 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
 
 function channel_usage()
 {
-    echo T_("Usage:");
-    echo "\n";
-    echo T_("channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]");
-    echo "\n\t";
-    echo "\n-c {CHANNEL ID}\t";
-    echo T_('Channel id to start');
-    echo "\n-p {PORT}\t";
-    echo T_('Listening port, default get an available port automatically');
-    echo "\n-v\t";
-    echo T_('Verbose');
-    echo "\n";
-    echo "----------------------------------------------------------";
-    echo "\n";
+    echo T_("Usage:") . "\n";
+    echo T_("channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]") . "\n\t";
+    echo "\n-c {CHANNEL ID}\t" . T_('Channel id to start');
+    echo "\n-p {PORT}\t" . T_('Listening port, default get an available port automatically');
+    echo "\n-v\t" . T_('Verbose') . "\n";
+    echo "----------------------------------------------------------\n";
 }
 
 /**

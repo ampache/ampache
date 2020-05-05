@@ -2000,6 +2000,7 @@ abstract class Catalog extends database_object
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array
+     * @throws Exception
      */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
@@ -2082,7 +2083,7 @@ abstract class Catalog extends database_object
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
         }
-        UI::update_text(T_("Catalog Cleaned"), sprintf(nT_('%d file removed.', '%d files removed.', $dead_total), $dead_total));
+        UI::update_text(T_("Catalog Cleaned"), sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total));
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }
@@ -2612,16 +2613,16 @@ abstract class Catalog extends database_object
 
     /**
      * @param $libitem
-     * @param User|null $user
+     * @param User|null $user_id
      * @return boolean
      */
-    public static function can_remove($libitem, $user = null)
+    public static function can_remove($libitem, $user_id = null)
     {
-        if (!$user) {
-            $user = Core::get_global('user')->id;
+        if (!$user_id) {
+            $user_id = Core::get_global('user')->id;
         }
 
-        if (!$user) {
+        if (!$user_id) {
             return false;
         }
 
@@ -2629,7 +2630,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
+        return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove')));
     }
 
     /**

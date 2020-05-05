@@ -198,7 +198,7 @@ class AmpacheDiscogs
             } else {
                 if (in_array('album', $gather_types)) {
                     $albums = $this->search_album($media_info['artist'], $media_info['title']);
-                    if (count($albums['results']) > 0) {
+                    if (!empty($albums['results'])) {
                         $album = $this->get_album($albums['results'][0]['id']);
                         if (count($album['images']) > 0) {
                             $results['art'] = $album['images'][0]['uri'];

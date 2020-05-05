@@ -305,6 +305,7 @@ class Catalog_local extends Catalog
      * @param $full_file
      * @param $options
      * @return boolean
+     * @throws Exception
      */
     public function add_file($full_file, $options)
     {

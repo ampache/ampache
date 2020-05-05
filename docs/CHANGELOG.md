@@ -9,16 +9,30 @@ Admin -> Server Config -> Interface -> Custom datetime
 e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
 Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
 
-* Bump API version to 400005 (4.0.0 build 005)
+* Bump API version to 410001 (4.1.0 build 001)
 * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
   * Call xml as normal:
-    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400004
+    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=410001
   * Call the JSON server:
-    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400004
+    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=410001
 * NEW API functions
   * get_similar: send artist or song id to get related objects from last.fm
   * shares: get a list of shares you can access
   * share: get a share by id
+  * share_create: create a share
+  * share_edit: edit an existing share
+  * share_delete: delete an existing share
+  * podcasts: get a list of podcasts you can access
+  * podcast: get a podcast by id
+  * podcast_episodes: get a list of podcast_episodes you can access
+  * podcast_episode: get a podcast_episode by id
+  * podcast_episode_delete: delete an existing podcast_episode
+  * podcast_create: create a podcast
+  * podcast_edit: edit an existing podcast
+  * podcast_delete: delete an existing podcast
+  * update_podcast: sync and download new episodes
+  * catalogs: get all the catalogs
+  * catalog: get a catalog by id
 * NEW db options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
@@ -34,6 +48,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * API: All calls that return songs now include <playlisttrack> which can be used to identify track order.
 * API: <playcount> added to objects.
 * API: Don't gather art when adding songs
+* API: Added actions to catalog_action. 'verify_catalog' 'gather_art'
 * Fix: Channel authentication
 * Fix: IP checks when sending null proxy values
 * Fix: Extra text in catalog API calls
@@ -49,6 +64,8 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Stop showing the average rating in the web interface.
 * April 2020 Translation update
 * Fix: When you had beautiful_urls enabled tracks would not parse in localplay
+* Fix: Podcast durations aren't always correct format, prep the time before trying to insert it.
+
 
 ## 4.1.1
 * Bump API version to 400004 (4.0.0 build 004)

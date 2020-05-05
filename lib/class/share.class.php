@@ -66,15 +66,16 @@ class Share extends database_object
     /**
      * delete_share
      * @param $id
+     * @param User $user
      * @return PDOStatement|boolean
      */
-    public static function delete_share($id)
+    public static function delete_share($id, $user)
     {
         $sql    = "DELETE FROM `share` WHERE `id` = ?";
         $params = array( $id );
-        if (!Core::get_global('user')->has_access('75')) {
+        if (!$user->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = Core::get_global('user')->id;
+            $params[] = $user->id;
         }
 
         return Dba::write($sql, $params);
@@ -101,21 +102,6 @@ class Share extends database_object
         $sql = "DELETE FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
 
         Dba::write($sql, array($object_type, $object_id));
-    }
-
-    /**
-     * @param integer $length
-     * @return string
-     */
-    public static function generate_secret($length = 8)
-    {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $secret     = '';
-        for ($count = 0; $count < $length; $count++) {
-            $secret .= $characters[rand(0, strlen((string) $characters) - 1)];
-        }
-
-        return $secret;
     }
 
     /**
@@ -277,6 +263,7 @@ class Share extends database_object
     }
 
     /**
+     * format
      * @param boolean $details
      */
     public function format($details = true)
@@ -300,9 +287,10 @@ class Share extends database_object
     /**
      * update
      * @param array $data
+     * @param User $user
      * @return PDOStatement|boolean
      */
-    public function update(array $data)
+    public function update(array $data, $user)
     {
         $this->max_counter    = (int) ($data['max_counter']);
         $this->expire_days    = (int) ($data['expire']);
@@ -313,9 +301,9 @@ class Share extends database_object
         $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " .
             "WHERE `id` = ?";
         $params = array($this->max_counter, $this->expire_days, $this->allow_stream ? 1 : 0, $this->allow_download ? 1 : 0, $this->description, $this->id);
-        if (!Core::get_global('user')->has_access('75')) {
+        if (!$user->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = Core::get_global('user')->id;
+            $params[] = $user->id;
         }
 
         return Dba::write($sql, $params);
@@ -448,6 +436,33 @@ class Share extends database_object
     public function get_user_owner()
     {
         return $this->user;
+    }
+
+    /**
+     * get_expiry
+     * @param integer $days
+     * @return integer
+     */
+    public static function get_expiry($days = null)
+    {
+        if (isset($days)) {
+            $expires = $days;
+            // no limit expiry
+            if ($expires == 0) {
+                $expire_days = 0;
+            } else {
+                // Parse as a string to work on 32-bit computers
+                if (strlen((string) $expires) > 3) {
+                    $expires = (int) (substr($expires, 0, - 3));
+                }
+                $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
+            }
+        } else {
+            //fall back to config defaults
+            $expire_days = AmpConfig::get('share_expire');
+        }
+
+        return (int) $expire_days;
     }
 
     /**

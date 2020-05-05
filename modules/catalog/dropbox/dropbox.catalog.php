@@ -357,7 +357,7 @@ class Catalog_dropbox extends Catalog
      * @param $dropbox
      * @param $path
      * @return boolean
-     * @throws DropboxClientException
+     * @throws DropboxClientException|Exception
      */
     private function insert_song($dropbox, $path)
     {
@@ -410,7 +410,7 @@ class Catalog_dropbox extends Catalog
      * @param $dropbox
      * @param $path
      * @return integer
-     * @throws DropboxClientException
+     * @throws DropboxClientException|Exception
      */
     public function insert_video($dropbox, $path)
     {
