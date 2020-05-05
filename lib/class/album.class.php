@@ -434,20 +434,20 @@ class Album extends database_object implements library_item
 
     /**
      * can_edit
-     * @param integer $user
+     * @param integer $user_id
      * @return boolean
      */
-    public function can_edit($user = null)
+    public function can_edit($user_id = null)
     {
-        if ($user === null) {
-            $user = Core::get_global('user')->id;
+        if ($user_id === null) {
+            $user_id = Core::get_global('user')->id;
         }
 
-        if (!$user) {
+        if (!$user_id) {
             return false;
         }
 
-        if (Access::check('interface', 50, $user)) {
+        if (Access::check('interface', 50, $user_id)) {
             return true;
         }
 
@@ -461,7 +461,7 @@ class Album extends database_object implements library_item
 
         $owner = $this->get_user_owner();
 
-        return ($owner === $user);
+        return ($owner === $user_id);
     }
 
     /**
@@ -1195,7 +1195,7 @@ class Album extends database_object implements library_item
             $count = 1;
         }
         if ($user_id === null) {
-            $user_id = Core::get_global('user');
+            $user_id = Core::get_global('user')->id;
         }
 
         $sql = "SELECT DISTINCT `album`.`id` FROM `album` " .

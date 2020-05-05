@@ -2613,16 +2613,16 @@ abstract class Catalog extends database_object
 
     /**
      * @param $libitem
-     * @param User|null $user
+     * @param User|null $user_id
      * @return boolean
      */
-    public static function can_remove($libitem, $user = null)
+    public static function can_remove($libitem, $user_id = null)
     {
-        if (!$user) {
-            $user = Core::get_global('user')->id;
+        if (!$user_id) {
+            $user_id = Core::get_global('user')->id;
         }
 
-        if (!$user) {
+        if (!$user_id) {
             return false;
         }
 
@@ -2630,7 +2630,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
+        return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove')));
     }
 
     /**
