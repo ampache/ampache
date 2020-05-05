@@ -1917,13 +1917,13 @@ class Subsonic_Api
             $count = 0;
             if ($artist) {
                 $search['rule_' . $count . '_input']    = $artist;
-                $search['rule_' . $count . '_operator'] = 5;
+                $search['rule_' . $count . '_operator'] = 4;
                 $search['rule_' . $count . '']          = "artist";
                 ++$count;
             }
             if ($title) {
                 $search['rule_' . $count . '_input']    = $title;
-                $search['rule_' . $count . '_operator'] = 5;
+                $search['rule_' . $count . '_operator'] = 4;
                 $search['rule_' . $count . '']          = "title";
                 ++$count;
             }
