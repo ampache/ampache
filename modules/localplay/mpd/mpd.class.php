@@ -246,7 +246,7 @@ class mpd
      *
      * NOTE: This is called automatically upon object instantiation; you
      * should not need to call this directly.
-     * @return bool|false|string
+     * @return false|string
      */
     public function Connect()
     {
@@ -276,7 +276,6 @@ class mpd
                     $this->connected = true;
 
                     return $response;
-                    break;
                 }
                 if (strncmp(self::RESPONSE_ERR, $response, strlen(self::RESPONSE_ERR)) == 0) {
                     $this->_error('Connect', "Server responded with: $response");
@@ -300,7 +299,7 @@ class mpd
      * @param $command
      * @param $arguments
      * @param boolean $refresh_info
-     * @return bool|string
+     * @return boolean|string
      */
     public function SendCommand($command, $arguments = null, $refresh_info = true)
     {
@@ -401,7 +400,7 @@ class mpd
      * SendCommandQueue
      *
      * Sends all commands in the Command Queue to the MPD server.
-     * @return bool|string
+     * @return boolean|string
      */
     public function SendCommandQueue()
     {
@@ -460,7 +459,7 @@ class mpd
      * Adjusts the mixer volume on the MPD by <value>, which can be a
      * positive (volume increase) or negative (volume decrease) value.
      * @param $value
-     * @return bool|string
+     * @return boolean|string
      */
     public function AdjustVolume($value)
     {
@@ -485,7 +484,7 @@ class mpd
      *
      * Sets the mixer volume to <value>, which should be between 1 - 100.
      * @param $value
-     * @return bool|string
+     * @return boolean|string
      */
     public function SetVolume($value)
     {
@@ -547,7 +546,7 @@ class mpd
      * contains filenames of tracks to add to the end of the playlist. This
      * is used to add many, many tracks to the playlist in one swoop.
      * @param $trackArray
-     * @return bool|string
+     * @return boolean|string
      */
     public function PLAddBulk($trackArray)
     {
@@ -568,7 +567,7 @@ class mpd
      * Adds the file <file> to the end of the playlist. <file> must be a
      * track in the MPD database.
      * @param string $filename
-     * @return bool|string
+     * @return boolean|string
      */
     public function PLAdd($filename)
     {
@@ -585,7 +584,7 @@ class mpd
      * the playlist. This is used to reorder the songs in the playlist.
      * @param $current_position
      * @param $new_position
-     * @return bool|string
+     * @return boolean|string
      */
     public function PLMoveTrack($current_position, $new_position)
     {
@@ -615,7 +614,7 @@ class mpd
     /**PLShuffle
      *
      * Randomly reorders the songs in the playlist.
-     * @return bool|string
+     * @return boolean|string
      */
     public function PLShuffle()
     {
@@ -631,7 +630,7 @@ class mpd
      * Retrieves the playlist from <file>.m3u and loads it into the current
      * playlist.
      * @param $file
-     * @return bool|string
+     * @return boolean|string
      */
     public function PLLoad($file)
     {
@@ -647,7 +646,7 @@ class mpd
      * Saves the playlist to <file>.m3u for later retrieval. The file is
      * saved in the MPD playlist directory.
      * @param $file
-     * @return bool|string
+     * @return boolean|string
      */
     public function PLSave($file)
     {
@@ -662,7 +661,7 @@ class mpd
      * PLClear
      *
      * Empties the playlist.
-     * @return bool|string
+     * @return boolean|string
      */
     public function PLClear()
     {
@@ -678,7 +677,7 @@ class mpd
      *
      * Removes track <id> from the playlist.
      * @param $id
-     * @return bool|string
+     * @return boolean|string
      */
     public function PLRemove($id)
     {
@@ -699,7 +698,7 @@ class mpd
      * Enables 'loop' mode -- tells MPD continually loop the playlist. The
      * <repVal> parameter is either 1 (on) or 0 (off).
      * @param $value
-     * @return bool|string
+     * @return boolean|string
      */
     public function SetRepeat($value)
     {
@@ -717,7 +716,7 @@ class mpd
      * Enables 'randomize' mode -- tells MPD to play songs in the playlist
      * in random order. The parameter is either 1 (on) or 0 (off).
      * @param $value
-     * @return bool|string
+     * @return boolean|string
      */
     public function SetRandom($value)
     {
@@ -735,7 +734,7 @@ class mpd
      * Shuts down the MPD server (aka sends the KILL command). This closes
      * the current connection and prevents future communication with the
      * server.
-     * @return bool|string
+     * @return boolean|string
      */
     public function Shutdown()
     {
@@ -758,7 +757,7 @@ class mpd
      * Tells MPD to rescan the music directory for new tracks and refresh
      * the Database. Tracks cannot be played unless they are in the MPD
      * database.
-     * @return bool|string
+     * @return boolean|string
      */
     public function DBRefresh()
     {
@@ -773,7 +772,7 @@ class mpd
      * Play
      *
      * Begins playing the songs in the MPD playlist.
-     * @return bool|string
+     * @return boolean|string
      */
     public function Play()
     {
@@ -788,7 +787,7 @@ class mpd
      * Stop
      *
      * Stops playback.
-     * @return bool|string
+     * @return boolean|string
      */
     public function Stop()
     {
@@ -803,7 +802,7 @@ class mpd
      * Pause
      *
      * Toggles pausing.
-     * @return bool|string
+     * @return boolean|string
      */
     public function Pause()
     {
@@ -875,7 +874,7 @@ class mpd
      *
      * Skips to the next song in the MPD playlist. If not playing, returns
      * an error.
-     * @return bool|string
+     * @return boolean|string
      */
     public function Next()
     {
@@ -891,7 +890,7 @@ class mpd
      *
      * Skips to the previous song in the MPD playlist. If not playing,
      * returns an error.
-     * @return bool|string
+     * @return boolean|string
      */
     public function Previous()
     {

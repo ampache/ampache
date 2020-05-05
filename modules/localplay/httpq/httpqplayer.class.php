@@ -65,7 +65,7 @@ class HttpQPlayer
         $results = $this->sendCommand('playurl', $args);
 
         if ($results == '0') {
-            $results = null;
+            return false;
         }
 
         return $results;
@@ -83,7 +83,7 @@ class HttpQPlayer
 
         // a return of 0 is a bad value
         if ($results == '0') {
-            $results = null;
+            $results = false;
         }
 
 
@@ -100,7 +100,7 @@ class HttpQPlayer
         $results = $this->sendCommand("delete", $args);
 
         if ($results == '0') {
-            $results = null;
+            $results = false;
         }
 
         return $results;
@@ -116,7 +116,7 @@ class HttpQPlayer
         $results = $this->sendCommand("next", $args);
 
         if ($results == '0') {
-            return null;
+            return false;
         }
 
         return true;
@@ -132,7 +132,7 @@ class HttpQPlayer
         $results = $this->sendCommand("prev", $args);
 
         if ($results == '0') {
-            return null;
+            return false;
         }
 
         return true;
@@ -150,7 +150,7 @@ class HttpQPlayer
         $results = $this->sendCommand('setplaylistpos', $args);
 
         if ($results == '0') {
-            return null;
+            return false;
         }
 
         // Now stop start
@@ -170,7 +170,7 @@ class HttpQPlayer
         $results = $this->sendCommand("play", $args);
 
         if ($results == '0') {
-            $results = null;
+            $results = false;
         }
 
         return $results;
@@ -186,7 +186,7 @@ class HttpQPlayer
         $results = $this->sendCommand("pause", $args);
 
         if ($results == '0') {
-            $results = null;
+            $results = false;
         }
 
         return $results;
@@ -202,7 +202,7 @@ class HttpQPlayer
         $results = $this->sendCommand('stop', $args);
 
         if ($results == '0') {
-            $results = null;
+            $results = false;
         }
 
         return $results;
@@ -220,7 +220,7 @@ class HttpQPlayer
         $results = $this->sendCommand('repeat', $args);
 
         if ($results == '0') {
-            $results = null;
+            $results = false;
         }
 
         return $results;
@@ -238,7 +238,7 @@ class HttpQPlayer
         $results = $this->sendCommand('shuffle', $args);
 
         if ($results == '0') {
-            $results = null;
+            $results = false;
         }
 
         return $results;
@@ -256,7 +256,7 @@ class HttpQPlayer
         $results = $this->sendCommand('deletepos', $args);
 
         if ($results == '0') {
-            $results = null;
+            $results = false;
         }
 
         return $results;
@@ -295,13 +295,10 @@ class HttpQPlayer
         $results = $this->sendCommand('getvolume', $args);
 
         if ($results == '0') {
-            $results = null;
-        } else {
-            /* Need to make this out of 100 */
-            $results = round((($results / 255) * 100), 2);
+            return false;
         }
 
-        return $results;
+        return round((($results / 255) * 100), 2);
     } // get_volume
 
     /**
@@ -314,7 +311,7 @@ class HttpQPlayer
         $results = $this->sendCommand('volumeup', $args);
 
         if ($results == '0') {
-            return null;
+            return false;
         }
 
         return true;
@@ -330,7 +327,7 @@ class HttpQPlayer
         $results = $this->sendCommand('volumedown', $args);
 
         if ($results == '0') {
-            return null;
+            return false;
         }
 
         return true;
@@ -341,7 +338,7 @@ class HttpQPlayer
      * This sets the volume as best it can, we go from a resolution
      * of 100 --> 255 so it's a little fuzzy
      * @param $value
-     * @return bool|null
+     * @return boolean
      */
     public function set_volume($value)
     {
@@ -352,7 +349,7 @@ class HttpQPlayer
         $results = $this->sendCommand('setvolume', $args);
 
         if ($results == '0') {
-            return null;
+            return false;
         }
 
         return true;
@@ -368,7 +365,7 @@ class HttpQPlayer
         $results = $this->sendcommand('flushplaylist', $args);
 
         if ($results == '0') {
-            return null;
+            return false;
         }
 
         return true;
@@ -423,7 +420,7 @@ class HttpQPlayer
         $results = $this->sendCommand('getplaylistfile', array('delim' => '::'));
 
         if ($results == '0') {
-            $results = null;
+            $results = false;
         }
 
         return $results;

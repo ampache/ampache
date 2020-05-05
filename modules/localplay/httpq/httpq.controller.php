@@ -360,11 +360,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function volume_up()
     {
-        if ($this->_httpq->volume_up() === null) {
-            return false;
-        }
-
-        return true;
+        return $this->_httpq->volume_up();
     } // volume_up
 
     /**
@@ -372,11 +368,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function volume_down()
     {
-        if ($this->_httpq->volume_down() === null) {
-            return false;
-        }
-
-        return true;
+        return $this->_httpq->volume_down();
     } // volume_down
 
     /**
@@ -427,11 +419,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function volume($volume)
     {
-        if ($this->_httpq->set_volume($volume) === null) {
-            return false;
-        }
-
-        return true;
+        return $this->_httpq->set_volume($volume);
     } // volume
 
     /**
