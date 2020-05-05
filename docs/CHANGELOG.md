@@ -26,6 +26,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * podcast: get a podcast by id
   * podcast_episodes: get a list of podcast_episodes you can access
   * podcast_episode: get a podcast_episode by id
+  * podcast_episode_delete: delete an existing podcast_episode
   * podcast_create: create a podcast
   * podcast_edit: edit an existing podcast
   * podcast_delete: delete an existing podcast

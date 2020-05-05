@@ -1248,8 +1248,8 @@ class Api
     {
         $user   = User::get_from_username(Session::username($input['auth']));
         $method = $input['exact'] ? false : true;
-        $userid = (!Access::check('interface', 100)) ? $user->id : -1;
-        $public = !Access::check('interface', 100);
+        $userid = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
+        $public = !Access::check('interface', 100, $user->id);
 
         // regular playlists
         $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
@@ -2300,6 +2300,9 @@ class Api
 
             return false;
         }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
+            return false;
+        }
         $object_id = $input['filter'];
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
@@ -2420,18 +2423,59 @@ class Api
 
             return false;
         }
-        $podcast_episode = array((int) $input['filter']);
-
-        ob_end_clean();
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::podcast_episodes($podcast_episode);
-                break;
-            default:
-                echo XML_Data::podcast_episodes($podcast_episode);
+        $object_id = (int) $input['filter'];
+        $episode   = new Podcast_Episode($object_id);
+        if ($episode->id > 0) {
+            ob_end_clean();
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::podcast_episodes(array($object_id));
+                    break;
+                default:
+                    echo XML_Data::podcast_episodes(array($object_id));
+            }
+        } else {
+            self::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
     } // podcast_episode
+
+    /**
+     * podcast_episode_delete
+     *
+     * MINIMUM_API_VERSION=400005
+     *
+     * Delete an existing podcast_episode.
+     *
+     * @param array $input
+     * filter = (string) UID of podcast_episode to delete
+     */
+    public static function podcast_episode_delete($input)
+    {
+        if (!self::check_parameter($input, array('filter'), 'podcast_episode_delete')) {
+            return false;
+        }
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
+            return false;
+        }
+        $object_id = $input['filter'];
+        $episode   = new Podcast_Episode($object_id);
+        if ($episode->id > 0) {
+            if ($episode->remove()) {
+                self::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['format']);
+            } else {
+                self::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['format']);
+            }
+        } else {
+            self::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+    } // podcast_episode_delete
 
     /**
      * user
@@ -3389,6 +3433,9 @@ class Api
     public static function update_podcast($input)
     {
         if (!self::check_parameter($input, array('filter'), 'update_podcast')) {
+            return false;
+        }
+        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
             return false;
         }
         $object_id = scrub_in($input['filter']);
