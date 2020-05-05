@@ -3477,7 +3477,7 @@ class Api
         $object_id = scrub_in($input['filter']);
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
-            if ($podcast->sync_episodes()) {
+            if ($podcast->sync_episodes(true)) {
                 self::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['format']);
                 Session::extend($input['auth']);
             } else {
