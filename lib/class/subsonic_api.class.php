@@ -1513,10 +1513,11 @@ class Subsonic_Api
      */
     public static function deleteshare($input)
     {
-        $id = self::check_parameter($input, 'id');
-
+        $username = self::check_parameter($input, 'username');
+        $user     = User::get_from_username((string) $username);
+        $id       = self::check_parameter($input, 'id');
         if (AmpConfig::get('share')) {
-            if (Share::delete_share($id)) {
+            if (Share::delete_share($id, $user)) {
                 $response = Subsonic_XML_Data::createSuccessResponse('deleteshare');
             } else {
                 $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'deleteshare');
@@ -1536,7 +1537,9 @@ class Subsonic_Api
      */
     public static function updateshare($input)
     {
+        $username    = self::check_parameter($input, 'username');
         $id          = self::check_parameter($input, 'id');
+        $user        = User::get_from_username((string) $username);
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
@@ -1562,7 +1565,7 @@ class Subsonic_Api
                     'allow_download' => $share->allow_download,
                     'description' => $description ?: $share->description,
                 );
-                if ($share->update($data)) {
+                if ($share->update($data, $user)) {
                     $response = Subsonic_XML_Data::createSuccessResponse('updateshare');
                 } else {
                     $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_UNAUTHORIZED, '', 'updateshare');

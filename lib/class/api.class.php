@@ -1759,12 +1759,12 @@ class Api
      */
     public static function shares($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'shares')) {
-            return false;
-        }
         if (!AmpConfig::get('share')) {
             self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
 
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'shares')) {
             return false;
         }
         self::$browse->reset_filters();
@@ -1805,12 +1805,12 @@ class Api
      */
     public static function share($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'share')) {
-            return false;
-        }
         if (!AmpConfig::get('share')) {
             self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
 
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'share')) {
             return false;
         }
         $share = array((int) $input['filter']);
@@ -1840,12 +1840,12 @@ class Api
      */
     public static function share_create($input)
     {
-        if (!self::check_parameter($input, array('type', 'filter'), 'share_create')) {
-            return false;
-        }
         if (!AmpConfig::get('share')) {
             self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
 
+            return false;
+        }
+        if (!self::check_parameter($input, array('type', 'filter'), 'share_create')) {
             return false;
         }
         $description = $input['description'];
@@ -1894,17 +1894,18 @@ class Api
      */
     public static function share_delete($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'share_delete')) {
-            return false;
-        }
         if (!AmpConfig::get('share')) {
             self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
 
             return false;
         }
+        if (!self::check_parameter($input, array('filter'), 'share_delete')) {
+            return false;
+        }
+        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
         if (in_array($object_id, Share::get_share_list())) {
-            if (Share::delete_share($object_id)) {
+            if (Share::delete_share($object_id, $user)) {
                 self::message('success', 'share ' . $object_id . ' deleted', null, $input['format']);
             } else {
                 self::message('error', 'share ' . $object_id . ' was not deleted', '401', $input['format']);
@@ -1930,12 +1931,12 @@ class Api
      */
     public static function share_edit($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'share_edit')) {
-            return false;
-        }
         if (!AmpConfig::get('share')) {
             self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
 
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'share_edit')) {
             return false;
         }
         $share_id = $input['filter'];
@@ -1945,6 +1946,7 @@ class Api
             $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;
             $download    = isset($input['download']) ? $input['download'] : $share->allow_download;
             $expires     = isset($input['expires']) ? Share::get_expiry($input['expires']) : $share->expire_days;
+            $user        = User::get_from_username(Session::username($input['auth']));
 
             $data = array(
                 'max_counter' => $share->max_counter,
@@ -1953,7 +1955,7 @@ class Api
                 'allow_download' => $download,
                 'description' => $description
             );
-            if ($share->update($data)) {
+            if ($share->update($data, $user)) {
                 self::message('success', 'share ' . $share_id . ' updated', null, $input['format']);
             } else {
                 self::message('error', 'share ' . $share_id . ' was not updated', '401', $input['format']);
