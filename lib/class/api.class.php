@@ -3334,19 +3334,19 @@ class Api
         switch ($catalog->gather_types) {
             case 'podcast':
                 $type  = 'podcast_episode';
-                $media = new Podcast_Episode($catalog->get_id_from_file($file, $type));
+                $media = new Podcast_Episode(Catalog::get_id_from_file($file, $type));
                 break;
             case 'clip':
             case 'tvshow':
             case 'movie':
             case 'personal_video':
                 $type  = 'video';
-                $media = new Video($catalog->get_id_from_file($file, $type));
+                $media = new Video(Catalog::get_id_from_file($file, $type));
                 break;
             case 'music':
             default:
                 $type  = 'song';
-                $media = new Song($catalog->get_id_from_file($file, $type));
+                $media = new Song(Catalog::get_id_from_file($file, $type));
                 break;
         }
 

@@ -1071,10 +1071,10 @@ abstract class Catalog extends database_object
      * @param string $media_type
      * @return integer
      */
-    public function get_id_from_file($file_path, $media_type)
+    public static function get_id_from_file($file_path, $media_type)
     {
-        $sql        = "SELECT `id` FROM $media_type WHERE `catalog_id` = ? AND `file` = ?";
-        $db_results = Dba::read($sql, array($this->id, $file_path));
+        $sql        = "SELECT `id` FROM $media_type WHERE `file` = ?";
+        $db_results = Dba::read($sql, array($file_path));
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int) $results['id'];
