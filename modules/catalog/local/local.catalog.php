@@ -742,7 +742,7 @@ class Catalog_local extends Catalog
             /* HINT: filename (file path) */
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
             $sql = "DELETE FROM `$media_type` WHERE `file` = '" . $file . "'";
-            $db_results = Dba::write($sql);
+            Dba::write($sql);
         } //if error
         else {
             if (!Core::is_readable(Core::conv_lc_file($file))) {
