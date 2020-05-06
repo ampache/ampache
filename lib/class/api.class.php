@@ -3308,7 +3308,7 @@ class Api
      */
     public static function catalog_file($input)
     {
-        if (!self::check_parameter($input, array('catalog', 'file'), 'catalog_action')) {
+        if (!self::check_parameter($input, array('catalog', 'file', 'task'), 'catalog_action')) {
             return false;
         }
         $task = (string) $input['task'];
@@ -3324,20 +3324,29 @@ class Api
 
             return false;
         }
-        $catalog = Catalog::create_from_id((int) $input['catalog']);
+        $catalog_id = (int) $input['catalog'];
+        $catalog    = Catalog::create_from_id($catalog_id);
+        if ($catalog->id < 1) {
+            self::message('error', T_('Catalog not found') . ' ' . $catalog_id, '404', $input['format']);
+
+            return false;
+        }
         switch ($catalog->gather_types) {
             case 'podcast':
-                $type = 'podcast_episode';
+                $type  = 'podcast_episode';
+                $media = new Podcast_Episode($catalog->get_id_from_file($file, $type));
                 break;
             case 'clip':
             case 'tvshow':
             case 'movie':
             case 'personal_video':
-                $type = 'video';
+                $type  = 'video';
+                $media = new Video($catalog->get_id_from_file($file, $type));
                 break;
             case 'music':
             default:
-                $type = 'song';
+                $type  = 'song';
+                $media = new Song($catalog->get_id_from_file($file, $type));
                 break;
         }
 
@@ -3349,13 +3358,13 @@ class Api
                     $catalog->clean_file($file, $type);
                     break;
                 case 'verify':
-                    $catalog->update_media_from_tags();
+                    $catalog->update_media_from_tags($media, $type);
                     break;
                 case 'add':
                     $catalog->add_file($file);
                     break;
             }
-            self::message('success', 'successfully started: ' . $task, null, $input['format']);
+            self::message('success', 'successfully started: ' . $task . ' for ' . $file, null, $input['format']);
         } else {
             self::message('error', T_('The requested catalog was not found'), '404', $input['format']);
         }
@@ -3517,7 +3526,7 @@ class Api
 
             return true;
         }
-        self::message('error', T_('failed to update_artist_info or recommendations for ' . (string) $object), '400', $input['format']);
+        self::message('error', T_('Failed to update_artist_info or recommendations for ' . (string) $object), '400', $input['format']);
         Session::extend($input['auth']);
 
         return true;
@@ -3566,7 +3575,7 @@ class Api
 
             return true;
         }
-        self::message('error', T_('failed to update_art for ' . (string) $object), '400', $input['format']);
+        self::message('error', T_('Failed to update_art for ' . (string) $object), '400', $input['format']);
         Session::extend($input['auth']);
 
         return true;
@@ -3596,7 +3605,7 @@ class Api
                 self::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['format']);
                 Session::extend($input['auth']);
             } else {
-                self::message('error', T_('failed to sync episodes for podcast: ' . (string) $object_id), '400', $input['format']);
+                self::message('error', T_('Failed to sync episodes for podcast: ' . (string) $object_id), '400', $input['format']);
             }
         } else {
             self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['format']);
