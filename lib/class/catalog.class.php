@@ -1063,6 +1063,28 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_id_from_file
+     *
+     * Get media id from the file path.
+     *
+     * @param string $file_path
+     * @param $media_type $table
+     * @return array
+     */
+    public function get_id_from_file($file_path, $media_type)
+    {
+        $results    = array();
+        $sql        = "SELECT `id` FROM $media_type WHERE `catalog_id` = ? AND `file` = ?";
+        $db_results = Dba::read($sql, array($this->id, $file_path));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * @param string $name
      * @param integer $catalog_id
      * @return array

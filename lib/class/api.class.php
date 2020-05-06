@@ -511,7 +511,7 @@ class Api
         $type = (string) $input['type'];
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
-            self::message('error', T_('Wrong object type ' . $type), '401', $input['format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['format']);
 
             return false;
         }
@@ -570,7 +570,7 @@ class Api
         $filter = (string) $input['filter'];
         // confirm the correct data
         if (!in_array($type, array('song', 'artist'))) {
-            self::message('error', T_('Wrong object type ' . $type), '401', $input['format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['format']);
 
             return false;
         }
@@ -1975,6 +1975,8 @@ class Api
             self::message('error', 'share ' . $share_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // share_edit
 
     /**
@@ -2302,6 +2304,8 @@ class Api
             self::message('error', T_('Failed: podcast was not created.'), '401', $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // podcast_create
 
     /**
@@ -2340,6 +2344,8 @@ class Api
             self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // podcast_delete
 
     /**
@@ -2394,6 +2400,8 @@ class Api
             self::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // podcast_edit
 
     /**
@@ -2516,6 +2524,8 @@ class Api
             self::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // podcast_episode_delete
 
     /**
@@ -2895,6 +2905,8 @@ class Api
                 echo XML_Data::shouts($shouts);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // last_shouts
 
     /**
@@ -2926,7 +2938,7 @@ class Api
         $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
-            self::message('error', T_('Wrong object type ' . $type), '401', $input['format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['format']);
 
             return false;
         }
@@ -2989,7 +3001,7 @@ class Api
         }
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
-            self::message('error', T_('Wrong object type ' . $type), '401', $input['format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['format']);
 
             return false;
         }
@@ -3245,7 +3257,7 @@ class Api
         $task = (string) $input['task'];
         // confirm the correct data
         if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
-            self::message('error', T_('Wrong catalog task ' . $task), '401', $input['format']);
+            self::message('error', T_('Incorrect catalog task') . ' ' . $task, '401', $input['format']);
 
             return false;
         }
@@ -3280,6 +3292,77 @@ class Api
 
         return true;
     } // catalog_action
+
+    /**
+     * catalog_file
+     * MINIMUM_API_VERSION=410001
+     *
+     * Perform actions on local catalog files.
+     * Singular versions of catalog add, clean and verify
+     *
+     * @param array $input
+     * file    = (string) FULL path to local file
+     * task    = (string) 'add'|'clean'|'verify'
+     * catalog = (integer) $catalog_id)
+     * @return boolean
+     */
+    public static function catalog_file($input)
+    {
+        if (!self::check_parameter($input, array('catalog', 'file'), 'catalog_action')) {
+            return false;
+        }
+        $task = (string) $input['task'];
+        $file = (string) $input['file'];
+        // confirm the correct data
+        if (!in_array($task, array('add', 'clean', 'verify'))) {
+            self::message('error', T_('Incorrect file task') . ' ' . $task, '401', $input['format']);
+
+            return false;
+        }
+        if (!file_exists($file) && $task !== 'clean') {
+            self::message('error', T_('File not found') . ' ' . $file, '404', $input['format']);
+
+            return false;
+        }
+        $catalog = Catalog::create_from_id((int) $input['catalog']);
+        switch ($catalog->gather_types) {
+            case 'podcast':
+                $type = 'podcast_episode';
+                break;
+            case 'clip':
+            case 'tvshow':
+            case 'movie':
+            case 'personal_video':
+                $type = 'video';
+                break;
+            case 'music':
+            default:
+                $type = 'song';
+                break;
+        }
+
+        if ($catalog->catalog_type == 'local') {
+            define('API', true);
+            define('SSE_OUTPUT', true);
+            switch ($task) {
+                case 'clean':
+                    $catalog->clean_file($file, $type);
+                    break;
+                case 'verify':
+                    $catalog->update_media_from_tags();
+                    break;
+                case 'add':
+                    $catalog->add_file($file);
+                    break;
+            }
+            self::message('success', 'successfully started: ' . $task, null, $input['format']);
+        } else {
+            self::message('error', T_('The requested catalog was not found'), '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // catalog_file
 
     /**
      * timeline
@@ -3382,7 +3465,7 @@ class Api
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album', 'song'))) {
-            self::message('error', T_('Wrong item type ' . $type), '401', $input['format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['format']);
 
             return false;
         }
@@ -3467,7 +3550,7 @@ class Api
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
-            self::message('error', T_('Wrong item type ' . $type), '401', $input['format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['format']);
 
             return true;
         }
@@ -3657,7 +3740,7 @@ class Api
 
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
-            self::message('error', T_('Wrong object type ' . $type), '401', $input['format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['format']);
 
             return false;
         }
