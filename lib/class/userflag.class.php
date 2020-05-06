@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -36,6 +37,8 @@ class Userflag extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
+     * @param $object_id
+     * @param $type
      */
     public function __construct($object_id, $type)
     {
@@ -46,10 +49,12 @@ class Userflag extends database_object
     } // Constructor
 
     /**
-      * build_cache
+     * build_cache
      * This attempts to get everything we'll need for this page load in a
      * single query, saving on connection overhead
      * @param string $type
+     * @param array $ids
+     * @param integer $user_id
      * @return boolean
      */
     public static function build_cache($type, $ids, $user_id = null)
@@ -57,30 +62,27 @@ class Userflag extends database_object
         if (!is_array($ids) || !count($ids)) {
             return false;
         }
-
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-
         $userflags = array();
+        $idlist    = '(' . implode(',', $ids) . ')';
+        $sql       = "SELECT `object_id`, `date` FROM `user_flag` " .
+                    "WHERE `user` = ? AND `object_id` IN $idlist " .
+                    "AND `object_type` = ?";
 
-        $idlist = '(' . implode(',', $ids) . ')';
-        $sql    = "SELECT `object_id` FROM `user_flag` " .
-            "WHERE `user` = ? AND `object_id` IN $idlist " .
-            "AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $userflags[$row['object_id']] = true;
+            $userflags[$row['object_id']] = $row['date'];
         }
 
         foreach ($ids as $objectid) {
-            if (!isset($userflags[$objectid])) {
-                $userflag = 0;
+            if (isset($userflags[$objectid])) {
+                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, array(1, $userflags[$objectid]));
             } else {
-                $userflag = (int) ($userflags[$objectid]);
+                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, array(false));
             }
-            parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, $userflag);
         }
 
         return true;
@@ -91,6 +93,7 @@ class Userflag extends database_object
      *
      * Remove userflag for items that no longer exist.
      * @param string $object_type
+     * @param string $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -112,7 +115,7 @@ class Userflag extends database_object
 
     /**
      * get_flag
-     * @param boolean|integer $user_id
+     * @param integer $user_id
      * @param boolean $get_date
      * @return boolean|array
      */
@@ -124,7 +127,12 @@ class Userflag extends database_object
 
         $key = 'userflag_' . $this->type . '_user' . $user_id;
         if (parent::is_cached($key, $this->id)) {
-            return parent::get_from_cache($key, $this->id);
+            $object = parent::get_from_cache($key, $this->id);
+            if (empty($object) || !$object[0]) {
+                return false;
+            }
+
+            return $object;
         }
 
         $sql = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? " .
@@ -134,12 +142,11 @@ class Userflag extends database_object
         $flagged = false;
         if ($row = Dba::fetch_assoc($db_results)) {
             if ($get_date) {
-                return array(true, $row['date']);
+                $flagged = array(1, $row['date']);
             } else {
-                $flagged = true;
+                $flagged = array(1);
             }
         }
-
         parent::add_to_cache($key, $this->id, $flagged);
 
         return $flagged;
@@ -151,6 +158,7 @@ class Userflag extends database_object
      * If no user_id is passed in, we use the currently logged in user.
      * @param boolean $flagged
      * @param integer $user_id
+     * @return boolean
      */
     public function set_flag($flagged, $user_id = null)
     {
@@ -178,17 +186,18 @@ class Userflag extends database_object
                 "`object_type` = ? AND " .
                 "`user` = ?";
             $params = array($this->id, $this->type, $user_id);
+            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(false));
         } else {
-            $sql = "REPLACE INTO `user_flag` " .
-            "(`object_id`, `object_type`, `user`, `date`) " .
-            "VALUES (?, ?, ?, ?)";
-            $params = array($this->id, $this->type, $user_id, time());
+            $date = time();
+            $sql  = "REPLACE INTO `user_flag` " .
+                "(`object_id`, `object_type`, `user`, `date`) " .
+                "VALUES (?, ?, ?, ?)";
+            $params = array($this->id, $this->type, $user_id, $date);
+            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(1, $date));
 
             Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id);
         }
         Dba::write($sql, $params);
-
-        parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, $flagged);
 
         // Forward flag to last.fm and Libre.fm (song only)
         if ($this->type == 'song') {
@@ -216,7 +225,9 @@ class Userflag extends database_object
      * set_flag_for_group
      * This function sets the user flag for an album group.
      * @param boolean $flagged
+     * @param $album
      * @param integer $user_id
+     * @return boolean
      */
     public static function set_flag_for_group($flagged, $album, $user_id = null)
     {
@@ -259,7 +270,7 @@ class Userflag extends database_object
                 Dba::write($sql, $params);
             }
 
-            parent::add_to_cache('userflag_album_user' . $user_id, $album_id, $flagged);
+            parent::add_to_cache('userflag_album_user' . $user_id, $album_id, array($flagged));
         }
 
         return true;
@@ -296,7 +307,7 @@ class Userflag extends database_object
             if ($user_id > 0) {
                 $sql .= " AND `user_flag`.`user` = '" . $user_id . "'";
             }
-            if (AmpConfig::get('catalog_disable')) {
+            if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
                 $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
             }
         }
@@ -304,11 +315,14 @@ class Userflag extends database_object
 
         return $sql;
     }
+
     /**
      * get_latest
      * Get the latest user flagged objects
      * @param string $type
      * @param string $user_id
+     * @param string $count
+     * @param string $offset
      * @return array
      */
     public static function get_latest($type = null, $user_id = null, $count = '', $offset = '')
@@ -345,6 +359,9 @@ class Userflag extends database_object
      * show
      * This takes an id and a type and displays the flag state
      * enabled.
+     * @param integer $object_id
+     * @param string $type
+     * @return boolean
      */
     public static function show($object_id, $type)
     {
@@ -355,6 +372,8 @@ class Userflag extends database_object
 
         $userflag = new Userflag($object_id, $type);
         require AmpConfig::get('prefix') . UI::find_template('show_object_userflag.inc.php');
+
+        return true;
     } // show
 
     /**

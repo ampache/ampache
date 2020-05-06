@@ -64,6 +64,7 @@ class Ampachelyricwiki
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
@@ -75,6 +76,8 @@ class Ampachelyricwiki
     /**
      * get_lyrics
      * This will look web services for a song lyrics.
+     * @param Song $song
+     * @return array|bool
      */
     public function get_lyrics($song)
     {
@@ -92,4 +95,3 @@ class Ampachelyricwiki
         return false;
     } // get_lyrics
 } // end Ampachelyricwiki
-;

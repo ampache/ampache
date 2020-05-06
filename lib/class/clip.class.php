@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -33,6 +34,7 @@ class Clip extends Video
      * Constructor
      * This pulls the clip information from the database and returns
      * a constructed object
+     * @param $clip_id
      */
     public function __construct($clip_id)
     {
@@ -57,9 +59,12 @@ class Clip extends Video
             "WHERE `video`.`id` IS NULL";
         Dba::write($sql);
     }
+
     /**
      * _get_artist_id
      * Look-up an artist id from artist tag data... creates one if it doesn't exist already
+     * @param array $data
+     * @return int|null
      */
     public static function _get_artist_id($data)
     {
@@ -76,9 +81,14 @@ class Clip extends Video
 
         return Artist::check($data['artist'], $artist_mbid);
     } // _get_artist_id
+
     /**
      * create
      * This takes a key'd array of data as input and inserts a new clip entry, it returns the record id
+     * @param array $data
+     * @param array $gtypes
+     * @param array $options
+     * @return mixed
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
@@ -101,6 +111,8 @@ class Clip extends Video
     /**
      * update
      * This takes a key'd array of data as input and updates a clip entry
+     * @param array $data
+     * @return int
      */
     public function update(array $data)
     {
@@ -118,6 +130,8 @@ class Clip extends Video
     /**
      * format
      * this function takes the object and reformats some values
+     * @param boolean $details
+     * @return boolean
      */
 
     public function format($details = true)
@@ -158,6 +172,9 @@ class Clip extends Video
         return $keywords;
     }
 
+    /**
+     * @return array|null
+     */
     public function get_parent()
     {
         if ($this->artist) {

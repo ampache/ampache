@@ -32,10 +32,10 @@ html, body {
     font-weight: bold;
     font-size: 300%;
     color: #fff;
-    margin-top: 0px;
+    margin-top: 0;
     margin-bottom: 10px;
     padding-top: 10px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
     padding-left: 90px;
     height: 70px;
     background: url(images/icecast.png) no-repeat left center;
@@ -72,7 +72,7 @@ html, body {
     padding-top: 30px;
     padding-bottom: 30px;
     padding-left: 90px;
-    margin-top: 0px;
+    margin-top: 0;
     margin-bottom: 10px;
     background: url(images/icecast.png) no-repeat left center;
 }
@@ -123,8 +123,8 @@ td {
 .roundcont {
     background-color: #656565;
     color: #fff;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     border-collapse: collapse;
 }
 .roundcont table{
@@ -136,8 +136,8 @@ td {
     margin: 0 20px;
 }
 h3 {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     font-family: Verdana, sans-serif;
     text-decoration: none;
     font-weight: bold;
@@ -149,7 +149,7 @@ h3 {
     border-bottom: 1px groove #ACACAC;
 }
 .newscontent h4 {
-    margin: 10px 0px;
+    margin: 10px 0;
     font-family: Verdana, sans-serif;
     text-decoration: none;
     font-weight: bold;
@@ -184,23 +184,23 @@ h3 {
     border-bottom: 1px groove #ACACAC;
 }
 .streamheader td {
-    margin: 0px;
-    padding: 6px 0px;
-    border: 0px solid cyan;
+    margin: 0;
+    padding: 6px 0;
+    border: 0 solid cyan;
 }
 .streamheader h3 {
-    margin: 0px;
-    border: 0px solid blue;
+    margin: 0;
+    border: 0 solid blue;
     vertical-align: lower;
 }
 .streamheader a {
     padding: 8px 5px 3px 30px;
     text-decoration: none;
-    margin: 0px 0px 0px 20px;
+    margin: 0 0 0 20px;
     background: transparent url("images/tunein.png") no-repeat left center;
 }
 .streamheader a.auth {
-    margin: 0px;
+    margin: 0;
     padding-top: 14px;
     padding-bottom: 14px;
     background: transparent url("images/key.png") no-repeat left center;
@@ -232,7 +232,7 @@ h3 {
 }
 .poster {
     font-family: Verdana, sans-serif;
-    margin: 50px 0px 20px 0px;
+    margin: 50px 0 20px 0;
     padding-top: 10px;
     padding-bottom: 10px;
     display: block;
@@ -253,7 +253,7 @@ h3 {
 }
 .nav a {
     margin: 15px;
-    padding: 0px;
+    padding: 0;
 }
 .nav table {
     font-size: 110%;

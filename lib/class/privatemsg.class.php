@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -30,7 +31,7 @@ class PrivateMsg extends database_object
 {
     /* Variables from DB */
     /**
-     *  @var int $id
+     *  @var integer $id
      */
     public $id;
 
@@ -113,12 +114,16 @@ class PrivateMsg extends database_object
         return true;
     }
 
+    /**
+     * @param boolean $details
+     */
     public function format($details = true)
     {
         unset($details); //dead code but called from other format calls
         $this->f_subject       = scrub_out($this->subject);
         $this->f_message       = scrub_out($this->message);
-        $this->f_creation_date = date("Y/m/d H:i:s", (int) $this->creation_date);
+        $time_format           = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
+        $this->f_creation_date = get_datetime($time_format, (int) $this->creation_date);
         $from_user             = new User($this->from_user);
         $from_user->format();
         $this->f_from_user_link = $from_user->f_link;
@@ -152,6 +157,10 @@ class PrivateMsg extends database_object
         return Dba::write($sql, array($this->id));
     }
 
+    /**
+     * @param array $data
+     * @return bool|string|null
+     */
     public static function create(array $data)
     {
         $subject = trim(strip_tags(filter_var($data['subject'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
@@ -247,9 +256,7 @@ class PrivateMsg extends database_object
         $sql = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) ";
         $sql .= "VALUES (?, ?, ?, ?, ?, ?)";
         if (Dba::write($sql, array(null, $message, $user_id, 0, time(), 0))) {
-            $insert_id = Dba::insert_id();
-
-            return $insert_id;
+            return Dba::insert_id();
         }
 
         return null;
@@ -284,6 +291,7 @@ class PrivateMsg extends database_object
     /**
      * clean_chat_msgs
      * Clear old messages from the subsonic chat message list.
+     * @param integer $days
      */
     public static function clean_chat_msgs($days = 30)
     {

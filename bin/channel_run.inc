@@ -78,7 +78,7 @@ if (!$channel->id) {
 if ($port <= 0) {
     if ($channel->fixed_endpoint) {
         $address = $channel->interface;
-        $port = $channel->port;
+        $port = (int) $channel->port;
     } else {
         $address = "127.0.0.1";
         // Try to find an available port
@@ -291,6 +291,12 @@ while(true)
 ob_end_flush();
 echo "\n";
 
+/**
+ * @param $channel
+ * @param $client_socks
+ * @param $stream_clients
+ * @param $sock
+ */
 function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
 {
     $key = array_search($sock, $client_socks);
@@ -307,21 +313,21 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
 
 function channel_usage()
 {
-    echo T_("Usage:");
-    echo "\n";
-    echo T_("channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]");
-    echo "\n\t";
-    echo "\n-c {CHANNEL ID}\t";
-    echo T_('Channel id to start');
-    echo "\n-p {PORT}\t";
-    echo T_('Listening port, default get an available port automatically');
-    echo "\n-v\t";
-    echo T_('Verbose');
-    echo "\n";
-    echo "----------------------------------------------------------";
-    echo "\n";
+    echo T_("Usage:") . "\n";
+    echo T_("channel_run.inc [-c {CHANNEL ID}|-p {PORT}|-v]") . "\n\t";
+    echo "\n-c {CHANNEL ID}\t" . T_('Channel id to start');
+    echo "\n-p {PORT}\t" . T_('Listening port, default get an available port automatically');
+    echo "\n-v\t" . T_('Verbose') . "\n";
+    echo "----------------------------------------------------------\n";
 }
 
+/**
+ * @param $channel
+ * @param $client_socks
+ * @param $stream_clients
+ * @param $read_socks
+ * @param $sock
+ */
 function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $sock)
 {
     $data = fread($sock, 1024);
@@ -463,7 +469,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Mount Start:</td>" . "\n";
-                    $xsl .= "<td class=\"streamdata\">" . date("c", $channel->start_date) . "</td>" . "\n";
+                    $xsl .= "<td class=\"streamdata\">" . get_datetime((string) AmpConfig::get('custom_datetime'), $channel->start_date) . "</td>" . "\n";
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Bitrate:</td>" . "\n";
@@ -575,6 +581,10 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
     }
 }
 
+/**
+ * @param string $x
+ * @return string
+ */
 function strtohex($x) {
     $s='';
     foreach (str_split($x) as $c) {

@@ -66,9 +66,7 @@ if ($test_mode) {
 $sql = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
 $db_results = Dba::read($sql);
 
-$catalogs = array();
-
-while ($row = Dba::fetch_row($db_results)) {
+while ($row = Dba::fetch_assoc($db_results)) {
 
     $catalog = Catalog::create_from_id($row['id']);
     /* HINT: Catalog Name */
@@ -88,7 +86,7 @@ while ($row = Dba::fetch_row($db_results)) {
         if ($directory === false || $filename === false) {
             $fullpath = $song->file;
         } else {
-            $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);;
+            $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
         }
 
         /* We need to actually do the moving (fake it if we are testing)
@@ -116,6 +114,10 @@ while ($row = Dba::fetch_row($db_results)) {
  * sort_find_home
  * Get the directory for this file from the catalog and the song info using the sort_pattern
  * takes into account various artists and the alphabet_prefix
+ * @param $song
+ * @param $sort_pattern
+ * @param $base
+ * @return false|string
  */
 function sort_find_home($song, $sort_pattern, $base = null) {
 
@@ -184,6 +186,8 @@ function sort_find_home($song, $sort_pattern, $base = null) {
  * This is run on every individual element of the search
  * Before it is put together, this removes / and \ and also
  * once I figure it out, it'll clean other stuff
+ * @param $string
+ * @return string|string[]|null
  */
 function sort_clean_name($string) {
 
@@ -205,6 +209,10 @@ function sort_clean_name($string) {
  * sure that the directories exist, once the dirs exist then we do a copy
  * and unlink.. This is a little unsafe, and as such it verifies the copy
  * worked by doing a filesize() before unlinking.
+ * @param $song
+ * @param $fullname
+ * @param $test_mode
+ * @return bool
  */
 function sort_move_file($song, $fullname, $test_mode) {
 
@@ -232,7 +240,7 @@ function sort_move_file($song, $fullname, $test_mode) {
                 echo "\n";
             }
             else {
-                debug_event('sort_files.inc', "Creating $path directory", 4);
+                debug_event('sort_files', "Creating $path directory", 4);
                 $results = mkdir($path);
                 if (!$results) {
                     /* HINT: Directory (File path) */
@@ -259,7 +267,7 @@ function sort_move_file($song, $fullname, $test_mode) {
 
         /* Check for file existence */
         if (file_exists($fullname)) {
-            debug_event('sort_files.inc', 'Error: $fullname already exists', 1);
+            debug_event('sort_files', 'Error: $fullname already exists', 1);
             /* HINT: filename (File path) */
             printf (T_("Don't overwrite an existing file: %s"), $fullname);
             echo "\n";
@@ -267,7 +275,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         }
 
         $results = copy($song->file, $fullname);
-        debug_event('sort_files.inc', 'Copied ' . $song->file . ' to ' . $fullname, 4);
+        debug_event('sort_files', 'Copied ' . $song->file . ' to ' . $fullname, 4);
 
         /* Look for the folder art and copy that as well */
         if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'), "%")) {
@@ -279,7 +287,7 @@ function sort_move_file($song, $fullname, $test_mode) {
             $old_art     = $old_dir . DIRECTORY_SEPARATOR . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
         }
 
-        debug_event('sort_files.inc', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
+        debug_event('sort_files', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
         if (copy($old_art, $folder_art) === false) {
             throw new \RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
         }

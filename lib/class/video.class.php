@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -23,7 +24,7 @@
 class Video extends database_object implements media, library_item
 {
     /**
-     * @var int $id
+     * @var integer $id
      */
     public $id;
     /**
@@ -43,7 +44,7 @@ class Video extends database_object implements media, library_item
      */
     public $file;
     /**
-     * @var int $size
+     * @var integer $size
      */
     public $size;
     /**
@@ -55,15 +56,15 @@ class Video extends database_object implements media, library_item
      */
     public $audio_codec;
     /**
-     * @var int $resolution_x
+     * @var integer $resolution_x
      */
     public $resolution_x;
     /**
-     * @var int $resolution_y
+     * @var integer $resolution_y
      */
     public $resolution_y;
     /**
-     * @var int $time
+     * @var integer $time
      */
     public $time;
     /**
@@ -71,15 +72,15 @@ class Video extends database_object implements media, library_item
      */
     public $mime;
     /**
-     * @var int $release_date
+     * @var integer $release_date
      */
     public $release_date;
     /**
-     * @var int $catalog
+     * @var integer $catalog
      */
     public $catalog;
     /**
-     * @var int $bitrate
+     * @var integer $bitrate
      */
     public $bitrate;
     /**
@@ -87,15 +88,15 @@ class Video extends database_object implements media, library_item
      */
     public $mode;
     /**
-     * @var int $channels
+     * @var integer $channels
      */
     public $channels;
     /**
-     * @var int $display_x
+     * @var integer $display_x
      */
     public $display_x;
     /**
-     * @var int $display_x
+     * @var integer $display_x
      */
     public $display_y;
     /**
@@ -103,7 +104,7 @@ class Video extends database_object implements media, library_item
      */
     public $frame_rate;
     /**
-     * @var int $video_bitrate
+     * @var integer $video_bitrate
      */
     public $video_bitrate;
 
@@ -219,7 +220,7 @@ class Video extends database_object implements media, library_item
     /**
      * Create a video strongly typed object from its id.
      * @param integer $video_id
-     * @return \Video
+     * @return Video
      */
     public static function create_from_id($video_id)
     {
@@ -239,7 +240,8 @@ class Video extends database_object implements media, library_item
     /**
      * build_cache
      * Build a cache based on the array of ids passed, saves lots of little queries
-     * @param int[] $ids
+     * @param integer[] $ids
+     * @return boolean
      */
     public static function build_cache($ids = array())
     {
@@ -247,19 +249,21 @@ class Video extends database_object implements media, library_item
             return false;
         }
 
-        $idlist = '(' . implode(',', $ids) . ')';
-
+        $idlist     = '(' . implode(',', $ids) . ')';
         $sql        = "SELECT * FROM `video` WHERE `video`.`id` IN $idlist";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('video', $row['id'], $row);
         }
+
+        return true;
     } // build_cache
 
     /**
      * format
      * This formats a video object so that it is human readable
+     * @param boolean $details
      */
     public function format($details = true)
     {
@@ -299,7 +303,8 @@ class Video extends database_object implements media, library_item
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
         $this->f_file   = $this->f_title . '.' . $this->type;
         if ($this->release_date) {
-            $this->f_release_date = date('Y-m-d', (int) $this->release_date);
+            $time_format          = AmpConfig::get('custom_datetime') ? preg_replace("/[^dmY\s]/", "", (string) AmpConfig::get('custom_datetime')) : "m-d-Y";
+            $this->f_release_date = get_datetime($time_format, (int) $this->release_date);
         }
     } // format
 
@@ -403,11 +408,19 @@ class Video extends database_object implements media, library_item
         return 'preview';
     }
 
+    /**
+     * @return string
+     */
     public function get_description()
     {
         return '';
     }
 
+    /**
+     * @param integer $thumb
+     * @param boolean $force
+     * @return mixed|void
+     */
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'video') || $force) {
@@ -432,6 +445,7 @@ class Video extends database_object implements media, library_item
 
     /**
      * Get stream types.
+     * @param string $player
      * @return array
      */
     public function get_stream_types($player = null)
@@ -447,10 +461,15 @@ class Video extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
+     * @param integer $uid
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
     {
+        if (!$uid) {
+            $uid = Core::get_global('user')->id;
+        }
+
         return Song::generic_play_url('video', $oid, $additional_params, $player, $local, $uid);
     }
 
@@ -524,8 +543,6 @@ class Video extends database_object implements media, library_item
             case 'mp4':
             case 'm4v':
                 return 'video/mp4';
-            case 'mkv':
-                return 'video/x-matroska';
             case 'mkv':
                 return 'video/x-matroska';
             case 'mov':
@@ -656,6 +673,7 @@ class Video extends database_object implements media, library_item
 
     /**
      * @param integer $video_id
+     * @param Video $new_video
      */
     public static function update_video($video_id, Video $new_video)
     {
@@ -681,7 +699,7 @@ class Video extends database_object implements media, library_item
         );
     }
 
-    /*
+    /**
      * generate_preview
      * Generate video preview image from a video file
      * @param integer $video_id
@@ -753,9 +771,14 @@ class Video extends database_object implements media, library_item
         return true;
     } // set_played
 
-    public function check_play_history($user)
+    /**
+     * @param $user
+     * @param $agent
+     * @return mixed|void
+     */
+    public function check_play_history($user, $agent)
     {
-        unset($user);
+        unset($user, $agent);
         // Do nothing
     }
 
@@ -765,8 +788,8 @@ class Video extends database_object implements media, library_item
      * the ones in the database to see if they have changed
      * it returns false if nothing has changes, or the true
      * if they have. Static because it doesn't need this
-     * @param \Video $video
-     * @param \Video $new_video
+     * @param Video $video
+     * @param Video $new_video
      * @return array
      */
     public static function compare_video_information(Video $video, Video $new_video)

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -42,6 +43,9 @@ class Stream
         self::$session=$sid;
     } // set_session
 
+    /**
+     * @return string
+     */
     public static function get_session()
     {
         if (!self::$session) {
@@ -138,6 +142,10 @@ class Stream
      *
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
+     * @param $media
+     * @param string $type
+     * @param string $player
+     * @param array $options
      * @return array|false
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
@@ -258,6 +266,8 @@ class Stream
 
     /**
      * start_process
+     * @param $command
+     * @param array $settings
      * @return array
      */
     private static function start_process($command, $settings = array())
@@ -291,13 +301,16 @@ class Stream
             );
 
             if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-                stream_set_blocking($pipes[2], 0); // Be sure stderr is non-blocking
+                stream_set_blocking($pipes[2], false); // Be sure stderr is non-blocking
             }
         }
 
         return array_merge($parray, $settings);
     }
 
+    /**
+     * @param $transcoder
+     */
     public static function kill_process($transcoder)
     {
         $status = proc_get_status($transcoder['process']);
@@ -316,14 +329,13 @@ class Stream
     /**
      * validate_bitrate
      * this function takes a bitrate and returns a valid one
+     * @param $bitrate
      * @return integer
      */
     public static function validate_bitrate($bitrate)
     {
         /* Round to standard bitrates */
-        $bit_rate = (int) (16 * (floor((int) $bitrate / 16)));
-
-        return $bit_rate;
+        return (int) (16 * (floor((int) $bitrate / 16)));
     }
 
     /**
@@ -483,11 +495,15 @@ class Stream
         echo "<script>";
         echo Core::get_reloadutil() . "('" . $_SESSION['iframe']['target'] . "');";
         echo "</script>";
+
+        return true;
     } // run_playlist_method
 
     /**
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
+     * @param boolean $local
+     * @return string
      */
     public static function get_base_url($local = false)
     {
@@ -515,8 +531,6 @@ class Stream
             }
         }
 
-        $url = $web_path . "/play/index.php?$session_string";
-
-        return $url;
+        return $web_path . "/play/index.php?$session_string";
     } // get_base_url
 } // end stream.class

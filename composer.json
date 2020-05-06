@@ -71,7 +71,8 @@
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
         "tightenco/collect": "5.2.*",
         "ampache/ampacheapi-php": "^1.0",
-        "dropbox/dropbox-sdk": "^1.1"
+        "ext-json": "*",
+        "ext-xml": "*"
     },
 
     "repositories":

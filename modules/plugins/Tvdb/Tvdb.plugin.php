@@ -76,6 +76,7 @@ class AmpacheTvdb
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
@@ -101,6 +102,9 @@ class AmpacheTvdb
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
+     * @param $gather_types
+     * @param $media_info
+     * @return null
      */
     public function get_metadata($gather_types, $media_info)
     {
@@ -185,6 +189,12 @@ class AmpacheTvdb
         return $results;
     } // get_metadata
 
+    /**
+     * @param $type
+     * @param array $options
+     * @param integer $limit
+     * @return array
+     */
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         debug_event('tvdb.plugin', 'gather_arts for type `' . $type . '`', 5);
@@ -192,6 +202,12 @@ class AmpacheTvdb
         return Art::gather_metadata_plugin($this, $type, $options);
     }
 
+    /**
+     * @param $results
+     * @param $title
+     * @param $year
+     * @return mixed
+     */
     private function getReleaseByTitle($results, $title, $year)
     {
         $titles = array();
@@ -214,4 +230,3 @@ class AmpacheTvdb
         return count($titles) > 0 ? $titles[0] : $results[0];
     }
 } // end AmpacheTvdb
-;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -47,6 +48,7 @@ class Share extends database_object
 
     /**
      * Constructor
+     * @param $share_id
      */
     public function __construct($share_id)
     {
@@ -63,15 +65,17 @@ class Share extends database_object
 
     /**
      * delete_share
+     * @param $id
+     * @param User $user
      * @return PDOStatement|boolean
      */
-    public static function delete_share($id)
+    public static function delete_share($id, $user)
     {
         $sql    = "DELETE FROM `share` WHERE `id` = ?";
         $params = array( $id );
-        if (!Core::get_global('user')->has_access('75')) {
+        if (!$user->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = Core::get_global('user')->id;
+            $params[] = $user->id;
         }
 
         return Dba::write($sql, $params);
@@ -79,7 +83,7 @@ class Share extends database_object
 
     /**
      * garbage_collection
-     * @return PDOStatement|boolean
+     * @return void
      */
     public static function garbage_collection()
     {
@@ -89,24 +93,15 @@ class Share extends database_object
 
     /**
      * delete_shares
-     * @return PDOStatement|boolean
+     * @param $object_type
+     * @param $object_id
+     * @return void
      */
     public static function delete_shares($object_type, $object_id)
     {
         $sql = "DELETE FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
 
         Dba::write($sql, array($object_type, $object_id));
-    }
-
-    public static function generate_secret($length = 8)
-    {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $secret     = '';
-        for ($count = 0; $count < $length; $count++) {
-            $secret .= $characters[rand(0, strlen((string) $characters) - 1)];
-        }
-
-        return $secret;
     }
 
     /**
@@ -129,6 +124,13 @@ class Share extends database_object
     /**
      * @param string $object_type
      * @param integer $object_id
+     * @param boolean $allow_stream
+     * @param boolean $allow_download
+     * @param integer $expire
+     * @param string $secret
+     * @param integer $max_counter
+     * @param string $description
+     * @return string|null
      */
     public static function create_share($object_type, $object_id, $allow_stream = true, $allow_download = true, $expire = 0, $secret = '', $max_counter = 0, $description = '')
     {
@@ -185,6 +187,7 @@ class Share extends database_object
      * get_url
      * @param string $secret
      * @param string|null $share_id
+     * @return string
      */
     public static function get_url($share_id, $secret)
     {
@@ -230,6 +233,8 @@ class Share extends database_object
 
     /**
      * get_shares
+     * @param $object_type
+     * @param $object_id
      * @return array
      */
     public static function get_shares($object_type, $object_id)
@@ -257,6 +262,10 @@ class Share extends database_object
         }
     }
 
+    /**
+     * format
+     * @param boolean $details
+     */
     public function format($details = true)
     {
         if ($details) {
@@ -270,15 +279,18 @@ class Share extends database_object
         }
         $this->f_allow_stream   = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
-        $this->f_creation_date  = date("Y-m-d H:i:s", (int) $this->creation_date);
-        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? date("Y-m-d H:i:s", (int) $this->creation_date) : '';
+        $time_format            = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
+        $this->f_creation_date  = get_datetime($time_format, (int) $this->creation_date);
+        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? get_datetime($time_format, (int) $this->creation_date) : '';
     }
 
     /**
      * update
+     * @param array $data
+     * @param User $user
      * @return PDOStatement|boolean
      */
-    public function update(array $data)
+    public function update(array $data, $user)
     {
         $this->max_counter    = (int) ($data['max_counter']);
         $this->expire_days    = (int) ($data['expire']);
@@ -289,9 +301,9 @@ class Share extends database_object
         $sql = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " .
             "WHERE `id` = ?";
         $params = array($this->max_counter, $this->expire_days, $this->allow_stream ? 1 : 0, $this->allow_download ? 1 : 0, $this->description, $this->id);
-        if (!Core::get_global('user')->has_access('75')) {
+        if (!$user->has_access('75')) {
             $sql .= " AND `user` = ?";
-            $params[] = Core::get_global('user')->id;
+            $params[] = $user->id;
         }
 
         return Dba::write($sql, $params);
@@ -310,6 +322,8 @@ class Share extends database_object
 
     /**
      * is_valid
+     * @param $secret
+     * @param $action
      * @return boolean
      */
     public function is_valid($secret, $action)
@@ -359,6 +373,9 @@ class Share extends database_object
         return true;
     }
 
+    /**
+     * @return Stream_Playlist
+     */
     public function create_fake_playlist()
     {
         $playlist = new Stream_Playlist(-1);
@@ -386,6 +403,10 @@ class Share extends database_object
         return $playlist;
     }
 
+    /**
+     * @param $media_id
+     * @return boolean
+     */
     public function is_shared_media($media_id)
     {
         $is_shared = false;
@@ -409,11 +430,46 @@ class Share extends database_object
         return $is_shared;
     }
 
+    /**
+     * @return mixed
+     */
     public function get_user_owner()
     {
         return $this->user;
     }
 
+    /**
+     * get_expiry
+     * @param integer $days
+     * @return integer
+     */
+    public static function get_expiry($days = null)
+    {
+        if (isset($days)) {
+            $expires = $days;
+            // no limit expiry
+            if ($expires == 0) {
+                $expire_days = 0;
+            } else {
+                // Parse as a string to work on 32-bit computers
+                if (strlen((string) $expires) > 3) {
+                    $expires = (int) (substr($expires, 0, - 3));
+                }
+                $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
+            }
+        } else {
+            //fall back to config defaults
+            $expire_days = AmpConfig::get('share_expire');
+        }
+
+        return (int) $expire_days;
+    }
+
+    /**
+     * @param $object_type
+     * @param $object_id
+     * @param boolean $show_text
+     */
     public static function display_ui($object_type, $object_id, $show_text = true)
     {
         echo "<a onclick=\"showShareDialog(event, '" . $object_type . "', " . $object_id . ");\">" . UI::get_icon('share', T_('Share'));
@@ -423,6 +479,10 @@ class Share extends database_object
         echo "</a>";
     }
 
+    /**
+     * @param $object_type
+     * @param $object_id
+     */
     public static function display_ui_links($object_type, $object_id)
     {
         echo "<ul>";

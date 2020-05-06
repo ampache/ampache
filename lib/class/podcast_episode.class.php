@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -71,7 +72,7 @@ class Podcast_Episode extends database_object implements media, library_item
             return false;
         }
 
-        $this->id = (int) ($podcastep_id);
+        $this->id = (int) $podcastep_id;
 
         if ($info = $this->get_info($this->id)) {
             foreach ($info as $key => $value) {
@@ -116,6 +117,8 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * format
      * this function takes the object and reformats some values
+     * @param boolean $details
+     * @return boolean
      */
     public function format($details = true)
     {
@@ -125,7 +128,8 @@ class Podcast_Episode extends database_object implements media, library_item
         $this->f_author      = scrub_out($this->author);
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
-        $this->f_pubdate     = date("m\/d\/Y - H:i", (int) $this->pubdate);
+        $time_format         = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
+        $this->f_pubdate     = get_datetime($time_format, (int) $this->pubdate);
         $this->f_state       = ucfirst($this->state);
 
         // Format the Time
@@ -154,6 +158,9 @@ class Podcast_Episode extends database_object implements media, library_item
         return true;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function get_keywords()
     {
         $keywords            = array();
@@ -167,21 +174,34 @@ class Podcast_Episode extends database_object implements media, library_item
         return $keywords;
     }
 
+    /**
+     * @return string
+     */
     public function get_fullname()
     {
         return $this->f_title;
     }
 
+    /**
+     * @return array
+     */
     public function get_parent()
     {
         return array('object_type' => 'podcast', 'object_id' => $this->podcast);
     }
 
+    /**
+     * @return array
+     */
     public function get_childrens()
     {
         return array();
     }
 
+    /**
+     * @param $name
+     * @return array
+     */
     public function search_childrens($name)
     {
         debug_event('podcast_episode.class', 'search_childrens ' . $name, 5);
@@ -189,6 +209,10 @@ class Podcast_Episode extends database_object implements media, library_item
         return array();
     }
 
+    /**
+     * @param $filter_type
+     * @return array|mixed
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
@@ -202,21 +226,35 @@ class Podcast_Episode extends database_object implements media, library_item
         return $medias;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function get_user_owner()
     {
         return null;
     }
 
+    /**
+     * @return string
+     */
     public function get_default_art_kind()
     {
         return 'default';
     }
 
+    /**
+     * @return string
+     */
     public function get_description()
     {
         return $this->f_description;
     }
 
+    /**
+     * @param integer $thumb
+     * @param boolean $force
+     * @return void
+     */
     public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
@@ -240,6 +278,8 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * update
      * This takes a key'd array of data and updates the current podcast episode
+     * @param array $data
+     * @return integer
      */
     public function update(array $data)
     {
@@ -285,9 +325,14 @@ class Podcast_Episode extends database_object implements media, library_item
         return true;
     } // set_played
 
-    public function check_play_history($user)
+    /**
+     * @param $user
+     * @param $agent
+     * @return mixed|void
+     */
+    public function check_play_history($user, $agent)
     {
-        unset($user);
+        unset($user, $agent);
         // Do nothing
     }
 
@@ -344,6 +389,7 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * Get transcode settings.
      * @param string $target
+     * @param string $player
      * @param array $options
      * @return array|boolean
      */
@@ -361,15 +407,22 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
+     * @param integer $uid
+     * @param boolean $original
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
     {
+        if (!$uid) {
+            $uid = Core::get_global('user')->id;
+        }
+
         return Song::generic_play_url('podcast_episode', $oid, $additional_params, $player, $local, $uid, $original);
     }
 
     /**
      * Get stream types.
+     * @param string $player
      * @return array
      */
     public function get_stream_types($player = null)

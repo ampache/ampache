@@ -116,13 +116,11 @@ if ($tmpmemlimoff == 1) {
 
 //$options = array(); // for $catadd
 if ($artadd == 1) {
-    echo "- " . T_("Gathering art") . " - \n";
     $options['gather_art'] = true;
     } else {
     $options['gather_art'] = false;
 }
 if ($plimp == 1) {
-    echo "- " . T_("Parsing playlists") . " - \n";
     $options['parse_playlist'] = true;
     } else {
     $options['parse_playlist'] = false;
@@ -144,9 +142,9 @@ $db_results = Dba::read($sql);
 
 ob_start("ob_html_strip",'1024',true);
 
-while ($row = Dba::fetch_row($db_results)) {
+while ($row = Dba::fetch_assoc($db_results)) {
 
-    $catalog = Catalog::create_from_id($row['0']);
+    $catalog = Catalog::create_from_id($row['id']);
     /* HINT: Catalog Name */
     printf(T_('Reading Catalog: "%s"'), $catalog->name);
     ob_flush();
@@ -184,7 +182,8 @@ while ($row = Dba::fetch_row($db_results)) {
         // Look for updated artist information. (missing or < 6 months since last update)
         echo "- " . T_('Update artist information and fetch similar artists from last.fm') . " - \n";
         echo "\n";
-        $catalog->gather_artist_info();
+        $artist_info = $catalog->get_artist_ids('info');
+        $catalog->gather_artist_info($artist_info);
         echo "----------------\n\n";
     }
 }
@@ -199,6 +198,10 @@ while ($row = Dba::fetch_row($db_results)) {
 ob_end_flush();
 echo "\n";
 
+/**
+ * @param $string
+ * @return string|string[]|null
+ */
 function ob_html_strip($string) {
 
     //$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
@@ -215,43 +218,25 @@ function ob_html_strip($string) {
 function usage() {
     echo "\n";
     echo "----------------------------------------------------------\n\t\t";
-    echo T_("Usage:");
-    echo "\n\033[32m";
-    echo T_("catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-u|-i|-o]") . "\033[0m (\033[31m!\033[0m)";
-    echo "\033[0m\n";
+    echo T_("Usage:") . " \n\033[32m";
+    echo T_("catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-u|-i|-o]") . "\033[0m (\033[31m!\033[0m)" . " \033[0m\n";
+    echo "----------------------------------------------------------\n";
+    echo T_("Default behavior is to do all except temporarily deactivate the php memory limit") . " \n";
     echo "----------------------------------------------------------";
-    echo "\n";
-    echo T_("Default behavior is to do all except temporarily deactivate the php memory limit");
-    echo "\n";
-    echo "----------------------------------------------------------";
-    echo "\n-h\t";
-    echo T_('This help message');
-    echo "\n-n\t";
-    echo T_('Name of Catalog (optional)');
-    echo "\n-t\t";
-    echo T_('Type of Catalog (optional)');
-    echo "\n-m\t";
-    echo T_('Temporarily deactivates PHP memory limit') . " (\033[31m1\033[0m)";
-    echo "\n-c\t";
-    echo T_('Cleans Catalogs from orphaned entries');
-    echo "\n-v\t";
-    echo T_('Verifies Catalog entries and updates them if related files have new information');
-    echo "\n-a\t";
-    echo T_('Adds new media to Catalogs');
-    echo "\n-g\t";
-    echo T_('Gathers media Art');
-    echo "\n-u\t";
-    echo T_('Update artist information and fetch similar artists from last.fm') . " " . T_('Make sure lastfm_api_key is set in your configuration file');
-    echo "\n-i\t";
-    echo T_('Imports playlists');
-    echo "\n-o\t";
-    echo T_('Optimizes database tables') . " (\033[31m2\033[0m)";
-    echo "\n";
+    echo "\n-h\t" . T_('This help message');
+    echo "\n-n\t" . T_('Name of Catalog (optional)');
+    echo "\n-t\t" . T_('Type of Catalog (optional)');
+    echo "\n-m\t" . T_('Temporarily deactivates PHP memory limit') . " (\033[31m1\033[0m)";
+    echo "\n-c\t" . T_('Cleans Catalogs from orphaned entries');
+    echo "\n-v\t" . T_('Verifies Catalog entries and updates them if related files have new information');
+    echo "\n-a\t" . T_('Adds new media to Catalogs');
+    echo "\n-g\t" . T_('Gathers media Art');
+    echo "\n-u\t" . T_('Update artist information and fetch similar artists from last.fm') . " " . T_('Make sure lastfm_api_key is set in your configuration file');
+    echo "\n-i\t" . T_('Imports playlists');
+    echo "\n-o\t" . T_('Optimizes database tables') . " (\033[31m2\033[0m)" . " \n";
     echo "----------------------------------------------------------\033[31m\n";
     echo "1. " . T_('Use this option at your own risk! Your system could crash or become unresponsive due to huge memory consumption!') . "\n";
     echo "2. " . T_("Depending on your system's performance, this option may need a long time to finish and could greatly slow down other database processes if you have large Catalogs!") . "\n";
-    echo "!  " . T_('The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-a|-g] is used');
-    echo "\033[0m\n";
-    echo "----------------------------------------------------------";
-    echo "\n";
+    echo "!  " . T_('The switches [-m|-o] can only be used, if one of the other switches [-c|-v|-a|-g] is used') . " \033[0m\n";
+    echo "----------------------------------------------------------\n";
 }

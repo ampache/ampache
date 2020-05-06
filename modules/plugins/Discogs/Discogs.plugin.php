@@ -76,6 +76,7 @@ class AmpacheDiscogs
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
@@ -106,6 +107,10 @@ class AmpacheDiscogs
         return true;
     } // load
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     protected function query_discogs($query)
     {
         $url     = 'https://api.discogs.com/' . $query;
@@ -117,6 +122,10 @@ class AmpacheDiscogs
         return json_decode($request->body, true);
     }
 
+    /**
+     * @param $artist
+     * @return mixed
+     */
     protected function search_artist($artist)
     {
         $query = "database/search?type=artist&title=" . rawurlencode($artist) . "&per_page=10";
@@ -124,6 +133,10 @@ class AmpacheDiscogs
         return $this->query_discogs($query);
     }
 
+    /**
+     * @param $object_id
+     * @return mixed
+     */
     protected function get_artist($object_id)
     {
         $query = "artists/" . $object_id;
@@ -131,6 +144,11 @@ class AmpacheDiscogs
         return $this->query_discogs($query);
     }
 
+    /**
+     * @param $artist
+     * @param $album
+     * @return mixed
+     */
     protected function search_album($artist, $album)
     {
         $query = "database/search?type=master&release_title=" . rawurlencode($album) . "&artist=" . rawurlencode($artist) . "&per_page=10";
@@ -138,6 +156,10 @@ class AmpacheDiscogs
         return $this->query_discogs($query);
     }
 
+    /**
+     * @param $object_id
+     * @return mixed
+     */
     protected function get_album($object_id)
     {
         $query = "masters/" . $object_id;
@@ -148,6 +170,9 @@ class AmpacheDiscogs
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
+     * @param $gather_types
+     * @param $media_info
+     * @return array|null
      */
     public function get_metadata($gather_types, $media_info)
     {
@@ -173,7 +198,7 @@ class AmpacheDiscogs
             } else {
                 if (in_array('album', $gather_types)) {
                     $albums = $this->search_album($media_info['artist'], $media_info['title']);
-                    if (count($albums['results']) > 0) {
+                    if (!empty($albums['results'])) {
                         $album = $this->get_album($albums['results'][0]['id']);
                         if (count($album['images']) > 0) {
                             $results['art'] = $album['images'][0]['uri'];
@@ -188,6 +213,12 @@ class AmpacheDiscogs
         return $results;
     } // get_metadata
 
+    /**
+     * @param string $type
+     * @param array $options
+     * @param integer $limit
+     * @return array
+     */
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         return Art::gather_metadata_plugin($this, $type, $options);

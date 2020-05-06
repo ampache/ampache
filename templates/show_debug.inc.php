@@ -57,6 +57,12 @@
         <br />
     <?php UI::show_box_bottom(); ?>
 
+<?php if ((string) AmpConfig::get('cron_cache') !== '') { ?>
+    <?php UI::show_box_top(T_('Ampache Cron'), 'box'); ?>
+        <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime($time_format, get_cron_date()); ?></div>
+        <br />
+    <?php UI::show_box_bottom();
+} ?>
     <?php UI::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
         <table class="tabledata">
             <colgroup>
@@ -124,35 +130,35 @@
             </thead>
             <tbody>
             <?php foreach ($configuration as $key => $value) {
-            if ($key == 'database_password' || $key == 'mysql_password') {
-                $value = '*********';
-            }
-            if (is_array($value)) {
-                $string = '';
-                foreach ($value as $setting) {
-                    if (is_array($setting)) {
-                        foreach ($setting as $array_value) {
-                            $string .= $array_value . '<br />';
-                        }
-                    } else {
-                        $string .= $setting . '<br />';
-                    }
+    if ($key == 'database_password' || $key == 'mysql_password') {
+        $value = '*********';
+    }
+    if (is_array($value)) {
+        $string = '';
+        foreach ($value as $setting) {
+            if (is_array($setting)) {
+                foreach ($setting as $array_value) {
+                    $string .= $array_value . '<br />';
                 }
-                $value = $string;
+            } else {
+                $string .= $setting . '<br />';
             }
-            if (Preference::is_boolean($key)) {
-                $value = print_bool($value);
-            }
+        }
+        $value = $string;
+    }
+    if (Preference::is_boolean($key)) {
+        $value = print_bool($value);
+    }
 
-            // Be sure to print only scalar values
-            if ($value === null || is_scalar($value)) { ?>
+    // Be sure to print only scalar values
+    if ($value === null || is_scalar($value)) { ?>
             <tr class="<?php echo UI::flip_class(); ?>">
                 <td><strong><?php echo $key; ?></strong></td>
                 <td><?php echo $value; ?></td>
             </tr>
 <?php
             }
-        } ?>
+} ?>
             </tbody>
         </table>
     <?php UI::show_box_bottom(); ?>

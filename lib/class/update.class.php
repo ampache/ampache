@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -37,7 +38,7 @@ class Update
     public $value;
     public static $versions; // array containing version information
 
-    /*
+    /**
      * Constructor
      *
      * This should never be called
@@ -86,16 +87,14 @@ class Update
      * format_version
      *
      * Make the version number pretty.
+     * @param string $data
      * @return string
      */
     public static function format_version($data)
     {
-        $new_version =
-            substr($data, 0, strlen((string) $data) - 5) . '.' .
-            substr($data, strlen((string) $data) - 5, 1) . ' Build:' .
-            substr($data, strlen((string) $data) - 4, strlen((string) $data));
-
-        return $new_version;
+        return substr($data, 0, strlen((string) $data) - 5) . '.' .
+        substr($data, strlen((string) $data) - 5, 1) . ' Build:' .
+        substr($data, strlen((string) $data) - 4, strlen((string) $data));
     }
 
     /**
@@ -190,6 +189,13 @@ class Update
         $update_string = "* Drop shoutcast_active preferences. (Feature has not existed for years)<br />" .
                          "* Drop localplay_shoutcast table if present.<br />";
         $version[]     = array('version' => '400006', 'description' => $update_string);
+
+        $update_string = "* Add ui option for skip_count display.<br />" .
+                         "* Add ui option for displaying dates in a custom format.<br />";
+        $version[]     = array('version' => '400007', 'description' => $update_string);
+
+        $update_string = "* Add system option for cron based cache and create related tables.<br />";
+        $version[]     = array('version' => '400008', 'description' => $update_string);
 
         return $version;
     }
@@ -304,6 +310,8 @@ class Update
 
         // Let's also clean up the preferences unconditionally
         User::rebuild_all_preferences();
+
+        return true;
     } // run_update
 
     /**
@@ -312,6 +320,7 @@ class Update
      * This updates the 'update_info' which is used by the updater
      * and plugins
      * @param string $key
+     * @param $value
      */
     private static function set_version($key, $value)
     {
@@ -1062,6 +1071,68 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql = "DROP TABLE IF EXISTS `localplay_shoutcast`";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400007
+     *
+     * Add ui option for skip_count display
+     * Add ui option for displaying dates in a custom format
+     */
+    public static function update_400007()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'library')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_400008
+     *
+     * Add system option for cron based cache and create related tables
+     */
+    public static function update_400008()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        $tables = [ 'cache_object_count', 'cache_object_count_run' ];
+        foreach ($tables as $table) {
+            $sql = "CREATE TABLE IF NOT EXISTS `" . $table . "` (" .
+              "`object_id` int(11) unsigned NOT NULL," .
+              "`object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET utf8 NOT NULL," .
+              "`count` int(11) unsigned NOT NULL DEFAULT '0'," .
+              "`threshold` int(11) unsigned NOT NULL DEFAULT '0'," .
+              "`count_type` varchar(16) NOT NULL," .
+              "PRIMARY KEY (`object_id`, `object_type`, `threshold`, `count_type`)" .
+              ") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+            $retval &= Dba::write($sql);
+        }
+
+        $sql = "UPDATE `preference` SET `level`=75 WHERE `preference`.`name`='stats_threshold'";
         $retval &= Dba::write($sql);
 
         return $retval;

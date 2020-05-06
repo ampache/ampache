@@ -64,6 +64,7 @@ class AmpacheOmdb
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
@@ -72,6 +73,11 @@ class AmpacheOmdb
         return true;
     } // load
 
+    /**
+     * @param string $title
+     * @param string $year
+     * @return mixed
+     */
     protected function query_omdb($title, $year = '')
     {
         $url = 'http://www.omdbapi.com/?t=' . rawurlencode($title);
@@ -83,6 +89,10 @@ class AmpacheOmdb
         return json_decode($request->body);
     }
 
+    /**
+     * @param string $runtime
+     * @return float|int
+     */
     protected function parse_runtime($runtime)
     {
         $time  = 0;
@@ -99,6 +109,9 @@ class AmpacheOmdb
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
+     * @param array $gather_types
+     * @param array $media_info
+     * @return array|null
      */
     public function get_metadata($gather_types, $media_info)
     {
@@ -167,9 +180,14 @@ class AmpacheOmdb
         return $results;
     } // get_metadata
 
+    /**
+     * @param string $type
+     * @param array $options
+     * @param integer $limit
+     * @return array
+     */
     public function gather_arts($type, $options = array(), $limit = 5)
     {
         return Art::gather_metadata_plugin($this, $type, $options);
     }
 } // end AmpacheOmdb
-;

@@ -97,6 +97,9 @@ class Catalog_subsonic extends Catalog
         return true;
     } // install
 
+    /**
+     * @return array|mixed
+     */
     public function catalog_fields()
     {
         $fields['uri']           = array('description' => T_('URI'), 'type' => 'url');
@@ -114,6 +117,7 @@ class Catalog_subsonic extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
+     * @param integer $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -135,6 +139,9 @@ class Catalog_subsonic extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
+     * @param $catalog_id
+     * @param array $data
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     {
@@ -176,6 +183,8 @@ class Catalog_subsonic extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
+     * @param array $options
+     * @return boolean
      */
     public function add_to_catalog($options = null)
     {
@@ -193,6 +202,9 @@ class Catalog_subsonic extends Catalog
         return true;
     } // add_to_catalog
 
+    /**
+     * @return SubsonicClient
+     */
     public function createClient()
     {
         return (new SubsonicClient($this->username, $this->password, $this->uri, null));
@@ -282,18 +294,26 @@ class Catalog_subsonic extends Catalog
         return true;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function verify_catalog_proc()
     {
         return array('total' => 0, 'updated' => 0);
     }
 
+    /**
+     * @param $data
+     * @param $song_Id
+     * @return boolean
+     */
     public function insertArt($data, $song_Id)
     {
         $subsonic = $this->createClient();
         $song     = new Song($song_Id);
         $art      = new Art($song->album, 'album');
-        if (Ampconfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width')) {
-            $size = array('width' => AmpConfig::get('album_art_max_width'), 'height' => Ampconfig::get('album_art_max_height'));
+        if (AmpConfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width')) {
+            $size = array('width' => AmpConfig::get('album_art_max_width'), 'height' => AmpConfig::get('album_art_max_height'));
         } else {
             $size  = array('width' => 275, 'height' => 275);
         }
@@ -344,6 +364,8 @@ class Catalog_subsonic extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
+     * @param array $song
+     * @return bool|mixed
      */
     public function check_remote_song($song)
     {
@@ -359,6 +381,10 @@ class Catalog_subsonic extends Catalog
         return false;
     }
 
+    /**
+     * @param string $file_path
+     * @return string|string[]
+     */
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->uri, "/");
@@ -366,6 +392,10 @@ class Catalog_subsonic extends Catalog
         return(str_replace($catalog_path . "/", "", $file_path));
     }
 
+    /**
+     * @param $url
+     * @return integer
+     */
     public function url_to_songid($url)
     {
         $song_id = 0;
@@ -389,6 +419,10 @@ class Catalog_subsonic extends Catalog
         $this->f_full_info = $this->uri;
     }
 
+    /**
+     * @param Podcast_Episode|Song|Song_Preview|Video $media
+     * @return media|null
+     */
     public function prepare_media($media)
     {
         $subsonic = $this->createClient();

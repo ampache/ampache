@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -69,6 +70,10 @@ class Stream_Playlist
         return true;
     }
 
+    /**
+     * @param $url
+     * @return bool|PDOStatement
+     */
     private function _add_url($url)
     {
         debug_event("stream_playlist.class.php", "Adding url {" . json_encode($url) . "}...", 5);
@@ -96,6 +101,9 @@ class Stream_Playlist
         return Dba::write($sql, $values);
     }
 
+    /**
+     * @return bool|PDOStatement
+     */
     public static function garbage_collection()
     {
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' .
@@ -108,6 +116,8 @@ class Stream_Playlist
     /**
      * media_to_urlarray
      * Formats the URL and media information and adds it to the object
+     * @param $media
+     * @param string $additional_params
      * @return array
      */
     public static function media_to_urlarray($media, $additional_params = '')
@@ -125,6 +135,9 @@ class Stream_Playlist
 
     /**
      * media_to_url
+     * @param $media
+     * @param string $additional_params
+     * @param string $urltype
      * @return Stream_URL
      */
     public static function media_to_url($media, $additional_params = '', $urltype = 'web')
@@ -147,6 +160,9 @@ class Stream_Playlist
 
     /**
      * media_object_to_url
+     * @param $object
+     * @param string $additional_params
+     * @param string $urltype
      * @return Stream_URL
      */
     public static function media_object_to_url($object, $additional_params = '', $urltype = 'web')
@@ -254,6 +270,11 @@ class Stream_Playlist
         return (AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player');
     }
 
+    /**
+     * @param $type
+     * @param boolean $redirect
+     * @return boolean
+     */
     public function generate_playlist($type, $redirect = false)
     {
         if (!count($this->urls)) {
@@ -318,15 +339,19 @@ class Stream_Playlist
         }
 
         $this->{'create_' . $type}();
+
+        return true;
     }
 
     /**
      * add
      * Adds an array of media
+     * @param array $media
+     * @param string $additional_params
      */
     public function add($media = array(), $additional_params = '')
     {
-        $urls = $this->media_to_urlarray($media, $additional_params);
+        $urls = self::media_to_urlarray($media, $additional_params);
         foreach ($urls as $url) {
             $this->_add_url($url);
         }
@@ -336,6 +361,8 @@ class Stream_Playlist
      * add_urls
      * Add an array of urls. This is used for things that aren't coming
      * from media objects
+     * @param array $urls
+     * @return boolean
      */
     public function add_urls($urls = array())
     {
@@ -351,6 +378,8 @@ class Stream_Playlist
                 'time' => '-1'
             )));
         }
+
+        return true;
     }
 
     /**
@@ -425,7 +454,7 @@ class Stream_Playlist
     {
         $ret = '<ASX VERSION="3.0" BANNERBAR="auto">' . "\n";
         $ret .= "<TITLE>" . ($this->title ?: T_("Ampache ASX Playlist")) . "</TITLE>\n";
-        $ret .= '<PARAM NAME="Encoding" VALUE="utf-8" />' . "\n";
+        $ret .= '<PARAM NAME="Encoding" VALUE="utf-8"' . "></PARAM>\n";
 
         foreach ($this->urls as $url) {
             $ret .= "<ENTRY>\n";
@@ -647,7 +676,7 @@ class Stream_Playlist
 
         // Header redirect baby!
         $url = current($this->urls);
-        $url = Stream_URL::add_options($url->url, 'action=download');
+        $url = Stream_URL::add_options($url->url, '&action=download');
         header('Location: ' . $url);
 
         return false;

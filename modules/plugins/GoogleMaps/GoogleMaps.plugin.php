@@ -79,6 +79,11 @@ class AmpacheGoogleMaps
         return true;
     } // upgrade
 
+    /**
+     * @param $latitude
+     * @param $longitude
+     * @return string
+     */
     public function get_location_name($latitude, $longitude)
     {
         $name = "";
@@ -97,6 +102,10 @@ class AmpacheGoogleMaps
         return $name;
     }
 
+    /**
+     * @param $pts
+     * @return boolean
+     */
     public function display_map($pts)
     {
         if (!$this->api_key) {
@@ -151,6 +160,7 @@ class AmpacheGoogleMaps
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {

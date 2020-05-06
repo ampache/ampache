@@ -70,8 +70,6 @@ UI::show_header();
 $browse->set_update_session(true);
 
 switch ($_REQUEST['action']) {
-    case 'file':
-    break;
     case 'album':
         $browse->set_filter('catalog', $_SESSION['catalog']);
         if (AmpConfig::get('catalog_disable')) {
@@ -125,9 +123,6 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
-    break;
-    case 'catalog':
-
     break;
     case 'playlist':
         $browse->set_sort('type', 'ASC');
@@ -221,6 +216,8 @@ switch ($_REQUEST['action']) {
         $browse->update_browse_from_session();
         $browse->show_objects();
         break;
+    case 'file':
+    case 'catalog':
     default:
     break;
 } // end Switch $action

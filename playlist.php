@@ -88,7 +88,7 @@ switch ($_REQUEST['action']) {
                 sprintf(nT_('Successfully imported playlist with %d song.', 'Successfully imported playlist with %d songs.', $result['count']), $result['count']);
         } else {
             $url   = 'show_import_playlist';
-            $title = T_('There Was a Problem');
+            $title = T_("There Was a Problem");
             $body  = T_('The Playlist could not be imported') . ': ' . $result['error'];
         }
         show_confirmation($title, $body, AmpConfig::get('web_path') . '/playlist.php?action=' . $url);

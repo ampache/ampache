@@ -222,8 +222,8 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            foreach ($sres as $userid) {
-                $user = new User($userid);
+            foreach ($sres as $user_id) {
+                $user = new User($user_id);
                 $user->format();
                 $avatar    = $user->get_avatar();
                 $results[] = array(

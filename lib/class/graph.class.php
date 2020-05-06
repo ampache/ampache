@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -39,6 +40,7 @@ class Graph
     /**
      * @param string $field
      * @param string $zoom
+     * @return string
      */
     protected function get_sql_date_format($field, $zoom)
     {
@@ -61,6 +63,14 @@ class Graph
         return "UNIX_TIMESTAMP(" . $dateformat . ")";
     }
 
+    /**
+     * @param integer $user
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @return string
+     */
     protected function get_user_sql_where($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null)
     {
         $start_date = (int) ($start_date);
@@ -89,6 +99,14 @@ class Graph
         return $sql;
     }
 
+    /**
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $catalog
+     * @param integer $start_date
+     * @param integer $end_date
+     * @return string
+     */
     protected function get_catalog_sql_where($object_type = 'song', $object_id = 0, $catalog = 0, $start_date = null, $end_date = null)
     {
         $start_date = (int) ($start_date);
@@ -116,6 +134,13 @@ class Graph
 
     /**
      * @param string $fct
+     * @param integer $id
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @return array
      */
     protected function get_all_type_pts($fct, $id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
@@ -145,6 +170,15 @@ class Graph
 
     /**
      * @param string $fct
+     * @param \CpChart\Chart\Data $MyData
+     * @param integer $user_id
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @param boolean $show_total
+     * @return array
      */
     protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $user_id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
     {
@@ -160,7 +194,15 @@ class Graph
     }
 
     /**
+     * get_user_all_pts
      * @param string $fct
+     * @param \CpChart\Chart\Data $MyData
+     * @param integer $user
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
      */
     protected function get_user_all_pts($fct, CpChart\Chart\Data $MyData, $user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
@@ -187,6 +229,13 @@ class Graph
 
     /**
      * @param string $fct
+     * @param \CpChart\Chart\Data $MyData
+     * @param integer $catalog
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
      */
     protected function get_catalog_all_pts($fct, CpChart\Chart\Data $MyData, $catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
@@ -212,6 +261,15 @@ class Graph
         }
     }
 
+    /**
+     * @param integer $user
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @return array
+     */
     protected function get_user_hits_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
@@ -228,6 +286,16 @@ class Graph
         return $values;
     }
 
+    /**
+     * @param integer $user
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @param string $column
+     * @return array
+     */
     protected function get_user_object_count_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $column = 'size')
     {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
@@ -245,16 +313,43 @@ class Graph
         return $values;
     }
 
+    /**
+     * @param integer $user
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @return array
+     */
     protected function get_user_bandwidth_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom, 'size');
     }
 
+    /**
+     * @param integer $user
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @return array
+     */
     protected function get_user_time_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom, 'time');
     }
 
+    /**
+     * @param integer $catalog
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @return array
+     */
     protected function get_catalog_files_pts($catalog = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $start_date = $start_date ?: ($end_date ?: time()) - 864000;
@@ -272,6 +367,15 @@ class Graph
         return $values;
     }
 
+    /**
+     * @param integer $catalog
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @return array
+     */
     protected function get_catalog_size_pts($catalog = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $start_date = $start_date ?: ($end_date ?: time()) - 864000;
@@ -289,12 +393,21 @@ class Graph
         return $values;
     }
 
-    protected function get_geolocation_pts($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    /**
+     * @param integer $user
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @return array
+     */
+    protected function get_geolocation_pts($user = 0, $object_type = '', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $pts = array();
 
         $where = $this->get_user_sql_where($user, $object_type, $object_id, $start_date, $end_date);
-        if ($object_type == null) {
+        if ($object_type === '') {
             $where .= " AND `object_type` IN ('song', 'video')";
         }
         $sql = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` " .
@@ -316,7 +429,10 @@ class Graph
 
     /**
      * @param string $title
+     * @param \CpChart\Chart\Data $MyData
      * @param string $zoom
+     * @param integer $width
+     * @param integer $height
      */
     protected function render_graph($title, CpChart\Chart\Data $MyData, $zoom, $width = 0, $height = 0)
     {
@@ -398,7 +514,17 @@ class Graph
         $myPicture->autoOutput();
     }
 
-    public function render_user_hits($user = 0, $object_type, $object_id, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
+    /**
+     * @param integer $user
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @param integer $width
+     * @param integer $height
+     */
+    public function render_user_hits($user, $object_type, $object_id, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
         $MyData = new CpChart\Chart\Data();
         $this->get_user_all_pts('get_user_hits_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
@@ -409,6 +535,16 @@ class Graph
         $this->render_graph('Hits', $MyData, $zoom, $width, $height);
     }
 
+    /**
+     * @param integer $user
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @param integer $width
+     * @param integer $height
+     */
     public function render_user_bandwidth($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
         $MyData = new CpChart\Chart\Data();
@@ -420,6 +556,12 @@ class Graph
         $this->render_graph('Bandwidth', $MyData, $zoom, $width, $height);
     }
 
+    /**
+     * @param integer $user
+     * @param integer $start_date
+     * @param integer $end_date
+     * @return int
+     */
     public function get_total_bandwidth($user = 0, $start_date = null, $end_date = null)
     {
         $total  = 0;
@@ -431,6 +573,12 @@ class Graph
         return $total;
     }
 
+    /**
+     * @param integer $user
+     * @param integer $start_date
+     * @param integer $end_date
+     * @return int
+     */
     public function get_total_time($user = 0, $start_date = null, $end_date = null)
     {
         $total  = 0;
@@ -442,6 +590,12 @@ class Graph
         return $total;
     }
 
+    /**
+     * @param integer $user
+     * @param integer $start_date
+     * @param integer $end_date
+     * @return int
+     */
     public function get_total_hits($user = 0, $start_date = null, $end_date = null)
     {
         $total  = 0;
@@ -453,6 +607,16 @@ class Graph
         return $total;
     }
 
+    /**
+     * @param integer $catalog
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @param integer $width
+     * @param integer $height
+     */
     public function render_catalog_files($catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
         $MyData = new CpChart\Chart\Data();
@@ -464,6 +628,16 @@ class Graph
         $this->render_graph('Files', $MyData, $zoom, $width, $height);
     }
 
+    /**
+     * @param integer $catalog
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     * @param integer $width
+     * @param integer $height
+     */
     public function render_catalog_size($catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
         $MyData = new CpChart\Chart\Data();
@@ -476,6 +650,14 @@ class Graph
         $this->render_graph('Size', $MyData, $zoom, $width, $height);
     }
 
+    /**
+     * @param integer $user
+     * @param string $object_type
+     * @param integer $object_id
+     * @param integer $start_date
+     * @param integer $end_date
+     * @param string $zoom
+     */
     public function display_map($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $pts = $this->get_geolocation_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom);
@@ -505,11 +687,12 @@ class Graph
         if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', '50')) {
             UI::access_denied();
         } else {
+            $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
             $user_id      = Core::get_request('user_id');
             $end_date     = $_REQUEST['end_date'] ? strtotime($_REQUEST['end_date']) : time();
-            $f_end_date   = date("Y-m-d H:i", (int) $end_date);
+            $f_end_date   = get_datetime($time_format, (int) $end_date);
             $start_date   = $_REQUEST['start_date'] ? strtotime($_REQUEST['start_date']) : ($end_date - 864000);
-            $f_start_date = date("Y-m-d H:i", $start_date);
+            $f_start_date = get_datetime($time_format, (int) $start_date);
             $zoom         = $_REQUEST['zoom'] ?: 'day';
 
             $gtypes   = array();
@@ -542,6 +725,10 @@ class Graph
 }
 
 // Need to create a function to pass to pGraph objects
+/**
+ * @param $value
+ * @return string
+ */
 function pGraph_Yformat_bytes($value)
 {
     return UI::format_bytes($value);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -38,7 +39,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '400004';
+    public static $version = '410001';
 
     /**
      *  @var Browse $browse
@@ -64,6 +65,36 @@ class Api
             self::$browse = new Browse(null, false);
         }
     }
+
+    /**
+     * message
+     * call the correct error / success message depending on format
+     * @param string $type
+     * @param string $message
+     * @param string $error_code
+     * @param string $format
+     */
+    public static function message($type, $message, $error_code = null, $format = 'xml')
+    {
+        if ($type === 'error') {
+            switch ($format) {
+                case 'json':
+                    echo JSON_Data::error($error_code, $message);
+                    break;
+                default:
+                    echo XML_Data::error($error_code, $message);
+            }
+        }
+        if ($type === 'success') {
+            switch ($format) {
+                case 'json':
+                    echo JSON_Data::success($message);
+                    break;
+                default:
+                    echo XML_Data::success($message);
+            }
+        }
+    } // message
 
     /**
      * set_filter
@@ -129,6 +160,7 @@ class Api
      *
      * @param array $input
      * @param string[] $parameters e.g. array('auth','type')
+     * @param string $method
      * @return boolean
      */
     private static function check_parameter($input, $parameters, $method = '')
@@ -136,20 +168,14 @@ class Api
         foreach ($parameters as $parameter) {
             if (empty($input[$parameter]) && !$input[$parameter] == 0) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::error('401', T_('Missing mandatory parameter') . " '" . $parameter . "'");
-                    break;
-                    default:
-                        echo XML_Data::error('401', T_('Missing mandatory parameter') . " '" . $parameter . "'");
-                }
+                self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['format']);
 
                 return false;
             }
         }
 
         return true;
-    }
+    } // check_parameter
 
     /**
      * check_access
@@ -168,19 +194,14 @@ class Api
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event('api.class', $type . " '" . $level . "' required on " . $method . " function call.", 2);
-            switch ($format) {
-                case 'json':
-                    echo JSON_Data::error('400', 'User does not have access to this function');
-                break;
-                default:
-                    echo XML_Data::error('400', 'User does not have access to this function');
-            }
+            self::message('error', 'User does not have access to this function', '400', $format);
 
             return false;
         }
 
         return true;
-    }
+    } // check_access
+
     /**
      * handshake
      * MINIMUM_API_VERSION=380001
@@ -203,7 +224,7 @@ class Api
             $passphrase = Core::get_post('auth');
         }
         $username = trim((string) $input['user']);
-        $user_ip  = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        $user_ip  = Core::get_user_ip();
         if (isset($input['version'])) {
             // If version is provided, use it
             $version = $input['version'];
@@ -238,7 +259,7 @@ class Api
         // Log this attempt
         debug_event('api.class', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
-        if ($user_id > 0 && Access::check_network('api', $user_id, 5, $user_ip)) {
+        if ($user_id > 0 && Access::check_network('api', $user_id, 5)) {
 
             // Authentication with user/password, we still need to check the password
             if ($username) {
@@ -248,13 +269,7 @@ class Api
                     ($timestamp > (time() + 1800))) {
                     debug_event('api.class', 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
-                    switch ($input['format']) {
-                        case 'json':
-                            echo JSON_Data::error('401', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'));
-                        break;
-                        default:
-                            echo XML_Data::error('401', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'));
-                    }
+                    self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['format']);
 
                     return false;
                 }
@@ -267,13 +282,7 @@ class Api
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    switch ($input['format']) {
-                        case 'json':
-                            echo JSON_Data::error('401', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'));
-                        break;
-                        default:
-                            echo XML_Data::error('401', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'));
-                    }
+                    self::message('error',  T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['format']);
 
                     return false;
                 }
@@ -378,13 +387,7 @@ class Api
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::error('401', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'));
-            break;
-            default:
-                echo XML_Data::error('401', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'));
-        }
+        self::message('error',  T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['format']);
  
         return false;
     } // handshake
@@ -429,6 +432,7 @@ class Api
      *
      * @param array $input
      * auth = (string))
+     * @return boolean
      */
     public static function goodbye($input)
     {
@@ -443,24 +447,14 @@ class Api
 
             debug_event('api.class', 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
             ob_end_clean();
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::success('goodbye: ' . $input['auth']);
-                break;
-                default:
-                    echo XML_Data::success('goodbye: ' . $input['auth']);
-            }
+            self::message('success', 'goodbye: ' . $input['auth'], null, $input['format']);
 
             return true;
         }
         ob_end_clean();
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::error('400', 'failed to end session: ' . $input['auth']);
-            break;
-            default:
-                echo XML_Data::error('400', 'failed to end session: ' . $input['auth']);
-        }
+        self::message('error', 'failed to end session: ' . $input['auth'], '400', $input['format']);
+
+        return false;
     } // goodbye
 
     /**
@@ -471,6 +465,7 @@ class Api
      *
      * @param array $input
      * url = (string) $url
+     * @return boolean
      */
     public static function url_to_song($input)
     {
@@ -483,12 +478,14 @@ class Api
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
-                echo JSON_Data::songs(array($data['id']), array(), $user->id);
+                echo JSON_Data::songs(array($data['id']), $user->id);
             break;
             default:
-                echo XML_Data::songs(array($data['id']), array(), true, $user->id);
+                echo XML_Data::songs(array($data['id']), $user->id);
         }
-    }
+
+        return true;
+    } // url_to_song
 
     /**
      * get_indexes
@@ -503,6 +500,7 @@ class Api
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function get_indexes($input)
     {
@@ -513,15 +511,9 @@ class Api
         $type = (string) $input['type'];
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Wrong object type ' . $type));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Wrong object type ' . $type));
-            }
+            self::message('error', T_('Wrong object type ' . $type), '401', $input['format']);
 
-            return;
+            return false;
         }
         self::$browse->reset_filters();
         self::$browse->set_type($type);
@@ -532,15 +524,13 @@ class Api
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
 
-        // Set the offset
-
         if ($type == 'playlist') {
             self::$browse->set_filter('playlist_type', $user->id);
             $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
         } else {
             $objects = self::$browse->get_objects();
         }
-        // echo out the resulting xml document
+
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
@@ -554,7 +544,66 @@ class Api
                 echo XML_Data::indexes($objects, $type);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // get_indexes
+
+    /**
+     * get_similar
+     * MINIMUM_API_VERSION=410001
+     *
+     * Return similar artist id's or similar song ids compared to the input filter
+     *
+     * @param array $input
+     * type   = (string) 'song'|'artist'
+     * filter = (integer) artist id or song id
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     * @return boolean
+     */
+    public static function get_similar($input)
+    {
+        if (!self::check_parameter($input, array('type', 'filter'), 'get_similar')) {
+            return false;
+        }
+        $type   = (string) $input['type'];
+        $filter = (string) $input['filter'];
+        // confirm the correct data
+        if (!in_array($type, array('song', 'artist'))) {
+            self::message('error', T_('Wrong object type ' . $type), '401', $input['format']);
+
+            return false;
+        }
+
+        $objects = array();
+        $similar = array();
+        switch ($type) {
+            case 'artist':
+                $similar = Recommendation::get_artists_like($filter);
+            break;
+            case 'song':
+                $similar = Recommendation::get_songs_like($filter);
+        }
+        foreach ($similar as $child) {
+            $objects[] = $child['id'];
+        }
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::indexes($objects, $type);
+            break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::indexes($objects, $type);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // get_similar
 
     /**
      * advanced_search
@@ -577,7 +626,7 @@ class Api
      * @param array $input
      * operator        = (string) 'and'|'or' (whether to match one rule or all)
      * rule_1          = (string)
-     * rule_1_operator = (integer) 0|1|2|3|4|5|6
+     * rule_1_operator = (integer) 0,1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
      * type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
      * offset          = (integer)
@@ -607,7 +656,7 @@ class Api
                         echo JSON_Data::albums($results, array(), $user->id);
                         break;
                     default:
-                        echo JSON_Data::songs($results, array(), $user->id);
+                        echo JSON_Data::songs($results, $user->id);
                         break;
                 }
             break;
@@ -616,13 +665,13 @@ class Api
                 XML_Data::set_limit($input['limit']);
             switch ($type) {
                 case 'artist':
-                    echo XML_Data::artists($results, array(), true, $user->id);
+                    echo XML_Data::artists($results, array(), $user->id);
                     break;
                 case 'album':
-                    echo XML_Data::albums($results, array(), true, $user->id);
+                    echo XML_Data::albums($results, array(), $user->id);
                     break;
                 default:
-                    echo XML_Data::songs($results, array(), true, $user->id);
+                    echo XML_Data::songs($results, $user->id);
                     break;
             }
         }
@@ -638,7 +687,7 @@ class Api
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
@@ -659,18 +708,19 @@ class Api
 
         $artists = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
-        // echo out the resulting xml document
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::artists($artists, $input['include'], $user->id);
+                echo JSON_Data::artists($artists, $include, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::artists($artists, $input['include'], true, $user->id);
+                echo XML_Data::artists($artists, $include, $user->id);
         }
         Session::extend($input['auth']);
     } // artists
@@ -684,22 +734,26 @@ class Api
      * @param array $input
      * filter  = (string) Alpha-numeric search term
      * include = (array) 'albums'|'songs' //optional
+     * @return boolean
      */
     public static function artist($input)
     {
         if (!self::check_parameter($input, array('filter'), 'artist')) {
             return false;
         }
-        $uid  = scrub_in($input['filter']);
-        $user = User::get_from_username(Session::username($input['auth']));
+        $uid     = scrub_in($input['filter']);
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
         switch ($input['format']) {
             case 'json':
-                echo JSON_Data::artists(array($uid), $input['include'], $user->id);
+                echo JSON_Data::artists(array($uid), $include, $user->id);
             break;
             default:
-                echo XML_Data::artists(array($uid), $input['include'], true, $user->id);
+                echo XML_Data::artists(array($uid), $include, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // artist
 
     /**
@@ -712,6 +766,7 @@ class Api
      * filter = (string) UID of artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function artist_albums($input)
     {
@@ -722,18 +777,21 @@ class Api
         $albums = $artist->get_albums();
         $user   = User::get_from_username(Session::username($input['auth']));
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
                 echo JSON_Data::albums($albums, array(), $user->id);
             break;
             default:
-                echo XML_Data::albums($albums, array(), true, $user->id);
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::albums($albums, array(), $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // artist_albums
 
     /**
@@ -746,6 +804,7 @@ class Api
      * filter = (string) UID of Artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function artist_songs($input)
     {
@@ -762,15 +821,17 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($songs, array(), $user->id);
+                echo JSON_Data::songs($songs, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::songs($songs, array(), true, $user->id);
+                echo XML_Data::songs($songs, $user->id);
             }
         }
         Session::extend($input['auth']);
+
+        return true;
     } // artist_songs
 
     /**
@@ -781,7 +842,7 @@ class Api
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
@@ -798,20 +859,21 @@ class Api
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
 
-        $albums = self::$browse->get_objects();
-        $user   = User::get_from_username(Session::username($input['auth']));
+        $albums  = self::$browse->get_objects();
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
 
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::albums($albums, $input['include'], $user->id);
+                echo JSON_Data::albums($albums, $include, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::albums($albums, $input['include'], true, $user->id);
+                echo XML_Data::albums($albums, $include, $user->id);
         }
         Session::extend($input['auth']);
     } // albums
@@ -825,23 +887,26 @@ class Api
      * @param array $input
      * filter  = (string) UID of Album
      * include = (array) 'songs' //optional
-
+     * @return boolean
      */
     public static function album($input)
     {
         if (!self::check_parameter($input, array('filter'), 'album')) {
             return false;
         }
-        $uid  = (int) scrub_in($input['filter']);
-        $user = User::get_from_username(Session::username($input['auth']));
+        $uid     = (int) scrub_in($input['filter']);
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
         switch ($input['format']) {
             case 'json':
-                echo JSON_Data::albums(array($uid), $input['include'], $user->id);
+                echo JSON_Data::albums(array($uid), $include, $user->id);
             break;
             default:
-                echo XML_Data::albums(array($uid), $input['include'], true, $user->id);
+                echo XML_Data::albums(array($uid), $include, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // album
 
     /**
@@ -854,6 +919,7 @@ class Api
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function album_songs($input)
     {
@@ -863,10 +929,6 @@ class Api
         $album = new Album($input['filter']);
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
-
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
 
@@ -889,15 +951,17 @@ class Api
                 case 'json':
                     JSON_Data::set_offset($input['offset']);
                     JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, array(), $user->id);
+                    echo JSON_Data::songs($songs, $user->id);
                 break;
                 default:
                     XML_Data::set_offset($input['offset']);
                     XML_Data::set_limit($input['limit']);
-                    echo XML_Data::songs($songs, array(), true, $user->id);
+                    echo XML_Data::songs($songs, $user->id);
             }
         }
         Session::extend($input['auth']);
+
+        return true;
     } // album_songs
 
     /**
@@ -908,7 +972,7 @@ class Api
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
@@ -945,6 +1009,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of Tag
+     * @return boolean
      */
     public static function tag($input)
     {
@@ -961,6 +1026,8 @@ class Api
                 echo XML_Data::tags(array($uid));
         }
         Session::extend($input['auth']);
+
+        return true;
     } // tag
 
     /**
@@ -973,6 +1040,7 @@ class Api
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function tag_artists($input)
     {
@@ -980,7 +1048,7 @@ class Api
             return false;
         }
         $artists = Tag::get_tag_objects('artist', $input['filter']);
-        if ($artists) {
+        if (!empty($artists)) {
             $user = User::get_from_username(Session::username($input['auth']));
 
             ob_end_clean();
@@ -993,10 +1061,12 @@ class Api
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::artists($artists, array(), true, $user->id);
+                echo XML_Data::artists($artists, array(), $user->id);
             }
         }
         Session::extend($input['auth']);
+
+        return true;
     } // tag_artists
 
     /**
@@ -1009,6 +1079,7 @@ class Api
      * filter = (string) UID of Tag
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function tag_albums($input)
     {
@@ -1016,7 +1087,7 @@ class Api
             return false;
         }
         $albums = Tag::get_tag_objects('album', $input['filter']);
-        if ($albums) {
+        if (!empty($albums)) {
             $user = User::get_from_username(Session::username($input['auth']));
             XML_Data::set_offset($input['offset']);
             XML_Data::set_limit($input['limit']);
@@ -1031,10 +1102,12 @@ class Api
                 default:
                     XML_Data::set_offset($input['offset']);
                     XML_Data::set_limit($input['limit']);
-                    echo XML_Data::albums($albums, array(), true, $user->id);
+                    echo XML_Data::albums($albums, array(), $user->id);
             }
         }
         Session::extend($input['auth']);
+
+        return true;
     } // tag_albums
 
     /**
@@ -1047,6 +1120,7 @@ class Api
      * filter = (string) UID of Tag
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function tag_songs($input)
     {
@@ -1060,31 +1134,35 @@ class Api
         XML_Data::set_limit($input['limit']);
 
         ob_end_clean();
-        if ($songs) {
+        if (!empty($songs)) {
             switch ($input['format']) {
                 case 'json':
                     JSON_Data::set_offset($input['offset']);
                     JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, array(), $user->id);
+                    echo JSON_Data::songs($songs, $user->id);
                 break;
                 default:
                     XML_Data::set_offset($input['offset']);
                     XML_Data::set_limit($input['limit']);
-                    echo XML_Data::songs($songs, array(), true, $user->id);
+                    echo XML_Data::songs($songs, $user->id);
             }
         }
         Session::extend($input['auth']);
+
+        return true;
     } // tag_songs
 
     /**
      * songs
      * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=410001
      *
      * Returns songs based on the specified filter
+     * All calls that return songs now include <playlisttrack> which can be used to identify track order.
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add    = self::set_filter(date) //optional
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
@@ -1106,21 +1184,17 @@ class Api
         $songs = self::$browse->get_objects();
         $user  = User::get_from_username(Session::username($input['auth']));
 
-        // Set the offset
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($songs, array(), $user->id);
+                echo JSON_Data::songs($songs, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::songs($songs, array(), true, $user->id);
+                echo XML_Data::songs($songs, $user->id);
         }
         Session::extend($input['auth']);
     } // songs
@@ -1133,6 +1207,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of song
+     * @return boolean
      */
     public static function song($input)
     {
@@ -1145,12 +1220,14 @@ class Api
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
-                echo JSON_Data::songs(array((int) $song_id), array(), $user->id);
+                echo JSON_Data::songs(array((int) $song_id), $user->id);
             break;
             default:
-                echo XML_Data::songs(array((int) $song_id), array(), true, $user->id);
+                echo XML_Data::songs(array((int) $song_id), $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // song
 
     /**
@@ -1161,7 +1238,7 @@ class Api
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact  = (boolean) 0|1, if true filter is exact rather then fuzzy //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add    = self::set_filter(date) //optional
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
@@ -1171,8 +1248,8 @@ class Api
     {
         $user   = User::get_from_username(Session::username($input['auth']));
         $method = $input['exact'] ? false : true;
-        $userid = (!Access::check('interface', 100)) ? $user->id : -1;
-        $public = (!Access::check('interface', 100)) ? true : false;
+        $userid = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
+        $public = !Access::check('interface', 100, $user->id);
 
         // regular playlists
         $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
@@ -1202,6 +1279,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of playlist
+     * @return boolean
      */
     public static function playlist($input)
     {
@@ -1219,15 +1297,9 @@ class Api
             $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
         }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Access denied to this playlist'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Access denied to this playlist'));
-            }
+            self::message('error', T_('Access denied to this playlist'), '401', $input['format']);
 
-            return;
+            return false;
         }
         ob_end_clean();
         switch ($input['format']) {
@@ -1238,6 +1310,8 @@ class Api
                 echo XML_Data::playlists(array($uid));
         }
         Session::extend($input['auth']);
+
+        return true;
     } // playlist
 
     /**
@@ -1250,6 +1324,7 @@ class Api
      * filter = (string) UID of playlist
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function playlist_songs($input)
     {
@@ -1267,15 +1342,9 @@ class Api
             $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
         }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Access denied to this playlist'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Access denied to this playlist'));
-            }
+            self::message('error', T_('Access denied to this playlist'), '401', $input['format']);
 
-            return;
+            return false;
         }
 
         $items = $playlist->get_items();
@@ -1291,14 +1360,16 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($songs, $items, $user->id);
+                echo JSON_Data::songs($songs, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::songs($songs, $items, true, $user->id);
+                echo XML_Data::songs($songs, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // playlist_songs
 
     /**
@@ -1310,6 +1381,7 @@ class Api
      * @param array $input
      * name = (string) Alpha-numeric search term
      * type = (string) 'public'|'private'
+     * @return boolean
      */
     public static function playlist_create($input)
     {
@@ -1332,6 +1404,8 @@ class Api
                 echo XML_Data::playlists(array($uid));
         }
         Session::extend($input['auth']);
+
+        return true;
     } // playlist_create
 
     /**
@@ -1346,6 +1420,7 @@ class Api
      * filter = (string) UID of playlist
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
+     * @return boolean
      */
     public static function playlist_edit($input)
     {
@@ -1359,29 +1434,19 @@ class Api
         $playlist = new Playlist($input['filter']);
 
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Access denied to this playlist'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Access denied to this playlist'));
-            }
+            self::message('error', T_('Access denied to this playlist'), '401', $input['format']);
 
-            return;
+            return false;
         }
         $array = [
             "name" => $name,
             "pl_type" => $type,
         ];
         $playlist->update($array);
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::success('playlist changes saved');
-            break;
-            default:
-                echo XML_Data::success('playlist changes saved');
-        }
+        self::message('success', 'playlist changes saved', null, $input['format']);
         Session::extend($input['auth']);
+
+        return true;
     } // playlist_edit
 
     /**
@@ -1392,6 +1457,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of playlist
+     * @return boolean
      */
     public static function playlist_delete($input)
     {
@@ -1402,24 +1468,14 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Access denied to this playlist'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Access denied to this playlist'));
-            }
+            self::message('error', T_('Access denied to this playlist'), '401', $input['format']);
         } else {
             $playlist->delete();
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::success('playlist deleted');
-                break;
-                default:
-                    echo XML_Data::success('playlist deleted');
-            }
+            self::message('success', 'playlist deleted', null, $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // playlist_delete
 
     /**
@@ -1431,7 +1487,8 @@ class Api
      * @param array $input
      * filter = (string) UID of playlist
      * song   = (string) UID of song to add to playlist
-     * check  = (integer) 0|1 Check for duplicates (default = 0) //optional
+     * check  = (integer) 0,1 Check for duplicates //optional, default = 0
+     * @return boolean
      */
     public static function playlist_add_song($input)
     {
@@ -1443,36 +1500,20 @@ class Api
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Access denied to this playlist'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Access denied to this playlist'));
-            }
+            self::message('error', T_('Access denied to this playlist'), '401', $input['format']);
 
-            return;
+            return false;
         }
         if ((int) $input['check'] == 1 && in_array($song, $playlist->get_songs())) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('400', T_("Can't add a duplicate item when check is enabled"));
-                break;
-                default:
-                    echo XML_Data::error('400', T_("Can't add a duplicate item when check is enabled"));
-            }
+            self::message('error', T_("Can't add a duplicate item when check is enabled"), '400', $input['format']);
 
-            return;
+            return false;
         }
         $playlist->add_songs(array($song), true);
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::success('song added to playlist');
-            break;
-            default:
-                echo XML_Data::success('song added to playlist');
-        }
+        self::message('success', 'song added to playlist', null, $input['format']);
         Session::extend($input['auth']);
+
+        return true;
     } // playlist_add_song
 
     /**
@@ -1487,6 +1528,7 @@ class Api
      * filter = (string) UID of playlist
      * song   = (string) UID of song to remove from the playlist //optional
      * track  = (string) track number to remove from the playlist //optional
+     * @return boolean
      */
     public static function playlist_remove_song($input)
     {
@@ -1497,55 +1539,33 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Access denied to this playlist'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Access denied to this playlist'));
-            }
+            self::message('error', T_('Access denied to this playlist'), '401', $input['format']);
         } else {
             if ($input['song']) {
                 $track = (int) scrub_in($input['song']);
                 if (!$playlist->has_item($track)) {
-                    echo XML_Data::error('404', T_('Song not found in playlist'));
+                    self::message('error', T_('Song not found in playlist'), '404', $input['format']);
 
-                    return;
+                    return false;
                 }
                 $playlist->delete_song($track);
                 $playlist->regenerate_track_numbers();
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::success('song removed from playlist');
-                    break;
-                    default:
-                        echo XML_Data::success('song removed from playlist');
-                }
+                self::message('success', 'song removed from playlist', null, $input['format']);
             } else {
                 $track = (int) scrub_in($input['track']);
                 if (!$playlist->has_item(null, $track)) {
-                    switch ($input['format']) {
-                        case 'json':
-                            echo JSON_Data::error('404', T_('Track ID not found in playlist'));
-                        break;
-                        default:
-                            echo XML_Data::error('404', T_('Track ID not found in playlist'));
-                    }
+                    self::message('error', T_('Track ID not found in playlist'), '404', $input['format']);
 
-                    return;
+                    return false;
                 }
                 $playlist->delete_track_number($track);
                 $playlist->regenerate_track_numbers();
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::success('song removed from playlist');
-                    break;
-                    default:
-                        echo XML_Data::success('song removed from playlist');
-                }
+                self::message('success', 'song removed from playlist', null, $input['format']);
             }
         }
         Session::extend($input['auth']);
+
+        return true;
     } // playlist_remove_song
 
     /**
@@ -1563,7 +1583,7 @@ class Api
      * filter = (string)  $filter                       //optional, LIKE matched to song title
      * album  = (integer) $album_id                     //optional
      * artist = (integer) $artist_id                    //optional
-     * flag   = (integer) 0|1                           //optional, default = 0
+     * flag   = (integer) 0,1                           //optional, default = 0
      * format = (string)  'song'|'index'|'id'           //optional, default = 'song'
      * offset = (integer)                               //optional
      * limit  = (integer)                               //optional
@@ -1634,7 +1654,6 @@ class Api
             $array['rule_' . $rule_count]               = 'artist';
             $array['rule_' . $rule_count . '_input']    = trim(trim((string) $artist->prefix) . ' ' . trim((string) $artist->name));
             $array['rule_' . $rule_count . '_operator'] = 4;
-            $rule_count++;
         }
 
         ob_end_clean();
@@ -1674,10 +1693,10 @@ class Api
             default:
                 switch ($input['format']) {
                     case 'json':
-                        echo JSON_Data::songs($song_ids, array(), $user->id);
+                        echo JSON_Data::songs($song_ids, $user->id);
                     break;
                     default:
-                        echo XML_Data::songs($song_ids, array(), true, $user->id);
+                        echo XML_Data::songs($song_ids, $user->id);
                 }
         }
         Session::extend($input['auth']);
@@ -1693,6 +1712,7 @@ class Api
      * filter = (string) Alpha-numeric search term
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function search_songs($input)
     {
@@ -1713,15 +1733,249 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($results, array(), $user->id);
+                echo JSON_Data::songs($results, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::songs($results, array(), true, $user->id);
+                echo XML_Data::songs($results, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // search_songs
+
+    /**
+     * shares
+     * MINIMUM_API_VERSION=410001
+     *
+     * Get information about shared media this user is allowed to manage.
+     *
+     * @param array $input
+     * filter = (string) Alpha-numeric search term
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     * @return boolean
+     */
+    public static function shares($input)
+    {
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'shares')) {
+            return false;
+        }
+        self::$browse->reset_filters();
+        self::$browse->set_type('share');
+        self::$browse->set_sort('title', 'ASC');
+
+        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        self::set_filter($method, $input['filter']);
+        self::set_filter('add', $input['add']);
+        self::set_filter('update', $input['update']);
+
+        $shares = self::$browse->get_objects();
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::shares($shares);
+            break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::shares($shares);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // shares
+
+    /**
+     * share
+     * MINIMUM_API_VERSION=410001
+     *
+     * Get the share from it's id.
+     *
+     * @param array $input
+     * filter = (integer) Share ID number
+     * @return boolean
+     */
+    public static function share($input)
+    {
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'share')) {
+            return false;
+        }
+        $share = array((int) $input['filter']);
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::shares($share);
+            break;
+            default:
+                echo XML_Data::shares($share);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // share
+
+    /**
+     * share_create
+     * MINIMUM_API_VERSION=410001
+     * Create a public url that can be used by anyone to stream media.
+     * Takes the file id with optional description and expires parameters.
+     *
+     * @param array $input
+     * filter      = (string) object_id
+     * type        = (string) object_type
+     * description = (string) description (will be filled for you if empty) //optional
+     * expires     = (integer) days to keep active //optional
+     * @return boolean
+     */
+    public static function share_create($input)
+    {
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('type', 'filter'), 'share_create')) {
+            return false;
+        }
+        $description = $input['description'];
+        $object_id   = $input['filter'];
+        $object_type = $input['type'];
+        $download    = Access::check_function('download');
+        $expire_days = Share::get_expiry($input['expires']);
+        // confirm the correct data
+        if (!in_array($object_type, array('song', 'album', 'artist'))) {
+            self::message('error', T_('Wrong object type ' . $object_type), '401', $input['format']);
+
+            return false;
+        }
+        $share = array();
+        if (!Core::is_library_item($object_type) || !$object_id) {
+            self::message('error', T_('Wrong library item type'), '401', $input['format']);
+        } else {
+            $item = new $object_type($object_id);
+            if (!$item->id) {
+                self::message('error', T_('Library item not found'), '404', $input['format']);
+
+                return false;
+            }
+            $share[] = Share::create_share($object_type, $object_id, true, $download, $expire_days, generate_password(8), 0, $description);
+        }
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::shares($share);
+                break;
+            default:
+                echo XML_Data::shares($share);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // share_create
+
+    /**
+     * share_delete
+     *
+     * MINIMUM_API_VERSION=410001
+     *
+     * Delete an existing share.
+     *
+     * @param array $input
+     * filter = (string) UID of share to delete
+     * @return boolean
+     */
+    public static function share_delete($input)
+    {
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'share_delete')) {
+            return false;
+        }
+        $user      = User::get_from_username(Session::username($input['auth']));
+        $object_id = $input['filter'];
+        if (in_array($object_id, Share::get_share_list())) {
+            if (Share::delete_share($object_id, $user)) {
+                self::message('success', 'share ' . $object_id . ' deleted', null, $input['format']);
+            } else {
+                self::message('error', 'share ' . $object_id . ' was not deleted', '401', $input['format']);
+            }
+        } else {
+            self::message('error', 'share ' . $object_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // share_delete
+
+    /**
+     * share_edit
+     * MINIMUM_API_VERSION=410001
+     * Update the description and/or expiration date for an existing share.
+     * Takes the share id to update with optional description and expires parameters.
+     *
+     * @param array $input
+     * filter      = (string) Alpha-numeric search term
+     * stream      = (boolean) 0,1 // optional
+     * download    = (boolean) 0,1 // optional
+     * expires     = (integer) number of whole days before expiry // optional
+     * description = (string) update description // optional
+     * @return boolean
+     */
+    public static function share_edit($input)
+    {
+        if (!AmpConfig::get('share')) {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'share_edit')) {
+            return false;
+        }
+        $share_id = $input['filter'];
+        if (in_array($share_id, Share::get_share_list())) {
+            $share       = new Share($share_id);
+            $description = isset($input['description']) ? $input['description'] : $share->description;
+            $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;
+            $download    = isset($input['download']) ? $input['download'] : $share->allow_download;
+            $expires     = isset($input['expires']) ? Share::get_expiry($input['expires']) : $share->expire_days;
+            $user        = User::get_from_username(Session::username($input['auth']));
+
+            $data = array(
+                'max_counter' => $share->max_counter,
+                'expire' => $expires,
+                'allow_stream' => $stream,
+                'allow_download' => $download,
+                'description' => $description
+            );
+            if ($share->update($data, $user)) {
+                self::message('success', 'share ' . $share_id . ' updated', null, $input['format']);
+            } else {
+                self::message('error', 'share ' . $share_id . ' was not updated', '401', $input['format']);
+            }
+        } else {
+            self::message('error', 'share ' . $share_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+    } // share_edit
 
     /**
      * videos
@@ -1729,7 +1983,7 @@ class Api
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (boolean) 0|1, Whether to match the exact term or not //optional
+     * exact  = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
@@ -1765,6 +2019,7 @@ class Api
      *
      * @param array $input
      * filter = (string) UID of video
+     * @return boolean
      */
     public static function video($input)
     {
@@ -1782,6 +2037,8 @@ class Api
                 echo XML_Data::videos(array($video_id), $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // video
 
     /**
@@ -1800,6 +2057,7 @@ class Api
      * username = (string)  //optional
      * offset   = (integer) //optional
      * limit    = (integer) //optional
+     * @return boolean
      */
     public static function stats($input)
     {
@@ -1850,7 +2108,7 @@ class Api
             case 'recent':
             case 'forgotten':
                 debug_event('api.class', 'stats ' . $input['filter'], 4);
-                $newest = ($input['filter'] == 'recent') ? true : false;
+                $newest = $input['filter'] == 'recent';
                 if ($user_id !== null) {
                     $results = $user->get_recently_played($limit, $type, $newest);
                 } else {
@@ -1882,10 +2140,10 @@ class Api
             if ($type === 'song') {
                 switch ($input['format']) {
                     case 'json':
-                        echo JSON_Data::songs($results, array(), $user->id);
+                        echo JSON_Data::songs($results, $user->id);
                     break;
                     default:
-                        echo XML_Data::songs($results, array(), true, $user->id);
+                        echo XML_Data::songs($results, $user->id);
                 }
             }
             if ($type === 'artist') {
@@ -1894,7 +2152,7 @@ class Api
                         echo JSON_Data::artists($results, array(), $user->id);
                     break;
                     default:
-                        echo XML_Data::artists($results, array(), true, $user->id);
+                        echo XML_Data::artists($results, array(), $user->id);
                 }
             }
             if ($type === 'album') {
@@ -1903,12 +2161,362 @@ class Api
                         echo JSON_Data::albums($results, array(), $user->id);
                     break;
                     default:
-                        echo XML_Data::albums($results, array(), true, $user->id);
+                        echo XML_Data::albums($results, array(), $user->id);
                 }
             }
         }
         Session::extend($input['auth']);
+
+        return true;
     } // stats
+
+    /**
+     * podcasts
+     * MINIMUM_API_VERSION=410001
+     *
+     * Get information about podcasts.
+     *
+     * @param array $input
+     * filter  = (string) Alpha-numeric search term
+     * include = (string) 'episodes' (include episodes in the response) // optional
+     * offset  = (integer) //optional
+     * limit   = (integer) //optional
+     * @return boolean
+     */
+    public static function podcasts($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        self::$browse->reset_filters();
+        self::$browse->set_type('podcast');
+        self::$browse->set_sort('title', 'ASC');
+
+        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        self::set_filter($method, $input['filter']);
+        self::set_filter('add', $input['add']);
+        self::set_filter('update', $input['update']);
+
+        $podcasts = self::$browse->get_objects();
+        $episodes = $input['include'] == 'episodes';
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::podcasts($podcasts, $episodes);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::podcasts($podcasts, $episodes);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // podcasts
+
+    /**
+     * podcast
+     * MINIMUM_API_VERSION=410001
+     *
+     * Get the podcast from it's id.
+     *
+     * @param array $input
+     * filter  = (integer) Podcast ID number
+     * include = (string) 'episodes' (include episodes in the response) // optional
+     * @return boolean
+     */
+    public static function podcast($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'podcast')) {
+            return false;
+        }
+        $object_id = (int) $input['filter'];
+        $podcast   = new Podcast($object_id);
+        if ($podcast->id > 0) {
+            $episodes = $input['include'] == 'episodes';
+
+            ob_end_clean();
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::podcasts(array($object_id), $episodes);
+                    break;
+                default:
+                    echo XML_Data::podcasts(array($object_id), $episodes);
+            }
+        } else {
+            self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // podcast
+
+    /**
+     * podcast_create
+     * MINIMUM_API_VERSION=410001
+     * Create a public url that can be used by anyone to stream media.
+     * Takes the file id with optional description and expires parameters.
+     *
+     * @param array $input
+     * url     = (string) rss url for podcast
+     * catalog = (string) podcast catalog
+     * @return boolean
+     */
+    public static function podcast_create($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
+            return false;
+        }
+        if (!self::check_parameter($input, array('url', 'catalog'), 'podcast_create')) {
+            return false;
+        }
+        $data            = array();
+        $data['feed']    = $input['url'];
+        $data['catalog'] = $input['catalog'];
+        $podcast         = Podcast::create($data, true);
+        if ($podcast) {
+            ob_end_clean();
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::podcasts(array($podcast));
+                    break;
+                default:
+                    echo XML_Data::podcasts(array($podcast));
+            }
+        } else {
+            self::message('error', T_('Failed: podcast was not created.'), '401', $input['format']);
+        }
+        Session::extend($input['auth']);
+    } // podcast_create
+
+    /**
+     * podcast_delete
+     *
+     * MINIMUM_API_VERSION=410001
+     *
+     * Delete an existing podcast.
+     *
+     * @param array $input
+     * filter = (string) UID of podcast to delete
+     * @return boolean
+     */
+    public static function podcast_delete($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'podcast_delete')) {
+            return false;
+        }
+        $object_id = (int) $input['filter'];
+        $podcast   = new Podcast($object_id);
+        if ($podcast->id > 0) {
+            if ($podcast->remove()) {
+                self::message('success', 'podcast ' . $object_id . ' deleted', null, $input['format']);
+            } else {
+                self::message('error', 'podcast ' . $object_id . ' was not deleted', '401', $input['format']);
+            }
+        } else {
+            self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+    } // podcast_delete
+
+    /**
+     * podcast_edit
+     * MINIMUM_API_VERSION=410001
+     * Update the description and/or expiration date for an existing podcast.
+     * Takes the podcast id to update with optional description and expires parameters.
+     *
+     * @param array $input
+     * filter      = (string) Alpha-numeric search term //optional
+     * stream      = (boolean) 0,1 // optional
+     * download    = (boolean) 0,1 // optional
+     * expires     = (integer) number of whole days before expiry // optional
+     * description = (string) update description // optional
+     * @return boolean
+     */
+    public static function podcast_edit($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'edit_podcast', $input['format'])) {
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'podcast_edit')) {
+            return false;
+        }
+        $podcast_id = $input['filter'];
+        if (in_array($podcast_id, Share::get_share_list())) {
+            $user          = User::get_from_username(Session::username($input['auth']));
+            $podcast       = new Share($podcast_id);
+            $description   = isset($input['description']) ? $input['description'] : $podcast->description;
+            $stream        = isset($input['stream']) ? $input['stream'] : $podcast->allow_stream;
+            $download      = isset($input['download']) ? $input['download'] : $podcast->allow_download;
+            $expires       = isset($input['expires']) ? podcast::get_expiry($input['expires']) : $podcast->expire_days;
+
+            $data = array(
+                'max_counter' => $podcast->max_counter,
+                'expire' => $expires,
+                'allow_stream' => $stream,
+                'allow_download' => $download,
+                'description' => $description
+            );
+            if ($podcast->update($data, $user)) {
+                self::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['format']);
+            } else {
+                self::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['format']);
+            }
+        } else {
+            self::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+    } // podcast_edit
+
+    /**
+     * podcast_episodes
+     * MINIMUM_API_VERSION=410001
+     *
+     * This returns the episodes for a podcast
+     *
+     * @param array $input
+     * filter = (string) UID of podcast
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     * @return boolean
+     */
+    public static function podcast_episodes($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'podcast_episodes')) {
+            return false;
+        }
+        $user = User::get_from_username(Session::username($input['auth']));
+        $uid  = (string) scrub_in($input['filter']);
+        debug_event('api.class', 'User ' . $user->id . ' loading podcast: ' . $input['filter'], '5');
+        $podcast = new Podcast($uid);
+        $items   = $podcast->get_episodes();
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::podcast_episodes($items);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::podcast_episodes($items);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // podcast_episodes
+
+    /**
+     * podcast_episode
+     * MINIMUM_API_VERSION=410001
+     *
+     * Get the podcast_episode from it's id.
+     *
+     * @param array $input
+     * filter  = (integer) podcast_episode ID number
+     * @return boolean
+     */
+    public static function podcast_episode($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'podcast')) {
+            return false;
+        }
+        $object_id = (int) $input['filter'];
+        $episode   = new Podcast_Episode($object_id);
+        if ($episode->id > 0) {
+            ob_end_clean();
+            switch ($input['format']) {
+                case 'json':
+                    echo JSON_Data::podcast_episodes(array($object_id));
+                    break;
+                default:
+                    echo XML_Data::podcast_episodes(array($object_id));
+            }
+        } else {
+            self::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // podcast_episode
+
+    /**
+     * podcast_episode_delete
+     *
+     * MINIMUM_API_VERSION=410001
+     *
+     * Delete an existing podcast_episode.
+     *
+     * @param array $input
+     * filter = (string) UID of podcast_episode to delete
+     * @return boolean
+     */
+    public static function podcast_episode_delete($input)
+    {
+        if (!AmpConfig::get('podcast')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'podcast_episode_delete')) {
+            return false;
+        }
+        $object_id = (int) $input['filter'];
+        $episode   = new Podcast_Episode($object_id);
+        if ($episode->id > 0) {
+            if ($episode->remove()) {
+                self::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['format']);
+            } else {
+                self::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['format']);
+            }
+        } else {
+            self::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['format']);
+        }
+        Session::extend($input['auth']);
+    } // podcast_episode_delete
 
     /**
      * user
@@ -1918,6 +2526,7 @@ class Api
      *
      * @param array $input
      * username = (string) $username)
+     * @return boolean
      */
     public static function user($input)
     {
@@ -1947,6 +2556,8 @@ class Api
             }
         }
         Session::extend($input['auth']);
+
+        return true;
     } // user
 
     /**
@@ -1961,14 +2572,15 @@ class Api
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password))
      * email    = (string) $email
-     * disable  = (integer) 0|1 //optional
+     * disable  = (integer) 0,1 //optional, default = 0
+     * @return boolean
      */
     public static function user_create($input)
     {
-        if (!self::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['format'])) {
             return false;
         }
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['format'])) {
+        if (!self::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
             return false;
         }
         $username = $input['username'];
@@ -1980,24 +2592,14 @@ class Api
         $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
 
         if ($user_id > 0) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::success('successfully created: ' . $username);
-                break;
-                default:
-                    echo XML_Data::success('successfully created: ' . $username);
-            }
+            self::message('success', 'successfully created: ' . $username, null, $input['format']);
 
             return true;
         }
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::error('400', 'failed to create: ' . $username);
-            break;
-            default:
-                echo XML_Data::error('400', 'failed to create: ' . $username);
-        }
+        self::message('error', 'failed to create: ' . $username, '400', $input['format']);
         Session::extend($input['auth']);
+
+        return false;
     } // user_create
 
     /**
@@ -2015,15 +2617,16 @@ class Api
      * website    = (string) $website //optional
      * state      = (string) $state //optional
      * city       = (string) $city //optional
-     * disable    = (integer) 0|1 true to disable, false to enable //optional
+     * disable    = (integer) 0,1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
+     * @return boolean
      */
     public static function user_update($input)
     {
-        if (!self::check_parameter($input, array('username'), 'user_update')) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_update', $input['format'])) {
             return false;
         }
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_update', $input['format'])) {
+        if (!self::check_parameter($input, array('username'), 'user_update')) {
             return false;
         }
         $username   = $input['username'];
@@ -2041,13 +2644,7 @@ class Api
         $user_id = $user->id;
 
         if ($password && Access::check('interface', 100, $user_id)) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('400', 'Do not update passwords for admin users! ' . $username);
-                break;
-                default:
-                    echo XML_Data::error('400', 'Do not update passwords for admin users! ' . $username);
-            }
+            self::message('error', 'Do not update passwords for admin users! ' . $username, '400', $input['format']);
 
             return false;
         }
@@ -2079,24 +2676,14 @@ class Api
             if ((int) $maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
             }
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::success('successfully updated: ' . $username);
-                break;
-                default:
-                    echo XML_Data::success('successfully updated: ' . $username);
-            }
+            self::message('success', 'successfully updated: ' . $username, null, $input['format']);
 
             return true;
         }
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::error('400', 'failed to update: ' . $username);
-            break;
-            default:
-                echo XML_Data::error('400', 'failed to update: ' . $username);
-        }
+        self::message('error', 'failed to update: ' . $username, '400', $input['format']);
         Session::extend($input['auth']);
+
+        return false;
     } // user_update
 
     /**
@@ -2108,13 +2695,14 @@ class Api
      *
      * @param array $input
      * username = (string) $username)
+     * @return boolean
      */
     public static function user_delete($input)
     {
-        if (!self::check_parameter($input, array('username'), 'user_delete')) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['format'])) {
             return false;
         }
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['format'])) {
+        if (!self::check_parameter($input, array('username'), 'user_delete')) {
             return false;
         }
         $username = $input['username'];
@@ -2122,24 +2710,14 @@ class Api
         // don't delete yourself or admins
         if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
             $user->delete();
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::success('successfully deleted: ' . $username);
-                break;
-                default:
-                    echo XML_Data::success('successfully deleted: ' . $username);
-            }
+            self::message('success', 'successfully deleted: ' . $username, null, $input['format']);
 
             return true;
         }
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::error('400', 'failed to delete: ' . $username);
-            break;
-            default:
-                echo XML_Data::error('400', 'failed to delete: ' . $username);
-        }
+        self::message('error', 'failed to delete: ' . $username, '400', $input['format']);
         Session::extend($input['auth']);
+
+        return false;
     } // user_delete
 
     /**
@@ -2152,51 +2730,43 @@ class Api
      *
      * @param array $input
      * username = (string) $username
+     * @return boolean
      */
     public static function followers($input)
     {
-        if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter($input, array('username'), 'followers')) {
-                return false;
-            }
-            $username = $input['username'];
-            if (!empty($username)) {
-                $user = User::get_from_username($username);
-                if ($user !== null) {
-                    $users    = $user->get_followers();
-                    if (!count($users)) {
-                        switch ($input['format']) {
-                            case 'json':
-                                echo JSON_Data::error('400', 'User `' . $username . '` has no followers.');
-                            break;
-                            default:
-                                echo XML_Data::error('400', 'User `' . $username . '` has no followers.');
-                        }
-                    } else {
-                        ob_end_clean();
-                        switch ($input['format']) {
-                            case 'json':
-                                echo JSON_Data::users($users);
-                            break;
-                            default:
-                                echo XML_Data::users($users);
-                        }
-                    }
+        if (!AmpConfig::get('sociable')) {
+            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('username'), 'followers')) {
+            return false;
+        }
+        $username = $input['username'];
+        if (!empty($username)) {
+            $user = User::get_from_username($username);
+            if ($user !== null) {
+                $users    = $user->get_followers();
+                if (!count($users)) {
+                    self::message('error', 'User `' . $username . '` has no followers.', '400', $input['format']);
                 } else {
-                    debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                    ob_end_clean();
                     switch ($input['format']) {
                         case 'json':
-                            echo JSON_Data::error('400', 'User `' . $username . '` cannot be found.');
+                            echo JSON_Data::users($users);
                         break;
                         default:
-                            echo XML_Data::error('400', 'User `' . $username . '` cannot be found.');
+                            echo XML_Data::users($users);
                     }
                 }
+            } else {
+                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                self::message('error', 'User `' . $username . '` cannot be found.', '400', $input['format']);
             }
-        } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // followers
 
     /**
@@ -2209,52 +2779,44 @@ class Api
      *
      * @param array $input
      * username = (string) $username
+     * @return boolean
      */
     public static function following($input)
     {
-        if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter($input, array('username'), 'following')) {
-                return false;
-            }
-            $username = $input['username'];
-            if (!empty($username)) {
-                $user = User::get_from_username($username);
-                if ($user !== null) {
-                    $users = $user->get_following();
-                    if (!count($users)) {
-                        switch ($input['format']) {
-                            case 'json':
-                                echo JSON_Data::error('400', 'User `' . $username . '` does not follow anyone.');
-                            break;
-                            default:
-                                echo XML_Data::error('400', 'User `' . $username . '` does not follow anyone.');
-                        }
-                    } else {
-                        debug_event('api.class', 'User is following:  ' . print_r($users), 1);
-                        ob_end_clean();
-                        switch ($input['format']) {
-                            case 'json':
-                                echo JSON_Data::users($users);
-                            break;
-                            default:
-                                echo XML_Data::users($users);
-                        }
-                    }
+        if (!AmpConfig::get('sociable')) {
+            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('username'), 'following')) {
+            return false;
+        }
+        $username = $input['username'];
+        if (!empty($username)) {
+            $user = User::get_from_username($username);
+            if ($user !== null) {
+                $users = $user->get_following();
+                if (!count($users)) {
+                    self::message('error', 'User `' . $username . '` does not follow anyone.', '400', $input['format']);
                 } else {
-                    debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                    debug_event('api.class', 'User is following:  ' . print_r($users), 1);
+                    ob_end_clean();
                     switch ($input['format']) {
                         case 'json':
-                            echo JSON_Data::error('400', 'User `' . $username . '` cannot be found.');
+                            echo JSON_Data::users($users);
                         break;
                         default:
-                            echo XML_Data::error('400', 'User `' . $username . '` cannot be found.');
+                            echo XML_Data::users($users);
                     }
                 }
+            } else {
+                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                self::message('error', 'User `' . $username . '` cannot be found.', '400', $input['format']);
             }
-        } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // following
 
     /**
@@ -2265,32 +2827,30 @@ class Api
      *
      * @param array $input
      * username = (string) $username
+     * @return boolean
      */
     public static function toggle_follow($input)
     {
-        if (AmpConfig::get('sociable')) {
-            if (!self::check_parameter($input, array('username'), 'toggle_follow')) {
-                return false;
+        if (!AmpConfig::get('sociable')) {
+            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('username'), 'toggle_follow')) {
+            return false;
+        }
+        $username = $input['username'];
+        if (!empty($username)) {
+            $user = User::get_from_username($username);
+            if ($user !== null) {
+                User::get_from_username(Session::username($input['auth']))->toggle_follow($user->id);
+                ob_end_clean();
+                self::message('success', 'follow toggled for: ' . $user->id, null, $input['format']);
             }
-            $username = $input['username'];
-            if (!empty($username)) {
-                $user = User::get_from_username($username);
-                if ($user !== null) {
-                    User::get_from_username(Session::username($input['auth']))->toggle_follow($user->id);
-                    ob_end_clean();
-                    switch ($input['format']) {
-                        case 'json':
-                            echo JSON_Data::success('follow toggled for: ' . $user->id);
-                        break;
-                        default:
-                            echo XML_Data::success('follow toggled for: ' . $user->id);
-                    }
-                }
-            }
-        } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // toggle_follow
 
 
@@ -2303,31 +2863,36 @@ class Api
      * @param array $input
      * username = (string) $username //optional
      * limit = (integer) $limit //optional
+     * @return boolean
      */
     public static function last_shouts($input)
     {
+        if (!AmpConfig::get('sociable')) {
+            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('username'), 'last_shouts')) {
+            return false;
+        }
         $limit = (int) ($input['limit']);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold');
         }
-        if (AmpConfig::get('sociable')) {
-            $username = $input['username'];
-            if (!empty($username)) {
-                $shouts = Shoutbox::get_top($limit, $username);
-            } else {
-                $shouts = Shoutbox::get_top($limit);
-            }
-
-            ob_end_clean();
-            switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::shouts($shouts);
-                    break;
-                    default:
-                        echo XML_Data::shouts($shouts);
-                }
+        $username = $input['username'];
+        if (!empty($username)) {
+            $shouts = Shoutbox::get_top($limit, $username);
         } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
+            $shouts = Shoutbox::get_top($limit);
+        }
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::shouts($shouts);
+            break;
+            default:
+                echo XML_Data::shouts($shouts);
         }
         Session::extend($input['auth']);
     } // last_shouts
@@ -2341,10 +2906,16 @@ class Api
      * @param array $input
      * type   = (string) 'song'|'album'|'artist' $type
      * id     = (integer) $object_id
-     * rating = (integer) 0|1|2|3|4|5 $rating
+     * rating = (integer) 0,1|2|3|4|5 $rating
+     * @return boolean|void
      */
     public static function rate($input)
     {
+        if (!AmpConfig::get('ratings')) {
+            self::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
         if (!self::check_parameter($input, array('type', 'id', 'rating'), 'rate')) {
             return false;
         }
@@ -2355,60 +2926,32 @@ class Api
         $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Wrong object type ' . $type));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Wrong object type ' . $type));
-            }
+            self::message('error', T_('Wrong object type ' . $type), '401', $input['format']);
 
-            return;
+            return false;
         }
         if (!in_array($rating, array('0', '1', '2', '3', '4', '5'))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'));
-            }
+            self::message('error', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'), '401', $input['format']);
 
-            return;
+            return false;
         }
 
         if (!Core::is_library_item($type) || !$object_id) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Wrong library item type'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Wrong library item type'));
-            }
+            self::message('error', T_('Wrong library item type'), '401', $input['format']);
         } else {
             $item = new $type($object_id);
             if (!$item->id) {
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::error('404', T_('Library item not found'));
-                    break;
-                    default:
-                        echo XML_Data::error('404', T_('Library item not found'));
-                }
+                self::message('error', T_('Library item not found'), '404', $input['format']);
 
-                return;
+                return false;
             }
             $rate = new Rating($object_id, $type);
             $rate->set_rating($rating, $user->id);
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::success('rating set to ' . $rating . ' for ' . $object_id);
-                break;
-                default:
-                    echo XML_Data::success('rating set to ' . $rating . ' for ' . $object_id);
-            }
+            self::message('success', 'rating set to ' . $rating . ' for ' . $object_id, null, $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // rate
 
     /**
@@ -2422,10 +2965,16 @@ class Api
      * @param array $input
      * type = (string) 'song'|'album'|'artist' $type
      * id   = (integer) $object_id
-     * flag = (boolean) 0|1 $flag
+     * flag = (integer) 0,1 $flag
+     * @return boolean
      */
     public static function flag($input)
     {
+        if (!AmpConfig::get('userflags')) {
+            self::message('error', T_('Access Denied: UserFlag features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
         if (!self::check_parameter($input, array('type', 'id', 'flag'), 'flag')) {
             return false;
         }
@@ -2440,60 +2989,32 @@ class Api
         }
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Wrong object type ' . $type));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Wrong object type ' . $type));
-            }
+            self::message('error', T_('Wrong object type ' . $type), '401', $input['format']);
 
-            return;
+            return false;
         }
 
         if (!Core::is_library_item($type) || !$object_id) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Wrong library item type'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Wrong library item type'));
-            }
+            self::message('error', T_('Wrong library item type'), '401', $input['format']);
         } else {
             $item = new $type($object_id);
             if (!$item->id) {
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::error('404', T_('Library item not found'));
-                    break;
-                    default:
-                        echo XML_Data::error('404', T_('Library item not found'));
-                }
+                self::message('error', T_('Library item not found'), '404', $input['format']);
 
-                return;
+                return false;
             }
             $userflag = new Userflag($object_id, $type);
             if ($userflag->set_flag($flag, $user_id)) {
                 $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::success($message . $object_id);
-                    break;
-                    default:
-                        echo XML_Data::success($message . $object_id);
-                }
+                self::message('success', $message . $object_id, null, $input['format']);
 
-                return;
+                return true;
             }
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('400', 'flag failed ' . $object_id);
-                break;
-                default:
-                    echo XML_Data::error('400', 'flag failed ' . $object_id);
-            }
+            self::message('error', 'flag failed ' . $object_id, '400', $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // flag
 
     /**
@@ -2507,6 +3028,7 @@ class Api
      * id     = (integer) $object_id
      * user   = (integer) $user_id
      * client = (string) $agent //optional
+     * @return boolean
      */
     public static function record_play($input)
     {
@@ -2521,15 +3043,9 @@ class Api
 
         // validate supplied user
         if ($valid === false) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('404', T_('User_id not found'));
-                break;
-                default:
-                    echo XML_Data::error('404', T_('User_id not found'));
-            }
+            self::message('error', T_('User_id not found'), '404', $input['format']);
 
-            return;
+            return false;
         }
 
         // validate client string or fall back to 'api'
@@ -2541,15 +3057,9 @@ class Api
 
         $item = new Song($object_id);
         if (!$item->id) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('404', T_('Library item not found'));
-                break;
-                default:
-                    echo XML_Data::error('404', T_('Library item not found'));
-            }
+            self::message('error', T_('Library item not found'), '404', $input['format']);
 
-            return;
+            return false;
         }
         debug_event('api.class', 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
@@ -2559,14 +3069,10 @@ class Api
         //scrobble plugins
         User::save_mediaplay($user, $item);
 
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::success('successfully recorded play: ' . $item->id);
-            break;
-            default:
-                echo XML_Data::success('successfully recorded play: ' . $item->id);
-        }
+        self::message('success', 'successfully recorded play: ' . $item->id, null, $input['format']);
         Session::extend($input['auth']);
+
+        return true;
     } // record_play
 
     /**
@@ -2585,6 +3091,7 @@ class Api
      * albummbid  = (string)  $album_mbid //optional
      * date       = (integer) UNIXTIME() //optional
      * client     = (string)  $agent //optional
+     * @return boolean
      */
     public static function scrobble($input)
     {
@@ -2610,29 +3117,17 @@ class Api
         }
         // validate supplied user
         if ($valid === false) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('404', T_('User_id not found'));
-                break;
-                default:
-                    echo XML_Data::error('404', T_('User_id not found'));
-            }
+            self::message('error', T_('User_id not found'), '404', $input['format']);
 
-            return;
+            return false;
         }
 
         //validate minimum required options
         debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Invalid input options'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Invalid input options'));
-            }
+            self::message('error', T_('Invalid input options'), '401', $input['format']);
 
-            return;
+            return false;
         }
 
         // validate client string or fall back to 'api'
@@ -2644,55 +3139,103 @@ class Api
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
 
         if ($scrobble_id === '') {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Failed to scrobble: No item found!'));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Failed to scrobble: No item found!'));
-            }
-
-            return;
+            self::message('error', T_('Failed to scrobble: No item found!'), '401', $input['format']);
         } else {
             $item = new Song((int) $scrobble_id);
             if (!$item->id) {
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::error('404', T_('Library item not found'));
-                    break;
-                    default:
-                        echo XML_Data::error('404', T_('Library item not found'));
-                }
+                self::message('error', T_('Library item not found'), '404', $input['format']);
 
-                return;
+                return false;
             }
             debug_event('api.class', 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
-            $item->set_played($user_id, $agent, array(), time());
+            $item->set_played($user_id, $agent, array(), $date);
 
             //scrobble plugins
             User::save_mediaplay($user, $item);
-        }
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::success('successfully scrobbled: ' . $scrobble_id);
-            break;
-            default:
-                echo XML_Data::success('successfully scrobbled: ' . $scrobble_id);
+
+            self::message('success', 'successfully scrobbled: ' . $scrobble_id, null, $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // scrobble
+
+    /**
+     * catalogs
+     * MINIMUM_API_VERSION=410001
+     *
+     * Get information about catalogs this user is allowed to manage.
+     *
+     * @param array $input
+     * filter = (string) set $filter_type //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     */
+    public static function catalogs($input)
+    {
+        // filter for specific catalog types
+        $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
+        $catalogs = Catalog::get_catalogs($filter);
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::catalogs($catalogs);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::catalogs($catalogs);
+        }
+        Session::extend($input['auth']);
+    } // catalogs
+
+    /**
+     * catalog
+     * MINIMUM_API_VERSION=410001
+     *
+     * Get the catalogs from it's id.
+     *
+     * @param array $input
+     * filter = (integer) Catalog ID number
+     * @return boolean
+     */
+    public static function catalog($input)
+    {
+        if (!self::check_parameter($input, array('filter'), 'catalog')) {
+            return false;
+        }
+        $catalog = array((int) $input['filter']);
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::catalogs($catalog);
+                break;
+            default:
+                echo XML_Data::catalogs($catalog);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // catalog
 
     /**
      * catalog_action
      * MINIMUM_API_VERSION=400001
+     * CHANGED_IN_API_VERSION=410001
      *
      * Kick off a catalog update or clean for the selected catalog
+     * Added 'verify_catalog', 'gather_art'
      *
      * @param array $input
      * task    = (string) 'add_to_catalog'|'clean_catalog'
      * catalog = (integer) $catalog_id)
+     * @return boolean
      */
     public static function catalog_action($input)
     {
@@ -2701,45 +3244,41 @@ class Api
         }
         $task = (string) $input['task'];
         // confirm the correct data
-        if (!in_array($task, array('add_to_catalog', 'clean_catalog'))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Wrong catalog task ' . $task));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Wrong catalog task ' . $task));
-            }
+        if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
+            self::message('error', T_('Wrong catalog task ' . $task), '401', $input['format']);
 
-            return;
+            return false;
         }
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog) {
+            define('API', true);
+            define('SSE_OUTPUT', true);
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog();
                 break;
+                case 'verify_catalog':
+                    $catalog->verify_catalog();
+                break;
+                case 'gather_art':
+                    $catalog->gather_art();
+                    break;
                 case 'add_to_catalog':
-                    $catalog->add_to_catalog();
+                    $options = array(
+                        'gather_art' => false,
+                        'parse_playlist' => false
+                    );
+                    $catalog->add_to_catalog($options);
                 break;
             }
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::success('successfully started: ' . $task);
-                break;
-                default:
-                   echo XML_Data::success('successfully started: ' . $task);
-            }
+            self::message('success', 'successfully started: ' . $task, null, $input['format']);
         } else {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('404', T_('The requested item was not found'));
-                break;
-                default:
-                   echo XML_Data::error('404', T_('The requested item was not found'));
-            }
+            self::message('error', T_('The requested item was not found'), '404', $input['format']);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // catalog_action
 
     /**
@@ -2752,6 +3291,7 @@ class Api
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
+     * @return boolean
      */
     public static function timeline($input)
     {
@@ -2783,6 +3323,8 @@ class Api
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // timeline
 
     /**
@@ -2828,6 +3370,7 @@ class Api
      * @param array $input
      * type = (string) 'artist'|'album'|'song'
      * id   = (integer) $artist_id, $album_id, $song_id)
+     * @return boolean
      */
     public static function update_from_tags($input)
     {
@@ -2839,39 +3382,23 @@ class Api
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album', 'song'))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Wrong item type ' . $type));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Wrong item type ' . $type));
-            }
+            self::message('error', T_('Wrong item type ' . $type), '401', $input['format']);
 
-            return;
+            return false;
         }
         $item = new $type($object);
         if (!$item->id) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('404', T_('The requested item was not found'));
-                break;
-                default:
-                    echo XML_Data::error('404', T_('The requested item was not found'));
-            }
+            self::message('error', T_('The requested item was not found'), '404', $input['format']);
 
-            return;
+            return false;
         }
         // update your object
         Catalog::update_single_item($type, $object, true);
 
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::success('Updated tags for: ' . (string) $object . ' (' . $type . ')');
-            break;
-            default:
-                echo XML_Data::success('Updated tags for: ' . (string) $object . ' (' . $type . ')');
-        }
+        self::message('success', 'Updated tags for: ' . (string) $object . ' (' . $type . ')', null, $input['format']);
         Session::extend($input['auth']);
+
+        return true;
     } // update_from_tags
 
     /**
@@ -2883,6 +3410,7 @@ class Api
      *
      * @param array $input
      * id   = (integer) $artist_id)
+     * @return boolean
      */
     public static function update_artist_info($input)
     {
@@ -2895,37 +3423,21 @@ class Api
         $object = (int) $input['id'];
         $item   = new Artist($object);
         if (!$item->id) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('404', T_('The requested item was not found'));
-                break;
-                default:
-                    echo XML_Data::error('404', T_('The requested item was not found'));
-            }
+            self::message('error', T_('The requested item was not found'), '404', $input['format']);
 
-            return;
+            return false;
         }
         // update your object
         // need at least catalog_manager access to the db
         if (!empty(Recommendation::get_artist_info($object) || !empty(Recommendation::get_artists_like($object)))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::success('Updated artist info: ' . (string) $object);
-                break;
-                default:
-                    echo XML_Data::success('Updated artist info: ' . (string) $object);
-            }
+            self::message('success', 'Updated artist info: ' . (string) $object, null, $input['format']);
 
-            return;
+            return true;
         }
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::error('400', T_('failed to update_artist_info or recommendations for ' . (string) $object));
-            break;
-            default:
-                echo XML_Data::error('400', T_('failed to update_artist_info or recommendations for ' . (string) $object));
-        }
+        self::message('error', T_('failed to update_artist_info or recommendations for ' . (string) $object), '400', $input['format']);
         Session::extend($input['auth']);
+
+        return true;
     } // update_artist_info
 
     /**
@@ -2938,7 +3450,8 @@ class Api
      * @param array $input
      * type      = (string) 'artist'|'album'
      * id        = (integer) $artist_id, $album_id)
-     * overwrite = (boolean) 0|1 //optional
+     * overwrite = (integer) 0,1 //optional
+     * @return boolean
      */
     public static function update_art($input)
     {
@@ -2950,53 +3463,65 @@ class Api
         }
         $type      = (string) $input['type'];
         $object    = (int) $input['id'];
-        $overwrite = ((int) $input['overwrite'] == 0) ? true : false;
+        $overwrite = (int) $input['overwrite'] == 0;
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Wrong item type ' . $type));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Wrong item type ' . $type));
-            }
+            self::message('error', T_('Wrong item type ' . $type), '401', $input['format']);
 
-            return;
+            return true;
         }
         $item = new $type($object);
         if (!$item->id) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('404', T_('The requested item was not found'));
-                break;
-                default:
-                    echo XML_Data::error('404', T_('The requested item was not found'));
-            }
+            self::message('error', T_('The requested item was not found'), '404', $input['format']);
 
-            return;
+            return true;
         }
         // update your object
         if (Catalog::gather_art_item($type, $object, $overwrite, true)) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::success('Gathered new art for: ' . (string) $object . ' (' . $type . ')');
-                break;
-                default:
-                    echo XML_Data::success('Gathered new art for: ' . (string) $object . ' (' . $type . ')');
-            }
+            self::message('success', 'Gathered new art for: ' . (string) $object . ' (' . $type . ')', null, $input['format']);
 
-            return;
+            return true;
         }
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::error('400', T_('failed to update_art for ' . (string) $object));
-            break;
-            default:
-                echo XML_Data::error('400', T_('failed to update_art for ' . (string) $object));
+        self::message('error', T_('failed to update_art for ' . (string) $object), '400', $input['format']);
+        Session::extend($input['auth']);
+
+        return true;
+    } // update_art
+    /**
+     * update_podcast
+     * MINIMUM_API_VERSION=410001
+     *
+     * Sync and download new podcast episodes
+     *
+     * @param array $input
+     * filter = (string) UID of podcast
+     * @return boolean
+     */
+    public static function update_podcast($input)
+    {
+        if (!self::check_parameter($input, array('filter'), 'update_podcast')) {
+            return false;
+        }
+        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
+            return false;
+        }
+        $object_id = (string) scrub_in($input['filter']);
+        $podcast   = new Podcast($object_id);
+        if ($podcast->id > 0) {
+            if ($podcast->sync_episodes(true)) {
+                self::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['format']);
+                Session::extend($input['auth']);
+            } else {
+                self::message('error', T_('failed to sync episodes for podcast: ' . (string) $object_id), '400', $input['format']);
+            }
+        } else {
+            self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['format']);
         }
         Session::extend($input['auth']);
-    } // update_art
+
+        return true;
+    } // update_podcast
 
     /**
      * stream
@@ -3011,7 +3536,8 @@ class Api
      * bitrate = (integer) max bitrate for transcoding
      * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
      * offset  = (integer) time offset in seconds
-     * length  = (boolean) 0|1
+     * length  = (integer) 0,1
+     * @return boolean
      */
     public static function stream($input)
     {
@@ -3024,7 +3550,7 @@ class Api
 
         $maxBitRate    = $input['bitrate'];
         $format        = $input['format']; // mp3, flv or raw
-        $original      = ($format && $format != 'raw') ? true : false;
+        $original      = $format && $format != 'raw';
         $timeOffset    = $input['offset'];
         $contentLength = (int) $input['length']; // Force content-length guessing if transcode
 
@@ -3054,14 +3580,10 @@ class Api
 
             return true;
         }
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::error('400', 'failed to create: ' . $url);
-            break;
-            default:
-                echo XML_Data::error('400', 'failed to create: ' . $url);
-        }
+        self::message('error', 'failed to create: ' . $url, '400', $input['format']);
         Session::extend($input['auth']);
+
+        return true;
     } // stream
 
     /**
@@ -3074,6 +3596,7 @@ class Api
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song'|'podcast'
      * format = (string) 'mp3'|'ogg', etc //optional
+     * @return boolean
      */
     public static function download($input)
     {
@@ -3083,7 +3606,7 @@ class Api
         $fileid   = $input['id'];
         $type     = $input['type'];
         $format   = $input['format'];
-        $original = ($format && $format != 'raw') ? true : false;
+        $original = $format && $format != 'raw';
         $user_id  = User::get_from_username(Session::username($input['auth']))->id;
 
         $url    = '';
@@ -3105,14 +3628,10 @@ class Api
 
             return true;
         }
-        switch ($input['format']) {
-            case 'json':
-                echo JSON_Data::error('400', 'failed to create: ' . $url);
-            break;
-            default:
-                echo XML_Data::error('400', 'failed to create: ' . $url);
-        }
+        self::message('error', 'failed to create: ' . $url, '400', $input['format']);
         Session::extend($input['auth']);
+
+        return true;
     } // download
 
     /**
@@ -3124,6 +3643,7 @@ class Api
      * @param array $input
      * id   = (string) $object_id
      * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast')
+     * @return boolean
      */
     public static function get_art($input)
     {
@@ -3137,15 +3657,9 @@ class Api
 
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
-            switch ($input['format']) {
-                case 'json':
-                    echo JSON_Data::error('401', T_('Wrong object type ' . $type));
-                break;
-                default:
-                    echo XML_Data::error('401', T_('Wrong object type ' . $type));
-            }
+            self::message('error', T_('Wrong object type ' . $type), '401', $input['format']);
 
-            return;
+            return false;
         }
 
         $art = null;
@@ -3195,7 +3709,7 @@ class Api
                     header('Content-Length: ' . strlen((string) $thumb['thumb']));
                     echo $thumb['thumb'];
 
-                    return;
+                    return true;
                 }
             }
 
@@ -3204,6 +3718,8 @@ class Api
             echo $art->raw;
         }
         Session::extend($input['auth']);
+
+        return true;
     } // get_art
 
     /**
@@ -3238,13 +3754,7 @@ class Api
             break;
             default:
                 // They are doing it wrong
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::error('405', T_('Invalid request'));
-                    break;
-                    default:
-                        echo XML_Data::error('405', T_('Invalid request'));
-                }
+                self::message('error', T_('Invalid request'), '405', $input['format']);
             break;
         } // end switch on command
         Session::extend($input['auth']);
@@ -3272,13 +3782,7 @@ class Api
                 $type  = 'song';
                 $media = new Song($input['oid']);
                 if (!$media->id) {
-                    switch ($input['format']) {
-                        case 'json':
-                            echo JSON_Data::error('400', T_('Media object invalid or not specified'));
-                        break;
-                        default:
-                            echo XML_Data::error('400', T_('Media object invalid or not specified'));
-                    }
+                    self::message('error', T_('Media object invalid or not specified'), '400', $input['format']);
                     break;
                 }
                 $democratic->add_vote(array(
@@ -3302,13 +3806,7 @@ class Api
                 $type  = 'song';
                 $media = new Song($input['oid']);
                 if (!$media->id) {
-                    switch ($input['format']) {
-                        case 'json':
-                            echo JSON_Data::error('400', T_('Media object invalid or not specified'));
-                        break;
-                        default:
-                            echo XML_Data::error('400', T_('Media object invalid or not specified'));
-                    }
+                    self::message('error', T_('Media object invalid or not specified'), '400', $input['format']);
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id, $type);
@@ -3349,13 +3847,7 @@ class Api
                 }
             break;
             default:
-                switch ($input['format']) {
-                    case 'json':
-                        echo JSON_Data::error('405', T_('Invalid request'));
-                    break;
-                    default:
-                        echo XML_Data::error('405', T_('Invalid request'));
-                }
+                self::message('error', T_('Invalid request'), '405', $input['format']);
             break;
         } // switch on method
         Session::extend($input['auth']);

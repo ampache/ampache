@@ -28,6 +28,8 @@ define('TABLE_RENDERED', 1);
 // Temporary workaround to avoid sorting on custom base requests
 define('NO_BROWSE_SORTING', true);
 
+$time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
+
 // Switch on the actions
 switch ($_REQUEST['action']) {
     // Show a Users "Profile" page

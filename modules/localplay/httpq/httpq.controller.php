@@ -118,6 +118,8 @@ class AmpacheHttpq extends localplay_controller
     /**
      * add_instance
      * This takes keyed data and inserts a new httpQ instance
+     * @param array $data
+     * @return bool|PDOStatement
      */
     public function add_instance($data)
     {
@@ -129,15 +131,15 @@ class AmpacheHttpq extends localplay_controller
 
         $sql = "INSERT INTO `localplay_httpq` (`name`, `host`, `port`, `password`, `owner`) " .
             "VALUES ('$name', '$host', '$port', '$password', '$user_id')";
-        $db_results = Dba::write($sql);
 
-
-        return $db_results;
+        return Dba::write($sql);
     } // add_instance
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
+     * @param $uid
+     * @return boolean
      */
     public function delete_instance($uid)
     {
@@ -171,6 +173,9 @@ class AmpacheHttpq extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
+     * @param $uid
+     * @param array $data
+     * @return boolean
      */
     public function update_instance($uid, $data)
     {
@@ -204,23 +209,28 @@ class AmpacheHttpq extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all its variables
+     * @param string $instance
+     * @return array
      */
     public function get_instance($instance = '')
     {
         $instance = $instance ? $instance : AmpConfig::get('httpq_active');
-        $instance = Dba::escape($instance);
+        $sql      = "SELECT * FROM `localplay_httpq` WHERE `id` = ?";
+        // if you only have one instance just default to that!
+        if (!is_numeric($instance) && count(self::get_instances()) === 1) {
+            $sql = "SELECT * FROM `localplay_httpq`";
+        }
+        $db_results = Dba::query($sql, array($instance));
 
-        $sql        = "SELECT * FROM `localplay_httpq` WHERE `id`='$instance'";
-        $db_results = Dba::read($sql);
-
-        $row = Dba::fetch_assoc($db_results);
-
-        return $row;
+        return Dba::fetch_assoc($db_results);
     } // get_instance
 
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
+     * @param $uid
+     * @param string $user_id
+     * @return boolean
      */
     public function set_active_instance($uid, $user_id = '')
     {
@@ -231,8 +241,8 @@ class AmpacheHttpq extends localplay_controller
 
         $user_id = $user_id ? $user_id : Core::get_global('user')->id;
 
-        Preference::update('httpq_active', $user_id, (int) ($uid));
-        AmpConfig::set('httpq_active', (int) ($uid), true);
+        Preference::update('httpq_active', $user_id, $uid);
+        AmpConfig::set('httpq_active', $uid, true);
 
         return true;
     } // set_active_instance
@@ -249,11 +259,13 @@ class AmpacheHttpq extends localplay_controller
     /**
      * add_url
      * This is the new hotness
+     * @param Stream_URL $url
+     * @return boolean
      */
     public function add_url(Stream_URL $url)
     {
         if ($this->_httpq->add($url->title, $url->url) === null) {
-            debug_event('httpq.controller', 'add_url failed to add ' . $url, 1);
+            debug_event('httpq.controller', 'add_url failed to add ' . (string) $url, 1);
 
             return false;
         }
@@ -265,6 +277,8 @@ class AmpacheHttpq extends localplay_controller
      * delete_track
      * This must take an ID (as returned by our get function)
      * and delete it from httpQ
+     * @param $object_id
+     * @return boolean
      */
     public function delete_track($object_id)
     {
@@ -329,6 +343,8 @@ class AmpacheHttpq extends localplay_controller
     /**
      * skip
      * This tells httpQ to skip to the specified song
+     * @param $song
+     * @return boolean
      */
     public function skip($song)
     {
@@ -344,11 +360,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function volume_up()
     {
-        if ($this->_httpq->volume_up() === null) {
-            return false;
-        }
-
-        return true;
+        return $this->_httpq->volume_up();
     } // volume_up
 
     /**
@@ -356,11 +368,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function volume_down()
     {
-        if ($this->_httpq->volume_down() === null) {
-            return false;
-        }
-
-        return true;
+        return $this->_httpq->volume_down();
     } // volume_down
 
     /**
@@ -403,23 +411,23 @@ class AmpacheHttpq extends localplay_controller
     } // pause
 
     /**
-    * volume
-    * This tells httpQ to set the volume to the specified amount this
-    * is 0-100
-    */
+     * volume
+     * This tells httpQ to set the volume to the specified amount this
+     * is 0-100
+     * @param $volume
+     * @return boolean
+     */
     public function volume($volume)
     {
-        if ($this->_httpq->set_volume($volume) === null) {
-            return false;
-        }
-
-        return true;
+        return $this->_httpq->set_volume($volume);
     } // volume
 
     /**
      * repeat
      * This tells httpQ to set the repeating the playlist (i.e. loop) to
-    * either on or off
+     * either on or off
+     * @param $state
+     * @return boolean
      */
     public function repeat($state)
     {
@@ -433,7 +441,9 @@ class AmpacheHttpq extends localplay_controller
     /**
      * random
      * This tells httpQ to turn on or off the playing of songs from the
-    * playlist in random order
+     * playlist in random order
+     * @param $onoff
+     * @return boolean
      */
     public function random($onoff)
     {
@@ -459,7 +469,8 @@ class AmpacheHttpq extends localplay_controller
             return array();
         }
 
-        $songs = explode("::", $list);
+        $songs   = explode("::", $list);
+        $results = array();
 
         foreach ($songs as $key => $entry) {
             $data = array();
@@ -542,7 +553,7 @@ class AmpacheHttpq extends localplay_controller
         $url_data        = $this->parse_url($array['track']);
 
         if (isset($url_data['oid'])) {
-            $song                  = new Song($data['oid']);
+            $song                  = new Song($url_data['oid']);
             $array['track_title']  = $song->title;
             $array['track_artist'] = $song->get_artist_name();
             $array['track_album']  = $song->get_album_name();

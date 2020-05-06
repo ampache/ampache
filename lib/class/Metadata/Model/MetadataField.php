@@ -22,12 +22,15 @@
 
 namespace Lib\Metadata\Model;
 
+use Lib\DatabaseObject;
+use Lib\Interfaces\Model;
+
 /**
  * Description of metadata_field
  *
  * @author raziel
  */
-class MetadataField extends \Lib\DatabaseObject implements \Lib\Interfaces\Model
+class MetadataField extends DatabaseObject implements Model
 {
     /**
      * Database ID

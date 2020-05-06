@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -72,6 +73,7 @@ class Browse extends Query
      *
      * @param string $class
      * @param integer $uid
+     * @return boolean
      */
     public function add_supplemental_object($class, $uid)
     {
@@ -198,6 +200,7 @@ class Browse extends Query
         debug_event('browse.class', 'Show objects called for type {' . $type . '}', 5);
 
         $limit_threshold = $this->get_threshold();
+        $time_format     = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
 
         // Switch on the type of browsing we're doing
         switch ($type) {
@@ -374,6 +377,9 @@ class Browse extends Query
         Ajax::end_container();
     } // show_object
 
+    /**
+     * @param $argument
+     */
     public function show_next_link($argument = null)
     {
         $limit       = $this->get_offset();
@@ -455,6 +461,7 @@ class Browse extends Query
     /**
      *
      * @param boolean $use_pages
+     * @param boolean $savecookie
      */
     public function set_use_pages($use_pages, $savecookie = true)
     {
@@ -476,6 +483,7 @@ class Browse extends Query
     /**
      *
      * @param boolean $grid_view
+     * @param boolean $savecookie
      */
     public function set_grid_view($grid_view, $savecookie = true)
     {
@@ -497,6 +505,7 @@ class Browse extends Query
     /**
      *
      * @param boolean $use_alpha
+     * @param boolean $savecookie
      */
     public function set_use_alpha($use_alpha, $savecookie = true)
     {

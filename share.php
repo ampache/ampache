@@ -109,7 +109,7 @@ switch ($_REQUEST['action']) {
 
         UI::show_header();
         $share_id = Core::get_request('id');
-        if (Share::delete_share($share_id)) {
+        if (Share::delete_share($share_id, Core::get_global('user'))) {
             $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
             show_confirmation(T_('No Problem'), T_('Share has been deleted'), $next_url);
         }
@@ -148,7 +148,7 @@ switch ($_REQUEST['action']) {
         $type           = Core::get_request('type');
         $share_id       = Core::get_request('id');
         $allow_download = (($type == 'song' && Access::check_function('download')) || Access::check_function('batch_download'));
-        $secret         = Share::generate_secret();
+        $secret         = generate_password(8);
 
         $share_id = Share::create_share($type, $share_id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
         $share    = new Share($share_id);

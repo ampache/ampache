@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -23,6 +24,9 @@
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
+/**
+ * Class Broadcast_Server
+ */
 class Broadcast_Server implements MessageComponentInterface
 {
     const BROADCAST_SONG               = "SONG";
@@ -64,7 +68,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $conn
+     * @param ConnectionInterface $conn
      */
     public function onOpen(ConnectionInterface $conn)
     {
@@ -73,7 +77,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $from
+     * @param ConnectionInterface $from
      * @param string $msg
      */
     public function onMessage(ConnectionInterface $from, $msg)
@@ -137,7 +141,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $from
+     * @param ConnectionInterface $from
      * @param integer $song_id
      */
     protected function notifySong(ConnectionInterface $from, $song_id)
@@ -159,7 +163,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $from
+     * @param ConnectionInterface $from
      * @param integer $song_position
      */
     protected function notifySongPosition(ConnectionInterface $from, $song_position)
@@ -181,7 +185,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $from
+     * @param ConnectionInterface $from
      * @param boolean $play
      */
     protected function notifyPlayerPlay(ConnectionInterface $from, $play)
@@ -199,7 +203,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $from
+     * @param ConnectionInterface $from
      */
     protected function notifyEnded(ConnectionInterface $from)
     {
@@ -216,7 +220,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $from
+     * @param ConnectionInterface $from
      * @param string $broadcast_key
      */
     protected function registerBroadcast(ConnectionInterface $from, $broadcast_key)
@@ -232,7 +236,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $conn
+     * @param ConnectionInterface $conn
      */
     protected function unregisterBroadcast(ConnectionInterface $conn)
     {
@@ -267,7 +271,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $from
+     * @param ConnectionInterface $from
      * @param integer $broadcast_id
      */
     protected function registerListener(ConnectionInterface $from, $broadcast_id)
@@ -290,7 +294,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $conn
+     * @param ConnectionInterface $conn
      * @param string $sid
      */
     protected function authSid(ConnectionInterface $conn, $sid)
@@ -304,7 +308,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $conn
+     * @param ConnectionInterface $conn
      */
     protected function unregisterListener(ConnectionInterface $conn)
     {
@@ -345,7 +349,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param Broadcast $broadcast
-     * @return \Ratchet\ConnectionInterface
+     * @return ConnectionInterface[]
      */
     protected function getListeners(Broadcast $broadcast)
     {
@@ -354,7 +358,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $conn
+     * @param ConnectionInterface $conn
      * @return boolean
      */
     protected function isBroadcaster(ConnectionInterface $conn)
@@ -364,7 +368,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface[] $clients
+     * @param ConnectionInterface[] $clients
      * @param string $cmd
      * @param string $value
      */
@@ -382,7 +386,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param \Ratchet\ConnectionInterface $conn
+     * @param ConnectionInterface $conn
      */
     public function onClose(ConnectionInterface $conn)
     {
@@ -397,12 +401,13 @@ class Broadcast_Server implements MessageComponentInterface
     }
 
     /**
-     *
-     * @param \Ratchet\ConnectionInterface $conn
-     * @param \Exception $error
+     * onError
+     * @param ConnectionInterface $conn
+     * @param Exception $error
      */
-    public function onError(ConnectionInterface $conn, \Exception $error)
+    public function onError(ConnectionInterface $conn, Exception $error)
     {
+        debug_event('broadcast_server.class', 'Broadcast error: ' . $error->getMessage(), 1);
         $conn->close();
     }
 

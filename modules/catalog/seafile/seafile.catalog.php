@@ -29,6 +29,9 @@
 
 require_once('SeafileAdapter.php');
 
+/**
+ * Class Catalog_Seafile
+ */
 class Catalog_Seafile extends Catalog
 {
     private static $version     = '000001';
@@ -142,6 +145,9 @@ class Catalog_Seafile extends Catalog
      * create_type
      *
      * This creates a new catalog type entry for a catalog
+     * @param $catalog_id
+     * @param array $data
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     {
@@ -187,7 +193,7 @@ class Catalog_Seafile extends Catalog
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
         } catch (Exception $error) {
             /* HINT: exception error message */
-            AmpError::add('general', sprintf(T_('There was a problem authenticating against the Seafile API: %s', $error->getMessage())));
+            AmpError::add('general', sprintf(T_('There was a problem authenticating against the Seafile API: %s'), $error->getMessage()));
             debug_event('seafile_catalog', 'Exception while Authenticating: ' . $error->getMessage(), 2);
         }
 
@@ -196,7 +202,7 @@ class Catalog_Seafile extends Catalog
         }
 
         $sql = "INSERT INTO `catalog_seafile` (`server_uri`, `api_key`, `library_name`, `api_call_delay`, `catalog_id`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($server_uri, $api_key, $library_name, intval($api_call_delay), $catalog_id));
+        Dba::write($sql, array($server_uri, $api_key, $library_name, (int) ($api_call_delay), $catalog_id));
 
         return true;
     }
@@ -205,17 +211,22 @@ class Catalog_Seafile extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
+     * @param integer $catalog_id
      */
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = intval($catalog_id);
+            $this->id = (int) $catalog_id;
             $info     = $this->get_info($catalog_id);
 
             $this->seafile = new SeafileAdapter($info['server_uri'], $info['library_name'], $info['api_call_delay'], $info['api_key']);
         }
     }
 
+    /**
+     * @param string $file_path
+     * @return string
+     */
     public function get_rel_path($file_path)
     {
         $arr = $this->seafile->from_virtual_path($file_path);
@@ -227,6 +238,8 @@ class Catalog_Seafile extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
+     * @param array $options
+     * @return boolean
      */
     public function add_to_catalog($options = null)
     {
@@ -254,8 +267,8 @@ class Catalog_Seafile extends Catalog
                     if ($this->insert_song($file)) {
                         return 1;
                     }
-                } elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
-                    // TODO $this->insert_video()
+                    //} elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
+                //    // TODO $this->insert_video()
                 } elseif (!$is_audio_file && !$is_video_file) {
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
                 } else {
@@ -289,6 +302,8 @@ class Catalog_Seafile extends Catalog
      * _insert_local_song
      *
      * Insert a song that isn't already in the database.
+     * @param $file
+     * @return bool|int
      */
     private function insert_song($file)
     {
@@ -320,6 +335,14 @@ class Catalog_Seafile extends Catalog
         return false;
     }
 
+    /**
+     * @param $file
+     * @param string $sort_pattern
+     * @param string $rename_pattern
+     * @param $gather_types
+     * @return array
+     * @throws Exception
+     */
     private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null)
     {
         // Check for patterns
@@ -343,7 +366,7 @@ class Catalog_Seafile extends Catalog
         $key = vainfo::get_tag_type($vainfo->tags);
 
         // maybe fix stat-ing-nonexistent-file bug?
-        $vainfo->tags['general']['size'] = intval($file->size);
+        $vainfo->tags['general']['size'] = (int) ($file->size);
 
         $results = vainfo::clean_tag_info($vainfo->tags, $key, $file->name);
 
@@ -355,6 +378,10 @@ class Catalog_Seafile extends Catalog
         return $results;
     }
 
+    /**
+     * @return array|mixed
+     * @throws ReflectionException
+     */
     public function verify_catalog_proc()
     {
         $results = array('total' => 0, 'updated' => 0);
@@ -401,6 +428,14 @@ class Catalog_Seafile extends Catalog
         return $results;
     }
 
+    /**
+     * @param media $media
+     * @param $gather_types
+     * @param string $sort_pattern
+     * @param string $rename_pattern
+     * @return array|null
+     * @throws Exception
+     */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
         if ($this->seafile->prepare()) {
@@ -469,6 +504,8 @@ class Catalog_Seafile extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
+     * @param $file
+     * @return bool|mixed
      */
     public function check_remote_song($file)
     {
@@ -501,6 +538,10 @@ class Catalog_Seafile extends Catalog
         }
     }
 
+    /**
+     * @param Podcast_Episode|Song|Song_Preview|Video $media
+     * @return media|Podcast_Episode|Song|Song_Preview|Video|null
+     */
     public function prepare_media($media)
     {
         if ($this->seafile->prepare()) {

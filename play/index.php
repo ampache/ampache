@@ -40,9 +40,10 @@ $sid            = scrub_in($_REQUEST['ssid']);
 $type           = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 $cache          = scrub_in($_REQUEST['cache']);
 $format         = scrub_in($_REQUEST['format']);
-$original       = ($format == 'raw') ? true : false;
+$original       = $format == 'raw';
 $action         = Core::get_get('action');
 $record_stats   = true;
+$use_auth       = AmpConfig::get('use_auth');
 
 // allow disabling stat recording from the play url
 if ($cache === '1' || $type == 'podcast_episode') {
@@ -62,7 +63,7 @@ if (isset($_REQUEST['player'])) {
 }
 
 if (AmpConfig::get('transcode_player_customize') && !$original) {
-    $transcode_to = scrub_in($_REQUEST['transcode_to']);
+    $transcode_to = (string) scrub_in($_REQUEST['transcode_to']) == '' ? null : (string) scrub_in($_REQUEST['transcode_to']);
     $bitrate      = (int) ($_REQUEST['bitrate']);
 
     // Trick to avoid LimitInternalRecursion reconfiguration
@@ -132,15 +133,16 @@ if (!empty($apikey)) {
     $user = User::get_from_apikey($apikey);
     if ($user != null) {
         $GLOBALS['user'] = $user;
-        $uid             = Core::get_global('user')->id;
+        $uid             = $user->id;
         Preference::init();
         $user_authenticated = true;
     }
 } elseif (!empty($username) && !empty($password)) {
     $auth = Auth::login($username, $password);
     if ($auth['success']) {
-        $GLOBALS['user']         = User::get_from_username($auth['username']);
-        $uid                     = Core::get_global('user')->id;
+        $user            = User::get_from_username($auth['username']);
+        $GLOBALS['user'] = $user;
+        $uid             = $user->id;
         Preference::init();
         $user_authenticated = true;
     }
@@ -151,7 +153,9 @@ if (empty($uid)) {
     header('HTTP/1.1 400 No User Specified');
 
     return false;
-} elseif ($uid == '-1' && AmpConfig::get('use_auth')) {
+}
+
+if ($use_auth) {
     // Identify the user according to it's web session
     // We try to avoid the generic 'Ampache User' as much as possible
     if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
@@ -176,7 +180,7 @@ if (!$share_id) {
         }
 
         // If require session is set then we need to make sure we're legit
-        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+        if ($use_auth && AmpConfig::get('require_session')) {
             if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, '5')) {
                 debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
             } else {
@@ -671,8 +675,13 @@ if (!isset($_REQUEST['segment'])) {
         $location   = Session::get_geolocation($sessionkey);
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                debug_event('play/index', 'Registering stream stats for {' . $media->get_stream_name() . '}...', 4);
-                Core::get_global('user')->update_stats($type, $media->id, $agent, $location);
+                debug_event('play/index', 'Registering stream stats for ' . $uid . ' {' . $media->get_stream_name() . '}...', 4);
+                if ($use_auth) {
+                    $user = new User($uid);
+                    $user->update_stats($type, $media->id, $agent, $location);
+                } else {
+                    Stats::insert($type, $media->id, 0, $agent, $location, 'stream');
+                }
             }
         } elseif (!$share_id && !$record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
@@ -702,7 +711,7 @@ if ($transcode && isset($transcoder)) {
         }
         fclose($transcoder['stderr']);
     }
-};
+}
 
 // If this is a democratic playlist remove the entry.
 // We do this regardless of play amount.

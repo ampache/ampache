@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -39,6 +40,9 @@ class VlcPlayer
      * This is the constructor, it defaults to localhost
      * with port 8080
      * i would change this to another value then standard 8080, it gets used by more things
+     * @param string $h
+     * @param string $pw
+     * @param integer $p
      */
     public function __construct($h = 'localhost', $pw = '', $p = 8080)
     {
@@ -52,6 +56,9 @@ class VlcPlayer
      * append a song to the playlist
      * $name    Name to be shown in the playlist
      * $url        URL of the song
+     * @param $name
+     * @param $url
+     * @return boolean
      */
     public function add($name, $url)
     {
@@ -62,7 +69,7 @@ class VlcPlayer
         $args    = array('command' => 'in_enqueue', '&input' => $aurl);
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -132,6 +139,8 @@ class VlcPlayer
     /**
      * skip
      * This skips to POS in the playlist
+     * @param $pos
+     * @return bool|null
      */
     public function skip($pos)
     {
@@ -192,8 +201,10 @@ class VlcPlayer
     } // stop
 
     /**
-      * repeat
+     * repeat
      * This toggles the repeat state of VLC
+     * @param $value
+     * @return bool|null
      */
     public function repeat($value)
     {
@@ -209,13 +220,15 @@ class VlcPlayer
     /**
      * random
      * this toggles the random state of VLC
+     * @param $value
+     * @return bool|null
      */
     public function random($value)
     {
         $args    = array('command' => 'pl_random');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -224,13 +237,15 @@ class VlcPlayer
     /**
      * delete_pos
      * This deletes a specific track
+     * @param $track
+     * @return bool|null
      */
     public function delete_pos($track)
     {
         $args    = array('command' => 'pl_delete', '&id' => $track);
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -244,6 +259,7 @@ class VlcPlayer
     {
         $args = array();
 
+        $state       = 'unknown';
         $results     = $this->sendCommand('status.xml', $args);
         $currentstat = $results['root']['state']['value'];
 
@@ -270,7 +286,7 @@ class VlcPlayer
 
         $results = $this->sendCommand('status.xml', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return $results;
@@ -286,7 +302,7 @@ class VlcPlayer
         $args    = array('command' => 'volume', '&val' => '%2B20');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -301,7 +317,7 @@ class VlcPlayer
         $args    = array('command' => 'volume', '&val' => '-20');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -310,6 +326,8 @@ class VlcPlayer
     /**
      * set_volume
      * This sets the volume as best it can, i think it's from 0 to 400, need more testing'
+     * @param $value
+     * @return boolean
      */
     public function set_volume($value)
     {
@@ -319,7 +337,7 @@ class VlcPlayer
         $args    = array('command' => 'volume', '&val' => $value);
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -334,7 +352,7 @@ class VlcPlayer
         $args    = array('command' => 'pl_empty');
         $results = $this->sendcommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -353,20 +371,23 @@ class VlcPlayer
 
         $results = $this->sendCommand('playlist.xml', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return $results;
     } // get_tracks
 
     /**
-      * sendCommand
+     * sendCommand
      * This is the core of this library it takes care of sending the HTTP
      * request to the VLC server and getting the response
+     * @param $cmd
+     * @param $args
+     * @return array|void|null
      */
     private function sendCommand($cmd, $args)
     {
-        $fsock = fsockopen($this->host, $this->port, $errno, $errstr);
+        $fsock = fsockopen($this->host, (int) $this->port, $errno, $errstr);
 
         if (!$fsock) {
             debug_event('vlcplayer.class', "VLCPlayer: $errstr ($errno)", 1);
@@ -410,13 +431,17 @@ class VlcPlayer
         fclose($fsock);
 
         // send to xml parser and make an array
-        $result = $this->xmltoarray($data);
-
-        return $result;
+        return $this->xmltoarray($data);
     } // sendCommand
 
     //this function parses the xml page into an array thx to bin-co
     //warning VLC returns it's complete media lib if asked for playlist
+    /**
+     * @param $contents
+     * @param integer $get_attributes
+     * @param string $priority
+     * @return array|void
+     */
     private function xmltoarray($contents, $get_attributes = 1, $priority = 'attribute')
     {
         if (!$contents) {
@@ -454,10 +479,10 @@ class VlcPlayer
         unset($attributes, $value);//Remove existing values, or there will be trouble
 
         //This command will extract these variables into the foreach scope
-           // tag(string), type(string), level(int), attributes(array).
-           extract($data);//We could use the array by itself, but this cooler.
+        // tag(string), type(string), level(int), attributes(array).
+        extract($data);//We could use the array by itself, but this cooler.
 
-           $result       = array();
+        $result          = array();
         $attributes_data = array();
 
         if (isset($value)) {
@@ -554,4 +579,3 @@ class VlcPlayer
         return($bigxml_array);
     }   //end xml parser
 } // End VLCPlayer Class
-;

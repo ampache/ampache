@@ -122,7 +122,7 @@ if (!empty($username) && isset($auth)) {
         $city       = array_key_exists('city', $auth) ? $auth['city']    : '';
 
         /* Attempt to create the user */
-        if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city)) {
+        if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {
             $user = User::get_from_username($username);
 
             if (array_key_exists('avatar', $auth)) {
@@ -194,6 +194,8 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     if (AmpConfig::get('autoupdate') && Access::check('interface', '100')) {
         AutoUpdate::is_update_available(true);
     }
+    // fix preferences that are missing for user
+    User::fix_preferences($user->id);
 
     /* Make sure they are actually trying to get to this site and don't try
      * to redirect them back into an admin section

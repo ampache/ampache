@@ -74,20 +74,20 @@ $t_logout    = T_('Log out'); ?>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/vendor/needim/noty/js/noty/packaged/jquery.noty.packaged.min.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/vendor/needim/noty/js/noty/packaged/jquery.noty.packaged.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-cookie/jquery.cookie.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/jquery-qrcode-built.js"></script>
-        <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/jquery-qrcode-built.js" defer></script>
+        <script src="<?php echo $web_path; ?>/modules/rhinoslider/js/rhinoslider-1.05.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/responsive-elements/responsive-elements.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/jQuery-Knob/js/jquery.knob.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/vendor/blueimp/jquery-file-upload/js/jquery.iframe-transport.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/vendor/blueimp/jquery-file-upload/js/jquery.fileupload.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/components/jQuery-Knob/js/jquery.knob.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/vendor/blueimp/jquery-file-upload/js/jquery.iframe-transport.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/vendor/blueimp/jquery-file-upload/js/jquery.fileupload.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/jQuery-contextMenu/dist/jquery.contextMenu.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/javascript/tools.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/base.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" defer></script>
+        <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" defer></script>
 
         <script>
             $(document).ready(function(){

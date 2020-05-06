@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -36,7 +37,7 @@ class Query
     public $id;
 
     /**
-     * @var int $catalog
+     * @var integer $catalog
      */
     public $catalog;
 
@@ -441,7 +442,7 @@ class Query
         return json_encode($data);
     }
 
-    /*
+    /**
      * _unserialize
      *
      * Reverses serialization.
@@ -761,6 +762,7 @@ class Query
      * This sets the current sort(s)
      * @param string $sort
      * @param string $order
+     * @return boolean
      */
     public function set_sort($sort, $order = '')
     {
@@ -786,6 +788,8 @@ class Query
         }
 
         $this->resort_objects();
+
+        return true;
     } // set_sort
 
     /**
@@ -972,6 +976,7 @@ class Query
      * This saves the base sql statement we are going to use.
      * @param boolean $force
      * @param string $custom_base
+     * @return boolean
      */
     private function set_base_sql($force = false, $custom_base = '')
     {
@@ -1103,6 +1108,8 @@ class Query
         }
 
         $this->_state['base'] = $sql;
+
+        return true;
     } // set_base_sql
 
     /**
@@ -1113,9 +1120,7 @@ class Query
      */
     private function get_select()
     {
-        $select_string = implode(", ", $this->_state['select']);
-
-        return $select_string;
+        return implode(", ", $this->_state['select']);
     } // get_select
 
     /**
@@ -1126,9 +1131,7 @@ class Query
      */
     private function get_base_sql()
     {
-        $sql = str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
-
-        return $sql;
+        return str_replace("%%SELECT%%", $this->get_select(), $this->_state['base']);
     } // get_base_sql
 
     /**
@@ -1154,11 +1157,11 @@ class Query
             switch ($this->get_type()) {
                 case "video":
                 case "song":
-                    $dis = Catalog::get_enable_filter($this->get_type(), '`' . $this->get_type() . '`.`id`');
+                    $dis = Catalog::get_enable_filter('song', '`' . $this->get_type() . '`.`id`');
                     break;
 
                 case "tag":
-                    $dis = Catalog::get_enable_filter($this->get_type(), '`' . $this->get_type() . '`.`object_id`');
+                    $dis = Catalog::get_enable_filter('tag', '`' . $this->get_type() . '`.`object_id`');
                     break;
             }
         }
@@ -1206,9 +1209,7 @@ class Query
             return '';
         }
 
-        $sql = ' LIMIT ' . (string) ($this->get_start()) . ', ' . (string) ($this->get_offset());
-
-        return $sql;
+        return ' LIMIT ' . (string) ($this->get_start()) . ', ' . (string) ($this->get_offset());
     } // get_limit_sql
 
     /**
@@ -1240,9 +1241,7 @@ class Query
      */
     public function get_having_sql()
     {
-        $sql = isset($this->_state['having']) ? $this->_state['having'] : '';
-
-        return $sql;
+        return isset($this->_state['having']) ? $this->_state['having'] : '';
     } // get_having_sql
 
     /**
@@ -1896,7 +1895,7 @@ class Query
     private function sql_sort($field, $order)
     {
         if ($order != 'DESC') {
-            $order == 'ASC';
+            $order = 'ASC';
         }
 
         // Depending on the type of browsing we are doing we can apply
@@ -2351,7 +2350,9 @@ class Query
             $order_sql = " ORDER BY ";
 
             foreach ($this->_state['sort'] as $key => $value) {
-                $order_sql .= $this->sql_sort($key, $value);
+                $sql_sort = $this->sql_sort($key, $value);
+                $order_sql .= $sql_sort;
+                $group_sql .= ", " . substr($sql_sort, 0, strpos($sql_sort, " "));
             }
             // Clean her up
             $order_sql = rtrim((string) $order_sql, "ORDER BY ");
@@ -2392,7 +2393,7 @@ class Query
      * save_objects
      * This takes the full array of object ids, often passed into show and
      * if necessary it saves them
-     * @param int[] $object_ids
+     * @param integer[] $object_ids
      * @return boolean
      */
     public function save_objects($object_ids)

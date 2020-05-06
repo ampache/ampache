@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -44,6 +45,7 @@ class Core
      * This function automatically loads any missing classes as they are
      * needed so that we don't use a million include statements which load
      * more than we need.
+     * @param $class
      */
     public static function autoload($class)
     {
@@ -82,6 +84,7 @@ class Core
      * Return a $GLOBAL variable instead of calling directly
      *
      * @param string $variable
+     * @return mixed
      */
     public static function get_global($variable)
     {
@@ -206,6 +209,26 @@ class Core
     }
 
     /**
+     * get_user_ip
+     * check for the ip of the request
+     *
+     * @return string
+     */
+    public static function get_user_ip()
+    {
+        $user_ip = '';
+        // Clean incoming variables
+        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
+            $user_ip = (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+                ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
+                : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP));
+        } else {
+            $user_ip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        }
+
+        return $user_ip;
+    }
+    /**
      * Place a new key on a specific position in array
      * @param array $array
      * @param integer $position
@@ -255,6 +278,9 @@ class Core
      * form_register
      * This registers a form with a SID, inserts it into the session
      * variables and then returns a string for use in the HTML form
+     * @param $name
+     * @param string $type
+     * @return string
      */
     public static function form_register($name, $type = 'post')
     {
@@ -290,6 +316,9 @@ class Core
      * This takes a form name and then compares it with the posted sid, if
      * they don't match then it returns false and doesn't let the person
      * continue
+     * @param $name
+     * @param string $type
+     * @return boolean
      */
     public static function form_verify($name, $type = 'post')
     {
@@ -343,6 +372,8 @@ class Core
      * Returns a token of the required bytes length, as a string. Returns false
      * if it could not generate a cryptographically secure token.
      * @param integer $length
+     * @return false|string
+     * @throws Exception
      */
     public static function gen_secure_token($length)
     {
@@ -367,7 +398,7 @@ class Core
      * false on error
      *
      * @param string $image_data
-     * @return array|boolean
+     * @return array
      */
     public static function image_dimensions($image_data)
     {
@@ -397,13 +428,14 @@ class Core
         return array('width' => $width, 'height' => $height);
     } // image_dimensions
 
-    /*
+    /**
      * is_readable
      *
      * Replacement function because PHP's is_readable is buggy:
      * https://bugs.php.net/bug.php?id=49620
      *
-     * @param string|false $path
+     * @param string $path
+     * @return boolean
      */
     public static function is_readable($path)
     {
@@ -429,6 +461,8 @@ class Core
     /**
      * get_filesize
      * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
+     * @param $filename
+     * @return integer
      */
     public static function get_filesize($filename)
     {
@@ -455,10 +489,12 @@ class Core
         return $size;
     }
 
-    /*
+    /**
      * conv_lc_file
      *
      * Convert site charset filename to local charset filename for file operations
+     * @param string $filename
+     * @return string
      */
     public static function conv_lc_file($filename)
     {
@@ -474,16 +510,17 @@ class Core
         return $lc_filename;
     }
 
-    /*
+    /**
      * is_session_started
      *
      * Universal function for checking session status.
+     * @return boolean
      */
     public static function is_session_started()
     {
         if (php_sapi_name() !== 'cli') {
             if (version_compare(phpversion(), '5.4.0', '>=')) {
-                return session_status() === PHP_SESSION_ACTIVE ? true : false;
+                return session_status() === PHP_SESSION_ACTIVE;
             } else {
                 return session_id() === '' ? false : true;
             }
@@ -495,7 +532,9 @@ class Core
     /**
      * is_class_typeof
      *
+     * @param $classname
      * @param string $typeofname
+     * @return boolean
      */
     private static function is_class_typeof($classname, $typeofname)
     {
@@ -506,32 +545,47 @@ class Core
         return false;
     }
 
+    /**
+     * @param $classname
+     * @return boolean
+     */
     public static function is_playable_item($classname)
     {
         return self::is_class_typeof($classname, 'playable_item');
     }
 
+    /**
+     * @param $classname
+     * @return boolean
+     */
     public static function is_library_item($classname)
     {
         return self::is_class_typeof($classname, 'library_item');
     }
 
+    /**
+     * @param $classname
+     * @return boolean
+     */
     public static function is_media($classname)
     {
         return self::is_class_typeof($classname, 'media');
     }
 
+    /**
+     * @return string
+     */
     public static function get_reloadutil()
     {
         return (AmpConfig::get('play_type') == "stream" || !AmpConfig::get('ajax_load')) ? "reloadUtil" : "reloadDivUtil";
     }
 
-    public static function requests_options($options = null)
+    /**
+     * @param $options
+     * @return array
+     */
+    public static function requests_options($options = array())
     {
-        if ($options === null) {
-            $options = array();
-        }
-
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
                 $proxy   = array();

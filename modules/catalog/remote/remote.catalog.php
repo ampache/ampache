@@ -97,6 +97,9 @@ class Catalog_remote extends Catalog
         return true;
     } // install
 
+    /**
+     * @return array|mixed
+     */
     public function catalog_fields()
     {
         $fields['uri']           = array('description' => T_('URI'), 'type' => 'url');
@@ -114,6 +117,7 @@ class Catalog_remote extends Catalog
      * Constructor
      *
      * Catalog class constructor, pulls catalog information
+     * @param integer $catalog_id
      */
     public function __construct($catalog_id = null)
     {
@@ -133,6 +137,9 @@ class Catalog_remote extends Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
+     * @param $catalog_id
+     * @param array $data
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     {
@@ -175,6 +182,9 @@ class Catalog_remote extends Catalog
      * add_to_catalog
      * this function adds new files to an
      * existing catalog
+     * @param array $options
+     * @return boolean
+     * @throws Exception
      */
     public function add_to_catalog($options = null)
     {
@@ -229,6 +239,9 @@ class Catalog_remote extends Catalog
      *
      * Pulls the data from a remote catalog and adds any missing songs to the
      * database.
+     * @param integer $type
+     * @return boolean
+     * @throws Exception
      */
     public function update_remote_catalog($type = 0)
     {
@@ -290,6 +303,9 @@ class Catalog_remote extends Catalog
         return true;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function verify_catalog_proc()
     {
         return array('total' => 0, 'updated' => 0);
@@ -339,6 +355,8 @@ class Catalog_remote extends Catalog
      *
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
+     * @param array $song
+     * @return bool|mixed
      */
     public function check_remote_song($song)
     {
@@ -354,6 +372,10 @@ class Catalog_remote extends Catalog
         return false;
     }
 
+    /**
+     * @param string $file_path
+     * @return string|string[]
+     */
     public function get_rel_path($file_path)
     {
         $catalog_path = rtrim($this->uri, "/");
@@ -373,6 +395,11 @@ class Catalog_remote extends Catalog
         $this->f_full_info = $this->uri;
     }
 
+    /**
+     * @param Podcast_Episode|Song|Song_Preview|Video $media
+     * @return bool|media|null
+     * @throws Exception
+     */
     public function prepare_media($media)
     {
         $remote_handle = $this->connect();

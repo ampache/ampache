@@ -85,6 +85,10 @@ class AmpacheBitly
         return true;
     } // upgrade
 
+    /**
+     * @param string $url
+     * @return bool|string
+     */
     public function shortener($url)
     {
         if (empty($this->bitly_username) || empty($this->bitly_api_key)) {
@@ -93,20 +97,18 @@ class AmpacheBitly
             return false;
         }
 
-        $shorturl = '';
-
         $apiurl = 'http://api.bit.ly/v3/shorten?login=' . $this->bitly_username . '&apiKey=' . $this->bitly_api_key . '&longUrl=' . urlencode($url) . '&format=json';
         try {
             debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
             $request  = Requests::get($apiurl, array(), Core::requests_options());
             $shorturl = json_decode($request->body)->data->url;
+
+            return $shorturl;
         } catch (Exception $error) {
             debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
 
             return false;
         }
-
-        return $shorturl;
     }
 
     /**
@@ -114,6 +116,7 @@ class AmpacheBitly
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
@@ -144,4 +147,3 @@ class AmpacheBitly
         return true;
     } // load
 } // end AmpacheBitly
-;

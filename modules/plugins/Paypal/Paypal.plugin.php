@@ -90,6 +90,7 @@ class AmpachePaypal
     /**
      * display_user_field
      * This display the module in user page
+     * @param library_item|null $libitem
      */
     public function display_user_field(library_item $libitem = null)
     {
@@ -117,6 +118,7 @@ class AmpachePaypal
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {

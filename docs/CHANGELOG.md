@@ -2,11 +2,70 @@
 
 ## 4.2.0-develop
 
+A big visual change in the interface is that Ampache now defaults to US time for dates. ('Month/Day/Year')
+For everyone who isn't American you have control over date formats using custom_datetime.
+Admin -> Server Config -> Interface -> Custom datetime
+
+e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
+Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
+
+* Bump API version to 410001 (4.1.0 build 001)
 * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
   * Call xml as normal:
-    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400003
+    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=410001
   * Call the JSON server:
-    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400003
+    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=410001
+* NEW API functions
+  * get_similar: send artist or song id to get related objects from last.fm
+  * shares: get a list of shares you can access
+  * share: get a share by id
+  * share_create: create a share
+  * share_edit: edit an existing share
+  * share_delete: delete an existing share
+  * podcasts: get a list of podcasts you can access
+  * podcast: get a podcast by id
+  * podcast_episodes: get a list of podcast_episodes you can access
+  * podcast_episode: get a podcast_episode by id
+  * podcast_episode_delete: delete an existing podcast_episode
+  * podcast_create: create a podcast
+  * podcast_edit: edit an existing podcast
+  * podcast_delete: delete an existing podcast
+  * update_podcast: sync and download new episodes
+  * catalogs: get all the catalogs
+  * catalog: get a catalog by id
+* NEW db options
+  * cron_cache: Speed up the interface by allowing background caching of data
+  * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
+  * custom_datetime: Allow you to format your date strings your way.
+* NEW config options
+  * skip_timer: Add Skip Timer Threshold to the config
+* NEW files
+  * bin/compute_cache.inc: Cache object_count data to speed up access
+  * bin/cron.inc: Perform garbage_collection functions outside of main functions (includes compute_cache.inc)
+* NEW examples
+  * docs/examples/ampache_cron.service
+  * docs/examples/ampache_cron.timer
+* API: All calls that return songs now include <playlisttrack> which can be used to identify track order.
+* API: <playcount> added to objects.
+* API: Don't gather art when adding songs
+* API: Added actions to catalog_action. 'verify_catalog' 'gather_art'
+* Fix: Channel authentication
+* Fix: IP checks when sending null proxy values
+* Fix: Extra text in catalog API calls
+* Fix: Gather art page layout
+* Fix: Read vorbis rating correctly
+* Fix: Search rules in UI failing to load with custom_metadata
+* Fix: Warn correctly when inserting art fails
+* Update Composer requirements
+* Fix: Insert missing user preferences on login
+* Allow searching play times without requiring UI option
+* Added declare(strict_types=0); to lib/* and lib/class/* (requires more work before it can be enabled)
+* Fixed a lot of incorrectly typed function calls and code documentation
+* Stop showing the average rating in the web interface.
+* April 2020 Translation update
+* Fix: When you had beautiful_urls enabled tracks would not parse in localplay
+* Fix: Podcast durations aren't always correct format, prep the time before trying to insert it.
+
 
 ## 4.1.1
 * Bump API version to 400004 (4.0.0 build 004)
@@ -46,7 +105,7 @@
 * Fix bin\*.inc text issues with newline
 * Add docs/examples/channel_run.service for running background processes as a service
 * New search option "Another User" allows searching other user ratings and favorites
-* user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods])>
+* user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods>])
 * Updates to support php7.4 (Ampache supports 7.1-7.4)
 * Fix bug in UI when enabling/disabling songs
 * Checks in Subsonic/WebUI for recording repeated plays

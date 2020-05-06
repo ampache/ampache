@@ -168,12 +168,13 @@ switch ($_REQUEST['action']) {
 
         /* Attempt to create the user */
         $user_id = User::create($username, $fullname, $email, $website, $pass1, (string) $access, $state, $city);
-        if (!$user_id) {
+        if ($user_id < 1) {
             AmpError::add('general', T_("The new User was not created"));
         }
         $user = new User($user_id);
         $user->upload_avatar();
 
+        $useraccess = '';
         switch ($access) {
             case 5:
                 $useraccess = T_('Guest');
@@ -301,12 +302,13 @@ switch ($_REQUEST['action']) {
     /* Show IP History for the Specified User */
     case 'show_ip_history':
         /* get the user and their history */
-        $working_user    = new User(Core::get_request('user_id'));
+        $working_user = new User(Core::get_request('user_id'));
+        $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
 
         if (!isset($_REQUEST['all'])) {
-            $history    = $working_user->get_ip_history(0, 1);
+            $history = $working_user->get_ip_history(0, 1);
         } else {
-            $history    = $working_user->get_ip_history();
+            $history = $working_user->get_ip_history();
         }
         require AmpConfig::get('prefix') . UI::find_template('show_ip_history.inc.php');
     break;

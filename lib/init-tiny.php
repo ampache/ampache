@@ -25,9 +25,7 @@
 // Do a check for PHP5.4 because nothing will work without it
 if (version_compare(phpversion(), '7.1.0', '<')) {
     echo T_("Ampache requires PHP version >= 7.1");
-    throw new \RuntimeException(T_("Ampache requires PHP version >= 7.1"));
-
-    return false;
+    throw new RuntimeException(T_("Ampache requires PHP version >= 7.1"));
 }
 
 error_reporting(E_ERROR); // Only show fatal errors in production
@@ -48,6 +46,7 @@ if (!defined('CLI')) {
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/ampconfig.class.php';
 require_once $prefix . '/lib/class/core.class.php';
+require_once $prefix . '/lib/cron.lib.php';
 
 // Define some base level config options
 AmpConfig::set('prefix', $prefix);

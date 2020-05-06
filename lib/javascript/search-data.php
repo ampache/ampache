@@ -22,6 +22,10 @@
 
 require_once '../init.php';
 
+/**
+ * @param $array
+ * @return string
+ */
 function arrayToJSON($array)
 {
     $json = '{ ';
@@ -32,7 +36,7 @@ function arrayToJSON($array)
         } else {
             // Make sure to strip backslashes and convert things to
             // entities in our output
-            $json .= '"' . scrub_out(str_replace('\\', '', $value)) . '"';
+            $json .= '"' . scrub_out(str_replace(['"', '\\'], '', $value)) . '"';
         }
         $json .= ' , ';
     }

@@ -70,11 +70,17 @@ class AmpacheGravatar
         return true;
     } // upgrade
 
+    /**
+     * @param User $user
+     * @param integer $size
+     * @return string
+     */
     public function get_avatar_url($user, $size = 80)
     {
         $url = "";
         if (!empty($user->email)) {
-            if (filter_has_var(INPUT_SERVER, 'HTTPS') && Core::get_server('HTTPS') !== 'off') {
+            if (!empty(AmpConfig::get('force_ssl')) ||
+                (filter_has_var(INPUT_SERVER, 'HTTPS') && Core::get_server('HTTPS') !== 'off')) {
                 $url = "https://secure.gravatar.com";
             } else {
                 $url = "http://www.gravatar.com";
@@ -93,6 +99,7 @@ class AmpacheGravatar
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
      * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
@@ -101,4 +108,3 @@ class AmpacheGravatar
         return true;
     } // load
 } // end AmpacheGravatar
-;

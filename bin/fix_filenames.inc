@@ -49,10 +49,8 @@ $source_encoding = iconv_get_encoding('output_encoding');
 
 // Attempt a simple translation
 $string = sprintf(T_('%s'), iconv(AmpConfig::get('site_charset'),AmpConfig::get('site_charset'), T_('For the Love of Music')));
-echo T_('Testing basic translation, the two strings below should look the same');
-echo "\n";
-echo T_('Original: For the Love of Music');
-echo "\n";
+echo T_('Testing basic translation, the two strings below should look the same') . "\n";
+echo T_('Original: For the Love of Music') . "\n";
 printf (
     /* HINT: Translated version of 'For the Love of Music' */
     T_('Translated: %s'), $string);
@@ -78,8 +76,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
 
 } // end of the catalogs
 
-echo T_('Finished checking file names for valid characters');
-echo "\n";
+echo T_('Finished checking file names for valid characters') . "\n";
 
 /**************************************************
  ****************** FUNCTIONS *********************
@@ -144,13 +141,11 @@ function charset_directory_correct($path) {
             }
 
             printf (T_('Attempting to Transcode to "%s"'), AmpConfig::get('site_charset'));
-            echo "\n";
-            echo "--------------------------------------------------------------------------------------------\n";
+            echo "\n--------------------------------------------------------------------------------------------\n";
             printf (T_('OLD: "%s" has invalid chars'), $full_file);
             echo "\n";
             printf (T_('NEW: %s'), $translated_filename);
-            echo "\n";
-            echo "--------------------------------------------------------------------------------------------\n";
+            echo "\n--------------------------------------------------------------------------------------------\n";
             if (!Core::get_global('i_am_crazy')) {
                 echo T_("Rename File (Y/N):");
                 $input = trim(fgets(STDIN));
@@ -173,6 +168,7 @@ function charset_directory_correct($path) {
  * This just takes a source / dest and does the renaming
  * @param string $full_file
  * @param string $translated_filename
+ * @return boolean
  */
 function charset_rename_file($full_file, $translated_filename) {
 
@@ -222,10 +218,13 @@ function charset_rename_file($full_file, $translated_filename) {
 
     $results = unlink($full_file);
 
-    if (!$results) { printf (T_('There was an error trying to delete "%s"'), $full_file); echo "\n"; return false; }
+    if (!$results) {
+        printf (T_('There was an error trying to delete "%s"'), $full_file);
+        echo "\n";
+        return false;
+    }
 
-    echo T_("File moved...");
-    echo "\n\n";
+    echo T_("File moved...") . "\n\n";
 
     return true;
 
@@ -237,14 +236,13 @@ function charset_rename_file($full_file, $translated_filename) {
  * This is run on every individual element of the search
  * Before it is put together, this removes / and \ and also
  * once I figure it out, it'll clean other stuff
+ * @param $string
+ * @return string|string[]|null
  */
 function charset_clean_name($string) {
+    /* First remove any / or \ chars */
+    $string_1 = preg_replace('/[\/\\\]/','-',$string);
+    $string_2 = str_replace(':',' ',$string_1);
 
-        /* First remove any / or \ chars */
-        $string_1 = preg_replace('/[\/\\\]/','-',$string);
-        $string_2 = str_replace(':',' ',$string_1);
-        $string_3 = preg_replace('/[\!\:\*]/','_',$string_2);
-
-        return $string_3;
-
+    return preg_replace('/[\!\:\*]/','_',$string_2);
 } // charset_clean_name

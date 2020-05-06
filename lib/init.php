@@ -188,7 +188,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
         Session::create_cookie();
         Session::create($auth);
         Session::check();
-        $GLOBALS['user']           = new User($auth['username']);
+        $GLOBALS['user']           = new User('-1');
         $GLOBALS['user']->username = $auth['username'];
         $GLOBALS['user']->fullname = $auth['fullname'];
         $GLOBALS['user']->access   = (int) ($auth['access']);
@@ -197,7 +197,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
         if ($_SESSION['userdata']['username']) {
             $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
         } else {
-            $GLOBALS['user']           = new User($auth['username']);
+            $GLOBALS['user']           = new User('-1');
             $GLOBALS['user']->id       = -1;
             $GLOBALS['user']->username = $auth['username'];
             $GLOBALS['user']->fullname = $auth['fullname'];
