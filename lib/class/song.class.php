@@ -2351,11 +2351,11 @@ class Song extends database_object implements media, library_item
     }
 
     /**
-     * remove_from_disk
+     * remove
      * Remove the song from disk.
      * @return PDOStatement|boolean
      */
-    public function remove_from_disk()
+    public function remove()
     {
         if (file_exists($this->file)) {
             $deleted = unlink($this->file);

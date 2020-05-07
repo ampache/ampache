@@ -302,6 +302,8 @@ class Catalog_local extends Catalog
     } // add_files
 
     /**
+     * add_file
+     *
      * @param $full_file
      * @param $options
      * @return boolean
@@ -339,7 +341,7 @@ class Catalog_local extends Catalog
             if (!chdir($full_file)) {
                 debug_event('local.catalog', "Unable to chdir to $full_file", 2);
                 /* HINT: directory (file path) */
-                AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $path));
+                AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $full_file));
             }
 
             /* Skip to the next file */
@@ -723,6 +725,31 @@ class Catalog_local extends Catalog
 
         return $dead;
     } //_clean_chunk
+
+    /**
+     * clean_file
+     *
+     * Clean up a single file checking that it's missing or just unreadable.
+     *
+     * @param string $file
+     * @param string $media_type
+     */
+    public function clean_file($file, $media_type = 'song')
+    {
+        $file_info = Core::get_filesize(Core::conv_lc_file($file));
+        if (!file_exists(Core::conv_lc_file($file)) || $file_info < 1) {
+            debug_event('local.catalog', 'File not found or empty: ' . $file, 5);
+            /* HINT: filename (file path) */
+            AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
+            $sql = "DELETE FROM `$media_type` WHERE `file` = '" . $file . "'";
+            Dba::write($sql);
+        } //if error
+        else {
+            if (!Core::is_readable(Core::conv_lc_file($file))) {
+                debug_event('local.catalog', $file . ' is not readable, but does exist', 1);
+            }
+        }
+    } //clean_file
 
     /**
      * insert_local_song

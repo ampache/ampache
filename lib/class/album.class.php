@@ -1133,16 +1133,16 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * remove_from_disk
+     * remove
      * @return PDOStatement|boolean
      */
-    public function remove_from_disk()
+    public function remove()
     {
         $deleted  = true;
         $song_ids = $this->get_songs();
         foreach ($song_ids as $song_id) {
             $song    = new Song($song_id);
-            $deleted = $song->remove_from_disk();
+            $deleted = $song->remove();
             if (!$deleted) {
                 debug_event('album.class', 'Error when deleting the song `' . $song_id . '`.', 1);
                 break;
