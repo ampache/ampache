@@ -3323,7 +3323,7 @@ class Api
         }
         $file = (string) html_entity_decode($input['file']);
         // confirm the correct data
-        if (!in_array($task, array('add', 'clean', 'verify'))) {
+        if (!in_array($task, array('add', 'clean', 'verify', 'remove'))) {
             self::message('error', T_('Incorrect file task') . ' ' . $task, '401', $input['format']);
 
             return false;
