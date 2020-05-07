@@ -3265,7 +3265,7 @@ class Api
 
         if ($catalog) {
             define('API', true);
-            define('SSE_OUTPUT', true);
+            unset($SSE_OUTPUT);
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog();
@@ -3352,7 +3352,7 @@ class Api
 
         if ($catalog->catalog_type == 'local') {
             define('API', true);
-            define('SSE_OUTPUT', true);
+            unset($SSE_OUTPUT);
             switch ($task) {
                 case 'clean':
                     $catalog->clean_file($file, $type);
