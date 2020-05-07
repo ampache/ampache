@@ -462,13 +462,13 @@ class TVShow extends database_object implements library_item
     /**
      * @return bool|PDOStatement
      */
-    public function remove_from_disk()
+    public function remove()
     {
         $deleted    = true;
         $season_ids = $this->get_seasons();
         foreach ($season_ids as $season_object) {
             $season  = new TVShow_Season($season_object);
-            $deleted = $season->remove_from_disk();
+            $deleted = $season->remove();
             if (!$deleted) {
                 debug_event('tvshow.class', 'Error when deleting the season `' . (string) $season . '`.', 1);
                 break;

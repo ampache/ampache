@@ -359,13 +359,13 @@ class TVShow_Season extends database_object implements library_item
     /**
      * @return bool|PDOStatement
      */
-    public function remove_from_disk()
+    public function remove()
     {
         $deleted   = true;
         $video_ids = $this->get_episodes();
         foreach ($video_ids as $videos) {
             $video   = Video::create_from_id($videos);
-            $deleted = $video->remove_from_disk();
+            $deleted = $video->remove();
             if (!$deleted) {
                 debug_event('tvshow_season.class', 'Error when deleting the video `' . $videos . '`.', 1);
                 break;

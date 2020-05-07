@@ -1051,13 +1051,13 @@ class Artist extends database_object implements library_item
     /**
      * @return bool|PDOStatement
      */
-    public function remove_from_disk()
+    public function remove()
     {
         $deleted   = true;
         $album_ids = $this->get_albums();
         foreach ($album_ids as $albumid) {
             $album   = new Album($albumid);
-            $deleted = $album->remove_from_disk();
+            $deleted = $album->remove();
             if (!$deleted) {
                 debug_event('artist.class', 'Error when deleting the album `' . $albumid . '`.', 1);
                 break;
