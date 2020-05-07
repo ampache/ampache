@@ -89,7 +89,7 @@ if (AmpConfig::get('transcode_player_customize') && !$original) {
 $share_id         = (int) filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
 $subtitle         = '';
 $send_all_in_once = AmpConfig::get('send_full_stream');
-if (!$send_all_in_once === '1' || !$send_all_in_once === $player) {
+if (!$send_all_in_once === 'true' || !$send_all_in_once === $player) {
     $send_all_in_once = false;
 }
 
