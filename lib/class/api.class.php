@@ -3298,10 +3298,11 @@ class Api
      * MINIMUM_API_VERSION=410001
      *
      * Perform actions on local catalog files.
-     * Singular versions of catalog add, clean and verify
+     * Single file versions of catalog add, clean and verify.
+     * Make sure you remember to urlencode those file names!
      *
      * @param array $input
-     * file    = (string) FULL path to local file
+     * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add'|'clean'|'verify'
      * catalog = (integer) $catalog_id)
      * @return boolean
