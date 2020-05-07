@@ -1053,7 +1053,7 @@ class Video extends database_object implements media, library_item
     /**
      * Remove the video from disk.
      */
-    public function remove_from_disk()
+    public function remove()
     {
         if (file_exists($this->file)) {
             $deleted = unlink($this->file);

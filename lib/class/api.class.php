@@ -3303,16 +3303,24 @@ class Api
      *
      * @param array $input
      * file    = (string) urlencode(FULL path to local file)
-     * task    = (string) 'add'|'clean'|'verify'
+     * task    = (string) 'add'|'clean'|'verify'|'remove'
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
     public static function catalog_file($input)
     {
+        $task = (string) $input['task'];
+        if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
+            self::message('error', T_('Access Denied: delete from disk is not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'catalog_file', $input['format'])) {
+            return false;
+        }
         if (!self::check_parameter($input, array('catalog', 'file', 'task'), 'catalog_action')) {
             return false;
         }
-        $task = (string) $input['task'];
         $file = (string) html_entity_decode($input['file']);
         // confirm the correct data
         if (!in_array($task, array('add', 'clean', 'verify'))) {
@@ -3363,6 +3371,9 @@ class Api
                     break;
                 case 'add':
                     $catalog->add_file($file);
+                    break;
+                case 'remove':
+                    $media->remove($file);
                     break;
             }
             self::message('success', 'successfully started: ' . $task . ' for ' . $file, null, $input['format']);
