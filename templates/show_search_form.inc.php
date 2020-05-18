@@ -71,6 +71,9 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
                         <option value="100" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 100) {
         echo "selected=\"selected\"";
     }?>>100</option>
+                        <option value="250" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 250) {
+        echo "selected=\"selected\"";
+    }?>>250</option>
                         <option value="500" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 500) {
         echo "selected=\"selected\"";
     }?>>500</option>
