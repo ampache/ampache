@@ -30,7 +30,8 @@ require_once $prefix . '/lib/init.php';
 ob_end_flush();
 
 if (!AmpConfig::get('cron_cache')) {
-    throw new Exception("\n * ENABLE 'Cache computed SQL data (eg. media hits stats) using a cron'\n * In Admin -> Server Config -> System -> Catalog\n");
+    debug_event('cron.inc', 'ENABLE \'Cache computed SQL data (eg. media hits stats) using a cron\'\n * In Admin -> Server Config -> System -> Catalog\n', 5);
+    return false;
 }
 debug_event('cron', 'started cron process', 3);
 
@@ -79,106 +80,6 @@ Recommendation::garbage_collection();
  * Run compute_cache
  */
 require_once $prefix . '/bin/compute_cache.inc';
-
-/**
- * Run live memory cache processes.
- */
-if (AmpConfig::get('memory_cache')) {
-    debug_event('cron', 'Filling memory cache', 4);
-    $catalogs = Catalog::get_catalogs();
-    $users    = User::get_valid_users();
-
-    foreach ($catalogs as $catalog_id) {
-        debug_event('cron', 'Catalog memory cache for catalog ' . (string) $catalog_id, 4);
-        $catalog = Catalog::create_from_id($catalog_id);
-        // cache album details
-        $albums = $catalog->get_album_ids();
-        Album::build_cache($albums);
-
-        // cache artist details
-        $artists = $catalog->get_artist_ids();
-        Artist::build_cache($artists, true, '');
-
-        // cache song details
-        $songs = $catalog->get_song_ids();
-        Song::build_cache($songs, '');
-
-        // cache playlist details
-        $playlists = Playlist::get_playlists(true, -1);
-        Playlist::build_cache($playlists);
-
-        // cache art details
-        Art::build_cache($artists, 'artist');
-        Art::build_cache($albums, 'album');
-
-        if (AmpConfig::get('allow_video')) {
-            $videos = $catalog->get_video_ids();
-            Video::build_cache($videos);
-        }
-        
-        // Update artist information and fetch similar artists from last.fm
-        //$artist_info = $catalog->get_artist_ids('info');
-        //$catalog->gather_artist_info($artist_info);
-
-        //Song_preview::build_cache($song_ids)
-
-        /**
-         * Fill rating and hear/flag details for each user
-         */
-        foreach ($users as $user_id) {
-            // artists
-            Rating::build_cache('artist', $artists, $user_id);
-            Userflag::build_cache('artist', $artists, $user_id);
-            // albums
-            Rating::build_cache('album', $albums, $user_id);
-            Userflag::build_cache('album', $albums, $user_id);
-            // songs
-            Rating::build_cache('song', $songs, $user_id);
-            Userflag::build_cache('song', $songs, $user_id);
-            // videos
-            if (AmpConfig::get('allow_video')) {
-                Rating::build_cache('video', $videos, $user_id);
-                Userflag::build_cache('video', $videos, $user_id);
-            }
-            // useractivities
-            $user_activities = Useractivity::get_activities($user_id, 100);
-            // playlists
-            $user_playlist = Playlist::get_playlists(true, $user_id);
-            foreach ($user_playlist as $playlist_id) {
-                Rating::build_cache('playlist', $playlist_id, $user_id);
-                Userflag::build_cache('playlist', $playlist_id, $user_id);
-            }
-            // podcasts
-            if (AmpConfig::get('podcast')) {
-                $podcasts = $catalog->get_podcast_ids();
-                foreach ($podcasts as $podcast_id) {
-                    Rating::build_cache('podcast', $podcasts, $user_id);
-                    Userflag::build_cache('podcast', $podcasts, $user_id);
-                    // podcast_episodes
-                    $podcast = New Podcast($podcast_id);
-                    $podcast_episodes = $catalog->get_podcast_ids();
-                    Rating::build_cache('podcast_episode', $podcast_episodes, $user_id);
-                    Userflag::build_cache('podcast_episode', $podcast_episodes, $user_id);
-                } // end foreach $podcasts
-            }
-        } // end foreach $user_id
-    } // end foreach $catalogs
-
-    // artist tags
-    $artist_tags = Tag::get_tag_ids('artist');
-    Tag::build_cache($artist_tags);
-    Tag::build_map_cache('artist', $artist_tags);
-    // album tags
-    $album_tags  = Tag::get_tag_ids('album');
-    Tag::build_cache($album_tags);
-    Tag::build_map_cache('album', $album_tags);
-    // song tags
-    $song_tags   = Tag::get_tag_ids('song');
-    Tag::build_cache($song_tags);
-    Tag::build_map_cache('song', $song_tags);
-
-    debug_event('cron', 'Completed filling memory cache', 5);
-}
 
 // mark the date this cron was completed.
 set_cron_date();
