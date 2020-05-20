@@ -1927,6 +1927,8 @@ class Search extends playlist_object
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
+            $addition_string    = '';
+            $update_string      = '';
 
             switch ($rule[0]) {
                 case 'anywhere':

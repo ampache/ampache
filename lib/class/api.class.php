@@ -3373,7 +3373,7 @@ class Api
                     $catalog->add_file($file);
                     break;
                 case 'remove':
-                    $media->remove($file);
+                    $media->remove();
                     break;
             }
             self::message('success', 'successfully started: ' . $task . ' for ' . $file, null, $input['format']);
