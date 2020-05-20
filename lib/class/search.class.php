@@ -299,6 +299,18 @@ class Search extends playlist_object
             'sql' => '>'
         );
 
+        $this->basetypes['recent_added'][] = array(
+            'name' => 'add',
+            'description' => T_('# songs'),
+            'sql' => '`addition_time`'
+        );
+
+        $this->basetypes['recent_updated'][] = array(
+            'name' => 'upd',
+            'description' => T_('# songs'),
+            'sql' => '`update_time`'
+        );
+
         $this->basetypes['user_numeric'][] = array(
             'name' => 'love',
             'description' => T_('has loved'),
@@ -699,6 +711,20 @@ class Search extends playlist_object
             'label' => T_('Updated'),
             'type' => 'date',
             'widget' => array('input', 'datetime-local')
+        );
+
+        $this->types[] = array(
+            'name' => 'recent_added',
+            'label' => T_('Recently added'),
+            'type' => 'recent_added',
+            'widget' => array('input', 'number')
+        );
+
+        $this->types[] = array(
+            'name' => 'recent_updated',
+            'label' => T_('Recently updated'),
+            'type' => 'recent_updated',
+            'widget' => array('input', 'number')
         );
 
         $catalogs = array();
@@ -2136,8 +2162,19 @@ class Search extends playlist_object
                     $where[] = "`song`.`addition_time` $sql_match_operator $input";
                 break;
                 case 'updated':
-                    $input   = strtotime($input);
-                    $where[] = "`song`.`update_time` $sql_match_operator $input";
+                    $update_string = '';
+                    $input         = strtotime($input);
+                    $where[]       = "`song`.`update_time` $sql_match_operator $input";
+                    break;
+                case 'recent_added':
+                    $where[]          = "`addition_time`.`id` IS NOT NULL";
+                    $addition_string  = "LEFT JOIN (SELECT `id` from `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `addition_time` ON `song`.`id` = `addition_time`.`id`";
+                    $join['addition'] = true;
+                    break;
+                case 'recent_updated':
+                    $where[]        = "`update_time`.`id` IS NOT NULL";
+                    $update_string  = "LEFT JOIN (SELECT `id` from `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `update_time` ON `song`.`id` = `update_time`.`id`";
+                    $join['update'] = true;
                     break;
                 case 'metadata':
                     // Need to create a join for every field so we can create and / or queries with only one table
@@ -2268,7 +2305,12 @@ class Search extends playlist_object
                 $table['playlist'] = "LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id`";
             }
         }
-
+        if ($join['addition']) {
+            $table['addition'] = $addition_string;
+        }
+        if ($join['update']) {
+            $table['update'] = $update_string;
+        }
         if ($join['catalog']) {
             $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
             if (!empty($where_sql)) {
