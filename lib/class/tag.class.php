@@ -285,6 +285,7 @@ class Tag extends database_object implements library_item
     /**
      * get_merged_tags
      * Get merged tags to this tag.
+     * @return array
      */
     public function get_merged_tags()
     {
@@ -340,9 +341,11 @@ class Tag extends database_object implements library_item
             $merges[] = array('id' => $parent->id, 'name' => $parent->name);
         }
         foreach ($merges as $tag) {
-            $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
-                "VALUES (?, ?, ?, ?)";
-            Dba::write($sql, array($tag['id'], $uid, $type, $id));
+            if ($tag['id']) {
+                $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
+                    "VALUES (?, ?, ?, ?)";
+                Dba::write($sql, array($tag['id'], $uid, $type, $id));
+            }
         }
         $insert_id = Dba::insert_id();
 

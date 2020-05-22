@@ -196,7 +196,7 @@ class Useractivity extends database_object
      */
     public static function del_activity($object_id, $object_type = 'song')
     {
-        $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `date` DESC LIMIT 1";
+        $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `activity_date` DESC LIMIT 1";
 
         return Dba::write($sql, array($object_type, $object_id));
     }

@@ -1174,8 +1174,8 @@ class Search extends playlist_object
      */
     public function delete()
     {
-        $search_id  = Dba::escape($this->id);
-        $sql        = "DELETE FROM `search` WHERE `id` = ?";
+        $search_id = Dba::escape($this->id);
+        $sql       = "DELETE FROM `search` WHERE `id` = ?";
         Dba::write($sql, array($search_id));
 
         return true;
@@ -1245,8 +1245,9 @@ class Search extends playlist_object
      */
     private function set_last_count($count)
     {
-        $sql = "Update `search` SET `last_count`=" . $count . " WHERE `id`=" . $this->id;
-        Dba::write($sql);
+        $search_id = Dba::escape($this->id);
+        $sql       = "Update `search` SET `last_count` = " . $count . " WHERE `id` = ?";
+        Dba::write($sql, array($search_id));
     }
 
     /**
