@@ -46,7 +46,7 @@ $options        = getopt("xv:");
 $test_mode = !array_key_exists('x', $options);
 
 if (array_key_exists('v', $options)) {
-    $operations_string .= "\n\t- " . T_('Setting Catalog name');
+    $operations_string .= "\n\t- " . T_('Setting Various Artists name to: ' . $options['n']);
     $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
 }
 
@@ -81,8 +81,8 @@ while ($row = Dba::fetch_assoc($db_results)) {
         /* Find this poor song a home */
         $song->format();
         // sort_find_home will replace the % with the correct values.
-        $directory = sort_find_home($song, $catalog->sort_pattern, $catalog->path);
-        $filename  = sort_find_home($song, $catalog->rename_pattern, null);
+        $directory = sort_find_home($song, $catalog->sort_pattern, $catalog->path, $various_artist);
+        $filename  = sort_find_home($song, $catalog->rename_pattern, null, $various_artist);
         if ($directory === false || $filename === false) {
             $fullpath = $song->file;
         } else {
@@ -119,7 +119,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
  * @param $base
  * @return false|string
  */
-function sort_find_home($song, $sort_pattern, $base = null) {
+function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "Various Artists") {
 
     $home = '';
     if ($base) {
