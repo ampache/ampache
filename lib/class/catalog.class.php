@@ -1724,6 +1724,18 @@ abstract class Catalog extends database_object
         if (!$api) {
             echo "</tbody></table>\n";
         }
+        // Update the tags for
+        switch ($type) {
+            case 'album':
+                $tags = self::getSongTags('album', $album->id);
+                Tag::update_tag_list(implode(',', $tags), 'album', $album->id, false);
+                break;
+            case 'artist':
+                $tags = self::getSongTags('artist', $artist->id);
+                Tag::update_tag_list(implode(',', $tags), 'artist', $artist->id, false);
+                break;
+        } // end switch type
+
         // Cleanup old objects that are no longer needed
         if (!AmpConfig::get('cron_cache')) {
             Album::garbage_collection();
