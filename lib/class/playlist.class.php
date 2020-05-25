@@ -492,7 +492,6 @@ class Playlist extends playlist_object
             $media = new $data['object_type']($data['object_id']);
             if (AmpConfig::get('unique_playlist') && in_array($media->id, $track_data)) {
                 debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
-
             } elseif ($media->id) {
                 // Based on the ordered prop we use track + base or just $count++
                 if (!$ordered && $data['object_type'] == 'song') {
