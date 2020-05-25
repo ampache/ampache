@@ -220,6 +220,7 @@ function create_preference_input($name, $value)
         case 'browse_filter':
         case 'sidebar_light':
         case 'cron_cache':
+        case 'unique_playlist':
             $is_true  = '';
             $is_false = '';
             if ($value == '1') {

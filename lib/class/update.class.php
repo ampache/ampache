@@ -197,6 +197,9 @@ class Update
         $update_string = "* Add system option for cron based cache and create related tables.<br />";
         $version[]     = array('version' => '400008', 'description' => $update_string);
 
+        $update_string = "* Add ui option for forcing unique items to playlists.<br />";
+        $version[]     = array('version' => '400009', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1134,6 +1137,25 @@ class Update
 
         $sql = "UPDATE `preference` SET `level`=75 WHERE `preference`.`name`='stats_threshold'";
         $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400009
+     *
+     * Add ui option for forcing unique items to playlists
+     */
+    public static function update_400009()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', null)";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
+        $retval &= Dba::write($sql, array($row_id));
 
         return $retval;
     }

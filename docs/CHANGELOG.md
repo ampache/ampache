@@ -38,6 +38,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
   * custom_datetime: Allow you to format your date strings your way.
+  * unique_playlist: Force unique playlists by ignoring existing songs
 * NEW config options
   * skip_timer: Add Skip Timer Threshold to the config
 * NEW files

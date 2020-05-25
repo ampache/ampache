@@ -484,26 +484,25 @@ class Playlist extends playlist_object
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
          */
-        $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track` DESC LIMIT 1";
-        $db_results = Dba::read($sql, array($this->id));
-        $track_data = Dba::fetch_assoc($db_results);
+        $playlist   = new Playlist($this->id);
+        $track_data = $playlist->get_songs();
         $base_track = $track_data['track'] ?: 0;
-        debug_event('playlist.class', 'Adding Media; Track number: ' . $base_track, 5);
-
-        $count = 0;
+        $count      = 0;
         foreach ($medias as $data) {
             $media = new $data['object_type']($data['object_id']);
+            if (AmpConfig::get('unique_playlist') && in_array($media->id, $track_data)) {
+                debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
 
-            // Based on the ordered prop we use track + base or just $count++
-            if (!$ordered && $data['object_type'] == 'song') {
-                $track    = $media->track + $base_track;
-            } else {
-                $count++;
-                $track = $base_track + $count;
-            }
+            } elseif ($media->id) {
+                // Based on the ordered prop we use track + base or just $count++
+                if (!$ordered && $data['object_type'] == 'song') {
+                    $track = $media->track + $base_track;
+                } else {
+                    $count++;
+                    $track = $base_track + $count;
+                }
+                debug_event('playlist.class', 'Adding Media; Track number: ' . $track, 5);
 
-            /* Don't insert dead media */
-            if ($media->id) {
                 $sql = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) " .
                     " VALUES (?, ?, ?, ?)";
                 Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
