@@ -1396,7 +1396,7 @@ class Subsonic_XML_Data
      * @param Podcast[] $podcasts
      * @param boolean $includeEpisodes
      */
-    public static function addPodcasts($xml, $podcasts, $includeEpisodes = false)
+    public static function addPodcasts($xml, $podcasts, $includeEpisodes = true)
     {
         $xpodcasts = $xml->addChild('podcasts');
         foreach ($podcasts as $podcast) {
