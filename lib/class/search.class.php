@@ -37,6 +37,7 @@ class Search extends playlist_object
     public $random         = 0;
     public $limit          = 0;
     public $last_count     = 0;
+    public $date           = 0;
 
     public $basetypes;
     public $types;
@@ -67,6 +68,7 @@ class Search extends playlist_object
             }
             $this->rules = json_decode((string) $this->rules, true);
         }
+        $this->date = time();
 
         // Define our basetypes
         $this->set_basetypes();
@@ -1232,6 +1234,7 @@ class Search extends playlist_object
                 'object_type' => $this->searchtype
             );
         }
+        $this->date = time();
         $this->set_last_count(count($results));
 
         return $results;
