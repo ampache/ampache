@@ -1023,10 +1023,14 @@ class Subsonic_XML_Data
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', (string) $user->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
+        $xplaylist->addAttribute('created', date("c", (int) $playlist->date));
         $xplaylist->addAttribute('changed', date("c", time()));
+        $allitems = $playlist->get_items();
+        $xplaylist->addAttribute('songCount', (string) count($allitems));
+        $duration = (count($allitems) > 0) ? $playlist->get_total_duration($allitems) : 0;
+        $xplaylist->addAttribute('duration', (string) $duration);
 
         if ($songs) {
-            $allitems = $playlist->get_items();
             foreach ($allitems as $item) {
                 $song = new Song($item['object_id']);
                 self::addSong($xplaylist, $song->id, false, "entry");

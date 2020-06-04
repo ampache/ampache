@@ -1308,6 +1308,24 @@ class Search extends playlist_object
     }
 
     /**
+     * get_total_duration
+     * Get the total duration of all songs.
+     * @param array $songs
+     * @return string|null
+     */
+    public static function get_total_duration($songs)
+    {
+        $idlist = '(' . implode(',', $songs) . ')';
+
+        $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
+        $db_results = Dba::read($sql);
+
+        $results = Dba::fetch_row($db_results);
+
+        return $results['0'];
+    } // get_total_duration
+
+    /**
      * name_to_basetype
      *
      * Iterates over our array of types to find out the basetype for
