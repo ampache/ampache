@@ -1311,18 +1311,22 @@ class Search extends playlist_object
      * get_total_duration
      * Get the total duration of all songs.
      * @param array $songs
-     * @return string|null
+     * @return integer
      */
     public static function get_total_duration($songs)
     {
-        $idlist = '(' . implode(',', $songs) . ')';
+        $song_ids = array();
+        foreach($songs as $objects) {
+            $song_ids[] = (string) $objects['object_id'];
+        }
+        $idlist = '(' . implode(',', $song_ids) . ')';
 
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_row($db_results);
 
-        return $results['0'];
+        return (int) $results['0'];
     } // get_total_duration
 
     /**
