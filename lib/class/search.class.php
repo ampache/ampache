@@ -1316,7 +1316,7 @@ class Search extends playlist_object
     public static function get_total_duration($songs)
     {
         $song_ids = array();
-        foreach($songs as $objects) {
+        foreach ($songs as $objects) {
             $song_ids[] = (string) $objects['object_id'];
         }
         $idlist = '(' . implode(',', $song_ids) . ')';
