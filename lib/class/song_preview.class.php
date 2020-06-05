@@ -131,8 +131,6 @@ class Song_Preview extends database_object implements media, playable_item
             return false;
         }
         $idlist = '(' . implode(',', $song_ids) . ')';
-
-        // Callers might have passed array(false) because they are dumb
         if ($idlist == '()') {
             return false;
         }

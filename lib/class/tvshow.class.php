@@ -437,7 +437,7 @@ class TVShow extends database_object implements library_item
      * update_tags
      *
      * Update tags of tv shows
-     * @param $tags_comma
+     * @param string $tags_comma
      * @param boolean $override_childs
      * @param boolean $add_to_childs
      * @param integer $current_id

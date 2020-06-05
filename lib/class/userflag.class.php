@@ -65,12 +65,11 @@ class Userflag extends database_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        $userflags = array();
-        $idlist    = '(' . implode(',', $ids) . ')';
-        $sql       = "SELECT `object_id`, `date` FROM `user_flag` " .
-                    "WHERE `user` = ? AND `object_id` IN $idlist " .
-                    "AND `object_type` = ?";
-
+        $userflags  = array();
+        $idlist     = '(' . implode(',', $ids) . ')';
+        $sql        = "SELECT `object_id`, `date` FROM `user_flag` " .
+                      "WHERE `user` = ? AND `object_id` IN $idlist " .
+                      "AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $type));
 
         while ($row = Dba::fetch_assoc($db_results)) {

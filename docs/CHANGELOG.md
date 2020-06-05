@@ -9,12 +9,27 @@ Admin -> Server Config -> Interface -> Custom datetime
 e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
 Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
 
-* Bump API version to 410001 (4.1.0 build 001)
-* JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
-  * Call xml as normal:
-    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=410001
-  * Call the JSON server:
-    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=410001
+* GENERAL changes
+  * April 2020 Translation update
+  * May 2020 Translation update
+  * Fixed a lot of incorrectly typed function calls and code documentation
+  * Update Composer requirements
+  * Allow searching play times without requiring UI option
+  * Added declare(strict_types=0); to lib/* and lib/class/* (requires more work before it can be enabled)
+  * Stop showing the average rating in the web interface as stars. (show an average when available as text separately)
+  * Add 250 for search form limits in the web ui. (Jump from 100 to 500 is pretty big)
+  * Add Recently updated/added to search rules
+* API changes
+  * Bump API version to 410001 (4.1.0 build 001)
+  * All calls that return songs now include <playlisttrack> which can be used to identify track order.
+  * <playcount> added to objects.
+  * Don't gather art when adding songs
+  * Added actions to catalog_action. 'verify_catalog' 'gather_art'
+  * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
+    * Call xml as normal:
+      * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=410001
+    * Call the JSON server:
+      * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=410001
 * NEW API functions
   * get_similar: send artist or song id to get related objects from last.fm
   * shares: get a list of shares you can access

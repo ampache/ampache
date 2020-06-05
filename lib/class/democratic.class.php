@@ -76,10 +76,9 @@ class Democratic extends Tmp_Playlist
         }
 
         $idlist = '(' . implode(',', $ids) . ')';
-
-        $sql = 'SELECT `object_id`, COUNT(`user`) AS `count` ' .
-            'FROM `user_vote` ' .
-            "WHERE `object_id` IN $idlist GROUP BY `object_id`";
+        $sql    = "SELECT `object_id`, COUNT(`user`) AS `count` " .
+                  "FROM `user_vote` " .
+                  "WHERE `object_id` IN $idlist GROUP BY `object_id`";
 
         $db_results = Dba::read($sql);
 
