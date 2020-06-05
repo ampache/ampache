@@ -1320,7 +1320,9 @@ class Search extends playlist_object
             $song_ids[] = (string) $objects['object_id'];
         }
         $idlist = '(' . implode(',', $song_ids) . ')';
-
+        if ($idlist == '()') {
+            return 0;
+        }
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 

@@ -493,8 +493,6 @@ class Song extends database_object implements media, library_item
             return false;
         }
         $idlist = '(' . implode(',', $song_ids) . ')';
-
-        // Callers might have passed array(false) because they are dumb
         if ($idlist == '()') {
             return false;
         }
@@ -560,6 +558,17 @@ class Song extends database_object implements media, library_item
 
         return true;
     } // build_cache
+
+    /**
+     * get_cache_count
+     * This counts the size of the specified index in the cache
+     * @param string $index
+     * @return integer
+     */
+    public static function get_cache_count($index)
+    {
+        return parent::get_cache_count($index);
+    } // get_cache_count
 
     /**
      * has_info
@@ -1285,8 +1294,8 @@ class Song extends database_object implements media, library_item
             "`size` = ?, `time` = ?, `track` = ?, `mbid` = ?, " .
             "`update_time` = ? WHERE `id` = ?";
         Dba::write($sql, array($new_song->album, $new_song->year, $new_song->artist,
-                                $new_song->title, $new_song->composer, $new_song->bitrate, $new_song->rate, $new_song->mode,
-                                $new_song->size, $new_song->time, $new_song->track, $new_song->mbid,
+                                $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode,
+                                (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid,
                                 $update_time, $song_id));
 
         $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, " .

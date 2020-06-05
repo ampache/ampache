@@ -326,7 +326,9 @@ class Playlist extends playlist_object
     {
         $songs  = self::get_songs();
         $idlist = '(' . implode(',', $songs) . ')';
-
+        if ($idlist == '()') {
+            return null;
+        }
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 

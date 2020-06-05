@@ -1757,29 +1757,30 @@ abstract class Catalog extends database_object
      */
     public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern = '', $rename_pattern = '')
     {
-        // check for wav files
-        $invalid_exts = array('wav');
-        $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
-        if (in_array($extension, $invalid_exts)) {
-            debug_event('catalog.class', 'update_media_from_tags: Invalid file extension ' . $media->file, 2);
-
-            return array();
-        }
-        debug_event('catalog.class', 'Reading tags from ' . $media->file, 4);
-
         $catalog = self::create_from_id($media->catalog);
         if ($catalog === null) {
             debug_event('catalog.class', 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
 
             return array();
         }
-        $results = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
 
-        // Figure out what type of object this is and call the right
-        // function, giving it the stuff we've figured out above
-        $name = (strtolower(get_class($media)) == 'song') ? 'song' : 'video';
-
+        // Figure out what type of object this is and call the right  function
+        $name     = (strtolower(get_class($media)) == 'song') ? 'song' : 'video';
         $function = 'update_' . $name . '_from_tags';
+
+        // check for files without tags and try to update from their file name instead
+        $invalid_exts = array('wav', 'shn');
+        $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
+        $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
+        if (in_array($extension, $invalid_exts)) {
+            debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: Updating from file name', 2);
+            $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
+            $results = array_merge($results, $patres);
+
+            return call_user_func(array('Catalog', $function), $results, $media);
+        }
+        debug_event('catalog.class', 'Reading tags from ' . $media->file, 4);
+
 
         return call_user_func(array('Catalog', $function), $results, $media);
     } // update_media_from_tags
@@ -2026,7 +2027,6 @@ abstract class Catalog extends database_object
             $libraryItem->addMetadata($field, $value);
         }
     }
-
 
     /**
      * @param media $media
