@@ -36,7 +36,7 @@
         "gettext/gettext": "4.*.*",
         "james-heinrich/getid3": "dev-master",
         "mikealmond/musicbrainz": "dev-master",
-        "phpmailer/phpmailer": "5.2.*",
+        "phpmailer/phpmailer": "6.1.*",
         "rmccue/requests": "1.7.*",
         "cboden/ratchet": "0.4.*",
         "symfony/event-dispatcher": "^3.0",
