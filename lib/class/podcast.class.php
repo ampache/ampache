@@ -353,7 +353,7 @@ class Podcast extends database_object implements library_item
         $episodes      = array();
         $arturl        = '';
 
-        $xmlstr = file_get_contents($feed);
+        $xmlstr = file_get_contents($feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
             AmpError::add('feed', T_('Can not access the feed'));
         } else {
@@ -528,7 +528,7 @@ class Podcast extends database_object implements library_item
     {
         debug_event('podcast.class', 'Syncing feed ' . $this->feed . ' ...', 4);
 
-        $xmlstr = file_get_contents($this->feed);
+        $xmlstr = file_get_contents($this->feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
             debug_event('podcast.class', 'Cannot access feed ' . $this->feed, 1);
 

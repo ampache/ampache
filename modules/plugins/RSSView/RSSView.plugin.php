@@ -92,7 +92,7 @@ class AmpacheRSSView
      */
     public function display_home()
     {
-        $xmlstr      = file_get_contents($this->feed_url);
+        $xmlstr      = file_get_contents($this->feed_url, false, stream_context_create(Core::requests_options()));
         $xml         = simplexml_load_string($xmlstr);
         $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         if ($xml->channel) {
