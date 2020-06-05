@@ -362,11 +362,15 @@ function translate_pattern_code($code)
     $code_array = array('%A' => 'album',
             '%a' => 'artist',
             '%c' => 'comment',
-            '%g' => 'genre',
+            '%C' => 'catalog_number',
             '%T' => 'track',
+            '%d' => 'disk',
+            '%g' => 'genre',
             '%t' => 'title',
             '%y' => 'year',
-            '%d' => 'disk',
+            '%Y' => 'original_year',
+            '%r' => 'release_type',
+            '%b' => 'barcode',
             '%o' => 'zz_other');
 
     if (isset($code_array[$code])) {
