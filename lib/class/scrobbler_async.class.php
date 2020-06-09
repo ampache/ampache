@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,8 +21,16 @@
  *
  */
 
-class scrobbler_async extends Thread
+abstract class scrobbler_async extends Thread
 {
+    public $user;
+    public $song_info;
+
+    /**
+     * scrobbler_async constructor.
+     * @param $user
+     * @param $song_info
+     */
     public function __construct($user, $song_info)
     {
         $this->user      = $user;
@@ -36,4 +45,4 @@ class scrobbler_async extends Thread
             User::save_mediaplay($this->user, $this->song_info);
         }
     }
-}
+} // end scrobbler_async.class

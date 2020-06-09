@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,13 +22,11 @@
 
 // Because this is a reset of the persons password make the form a little more secure
 
-$display_fields = (array) AmpConfig::get('registration_display_fields');
-?>
+$display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php AmpError::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
-    <table class="tabledata" cellspacing="0" cellpadding="0">
-        <?php if (in_array('fullname', $display_fields)) {
-    ?>
+    <table class="tabledata">
+        <?php if (in_array('fullname', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('Full Name'); ?>:</td>
                 <td>
@@ -43,8 +41,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
                 <input type="text" name="email" id="email" value="<?php echo scrub_out($client->email); ?>" />
             </td>
         </tr>
-        <?php if (in_array('website', $display_fields)) {
-        ?>
+        <?php if (in_array('website', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('Website'); ?>:</td>
                 <td>
@@ -53,8 +50,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
             </tr>
         <?php
     } ?>
-        <?php if (in_array('state', $display_fields)) {
-        ?>
+        <?php if (in_array('state', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('State'); ?>:</td>
                 <td>
@@ -63,8 +59,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
             </tr>
         <?php
     } ?>
-        <?php if (in_array('city', $display_fields)) {
-        ?>
+        <?php if (in_array('city', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('City'); ?>:</td>
                 <td>
@@ -92,6 +87,15 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
             </td>
             <td>
                 <input type="file" id="avatar" name="avatar" value="" />
+        </tr>
+        <tr>
+            <td>
+        </td>
+        <td>
+          <?php
+                if ($client->f_avatar) {
+                    echo $client->f_avatar;
+                } ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
             </td>
@@ -99,29 +103,29 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
         <tr>
             <td>
                 <?php echo T_('API Key'); ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API Key')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API key')); ?></a>
             </td>
             <td>
                 <span>
                     <?php if ($client->apikey) {
-        $urlinfo       = parse_url(AmpConfig::get('web_path'));
-        $apikey_qrcode = "ampache://" . $client->apikey . "@" . $urlinfo['host'];
-        if ($urlinfo['port'] && $urlinfo['port'] != 80) {
-            $apikey_qrcode .= ":" . $urlinfo['port'];
-        }
-        $apikey_qrcode .= $urlinfo['path'];
-        if ($urlinfo['scheme'] == "https" || AmpConfig::get('force_ssl')) {
-            $apikey_qrcode .= "#ssl=true";
-        } ?>
+                    $urlinfo       = parse_url(AmpConfig::get('web_path'));
+                    $apikey_qrcode = "https://" . $client->apikey . "@" . $urlinfo['host'];
+                    if ($urlinfo['port'] && $urlinfo['port'] != 80) {
+                        $apikey_qrcode .= ":" . $urlinfo['port'];
+                    }
+                    $apikey_qrcode .= $urlinfo['path'];
+                    if ($urlinfo['scheme'] == "https" || AmpConfig::get('force_ssl')) {
+                        $apikey_qrcode .= "#ssl=true";
+                    } ?>
                     <br />
                     <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
-                        <a href="<?php echo $apikey_qrcode; ?>" rel="nohtml"><div id="apikey_qrcode"></div></a>
+                        <a href="<?php echo $apikey_qrcode; ?>" class="nohtml"><div id="apikey_qrcode"></div></a>
                     </div>
                     <br />
-                    <script language="javascript" type="text/javascript">$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>', background: '#ffffff', foreground: '#000000'});</script>
+                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>', background: '#ffffff', foreground: '#000000'});</script>
                     <?php echo $client->apikey; ?>
                     <?php
-    } ?>
+                } ?>
                 </span>
             </td>
         </tr>
@@ -135,7 +139,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields');
     <div class="formValidation">
             <input type="hidden" name="user_id" value="<?php echo scrub_out($client->id); ?>" />
             <?php echo Core::form_register('update_user'); ?>
-            <input type="hidden" name="tab" value="<?php echo scrub_out($_REQUEST['tab']); ?>" />
+            <input type="hidden" name="tab" value="<?php echo scrub_out(Core::get_request('tab')); ?>" />
             <input class="button" type="submit" value="<?php echo T_('Update Account'); ?>" />
     </div>
 </form>

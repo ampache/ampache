@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,6 +21,9 @@
  */
 
 namespace Lib\Metadata;
+
+use AmpConfig;
+use Lib\Metadata\Model\MetadataField;
 
 /**
  * Description of metadata
@@ -58,7 +61,7 @@ trait Metadata
      */
     protected function initializeMetadata()
     {
-        $this->metadataRepository      = new \Lib\Metadata\Repository\Metadata();
+        $this->metadataRepository      = new Repository\Metadata();
         $this->metadataFieldRepository = new \Lib\Metadata\Repository\MetadataField();
     }
 
@@ -83,12 +86,13 @@ trait Metadata
 
     /**
      *
-     * @param \Lib\Metadata\Model\MetadataField $field
-     * @param type $data
+     * @param MetadataField $field
+     * @param string $data
+     * @throws \ReflectionException
      */
-    public function addMetadata(\Lib\Metadata\Model\MetadataField $field, $data)
+    public function addMetadata(MetadataField $field, $data)
     {
-        $metadata = new \Lib\Metadata\Model\Metadata();
+        $metadata = new Model\Metadata();
         $metadata->setField($field);
         $metadata->setObjectId($this->id);
         $metadata->setType(get_class($this));
@@ -96,7 +100,12 @@ trait Metadata
         $this->metadataRepository->add($metadata);
     }
 
-    public function updateOrInsertMetadata(\Lib\Metadata\Model\MetadataField $field, $data)
+    /**
+     * @param Model\MetadataField $field
+     * @param $data
+     * @throws \ReflectionException
+     */
+    public function updateOrInsertMetadata(MetadataField $field, $data)
     {
         /* @var $metadata Model\Metadata */
         $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, get_class($this));
@@ -111,13 +120,14 @@ trait Metadata
 
     /**
      *
-     * @param type $name
-     * @param type $public
-     * @return \Lib\Metadata\Model\MetadataField
+     * @param string $name
+     * @param boolean $public
+     * @return MetadataField
+     * @throws \ReflectionException
      */
     protected function createField($name, $public)
     {
-        $field = new \Lib\Metadata\Model\MetadataField();
+        $field = new MetadataField();
         $field->setName($name);
         if (!$public) {
             $field->hide();
@@ -132,6 +142,7 @@ trait Metadata
      * @param string $propertie
      * @param boolean $public
      * @return Model\MetadataField
+     * @throws \ReflectionException
      */
     public function getField($propertie, $public = true)
     {
@@ -151,7 +162,7 @@ trait Metadata
      */
     public static function isCustomMetadataEnabled()
     {
-        return (boolean) \AmpConfig::get('enable_custom_metadata');
+        return (boolean) AmpConfig::get('enable_custom_metadata');
     }
 
     /**
@@ -162,15 +173,15 @@ trait Metadata
     {
         if (!$this->disabledMetadataFields) {
             $fields = array();
-            $ids    = explode(',', \AmpConfig::get('disabled_custom_metadata_fields'));
-            foreach ($ids as $id) {
-                $field = $this->metadataFieldRepository->findById($id);
+            $ids    = explode(',', AmpConfig::get('disabled_custom_metadata_fields'));
+            foreach ($ids as $metaid) {
+                $field = $this->metadataFieldRepository->findById($metaid);
                 if ($field) {
                     $fields[] = $field->getName();
                 }
             }
             $this->disabledMetadataFields = array_merge(
-                    $fields, explode(',', \AmpConfig::get('disabled_custom_metadata_fields_input'))
+                    $fields, explode(',', AmpConfig::get('disabled_custom_metadata_fields_input'))
             );
         }
 

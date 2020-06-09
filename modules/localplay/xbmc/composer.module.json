@@ -1,26 +1,26 @@
 {
-	"name": "ampache/ampache-xbmc",
-	"description": "XBMC localplay for Ampache.",
-	"homepage": "http://ampache.org",
-	"keywords": ["ampache", "xbmc", "localplay"],
-	"type": "ampache-localplay",
-	"license": "GPL-2.0",
+    "name": "ampache/ampache-xbmc",
+    "description": "XBMC localplay for Ampache.",
+    "homepage": "http://ampache.org",
+    "keywords": ["ampache", "xbmc", "localplay"],
+    "type": "ampache-localplay",
+    "license": "GPL-2.0",
     "require": {
-		"krixon/xbmc-php-rpc": "dev-master"
+        "krixon/xbmc-php-rpc": "dev-master"
     },
-	"repositories":
-	[
-		{
-			"type": "package",
-			"package": {
-				"name": "krixon/xbmc-php-rpc",
-				"version": "dev-master",
-				"source": {
-					"url": "https://github.com/krixon/xbmc-php-rpc.git",
-					"type": "git",
-					"reference": "master"
-				}
-			}
-		}
-	]
+    "repositories":
+    [
+        {
+            "type": "package",
+            "package": {
+                "name": "krixon/xbmc-php-rpc",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/krixon/xbmc-php-rpc.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        }
+    ]
 }

@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,10 +31,15 @@ use Sabre\DAV;
  */
 class WebDAV_Auth extends DAV\Auth\Backend\AbstractBasic
 {
+    /**
+     * @param $username
+     * @param $password
+     * @return mixed
+     */
     protected function validateUserPass($username, $password)
     {
         $auth = Auth::login($username, $password, true);
 
         return $auth['success'];
     }
-}
+} // end webdav_auth.class

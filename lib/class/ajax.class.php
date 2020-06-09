@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,7 +53,7 @@ class Ajax
      * @param string $confirm
      * @return string
      */
-    public static function observe($source, $method, $action, $confirm='')
+    public static function observe($source, $method, $action, $confirm = '')
     {
         $non_quoted = array('document', 'window');
 
@@ -62,8 +63,8 @@ class Ajax
             $source_txt = "'#$source'";
         }
 
-        $observe   = "<script type=\"text/javascript\">";
-        $methodact = (($method == 'click') ? "update_action();" : "");
+        $observe   = "<script>";
+        $methodact = ($method == 'click') ? "update_action();" : "";
         if (AmpConfig::get('ajax_load') && $method == 'load') {
             $source_txt = "$( document ).ready(";
         } else {
@@ -99,11 +100,11 @@ class Ajax
      * @param string $post
      * @return string
      */
-    public static function action($action, $source, $post='')
+    public static function action($action, $source, $post = '')
     {
         $url = self::url($action);
 
-        $non_quoted = array('document','window');
+        $non_quoted = array('document', 'window');
 
         if (in_array($source, $non_quoted)) {
             $source_txt = $source;
@@ -112,9 +113,9 @@ class Ajax
         }
 
         if ($post) {
-            $ajax_string = "ajaxPost('$url','$post',$source_txt)";
+            $ajax_string = "ajaxPost('$url', '$post', $source_txt)";
         } else {
-            $ajax_string = "ajaxPut('$url',$source_txt)";
+            $ajax_string = "ajaxPut('$url', $source_txt)";
         }
 
         return $ajax_string;
@@ -133,7 +134,7 @@ class Ajax
      * @param string $confirm
      * @return string
      */
-    public static function button($action, $icon, $alt, $source='', $post='', $class='', $confirm='')
+    public static function button($action, $icon, $alt, $source = '', $post = '', $class = '', $confirm = '')
     {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
@@ -166,7 +167,7 @@ class Ajax
      * @param string $class
      * @return string
      */
-    public static function text($action, $text, $source, $post='', $class='')
+    public static function text($action, $text, $source, $post = '', $class = '')
     {
         // Temporary workaround to avoid sorting on custom base requests
         if (!defined("NO_BROWSE_SORTING") || strpos($source, "sort_") === false) {
@@ -198,7 +199,7 @@ class Ajax
      */
     public static function run($action)
     {
-        echo "<script type=\"text/javascript\"><!--\n";
+        echo "<script><!--\n";
         echo "$action";
         echo "\n--></script>";
     } // run
@@ -207,7 +208,7 @@ class Ajax
       * set_include_override
      * This sets the including div override, used only one place. Kind of a
      * hack.
-     * @param bool $value
+     * @param boolean $value
      */
     public static function set_include_override($value)
     {
@@ -215,37 +216,42 @@ class Ajax
     } // set_include_override
 
     /**
-      * start_container
+     * start_container
      * This checks to see if we're AJAXin'. If we aren't then it echoes out
      * the html needed to start a container that can be replaced by Ajax.
      * @param string $name
      * @param string $class
+     * @return boolean
      */
     public static function start_container($name, $class = '')
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
+        } else {
+            echo '<div id="' . scrub_out($name) . '"';
+            if (!empty($class)) {
+                echo ' class="' . scrub_out($class) . '"';
+            }
+            echo '>';
         }
 
-        echo '<div id="' . scrub_out($name) . '"';
-        if (!empty($class)) {
-            echo ' class="' . scrub_out($class) . '"';
-        }
-        echo '>';
+        return false;
     } // start_container
 
     /**
      * end_container
      * This ends the container if we're not doing the AJAX thing
+     * @return boolean
      */
     public static function end_container()
     {
         if (defined('AJAX_INCLUDE') && !self::$include_override) {
             return true;
+        } else {
+            echo "</div>";
+            self::$include_override = false;
         }
 
-        echo "</div>";
-
-        self::$include_override = false;
+        return false;
     } // end_container
-} // end Ajax class
+} // end ajax.class

@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,12 +38,13 @@ class TVShow_Episode extends Video
      * Constructor
      * This pulls the tv show episode information from the database and returns
      * a constructed object
+     * @param $episode_id
      */
-    public function __construct($id)
+    public function __construct($episode_id)
     {
-        parent::__construct($id);
+        parent::__construct($episode_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($episode_id);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -51,11 +53,11 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused tv shows episodes
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `tvshow_episode` USING `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
@@ -64,6 +66,10 @@ class TVShow_Episode extends Video
     /**
      * insert
      * Insert a new tv show episode and related entities.
+     * @param array $data
+     * @param array $gtypes
+     * @param array $options
+     * @return integer
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
@@ -73,8 +79,8 @@ class TVShow_Episode extends Video
         $tags = $data['genre'];
 
         $tvshow = TVShow::check($data['tvshow'], $data['year'], $data['tvshow_summary']);
-        if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db($tvshow, 'tvshow')) {
-            $art = new Art($tvshow, 'tvshow');
+        if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db((int) $tvshow, 'tvshow')) {
+            $art = new Art((int) $tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
         }
         $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
@@ -85,7 +91,7 @@ class TVShow_Episode extends Video
 
         if (is_array($tags)) {
             foreach ($tags as $tag) {
-                $tag = trim($tag);
+                $tag = trim((string) $tag);
                 if (!empty($tag)) {
                     Tag::add('tvshow_season', $tvshow_season, $tag, false);
                     Tag::add('tvshow', $tvshow, $tag, false);
@@ -104,6 +110,8 @@ class TVShow_Episode extends Video
     /**
      * create
      * This takes a key'd array of data as input and inserts a new tv show episode entry, it returns the record id
+     * @param array $data
+     * @return integer
      */
     public static function create($data)
     {
@@ -117,6 +125,8 @@ class TVShow_Episode extends Video
     /**
      * update
      * This takes a key'd array of data as input and updates a tv show episode entry
+     * @param array $data
+     * @return int
      */
     public function update(array $data)
     {
@@ -141,6 +151,8 @@ class TVShow_Episode extends Video
     /**
      * format
      * this function takes the object and reformats some values
+     * @param boolean $details
+     * @return boolean
      */
     public function format($details = true)
     {
@@ -167,7 +179,7 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * Get item keywords for metadata searches.
+     * get_keywords
      * @return array
      */
     public function get_keywords()
@@ -192,11 +204,19 @@ class TVShow_Episode extends Video
         return $keywords;
     }
 
+    /**
+     * get_parent
+     * @return array
+     */
     public function get_parent()
     {
         return array('object_type' => 'tvshow_season', 'object_id' => $this->season);
     }
 
+    /**
+     * get_release_item_art
+     * @return array
+     */
     public function get_release_item_art()
     {
         return array('object_type' => 'tvshow_season',
@@ -204,6 +224,9 @@ class TVShow_Episode extends Video
         );
     }
 
+    /**
+     * @return string
+     */
     public function get_description()
     {
         if (!empty($this->summary)) {
@@ -215,6 +238,11 @@ class TVShow_Episode extends Video
         return $season->get_description();
     }
 
+    /**
+     * @param integer $thumb
+     * @param boolean $force
+     * @return mixed|void
+     */
     public function display_art($thumb = 2, $force = false)
     {
         $id   = null;
@@ -244,9 +272,9 @@ class TVShow_Episode extends Video
     /**
      * Remove the video from disk.
      */
-    public function remove_from_disk()
+    public function remove()
     {
-        $deleted = parent::remove_from_disk();
+        $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
@@ -254,4 +282,4 @@ class TVShow_Episode extends Video
 
         return $deleted;
     }
-}
+} // end tvshow_episode.class

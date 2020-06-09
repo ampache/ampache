@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,15 @@ class SubsonicClient
     protected $_creds;
     protected $_commands;
 
-    public function __construct($username, $password, $serverUrl, $port="4040", $client="Ampache")
+    /**
+     * SubsonicClient constructor.
+     * @param string $username
+     * @param string $password
+     * @param string $serverUrl
+     * @param string $port
+     * @param string $client
+     */
+    public function __construct($username, $password, $serverUrl, $port = "4040", $client = "Ampache")
     {
         $this->setServer($serverUrl, $port);
 
@@ -78,24 +86,41 @@ class SubsonicClient
         );
     }
 
-    public function querySubsonic($action, $o=array(), $rawAnswer=false)
+    /**
+     * @param $action
+     * @param array $object
+     * @param boolean $rawAnswer
+     * @return array|bool|object|string
+     */
+    public function querySubsonic($action, $object = array(), $rawAnswer = false)
     {
-        return $this->_querySubsonic($action, $o, $rawAnswer);
+        return $this->_querySubsonic($action, $object, $rawAnswer);
     }
-    
-    public function parameterize($url, $o = array())
+
+    /**
+     * @param $url
+     * @param array $object
+     * @return string
+     */
+    public function parameterize($url, $object = array())
     {
-        $params = array_merge($this->_creds, $o);
+        $params = array_merge($this->_creds, $object);
 
         return $url . http_build_query($params);
     }
 
-    protected function _querySubsonic($action, $o=array(), $rawAnswer=false)
+    /**
+     * @param $action
+     * @param array $o
+     * @param boolean $rawAnswer
+     * @return array|bool|object|string
+     */
+    protected function _querySubsonic($action, $o = array(), $rawAnswer = false)
     {
         // Make sure the command is in the list of commands
         if ($this->isCommand($action)) {
             $url = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $o);
-            
+
             $options = array(
                 CURLOPT_URL => $url,
                 CURLOPT_HEADER => 0,
@@ -103,12 +128,12 @@ class SubsonicClient
                 CURLOPT_CONNECTTIMEOUT => 8,
                 CURLOPT_SSL_VERIFYPEER => 0,
                 CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_PORT => intval($this->_serverPort)
+                CURLOPT_PORT => (int) ($this->_serverPort)
             );
-            $ch = curl_init();
-            curl_setopt_array($ch, $options);
-            $answer = curl_exec($ch);
-            curl_close($ch);
+            $curl = curl_init();
+            curl_setopt_array($curl, $options);
+            $answer = curl_exec($curl);
+            curl_close($curl);
             if ($rawAnswer) {
                 return $answer;
             } else {
@@ -119,7 +144,11 @@ class SubsonicClient
         }
     }
 
-    public function setServer($server, $port=null)
+    /**
+     * @param $server
+     * @param $port
+     */
+    public function setServer($server, $port = null)
     {
         $protocol = "";
         if (preg_match("/^https\:\/\//", $server)) {
@@ -149,18 +178,30 @@ class SubsonicClient
         $this->_serverPort = $port;
     }
 
+    /**
+     * @return string
+     */
     public function getServer()
     {
         return $this->_serverUrl . ":" . $this->_serverPort;
     }
 
-    protected function error($error, $data=null)
+    /**
+     * @param $error
+     * @param $data
+     * @return object
+     */
+    protected function error($error, $data = null)
     {
         error_log($error . "\n" . print_r($data, true));
 
         return (object) array("success" => false, "error" => $error, "data" => $data);
     }
 
+    /**
+     * @param $response
+     * @return array|object
+     */
     protected function parseResponse($response)
     {
         $arr = json_decode($response, true);
@@ -174,11 +215,20 @@ class SubsonicClient
         }
     }
 
+    /**
+     * @param $command
+     * @return boolean
+     */
     public function isCommand($command)
     {
         return in_array($command, $this->_commands);
     }
 
+    /**
+     * @param $action
+     * @param $arguments
+     * @return array|bool|object|string
+     */
     public function __call($action, $arguments)
     {
         $o = count($arguments) ? (array) $arguments[0] : array();

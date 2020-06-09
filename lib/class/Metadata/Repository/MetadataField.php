@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,17 +22,20 @@
 
 namespace Lib\Metadata\Repository;
 
+use Dba;
+use Lib\Repository;
+
 /**
  * Description of Metadata_field
  *
  * @author raziel
  */
-class MetadataField extends \Lib\Repository
+class MetadataField extends Repository
 {
     protected $modelClassName = '\Lib\Metadata\Model\MetadataField';
 
-    public static function gc()
+    public static function garbage_collection()
     {
-        \Dba::write('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL');
+        Dba::write('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL');
     }
 }

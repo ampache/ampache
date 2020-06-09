@@ -39,10 +39,10 @@ echo "STATE = " . $state . "\n";
 // If the song was played and then finished, start to play next song in list.
 // Do not start anything if playback was stopped from beginning
 if ($played) {
-    echo "UPnP play next" . "\n";
+    echo T_("Play next") . "\n";
     if ($player->Next(false)) {
-        echo "Next song started" . "\n";
+        echo T_("The next song has started") . "\n";
     } else {
-        echo "Next song FAILED!" . "\n";
+        echo T_("The next song failed to start") . "\n";
     }
 }

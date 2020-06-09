@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,10 @@
 
 namespace Lib;
 
+use Dba;
 use Lib\Interfaces\Model;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Description of Repository
@@ -32,7 +35,7 @@ use Lib\Interfaces\Model;
 class Repository
 {
     protected $modelClassName;
-    
+
     /**
      *
      * @var array Stores relation between SQL field name and class name so we
@@ -40,6 +43,11 @@ class Repository
      */
     protected $fieldClassRelations = array();
 
+    /**
+     * @param $fields
+     * @param $values
+     * @return array
+     */
     protected function findBy($fields, $values)
     {
         $table = $this->getTableName();
@@ -60,23 +68,29 @@ class Repository
 
     /**
      *
-     * @param type $id
+     * @param $object_id
      * @return DatabaseObject
      */
-    public function findById($id)
+    public function findById($object_id)
     {
-        $rows = $this->findBy(array('id'), array($id));
+        $rows = $this->findBy(array('id'), array($object_id));
 
         return count($rows) ? reset($rows) : null;
     }
 
-    private function getRecords($table, $field = null, $value = null)
+    /**
+     * @param string $table
+     * @param array $field
+     * @param array|string $value
+     * @return array
+     */
+    private function getRecords($table, $field = array(), $value = null)
     {
         $data = array();
         $sql  = $this->assembleQuery($table, $field);
 
-        $statement = \Dba::read($sql, is_array($value) ? $value : array($value));
-        while ($object = \Dba::fetch_object($statement, $this->modelClassName)) {
+        $statement = Dba::read($sql, is_array($value) ? $value : array($value));
+        while ($object = Dba::fetch_object($statement, $this->modelClassName)) {
             $data[$object->getId()] = $object;
         }
 
@@ -87,7 +101,7 @@ class Repository
      *
      * @param string $name
      * @param array $arguments
-     * @return DatabaseObject
+     * @return array
      */
     public function __call($name, $arguments)
     {
@@ -99,21 +113,30 @@ class Repository
                     $this->resolveObjects($arguments)
             );
         }
+
+        return array();
     }
 
+    /**
+     * @return string
+     */
     private function getTableName()
     {
         $className = get_called_class();
         $nameParts = explode('\\', $className);
         $tableName = preg_replace_callback(
                 '/(?<=.)([A-Z])/',
-                function ($m) {
-                    return '_' . strtolower($m[0]);
+                function ($name) {
+                    return '_' . strtolower((string) $name[0]);
                 }, end($nameParts));
 
         return lcfirst($tableName);
     }
 
+    /**
+     * @param DatabaseObject $object
+     * @throws ReflectionException
+     */
     public function add(DatabaseObject $object)
     {
         $properties = $object->getDirtyProperties();
@@ -124,6 +147,9 @@ class Repository
         );
     }
 
+    /**
+     * @param DatabaseObject $object
+     */
     public function update(DatabaseObject $object)
     {
         if ($object->isDirty()) {
@@ -132,44 +158,62 @@ class Repository
         }
     }
 
+    /**
+     * @param DatabaseObject $object
+     */
     public function remove(DatabaseObject $object)
     {
         $id = $object->getId();
         $this->deleteRecord($id);
     }
 
+    /**
+     * @param $properties
+     * @return string|null
+     */
     protected function insertRecord($properties)
     {
         $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ')'
                 . ' VALUES(' . implode(',', array_fill(0, count($properties), '?')) . ')';
         //print_r($properties);
-        \Dba::write(
+        Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))
         );
 
-        return \Dba::insert_id();
+        return Dba::insert_id();
     }
 
+    /**
+     * @param $id
+     * @param $properties
+     */
     protected function updateRecord($id, $properties)
     {
         $sql = 'UPDATE ' . $this->getTableName()
                 . ' SET ' . implode(',', $this->getKeyValuePairs($properties))
                 . ' WHERE id = ?';
         $properties[] = $id;
-        \Dba::write(
+        Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))
         );
     }
 
-    protected function deleteRecord($id)
+    /**
+     * @param $object_id
+     */
+    protected function deleteRecord($object_id)
     {
         $sql = 'DELETE FROM ' . $this->getTableName()
                 . ' WHERE id = ?';
-        \Dba::write($sql, array($id));
+        Dba::write($sql, array($object_id));
     }
 
+    /**
+     * @param $properties
+     * @return array
+     */
     protected function getKeyValuePairs($properties)
     {
         $pairs = array();
@@ -183,13 +227,14 @@ class Repository
     /**
      * Set a private or protected variable.
      * Only used in case where a property should not publicly writable
-     * @param Object $object
+     * @param Model $object
      * @param string $property
-     * @param mixed $value
+     * @param string|null $value
+     * @throws ReflectionException
      */
     protected function setPrivateProperty(Model $object, $property, $value)
     {
-        $reflectionClass    = new \ReflectionClass(get_class($object));
+        $reflectionClass    = new ReflectionClass(get_class($object));
         $ReflectionProperty = $reflectionClass->getProperty($property);
         $ReflectionProperty->setAccessible(true);
         $ReflectionProperty->setValue($object, $value);
@@ -220,7 +265,7 @@ class Repository
     public function assembleQuery($table, $fields)
     {
         $sql = 'SELECT * FROM ' . $table;
-        if ($fields) {
+        if (!empty($fields)) {
             $sql .= ' WHERE ';
             $sqlParts = array();
             foreach ($fields as $field) {
@@ -228,12 +273,16 @@ class Repository
             }
             $sql .= implode(' and ', $sqlParts);
         }
-        
+
         return $sql;
     }
 
+    /**
+     * @param $string
+     * @return string
+     */
     public function camelCaseToUnderscore($string)
     {
         return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', '_$1', $string));
     }
-}
+} // end repository

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,25 +31,25 @@ if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !
     exit;
 }
 
-if (!AmpConfig::get('statistical_graphs')) {
+if (!AmpConfig::get('statistical_graphs') || !is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
     debug_event('graph', 'Access denied, statistical graph disabled.', 1);
     exit;
 }
 
 $type = $_REQUEST['type'];
 
-$user_id     = intval($_REQUEST['user_id']);
+$user_id     = (int) ($_REQUEST['user_id']);
 $object_type = (string) scrub_in($_REQUEST['object_type']);
 if (!Core::is_library_item($object_type)) {
     $object_type = null;
 }
-$object_id  = intval($_REQUEST['object_id']);
+$object_id  = (int) ($_REQUEST['object_id']);
 $start_date = scrub_in($_REQUEST['start_date']);
 $end_date   = scrub_in($_REQUEST['end_date']);
 $zoom       = (string) scrub_in($_REQUEST['zoom']);
 
-$width  = intval($_REQUEST['width']);
-$height = intval($_REQUEST['height']);
+$width  = (int) ($_REQUEST['width']);
+$height = (int) ($_REQUEST['height']);
 
 $graph = new Graph();
 

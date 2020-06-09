@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,12 +33,13 @@ class Personal_Video extends Video
      * Constructor
      * This pulls the personal video information from the database and returns
      * a constructed object
+     * @param $object_id
      */
-    public function __construct($id)
+    public function __construct($object_id)
     {
-        parent::__construct($id);
+        parent::__construct($object_id);
 
-        $info = $this->get_info($id);
+        $info = $this->get_info($object_id);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -46,11 +48,11 @@ class Personal_Video extends Video
     } // Constructor
 
     /**
-     * gc
+     * garbage_collection
      *
      * This cleans out unused personal videos
      */
-    public static function gc()
+    public static function garbage_collection()
     {
         $sql = "DELETE FROM `personal_video` USING `personal_video` LEFT JOIN `video` ON `video`.`id` = `personal_video`.`id` " .
             "WHERE `video`.`id` IS NULL";
@@ -60,10 +62,14 @@ class Personal_Video extends Video
     /**
      * create
      * This takes a key'd array of data as input and inserts a new personal video entry, it returns the record id
+     * @param array $data
+     * @param array $gtypes
+     * @param array $options
+     * @return mixed
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        $sql = "INSERT INTO `personal_video` (`id`,`location`,`summary`) " .
+        $sql = "INSERT INTO `personal_video` (`id`, `location`, `summary`) " .
             "VALUES (?, ?, ?)";
         Dba::write($sql, array($data['id'], $data['location'], $data['summary']));
 
@@ -73,6 +79,8 @@ class Personal_Video extends Video
     /**
      * update
      * This takes a key'd array of data as input and updates a personal video entry
+     * @param array $data
+     * @return int
      */
     public function update(array $data)
     {
@@ -87,6 +95,8 @@ class Personal_Video extends Video
     /**
      * format
      * this function takes the object and reformats some values
+     * @param boolean $details
+     * @return boolean
      */
 
     public function format($details = true)
@@ -101,9 +111,9 @@ class Personal_Video extends Video
     /**
      * Remove the video from disk.
      */
-    public function remove_from_disk()
+    public function remove()
     {
-        $deleted = parent::remove_from_disk();
+        $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `personal_video` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
@@ -111,4 +121,4 @@ class Personal_Video extends Video
 
         return $deleted;
     }
-} // Personal_Video class
+} // end personal_video.class

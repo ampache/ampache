@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,9 +23,9 @@
 // Minimal init for use in install
 
 // Do a check for PHP5.4 because nothing will work without it
-if (version_compare(phpversion(), '5.4.0', '<')) {
-    echo "ERROR: Ampache requires PHP version >= 5.4";
-    exit;
+if (version_compare(phpversion(), '7.1.0', '<')) {
+    echo T_("Ampache requires PHP version >= 7.1");
+    throw new RuntimeException(T_("Ampache requires PHP version >= 7.1"));
 }
 
 error_reporting(E_ERROR); // Only show fatal errors in production
@@ -39,13 +39,14 @@ $configfile   = $prefix . '/config/ampache.cfg.php';
 // We still allow scripts to run (it could be the purpose of the maintenance)
 if (!defined('CLI')) {
     if (file_exists($prefix . '/.maintenance')) {
-        require_once($prefix . '/.maintenance');
+        require_once $prefix . '/.maintenance';
     }
 }
 
 require_once $prefix . '/lib/general.lib.php';
 require_once $prefix . '/lib/class/ampconfig.class.php';
 require_once $prefix . '/lib/class/core.class.php';
+require_once $prefix . '/lib/cron.lib.php';
 
 // Define some base level config options
 AmpConfig::set('prefix', $prefix);
@@ -60,17 +61,17 @@ if (file_exists($composer_autoload)) {
 }
 
 // Check to see if this is http or https
-if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
-    || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')) {
+if ((filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_PROTO') && Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https')
+    || (filter_has_var(INPUT_SERVER, 'HTTPS') && Core::get_server('HTTPS') == 'on')) {
     $http_type = 'https://';
 } else {
     $http_type = 'http://';
 }
 
-if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_PORT')) {
     $http_port = $_SERVER['HTTP_X_FORWARDED_PORT'];
 } else {
-    if (isset($_SERVER['SERVER_PORT'])) {
+    if (filter_has_var(INPUT_SERVER, 'SERVER_PORT')) {
         $http_port = $_SERVER['SERVER_PORT'];
     }
 }

@@ -18,18 +18,15 @@
 }
 
 .editdialogstyle.ui-dialog  .ui-dialog-titlebar {
-    background: none;
-    background-color: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1) none;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    border-color: #1d1d1d;
-    border: 2px solid rgba(0,0,0,0.15);
+    border: 2px solid rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
     padding: 7px;
-    color: #eee;
 }
 
 .editdialogstyle.ui-dialog  .ui-dialog-title {
@@ -42,15 +39,12 @@
 }
 
 .editdialogstyle.ui-dialog .ui-dialog-buttonpane {
-    background: none;
-    background-color: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1) none;
     height: 40px;
-    border: 0;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    border-color: #1d1d1d;
-    border: 2px solid rgba(0,0,0,0.15);
+    border: 2px solid rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
     box-shadow: 0 0 5px rgba(255,255,255,0.05);
@@ -121,7 +115,6 @@
 .edit_dialog_content input[type=text] , .edit_dialog_content select {
     width: 430px;
     height: 30px;
-    color: #fff;
     background: #333;
     background: rgba(255,255,255,0.2);
     border-color: #222;
@@ -136,7 +129,7 @@
 }
 
 .edit_dialog_content .metadataAccordion {
-	display: none;
+    display: none;
 }
 
 /***********************************************
@@ -152,21 +145,20 @@
     width: 100%;
     height: 100%;
     border-radius: 2px;
-    border-color: #1d1d1d;
-    border: 2px solid rgba(0,0,0,0.15);
+    border: 2px solid rgba(0, 0, 0, 0.15);
     z-index: 10000;
 }
 
 .playlistdialogstyle.ui-widget-content a {
     background-color: #222;
-	color: #eee;
-	text-decoration: none;
-	text-align: left;
-	padding: 0.4em;
+    color: #eee;
+    text-decoration: none;
+    text-align: left;
+    padding: 0.4em;
 }
 
 .playlistdialogstyle.ui-widget-content a:hover {
-	color: #ff9d00;
+    color: #ff9d00;
     cursor: pointer;
 }
 
@@ -213,21 +205,20 @@
     width: 100%;
     height: 100%;
     border-radius: 2px;
-    border-color: #1d1d1d;
-    border: 2px solid rgba(0,0,0,0.15);
+    border: 2px solid rgba(0, 0, 0, 0.15);
     z-index: 9999;
 }
 
 .broadcastsdialogstyle.ui-widget-content a {
     background-color: #222;
-	color: #eee;
-	text-decoration: none;
-	text-align: left;
-	padding: 0.4em;
+    color: #eee;
+    text-decoration: none;
+    text-align: left;
+    padding: 0.4em;
 }
 
 .broadcastsdialogstyle.ui-widget-content a:hover {
-	color: #ff9d00;
+    color: #ff9d00;
     cursor: pointer;
 }
 
@@ -274,21 +265,20 @@
     width: 100%;
     height: 100%;
     border-radius: 2px;
-    border-color: #1d1d1d;
-    border: 2px solid rgba(0,0,0,0.15);
+    border: 2px solid rgba(0, 0, 0, 0.15);
     z-index: 9999;
 }
 
 .sharedialogstyle.ui-widget-content a {
     background-color: #222;
-	color: #eee;
-	text-decoration: none;
-	text-align: left;
-	padding: 0.4em;
+    color: #eee;
+    text-decoration: none;
+    text-align: left;
+    padding: 0.4em;
 }
 
 .sharedialogstyle.ui-widget-content a:hover {
-	color: #ff9d00;
+    color: #ff9d00;
     cursor: pointer;
 }
 

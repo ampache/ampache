@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,9 @@
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
+/**
+ * Class AmpacheMusicBrainz
+ */
 class AmpacheMusicBrainz
 {
     public $name           = 'MusicBrainz';
@@ -39,6 +42,8 @@ class AmpacheMusicBrainz
      */
     public function __construct()
     {
+        $this->description = T_('MusicBrainz metadata integration');
+
         return true;
     }
 
@@ -64,15 +69,22 @@ class AmpacheMusicBrainz
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
+        $user->set_preferences();
+
         return true;
     } // load
 
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
+     * @param array $gather_types
+     * @param array $song_info
+     * @return array|null
      */
     public function get_metadata($gather_types, $song_info)
     {
@@ -80,7 +92,7 @@ class AmpacheMusicBrainz
         if (!in_array('music', $gather_types)) {
             return null;
         }
-    
+
         if (!$mbid = $song_info['mb_trackid']) {
             return null;
         }
@@ -92,7 +104,9 @@ class AmpacheMusicBrainz
         );
         try {
             $track = $mb->lookup('recording', $mbid, $includes);
-        } catch (Exception $e) {
+        } catch (Exception $error) {
+            debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+
             return null;
         }
 
@@ -113,4 +127,3 @@ class AmpacheMusicBrainz
         return $results;
     } // get_metadata
 } // end AmpacheMusicBrainz
-;

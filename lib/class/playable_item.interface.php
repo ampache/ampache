@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,6 +33,7 @@ interface playable_item
      * format
      *
      * Creates member variables for output
+     * @param boolean $details
      */
     public function format($details = true);
 
@@ -61,13 +62,18 @@ interface playable_item
      * search_childrens
      *
      * Search for direct childrens. Return an array of `object_type`, `object_id` childrens matching the criteria.
+     * @param $name
      */
     public function search_childrens($name);
 
-    /*
+    /**
      * get_medias
      *
      * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.
+     */
+    /**
+     * @param $filter_type
+     * @return mixed
      */
     public function get_medias($filter_type = null);
 
@@ -75,7 +81,7 @@ interface playable_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs();
-} // end interface
+} // end playable_item.interface

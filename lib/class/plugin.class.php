@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,11 +33,12 @@ class Plugin
      * Constructor
      * This constructor loads the Plugin config file which defines how to
      * install/uninstall the plugin from Ampache's database
+     * @param $name
      */
     public function __construct($name)
     {
         /* Load the plugin */
-        if (!$this->_get_info($name)) {
+        if (!$this->has_info($name)) {
             return false;
         }
 
@@ -45,23 +47,25 @@ class Plugin
 
 
     /**
-     * _get_info
+     * has_info
      * This actually loads the config file for the plugin the name of the
      * class contained within the config file must be Plugin[NAME OF FILE]
+     * @param $cname
+     * @return boolean
      */
-    public function _get_info($cname)
+    public function has_info($cname)
     {
         try {
             $basedir = AmpConfig::get('prefix') . '/modules/plugins';
             if (is_dir($basedir . '/' . $cname)) {
                 $name = $cname;
             } else {
-                $name = 'ampache-' . strtolower($cname);
+                $name = 'ampache-' . strtolower((string) $cname);
             }
-            
+
             /* Require the file we want */
-            if (!@include_once($basedir . '/' . $name . '/' . $cname . '.plugin.php')) {
-                debug_event('plugin', 'Cannot include plugin `' . $cname . '`.', 1);
+            if (!include_once($basedir . '/' . $name . '/' . $cname . '.plugin.php')) {
+                debug_event('plugin.class', 'Cannot include plugin `' . $cname . '`.', 1);
 
                 return false;
             }
@@ -73,19 +77,21 @@ class Plugin
                 return false;
             }
         } catch (Exception $ex) {
-            debug_event('plugin', 'Error when initializing plugin `' . $cname . '`: ' . $ex->getMessage(), 1);
+            debug_event('plugin.class', 'Error when initializing plugin `' . $cname . '`: ' . $ex->getMessage(), 1);
 
             return false;
         }
 
         return true;
-    } // _get_info
+    } // has_info
 
     /**
      * get_plugins
      * This returns an array of plugin names
+     * @param string $type
+     * @return mixed
      */
-    public static function get_plugins($type='')
+    public static function get_plugins($type = '')
     {
         // make static cache for optimization when multiple call
         static $plugins_list = array();
@@ -100,7 +106,7 @@ class Plugin
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
-            debug_event('Plugins', 'Unable to read plugins directory', '1');
+            debug_event('plugin.class', 'Unable to read plugins directory', 1);
         }
 
         // Recurse the directory
@@ -110,35 +116,35 @@ class Plugin
             }
             // Take care of directories only
             if (!is_dir($basedir . '/' . $file)) {
-                debug_event('Plugins', $file . ' is not a directory.', 3);
+                debug_event('plugin.class', $file . ' is not a directory.', 3);
                 continue;
             }
-            
+
             // If directory name start with ampache-, this is an external plugin and some parsing is required
             if (strpos($file, "ampache-") === 0) {
                 $cfile = ucfirst(substr($file, 8));
             } else {
                 $cfile = $file;
             }
-            
+
             // Make sure the plugin base file exists inside the plugin directory
             if (! file_exists($basedir . '/' . $file . '/' . $cfile . '.plugin.php')) {
-                debug_event('Plugins', 'Missing class for ' . $cfile, 3);
+                debug_event('plugin.class', 'Missing class for ' . $cfile, 3);
                 continue;
             }
-            
+
             if ($type != '') {
                 $plugin = new Plugin($cfile);
                 if (! Plugin::is_installed($plugin->_plugin->name)) {
-                    debug_event('Plugins', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
+                    debug_event('plugin.class', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (! $plugin->is_valid()) {
-                    debug_event('Plugins', 'Plugin ' . $cfile . ' is not valid, skipping', 6);
+                    debug_event('plugin.class', 'Plugin ' . $cfile . ' is not valid, skipping', 6);
                     continue;
                 }
                 if (! method_exists($plugin->_plugin, $type)) {
-                    debug_event('Plugins', 'Plugin ' . $cfile . ' does not support ' . $type . ', skipping', 6);
+                    debug_event('plugin.class', 'Plugin ' . $cfile . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }
@@ -163,13 +169,13 @@ class Plugin
     public function is_valid()
     {
         /* Check the plugin to make sure it's got the needed vars */
-        if (!strlen($this->_plugin->name)) {
+        if (!strlen((string) $this->_plugin->name)) {
             return false;
         }
-        if (!strlen($this->_plugin->description)) {
+        if (!strlen((string) $this->_plugin->description)) {
             return false;
         }
-        if (!strlen($this->_plugin->version)) {
+        if (!strlen((string) $this->_plugin->version)) {
             return false;
         }
 
@@ -205,6 +211,8 @@ class Plugin
      * is_installed
      * This checks to see if the specified plugin is currently installed in
      * the database, it doesn't check the files for integrity
+     * @param $plugin_name
+     * @return bool|mixed
      */
     public static function is_installed($plugin_name)
     {
@@ -256,6 +264,8 @@ class Plugin
     /**
      * load
      * This calls the plugin's load function
+     * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
@@ -267,6 +277,8 @@ class Plugin
     /**
      * get_plugin_version
      * This returns the version of the specified plugin
+     * @param $plugin_name
+     * @return bool|mixed
      */
     public static function get_plugin_version($plugin_name)
     {
@@ -299,6 +311,8 @@ class Plugin
     /**
      * set_plugin_version
      * This sets the plugin version in the update_info table
+     * @param $version
+     * @return boolean
      */
     public function set_plugin_version($version)
     {
@@ -324,4 +338,4 @@ class Plugin
 
         return true;
     } // remove_plugin_version
-} //end plugin class
+} // end plugin.class

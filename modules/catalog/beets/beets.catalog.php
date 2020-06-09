@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,6 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+use Beets\CliHandler;
 
 /**
  * Beets Catalog Class
@@ -47,11 +49,9 @@ class Catalog_beets extends Beets\Catalog
      */
     public function get_create_help()
     {
-        $help = "<ul>" .
+        return "<ul>" .
                 "<li>Fetch songs from beets command over CLI.</li>" .
-                "<li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessable by the Webserver.</li></ul>";
-
-        return $help;
+                "<li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessible by the Webserver.</li></ul>";
     }
 
     /**
@@ -81,6 +81,9 @@ class Catalog_beets extends Beets\Catalog
         return true;
     }
 
+    /**
+     * @return array|mixed
+     */
     public function catalog_fields()
     {
         $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'text');
@@ -94,13 +97,16 @@ class Catalog_beets extends Beets\Catalog
      * This creates a new catalog type entry for a catalog
      * It checks to make sure its parameters is not already used before creating
      * the catalog.
+     * @param $catalog_id
+     * @param array $data
+     * @return boolean
      */
     public static function create_type($catalog_id, $data)
     { // TODO: This Method should be required / provided by parent
         $beetsdb = $data['beetsdb'];
 
         if (preg_match('/^[\s]+$/', $beetsdb)) {
-            AmpError::add('general', T_('Error: Beets selected, but no Beets DB File provided'));
+            AmpError::add('general', T_('Beets Catalog was selected, but no Beets DB file was provided'));
 
             return false;
         }
@@ -111,7 +117,7 @@ class Catalog_beets extends Beets\Catalog
 
         if (Dba::num_rows($db_results)) {
             debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $beetsdb, 1);
-            AmpError::add('general', sprintf(T_('Error: Catalog with %s already exists'), $beetsdb));
+            AmpError::add('general', sprintf(T_('This path belongs to an existing Beets Catalog: %s'), $beetsdb));
 
             return false;
         }
@@ -122,6 +128,9 @@ class Catalog_beets extends Beets\Catalog
         return true;
     }
 
+    /**
+     * @return CliHandler
+     */
     protected function getParser()
     {
         return new Beets\CliHandler();
@@ -131,12 +140,14 @@ class Catalog_beets extends Beets\Catalog
      * Check if a song was added before
      * @param array $song
      * @return boolean
+     * @throws Exception
      */
     public function checkSong($song)
     {
-        $date = new DateTime($song['added']);
-        if ($date->format('U') < $this->last_add) {
-            debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', '3');
+        $date       = new DateTime($song['added']);
+        $last_added = date("Y-m-d H:i:s", $this->last_add);
+        if (date_diff($date, $last_added) < 0) {
+            debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
 
             return true;
         }
@@ -144,6 +155,9 @@ class Catalog_beets extends Beets\Catalog
         return (boolean) $this->getIdFromPath($song['file']);
     }
 
+    /**
+     * @return string
+     */
     public function getBeetsDb()
     {
         return $this->beetsdb;

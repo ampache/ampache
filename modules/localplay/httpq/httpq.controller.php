@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,7 @@
 /**
  * AmpacheHttpq Class
  *
- * This is the class for the httpQ localplay method to remotely control
+ * This is the class for the httpQ Localplay method to remotely control
  * a WinAmp Instance
  *
  */
@@ -39,7 +39,7 @@ class AmpacheHttpq extends localplay_controller
 
     /**
      * Constructor
-     * This returns the array map for the localplay object
+     * This returns the array map for the Localplay object
      * REQUIRED for Localplay
      */
     public function __construct()
@@ -50,7 +50,7 @@ class AmpacheHttpq extends localplay_controller
 
     /**
      * get_description
-     * This returns the description of this localplay method
+     * This returns the description of this Localplay method
      */
     public function get_description()
     {
@@ -95,14 +95,14 @@ class AmpacheHttpq extends localplay_controller
         $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('httpq_active', 'HTTPQ Active Instance', '0', '25', 'integer', 'internal', 'httpq');
+        Preference::insert('httpq_active', T_('HTTPQ Active Instance'), '0', '25', 'integer', 'internal', 'httpq');
 
         return true;
     } // install
 
     /**
      * uninstall
-     * This removes the localplay controller
+     * This removes the Localplay controller
      */
     public function uninstall()
     {
@@ -118,6 +118,8 @@ class AmpacheHttpq extends localplay_controller
     /**
      * add_instance
      * This takes keyed data and inserts a new httpQ instance
+     * @param array $data
+     * @return bool|PDOStatement
      */
     public function add_instance($data)
     {
@@ -125,19 +127,19 @@ class AmpacheHttpq extends localplay_controller
         $host     = Dba::escape($data['host']);
         $port     = Dba::escape($data['port']);
         $password = Dba::escape($data['password']);
-        $user_id  = Dba::escape($GLOBALS['user']->id);
+        $user_id  = Dba::escape(Core::get_global('user')->id);
 
-        $sql = "INSERT INTO `localplay_httpq` (`name`,`host`,`port`,`password`,`owner`) " .
-            "VALUES ('$name','$host','$port','$password','$user_id')";
-        $db_results = Dba::write($sql);
+        $sql = "INSERT INTO `localplay_httpq` (`name`, `host`, `port`, `password`, `owner`) " .
+            "VALUES ('$name', '$host', '$port', '$password', '$user_id')";
 
-
-        return $db_results;
+        return Dba::write($sql);
     } // add_instance
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
+     * @param $uid
+     * @return boolean
      */
     public function delete_instance($uid)
     {
@@ -171,6 +173,9 @@ class AmpacheHttpq extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
+     * @param $uid
+     * @param array $data
+     * @return boolean
      */
     public function update_instance($uid, $data)
     {
@@ -193,10 +198,10 @@ class AmpacheHttpq extends localplay_controller
      */
     public function instance_fields()
     {
-        $fields['name']         = array('description' => T_('Instance Name'),'type' => 'text');
-        $fields['host']         = array('description' => T_('Hostname'),'type' => 'text');
-        $fields['port']         = array('description' => T_('Port'),'type' => 'number');
-        $fields['password']     = array('description' => T_('Password'),'type' => 'password');
+        $fields['name']         = array('description' => T_('Instance Name'), 'type' => 'text');
+        $fields['host']         = array('description' => T_('Hostname'), 'type' => 'text');
+        $fields['port']         = array('description' => T_('Port'), 'type' => 'number');
+        $fields['password']     = array('description' => T_('Password'), 'type' => 'password');
 
         return $fields;
     } // instance_fields
@@ -204,35 +209,40 @@ class AmpacheHttpq extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all its variables
+     * @param string $instance
+     * @return array
      */
-    public function get_instance($instance='')
+    public function get_instance($instance = '')
     {
         $instance = $instance ? $instance : AmpConfig::get('httpq_active');
-        $instance = Dba::escape($instance);
+        $sql      = "SELECT * FROM `localplay_httpq` WHERE `id` = ?";
+        // if you only have one instance just default to that!
+        if (!is_numeric($instance) && count(self::get_instances()) === 1) {
+            $sql = "SELECT * FROM `localplay_httpq`";
+        }
+        $db_results = Dba::query($sql, array($instance));
 
-        $sql        = "SELECT * FROM `localplay_httpq` WHERE `id`='$instance'";
-        $db_results = Dba::read($sql);
-
-        $row = Dba::fetch_assoc($db_results);
-
-        return $row;
+        return Dba::fetch_assoc($db_results);
     } // get_instance
 
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
+     * @param $uid
+     * @param string $user_id
+     * @return boolean
      */
-    public function set_active_instance($uid, $user_id='')
+    public function set_active_instance($uid, $user_id = '')
     {
         // Not an admin? bubkiss!
-        if (!$GLOBALS['user']->has_access('100')) {
-            $user_id = $GLOBALS['user']->id;
+        if (!Core::get_global('user')->has_access('100')) {
+            $user_id = Core::get_global('user')->id;
         }
 
-        $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
+        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
 
-        Preference::update('httpq_active', $user_id, intval($uid));
-        AmpConfig::set('httpq_active', intval($uid), true);
+        Preference::update('httpq_active', $user_id, $uid);
+        AmpConfig::set('httpq_active', $uid, true);
 
         return true;
     } // set_active_instance
@@ -249,11 +259,13 @@ class AmpacheHttpq extends localplay_controller
     /**
      * add_url
      * This is the new hotness
+     * @param Stream_URL $url
+     * @return boolean
      */
     public function add_url(Stream_URL $url)
     {
-        if (is_null($this->_httpq->add($url->title, $url->url))) {
-            debug_event('httpq', 'add_url failed to add ' . $url, 1);
+        if ($this->_httpq->add($url->title, $url->url) === null) {
+            debug_event('httpq.controller', 'add_url failed to add ' . (string) $url, 1);
 
             return false;
         }
@@ -265,11 +277,13 @@ class AmpacheHttpq extends localplay_controller
      * delete_track
      * This must take an ID (as returned by our get function)
      * and delete it from httpQ
+     * @param $object_id
+     * @return boolean
      */
     public function delete_track($object_id)
     {
-        if (is_null($this->_httpq->delete_pos($object_id))) {
-            debug_event('httpq', 'Unable to delete ' . $object_id . ' from httpQ', 1);
+        if ($this->_httpq->delete_pos($object_id) === null) {
+            debug_event('httpq.controller', 'Unable to delete ' . $object_id . ' from httpQ', 1);
 
             return false;
         }
@@ -282,7 +296,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function clear_playlist()
     {
-        if (is_null($this->_httpq->clear())) {
+        if ($this->_httpq->clear() === null) {
             return false;
         }
 
@@ -305,7 +319,7 @@ class AmpacheHttpq extends localplay_controller
             return true;
         }
 
-        if (is_null($this->_httpq->play())) {
+        if ($this->_httpq->play() === null) {
             return false;
         }
 
@@ -319,7 +333,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function stop()
     {
-        if (is_null($this->_httpq->stop())) {
+        if ($this->_httpq->stop() === null) {
             return false;
         }
 
@@ -329,10 +343,12 @@ class AmpacheHttpq extends localplay_controller
     /**
      * skip
      * This tells httpQ to skip to the specified song
+     * @param $song
+     * @return boolean
      */
     public function skip($song)
     {
-        if (is_null($this->_httpq->skip($song))) {
+        if ($this->_httpq->skip($song) === null) {
             return false;
         }
 
@@ -340,15 +356,11 @@ class AmpacheHttpq extends localplay_controller
     } // skip
 
     /**
-     * This tells Httpq to increase the volume by WinAmps default amount
+     * This tells httpQ to increase the volume by WinAmps default amount
      */
     public function volume_up()
     {
-        if (is_null($this->_httpq->volume_up())) {
-            return false;
-        }
-
-        return true;
+        return $this->_httpq->volume_up();
     } // volume_up
 
     /**
@@ -356,11 +368,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function volume_down()
     {
-        if (is_null($this->_httpq->volume_down())) {
-            return false;
-        }
-
-        return true;
+        return $this->_httpq->volume_down();
     } // volume_down
 
     /**
@@ -369,7 +377,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function next()
     {
-        if (is_null($this->_httpq->next())) {
+        if ($this->_httpq->next() === null) {
             return false;
         }
 
@@ -382,7 +390,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function prev()
     {
-        if (is_null($this->_httpq->prev())) {
+        if ($this->_httpq->prev() === null) {
             return false;
         }
 
@@ -395,7 +403,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function pause()
     {
-        if (is_null($this->_httpq->pause())) {
+        if ($this->_httpq->pause() === null) {
             return false;
         }
 
@@ -403,27 +411,27 @@ class AmpacheHttpq extends localplay_controller
     } // pause
 
     /**
-    * volume
-    * This tells httpQ to set the volume to the specified amount this
-    * is 0-100
-    */
+     * volume
+     * This tells httpQ to set the volume to the specified amount this
+     * is 0-100
+     * @param $volume
+     * @return boolean
+     */
     public function volume($volume)
     {
-        if (is_null($this->_httpq->set_volume($volume))) {
-            return false;
-        }
-
-        return true;
+        return $this->_httpq->set_volume($volume);
     } // volume
 
     /**
      * repeat
      * This tells httpQ to set the repeating the playlist (i.e. loop) to
-    * either on or off
+     * either on or off
+     * @param $state
+     * @return boolean
      */
     public function repeat($state)
     {
-        if (is_null($this->_httpq->repeat($state))) {
+        if ($this->_httpq->repeat($state) === null) {
             return false;
         }
 
@@ -433,11 +441,13 @@ class AmpacheHttpq extends localplay_controller
     /**
      * random
      * This tells httpQ to turn on or off the playing of songs from the
-    * playlist in random order
+     * playlist in random order
+     * @param $onoff
+     * @return boolean
      */
     public function random($onoff)
     {
-        if (is_null($this->_httpq->random($onoff))) {
+        if ($this->_httpq->random($onoff) === null) {
             return false;
         }
 
@@ -459,7 +469,8 @@ class AmpacheHttpq extends localplay_controller
             return array();
         }
 
-        $songs = explode("::", $list);
+        $songs   = explode("::", $list);
+        $results = array();
 
         foreach ($songs as $key => $entry) {
             $data = array();
@@ -489,9 +500,9 @@ class AmpacheHttpq extends localplay_controller
                                 default:
                                         /* If we don't know it, look up by filename */
                                         $filename = Dba::escape($entry['file']);
-                                        $sql      = "SELECT `id`,'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' " .
+                                        $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' " .
                                                 "UNION ALL " .
-                                                "SELECT `id`,'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                                                "SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
 
                                         $db_results = Dba::read($sql);
                                         if ($row = Dba::fetch_assoc($db_results)) {
@@ -529,25 +540,25 @@ class AmpacheHttpq extends localplay_controller
     /**
      * status
      * This returns bool/int values for features, loop, repeat and any other features
-     * That this localplay method supports. required function
+     * That this Localplay method supports. required function
      */
     public function status()
     {
         /* Construct the Array */
-        $array['state']        = $this->_httpq->state();
-        $array['volume']       = $this->_httpq->get_volume();
-        $array['repeat']       = $this->_httpq->get_repeat();
-        $array['random']       = $this->_httpq->get_random();
-        $array['track']        = $this->_httpq->get_now_playing();
-        $url_data              = $this->parse_url($array['track']);
+        $array['state']  = $this->_httpq->state();
+        $array['volume'] = $this->_httpq->get_volume();
+        $array['repeat'] = $this->_httpq->get_repeat();
+        $array['random'] = $this->_httpq->get_random();
+        $array['track']  = $this->_httpq->get_now_playing();
+        $url_data        = $this->parse_url($array['track']);
 
         if (isset($url_data['oid'])) {
-            $song                      = new Song($data['oid']);
-            $array['track_title']      = $song->title;
-            $array['track_artist']     = $song->get_artist_name();
-            $array['track_album']      = $song->get_album_name();
+            $song                  = new Song($url_data['oid']);
+            $array['track_title']  = $song->title;
+            $array['track_artist'] = $song->get_artist_name();
+            $array['track_album']  = $song->get_album_name();
         } else {
-            $array['track_title']    = basename($array['track']);
+            $array['track_title'] = basename($array['track']);
         }
 
         return $array;
@@ -565,7 +576,7 @@ class AmpacheHttpq extends localplay_controller
         $this->_httpq = new HttpQPlayer($options['host'], $options['password'], $options['port']);
 
         // Test our connection by retriving the version
-        if (!is_null($this->_httpq->version())) {
+        if ($this->_httpq->version() !== null) {
             return true;
         }
 

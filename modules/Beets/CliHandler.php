@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -108,6 +108,9 @@ class CliHandler extends Handler
         }
     }
 
+    /**
+     * @param $handle
+     */
     public function iterateItems($handle)
     {
         $item = '';
@@ -125,7 +128,7 @@ class CliHandler extends Handler
      * Assemble the command for CLI
      * @param string $command beets command (e.g. 'ls myArtist')
      * @param boolean $disableCostomFields disables the -f switch for this time
-     * @return type
+     * @return string
      */
     protected function assembleCommand($command, $disableCostomFields = false)
     {

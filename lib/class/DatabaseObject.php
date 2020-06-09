@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,11 +51,14 @@ abstract class DatabaseObject
         return $this->id;
     }
 
-    protected function isPropertyDirty($property)
-    {
-        return $this->originalData->$property !== $this->$property;
-    }
+    //protected function isPropertyDirty($property)
+    //{
+    //    return $this->originalData->$property !== $this->$property;
+    //}
 
+    /**
+     * @return boolean
+     */
     public function isDirty()
     {
         return true;
@@ -90,7 +93,11 @@ abstract class DatabaseObject
             }
         }
     }
-    
+
+    /**
+     * @param $properties
+     * @return array
+     */
     protected function fromCamelCase($properties)
     {
         $data = array();
@@ -116,4 +123,4 @@ abstract class DatabaseObject
             }
         }
     }
-}
+} // end databaseobject

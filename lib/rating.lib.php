@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,8 @@
 /**
  * show_rating
  * This takes an artist id and includes the right file
+ * @param $object_id
+ * @param $type
  */
 function show_rating($object_id, $type)
 {
@@ -34,6 +36,8 @@ function show_rating($object_id, $type)
 /**
  * get_rating_name
  * This takes a score and returns the name that we should use
+ * @param string $score
+ * @return string
  */
 function get_rating_name($score)
 {

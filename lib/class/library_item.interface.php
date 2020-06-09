@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,17 +29,41 @@
  */
 interface library_item extends playable_item
 {
+    /**
+     * @return mixed
+     */
     public function get_keywords();
 
+    /**
+     * @return mixed
+     */
     public function get_user_owner();
 
+    /**
+     * @return mixed
+     */
     public function get_default_art_kind();
 
+    /**
+     * @return mixed
+     */
     public function get_description();
 
+    /**
+     * @param $thumb
+     * @param boolean $force
+     * @return mixed
+     */
     public function display_art($thumb, $force = false);
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
     public function update(array $data);
 
-    public static function gc();
-} // end interface
+    /**
+     * @return mixed
+     */
+    public static function garbage_collection();
+} // end library_item.interface

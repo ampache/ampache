@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,29 +43,34 @@ class Registration
      * This sends the confirmation e-mail for the specified user
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param string $username
+     * @param string $fullname
+     * @param string $email
+     * @param string $website
+     * @param string $validation
+     * @return boolean
      */
-    public static function send_confirmation($username, $fullname, $email, $website, $password, $validation)
+    public static function send_confirmation($username, $fullname, $email, $website, $validation)
     {
+        if (!Mailer::is_mail_enabled()) {
+            return false;
+        }
+
         $mailer = new Mailer();
 
         // We are the system
         $mailer->set_default_sender();
 
+        /* HINT: Ampache site_title */
         $mailer->subject = sprintf(T_("New User Registration at %s"), AmpConfig::get('site_title'));
 
-        $mailer->message = sprintf(T_("Thank you for registering\n\n
-Please keep this e-mail for your records. Your account information is as follows:
-----------------------
-Username: %s
-----------------------
-
-Your account is currently inactive. You cannot use it until you've visited the following link:
-
-%s
-
-Thank you for registering
-"), $username, AmpConfig::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation");
-
+        $mailer->message = T_("Thank you for registering") . "\n";
+        $mailer->message .= T_("Please keep this e-mail for your records. Your account information is as follows:") . "\n";
+        $mailer->message .= "----------------------\n";
+        $mailer->message .= T_("Username") . ": $username" . "\n";
+        $mailer->message .= "----------------------\n";
+        $mailer->message .= T_("To begin using your account, you must verify your e-mail address by vising the following link:") . "\n\n";
+        $mailer->message .= AmpConfig::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation";
         $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;
 
@@ -74,16 +80,11 @@ Thank you for registering
 
         // Check to see if the admin should be notified
         if (AmpConfig::get('admin_notify_reg')) {
-            $mailer->message = sprintf(T_("A new user has registered
-The following values were entered.
-
-Username: %s
-Fullname: %s
-E-mail: %s
-Website: %s
-
-"), $username, $fullname, $email, $website);
-
+            $mailer->message = T_("A new user has registered, the following values were entered:") . "\n\n";
+            $mailer->message .= T_("Username") . ": $username\n";
+            $mailer->message .= T_("Fullname") . ": $fullname\n";
+            $mailer->message .= T_("E-mail") . ": $email\n";
+            $mailer->message .= T_("Website") . ": $website\n";
             $mailer->send_to_group('admins');
         }
 
@@ -94,17 +95,21 @@ Website: %s
      * send_account_enabled
      * This sends the account enabled email for the specified user
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param string $username
+     * @param string $fullname
+     * @param $email
      */
     public static function send_account_enabled($username, $fullname, $email)
     {
         $mailer = new Mailer();
         $mailer->set_default_sender();
 
+        /* HINT: Ampache site_title */
         $mailer->subject = sprintf(T_("Account enabled at %s"), AmpConfig::get('site_title'));
-        $mailer->message = sprintf(T_("Your account %s has been enabled\n\n
-            Please logon using %s"), $username, AmpConfig::get('web_path') . "/login.php");
-
+        /* HINT: Username */
+        $mailer->message = sprintf(T_("A new user has been enabled. %s"), $username) .
+                /* HINT: Ampache Login Page */
+                "\n\n " . sprintf(T_("You can log in at the following address %s"), AmpConfig::get('web_path') . "/login.php");
         $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;
 
@@ -114,6 +119,7 @@ Website: %s
     /**
       * show_agreement
      * This shows the registration agreement, /config/registration_agreement.php
+     * @return boolean
      */
     public static function show_agreement()
     {
@@ -124,15 +130,17 @@ Website: %s
         }
 
         /* Check for existance */
-        $fp = fopen($filename, 'r');
+        $filepointer = fopen($filename, 'r');
 
-        if (!$fp) {
+        if (!$filepointer) {
             return false;
         }
 
-        $data = fread($fp, filesize($filename));
+        $data = fread($filepointer, filesize($filename));
 
         /* Scrub and show */
         echo $data;
+
+        return true;
     } // show_agreement
-} // end registration class
+} // end registration.class

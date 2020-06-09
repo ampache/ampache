@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,6 +22,10 @@
 
 require_once '../init.php';
 
+/**
+ * @param $array
+ * @return string
+ */
 function arrayToJSON($array)
 {
     $json = '{ ';
@@ -32,18 +36,18 @@ function arrayToJSON($array)
         } else {
             // Make sure to strip backslashes and convert things to
             // entities in our output
-            $json .= '"' . scrub_out(str_replace('\\', '', $value)) . '"';
+            $json .= '"' . scrub_out(str_replace(['"', '\\'], '', $value)) . '"';
         }
         $json .= ' , ';
     }
-    $json = rtrim($json, ', ');
+    $json = rtrim((string) $json, ', ');
 
     return $json . ' }';
 }
 
 Header('content-type: application/x-javascript');
 
-$search = new Search(null, $_REQUEST['type']);
+$search = new Search(null, Core::get_request('type'));
 
 echo 'var types = ';
 echo arrayToJSON($search->types) . ";\n";

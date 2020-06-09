@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,22 +52,21 @@ class Song_Preview extends database_object implements media, playable_item
      * Constructor
      *
      * Song Preview class
+     * @param $object_id
      */
-    public function __construct($id = null)
+    public function __construct($object_id)
     {
-        if (!$id) {
-            return false;
-        }
+        $this->id = (int) ($object_id);
 
-        $this->id = intval($id);
-
-        if ($info = $this->_get_info()) {
+        if ($info = $this->has_info()) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
-            $data       = pathinfo($this->file);
-            $this->type = strtolower($data['extension']) ?: 'mp3';
-            $this->mime = Song::type_to_mime($this->type);
+            if ($this->file) {
+                $data       = pathinfo($this->file);
+                $this->type = strtolower((string) $data['extension']) ?: 'mp3';
+                $this->mime = Song::type_to_mime($this->type);
+            }
         } else {
             $this->id = null;
 
@@ -80,9 +80,18 @@ class Song_Preview extends database_object implements media, playable_item
      * insert
      *
      * This inserts the song preview described by the passed array
+     * @param $results
+     * @return string|null
      */
     public static function insert($results)
     {
+        if ((int) $results['disk'] == 0) {
+            $results['disk'] = Album::sanitize_disk($results['disk']);
+        }
+        if ((int) $results['track'] == 0) {
+            $results['disk']  = Album::sanitize_disk($results['track'][0]);
+            $results['track'] = substr($results['track'], 1);
+        }
         $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) ' .
             ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
@@ -99,7 +108,7 @@ class Song_Preview extends database_object implements media, playable_item
         ));
 
         if (!$db_results) {
-            debug_event('song_preview', 'Unable to insert ' . $results[''], 2);
+            debug_event('song_preview.class', 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
 
             return false;
         }
@@ -113,16 +122,15 @@ class Song_Preview extends database_object implements media, playable_item
      * This attempts to reduce queries by asking for everything in the
      * browse all at once and storing it in the cache, this can help if the
      * db connection is the slow point.
+     * @param array $song_ids
+     * @return boolean
      */
     public static function build_cache($song_ids)
     {
         if (!is_array($song_ids) || !count($song_ids)) {
             return false;
         }
-
         $idlist = '(' . implode(',', $song_ids) . ')';
-
-        // Callers might have passed array(false) because they are dumb
         if ($idlist == '()') {
             return false;
         }
@@ -147,9 +155,9 @@ class Song_Preview extends database_object implements media, playable_item
     } // build_cache
 
     /**
-     * _get_info
+     * has_info
      */
-    private function _get_info()
+    private function has_info()
     {
         $id = $this->id;
 
@@ -181,8 +189,10 @@ class Song_Preview extends database_object implements media, playable_item
     /**
      * get_artist_name
      * gets the name of $this->artist, allows passing of id
+     * @param integer $artist_id
+     * @return string
      */
-    public function get_artist_name($artist_id=0)
+    public function get_artist_name($artist_id = 0)
     {
         if (!$artist_id) {
             $artist_id = $this->artist;
@@ -198,15 +208,18 @@ class Song_Preview extends database_object implements media, playable_item
     /**
      * format
      * This takes the current song object
-     * and does a ton of formating on it creating f_??? variables on the current
+     * and does a ton of formatting on it creating f_??? variables on the current
      * object
+     * @param boolean $details
+     * @return boolean
      */
     public function format($details = true)
     {
+        unset($details); //dead code but called from other format calls
         // Format the artist name
         if ($this->artist) {
             $this->f_artist_full = $this->get_artist_name();
-            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist) . "</a>";
+            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist_full) . "</a>";
         } else {
             $wartist             = Wanted::get_missing_artist($this->artist_mbid);
             $this->f_artist_link = $wartist['link'];
@@ -228,31 +241,50 @@ class Song_Preview extends database_object implements media, playable_item
         return true;
     } // format
 
+    /**
+     * @return string
+     */
     public function get_fullname()
     {
         return $this->f_title;
     }
 
+    /**
+     * @return null
+     */
     public function get_parent()
     {
         // Wanted album is not part of the library, cannot return it.
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function get_childrens()
     {
         return array();
     }
 
+    /**
+     * @param $name
+     * @return array
+     */
     public function search_childrens($name)
     {
+        debug_event('song_preview.class', 'search_childrens ' . $name, 5);
+
         return array();
     }
 
+    /**
+     * @param $filter_type
+     * @return array|mixed
+     */
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if (!$filter_type || $filter_type == 'song_preview') {
+        if ($filter_type === null || $filter_type == 'song_preview') {
             $medias[] = array(
                 'object_type' => 'song_preview',
                 'object_id' => $this->id
@@ -266,7 +298,7 @@ class Song_Preview extends database_object implements media, playable_item
      * get_catalogs
      *
      * Get all catalog ids related to this item.
-     * @return int[]
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -276,13 +308,18 @@ class Song_Preview extends database_object implements media, playable_item
     /**
      * play_url
      * This function takes all the song information and correctly formats a
-     * a stream URL taking into account the downsmapling mojo and everything
+     * a stream URL taking into account the downsampling mojo and everything
      * else, this is the true function
+     * @param $oid
+     * @param string $additional_params
+     * @param string $player
+     * @param boolean $local
+     * @return string
      */
-    public static function play_url($oid, $additional_params='', $player=null, $local=false)
+    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
     {
         $song        = new Song_Preview($oid);
-        $user_id     = $GLOBALS['user']->id ? scrub_out($GLOBALS['user']->id) : '-1';
+        $user_id     = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
         $type        = $song->type;
 
         $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);
@@ -292,12 +329,15 @@ class Song_Preview extends database_object implements media, playable_item
         return Stream_URL::format($url . $additional_params);
     } // play_url
 
+    /**
+     * @return null
+     */
     public function stream()
     {
         $data = null;
         foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->load($GLOBALS['user'])) {
+            if ($plugin->load(Core::get_global('user'))) {
                 if ($plugin->_plugin->stream_song_preview($this->file)) {
                     break;
                 }
@@ -307,6 +347,12 @@ class Song_Preview extends database_object implements media, playable_item
         return $data;
     }
 
+    /**
+     * get_stream_types
+     *
+     * @param $player
+     * @return string[]
+     */
     public function get_stream_types($player = null)
     {
         return array('native');
@@ -316,22 +362,50 @@ class Song_Preview extends database_object implements media, playable_item
      * get_transcode_settings
      *
      * FIXME: Song Preview transcoding is not implemented
+     * @param string $target
+     * @param string $player
+     * @param array $options
+     * @return boolean
      */
-    public function get_transcode_settings($target = null, $player = null, $options=array())
+    public function get_transcode_settings($target = null, $player = null, $options = array())
     {
         return false;
     }
 
+    /**
+     * @return mixed
+     */
     public function get_stream_name()
     {
         return $this->title;
     }
 
+    /**
+     * @param $user
+     * @param $agent
+     * @param $location
+     * @return mixed|void
+     */
     public function set_played($user, $agent, $location)
     {
         // Do nothing
     }
 
+    /**
+     * @param $user
+     * @param $agent
+     * @return mixed|void
+     */
+    public function check_play_history($user, $agent)
+    {
+        unset($user, $agent);
+        // Do nothing
+    }
+
+    /**
+     * @param string $album_mbid
+     * @return array
+     */
     public static function get_song_previews($album_mbid)
     {
         $songs = array();
@@ -347,7 +421,10 @@ class Song_Preview extends database_object implements media, playable_item
         return $songs;
     }
 
-    public static function gc()
+    /**
+     * @return bool|PDOStatement
+     */
+    public static function garbage_collection()
     {
         $sql = 'DELETE FROM `song_preview` USING `song_preview` ' .
             'LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` ' .
@@ -355,4 +432,4 @@ class Song_Preview extends database_object implements media, playable_item
 
         return Dba::write($sql);
     }
-} // end of song_preview class
+} // end song_preview.class

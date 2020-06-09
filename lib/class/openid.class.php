@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,15 +31,21 @@ require_once "Auth/OpenID/FileStore.php";
 require_once "Auth/OpenID/SReg.php";
 require_once "Auth/OpenID/PAPE.php";
 
+/**
+ * Class Openid
+ */
 class Openid
 {
+    /**
+     * @return Auth_OpenID_FileStore|null
+     */
     public static function get_store()
     {
         $store      = null;
         $store_path = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . '_openid';
 
         if (!file_exists($store_path) && !mkdir($store_path)) {
-            debug_event('openid', 'Could not access/create the FileStore directory ' . $store_path . '. Please check the effective permissions.', '5');
+            debug_event('openid.class', 'Could not access/create the FileStore directory ' . $store_path . '. Please check the effective permissions.', 3);
         } else {
             $store = new Auth_OpenID_FileStore($store_path);
 
@@ -48,6 +55,9 @@ class Openid
         return $store;
     }
 
+    /**
+     * @return Auth_OpenID_Consumer|null
+     */
     public static function get_consumer()
     {
         $consumer = null;
@@ -59,14 +69,20 @@ class Openid
         return $consumer;
     }
 
+    /**
+     * @return string
+     */
     public static function get_return_url()
     {
         return AmpConfig::get('web_path') . '/login.php?auth_mod=openid&step=2';
     }
 
+    /**
+     * @return array
+     */
     public static function get_policies()
     {
-        $openid_required_pape = AmpConfig::get('openid_required_pape');
+        $openid_required_pape = (string) AmpConfig::get('openid_required_pape');
         $policies             = array();
         if (!empty($openid_required_pape)) {
             $papes = explode(',', $openid_required_pape);
@@ -77,4 +93,4 @@ class Openid
 
         return $policies;
     }
-} // end of Openid class
+} // end openid.class

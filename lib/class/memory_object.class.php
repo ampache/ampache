@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,6 +28,10 @@ class memory_object
     private $_data = array();
     public $properties;
 
+    /**
+     * memory_object constructor.
+     * @param $data
+     */
     public function __construct($data)
     {
         foreach ($data as $key => $value) {
@@ -36,14 +41,21 @@ class memory_object
         }
     }
 
+    /**
+     * @param $name
+     * @param $value
+     */
     public function __set($name, $value)
     {
-        if (!in_array($name, $this->properties)) {
-            return false;
+        if (in_array($name, $this->properties)) {
+            $this->_data[$name] = $value;
         }
-        $this->_data[$name] = $value;
     }
 
+    /**
+     * @param $name
+     * @return bool|mixed|null
+     */
     public function __get($name)
     {
         if (!in_array($name, $this->properties)) {
@@ -52,4 +64,4 @@ class memory_object
 
         return isset($this->_data[$name]) ? $this->_data[$name] : null;
     }
-}
+} // end memory_object.class

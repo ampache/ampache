@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,6 +36,8 @@ class Ampachechartlyrics
      */
     public function __construct()
     {
+        $this->description = T_('Get lyrics from ChartLyrics');
+
         return true;
     } // constructor
 
@@ -61,15 +63,21 @@ class Ampachechartlyrics
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
+     * @param User $user
+     * @return boolean
      */
     public function load($user)
     {
+        $user->set_preferences();
+
         return true;
     } // load
 
     /**
      * get_lyrics
      * This will look web services for a song lyrics.
+     * @param Song $song
+     * @return array|bool
      */
     public function get_lyrics($song)
     {
@@ -84,8 +92,7 @@ class Ampachechartlyrics
                 }
             }
         }
-        
+
         return false;
     } // get_lyrics
 } // end Ampachelyricwiki
-;

@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,9 +48,27 @@ class Mailer
     } // Constructor
 
     /**
+     * is_mail_enabled
+     *
+     * Check that the mail feature is enabled
+     * @return boolean
+     */
+    public static function is_mail_enabled()
+    {
+        if (AmpConfig::get('mail_enable') && !AmpConfig::get('demo_mode')) {
+            return true;
+        }
+
+        // by default you actually want people to set up mail first
+        return false;
+    }
+
+    /**
      * validate_address
      *
      * Checks whether what we have looks like a valid address.
+     * @param string $address
+     * @return boolean
      */
     public static function validate_address($address)
     {
@@ -84,9 +103,11 @@ class Mailer
     } // set_default_sender
 
     /**
-      * get_users
+     * get_users
      * This returns an array of userids for people who have e-mail
      * addresses based on the passed filter
+     * @param $filter
+     * @return array
      */
     public static function get_users($filter)
     {
@@ -107,12 +128,12 @@ class Mailer
             break;
         } // end filter switch
 
-        $db_results = Dba::read($sql, isset($inactive) ? array($inactive) : null);
+        $db_results = Dba::read($sql, isset($inactive) ? array($inactive) : array());
 
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('id' => $row['id'],'fullname' => $row['fullname'],'email' => $row['email']);
+            $results[] = array('id' => $row['id'], 'fullname' => $row['fullname'], 'email' => $row['email']);
         }
 
         return $results;
@@ -121,6 +142,8 @@ class Mailer
     /**
      * send
      * This actually sends the mail, how amazing
+     * @param PHPMailer $phpmailer
+     * @return boolean
      */
     public function send($phpmailer = null)
     {
@@ -194,6 +217,10 @@ class Mailer
         }
     } // send
 
+    /**
+     * @param $group_name
+     * @return boolean
+     */
     public function send_to_group($group_name)
     {
         $mail = new PHPMailer();
@@ -207,4 +234,4 @@ class Mailer
 
         return $this->send($mail);
     }
-} // Mailer class
+} // end mailer.class

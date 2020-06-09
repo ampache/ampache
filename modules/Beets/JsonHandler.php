@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,6 +61,10 @@ class JsonHandler extends Handler
         'bitrate' => array('bitrate', '%d')
     );
 
+    /**
+     * JsonHandler constructor.
+     * @param $uri
+     */
     public function __construct($uri)
     {
         $this->uri = $uri;
@@ -157,7 +161,7 @@ class JsonHandler extends Handler
      *
      * @param string $char
      * @param string $string
-     * @return type
+     * @return int
      */
     public function countChar($char, $string)
     {
