@@ -67,12 +67,12 @@
         "swisnl/jquery-contextmenu": "2.1.*",
         "blueimp/jquery-file-upload": "10.2.0",
         "krixon/xbmc-php-rpc": "dev-master",
-        "friendsofphp/php-cs-fixer": "~2.16.0",
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
         "tightenco/collect": "5.2.*",
         "ampache/ampacheapi-php": "^1.0",
         "ext-json": "*",
-        "ext-xml": "*"
+        "ext-xml": "*",
+        "oomphinc/composer-installers-extender": "^1.1"
     },
 
     "repositories":
@@ -131,9 +131,6 @@
                             "src/qrcode.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -154,9 +151,6 @@
                             "jquery.cookie.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -183,11 +177,9 @@
                             "js/tag-it.min.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
-            }
+             }
+
         },
         {
             "type": "package",
@@ -209,9 +201,6 @@
                             "css/prettyPhoto.css"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -235,9 +224,6 @@
                             "jquery.datetimepicker.css"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -263,9 +249,6 @@
                             "js/jquery.iframe-transport.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -286,9 +269,6 @@
                             "js/jquery.knob.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -312,9 +292,6 @@
                             "jquery.jscroll.min.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -335,9 +312,6 @@
                             "responsive-elements.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -366,9 +340,6 @@
                             "dist/jquery.contextMenu.min.css"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         }
