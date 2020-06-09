@@ -200,6 +200,9 @@ class Update
         $update_string = "* Add ui option for forcing unique items to playlists.<br />";
         $version[]     = array('version' => '400009', 'description' => $update_string);
 
+        $update_string = "* Add a last_duration to search table to speed up access requests<br />";
+        $version[]     = array('version' => '400010', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1156,6 +1159,20 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
         $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_400010
+     *
+     * Add a last_duration to searches to speed up access requests
+     */
+    public static function update_400010()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `search` ADD `last_duration` INT(11) NULL;";
+        $retval &= Dba::write($sql);
 
         return $retval;
     }
