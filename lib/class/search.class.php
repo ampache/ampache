@@ -37,6 +37,7 @@ class Search extends playlist_object
     public $random         = 0;
     public $limit          = 0;
     public $last_count     = 0;
+    public $last_duration  = 0;
     public $date           = 0;
 
     public $basetypes;
@@ -1235,22 +1236,26 @@ class Search extends playlist_object
             );
         }
         $this->date = time();
-        $this->set_last_count(count($results));
+        $this->set_last(count($results), 'last_count');
+
+        Search::set_last(Search::get_total_duration($results), 'last_duration');
 
         return $results;
     }
 
     /**
-     * set_last_count
+     * set_last
      *
-     * Returns the name of the saved search corresponding to the given ID
      * @param integer $count
+     * @param string $column
      */
-    private function set_last_count($count)
+    private function set_last($count, $column)
     {
-        $search_id = Dba::escape($this->id);
-        $sql       = "Update `search` SET `last_count` = " . $count . " WHERE `id` = ?";
-        Dba::write($sql, array($search_id));
+        if (in_array($column, array('last_count', 'last_duration'))) {
+            $search_id = Dba::escape($this->id);
+            $sql       = "Update `search` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = ?";
+            Dba::write($sql, array($search_id));
+        }
     }
 
     /**

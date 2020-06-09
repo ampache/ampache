@@ -193,7 +193,7 @@ class Subsonic_Api
      * @param SimpleXMLElement $xml
      * @param array $alwaysArray
      */
-    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'))
+    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
     {
         $type     = $input['f'];
         $callback = $input['callback'];
@@ -207,7 +207,7 @@ class Subsonic_Api
      * @param string $callback
      * @param array $alwaysArray
      */
-    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'))
+    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
     {
         $conf = array('alwaysArray' => $alwaysArray);
         if ($outputtype == "json") {
@@ -242,7 +242,7 @@ class Subsonic_Api
         $defaults = array(
             'namespaceSeparator' => ' :', //you may want this to be something other than a colon
             'attributePrefix' => '', //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'playlist', 'song', 'album', 'share'), //array of xml tag names which should always become arrays
+            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'), //array of xml tag names which should always become arrays
             'autoArray' => true, //only create arrays for tags which appear more than once
             'textContent' => 'value', //key used for the text content of elements
             'autoText' => true, //skip textContent key if node has no attributes or child nodes
