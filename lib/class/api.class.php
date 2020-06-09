@@ -1520,14 +1520,17 @@ class Api
      * playlist_remove_song
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=400001
+     * CHANGED_IN_API_VERSION=410001
      *
      * This removes a song from a playlist using track number in the list or song ID.
      * Pre-400001 the api required 'track' instead of 'song'.
+     * 410001+: added clear to allow you to clear a playlist without getting all the tracks.
      *
      * @param array $input
      * filter = (string) UID of playlist
      * song   = (string) UID of song to remove from the playlist //optional
      * track  = (string) track number to remove from the playlist //optional
+     * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
      * @return boolean
      */
     public static function playlist_remove_song($input)
@@ -1541,7 +1544,10 @@ class Api
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['format']);
         } else {
-            if ($input['song']) {
+            if ($input['clear']) {
+                $playlist->delete_all();
+                self::message('success', 'all songs removed from playlist', null, $input['format']);
+            } elseif ($input['song']) {
                 $track = (int) scrub_in($input['song']);
                 if (!$playlist->has_item($track)) {
                     self::message('error', T_('Song not found in playlist'), '404', $input['format']);
@@ -1551,7 +1557,7 @@ class Api
                 $playlist->delete_song($track);
                 $playlist->regenerate_track_numbers();
                 self::message('success', 'song removed from playlist', null, $input['format']);
-            } else {
+            } elseif ($input['track']) {
                 $track = (int) scrub_in($input['track']);
                 if (!$playlist->has_item(null, $track)) {
                     self::message('error', T_('Track ID not found in playlist'), '404', $input['format']);

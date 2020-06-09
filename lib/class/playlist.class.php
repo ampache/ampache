@@ -555,6 +555,23 @@ class Playlist extends playlist_object
     } // set_items
 
     /**
+     * delete_all
+     *
+     * this deletes all tracks from a playlist, you specify the playlist.id here
+     * @return boolean
+     */
+    public function delete_all()
+    {
+        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?";
+        Dba::write($sql, array($this->id));
+        debug_event('playlist.class', 'Delete all tracks from: ' . $this->id, 5);
+
+        $this->update_last_update();
+
+        return true;
+    } // delete_all
+
+    /**
      * delete_song
      * @param integer $object_id
      * this deletes a single track, you specify the playlist_data.id here
