@@ -1420,6 +1420,7 @@ class Api
      * filter = (string) UID of playlist
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
+     * items  = (array)  replace all playlist items with a new list of object_ids //optional
      * @return boolean
      */
     public static function playlist_edit($input)
@@ -1544,7 +1545,7 @@ class Api
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['format']);
         } else {
-            if ($input['clear']) {
+            if ((int) $input['clear'] === 1) {
                 $playlist->delete_all();
                 self::message('success', 'all songs removed from playlist', null, $input['format']);
             } elseif ($input['song']) {
