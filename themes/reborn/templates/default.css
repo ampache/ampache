@@ -1245,6 +1245,10 @@ div.box.box_rules {
     width: 100%;
 }
 
+#browse_header {
+    margin-right: 140px;
+}
+
 .album_group_disks_title {
     float: left;
     margin-right: 30px;
@@ -1335,6 +1339,7 @@ span.fatalerror {
 
 #content .info-box {
     margin-bottom: 30px;
+    margin-right: 140px;
 }
 
 #content .info-box .box-content .item_art {
