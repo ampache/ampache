@@ -197,6 +197,7 @@ if (!defined('INSTALL')) { ?>
     <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?>
     </td>
 </tr>
+<?php if (is_readable($configfile)) { ?>
 <tr>
     <td>
         <?php echo T_('Configuration file validity'); ?>
@@ -245,4 +246,5 @@ if (!defined('INSTALL')) { ?>
     </td>
 </tr>
 <?php
-    } ?>
+    }
+} ?>
