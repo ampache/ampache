@@ -29,6 +29,9 @@ if ($user) {
         }
     }
 } ?>
+<div id="browse_header">
+<?php UI::show_browse_form(); ?>
+</div> <!-- Close browse_header Div -->
 <?php if (AmpConfig::get('home_now_playing')) { ?>
 <div id="now_playing">
     <?php show_now_playing(); ?>

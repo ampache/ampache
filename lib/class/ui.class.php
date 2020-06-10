@@ -476,6 +476,17 @@ class UI
     }
 
     /**
+     * show_browse_form
+     *
+     * For now this just shows the header template
+     */
+    public static function show_browse_form()
+    {
+        require_once AmpConfig::get('prefix') . self::find_template('show_browse_form.inc.php');
+    }
+
+
+    /**
      * show_footer
      *
      * Shows the footer template and possibly profiling info.
