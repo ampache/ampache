@@ -355,7 +355,7 @@ class Song extends database_object implements media, library_item
     {
         $catalog               = $results['catalog'];
         $file                  = $results['file'];
-        $title                 = Song::sanitize_title(['title']) ?: $file;
+        $title                 = Song::sanitize_title($results['title']) ?: $file;
         $artist                = $results['artist'];
         $album                 = $results['album'];
         $albumartist           = $results['albumartist'] ?: $results['band'];
