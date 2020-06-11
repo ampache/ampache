@@ -355,7 +355,7 @@ class Song extends database_object implements media, library_item
     {
         $catalog               = $results['catalog'];
         $file                  = $results['file'];
-        $title                 = trim((string) $results['title']) ?: $file;
+        $title                 = Song::sanitize_title(['title']) ?: $file;
         $artist                = $results['artist'];
         $album                 = $results['album'];
         $albumartist           = $results['albumartist'] ?: $results['band'];
@@ -2386,5 +2386,21 @@ class Song extends database_object implements media, library_item
         }
 
         return $deleted;
+    }
+
+    /**
+     * sanitize_title
+     * Make sure the song title fits into the database
+     * @param string $title
+     * @return string
+     */
+    public static function sanitize_title($title)
+    {
+        $title = (string) $title;
+        if (false !== $encoding = mb_detect_encoding($title, null, true)) {
+            return trim(mb_strcut($title, 0, 255, $encoding));
+        } else {
+            return trim(substr($title, 0, 255));
+        }
     }
 } // end song.class
