@@ -242,6 +242,10 @@ class Catalog_local extends Catalog
         if (isset($options['subdirectory'])) {
             $path = $options['subdirectory'];
             unset($options['subdirectory']);
+
+            // Make sure the path doesn't end in a / or \
+            $path = rtrim($path, '/');
+            $path = rtrim($path, '\\');
         }
 
         // Correctly detect the slash we need to use here
