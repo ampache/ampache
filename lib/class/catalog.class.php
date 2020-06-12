@@ -2289,6 +2289,7 @@ abstract class Catalog extends database_object
         } else {
             $string = trim(substr($string, 0, $max_length));
         }
+
         return $string;
     }
 
