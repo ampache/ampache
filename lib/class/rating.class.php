@@ -197,7 +197,7 @@ class Rating extends database_object
     public static function get_highest_sql($type)
     {
         $type = Stats::validate_type($type);
-        $sql  = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating`, COUNT(`object_id`) AS `count` FROM `rating`";
+        $sql  = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating`, COUNT(`object_id`) AS `count`, MAX(`id`) AS `order` FROM `rating`";
 
         if (AmpConfig::get('album_group') && $type === 'album') {
             $sql .= " LEFT JOIN `album` on `rating`.`object_id` = `album`.`id` and `rating`.`object_type` = 'album'";
@@ -207,9 +207,10 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('album_group') && $type === 'album') {
-            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `rating`, `object_id` DESC";  //TODO mysql8 test
+            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`" .
+                    " ORDER BY `rating` DESC, `count` DESC, `order` DESC, `object_id` DESC";  //TODO mysql8 test
         } else {
-            $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC ";
+            $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC  ";
         }
         //debug_event('rating.class', 'get_highest_sql ' . $sql, 5);
 
