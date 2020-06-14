@@ -19,6 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */ ?>
+<script>
+    function ToggleRightbarVisibility()
+    {
+        if ($("#rightbar").is(":visible")) {
+            $("#rightbar").slideUp();
+        } else {
+            $("#rightbar").slideDown();
+        }
+    }
+</script>
 <ul id="rb_action">
     <li>
         <?php echo Ajax::button('?page=stream&action=basket', 'all', $t_play, 'rightbar_play'); ?>

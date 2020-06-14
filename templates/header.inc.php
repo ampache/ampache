@@ -390,7 +390,11 @@ $t_logout    = T_('Log out'); ?>
                         </span>
                     <?php
                         } ?>
-
+                    <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
+                        <div id="rightbar-minimize">
+                            <a href="javascript:ToggleRightbarVisibility();"><?php echo UI::get_icon('minimize', T_('Show/Hide Playlist')); ?></a>
+                        </div>
+                    <?php } ?>
                     <?php UI::show_box_bottom(); ?>
                 </div> <!-- End headerbox -->
             </div><!-- End header -->
@@ -496,7 +500,6 @@ $t_logout    = T_('Log out'); ?>
                 $.cookie('sidebar_state', newstate, { expires: 30, path: '/'});
             });
             </script>
-
             <div id="rightbar" class="rightbar-fixed">
                 <?php require_once AmpConfig::get('prefix') . UI::find_template('rightbar.inc.php'); ?>
             </div>
