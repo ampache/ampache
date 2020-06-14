@@ -1803,7 +1803,7 @@ abstract class Catalog extends database_object
         $new_song           = new Song();
         $new_song->file     = $results['file'];
         $new_song->year     = (strlen((string) $results['year']) > 4) ? (int) substr($results['year'], -4, 4) : (int) ($results['year']);
-        $new_song->title    = $results['title'];
+        $new_song->title    = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate  = $results['bitrate'];
         $new_song->rate     = $results['rate'];
         $new_song->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
@@ -1815,7 +1815,7 @@ abstract class Catalog extends database_object
         }
         $new_song->track    = (strlen((string) $results['track']) > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']);
         $new_song->mbid     = $results['mb_trackid'];
-        $new_song->composer = $results['composer'];
+        $new_song->composer = self::check_length($results['composer']);
         $new_song->mime     = $results['mime'];
 
         // info for the song_data table. used in Song::update_song
@@ -1824,8 +1824,8 @@ abstract class Catalog extends database_object
                         array("\r\n", "\r", "\n"),
                         '<br />',
                         strip_tags($results['lyrics']));
-        $new_song->label                 = $results['publisher'];
-        $new_song->language              = $results['language'];
+        $new_song->label                 = self::check_length($results['publisher'], 128);
+        $new_song->language              = self::check_length($results['language'], 128);
         $new_song->replaygain_track_gain = floatval($results['replaygain_track_gain']);
         $new_song->replaygain_track_peak = floatval($results['replaygain_track_peak']);
         $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
@@ -1840,22 +1840,22 @@ abstract class Catalog extends database_object
             }
         }
         // info for the artist table.
-        $artist           = $results['artist'];
+        $artist           = self::check_length($results['artist']);
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
 
         // info for the album table.
-        $album            = $results['album'];
+        $album            = self::check_length($results['album']);
         $album_mbid       = $results['mb_albumid'];
         $disk             = $results['disk'];
         // year is also included in album
         $album_mbid_group = $results['mb_albumid_group'];
         $releasetype      = $results['releasetype'];
-        $albumartist      = $results['albumartist'] ?: $results['band'];
+        $albumartist      = self::check_length($results['albumartist'] ?: $results['band']);
         $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
-        $barcode          = $results['barcode'];
-        $catalog_number   = $results['catalog_number'];
+        $barcode          = self::check_length($results['barcode'], 64);
+        $catalog_number   = self::check_length($results['catalog_number'], 64);
 
         // check whether this artist exists (and the album_artist)
         $new_song->artist = Artist::check($artist, $artist_mbid);
@@ -1873,7 +1873,6 @@ abstract class Catalog extends database_object
                 self::migrate('album', $song->album, $new_song->album)) {
             Song::update_utime($song->id, $update_time);
         }
-        $new_song->title = self::check_title($new_song->title, $new_song->file);
 
         if ($artist_mbid) {
             $new_song->artist_mbid = $artist_mbid;
@@ -2273,6 +2272,26 @@ abstract class Catalog extends database_object
 
         return $title;
     } // check_title
+
+    /**
+     * check_length
+     * Check to make sure the string fits into the database
+     * max_length is the maximum number of characters that the (varchar) column can hold
+     * @param string $string
+     * @param string $max_length
+     * @return string
+     */
+    public static function check_length($string, $max_length = 255)
+    {
+        $string = (string) $string;
+        if (false !== $encoding = mb_detect_encoding($string, null, true)) {
+            $string = trim(mb_substr($string, 0, $max_length, $encoding));
+        } else {
+            $string = trim(substr($string, 0, $max_length));
+        }
+
+        return $string;
+    }
 
     /**
      * playlist_import
