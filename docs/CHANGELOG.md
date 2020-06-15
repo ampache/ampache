@@ -22,10 +22,10 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * Add Recently updated/added to search rules
   * Gravatar Plugin: Make sure https is used when force_ssl is configured
   * When you don't have a config file redirect to installer
-  * Truncate strings to match databse limits when strings go over
+  * Truncate strings to match database limits when strings go over
   * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
     * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
-  * Change to numeric searches renamed is -> equals and is not -> soes not equal
+  * Change to numeric searches renamed is -> equals and is not -> does not equal
 * API changes
   * Bump API version to 410001 (4.1.0 build 001)
   * All calls that return songs now include <playlisttrack> which can be used to identify track order.

@@ -1651,12 +1651,18 @@ class Art extends database_object
 
         $images = array();
 
-        if ($this->type != 'album' || empty($data['artist']) || empty($data['album'])) {
+        if (($this->type != 'album' && (empty($data['artist']) || empty($data['album']))) ||
+            ($this->type != 'artist' && empty($data['artist']))) {
             return $images;
         }
 
         try {
-            $xmldata = Recommendation::album_search($data['artist'], $data['album']);
+            if ($this->type != 'album') {
+                $xmldata = Recommendation::album_search($data['artist'], $data['album']);
+            }
+            if ($this->type != 'artist') {
+                $xmldata = Recommendation::artist_search($data['artist']);
+            }
 
             if (!count($xmldata)) {
                 return array();
