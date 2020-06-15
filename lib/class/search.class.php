@@ -2014,7 +2014,6 @@ class Search extends playlist_object
                     $join['album'] = true;
                 break;
                 case 'artist':
-                    $group[]        = "`artist`.`id`";
                     $where[]        = "(`artist`.`name` $sql_match_operator '$input' " .
                                       " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
                                       "' ', `artist`.`name`)) $sql_match_operator '$input')";
