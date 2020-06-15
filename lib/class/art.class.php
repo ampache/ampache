@@ -1351,6 +1351,7 @@ class Art extends database_object
 
         /* See if we are looking for a specific filename */
         $preferred_filename = AmpConfig::get('album_art_preferred_filename');
+        $artist_art_folder  = AmpConfig::get('artist_art_folder');
 
         // Array of valid extensions
         $image_extensions = array(
@@ -1370,11 +1371,14 @@ class Art extends database_object
                 $song   = new Song($song_id);
                 $dirs[] = Core::conv_lc_file(dirname($song->file));
             }
-        } else {
-            if ($this->type == 'video') {
-                $media  = new Video($this->uid);
-                $dirs[] = Core::conv_lc_file(dirname($media->file));
-            }
+        } elseif ($this->type == 'video') {
+            $media  = new Video($this->uid);
+            $dirs[] = Core::conv_lc_file(dirname($media->file));
+        } elseif ($this->type == 'artist' && $artist_art_folder) {
+            $media = new Artist($this->uid);
+            $media->format();
+            $preferred_filename = $media->f_full_name;
+            $dirs[] = Core::conv_lc_file($artist_art_folder);
         }
 
         foreach ($dirs as $dir) {
@@ -1382,7 +1386,7 @@ class Art extends database_object
                 continue;
             }
 
-            debug_event('art.class', "gather_folder: Opening $dir and checking for Album Art", 3);
+            debug_event('art.class', "gather_folder: Opening $dir and checking for " . $this->type . " Art", 3);
 
             /* Open up the directory */
             $handle = opendir($dir);
@@ -1422,7 +1426,7 @@ class Art extends database_object
                 // files.
                 $index = md5($full_filename);
 
-                if ($file == $preferred_filename) {
+                if ($file == $preferred_filename || pathinfo($file, PATHINFO_FILENAME) == $preferred_filename) {
                     // We found the preferred filename and
                     // so we're done.
                     debug_event('art.class', "gather_folder: Found preferred image file: $file", 5);
@@ -1433,8 +1437,9 @@ class Art extends database_object
                     );
                     break;
                 }
-
-                debug_event('art.class', "gather_folder: Found image file: $file", 5);
+                if ($this->type !== 'artist') {
+                    debug_event('art.class', "gather_folder: Found image file: $file", 5);
+                }
                 $results[$index] = array(
                     'file' => $full_filename,
                     'mime' => 'image/' . $extension,
@@ -1652,27 +1657,36 @@ class Art extends database_object
         $images = array();
 
         try {
+            $coverart = array();
+            // search for album objects
             if ((!empty($data['artist']) || !empty($data['album']))) {
                 $xmldata = Recommendation::album_search($data['artist'], $data['album']);
+                if (!count($xmldata)) {
+                    return array();
+                }
+                $xalbum = $xmldata->album;
+                if (!$xalbum) {
+                    return array();
+                }
+                $coverart = (array) $xalbum->image;
+
             }
+            // search for artist objects
             if ((!empty($data['artist']) || empty($data['album']))) {
                 $xmldata = Recommendation::artist_search($data['artist']);
+                if (!count($xmldata)) {
+                    return array();
+                }
+                $xartist = $xmldata->artist;
+                if (!$xartist) {
+                    return array();
+                }
+                $coverart = (array) $xartist->image;
             }
 
-            if (!count($xmldata)) {
-                return array();
-            }
-
-            $xalbum = $xmldata->album;
-            if (!$xalbum) {
-                return array();
-            }
-
-            $coverart = (array) $xalbum->image;
             if (empty($coverart)) {
                 return array();
             }
-
             ksort($coverart);
             foreach ($coverart as $url) {
                 // We need to check the URL for the /noimage/ stuff
@@ -1929,3 +1943,4 @@ class Art extends database_object
         return true;
     }
 } // end art.class
+

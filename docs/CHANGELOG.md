@@ -63,6 +63,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * unique_playlist: Force unique playlists by ignoring existing songs
 * NEW config options
   * skip_timer: Add Skip Timer Threshold to the config
+  * artist_art_folder: Specify a local folder to search for artist images using name/title
 * NEW files
   * bin/compute_cache.inc: Cache object_count data to speed up access
   * bin/cron.inc: Perform garbage_collection functions outside of main functions (includes compute_cache.inc)
