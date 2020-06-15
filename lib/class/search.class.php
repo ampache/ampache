@@ -121,13 +121,13 @@ class Search extends playlist_object
 
         $this->basetypes['numeric'][] = array(
             'name' => 'equal',
-            'description' => T_('is'),
+            'description' => T_('equals'),
             'sql' => '<=>'
         );
 
         $this->basetypes['numeric'][] = array(
             'name' => 'ne',
-            'description' => T_('is not'),
+            'description' => T_('does not equal'),
             'sql' => '<>'
         );
 
