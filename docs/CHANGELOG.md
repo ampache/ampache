@@ -10,7 +10,7 @@ e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
 Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
 
 * GENERAL changes
-  * June 8 2020 updated component installer and php-cs-fixer package.
+  * Updated component installer and php-cs-fixer package.
   * April 2020 Translation update
   * May 2020 Translation update
   * Fixed a lot of incorrectly typed function calls and code documentation
@@ -21,6 +21,10 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * Add 250 for search form limits in the web ui. (Jump from 100 to 500 is pretty big)
   * Add Recently updated/added to search rules
   * Gravatar Plugin: Make sure https is used when force_ssl is configured
+  * When you don't have a config file redirect to installer
+  * Truncate strings to match databse limits when strings go over
+  * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
+    * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
 * API changes
   * Bump API version to 410001 (4.1.0 build 001)
   * All calls that return songs now include <playlisttrack> which can be used to identify track order.
@@ -29,9 +33,9 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * Added actions to catalog_action. 'verify_catalog' 'gather_art'
   * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
     * Call xml as normal:
-      * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=410001
+      * [<http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=410001>]
     * Call the JSON server:
-      * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=410001
+      * [<http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=410001>]
 * NEW API functions
   * get_similar: send artist or song id to get related objects from last.fm
   * shares: get a list of shares you can access
@@ -68,7 +72,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * API: <playcount> added to objects.
 * API: Don't gather art when adding songs
 * API: Added actions to catalog_action. 'verify_catalog' 'gather_art'
-*Fix: Add User
+* Fix: Add User warnings
 * Fix: Channel authentication
 * Fix: IP checks when sending null proxy values
 * Fix: Extra text in catalog API calls
@@ -88,6 +92,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Update Composer requirements (Fix CVE-2020-13625 in phpmailer)
 
 ## 4.1.1
+
 * Bump API version to 400004 (4.0.0 build 004)
 * Api - Fix parameters using 0
 * Api - Get the correct total_count in xml when you set a limit
@@ -209,7 +214,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Add bin/clean_art_table.inc to clean art that doesn't fit your min or max dimensions.
 * Add -u to bin/catalog_update.inc This function will update the artist table with bio, image, etc as well as update similar artists.
 * Filter zip names in batch so they are named correctly by the download
-* Numerous catalog updates to allow data migration when updating file tags. 
+* Numerous catalog updates to allow data migration when updating file tags.
   * UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate,
   * Shoutbox::migrate, Recommendation::migrate, Tag::migrate, Share::migrate* Faster tag updates/catalog verify! (Updating an album would update each file multiple times)
 * Default to disk 1 instead of 0 (db updates to handle existing albums)
@@ -322,7 +327,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Add: rating_browse_filter, rating_browse_minimum_stars - filter based on a star rating.
 * Add: send_full_stream - allow pushing the full track instead of segmenting
 * Add: github_force_branch - Allow any official Ampache git branch set in config
-* Add: subsonic_stream_scrobble - set to false to force all caching to count as a download. This is to be used with the subsonic client set to scrobble. (Ampache will now scrobble to itself over subsonic.) 
+* Add: subsonic_stream_scrobble - set to false to force all caching to count as a download. This is to be used with the subsonic client set to scrobble. (Ampache will now scrobble to itself over subsonic.)
 * Add: waveform_height,  waveform_width - customize waveform size
 * Add: of_the_moment - set custom amount of albums/videos in "of the moment areas"
 * Add: use_now_playing_embedded, now_playing_refresh_limit, now_playing_css_file - Show a user forum tag "Now playing / last played"
