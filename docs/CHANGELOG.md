@@ -68,6 +68,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * API: <playcount> added to objects.
 * API: Don't gather art when adding songs
 * API: Added actions to catalog_action. 'verify_catalog' 'gather_art'
+*Fix: Add User
 * Fix: Channel authentication
 * Fix: IP checks when sending null proxy values
 * Fix: Extra text in catalog API calls
