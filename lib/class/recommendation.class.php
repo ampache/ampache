@@ -66,7 +66,7 @@ class Recommendation
 
     /**
      * album_search
-     * 
+     *
      * @param $artist
      * @param $album
      * @return SimpleXMLElement
