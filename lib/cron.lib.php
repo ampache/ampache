@@ -91,14 +91,15 @@ function run_cron_cache($user_id = 0)
             Art::build_cache($artists, 'artist');
             Art::build_cache($albums, 'album');
 
+            $videos = array();
             if (AmpConfig::get('allow_video')) {
                 $videos = $catalog->get_video_ids();
                 Video::build_cache($videos);
             }
 
             // Update artist information and fetch similar artists from last.fm
-            //$artist_info = $catalog->get_artist_ids('info');
-            //$catalog->gather_artist_info($artist_info);
+            $artist_info = $catalog->get_artist_ids('info');
+            $catalog->gather_artist_info($artist_info);
 
             //Song_preview::build_cache($song_ids)
 
@@ -121,8 +122,6 @@ function run_cron_cache($user_id = 0)
                     Rating::build_cache('video', $videos, $user_id);
                     Userflag::build_cache('video', $videos, $user_id);
                 }
-                // useractivities
-                $user_activities = Useractivity::get_activities($user_id, 100);
                 // playlists
                 $user_playlist = Playlist::get_playlists(true, $user_id);
                 foreach ($user_playlist as $playlist_id) {
