@@ -985,51 +985,56 @@ class vainfo
                     $parsed['mb_trackid'] = $ufid['data'];
                 }
             }
+        }
 
-            if (!empty($id3v2['TXXX'])) {
-                // Find the MBIDs for the album and artist
-                // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
-                // not a bug those strings are UTF-16 encoded
-                // getID3 has copies of text properly converted to utf-8 encoding in comments/text
-                foreach ($id3v2['TXXX'] as $txxx) {
-                    switch (strtolower($this->trimAscii($txxx['description']))) {
-                        case 'musicbrainz album id':
-                            $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
+        if (!empty($id3v2['TXXX'])) {
+            // Find the MBIDs for the album and artist
+            // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
+            // not a bug those strings are UTF-16 encoded
+            // getID3 has copies of text properly converted to utf-8 encoding in comments/text
+            foreach ($id3v2['TXXX'] as $txxx) {
+                switch (strtolower($this->trimAscii($txxx['description']))) {
+                    case 'musicbrainz album id':
+                        $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'musicbrainz release group id':
-                            $parsed['mb_albumid_group'] = $id3v2['comments']['text'][$txxx['description']];
+                    case 'musicbrainz release group id':
+                        $parsed['mb_albumid_group'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'musicbrainz artist id':
-                            $parsed['mb_artistid'] = $id3v2['comments']['text'][$txxx['description']];
+                    case 'musicbrainz artist id':
+                        $parsed['mb_artistid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'musicbrainz album artist id':
-                            $parsed['mb_albumartistid'] = $id3v2['comments']['text'][$txxx['description']];
+                    case 'musicbrainz album artist id':
+                        $parsed['mb_albumartistid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'musicbrainz album type':
-                            $parsed['release_type'] = $id3v2['comments']['text'][$txxx['description']];
+                    case 'musicbrainz album type':
+                        $parsed['release_type'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'replaygain_track_gain':
-                            $parsed['replaygain_track_gain'] = floatval($txxx['data']);
+                    case 'replaygain_track_gain':
+                        $parsed['replaygain_track_gain'] = floatval($txxx['data']);
                         break;
-                        case 'replaygain_track_peak':
-                            $parsed['replaygain_track_peak'] = floatval($txxx['data']);
+                    case 'replaygain_track_peak':
+                        $parsed['replaygain_track_peak'] = floatval($txxx['data']);
                         break;
-                        case 'replaygain_album_gain':
-                            $parsed['replaygain_album_gain'] = floatval($txxx['data']);
+                    case 'replaygain_album_gain':
+                        $parsed['replaygain_album_gain'] = floatval($txxx['data']);
                         break;
-                        case 'replaygain_album_peak':
-                            $parsed['replaygain_album_peak'] = floatval($txxx['data']);
+                    case 'replaygain_album_peak':
+                        $parsed['replaygain_album_peak'] = floatval($txxx['data']);
                         break;
-                        case 'original_year':
-                            $parsed['original_year'] = $id3v2['comments']['text'][$txxx['description']];
+                    case 'original_year':
+                        $parsed['original_year'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'barcode':
-                            $parsed['barcode'] = $id3v2['comments']['text'][$txxx['description']];
+                    case 'barcode':
+                        $parsed['barcode'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                        case 'catalognumber':
-                            $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
+                    case 'catalognumber':
+                        $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                    }
+                    default:
+                        if (AmpConfig::get('enable_custom_metadata') && !in_array($txxx['description'], $parsed)) {
+                            $parsed[$txxx['description']] = $txxx['data'];
+                        }
+                        break;
                 }
             }
         }
