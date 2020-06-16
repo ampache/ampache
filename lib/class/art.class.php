@@ -335,7 +335,7 @@ class Art extends database_object
     public function insert_url($url)
     {
         debug_event('art.class', 'Insert art from url ' . $url, 4);
-        $image = Art::get_from_source(array('url' => $url), $this->type);
+        $image = self::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
         $mime  = "image/" . $rurl['extension'];
         $this->insert($image, $mime);
@@ -348,7 +348,7 @@ class Art extends database_object
     public function insert_from_file($filepath)
     {
         debug_event('art.class', 'Insert art from file on disk ' . $filepath, 4);
-        $image = Art::get_from_source(array('file' => $filepath), $this->type);
+        $image = self::get_from_source(array('file' => $filepath), $this->type);
         $rfile = pathinfo($filepath);
         $mime  = "image/" . $rfile['extension'];
         $this->insert($image, $mime);
@@ -879,9 +879,11 @@ class Art extends database_object
 
         // Check to see if it's a URL
         if (isset($data['url'])) {
+            debug_event('art.class', 'CHECKING URL ' . $data['url'], 2);
             $options = array();
             try {
                 $options['timeout'] = 10;
+                Requests::register_autoloader();
                 $request            = Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw                = $request->body;
             } catch (Exception $error) {
@@ -1133,8 +1135,9 @@ class Art extends database_object
                     switch ($method_name) {
                         case 'gather_google':
                         case 'gather_musicbrainz':
-                        case 'gather_lastfm':
                         $data = $this->{$method_name}($limit, $options);
+                    break;
+                        case 'gather_lastfm':
                     break;
                         default:
                         $data = $this->{$method_name}($limit);
@@ -1669,7 +1672,6 @@ class Art extends database_object
                     return array();
                 }
                 $coverart = (array) $xalbum->image;
-
             }
             // search for artist objects
             if ((!empty($data['artist']) && empty($data['album']))) {
@@ -1691,14 +1693,15 @@ class Art extends database_object
             foreach ($coverart as $url) {
                 // We need to check the URL for the /noimage/ stuff
                 if (is_array($url) || strpos($url, '/noimage/') !== false) {
-                    debug_event('art.class', 'LastFM: Detected as noimage, skipped ' . $url, 3);
+                    debug_event('art.class', 'LastFM: Detected as noimage, skipped', 3);
                     continue;
                 }
+                debug_event('art.class', 'LastFM: found image ' . $url[0], 3);
 
                 // HACK: we shouldn't rely on the extension to determine file type
-                $results  = pathinfo($url);
+                $results  = pathinfo($url[0]);
                 $mime     = 'image/' . $results['extension'];
-                $images[] = array('url' => $url, 'mime' => $mime, 'title' => 'LastFM');
+                $images[] = array('url' => $url[0], 'mime' => $mime, 'title' => 'LastFM');
                 if ($limit && count($images) >= $limit) {
                     return $images;
                 }
@@ -1943,4 +1946,3 @@ class Art extends database_object
         return true;
     }
 } // end art.class
-
