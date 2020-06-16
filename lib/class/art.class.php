@@ -1439,12 +1439,12 @@ class Art extends database_object
                 }
                 if ($this->type !== 'artist') {
                     debug_event('art.class', "gather_folder: Found image file: $file", 5);
+                    $results[$index] = array(
+                        'file' => $full_filename,
+                        'mime' => 'image/' . $extension,
+                        'title' => 'Folder'
+                    );
                 }
-                $results[$index] = array(
-                    'file' => $full_filename,
-                    'mime' => 'image/' . $extension,
-                    'title' => 'Folder'
-                );
             } // end while reading dir
             closedir($handle);
         } // end foreach dirs
@@ -1455,7 +1455,7 @@ class Art extends database_object
             $results = $preferred;
         }
 
-        debug_event('art.class', "gather_folder: Results: " . json_encode($results), 5);
+        //debug_event('art.class', "gather_folder: Results: " . json_encode($results), 5);
         if ($limit && count($results) > $limit) {
             $results = array_slice($results, 0, $limit);
         }
