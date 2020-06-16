@@ -992,6 +992,7 @@ class vainfo
             // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
             // not a bug those strings are UTF-16 encoded
             // getID3 has copies of text properly converted to utf-8 encoding in comments/text
+            $enable_custom_metadata = AmpConfig::get('enable_custom_metadata');
             foreach ($id3v2['TXXX'] as $txxx) {
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'musicbrainz album id':
@@ -1031,8 +1032,8 @@ class vainfo
                         $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     default:
-                        if (AmpConfig::get('enable_custom_metadata') && !in_array($txxx['description'], $parsed)) {
-                            $parsed[$txxx['description']] = $txxx['data'];
+                        if ($enable_custom_metadata && !in_array($txxx['description'], $parsed)) {
+                            $parsed[$txxx['description']] = $id3v2['comments']['text'][$txxx['description']];
                         }
                         break;
                 }
