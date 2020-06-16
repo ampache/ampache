@@ -1135,9 +1135,8 @@ class Art extends database_object
                     switch ($method_name) {
                         case 'gather_google':
                         case 'gather_musicbrainz':
-                        $data = $this->{$method_name}($limit, $options);
-                    break;
                         case 'gather_lastfm':
+                        $data = $this->{$method_name}($limit, $options);
                     break;
                         default:
                         $data = $this->{$method_name}($limit);
@@ -1671,7 +1670,9 @@ class Art extends database_object
                 if (!$xalbum) {
                     return array();
                 }
-                $coverart = (array) $xalbum->image;
+                foreach ($xmldata->album->image as $albumart) {
+                    $coverart[] = (string) $albumart;
+                }
             }
             // search for artist objects
             if ((!empty($data['artist']) && empty($data['album']))) {
@@ -1683,7 +1684,9 @@ class Art extends database_object
                 if (!$xartist) {
                     return array();
                 }
-                $coverart = (array) $xartist->image;
+                foreach ($xmldata->artist->image as $artistart) {
+                    $coverart[] = (string) $artistart;
+                }
             }
 
             if (empty($coverart)) {
@@ -1696,12 +1699,12 @@ class Art extends database_object
                     debug_event('art.class', 'LastFM: Detected as noimage, skipped', 3);
                     continue;
                 }
-                debug_event('art.class', 'LastFM: found image ' . $url[0], 3);
+                debug_event('art.class', 'LastFM: found image ' . $url, 3);
 
                 // HACK: we shouldn't rely on the extension to determine file type
                 $results  = pathinfo($url[0]);
                 $mime     = 'image/' . $results['extension'];
-                $images[] = array('url' => $url[0], 'mime' => $mime, 'title' => 'LastFM');
+                $images[] = array('url' => $url, 'mime' => $mime, 'title' => 'LastFM');
                 if ($limit && count($images) >= $limit) {
                     return $images;
                 }
