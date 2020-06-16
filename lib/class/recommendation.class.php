@@ -306,11 +306,12 @@ class Recommendation
                 if ($local_id === null) {
                     $searchname = Catalog::trim_prefix($name);
                     $searchname = Dba::escape($searchname['string']);
-                    $sql        = "SELECT `artist`.`id` FROM `artist` WHERE `name` = ?";
+                    $sql        = "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR " .
+                                  "LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
                     if (AmpConfig::get('catalog_disable')) {
                         $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
                     }
-                    $db_result = Dba::read($sql, array($searchname));
+                    $db_result = Dba::read($sql, array($searchname, $searchname));
                     if ($result = Dba::fetch_assoc($db_result)) {
                         $local_id = $result['id'];
                     }
