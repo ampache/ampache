@@ -1972,6 +1972,7 @@ class Search extends playlist_object
         $group       = array();
         $having      = array();
         $join['tag'] = array();
+        $metadata    = array();
 
         foreach ($this->rules as $rule) {
             $type          = $this->name_to_basetype($rule[0]);
@@ -2240,17 +2241,15 @@ class Search extends playlist_object
                     $join['update'] = true;
                     break;
                 case 'metadata':
+                    $field = (int) $rule[3];
                     if ($sql_match_operator === '=' && strlen($input) == 0) {
-                        $field              = (int) $rule[3];
-                        $where[]            = "NOT EXISTS (SELECT NULL FROM `metadata` WHERE `metadata`.`object_id` = `song`.`id` AND `metadata`.`field` = {$field})";
+                        $where[] = "NOT EXISTS (SELECT NULL FROM `metadata` WHERE `metadata`.`object_id` = `song`.`id` AND `metadata`.`field` = {$field})";
                     } else {
-                        // Need to create a join for every field so we can create and / or queries with only one table
-                        $tableAlias         = 'metadata' . uniqid();
-                        $field              = (int) $rule[3];
-                        $join[$tableAlias]  = true;
-                        $parsedInput        = is_numeric($input) ? $input : '"' . $input . '"';
-                        $where[]            = "(`$tableAlias`.`field` = {$field} AND `$tableAlias`.`data` $sql_match_operator $parsedInput)";
-                        $table[$tableAlias] = 'LEFT JOIN `metadata` AS ' . $tableAlias . ' ON `song`.`id` = `' . $tableAlias . '`.`object_id`';
+                        $parsedInput = is_numeric($input) ? $input : '"' . $input . '"';
+                        if (!array_key_exists($field, $metadata)) {
+                            $metadata[$field] = array();
+                        }
+                        $metadata[$field][] = "`metadata`.`data` $sql_match_operator $parsedInput";
                     }
                     break;
                 default:
@@ -2258,6 +2257,13 @@ class Search extends playlist_object
                 break;
             } // switch on type
         } // foreach over rules
+
+        //translate metadata queries into sql for each field
+        foreach ($metadata as $metadata_field => $metadata_queries) {
+            $metadata_sql  = "EXISTS (SELECT NULL FROM `metadata` WHERE `metadata`.`object_id` = `song`.`id` AND `metadata`.`field` = {$metadata_field} AND (";
+            $metadata_sql .= implode(" $sql_logic_operator ", $metadata_queries);
+            $where[]   = $metadata_sql . '))';
+        }
 
         $join['catalog'] = AmpConfig::get('catalog_disable');
 
