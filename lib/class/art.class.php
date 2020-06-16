@@ -1378,7 +1378,7 @@ class Art extends database_object
             $media = new Artist($this->uid);
             $media->format();
             $preferred_filename = $media->f_full_name;
-            $dirs[] = Core::conv_lc_file($artist_art_folder);
+            $dirs[]             = Core::conv_lc_file($artist_art_folder);
         }
 
         foreach ($dirs as $dir) {
@@ -1659,7 +1659,7 @@ class Art extends database_object
         try {
             $coverart = array();
             // search for album objects
-            if ((!empty($data['artist']) || !empty($data['album']))) {
+            if ((!empty($data['artist']) && !empty($data['album']))) {
                 $xmldata = Recommendation::album_search($data['artist'], $data['album']);
                 if (!count($xmldata)) {
                     return array();
@@ -1672,7 +1672,7 @@ class Art extends database_object
 
             }
             // search for artist objects
-            if ((!empty($data['artist']) || empty($data['album']))) {
+            if ((!empty($data['artist']) && empty($data['album']))) {
                 $xmldata = Recommendation::artist_search($data['artist']);
                 if (!count($xmldata)) {
                     return array();
