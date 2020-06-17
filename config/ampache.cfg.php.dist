@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 41
+config_version = 42
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
@@ -474,6 +474,14 @@ sociable = "true"
 ; comment out if Ampache should search for any jpg, gif or png
 ; DEFAULT: folder.jpg
 ;album_art_preferred_filename = "folder.jpg"
+
+; Artist Art Dump Folder
+; Specify a local folder to search for art using name/title to identify
+; i.e. "/var/www/art/" is filled with artist images named by artist
+; e.g. "Megadeth.jpg", "Judas Priest.png", "The Smashing Pumpkins.jpg"
+; When enabled; gather_folder will check this folder for artist images
+; DEFAULT: false
+;artist_art_folder = "/var/www/art"
 
 ; Album Art Store on Disk
 ; This defines if arts should be stored on disk instead of database.

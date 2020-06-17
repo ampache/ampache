@@ -355,10 +355,10 @@ class Song extends database_object implements media, library_item
     {
         $catalog               = $results['catalog'];
         $file                  = $results['file'];
-        $title                 = trim((string) $results['title']) ?: $file;
-        $artist                = $results['artist'];
-        $album                 = $results['album'];
-        $albumartist           = $results['albumartist'] ?: $results['band'];
+        $title                 = Catalog::check_length(Catalog::check_title($results['title'], $file));
+        $artist                = Catalog::check_length($results['artist']);
+        $album                 = Catalog::check_length($results['album']);
+        $albumartist           = Catalog::check_length($results['albumartist'] ?: $results['band']);
         $albumartist           = $albumartist ?: null;
         $bitrate               = $results['bitrate'] ?: 0;
         $rate                  = $results['rate'] ?: 0;
@@ -379,10 +379,10 @@ class Song extends database_object implements media, library_item
         $lyrics                = $results['lyrics'];
         $user_upload           = isset($results['user_upload']) ? $results['user_upload'] : null;
         $license               = isset($results['license']) ? $results['license'] : null;
-        $composer              = isset($results['composer']) ? $results['composer'] : null;
-        $label                 = isset($results['publisher']) ? $results['publisher'] : null;
-        $catalog_number        = isset($results['catalog_number']) ? $results['catalog_number'] : null;
-        $language              = isset($results['language']) ? $results['language'] : null;
+        $composer              = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
+        $label                 = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
+        $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
+        $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
         $channels              = $results['channels'] ?: 0;
         $release_type          = isset($results['release_type']) ? $results['release_type'] : null;
         $replaygain_track_gain = isset($results['replaygain_track_gain']) ? $results['replaygain_track_gain'] : null;
@@ -390,7 +390,7 @@ class Song extends database_object implements media, library_item
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
         $original_year         = Catalog::normalize_year($results['original_year'] ?: 0);
-        $barcode               = $results['barcode'];
+        $barcode               = Catalog::check_length($results['barcode'], 64);
 
         if (!in_array($mode, ['vbr', 'cbr', 'abr'])) {
             debug_event('song.class', 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);

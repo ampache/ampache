@@ -38,7 +38,8 @@ $baseUri = ((AmpConfig::get('raw_web_path') !== "/") ? AmpConfig::get('raw_web_p
 $server->setBaseUri($baseUri);
 if (AmpConfig::get('use_auth')) {
     $authBackend = new WebDAV_Auth();
-    $authPlugin  = new DAV\Auth\Plugin($authBackend, 'Ampache');
+    $authBackend->setRealm('Ampache');
+    $authPlugin  = new DAV\Auth\Plugin($authBackend);
     $server->addPlugin($authPlugin);
 }
 

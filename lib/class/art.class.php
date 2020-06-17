@@ -335,7 +335,7 @@ class Art extends database_object
     public function insert_url($url)
     {
         debug_event('art.class', 'Insert art from url ' . $url, 4);
-        $image = Art::get_from_source(array('url' => $url), $this->type);
+        $image = self::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
         $mime  = "image/" . $rurl['extension'];
         $this->insert($image, $mime);
@@ -348,7 +348,7 @@ class Art extends database_object
     public function insert_from_file($filepath)
     {
         debug_event('art.class', 'Insert art from file on disk ' . $filepath, 4);
-        $image = Art::get_from_source(array('file' => $filepath), $this->type);
+        $image = self::get_from_source(array('file' => $filepath), $this->type);
         $rfile = pathinfo($filepath);
         $mime  = "image/" . $rfile['extension'];
         $this->insert($image, $mime);
@@ -879,9 +879,11 @@ class Art extends database_object
 
         // Check to see if it's a URL
         if (isset($data['url'])) {
+            debug_event('art.class', 'CHECKING URL ' . $data['url'], 2);
             $options = array();
             try {
                 $options['timeout'] = 10;
+                Requests::register_autoloader();
                 $request            = Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw                = $request->body;
             } catch (Exception $error) {
@@ -1351,6 +1353,7 @@ class Art extends database_object
 
         /* See if we are looking for a specific filename */
         $preferred_filename = AmpConfig::get('album_art_preferred_filename');
+        $artist_art_folder  = AmpConfig::get('artist_art_folder');
 
         // Array of valid extensions
         $image_extensions = array(
@@ -1370,11 +1373,14 @@ class Art extends database_object
                 $song   = new Song($song_id);
                 $dirs[] = Core::conv_lc_file(dirname($song->file));
             }
-        } else {
-            if ($this->type == 'video') {
-                $media  = new Video($this->uid);
-                $dirs[] = Core::conv_lc_file(dirname($media->file));
-            }
+        } elseif ($this->type == 'video') {
+            $media  = new Video($this->uid);
+            $dirs[] = Core::conv_lc_file(dirname($media->file));
+        } elseif ($this->type == 'artist' && $artist_art_folder) {
+            $media = new Artist($this->uid);
+            $media->format();
+            $preferred_filename = $media->f_full_name;
+            $dirs[]             = Core::conv_lc_file($artist_art_folder);
         }
 
         foreach ($dirs as $dir) {
@@ -1382,7 +1388,7 @@ class Art extends database_object
                 continue;
             }
 
-            debug_event('art.class', "gather_folder: Opening $dir and checking for Album Art", 3);
+            debug_event('art.class', "gather_folder: Opening $dir and checking for " . $this->type . " Art", 3);
 
             /* Open up the directory */
             $handle = opendir($dir);
@@ -1422,7 +1428,7 @@ class Art extends database_object
                 // files.
                 $index = md5($full_filename);
 
-                if ($file == $preferred_filename) {
+                if ($file == $preferred_filename || pathinfo($file, PATHINFO_FILENAME) == $preferred_filename) {
                     // We found the preferred filename and
                     // so we're done.
                     debug_event('art.class', "gather_folder: Found preferred image file: $file", 5);
@@ -1433,13 +1439,14 @@ class Art extends database_object
                     );
                     break;
                 }
-
-                debug_event('art.class', "gather_folder: Found image file: $file", 5);
-                $results[$index] = array(
-                    'file' => $full_filename,
-                    'mime' => 'image/' . $extension,
-                    'title' => 'Folder'
-                );
+                if ($this->type !== 'artist') {
+                    debug_event('art.class', "gather_folder: Found image file: $file", 5);
+                    $results[$index] = array(
+                        'file' => $full_filename,
+                        'mime' => 'image/' . $extension,
+                        'title' => 'Folder'
+                    );
+                }
             } // end while reading dir
             closedir($handle);
         } // end foreach dirs
@@ -1450,7 +1457,7 @@ class Art extends database_object
             $results = $preferred;
         }
 
-        debug_event('art.class', "gather_folder: Results: " . json_encode($results), 5);
+        //debug_event('art.class', "gather_folder: Results: " . json_encode($results), 5);
         if ($limit && count($results) > $limit) {
             $results = array_slice($results, 0, $limit);
         }
@@ -1651,37 +1658,51 @@ class Art extends database_object
 
         $images = array();
 
-        if ($this->type != 'album' || empty($data['artist']) || empty($data['album'])) {
-            return $images;
-        }
-
         try {
-            $xmldata = Recommendation::album_search($data['artist'], $data['album']);
-
-            if (!count($xmldata)) {
-                return array();
+            $coverart = array();
+            // search for album objects
+            if ((!empty($data['artist']) && !empty($data['album']))) {
+                $xmldata = Recommendation::album_search($data['artist'], $data['album']);
+                if (!count($xmldata)) {
+                    return array();
+                }
+                $xalbum = $xmldata->album;
+                if (!$xalbum) {
+                    return array();
+                }
+                foreach ($xmldata->album->image as $albumart) {
+                    $coverart[] = (string) $albumart;
+                }
+            }
+            // search for artist objects
+            if ((!empty($data['artist']) && empty($data['album']))) {
+                $xmldata = Recommendation::artist_search($data['artist']);
+                if (!count($xmldata)) {
+                    return array();
+                }
+                $xartist = $xmldata->artist;
+                if (!$xartist) {
+                    return array();
+                }
+                foreach ($xmldata->artist->image as $artistart) {
+                    $coverart[] = (string) $artistart;
+                }
             }
 
-            $xalbum = $xmldata->album;
-            if (!$xalbum) {
-                return array();
-            }
-
-            $coverart = (array) $xalbum->image;
             if (empty($coverart)) {
                 return array();
             }
-
             ksort($coverart);
             foreach ($coverart as $url) {
                 // We need to check the URL for the /noimage/ stuff
                 if (is_array($url) || strpos($url, '/noimage/') !== false) {
-                    debug_event('art.class', 'LastFM: Detected as noimage, skipped ' . $url, 3);
+                    debug_event('art.class', 'LastFM: Detected as noimage, skipped', 3);
                     continue;
                 }
+                debug_event('art.class', 'LastFM: found image ' . $url, 3);
 
                 // HACK: we shouldn't rely on the extension to determine file type
-                $results  = pathinfo($url);
+                $results  = pathinfo($url[0]);
                 $mime     = 'image/' . $results['extension'];
                 $images[] = array('url' => $url, 'mime' => $mime, 'title' => 'LastFM');
                 if ($limit && count($images) >= $limit) {

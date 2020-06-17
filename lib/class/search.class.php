@@ -121,13 +121,13 @@ class Search extends playlist_object
 
         $this->basetypes['numeric'][] = array(
             'name' => 'equal',
-            'description' => T_('is'),
+            'description' => T_('equals'),
             'sql' => '<=>'
         );
 
         $this->basetypes['numeric'][] = array(
             'name' => 'ne',
-            'description' => T_('is not'),
+            'description' => T_('does not equal'),
             'sql' => '<>'
         );
 
@@ -210,6 +210,19 @@ class Search extends playlist_object
             'description' => T_('does not sound like'),
             'sql' => 'NOT SOUNDS LIKE'
         );
+
+        $this->basetypes['text'][] = array(
+            'name' => 'regexp',
+            'description' => T_('matches regular expression'),
+            'sql' => 'REGEXP'
+        );
+
+        $this->basetypes['text'][] = array(
+            'name' => 'notregexp',
+            'description' => T_('does not match regular expression'),
+            'sql' => 'NOT REGEXP'
+        );
+
         $this->basetypes['tags'][] = array(
             'name' => 'contain',
             'description' => T_('contains'),
@@ -642,6 +655,13 @@ class Search extends playlist_object
         $this->types[] = array(
             'name' => 'label',
             'label' => T_('Label'),
+            'type' => 'text',
+            'widget' => array('input', 'text')
+        );
+
+        $this->types[] = array(
+            'name' => 'lyrics',
+            'label' => T_('Lyrics'),
             'type' => 'text',
             'widget' => array('input', 'text')
         );
@@ -1372,11 +1392,16 @@ class Search extends playlist_object
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
                 $ruleID     = (string) $ruleID[1];
                 $input_rule = (string) $data['rule_' . $ruleID . '_input'];
+                $operator   = $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'];
+                //keep vertical bar in regular expression
+                if (in_array($operator, ['regexp', 'notregexp'])) {
+                    $input_rule = str_replace("|", "\0", $input_rule);
+                }
                 foreach (explode('|', $input_rule) as $input) {
                     $this->rules[] = array(
                         $value,
-                        $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'],
-                        $input,
+                        $operator,
+                        in_array($operator, ['regexp', 'notregexp']) ? str_replace("\0", "|", $input) : $input,
                         $data['rule_' . $ruleID . '_subtype']
                     );
                 }
@@ -1947,6 +1972,7 @@ class Search extends playlist_object
         $group       = array();
         $having      = array();
         $join['tag'] = array();
+        $metadata    = array();
 
         foreach ($this->rules as $rule) {
             $type          = $this->name_to_basetype($rule[0]);
@@ -2014,7 +2040,6 @@ class Search extends playlist_object
                     $join['album'] = true;
                 break;
                 case 'artist':
-                    $group[]        = "`artist`.`id`";
                     $where[]        = "(`artist`.`name` $sql_match_operator '$input' " .
                                       " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
                                       "' ', `artist`.`name`)) $sql_match_operator '$input')";
@@ -2041,6 +2066,10 @@ class Search extends playlist_object
                     $where[]           = "`song_data`.`label` $sql_match_operator '$input'";
                     $join['song_data'] = true;
                 break;
+                case 'lyrics':
+                    $where[]           = "`song_data`.`lyrics` $sql_match_operator '$input'";
+                    $join['song_data'] = true;
+                    break;
                 case 'played':
                     $where[] = " `song`.`played` = '$sql_match_operator'";
                 break;
@@ -2212,19 +2241,29 @@ class Search extends playlist_object
                     $join['update'] = true;
                     break;
                 case 'metadata':
-                    // Need to create a join for every field so we can create and / or queries with only one table
-                    $tableAlias         = 'metadata' . uniqid();
-                    $field              = (int) $rule[3];
-                    $join[$tableAlias]  = true;
-                    $parsedInput        = is_numeric($input) ? $input : '"' . $input . '"';
-                    $where[]            = "(`$tableAlias`.`field` = {$field} AND `$tableAlias`.`data` $sql_match_operator $parsedInput)";
-                    $table[$tableAlias] = 'LEFT JOIN `metadata` AS ' . $tableAlias . ' ON `song`.`id` = `' . $tableAlias . '`.`object_id`';
+                    $field = (int) $rule[3];
+                    if ($sql_match_operator === '=' && strlen($input) == 0) {
+                        $where[] = "NOT EXISTS (SELECT NULL FROM `metadata` WHERE `metadata`.`object_id` = `song`.`id` AND `metadata`.`field` = {$field})";
+                    } else {
+                        $parsedInput = is_numeric($input) ? $input : '"' . $input . '"';
+                        if (!array_key_exists($field, $metadata)) {
+                            $metadata[$field] = array();
+                        }
+                        $metadata[$field][] = "`metadata`.`data` $sql_match_operator $parsedInput";
+                    }
                     break;
                 default:
                     // NOSSINK!
                 break;
             } // switch on type
         } // foreach over rules
+
+        //translate metadata queries into sql for each field
+        foreach ($metadata as $metadata_field => $metadata_queries) {
+            $metadata_sql  = "EXISTS (SELECT NULL FROM `metadata` WHERE `metadata`.`object_id` = `song`.`id` AND `metadata`.`field` = {$metadata_field} AND (";
+            $metadata_sql .= implode(" $sql_logic_operator ", $metadata_queries);
+            $where[]   = $metadata_sql . '))';
+        }
 
         $join['catalog'] = AmpConfig::get('catalog_disable');
 

@@ -38,6 +38,7 @@ switch ($_REQUEST['action']) {
         $results = array();
         if (!file_exists($configfile)) {
             $link = $path . '/install.php';
+            header("Location: " . $link);
         } else {
             // Make sure the config file is set up and parsable
             $results = @parse_ini_file($configfile);
