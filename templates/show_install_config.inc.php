@@ -25,9 +25,9 @@ $web_path_guess = $_REQUEST['web_path'];
 if (empty($web_path_guess)) {
     $web_path_guess = get_web_path();
 }
-
+$db_user        = scrub_out($_REQUEST['db_user']);
 $local_username = scrub_out($_REQUEST['db_username']);
-if (empty($local_username)) {
+if (!$db_user) {
     $local_username = scrub_out($_REQUEST['local_username']);
 }
 $local_pass = scrub_out($_REQUEST['db_password']);
