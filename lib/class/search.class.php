@@ -1641,11 +1641,6 @@ class Search extends playlist_object
                         "WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' " .
                         "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                 break;
-                case 'skipped_times':
-                    $where[] = "`album`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'skip' " .
-                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
-                    break;
                 case 'other_user':
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
@@ -1871,11 +1866,6 @@ class Search extends playlist_object
                         "WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' " .
                         "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                 break;
-                case 'skipped_times':
-                    $where[] = "`artist`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'skip' " .
-                        "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
-                    break;
                 case 'other_user':
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
