@@ -2295,14 +2295,14 @@ abstract class Catalog extends database_object
 
     /**
      * check_tracknr
-     * Check to make sure the tracknr fits into the database: unsigned, max 5 digits
+     * Check to make sure the tracknr fits into the database: unsigned, max 65535
      *
      * @param string $tracknr
      * @return int null if tracknr is negative
      */
     public static function check_tracknr($tracknr)
     {
-        $retval = (strlen((string) $tracknr) > 5) ? (int) substr($tracknr, -5, 5) : (int) ($tracknr);
+        $retval = ((int) $tracknr > 65535) ? (int) substr($tracknr, -4, 4) : (int) ($tracknr);
         return ($retval >= 0) ? $retval : null;
     }
 
