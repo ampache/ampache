@@ -1813,7 +1813,7 @@ abstract class Catalog extends database_object
             // fall back to last time if you fail to scan correctly
             $new_song->time = $song->time;
         }
-        $new_song->track    = (strlen((string) $results['track']) > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']);
+        $new_song->track    = self::check_tracknr($results['track']);
         $new_song->mbid     = $results['mb_trackid'];
         $new_song->composer = self::check_length($results['composer']);
         $new_song->mime     = $results['mime'];
@@ -2291,6 +2291,19 @@ abstract class Catalog extends database_object
         }
 
         return $string;
+    }
+
+    /**
+     * check_tracknr
+     * Check to make sure the tracknr fits into the database: unsigned, max 5 digits
+     *
+     * @param string $tracknr
+     * @return int null if tracknr is negative
+     */
+    public static function check_tracknr($tracknr)
+    {
+        $retval = (strlen((string) $tracknr) > 5) ? (int) substr($tracknr, -5, 5) : (int) ($tracknr);
+        return ($retval >= 0) ? $retval : null;
     }
 
     /**

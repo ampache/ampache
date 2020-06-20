@@ -365,7 +365,7 @@ class Song extends database_object implements media, library_item
         $mode                  = $results['mode'];
         $size                  = $results['size'] ?: 0;
         $time                  = $results['time'] ?: 0;
-        $track                 = $results['track'];
+        $track                 = Catalog::check_tracknr($results['track']);
         $track_mbid            = $results['mb_trackid'] ?: $results['mbid'];
         $track_mbid            = $track_mbid ?: null;
         $album_mbid            = $results['mb_albumid'];
