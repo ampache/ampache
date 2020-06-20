@@ -2303,6 +2303,7 @@ abstract class Catalog extends database_object
     public static function check_tracknr($tracknr)
     {
         $retval = ((int) $tracknr > 65535) ? (int) substr($tracknr, -4, 4) : (int) ($tracknr);
+
         return ($retval >= 0) ? $retval : null;
     }
 
