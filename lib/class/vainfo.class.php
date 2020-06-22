@@ -832,7 +832,7 @@ class vainfo
      */
     private function _cleanup_vorbiscomment($tags)
     {
-        $parsed = array();
+        $parsed      = array();
 
         foreach ($tags as $tag => $data) {
             //debug_event('vainfo.class', 'Vorbis tag: ' . $tag . ' value: ' . $data[0], 5);
@@ -888,7 +888,11 @@ class vainfo
                     $parsed['publisher'] = $data[0];
                     break;
                 case 'rating':
-                    $parsed['rating'][-1] = floor($data[0] * 5 / 100);
+                    $rating_user = -1;
+                    if (AmpConfig::get('rating_file_tag_user')) {
+                        $rating_user = (int) AmpConfig::get('rating_file_tag_user');
+                    }
+                    $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
                     break;
                 default:
                     $parsed[$tag] = $data[0];
@@ -1059,9 +1063,13 @@ class vainfo
                         $parsed['rating'][$user->id] = $popm['rating'] / 255 * 5;
                     }
                 }
-                // Rating made by an unknow user, adding it to super user (id=-1)
+                // Rating made by an unknown user, adding it to super user (id=-1)
                 else {
-                    $parsed['rating'][-1] = $popm['rating'] / 255 * 5;
+                    $rating_user = -1;
+                    if (AmpConfig::get('rating_file_tag_user')) {
+                        $rating_user = (int) AmpConfig::get('rating_file_tag_user');
+                    }
+                    $parsed['rating'][$rating_user] = $popm['rating'] / 255 * 5;
                 }
             }
         }
