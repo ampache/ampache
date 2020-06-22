@@ -700,7 +700,7 @@ class JSON_Data
             if (AmpConfig::get('licensing')) {
                 $ourSong['license'] = $song->f_license;
             }
-            $ourSong['publisher']        = $song->label;
+            $ourSong['publisher']             = $song->label;
             $ourSong['language']              = $song->language;
             $ourSong['replaygain_album_gain'] = $song->replaygain_album_gain;
             $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;

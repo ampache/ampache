@@ -30,6 +30,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * Bump API version to 410001 (4.1.0 build 001)
   * All calls that return songs now include <playlisttrack> which can be used to identify track order.
   * <playcount> added to objects.
+  * <license> added to song objects.
   * Don't gather art when adding songs
   * Added actions to catalog_action. 'verify_catalog' 'gather_art'
   * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.

@@ -884,6 +884,9 @@ class vainfo
                 case 'catalognumber':
                     $parsed['catalog_number'] = $data[0];
                     break;
+                case 'label':
+                    $parsed['publisher'] = $data[0];
+                    break;
                 case 'rating':
                     $parsed['rating'][-1] = floor($data[0] * 5 / 100);
                     break;
@@ -930,7 +933,7 @@ class vainfo
 
         foreach ($tags as $tag => $data) {
             //debug_event('vainfo.class', 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0], 5);
-            switch ($tag) {
+            switch (strtolower($tag)) {
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
@@ -968,6 +971,9 @@ class vainfo
                     break;
                 case 'catalognumber':
                     $parsed['catalog_number'] = $data[0];
+                    break;
+                case 'label':
+                    $parsed['publisher'] = $data[0];
                     break;
                 default:
                     $parsed[$tag] = $data[0];
@@ -1030,6 +1036,9 @@ class vainfo
                         break;
                     case 'catalognumber':
                         $parsed['catalog_number'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                    case 'label':
+                        $parsed['publisher'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     default:
                         if ($enable_custom_metadata && !in_array($txxx['description'], $parsed)) {
