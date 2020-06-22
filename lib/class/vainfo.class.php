@@ -1106,7 +1106,7 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            switch ($tag) {
+            switch (strtolower($tag)) {
                 case 'creation_date':
                     $parsed['release_date'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
@@ -1114,22 +1114,22 @@ class vainfo
                     }
                     $parsed['year'] = $data[0];
                 break;
-                case 'MusicBrainz Track Id':
+                case 'musicbrainz track id':
                     $parsed['mb_trackid'] = $data[0];
                 break;
-                case 'MusicBrainz Album Id':
+                case 'musicbrainz album id':
                     $parsed['mb_albumid'] = $data[0];
                 break;
-                case 'MusicBrainz Album Artist Id':
+                case 'musicbrainz album artist id':
                     $parsed['mb_albumartistid'] = $data[0];
                 break;
-                case 'MusicBrainz Release Group Id':
+                case 'musicbrainz release group id':
                     $parsed['mb_albumid_group'] = $data[0];
                 break;
-                case 'MusicBrainz Artist Id':
+                case 'musicbrainz artist id':
                     $parsed['mb_artistid'] = $data[0];
                 break;
-                case 'MusicBrainz Album Type':
+                case 'musicbrainz album type':
                 $parsed['release_type'] = $data[0];
                 break;
                 case 'track_number':
@@ -1141,15 +1141,27 @@ class vainfo
                 case 'album_artist':
                     $parsed['albumartist'] = $data[0];
                 break;
+                case 'originalyear':
+                    $parsed['original_year'] = $data[0];
+                    break;
+                case 'barcode':
+                    $parsed['barcode'] = $data[0];
+                    break;
+                case 'catalognumber':
+                    $parsed['catalog_number'] = $data[0];
+                    break;
+                case 'label':
+                    $parsed['publisher'] = $data[0];
+                break;
                 case 'tv_episode':
                     $parsed['tvshow_episode'] = $data[0];
-                    break;
+                break;
                 case 'tv_season':
                     $parsed['tvshow_season'] = $data[0];
-                    break;
+                break;
                 case 'tv_show_name':
                     $parsed['tvshow'] = $data[0];
-                    break;
+                break;
                 default:
                     $parsed[$tag] = $data[0];
                 break;
