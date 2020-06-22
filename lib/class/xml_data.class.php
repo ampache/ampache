@@ -869,7 +869,9 @@ class XML_Data
                     "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                     "\t<channels>" . $song->channels . "</channels>\n" .
                     "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
-
+            if (AmpConfig::get('licensing')) {
+                $string .= "\t<license><![CDATA[" . $song->f_license . "]]></license>\n";
+            }
             $string .= "\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n"
                     . "\t<language>" . $song->language . "</language>\n"
                     . "\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n"
