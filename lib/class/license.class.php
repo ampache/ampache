@@ -150,21 +150,28 @@ class License
     /**
      * lookup
      * Returns a license matched by name or create one if missing
-     * @param string $name
+     * @param string $value
      * @return integer
      */
-    public static function lookup($name)
+    public static function lookup($value)
     {
-        $sql        = 'SELECT `id` from `license` WHERE `name` = ?';
-        $db_results = Dba::read($sql, array($name));
-
         // lookup the license by name
+        $sql        = 'SELECT `id` from `license` WHERE `name` = ?';
+        $db_results = Dba::read($sql, array($value));
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            return $row['id'];
+        }
+        // lookup the license by external_link
+        $sql        = 'SELECT `id` from `license` WHERE `external_link` = ?';
+        $db_results = Dba::read($sql, array($value));
+
         while ($row = Dba::fetch_assoc($db_results)) {
             return $row['id'];
         }
         // create one if missing
         $license = array(
-            'name' => $name,
+            'name' => $value,
             'description' => null,
             'external_link' => null
         );
