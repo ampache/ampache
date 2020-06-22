@@ -229,6 +229,7 @@ Preference::init();
 // Load gettext mojo
 if (!class_exists('Gettext\Translations')) {
     require_once $prefix . '/templates/test_error_page.inc.php';
+    /** @noinspection PhpUnhandledExceptionInspection */
     throw new Exception('load_gettext()');
 } else {
     load_gettext();

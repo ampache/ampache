@@ -222,34 +222,30 @@ class vainfo
         // time, just return their rotting carcass of a media file.
         if ($this->_broken) {
             $this->tags = $this->set_broken();
+        } else {
+            $enabled_sources = (array)$this->get_metadata_order();
 
-            return true;
-        }
-
-        $enabled_sources = (array) $this->get_metadata_order();
-
-        if (in_array('getID3', $enabled_sources) && $this->islocal) {
-            try {
-                $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
-            } catch (Exception $error) {
-                debug_event('vainfo.class', 'getID2 Unable to catalog file: ' . $error->getMessage(), 1);
+            if (in_array('getID3', $enabled_sources) && $this->islocal) {
+                try {
+                    $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
+                } catch (Exception $error) {
+                    debug_event('vainfo.class', 'getID2 Unable to catalog file: ' . $error->getMessage(), 1);
+                }
             }
+
+            /* Figure out what type of file we are dealing with */
+            $this->type = $this->_get_type() ?: '';
+
+            if (in_array('filename', $enabled_sources)) {
+                $this->tags['filename'] = $this->_parse_filename($this->filename);
+            }
+
+            if (in_array('getID3', $enabled_sources) && $this->islocal) {
+                $this->tags['getID3'] = $this->_get_tags();
+            }
+
+            $this->_get_plugin_tags();
         }
-
-        /* Figure out what type of file we are dealing with */
-        $this->type = $this->_get_type() ?: '';
-
-        if (in_array('filename', $enabled_sources)) {
-            $this->tags['filename'] = $this->_parse_filename($this->filename);
-        }
-
-        if (in_array('getID3', $enabled_sources) && $this->islocal) {
-            $this->tags['getID3'] = $this->_get_tags();
-        }
-
-        $this->_get_plugin_tags();
-
-        return true;
     } // get_info
 
     /**
