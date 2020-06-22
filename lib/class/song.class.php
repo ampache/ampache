@@ -392,6 +392,9 @@ class Song extends database_object implements media, library_item
         $original_year         = Catalog::normalize_year($results['original_year'] ?: 0);
         $barcode               = Catalog::check_length($results['barcode'], 64);
 
+        if ($track !== (int) $results['track']) {
+            debug_event('song.class', "Track nr '{$results['track']}' out of range. Changed into '$track'", 2);
+        }
         if (!in_array($mode, ['vbr', 'cbr', 'abr'])) {
             debug_event('song.class', 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
             $mode = null;

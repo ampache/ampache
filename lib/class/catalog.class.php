@@ -2298,13 +2298,13 @@ abstract class Catalog extends database_object
      * Check to make sure the tracknr fits into the database: unsigned, max 65535
      *
      * @param string $tracknr
-     * @return int null if tracknr is negative
+     * @return int
      */
     public static function check_tracknr($tracknr)
     {
-        $retval = ((int) $tracknr > 65535) ? (int) substr($tracknr, -4, 4) : (int) ($tracknr);
+        $retval = abs((int) $tracknr);
 
-        return ($retval >= 0) ? $retval : null;
+        return ($retval > 65535) ? (int) substr($retval, -4, 4) : $retval;
     }
 
     /**
