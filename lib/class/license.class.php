@@ -146,4 +146,28 @@ class License
 
         return $results;
     } // get_licenses
+
+    /**
+     * lookup
+     * Returns a license matched by name or create one if missing
+     * @param string $name
+     * @return integer
+     */
+    public static function lookup($name)
+    {
+        $sql        = 'SELECT `id` from `license` WHERE `name` = ?';
+        $db_results = Dba::read($sql, array($name));
+
+        // lookup the license by name
+        while ($row = Dba::fetch_assoc($db_results)) {
+            return $row['id'];
+        }
+        // create one if missing
+        $license = array(
+            'name' => $name,
+            'description' => null,
+            'external_link' => null
+        );
+        return self::create($license);
+    } // get_licenses
 } // end license.class
