@@ -724,7 +724,7 @@ class Tag extends database_object implements library_item
                 if ($found) {
                     unset($editedTags[$ctag->name]);
                 } else {
-                    if ($overwrite) {
+                    if ($overwrite && $ctv['user'] == 0) {
                         debug_event('tag.class', 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
                         $ctag->remove_map($type, $object_id, false);
                     }
