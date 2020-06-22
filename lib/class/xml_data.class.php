@@ -422,8 +422,7 @@ class XML_Data
         $string = "<total_count>" . count($licenses) . "</total_count>\n";
 
         foreach ($licenses as $license_id) {
-            $license    = new license($license_id);
-            $counts = $license->count();
+            $license = new license($license_id);
             $string .= "<license id=\"$license_id\">\n" .
                 "\t<name><![CDATA[$license->name]]></name>\n" .
                 "\t<description><![CDATA[$license->description]]></description>\n" .
