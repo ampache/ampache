@@ -171,7 +171,36 @@ class JSON_Data
             default:
                 return self::error('401', T_('Wrong object type ' . $type));
         }
-    }
+    } // indexes
+
+    /**
+     * licenses
+     *
+     * This returns licenses to the user, in a pretty JSON document with the information
+     *
+     * @param    array    $licenses    (description here...)
+     * @return string return JSON
+     */
+    public static function licenses($licenses)
+    {
+        if (count($licenses) > self::$limit or self::$offset > 0) {
+            $licenses = array_splice($licenses, self::$offset, self::$limit);
+        }
+
+        $JSON = [];
+
+        foreach ($licenses as $license_id) {
+            $license = new License($license_id);
+            array_push($JSON, array(
+                "id" => $license_id,
+                "name" => $license->name,
+                "description" => $license->description,
+                "external_link" => $license->external_link
+            ));
+        } // end foreach
+
+        return json_encode($JSON, JSON_PRETTY_PRINT);
+    } // licenses
 
     /**
      * tags

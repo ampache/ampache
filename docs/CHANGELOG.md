@@ -54,6 +54,8 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * podcast_edit: edit an existing podcast
   * podcast_delete: delete an existing podcast
   * update_podcast: sync and download new episodes
+  * licenses: get a list of licenses you can access
+  * license: get a license by id
   * catalogs: get all the catalogs
   * catalog: get a catalog by id
   * catalog_file: clean, add, verify using the file path (good for scripting)

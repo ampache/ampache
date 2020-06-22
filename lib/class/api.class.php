@@ -965,6 +965,72 @@ class Api
     } // album_songs
 
     /**
+     * licenses
+     * MINIMUM_API_VERSION=380001
+     *
+     * This returns the licenses  based on the specified filter
+     *
+     * @param array $input
+     * filter = (string) Alpha-numeric search term //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     */
+    public static function licenses($input)
+    {
+        self::$browse->reset_filters();
+        self::$browse->set_type('license');
+        self::$browse->set_sort('name', 'ASC');
+
+        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        self::set_filter($method, $input['filter']);
+        $licenses = self::$browse->get_objects();
+
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::licenses($licenses);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::licenses($licenses);
+        }
+        Session::extend($input['auth']);
+    } // licenses
+
+    /**
+     * license
+     * MINIMUM_API_VERSION=380001
+     *
+     * This returns a single license based on UID
+     *
+     * @param array $input
+     * filter = (string) UID of license
+     * @return boolean
+     */
+    public static function license($input)
+    {
+        if (!self::check_parameter($input, array('filter'), 'license')) {
+            return false;
+        }
+        $uid = scrub_in($input['filter']);
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::licenses(array($uid));
+                break;
+            default:
+                echo XML_Data::licenses(array($uid));
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // license
+
+    /**
      * tags
      * MINIMUM_API_VERSION=380001
      *

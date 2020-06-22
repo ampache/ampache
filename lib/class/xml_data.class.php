@@ -407,6 +407,34 @@ class XML_Data
     } // indexes
 
     /**
+     * licenses
+     *
+     * This returns licenses to the user, in a pretty xml document with the information
+     *
+     * @param    array    $licenses    (description here...)
+     * @return    string    return xml
+     */
+    public static function licenses($licenses)
+    {
+        if (count($licenses) > self::$limit || self::$offset > 0) {
+            $licenses = array_splice($licenses, self::$offset, self::$limit);
+        }
+        $string = "<total_count>" . count($licenses) . "</total_count>\n";
+
+        foreach ($licenses as $license_id) {
+            $license    = new license($license_id);
+            $counts = $license->count();
+            $string .= "<license id=\"$license_id\">\n" .
+                "\t<name><![CDATA[$license->name]]></name>\n" .
+                "\t<description><![CDATA[$license->description]]></description>\n" .
+                "\t<external_link><![CDATA[$license->external_link]]></external_link>\n" .
+                "</license>\n";
+        } // end foreach
+
+        return self::output_xml($string);
+    } // licenses
+
+    /**
      * tags
      *
      * This returns tags to the user, in a pretty xml document with the information
