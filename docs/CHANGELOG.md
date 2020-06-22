@@ -30,6 +30,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * Bump API version to 410001 (4.1.0 build 001)
   * All calls that return songs now include <playlisttrack> which can be used to identify track order.
   * <playcount> added to objects.
+  * <license> added to song objects.
   * Don't gather art when adding songs
   * Added actions to catalog_action. 'verify_catalog' 'gather_art'
   * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
@@ -53,6 +54,8 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * podcast_edit: edit an existing podcast
   * podcast_delete: delete an existing podcast
   * update_podcast: sync and download new episodes
+  * licenses: get a list of licenses you can access
+  * license: get a license by id
   * catalogs: get all the catalogs
   * catalog: get a catalog by id
   * catalog_file: clean, add, verify using the file path (good for scripting)
@@ -64,6 +67,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * NEW config options
   * skip_timer: Add Skip Timer Threshold to the config
   * artist_art_folder: Specify a local folder to search for artist images using name/title
+  * rating_file_tag_user: Set ratings to this user ID when importing ratings from file tags
 * NEW files
   * bin/compute_cache.inc: Cache object_count data to speed up access
   * bin/cron.inc: Perform garbage_collection functions outside of main functions (includes compute_cache.inc)

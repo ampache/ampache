@@ -171,7 +171,36 @@ class JSON_Data
             default:
                 return self::error('401', T_('Wrong object type ' . $type));
         }
-    }
+    } // indexes
+
+    /**
+     * licenses
+     *
+     * This returns licenses to the user, in a pretty JSON document with the information
+     *
+     * @param    array    $licenses    (description here...)
+     * @return string return JSON
+     */
+    public static function licenses($licenses)
+    {
+        if (count($licenses) > self::$limit or self::$offset > 0) {
+            $licenses = array_splice($licenses, self::$offset, self::$limit);
+        }
+
+        $JSON = [];
+
+        foreach ($licenses as $license_id) {
+            $license = new License($license_id);
+            array_push($JSON, array(
+                "id" => $license_id,
+                "name" => $license->name,
+                "description" => $license->description,
+                "external_link" => $license->external_link
+            ));
+        } // end foreach
+
+        return json_encode($JSON, JSON_PRETTY_PRINT);
+    } // licenses
 
     /**
      * tags
@@ -673,30 +702,33 @@ class JSON_Data
                 );
             }
 
-            $ourSong['filename']              = $song->file;
-            $ourSong['track']                 = $song->track;
-            $ourSong['playlisttrack']         = $playlist_track;
-            $ourSong['time']                  = (int) $song->time;
-            $ourSong['year']                  = $song->year;
-            $ourSong['bitrate']               = $song->bitrate;
-            $ourSong['rate']                  = $song->rate;
-            $ourSong['mode']                  = $song->mode;
-            $ourSong['mime']                  = $song->mime;
-            $ourSong['url']                   = Song::play_url($song->id, '', 'api', false, $user_id);
-            $ourSong['size']                  = $song->size;
-            $ourSong['mbid']                  = $song->mbid;
-            $ourSong['album_mbid']            = $song->album_mbid;
-            $ourSong['artist_mbid']           = $song->artist_mbid;
-            $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
-            $ourSong['art']                   = $art_url;
-            $ourSong['flag']                  = (!$flag->get_flag($user_id, false) ? 0 : 1);
-            $ourSong['preciserating']         = ($rating->get_user_rating() ?: 0);
-            $ourSong['rating']                = ($rating->get_user_rating() ?: 0);
-            $ourSong['averagerating']         = ($rating->get_average_rating() ?: 0);
-            $ourSong['playcount']             = (int) $song->played;
-            $ourSong['composer']              = $song->composer;
-            $ourSong['channels']              = $song->channels;
-            $ourSong['comment']               = $song->comment;
+            $ourSong['filename']         = $song->file;
+            $ourSong['track']            = $song->track;
+            $ourSong['playlisttrack']    = $playlist_track;
+            $ourSong['time']             = (int) $song->time;
+            $ourSong['year']             = $song->year;
+            $ourSong['bitrate']          = $song->bitrate;
+            $ourSong['rate']             = $song->rate;
+            $ourSong['mode']             = $song->mode;
+            $ourSong['mime']             = $song->mime;
+            $ourSong['url']              = Song::play_url($song->id, '', 'api', false, $user_id);
+            $ourSong['size']             = $song->size;
+            $ourSong['mbid']             = $song->mbid;
+            $ourSong['album_mbid']       = $song->album_mbid;
+            $ourSong['artist_mbid']      = $song->artist_mbid;
+            $ourSong['albumartist_mbid'] = $song->albumartist_mbid;
+            $ourSong['art']              = $art_url;
+            $ourSong['flag']             = (!$flag->get_flag($user_id, false) ? 0 : 1);
+            $ourSong['preciserating']    = ($rating->get_user_rating() ?: 0);
+            $ourSong['rating']           = ($rating->get_user_rating() ?: 0);
+            $ourSong['averagerating']    = ($rating->get_average_rating() ?: 0);
+            $ourSong['playcount']        = (int) $song->played;
+            $ourSong['composer']         = $song->composer;
+            $ourSong['channels']         = $song->channels;
+            $ourSong['comment']          = $song->comment;
+            if (AmpConfig::get('licensing')) {
+                $ourSong['license'] = $song->f_license;
+            }
             $ourSong['publisher']             = $song->label;
             $ourSong['language']              = $song->language;
             $ourSong['replaygain_album_gain'] = $song->replaygain_album_gain;

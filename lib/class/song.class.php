@@ -378,7 +378,7 @@ class Song extends database_object implements media, library_item
         $tags                  = $results['genre']; // multiple genre support makes this an array
         $lyrics                = $results['lyrics'];
         $user_upload           = isset($results['user_upload']) ? $results['user_upload'] : null;
-        $license               = isset($results['license']) ? $results['license'] : null;
+        $license               = isset($results['license']) ? License::lookup($results['license']) : null;
         $composer              = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
         $label                 = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
         $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;

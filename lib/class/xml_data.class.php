@@ -407,6 +407,33 @@ class XML_Data
     } // indexes
 
     /**
+     * licenses
+     *
+     * This returns licenses to the user, in a pretty xml document with the information
+     *
+     * @param    array    $licenses    (description here...)
+     * @return    string    return xml
+     */
+    public static function licenses($licenses)
+    {
+        if (count($licenses) > self::$limit || self::$offset > 0) {
+            $licenses = array_splice($licenses, self::$offset, self::$limit);
+        }
+        $string = "<total_count>" . count($licenses) . "</total_count>\n";
+
+        foreach ($licenses as $license_id) {
+            $license = new license($license_id);
+            $string .= "<license id=\"$license_id\">\n" .
+                "\t<name><![CDATA[$license->name]]></name>\n" .
+                "\t<description><![CDATA[$license->description]]></description>\n" .
+                "\t<external_link><![CDATA[$license->external_link]]></external_link>\n" .
+                "</license>\n";
+        } // end foreach
+
+        return self::output_xml($string);
+    } // licenses
+
+    /**
      * tags
      *
      * This returns tags to the user, in a pretty xml document with the information
@@ -869,7 +896,9 @@ class XML_Data
                     "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                     "\t<channels>" . $song->channels . "</channels>\n" .
                     "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
-
+            if (AmpConfig::get('licensing')) {
+                $string .= "\t<license><![CDATA[" . $song->f_license . "]]></license>\n";
+            }
             $string .= "\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n"
                     . "\t<language>" . $song->language . "</language>\n"
                     . "\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n"

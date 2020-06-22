@@ -273,6 +273,9 @@ class Repository
             }
             $sql .= implode(' and ', $sqlParts);
         }
+        if ($table == 'metadata_field') {
+            $sql .= ' ORDER BY `metadata_field`.`name`';
+        }
 
         return $sql;
     }
