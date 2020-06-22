@@ -175,6 +175,7 @@ class License
             'description' => null,
             'external_link' => null
         );
+
         return self::create($license);
     } // get_licenses
 } // end license.class
