@@ -304,7 +304,7 @@ class Label extends database_object implements library_item
      * @param string $name
      * @return string
      */
-    public static function helper(array $name)
+    public static function helper(string $name)
     {
         $label_data = array(
             'name' => $name,
