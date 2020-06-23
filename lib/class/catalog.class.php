@@ -1824,8 +1824,13 @@ abstract class Catalog extends database_object
                         array("\r\n", "\r", "\n"),
                         '<br />',
                         strip_tags($results['lyrics']));
-        $new_song->license               = isset($results['license']) ? License::lookup($results['license']) : null;
-        $new_song->label                 = self::check_length($results['publisher'], 128);
+        $new_song->license = isset($results['license']) ? License::lookup($results['license']) : null;
+        $label_name        = self::check_length($results['publisher'], 128);
+        $new_song->label   = $label_name;
+        if (AmpConfig::get('label')) {
+            // create the label if missing
+            Label::helper($label_name);
+        }
         $new_song->language              = self::check_length($results['language'], 128);
         $new_song->replaygain_track_gain = floatval($results['replaygain_track_gain']);
         $new_song->replaygain_track_peak = floatval($results['replaygain_track_peak']);
@@ -1913,6 +1918,17 @@ abstract class Catalog extends database_object
         if ($song->album != $new_song->album) {
             if (!Art::has_db($new_song->album, 'album')) {
                 Art::duplicate('album', $song->album, $new_song->album);
+            }
+        }
+        if ($song->label && AmpConfig::get('label')) {
+            $label_id = Label::lookup(array('name' => $song->label));
+            if ($label_id > 0) {
+                $label    = new Label($label_id);
+                $artists  = $label->get_artists();
+                if (!in_array($song->artist, $artists)) {
+                    debug_event('catalog.class', "$song->artist: adding association to $label->name", 4);
+                    $label->add_artist_assoc($song->artist);
+                }
             }
         }
 
@@ -2279,7 +2295,7 @@ abstract class Catalog extends database_object
      * Check to make sure the string fits into the database
      * max_length is the maximum number of characters that the (varchar) column can hold
      * @param string $string
-     * @param string $max_length
+     * @param integer $max_length
      * @return string
      */
     public static function check_length($string, $max_length = 255)

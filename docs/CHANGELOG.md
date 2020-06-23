@@ -26,6 +26,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
     * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
   * Change to numeric searches renamed is -> equals and is not -> does not equal
+  * When labels are enabled, automatically generate and assosciate artists with their publisher/label tag values.
 * API changes
   * Bump API version to 410001 (4.1.0 build 001)
   * All calls that return songs now include <playlisttrack> which can be used to identify track order.

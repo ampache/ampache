@@ -834,7 +834,6 @@ class Search extends playlist_object
         foreach ($metadataFieldRepository->findAll() as $metadata) {
             $metadataFields[$metadata->getId()] = $metadata->getName();
         }
-        sort($metadataFields);
         $this->types[] = array(
             'name' => 'metadata',
             'label' => T_('Metadata'),
