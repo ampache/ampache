@@ -316,6 +316,7 @@ class Label extends database_object implements library_item
             'user' => 0,
             'creation_date' => time()
         );
+
         return self::create($label_data);
     }
 
