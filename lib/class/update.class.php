@@ -209,6 +209,7 @@ class Update
                          "* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />" .
                          "* Truncate database tracks to 0 when greater than 32,767<br />";
         $version[]     = array('version' => '400011', 'description' => $update_string);
+
         return $version;
     }
 
