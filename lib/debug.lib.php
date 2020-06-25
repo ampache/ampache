@@ -305,7 +305,7 @@ function check_php_gd()
 
 /**
  * @param string $val
- * @return int|string
+ * @return integer|string
  */
 function return_bytes($val)
 {

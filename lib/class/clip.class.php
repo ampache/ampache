@@ -64,7 +64,7 @@ class Clip extends Video
      * _get_artist_id
      * Look-up an artist id from artist tag data... creates one if it doesn't exist already
      * @param array $data
-     * @return int|null
+     * @return integer|null
      */
     public static function _get_artist_id($data)
     {

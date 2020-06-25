@@ -142,7 +142,7 @@ class HttpQPlayer
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return bool|null
+     * @return boolean|null
      */
     public function skip($pos)
     {

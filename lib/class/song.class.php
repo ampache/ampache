@@ -124,15 +124,15 @@ class Song extends database_object implements media, library_item
      */
     public $catalog;
     /**
-     * @var int|null $waveform
+     * @var integer|null $waveform
      */
     public $waveform;
     /**
-     * @var int|null $user_upload
+     * @var integer|null $user_upload
      */
     public $user_upload;
     /**
-     * @var int|null $license
+     * @var integer|null $license
      */
     public $license;
     /**
@@ -349,7 +349,7 @@ class Song extends database_object implements media, library_item
      *
      * This inserts the song described by the passed array
      * @param array $results
-     * @return int|boolean
+     * @return integer|boolean
      */
     public static function insert(array $results)
     {
@@ -1803,7 +1803,7 @@ class Song extends database_object implements media, library_item
 
     /**
      * Get item's owner.
-     * @return int|null
+     * @return integer|null
      */
     public function get_user_owner()
     {

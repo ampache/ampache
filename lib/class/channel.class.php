@@ -134,7 +134,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * delete
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function delete()
     {

@@ -585,7 +585,7 @@ class Catalog_dropbox extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param $file
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public function check_remote_file($file)
     {

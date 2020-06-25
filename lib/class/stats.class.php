@@ -81,7 +81,7 @@ class Stats
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
@@ -283,7 +283,7 @@ class Stats
      * Gets called when the next song is played in quick succession
      *
      * @param integer $object_id
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function skip_last_song($object_id)
     {

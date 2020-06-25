@@ -32,6 +32,7 @@ use Sabre\DAV;
 class WebDAV_Auth extends DAV\Auth\Backend\AbstractBasic
 {
     /**
+     * validateUserPass
      * @param $username
      * @param $password
      * @return mixed

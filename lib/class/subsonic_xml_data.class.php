@@ -119,7 +119,7 @@ class Subsonic_XML_Data
 
     /**
      * @param integer|null $episodeid
-     * @return int|null
+     * @return integer|null
      */
     public static function getPodcastEpId($episodeid)
     {

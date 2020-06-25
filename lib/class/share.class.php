@@ -83,7 +83,6 @@ class Share extends database_object
 
     /**
      * garbage_collection
-     * @return void
      */
     public static function garbage_collection()
     {
@@ -95,7 +94,6 @@ class Share extends database_object
      * delete_shares
      * @param $object_type
      * @param $object_id
-     * @return void
      */
     public static function delete_shares($object_type, $object_id)
     {
@@ -518,7 +516,7 @@ class Share extends database_object
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

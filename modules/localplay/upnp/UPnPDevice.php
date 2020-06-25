@@ -85,7 +85,7 @@ class UPnPDevice
      * @param string $method Method name
      * @param array $arguments Key-Value array
      * @param string $type
-     * @return bool|string
+     * @return boolean|string
      */
     public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl')
     {

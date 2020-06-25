@@ -51,7 +51,6 @@ class JSON_Data
      * This takes an int and changes the offset
      *
      * @param    integer    $offset    (description here...)
-     * @return    void
      */
     public static function set_offset($offset)
     {

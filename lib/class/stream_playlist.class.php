@@ -72,7 +72,7 @@ class Stream_Playlist
 
     /**
      * @param $url
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     private function _add_url($url)
     {
@@ -102,7 +102,7 @@ class Stream_Playlist
     }
 
     /**
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function garbage_collection()
     {

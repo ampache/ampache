@@ -65,6 +65,7 @@ class Random
      * playlist
      * This returns a random Playlist with songs little bit of extra
      * logic require
+     * @return integer
      */
     public static function playlist()
     {
@@ -75,7 +76,7 @@ class Random
 
         $results = Dba::fetch_assoc($db_results);
 
-        return $results['id'];
+        return (int) $results['id'];
     } // playlist
 
     /**

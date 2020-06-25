@@ -54,7 +54,7 @@ class memory_object
 
     /**
      * @param $name
-     * @return bool|mixed|null
+     * @return boolean|mixed|null
      */
     public function __get($name)
     {

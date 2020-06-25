@@ -3440,7 +3440,7 @@ class Api
                     $catalog->clean_file($file, $type);
                     break;
                 case 'verify':
-                    $catalog->update_media_from_tags($media, $type);
+                    Catalog::update_media_from_tags($media, $type);
                     break;
                 case 'add':
                     $catalog->add_file($file);

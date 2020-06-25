@@ -2045,8 +2045,9 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_media_tags
      * @param media $media
-     * @param $gather_types
+     * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array
@@ -2069,7 +2070,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
+     * get_gather_types
      * @param string $media_type
      * @return array
      */

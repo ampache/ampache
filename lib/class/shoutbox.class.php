@@ -214,7 +214,7 @@ class Shoutbox
      * create
      * This takes a key'd array of data as input and inserts a new shoutbox entry, it returns the auto_inc id
      * @param array $data
-     * @return bool|string|null
+     * @return boolean|string|null
      */
     public static function create(array $data)
     {
@@ -385,7 +385,7 @@ class Shoutbox
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

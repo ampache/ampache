@@ -398,7 +398,7 @@ class Waveform
      * Save waveform to db.
      * @param integer $song_id
      * @param string $waveform
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     protected static function save_to_db($song_id, $waveform)
     {

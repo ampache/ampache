@@ -142,7 +142,7 @@ class scrobbler
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
      * @param string $token
-     * @return bool|SimpleXMLElement
+     * @return boolean|SimpleXMLElement
      */
     public function get_session_key($token = null)
     {

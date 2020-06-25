@@ -139,7 +139,7 @@ class Catalog_local extends Catalog
      * This is useful when creating a new catalog to make sure we're not
      * doubling up here.
      * @param $path
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public static function get_from_path($path)
     {
@@ -761,7 +761,7 @@ class Catalog_local extends Catalog
      * Insert a song that isn't already in the database.
      * @param $file
      * @param array $options
-     * @return bool|int
+     * @return boolean|int
      * @throws Exception
      * @throws Exception
      */

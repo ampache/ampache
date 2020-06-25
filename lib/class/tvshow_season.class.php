@@ -357,7 +357,7 @@ class TVShow_Season extends database_object implements library_item
     } // update
 
     /**
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function remove()
     {
@@ -390,7 +390,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * @param $tvshow_id
      * @param $season_id
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function update_tvshow($tvshow_id, $season_id)
     {

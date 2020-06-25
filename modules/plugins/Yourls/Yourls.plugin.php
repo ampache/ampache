@@ -90,7 +90,7 @@ class AmpacheYourls
 
     /**
      * @param string $url
-     * @return bool|string
+     * @return string|false
      */
     public function shortener($url)
     {

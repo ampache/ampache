@@ -417,7 +417,7 @@ class Playlist extends playlist_object
      * @param string $field
      * @param $value
      * @param integer $level
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     private function _update_item($field, $value, $level)
     {
