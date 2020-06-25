@@ -203,6 +203,12 @@ class Update
         $update_string = "* Add a last_duration to search table to speed up access requests<br />";
         $version[]     = array('version' => '400010', 'description' => $update_string);
 
+        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" .
+                         "To allow negatives the maximum value of `song`.`track`has been reduced.  " .
+                         "This shouldn't affect anyone due to the large size allowed.<br /><br />" .
+                         "* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />";
+                         "* Truncate database tracks to 0 when greater than 32,767<br />";
+        $version[]     = array('version' => '400011', 'description' => $update_string);
         return $version;
     }
 
@@ -1172,6 +1178,23 @@ class Update
     {
         $retval = true;
         $sql    = "ALTER TABLE `search` ADD `last_duration` INT(11) NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    /**
+     * update_400011
+     *
+     * Allow negative track numbers for albums
+     * Truncate database tracks to 0 when greater than 32767
+     */
+    public static function update_400011()
+    {
+        $retval = true;
+        $sql    = "UPDATE `song` SET `track` = 0 WHERE `track` > 32767;";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `song` MODIFY COLUMN `track` SMALLINT DEFAULT NULL NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;

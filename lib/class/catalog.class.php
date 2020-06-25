@@ -1813,7 +1813,7 @@ abstract class Catalog extends database_object
             // fall back to last time if you fail to scan correctly
             $new_song->time = $song->time;
         }
-        $new_song->track    = (strlen((string) $results['track']) > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']);
+        $new_song->track    = self::check_track((string) $results['track']);
         $new_song->mbid     = $results['mb_trackid'];
         $new_song->composer = self::check_length($results['composer']);
         $new_song->mime     = $results['mime'];
@@ -2308,6 +2308,23 @@ abstract class Catalog extends database_object
         }
 
         return $string;
+    }
+
+    /**
+     * check_track
+     * Check to make sure the track number fits into the database: max 32767, min -32767
+     *
+     * @param string $track
+     * @return integer
+     */
+    public static function check_track($track)
+    {
+        $retval = ((int) $track > 32767 || (int) $track < -32767) ? (int) substr($track, -4, 4) : (int) $track;
+        if ($track !== $retval) {
+            debug_event('catalog.class', "check_track: '{$track}' out of range. Changed into '{$retval}'", 4);
+        }
+
+        return $retval;
     }
 
     /**
