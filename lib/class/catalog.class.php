@@ -2320,7 +2320,7 @@ abstract class Catalog extends database_object
     public static function check_track($track)
     {
         $retval = ((int) $track > 32767 || (int) $track < -32767) ? (int) substr($track, -4, 4) : (int) $track;
-        if ($track !== $retval) {
+        if ((int) $track !== $retval) {
             debug_event('catalog.class', "check_track: '{$track}' out of range. Changed into '{$retval}'", 4);
         }
 

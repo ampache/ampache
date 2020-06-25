@@ -27,6 +27,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
     * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
   * Change to numeric searches renamed is -> equals and is not -> does not equal
   * When labels are enabled, automatically generate and assosciate artists with their publisher/label tag values.
+  * Allow negative track numbers; reducing the maximum track number to 32767.
 * API changes
   * Bump API version to 410001 (4.1.0 build 001)
   * All calls that return songs now include <playlisttrack> which can be used to identify track order.
@@ -96,6 +97,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Fix: Stream_urls were generated with a typo when downloading
 * Fix: Respect album grouping using of the moment plugin
 * Fix: Filter album title with grouping enabled. (seriously deadmau5, stop with the <> everywhere)
+* Fix: Share playback without a UID would fail to start
 * Update Composer requirements (Fix CVE-2020-13625 in phpmailer)
 
 ## 4.1.1
