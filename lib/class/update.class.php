@@ -206,7 +206,7 @@ class Update
         $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" .
                          "To allow negatives the maximum value of `song`.`track`has been reduced.  " .
                          "This shouldn't affect anyone due to the large size allowed.<br /><br />" .
-                         "* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />";
+                         "* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />" .
                          "* Truncate database tracks to 0 when greater than 32,767<br />";
         $version[]     = array('version' => '400011', 'description' => $update_string);
         return $version;
@@ -1182,6 +1182,7 @@ class Update
 
         return $retval;
     }
+
     /**
      * update_400011
      *
