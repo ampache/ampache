@@ -139,7 +139,7 @@ class Catalog_local extends Catalog
      * This is useful when creating a new catalog to make sure we're not
      * doubling up here.
      * @param $path
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public static function get_from_path($path)
     {
@@ -242,6 +242,10 @@ class Catalog_local extends Catalog
         if (isset($options['subdirectory'])) {
             $path = $options['subdirectory'];
             unset($options['subdirectory']);
+
+            // Make sure the path doesn't end in a / or \
+            $path = rtrim($path, '/');
+            $path = rtrim($path, '\\');
         }
 
         // Correctly detect the slash we need to use here
@@ -302,9 +306,12 @@ class Catalog_local extends Catalog
     } // add_files
 
     /**
+     * add_file
+     *
      * @param $full_file
      * @param $options
      * @return boolean
+     * @throws Exception
      */
     public function add_file($full_file, $options)
     {
@@ -338,7 +345,7 @@ class Catalog_local extends Catalog
             if (!chdir($full_file)) {
                 debug_event('local.catalog', "Unable to chdir to $full_file", 2);
                 /* HINT: directory (file path) */
-                AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $path));
+                AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $full_file));
             }
 
             /* Skip to the next file */
@@ -696,7 +703,7 @@ class Catalog_local extends Catalog
         $db_results = Dba::read($sql);
 
         while ($results = Dba::fetch_assoc($db_results)) {
-            debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . '(' . $results['id'] . ')', 5);
+            //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . '(' . $results['id'] . ')', 5);
             $count++;
             if (UI::check_ticker()) {
                 $file = str_replace(array('(', ')', '\''), '', $results['file']);
@@ -724,12 +731,37 @@ class Catalog_local extends Catalog
     } //_clean_chunk
 
     /**
+     * clean_file
+     *
+     * Clean up a single file checking that it's missing or just unreadable.
+     *
+     * @param string $file
+     * @param string $media_type
+     */
+    public function clean_file($file, $media_type = 'song')
+    {
+        $file_info = Core::get_filesize(Core::conv_lc_file($file));
+        if (!file_exists(Core::conv_lc_file($file)) || $file_info < 1) {
+            debug_event('local.catalog', 'File not found or empty: ' . $file, 5);
+            /* HINT: filename (file path) */
+            AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
+            $sql = "DELETE FROM `$media_type` WHERE `file` = '" . $file . "'";
+            Dba::write($sql);
+        } //if error
+        else {
+            if (!Core::is_readable(Core::conv_lc_file($file))) {
+                debug_event('local.catalog', $file . ' is not readable, but does exist', 1);
+            }
+        }
+    } //clean_file
+
+    /**
      * insert_local_song
      *
      * Insert a song that isn't already in the database.
      * @param $file
      * @param array $options
-     * @return bool|int
+     * @return boolean|int
      * @throws Exception
      * @throws Exception
      */

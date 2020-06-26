@@ -629,7 +629,7 @@ class User extends database_object
      * calls the mini ones does all the error checking and all that
      * good stuff
      * @param array $data
-     * @return bool|int
+     * @return boolean|int
      */
     public function update(array $data)
     {
@@ -704,7 +704,7 @@ class User extends database_object
      * Use this function to update the validation key
      * NOTE: crap this doesn't have update_item the humanity of it all
      * @param $new_validation
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function update_validation($new_validation)
     {
@@ -925,7 +925,7 @@ class User extends database_object
         debug_event('user.class', 'Updating stats for {' . $media_type . '/' . $media_id . '} {' . $agent . '}...', 5);
         $media = new $media_type($media_id);
         $media->format();
-        $user_id = $this->id;
+        $user_id = (int) $this->id;
 
         // We shouldn't test on file only
         if (!strlen((string) $media->file)) {
@@ -997,7 +997,7 @@ class User extends database_object
 
         $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim((string) $sip, "[]"))) : '';
         $date    = time();
-        $user_id = $this->id;
+        $user_id = (int) $this->id;
         $agent   = Dba::escape(Core::get_server('HTTP_USER_AGENT'));
 
         $sql = "INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";

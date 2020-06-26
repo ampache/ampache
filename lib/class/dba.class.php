@@ -77,7 +77,7 @@ class Dba
     /**
      * _query
      * @param string $sql
-     * @param $params
+     * @param array $params
      * @return PDOStatement|boolean
      */
     private static function _query($sql, $params)
@@ -125,7 +125,7 @@ class Dba
      * read
      * @param string $sql
      * @param array $params
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function read($sql, $params = array())
     {
@@ -306,6 +306,7 @@ class Dba
      * _connect
      *
      * This connects to the database, used by the DBH function
+     * @return PDO|null
      */
     private static function _connect()
     {

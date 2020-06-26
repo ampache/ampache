@@ -9,18 +9,67 @@ Admin -> Server Config -> Interface -> Custom datetime
 e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
 Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
 
-* Bump API version to 400005 (4.0.0 build 005)
-* JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
-  * Call xml as normal:
-    * http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=400004
-  * Call the JSON server:
-    * http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=400004
+* GENERAL changes
+  * Updated component installer and php-cs-fixer package.
+  * April 2020 Translation update
+  * May 2020 Translation update
+  * Fixed a lot of incorrectly typed function calls and code documentation
+  * Update Composer requirements
+  * Allow searching play times without requiring UI option
+  * Added declare(strict_types=0); to lib/* and lib/class/* (requires more work before it can be enabled)
+  * Stop showing the average rating in the web interface as stars. (show an average when available as text separately)
+  * Add 250 for search form limits in the web ui. (Jump from 100 to 500 is pretty big)
+  * Add Recently updated/added to search rules
+  * Gravatar Plugin: Make sure https is used when force_ssl is configured
+  * When you don't have a config file redirect to installer
+  * Truncate strings to match database limits when strings go over
+  * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
+    * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
+  * Change to numeric searches renamed is -> equals and is not -> does not equal
+  * When labels are enabled, automatically generate and assosciate artists with their publisher/label tag values.
+  * Allow negative track numbers; reducing the maximum track number to 32767.
+* API changes
+  * Bump API version to 410001 (4.1.0 build 001)
+  * All calls that return songs now include <playlisttrack> which can be used to identify track order.
+  * <playcount> added to objects.
+  * <license> added to song objects.
+  * Don't gather art when adding songs
+  * Added actions to catalog_action. 'verify_catalog' 'gather_art'
+  * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
+    * Call xml as normal:
+      * [<http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=410001>]
+    * Call the JSON server:
+      * [<http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=410001>]
+* NEW API functions
+  * get_similar: send artist or song id to get related objects from last.fm
+  * shares: get a list of shares you can access
+  * share: get a share by id
+  * share_create: create a share
+  * share_edit: edit an existing share
+  * share_delete: delete an existing share
+  * podcasts: get a list of podcasts you can access
+  * podcast: get a podcast by id
+  * podcast_episodes: get a list of podcast_episodes you can access
+  * podcast_episode: get a podcast_episode by id
+  * podcast_episode_delete: delete an existing podcast_episode
+  * podcast_create: create a podcast
+  * podcast_edit: edit an existing podcast
+  * podcast_delete: delete an existing podcast
+  * update_podcast: sync and download new episodes
+  * licenses: get a list of licenses you can access
+  * license: get a license by id
+  * catalogs: get all the catalogs
+  * catalog: get a catalog by id
+  * catalog_file: clean, add, verify using the file path (good for scripting)
 * NEW db options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
   * custom_datetime: Allow you to format your date strings your way.
+  * unique_playlist: Force unique playlists by ignoring existing songs
 * NEW config options
   * skip_timer: Add Skip Timer Threshold to the config
+  * artist_art_folder: Specify a local folder to search for artist images using name/title
+  * rating_file_tag_user: Set ratings to this user ID when importing ratings from file tags
 * NEW files
   * bin/compute_cache.inc: Cache object_count data to speed up access
   * bin/cron.inc: Perform garbage_collection functions outside of main functions (includes compute_cache.inc)
@@ -28,7 +77,10 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * docs/examples/ampache_cron.service
   * docs/examples/ampache_cron.timer
 * API: All calls that return songs now include <playlisttrack> which can be used to identify track order.
+* API: <playcount> added to objects.
 * API: Don't gather art when adding songs
+* API: Added actions to catalog_action. 'verify_catalog' 'gather_art'
+* Fix: Add User warnings
 * Fix: Channel authentication
 * Fix: IP checks when sending null proxy values
 * Fix: Extra text in catalog API calls
@@ -37,13 +89,19 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Fix: Search rules in UI failing to load with custom_metadata
 * Fix: Warn correctly when inserting art fails
 * Fix: Insert missing user preferences on login
-* Update Composer requirements
-* Allow searching play times without requiring UI option
-* Added declare(strict_types=0); to lib/* and lib/class/* (requires more work before it can be enabled)
-* Fixed a lot of incorrectly typed function calls and code documentation
-* Stop showing the average rating in the web interface.
+* Fix: When you had beautiful_urls enabled tracks would not parse in localplay making them all Unknown
+* Fix: Podcast durations aren't always correct format, prep the time before trying to insert it
+* Fix: Subsonic playlist add/remove removing incorrect songs
+* Fix: Search/Smartlists need to have results to be used in lists
+* Fix: Auth issues with stats for recording and localplay
+* Fix: Stream_urls were generated with a typo when downloading
+* Fix: Respect album grouping using of the moment plugin
+* Fix: Filter album title with grouping enabled. (seriously deadmau5, stop with the <> everywhere)
+* Fix: Share playback without a UID would fail to start
+* Update Composer requirements (Fix CVE-2020-13625 in phpmailer)
 
 ## 4.1.1
+
 * Bump API version to 400004 (4.0.0 build 004)
 * Api - Fix parameters using 0
 * Api - Get the correct total_count in xml when you set a limit
@@ -165,7 +223,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Add bin/clean_art_table.inc to clean art that doesn't fit your min or max dimensions.
 * Add -u to bin/catalog_update.inc This function will update the artist table with bio, image, etc as well as update similar artists.
 * Filter zip names in batch so they are named correctly by the download
-* Numerous catalog updates to allow data migration when updating file tags. 
+* Numerous catalog updates to allow data migration when updating file tags.
   * UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate,
   * Shoutbox::migrate, Recommendation::migrate, Tag::migrate, Share::migrate* Faster tag updates/catalog verify! (Updating an album would update each file multiple times)
 * Default to disk 1 instead of 0 (db updates to handle existing albums)
@@ -278,7 +336,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Add: rating_browse_filter, rating_browse_minimum_stars - filter based on a star rating.
 * Add: send_full_stream - allow pushing the full track instead of segmenting
 * Add: github_force_branch - Allow any official Ampache git branch set in config
-* Add: subsonic_stream_scrobble - set to false to force all caching to count as a download. This is to be used with the subsonic client set to scrobble. (Ampache will now scrobble to itself over subsonic.) 
+* Add: subsonic_stream_scrobble - set to false to force all caching to count as a download. This is to be used with the subsonic client set to scrobble. (Ampache will now scrobble to itself over subsonic.)
 * Add: waveform_height,  waveform_width - customize waveform size
 * Add: of_the_moment - set custom amount of albums/videos in "of the moment areas"
 * Add: use_now_playing_embedded, now_playing_refresh_limit, now_playing_css_file - Show a user forum tag "Now playing / last played"

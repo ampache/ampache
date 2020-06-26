@@ -120,7 +120,7 @@ class AmpacheMpd extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new MPD instance
      * @param array $data
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function add_instance($data)
     {
@@ -303,7 +303,7 @@ class AmpacheMpd extends localplay_controller
      * This must take a single ID (as returned by the get function)
      * and delete it from the current playlist
      * @param $object_id
-     * @return
+     * @return boolean|string
      */
     public function delete_track($object_id)
     {
@@ -406,7 +406,7 @@ class AmpacheMpd extends localplay_controller
      * volume
      * This tells MPD to set the volume to the parameter
      * @param $volume
-     * @return
+     * @return boolean|string
      */
     public function volume($volume)
     {
@@ -418,7 +418,7 @@ class AmpacheMpd extends localplay_controller
      * This tells MPD to set the repeating the playlist (i.e. loop) to either
      * on or off.
      * @param $state
-     * @return
+     * @return boolean|string
      */
     public function repeat($state)
     {
@@ -430,7 +430,7 @@ class AmpacheMpd extends localplay_controller
      * This tells MPD to turn on or off the playing of songs from the
      * playlist in random order.
      * @param $onoff
-     * @return
+     * @return boolean|string
      */
     public function random($onoff)
     {
@@ -442,7 +442,7 @@ class AmpacheMpd extends localplay_controller
      * This tells MPD to move a song
      * @param $source
      * @param $destination
-     * @return
+     * @return boolean|string
      */
     public function move($source, $destination)
     {
@@ -519,8 +519,11 @@ class AmpacheMpd extends localplay_controller
                     } // end if results
 
                     else {
-                        $data['name']   = T_('Unknown');
-                        $data['link']   = '';
+                        $title_string = ($entry['Title'] && $entry['Album'] && $entry['Artist']) ?
+                                        $entry['Title'] . ' - ' . $entry['Album'] . ' - ' . $entry['Artist'] :
+                                        T_('Unknown');
+                        $data['name'] = $title_string;
+                        $data['link'] = '';
                     }
 
                 break;

@@ -318,9 +318,10 @@ class Podcast extends database_object implements library_item
     /**
      * create
      * @param array $data
-     * @return PDOStatement|boolean
+     * @param boolean $return_id
+     * @return PDOStatement|boolean|integer
      */
-    public static function create(array $data)
+    public static function create(array $data, $return_id = false)
     {
         $feed = $data['feed'];
         // Feed must be http/https
@@ -352,7 +353,7 @@ class Podcast extends database_object implements library_item
         $episodes      = array();
         $arturl        = '';
 
-        $xmlstr = file_get_contents($feed);
+        $xmlstr = file_get_contents($feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
             AmpError::add('feed', T_('Can not access the feed'));
         } else {
@@ -400,6 +401,9 @@ class Podcast extends database_object implements library_item
             }
             if (count($episodes) > 0) {
                 $podcast->add_episodes($episodes);
+            }
+            if ($return_id) {
+                return (int) $podcast_id;
             }
         }
 
@@ -473,8 +477,12 @@ class Podcast extends database_object implements library_item
         }
         $itunes = $episode->children('itunes', true);
         if ($itunes) {
-            $ptime = date_parse((string) $itunes->duration);
-            $time  = $ptime['hour'] * 3600 + $ptime['minute'] * 60 + $ptime['second'];
+            $duration = (string) $itunes->duration;
+            if (preg_grep("/^[0-9][0-9]\:[0-9][0-9]$/", array($duration))) {
+                $duration = '00:' . $duration;
+            }
+            $ptime = date_parse((string) $duration);
+            $time  = (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second'];
         }
         $pubdate    = 0;
         $pubdatestr = (string) $episode->pubDate;
@@ -520,7 +528,7 @@ class Podcast extends database_object implements library_item
     {
         debug_event('podcast.class', 'Syncing feed ' . $this->feed . ' ...', 4);
 
-        $xmlstr = file_get_contents($this->feed);
+        $xmlstr = file_get_contents($this->feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
             debug_event('podcast.class', 'Cannot access feed ' . $this->feed, 1);
 

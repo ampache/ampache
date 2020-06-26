@@ -35,9 +35,15 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
     <?php $rowparity = UI::flip_class(); ?>
+    <?php $rating    = new Rating($song->id, 'song'); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
-        <div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id, 'song'); ?>
+        <div id="rating_<?php echo $song->id; ?>_song"><?php Rating::show($song->id, 'song');
+        $average = $rating->get_average_rating();
+        if ($average > 0) {
+            /* HINT: Average rating. e.g. (average 3.7)*/
+            echo '(' . T_('average') . ' ' . $average . ')';
+        } ?>
         </div>
     </dd>
     <?php
@@ -99,7 +105,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <?php
         } ?>
         <?php if (Access::check_function('download')) { ?>
-        <a class="nohtml" href="<?php echo Song::play_url($song->id, '&action=download', '', false, 0, true); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
+        <a class="nohtml" href="<?php echo Song::play_url($song->id, '&action=download', '', false, Core::get_global('user')->id, true); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
         } ?>

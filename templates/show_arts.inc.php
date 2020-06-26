@@ -37,7 +37,7 @@ while ($count <= $rows) {
         if ((int) $dimensions['width'] == 0 || (int) $dimensions['height'] == 0) {
             $image_url = AmpConfig::get('web_path') . '/images/blankalbum.png';
         }
-        if (!isset($images[$key]) || !Art::check_dimensions($dimensions)) {
+        if (!isset($images[$key])) {
             echo "<td>&nbsp;</td>\n";
         } else { ?>
             <td>

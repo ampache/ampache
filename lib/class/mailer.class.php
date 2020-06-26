@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 /**
  * Mailer Class
  *

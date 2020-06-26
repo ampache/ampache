@@ -303,7 +303,7 @@ class Catalog_Seafile extends Catalog
      *
      * Insert a song that isn't already in the database.
      * @param $file
-     * @return bool|int
+     * @return boolean|int
      */
     private function insert_song($file)
     {
@@ -434,6 +434,7 @@ class Catalog_Seafile extends Catalog
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array|null
+     * @throws Exception
      */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
@@ -504,7 +505,7 @@ class Catalog_Seafile extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param $file
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public function check_remote_song($file)
     {

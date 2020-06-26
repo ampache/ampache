@@ -119,7 +119,7 @@ class AmpacheVlc extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new VLC instance
      * @param array $data
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function add_instance($data)
     {
@@ -242,7 +242,7 @@ class AmpacheVlc extends localplay_controller
 
     /**
      * @param Stream_URL $url
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public function add_url(Stream_URL $url)
     {
@@ -344,11 +344,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function volume_up()
     {
-        if ($this->_vlc->volume_up() === null) {
-            return false;
-        }
-
-        return true;
+        return $this->_vlc->volume_up();
     } // volume_up
 
     /**
@@ -356,11 +352,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function volume_down()
     {
-        if ($this->_vlc->volume_down() === null) {
-            return false;
-        }
-
-        return true;
+        return $this->_vlc->volume_down();
     } // volume_down
 
     /**
@@ -412,11 +404,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function volume($volume)
     {
-        if ($this->_vlc->set_volume($volume) === null) {
-            return false;
-        }
-
-        return true;
+        return $this->_vlc->set_volume($volume);
     } // volume
 
     /**

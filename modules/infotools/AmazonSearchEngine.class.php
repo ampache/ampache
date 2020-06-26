@@ -295,10 +295,7 @@ class AmazonSearch
         // create the xml parser
         $this->createParser();
 
-        $options = array();
-
-        $params = array();
-
+        $params                   = array();
         $params['Service']        = 'AWSECommerceService';
         $params['AWSAccessKeyId'] = $this->public_key;
         $params['AssociateTag']   = $this->associate_tag;

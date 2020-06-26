@@ -160,9 +160,9 @@ class Movie extends Video
     /**
      * Remove the video from disk.
      */
-    public function remove_from_disk()
+    public function remove()
     {
-        $deleted = parent::remove_from_disk();
+        $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `movie` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));

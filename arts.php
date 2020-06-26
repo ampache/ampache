@@ -135,7 +135,6 @@ switch ($_REQUEST['action']) {
         if (count($images)) {
             // We don't want to store raw's in here so we need to strip them out into a separate array
             foreach ($images as $index => $image) {
-                debug_event('arts', 'IMAGE URL?:' . (string) $images[$index]['url'], 3);
                 if ($image['raw']) {
                     unset($images[$index]['raw']);
                 }

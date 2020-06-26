@@ -220,6 +220,7 @@ function create_preference_input($name, $value)
         case 'browse_filter':
         case 'sidebar_light':
         case 'cron_cache':
+        case 'unique_playlist':
             $is_true  = '';
             $is_false = '';
             if ($value == '1') {
@@ -228,8 +229,8 @@ function create_preference_input($name, $value)
                 $is_false = "selected=\"selected\"";
             }
             echo "<select name=\"$name\">\n";
-            echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
-            echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
+            echo "\t<option value=\"1\" $is_true>" . T_("On") . "</option>\n";
+            echo "\t<option value=\"0\" $is_false>" . T_("Off") . "</option>\n";
             echo "</select>\n";
         break;
         case 'upload_catalog':
@@ -375,8 +376,8 @@ function create_preference_input($name, $value)
                 $is_false = "selected=\"selected\"";
             }
             echo "<select name=\"$name\">\n";
-            echo "\t<option value=\"1\" $is_true>" . T_("Enable") . "</option>\n";
-            echo "\t<option value=\"0\" $is_false>" . T_("Disable") . "</option>\n";
+            echo "\t<option value=\"1\" $is_true>" . T_("On") . "</option>\n";
+            echo "\t<option value=\"0\" $is_false>" . T_("Off") . "</option>\n";
             echo "</select>\n";
         break;
         case 'album_sort':

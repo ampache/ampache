@@ -117,7 +117,7 @@ class AmpacheUPnP extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new UPnP instance
      * @param array $data
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function add_instance($data)
     {
@@ -240,7 +240,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * @param Stream_URL $url
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public function add_url(Stream_URL $url)
     {

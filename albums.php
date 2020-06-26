@@ -51,7 +51,7 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        if ($album->remove_from_disk()) {
+        if ($album->remove()) {
             show_confirmation(T_('No Problem'), T_('The Album has been deleted'), AmpConfig::get('web_path'));
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Album."), AmpConfig::get('web_path'));

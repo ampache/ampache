@@ -357,15 +357,15 @@ class TVShow_Season extends database_object implements library_item
     } // update
 
     /**
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
-    public function remove_from_disk()
+    public function remove()
     {
         $deleted   = true;
         $video_ids = $this->get_episodes();
         foreach ($video_ids as $videos) {
             $video   = Video::create_from_id($videos);
-            $deleted = $video->remove_from_disk();
+            $deleted = $video->remove();
             if (!$deleted) {
                 debug_event('tvshow_season.class', 'Error when deleting the video `' . $videos . '`.', 1);
                 break;
@@ -390,7 +390,7 @@ class TVShow_Season extends database_object implements library_item
     /**
      * @param $tvshow_id
      * @param $season_id
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function update_tvshow($tvshow_id, $season_id)
     {

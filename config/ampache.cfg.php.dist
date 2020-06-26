@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 41
+config_version = 42
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
@@ -368,7 +368,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: false
 ;generate_video_preview = "true"
 
-; Un comment if don't want Ampache to follow symlinks
+; Uncomment if don't want Ampache to follow symlinks
 ; DEFAULT: false
 ;no_symlinks = "false"
 
@@ -389,12 +389,6 @@ use_auth = "true"
 ; DEFAULT: guest
 default_auth_level = "guest"
 
-; 5 Star Ratings
-; This allows ratings for almost any object in Ampache
-; POSSIBLE VALUES: false true
-; DEFAULT: true
-ratings = "true"
-
 ; Skip Timer Threshold
 ; This allows custom times to decide when a track is skipped
 ; Allows an integer to denote seconds, or a float to denote percentage
@@ -403,6 +397,12 @@ ratings = "true"
 ; 0.3 = 30%
 ; DEFAULT: 20
 ;skip_timer = 20
+
+; 5 Star Ratings
+; This allows ratings for almost any object in Ampache
+; POSSIBLE VALUES: false true
+; DEFAULT: true
+ratings = "true"
 
 ; Enable filtering on browse pages for artists and albums.
 ; If you enable this setting the get_random and browse pages
@@ -415,6 +415,12 @@ ratings = "true"
 ; this setting must be set for the filter to work
 ; DEFAULT: null
 ;rating_browse_minimum_stars = 1
+
+; By default Ampache assigns the rating set in files tags to
+; the system user (-1). If you would like ALL file tags to be
+; assigned to a specific user set their user ID here.
+; DEFAULT = -1
+;rating_file_tag_user = 1
 
 ; Set the amount of items Album/Video of the Moment will display
 ; This was previously hardcoded into the site
@@ -474,6 +480,14 @@ sociable = "true"
 ; comment out if Ampache should search for any jpg, gif or png
 ; DEFAULT: folder.jpg
 ;album_art_preferred_filename = "folder.jpg"
+
+; Artist Art Dump Folder
+; Specify a local folder to search for art using name/title to identify
+; i.e. "/var/www/art/" is filled with artist images named by artist
+; e.g. "Megadeth.jpg", "Judas Priest.png", "The Smashing Pumpkins.jpg"
+; When enabled; gather_folder will check this folder for artist images
+; DEFAULT: false
+;artist_art_folder = "/var/www/art"
 
 ; Album Art Store on Disk
 ; This defines if arts should be stored on disk instead of database.
@@ -803,12 +817,12 @@ site_charset = UTF-8
 ;ldap_require_group = "cn=yourgroup,ou=yourorg,dc=yoursubdomain,dc=yourdomain,dc=yourtld"
 
 ; LDAP name field
-; DEFAULT: = "cn"
+; DEFAULT: cn
 ;ldap_name_field = "cn"
 ;ldap_name_field = "displayName"
 
 ; LDAP email field
-; DEFAULT: = "mail"
+; DEFAULT: mail
 ;ldap_email_field = "mail"
 
 ; LDAP avatar field
@@ -1079,7 +1093,7 @@ encode_ss_duration = "-t %DURATION%"
 ; Useful if you are having issues streaming the full track.
 ; You can set it for all streams or a specific player
 ; POSSIBLE VALUES: true webplayer api
-; DEFAULT: = false
+; DEFAULT: false
 ;send_full_stream = "webplayer"
 
 ;#########################################################

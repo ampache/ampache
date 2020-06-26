@@ -81,7 +81,7 @@ class Stats
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
@@ -106,7 +106,7 @@ class Stats
      */
     public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
     {
-        if ($user < 1) {
+        if (AmpConfig::get('use_auth') && $user < 0) {
             debug_event('stats.class', 'Invalid user given ' . $user, 3);
 
             return false;
@@ -135,7 +135,7 @@ class Stats
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $db_results = Dba::write($sql, array($type, $oid, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-            if (($input_type == 'song') && ($count_type === 'stream')) {
+            if (($input_type == 'song') && ($count_type === 'stream') && $user > 1) {
                 Useractivity::post_activity($user, 'play', $type, $oid, $date);
             }
 
@@ -283,7 +283,7 @@ class Stats
      * Gets called when the next song is played in quick succession
      *
      * @param integer $object_id
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function skip_last_song($object_id)
     {
@@ -391,7 +391,7 @@ class Stats
                     $sql .= "AND `date` >= '" . $date . "'";
                 }
             }
-            if (AmpConfig::get('catalog_disable')) {
+            if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
                 $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
             }
             $rating_filter = AmpConfig::get_rating_filter();
@@ -473,7 +473,7 @@ class Stats
 
         $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) FROM `object_count`" .
                 " WHERE `object_type` = '" . $type . "'" . $user_sql;
-        if (AmpConfig::get('catalog_disable')) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $rating_filter = AmpConfig::get_rating_filter();

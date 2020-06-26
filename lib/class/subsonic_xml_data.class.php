@@ -119,7 +119,7 @@ class Subsonic_XML_Data
 
     /**
      * @param integer|null $episodeid
-     * @return int|null
+     * @return integer|null
      */
     public static function getPodcastEpId($episodeid)
     {
@@ -1023,14 +1023,21 @@ class Subsonic_XML_Data
         $user = new User($playlist->user);
         $xplaylist->addAttribute('owner', (string) $user->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
+        $xplaylist->addAttribute('created', date("c", (int) $playlist->date));
         $xplaylist->addAttribute('changed', date("c", time()));
 
         if ($songs) {
             $allitems = $playlist->get_items();
+            $xplaylist->addAttribute('songCount', (string) count($allitems));
+            $duration = (count($allitems) > 0) ? Search::get_total_duration($allitems) : 0;
+            $xplaylist->addAttribute('duration', (string) $duration);
             foreach ($allitems as $item) {
                 $song = new Song($item['object_id']);
                 self::addSong($xplaylist, $song->id, false, "entry");
             }
+        } else {
+            $xplaylist->addAttribute('songCount', (string) $playlist->last_count);
+            $xplaylist->addAttribute('duration', (string) $playlist->last_duration);
         }
     }
 
@@ -1396,7 +1403,7 @@ class Subsonic_XML_Data
      * @param Podcast[] $podcasts
      * @param boolean $includeEpisodes
      */
-    public static function addPodcasts($xml, $podcasts, $includeEpisodes = false)
+    public static function addPodcasts($xml, $podcasts, $includeEpisodes = true)
     {
         $xpodcasts = $xml->addChild('podcasts');
         foreach ($podcasts as $podcast) {

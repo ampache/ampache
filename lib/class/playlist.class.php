@@ -326,7 +326,9 @@ class Playlist extends playlist_object
     {
         $songs  = self::get_songs();
         $idlist = '(' . implode(',', $songs) . ')';
-
+        if ($idlist == '()') {
+            return null;
+        }
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
@@ -415,7 +417,7 @@ class Playlist extends playlist_object
      * @param string $field
      * @param $value
      * @param integer $level
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     private function _update_item($field, $value, $level)
     {
@@ -470,40 +472,32 @@ class Playlist extends playlist_object
                 'object_id' => $song_id,
             );
         }
-        $this->add_medias($medias, $ordered);
+        $this->add_medias($medias);
     } // add_songs
 
     /**
      * add_medias
      * @param array $medias
-     * @param boolean $ordered
      */
-    public function add_medias($medias, $ordered = false)
+    public function add_medias($medias)
     {
         /* We need to pull the current 'end' track and then use that to
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
          */
-        $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist` = ? ORDER BY `track` DESC LIMIT 1";
-        $db_results = Dba::read($sql, array($this->id));
-        $track_data = Dba::fetch_assoc($db_results);
-        $base_track = $track_data['track'] ?: 0;
-        debug_event('playlist.class', 'Adding Media; Track number: ' . $base_track, 5);
-
-        $count = 0;
+        $playlist   = new Playlist($this->id);
+        $track_data = $playlist->get_songs();
+        $base_track = count($track_data);
+        $count      = 0;
         foreach ($medias as $data) {
             $media = new $data['object_type']($data['object_id']);
-
-            // Based on the ordered prop we use track + base or just $count++
-            if (!$ordered && $data['object_type'] == 'song') {
-                $track    = $media->track + $base_track;
-            } else {
+            if (AmpConfig::get('unique_playlist') && in_array($media->id, $track_data)) {
+                debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
+            } elseif ($media->id) {
                 $count++;
                 $track = $base_track + $count;
-            }
+                debug_event('playlist.class', 'Adding Media; Track number: ' . $track, 5);
 
-            /* Don't insert dead media */
-            if ($media->id) {
                 $sql = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) " .
                     " VALUES (?, ?, ?, ?)";
                 Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
@@ -559,6 +553,23 @@ class Playlist extends playlist_object
     {
         $this->items = $this->get_items();
     } // set_items
+
+    /**
+     * delete_all
+     *
+     * this deletes all tracks from a playlist, you specify the playlist.id here
+     * @return boolean
+     */
+    public function delete_all()
+    {
+        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?";
+        Dba::write($sql, array($this->id));
+        debug_event('playlist.class', 'Delete all tracks from: ' . $this->id, 5);
+
+        $this->update_last_update();
+
+        return true;
+    } // delete_all
 
     /**
      * delete_song

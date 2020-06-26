@@ -142,15 +142,6 @@
     </td>
 </tr>
 <tr>
-    <td><?php echo T_('PHP safe mode disabled'); ?></td>
-    <td>
-    <?php echo debug_result(check_php_safemode()); ?>
-    </td>
-    <td>
-    <?php echo T_('This test makes sure that PHP is not running in safe mode. Some features of Ampache will not work correctly in safe mode.'); ?>
-    </td>
-</tr>
-<tr>
     <td><?php echo T_('PHP memory limit override'); ?></td>
     <td>
     <?php echo debug_wresult(check_override_memory()); ?>
@@ -200,12 +191,14 @@ if (!defined('INSTALL')) { ?>
 <tr>
     <td><?php echo T_('Configuration file readability'); ?></td>
     <td>
-    <?php echo debug_result(is_readable($configfile)); ?>
+    <?php echo debug_result(is_readable($configfile), "WARNING"); ?>
     </td>
     <td>
-    <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?>
+        <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?> </br>
+        <?php echo T_('If you are installing Ampache for the first time you can ignore this warning and proceed to the installer.'); ?> &nbsp;<a href="install.php"><?php echo T_('Web Installation'); ?></a>
     </td>
 </tr>
+<?php if (is_readable($configfile)) { ?>
 <tr>
     <td>
         <?php echo T_('Configuration file validity'); ?>
@@ -254,4 +247,5 @@ if (!defined('INSTALL')) { ?>
     </td>
 </tr>
 <?php
-    } ?>
+    }
+} ?>

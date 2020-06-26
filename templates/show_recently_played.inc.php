@@ -39,7 +39,8 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <?php
 $nb = 0;
 foreach ($data as $row) {
-    $row_user = new User($row['user']);
+    $row_id   = ($row['user'] > 0) ? (int) $row['user'] : -1;
+    $row_user = new User($row_id);
     $song     = new Song($row['object_id']);
 
     $agent       = '';

@@ -300,6 +300,27 @@ class Label extends database_object implements library_item
     }
 
     /**
+     * helper
+     * @param string $name
+     * @return string
+     */
+    public static function helper(string $name)
+    {
+        $label_data = array(
+            'name' => $name,
+            'category' => 'tag_generated',
+            'summary' => null,
+            'address' => null,
+            'email' => null,
+            'website' => null,
+            'user' => 0,
+            'creation_date' => time()
+        );
+
+        return self::create($label_data);
+    }
+
+    /**
      * create
      * @param array $data
      * @return string
@@ -327,6 +348,7 @@ class Label extends database_object implements library_item
     }
 
     /**
+     * lookup
      * @param array $data
      * @param integer $id
      * @return integer
@@ -378,7 +400,7 @@ class Label extends database_object implements library_item
     /**
      * add_artist_assoc
      * @param integer $artist_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function add_artist_assoc($artist_id)
     {
@@ -390,7 +412,7 @@ class Label extends database_object implements library_item
     /**
      * remove_artist_assoc
      * @param integer $artist_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function remove_artist_assoc($artist_id)
     {
@@ -427,7 +449,8 @@ class Label extends database_object implements library_item
     } // get_songs
 
     /**
-     * @return bool|PDOStatement
+     * remove
+     * @return PDOStatement|boolean
      */
     public function remove()
     {
@@ -445,6 +468,7 @@ class Label extends database_object implements library_item
     }
 
     /**
+     * get_all_labels
      * @return array
      */
     public static function get_all_labels()

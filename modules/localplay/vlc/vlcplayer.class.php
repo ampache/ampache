@@ -58,7 +58,7 @@ class VlcPlayer
      * $url        URL of the song
      * @param $name
      * @param $url
-     * @return bool|null
+     * @return boolean
      */
     public function add($name, $url)
     {
@@ -69,7 +69,7 @@ class VlcPlayer
         $args    = array('command' => 'in_enqueue', '&input' => $aurl);
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -140,7 +140,7 @@ class VlcPlayer
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return bool|null
+     * @return boolean|null
      */
     public function skip($pos)
     {
@@ -204,7 +204,7 @@ class VlcPlayer
      * repeat
      * This toggles the repeat state of VLC
      * @param $value
-     * @return bool|null
+     * @return boolean|null
      */
     public function repeat($value)
     {
@@ -221,14 +221,14 @@ class VlcPlayer
      * random
      * this toggles the random state of VLC
      * @param $value
-     * @return bool|null
+     * @return boolean
      */
     public function random($value)
     {
         $args    = array('command' => 'pl_random');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -238,14 +238,14 @@ class VlcPlayer
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return bool|null
+     * @return boolean
      */
     public function delete_pos($track)
     {
         $args    = array('command' => 'pl_delete', '&id' => $track);
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -286,7 +286,7 @@ class VlcPlayer
 
         $results = $this->sendCommand('status.xml', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return $results;
@@ -302,7 +302,7 @@ class VlcPlayer
         $args    = array('command' => 'volume', '&val' => '%2B20');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -317,7 +317,7 @@ class VlcPlayer
         $args    = array('command' => 'volume', '&val' => '-20');
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -327,7 +327,7 @@ class VlcPlayer
      * set_volume
      * This sets the volume as best it can, i think it's from 0 to 400, need more testing'
      * @param $value
-     * @return bool|null
+     * @return boolean
      */
     public function set_volume($value)
     {
@@ -337,7 +337,7 @@ class VlcPlayer
         $args    = array('command' => 'volume', '&val' => $value);
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -352,7 +352,7 @@ class VlcPlayer
         $args    = array('command' => 'pl_empty');
         $results = $this->sendcommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -371,7 +371,7 @@ class VlcPlayer
 
         $results = $this->sendCommand('playlist.xml', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return $results;

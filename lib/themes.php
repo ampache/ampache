@@ -59,7 +59,7 @@ function get_themes()
  * @discussion get a single theme and read the config file
  * then return the results
  * @param string $name
- * @return array|bool|false|mixed|null
+ * @return array|boolean|false|mixed|null
  */
 function get_theme($name)
 {

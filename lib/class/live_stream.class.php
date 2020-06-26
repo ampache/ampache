@@ -228,7 +228,7 @@ class Live_Stream extends database_object implements media, library_item
      * it depends on a ID element to determine which radio element it
      * should be updating
      * @param array $data
-     * @return bool|int
+     * @return boolean|integer
      */
     public function update(array $data)
     {
@@ -266,7 +266,7 @@ class Live_Stream extends database_object implements media, library_item
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
      * @param array $data
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function create(array $data)
     {

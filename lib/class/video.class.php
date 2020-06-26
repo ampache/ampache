@@ -392,7 +392,7 @@ class Video extends database_object implements media, library_item
 
     /**
      * Get item's owner.
-     * @return int|null
+     * @return integer|null
      */
     public function get_user_owner()
     {
@@ -461,11 +461,15 @@ class Video extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param boolean $uid
+     * @param integer $uid
      * @return string
      */
     public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
     {
+        if (!$uid) {
+            $uid = Core::get_global('user')->id;
+        }
+
         return Song::generic_play_url('video', $oid, $additional_params, $player, $local, $uid);
     }
 
@@ -793,7 +797,7 @@ class Video extends database_object implements media, library_item
         // Remove some stuff we don't care about
         unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);
         $string_array = array('title', 'tags');
-        $skip_array   = array('id', 'tag_id', 'mime', 'object_cnt');
+        $skip_array   = array('id', 'tag_id', 'mime', 'object_cnt', 'disabledMetadataFields');
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
     } // compare_video_information
@@ -1049,7 +1053,7 @@ class Video extends database_object implements media, library_item
     /**
      * Remove the video from disk.
      */
-    public function remove_from_disk()
+    public function remove()
     {
         if (file_exists($this->file)) {
             $deleted = unlink($this->file);

@@ -92,12 +92,11 @@ class Rating extends database_object
         }
         $ratings      = array();
         $user_ratings = array();
-
-        $idlist = '(' . implode(',', $ids) . ')';
-        $sql    = "SELECT `rating`, `object_id` FROM `rating` " .
-                "WHERE `user` = ? AND `object_id` IN $idlist " .
-                "AND `object_type` = ?";
-        $db_results = Dba::read($sql, array($user_id, $type));
+        $idlist       = '(' . implode(',', $ids) . ')';
+        $sql          = "SELECT `rating`, `object_id` FROM `rating` " .
+                        "WHERE `user` = ? AND `object_id` IN $idlist " .
+                        "AND `object_type` = ?";
+        $db_results   = Dba::read($sql, array($user_id, $type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $user_ratings[$row['object_id']] = $row['rating'];
@@ -178,7 +177,8 @@ class Rating extends database_object
         }
 
         $sql = "SELECT AVG(`rating`) as `rating` FROM `rating` WHERE " .
-                "`object_id` = ? AND `object_type` = ?";
+                "`object_id` = ? AND `object_type` = ? " .
+                "HAVING COUNT(object_id) > 1";
         $db_results = Dba::read($sql, array($this->id, $this->type));
 
         $results = Dba::fetch_assoc($db_results);
@@ -197,19 +197,20 @@ class Rating extends database_object
     public static function get_highest_sql($type)
     {
         $type = Stats::validate_type($type);
-        $sql  = "SELECT `object_id` as `id`, AVG(`rating`) AS `rating`, COUNT(`object_id`) AS `count` FROM `rating`";
+        $sql  = "SELECT `rating`.`object_id` as `id`, AVG(`rating`) AS `rating`, COUNT(`object_id`) AS `count`, MAX(`rating`.`id`) AS `order` FROM `rating`";
 
         if (AmpConfig::get('album_group') && $type === 'album') {
             $sql .= " LEFT JOIN `album` on `rating`.`object_id` = `album`.`id` and `rating`.`object_type` = 'album'";
         }
         $sql .= " WHERE `object_type` = '" . $type . "'";
-        if (AmpConfig::get('catalog_disable')) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('album_group') && $type === 'album') {
-            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `rating`, `object_id` DESC";  //TODO mysql8 test
+            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`" .
+                    " ORDER BY `rating` DESC, `count` DESC, `order` DESC, `rating`.`object_id` DESC";  //TODO mysql8 test
         } else {
-            $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC ";
+            $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC  ";
         }
         //debug_event('rating.class', 'get_highest_sql ' . $sql, 5);
 
@@ -369,26 +370,21 @@ class Rating extends database_object
     /**
      * show
      * This takes an id and a type and displays the rating if ratings are
-     * enabled.  If $static is true, the rating won't be editable.
-     * @param $object_id
-     * @param $type
-     * @param boolean $static
+     * enabled.  If $global_rating is true, the is the average from all users.
+     * @param integer $object_id
+     * @param string $type
+     * @param boolean $global_rating
      * @return boolean
      */
-    public static function show($object_id, $type, $static = false)
+    public static function show($object_id, $type, $global_rating = false)
     {
         // If ratings aren't enabled don't do anything
         if (!AmpConfig::get('ratings')) {
             return false;
         }
-
         $rating = new Rating($object_id, $type);
 
-        if ($static) {
-            require AmpConfig::get('prefix') . UI::find_template('show_static_object_rating.inc.php');
-        } else {
-            require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
-        }
+        require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
 
         return true;
     } // show
@@ -398,7 +394,7 @@ class Rating extends database_object
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

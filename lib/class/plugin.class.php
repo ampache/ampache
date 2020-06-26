@@ -212,7 +212,7 @@ class Plugin
      * This checks to see if the specified plugin is currently installed in
      * the database, it doesn't check the files for integrity
      * @param $plugin_name
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public static function is_installed($plugin_name)
     {
@@ -278,7 +278,7 @@ class Plugin
      * get_plugin_version
      * This returns the version of the specified plugin
      * @param $plugin_name
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public static function get_plugin_version($plugin_name)
     {

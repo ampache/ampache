@@ -61,15 +61,9 @@ $app->run();
 
 function websocket_usage()
 {
-    echo T_("Usage:");
-    echo "\n";
-    echo T_("websocket_run.inc [-p {PORT}|-v]");
-    echo "\n\t"; 
-    echo "\n-p {PORT}\t";
-    echo T_('Listening port, default 8100');
-    echo "\n-v\t";
-    echo T_('Verbose');
-    echo "\n";
-    echo "----------------------------------------------------------";
-    echo "\n";
+    echo T_("Usage:") . "\n";
+    echo T_("websocket_run.inc [-p {PORT}|-v]") . "\n\t";
+    echo "\n-p {PORT}\t" . T_('Listening port, default 8100');
+    echo "\n-v\t" . T_('Verbose') . " \n";
+    echo "----------------------------------------------------------\n";
 }

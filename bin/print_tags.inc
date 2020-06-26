@@ -59,19 +59,23 @@ if(isset($dir_pattern) || isset($file_pattern)) {
     printf(T_('Using: %1$s AND %2$s for file pattern matching'), $dir_pattern, $file_pattern);
     print "\n";
 }
-$info->get_info();
-$results = $info->tags;
-$keys = vainfo::get_tag_type($results);
-$ampache_results = vainfo::clean_tag_info($results, $keys, $filename);
+try {
+    $info->get_info();
+    $results = $info->tags;
+    $keys = vainfo::get_tag_type($results);
+    $ampache_results = vainfo::clean_tag_info($results, $keys, $filename);
 
-echo "\n";
-echo T_('Raw results:');
-echo "\n\n";
-print_r($info);
-echo "\n------------------------------------------------------------------\n";
-printf(T_('Final results seen by Ampache using %s:'), implode(' + ', $keys));
-echo "\n\n";
-print_r($ampache_results);
+    echo "\n";
+    echo T_('Raw results:');
+    echo "\n\n";
+    print_r($info);
+    echo "\n------------------------------------------------------------------\n";
+    printf(T_('Final results seen by Ampache using %s:'), implode(' + ', $keys));
+    echo "\n\n";
+    print_r($ampache_results);
+} catch (Exception $error) {
+    debug_event('print_tags', 'get_info exception: ' . $error->getMessage(), 1);
+}
 
 /**
  * @return string

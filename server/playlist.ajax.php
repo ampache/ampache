@@ -100,7 +100,7 @@ switch ($_REQUEST['action']) {
 
         if (count($medias) > 0) {
             Ajax::set_include_override(true);
-            $playlist->add_medias($medias, true);
+            $playlist->add_medias($medias);
 
             debug_event('playlist.ajax', 'Items added successfully!', 5);
             ob_start();

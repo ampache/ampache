@@ -312,8 +312,8 @@ class Catalog_subsonic extends Catalog
         $subsonic = $this->createClient();
         $song     = new Song($song_Id);
         $art      = new Art($song->album, 'album');
-        if (Ampconfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width')) {
-            $size = array('width' => AmpConfig::get('album_art_max_width'), 'height' => Ampconfig::get('album_art_max_height'));
+        if (AmpConfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width')) {
+            $size = array('width' => AmpConfig::get('album_art_max_width'), 'height' => AmpConfig::get('album_art_max_height'));
         } else {
             $size  = array('width' => 275, 'height' => 275);
         }
@@ -365,7 +365,7 @@ class Catalog_subsonic extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param array $song
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public function check_remote_song($song)
     {

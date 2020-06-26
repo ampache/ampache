@@ -1004,6 +1004,11 @@ abstract class Catalog extends database_object
                 "LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'" .
                 "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
+        if ($filter === 'info') {
+            // only update info when you haven't done it for 6 months
+            $sql = "SELECT DISTINCT(`artist`.`id`) FROM `artist`" .
+                "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
+        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1055,6 +1060,27 @@ abstract class Catalog extends database_object
         }
 
         return $results;
+    }
+
+    /**
+     * get_id_from_file
+     *
+     * Get media id from the file path.
+     *
+     * @param string $file_path
+     * @param string $media_type
+     * @return integer
+     */
+    public static function get_id_from_file($file_path, $media_type)
+    {
+        $sql        = "SELECT `id` FROM $media_type WHERE `file` = ?";
+        $db_results = Dba::read($sql, array($file_path));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int) $results['id'];
+        }
+
+        return 0;
     }
 
     /**
@@ -1424,15 +1450,20 @@ abstract class Catalog extends database_object
      *
      * This runs through all of the artists and refreshes last.fm information
      * including similar artists that exist in your catalog.
+     * @param array $artist_list
      */
-    public function gather_artist_info()
+    public function gather_artist_info($artist_list = array())
     {
         // Prevent the script from timing out
         set_time_limit(0);
 
         $search_count       = 0;
         $searches           = array();
-        $searches['artist'] = $this->get_artist_ids();
+        if (empty($artist_list)) {
+            $searches['artist'] = $this->get_artist_ids();
+        } else {
+            $searches['artist'] = $artist_list;
+        }
 
         debug_event('catalog.class', 'gather_artist_info found ' . (string) count($searches) . 'items to check', 4);
         // Run through items and refresh info
@@ -1440,6 +1471,7 @@ abstract class Catalog extends database_object
             foreach ($values as $objectid) {
                 Recommendation::get_artist_info($objectid);
                 Recommendation::get_artists_like($objectid);
+                Artist::set_last_update($objectid);
 
                 // Stupid little cutesie thing
                 $search_count++;
@@ -1692,6 +1724,18 @@ abstract class Catalog extends database_object
         if (!$api) {
             echo "</tbody></table>\n";
         }
+        // Update the tags for
+        switch ($type) {
+            case 'album':
+                $tags = self::getSongTags('album', $album->id);
+                Tag::update_tag_list(implode(',', $tags), 'album', $album->id, false);
+                break;
+            case 'artist':
+                $tags = self::getSongTags('artist', $artist->id);
+                Tag::update_tag_list(implode(',', $tags), 'artist', $artist->id, false);
+                break;
+        } // end switch type
+
         // Cleanup old objects that are no longer needed
         if (!AmpConfig::get('cron_cache')) {
             Album::garbage_collection();
@@ -1713,29 +1757,30 @@ abstract class Catalog extends database_object
      */
     public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern = '', $rename_pattern = '')
     {
-        // check for wav files
-        $invalid_exts = array('wav');
-        $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
-        if (in_array($extension, $invalid_exts)) {
-            debug_event('catalog.class', 'update_media_from_tags: Invalid file extension ' . $media->file, 2);
-
-            return array();
-        }
-        debug_event('catalog.class', 'Reading tags from ' . $media->file, 4);
-
         $catalog = self::create_from_id($media->catalog);
         if ($catalog === null) {
             debug_event('catalog.class', 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
 
             return array();
         }
-        $results = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
 
-        // Figure out what type of object this is and call the right
-        // function, giving it the stuff we've figured out above
-        $name = (strtolower(get_class($media)) == 'song') ? 'song' : 'video';
-
+        // Figure out what type of object this is and call the right  function
+        $name     = (strtolower(get_class($media)) == 'song') ? 'song' : 'video';
         $function = 'update_' . $name . '_from_tags';
+
+        // check for files without tags and try to update from their file name instead
+        $invalid_exts = array('wav', 'shn');
+        $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
+        $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
+        if (in_array($extension, $invalid_exts)) {
+            debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: Updating from file name', 2);
+            $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
+            $results = array_merge($results, $patres);
+
+            return call_user_func(array('Catalog', $function), $results, $media);
+        }
+        debug_event('catalog.class', 'Reading tags from ' . $media->file, 4);
+
 
         return call_user_func(array('Catalog', $function), $results, $media);
     } // update_media_from_tags
@@ -1758,7 +1803,7 @@ abstract class Catalog extends database_object
         $new_song           = new Song();
         $new_song->file     = $results['file'];
         $new_song->year     = (strlen((string) $results['year']) > 4) ? (int) substr($results['year'], -4, 4) : (int) ($results['year']);
-        $new_song->title    = $results['title'];
+        $new_song->title    = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate  = $results['bitrate'];
         $new_song->rate     = $results['rate'];
         $new_song->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
@@ -1768,9 +1813,9 @@ abstract class Catalog extends database_object
             // fall back to last time if you fail to scan correctly
             $new_song->time = $song->time;
         }
-        $new_song->track    = (strlen((string) $results['track']) > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']);
+        $new_song->track    = self::check_track((string) $results['track']);
         $new_song->mbid     = $results['mb_trackid'];
-        $new_song->composer = $results['composer'];
+        $new_song->composer = self::check_length($results['composer']);
         $new_song->mime     = $results['mime'];
 
         // info for the song_data table. used in Song::update_song
@@ -1779,8 +1824,14 @@ abstract class Catalog extends database_object
                         array("\r\n", "\r", "\n"),
                         '<br />',
                         strip_tags($results['lyrics']));
-        $new_song->label                 = $results['publisher'];
-        $new_song->language              = $results['language'];
+        $new_song->license = isset($results['license']) ? License::lookup($results['license']) : null;
+        $label_name        = self::check_length($results['publisher'], 128);
+        $new_song->label   = $label_name;
+        if (AmpConfig::get('label')) {
+            // create the label if missing
+            Label::helper($label_name);
+        }
+        $new_song->language              = self::check_length($results['language'], 128);
         $new_song->replaygain_track_gain = floatval($results['replaygain_track_gain']);
         $new_song->replaygain_track_peak = floatval($results['replaygain_track_peak']);
         $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
@@ -1795,22 +1846,22 @@ abstract class Catalog extends database_object
             }
         }
         // info for the artist table.
-        $artist           = $results['artist'];
+        $artist           = self::check_length($results['artist']);
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
 
         // info for the album table.
-        $album            = $results['album'];
+        $album            = self::check_length($results['album']);
         $album_mbid       = $results['mb_albumid'];
         $disk             = $results['disk'];
         // year is also included in album
         $album_mbid_group = $results['mb_albumid_group'];
         $releasetype      = $results['releasetype'];
-        $albumartist      = $results['albumartist'] ?: $results['band'];
+        $albumartist      = self::check_length($results['albumartist'] ?: $results['band']);
         $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
-        $barcode          = $results['barcode'];
-        $catalog_number   = $results['catalog_number'];
+        $barcode          = self::check_length($results['barcode'], 64);
+        $catalog_number   = self::check_length($results['catalog_number'], 64);
 
         // check whether this artist exists (and the album_artist)
         $new_song->artist = Artist::check($artist, $artist_mbid);
@@ -1828,7 +1879,6 @@ abstract class Catalog extends database_object
                 self::migrate('album', $song->album, $new_song->album)) {
             Song::update_utime($song->id, $update_time);
         }
-        $new_song->title = self::check_title($new_song->title, $new_song->file);
 
         if ($artist_mbid) {
             $new_song->artist_mbid = $artist_mbid;
@@ -1868,6 +1918,17 @@ abstract class Catalog extends database_object
         if ($song->album != $new_song->album) {
             if (!Art::has_db($new_song->album, 'album')) {
                 Art::duplicate('album', $song->album, $new_song->album);
+            }
+        }
+        if ($song->label && AmpConfig::get('label')) {
+            $label_id = Label::lookup(array('name' => $song->label));
+            if ($label_id > 0) {
+                $label    = new Label($label_id);
+                $artists  = $label->get_artists();
+                if (!in_array($song->artist, $artists)) {
+                    debug_event('catalog.class', "$song->artist: adding association to $label->name", 4);
+                    $label->add_artist_assoc($song->artist);
+                }
             }
         }
 
@@ -1983,13 +2044,14 @@ abstract class Catalog extends database_object
         }
     }
 
-
     /**
+     * get_media_tags
      * @param media $media
-     * @param $gather_types
+     * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array
+     * @throws Exception
      */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
@@ -2008,7 +2070,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
+     * get_gather_types
      * @param string $media_type
      * @return array
      */
@@ -2072,7 +2134,7 @@ abstract class Catalog extends database_object
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top();
         }
-        UI::update_text(T_("Catalog Cleaned"), sprintf(nT_('%d file removed.', '%d files removed.', $dead_total), $dead_total));
+        UI::update_text(T_("Catalog Cleaned"), sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total));
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_bottom();
         }
@@ -2228,6 +2290,43 @@ abstract class Catalog extends database_object
 
         return $title;
     } // check_title
+
+    /**
+     * check_length
+     * Check to make sure the string fits into the database
+     * max_length is the maximum number of characters that the (varchar) column can hold
+     * @param string $string
+     * @param integer $max_length
+     * @return string
+     */
+    public static function check_length($string, $max_length = 255)
+    {
+        $string = (string) $string;
+        if (false !== $encoding = mb_detect_encoding($string, null, true)) {
+            $string = trim(mb_substr($string, 0, $max_length, $encoding));
+        } else {
+            $string = trim(substr($string, 0, $max_length));
+        }
+
+        return $string;
+    }
+
+    /**
+     * check_track
+     * Check to make sure the track number fits into the database: max 32767, min -32767
+     *
+     * @param string $track
+     * @return integer
+     */
+    public static function check_track($track)
+    {
+        $retval = ((int) $track > 32767 || (int) $track < -32767) ? (int) substr($track, -4, 4) : (int) $track;
+        if ((int) $track !== $retval) {
+            debug_event('catalog.class', "check_track: '{$track}' out of range. Changed into '{$retval}'", 4);
+        }
+
+        return $retval;
+    }
 
     /**
      * playlist_import
@@ -2602,16 +2701,16 @@ abstract class Catalog extends database_object
 
     /**
      * @param $libitem
-     * @param User|null $user
+     * @param User|null $user_id
      * @return boolean
      */
-    public static function can_remove($libitem, $user = null)
+    public static function can_remove($libitem, $user_id = null)
     {
-        if (!$user) {
-            $user = Core::get_global('user')->id;
+        if (!$user_id) {
+            $user_id = Core::get_global('user')->id;
         }
 
-        if (!$user) {
+        if (!$user_id) {
             return false;
         }
 
@@ -2619,7 +2718,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user && AmpConfig::get('upload_allow_remove')));
+        return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove')));
     }
 
     /**

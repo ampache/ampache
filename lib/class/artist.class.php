@@ -717,7 +717,7 @@ class Artist extends database_object implements library_item
 
     /**
      * Get item's owner.
-     * @return int|null
+     * @return integer|null
      */
     public function get_user_owner()
     {
@@ -793,7 +793,7 @@ class Artist extends database_object implements library_item
      * @param string $name
      * @param string $mbid
      * @param boolean $readonly
-     * @return int|null
+     * @return integer|null
      */
     public static function check($name, $mbid = '', $readonly = false)
     {
@@ -1039,15 +1039,25 @@ class Artist extends database_object implements library_item
     }
 
     /**
-     * @return bool|PDOStatement
+     * Update artist last_update time.
+     * @param $object_id
      */
-    public function remove_from_disk()
+    public static function set_last_update($object_id)
+    {
+        $sql = "UPDATE `artist` SET `last_update` = ? WHERE `id` = ?";
+        Dba::write($sql, array(time(), $object_id));
+    }
+
+    /**
+     * @return PDOStatement|boolean
+     */
+    public function remove()
     {
         $deleted   = true;
         $album_ids = $this->get_albums();
         foreach ($album_ids as $albumid) {
             $album   = new Album($albumid);
-            $deleted = $album->remove_from_disk();
+            $deleted = $album->remove();
             if (!$deleted) {
                 debug_event('artist.class', 'Error when deleting the album `' . $albumid . '`.', 1);
                 break;

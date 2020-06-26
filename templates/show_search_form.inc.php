@@ -45,15 +45,12 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
         echo T_('Playlists');
     } ?></td>
     <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
-        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) != 'video') { ?>
-            <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') {
-        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a><?php
-    } else {
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') { ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
+        <?php } else {
         echo T_('Videos');
     } ?></td>
-        <?php
-        }
-    }?>
+    <?php } ?>
     </tr>
 </table>
 <table class="tabledata">
@@ -71,6 +68,9 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
                         <option value="100" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 100) {
         echo "selected=\"selected\"";
     }?>>100</option>
+                        <option value="250" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 250) {
+        echo "selected=\"selected\"";
+    }?>>250</option>
                         <option value="500" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 500) {
         echo "selected=\"selected\"";
     }?>>500</option>

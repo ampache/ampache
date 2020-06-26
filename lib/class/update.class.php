@@ -197,6 +197,19 @@ class Update
         $update_string = "* Add system option for cron based cache and create related tables.<br />";
         $version[]     = array('version' => '400008', 'description' => $update_string);
 
+        $update_string = "* Add ui option for forcing unique items to playlists.<br />";
+        $version[]     = array('version' => '400009', 'description' => $update_string);
+
+        $update_string = "* Add a last_duration to search table to speed up access requests<br />";
+        $version[]     = array('version' => '400010', 'description' => $update_string);
+
+        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" .
+                         "To allow negatives the maximum value of `song`.`track`has been reduced.  " .
+                         "This shouldn't affect anyone due to the large size allowed.<br /><br />" .
+                         "* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />" .
+                         "* Truncate database tracks to 0 when greater than 32,767<br />";
+        $version[]     = array('version' => '400011', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1133,6 +1146,57 @@ class Update
         }
 
         $sql = "UPDATE `preference` SET `level`=75 WHERE `preference`.`name`='stats_threshold'";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400009
+     *
+     * Add ui option for forcing unique items to playlists
+     */
+    public static function update_400009()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', null)";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_400010
+     *
+     * Add a last_duration to searches to speed up access requests
+     */
+    public static function update_400010()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `search` ADD `last_duration` INT(11) NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400011
+     *
+     * Allow negative track numbers for albums
+     * Truncate database tracks to 0 when greater than 32767
+     */
+    public static function update_400011()
+    {
+        $retval = true;
+        $sql    = "UPDATE `song` SET `track` = 0 WHERE `track` > 32767;";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `song` MODIFY COLUMN `track` SMALLINT DEFAULT NULL NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;

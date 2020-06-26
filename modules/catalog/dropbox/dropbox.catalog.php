@@ -357,7 +357,7 @@ class Catalog_dropbox extends Catalog
      * @param $dropbox
      * @param $path
      * @return boolean
-     * @throws DropboxClientException
+     * @throws DropboxClientException|Exception
      */
     private function insert_song($dropbox, $path)
     {
@@ -410,7 +410,7 @@ class Catalog_dropbox extends Catalog
      * @param $dropbox
      * @param $path
      * @return integer
-     * @throws DropboxClientException
+     * @throws DropboxClientException|Exception
      */
     public function insert_video($dropbox, $path)
     {
@@ -585,7 +585,7 @@ class Catalog_dropbox extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param $file
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public function check_remote_file($file)
     {

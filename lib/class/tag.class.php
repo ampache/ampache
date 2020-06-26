@@ -145,7 +145,7 @@ class Tag extends database_object implements library_item
      * @param integer $object_id
      * @param string $value
      * @param boolean $user
-     * @return bool|mixed|string|null
+     * @return boolean|mixed|string|null
      */
     public static function add($type, $object_id, $value, $user = true)
     {
@@ -193,7 +193,7 @@ class Tag extends database_object implements library_item
      * add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
      * @param string $value
-     * @return bool|string|null
+     * @return boolean|string|null
      */
     public static function add_tag($value)
     {
@@ -285,6 +285,7 @@ class Tag extends database_object implements library_item
     /**
      * get_merged_tags
      * Get merged tags to this tag.
+     * @return array
      */
     public function get_merged_tags()
     {
@@ -311,7 +312,7 @@ class Tag extends database_object implements library_item
      * @param integer|string $object_id
      * @param integer|string $tag_id
      * @param boolean $user
-     * @return bool|string|null
+     * @return boolean|string|null
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
@@ -340,9 +341,11 @@ class Tag extends database_object implements library_item
             $merges[] = array('id' => $parent->id, 'name' => $parent->name);
         }
         foreach ($merges as $tag) {
-            $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
-                "VALUES (?, ?, ?, ?)";
-            Dba::write($sql, array($tag['id'], $uid, $type, $id));
+            if ($tag['id']) {
+                $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
+                    "VALUES (?, ?, ?, ?)";
+                Dba::write($sql, array($tag['id'], $uid, $type, $id));
+            }
         }
         $insert_id = Dba::insert_id();
 
@@ -437,7 +440,7 @@ class Tag extends database_object implements library_item
      * @param integer $object_id
      * @param integer $tag_id
      * @param integer $user
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
@@ -546,9 +549,10 @@ class Tag extends database_object implements library_item
 
         $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " .
             "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`') . $limit_sql;
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
+            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
+        $sql .= $limit_sql;
         $db_results = Dba::read($sql, array($tag_id, $type));
 
         $results = array();
@@ -585,9 +589,10 @@ class Tag extends database_object implements library_item
 
         $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` " .
             "WHERE `tag_map`.`object_type` = ? ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`') . $limit_sql;
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
+            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
+        $sql .= $limit_sql;
         $db_results = Dba::read($sql, array($type));
 
         $results = array();
@@ -719,7 +724,7 @@ class Tag extends database_object implements library_item
                 if ($found) {
                     unset($editedTags[$ctag->name]);
                 } else {
-                    if ($overwrite) {
+                    if ($overwrite && $ctv['user'] == 0) {
                         debug_event('tag.class', 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
                         $ctag->remove_map($type, $object_id, false);
                     }
@@ -992,7 +997,7 @@ class Tag extends database_object implements library_item
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

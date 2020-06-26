@@ -34,8 +34,7 @@ function check_php()
         check_php_pdo() &&
         check_php_pdo_mysql() &&
         check_php_session() &&
-        check_php_json() &&
-        check_php_safemode()
+        check_php_json()
     ) {
         return true;
     }
@@ -216,20 +215,6 @@ function check_php_timelimit()
 } // check_php_timelimit
 
 /**
- * check_safe_mode
- * Checks to make sure we aren't in safe mode
- * @return boolean
- */
-function check_php_safemode()
-{
-    if (ini_get('safe_mode')) {
-        return false;
-    }
-
-    return true;
-}
-
-/**
  * check_override_memory
  * This checks to see if we can manually override the memory limit
  * @return boolean
@@ -320,7 +305,7 @@ function check_php_gd()
 
 /**
  * @param string $val
- * @return int|string
+ * @return integer|string
  */
 function return_bytes($val)
 {
