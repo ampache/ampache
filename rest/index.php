@@ -21,6 +21,7 @@
  */
 
 define('NO_SESSION', '1');
+define('OUTDATED_DATABASE_OK', 1);
 require_once '../lib/init.php';
 
 if (!AmpConfig::get('subsonic_backend')) {
