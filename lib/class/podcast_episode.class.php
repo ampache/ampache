@@ -253,7 +253,6 @@ class Podcast_Episode extends database_object implements media, library_item
     /**
      * @param integer $thumb
      * @param boolean $force
-     * @return void
      */
     public function display_art($thumb = 2, $force = false)
     {

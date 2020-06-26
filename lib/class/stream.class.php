@@ -44,6 +44,7 @@ class Stream
     } // set_session
 
     /**
+     * get_session
      * @return string
      */
     public static function get_session()
@@ -309,6 +310,7 @@ class Stream
     }
 
     /**
+     * kill_process
      * @param $transcoder
      */
     public static function kill_process($transcoder)
@@ -377,6 +379,7 @@ class Stream
      *
      * There really isn't anywhere else for this function, shouldn't have
      * deleted it in the first place.
+     * @return true
      */
     public static function clear_now_playing()
     {
@@ -469,6 +472,7 @@ class Stream
      * reason this is here is because it deals with streaming rather than
      * playlist mojo. If something needs to happen this will echo the
      * javascript required to cause a reload of the iframe.
+     * @return boolean
      */
     public static function run_playlist_method()
     {

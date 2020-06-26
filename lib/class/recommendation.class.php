@@ -432,7 +432,7 @@ class Recommendation
      * @param string $object_type
      * @param integer $old_object_id
      * @param string $new_object_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

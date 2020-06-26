@@ -435,7 +435,7 @@ class Catalog_soundcloud extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param array $song
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public function check_remote_song($song)
     {

@@ -145,7 +145,7 @@ class Tag extends database_object implements library_item
      * @param integer $object_id
      * @param string $value
      * @param boolean $user
-     * @return bool|mixed|string|null
+     * @return boolean|mixed|string|null
      */
     public static function add($type, $object_id, $value, $user = true)
     {
@@ -193,7 +193,7 @@ class Tag extends database_object implements library_item
      * add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
      * @param string $value
-     * @return bool|string|null
+     * @return boolean|string|null
      */
     public static function add_tag($value)
     {
@@ -312,7 +312,7 @@ class Tag extends database_object implements library_item
      * @param integer|string $object_id
      * @param integer|string $tag_id
      * @param boolean $user
-     * @return bool|string|null
+     * @return boolean|string|null
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
@@ -440,7 +440,7 @@ class Tag extends database_object implements library_item
      * @param integer $object_id
      * @param integer $tag_id
      * @param integer $user
-     * @return bool|mixed
+     * @return boolean|mixed
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
@@ -997,7 +997,7 @@ class Tag extends database_object implements library_item
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

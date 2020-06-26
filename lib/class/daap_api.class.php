@@ -79,6 +79,7 @@ class Daap_Api
     }
 
     /**
+     * follow_stream
      * @param string $url
      */
     public static function follow_stream($url)

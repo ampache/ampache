@@ -582,13 +582,14 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
 }
 
 /**
+ * strtohex
  * @param string $x
  * @return string
  */
-function strtohex($x) {
-    $s='';
-    foreach (str_split($x) as $c) {
-        $s .= sprintf("%02X", ord($c));
+function strtohex($string) {
+    $hex='';
+    foreach (str_split($string) as $char) {
+        $hex .= sprintf("%02X", ord($char));
     }
-    return($s);
+    return($hex);
 }

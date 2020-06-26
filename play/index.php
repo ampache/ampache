@@ -34,16 +34,20 @@ ob_end_clean();
 //debug_event('play/index', print_r(apache_request_headers(), true), 5);
 
 /* These parameters had better come in on the url. */
-$uid            = scrub_in($_REQUEST['uid']);
-$oid            = scrub_in($_REQUEST['oid']);
-$sid            = scrub_in($_REQUEST['ssid']);
-$type           = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
-$cache          = scrub_in($_REQUEST['cache']);
-$format         = scrub_in($_REQUEST['format']);
-$original       = $format == 'raw';
-$action         = Core::get_get('action');
-$record_stats   = true;
-$use_auth       = AmpConfig::get('use_auth');
+$uid          = scrub_in($_REQUEST['uid']);
+$oid          = scrub_in($_REQUEST['oid']);
+$sid          = scrub_in($_REQUEST['ssid']);
+$type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+$cache        = scrub_in($_REQUEST['cache']);
+$format       = scrub_in($_REQUEST['format']);
+$original     = $format == 'raw';
+$action       = Core::get_get('action');
+$record_stats = true;
+$use_auth     = AmpConfig::get('use_auth');
+
+// Share id and secret if used
+$share_id = (int) filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
+$secret   = $_REQUEST['share_secret'];
 
 // allow disabling stat recording from the play url
 if ($cache === '1' || $type == 'podcast_episode') {
@@ -86,7 +90,6 @@ if (AmpConfig::get('transcode_player_customize') && !$original) {
         }
     }
 }
-$share_id         = (int) filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
 $subtitle         = '';
 $send_all_in_once = AmpConfig::get('send_full_stream');
 if (!$send_all_in_once === 'true' || !$send_all_in_once === $player) {
@@ -127,7 +130,7 @@ if (empty($password)) {
 }
 $apikey = $_REQUEST['apikey'];
 
-// If explicit user authentification was passed
+// If explicit user authentication was passed
 $user_authenticated = false;
 if (!empty($apikey)) {
     $user = User::get_from_apikey($apikey);
@@ -148,7 +151,7 @@ if (!empty($apikey)) {
     }
 }
 
-if (empty($uid)) {
+if (empty($uid) && (!$share_id && !$secret)) {
     debug_event('play/index', 'No user specified', 2);
     header('HTTP/1.1 400 No User Specified');
 
@@ -205,8 +208,8 @@ if (!$share_id) {
     /* Update the users last seen information */
     Core::get_global('user')->update_last_seen();
 } else {
-    $secret = $_REQUEST['share_secret'];
-    $share  = new Share($share_id);
+    $uid   = 0;
+    $share = new Share($share_id);
 
     if (!$share->is_valid($secret, 'stream')) {
         header('HTTP/1.1 403 Access Unauthorized');
@@ -449,6 +452,8 @@ if ($action == 'download' && !$original) {
             $location   = Session::get_geolocation($sessionkey);
             Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
         }
+    } else {
+        Stats::insert($type, $media->id, $uid, 'share.php', null, 'download');
     }
 
     // Check to see if we should be throttling because we can get away with it
@@ -688,6 +693,8 @@ if (!isset($_REQUEST['segment'])) {
                 debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
                 Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
             }
+        } elseif ($share_id) {
+            Stats::insert($type, $media->id, $uid, 'share.php', null, 'stream');
         }
     }
 }

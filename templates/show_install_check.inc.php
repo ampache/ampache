@@ -58,7 +58,7 @@ require $prefix . '/templates/install_header.inc.php'; ?>
     <tr>
         <td><?php echo T_('"ampache.cfg.php" is writable'); ?></td>
         <td><?php echo debug_result(check_config_writable()); ?></td>
-        <td><?php echo T_('This tests whether PHP can write to config/. This is not strictly necessary, but will help streamline the installation process.'); ?></td>
+        <td><?php echo T_('This tests whether PHP can write to config. This is not strictly necessary, but will help streamline the installation process.'); ?></td>
     </tr>
 </table>
 <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=init"; ?>" enctype="multipart/form-data" >

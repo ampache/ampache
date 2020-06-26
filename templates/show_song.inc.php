@@ -153,7 +153,11 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
     $songprops[T_('Length')]         = scrub_out($song->f_time);
     $songprops[T_('Comment')]        = scrub_out($song->comment);
-    $songprops[T_('Label')]          = AmpConfig::get('label') ? "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($song->label) . "\">" . scrub_out($song->label) . "</a>" : scrub_out($song->label);
+    $label_string                    = '';
+    foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
+        $label_string .= "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a> ";
+    }
+    $songprops[T_('Label')]          = AmpConfig::get('label') ? $label_string : scrub_out($song->label);
     $songprops[T_('Song Language')]  = scrub_out($song->language);
     $songprops[T_('Catalog Number')] = scrub_out($song->get_album_catalog_number($song->album));
     $songprops[T_('Barcode')]        = scrub_out($song->get_album_barcode($song->album));

@@ -87,7 +87,6 @@ class Useractivity extends database_object
      * Remove activities for items that no longer exist.
      * @param string $object_type
      * @param integer $object_id
-     * @return void
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -192,7 +191,7 @@ class Useractivity extends database_object
      * Deletes last activity
      * @param integer $object_id
      * @param string $object_type
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function del_activity($object_id, $object_type = 'song')
     {
@@ -332,7 +331,7 @@ class Useractivity extends database_object
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
-     * @return boolean|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {

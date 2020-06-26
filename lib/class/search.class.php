@@ -1516,7 +1516,7 @@ class Search extends playlist_object
      * @param array $data
      * @param string|false $type
      * @param array $operator
-     * @return array|bool|int|string|string[]|null
+     * @return array|boolean|integer|string|string[]|null
      */
     private function _mangle_data($data, $type, $operator)
     {

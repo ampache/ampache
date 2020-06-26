@@ -1813,7 +1813,7 @@ abstract class Catalog extends database_object
             // fall back to last time if you fail to scan correctly
             $new_song->time = $song->time;
         }
-        $new_song->track    = (strlen((string) $results['track']) > 5) ? (int) substr($results['track'], -5, 5) : (int) ($results['track']);
+        $new_song->track    = self::check_track((string) $results['track']);
         $new_song->mbid     = $results['mb_trackid'];
         $new_song->composer = self::check_length($results['composer']);
         $new_song->mime     = $results['mime'];
@@ -1825,11 +1825,12 @@ abstract class Catalog extends database_object
                         '<br />',
                         strip_tags($results['lyrics']));
         $new_song->license = isset($results['license']) ? License::lookup($results['license']) : null;
-        $label_name        = self::check_length($results['publisher'], 128);
-        $new_song->label   = $label_name;
-        if (AmpConfig::get('label')) {
+        $new_song->label   = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
+        if ($song->label && AmpConfig::get('label')) {
             // create the label if missing
-            Label::helper($label_name);
+            foreach (array_map('trim', explode(';', $new_song->label)) as $label_name) {
+                Label::helper($label_name);
+            }
         }
         $new_song->language              = self::check_length($results['language'], 128);
         $new_song->replaygain_track_gain = floatval($results['replaygain_track_gain']);
@@ -1921,13 +1922,15 @@ abstract class Catalog extends database_object
             }
         }
         if ($song->label && AmpConfig::get('label')) {
-            $label_id = Label::lookup(array('name' => $song->label));
-            if ($label_id > 0) {
-                $label    = new Label($label_id);
-                $artists  = $label->get_artists();
-                if (!in_array($song->artist, $artists)) {
-                    debug_event('catalog.class', "$song->artist: adding association to $label->name", 4);
-                    $label->add_artist_assoc($song->artist);
+            foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
+                $label_id = Label::lookup(array('name' => $label_name));
+                if ($label_id > 0) {
+                    $label   = new Label($label_id);
+                    $artists = $label->get_artists();
+                    if (!in_array($song->artist, $artists)) {
+                        debug_event('catalog.class', "$song->artist: adding association to $label->name", 4);
+                        $label->add_artist_assoc($song->artist);
+                    }
                 }
             }
         }
@@ -2045,8 +2048,9 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_media_tags
      * @param media $media
-     * @param $gather_types
+     * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array
@@ -2069,7 +2073,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
+     * get_gather_types
      * @param string $media_type
      * @return array
      */
@@ -2308,6 +2312,37 @@ abstract class Catalog extends database_object
         }
 
         return $string;
+    }
+
+    /**
+     * check_track
+     * Check to make sure the track number fits into the database: max 32767, min -32767
+     *
+     * @param string $track
+     * @return integer
+     */
+    public static function check_track($track)
+    {
+        $retval = ((int) $track > 32767 || (int) $track < -32767) ? (int) substr($track, -4, 4) : (int) $track;
+        if ((int) $track !== $retval) {
+            debug_event('catalog.class', "check_track: '{$track}' out of range. Changed into '{$retval}'", 4);
+        }
+
+        return $retval;
+    }
+
+    /**
+     * get_unique_string
+     * Check to make sure the string doesn't have duplicate strings ({)e.g. "Enough Records; Enough Records")
+     *
+     * @param string $str_array
+     * @return string
+     */
+    public static function get_unique_string($str_array)
+    {
+        $array = array_unique(array_map('trim', explode(';', $str_array)));
+
+        return implode($array);
     }
 
     /**

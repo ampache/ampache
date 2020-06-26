@@ -25,6 +25,7 @@
  * as such it needs to verify the session id that is passed
  */
 define('NO_SESSION', '1');
+define('OUTDATED_DATABASE_OK', 1);
 require_once '../lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time

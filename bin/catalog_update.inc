@@ -199,6 +199,7 @@ ob_end_flush();
 echo "\n";
 
 /**
+ * ob_html_strip
  * @param $string
  * @return string|string[]|null
  */

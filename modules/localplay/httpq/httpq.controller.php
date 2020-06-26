@@ -119,7 +119,7 @@ class AmpacheHttpq extends localplay_controller
      * add_instance
      * This takes keyed data and inserts a new httpQ instance
      * @param array $data
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function add_instance($data)
     {

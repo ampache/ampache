@@ -159,7 +159,7 @@ class PrivateMsg extends database_object
 
     /**
      * @param array $data
-     * @return bool|string|null
+     * @return boolean|string|null
      */
     public static function create(array $data)
     {

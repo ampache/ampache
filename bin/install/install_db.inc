@@ -97,6 +97,7 @@ AmpConfig::set_by_array(array(
 ), true);
 
 // Write the config file
+/** @noinspection PhpUnhandledExceptionInspection */
 if (!install_create_config()) {
     echo T_('Config file creation failed'), "\n";
     echo AmpError::get('general') . "\n\n";

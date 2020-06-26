@@ -422,7 +422,7 @@ class Song_Preview extends database_object implements media, playable_item
     }
 
     /**
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function garbage_collection()
     {

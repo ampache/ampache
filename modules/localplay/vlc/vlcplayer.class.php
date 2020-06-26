@@ -140,7 +140,7 @@ class VlcPlayer
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return bool|null
+     * @return boolean|null
      */
     public function skip($pos)
     {
@@ -204,7 +204,7 @@ class VlcPlayer
      * repeat
      * This toggles the repeat state of VLC
      * @param $value
-     * @return bool|null
+     * @return boolean|null
      */
     public function repeat($value)
     {
@@ -221,7 +221,7 @@ class VlcPlayer
      * random
      * this toggles the random state of VLC
      * @param $value
-     * @return bool|null
+     * @return boolean
      */
     public function random($value)
     {
@@ -238,7 +238,7 @@ class VlcPlayer
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return bool|null
+     * @return boolean
      */
     public function delete_pos($track)
     {

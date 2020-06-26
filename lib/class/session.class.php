@@ -131,8 +131,6 @@ class Session
         Stream_Playlist::garbage_collection();
         Song_Preview::garbage_collection();
         debug_event('session.class', 'Session cleanup ended', 4);
-        
-        return true;
     }
 
     /**
@@ -280,6 +278,7 @@ class Session
      *
      * This checks for an existing session. If it's still valid we go ahead
      * and start it and return true.
+     * @return boolean
      */
     public static function check()
     {
@@ -368,7 +367,7 @@ class Session
      * This takes a SID and extends its expiration.
      * @param $sid
      * @param string $type
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public static function extend($sid, $type = null)
     {
@@ -408,7 +407,7 @@ class Session
      * @param string $sid
      * @param float $latitude
      * @param float $longitude
-     * @param $name
+     * @param string $name
      */
     public static function update_geolocation($sid, $latitude, $longitude, $name)
     {
@@ -446,6 +445,7 @@ class Session
      *
      * This function is called when the object is included, this sets up the
      * session_save_handler
+     * @return boolean
      */
     public static function _auto_init()
     {

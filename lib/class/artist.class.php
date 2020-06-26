@@ -717,7 +717,7 @@ class Artist extends database_object implements library_item
 
     /**
      * Get item's owner.
-     * @return int|null
+     * @return integer|null
      */
     public function get_user_owner()
     {
@@ -793,7 +793,7 @@ class Artist extends database_object implements library_item
      * @param string $name
      * @param string $mbid
      * @param boolean $readonly
-     * @return int|null
+     * @return integer|null
      */
     public static function check($name, $mbid = '', $readonly = false)
     {
@@ -1049,7 +1049,7 @@ class Artist extends database_object implements library_item
     }
 
     /**
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function remove()
     {

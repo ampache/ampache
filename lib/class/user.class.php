@@ -629,7 +629,7 @@ class User extends database_object
      * calls the mini ones does all the error checking and all that
      * good stuff
      * @param array $data
-     * @return bool|int
+     * @return boolean|int
      */
     public function update(array $data)
     {
@@ -704,7 +704,7 @@ class User extends database_object
      * Use this function to update the validation key
      * NOTE: crap this doesn't have update_item the humanity of it all
      * @param $new_validation
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function update_validation($new_validation)
     {

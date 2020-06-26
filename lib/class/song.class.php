@@ -124,15 +124,15 @@ class Song extends database_object implements media, library_item
      */
     public $catalog;
     /**
-     * @var int|null $waveform
+     * @var integer|null $waveform
      */
     public $waveform;
     /**
-     * @var int|null $user_upload
+     * @var integer|null $user_upload
      */
     public $user_upload;
     /**
-     * @var int|null $license
+     * @var integer|null $license
      */
     public $license;
     /**
@@ -349,7 +349,7 @@ class Song extends database_object implements media, library_item
      *
      * This inserts the song described by the passed array
      * @param array $results
-     * @return int|boolean
+     * @return integer|boolean
      */
     public static function insert(array $results)
     {
@@ -365,7 +365,7 @@ class Song extends database_object implements media, library_item
         $mode                  = $results['mode'];
         $size                  = $results['size'] ?: 0;
         $time                  = $results['time'] ?: 0;
-        $track                 = $results['track'];
+        $track                 = Catalog::check_track((string) $results['track']);
         $track_mbid            = $results['mb_trackid'] ?: $results['mbid'];
         $track_mbid            = $track_mbid ?: null;
         $album_mbid            = $results['mb_albumid'];
@@ -380,10 +380,12 @@ class Song extends database_object implements media, library_item
         $user_upload           = isset($results['user_upload']) ? $results['user_upload'] : null;
         $license               = isset($results['license']) ? License::lookup($results['license']) : null;
         $composer              = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
-        $label                 = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
-        if (isset($results['publisher']) && AmpConfig::get('label')) {
+        $label                 = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
+        if ($label && AmpConfig::get('label')) {
             // create the label if missing
-            Label::helper(Catalog::check_length($results['publisher'], 128));
+            foreach (array_map('trim', explode(';', $label)) as $label_name) {
+                Label::helper($label_name);
+            }
         }
         $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
         $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
@@ -1803,7 +1805,7 @@ class Song extends database_object implements media, library_item
 
     /**
      * Get item's owner.
-     * @return int|null
+     * @return integer|null
      */
     public function get_user_owner()
     {

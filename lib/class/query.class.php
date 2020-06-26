@@ -32,7 +32,7 @@ declare(strict_types=0);
 class Query
 {
     /**
-     * @var int|string $id
+     * @var integer|string $id
      */
     public $id;
 

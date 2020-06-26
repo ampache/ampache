@@ -460,7 +460,7 @@ class TVShow extends database_object implements library_item
     }
 
     /**
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
     public function remove()
     {
