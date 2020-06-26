@@ -153,7 +153,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
     $songprops[T_('Length')]         = scrub_out($song->f_time);
     $songprops[T_('Comment')]        = scrub_out($song->comment);
-    $label_string = '';
+    $label_string                    = '';
     foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
         $label_string .= "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a> ";
     }

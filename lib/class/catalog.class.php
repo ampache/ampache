@@ -1925,7 +1925,7 @@ abstract class Catalog extends database_object
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
                 $label_id = Label::lookup(array('name' => $label_name));
                 if ($label_id > 0) {
-                    $label = new Label($label_id);
+                    $label   = new Label($label_id);
                     $artists = $label->get_artists();
                     if (!in_array($song->artist, $artists)) {
                         debug_event('catalog.class', "$song->artist: adding association to $label->name", 4);
