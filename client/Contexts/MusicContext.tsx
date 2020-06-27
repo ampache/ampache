@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { AuthKey } from '~logic/Auth';
@@ -19,7 +19,7 @@ interface MusicContext {
     playPause: () => void;
     playPrevious: () => void;
     playNext: () => void;
-    startPlayingWithNewQueue: (song: Song, newQueue: Song[]) => {};
+    startPlayingWithNewQueue: (song: Song, newQueue: Song[]) => void;
     addToQueue: (song: Song, next: boolean) => void;
     seekSongTo: (newPosition: number) => void;
     setVolume: (newVolume: number) => void;
@@ -31,10 +31,7 @@ export const MusicContext = React.createContext({
 
 export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const [playerStatus, setPlayerStatus] = useState(PLAYERSTATUS.STOPPED);
-    const [currentPlayingSong, setCurrentPlayingSong]: [
-        Song,
-        React.Dispatch<React.SetStateAction<Song>>
-    ] = useState();
+    const currentPlayingSongRef: React.MutableRefObject<Song> = useRef(null);
     const [songQueue, setSongQueue]: [
         Song[],
         React.Dispatch<React.SetStateAction<Song[]>>
@@ -57,7 +54,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     );
 
     const playPause = useCallback(() => {
-        if (currentPlayingSong == undefined) return;
+        if (currentPlayingSongRef == undefined) return;
         const isPaused = audioRef.audioEl?.paused;
         if (isPaused) {
             audioRef.audioEl.play();
@@ -65,7 +62,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         } else {
             audioRef.audioEl.pause();
         }
-    }, [audioRef, currentPlayingSong]);
+    }, [audioRef, currentPlayingSongRef]);
 
     const _playSong = useCallback(
         async (song: Song) => {
@@ -78,7 +75,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
             audioRef.audioEl.src = song.url;
             audioRef.audioEl.title = `${song.artist.name} - ${song.title}`;
             audioRef.audioEl.play();
-            setCurrentPlayingSong(song);
+            currentPlayingSongRef.current = song;
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: song.title,
@@ -113,7 +110,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     }, [_playSong, songQueue, songQueueIndex, userQCount]);
 
     useEffect(() => {
-        if (!currentPlayingSong) return;
+        if (!currentPlayingSongRef) return;
         //This seems to work, but there is a slight delay if you spam next or previous.
         //Don't know if there is a better way.
         if ('mediaSession' in navigator) {
@@ -124,11 +121,11 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 playPrevious();
             });
         }
-    }, [currentPlayingSong, playNext, playPrevious]);
+    }, [currentPlayingSongRef, playNext, playPrevious]);
 
     const songIsOver = () => {
         if (songQueueIndex === songQueue.length - 1) {
-            setCurrentPlayingSong(null);
+            currentPlayingSongRef.current = null;
             setPlayerStatus(PLAYERSTATUS.STOPPED);
             return;
         }
@@ -136,7 +133,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     };
 
     const startPlayingWithNewQueue = async (song: Song, newQueue: Song[]) => {
-        if (song.id === currentPlayingSong?.id) return;
+        if (song.id === currentPlayingSongRef.current?.id) return;
 
         const queueIndex = newQueue.findIndex((o) => o.id === song.id);
 
@@ -170,6 +167,9 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         setSongPosition(newPosition);
     };
 
+    //TODO: Investigate if this is reasonable, passing the ref itself is kind of annoying.
+    // But if we can avoid using a ref, or perhaps better understand the performance issues this may cause.
+    const currentPlayingSong = currentPlayingSongRef.current;
     return (
         <MusicContext.Provider //TODO: Should this provider be split into multiple providers?
             value={{
