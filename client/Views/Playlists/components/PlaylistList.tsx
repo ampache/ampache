@@ -11,8 +11,11 @@ import { AuthKey } from '~logic/Auth';
 import AmpacheError from '~logic/AmpacheError';
 import Plus from '~images/icons/svg/plus.svg';
 import { ModalType, useModal } from '~Modal/Modal';
+import { Modal } from 'react-async-popup';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
+import PlaylistSelector from '~Modal/types/PlaylistSelector';
+import InputModal from '~Modal/types/InputModal';
 
 interface PlaylistListProps {
     authKey?: AuthKey;
@@ -22,7 +25,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
-    const Modal = useModal();
+    // const Modal = useModal();
 
     useEffect(() => {
         getPlaylists(props.authKey)
@@ -53,40 +56,63 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
             });
     };
 
-    const handleNewPlaylist = () => {
-        Modal({
-            parent: document.getElementById('modalView'),
-            modalName: 'New Playlist',
-            modalType: ModalType.InputModal,
-            submitButtonText: 'Create Playlist'
-        })
-            .then((playlistName: string) =>
-                createPlaylist(playlistName, props.authKey)
-            )
-            .then((newPlaylist) => {
-                console.log(newPlaylist);
-                const newPlaylists = [...playlists];
-                newPlaylists.unshift(newPlaylist);
-                setPlaylists(newPlaylists);
-                toast.success('Created Playlist.');
-            })
-            .catch((err) => {
-                toast.error('😞 Something went wrong creating new playlist.');
-                console.error(err);
-            });
+    const handleNewPlaylist = async () => {
+        const { show } = await Modal.new({
+            title: 'New Playlist',
+            content: (
+                <InputModal
+                    inputLabel='New Playlist Name'
+                    inputPlaceholder='Rock & Roll...'
+                    submitButtonText='Create'
+                />
+            ),
+            footer: null,
+            popupStyle: {
+                minWidth: 400
+            }
+        });
+        const result = await show();
+
+        if (result) {
+            createPlaylist(result, props.authKey)
+                .then((newPlaylist) => {
+                    console.log(newPlaylist);
+                    const newPlaylists = [...playlists];
+                    newPlaylists.unshift(newPlaylist);
+                    setPlaylists(newPlaylists);
+                    toast.success('Created Playlist.');
+                })
+                .catch((err) => {
+                    toast.error(
+                        '😞 Something went wrong creating new playlist.'
+                    );
+                    console.error(err);
+                });
+        }
     };
 
-    const handleEditPlaylist = (
+    const handleEditPlaylist = async (
         playlistID: number,
         playlistCurrentName: string
     ) => {
-        Modal({
-            parent: document.getElementById('modalView'),
-            modalName: 'Edit Playlist',
-            modalType: ModalType.InputModal,
-            inputInitialValue: playlistCurrentName
-        })
-            .then(async (newName: string) => {
+        const { show } = await Modal.new({
+            title: `Editing ${playlistCurrentName}`,
+            content: (
+                <InputModal
+                    inputLabel='New Playlist Name'
+                    inputInitialValue={playlistCurrentName}
+                    inputPlaceholder={playlistCurrentName}
+                    submitButtonText='Save'
+                />
+            ),
+            footer: null,
+            popupStyle: {
+                minWidth: 400
+            }
+        });
+        const newName = await show();
+        if (newName) {
+            try {
                 await renamePlaylist(playlistID, newName, props.authKey);
 
                 const newPlaylists = playlists.map((playlist) => {
@@ -98,12 +124,11 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 });
 
                 setPlaylists(newPlaylists);
-                toast.success('Renamed Playlist.');
-            })
-            .catch((err) => {
-                toast.error('😞 Something went wrong editing playlist.');
-                console.error(err);
-            });
+                toast.success('Edited Playlist.');
+            } catch (e) {
+                toast.error('😞 Something went wrong editing the playlist.');
+            }
+        }
     };
 
     if (error) {

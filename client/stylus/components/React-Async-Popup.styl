@@ -5,23 +5,35 @@ popupColor = #2c2c2c
 cancelButton = #850000
 confirmButton = #166e16
 textColor = white
+closeButton = #9a9a9a
 
 .react-async-popup
   .popup-content
     background-color popupColor !important
     border none !important
-    padding 20px !important
     color textColor
+    .close-button svg
+      fill closeButton
+    .body
+      padding 0
     .footer
       display flex
       justify-content space-around
-      button:first-of-type
-        background-color cancelButton
-      button
-        background-color confirmButton
-        border none
-        color textColor
-        padding 10px 0
-        min-width: 200px;
+    .cancelButton, .footer button:first-of-type
+      background-color cancelButton
+      &:hover
+        background-color darken(@background-color, 20%)
+    .confirmButton, .footer button
+      background-color confirmButton
+      font-size 16px
+      font-weight normal
+      border none
+      color textColor
+      padding 10px 0
+      min-width: 200px;
+      cursor pointer
+      transition 0.2s background-color
+      &:hover
+        background-color darken(@background-color, 20%)
   & ~ .mask
     background-color rgba(0,0,0,0.5) !important

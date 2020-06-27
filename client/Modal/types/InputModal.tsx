@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
 import closeWindowIcon from '/images/icons/svg/close-window.svg';
 
-interface PlaylistSelectorParams {
-    returnData: (data: string) => void;
-    modalName: string;
+interface InputModalParams {
     submitButtonText: string;
-    inputInitialValue: string;
-    close: () => void;
+    inputPlaceholder?: string;
+    inputInitialValue?: string;
+    inputLabel: string;
+    ok?: any; //TODO
+    cancel?: any;
 }
 
-const InputModal = (props: PlaylistSelectorParams) => {
-    const [inputValue, setInputValue] = useState(props.inputInitialValue);
+const InputModal = (props: InputModalParams) => {
+    const [inputValue, setInputValue] = useState(props.inputInitialValue ?? '');
 
-    const handleSubmit = () => {
-        props.returnData(
-            (document.getElementById(
-                'inputModal-inputField'
-            ) as HTMLInputElement).value
-        );
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const inputValue = (document.getElementById(
+            'inputModal-inputField'
+        ) as HTMLInputElement).value;
+        if (inputValue != (props.inputInitialValue ?? '')) {
+            props.ok(inputValue);
+        }
     };
+    console.log(props);
 
     return (
         <div className='inputModal' onClick={close}>
@@ -28,23 +32,23 @@ const InputModal = (props: PlaylistSelectorParams) => {
                     e.stopPropagation();
                 }}
             >
-                <div className='header'>
-                    <div className='title'>{props.modalName}</div>
-                    <img
-                        className='close'
-                        src={closeWindowIcon}
-                        alt='Close'
-                        onClick={props.close}
-                    />
-                </div>
                 <form onSubmit={handleSubmit}>
+                    <label htmlFor='inputModal-inputField'>
+                        {props.inputLabel}
+                    </label>
                     <input
                         id='inputModal-inputField'
-                        placeholder={props.modalName}
+                        type='text'
+                        required
+                        placeholder={props.inputPlaceholder}
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                     />
-                    <input type='submit' value={props.submitButtonText} />
+                    <input
+                        type='submit'
+                        className='confirmButton'
+                        value={props.submitButtonText}
+                    />
                 </form>
             </div>
         </div>

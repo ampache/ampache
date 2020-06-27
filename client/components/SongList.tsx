@@ -10,9 +10,10 @@ import {
 import { AuthKey } from '~logic/Auth';
 import AmpacheError from '../logic/AmpacheError';
 import { getAlbumSongs } from '~logic/Album';
-import { ModalType, useModal } from '~Modal/Modal';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
+import { Modal } from 'react-async-popup';
+import PlaylistSelector from '~Modal/types/PlaylistSelector';
 
 interface SongListProps {
     showArtist?: boolean;
@@ -27,8 +28,6 @@ const SongList: React.FC<SongListProps> = (props) => {
     const musicContext = useContext(MusicContext);
     const [songs, setSongs] = useState<Song[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
-
-    const Modal = useModal();
 
     useEffect(() => {
         if (props.songData) {
@@ -76,23 +75,26 @@ const SongList: React.FC<SongListProps> = (props) => {
             setSongs(newSongs);
         });
     };
-    const handleAddToPlaylist = (songID: number) => {
+    const handleAddToPlaylist = async (songID: number) => {
         console.log(songID);
-        Modal({
-            parent: document.getElementById('modalView'),
-            modalName: 'Add To Playlist',
-            modalType: ModalType.PlaylistSelectorModal,
-            authKey: props.authKey
-        })
-            .then((playlistID: number) => {
-                addToPlaylist(playlistID, songID, props.authKey).then(() =>
-                    toast.success('Added song to playlist')
-                );
-            })
-            .catch((err) => {
+        const { show } = await Modal.new({
+            title: 'Add To Playlist',
+            content: <PlaylistSelector authKey={props.authKey} />,
+            footer: null,
+            popupStyle: {
+                minWidth: 400
+            }
+        });
+        const playlistID = await show();
+
+        if (playlistID) {
+            try {
+                await addToPlaylist(playlistID, songID, props.authKey);
+                toast.success('Added song to playlist');
+            } catch (e) {
                 toast.error('😞 Something went wrong adding to playlist.');
-                setError(err);
-            });
+            }
+        }
     };
 
     const handleFlagSong = (songID: number, favorite: boolean) => {
