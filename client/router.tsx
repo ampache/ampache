@@ -99,7 +99,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
         return (
             <BrowserRouter basename='/newclient'>
                 <Switch>
-                    //TODO: Do i need this switch?
+                    {/*TODO: Do i need this switch?*/}
                     <Route exact path='/login'>
                         <Redirect to='/' />
                     </Route>

@@ -10,11 +10,9 @@ import PlaylistRow from './PlaylistRow';
 import { AuthKey } from '~logic/Auth';
 import AmpacheError from '~logic/AmpacheError';
 import Plus from '~images/icons/svg/plus.svg';
-import { ModalType, useModal } from '~Modal/Modal';
 import { Modal } from 'react-async-popup';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
-import PlaylistSelector from '~Modal/types/PlaylistSelector';
 import InputModal from '~Modal/types/InputModal';
 
 interface PlaylistListProps {
@@ -24,8 +22,6 @@ interface PlaylistListProps {
 const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
-
-    // const Modal = useModal();
 
     useEffect(() => {
         getPlaylists(props.authKey)
