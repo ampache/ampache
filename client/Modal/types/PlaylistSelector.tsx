@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 interface PlaylistSelectorProps {
     authKey: AuthKey;
+    history?: any;
     ok?: any; //TODO
     cancel?: any;
 }
@@ -13,17 +14,29 @@ interface PlaylistSelectorProps {
 const PlaylistSelector = (props: PlaylistSelectorProps) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
 
+    const { authKey, cancel, history, ok } = { ...props };
+
     useEffect(() => {
-        getPlaylists(props.authKey)
+        const unblock = history.block((tx) => {
+            cancel();
+            return false;
+        });
+        return () => {
+            unblock();
+        };
+    }, [cancel, history]);
+
+    useEffect(() => {
+        getPlaylists(authKey)
             .then((data) => {
                 setPlaylists(data);
             })
             .catch((error) => {
                 toast.error('😞 Something went wrong getting playlists.');
                 console.error(error);
-                props.cancel();
+                cancel();
             });
-    }, [props.authKey, props.cancel]);
+    }, [authKey, cancel]);
 
     if (!playlists) {
         return (
@@ -47,7 +60,7 @@ const PlaylistSelector = (props: PlaylistSelectorProps) => {
                             <li
                                 key={playlist.id}
                                 className='playlist'
-                                onClick={() => props.ok(playlist.id)}
+                                onClick={() => ok(playlist.id)}
                             >
                                 {playlist.name}
                             </li>

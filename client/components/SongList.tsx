@@ -14,6 +14,7 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { Modal } from 'react-async-popup';
 import PlaylistSelector from '~Modal/types/PlaylistSelector';
+import { useHistory } from 'react-router-dom';
 
 interface SongListProps {
     showArtist?: boolean;
@@ -75,11 +76,15 @@ const SongList: React.FC<SongListProps> = (props) => {
             setSongs(newSongs);
         });
     };
+    const history = useHistory();
+
     const handleAddToPlaylist = async (songID: number) => {
         console.log(songID);
         const { show } = await Modal.new({
             title: 'Add To Playlist',
-            content: <PlaylistSelector authKey={props.authKey} />,
+            content: (
+                <PlaylistSelector authKey={props.authKey} history={history} />
+            ),
             footer: null,
             popupStyle: {
                 minWidth: 400
