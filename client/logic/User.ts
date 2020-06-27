@@ -4,13 +4,17 @@ import AmpacheError from './AmpacheError';
 
 type User = {
     authKey: AuthKey;
-    city: string;
-    create_date: number;
     id: number;
-    last_seen: number;
-    state: string;
     username: string;
+    email: string;
+    access: number;
+    fullname_public: boolean;
+    disabled: boolean;
+    create_date: number;
+    last_seen: number;
     website: string;
+    state: string;
+    city: string;
 };
 
 const getUser = (username: string, authKey: AuthKey) => {

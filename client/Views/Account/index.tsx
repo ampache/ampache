@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { User } from '~logic/User';
-import { updateCatalog } from '~logic/Catalog';
+import React, { useEffect, useState } from 'react';
+import { getUser, User } from '~logic/User';
+import { cleanCatalog, updateCatalog } from '~logic/Catalog';
 import { toast } from 'react-toastify';
 
 interface AccountProps {
@@ -12,6 +12,13 @@ const AccountView: React.FC<AccountProps> = (props) => {
     const [email, setEmail] = useState(''); //TODO: https://github.com/ampache/ampache/issues/2234
     const [website, setWebsite] = useState(''); //TODO: https://github.com/ampache/ampache/issues/2234
     const [catalogID, setCatalogID] = useState(null);
+
+    useEffect(() => {
+        getUser(props.user.username, props.user.authKey).then((userInfo) => {
+            setWebsite(userInfo.website);
+            setEmail(userInfo.email);
+        });
+    });
 
     const handleCatalogUpdate = async () => {
         try {
@@ -25,6 +32,18 @@ const AccountView: React.FC<AccountProps> = (props) => {
         toast.success('Started Catalog Update.');
     };
 
+    const handleCatalogClean = async () => {
+        try {
+            await cleanCatalog(catalogID, props.user.authKey);
+        } catch (err) {
+            toast.error('😞 Something went wrong cleaning Catalog.');
+            console.error(err);
+            return;
+        }
+
+        toast.success('Started Catalog Cleaning.');
+    };
+
     return (
         <div className='accountPage'>
             <h1>Edit Account Settings</h1>
@@ -33,19 +52,25 @@ const AccountView: React.FC<AccountProps> = (props) => {
             <div className='accountInfo'>
                 <h2>Profile</h2>
                 <form>
+                    <label htmlFor='fullName'>Full Name</label>
                     <input
                         placeholder='Full Name'
                         value={fullName}
+                        id='fullName'
                         onChange={(event) => setFullName(event.target.value)}
                     />
+                    <label htmlFor='email'>Email</label>
                     <input
                         placeholder='Email'
                         value={email}
+                        id='email'
                         onChange={(event) => setEmail(event.target.value)}
                     />
+                    <label htmlFor='website'>Website</label>
                     <input
                         placeholder='Website'
                         value={website}
+                        id='website'
                         onChange={(event) => setWebsite(event.target.value)}
                     />
                 </form>
@@ -57,6 +82,7 @@ const AccountView: React.FC<AccountProps> = (props) => {
                     onChange={(event) => setCatalogID(event.target.value)}
                 />
                 <button onClick={handleCatalogUpdate}>Update Catalog</button>
+                <button onClick={handleCatalogClean}>Clean Catalog</button>
             </div>
         </div>
     );

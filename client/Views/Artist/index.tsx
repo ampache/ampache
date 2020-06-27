@@ -9,6 +9,7 @@ import { MusicContext } from '~Contexts/MusicContext';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { generateSongsFromArtist } from '~logic/Playlist_Generate';
+import { updateArtistArt } from '~logic/Art';
 
 interface ArtistViewProps {
     user: User;
@@ -55,6 +56,18 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
             });
     };
 
+    const handleArtistArtUpdate = () => {
+        updateArtistArt(artist.id, true, props.user.authKey)
+            .then(() => {
+                toast.success('Art Updated Successfully');
+            })
+            .catch((error) => {
+                toast.error(
+                    `😞 Something went wrong updating artist art. ${error}`
+                );
+            });
+    };
+
     if (error) {
         return (
             <div className='artistPage'>
@@ -68,7 +81,11 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
             {artist && (
                 <div className='artistInfo'>
                     <div className='imageContainer'>
-                        <img src={artist.art} alt={`Photo of ${artist.name}`} />
+                        <img
+                            src={artist.art}
+                            alt={`Photo of ${artist.name}`}
+                            onClick={handleArtistArtUpdate}
+                        />
                     </div>
                     <div className='details'>
                         <div className='name'>{artist.name}</div>
