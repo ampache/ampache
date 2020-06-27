@@ -1,0 +1,27 @@
+//This overrides some of the style that comes with react-async-popup
+
+//Colors
+popupColor = #2c2c2c
+cancelButton = #850000
+confirmButton = #166e16
+textColor = white
+
+.react-async-popup
+  .popup-content
+    background-color popupColor !important
+    border none !important
+    padding 20px !important
+    color textColor
+    .footer
+      display flex
+      justify-content space-around
+      button:first-of-type
+        background-color cancelButton
+      button
+        background-color confirmButton
+        border none
+        color textColor
+        padding 10px 0
+        min-width: 200px;
+  & ~ .mask
+    background-color rgba(0,0,0,0.5) !important

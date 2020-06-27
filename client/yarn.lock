@@ -7385,6 +7385,11 @@ randomfill@^1.0.3:
     randombytes "^2.0.5"
     safe-buffer "^5.1.0"
 
+react-async-popup@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/react-async-popup/-/react-async-popup-0.0.6.tgz#ccd5aa802c81c82d056357bef825fb98f0b15d08"
+  integrity sha512-uzUGHENIkAsUsZk3da4HEijhEOTJWX+wgg3MVgE5Y40hUPImcC5lRjtFajx2MiUZxmKgpL1ebKULUmRHIMrE7g==
+
 "react-audio-player@https://github.com/justinmc/react-audio-player":
   version "0.11.1"
   resolved "https://github.com/justinmc/react-audio-player#8edc22c454a9b0823f54e94416b047e10c2a50d5"

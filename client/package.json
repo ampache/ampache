@@ -11,6 +11,7 @@
         "axios": "^0.19.2",
         "js-cookie": "^2.2.1",
         "react": "^16.13.1",
+        "react-async-popup": "^0.0.6",
         "react-audio-player": "https://github.com/justinmc/react-audio-player",
         "react-dom": "npm:@hot-loader/react-dom",
         "react-hotkeys-hook": "^2.1.3",
