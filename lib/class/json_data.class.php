@@ -139,7 +139,7 @@ class JSON_Data
                     ));
                 } else {
                     array_push($JSON, array(
-                        "id" => id,
+                        "id" => $id,
                         "name" => $data['name']
                     ));
                 }
