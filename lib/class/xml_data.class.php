@@ -879,8 +879,8 @@ class XML_Data
                     "\t<year>" . $song->year . "</year>\n" .
                     "\t<bitrate>" . $song->bitrate . "</bitrate>\n" .
                     "\t<rate>" . $song->rate . "</rate>\n" .
-                    "\t<mode>" . $song->mode . "</mode>\n" .
-                    "\t<mime>" . $song->mime . "</mime>\n" .
+                    "\t<mode><![CDATA[" . $song->mode . "]]></mode>\n" .
+                    "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
                     "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n" .
@@ -995,8 +995,8 @@ class XML_Data
                     "\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" .
                     $tag_string .
                     "\t<track>" . $song->track . "</track>\n" .
-                    "\t<time>" . $song->time . "</time>\n" .
-                    "\t<mime>" . $song->mime . "</mime>\n" .
+                    "\t<time><![CDATA[" . $song->time . "]]></time>\n" .
+                    "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
                     "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
