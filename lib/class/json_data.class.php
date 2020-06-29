@@ -719,10 +719,10 @@ class JSON_Data
             $ourSong['mime']             = $song->mime;
             $ourSong['url']              = Song::play_url($song->id, '', 'api', false, $user_id);
             $ourSong['size']             = (int) $song->size;
-            $ourSong['mbid']             = $song->mbid;
-            $ourSong['album_mbid']       = $song->album_mbid;
-            $ourSong['artist_mbid']      = $song->artist_mbid;
-            $ourSong['albumartist_mbid'] = $song->albumartist_mbid;
+            $ourSong['mbid']             = (string) $song->mbid;
+            $ourSong['album_mbid']       = (string) $song->album_mbid;
+            $ourSong['artist_mbid']      = (string) $song->artist_mbid;
+            $ourSong['albumartist_mbid'] = (string) $song->albumartist_mbid;
             $ourSong['art']              = $art_url;
             $ourSong['flag']             = (!$flag->get_flag($user_id, false) ? 0 : 1);
             $ourSong['preciserating']    = ($rating->get_user_rating() ?: 0);
@@ -730,10 +730,10 @@ class JSON_Data
             $ourSong['averagerating']    = ($rating->get_average_rating() ?: 0);
             $ourSong['playcount']        = (int) $song->played;
             $ourSong['composer']         = $song->composer;
-            $ourSong['channels']         = $song->channels;
+            $ourSong['channels']         = (string) $song->channels;
             $ourSong['comment']          = $song->comment;
-            if (AmpConfig::get('licensing')) {
-                $ourSong['license'] = $song->f_license;
+            if (AmpConfig::get('licensing') && $song->f_license) {
+                $ourSong['license'] = (string) $song->f_license;
             }
             $ourSong['publisher']             = $song->label;
             $ourSong['language']              = $song->language;
