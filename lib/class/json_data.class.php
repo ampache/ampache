@@ -110,13 +110,14 @@ class JSON_Data
     } // success
 
     /**
-     * tags_string
+     * tags_array
      *
-     * This returns the formatted 'tags' string for an JSON document
-     * @param $tags
-     * @return string
+     * This returns the formatted 'tags' array for a JSON document
+     * @param array $tags
+     * @param boolean $simple
+     * @return array
      */
-    private static function tags_string($tags)
+    private static function tags_array($tags, $simple = false)
     {
         $JSON = array();
 
@@ -132,14 +133,21 @@ class JSON_Data
             }
 
             foreach ($atags as $id => $data) {
-                $JSON['id']    = $id;
-                $JSON['count'] = $data['count'];
-                $JSON['name']  = $data['name'];
+                if ($simple) {
+                    array_push($JSON, array(
+                        "name" => $data['name']
+                    ));
+                } else {
+                    array_push($JSON, array(
+                        "id" => id,
+                        "name" => $data['name']
+                    ));
+                }
             }
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // tags_string
+        return $JSON;
+    } // tags_array
 
     /**
      * indexes
@@ -264,7 +272,6 @@ class JSON_Data
 
             $rating     = new Rating($artist_id, 'artist');
             $flag       = new Userflag($artist_id, 'artist');
-            $tag_string = self::tags_string($artist->tags);
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
@@ -284,7 +291,7 @@ class JSON_Data
             array_push($JSON, array(
                 "id" => $artist->id,
                 "name" => $artist->f_full_name,
-                "tags" => $tag_string,
+                "tags" => self::tags_array($artist->tags),
                 "albums" => ($albums ?: null),
                 "songs" => ($songs ?: null),
                 "art" => $art_url,
@@ -375,7 +382,7 @@ class JSON_Data
             $theArray['year']          = $album->year;
             $theArray['tracks']        = $songs;
             $theArray['disk']          = $disk;
-            $theArray['tags']          = self::tags_string($album->tags);
+            $theArray['tags']          = self::tags_array($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
             $theArray['preciserating'] = ($rating->get_user_rating() ?: 0);
@@ -677,7 +684,6 @@ class JSON_Data
 
 
             $song->format();
-            //TODO: $tag_string
             $rating  = new Rating($song_id, 'song');
             $flag    = new Userflag($song_id, 'song');
             $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
@@ -693,6 +699,7 @@ class JSON_Data
                 "album" => array(
                     "id" => $song->album,
                     "name" => $song->get_album_name()),
+                "tags" => self::tags_array($song->tags),
             );
             if ($song->albumartist) {
                 $ourSong['albumartist'] = array(
@@ -734,6 +741,7 @@ class JSON_Data
             $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;
             $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
             $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
+            $ourSong['genre']                 = self::tags_array($song->tags, true);
 
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
@@ -741,11 +749,6 @@ class JSON_Data
                     $ourSong[$meta_name] = $metadata->getData();
                 }
             }
-            $genre = [];
-            foreach ($song->tags as $tag) {
-                array_push($genre, $tag['name']);
-            }
-            $ourSong['genre'] = $genre;
 
             array_push($JSON, $ourSong);
         } // end foreach
@@ -782,7 +785,7 @@ class JSON_Data
                 "mime" => $video->mime,
                 "resolution" => $video->f_resolution,
                 "size" => $video->size,
-                "tags" => self::tags_string($video->tags),
+                "tags" => self::tags_array($video->tags),
                 "url" => Video::play_url($video->id, '', 'api', false, $user_id)
             ));
         } // end foreach
@@ -814,15 +817,7 @@ class JSON_Data
             $song = new $data['object_type']($data['object_id']);
             $song->format();
 
-            //FIXME: This is duplicate code and so wrong, functions need to be improved
-            $tag           = new Tag($song->tags['0']);
-            $song->genre   = $tag->id;
-            $song->f_genre = $tag->name;
-
-            $tag_string = self::tags_string($song->tags); //TODO
-
-            $rating = new Rating($song->id, 'song');
-
+            $rating  = new Rating($song->id, 'song');
             $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
 
             array_push($JSON, array(
@@ -830,7 +825,7 @@ class JSON_Data
                 "title" => $song->title,
                 "artist" => array("id" => $song->artist, "name" => $song->f_artist_full),
                 "album" => array("id" => $song->album, "name" => $song->f_album_full),
-                "genre" => array("id" => $song->genre, "name" => $song->f_genre),
+                "tags" => self::tags_array($song->tags),
                 "track" => $song->track,
                 "time" => $song->time,
                 "mime" => $song->mime,
@@ -840,7 +835,8 @@ class JSON_Data
                 "preciserating" => $rating->get_user_rating(),
                 "rating" => $rating->get_user_rating(),
                 "averagerating" => $rating->get_average_rating(),
-                "vote" => $democratic->get_vote($row_id)
+                "vote" => $democratic->get_vote($row_id),
+                "genre" => self::tags_array($song->tags, true)
             ));
         } // end foreach
 
