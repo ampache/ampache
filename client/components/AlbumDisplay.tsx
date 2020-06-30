@@ -47,7 +47,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
                 >
                     Play First Song
                 </div>
-                {props.album.tracks > 1 && (
+                {props.album.tracks.length > 1 && (
                     <div
                         {...bindMenuItems}
                         onClick={() => {

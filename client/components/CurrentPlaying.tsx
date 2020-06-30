@@ -16,27 +16,30 @@ const CurrentPlaying: React.FC = () => {
                 />
             )}
             {musicContext.currentPlayingSong != undefined && (
-                <Link
-                    className='albumArt'
-                    to={`/album/${musicContext.currentPlayingSong.album.id}`}
-                >
-                    <img
-                        src={musicContext.currentPlayingSong.art}
-                        alt='cover art'
-                    />
-                </Link>
+                <>
+                    <Link
+                        className='albumArt'
+                        to={`/album/${musicContext.currentPlayingSong.album.id}`}
+                    >
+                        <img
+                            src={musicContext.currentPlayingSong.art}
+                            alt='cover art'
+                        />
+                    </Link>
+
+                    <div className='info'>
+                        <div className='songName'>
+                            {musicContext.currentPlayingSong?.title}
+                        </div>
+                        <Link
+                            className='artistName'
+                            to={`/artist/${musicContext.currentPlayingSong?.artist.id}`}
+                        >
+                            {musicContext.currentPlayingSong?.artist.name}
+                        </Link>
+                    </div>
+                </>
             )}
-            <div className='info'>
-                <div className='songName'>
-                    {musicContext.currentPlayingSong?.title}
-                </div>
-                <Link
-                    className='artistName'
-                    to={`/artist/${musicContext.currentPlayingSong?.artist.id}`}
-                >
-                    {musicContext.currentPlayingSong?.artist.name}
-                </Link>
-            </div>
         </div>
     );
 };

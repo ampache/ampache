@@ -26,16 +26,20 @@ const LoginView: React.FC<LoginProps> = (props) => {
             <div>{error?.message}</div>
             <img src={logo} className='logo' alt='Ampache Logo' />
             <form onSubmit={handleSubmit}>
+                <label htmlFor='username'>Username</label>
                 <input
                     placeholder='Username'
                     name='username'
+                    id='username'
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                 />
+                <label htmlFor='password'>Password</label>
                 <input
                     placeholder='Password'
                     type='password'
                     name='password'
+                    id='password'
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                 />

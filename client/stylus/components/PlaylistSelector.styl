@@ -1,28 +1,27 @@
 .playlistSelector
-  .content
-    height 500px
-    width 100%
-    .playlists
-      display flex
-      flex-direction column
-      height 100%
-      overflow-y scroll
-      background-color @background-color
-      .playlist
-        cursor pointer
-        font-size calc(0.5vw + 10px)
-        padding 10px
-        margin-bottom 1px
-        background-color #4d4d4d
-        border 1px solid transparent
-        &:nth-child(odd)
-          background-color #333
-        &.newPlaylist
-          background-color lighten(bodyBackgroundColor, 10%)
-          text-align center
-          margin-top auto
-          margin-bottom 0
+  height 500px
+  width 100%
+  .playlists
+    display flex
+    flex-direction column
+    height 100%
+    overflow-y scroll
+    background-color @background-color
+    .playlist
+      cursor pointer
+      font-size calc(0.5vw + 10px)
+      padding 10px
+      margin-bottom 1px
+      background-color #4d4d4d
+      border 1px solid transparent
+      &:nth-child(odd)
+        background-color #333
+      &.newPlaylist
+        background-color lighten(bodyBackgroundColor, 10%)
+        text-align center
+        margin-top auto
+        margin-bottom 0
 
-        &:hover
-          color linkHoverColor
-          border 1px solid linkHoverColor
+      &:hover
+        color linkHoverColor
+        border 1px solid linkHoverColor

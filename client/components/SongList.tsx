@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import { Modal } from 'react-async-popup';
 import PlaylistSelector from '~Modal/types/PlaylistSelector';
 import { useHistory } from 'react-router-dom';
+import HistoryShell from '~Modal/HistoryShell';
 
 interface SongListProps {
     showArtist?: boolean;
@@ -29,6 +30,7 @@ const SongList: React.FC<SongListProps> = (props) => {
     const musicContext = useContext(MusicContext);
     const [songs, setSongs] = useState<Song[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
+    const history = useHistory();
 
     useEffect(() => {
         if (props.songData) {
@@ -71,24 +73,20 @@ const SongList: React.FC<SongListProps> = (props) => {
             props.authKey
         ).then(() => {
             let newSongs = [...songs];
-            console.log(newSongs);
             newSongs = newSongs.filter((song) => song.id != songID);
             setSongs(newSongs);
         });
     };
-    const history = useHistory();
 
     const handleAddToPlaylist = async (songID: number) => {
-        console.log(songID);
         const { show } = await Modal.new({
             title: 'Add To Playlist',
             content: (
-                <PlaylistSelector authKey={props.authKey} history={history} />
+                <HistoryShell history={history}>
+                    <PlaylistSelector authKey={props.authKey} />
+                </HistoryShell>
             ),
-            footer: null,
-            popupStyle: {
-                minWidth: 400
-            }
+            footer: null
         });
         const playlistID = await show();
 

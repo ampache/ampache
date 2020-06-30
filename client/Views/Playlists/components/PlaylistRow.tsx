@@ -1,8 +1,9 @@
 import React from 'react';
 import useContextMenu from 'react-use-context-menu';
 import { Playlist } from '~logic/Playlist';
-import { Link } from 'react-router-dom';
-import { useConfirm } from 'react-async-popup';
+import { Link, useHistory } from 'react-router-dom';
+import { Modal } from '~node_modules/react-async-popup';
+import HistoryShell from '~Modal/HistoryShell';
 
 interface PlaylistRowProps {
     playlist: Playlist;
@@ -18,6 +19,7 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
         { setVisible, setCoords }
     ] = useContextMenu();
     const [bindTrigger] = useContextTrigger();
+    const history = useHistory();
 
     const showContextMenu = (e) => {
         e.preventDefault();
@@ -26,9 +28,17 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
         setVisible(true);
     };
 
-    const [showConfirm] = useConfirm({
-        title: `Are you sure you want to delete ${props.playlist.name}?`
-    });
+    const handleDeleteRequest = async () => {
+        setVisible(false);
+        const { show } = await Modal.new({
+            title: `Are you sure you want to delete ${props.playlist.name}?`,
+            content: <HistoryShell history={history} />
+        });
+        const result = await show();
+        if (result) {
+            props.deletePlaylist(props.playlist.id);
+        }
+    };
 
     return (
         <>
@@ -72,16 +82,7 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
                     </div>
                 )}
                 {props.deletePlaylist && (
-                    <div
-                        {...bindMenuItems}
-                        onClick={async () => {
-                            setVisible(false);
-                            const result = await showConfirm();
-                            if (result) {
-                                props.deletePlaylist(props.playlist.id);
-                            }
-                        }}
-                    >
+                    <div {...bindMenuItems} onClick={handleDeleteRequest}>
                         Delete Playlist
                     </div>
                 )}

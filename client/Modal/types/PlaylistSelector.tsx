@@ -6,25 +6,14 @@ import { toast } from 'react-toastify';
 
 interface PlaylistSelectorProps {
     authKey: AuthKey;
-    history?: any;
-    ok?: any; //TODO
-    cancel?: any;
+    ok?: (resolve) => Promise<unknown>; //TODO: confirm that these are correct type definitions.
+    cancel?: () => Promise<unknown>;
 }
 
 const PlaylistSelector = (props: PlaylistSelectorProps) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
 
-    const { authKey, cancel, history, ok } = { ...props };
-
-    useEffect(() => {
-        const unblock = history.block((tx) => {
-            cancel();
-            return false;
-        });
-        return () => {
-            unblock();
-        };
-    }, [cancel, history]);
+    const { authKey, cancel, ok } = { ...props };
 
     useEffect(() => {
         getPlaylists(authKey)
@@ -48,29 +37,22 @@ const PlaylistSelector = (props: PlaylistSelectorProps) => {
 
     return (
         <div className='playlistSelector'>
-            <div
-                className='content'
-                onClick={(e) => {
-                    e.stopPropagation();
-                }}
-            >
-                <ul className='playlists'>
-                    {playlists.map((playlist) => {
-                        return (
-                            <li
-                                key={playlist.id}
-                                className='playlist'
-                                onClick={() => ok(playlist.id)}
-                            >
-                                {playlist.name}
-                            </li>
-                        );
-                    })}
-                    <li className='playlist newPlaylist'>
-                        Create New Playlist(TODO)
-                    </li>
-                </ul>
-            </div>
+            <ul className='playlists'>
+                {playlists.map((playlist) => {
+                    return (
+                        <li
+                            key={playlist.id}
+                            className='playlist'
+                            onClick={() => ok(playlist.id)}
+                        >
+                            {playlist.name}
+                        </li>
+                    );
+                })}
+                <li className='playlist newPlaylist'>
+                    Create New Playlist(TODO)
+                </li>
+            </ul>
         </div>
     );
 };

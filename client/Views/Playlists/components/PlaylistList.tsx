@@ -14,6 +14,8 @@ import { Modal } from 'react-async-popup';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import InputModal from '~Modal/types/InputModal';
+import { useHistory } from 'react-router-dom';
+import HistoryShell from '~Modal/HistoryShell';
 
 interface PlaylistListProps {
     authKey?: AuthKey;
@@ -22,6 +24,7 @@ interface PlaylistListProps {
 const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
+    const history = useHistory();
 
     useEffect(() => {
         getPlaylists(props.authKey)
@@ -56,16 +59,15 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
         const { show } = await Modal.new({
             title: 'New Playlist',
             content: (
-                <InputModal
-                    inputLabel='New Playlist Name'
-                    inputPlaceholder='Rock & Roll...'
-                    submitButtonText='Create'
-                />
+                <HistoryShell history={history}>
+                    <InputModal
+                        inputLabel='New Playlist Name'
+                        inputPlaceholder='Rock & Roll...'
+                        submitButtonText='Create'
+                    />
+                </HistoryShell>
             ),
-            footer: null,
-            popupStyle: {
-                minWidth: 400
-            }
+            footer: null
         });
         const result = await show();
 
@@ -94,17 +96,16 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
         const { show } = await Modal.new({
             title: `Editing ${playlistCurrentName}`,
             content: (
-                <InputModal
-                    inputLabel='New Playlist Name'
-                    inputInitialValue={playlistCurrentName}
-                    inputPlaceholder={playlistCurrentName}
-                    submitButtonText='Save'
-                />
+                <HistoryShell history={history}>
+                    <InputModal
+                        inputLabel='New Playlist Name'
+                        inputInitialValue={playlistCurrentName}
+                        inputPlaceholder={playlistCurrentName}
+                        submitButtonText='Save'
+                    />
+                </HistoryShell>
             ),
-            footer: null,
-            popupStyle: {
-                minWidth: 400
-            }
+            footer: null
         });
         const newName = await show();
         if (newName) {
