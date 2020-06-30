@@ -1322,9 +1322,7 @@ abstract class Catalog extends database_object
 
                 $parent = $libitem->get_parent();
                 if ($parent != null) {
-                    if (!Art::has_db($parent['object_id'], $parent['object_type'])) {
-                        self::gather_art_item($parent['object_type'], $parent['object_id']);
-                    }
+                    self::gather_art_item($parent['object_type'], $parent['object_id'], $db_art_first, $api);
                 }
             }
         }
