@@ -291,9 +291,9 @@ class JSON_Data
             array_push($JSON, array(
                 "id" => (string) $artist->id,
                 "name" => $artist->f_full_name,
-                "tags" => self::tags_array($artist->tags),
                 "albums" => (int) $albums,
                 "songs" => (int) $songs,
+                "tag" => self::tags_array($artist->tags),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
                 "preciserating" => ($rating->get_user_rating() ?: 0),
@@ -382,7 +382,7 @@ class JSON_Data
             $theArray['year']          = (int) $album->year;
             $theArray['tracks']        = (int) $songs;
             $theArray['disk']          = (int) $disk;
-            $theArray['tags']          = self::tags_array($album->tags);
+            $theArray['tag']          = self::tags_array($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
             $theArray['preciserating'] = ($rating->get_user_rating() ?: 0);
@@ -699,7 +699,7 @@ class JSON_Data
                 "album" => array(
                     "id" => (string) $song->album,
                     "name" => $song->get_album_name()),
-                "tags" => self::tags_array($song->tags),
+                "tag" => self::tags_array($song->tags),
             );
             if ($song->albumartist) {
                 $ourSong['albumartist'] = array(
@@ -785,7 +785,7 @@ class JSON_Data
                 "mime" => $video->mime,
                 "resolution" => $video->f_resolution,
                 "size" => (int) $video->size,
-                "tags" => self::tags_array($video->tags),
+                "tag" => self::tags_array($video->tags),
                 "url" => Video::play_url($video->id, '', 'api', false, $user_id)
             ));
         } // end foreach
@@ -825,7 +825,7 @@ class JSON_Data
                 "title" => $song->title,
                 "artist" => array("id" => (string) $song->artist, "name" => $song->f_artist_full),
                 "album" => array("id" => (string) $song->album, "name" => $song->f_album_full),
-                "tags" => self::tags_array($song->tags),
+                "tag" => self::tags_array($song->tags),
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,
                 "mime" => $song->mime,
