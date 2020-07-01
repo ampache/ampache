@@ -296,12 +296,12 @@ class JSON_Data
                 "tag" => self::tags_array($artist->tags),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating() ?: 0),
-                "rating" => ($rating->get_user_rating() ?: 0),
-                "averagerating" => ($rating->get_average_rating() ?: 0),
+                "preciserating" => ($rating->get_user_rating() ?: null),
+                "rating" => ($rating->get_user_rating() ?: null),
+                "averagerating" => ($rating->get_average_rating() ?: null),
                 "mbid" => $artist->mbid,
                 "summary" => $artist->summary,
-                "yearformed" => (int) $artist->yearformed,
+                "yearformed" => $artist->yearformed,
                 "placeformed" => $artist->placeformed
             ));
         } // end foreach artists
@@ -385,9 +385,9 @@ class JSON_Data
             $theArray['tag']          = self::tags_array($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
-            $theArray['preciserating'] = ($rating->get_user_rating() ?: 0);
-            $theArray['rating']        = ($rating->get_user_rating() ?: 0);
-            $theArray['averagerating'] = ($rating->get_average_rating() ?: 0);
+            $theArray['preciserating'] = ($rating->get_user_rating() ?: null);
+            $theArray['rating']        = ($rating->get_user_rating() ?: null);
+            $theArray['averagerating'] = ($rating->get_average_rating() ?: null);
             $theArray['mbid']          = $album->mbid;
 
             array_push($JSON, $theArray);
@@ -719,21 +719,21 @@ class JSON_Data
             $ourSong['mime']             = $song->mime;
             $ourSong['url']              = Song::play_url($song->id, '', 'api', false, $user_id);
             $ourSong['size']             = (int) $song->size;
-            $ourSong['mbid']             = (string) $song->mbid;
-            $ourSong['album_mbid']       = (string) $song->album_mbid;
-            $ourSong['artist_mbid']      = (string) $song->artist_mbid;
-            $ourSong['albumartist_mbid'] = (string) $song->albumartist_mbid;
+            $ourSong['mbid']             = $song->mbid;
+            $ourSong['album_mbid']       = $song->album_mbid;
+            $ourSong['artist_mbid']      = $song->artist_mbid;
+            $ourSong['albumartist_mbid'] = $song->albumartist_mbid;
             $ourSong['art']              = $art_url;
             $ourSong['flag']             = (!$flag->get_flag($user_id, false) ? 0 : 1);
-            $ourSong['preciserating']    = ($rating->get_user_rating() ?: 0);
-            $ourSong['rating']           = ($rating->get_user_rating() ?: 0);
-            $ourSong['averagerating']    = ($rating->get_average_rating() ?: 0);
+            $ourSong['preciserating']    = ($rating->get_user_rating() ?: null);
+            $ourSong['rating']           = ($rating->get_user_rating() ?: null);
+            $ourSong['averagerating']    = ($rating->get_average_rating() ?: null);
             $ourSong['playcount']        = (int) $song->played;
             $ourSong['composer']         = $song->composer;
-            $ourSong['channels']         = (string) $song->channels;
+            $ourSong['channels']         = $song->channels;
             $ourSong['comment']          = $song->comment;
             if (AmpConfig::get('licensing') && $song->f_license) {
-                $ourSong['license'] = (string) $song->f_license;
+                $ourSong['license'] = $song->f_license;
             }
             $ourSong['publisher']             = $song->label;
             $ourSong['language']              = $song->language;
@@ -832,9 +832,9 @@ class JSON_Data
                 "url" => Song::play_url($song->id, '', 'api', false, $user_id),
                 "size" => (int) $song->size,
                 "art" => $art_url,
-                "preciserating" => $rating->get_user_rating(),
-                "rating" => $rating->get_user_rating(),
-                "averagerating" => $rating->get_average_rating(),
+                "preciserating" => ($rating->get_user_rating() ?: null),
+                "rating" => ($rating->get_user_rating() ?: null),
+                "averagerating" => ($rating->get_average_rating() ?: null),
                 "vote" => $democratic->get_vote($row_id),
                 "genre" => self::tags_array($song->tags, true)
             ));
