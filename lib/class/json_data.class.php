@@ -382,7 +382,7 @@ class JSON_Data
             $theArray['year']          = (int) $album->year;
             $theArray['tracks']        = (int) $songs;
             $theArray['disk']          = (int) $disk;
-            $theArray['tag']          = self::tags_array($album->tags);
+            $theArray['tag']           = self::tags_array($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
             $theArray['preciserating'] = ($rating->get_user_rating() ?: null);
