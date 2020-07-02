@@ -1945,6 +1945,9 @@ abstract class Catalog extends database_object
                 self::updateAlbumTags($song);
                 self::updateArtistTags($song);
             }
+            if ($song->license != $new_song->license) {
+                Song::update_license($new_song->license, $song->id);
+            }
             // Refine our reference
             //$song = $new_song;
         } else {

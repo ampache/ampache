@@ -98,6 +98,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Fix: Respect album grouping using of the moment plugin
 * Fix: Filter album title with grouping enabled. (seriously deadmau5, stop with the <> everywhere)
 * Fix: Share playback without a UID would fail to start
+* Fix: Import failures when the file has a license tag. (also update the database)
 * Update Composer requirements (Fix CVE-2020-13625 in phpmailer)
 
 ## 4.1.1
