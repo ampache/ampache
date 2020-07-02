@@ -2009,7 +2009,7 @@ class Search extends playlist_object
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                        $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                        $where[]           = "`realtag_$key`.`name` IS NOT NULL";
                         $join['tag'][$key] = "$sql_match_operator '$input'";
                     } else {
                         $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
@@ -2020,7 +2020,7 @@ class Search extends playlist_object
                     $key           = md5($input . $sql_match_operator);
                     $join['album'] = true;
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                        $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                        $where[]                 = "`realtag_$key`.`name` IS NOT NULL";
                         $join['album_tag'][$key] = "$sql_match_operator '$input'";
                     } else {
                         $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
@@ -2031,7 +2031,7 @@ class Search extends playlist_object
                     $key            = md5($input . $sql_match_operator);
                     $join['artist'] = true;
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                        $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
+                        $where[]                  = "`realtag_$key`.`name` IS NOT NULL";
                         $join['artist_tag'][$key] = "$sql_match_operator '$input'";
                     } else {
                         $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
@@ -2300,6 +2300,7 @@ class Search extends playlist_object
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='song' " .
+                    "AND `tag`.`name` $sql_match_operator '$input' " .
                     "GROUP BY `object_id`" .
                     ") AS `realtag_$key` " .
                     "ON `song`.`id`=`realtag_$key`.`object_id`";
@@ -2313,6 +2314,7 @@ class Search extends playlist_object
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='album' " .
+                    "AND `tag`.`name` $sql_match_operator '$input' " .
                     "GROUP BY `object_id`" .
                     ") AS realtag_$key " .
                     "ON `album`.`id`=`realtag_$key`.`object_id`";
@@ -2326,6 +2328,7 @@ class Search extends playlist_object
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='artist' " .
+                    "AND `tag`.`name` $sql_match_operator '$input' " .
                     "GROUP BY `object_id`" .
                     ") AS realtag_$key " .
                     "ON `artist`.`id`=`realtag_$key`.`object_id`";
