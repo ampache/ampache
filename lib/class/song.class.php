@@ -430,7 +430,7 @@ class Song extends database_object implements media, library_item
             '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
             '`addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, ' .
             '`composer`, `channels`) ' .
-            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $catalog, $file, $album_id, $artist_id,
