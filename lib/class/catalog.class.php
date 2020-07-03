@@ -1322,7 +1322,9 @@ abstract class Catalog extends database_object
 
                 $parent = $libitem->get_parent();
                 if ($parent != null) {
-                    self::gather_art_item($parent['object_type'], $parent['object_id'], $db_art_first, $api);
+                    if (!Art::has_db($parent['object_id'], $parent['object_type'])) {
+                        self::gather_art_item($parent['object_type'], $parent['object_id']);
+                    }
                 }
             }
         }
@@ -1823,7 +1825,7 @@ abstract class Catalog extends database_object
                         '<br />',
                         strip_tags($results['lyrics']));
         $new_song->license = isset($results['license']) ? License::lookup($results['license']) : null;
-        $new_song->label   = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
+        $new_song->label   = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
         if ($song->label && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $new_song->label)) as $label_name) {
@@ -1944,9 +1946,6 @@ abstract class Catalog extends database_object
                 Tag::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
                 self::updateAlbumTags($song);
                 self::updateArtistTags($song);
-            }
-            if ($song->license != $new_song->license) {
-                Song::update_license($new_song->license, $song->id);
             }
             // Refine our reference
             //$song = $new_song;

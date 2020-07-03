@@ -22,9 +22,12 @@
 
 $threshold = AmpConfig::get('stats_threshold');
 $user_id   = Core::get_global('user')->id;
-$count     = AmpConfig::get('popular_threshold');
-
-UI::show('show_mashup_browse_form.inc.php');
+$count     = AmpConfig::get('popular_threshold'); ?>
+<p>
+    <input type="button" value="<?php echo T_('Browse Library') ?>" onclick="NavigateTo('<?php echo AmpConfig::get('web_path') ?>/browse.php?action=<?php echo $object_type ?>');" />
+    <br /><br /><br />
+</p>
+<?php
 UI::show_box_top(T_('Trending'));
 $object_ids = Stats::get_top($object_type, $count, $threshold);
 $browse     = new Browse();
