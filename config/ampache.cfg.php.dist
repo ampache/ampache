@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 42
+config_version = 43
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
@@ -480,6 +480,14 @@ sociable = "true"
 ; comment out if Ampache should search for any jpg, gif or png
 ; DEFAULT: folder.jpg
 ;album_art_preferred_filename = "folder.jpg"
+
+; Artist Art Preferred Filename
+; Specify a filename to look for artist specific art, either in the
+; same folder as your files or in the parent folder
+; e.g. /mnt/music/Artist/Album/artist.jpg
+;      /mnt/music/Artist/artist.jpg
+; DEFAULT: folder.jpg
+;artist_art_preferred_filename = "folder.jpg"
 
 ; Artist Art Dump Folder
 ; Specify a local folder to search for art using name/title to identify

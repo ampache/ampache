@@ -69,6 +69,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * NEW config options
   * skip_timer: Add Skip Timer Threshold to the config
   * artist_art_folder: Specify a local folder to search for artist images using name/title
+  * artist_art_preferred_filename: Same as album art; but Artists!
   * rating_file_tag_user: Set ratings to this user ID when importing ratings from file tags
 * NEW files
   * bin/compute_cache.inc: Cache object_count data to speed up access
