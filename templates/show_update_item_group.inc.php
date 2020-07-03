@@ -22,7 +22,8 @@
 UI::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
 
 // update from high to low so you return to the first disk in a group album
-foreach (rsort($objects) as $object) {
+rsort($objects);
+foreach ($objects as $object) {
     $return_id = Catalog::update_single_item($type, $object);
 }
 
