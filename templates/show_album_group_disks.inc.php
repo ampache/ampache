@@ -96,12 +96,6 @@ if ($directplay_limit > 0) {
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) { ?>
-            <li>
-                <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_group_from_tags&amp;album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
-            </li>
-            <?php
-        } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
