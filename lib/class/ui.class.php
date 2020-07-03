@@ -481,7 +481,7 @@ class UI
      * Show the requested template file
      * @param string $template
      */
-    public static function show_mashup_browse_form(string $template)
+    public static function show(string $template)
     {
         require_once AmpConfig::get('prefix') . self::find_template($template);
     }
