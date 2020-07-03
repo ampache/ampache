@@ -275,17 +275,19 @@ class Catalog_local extends Catalog
             return false;
         }
 
-        debug_event('local.catalog', UI::format_bytes(memory_get_usage(true)), 5);
-
+        $counter = 0;
         /* Recurse through this dir and create the files array */
         while (false !== ($file = readdir($handle))) {
             /* Skip to next if we've got . or .. */
             if (substr($file, 0, 1) == '.') {
                 continue;
             }
-
-            debug_event('local.catalog', "Reading $file inside $path", 5);
-            debug_event('local.catalog', "Memory usage: " . (string) UI::format_bytes(memory_get_usage(true)), 5);
+            // reduce the crazy log info
+            if ($counter % 1000 == 0) {
+                debug_event('local.catalog', "Reading $file inside $path", 5);
+                debug_event('local.catalog', "Memory usage: " . (string)UI::format_bytes(memory_get_usage(true)), 5);
+            }
+            $counter++;
 
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
