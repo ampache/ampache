@@ -476,15 +476,15 @@ class UI
     }
 
     /**
-     * show
+     * show_browse_form
      *
-     * Show the requested template file
-     * @param string $template
+     * For now this just shows the header template
      */
-    public static function show_mashup_browse_form(string $template)
+    public static function show_browse_form()
     {
-        require_once AmpConfig::get('prefix') . self::find_template($template);
+        require_once AmpConfig::get('prefix') . self::find_template('show_browse_form.inc.php');
     }
+
 
     /**
      * show_footer

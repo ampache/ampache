@@ -136,12 +136,6 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) { ?>
-        <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
-        </li>
-        <?php
-    } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
             <?php echo Ampache_RSS::get_display('podcast', T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>

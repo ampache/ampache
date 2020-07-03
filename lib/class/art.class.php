@@ -1352,8 +1352,7 @@ class Art extends database_object
         $processed = array();
 
         /* See if we are looking for a specific filename */
-        $preferred_filename = (AmpConfig::get('album_art_preferred_filename')) ?: 'folder.jpg';
-        $artist_filename    = AmpConfig::get('artist_art_preferred_filename');
+        $preferred_filename = AmpConfig::get('album_art_preferred_filename');
         $artist_art_folder  = AmpConfig::get('artist_art_folder');
 
         // Array of valid extensions
@@ -1380,19 +1379,8 @@ class Art extends database_object
         } elseif ($this->type == 'artist' && $artist_art_folder) {
             $media = new Artist($this->uid);
             $media->format();
-            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->f_full_name);
-            if ($artist_art_folder) {
-                $dirs[] = Core::conv_lc_file($artist_art_folder);
-            }
-            // get the folders from songs as well
-            $songs = $media->get_songs();
-            foreach ($songs as $song_id) {
-                $song = new Song($song_id);
-                // look in the directory name of the files (e.g. /mnt/Music/%artistName%/%album%)
-                $dirs[] = Core::conv_lc_file(dirname($song->file, 1));
-                // look one level up (e.g. /mnt/Music/%artistName%)
-                $dirs[] = Core::conv_lc_file(dirname($song->file, 2));
-            }
+            $preferred_filename = $media->f_full_name;
+            $dirs[]             = Core::conv_lc_file($artist_art_folder);
         }
 
         foreach ($dirs as $dir) {
@@ -1436,12 +1424,13 @@ class Art extends database_object
                     $extension = 'jpeg';
                 }
 
-                // Take an md5sum so we don't show duplicate files.
+                // Take an md5sum so we don't show duplicate
+                // files.
                 $index = md5($full_filename);
 
-                if (($file == $preferred_filename || pathinfo($file, PATHINFO_FILENAME) == $preferred_filename) ||
-                    ($file == $artist_filename || pathinfo($file, PATHINFO_FILENAME) == $artist_filename)) {
-                    // We found the preferred filename and so we're done.
+                if ($file == $preferred_filename || pathinfo($file, PATHINFO_FILENAME) == $preferred_filename) {
+                    // We found the preferred filename and
+                    // so we're done.
                     debug_event('art.class', "gather_folder: Found preferred image file: $file", 5);
                     $preferred[$index] = array(
                         'file' => $full_filename,

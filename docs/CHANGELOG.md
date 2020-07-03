@@ -69,7 +69,6 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * NEW config options
   * skip_timer: Add Skip Timer Threshold to the config
   * artist_art_folder: Specify a local folder to search for artist images using name/title
-  * artist_art_preferred_filename: Same as album art; but Artists!
   * rating_file_tag_user: Set ratings to this user ID when importing ratings from file tags
 * NEW files
   * bin/compute_cache.inc: Cache object_count data to speed up access
@@ -99,7 +98,6 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Fix: Respect album grouping using of the moment plugin
 * Fix: Filter album title with grouping enabled. (seriously deadmau5, stop with the <> everywhere)
 * Fix: Share playback without a UID would fail to start
-* Fix: Import failures when the file has a license tag. (also update the database)
 * Update Composer requirements (Fix CVE-2020-13625 in phpmailer)
 
 ## 4.1.1

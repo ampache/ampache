@@ -66,28 +66,12 @@ switch ($_REQUEST['action']) {
         }
         $album = new Album($_REQUEST['album_id']);
         $album->format();
-        $catalog_id = $album->get_catalogs();
-        $type       = 'album';
-        $object_id  = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);
-        $target_url = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
+        $catalog_id    = $album->get_catalogs();
+        $type          = 'album';
+        $object_id     = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);
+        $target_url    = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
         require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
     break;
-    case 'update_group_from_tags':
-        // Make sure they are a 'power' user at least
-        if (!Access::check('interface', '75')) {
-            UI::access_denied();
-
-            return false;
-        }
-        $album = new Album($_REQUEST['album_id']);
-        $album->format();
-        $catalog_id = $album->get_catalogs();
-        $type       = 'album';
-        $object_id  = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);
-        $objects    = $album->get_album_suite();
-        $target_url = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
-        require_once AmpConfig::get('prefix') . UI::find_template('show_update_item_group.inc.php');
-        break;
     case 'set_track_numbers':
         debug_event('albums', 'Set track numbers called.', 5);
 
