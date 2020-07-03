@@ -90,7 +90,7 @@ class Dba
         }
 
         // Run the query
-        if ($params) {
+        if (!empty($params)) {
             $stmt = $dbh->prepare($sql);
             $stmt->execute($params);
         } else {
