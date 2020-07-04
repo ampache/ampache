@@ -480,7 +480,7 @@ class UI
      *
      * For now this just shows the header template
      */
-    public static function show_browse_form()
+    public static function show(string $template)
     {
         require_once AmpConfig::get('prefix') . self::find_template('show_browse_form.inc.php');
     }
