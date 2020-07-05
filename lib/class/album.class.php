@@ -1204,7 +1204,7 @@ class Album extends database_object implements library_item
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
             $where = "WHERE `catalog`.`enabled` = '1' ";
         } else {
-            $where = "WHERE '1' = '1' ";
+            $where = "WHERE 1=1 ";
         }
         if ($with_art) {
             $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'album' AND `image`.`object_id` = `album`.`id`) ";
@@ -1219,9 +1219,6 @@ class Album extends database_object implements library_item
                     "WHERE `rating`.`object_type` = 'album' " .
                     "AND `rating`.`rating` <=" . $rating_filter .
                     " AND `rating`.`user` = " . $user_id . ") ";
-        }
-        if (AmpConfig::get('album_group')) {
-            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
         }
         $sql .= "ORDER BY RAND() LIMIT " . (string) $count;
         $db_results = Dba::read($sql);

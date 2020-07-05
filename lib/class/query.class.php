@@ -1169,7 +1169,7 @@ class Query
             $sql .= $dis . " AND ";
         }
 
-        $sql = rtrim((string) $sql, 'AND ') . ' ';
+        $sql = rtrim((string) $sql, 'AND ');
 
         return $sql;
     } // get_filter_sql
