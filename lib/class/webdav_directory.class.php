@@ -74,7 +74,7 @@ class WebDAV_Directory extends DAV\Collection
     {
         // Clean song name
         if (strtolower(get_class($this->libitem)) === "album") {
-            $splitname = explode('-', (string) $name, 3);
+            $splitname = explode(' - ', (string) $name, 3);
             $name      = trim((string) $splitname[count($splitname) - 1]);
             $nameinfo  = pathinfo($name);
             $name      = $nameinfo['filename'];
