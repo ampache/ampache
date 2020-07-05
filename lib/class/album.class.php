@@ -409,7 +409,7 @@ class Album extends database_object implements library_item
             // album_artist is set
             $sql = "SELECT DISTINCT `artist`.`name` AS `artist_name`, " .
                    "`artist`.`prefix` AS `artist_prefix`, " .
-                   "`artist`.`id` AS `artist_id` " .
+                   "MIN(`artist`.`id`) AS `artist_id` " .
                    "FROM `album` " .
                    "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist` WHERE " .
                    $name_sql . $where_sql . " " .
@@ -674,7 +674,7 @@ class Album extends database_object implements library_item
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
         }
 
-        $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+        $sql = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                 "$where $catalog_where GROUP BY `album`.`id` ORDER BY `album`.`disk` ASC";
         $db_results = Dba::read($sql);
 
