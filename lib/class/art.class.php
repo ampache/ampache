@@ -1376,7 +1376,7 @@ class Art extends database_object
         } elseif ($this->type == 'video') {
             $media  = new Video($this->uid);
             $dirs[] = Core::conv_lc_file(dirname($media->file));
-        } elseif ($this->type == 'artist' && $artist_art_folder) {
+        } elseif ($this->type == 'artist') {
             $media = new Artist($this->uid);
             $media->format();
             $preferred_filename = $media->f_full_name;
