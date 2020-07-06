@@ -460,7 +460,7 @@ class Artist extends database_object implements library_item
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
             $where = "WHERE `catalog`.`enabled` = '1' ";
         } else {
-            $where = "WHERE 1=1 ";
+            $where = "WHERE '1' = '1' ";
         }
         if ($with_art) {
             $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id`) ";
