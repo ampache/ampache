@@ -364,15 +364,13 @@ class Stats
             if ($threshold > 0) {
                 $sql .= " WHERE `last_update` >= '" . $date . "' ";
             }
-            $sql .= " GROUP BY `id`, `last_update` ORDER BY `last_update` DESC ";
+            $sql .= " GROUP BY `id` ORDER BY `last_update` DESC ";
             //debug_event('stats.class', 'get_top_sql ' . $sql, 5);
 
             return $sql;
         }
         if ($user_id === null && AmpConfig::get('cron_cache') && !defined('NO_CRON_CACHE')) {
-            $sql = "SELECT `object_id` as `id`, MAX(`count`) FROM `cache_object_count` " .
-                   "WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' " .
-                   "GROUP BY `object_id`, `object_type`";
+            $sql = "SELECT `object_id` as `id`, `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "'";
         } else {
             /* Select Top objects counting by # of rows for you only */
             $sql = "SELECT MAX(`object_id`) as `id`, COUNT(*) AS `count`";
@@ -406,9 +404,9 @@ class Stats
             }
             $sql .= " AND `count_type` = '" . $count_type . "'";
             if ($allow_group_disks && $type == 'album') {
-                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `object_count`.`object_type`, `object_count`.`count_type`";  //TODO mysql8 test
+                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";  //TODO mysql8 test
             } else {
-                $sql .= " GROUP BY `object_count`.`object_id`, `object_count`.`object_type`, `object_count`.`count_type`";
+                $sql .= " GROUP BY `object_count`.`object_id`";
             }
         }
         if ($random) {

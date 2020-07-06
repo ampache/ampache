@@ -54,20 +54,7 @@ switch ($_REQUEST['action']) {
         }
 
         $album = new Album($album_id[0]);
-        // songs for all disks
-        if (AmpConfig::get('album_group')) {
-            $disc_ids = $album->get_group_disks_ids();
-            foreach ($disc_ids as $discid) {
-                $disc     = new Album($discid);
-                $allsongs = $disc->get_songs();
-                foreach ($allsongs as $songid) {
-                    $songs[] = $songid;
-                }
-            }
-        } else {
-            // songs for just this disk
-            $songs = $album->get_songs();
-        }
+        $songs = $album->get_songs();
         foreach ($songs as $song_id) {
             Core::get_global('user')->playlist->add_object($song_id, 'song');
         }
