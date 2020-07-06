@@ -816,11 +816,11 @@ class Search extends playlist_object
         );
 
         $playlists = array();
-        $searches  = Search::get_searches();
+        $searches  = self::get_searches();
         foreach ($searches as $playlistid) {
             // Slightly different from the above so we don't instigate
             // a vicious loop.
-            $playlists[$playlistid] = Search::get_name_byid($playlistid);
+            $playlists[$playlistid] = self::get_name_byid($playlistid);
         }
         $this->types[] = array(
             'name' => 'smartplaylist',
@@ -1266,7 +1266,7 @@ class Search extends playlist_object
         $this->date = time();
         $this->set_last(count($results), 'last_count');
 
-        Search::set_last(Search::get_total_duration($results), 'last_duration');
+        self::set_last(self::get_total_duration($results), 'last_duration');
 
         return $results;
     }
