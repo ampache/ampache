@@ -197,7 +197,7 @@ class Rating extends database_object
     public static function get_highest_sql($type)
     {
         $type = Stats::validate_type($type);
-        $sql  = "SELECT MIN(`rating`.`object_id`) as `id`, AVG(`rating`) AS `rating`, COUNT(`object_id`) AS `count`, MAX(`rating`.`id`) AS `order` FROM `rating`";
+        $sql  = "SELECT `rating`.`object_id` as `id`, AVG(`rating`) AS `rating`, COUNT(`object_id`) AS `count`, MAX(`rating`.`id`) AS `order` FROM `rating`";
 
         if (AmpConfig::get('album_group') && $type === 'album') {
             $sql .= " LEFT JOIN `album` on `rating`.`object_id` = `album`.`id` and `rating`.`object_type` = 'album'";
