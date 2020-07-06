@@ -424,18 +424,17 @@ class Song extends database_object implements media, library_item
         } else {
             $album_id = (int) ($results['album_id']);
         }
-        $insert_time = time();
 
         $sql = 'INSERT INTO `song` (`catalog`, `file`, `album`, `artist`, ' .
             '`title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, ' .
-            '`addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, ' .
+            '`addition_time`, `year`, `mbid`, `user_upload`, `license`, ' .
             '`composer`, `channels`) ' .
-            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $catalog, $file, $album_id, $artist_id,
             $title, $bitrate, $rate, $mode, $size, $time, $track,
-            $insert_time, $insert_time, $year, $track_mbid, $user_upload, $license,
+            time(), $year, $track_mbid, $user_upload, $license,
             $composer, $channels));
 
         if (!$db_results) {
