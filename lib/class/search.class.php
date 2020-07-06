@@ -1996,9 +1996,6 @@ class Search extends playlist_object
             $sql_match_operator = $operator['sql'];
             $addition_string    = '';
             $update_string      = '';
-            $tag_join           = '';
-            $album_tag_join     = '';
-            $artist_tag_join    = '';
 
             switch ($rule[0]) {
                 case 'anywhere':

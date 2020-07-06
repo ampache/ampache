@@ -229,13 +229,15 @@ class Catalog_local extends Catalog
      * Recurses through $this->path and pulls out all mp3s and returns the
      * full path in an array. Passes gather_type to determine if we need to
      * check id3 information against the db.
-     * @param string $path
-     * @param array $options
-     * @param integer $counter
+     * @param $path
+     * @param $options
      * @return boolean
      */
-    public function add_files($path, $options, $counter = 0)
+    public function add_files($path, $options)
     {
+        // Profile the memory a bit
+        debug_event('local.catalog', UI::format_bytes(memory_get_usage(true)), 5);
+
         // See if we want a non-root path for the add
         if (isset($options['subdirectory'])) {
             $path = $options['subdirectory'];
@@ -273,27 +275,24 @@ class Catalog_local extends Catalog
             return false;
         }
 
+        debug_event('local.catalog', UI::format_bytes(memory_get_usage(true)), 5);
+
         /* Recurse through this dir and create the files array */
         while (false !== ($file = readdir($handle))) {
             /* Skip to next if we've got . or .. */
             if (substr($file, 0, 1) == '.') {
                 continue;
             }
-            // reduce the crazy log info
-            if ($counter % 1000 == 0) {
-                debug_event('local.catalog', "Reading $file inside $path", 5);
-                debug_event('local.catalog', "Memory usage: " . (string)UI::format_bytes(memory_get_usage(true)), 5);
-            }
-            $counter++;
+
+            debug_event('local.catalog', "Reading $file inside $path", 5);
+            debug_event('local.catalog', "Memory usage: " . (string) UI::format_bytes(memory_get_usage(true)), 5);
 
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
-            $this->add_file($full_file, $options, $counter);
+            $this->add_file($full_file, $options);
         } // end while reading directory
 
-        if ($counter % 1000 == 0) {
-            debug_event('local.catalog', "Finished reading $path , closing handle", 5);
-        }
+        debug_event('local.catalog', "Finished reading $path , closing handle", 5);
 
         // This should only happen on the last run
         if ($path == $this->path) {
@@ -314,7 +313,7 @@ class Catalog_local extends Catalog
      * @return boolean
      * @throws Exception
      */
-    public function add_file($full_file, $options, $counter)
+    public function add_file($full_file, $options)
     {
         // Ensure that we've got our cache
         $this->_create_filecache();
@@ -340,7 +339,7 @@ class Catalog_local extends Catalog
 
         /* If it's a dir run this function again! */
         if (is_dir($full_file)) {
-            $this->add_files($full_file, $options, $counter);
+            $this->add_files($full_file, $options);
 
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
@@ -449,9 +448,7 @@ class Catalog_local extends Catalog
             return true;
         } //if it matches the pattern
         else {
-            if ($counter % 1000 == 0) {
-                debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
-            }
+            debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
 
             return false;
         } // else not an audio file
