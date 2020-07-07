@@ -851,9 +851,9 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql = 'SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `song`.`catalog` = ?';
+        $sql = 'SELECT DISTINCT(`song`.`album`) AS `album` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`album`) FROM `song`" .
+            $sql = "SELECT DISTINCT(`song`.`album`) AS `album` FROM `song`" .
                    "LEFT JOIN `image` ON `song`.`album` = `image`.`object_id` AND `object_type` = 'album'" .
                    "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
@@ -877,7 +877,7 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql = 'SELECT DISTINCT(`video`.`id`) FROM `video` ';
+        $sql = 'SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` ';
         if (!empty($type)) {
             $sql .= 'JOIN `' . $type . '` ON `' . $type . '`.`id` = `video`.`id`';
         }
@@ -949,7 +949,7 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql = 'SELECT DISTINCT(`tvshow`.`id`) FROM `tvshow` ';
+        $sql = 'SELECT DISTINCT(`tvshow`.`id`) AS `id` FROM `tvshow` ';
         $sql .= 'JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` ';
         $sql .= 'JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` ';
         $sql .= 'JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ';
@@ -998,15 +998,15 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql        = 'SELECT DISTINCT(`song`.`artist`) FROM `song` WHERE `song`.`catalog` = ?';
+        $sql        = 'SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`artist`) FROM `song`" .
+            $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song`" .
                 "LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'" .
                 "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
         if ($filter === 'info') {
             // only update info when you haven't done it for 6 months
-            $sql = "SELECT DISTINCT(`artist`.`id`) FROM `artist`" .
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `id` FROM `artist`" .
                 "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
         }
         $db_results = Dba::read($sql, array($this->id));
