@@ -3327,6 +3327,9 @@ class Api
         if (!self::check_parameter($input, array('catalog', 'task'), 'catalog_action')) {
             return false;
         }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'catalog_action', $input['format'])) {
+            return false;
+        }
         $task = (string) $input['task'];
         // confirm the correct data
         if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
