@@ -1424,7 +1424,7 @@ abstract class Catalog extends database_object
             $searches['video'] = $videos;
         }
 
-        debug_event('catalog.class', 'gather_art found ' . (string) count($searches) . 'items missing art', 4);
+        debug_event('catalog.class', 'gather_art found ' . (string) count($searches) . ' items missing art', 4);
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $objectid) {
