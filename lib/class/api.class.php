@@ -1061,7 +1061,7 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'license_songs')) {
             return false;
         }
-        $user  = User::get_from_username(Session::username($input['auth']));
+        $user     = User::get_from_username(Session::username($input['auth']));
         $song_ids = License::get_license_songs(scrub_in($input['filter']));
         ob_end_clean();
         switch ($input['format']) {
