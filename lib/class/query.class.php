@@ -1935,6 +1935,9 @@ class Query
                 switch ($field) {
                     case 'name':
                         $sql = "`album`.`name` $order, `album`.`disk`";
+                        if (AmpConfig::get('album_group')) {
+                            $sql = "`album`.`name`";
+                        }
                     break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
