@@ -3341,10 +3341,11 @@ class Api
             unset($SSE_OUTPUT);
             switch ($task) {
                 case 'clean_catalog':
-                    $catalog->clean_catalog();
+                    $catalog->clean_catalog_proc();
+                    Catalog::clean_empty_albums();
                 break;
                 case 'verify_catalog':
-                    $catalog->verify_catalog();
+                    $catalog->verify_catalog_proc();
                 break;
                 case 'gather_art':
                     $catalog->gather_art();

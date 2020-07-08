@@ -550,10 +550,6 @@ class Catalog_local extends Catalog
         $total_updated = 0;
         $this->count   = 0;
 
-        if (!defined('SSE_OUTPUT')) {
-            require_once AmpConfig::get('prefix') . UI::find_template('show_verify_catalog.inc.php');
-            flush();
-        }
         $this->update_last_update();
 
         foreach (array('video', 'song') as $media_type) {
