@@ -224,11 +224,12 @@ class JSON_Data
         }
 
         $JSON = [];
+        $TAGS = [];
 
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
-            array_push($JSON, array(
+            array_push($TAGS, array(
                 "id" => (string) $tag_id,
                 "name" => $tag->name,
                 "albums" => (int) $counts['album'],
@@ -239,6 +240,11 @@ class JSON_Data
                 "stream" => (int) $counts['live_stream']
             ));
         } // end foreach
+
+        // return a tag object
+        array_push($JSON, array(
+            "tag" => $TAGS
+        ));
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // tags
