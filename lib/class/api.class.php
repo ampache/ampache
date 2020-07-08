@@ -978,6 +978,12 @@ class Api
      */
     public static function licenses($input)
     {
+        if (!AmpConfig::get('licensing')) {
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+
         self::$browse->reset_filters();
         self::$browse->set_type('license');
         self::$browse->set_sort('name', 'ASC');
@@ -1013,6 +1019,11 @@ class Api
      */
     public static function license($input)
     {
+        if (!AmpConfig::get('licensing')) {
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
         if (!self::check_parameter($input, array('filter'), 'license')) {
             return false;
         }
