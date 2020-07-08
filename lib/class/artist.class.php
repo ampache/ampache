@@ -827,12 +827,12 @@ class Artist extends database_object implements library_item
             $db_results = Dba::read($sql, array($mbid));
 
             if ($row = Dba::fetch_assoc($db_results)) {
-                $artist_id = $row['id'];
+                $artist_id = (int) $row['id'];
                 $exists    = true;
             }
         }
 
-        if (!$exists) {
+        if (!$exists && $artist_id > 0) {
             $sql        = 'SELECT `id`, `mbid` FROM `artist` WHERE `name` LIKE ?';
             $db_results = Dba::read($sql, array($name));
 
@@ -873,12 +873,12 @@ class Artist extends database_object implements library_item
         if (!$db_results) {
             return null;
         }
-        $artist_id = Dba::insert_id();
+        $artist_id = (int) Dba::insert_id();
         debug_event('artist.class', 'Artist check created new artist id `' . $artist_id . '`.', 4);
 
         self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
-        return (int) $artist_id;
+        return $artist_id;
     }
 
     /**

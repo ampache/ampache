@@ -532,11 +532,13 @@ class Album extends database_object implements library_item
         $db_results = Dba::read($sql, $params);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            $album_id = $row['id'];
-            // cache the album id against it's details
-            self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist] = $album_id;
+            $album_id = (int) $row['id'];
+            if ($album_id > 0) {
+                // cache the album id against it's details
+                self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist] = $album_id;
 
-            return (int) $album_id;
+                return $album_id;
+            }
         }
 
         if ($readonly) {

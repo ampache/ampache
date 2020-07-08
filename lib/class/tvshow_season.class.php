@@ -319,7 +319,7 @@ class TVShow_Season extends database_object implements library_item
             $exists    = true;
         }
 
-        if ($exists) {
+        if ($exists && (int) $object_id > 0) {
             self::$_mapcache[$name]['null'] = $object_id;
 
             return $object_id;
