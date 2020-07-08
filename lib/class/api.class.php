@@ -966,7 +966,7 @@ class Api
 
     /**
      * licenses
-     * MINIMUM_API_VERSION=380001
+     * MINIMUM_API_VERSION=410001
      *
      * This returns the licenses  based on the specified filter
      *
@@ -1009,7 +1009,7 @@ class Api
 
     /**
      * license
-     * MINIMUM_API_VERSION=380001
+     * MINIMUM_API_VERSION=410001
      *
      * This returns a single license based on UID
      *
@@ -1040,6 +1040,41 @@ class Api
 
         return true;
     } // license
+
+    /**
+     * license_songs
+     * MINIMUM_API_VERSION=410001
+     *
+     * This returns all songs attached to a license ID
+     *
+     * @param array $input
+     * filter = (string) UID of license
+     * @return boolean
+     */
+    public static function license_songs($input)
+    {
+        if (!AmpConfig::get('licensing')) {
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'license_songs')) {
+            return false;
+        }
+        $user  = User::get_from_username(Session::username($input['auth']));
+        $song_ids = License::get_license_songs(scrub_in($input['filter']));
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::songs($song_ids, $user->id);
+                break;
+            default:
+                echo XML_Data::songs($song_ids, $user->id);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // license_songs
 
     /**
      * tags
