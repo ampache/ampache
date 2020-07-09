@@ -17,7 +17,7 @@
 
  body {
      background: rgb(25, 25, 25) none;
- }
+}
 
  div.jp-area {
     margin-left: 230px;
@@ -25,7 +25,7 @@
     margin-top: 10px;
     width: 500px;
     min-width: 500px;
- }
+}
 
 a:active, a:focus {
     outline: none; /* To keep Google Chrome from adding that ugly yellow border/outlune on buttons when clicked */

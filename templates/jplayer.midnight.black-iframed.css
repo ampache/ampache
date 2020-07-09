@@ -18,23 +18,23 @@
 div.jp-area {
     height: 100px;
     width: 100%;
- }
+}
 
- div.jp-area-video {
+div.jp-area-video {
     margin: auto;
- }
+}
 
 div.jp-area-center {
     margin-top: 20px;
- }
+}
 
  div.jp-area-embed {
-    margin-left: 0px !important;
-    margin-right: 0px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
     width: auto !important;
     min-width: auto !important;
-    margin-top: 0px !important;
- }
+    margin-top: 0 !important;
+}
 
 a:active, a:focus {
     outline: none; /* To keep Google Chrome from adding that ugly yellow border/outlune on buttons when clicked */

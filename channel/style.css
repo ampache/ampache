@@ -13,7 +13,7 @@
 html, body {
     margin: 0;
     padding: 0;
-    color: white !important; 
+    color: white !important;
     background: black;
 }
 
@@ -64,6 +64,7 @@ html, body {
     margin-left: 50px;
     width: 90%;
 }
+
 .main h1 {
     text-decoration: none;
     font-weight: bold;
@@ -261,11 +262,11 @@ h3 {
     border: none;
 }
 .roundtop { 
-    background: url(images/corner_topright.jpg) no-repeat top right; 
+    background: url(images/corner_topright.jpg) no-repeat top right;
 }
 
 .roundbottom {
-    background: url(images/corner_bottomright.jpg) no-repeat top right; 
+    background: url(images/corner_bottomright.jpg) no-repeat top right;
 }
 
 .banner td {

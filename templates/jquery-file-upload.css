@@ -4,7 +4,7 @@
     http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/
 -----------------------------*/
 
-#dropfile{
+#dropfile {
     background-color: #2E3134;
     padding: 40px 50px;
     margin-bottom: 30px;
@@ -50,12 +50,12 @@
 
     background-color:#333639;
 
-    background-image:-moz-linear-gradient(top, #333639, #303335);
-    background-image:-webkit-linear-gradient(top, #333639, #303335);
-    background-image:-webkit-gradient(top, #333639, #303335);
-    background-image:-o-linear-gradient(top, #333639, #303335);
-    background-image:-ms-linear-gradient(top, #333639, #303335);
-    background-image:linear-gradient(top, #333639, #303335);
+    background-image:-moz-linear-gradient(to top, #333639, #303335);
+    background-image:-webkit-linear-gradient(to top, #333639, #303335);
+    background-image:-webkit-gradient(to top, #333639, #303335);
+    background-image:-o-linear-gradient(to top, #333639, #303335);
+    background-image:-ms-linear-gradient(to top, #333639, #303335);
+    background-image:linear-gradient(to top, #333639, #303335);
 
     border-top:1px solid #3d4043;
     border-bottom:1px solid #2b2e31;
