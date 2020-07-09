@@ -101,7 +101,7 @@
     position: absolute;
     top: 34px;
     right: 33px;
-    cursor pointer;
+    cursor: pointer;
 }
 
 #uploadfile ul li.working span{
