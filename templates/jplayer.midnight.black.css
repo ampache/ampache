@@ -250,21 +250,21 @@ div.jp-seek-bar {
     height: 100%;
     cursor: pointer;
     border-radius: 5px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0,0.25);
     overflow: hidden;
 }
 div.jp-play-bar {
     background-repeat: repeat-x;
     background-position: 0 -218px;
-    width:0;
-    height:100%;
+    width: 0;
+    height: 100%;
     border-radius: 4px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.25), 2px 0 5px -2px rgba(0,0,0,0.3);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0,0.25), 2px 0 5px -2px rgba(0,0,0,0.3);
 }
 div.jp-video div.jp-seek-bar,
 div.jp-video div.jp-play-bar {
     border-radius: 0;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* The seeking class is added/removed inside jPlayer */
@@ -281,8 +281,8 @@ a.jp-mute,
 a.jp-unmute,
 a.jp-volume-max {
     position: absolute;
-    width:18px;
-    height:15px;
+    width: 18px;
+    height: 15px;
 }
 
 div.jp-audio div.jp-type-single a.jp-mute,
@@ -315,7 +315,7 @@ div.jp-video a.jp-mute,
 div.jp-video a.jp-unmute,
 div.jp-video a.jp-volume-max {
     position: absolute;
-    top:12px;
+    top: 12px;
 }
 
 div.jp-video a.jp-mute,
@@ -356,7 +356,7 @@ div.jp-volume-bar {
     height: 5px;
     cursor: pointer;
     border-radius: 5px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 div.jp-audio div.jp-type-single div.jp-volume-bar {
     top: 32px;
@@ -380,7 +380,7 @@ div.jp-volume-bar-value {
     width: 0;
     height: 5px;
     border-radius: 5px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0,0.25);
 }
 
 /* @end */
@@ -436,7 +436,7 @@ div.jp-title {
     color: #FFF;
 
     background-color: rgba(0,0,0,0) !important;
-    font-size:0.7em;
+    font-size: 0.7em;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -451,7 +451,7 @@ div.playing_info {
 }
 
 div.playing_artist {
-    font-size:0.8em;
+    font-size: 0.8em;
 }
 
 div.playing_artist a {
@@ -459,7 +459,7 @@ div.playing_artist a {
 }
 
 div.playing_title {
-    font-size:1.1em;
+    font-size: 1.1em;
 }
 
 div.jp-title,
@@ -564,8 +564,8 @@ div.jp-video-full div.jp-video-play {
     height: 100%;
 }
 a.jp-video-play-icon {
-    position:relative;
-    display:block;
+    position: relative;
+    display: block;
     width: 112px;
     height: 100px;
 
@@ -727,7 +727,7 @@ a.jp-shuffle-off:hover {
     position: absolute;
     top: 2px;
     margin-right: 2px;
-    left:210px;
+    left: 210px;
     font-size: 0.67em;
 }
 
