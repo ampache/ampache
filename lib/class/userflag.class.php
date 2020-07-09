@@ -138,7 +138,7 @@ class Userflag extends database_object
             "AND `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
 
-        $flagged = array(0);
+        $flagged = false;
         if ($row = Dba::fetch_assoc($db_results)) {
             if ($get_date) {
                 $flagged = array(1, $row['date']);
