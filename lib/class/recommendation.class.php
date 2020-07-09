@@ -80,20 +80,6 @@ class Recommendation
     }
 
     /**
-     * artist_search
-     *
-     * @param $artist
-     * @return SimpleXMLElement
-     */
-    public static function artist_search($artist)
-    {
-        $api_key = AmpConfig::get('lastfm_api_key');
-        $url     = 'http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&artist=' . urlencode($artist) . '&api_key=' . $api_key;
-
-        return self::query_lastfm($url);
-    }
-
-    /**
      * garbage_collection
      *
      * This cleans out old recommendations cache
@@ -404,10 +390,10 @@ class Recommendation
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (string) $xml->artist->bio->placeformed;
         $results['yearformed']  = (string) $xml->artist->bio->yearformed;
-        $results['smallphoto']  = $xml->artist->image[0];
-        $results['mediumphoto'] = $xml->artist->image[1];
-        $results['largephoto']  = $xml->artist->image[2];
-        $results['megaphoto']   = $xml->artist->image[4];
+        $results['largephoto']  = Art::url($artist->id, 'artist');
+        $results['smallphoto']  = $results['largephoto'];    // TODO: Change to thumb size?
+        $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
+        $results['megaphoto']   = $results['largephoto'];
 
         if ($artist) {
             $results['id'] = $artist->id;

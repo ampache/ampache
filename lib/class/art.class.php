@@ -1663,10 +1663,6 @@ class Art extends database_object
      */
     public function gather_lastfm($limit = 5, $data = array())
     {
-        if (!$limit) {
-            $limit = 5;
-        }
-
         $images = array();
 
         try {
@@ -1685,21 +1681,7 @@ class Art extends database_object
                     $coverart[] = (string) $albumart;
                 }
             }
-            // search for artist objects
-            if ((!empty($data['artist']) && empty($data['album']))) {
-                $xmldata = Recommendation::artist_search($data['artist']);
-                if (!count($xmldata)) {
-                    return array();
-                }
-                $xartist = $xmldata->artist;
-                if (!$xartist) {
-                    return array();
-                }
-                foreach ($xmldata->artist->image as $artistart) {
-                    $coverart[] = (string) $artistart;
-                }
-            }
-
+            // Albums only for last FM
             if (empty($coverart)) {
                 return array();
             }
