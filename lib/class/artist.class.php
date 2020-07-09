@@ -832,7 +832,7 @@ class Artist extends database_object implements library_item
             }
         }
 
-        if (!$exists && $artist_id > 0) {
+        if (!$exists) {
             $sql        = 'SELECT `id`, `mbid` FROM `artist` WHERE `name` LIKE ?';
             $db_results = Dba::read($sql, array($name));
 
