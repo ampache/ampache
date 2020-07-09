@@ -256,21 +256,21 @@ class Podcast_Episode extends database_object implements media, library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        $id   = null;
-        $type = null;
+        $episode_id = null;
+        $type       = null;
 
         if (Art::has_db($this->id, 'podcast_episode')) {
-            $id   = $this->id;
-            $type = 'podcast_episode';
+            $episode_id = $this->id;
+            $type       = 'podcast_episode';
         } else {
             if (Art::has_db($this->podcast, 'podcast') || $force) {
-                $id   = $this->podcast;
-                $type = 'podcast';
+                $episode_id = $this->podcast;
+                $type       = 'podcast';
             }
         }
 
-        if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        if ($episode_id !== null && $type !== null) {
+            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 

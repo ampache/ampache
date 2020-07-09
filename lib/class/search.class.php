@@ -1453,14 +1453,14 @@ class Search extends playlist_object
      */
     public function to_js()
     {
-        $js = "";
+        $javascript = "";
         foreach ($this->rules as $rule) {
-            $js .= '<script>' .
+            $javascript .= '<script>' .
                 'SearchRow.add("' . $rule[0] . '","' .
                 $rule[1] . '","' . $rule[2] . '", "' . $rule[3] . '"); </script>';
         }
 
-        return $js;
+        return $javascript;
     }
 
     /**

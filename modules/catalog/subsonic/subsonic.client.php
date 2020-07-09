@@ -111,15 +111,15 @@ class SubsonicClient
 
     /**
      * @param $action
-     * @param array $o
+     * @param array $object
      * @param boolean $rawAnswer
      * @return array|boolean|object|string
      */
-    protected function _querySubsonic($action, $o = array(), $rawAnswer = false)
+    protected function _querySubsonic($action, $object = array(), $rawAnswer = false)
     {
         // Make sure the command is in the list of commands
         if ($this->isCommand($action)) {
-            $url = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $o);
+            $url = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $object);
 
             $options = array(
                 CURLOPT_URL => $url,
@@ -211,7 +211,7 @@ class SubsonicClient
 
             return array("success" => ($response['status'] == "ok"), "data" => $data);
         } else {
-            return $this->error("Invalid response from server!", $object);
+            return $this->error("Invalid response from server!");
         }
     }
 
@@ -231,8 +231,8 @@ class SubsonicClient
      */
     public function __call($action, $arguments)
     {
-        $o = count($arguments) ? (array) $arguments[0] : array();
+        $object = count($arguments) ? (array) $arguments[0] : array();
 
-        return $this->_querySubsonic($action, $o);
+        return $this->_querySubsonic($action, $object);
     }
 }

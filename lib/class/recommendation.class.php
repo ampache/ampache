@@ -105,18 +105,18 @@ class Recommendation
 
     /**
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      * @param boolean $get_items
      * @return array
      */
-    protected static function get_recommendation_cache($type, $id, $get_items = false)
+    protected static function get_recommendation_cache($type, $object_id, $get_items = false)
     {
         if (!AmpConfig::get('cron_cache')) {
             self::garbage_collection();
         }
 
         $sql        = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
-        $db_results = Dba::read($sql, array($type, $id));
+        $db_results = Dba::read($sql, array($type, $object_id));
 
         if ($cache = Dba::fetch_assoc($db_results)) {
             if ($get_items) {
@@ -138,12 +138,13 @@ class Recommendation
     }
 
     /**
+     * delete_recommendation_cache
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      */
-    protected static function delete_recommendation_cache($type, $id)
+    protected static function delete_recommendation_cache($type, $object_id)
     {
-        $cache = self::get_recommendation_cache($type, $id);
+        $cache = self::get_recommendation_cache($type, $object_id);
         if ($cache['id']) {
             Dba::write('DELETE FROM `recommendation_item` WHERE `recommendation` = ?', array($cache['id']));
             Dba::write('DELETE FROM `recommendation` WHERE `id` = ?', array($cache['id']));
@@ -151,16 +152,17 @@ class Recommendation
     }
 
     /**
+     * update_recommendation_cache
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      * @param $recommendations
      */
-    protected static function update_recommendation_cache($type, $id, $recommendations)
+    protected static function update_recommendation_cache($type, $object_id, $recommendations)
     {
         if (count($recommendations) > 0) {
-            self::delete_recommendation_cache($type, $id);
+            self::delete_recommendation_cache($type, $object_id);
             $sql = "INSERT INTO `recommendation` (`object_type`, `object_id`, `last_update`) VALUES (?, ?, ?)";
-            Dba::write($sql, array($type, $id, time()));
+            Dba::write($sql, array($type, $object_id, time()));
             $insertid = Dba::insert_id();
             foreach ($recommendations as $recommendation) {
                 $sql = "INSERT INTO `recommendation_item` (`recommendation`, `recommendation_id`, `name`, `rel`, `mbid`) VALUES (?, ?, ?, ?, ?)";

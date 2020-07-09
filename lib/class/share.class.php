@@ -65,14 +65,14 @@ class Share extends database_object
 
     /**
      * delete_share
-     * @param $id
+     * @param $share_id
      * @param User $user
      * @return PDOStatement|boolean
      */
-    public static function delete_share($id, $user)
+    public static function delete_share($share_id, $user)
     {
         $sql    = "DELETE FROM `share` WHERE `id` = ?";
-        $params = array( $id );
+        $params = array($share_id);
         if (!$user->has_access('75')) {
             $sql .= " AND `user` = ?";
             $params[] = $user->id;

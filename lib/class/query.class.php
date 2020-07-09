@@ -2448,10 +2448,10 @@ class Query
 
     /**
      * Set an additional content div key.
-     * @param string $ak
+     * @param string $key
      */
-    public function set_content_div_ak($ak)
+    public function set_content_div_ak($key)
     {
-        $this->_state['ak'] = $ak;
+        $this->_state['ak'] = $key;
     }
 } // end query.class

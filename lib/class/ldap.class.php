@@ -175,23 +175,23 @@ class LDAP
     /**
      * Read attributes for a DN from the LDAP
      * @param $link
-     * @param $dn
+     * @param string $base_dn
      * @param array $attrs
      * @param string $filter
      * @return mixed
      * @throws LDAPException
      */
-    private static function read($link, $dn, $attrs = [], $filter = 'objectClass=*')
+    private static function read($link, $base_dn, $attrs = [], $filter = 'objectClass=*')
     {
         $attrs_json = json_encode($attrs);
-        debug_event('ldap.class', "reading attributes $attrs_json in `$dn`", 5);
+        debug_event('ldap.class', "reading attributes $attrs_json in `$base_dn`", 5);
 
-        if (! $result = ldap_read($link, $dn, $filter, $attrs)) {
-            throw new LDAPException("Could not read attributes `$attrs_json` for dn `$dn`");
+        if (! $result = ldap_read($link, $base_dn, $filter, $attrs)) {
+            throw new LDAPException("Could not read attributes `$attrs_json` for dn `$base_dn`");
         }
 
         if (! $infos = ldap_get_entries($link, $result)) {
-            throw new LDAPException("Empty search result for dn `$dn`");
+            throw new LDAPException("Empty search result for dn `$base_dn`");
         }
 
         return $infos[0];

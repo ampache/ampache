@@ -247,10 +247,10 @@ abstract class Catalog extends database_object
      * This function attempts to create a catalog type
      * all Catalog modules should be located in /modules/catalog/<name>/<name>.class.php
      * @param string $type
-     * @param integer $id
+     * @param integer $catalog_id
      * @return Catalog|null
      */
-    public static function create_catalog_type($type, $id = 0)
+    public static function create_catalog_type($type, $catalog_id = 0)
     {
         if (!$type) {
             return null;
@@ -267,8 +267,8 @@ abstract class Catalog extends database_object
         } // include
         else {
             $class_name = "Catalog_" . $type;
-            if ($id > 0) {
-                $catalog = new $class_name($id);
+            if ($catalog_id > 0) {
+                $catalog = new $class_name($catalog_id);
             } else {
                 $catalog = new $class_name();
             }
@@ -461,10 +461,10 @@ abstract class Catalog extends database_object
     /**
      * Get enable sql filter;
      * @param string $type
-     * @param string $id
+     * @param string $catalog_id
      * @return string
      */
-    public static function get_enable_filter($type, $id)
+    public static function get_enable_filter($type, $catalog_id)
     {
         $sql = "";
         if ($type == "song" || $type == "album" || $type == "artist") {
@@ -472,10 +472,10 @@ abstract class Catalog extends database_object
                 $type = "id";
             }
             $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` " .
-                "WHERE `song_dis`.`" . $type . "`=" . $id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
+                "WHERE `song_dis`.`" . $type . "`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
         } elseif ($type == "video") {
             $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` " .
-                "WHERE `video_dis`.`id`=" . $id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
+                "WHERE `video_dis`.`id`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
         }
 
         return $sql;
@@ -1287,18 +1287,18 @@ abstract class Catalog extends database_object
     /**
      * gather_art_item
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      * @param boolean $db_art_first
      * @param boolean $api
      * @return boolean
      */
-    public static function gather_art_item($type, $id, $db_art_first = false, $api = false)
+    public static function gather_art_item($type, $object_id, $db_art_first = false, $api = false)
     {
         // Should be more generic !
         if ($type == 'video') {
-            $libitem = Video::create_from_id($id);
+            $libitem = Video::create_from_id($object_id);
         } else {
-            $libitem = new $type($id);
+            $libitem = new $type($object_id);
         }
         $inserted = false;
         $options  = array();
@@ -1327,13 +1327,13 @@ abstract class Catalog extends database_object
             }
         }
 
-        $art = new Art($id, $type);
+        $art = new Art($object_id, $type);
         // don't search for art when you already have it
         if ($art->has_db_info() && $db_art_first) {
-            debug_event('catalog.class', 'Blocking art search for ' . $type . '/' . $id . ' DB item exists', 5);
+            debug_event('catalog.class', 'Blocking art search for ' . $type . '/' . $object_id . ' DB item exists', 5);
             $results = array();
         } else {
-            debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 4);
+            debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $object_id . '...', 4);
             $results = $art->gather($options);
         }
 
@@ -1361,11 +1361,11 @@ abstract class Catalog extends database_object
         }
 
         if ($type == 'video' && AmpConfig::get('generate_video_preview')) {
-            Video::generate_preview($id);
+            Video::generate_preview($object_id);
         }
 
         if (UI::check_ticker() && !$api) {
-            UI::update_text('read_art_' . $id, $libitem->get_fullname());
+            UI::update_text('read_art_' . $object_id, $libitem->get_fullname());
         }
         if ($inserted) {
             return true;
@@ -2699,17 +2699,17 @@ abstract class Catalog extends database_object
     /**
      * Get all tags from all Songs from [type] (artist, album, ...)
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      * @return array
      */
-    protected static function getSongTags($type, $id)
+    protected static function getSongTags($type, $object_id)
     {
         $tags       = array();
         $db_results = Dba::read('SELECT `tag`.`name` FROM `tag`'
                         . ' JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id`'
                         . ' JOIN `song` ON `tag_map`.`object_id` = `song`.`id`'
                         . ' WHERE `song`.`' . $type . '` = ? AND `tag_map`.`object_type` = "song"'
-                        . ' GROUP BY `tag`.`id`, `tag`.`name`', array($id));
+                        . ' GROUP BY `tag`.`id`, `tag`.`name`', array($object_id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $tags[] = $row['name'];
         }

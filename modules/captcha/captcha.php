@@ -451,9 +451,9 @@ class easy_captcha
             mkdir($dir);
         }
         // clean up old files
-        if ((rand(0, 100) <= 5) && ($dh = opendir($dir))) {
+        if ((rand(0, 100) <= 5) && ($dir_handle = opendir($dir))) {
             $t_kill = time() - CAPTCHA_TIMEOUT * 1.2;
-            while (false !== ($filepath = readdir($dh))) {
+            while (false !== ($filepath = readdir($dir_handle))) {
                 if ($filepath[0] != ".") {
                     if (filemtime("$dir/$filepath") < $t_kill) {
                         @unlink("$dir/$filepath");

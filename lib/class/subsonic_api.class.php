@@ -1475,19 +1475,19 @@ class Subsonic_Api
      */
     public static function createshare($input)
     {
-        $id          = self::check_parameter($input, 'id');
+        $libitem_id  = self::check_parameter($input, 'id');
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
             $expire_days = Share::get_expiry($input['expires']);
-            $object_id   = Subsonic_XML_Data::getAmpacheId($id);
-            if (Subsonic_XML_Data::isAlbum($id)) {
+            $object_id   = Subsonic_XML_Data::getAmpacheId($libitem_id);
+            if (Subsonic_XML_Data::isAlbum($libitem_id)) {
                 $object_type = 'album';
             }
-            if (Subsonic_XML_Data::isSong($id)) {
+            if (Subsonic_XML_Data::isSong($libitem_id)) {
                 $object_type = 'song';
             }
-            if (Subsonic_XML_Data::isPlaylist($id)) {
+            if (Subsonic_XML_Data::isPlaylist($libitem_id)) {
                 $object_type = 'playlist';
             }
 
@@ -2242,18 +2242,18 @@ class Subsonic_Api
      */
     public static function createbookmark($input)
     {
-        $id       = self::check_parameter($input, 'id');
-        $position = self::check_parameter($input, 'position');
-        $comment  = $input['comment'];
-        $type     = Subsonic_XML_Data::getAmpacheType($id);
+        $object_id = self::check_parameter($input, 'id');
+        $position  = self::check_parameter($input, 'position');
+        $comment   = $input['comment'];
+        $type      = Subsonic_XML_Data::getAmpacheType($object_id);
 
         if (!empty($type)) {
-            $bookmark = new Bookmark(Subsonic_XML_Data::getAmpacheId($id), $type);
+            $bookmark = new Bookmark(Subsonic_XML_Data::getAmpacheId($object_id), $type);
             if ($bookmark->id) {
                 $bookmark->update($position);
             } else {
                 Bookmark::create(array(
-                    'object_id' => Subsonic_XML_Data::getAmpacheId($id),
+                    'object_id' => Subsonic_XML_Data::getAmpacheId($object_id),
                     'object_type' => $type,
                     'comment' => $comment,
                     'position' => $position

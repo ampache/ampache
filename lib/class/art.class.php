@@ -1203,12 +1203,12 @@ class Art extends database_object
             return $images;
         }
 
-        $mb       = new MusicBrainz(new RequestsHttpAdapter());
+        $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array(
             'url-rels'
         );
         try {
-            $release = $mb->lookup('release', $data['mb_albumid'], $includes);
+            $release = $mbrainz->lookup('release', $data['mb_albumid'], $includes);
         } catch (Exception $error) {
             debug_event('art.class', "gather_musicbrainz exception: " . $error, 3);
 

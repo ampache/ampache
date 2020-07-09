@@ -584,10 +584,10 @@ class Song extends database_object implements media, library_item
      */
     private function has_info($limit_threshold = '')
     {
-        $id = $this->id;
+        $song_id = $this->id;
 
-        if (parent::is_cached('song', $id)) {
-            return parent::get_from_cache('song', $id);
+        if (parent::is_cached('song', $song_id)) {
+            return parent::get_from_cache('song', $song_id);
         }
 
         $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, ' .
@@ -597,7 +597,7 @@ class Song extends database_object implements media, library_item
             'FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
             'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' .
             'WHERE `song`.`id` = ?';
-        $db_results = Dba::read($sql, array($id));
+        $db_results = Dba::read($sql, array($song_id));
 
         $results = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
@@ -608,7 +608,7 @@ class Song extends database_object implements media, library_item
                 $results['skip_cnt']   = Stats::get_object_count('song', $results['id'], $limit_threshold, 'skip');
             }
 
-            parent::add_to_cache('song', $id, $results);
+            parent::add_to_cache('song', $song_id, $results);
 
             return $results;
         }

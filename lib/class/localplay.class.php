@@ -128,13 +128,13 @@ class Localplay
      * is supported in the current player, if so it returns a 'skip to'
      * link, otherwise it returns just the text
      * @param $name
-     * @param $id
+     * @param $object_id
      * @return string
      */
-    public function format_name($name, $id)
+    public function format_name($name, $object_id)
     {
         $name = scrub_out($name);
-        $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $id, $name, 'localplay_skip_' . $id);
+        $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $object_id, $name, 'localplay_skip_' . $object_id);
 
         return $name;
     } // format_name

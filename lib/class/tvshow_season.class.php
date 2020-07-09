@@ -269,21 +269,21 @@ class TVShow_Season extends database_object implements library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        $id   = null;
-        $type = null;
+        $tvshow_id = null;
+        $type      = null;
 
         if (Art::has_db($this->id, 'tvshow_season')) {
-            $id   = $this->id;
-            $type = 'tvshow_season';
+            $tvshow_id = $this->id;
+            $type      = 'tvshow_season';
         } else {
             if (Art::has_db($this->tvshow, 'tvshow') || $force) {
-                $id   = $this->tvshow;
-                $type = 'tvshow';
+                $tvshow_id = $this->tvshow;
+                $type      = 'tvshow';
             }
         }
 
-        if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        if ($tvshow_id !== null && $type !== null) {
+            Art::display($type, $tvshow_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 
