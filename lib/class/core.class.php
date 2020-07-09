@@ -285,7 +285,7 @@ class Core
     public static function form_register($name, $type = 'post')
     {
         // Make ourselves a nice little sid
-        $sid    =  md5(uniqid((string) rand(), true));
+        $sid    = md5(uniqid((string) rand(), true));
         $window = AmpConfig::get('session_length');
         $expire = time() + $window;
 

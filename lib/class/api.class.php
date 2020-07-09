@@ -282,7 +282,7 @@ class Api
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    self::message('error',  T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['format']);
+                    self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['format']);
 
                     return false;
                 }
@@ -387,7 +387,7 @@ class Api
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        self::message('error',  T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['format']);
+        self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['format']);
  
         return false;
     } // handshake
@@ -975,6 +975,7 @@ class Api
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function licenses($input)
     {
@@ -1005,6 +1006,8 @@ class Api
                 echo XML_Data::licenses($licenses);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // licenses
 
     /**

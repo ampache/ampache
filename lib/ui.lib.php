@@ -150,11 +150,8 @@ function get_location()
         case 'preferences.php':
             $location['title'] = T_('Preferences');
             break;
-        case 'admin/index.php':
-            $location['title']   = T_('Admin-Catalog');
-            $location['section'] = 'admin';
-            break;
         case 'admin/catalog.php':
+        case 'admin/index.php':
             $location['title']   = T_('Admin-Catalog');
             $location['section'] = 'admin';
             break;

@@ -268,7 +268,7 @@ class mpd
             return false;
         } else {
             while (!feof($this->_mpd_sock) && !$status['timed_out']) {
-                $response =  fgets($this->_mpd_sock, 1024);
+                $response = fgets($this->_mpd_sock, 1024);
                 if (function_exists('socket_get_status')) {
                     $status = socket_get_status($this->_mpd_sock);
                 }

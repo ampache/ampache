@@ -565,7 +565,7 @@ class AmpacheVlc extends localplay_controller
         $array['volume']    = (int) (((int) ($arrayholder['root']['volume']['value']) / 2.6));
         $array['repeat']    = $arrayholder['root']['repeat']['value'];
         $array['random']    = $arrayholder['root']['random']['value'];
-        $array['track']     =   htmlspecialchars_decode($arrayholder['root']['information']['meta-information']['title']['value'], ENT_NOQUOTES);
+        $array['track']     = htmlspecialchars_decode($arrayholder['root']['information']['meta-information']['title']['value'], ENT_NOQUOTES);
 
         $url_data = $this->parse_url($array['track']);
         $song     = new Song($url_data['oid']);
@@ -577,7 +577,7 @@ class AmpacheVlc extends localplay_controller
         // if not a known format
         else {
             $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
-            $array['track_artist'] =  htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
+            $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
         }
 
         return $array;

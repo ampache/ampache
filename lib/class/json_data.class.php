@@ -667,7 +667,7 @@ class JSON_Data
      * @param bool $encode
      * @return array|string
      */
-    public static function songs($songs, $user_id = false, $encode =  true)
+    public static function songs($songs, $user_id = false, $encode = true)
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
