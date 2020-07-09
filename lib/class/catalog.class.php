@@ -2872,42 +2872,16 @@ abstract class Catalog extends database_object
     {
         if ($old_object_id != $new_object_id) {
             debug_event('catalog.class', 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id, 4);
-            if (!Stats::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' STATS migration failed!', 2);
-            }
-            if (!UserActivity::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' USERACTIVITY migration failed!', 2);
-            }
-            if (!Recommendation::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' RECOMMENDATION migration failed!', 2);
-            }
-            if (!Share::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' SHARE migration failed!', 2);
-            }
-            if (!Shoutbox::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' SHOUTBOX migration failed!', 2);
-            }
-            if (!Tag::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' TAG_MAP migration failed!', 2);
-            }
-            if (!Userflag::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' USERFLAG migration failed!', 2);
-            }
-            if (!Rating::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' RATING migration failed!', 2);
-            }
-            if (!Art::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' ART migration failed!', 2);
-            }
+
+            Stats::migrate($object_type, $old_object_id, $new_object_id);
+            UserActivity::migrate($object_type, $old_object_id, $new_object_id);
+            Recommendation::migrate($object_type, $old_object_id, $new_object_id);
+            Share::migrate($object_type, $old_object_id, $new_object_id);
+            Shoutbox::migrate($object_type, $old_object_id, $new_object_id);
+            Tag::migrate($object_type, $old_object_id, $new_object_id);
+            Userflag::migrate($object_type, $old_object_id, $new_object_id);
+            Rating::migrate($object_type, $old_object_id, $new_object_id);
+            Art::migrate($object_type, $old_object_id, $new_object_id);
 
             return true;
         }

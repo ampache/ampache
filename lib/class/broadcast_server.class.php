@@ -252,21 +252,21 @@ class Broadcast_Server implements MessageComponentInterface
     }
 
     /**
-     *
+     * getRunningBroadcast
      * @param integer $broadcast_id
      * @return Broadcast
      */
     protected function getRunningBroadcast($broadcast_id)
     {
-        $broadcast = null;
-        foreach ($this->broadcasters as $conn_id => $br) {
-            if ($br->id == $broadcast_id) {
-                $broadcast = $br;
+        $result = null;
+        foreach ($this->broadcasters as $broadcast) {
+            if ($broadcast->id == $broadcast_id) {
+                $result = $broadcast;
                 break;
             }
         }
 
-        return $broadcast;
+        return $result;
     }
 
     /**
@@ -318,7 +318,7 @@ class Broadcast_Server implements MessageComponentInterface
                 unset($this->listeners[$broadcast_id][$lindex]);
                 echo "[info]Listener leaved broadcast " . $broadcast_id . "." . "\r\n";
 
-                foreach ($this->broadcasters as $broadcaster_id => $broadcast) {
+                foreach ($this->broadcasters as $broadcast) {
                     if ($broadcast->id == $broadcast_id) {
                         $this->notifyNbListeners($broadcast);
                         break;

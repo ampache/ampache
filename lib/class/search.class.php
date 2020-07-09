@@ -842,12 +842,12 @@ class Search extends playlist_object
             'widget' => array('subtypes', array('input', 'text'))
         );
 
-        $licenses = array();
-        foreach (License::get_licenses() as $license_id) {
-            $license               = new License($license_id);
-            $licenses[$license_id] = $license->name;
-        }
         if (AmpConfig::get('licensing')) {
+            $licenses = array();
+            foreach (License::get_licenses() as $license_id) {
+                $license               = new License($license_id);
+                $licenses[$license_id] = $license->name;
+            }
             $this->types[] = array(
                 'name' => 'license',
                 'label' => T_('Music License'),
