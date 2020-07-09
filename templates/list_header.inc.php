@@ -27,11 +27,11 @@
  * to layout this page.
  */
 
- if (isset($is_header) && $is_header) {
-     $is_header = false;
- } else {
-     $is_header = true;
- }
+if (isset($is_header) && $is_header) {
+    $is_header = false;
+} else {
+    $is_header = true;
+}
 
 // Pull these variables out to allow shorthand (easier for lazy programmers)
 $limit = $browse->get_offset();

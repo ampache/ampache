@@ -325,7 +325,7 @@ if ($is_share && $isVideo) { ?>
 <style>
     div.jp-jplayer
     {
-        bottom: 0px !important;
+        bottom: 0 !important;
         top: 100px !important;
     }
 </style>

@@ -39,7 +39,7 @@ if (!$is_share) {
      if (is_string($stream_id) || is_integer($stream_id)) {
          $playlist = new Stream_Playlist($stream_id);
      }
- }
+}
 
 $isRadio = false;
 $isVideo = false;
