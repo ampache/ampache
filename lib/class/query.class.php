@@ -2383,12 +2383,12 @@ class Query
      */
     public function store()
     {
-        $id = $this->id;
-        if ($id != 'nocache') {
+        $browse_id = $this->id;
+        if ($browse_id != 'nocache') {
             $data = self::_serialize($this->_state);
 
             $sql = 'UPDATE `tmp_browse` SET `data` = ? WHERE `sid` = ? AND `id` = ?';
-            Dba::write($sql, array($data, session_id(), $id));
+            Dba::write($sql, array($data, session_id(), $browse_id));
         }
     }
 
@@ -2409,13 +2409,13 @@ class Query
         if (!$this->is_simple()) {
             $this->_cache = $object_ids;
             $this->set_total(count($object_ids));
-            $id = $this->id;
-            if ($id != 'nocache') {
+            $browse_id = $this->id;
+            if ($browse_id != 'nocache') {
                 $data = self::_serialize($this->_cache);
 
                 $sql = 'UPDATE `tmp_browse` SET `object_data` = ? ' .
                     'WHERE `sid` = ? AND `id` = ?';
-                Dba::write($sql, array($data, session_id(), $id));
+                Dba::write($sql, array($data, session_id(), $browse_id));
             }
         }
 

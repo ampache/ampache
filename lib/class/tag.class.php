@@ -670,11 +670,7 @@ class Tag extends database_object implements library_item
         $results = '';
 
         // Iterate through the tags, format them according to type and element id
-        foreach ($tags as $tag_id => $value) {
-            /*debug_event('tag.class', $tag_id, 5);
-            foreach ($value as $vid=>$v) {
-                debug_event('tag.class', $vid.' = {'.$v.'}', 5);
-            }*/
+        foreach ($tags as $value) {
             if ($link) {
                 $results .= '<a href="' . AmpConfig::get('web_path') . '/browse.php?action=tag&show_tag=' . $value['id'] . (!empty($filter_type) ? '&type=' . $filter_type : '') . '" title="' . $value['name'] . '">';
             }

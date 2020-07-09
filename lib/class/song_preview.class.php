@@ -159,15 +159,15 @@ class Song_Preview extends database_object implements media, playable_item
      */
     private function has_info()
     {
-        $id = $this->id;
+        $preview_id = $this->id;
 
-        if (parent::is_cached('song_preview', $id)) {
-            return parent::get_from_cache('song_preview', $id);
+        if (parent::is_cached('song_preview', $preview_id)) {
+            return parent::get_from_cache('song_preview', $preview_id);
         }
 
         $sql = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' .
             'FROM `song_preview` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($id));
+        $db_results = Dba::read($sql, array($preview_id));
 
         $results = Dba::fetch_assoc($db_results);
         if (!empty($results['id'])) {
@@ -178,7 +178,7 @@ class Song_Preview extends database_object implements media, playable_item
                     $results['artist_mbid'] = $artist_res['mbid'];
                 }
             }
-            parent::add_to_cache('song_preview', $id, $results);
+            parent::add_to_cache('song_preview', $preview_id, $results);
 
             return $results;
         }
