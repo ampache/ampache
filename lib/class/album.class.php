@@ -1199,14 +1199,15 @@ class Album extends database_object implements library_item
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
+		$sort_disk = (AmpConfig::get('album_group')) ? "AND `album`.`disk` = 1 " : "";
 
         $sql = "SELECT DISTINCT `album`.`id` FROM `album` " .
                 "LEFT JOIN `song` ON `song`.`album` = `album`.`id` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-            $where = "WHERE `catalog`.`enabled` = '1' AND `album`.`disk` = 1 ";
+            $where = "WHERE `catalog`.`enabled` = '1' " . $sort_disk;
         } else {
-            $where = "WHERE `album`.`disk` = 1";
+            $where = "WHERE 1=1 " . $sort_disk;
         }
         if ($with_art) {
             $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'album' AND `image`.`object_id` = `album`.`id`) ";
