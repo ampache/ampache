@@ -1199,7 +1199,7 @@ class Album extends database_object implements library_item
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-		$sort_disk = (AmpConfig::get('album_group')) ? "AND `album`.`disk` = 1 " : "";
+        $sort_disk = (AmpConfig::get('album_group')) ? "AND `album`.`disk` = 1 " : "";
 
         $sql = "SELECT DISTINCT `album`.`id` FROM `album` " .
                 "LEFT JOIN `song` ON `song`.`album` = `album`.`id` ";
