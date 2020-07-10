@@ -1480,13 +1480,13 @@ class Subsonic_Api
 
         if (AmpConfig::get('share')) {
             $expire_days = Share::get_expiry($input['expires']);
-            if (is_array($libitem_id)) {
-                if (Subsonic_XML_Data::isSong($libitem_id[0])) {
-                    $song_id     = Subsonic_XML_Data::getAmpacheId($libitem_id[0]);
-                    $tmp_song    = new Song($song_id);
-                    $libitem_id  = $tmp_song->album;
-                }
-                $object_id = Subsonic_XML_Data::getAmpacheId($tmp_song->album);
+            $object_id   = null;
+            $object_type = null;
+            if (is_array($libitem_id) && Subsonic_XML_Data::isSong($libitem_id[0])) {
+                $song_id     = Subsonic_XML_Data::getAmpacheId($libitem_id[0]);
+                $tmp_song    = new Song($song_id);
+                $libitem_id  = $tmp_song->album;
+                $object_id   = Subsonic_XML_Data::getAmpacheId($tmp_song->album);
                 $object_type = 'album';
             } else {
                 Subsonic_XML_Data::getAmpacheId($libitem_id);
