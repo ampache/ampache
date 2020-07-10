@@ -73,7 +73,7 @@ class UPnPDevice
         $this->_settings['descriptionURL'] = $descriptionUrl;
 
         Session::create(array(
-            'type' => 'api',
+            'type' => 'stream',
             'sid' => 'upnp_dev_' . $descriptionUrl,
             'value' => json_encode($this->_settings)
         ));

@@ -419,8 +419,8 @@ class UPnPPlayer
 
         $sid  = 'upnp_ply_' . $this->_description_url;
         $data = json_encode($this->_intState);
-        if (! Session::exists('api', $sid)) {
-            Session::create(array('type' => 'api', 'sid' => $sid, 'value' => $data ));
+        if (! Session::exists('stream', $sid)) {
+            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $data ));
         } else {
             Session::write($sid, $data);
         }
