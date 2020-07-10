@@ -1480,16 +1480,27 @@ class Subsonic_Api
 
         if (AmpConfig::get('share')) {
             $expire_days = Share::get_expiry($input['expires']);
-            $object_id   = Subsonic_XML_Data::getAmpacheId($libitem_id);
-            if (Subsonic_XML_Data::isAlbum($libitem_id)) {
+            if (is_array($libitem_id)) {
+                if (Subsonic_XML_Data::isSong($libitem_id[0])) {
+                    $song_id     = Subsonic_XML_Data::getAmpacheId($libitem_id[0]);
+                    $tmp_song    = new Song($song_id);
+                    $libitem_id  = $tmp_song->album;
+                }
+                $object_id = Subsonic_XML_Data::getAmpacheId($tmp_song->album);
                 $object_type = 'album';
+            } else {
+                Subsonic_XML_Data::getAmpacheId($libitem_id);
+                if (Subsonic_XML_Data::isAlbum($libitem_id)) {
+                    $object_type = 'album';
+                }
+                if (Subsonic_XML_Data::isSong($libitem_id)) {
+                    $object_type = 'song';
+                }
+                if (Subsonic_XML_Data::isPlaylist($libitem_id)) {
+                    $object_type = 'playlist';
+                }
             }
-            if (Subsonic_XML_Data::isSong($libitem_id)) {
-                $object_type = 'song';
-            }
-            if (Subsonic_XML_Data::isPlaylist($libitem_id)) {
-                $object_type = 'playlist';
-            }
+            debug_event('subsonic_api.class', 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
             if (!empty($object_type)) {
                 $response = Subsonic_XML_Data::createSuccessResponse('createshare');
