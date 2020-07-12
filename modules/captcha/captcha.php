@@ -451,9 +451,9 @@ class easy_captcha
             mkdir($dir);
         }
         // clean up old files
-        if ((rand(0, 100) <= 5) && ($dh = opendir($dir))) {
+        if ((rand(0, 100) <= 5) && ($dir_handle = opendir($dir))) {
             $t_kill = time() - CAPTCHA_TIMEOUT * 1.2;
-            while (false !== ($filepath = readdir($dh))) {
+            while (false !== ($filepath = readdir($dir_handle))) {
                 if ($filepath[0] != ".") {
                     if (filemtime("$dir/$filepath") < $t_kill) {
                         @unlink("$dir/$filepath");
@@ -1357,7 +1357,7 @@ class easy_captcha_utility
         $BASE_URL         = CAPTCHA_BASE_URL;
         $PARAM_ID         = CAPTCHA_PARAM_ID;
         $PARAM_INPUT      = CAPTCHA_PARAM_INPUT;
-        $COLOR_CALC       =  CAPTCHA_INVERSE ? "32 +" : "224 -";
+        $COLOR_CALC       = CAPTCHA_INVERSE ? "32 +" : "224 -";
         easy_captcha_utility::js_header();
         print<<<END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END
 

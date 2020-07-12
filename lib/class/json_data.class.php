@@ -216,12 +216,13 @@ class JSON_Data
         }
 
         $JSON = [];
+        $TAGS = [];
 
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
-            array_push($JSON, array(
-                "id" => $tag_id,
+            array_push($TAGS, array(
+                "id" => (string) $tag_id,
                 "name" => $tag->name,
                 "albums" => (int) $counts['album'],
                 "artists" => (int) $counts['artist'],
@@ -231,6 +232,11 @@ class JSON_Data
                 "stream" => (int) $counts['live_stream']
             ));
         } // end foreach
+
+        // return a tag object
+        array_push($JSON, array(
+            "tag" => $TAGS
+        ));
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // tags
@@ -654,7 +660,7 @@ class JSON_Data
      * @param bool $encode
      * @return array|string
      */
-    public static function songs($songs, $user_id = false, $encode =  true)
+    public static function songs($songs, $user_id = false, $encode = true)
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -722,6 +728,7 @@ class JSON_Data
             $ourSong['rating']           = ($rating->get_user_rating() ?: 0);
             $ourSong['averagerating']    = ($rating->get_average_rating() ?: 0);
             $ourSong['playcount']        = (int) $song->played;
+            $ourSong['catalog']          = (int) $song->catalog;
             $ourSong['composer']         = $song->composer;
             $ourSong['channels']         = $song->channels;
             $ourSong['comment']          = $song->comment;

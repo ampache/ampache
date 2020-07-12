@@ -245,17 +245,15 @@ class Graph
         if (!$catalog) {
             $catalog_ids = Catalog::get_catalogs();
             foreach ($catalog_ids as $catalog_id) {
-                $c              = Catalog::create_from_id($catalog_id);
+                $catalog        = Catalog::create_from_id($catalog_id);
                 $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-                $pv             = 0;
                 foreach ($values as $date => $value) {
                     if (array_key_exists($date, $catalog_values)) {
-                        $value = $catalog_values[$date];
-                        $pv    = $value;
+                        $value    = $catalog_values[$date];
                     } else {
-                        $value = $pv;
+                        $value = 0;
                     }
-                    $MyData->addPoints($value, $c->name);
+                    $MyData->addPoints($value, $catalog->name);
                 }
             }
         }

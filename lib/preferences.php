@@ -220,6 +220,7 @@ function create_preference_input($name, $value)
         case 'browse_filter':
         case 'sidebar_light':
         case 'cron_cache':
+        case 'show_lyrics':
         case 'unique_playlist':
             $is_true  = '';
             $is_false = '';
@@ -365,19 +366,6 @@ function create_preference_input($name, $value)
             echo "\t<option value=\"never\"$never>" . T_('Never') . "</option>\n";
             echo "\t<option value=\"default\"$default>" . T_('Default') . "</option>\n";
             echo "\t<option value=\"always\"$always>" . T_('Always') . "</option>\n";
-            echo "</select>\n";
-        break;
-        case 'show_lyrics':
-            $is_true  = '';
-            $is_false = '';
-            if ($value == '1') {
-                $is_true = "selected=\"selected\"";
-            } else {
-                $is_false = "selected=\"selected\"";
-            }
-            echo "<select name=\"$name\">\n";
-            echo "\t<option value=\"1\" $is_true>" . T_("On") . "</option>\n";
-            echo "\t<option value=\"0\" $is_false>" . T_("Off") . "</option>\n";
             echo "</select>\n";
         break;
         case 'album_sort':

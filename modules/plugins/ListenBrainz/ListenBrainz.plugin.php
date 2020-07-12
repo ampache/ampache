@@ -132,7 +132,7 @@ class Ampachelistenbrainz
         if ($artist->mbid) {
             $additional_info['artist_mbid'] = $artist->mbid;
         }
-        $track_metadata =  array(
+        $track_metadata = array(
                 'additional_info' => $additional_info,
                 'artist_name' => $artist->name,
                 'track_name' => $song->title,

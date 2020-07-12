@@ -23,12 +23,12 @@
 define('NO_SESSION','1');
 define('CLI', 1);
 define('NO_CRON_CACHE','1');
-$path   = dirname(__FILE__); 
-$prefix = realpath($path . '/../'); 
+$path   = dirname(__FILE__);
+$prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
 // Turn off output buffering we don't need it for a command line script
-ob_end_clean(); 
+ob_end_clean();
 
 debug_event('compute_cache', 'started cache process', 3);
 

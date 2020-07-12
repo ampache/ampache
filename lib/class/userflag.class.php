@@ -145,8 +145,8 @@ class Userflag extends database_object
             } else {
                 $flagged = array(1);
             }
+            parent::add_to_cache($key, $this->id, $flagged);
         }
-        parent::add_to_cache($key, $this->id, $flagged);
 
         return $flagged;
     }

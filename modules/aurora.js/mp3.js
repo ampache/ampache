@@ -6130,7 +6130,7 @@ Layer3.prototype.reorder = function (xr, channel, sfbwidth) {
         }
     }
 
-    var len = (576 - 18 * sb); 
+    var len = (576 - 18 * sb);
     for (var i = 0; i < len; i++) {
         xr[18 * sb + i] = tmp2[sb + i];
     }

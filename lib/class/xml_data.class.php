@@ -893,6 +893,7 @@ class XML_Data
                     "\t<rating>" . ($rating->get_user_rating($user_id) ?: 0) . "</rating>\n" .
                     "\t<averagerating>" . (string) ($rating->get_average_rating() ?: 0) . "</averagerating>\n" .
                     "\t<playcount>" . $song->played . "</playcount>\n" .
+                    "\t<catalog>" . $song->catalog . "</catalog>\n" .
                     "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                     "\t<channels>" . $song->channels . "</channels>\n" .
                     "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";

@@ -507,7 +507,7 @@ class Album extends database_object implements library_item
             return self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist];
         }
 
-        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ? AND `album`.`year` = ? ";
+        $sql    = "SELECT MIN(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`disk` = ? AND `album`.`year` = ? ";
         $params = array($name, $name, $disk, $year);
 
         if ($mbid) {
@@ -532,11 +532,13 @@ class Album extends database_object implements library_item
         $db_results = Dba::read($sql, $params);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            $album_id = $row['id'];
-            // cache the album id against it's details
-            self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist] = $album_id;
+            $album_id = (int) $row['id'];
+            if ($album_id > 0) {
+                // cache the album id against it's details
+                self::$_mapcache[$name][$disk][$year][$original_year][$mbid][$mbid_group][$album_artist] = $album_id;
 
-            return (int) $album_id;
+                return $album_id;
+            }
         }
 
         if ($readonly) {
@@ -674,7 +676,7 @@ class Album extends database_object implements library_item
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
         }
 
-        $sql = "SELECT DISTINCT `album`.`id`, `album`.`disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
+        $sql = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                 "$where $catalog_where GROUP BY `album`.`id` ORDER BY `album`.`disk` ASC";
         $db_results = Dba::read($sql);
 
@@ -708,7 +710,7 @@ class Album extends database_object implements library_item
     {
         $time = 0;
 
-        $sql        = "SELECT MIN(`addition_time`) FROM `song` WHERE `album` = ?";
+        $sql        = "SELECT MIN(`addition_time`) AS `addition_time` FROM `song` WHERE `album` = ?";
         $db_results = Dba::read($sql, array($this->id));
         if ($data = Dba::fetch_row($db_results)) {
             $time = $data[0];
@@ -1197,14 +1199,15 @@ class Album extends database_object implements library_item
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
+        $sort_disk = (AmpConfig::get('album_group')) ? "AND `album`.`disk` = 1 " : "";
 
         $sql = "SELECT DISTINCT `album`.`id` FROM `album` " .
                 "LEFT JOIN `song` ON `song`.`album` = `album`.`id` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-            $where = "WHERE `catalog`.`enabled` = '1' ";
+            $where = "WHERE `catalog`.`enabled` = '1' " . $sort_disk;
         } else {
-            $where = "WHERE '1' = '1' ";
+            $where = "WHERE 1=1 " . $sort_disk;
         }
         if ($with_art) {
             $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'album' AND `image`.`object_id` = `album`.`id`) ";

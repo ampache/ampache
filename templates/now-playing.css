@@ -44,6 +44,7 @@ label {
 .box-top, .box-title, .box-bottom, .cel_username, .cel_tags, .similars, .cel_rating, .cel_userflag {
     display: none;
 }
+
 #np_group_2 {
     display: flex;
     justify-content: center;

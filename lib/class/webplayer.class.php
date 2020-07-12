@@ -236,7 +236,7 @@ class WebPlayer
      */
     public static function get_media_js_param($item, $force_type = '')
     {
-        $js = array();
+        $json = array();
         foreach (array('title', 'author') as $member) {
             if ($member == "author") {
                 $kmember = "artist";
@@ -244,7 +244,7 @@ class WebPlayer
                 $kmember = $member;
             }
 
-            $js[$kmember] = $item->$member;
+            $json[$kmember] = $item->$member;
         }
         $types = self::get_types($item, $force_type);
 
@@ -274,15 +274,15 @@ class WebPlayer
         if ($media != null) {
             $media->format();
             if ($urlinfo['type'] == 'song') {
-                $js['artist_id']             = $media->artist;
-                $js['album_id']              = $media->album;
-                $js['replaygain_track_gain'] = $media->replaygain_track_gain;
-                $js['replaygain_track_peak'] = $media->replaygain_track_peak;
-                $js['replaygain_album_gain'] = $media->replaygain_album_gain;
-                $js['replaygain_album_peak'] = $media->replaygain_album_peak;
+                $json['artist_id']             = $media->artist;
+                $json['album_id']              = $media->album;
+                $json['replaygain_track_gain'] = $media->replaygain_track_gain;
+                $json['replaygain_track_peak'] = $media->replaygain_track_peak;
+                $json['replaygain_album_gain'] = $media->replaygain_album_gain;
+                $json['replaygain_album_peak'] = $media->replaygain_album_peak;
             }
-            $js['media_id']   = $media->id;
-            $js['media_type'] = $urlinfo['type'];
+            $json['media_id']   = $media->id;
+            $json['media_type'] = $urlinfo['type'];
 
             if ($media->type != $types['real']) {
                 $url .= '&transcode_to=' . $types['real'];
@@ -290,14 +290,14 @@ class WebPlayer
             //$url .= "&content_length=required";
         }
 
-        $js['filetype'] = $types['player'];
-        $js['url']      = $url;
+        $json['filetype'] = $types['player'];
+        $json['url']      = $url;
         if ($item->image_url) {
-            $js['poster'] = $item->image_url;
+            $json['poster'] = $item->image_url;
         }
 
-        debug_event("webplayer.class", "Return get_media_js_param {" . json_encode($js) . "}", 5);
+        debug_event("webplayer.class", "Return get_media_js_param {" . json_encode($json) . "}", 5);
 
-        return json_encode($js);
+        return json_encode($json);
     }
 } // end webplayer.class

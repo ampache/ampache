@@ -179,7 +179,7 @@ while(true)
     }
 
     // Get multiple chunks according to bitrate to return enough data per second (because sleep with socket select)
-    for ($c = 0; $c < $nb_chunks; $c++)  {
+    for ($count = 0; $count < $nb_chunks; $count++)  {
 
         $chunk = $channel->get_chunk();
         $chunklen = strlen($chunk);

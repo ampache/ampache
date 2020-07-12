@@ -33,10 +33,10 @@
     font-size:.8em;
 }
 .tag_size3 {
-    font-size:1em;
+    font-size: 1em;
 }
 .tag_size4 {
-    font-size:1.2em;
+    font-size: 1.2em;
 }
 
 a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
@@ -69,7 +69,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     margin-bottom: 20px;
     line-height: 18px;
     border-color: #333;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #tabs li {
@@ -90,7 +90,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 #tabs li.tab_active a {
-    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     padding-bottom: 10px;
     text-shadow: none;
     border-bottom: 2px solid #666;
@@ -153,12 +153,12 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 
 .shoutbox-img {
     float: left;
-    display:inline;
+    display: inline;
     padding-right: 10px;
 }
 
 .shoutbox-info {
-    display:inline;
+    display: inline;
 }
 
 .shoutbox-object {
@@ -180,12 +180,12 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 .shoutbox-actions {
-    display:inline;
+    display: inline;
 }
 
 .shoutbox-user {
     font-size: 10px;
-    display:inline;
+    display: inline;
     text-align: right;
     float: right;
 }
@@ -208,8 +208,8 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 .searchitemtxt {
-    display:inline-block;
-    vertical-align:middle;
+    display: inline-block;
+    vertical-align: middle;
     height: 32px;
 }
 

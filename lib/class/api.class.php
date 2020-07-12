@@ -282,7 +282,7 @@ class Api
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    self::message('error',  T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['format']);
+                    self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['format']);
 
                     return false;
                 }
@@ -387,7 +387,7 @@ class Api
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        self::message('error',  T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['format']);
+        self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['format']);
  
         return false;
     } // handshake
@@ -966,7 +966,7 @@ class Api
 
     /**
      * licenses
-     * MINIMUM_API_VERSION=380001
+     * MINIMUM_API_VERSION=410001
      *
      * This returns the licenses  based on the specified filter
      *
@@ -975,9 +975,16 @@ class Api
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function licenses($input)
     {
+        if (!AmpConfig::get('licensing')) {
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+
         self::$browse->reset_filters();
         self::$browse->set_type('license');
         self::$browse->set_sort('name', 'ASC');
@@ -999,11 +1006,13 @@ class Api
                 echo XML_Data::licenses($licenses);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // licenses
 
     /**
      * license
-     * MINIMUM_API_VERSION=380001
+     * MINIMUM_API_VERSION=410001
      *
      * This returns a single license based on UID
      *
@@ -1013,6 +1022,11 @@ class Api
      */
     public static function license($input)
     {
+        if (!AmpConfig::get('licensing')) {
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
         if (!self::check_parameter($input, array('filter'), 'license')) {
             return false;
         }
@@ -1029,6 +1043,41 @@ class Api
 
         return true;
     } // license
+
+    /**
+     * license_songs
+     * MINIMUM_API_VERSION=410001
+     *
+     * This returns all songs attached to a license ID
+     *
+     * @param array $input
+     * filter = (string) UID of license
+     * @return boolean
+     */
+    public static function license_songs($input)
+    {
+        if (!AmpConfig::get('licensing')) {
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['format']);
+
+            return false;
+        }
+        if (!self::check_parameter($input, array('filter'), 'license_songs')) {
+            return false;
+        }
+        $user     = User::get_from_username(Session::username($input['auth']));
+        $song_ids = License::get_license_songs(scrub_in($input['filter']));
+        ob_end_clean();
+        switch ($input['format']) {
+            case 'json':
+                echo JSON_Data::songs($song_ids, $user->id);
+                break;
+            default:
+                echo XML_Data::songs($song_ids, $user->id);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // license_songs
 
     /**
      * tags
@@ -3327,6 +3376,9 @@ class Api
         if (!self::check_parameter($input, array('catalog', 'task'), 'catalog_action')) {
             return false;
         }
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'catalog_action', $input['format'])) {
+            return false;
+        }
         $task = (string) $input['task'];
         // confirm the correct data
         if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
@@ -3341,10 +3393,11 @@ class Api
             unset($SSE_OUTPUT);
             switch ($task) {
                 case 'clean_catalog':
-                    $catalog->clean_catalog();
+                    $catalog->clean_catalog_proc();
+                    Catalog::clean_empty_albums();
                 break;
                 case 'verify_catalog':
-                    $catalog->verify_catalog();
+                    $catalog->verify_catalog_proc();
                 break;
                 case 'gather_art':
                     $catalog->gather_art();

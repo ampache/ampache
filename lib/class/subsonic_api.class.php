@@ -1475,21 +1475,32 @@ class Subsonic_Api
      */
     public static function createshare($input)
     {
-        $id          = self::check_parameter($input, 'id');
+        $libitem_id  = self::check_parameter($input, 'id');
         $description = $input['description'];
 
         if (AmpConfig::get('share')) {
             $expire_days = Share::get_expiry($input['expires']);
-            $object_id   = Subsonic_XML_Data::getAmpacheId($id);
-            if (Subsonic_XML_Data::isAlbum($id)) {
+            $object_id   = null;
+            $object_type = null;
+            if (is_array($libitem_id) && Subsonic_XML_Data::isSong($libitem_id[0])) {
+                $song_id     = Subsonic_XML_Data::getAmpacheId($libitem_id[0]);
+                $tmp_song    = new Song($song_id);
+                $libitem_id  = $tmp_song->album;
+                $object_id   = Subsonic_XML_Data::getAmpacheId($tmp_song->album);
                 $object_type = 'album';
+            } else {
+                Subsonic_XML_Data::getAmpacheId($libitem_id);
+                if (Subsonic_XML_Data::isAlbum($libitem_id)) {
+                    $object_type = 'album';
+                }
+                if (Subsonic_XML_Data::isSong($libitem_id)) {
+                    $object_type = 'song';
+                }
+                if (Subsonic_XML_Data::isPlaylist($libitem_id)) {
+                    $object_type = 'playlist';
+                }
             }
-            if (Subsonic_XML_Data::isSong($id)) {
-                $object_type = 'song';
-            }
-            if (Subsonic_XML_Data::isPlaylist($id)) {
-                $object_type = 'playlist';
-            }
+            debug_event('subsonic_api.class', 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
             if (!empty($object_type)) {
                 $response = Subsonic_XML_Data::createSuccessResponse('createshare');
@@ -1870,12 +1881,18 @@ class Subsonic_Api
             $oid   = $rid;
         }
 
+        $counter = 0;
         foreach ($oid as $object) {
             $aid   = Subsonic_XML_Data::getAmpacheId($object);
             $type  = Subsonic_XML_Data::getAmpacheType($object);
             $media = new $type($aid);
             $media->format();
 
+            // internal scrobbling (user_activity and object_count tables)
+            if (($submission === 'true' || $submission === '1') && $counter == 0) {
+                $media->set_played($user->id, $input['c'], array(), time());
+                $counter++;
+            }
             //scrobble plugins
             if ($submission === 'true' || $submission === '1') {
                 // stream has finished
@@ -1886,8 +1903,6 @@ class Subsonic_Api
                 debug_event('subsonic_api.class', 'now_playing: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) $time, 5);
                 Stream::garbage_collection();
                 Stream::insert_now_playing((int) $media->id, (int) $user->id, (int) $media->time, $user->username, $type);
-                //internal scrobbling is triggered by the now playing, as otherwise parts will be left out
-                $media->set_played($user->id, $input['c'], array(), time());
             }
         }
 
@@ -2242,18 +2257,18 @@ class Subsonic_Api
      */
     public static function createbookmark($input)
     {
-        $id       = self::check_parameter($input, 'id');
-        $position = self::check_parameter($input, 'position');
-        $comment  = $input['comment'];
-        $type     = Subsonic_XML_Data::getAmpacheType($id);
+        $object_id = self::check_parameter($input, 'id');
+        $position  = self::check_parameter($input, 'position');
+        $comment   = $input['comment'];
+        $type      = Subsonic_XML_Data::getAmpacheType($object_id);
 
         if (!empty($type)) {
-            $bookmark = new Bookmark(Subsonic_XML_Data::getAmpacheId($id), $type);
+            $bookmark = new Bookmark(Subsonic_XML_Data::getAmpacheId($object_id), $type);
             if ($bookmark->id) {
                 $bookmark->update($position);
             } else {
                 Bookmark::create(array(
-                    'object_id' => Subsonic_XML_Data::getAmpacheId($id),
+                    'object_id' => Subsonic_XML_Data::getAmpacheId($object_id),
                     'object_type' => $type,
                     'comment' => $comment,
                     'position' => $position

@@ -21,14 +21,14 @@
  */
 
 define('NO_SESSION','1');
-$path = dirname(__FILE__); 
-$prefix = realpath($path . '/../'); 
+$path = dirname(__FILE__);
+$prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
 // Turn off output buffering we don't need it for a command line script
-ob_end_clean(); 
+ob_end_clean();
 
-$meta = 'linux'; 
+$meta = 'linux';
 
 // Take input from the command line, two options linux or windows
 if (count($_SERVER['argv']) > 1) { 

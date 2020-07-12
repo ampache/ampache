@@ -317,7 +317,7 @@ class Catalog_Seafile extends Catalog
                 $results = $this->download_metadata($file);
                 /* HINT: filename (File path) */
                 UI::update_text('', sprintf(T_('Adding a new song: %s'), $file->name));
-                $added =  Song::insert($results);
+                $added = Song::insert($results);
 
                 if ($added) {
                     $this->count++;

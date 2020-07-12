@@ -70,7 +70,7 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_name =  $this->name;
+        $this->f_name = $this->name;
         $this->f_type = ($this->type == 'private') ? UI::get_icon('lock', T_('Private')) : '';
 
         if ($details) {

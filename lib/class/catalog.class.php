@@ -247,10 +247,10 @@ abstract class Catalog extends database_object
      * This function attempts to create a catalog type
      * all Catalog modules should be located in /modules/catalog/<name>/<name>.class.php
      * @param string $type
-     * @param integer $id
+     * @param integer $catalog_id
      * @return Catalog|null
      */
-    public static function create_catalog_type($type, $id = 0)
+    public static function create_catalog_type($type, $catalog_id = 0)
     {
         if (!$type) {
             return null;
@@ -267,8 +267,8 @@ abstract class Catalog extends database_object
         } // include
         else {
             $class_name = "Catalog_" . $type;
-            if ($id > 0) {
-                $catalog = new $class_name($id);
+            if ($catalog_id > 0) {
+                $catalog = new $class_name($catalog_id);
             } else {
                 $catalog = new $class_name();
             }
@@ -461,10 +461,10 @@ abstract class Catalog extends database_object
     /**
      * Get enable sql filter;
      * @param string $type
-     * @param string $id
+     * @param string $catalog_id
      * @return string
      */
-    public static function get_enable_filter($type, $id)
+    public static function get_enable_filter($type, $catalog_id)
     {
         $sql = "";
         if ($type == "song" || $type == "album" || $type == "artist") {
@@ -472,10 +472,10 @@ abstract class Catalog extends database_object
                 $type = "id";
             }
             $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` " .
-                "WHERE `song_dis`.`" . $type . "`=" . $id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
+                "WHERE `song_dis`.`" . $type . "`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
         } elseif ($type == "video") {
             $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` " .
-                "WHERE `video_dis`.`id`=" . $id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
+                "WHERE `video_dis`.`id`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
         }
 
         return $sql;
@@ -851,9 +851,9 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql = 'SELECT DISTINCT(`song`.`album`) FROM `song` WHERE `song`.`catalog` = ?';
+        $sql = 'SELECT DISTINCT(`song`.`album`) AS `album` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`album`) FROM `song`" .
+            $sql = "SELECT DISTINCT(`song`.`album`) AS `album` FROM `song`" .
                    "LEFT JOIN `image` ON `song`.`album` = `image`.`object_id` AND `object_type` = 'album'" .
                    "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
@@ -877,7 +877,7 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql = 'SELECT DISTINCT(`video`.`id`) FROM `video` ';
+        $sql = 'SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` ';
         if (!empty($type)) {
             $sql .= 'JOIN `' . $type . '` ON `' . $type . '`.`id` = `video`.`id`';
         }
@@ -949,7 +949,7 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql = 'SELECT DISTINCT(`tvshow`.`id`) FROM `tvshow` ';
+        $sql = 'SELECT DISTINCT(`tvshow`.`id`) AS `id` FROM `tvshow` ';
         $sql .= 'JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` ';
         $sql .= 'JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` ';
         $sql .= 'JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ';
@@ -998,15 +998,15 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql        = 'SELECT DISTINCT(`song`.`artist`) FROM `song` WHERE `song`.`catalog` = ?';
+        $sql        = 'SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`artist`) FROM `song`" .
+            $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song`" .
                 "LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'" .
                 "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
         if ($filter === 'info') {
             // only update info when you haven't done it for 6 months
-            $sql = "SELECT DISTINCT(`artist`.`id`) FROM `artist`" .
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `id` FROM `artist`" .
                 "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
         }
         $db_results = Dba::read($sql, array($this->id));
@@ -1181,7 +1181,7 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `song`.`album`as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
+        $sql = "SELECT `song`.`album` as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
             "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where " .
         "GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
@@ -1287,18 +1287,18 @@ abstract class Catalog extends database_object
     /**
      * gather_art_item
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      * @param boolean $db_art_first
      * @param boolean $api
      * @return boolean
      */
-    public static function gather_art_item($type, $id, $db_art_first = false, $api = false)
+    public static function gather_art_item($type, $object_id, $db_art_first = false, $api = false)
     {
         // Should be more generic !
         if ($type == 'video') {
-            $libitem = Video::create_from_id($id);
+            $libitem = Video::create_from_id($object_id);
         } else {
-            $libitem = new $type($id);
+            $libitem = new $type($object_id);
         }
         $inserted = false;
         $options  = array();
@@ -1329,13 +1329,13 @@ abstract class Catalog extends database_object
             }
         }
 
-        $art = new Art($id, $type);
+        $art = new Art($object_id, $type);
         // don't search for art when you already have it
         if ($art->has_db_info() && $db_art_first) {
-            debug_event('catalog.class', 'Blocking art search for ' . $type . '/' . $id . ' DB item exists', 5);
+            debug_event('catalog.class', 'Blocking art search for ' . $type . '/' . $object_id . ' DB item exists', 5);
             $results = array();
         } else {
-            debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $id . '...', 4);
+            debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $object_id . '...', 4);
             $results = $art->gather($options);
         }
 
@@ -1363,11 +1363,11 @@ abstract class Catalog extends database_object
         }
 
         if ($type == 'video' && AmpConfig::get('generate_video_preview')) {
-            Video::generate_preview($id);
+            Video::generate_preview($object_id);
         }
 
         if (UI::check_ticker() && !$api) {
-            UI::update_text('read_art_' . $id, $libitem->get_fullname());
+            UI::update_text('read_art_' . $object_id, $libitem->get_fullname());
         }
         if ($inserted) {
             return true;
@@ -1426,7 +1426,7 @@ abstract class Catalog extends database_object
             $searches['video'] = $videos;
         }
 
-        debug_event('catalog.class', 'gather_art found ' . (string) count($searches) . 'items missing art', 4);
+        debug_event('catalog.class', 'gather_art found ' . (string) count($searches) . ' items missing art', 4);
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $objectid) {
@@ -2698,17 +2698,17 @@ abstract class Catalog extends database_object
     /**
      * Get all tags from all Songs from [type] (artist, album, ...)
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      * @return array
      */
-    protected static function getSongTags($type, $id)
+    protected static function getSongTags($type, $object_id)
     {
         $tags       = array();
         $db_results = Dba::read('SELECT `tag`.`name` FROM `tag`'
                         . ' JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id`'
                         . ' JOIN `song` ON `tag_map`.`object_id` = `song`.`id`'
                         . ' WHERE `song`.`' . $type . '` = ? AND `tag_map`.`object_type` = "song"'
-                        . ' GROUP BY `tag`.`id`, `tag`.`name`', array($id));
+                        . ' GROUP BY `tag`.`id`, `tag`.`name`', array($object_id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $tags[] = $row['name'];
         }
@@ -2871,42 +2871,16 @@ abstract class Catalog extends database_object
     {
         if ($old_object_id != $new_object_id) {
             debug_event('catalog.class', 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id, 4);
-            if (!Stats::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' STATS migration failed!', 2);
-            }
-            if (!UserActivity::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' USERACTIVITY migration failed!', 2);
-            }
-            if (!Recommendation::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' RECOMMENDATION migration failed!', 2);
-            }
-            if (!Share::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' SHARE migration failed!', 2);
-            }
-            if (!Shoutbox::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' SHOUTBOX migration failed!', 2);
-            }
-            if (!Tag::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' TAG_MAP migration failed!', 2);
-            }
-            if (!Userflag::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' USERFLAG migration failed!', 2);
-            }
-            if (!Rating::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' RATING migration failed!', 2);
-            }
-            if (!Art::migrate($object_type, $old_object_id, $new_object_id)) {
-                debug_event('catalog.class', 'migrate ' . $object_type .
-                        ' from ' . $old_object_id . ' to ' . $new_object_id . ' ART migration failed!', 2);
-            }
+
+            Stats::migrate($object_type, $old_object_id, $new_object_id);
+            UserActivity::migrate($object_type, $old_object_id, $new_object_id);
+            Recommendation::migrate($object_type, $old_object_id, $new_object_id);
+            Share::migrate($object_type, $old_object_id, $new_object_id);
+            Shoutbox::migrate($object_type, $old_object_id, $new_object_id);
+            Tag::migrate($object_type, $old_object_id, $new_object_id);
+            Userflag::migrate($object_type, $old_object_id, $new_object_id);
+            Rating::migrate($object_type, $old_object_id, $new_object_id);
+            Art::migrate($object_type, $old_object_id, $new_object_id);
 
             return true;
         }

@@ -245,27 +245,27 @@ class TVShow_Episode extends Video
      */
     public function display_art($thumb = 2, $force = false)
     {
-        $id   = null;
-        $type = null;
+        $episode_id = null;
+        $type       = null;
 
         if (Art::has_db($this->id, 'video')) {
-            $id   = $this->id;
-            $type = 'video';
+            $episode_id = $this->id;
+            $type       = 'video';
         } else {
             if (Art::has_db($this->season, 'tvshow_season')) {
-                $id   = $this->season;
-                $type = 'tvshow_season';
+                $episode_id = $this->season;
+                $type       = 'tvshow_season';
             } else {
                 $season = new TVShow_Season($this->season);
                 if (Art::has_db($season->tvshow, 'tvshow') || $force) {
-                    $id   = $season->tvshow;
-                    $type = 'tvshow';
+                    $episode_id = $season->tvshow;
+                    $type       = 'tvshow';
                 }
             }
         }
 
-        if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        if ($episode_id !== null && $type !== null) {
+            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 

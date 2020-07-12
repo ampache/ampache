@@ -749,16 +749,16 @@ class Artist extends database_object implements library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        $id   = null;
-        $type = null;
+        $artist_id = null;
+        $type      = null;
 
         if (Art::has_db($this->id, 'artist') || $force) {
-            $id   = $this->id;
-            $type = 'artist';
+            $artist_id = $this->id;
+            $type      = 'artist';
         }
 
-        if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        if ($artist_id !== null && $type !== null) {
+            Art::display($type, $artist_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 
@@ -827,7 +827,7 @@ class Artist extends database_object implements library_item
             $db_results = Dba::read($sql, array($mbid));
 
             if ($row = Dba::fetch_assoc($db_results)) {
-                $artist_id = $row['id'];
+                $artist_id = (int) $row['id'];
                 $exists    = true;
             }
         }
@@ -873,12 +873,12 @@ class Artist extends database_object implements library_item
         if (!$db_results) {
             return null;
         }
-        $artist_id = Dba::insert_id();
+        $artist_id = (int) Dba::insert_id();
         debug_event('artist.class', 'Artist check created new artist id `' . $artist_id . '`.', 4);
 
         self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
-        return (int) $artist_id;
+        return $artist_id;
     }
 
     /**

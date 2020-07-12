@@ -4,7 +4,7 @@
     http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/
 -----------------------------*/
 
-#dropfile{
+#dropfile {
     background-color: #2E3134;
     padding: 40px 50px;
     margin-bottom: 30px;
@@ -14,52 +14,52 @@
     text-align: center;
     text-transform: uppercase;
 
-    font-size:16px;
-    font-weight:bold;
-    color:#7f858a;
+    font-size: 16px;
+    font-weight: bold;
+    color: #7f858a;
 }
 
 #dropfile a{
-    background-color:#007a96;
-    padding:12px 26px;
-    color:#fff;
-    font-size:14px;
-    border-radius:2px;
-    cursor:pointer;
-    display:inline-block;
-    margin-top:12px;
-    line-height:1;
+    background-color: #007a96;
+    padding: 12px 26px;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 12px;
+    line-height: 1;
 }
 
 #dropfile a:hover{
-    background-color:#0986a3;
+    background-color: #0986a3;
 }
 
 #dropfile input{
-    display:none;
+    display: none;
 }
 
 #uploadfile ul{
-    list-style:none;
-    margin:0 -30px;
-    border-top:1px solid #2b2e31;
-    border-bottom:1px solid #3d4043;
+    list-style: none;
+    margin: 0 -30px;
+    border-top: 1px solid #2b2e31;
+    border-bottom: 1px solid #3d4043;
 }
 
 #uploadfile ul li{
 
-    background-color:#333639;
+    background-color: #333639;
 
-    background-image:-moz-linear-gradient(top, #333639, #303335);
-    background-image:-webkit-linear-gradient(top, #333639, #303335);
-    background-image:-webkit-gradient(top, #333639, #303335);
-    background-image:-o-linear-gradient(top, #333639, #303335);
-    background-image:-ms-linear-gradient(top, #333639, #303335);
-    background-image:linear-gradient(top, #333639, #303335);
+    background-image: -moz-linear-gradient(to top, #333639, #303335);
+    background-image: -webkit-linear-gradient(to top, #333639, #303335);
+    background-image: -webkit-gradient(to top, #333639, #303335);
+    background-image: -o-linear-gradient(to top, #333639, #303335);
+    background-image: -ms-linear-gradient(to top, #333639, #303335);
+    background-image: linear-gradient(to top, #333639, #303335);
 
-    border-top:1px solid #3d4043;
-    border-bottom:1px solid #2b2e31;
-    padding:15px;
+    border-top: 1px solid #3d4043;
+    border-bottom: 1px solid #2b2e31;
+    padding: 15px;
     height: 52px;
 
     position: relative;
@@ -83,9 +83,9 @@
 
 #uploadfile ul li i{
     font-weight: normal;
-    font-style:normal;
-    color:#7f7f7f;
-    display:block;
+    font-style: normal;
+    color: #7f7f7f;
+    display: block;
 }
 
 #uploadfile ul li canvas{
@@ -101,7 +101,7 @@
     position: absolute;
     top: 34px;
     right: 33px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 #uploadfile ul li.working span{
@@ -110,7 +110,7 @@
 }
 
 #uploadfile ul li.error p{
-    color:red;
+    color: red;
 }
 
 /*----------------------------

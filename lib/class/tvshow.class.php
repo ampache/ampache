@@ -324,7 +324,7 @@ class TVShow extends database_object implements library_item
             return self::$_mapcache[$name]['null'];
         }
 
-        $id         = 0;
+        $tvshow_id  = 0;
         $exists     = false;
         $trimmed    = Catalog::trim_prefix(trim((string) $name));
         $name       = $trimmed['string'];
@@ -338,14 +338,14 @@ class TVShow extends database_object implements library_item
         }
 
         if (count($id_array)) {
-            $id     = array_shift($id_array);
-            $exists = true;
+            $tvshow_id = array_shift($id_array);
+            $exists    = true;
         }
 
-        if ($exists) {
-            self::$_mapcache[$name]['null'] = $id;
+        if ($exists && (int) $tvshow_id > 0) {
+            self::$_mapcache[$name]['null'] = $tvshow_id;
 
-            return $id;
+            return $tvshow_id;
         }
 
         if ($readonly) {
@@ -357,11 +357,11 @@ class TVShow extends database_object implements library_item
         if (!$db_results) {
             return null;
         }
-        $show_id = Dba::insert_id();
+        $tvshow_id = Dba::insert_id();
 
-        self::$_mapcache[$name]['null'] = $show_id;
+        self::$_mapcache[$name]['null'] = $tvshow_id;
 
-        return $show_id;
+        return $tvshow_id;
     }
 
     /**

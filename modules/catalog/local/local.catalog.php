@@ -547,10 +547,6 @@ class Catalog_local extends Catalog
         $total_updated = 0;
         $this->count   = 0;
 
-        if (!defined('SSE_OUTPUT')) {
-            require_once AmpConfig::get('prefix') . UI::find_template('show_verify_catalog.inc.php');
-            flush();
-        }
         $this->update_last_update();
 
         foreach (array('video', 'song') as $media_type) {
@@ -840,33 +836,33 @@ class Catalog_local extends Catalog
             }
         }
 
-        $id = Song::insert($results);
-        if ($id) {
+        $song_id = Song::insert($results);
+        if ($song_id) {
             // If song rating tag exists and is well formed (array user=>rating), add it
             if (array_key_exists('rating', $results) && is_array($results['rating'])) {
                 // For each user's ratings, call the function
                 foreach ($results['rating'] as $user => $rating) {
-                    debug_event('local.catalog', "Setting rating for Song $id to $rating for user $user", 5);
-                    $o_rating = new Rating($id, 'song');
+                    debug_event('local.catalog', "Setting rating for Song $song_id to $rating for user $user", 5);
+                    $o_rating = new Rating($song_id, 'song');
                     $o_rating->set_rating($rating, $user);
                 }
             }
             // Extended metadata loading is not deferred, retrieve it now
             if (!AmpConfig::get('deferred_ext_metadata')) {
-                $song = new Song($id);
+                $song = new Song($song_id);
                 Recommendation::get_artist_info($song->artist);
             }
             if (Song::isCustomMetadataEnabled()) {
-                $song    = new Song($id);
+                $song    = new Song($song_id);
                 $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
                 self::add_metadata($song, $results);
             }
-            $this->added_songs_to_gather[] = $id;
+            $this->added_songs_to_gather[] = $song_id;
 
-            $this->_filecache[strtolower($file)] = $id;
+            $this->_filecache[strtolower($file)] = $song_id;
         }
 
-        return $id;
+        return $song_id;
     }
 
     /**
@@ -891,21 +887,21 @@ class Catalog_local extends Catalog
         $results            = vainfo::clean_tag_info($vainfo->tags, $tag_name, $file);
         $results['catalog'] = $this->id;
 
-        $id = Video::insert($results, $gtypes, $options);
+        $video_id = Video::insert($results, $gtypes, $options);
         if ($results['art']) {
-            $art = new Art($id, 'video');
+            $art = new Art($video_id, 'video');
             $art->insert_url($results['art']);
 
             if (AmpConfig::get('generate_video_preview')) {
-                Video::generate_preview($id);
+                Video::generate_preview($video_id);
             }
         } else {
-            $this->added_videos_to_gather[] = $id;
+            $this->added_videos_to_gather[] = $video_id;
         }
 
-        $this->_filecache[strtolower($file)] = 'v_' . $id;
+        $this->_filecache[strtolower($file)] = 'v_' . $video_id;
 
-        return $id;
+        return $video_id;
     } // insert_local_video
 
     private function sync_podcasts()

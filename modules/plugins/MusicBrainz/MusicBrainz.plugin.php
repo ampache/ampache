@@ -97,13 +97,13 @@ class AmpacheMusicBrainz
             return null;
         }
 
-        $mb       = new MusicBrainz(new RequestsHttpAdapter());
+        $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array(
             'artists',
             'releases'
         );
         try {
-            $track = $mb->lookup('recording', $mbid, $includes);
+            $track = $mbrainz->lookup('recording', $mbid, $includes);
         } catch (Exception $error) {
             debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 

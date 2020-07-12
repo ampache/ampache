@@ -148,6 +148,26 @@ class License
     } // get_licenses
 
     /**
+     * get_license_songs
+     * Returns a list of song ID's attached to a license ID.
+     *
+     * @param integer $license_id
+     * @return integer[]
+     */
+    public static function get_license_songs($license_id)
+    {
+        $sql        = 'SELECT `id` from `song` WHERE `song`.`license` = ?';
+        $db_results = Dba::read($sql, array($license_id));
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    } // get_license_songs
+
+    /**
      * lookup
      * Returns a license matched by name or create one if missing
      * @param string $value

@@ -816,11 +816,11 @@ class Search extends playlist_object
         );
 
         $playlists = array();
-        $searches  = Search::get_searches();
+        $searches  = self::get_searches();
         foreach ($searches as $playlistid) {
             // Slightly different from the above so we don't instigate
             // a vicious loop.
-            $playlists[$playlistid] = Search::get_name_byid($playlistid);
+            $playlists[$playlistid] = self::get_name_byid($playlistid);
         }
         $this->types[] = array(
             'name' => 'smartplaylist',
@@ -842,12 +842,12 @@ class Search extends playlist_object
             'widget' => array('subtypes', array('input', 'text'))
         );
 
-        $licenses = array();
-        foreach (License::get_licenses() as $license_id) {
-            $license               = new License($license_id);
-            $licenses[$license_id] = $license->name;
-        }
         if (AmpConfig::get('licensing')) {
+            $licenses = array();
+            foreach (License::get_licenses() as $license_id) {
+                $license               = new License($license_id);
+                $licenses[$license_id] = $license->name;
+            }
             $this->types[] = array(
                 'name' => 'license',
                 'label' => T_('Music License'),
@@ -1266,7 +1266,7 @@ class Search extends playlist_object
         $this->date = time();
         $this->set_last(count($results), 'last_count');
 
-        Search::set_last(Search::get_total_duration($results), 'last_duration');
+        self::set_last(self::get_total_duration($results), 'last_duration');
 
         return $results;
     }
@@ -1453,14 +1453,14 @@ class Search extends playlist_object
      */
     public function to_js()
     {
-        $js = "";
+        $javascript = "";
         foreach ($this->rules as $rule) {
-            $js .= '<script>' .
+            $javascript .= '<script>' .
                 'SearchRow.add("' . $rule[0] . '","' .
                 $rule[1] . '","' . $rule[2] . '", "' . $rule[3] . '"); </script>';
         }
 
-        return $js;
+        return $javascript;
     }
 
     /**
@@ -1757,7 +1757,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`album`.`id`) FROM `album`',
+            'base' => 'SELECT MIN(`album`.`id`) AS `id` FROM `album`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2009,8 +2009,8 @@ class Search extends playlist_object
                 case 'tag':
                     $key = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                        $where[]           = "`realtag_$key`.`name` $sql_match_operator '$input'";
-                        $join['tag'][$key] = "$sql_match_operator '$input'";
+                        $where[]           = "`realtag_$key`.`name` IS NOT NULL";
+                        $join['tag'][$key] = "AND `tag`.`name` $sql_match_operator '$input' ";
                     } else {
                         $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
@@ -2020,8 +2020,8 @@ class Search extends playlist_object
                     $key           = md5($input . $sql_match_operator);
                     $join['album'] = true;
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                        $where[]                 = "`realtag_$key`.`name` $sql_match_operator '$input'";
-                        $join['album_tag'][$key] = "$sql_match_operator '$input'";
+                        $where[]                 = "`realtag_$key`.`name` IS NOT NULL";
+                        $join['album_tag'][$key] = "AND `tag`.`name` $sql_match_operator '$input' ";
                     } else {
                         $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
@@ -2031,8 +2031,8 @@ class Search extends playlist_object
                     $key            = md5($input . $sql_match_operator);
                     $join['artist'] = true;
                     if ($sql_match_operator == 'LIKE' || $sql_match_operator == 'NOT LIKE') {
-                        $where[]                  = "`realtag_$key`.`name` $sql_match_operator '$input'";
-                        $join['artist_tag'][$key] = "$sql_match_operator '$input'";
+                        $where[]                  = "`realtag_$key`.`name` IS NOT NULL";
+                        $join['artist_tag'][$key] = "AND `tag`.`name` $sql_match_operator '$input' ";
                     } else {
                         $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
@@ -2300,6 +2300,7 @@ class Search extends playlist_object
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='song' " .
+                    "$value" .
                     "GROUP BY `object_id`" .
                     ") AS `realtag_$key` " .
                     "ON `song`.`id`=`realtag_$key`.`object_id`";
@@ -2313,6 +2314,7 @@ class Search extends playlist_object
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='album' " .
+                    "$value" .
                     "GROUP BY `object_id`" .
                     ") AS realtag_$key " .
                     "ON `album`.`id`=`realtag_$key`.`object_id`";
@@ -2326,6 +2328,7 @@ class Search extends playlist_object
                     "FROM `tag` LEFT JOIN `tag_map` " .
                     "ON `tag`.`id`=`tag_map`.`tag_id` " .
                     "WHERE `tag_map`.`object_type`='artist' " .
+                    "$value" .
                     "GROUP BY `object_id`" .
                     ") AS realtag_$key " .
                     "ON `artist`.`id`=`realtag_$key`.`object_id`";

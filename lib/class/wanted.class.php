@@ -117,12 +117,12 @@ class Wanted extends database_object
      */
     public static function get_missing_albums($artist, $mbid = '')
     {
-        $mb       = new MusicBrainz(new RequestsHttpAdapter());
+        $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array('release-groups');
         $types    = explode(',', AmpConfig::get('wanted_types'));
 
         try {
-            $martist = $mb->lookup('artist', $artist ? $artist->mbid : $mbid, $includes);
+            $martist = $mbrainz->lookup('artist', $artist ? $artist->mbid : $mbid, $includes);
         } catch (Exception $error) {
             debug_event('wanted.class', 'get_missing_albums ERROR: ' . $error, 3);
 
@@ -139,7 +139,7 @@ class Wanted extends database_object
                     $owngroups[] = $album->mbid_group;
                 } else {
                     if (trim((string) $album->mbid)) {
-                        $malbum = $mb->lookup('release', $album->mbid, array('release-groups'));
+                        $malbum = $mbrainz->lookup('release', $album->mbid, array('release-groups'));
                         if ($malbum->{'release-group'}) {
                             if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
                                 $owngroups[] = $malbum->{'release-group'}->id;
@@ -219,12 +219,12 @@ class Wanted extends database_object
         if (parent::is_cached('missing_artist', $mbid)) {
             $wartist = parent::get_from_cache('missing_artist', $mbid);
         } else {
-            $mb              = new MusicBrainz(new RequestsHttpAdapter());
+            $mbrainz         = new MusicBrainz(new RequestsHttpAdapter());
             $wartist['mbid'] = $mbid;
             $wartist['name'] = T_('Unknown Artist');
 
             try {
-                $martist = $mb->lookup('artist', $mbid);
+                $martist = $mbrainz->lookup('artist', $mbid);
             } catch (Exception $error) {
                 return $wartist;
             }
@@ -249,8 +249,8 @@ class Wanted extends database_object
             'artist' => $name
         );
         $filter   = new ArtistFilter($args);
-        $mb       = new MusicBrainz(new RequestsHttpAdapter());
-        $res      = $mb->search($filter);
+        $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
+        $res      = $mbrainz->search($filter);
         $wartists = array();
         foreach ($res as $r) {
             $wartists[] = array(
@@ -316,8 +316,8 @@ class Wanted extends database_object
     public static function delete_wanted_release($mbid)
     {
         if (self::get_accepted_wanted_count() > 0) {
-            $mb     = new MusicBrainz(new RequestsHttpAdapter());
-            $malbum = $mb->lookup('release', $mbid, array('release-groups'));
+            $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
+            $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
             if ($malbum->{'release-group'}) {
                 self::delete_wanted(print_r($malbum->{'release-group'}, true));
             }
@@ -433,11 +433,11 @@ class Wanted extends database_object
      */
     public function load_all($track_details = true)
     {
-        $mb          = new MusicBrainz(new RequestsHttpAdapter());
+        $mbrainz     = new MusicBrainz(new RequestsHttpAdapter());
         $this->songs = array();
 
         try {
-            $group = $mb->lookup('release-group', $this->mbid, array( 'releases' ));
+            $group = $mbrainz->lookup('release-group', $this->mbid, array( 'releases' ));
             // Set fresh data
             $this->name = $group->title;
             $this->year = date("Y", strtotime($group->{'first-release-date'}));
@@ -448,7 +448,7 @@ class Wanted extends database_object
                 $this->release_mbid = $group->releases[0]->id;
                 if ($track_details && count($this->songs) == 0) {
                     // Use the first release as reference for track content
-                    $release = $mb->lookup('release', $this->release_mbid, array( 'recordings' ));
+                    $release = $mbrainz->lookup('release', $this->release_mbid, array( 'recordings' ));
                     foreach ($release->media as $media) {
                         foreach ($media->tracks as $track) {
                             $song          = array();

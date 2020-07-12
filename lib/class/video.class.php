@@ -730,7 +730,7 @@ class Video extends database_object implements media, library_item
             $count = 1;
         }
 
-        $sql   = "SELECT DISTINCT(`video`.`id`) FROM `video` ";
+        $sql   = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` ";
         $where = "WHERE `video`.`enabled` = '1' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";

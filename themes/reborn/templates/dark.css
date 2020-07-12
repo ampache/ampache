@@ -47,25 +47,25 @@ hr {
 
 input[type=password], input[type=text], textarea {
     background-color: #f5f5f5;
-    background-image: -moz-linear-gradient(top,#eee,#fff);
-    background-image: -ms-linear-gradient(top,#eee,#fff);
+    background-image: -moz-linear-gradient(to top, #eee, #fff);
+    background-image: -ms-linear-gradient(to top, #eee, #fff);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(#eee),to(#fff));
-    background-image: -webkit-linear-gradient(top,#eee,#fff);
-    background-image: -o-linear-gradient(top,#eee,#fff);
-    background-image: linear-gradient(top,#eee,#fff);
+    background-image: -webkit-linear-gradient(to top, #eee, #fff);
+    background-image: -o-linear-gradient(to top, #eee, #fff);
+    background-image: linear-gradient(to top, #eee, #fff);
     border-color: #fff;
 }
 
 input[type=button], input[type=submit] {
-    background-image: -moz-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: -ms-linear-gradient(top,#ff9d00,#cc6200);
+    background-image: -moz-linear-gradient(to top,#ff9d00,#cc6200);
+    background-image: -ms-linear-gradient(to top,#ff9d00,#cc6200);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(#ff9d00),to(#cc6200));
-    background-image: -webkit-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: -o-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: linear-gradient(top,#ff9d00,#cc6200);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.2);
+    background-image: -webkit-linear-gradient(to top,#ff9d00,#cc6200);
+    background-image: -o-linear-gradient(to top,#ff9d00,#cc6200);
+    background-image: linear-gradient(to top,#ff9d00,#cc6200);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
     color: #fff;
 }
 
@@ -74,9 +74,9 @@ input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, in
 }
 
 input[type=button]:focus:active, input[type=submit]:focus:active {
-    -webkit-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
-    -moz-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
-    box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255,255,255,0.1);
+    -webkit-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
+    -moz-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .edit_dialog_content input[type=text] , .edit_dialog_content select {
@@ -101,9 +101,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #header {
     background-color: #000;
     border-bottom: 2px solid #2d2d2d;
-    -webkit-box-shadow: 0 18px 18px rgba(30,30,30,0.7);
-    -moz-box-shadow: 0 18px 18px rgba(30,30,30,0.7);
-    box-shadow: 0 18px 18px rgba(30,30,30,0.7);
+    -webkit-box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
+    -moz-box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
+    box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
 }
 
 #sb_Subsearch input[type=text] {
@@ -112,8 +112,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #sb_Subsearch input[type=text]:focus {
     color: #555;
-    background: rgba(255,255,255,0.9);
-    border-color:#ff9d00;
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #ff9d00;
 }
 
 #headerbox  select {
@@ -130,9 +130,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #loginPage #maincontainer { /* , #registerPage #maincontainer */
     background-color: rgba(0,0,0,0.15);
     border: 2px solid rgba(0,0,0,0.15);
-    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
 }
 
 #loginPage #headerlogo, #registerPage #headerlogo {
@@ -191,9 +191,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #sidebar-header {
     background-color: rgba(0,0,0,0.15);
     border-color: rgba(0,0,0,0.15);
-    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     color: #999;
 }
 
@@ -203,9 +203,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 #sidebar-content, #sidebar-content-light, #sidebar-light {
     border-color: rgba(0,0,0,0.15);
-    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     background-color: #1a1a1a;
 }
 
@@ -213,9 +213,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #sidebar-page {
     background-color: rgba(0,0,0,0.15);
     border-color: rgba(0,0,0,0.15);
-    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
 }
 
 #sidebar-tabs .sb2 li h4 {
@@ -250,9 +250,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #rightbar {
     background-color: #222;
     border-color: rgba(0,0,0,0.15);
-    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     color: #fff;
 }
 
@@ -267,16 +267,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #rightbar #rb_current_playlist li a:hover, #rightbar #rb_current_playlist li a:focus {
     color: #fff;
     background-color: #c85a00;
-    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -moz-linear-gradient(to top,#cc6200,#c24d00);
+    background-image: -ms-linear-gradient(to top,#cc6200,#c24d00);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
-    background-image: linear-gradient(top,#cc6200,#c24d00);
+    background-image: -webkit-linear-gradient(to top,#cc6200,#c24d00);
+    background-image: -o-linear-gradient(to top,#cc6200,#c24d00);
+    background-image: linear-gradient(to top,#cc6200,#c24d00);
 }
 
 #rightbar #rb_current_playlist li.odd {
-    background-color: rgba(255,255,255,0.1);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 #rightbar .submenu {
@@ -299,9 +299,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #content {
     background-color: rgba(0,0,0,0.15);
     border-color: rgba(0,0,0,0.15);
-    -webkit-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    -moz-box-shadow: 0 0 5px rgba(255,255,255,0.05);
-    box-shadow: 0 0 5px rgba(255,255,255,0.05);
+    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     color: #fff;
 }
 
@@ -315,7 +315,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 span.page-nb {
     color: #ff9d00;
- }
+}
 
 table.tabledata {
     color: #eee;
@@ -354,12 +354,12 @@ table.tabledata th a {
 
 table.tabledata tr:hover, table.tabledata tr:focus {
     background-color: #c85a00;
-    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -moz-linear-gradient(to top,#cc6200,#c24d00);
+    background-image: -ms-linear-gradient(to top,#cc6200,#c24d00);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
-    background-image: linear-gradient(top,#cc6200,#c24d00);
+    background-image: -webkit-linear-gradient(to top,#cc6200,#c24d00);
+    background-image: -o-linear-gradient(to top,#cc6200,#c24d00);
+    background-image: linear-gradient(to top,#cc6200,#c24d00);
 }
 
 table.tabledata .th-top:hover,
@@ -371,7 +371,7 @@ table.tabledata .th-bottom:focus {
 }
 
 table.tabledata tbody .odd {
-    background-color: rgba(255,255,255,0.1);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 table.tabledata tbody .cel_cover img {
@@ -433,12 +433,12 @@ span.fatalerror {
 
 .box-content #tag_filter .tag_button span:hover {
     background-color: #c85a00;
-    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -moz-linear-gradient(to top,#cc6200,#c24d00);
+    background-image: -ms-linear-gradient(to top,#cc6200,#c24d00);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
-    background-image: linear-gradient(top,#cc6200,#c24d00);
+    background-image: -webkit-linear-gradient(to top,#cc6200,#c24d00);
+    background-image: -o-linear-gradient(to top,#cc6200,#c24d00);
+    background-image: linear-gradient(to top,#cc6200,#c24d00);
 }
 
 /***********************************************

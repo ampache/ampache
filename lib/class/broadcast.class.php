@@ -95,7 +95,7 @@ class Broadcast extends database_object implements library_item
      * @param boolean $started
      * @param string $key
      */
-    public function update_state($started, $key =  '')
+    public function update_state($started, $key = '')
     {
         $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
         Dba::write($sql, array($started, $key, $this->id));
@@ -145,7 +145,7 @@ class Broadcast extends database_object implements library_item
      * @param string $description
      * @return integer
      */
-    public static function create($name, $description =  '')
+    public static function create($name, $description = '')
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";

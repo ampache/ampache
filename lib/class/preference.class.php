@@ -238,14 +238,14 @@ class Preference extends database_object
      * name_from_id
      * This returns the name from an id, it's the exact opposite
      * of the function above it, amazing!
-     * @param $id
+     * @param $pref_id
      * @return mixed
      */
-    public static function name_from_id($id)
+    public static function name_from_id($pref_id)
     {
-        $id = Dba::escape($id);
+        $pref_id = Dba::escape($pref_id);
 
-        $sql        = "SELECT `name` FROM `preference` WHERE `id`='$id'";
+        $sql        = "SELECT `name` FROM `preference` WHERE `id`='$pref_id'";
         $db_results = Dba::read($sql);
 
         $row = Dba::fetch_assoc($db_results);

@@ -84,7 +84,7 @@ var AudioHandler = (function() {
 
         levelBins = Math.floor(binCount / levelsCount); //number of bins in each level
 
-        freqByteData = new Uint8Array(binCount); 
+        freqByteData = new Uint8Array(binCount);
         timeByteData = new Uint8Array(binCount);
 
         var length = 256;

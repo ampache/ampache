@@ -185,15 +185,15 @@ class Repository
     }
 
     /**
-     * @param $id
+     * @param $object_id
      * @param $properties
      */
-    protected function updateRecord($id, $properties)
+    protected function updateRecord($object_id, $properties)
     {
         $sql = 'UPDATE ' . $this->getTableName()
                 . ' SET ' . implode(',', $this->getKeyValuePairs($properties))
                 . ' WHERE id = ?';
-        $properties[] = $id;
+        $properties[] = $object_id;
         Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))

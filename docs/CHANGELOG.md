@@ -337,7 +337,7 @@ Check the php manual for help making your desired string. ([<https://www.php.net
 * Add: send_full_stream - allow pushing the full track instead of segmenting
 * Add: github_force_branch - Allow any official Ampache git branch set in config
 * Add: subsonic_stream_scrobble - set to false to force all caching to count as a download. This is to be used with the subsonic client set to scrobble. (Ampache will now scrobble to itself over subsonic.)
-* Add: waveform_height,  waveform_width - customize waveform size
+* Add: waveform_height, waveform_width - customize waveform size
 * Add: of_the_moment - set custom amount of albums/videos in "of the moment areas"
 * Add: use_now_playing_embedded, now_playing_refresh_limit, now_playing_css_file - Show a user forum tag "Now playing / last played"
 
