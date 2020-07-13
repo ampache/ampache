@@ -952,7 +952,7 @@ class JSON_Data
                 ));
 
                 // return a user object
-                array_push($ourArray['user'], $user_array);
+                array_push($ourArray, array("user" => $user_array));
             }
             array_push($JSON, $ourArray);
         }
@@ -991,7 +991,7 @@ class JSON_Data
                 ));
 
                 // return a user object
-                array_push($ourArray['user'], $user_array);
+                array_push($ourArray, array("user" => $user_array));
             }
             array_push($JSON['timeline'], $ourArray);
         }
