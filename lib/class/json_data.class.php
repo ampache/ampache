@@ -914,14 +914,12 @@ class JSON_Data
             $user = new User($user_id);
             array_push($USER, array(
                 "id" => (string) $user_id,
-                "name" => $user->username
+                "username" => $user->username
             ));
         } // end foreach
 
         // return a user object
-        array_push($JSON, array(
-            "user" => $USER
-        ));
+        array_push($JSON, array("user" => $USER));
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // users
@@ -947,7 +945,15 @@ class JSON_Data
                 "text" => $shout->text
             );
             if ($user->id) {
-                $ourArray['username'] = $user->username;
+                $USER = [];
+                $user = new User($user->id);
+                array_push($USER, array(
+                    "id" => (string) $user->id,
+                    "username" => $user->username
+                ));
+
+                // return a user object
+                array_push($ourArray, array("user" => $USER));
             }
             array_push($JSON, $ourArray);
         }
@@ -979,7 +985,15 @@ class JSON_Data
             );
 
             if ($user->id) {
-                $ourArray['username'] = $user->username;
+                $USER = [];
+                $user = new User($user->id);
+                array_push($USER, array(
+                    "id" => (string) $user->id,
+                    "username" => $user->username
+                ));
+
+                // return a user object
+                array_push($ourArray, array("user" => $USER));
             }
             array_push($JSON['timeline'], $ourArray);
         }
