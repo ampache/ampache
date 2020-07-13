@@ -939,21 +939,17 @@ class JSON_Data
             $shout = new Shoutbox($shout_id);
             $shout->format();
             $user     = new User($shout->user);
+            $user_array = [];
+            array_push($user_array, array(
+                "id" => (string) $user->id,
+                "username" => $user->username
+            ));
             $ourArray = array(
                 "id" => (string) $shout_id,
                 "date" => $shout->date,
-                "text" => $shout->text
+                "text" => $shout->text,
+                "user" => $user_array
             );
-            if ($user->id) {
-                $user_array = [];
-                array_push($user_array, array(
-                    "id" => (string) $user->id,
-                    "username" => $user->username
-                ));
-
-                // return a user object
-                array_push($ourArray, array("user" => $user_array));
-            }
             array_push($JSON, $ourArray);
         }
 
@@ -973,26 +969,22 @@ class JSON_Data
         $JSON             = array();
         $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss
         foreach ($activities as $aid) {
-            $activity = new Useractivity($aid);
-            $user     = new User($activity->user);
+            $activity   = new Useractivity($aid);
+            $user       = new User($activity->user);
+            $user_array = [];
+            array_push($user_array, array(
+                "id" => (string) $user->id,
+                "username" => $user->username
+            ));
             $ourArray = array(
                 "id" => (string) $aid,
                 "data" => $activity->activity_date,
                 "object_type" => $activity->object_type,
                 "object_id" => $activity->object_id,
-                "action" => $activity->action
+                "action" => $activity->action,
+                "user" => $user_array
             );
 
-            if ($user->id) {
-                $user_array = [];
-                array_push($user_array, array(
-                    "id" => (string) $user->id,
-                    "username" => $user->username
-                ));
-
-                // return a user object
-                array_push($ourArray, array("user" => $user_array));
-            }
             array_push($JSON['timeline'], $ourArray);
         }
 
