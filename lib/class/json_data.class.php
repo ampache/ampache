@@ -974,7 +974,7 @@ class JSON_Data
         $JSON             = array();
         $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss
         foreach ($activities as $aid) {
-            $activity = new Useractivity($aid)
+            $activity = new Useractivity($aid);
             $ourArray = array(
                 "id" => (string) $aid,
                 "data" => $activity->activity_date,
