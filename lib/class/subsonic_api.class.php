@@ -1881,18 +1881,12 @@ class Subsonic_Api
             $oid   = $rid;
         }
 
-        $counter = 0;
         foreach ($oid as $object) {
             $aid   = Subsonic_XML_Data::getAmpacheId($object);
             $type  = Subsonic_XML_Data::getAmpacheType($object);
             $media = new $type($aid);
             $media->format();
 
-            // internal scrobbling (user_activity and object_count tables)
-            if (($submission === 'true' || $submission === '1') && $counter == 0) {
-                $media->set_played($user->id, $input['c'], array(), time());
-                $counter++;
-            }
             //scrobble plugins
             if ($submission === 'true' || $submission === '1') {
                 // stream has finished
@@ -1903,6 +1897,8 @@ class Subsonic_Api
                 debug_event('subsonic_api.class', 'now_playing: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) $time, 5);
                 Stream::garbage_collection();
                 Stream::insert_now_playing((int) $media->id, (int) $user->id, (int) $media->time, $user->username, $type);
+                //internal scrobbling is triggered by the now playing, as otherwise parts will be left out
+                $media->set_played($user->id, $input['c'], array(), time());
             }
         }
 

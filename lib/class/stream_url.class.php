@@ -21,8 +21,12 @@ declare(strict_types=0);
  *
  */
 
-// A class for passing around an URL and associated data
-
+/**
+ * Stream_URL Class
+ *
+ * A class for passing around an URL and associated data
+ * @property string $url
+ */
 class Stream_URL extends memory_object
 {
     public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec', 'track_num');
