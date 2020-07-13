@@ -909,10 +909,19 @@ class JSON_Data
     public static function users($users)
     {
         $JSON = [];
+        $USER = [];
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            array_push($JSON, $user->username);
-        }
+            array_push($USER, array(
+                "id" => (string) $user_id,
+                "name" => $user->username
+            ));
+        } // end foreach
+
+        // return a user object
+        array_push($JSON, array(
+            "user" => $USER
+        ));
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // users
