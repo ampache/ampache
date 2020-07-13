@@ -946,14 +946,13 @@ class JSON_Data
             );
             if ($user->id) {
                 $user_array = [];
-                $user       = new User($shout->user);
                 array_push($user_array, array(
                     "id" => (string) $user->id,
                     "username" => $user->username
                 ));
 
                 // return a user object
-                array_push($ourArray, array("user" => $user_array));
+                array_push($ourArray['user'], $user_array);
             }
             array_push($JSON, $ourArray);
         }
@@ -975,6 +974,7 @@ class JSON_Data
         $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss
         foreach ($activities as $aid) {
             $activity = new Useractivity($aid);
+            $user     = new User($activity->user);
             $ourArray = array(
                 "id" => (string) $aid,
                 "data" => $activity->activity_date,
@@ -983,11 +983,10 @@ class JSON_Data
                 "action" => $activity->action
             );
 
-            if ($activity->user) {
+            if ($user->id) {
                 $user_array = [];
-                $user       = new User($activity->user);
                 array_push($user_array, array(
-                    "id" => (string) $activity->user,
+                    "id" => (string) $user->id,
                     "username" => $user->username
                 ));
 
