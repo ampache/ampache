@@ -67,7 +67,7 @@ switch ($_REQUEST['action']) {
 UI::show_header();
 
 if (in_array($_REQUEST['action'], array('song', 'album', 'artist', 'label', 'channel', 'broadcast', 'live_stream', 'podcast', 'video'))) {
-    UI::show_browse_form();
+    UI::show('show_browse_form.inc.php');
 }
 
 // Browser is able to save page on current session. Only applied to main menus.

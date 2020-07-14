@@ -481,6 +481,14 @@ sociable = "true"
 ; DEFAULT: folder.jpg
 ;album_art_preferred_filename = "folder.jpg"
 
+; Artist Art Preferred Filename
+; Specify a filename to look for artist specific art, either in the
+; same folder as your files or in the parent folder
+; e.g. /mnt/music/Artist/Album/artist.jpg
+;      /mnt/music/Artist/artist.jpg
+; DEFAULT: folder.jpg
+;artist_art_preferred_filename = "folder.jpg"
+
 ; Artist Art Dump Folder
 ; Specify a local folder to search for art using name/title to identify
 ; i.e. "/var/www/art/" is filled with artist images named by artist

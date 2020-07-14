@@ -409,7 +409,7 @@ class Album extends database_object implements library_item
             // album_artist is set
             $sql = "SELECT DISTINCT `artist`.`name` AS `artist_name`, " .
                    "`artist`.`prefix` AS `artist_prefix`, " .
-                   "`artist`.`id` AS `artist_id` " .
+                   "MIN(`artist`.`id`) AS `artist_id` " .
                    "FROM `album` " .
                    "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist` WHERE " .
                    $name_sql . $where_sql . " " .
@@ -1222,9 +1222,6 @@ class Album extends database_object implements library_item
                     "WHERE `rating`.`object_type` = 'album' " .
                     "AND `rating`.`rating` <=" . $rating_filter .
                     " AND `rating`.`user` = " . $user_id . ") ";
-        }
-        if (AmpConfig::get('album_group')) {
-            $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
         }
         $sql .= "ORDER BY RAND() LIMIT " . (string) $count;
         $db_results = Dba::read($sql);
