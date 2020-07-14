@@ -1060,7 +1060,9 @@ class XML_Data
         $string = "<users>\n";
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
+            $string .= "<user id=\"" . (string) $user->id . "\">\n" .
+                      "\t<username><![CDATA[" . $user->username . "]]></username>\n" .
+                      "</user>\n";
         }
         $string .= "</users>\n";
 
@@ -1086,7 +1088,9 @@ class XML_Data
                     "\t\t<date>" . $shout->date . "</date>\n" .
                     "\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
             if ($user->id) {
-                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>\n";
+                $string .= "\t\t<user id=\"" . (string) $user->id . "\">\n" .
+                           "\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n" .
+                           "\t\t</user>\n";
             }
             $string .= "\t</shout>\n";
         }
@@ -1134,7 +1138,9 @@ class XML_Data
                     "\t\t<object_id>" . $activity->object_id . "</object_id>\n" .
                     "\t\t<action><![CDATA[" . $activity->action . "]]></action>\n";
             if ($user->id) {
-                $string .= "\t\t<username><![CDATA[" . $user->username . "]]></username>";
+                $string .= "\t\t<user id=\"" . (string) $user->id . "\">\n" .
+                           "\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n" .
+                           "\t\t</user>\n";
             }
             $string .= "\n\t</activity>\n";
         }

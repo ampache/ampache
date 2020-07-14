@@ -3097,7 +3097,7 @@ class Api
      * Setting flag to false (0) will remove the flag
      *
      * @param array $input
-     * type = (string) 'song'|'album'|'artist' $type
+     * type = (string) 'song'|'album'|'artist'|'playlist' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      * @return boolean
@@ -3122,7 +3122,7 @@ class Api
             $user_id = $user->id;
         }
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['format']);
 
             return false;
