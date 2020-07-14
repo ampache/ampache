@@ -56,8 +56,6 @@ spl_autoload_register(array('Core', 'autoload'), true, true);
 $composer_autoload = $prefix . '/lib/vendor/autoload.php';
 if (file_exists($composer_autoload)) {
     require_once $composer_autoload;
-    require_once $prefix . '/lib/vendor/Afterster/php-echonest-api/lib/EchoNest/Autoloader.php';
-    EchoNest_Autoloader::register();
 }
 
 // Check to see if this is http or https
