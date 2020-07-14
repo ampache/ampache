@@ -23,6 +23,9 @@ declare(strict_types=0);
 
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
+use SpotifyWebAPI\SpotifyWebAPI;
+use SpotifyWebAPI\Session;
+use SpotifyWebAPI\SpotifyWebAPIException;
 
 /**
  * Art Class
@@ -1136,6 +1139,7 @@ class Art extends database_object
                         case 'gather_google':
                         case 'gather_musicbrainz':
                         case 'gather_lastfm':
+                        case 'gather_spotify':
                         $data = $this->{$method_name}($limit, $options);
                     break;
                         default:
@@ -1179,6 +1183,92 @@ class Art extends database_object
 
         return array();
     }
+
+    /**
+    * gather_spotify
+    * This function gathers art from the spotify catalog
+    * @param integer $limit
+    * @return array
+    */
+    public function gather_spotify($limit = 5, $data = array())
+    {
+        static  $accessToken = null;
+        $images              = array();
+        if (!AmpConfig::get('spotify_client_id') || !AmpConfig::get('spotify_client_secret')) {
+            AmpError::add('gather_spotify', 'Missing Spotify credentials',5);
+
+            return $images;
+        }
+        debug_event('art.class', "gather_spotify album: " . $data['album'], 5);
+        $clientId     = AmpConfig::get('spotify_client_id');
+        $clientSecret =AmpConfig::get('spotify_client_secret');
+        $session      = null;
+        
+        if (!isset($accessToken)) {
+            try {
+                $session = new Session($clientId, $clientSecret);
+                $session->requestCredentialsToken();
+                $accessToken = $session->getAccessToken();
+            } catch (SpotifyWebAPIException $e) {
+                $message =  "A problem exists with the client credentials";
+                debug_event('Spotify', $message, 5);
+            }
+        }
+        $api   = new SpotifyWebAPI();
+        $types = $this->type . 's';
+        $api->setAccessToken($accessToken);
+        if ($this->type == 'artist') {
+            $query   = $data['artist'];
+            $options = array();
+            $getType = 'getArtist';
+        } elseif ($this->type == 'album') {
+            $query   = $data['album'];
+            $options = array();
+            $getType = 'getAlbum';
+        } else {
+            return $images;
+        }
+        $response = null;
+        try {
+            $response = $api->search($query, $this->type);
+            if (count($response->{$types}->items)) {
+                goto getImages;
+            }
+
+            return $images;
+        } catch (SpotifyWebAPIException $e) {
+            if ($e->hasExpiredToken()) {
+                $accessToken = $session->getAccessToken();
+            } elseif ($e->getCode() == 429) {
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter   = $lastResponse['headers']['Retry-After'];
+                // Number of seconds to wait before sending another request
+                sleep($retryAfter);
+            }
+            $response = $api->search($query, $this->type);
+            if (count($response->{$types}->items)) {
+                goto getImages;
+            }
+
+            return $images;
+        }// end of catch
+
+        getImages:
+           $id      = $response->{$types}->items[0]->id;
+        $result     = $api->{$getType}($id);
+        $aImages    =$result->images;
+        foreach ($aImages as  $image) {
+            $url      = $image->url;
+            $images[] = array(
+                           'url' => $url,
+                            'mime' => 'image/jpeg',
+                            'title' => 'Spotify'
+                  );
+        }
+  
+        return $images;
+    }// gather_spotify
+
 
     /**
      * gather_musicbrainz

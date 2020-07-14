@@ -10,6 +10,7 @@ e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
 Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
 
 * GENERAL changes
+  * Added Spotify for both album and artist images.
   * Updated component installer and php-cs-fixer package.
   * April 2020 Translation update
   * May 2020 Translation update
