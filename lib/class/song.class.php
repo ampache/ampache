@@ -1030,7 +1030,7 @@ class Song extends database_object implements media, library_item
      */
     public function check_play_history($user, $agent)
     {
-        if ($user == -1) {
+        if ($user < 1) {
             return false;
         }
         $previous = Stats::get_last_song($user, $agent);
@@ -1056,6 +1056,8 @@ class Song extends database_object implements media, library_item
             debug_event('song.class', 'Last song played within ' . $diff . ' seconds, skipping ' . $previous['id'], 3);
             Stats::skip_last_song($previous['id']);
             Useractivity::del_activity($previous['id']);
+
+            return false;
         }
 
         return true;
