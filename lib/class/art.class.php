@@ -1201,7 +1201,6 @@ class Art extends database_object
 
             return $images;
         }
-        debug_event('art.class', "gather_spotify album: " . $data['album'], 5);
         $clientId     = AmpConfig::get('spotify_client_id');
         $clientSecret = AmpConfig::get('spotify_client_secret');
         $session      = null;
@@ -1219,9 +1218,11 @@ class Art extends database_object
         $types = $this->type . 's';
         $api->setAccessToken($accessToken);
         if ($this->type == 'artist') {
+            debug_event('art.class', "gather_spotify artist: " . $data['artist'], 5);
             $query   = $data['artist'];
             $getType = 'getArtist';
         } elseif ($this->type == 'album') {
+            debug_event('art.class', "gather_spotify album: " . $data['album'], 5);
             $query   = 'album:' . $data['album'] . ' artist:' . $data['artist'];
             $getType = 'getAlbum';
         } else {

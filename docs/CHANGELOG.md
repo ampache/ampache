@@ -9,6 +9,8 @@ Admin -> Server Config -> Interface -> Custom datetime
 e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
 Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
 
+The API changelog for this version has been separated into a new sub-heading below to make it easier to follow.
+
 * GENERAL changes
   * Added Spotify for both album and artist images.
   * Updated component installer and php-cs-fixer package.
@@ -29,14 +31,53 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * Change to numeric searches renamed is -> equals and is not -> does not equal
   * When labels are enabled, automatically generate and assosciate artists with their publisher/label tag values.
   * Allow negative track numbers; reducing the maximum track number to 32767.
-* API changes
+* NEW db options
+  * cron_cache: Speed up the interface by allowing background caching of data
+  * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
+  * custom_datetime: Allow you to format your date strings your way.
+  * unique_playlist: Force unique playlists by ignoring existing songs
+* NEW config options
+  * skip_timer: Add Skip Timer Threshold to the config
+  * artist_art_folder: Specify a local folder to search for artist images using name/title
+  * rating_file_tag_user: Set ratings to this user ID when importing ratings from file tags
+  * spotify_client_id: Allows Spotify art search
+  * spotify_client_secret: Allows Spotify art search
+* NEW files
+  * bin/compute_cache.inc: Cache object_count data to speed up access
+  * bin/cron.inc: Perform garbage_collection functions outside of main functions (includes compute_cache.inc)
+* NEW examples
+  * docs/examples/ampache_cron.service
+  * docs/examples/ampache_cron.timer
+* Fix: Add User warnings
+* Fix: Channel authentication
+* Fix: IP checks when sending null proxy values
+* Fix: Extra text in catalog API calls
+* Fix: Gather art page layout
+* Fix: Read vorbis rating correctly
+* Fix: Search rules in UI failing to load with custom_metadata
+* Fix: Warn correctly when inserting art fails
+* Fix: Insert missing user preferences on login
+* Fix: When you had beautiful_urls enabled tracks would not parse in localplay making them all Unknown
+* Fix: Podcast durations aren't always correct format, prep the time before trying to insert it
+* Fix: Subsonic playlist add/remove removing incorrect songs
+* Fix: Search/Smartlists need to have results to be used in lists
+* Fix: Auth issues with stats for recording and localplay
+* Fix: Stream_urls were generated with a typo when downloading
+* Fix: Respect album grouping using of the moment plugin
+* Fix: Filter album title with grouping enabled. (seriously deadmau5, stop with the <> everywhere)
+* Fix: Share playback without a UID would fail to start
+* Fix: CVE-2020-13625 in phpmailer
+
+### API 4.1.0 build 001
+
+* General API changes
   * Bump API version to 410001 (4.1.0 build 001)
   * All calls that return songs now include <playlisttrack> which can be used to identify track order.
   * <playcount> added to objects.
   * <license> added to song objects.
   * Don't gather art when adding songs
   * Added actions to catalog_action. 'verify_catalog' 'gather_art'
-  * JSON API! I haven't found any breakages on the XML server but please test out your apps for both.
+  * JSON API now available!
     * Call xml as normal:
       * [<http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=410001>]
     * Call the JSON server:
@@ -62,44 +103,6 @@ Check the php manual for help making your desired string. ([<https://www.php.net
   * catalogs: get all the catalogs
   * catalog: get a catalog by id
   * catalog_file: clean, add, verify using the file path (good for scripting)
-* NEW db options
-  * cron_cache: Speed up the interface by allowing background caching of data
-  * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
-  * custom_datetime: Allow you to format your date strings your way.
-  * unique_playlist: Force unique playlists by ignoring existing songs
-* NEW config options
-  * skip_timer: Add Skip Timer Threshold to the config
-  * artist_art_folder: Specify a local folder to search for artist images using name/title
-  * rating_file_tag_user: Set ratings to this user ID when importing ratings from file tags
-* NEW files
-  * bin/compute_cache.inc: Cache object_count data to speed up access
-  * bin/cron.inc: Perform garbage_collection functions outside of main functions (includes compute_cache.inc)
-* NEW examples
-  * docs/examples/ampache_cron.service
-  * docs/examples/ampache_cron.timer
-* API: All calls that return songs now include <playlisttrack> which can be used to identify track order.
-* API: <playcount> added to objects.
-* API: Don't gather art when adding songs
-* API: Added actions to catalog_action. 'verify_catalog' 'gather_art'
-* Fix: Add User warnings
-* Fix: Channel authentication
-* Fix: IP checks when sending null proxy values
-* Fix: Extra text in catalog API calls
-* Fix: Gather art page layout
-* Fix: Read vorbis rating correctly
-* Fix: Search rules in UI failing to load with custom_metadata
-* Fix: Warn correctly when inserting art fails
-* Fix: Insert missing user preferences on login
-* Fix: When you had beautiful_urls enabled tracks would not parse in localplay making them all Unknown
-* Fix: Podcast durations aren't always correct format, prep the time before trying to insert it
-* Fix: Subsonic playlist add/remove removing incorrect songs
-* Fix: Search/Smartlists need to have results to be used in lists
-* Fix: Auth issues with stats for recording and localplay
-* Fix: Stream_urls were generated with a typo when downloading
-* Fix: Respect album grouping using of the moment plugin
-* Fix: Filter album title with grouping enabled. (seriously deadmau5, stop with the <> everywhere)
-* Fix: Share playback without a UID would fail to start
-* Update Composer requirements (Fix CVE-2020-13625 in phpmailer)
 
 ## 4.1.1
 

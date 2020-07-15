@@ -598,7 +598,7 @@ lastfm_api_secret = ""
 
 ; Spotify client id
 ; Set this to your Spotify client id to actually use Spotify for
-; accessing their catalog API.
+; accessing their catalog API. (https://developer.spotify.com/dashboard/)
 ;spotify_client_id = ""
 
 ; Spotify client secret
