@@ -1195,7 +1195,7 @@ class Art extends database_object
     public function gather_spotify($data = array())
     {
         static $accessToken = null;
-        $images = array();
+        $images             = array();
         if (!AmpConfig::get('spotify_client_id') || !AmpConfig::get('spotify_client_secret')) {
             debug_event('art.class', 'gather_spotify: Missing Spotify credentials, check your config',5);
 
