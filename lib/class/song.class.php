@@ -1057,11 +1057,10 @@ class Song extends database_object implements media, library_item
             debug_event('song.class', 'Last song played within ' . $diff . ' seconds, skipping ' . $previous['object_id'], 3);
             Stats::skip_last_song($previous['object_id'], $previous['agent'], $previous['user']);
             // delete artist and album from object_count to keep stats in line
-            Useractivity::del_activity($previous['date'], $previous['agent'], 'song', $previous['user']);
+            Useractivity::del_activity($previous['date'], 'song', $previous['user']);
 
             return false;
         }
-        debug_event('song.class', 'check_play_history: record play for song ' . $previous['object_id'], 4);
 
         return true;
     }
