@@ -24,7 +24,7 @@ declare(strict_types=0);
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use SpotifyWebAPI\SpotifyWebAPI;
-use SpotifyWebAPI\Session;
+use SpotifyWebAPI\Session as SpotifySession;
 use SpotifyWebAPI\SpotifyWebAPIException;
 
 /**
@@ -1207,7 +1207,7 @@ class Art extends database_object
         
         if (!isset($accessToken)) {
             try {
-                $session = new Session($clientId, $clientSecret);
+                $session = new SpotifySession($clientId, $clientSecret);
                 $session->requestCredentialsToken();
                 $accessToken = $session->getAccessToken();
             } catch (SpotifyWebAPIException $error) {
