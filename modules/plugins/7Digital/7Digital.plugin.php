@@ -92,38 +92,7 @@ class Ampache7digital
      */
     public function get_song_preview($track_mbid, $artist_name, $title)
     {
-        $file     = null;
-        $echonest = new EchoNest_Client(new EchoNest_HttpClient_Requests());
-        $echonest->authenticate(AmpConfig::get('echonest_api_key'));
-        $enSong = null;
-        try {
-            $enProfile = $echonest->getTrackApi()->profile('musicbrainz:track:' . $track_mbid);
-            $enSong    = $echonest->getSongApi()->profile($enProfile['song_id'], array( 'id:7digital-US', 'audio_summary', 'tracks'));
-        } catch (Exception $error) {
-            debug_event('7digital.plugin', 'EchoNest track error on `' . $track_mbid . '` (' . $title . '): ' . $error->getMessage(), 1);
-        }
-
-        // Wans't able to get the song with MusicBrainz ID, try a search
-        if ($enSong == null) {
-            try {
-                $enSong = $echonest->getSongApi()->search(array(
-                    'results' => '1',
-                    'artist' => $artist_name,
-                    'title' => $title,
-                    'bucket' => array( 'id:7digital-US', 'audio_summary', 'tracks'),
-                ));
-            } catch (Exception $error) {
-                debug_event('7digital.plugin', 'EchoNest song search error: ' . $error->getMessage(), 1);
-            }
-        }
-
-        if ($enSong != null) {
-            $file = $enSong[0]['tracks'][0]['preview_url'];
-
-            debug_event('7digital.plugin', 'EchoNest `' . $title . '` preview: ' . $file, 1);
-        }
-
-        return $file;
+        return null;
     }
 
     /**

@@ -621,10 +621,6 @@ wanted_types = "album,official"
 ; DEFAULT: false
 ;wanted_auto_accept = "false"
 
-; EchoNest API key
-; EchoNest provides several music services. Currently used for missing song 30 seconds preview.
-;echonest_api_key = ""
-
 ; Labels
 ; Use labels to browse artists per label membership.
 ; DEFAULT: false

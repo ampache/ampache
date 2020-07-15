@@ -49,7 +49,6 @@
         "openid/php-openid": "2.*",
         "sabre/dav": "3.*.*",
         "maennchen/zipstream-php": "0.4.*",
-        "afterster/php-echonest-api": "dev-master",
         "components/jquery": "2.2.*",
         "components/jqueryui": "1.*",
         "vakata/jstree": "3.*",
@@ -76,18 +75,6 @@
 
     "repositories":
     [
-        {
-            "type": "package",
-            "package": {
-                "name": "Afterster/php-echonest-api",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/Afterster/php-echonest-api.git",
-                    "type": "git",
-                    "reference": "master"
-                }
-            }
-        },
         {
             "type": "package",
             "package": {

@@ -4,19 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "28d819af863f2f95d2348cddf06b1ffa",
+    "content-hash": "ab02820a88ed1663eb6b25006c84fca8",
     "packages": [
-        {
-            "name": "Afterster/php-echonest-api",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Afterster/php-echonest-api.git",
-                "reference": "master"
-            },
-            "type": "library",
-            "time": "2017-01-25T21:14:49+00:00"
-        },
         {
             "name": "aehlke/tag-it",
             "version": "2.0",
@@ -3814,7 +3803,6 @@
     "stability-flags": {
         "james-heinrich/getid3": 20,
         "mikealmond/musicbrainz": 20,
-        "afterster/php-echonest-api": 20,
         "jeromeetienne/jquery-qrcode": 20,
         "kumailht/responsive-elements": 20,
         "krixon/xbmc-php-rpc": 20

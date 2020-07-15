@@ -46,16 +46,6 @@ class Slideshow
     protected static function get_images($artist_name)
     {
         $images = array();
-        if (AmpConfig::get('echonest_api_key')) {
-            $echonest = new EchoNest_Client(new EchoNest_HttpClient_Requests());
-            $echonest->authenticate(AmpConfig::get('echonest_api_key'));
-
-            try {
-                $images = $echonest->getArtistApi()->setName($artist_name)->getImages();
-            } catch (Exception $error) {
-                debug_event('slideshow.class', 'EchoNest artist images error: ' . $error->getMessage(), 1);
-            }
-        }
 
         foreach (Plugin::get_plugins('get_photos') as $plugin_name) {
             $plugin = new Plugin($plugin_name);

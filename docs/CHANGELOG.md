@@ -31,6 +31,7 @@ The API changelog for this version has been separated into a new sub-heading bel
   * Change to numeric searches renamed is -> equals and is not -> does not equal
   * When labels are enabled, automatically generate and assosciate artists with their publisher/label tag values.
   * Allow negative track numbers; reducing the maximum track number to 32767.
+  * Removed EchoNest api / song previews
 * NEW db options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
