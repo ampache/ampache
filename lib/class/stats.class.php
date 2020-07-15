@@ -259,7 +259,7 @@ class Stats
         $sqlres = array($user_id);
 
         $sql = "SELECT `object_count`.`id`, `object_count`.`object_id`, `object_count`.`user`, " .
-               "`object_count`.`agent`, `object_count`.`date`, `object_count`.`time`, `object_count`.`count_type` " .
+               "`object_count`.`agent`, `object_count`.`date`, `song`.`time`, `object_count`.`count_type` " .
                "FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
