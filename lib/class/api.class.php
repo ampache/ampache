@@ -1536,6 +1536,7 @@ class Api
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
      * items  = (array)  replace all playlist items with a new list of object_ids //optional
+     * tracks = (array)  playlisttrack numbers to rearrange matched to items in order //optional
      * @return boolean
      */
     public static function playlist_edit($input)
@@ -1545,6 +1546,14 @@ class Api
         }
         $name = $input['name'];
         $type = $input['type'];
+        $items = (is_array($input['items'])) ? $input['items'] : explode(',', $input['items']);
+        $order = (is_array($input['tracks'])) ? $input['tracks'] : explode(',', $input['tracks']);
+        // calculate whether we are editing the track order too
+        $playlist_edit = array();
+        if (count($items) == count($order) && count($items) > 0) {
+            $playlist_edit = array_combine($items, $order);
+        }
+
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
@@ -1554,11 +1563,18 @@ class Api
 
             return false;
         }
+        //update name/type
         $array = [
             "name" => $name,
             "pl_type" => $type,
         ];
         $playlist->update($array);
+        // update track order with new id's
+        if (!empty($playlist_edit)) {
+            foreach($playlist_edit as $song => $track) {
+                $playlist->set_by_track_number((int) $song, (int) $track);
+            }
+        }
         self::message('success', 'playlist changes saved', null, $input['format']);
         Session::extend($input['auth']);
 

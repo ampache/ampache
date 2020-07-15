@@ -623,6 +623,25 @@ class Playlist extends playlist_object
     } // delete_track_number
 
     /**
+     * set_by_track_number
+     * @param integer $object_id
+     * @param integer $track
+     * this deletes a single track by it's track #, you specify the playlist_data.track here
+     * @return boolean
+     */
+    public function set_by_track_number($object_id, $track)
+    {
+        $sql = "UPDATE `playlist_data` SET `object_id` = ? " .
+               "WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ?";
+        Dba::write($sql, array($object_id, $this->id, $track));
+        debug_event('playlist.class', 'Set track: ' . $track . ' to ' . $object_id, 5);
+
+        $this->update_last_update();
+
+        return true;
+    } // delete_track_number
+
+    /**
     * has_item
     * look for the track id or the object id in a playlist
     * @param integer $object
