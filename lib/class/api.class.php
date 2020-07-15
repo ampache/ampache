@@ -1544,8 +1544,8 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'playlist_edit')) {
             return false;
         }
-        $name = $input['name'];
-        $type = $input['type'];
+        $name  = $input['name'];
+        $type  = $input['type'];
         $items = (is_array($input['items'])) ? $input['items'] : explode(',', $input['items']);
         $order = (is_array($input['tracks'])) ? $input['tracks'] : explode(',', $input['tracks']);
         // calculate whether we are editing the track order too
@@ -1571,7 +1571,7 @@ class Api
         $playlist->update($array);
         // update track order with new id's
         if (!empty($playlist_edit)) {
-            foreach($playlist_edit as $song => $track) {
+            foreach ($playlist_edit as $song => $track) {
                 $playlist->set_by_track_number((int) $song, (int) $track);
             }
         }
