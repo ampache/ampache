@@ -203,7 +203,7 @@ class Useractivity extends database_object
         }
         $sql .= "ORDER BY `activity_date` DESC LIMIT 1";
 
-        return Dba::write($sql, array($object_type, $date, $agent));
+        return Dba::write($sql, array($object_type, $date));
     }
 
     /**

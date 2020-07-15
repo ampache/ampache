@@ -142,8 +142,6 @@ class Stats
             if (!$db_results) {
                 debug_event('stats.class', 'Unable to insert statistics for ' . $user . ':' . $sql, 3);
             }
-        } else {
-            debug_event('stats.class', 'Statistics insertion ignored due to graceful delay.', 3);
         }
 
         return true;
@@ -182,7 +180,7 @@ class Stats
             $results[] = $row['id'];
         }
         if (count($results) > 0) {
-            debug_event('stats.class', 'Object already_inserted {' . (string) $oid . '} ' . (string) count($results), 5);
+            debug_event('stats.class', 'Object already_inserted {' . (string) $oid . '} count: ' . (string) count($results), 5);
 
             return true;
         }
