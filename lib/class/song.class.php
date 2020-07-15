@@ -1058,8 +1058,6 @@ class Song extends database_object implements media, library_item
             Stats::skip_last_song($previous['object_id'], $previous['agent'], $previous['user']);
             // delete artist and album from object_count to keep stats in line
             Useractivity::del_activity($previous['date'], 'song', $previous['user']);
-
-            return false;
         }
 
         return true;
