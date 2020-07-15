@@ -290,8 +290,19 @@ class Stats
     public static function skip_last_song($object_id, $agent, $user_id)
     {
         $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `object_id` = ? AND `agent` = ? AND " .
-               "`user` = ? AND `object_type` = 'song' ORDER BY `date` DESC LIMIT 1";
+               "`user` = ? AND `object_type` = 'song' ORDER BY `object_count`.`date` DESC LIMIT 1";
         Dba::write($sql, array($object_id, $agent, $user_id));
+
+        // Now the date for the skipped value is taken
+        $sql        = "SELECT `date` FROM `object_count` WHERE `object_id` = ? AND `agent` = ? AND `user` = ? " .
+                      " AND `count_type` = 'skip' ORDER BY `object_count`.`date` DESC LIMIT 1 ";
+        $db_results = Dba::write($sql, array($object_id, $agent, $user_id));
+        $skipped    = Dba::fetch_assoc($db_results);
+
+        // To remove associated album and artist entries
+        $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist')  AND `date` = ?";
+
+        return Dba::write($sql, array($skipped['date']));
     }
 
 

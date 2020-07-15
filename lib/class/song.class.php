@@ -1057,8 +1057,7 @@ class Song extends database_object implements media, library_item
             debug_event('song.class', 'Last song played within ' . $diff . ' seconds, skipping ' . $previous['object_id'], 3);
             Stats::skip_last_song($previous['object_id'], $previous['agent'], $previous['user']);
             // delete artist and album from object_count to keep stats in line
-            Useractivity::del_activity($previous['date'], $previous['agent'], 'artist', $previous['user']);
-            Useractivity::del_activity($previous['date'], $previous['agent'], 'album', $previous['user']);
+            Useractivity::del_activity($previous['date'], $previous['agent'], 'song', $previous['user']);
 
             return false;
         }

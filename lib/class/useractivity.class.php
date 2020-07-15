@@ -197,7 +197,7 @@ class Useractivity extends database_object
      */
     public static function del_activity($date, $agent, $object_type = 'song', $user_id = 0)
     {
-        $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `date` = ? AND `agent` = ? ";
+        $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `activity_date` = ? AND `agent` = ? ";
         if ($user_id > 0) {
             $sql .= "AND `user` = $user_id ";
         }
