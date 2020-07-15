@@ -2345,7 +2345,7 @@ class Subsonic_Api
         if ($position < 1 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song->time)) {
             Stream::garbage_collection();
             Stream::insert_now_playing((int) $song->id, (int) $user_id, (int) $song->time, $username, 'song');
-            $song->set_played($user_id, $client, array(), time());
+            $song->set_played($user_id, array(), time());
         }
         // continue to fail saving the queue
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
