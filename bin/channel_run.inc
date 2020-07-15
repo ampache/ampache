@@ -583,7 +583,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
 
 /**
  * strtohex
- * @param string $x
+ * @param string $string
  * @return string
  */
 function strtohex($string) {
