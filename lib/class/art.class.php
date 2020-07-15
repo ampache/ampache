@@ -1139,8 +1139,10 @@ class Art extends database_object
                         case 'gather_google':
                         case 'gather_musicbrainz':
                         case 'gather_lastfm':
-                        case 'gather_spotify':
                         $data = $this->{$method_name}($limit, $options);
+                    break;
+                        case 'gather_spotify':
+                        $data = $this->{$method_name}($options);
                     break;
                         default:
                         $data = $this->{$method_name}($limit);
@@ -1185,23 +1187,24 @@ class Art extends database_object
     }
 
     /**
-    * gather_spotify
-    * This function gathers art from the spotify catalog
-    * @param integer $limit
-    * @return array
-    */
-    public function gather_spotify($limit = 5, $data = array())
+     * gather_spotify
+     * This function gathers art from the spotify catalog
+     * @param integer $limit
+     * @param array $data
+     * @return array
+     */
+    public function gather_spotify($data = array())
     {
-        static  $accessToken = null;
-        $images              = array();
+        static $accessToken = null;
+        $images = array();
         if (!AmpConfig::get('spotify_client_id') || !AmpConfig::get('spotify_client_secret')) {
-            AmpError::add('gather_spotify', 'Missing Spotify credentials',5);
+            debug_event('art.class', 'gather_spotify: Missing Spotify credentials, check your config',5);
 
             return $images;
         }
         debug_event('art.class', "gather_spotify album: " . $data['album'], 5);
         $clientId     = AmpConfig::get('spotify_client_id');
-        $clientSecret =AmpConfig::get('spotify_client_secret');
+        $clientSecret = AmpConfig::get('spotify_client_secret');
         $session      = null;
         
         if (!isset($accessToken)) {
@@ -1209,9 +1212,8 @@ class Art extends database_object
                 $session = new Session($clientId, $clientSecret);
                 $session->requestCredentialsToken();
                 $accessToken = $session->getAccessToken();
-            } catch (SpotifyWebAPIException $e) {
-                $message =  "A problem exists with the client credentials";
-                debug_event('Spotify', $message, 5);
+            } catch (SpotifyWebAPIException $error) {
+                debug_event('art.class', "gather_spotify: A problem exists with the client credentials", 5);
             }
         }
         $api   = new SpotifyWebAPI();
@@ -1219,55 +1221,45 @@ class Art extends database_object
         $api->setAccessToken($accessToken);
         if ($this->type == 'artist') {
             $query   = $data['artist'];
-            $options = array();
             $getType = 'getArtist';
         } elseif ($this->type == 'album') {
-            $query   =  'album:' . $data['album'] . ' artist:' . $data['artist'];
-            $options = array();
+            $query   = $data['album'];
             $getType = 'getAlbum';
         } else {
             return $images;
         }
+
         $response = null;
         try {
             $response = $api->search($query, $this->type);
-            if (count($response->{$types}->items)) {
-                goto getImages;
-            }
-
-            return $images;
-        } catch (SpotifyWebAPIException $e) {
-            if ($e->hasExpiredToken()) {
+        } catch (SpotifyWebAPIException $error) {
+            if ($error->hasExpiredToken()) {
                 $accessToken = $session->getAccessToken();
-            } elseif ($e->getCode() == 429) {
+            } elseif ($error->getCode() == 429) {
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter   = $lastResponse['headers']['Retry-After'];
                 // Number of seconds to wait before sending another request
                 sleep($retryAfter);
             }
             $response = $api->search($query, $this->type);
-            if (count($response->{$types}->items)) {
-                goto getImages;
+        } // end of catch
+
+        if (count($response->{$types}->items)) {
+            foreach ($response->{$types}->items as $item) {
+                $item_id = $item->id;
+                $result  = $api->{$getType}($item_id);
+                $image   = $result->images[0];
+                debug_event('art.class', "gather_spotify: found " . $image->url, 5);
+                $images[] = array(
+                    'url' => $image->url,
+                    'mime' => 'image/jpeg',
+                    'title' => 'Spotify'
+                );
             }
-
-            return $images;
-        }// end of catch
-
-        getImages:
-           $id      = $response->{$types}->items[0]->id;
-        $result     = $api->{$getType}($id);
-        $aImages    =$result->images;
-        foreach ($aImages as  $image) {
-            $url      = $image->url;
-            $images[] = array(
-                           'url' => $url,
-                            'mime' => 'image/jpeg',
-                            'title' => 'Spotify'
-                  );
         }
   
         return $images;
-    }// gather_spotify
+    } // gather_spotify
 
     /**
      * gather_musicbrainz
@@ -1441,7 +1433,8 @@ class Art extends database_object
         $processed = array();
 
         /* See if we are looking for a specific filename */
-        $preferred_filename = AmpConfig::get('album_art_preferred_filename');
+        $preferred_filename = (AmpConfig::get('album_art_preferred_filename')) ?: 'folder.jpg';
+        $artist_filename    = AmpConfig::get('artist_art_preferred_filename');
         $artist_art_folder  = AmpConfig::get('artist_art_folder');
 
         // Array of valid extensions
@@ -1465,11 +1458,22 @@ class Art extends database_object
         } elseif ($this->type == 'video') {
             $media  = new Video($this->uid);
             $dirs[] = Core::conv_lc_file(dirname($media->file));
-        } elseif ($this->type == 'artist' && $artist_art_folder) {
+        } elseif ($this->type == 'artist') {
             $media = new Artist($this->uid);
             $media->format();
-            $preferred_filename = $media->f_full_name;
-            $dirs[]             = Core::conv_lc_file($artist_art_folder);
+            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', $media->f_full_name);
+            if ($artist_art_folder) {
+                $dirs[] = Core::conv_lc_file($artist_art_folder);
+            }
+            // get the folders from songs as well
+            $songs = $media->get_songs();
+            foreach ($songs as $song_id) {
+                $song = new Song($song_id);
+                // look in the directory name of the files (e.g. /mnt/Music/%artistName%/%album%)
+                $dirs[] = Core::conv_lc_file(dirname($song->file, 1));
+                // look one level up (e.g. /mnt/Music/%artistName%)
+                $dirs[] = Core::conv_lc_file(dirname($song->file, 2));
+            }
         }
 
         foreach ($dirs as $dir) {
@@ -1513,13 +1517,12 @@ class Art extends database_object
                     $extension = 'jpeg';
                 }
 
-                // Take an md5sum so we don't show duplicate
-                // files.
+                // Take an md5sum so we don't show duplicate files.
                 $index = md5($full_filename);
 
-                if ($file == $preferred_filename || pathinfo($file, PATHINFO_FILENAME) == $preferred_filename) {
-                    // We found the preferred filename and
-                    // so we're done.
+                if (($file == $preferred_filename || pathinfo($file, PATHINFO_FILENAME) == $preferred_filename) ||
+                    ($file == $artist_filename || pathinfo($file, PATHINFO_FILENAME) == $artist_filename)) {
+                    // We found the preferred filename and so we're done.
                     debug_event('art.class', "gather_folder: Found preferred image file: $file", 5);
                     $preferred[$index] = array(
                         'file' => $full_filename,
