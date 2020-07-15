@@ -111,7 +111,7 @@ class Stats
 
             return false;
         }
-        if (!self::is_already_inserted($input_type, $oid, $user, $count_type, $date, $song_time)) {
+        if (!self::is_already_inserted($input_type, $oid, $user, $date, $count_type)) {
             $type = self::validate_type($input_type);
 
             $latitude  = null;
@@ -158,20 +158,15 @@ class Stats
      * @param integer $song_time
      * @return boolean
      */
-    public static function is_already_inserted($type, $oid, $user, $count_type = 'stream', $date = null, $song_time = 0)
+    public static function is_already_inserted($type, $oid, $user, $time, $count_type = 'stream')
     {
-        // We look 10 + song time seconds in the past
-        $delay = time() - ($song_time - 5);
-        if (is_int($date)) {
-            $delay = $date - ($song_time - 5);
-        }
+        // We look 5 seconds in the past
+        $delay = $time - 5;
 
-        $sql = "SELECT `id` FROM `object_count` ";
-        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?  AND `object_count`.`count_type` = ? AND `object_count`.`date` >= ? ";
-        if (is_int($date)) {
-            $sql .= "AND `object_count`.`date` <= " . $date . " ";
-        }
-        $sql .= "ORDER BY `object_count`.`date` DESC";
+        $sql = "SELECT `id` FROM `object_count` " .
+               "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
+               "`object_count`.`object_id` = ? AND `object_count`.`count_type` = ? AND `object_count`.`date` >= ? " .
+               "ORDER BY `object_count`.`date` DESC";
 
         $db_results = Dba::read($sql, array($user, $type, $oid, $count_type, $delay));
         $results    = array();

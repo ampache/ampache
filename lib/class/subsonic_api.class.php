@@ -2342,7 +2342,7 @@ class Subsonic_Api
         $song_id  = Subsonic_XML_Data::getAmpacheId($current);
         $song     = new Song($song_id);
         // only record repeated play stats using this method
-        if ($position < 1 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song->time)) {
+        if ($position < 1 && $song->id) {
             Stream::garbage_collection();
             Stream::insert_now_playing((int) $song->id, (int) $user_id, (int) $song->time, $username, 'song');
             $song->set_played($user_id, $client, time());

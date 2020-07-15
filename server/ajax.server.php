@@ -224,7 +224,7 @@ switch ($action) {
         $user        = Core::get_global('user');
         $previous    = Stats::get_last_song($user->id);
         $song        = new Song($object_id);
-        if ($object_type == 'song' && $previous['object_id'] == $object_id && !stats::is_already_inserted($object_type, $object_id, $user->id, 'stream', time(), $song->time)) {
+        if ($object_type == 'song' && $previous['object_id'] == $object_id && !stats::is_already_inserted($object_type, $object_id, $user->id, time(), 'stream')) {
             User::save_mediaplay($user, $song);
         }
     break;
