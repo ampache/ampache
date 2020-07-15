@@ -1264,12 +1264,10 @@ class Art extends database_object
                             'mime' => 'image/jpeg',
                             'title' => 'Spotify'
                   );
-            debug_event('Spotify image', $url, 5);
         }
   
         return $images;
     }// gather_spotify
-
 
     /**
      * gather_musicbrainz
