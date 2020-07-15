@@ -1189,7 +1189,6 @@ class Art extends database_object
     /**
      * gather_spotify
      * This function gathers art from the spotify catalog
-     * @param integer $limit
      * @param array $data
      * @return array
      */
