@@ -133,7 +133,7 @@ class Useractivity extends database_object
             $mbid_song   = $song->mbid;
             $mbid_artist = $song->artist_mbid;
             $mbid_album  = $song->album_mbid;
-            debug_event('useractivity.class', 'Inserting details for ' . $name_song . ' - ' . $name_artist . ' - ' . $name_album . '.', 5);
+            debug_event('useractivity.class', 'Inserting details for ' . $object_type . '. {' . $object_id . '}', 5);
 
             if ($name_song && $name_artist && $name_album) {
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_song, $name_artist, $name_album, $mbid_song, $mbid_artist, $mbid_album));
@@ -150,7 +150,7 @@ class Useractivity extends database_object
             $artist->format();
             $name_artist = $artist->f_name;
             $mbid_artist = $artist->mbid;
-            debug_event('useractivity.class', 'Inserting details for ' . $name_artist . '.', 5);
+            debug_event('useractivity.class', 'Inserting details for ' . $object_type . '. {' . $object_id . '}', 5);
 
             if ($name_artist) {
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_artist, $mbid_artist));
@@ -171,7 +171,7 @@ class Useractivity extends database_object
             $mbid_artist  = $album->mbid_group;
 
             if ($name_artist && $name_album) {
-                debug_event('useractivity.class', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
+                debug_event('useractivity.class', 'Inserting details for ' . $object_type . '. {' . $object_id . '}', 5);
 
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_artist, $name_album, $mbid_artist, $mbid_album));
             }

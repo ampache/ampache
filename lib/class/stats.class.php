@@ -153,29 +153,25 @@ class Stats
      * @param string $type
      * @param integer $oid
      * @param integer $user
+     * @param $time
      * @param string $count_type
-     * @param integer $date
-     * @param integer $song_time
      * @return boolean
      */
     public static function is_already_inserted($type, $oid, $user, $time, $count_type = 'stream')
     {
-        // We look 5 seconds in the past
-        $delay = $time - 5;
-
         $sql = "SELECT `id` FROM `object_count` " .
                "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
-               "`object_count`.`object_id` = ? AND `object_count`.`count_type` = ? AND `object_count`.`date` >= ? " .
+               "`object_count`.`object_id` = ? AND `object_count`.`count_type` = ? AND `object_count`.`date` = ? " .
                "ORDER BY `object_count`.`date` DESC";
 
-        $db_results = Dba::read($sql, array($user, $type, $oid, $count_type, $delay));
+        $db_results = Dba::read($sql, array($user, $type, $oid, $count_type, $time));
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
         if (count($results) > 0) {
-            debug_event('stats.class', 'Object already_inserted {' . (string) $oid . '} count: ' . (string) count($results), 5);
+            debug_event('stats.class', 'Object already inserted {' . (string) $oid . '} count: ' . (string) count($results), 5);
 
             return true;
         }
