@@ -1062,6 +1062,7 @@ class Song extends database_object implements media, library_item
 
             return false;
         }
+        debug_event('song.class', 'check_play_history: record play for song ' . $previous['object_id'], 4);
 
         return true;
     }

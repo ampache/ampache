@@ -2352,8 +2352,9 @@ class Subsonic_Api
         $song     = new Song($song_id);
         // only record repeated play stats using this method (repeats aren't processed the same way.)
         if ($previous['object_id'] == $song_id && $position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song->time)) {
-            self::scrobble(array('u' => $username, 'id' => $current, 'submission' => 'false'));
-            self::scrobble(array('u' => $username, 'id' => $current, 'submission' => 'true'));
+            Stream::garbage_collection();
+            Stream::insert_now_playing((int) $song->id, (int) $song->id, (int) $song->time, $song->username, 'song');
+            $song->set_played($user_id, $client, array(), time());
         }
         // continue to fail saving the queue
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
