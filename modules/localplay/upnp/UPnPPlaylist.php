@@ -168,8 +168,8 @@ class UPnPPlaylist
             'upnp_playlist' => $this->_songs,
             'upnp_current' => $this->_current
         ));
-        if (! Session::exists('api', $sid)) {
-            Session::create(array('type' => 'api', 'sid' => $sid, 'value' => $pls_data ));
+        if (! Session::exists('stream', $sid)) {
+            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $pls_data ));
         } else {
             Session::write($sid, $pls_data);
         }
