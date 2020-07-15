@@ -1887,18 +1887,11 @@ class Subsonic_Api
             $media = new $type($aid);
             $media->format();
 
-            //scrobble plugins
+            // scrobble plugins
             if ($submission === 'true' || $submission === '1') {
                 // stream has finished
                 debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
                 User::save_mediaplay($user, $media);
-            } elseif ($submission === 'false' || $submission === '0') {
-                // stream is in progress
-                debug_event('subsonic_api.class', 'now_playing: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) $time, 5);
-                Stream::garbage_collection();
-                Stream::insert_now_playing((int) $media->id, (int) $user->id, (int) $media->time, $user->username, $type);
-                //internal scrobbling is triggered by the now playing, as otherwise parts will be left out
-                $media->set_played($user->id, $input['c'], array(), time());
             }
         }
 
@@ -2348,10 +2341,9 @@ class Subsonic_Api
         $client   = (string) $input['c'];
         $user_id  = User::get_from_username($username)->id;
         $song_id  = Subsonic_XML_Data::getAmpacheId($current);
-        $previous = Stats::get_last_song($user_id, $client);
         $song     = new Song($song_id);
-        // only record repeated play stats using this method (repeats aren't processed the same way.)
-        if ($previous['object_id'] == $song_id && $position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song->time)) {
+        // only record repeated play stats using this method
+        if ($position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song->time)) {
             Stream::garbage_collection();
             Stream::insert_now_playing((int) $song->id, (int) $song->id, (int) $song->time, $song->username, 'song');
             $song->set_played($user_id, $client, array(), time());
