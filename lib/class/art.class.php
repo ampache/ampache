@@ -1223,7 +1223,7 @@ class Art extends database_object
             $query   = $data['artist'];
             $getType = 'getArtist';
         } elseif ($this->type == 'album') {
-            $query   = $data['album'];
+            $query   = 'album:' . $data['album'] . ' artist:' . $data['artist'];
             $getType = 'getAlbum';
         } else {
             return $images;
