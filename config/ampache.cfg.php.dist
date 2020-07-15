@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 43
+config_version = 44
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
@@ -567,8 +567,8 @@ sociable = "true"
 ; database
 ; POSSIBLE VALUES (builtins): db tags folder lastfm musicbrainz google
 ; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Tmdb,Omdb,Flickr
-; DEFAULT: db,tags,folder,musicbrainz,lastfm,google
-art_order = "db,tags,folder,musicbrainz,lastfm,google"
+; DEFAULT: db,tags,folder,spotify,musicbrainz,lastfm,google
+art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
 
 ; Recommendations
 ; Set this to true to enable display of similar artists or albums
@@ -582,6 +582,10 @@ art_order = "db,tags,folder,musicbrainz,lastfm,google"
 ; DEFAULT: false
 ;show_concerts = "false"
 
+;#########################################################
+;      API keys                                          #
+;#########################################################
+
 ; Last.FM API Key
 ; Set this to your Last.FM api key to actually use Last.FM for
 ; recommendations and metadata.
@@ -591,6 +595,15 @@ lastfm_api_key = "d5df942424c71b754e54ce1832505ae2"
 ; Set this to your Last.FM api secret to actually use Last.FM for
 ; scrobbling.
 lastfm_api_secret = ""
+
+; Spotify client id
+; Set this to your Spotify client id to actually use Spotify for
+; accessing their catalog API. (https://developer.spotify.com/dashboard/)
+;spotify_client_id = ""
+
+; Spotify client secret
+; Both id and secret are required to access the spotify catalog.
+;spotify_client_secret = ""
 
 ; Wanted
 ; Set this to true to enable display missing albums and the

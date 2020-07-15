@@ -7,6 +7,9 @@
 
 **News:**
 
+* Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
+  * Then put your client ID and secret in your ampache config
+  * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
 * JSON support has landed! (Documentation for the API in both formats is being written in [flatdoc](http://ricostacruz.com/flatdoc/))
 * Ampache is getting social! Check out:
   * [r/Ampache](https://www.reddit.com/r/ampache/)
