@@ -1873,7 +1873,6 @@ class Subsonic_Api
         $oid        = self::check_parameter($input, 'id');
         $submission = $input['submission'];
         $user       = User::get_from_username($input['u']);
-        $time       = time();
 
         if (!is_array($oid)) {
             $rid   = array();
@@ -2345,7 +2344,7 @@ class Subsonic_Api
         // only record repeated play stats using this method
         if ($position == 0 && $song->id && !stats::is_already_inserted('song', $song->id, $user_id, 'stream', time(), $song->time)) {
             Stream::garbage_collection();
-            Stream::insert_now_playing((int) $song->id, (int) $song->id, (int) $song->time, $song->username, 'song');
+            Stream::insert_now_playing((int) $song->id, (int) $user_id, (int) $song->time, $username, 'song');
             $song->set_played($user_id, $client, array(), time());
         }
         // continue to fail saving the queue
