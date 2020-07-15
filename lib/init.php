@@ -103,7 +103,7 @@ if (!defined('CLI')) {
     $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
 }
 if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
-    $results['user_ip_cardinality'] = 43;
+    $results['user_ip_cardinality'] = 42;
 }
 
 /* Variables needed for Auth class */
