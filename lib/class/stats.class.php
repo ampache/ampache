@@ -258,8 +258,9 @@ class Stats
 
         $sqlres = array($user_id);
 
-        $sql = "SELECT * FROM `object_count` " .
-                "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
+        $sql = "SELECT `object_count`.`id`, `object_count`.`object_id`, `object_count`.`user`, " .
+               "`object_count`.`agent`, `object_count`.`date`, `object_count`.`time`, `object_count`.`count_type` " .
+               "FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
@@ -283,22 +284,14 @@ class Stats
      * Gets called when the next song is played in quick succession
      *
      * @param integer $object_id
-     * @return PDOStatement|boolean
+     * @param string $agent
+     * @param integer $user_id
      */
-    public static function skip_last_song($object_id)
+    public static function skip_last_song($object_id, $agent, $user_id)
     {
-        $sql        = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `object_id` = ? ORDER BY `date` DESC LIMIT 1";
-        $db_results = Dba::write($sql, array($object_id));
-
-        //Now the just updated skipped value is taken
-        $sql        = "SELECT * FROM `object_count` WHERE `count_type` = 'skip' ORDER BY `object_count`.`date` DESC LIMIT 1";
-        $db_results = Dba::write($sql, array());
-        $skipped    = Dba::fetch_assoc($db_results);
-
-        //To remove associated album and artist entries
-        $sql = "DELETE FROM `object_count` WHERE (`object_type` = 'album' OR `object_type` = 'artist') AND `agent` = ? AND `date` = ?";
-
-        return Dba::write($sql, array($skipped['agent'], $skipped['date']));
+        $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `object_id` = ? AND `agent` = ? AND " .
+               "`user` = ? AND `object_type` = 'song' ORDER BY `date` DESC LIMIT 1";
+        Dba::write($sql, array($object_id, $agent, $user_id));
     }
 
 

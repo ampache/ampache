@@ -189,15 +189,21 @@ class Useractivity extends database_object
     /**
      * del_activity
      * Deletes last activity
-     * @param integer $object_id
+     * @param integer $date
+     * @param string $agent
      * @param string $object_type
+     * @param integer $user_id
      * @return PDOStatement|boolean
      */
-    public static function del_activity($object_id, $object_type = 'song')
+    public static function del_activity($date, $agent, $object_type = 'song', integer $user_id = 0)
     {
-        $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `activity_date` DESC LIMIT 1";
+        $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `date` = ? AND `agent` = ? ";
+        if ($user_id > 0) {
+            $sql .= "AND `user` = $user_id ";
+        }
+        $sql .= "ORDER BY `activity_date` DESC LIMIT 1";
 
-        return Dba::write($sql, array($object_type, $object_id));
+        return Dba::write($sql, array($object_type, $date, $agent));
     }
 
     /**
