@@ -1222,7 +1222,7 @@ class Art extends database_object
             $options = array();
             $getType = 'getArtist';
         } elseif ($this->type == 'album') {
-            $query   = $data['album'];
+            $query   =  'album:' . $data['album'] . ' artist:' . $data['artist'];
             $options = array();
             $getType = 'getAlbum';
         } else {
@@ -1264,6 +1264,7 @@ class Art extends database_object
                             'mime' => 'image/jpeg',
                             'title' => 'Spotify'
                   );
+            debug_event('Spotify image', $url, 5);
         }
   
         return $images;
