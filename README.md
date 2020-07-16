@@ -81,7 +81,7 @@ All database updates will be handled by Ampache.
 ## License
 
 Ampache is free software; you can redistribute it and/or
-modify it under the terms of the GNU Affero General Public License v3 (AGPLv3)
+modify it under the terms of the GNU Affero General Public License v3 (AGPL-3.0-or-later)
 as published by the Free Software Foundation.
 
 Ampache includes some [external modules](https://github.com/ampache/ampache/blob/develop/composer.lock) that carry their own licensing.

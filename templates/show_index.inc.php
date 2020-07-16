@@ -30,7 +30,7 @@ if ($user) {
     }
 } ?>
 <div id="browse_header">
-<?php UI::show_browse_form(); ?>
+<?php UI::show('show_browse_form.inc.php'); ?>
 </div> <!-- Close browse_header Div -->
 <?php if (AmpConfig::get('home_now_playing')) { ?>
 <div id="now_playing">

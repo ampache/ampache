@@ -628,7 +628,7 @@ class Tag extends database_object implements library_item
             "WHERE `tag`.`is_hidden` = false " .
             "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         if (!empty($type)) {
-            $sql .= "AND `tag_map`.`object_type` = '" . (string) scrub_in($type) . "' ";
+            $sql .= ", `tag_map`.`object_type` = '" . (string) scrub_in($type) . "' ";
         }
         $order = "`" . $order . "`";
         if ($order == 'count') {

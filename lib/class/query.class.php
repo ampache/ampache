@@ -993,7 +993,7 @@ class Query
             switch ($this->get_type()) {
                 case 'album':
                     $this->set_select("`album`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `album` ";
+                    $sql = "SELECT MIN(%%SELECT%%) AS `id` FROM `album` ";
                 break;
                 case 'artist':
                     $this->set_select("`artist`.`id`");
@@ -1169,7 +1169,7 @@ class Query
             $sql .= $dis . " AND ";
         }
 
-        $sql = rtrim((string) $sql, 'AND ') . ' ';
+        $sql = rtrim((string) $sql, 'AND ') . " ";
 
         return $sql;
     } // get_filter_sql

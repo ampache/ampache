@@ -272,6 +272,7 @@ class Update
      */
     public static function run_update()
     {
+        debug_event('update.class', 'run_update: starting', 4);
         /* Nuke All Active session before we start the mojo */
         $sql = "TRUNCATE session";
         Dba::write($sql);
@@ -296,6 +297,7 @@ class Update
             self::$versions = self::populate_version();
         }
 
+        debug_event('update.class', 'run_update: checking versions', 4);
         foreach (self::$versions as $version) {
             // If it's newer than our current version let's see if a function
             // exists and run the bugger.
@@ -306,6 +308,7 @@ class Update
 
                     // If the update fails drop out
                     if ($success) {
+                        debug_event('update.class', 'run_update: successfully updated to ' . $version['version'], 3);
                         self::set_version('db_version', $version['version']);
                     } else {
                         AmpError::display('update');
@@ -319,10 +322,15 @@ class Update
         // Once we've run all of the updates let's re-sync the character set as
         // the user can change this between updates and cause mis-matches on any
         // new tables.
+        debug_event('update.class', 'run_update: starting reset_db_charset', 5);
         Dba::reset_db_charset();
 
         // Let's also clean up the preferences unconditionally
+        debug_event('update.class', 'run_update: starting rebuild_all_preferences', 5);
         User::rebuild_all_preferences();
+
+        // Upgrade complete
+        debug_event('update.class', 'run_update: starting', 4);
 
         return true;
     } // run_update
