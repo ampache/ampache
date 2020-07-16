@@ -275,6 +275,7 @@ class Stats
      * @param integer $object_id
      * @param string $agent
      * @param integer $user_id
+     * @return bool|PDOStatement
      */
     public static function skip_last_song($object_id, $agent, $user_id)
     {

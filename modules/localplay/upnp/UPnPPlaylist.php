@@ -28,11 +28,9 @@ class UPnPPlaylist
     private $_songs;
     private $_current = 0;
 
-    /*
-     * Playlist is its own for each UPnP device
-     */
     /**
      * UPnPPlaylist constructor.
+     * Playlist is its own for each UPnP device
      * @param $deviceGUID
      */
     public function __construct($deviceGUID)

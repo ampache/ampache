@@ -20,7 +20,7 @@
  *
  */
 
-/*
+/**
  * check_php
  * check for required modules
  * @return boolean

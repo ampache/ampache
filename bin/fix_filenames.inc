@@ -27,7 +27,7 @@ require_once $prefix . '/lib/init.php';
 
 ob_end_clean();
 
-/*
+/**
  * Pull the root path of your catalogs one by one
  * and then do a directory sweep and check all of the files
  * that would be cataloged and see if they have the correct charset

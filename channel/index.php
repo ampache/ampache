@@ -20,13 +20,13 @@
  *
  */
 
-/*
+/**
+ * This is the wrapper for opening music streams from this server.  This script
+ * will play the local version or redirect to the remote server if that be
+ * the case.  Also this will update local statistics for songs as well.
+ * This is also where it decides if you need to be downsampled.
+ */
 
- This is the wrapper for opening music streams from this server.  This script
-   will play the local version or redirect to the remote server if that be
-   the case.  Also this will update local statistics for songs as well.
-   This is also where it decides if you need to be downsampled.
-*/
 define('NO_SESSION', '1');
 require_once '../lib/init.php';
 ob_end_clean();

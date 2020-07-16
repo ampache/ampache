@@ -20,13 +20,12 @@
  *
  */
 
-/*
-
- This is the wrapper for opening music streams from this server.  This script
-   will play the local version or redirect to the remote server if that be
-   the case.  Also this will update local statistics for songs as well.
-   This is also where it decides if you need to be downsampled.
-*/
+/**
+ * This is the wrapper for opening music streams from this server.  This script
+ * will play the local version or redirect to the remote server if that be
+ * the case.  Also this will update local statistics for songs as well.
+ * This is also where it decides if you need to be downsampled.
+ */
 define('NO_SESSION', '1');
 require_once '../lib/init.php';
 ob_end_clean();
@@ -237,10 +236,7 @@ if (AmpConfig::get('demo_mode') || !$prefs) {
     return false;
 }
 
-/*
-   If they are using access lists let's make sure
-   that they have enough access to play this mojo
-*/
+// If they are using access lists let's make sure that they have enough access to play this mojo
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
         !Access::check_network('network', Core::get_global('user')->id, '25')) {

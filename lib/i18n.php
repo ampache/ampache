@@ -43,15 +43,11 @@ function load_gettext()
     return true;
 } // load_gettext
 
-/*
+/**
  * T_
  * Translate string
  * @param string $msgid
  * @return string
- */
-/**
- * @param $msgid
- * @return mixed
  */
 function T_($msgid)
 {

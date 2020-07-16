@@ -20,7 +20,7 @@
  *
  */
 
-/*
+/**
  * localplay_controller Class
  *
  * This is the abstract class for any Localplay controller

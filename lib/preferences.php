@@ -23,7 +23,7 @@ use Lib\Metadata\Repository\MetadataField;
  * @param integer $user_id
  */
 
-/*
+/**
  * update_preferences
  * grabs the current keys that should be added
  * and then runs throught $_REQUEST looking for those
