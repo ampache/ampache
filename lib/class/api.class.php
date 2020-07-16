@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1544,8 +1544,8 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'playlist_edit')) {
             return false;
         }
-        $name = $input['name'];
-        $type = $input['type'];
+        $name  = $input['name'];
+        $type  = $input['type'];
         $items = (is_array($input['items'])) ? $input['items'] : explode(',', $input['items']);
         $order = (is_array($input['tracks'])) ? $input['tracks'] : explode(',', $input['tracks']);
         // calculate whether we are editing the track order too
@@ -1571,7 +1571,7 @@ class Api
         $playlist->update($array);
         // update track order with new id's
         if (!empty($playlist_edit)) {
-            foreach($playlist_edit as $song => $track) {
+            foreach ($playlist_edit as $song => $track) {
                 $playlist->set_by_track_number((int) $song, (int) $track);
             }
         }

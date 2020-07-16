@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,11 +28,9 @@ class UPnPPlaylist
     private $_songs;
     private $_current = 0;
 
-    /*
-     * Playlist is its own for each UPnP device
-     */
     /**
      * UPnPPlaylist constructor.
+     * Playlist is its own for each UPnP device
      * @param $deviceGUID
      */
     public function __construct($deviceGUID)

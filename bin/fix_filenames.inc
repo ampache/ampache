@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ require_once $prefix . '/lib/init.php';
 
 ob_end_clean();
 
-/*
+/**
  * Pull the root path of your catalogs one by one
  * and then do a directory sweep and check all of the files
  * that would be cataloged and see if they have the correct charset

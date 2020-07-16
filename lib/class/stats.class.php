@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -275,6 +275,7 @@ class Stats
      * @param integer $object_id
      * @param string $agent
      * @param integer $user_id
+     * @return bool|PDOStatement
      */
     public static function skip_last_song($object_id, $agent, $user_id)
     {

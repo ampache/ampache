@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1301,10 +1301,7 @@ class User extends database_object
      */
     public function delete()
     {
-        /*
-          Before we do anything make sure that they aren't the last
-          admin
-        */
+        // Before we do anything make sure that they aren't the last admin
         if ($this->has_access(100)) {
             $sql        = "SELECT `id` FROM `user` WHERE `access`='100' AND id != ?";
             $db_results = Dba::read($sql, array($this->id));

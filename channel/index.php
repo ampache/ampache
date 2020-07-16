@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,13 +20,13 @@
  *
  */
 
-/*
+/**
+ * This is the wrapper for opening music streams from this server.  This script
+ * will play the local version or redirect to the remote server if that be
+ * the case.  Also this will update local statistics for songs as well.
+ * This is also where it decides if you need to be downsampled.
+ */
 
- This is the wrapper for opening music streams from this server.  This script
-   will play the local version or redirect to the remote server if that be
-   the case.  Also this will update local statistics for songs as well.
-   This is also where it decides if you need to be downsampled.
-*/
 define('NO_SESSION', '1');
 require_once '../lib/init.php';
 ob_end_clean();

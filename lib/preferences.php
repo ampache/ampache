@@ -5,7 +5,7 @@ use Lib\Metadata\Repository\MetadataField;
 
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ use Lib\Metadata\Repository\MetadataField;
  * @param integer $user_id
  */
 
-/*
+/**
  * update_preferences
  * grabs the current keys that should be added
  * and then runs throught $_REQUEST looking for those
