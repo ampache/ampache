@@ -1558,7 +1558,8 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
 
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
+        // don't continue if you didn't actually get a playlist or the access level
+        if (!$playlist->id || (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['format']);
 
             return false;

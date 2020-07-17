@@ -634,7 +634,7 @@ class Playlist extends playlist_object
         $sql = "UPDATE `playlist_data` SET `object_id` = ? " .
                "WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ?";
         Dba::write($sql, array($object_id, $this->id, $track));
-        debug_event('playlist.class', $this->id . ' set track: ' . $track . ' to ' . $object_id, 5);
+        debug_event('playlist.class', 'Set track ' . $track . ' to ' . $object_id . ' for playlist: ' . $this->id, 5);
 
         $this->update_last_update();
 
