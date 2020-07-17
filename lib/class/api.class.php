@@ -1551,7 +1551,7 @@ class Api
         // calculate whether we are editing the track order too
         $playlist_edit = array();
         if (count($items) == count($order) && count($items) > 0) {
-            $playlist_edit = array_combine($items, $order);
+            $playlist_edit = array_combine($order, $items);
         }
 
         $user = User::get_from_username(Session::username($input['auth']));
@@ -1571,20 +1571,15 @@ class Api
                 "pl_type" => $type,
             ];
             $playlist->update($array);
-            self::message('success', 'playlist changes saved', null, $input['format']);
         }
         $change_made = false;
         // update track order with new id's
         if (!empty($playlist_edit)) {
-            foreach ($playlist_edit as $song => $track) {
+            foreach ($playlist_edit as $track => $song) {
                 if ($song > 0 && $track > 0) {
-                    debug_event('api.class', 'Set track ' . $track . ' to ' . $song . ' for playlist: ' . $playlist->id, 5);
-                    $playlist->set_by_track_number((int)$song, (int)$track);
+                    $playlist->set_by_track_number((int) $song, (int) $track);
                     $change_made = true;
                 }
-            }
-            if ($change_made) {
-                self::message('success', 'playlist changes saved', null, $input['format']);
             }
         }
         Session::extend($input['auth']);
@@ -1594,6 +1589,7 @@ class Api
 
             return false;
         }
+        self::message('success', 'playlist changes saved', null, $input['format']);
 
         return true;
     } // playlist_edit
