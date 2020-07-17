@@ -4028,7 +4028,6 @@ class Api
      * @param array $input
      * oid    = (integer)
      * method = (string)
-     * action = (string)
      */
     public static function democratic($input)
     {

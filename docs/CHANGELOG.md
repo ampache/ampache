@@ -49,6 +49,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * When you don't have a config file redirect to installer
 * Change to numeric searches renamed is -> equals and is not -> does not equal
 * Allow negative track numbers; reducing the maximum track number to 32767.
+* Localplay volume controll moved to the playlist (rightbar)
 
 ### Removed
 

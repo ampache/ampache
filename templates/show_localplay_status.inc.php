@@ -31,9 +31,6 @@ if (!empty($status['track_album'])) {
 <div id="information_actions">
     <ul>
         <li>
-        <?php echo Ajax::button('?page=localplay&action=command&command=volume_mute', 'volumemute', T_('Mute'), 'localplay_mute'); ?>
-        <?php echo Ajax::button('?page=localplay&action=command&command=volume_down', 'volumedn', T_('Decrease Volume'), 'localplay_volume_dn'); ?>
-        <?php echo Ajax::button('?page=localplay&action=command&command=volume_up', 'volumeup', T_('Increase Volume'), 'localplay_volume_up'); ?>
         <?php echo T_('Volume'); ?>: <?php echo $status['volume']; ?>%
         </li>
         <li>
