@@ -1584,7 +1584,7 @@ class Api
         Session::extend($input['auth']);
         // if you didn't make any changes; tell me
         if (!($name || $type) && empty($playlist_edit)) {
-            self::message('error', T_('Nothing was changed'), '401', $input['format']);;
+            self::message('error', T_('Nothing was changed'), '401', $input['format']);
 
             return false;
         }
