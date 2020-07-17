@@ -1563,20 +1563,31 @@ class Api
 
             return false;
         }
-        //update name/type
-        $array = [
-            "name" => $name,
-            "pl_type" => $type,
-        ];
-        $playlist->update($array);
+        // update name/type
+        if ($name || $type) {
+            $array = [
+                "name" => $name,
+                "pl_type" => $type,
+            ];
+            $playlist->update($array);
+            self::message('success', 'playlist changes saved', null, $input['format']);
+
+        }
         // update track order with new id's
         if (!empty($playlist_edit)) {
             foreach ($playlist_edit as $song => $track) {
+                debug_event('api.class', 'Set track ' . $track . ' to ' . $song . ' for playlist: ' . $playlist->id, 5);
                 $playlist->set_by_track_number((int) $song, (int) $track);
             }
+            self::message('success', 'playlist changes saved', null, $input['format']);
         }
-        self::message('success', 'playlist changes saved', null, $input['format']);
         Session::extend($input['auth']);
+        // if you didn't make any changes; tell me
+        if (!($name || $type) && empty($playlist_edit)) {
+            self::message('error', T_('Nothing was changed'), '401', $input['format']);;
+
+            return false;
+        }
 
         return true;
     } // playlist_edit
