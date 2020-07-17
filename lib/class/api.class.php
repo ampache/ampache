@@ -1571,7 +1571,6 @@ class Api
             ];
             $playlist->update($array);
             self::message('success', 'playlist changes saved', null, $input['format']);
-
         }
         // update track order with new id's
         if (!empty($playlist_edit)) {
