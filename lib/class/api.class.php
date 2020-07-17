@@ -1572,17 +1572,23 @@ class Api
             $playlist->update($array);
             self::message('success', 'playlist changes saved', null, $input['format']);
         }
+        $change_made = false;
         // update track order with new id's
         if (!empty($playlist_edit)) {
             foreach ($playlist_edit as $song => $track) {
-                debug_event('api.class', 'Set track ' . $track . ' to ' . $song . ' for playlist: ' . $playlist->id, 5);
-                $playlist->set_by_track_number((int) $song, (int) $track);
+                if ($song > 0 && $track > 0) {
+                    debug_event('api.class', 'Set track ' . $track . ' to ' . $song . ' for playlist: ' . $playlist->id, 5);
+                    $playlist->set_by_track_number((int)$song, (int)$track);
+                    $change_made = true;
+                }
             }
-            self::message('success', 'playlist changes saved', null, $input['format']);
+            if ($change_made) {
+                self::message('success', 'playlist changes saved', null, $input['format']);
+            }
         }
         Session::extend($input['auth']);
         // if you didn't make any changes; tell me
-        if (!($name || $type) && empty($playlist_edit)) {
+        if (!($name || $type) && !$change_made) {
             self::message('error', T_('Nothing was changed'), '401', $input['format']);
 
             return false;
