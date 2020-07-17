@@ -368,12 +368,12 @@ class Api
                                     'update' => date("c", (int) $row['update']),
                                     'add' => date("c", (int) $row['add']),
                                     'clean' => date("c", (int) $row['clean']),
-                                    'songs' => $song['song'],
-                                    'albums' => $album['album'],
-                                    'artists' => $artist['artist'],
+                                    'songs' => (int) $song['song'],
+                                    'albums' => (int) $album['album'],
+                                    'artists' => (int) $artist['artist'],
                                     'playlists' => ((int) $playlist['playlist'] + (int) $smartlist['smartlist']),
-                                    'videos' => $vcounts['video'],
-                                    'catalogs' => $catalog['catalog']);
+                                    'videos' => (int) $vcounts['video'],
+                                    'catalogs' => (int) $catalog['catalog']);
                 switch ($input['format']) {
                     case 'json':
                         echo json_encode($outarray, JSON_PRETTY_PRINT);
