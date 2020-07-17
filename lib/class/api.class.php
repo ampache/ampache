@@ -39,7 +39,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '410001';
+    public static $version = '420000';
 
     /**
      *  @var Browse $browse
@@ -550,7 +550,7 @@ class Api
 
     /**
      * get_similar
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Return similar artist id's or similar song ids compared to the input filter
      *
@@ -966,7 +966,7 @@ class Api
 
     /**
      * licenses
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * This returns the licenses  based on the specified filter
      *
@@ -1012,7 +1012,7 @@ class Api
 
     /**
      * license
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * This returns a single license based on UID
      *
@@ -1046,7 +1046,7 @@ class Api
 
     /**
      * license_songs
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * This returns all songs attached to a license ID
      *
@@ -1270,7 +1270,7 @@ class Api
     /**
      * songs
      * MINIMUM_API_VERSION=380001
-     * CHANGED_IN_API_VERSION=410001
+     * CHANGED_IN_API_VERSION=420000
      *
      * Returns songs based on the specified filter
      * All calls that return songs now include <playlisttrack> which can be used to identify track order.
@@ -1665,11 +1665,11 @@ class Api
      * playlist_remove_song
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=400001
-     * CHANGED_IN_API_VERSION=410001
+     * CHANGED_IN_API_VERSION=420000
      *
      * This removes a song from a playlist using track number in the list or song ID.
      * Pre-400001 the api required 'track' instead of 'song'.
-     * 410001+: added clear to allow you to clear a playlist without getting all the tracks.
+     * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
      *
      * @param array $input
      * filter = (string) UID of playlist
@@ -1898,7 +1898,7 @@ class Api
 
     /**
      * shares
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Get information about shared media this user is allowed to manage.
      *
@@ -1948,7 +1948,7 @@ class Api
 
     /**
      * share
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Get the share from it's id.
      *
@@ -1983,7 +1983,7 @@ class Api
 
     /**
      * share_create
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
@@ -2043,7 +2043,7 @@ class Api
     /**
      * share_delete
      *
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Delete an existing share.
      *
@@ -2079,7 +2079,7 @@ class Api
 
     /**
      * share_edit
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
      *
@@ -2325,7 +2325,7 @@ class Api
 
     /**
      * podcasts
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Get information about podcasts.
      *
@@ -2374,7 +2374,7 @@ class Api
 
     /**
      * podcast
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Get the podcast from it's id.
      *
@@ -2416,7 +2416,7 @@ class Api
 
     /**
      * podcast_create
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
@@ -2462,7 +2462,7 @@ class Api
     /**
      * podcast_delete
      *
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Delete an existing podcast.
      *
@@ -2501,7 +2501,7 @@ class Api
 
     /**
      * podcast_edit
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      * Update the description and/or expiration date for an existing podcast.
      * Takes the podcast id to update with optional description and expires parameters.
      *
@@ -2557,7 +2557,7 @@ class Api
 
     /**
      * podcast_episodes
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * This returns the episodes for a podcast
      *
@@ -2602,7 +2602,7 @@ class Api
 
     /**
      * podcast_episode
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Get the podcast_episode from it's id.
      *
@@ -2642,7 +2642,7 @@ class Api
     /**
      * podcast_episode_delete
      *
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Delete an existing podcast_episode.
      *
@@ -3327,7 +3327,7 @@ class Api
 
     /**
      * catalogs
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Get information about catalogs this user is allowed to manage.
      *
@@ -3359,7 +3359,7 @@ class Api
 
     /**
      * catalog
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Get the catalogs from it's id.
      *
@@ -3390,7 +3390,7 @@ class Api
     /**
      * catalog_action
      * MINIMUM_API_VERSION=400001
-     * CHANGED_IN_API_VERSION=410001
+     * CHANGED_IN_API_VERSION=420000
      *
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
@@ -3450,7 +3450,7 @@ class Api
 
     /**
      * catalog_file
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Perform actions on local catalog files.
      * Single file versions of catalog add, clean and verify.
@@ -3749,7 +3749,7 @@ class Api
     } // update_art
     /**
      * update_podcast
-     * MINIMUM_API_VERSION=410001
+     * MINIMUM_API_VERSION=420000
      *
      * Sync and download new podcast episodes
      *
