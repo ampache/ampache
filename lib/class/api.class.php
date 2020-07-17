@@ -1535,8 +1535,8 @@ class Api
      * filter = (string) UID of playlist
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
-     * items  = (array)  replace all playlist items with a new list of object_ids //optional
-     * tracks = (array)  playlisttrack numbers to rearrange matched to items in order //optional
+     * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
+     * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
      * @return boolean
      */
     public static function playlist_edit($input)
@@ -1546,8 +1546,8 @@ class Api
         }
         $name  = $input['name'];
         $type  = $input['type'];
-        $items = (is_array($input['items'])) ? $input['items'] : explode(',', $input['items']);
-        $order = (is_array($input['tracks'])) ? $input['tracks'] : explode(',', $input['tracks']);
+        $items = explode(',', $input['items']);
+        $order = explode(',', $input['tracks']);
         // calculate whether we are editing the track order too
         $playlist_edit = array();
         if (count($items) == count($order) && count($items) > 0) {
