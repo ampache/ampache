@@ -64,7 +64,7 @@ class WebDAV_Catalog extends DAV\Collection
 
     /**
      * getChild
-     * @param $name
+     * @param string $name
      * @return WebDAV_File|WebDAV_Directory
      */
     public function getChild($name)
@@ -83,7 +83,7 @@ class WebDAV_Catalog extends DAV\Collection
 
     /**
      * childExists
-     * @param $name
+     * @param string $name
      * @return boolean
      */
     public function childExists($name)

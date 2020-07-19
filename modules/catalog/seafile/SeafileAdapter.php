@@ -251,7 +251,7 @@ class SeafileAdapter
     /**
      * @param $func
      * @param string $path
-     * @return int
+     * @return integer
      */
     public function for_all_files($func, $path = '/')
     {
@@ -278,7 +278,7 @@ class SeafileAdapter
 
     /**
      * @param $path
-     * @param $name
+     * @param string $name
      * @return mixed|null
      */
     public function get_file($path, $name)

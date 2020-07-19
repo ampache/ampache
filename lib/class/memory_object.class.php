@@ -42,7 +42,7 @@ class memory_object
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param $value
      */
     public function __set($name, $value)
@@ -53,7 +53,7 @@ class memory_object
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return boolean|mixed|null
      */
     public function __get($name)

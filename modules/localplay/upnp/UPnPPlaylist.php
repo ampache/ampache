@@ -43,7 +43,7 @@ class UPnPPlaylist
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param $link
      */
     public function Add($name, $link)
@@ -82,7 +82,7 @@ class UPnPPlaylist
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function CurrentPos()
     {

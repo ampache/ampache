@@ -92,7 +92,7 @@ class Share extends database_object
 
     /**
      * delete_shares
-     * @param $object_type
+     * @param string $object_type
      * @param $object_id
      */
     public static function delete_shares($object_type, $object_id)
@@ -231,7 +231,7 @@ class Share extends database_object
 
     /**
      * get_shares
-     * @param $object_type
+     * @param string $object_type
      * @param $object_id
      * @return array
      */
@@ -464,7 +464,7 @@ class Share extends database_object
     }
 
     /**
-     * @param $object_type
+     * @param string $object_type
      * @param $object_id
      * @param boolean $show_text
      */
@@ -478,7 +478,7 @@ class Share extends database_object
     }
 
     /**
-     * @param $object_type
+     * @param string $object_type
      * @param $object_id
      */
     public static function display_ui_links($object_type, $object_id)

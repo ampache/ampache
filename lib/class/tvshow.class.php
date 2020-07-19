@@ -75,7 +75,7 @@ class TVShow extends database_object implements library_item
     /**
      * get_from_name
      * This gets a tv show object based on the tv show name
-     * @param $name
+     * @param string $name
      * @return TVShow
      */
     public static function get_from_name($name)
@@ -230,7 +230,7 @@ class TVShow extends database_object implements library_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)
@@ -241,7 +241,7 @@ class TVShow extends database_object implements library_item
     }
 
     /**
-     * @param $filter_type
+     * @param string $filter_type
      * @return array|mixed
      */
     public function get_medias($filter_type = null)
@@ -311,7 +311,7 @@ class TVShow extends database_object implements library_item
      * check
      *
      * Checks for an existing tv show; if none exists, insert one.
-     * @param $name
+     * @param string $name
      * @param $year
      * @param $tvshow_summary
      * @param boolean $readonly

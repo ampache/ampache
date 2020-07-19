@@ -80,7 +80,7 @@ class Personal_Video extends Video
      * update
      * This takes a key'd array of data as input and updates a personal video entry
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {

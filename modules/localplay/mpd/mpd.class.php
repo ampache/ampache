@@ -527,7 +527,7 @@ class mpd
      * places the results into a multidimensional array. If no directory is
      * specified the directory listing is at the base of the MPD music path.
      * @param string $dir
-     * @return array|bool
+     * @return array|boolean
      */
     public function GetDir($dir = '')
     {
@@ -911,7 +911,7 @@ class mpd
      * that contains <string> will be returned in the results.
      * @param $type
      * @param $string
-     * @return array|bool
+     * @return array|boolean
      */
     public function Search($type, $string)
     {
@@ -947,7 +947,7 @@ class mpd
      * exactly matches <string> will be returned in the results.
      * @param $type
      * @param $string
-     * @return array|bool
+     * @return array|boolean
      */
     public function Find($type, $string)
     {
@@ -993,7 +993,7 @@ class mpd
      * GetArtists
      *
      * Returns the list of artists in the database in an associative array.
-     * @return array|bool
+     * @return array|boolean
      */
     public function GetArtists()
     {
@@ -1023,7 +1023,7 @@ class mpd
      * Optional parameter is an artist Name which will list all albums by a
      * particular artist.
      * @param $artist
-     * @return array|bool
+     * @return array|boolean
      */
     public function GetAlbums($artist = null)
     {
@@ -1112,7 +1112,7 @@ class mpd
      *
      * Builds a multidimensional array with MPD response lists.
      * @param $response
-     * @return array|bool
+     * @return array|boolean
      */
     private static function _parseFileListResponse($response)
     {
@@ -1139,7 +1139,7 @@ class mpd
      * _parseResponse
      * Turns a response into an array
      * @param $response
-     * @return array|bool
+     * @return array|boolean
      */
     private static function _parseResponse($response)
     {

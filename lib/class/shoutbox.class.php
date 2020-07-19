@@ -363,7 +363,7 @@ class Shoutbox
     }
 
     /**
-     * @param $object_type
+     * @param string $object_type
      * @param $object_id
      * @return array
      */

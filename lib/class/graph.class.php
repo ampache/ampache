@@ -558,7 +558,7 @@ class Graph
      * @param integer $user
      * @param integer $start_date
      * @param integer $end_date
-     * @return int
+     * @return integer
      */
     public function get_total_bandwidth($user = 0, $start_date = null, $end_date = null)
     {
@@ -575,7 +575,7 @@ class Graph
      * @param integer $user
      * @param integer $start_date
      * @param integer $end_date
-     * @return int
+     * @return integer
      */
     public function get_total_time($user = 0, $start_date = null, $end_date = null)
     {
@@ -592,7 +592,7 @@ class Graph
      * @param integer $user
      * @param integer $start_date
      * @param integer $end_date
-     * @return int
+     * @return integer
      */
     public function get_total_hits($user = 0, $start_date = null, $end_date = null)
     {

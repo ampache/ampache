@@ -129,7 +129,7 @@ function update_preference($user_id, $name, $pref_id, $value)
 /**
  * create_preference_input
  * takes the key and then creates the correct type of input for updating it
- * @param $name
+ * @param string $name
  * @param $value
  */
 function create_preference_input($name, $value)

@@ -81,7 +81,7 @@ abstract class database_object
     /**
      * is_cached
      * this checks the cache to see if the specified object is there
-     * @param $index
+     * @param string $index
      * @param $object_id
      * @return boolean
      */
@@ -98,7 +98,7 @@ abstract class database_object
     /**
      * get_from_cache
      * This attempts to retrieve the specified object from the cache we've got here
-     * @param integer $index
+     * @param string $index
      * @param integer $object_id
      * @return array
      */
@@ -117,7 +117,7 @@ abstract class database_object
     /**
      * add_to_cache
      * This adds the specified object to the specified index in the cache
-     * @param $index
+     * @param string $index
      * @param $object_id
      * @param array $data
      * @return boolean
@@ -143,7 +143,7 @@ abstract class database_object
      * remove_from_cache
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
-     * @param $index
+     * @param string $index
      * @param $object_id
      */
     public static function remove_from_cache($index, $object_id)

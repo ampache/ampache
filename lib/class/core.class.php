@@ -278,7 +278,7 @@ class Core
      * form_register
      * This registers a form with a SID, inserts it into the session
      * variables and then returns a string for use in the HTML form
-     * @param $name
+     * @param string $name
      * @param string $type
      * @return string
      */
@@ -316,7 +316,7 @@ class Core
      * This takes a form name and then compares it with the posted sid, if
      * they don't match then it returns false and doesn't let the person
      * continue
-     * @param $name
+     * @param string $name
      * @param string $type
      * @return boolean
      */

@@ -86,7 +86,7 @@ class Movie extends Video
      * update
      * This takes a key'd array of data as input and updates a movie entry
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {

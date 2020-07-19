@@ -444,7 +444,7 @@ class OAuthRequest
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param $value
      * @param boolean $allow_duplicates
      */
@@ -465,7 +465,7 @@ class OAuthRequest
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed|null
      */
     public function get_parameter($name)
@@ -482,7 +482,7 @@ class OAuthRequest
     }
 
     /**
-     * @param $name
+     * @param string $name
      */
     public function unset_parameter($name)
     {

@@ -497,7 +497,7 @@ class Tag extends database_object implements library_item
      * Display all tags that apply to matching target type of the specified id
      * @param string $type
      * @param integer $object_id
-     * @return array|bool
+     * @return array|boolean
      */
     public static function get_object_tags($type, $object_id = null)
     {

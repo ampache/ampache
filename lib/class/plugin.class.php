@@ -33,7 +33,7 @@ class Plugin
      * Constructor
      * This constructor loads the Plugin config file which defines how to
      * install/uninstall the plugin from Ampache's database
-     * @param $name
+     * @param string $name
      */
     public function __construct($name)
     {

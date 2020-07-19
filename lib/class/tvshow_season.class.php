@@ -194,7 +194,7 @@ class TVShow_Season extends database_object implements library_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)

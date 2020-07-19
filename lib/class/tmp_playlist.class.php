@@ -313,7 +313,7 @@ class Tmp_Playlist extends database_object
      * This adds the object of $this->object_type to this tmp playlist
      * it takes an optional type, default is song
      * @param $object_id
-     * @param $object_type
+     * @param string $object_type
      * @return boolean
      */
     public function add_object($object_id, $object_type)

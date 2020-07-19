@@ -83,7 +83,7 @@ class Subsonic_XML_Data
 
     /**
      * @param $songid
-     * @return int
+     * @return integer
      */
     public static function getSongId($songid)
     {
@@ -92,7 +92,7 @@ class Subsonic_XML_Data
 
     /**
      * @param integer $videoid
-     * @return int
+     * @return integer
      */
     public static function getVideoId($videoid)
     {
@@ -101,7 +101,7 @@ class Subsonic_XML_Data
 
     /**
      * @param integer $plistid
-     * @return int
+     * @return integer
      */
     public static function getSmartPlId($plistid)
     {
@@ -128,7 +128,7 @@ class Subsonic_XML_Data
 
     /**
      * @param integer $plistid
-     * @return int
+     * @return integer
      */
     public static function getPlaylistId($plistid)
     {
@@ -137,7 +137,7 @@ class Subsonic_XML_Data
 
     /**
      * @param $object_id
-     * @return int
+     * @return integer
      */
     private static function cleanId($object_id)
     {
@@ -152,7 +152,7 @@ class Subsonic_XML_Data
 
     /**
      * @param $object_id
-     * @return int
+     * @return integer
      */
     public static function getAmpacheId($object_id)
     {
@@ -821,7 +821,7 @@ class Subsonic_XML_Data
 
     /**
      * checkName
-     * @param $name
+     * @param string $name
      * @return string|null
      */
     private static function checkName($name)

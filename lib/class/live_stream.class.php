@@ -148,7 +148,7 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)

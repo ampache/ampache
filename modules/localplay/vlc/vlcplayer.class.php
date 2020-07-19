@@ -56,7 +56,7 @@ class VlcPlayer
      * append a song to the playlist
      * $name    Name to be shown in the playlist
      * $url        URL of the song
-     * @param $name
+     * @param string $name
      * @param $url
      * @return boolean
      */

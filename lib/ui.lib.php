@@ -53,7 +53,7 @@ function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = '
 /**
  * @param $action
  * @param $catalogs
- * @param $options
+ * @param array $options
  */
 function catalog_worker($action, $catalogs = null, $options = null)
 {
@@ -378,7 +378,7 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
 } // show_tvshow_select
 
 /**
- * @param $name
+ * @param string $name
  * @param $season_id
  * @param boolean $allow_add
  * @param integer $video_id

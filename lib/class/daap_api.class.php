@@ -125,7 +125,7 @@ class Daap_Api
     /**
      * @param $curl
      * @param $data
-     * @return int
+     * @return integer
      */
     public static function output_body($curl, $data)
     {
@@ -138,7 +138,7 @@ class Daap_Api
     /**
      * @param $curl
      * @param $header
-     * @return int
+     * @return integer
      */
     public static function output_header($curl, $header)
     {
@@ -852,7 +852,7 @@ class Daap_Api
 
     /**
      * @param $type
-     * @return int
+     * @return integer
      */
     private static function get_type_id($type)
     {

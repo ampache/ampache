@@ -127,7 +127,7 @@ class Localplay
      * This function takes the track name and checks to see if 'skip'
      * is supported in the current player, if so it returns a 'skip to'
      * link, otherwise it returns just the text
-     * @param $name
+     * @param string $name
      * @param $object_id
      * @return string
      */

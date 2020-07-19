@@ -782,7 +782,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
      * @param $i
      * @param $x
      * @param $y
-     * @return int
+     * @return integer
      */
     public function get_2x2_greyscale(&$i, $x, $y)
     {

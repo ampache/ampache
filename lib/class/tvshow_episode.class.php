@@ -126,7 +126,7 @@ class TVShow_Episode extends Video
      * update
      * This takes a key'd array of data as input and updates a tv show episode entry
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {

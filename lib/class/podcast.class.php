@@ -215,7 +215,7 @@ class Podcast extends database_object implements library_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)
@@ -226,7 +226,7 @@ class Podcast extends database_object implements library_item
     }
 
     /**
-     * @param $filter_type
+     * @param string $filter_type
      * @return array|mixed
      */
     public function get_medias($filter_type = null)

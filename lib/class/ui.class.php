@@ -42,7 +42,7 @@ class UI
      * Return the path to the template file wanted. The file can be overwriten
      * by the theme if it's not a php file, or if it is and if option
      * allow_php_themes is set to true.
-     * @param $template
+     * @param string $template
      * @return string
      */
     public static function find_template($template)
@@ -79,7 +79,7 @@ class UI
      *
      * Does some trickery with the output buffer to return the output of a
      * template.
-     * @param $template
+     * @param string $template
      * @return string
      */
     public static function ajax_include($template)
@@ -331,7 +331,7 @@ class UI
      * _find_icon
      *
      * Does the finding icon thing. match svg first over png
-     * @param $name
+     * @param string $name
      * @return string
      */
     private static function _find_icon($name)
@@ -430,7 +430,7 @@ class UI
      * _find_image
      *
      * Does the finding image thing. match svg first over png
-     * @param $name
+     * @param string $name
      * @return string
      */
     private static function _find_image($name)

@@ -125,7 +125,7 @@ function progress($totaldownload, $downloaded, $us, $ud)
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  * @param $curl
  * @param $header
- * @return int
+ * @return integer
  */
 function output_header($curl, $header)
 {

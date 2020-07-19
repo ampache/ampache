@@ -77,7 +77,7 @@ class Ampachechartlyrics
      * get_lyrics
      * This will look web services for a song lyrics.
      * @param Song $song
-     * @return array|bool
+     * @return array|boolean
      */
     public function get_lyrics($song)
     {

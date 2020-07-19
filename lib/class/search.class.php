@@ -1369,7 +1369,7 @@ class Search extends playlist_object
      *
      * Iterates over our array of types to find out the basetype for
      * the passed string.
-     * @param $name
+     * @param string $name
      * @return string|false
      */
     public function name_to_basetype($name)

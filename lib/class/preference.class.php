@@ -172,7 +172,7 @@ class Preference extends database_object
      * exists
      * This just checks to see if a preference currently exists
      * @param string $preference
-     * @return int
+     * @return integer
      */
     public static function exists($preference)
     {
@@ -214,7 +214,7 @@ class Preference extends database_object
     /**
      * id_from_name
      * This takes a name and returns the id
-     * @param $name
+     * @param string $name
      * @return array|mixed
      */
     public static function id_from_name($name)

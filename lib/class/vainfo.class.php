@@ -1342,7 +1342,7 @@ class vainfo
 
     /**
      * removeCommonAbbreviations
-     * @param $name
+     * @param string $name
      * @return string
      */
     private function removeCommonAbbreviations($name)
@@ -1362,7 +1362,7 @@ class vainfo
 
     /**
      * formatVideoName
-     * @param $name
+     * @param string $name
      * @return string
      */
     private function formatVideoName($name)

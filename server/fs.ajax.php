@@ -193,7 +193,7 @@ class fs
 
     /**
      * @param $fs_id
-     * @param $name
+     * @param string $name
      * @param boolean $mkdir
      * @return array
      * @throws Exception
@@ -216,7 +216,7 @@ class fs
 
     /**
      * @param $fs_id
-     * @param $name
+     * @param string $name
      * @return array
      * @throws Exception
      */

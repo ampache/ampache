@@ -155,7 +155,7 @@ abstract class Catalog extends database_object
     abstract public function install();
 
     /**
-     * @param $options
+     * @param array $options
      * @return mixed
      */
     abstract public function add_to_catalog($options = null);
@@ -2223,7 +2223,7 @@ abstract class Catalog extends database_object
 
     /**
      * @param $year
-     * @return int
+     * @return integer
      */
     public static function normalize_year($year)
     {
@@ -2741,9 +2741,9 @@ abstract class Catalog extends database_object
 
     /**
      * process_action
-     * @param $action
+     * @param string $action
      * @param $catalogs
-     * @param $options
+     * @param array $options
      */
     public static function process_action($action, $catalogs, $options = null)
     {

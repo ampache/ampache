@@ -470,7 +470,7 @@ class Democratic extends Tmp_Playlist
      * delete_from_oid
      * This takes an OID and type and removes the object from the democratic playlist
      * @param $oid
-     * @param $object_type
+     * @param string $object_type
      * @return boolean
      */
     public function delete_from_oid($oid, $object_type)

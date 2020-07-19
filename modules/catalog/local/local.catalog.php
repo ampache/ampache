@@ -310,7 +310,7 @@ class Catalog_local extends Catalog
      * add_file
      *
      * @param $full_file
-     * @param $options
+     * @param array $options
      * @return boolean
      * @throws Exception
      */
@@ -579,7 +579,7 @@ class Catalog_local extends Catalog
      * @param $media_type
      * @param $chunk
      * @param $chunk_size
-     * @return int
+     * @return integer
      */
     private function _verify_chunk($media_type, $chunk, $chunk_size)
     {
@@ -875,7 +875,7 @@ class Catalog_local extends Catalog
      * here
      * @param $file
      * @param array $options
-     * @return int
+     * @return integer
      * @throws Exception
      * @throws Exception
      */

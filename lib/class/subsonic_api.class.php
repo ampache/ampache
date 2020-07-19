@@ -85,7 +85,7 @@ class Subsonic_Api
     /**
      * @param $curl
      * @param $data
-     * @return int
+     * @return integer
      */
     public static function output_body($curl, $data)
     {
@@ -99,7 +99,7 @@ class Subsonic_Api
     /**
      * @param $curl
      * @param $header
-     * @return int
+     * @return integer
      */
     public static function output_header($curl, $header)
     {
@@ -957,7 +957,7 @@ class Subsonic_Api
 
     /**
      * @param $id
-     * @param $name
+     * @param string $name
      * @param array $songsIdToAdd
      * @param array $songIndexToRemove
      * @param boolean $public
