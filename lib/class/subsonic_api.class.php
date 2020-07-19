@@ -1872,6 +1872,7 @@ class Subsonic_Api
         $oid        = self::check_parameter($input, 'id');
         $submission = $input['submission'];
         $user       = User::get_from_username($input['u']);
+        $client     = (string) $input['c'];
 
         if (!is_array($oid)) {
             $rid   = array();
@@ -1888,8 +1889,9 @@ class Subsonic_Api
             // scrobble plugins
             if ($submission === 'true' || $submission === '1') {
                 // stream has finished
-                debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $input['c'] . ' ' . (string) time(), 5);
+                debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $client . ' ' . (string) time(), 5);
                 User::save_mediaplay($user, $media);
+                $media->set_played($user->id, $client, time());
             }
         }
 
