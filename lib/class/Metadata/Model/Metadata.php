@@ -43,7 +43,7 @@ class Metadata extends DatabaseObject implements Model
      * A library item like song or video
      * @var integer
      */
-    protected $object_id;
+    protected $objectid;
 
     /**
      * Tag Field
