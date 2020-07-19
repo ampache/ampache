@@ -860,10 +860,10 @@ class Album extends database_object implements library_item
         $songs                     = Search::run($search);
 
         $childrens = array();
-        foreach ($songs as $song) {
+        foreach ($songs as $song_id) {
             $childrens[] = array(
                 'object_type' => 'song',
-                'object_id' => $song
+                'object_id' => $song_id
             );
         }
 

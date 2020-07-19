@@ -895,10 +895,10 @@ class Tag extends database_object implements library_item
         $medias = array();
         if ($filter_type) {
             $ids = self::get_tag_objects($filter_type, $this->id);
-            foreach ($ids as $objectid) {
+            foreach ($ids as $object_id) {
                 $medias[] = array(
                     'object_type' => $filter_type,
-                    'object_id' => $objectid
+                    'object_id' => $object_id
                 );
             }
         }

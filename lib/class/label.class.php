@@ -234,10 +234,10 @@ class Label extends database_object implements library_item
         $artists                   = Search::run($search);
 
         $childrens = array();
-        foreach ($artists as $artist) {
+        foreach ($artists as $artist_id) {
             $childrens[] = array(
                 'object_type' => 'artist',
-                'object_id' => $artist
+                'object_id' => $artist_id
             );
         }
 

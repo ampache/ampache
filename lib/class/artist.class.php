@@ -673,10 +673,10 @@ class Artist extends database_object implements library_item
         $albums                    = Search::run($search);
 
         $childrens = array();
-        foreach ($albums as $album) {
+        foreach ($albums as $album_id) {
             $childrens[] = array(
                 'object_type' => 'album',
-                'object_id' => $album
+                'object_id' => $album_id
             );
         }
 

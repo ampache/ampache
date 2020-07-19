@@ -111,22 +111,22 @@ class Rating extends database_object
             $ratings[$row['object_id']] = $row['rating'];
         }
 
-        foreach ($ids as $objectid) {
+        foreach ($ids as $object_id) {
             // First store the user-specific rating
-            if (!isset($user_ratings[$objectid])) {
+            if (!isset($user_ratings[$object_id])) {
                 $rating = 0;
             } else {
-                $rating = (int) $user_ratings[$objectid];
+                $rating = (int) $user_ratings[$object_id];
             }
-            parent::add_to_cache('rating_' . $type . '_user' . $user_id, $objectid, array($rating));
+            parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, array($rating));
 
             // Then store the average
-            if (!isset($ratings[$objectid])) {
+            if (!isset($ratings[$object_id])) {
                 $rating = 0;
             } else {
-                $rating = round($ratings[$objectid], 1);
+                $rating = round($ratings[$object_id], 1);
             }
-            parent::add_to_cache('rating_' . $type . '_all', $objectid, array($rating));
+            parent::add_to_cache('rating_' . $type . '_all', $object_id, array($rating));
         }
 
         return true;

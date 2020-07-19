@@ -615,7 +615,6 @@ class Subsonic_Api
 
                 if ($fromYear || $toYear) {
                     $search = Search::year_search($fromYear, $toYear, $size, $offset);
-                    $query  = new Search(null, 'album');
                     $albums = Search::run($search);
                 }
                 break;

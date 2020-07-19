@@ -1103,10 +1103,10 @@ abstract class Catalog extends database_object
         $artists = Search::run($search);
 
         $childrens = array();
-        foreach ($artists as $artist) {
+        foreach ($artists as $artist_id) {
             $childrens[] = array(
                 'object_type' => 'artist',
-                'object_id' => $artist
+                'object_id' => $artist_id
             );
         }
 
@@ -1427,8 +1427,8 @@ abstract class Catalog extends database_object
         debug_event('catalog.class', 'gather_art found ' . (string) count($searches) . ' items missing art', 4);
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
-            foreach ($values as $objectid) {
-                self::gather_art_item($key, $objectid, $db_art_first);
+            foreach ($values as $object_id) {
+                self::gather_art_item($key, $object_id, $db_art_first);
 
                 // Stupid little cutesie thing
                 $search_count++;
@@ -1466,15 +1466,15 @@ abstract class Catalog extends database_object
         debug_event('catalog.class', 'gather_artist_info found ' . (string) count($searches) . 'items to check', 4);
         // Run through items and refresh info
         foreach ($searches as $key => $values) {
-            foreach ($values as $objectid) {
-                Recommendation::get_artist_info($objectid);
-                Recommendation::get_artists_like($objectid);
-                Artist::set_last_update($objectid);
+            foreach ($values as $object_id) {
+                Recommendation::get_artist_info($object_id);
+                Recommendation::get_artists_like($object_id);
+                Artist::set_last_update($object_id);
 
                 // Stupid little cutesie thing
                 $search_count++;
                 if (UI::check_ticker()) {
-                    UI::update_text('count_artist_' . $objectid, $search_count);
+                    UI::update_text('count_artist_' . $object_id, $search_count);
                 }
             }
         }

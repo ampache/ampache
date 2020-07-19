@@ -136,27 +136,27 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param $objectid
+     * @param $object_id
      * @return int
      */
-    private static function cleanId($objectid)
+    private static function cleanId($object_id)
     {
         // Remove all al-, ar-, ... prefixs
-        $tpos = strpos((string) $objectid, "-");
+        $tpos = strpos((string) $object_id, "-");
         if ($tpos !== false) {
-            $objectid = (int) (substr((string) $objectid, $tpos + 1));
+            $object_id = (int) (substr((string) $object_id, $tpos + 1));
         }
 
-        return $objectid;
+        return $object_id;
     }
 
     /**
-     * @param $objectid
+     * @param $object_id
      * @return int
      */
-    public static function getAmpacheId($objectid)
+    public static function getAmpacheId($object_id)
     {
-        return (self::cleanId($objectid) % self::AMPACHEID_ARTIST);
+        return (self::cleanId($object_id) % self::AMPACHEID_ARTIST);
     }
 
     /**
@@ -166,8 +166,8 @@ class Subsonic_XML_Data
     public static function getAmpacheIds($ids)
     {
         $ampids = array();
-        foreach ($ids as $objectid) {
-            $ampids[] = self::getAmpacheId($objectid);
+        foreach ($ids as $object_id) {
+            $ampids[] = self::getAmpacheId($object_id);
         }
 
         return $ampids;
@@ -248,26 +248,26 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param $objectid
+     * @param $object_id
      * @return string
      */
-    public static function getAmpacheType($objectid)
+    public static function getAmpacheType($object_id)
     {
-        if (self::isArtist($objectid)) {
+        if (self::isArtist($object_id)) {
             return "artist";
-        } elseif (self::isAlbum($objectid)) {
+        } elseif (self::isAlbum($object_id)) {
             return "album";
-        } elseif (self::isSong($objectid)) {
+        } elseif (self::isSong($object_id)) {
             return "song";
-        } elseif (self::isSmartPlaylist($objectid)) {
+        } elseif (self::isSmartPlaylist($object_id)) {
             return "search";
-        } elseif (self::isVideo($objectid)) {
+        } elseif (self::isVideo($object_id)) {
             return "video";
-        } elseif (self::isPodcast($objectid)) {
+        } elseif (self::isPodcast($object_id)) {
             return "podcast";
-        } elseif (self::isPodcastEp($objectid)) {
+        } elseif (self::isPodcastEp($object_id)) {
             return "podcast_episode";
-        } elseif (self::isPlaylist($objectid)) {
+        } elseif (self::isPlaylist($object_id)) {
             return "playlist";
         }
 
@@ -1126,14 +1126,14 @@ class Subsonic_XML_Data
      * setIfStarred
      * @param SimpleXMLElement $xml
      * @param string $objectType
-     * @param $objectId
+     * @param $object_id
      */
-    private static function setIfStarred($xml, $objectType, $objectId)
+    private static function setIfStarred($xml, $objectType, $object_id)
     {
 //        $object_type = strtolower(get_class($libitem));
         if (Core::is_library_item($objectType)) {
             if (AmpConfig::get('userflags')) {
-                $starred = new Userflag($objectId, $objectType);
+                $starred = new Userflag($object_id, $objectType);
                 if ($res = $starred->get_flag(null, true)) {
                     $format = AmpConfig::get('custom_datetime') ? preg_replace("/[^dmY\s]/", "", (string) AmpConfig::get('custom_datetime')) : 'd-m-Y';
                     $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int) $res[1]));

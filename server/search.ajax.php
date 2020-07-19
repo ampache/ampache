@@ -45,7 +45,7 @@ switch ($_REQUEST['action']) {
                 'rule_1' => 'name',
             );
             $sres = Search::run($searchreq);
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
                 'rule_1' => 'title',
             );
             $sres = Search::run($searchreq);
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -107,7 +107,7 @@ switch ($_REQUEST['action']) {
                 'rule_1' => 'title',
             );
             $sres = Search::run($searchreq);
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -136,7 +136,7 @@ switch ($_REQUEST['action']) {
                 'rule_1' => 'name',
             );
             $sres = Search::run($searchreq);
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -166,7 +166,7 @@ switch ($_REQUEST['action']) {
             );
             $sres = Search::run($searchreq);
 
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -216,7 +216,7 @@ switch ($_REQUEST['action']) {
             );
             $sres = Search::run($searchreq);
 
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
