@@ -190,7 +190,6 @@ class Useractivity extends database_object
      * del_activity
      * Deletes last activity
      * @param integer $date
-     * @param string $agent
      * @param string $object_type
      * @param integer $user_id
      * @return PDOStatement|boolean

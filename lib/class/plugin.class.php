@@ -50,7 +50,7 @@ class Plugin
      * has_info
      * This actually loads the config file for the plugin the name of the
      * class contained within the config file must be Plugin[NAME OF FILE]
-     * @param $cname
+     * @param string $cname
      * @return boolean
      */
     public function has_info($cname)

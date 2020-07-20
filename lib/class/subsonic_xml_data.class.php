@@ -109,7 +109,7 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param $podcastid
+     * @param integer $podcastid
      * @return integer
      */
     public static function getPodcastId($podcastid)
@@ -118,25 +118,26 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param integer|null $episodeid
-     * @return integer|null
-     */
-    public static function getPodcastEpId($episodeid)
-    {
-        return $episodeid + self::AMPACHEID_PODCASTEP;
-    }
-
-    /**
-     * @param integer $plistid
+     * @param integer $episode_id
      * @return integer
      */
-    public static function getPlaylistId($plistid)
+    public static function getPodcastEpId($episode_id)
     {
-        return $plistid + self::AMPACHEID_PLAYLIST;
+        return $episode_id + self::AMPACHEID_PODCASTEP;
     }
 
     /**
-     * @param integer $object_id
+     * @param integer $plist_id
+     * @return integer
+     */
+    public static function getPlaylistId($plist_id)
+    {
+        return $plist_id + self::AMPACHEID_PLAYLIST;
+    }
+
+    /**
+     * cleanId
+     * @param string $object_id
      * @return integer
      */
     private static function cleanId($object_id)
@@ -151,7 +152,8 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param integer $object_id
+     * getAmpacheId
+     * @param string $object_id
      * @return integer
      */
     public static function getAmpacheId($object_id)
@@ -160,13 +162,14 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param $ids
+     * getAmpacheIds
+     * @param array $object_ids
      * @return array
      */
-    public static function getAmpacheIds($ids)
+    public static function getAmpacheIds($object_ids)
     {
         $ampids = array();
-        foreach ($ids as $object_id) {
+        foreach ($object_ids as $object_id) {
             $ampids[] = self::getAmpacheId($object_id);
         }
 
@@ -174,72 +177,72 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param $artistid
+     * @param string $artist_id
      * @return boolean
      */
-    public static function isArtist($artistid)
+    public static function isArtist($artist_id)
     {
-        return (self::cleanId($artistid) >= self::AMPACHEID_ARTIST && $artistid < self::AMPACHEID_ALBUM);
+        return (self::cleanId($artist_id) >= self::AMPACHEID_ARTIST && $artist_id < self::AMPACHEID_ALBUM);
     }
 
     /**
-     * @param $albumid
+     * @param string $album_id
      * @return boolean
      */
-    public static function isAlbum($albumid)
+    public static function isAlbum($album_id)
     {
-        return (self::cleanId($albumid) >= self::AMPACHEID_ALBUM && $albumid < self::AMPACHEID_SONG);
+        return (self::cleanId($album_id) >= self::AMPACHEID_ALBUM && $album_id < self::AMPACHEID_SONG);
     }
 
     /**
-     * @param $songid
+     * @param string $song_id
      * @return boolean
      */
-    public static function isSong($songid)
+    public static function isSong($song_id)
     {
-        return (self::cleanId($songid) >= self::AMPACHEID_SONG && $songid < self::AMPACHEID_SMARTPL);
+        return (self::cleanId($song_id) >= self::AMPACHEID_SONG && $song_id < self::AMPACHEID_SMARTPL);
     }
 
     /**
-     * @param $plistid
+     * @param string $plist_id
      * @return boolean
      */
-    public static function isSmartPlaylist($plistid)
+    public static function isSmartPlaylist($plist_id)
     {
-        return (self::cleanId($plistid) >= self::AMPACHEID_SMARTPL && $plistid < self::AMPACHEID_VIDEO);
+        return (self::cleanId($plist_id) >= self::AMPACHEID_SMARTPL && $plist_id < self::AMPACHEID_VIDEO);
     }
 
     /**
-     * @param $videoid
+     * @param string $video_id
      * @return boolean
      */
-    public static function isVideo($videoid)
+    public static function isVideo($video_id)
     {
-        $videoid = self::cleanId($videoid);
+        $video_id = self::cleanId($video_id);
 
-        return (self::cleanId($videoid) >= self::AMPACHEID_VIDEO && $videoid < self::AMPACHEID_PODCAST);
+        return (self::cleanId($video_id) >= self::AMPACHEID_VIDEO && $video_id < self::AMPACHEID_PODCAST);
     }
 
     /**
-     * @param $podcastid
+     * @param string $podcast_id
      * @return boolean
      */
-    public static function isPodcast($podcastid)
+    public static function isPodcast($podcast_id)
     {
-        return (self::cleanId($podcastid) >= self::AMPACHEID_PODCAST && $podcastid < self::AMPACHEID_PODCASTEP);
+        return (self::cleanId($podcast_id) >= self::AMPACHEID_PODCAST && $podcast_id < self::AMPACHEID_PODCASTEP);
     }
 
     /**
-     * @param $episodeid
+     * @param string $episode_id
      * @return boolean
      */
-    public static function isPodcastEp($episodeid)
+    public static function isPodcastEp($episode_id)
     {
-        return (self::cleanId($episodeid) >= self::AMPACHEID_PODCASTEP && $episodeid < self::AMPACHEID_PLAYLIST);
+        return (self::cleanId($episode_id) >= self::AMPACHEID_PODCASTEP && $episode_id < self::AMPACHEID_PLAYLIST);
     }
 
     /**
-     * @param $plistid
+     * @param string $plistid
      * @return boolean
      */
     public static function isPlaylist($plistid)
@@ -248,7 +251,8 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param integer $object_id
+     * getAmpacheType
+     * @param string $object_id
      * @return string
      */
     public static function getAmpacheType($object_id)

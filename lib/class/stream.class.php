@@ -379,7 +379,7 @@ class Stream
      *
      * There really isn't anywhere else for this function, shouldn't have
      * deleted it in the first place.
-     * @return true
+     * @return boolean
      */
     public static function clear_now_playing()
     {

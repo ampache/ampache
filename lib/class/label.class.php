@@ -350,7 +350,7 @@ class Label extends database_object implements library_item
     /**
      * lookup
      * @param array $data
-     * @param integer $id
+     * @param integer $label_id
      * @return integer
      */
     public static function lookup(array $data, $label_id = 0)
@@ -575,9 +575,9 @@ class Label extends database_object implements library_item
 
         // Look if we need to add some new labels
         foreach ($editedLabels as  $key => $value) {
-            if ($lv != '') {
-                debug_event('label.class', 'Adding new label {' . $lv . '}', 4);
-                $label_id = Label::lookup(array('name' => $lv));
+            if ($value != '') {
+                debug_event('label.class', 'Adding new label {' . $value . '}', 4);
+                $label_id = Label::lookup(array('name' => $value));
                 if ($label_id === 0) {
                     debug_event('label.class', 'Creating a label directly from artist editing is not allowed.', 3);
                     //$label_id = Label::create(array('name' => $lv));

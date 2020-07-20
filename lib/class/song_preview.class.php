@@ -80,7 +80,7 @@ class Song_Preview extends database_object implements media, playable_item
      * insert
      *
      * This inserts the song preview described by the passed array
-     * @param $results
+     * @param array $results
      * @return string|null
      */
     public static function insert($results)
@@ -110,7 +110,7 @@ class Song_Preview extends database_object implements media, playable_item
         if (!$db_results) {
             debug_event('song_preview.class', 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
 
-            return false;
+            return null;
         }
 
         return Dba::insert_id();

@@ -456,15 +456,14 @@ class Subsonic_Api
      */
     public static function getmusicdirectory($input)
     {
-        $id = self::check_parameter($input, 'id');
-
-        $response = Subsonic_XML_Data::createSuccessResponse('getmusicdirectory');
-        if (Subsonic_XML_Data::isArtist($id)) {
-            $artist = new Artist(Subsonic_XML_Data::getAmpacheId($id));
+        $object_id = self::check_parameter($input, 'id');
+        $response  = Subsonic_XML_Data::createSuccessResponse('getmusicdirectory');
+        if (Subsonic_XML_Data::isArtist($object_id)) {
+            $artist = new Artist(Subsonic_XML_Data::getAmpacheId($object_id));
             Subsonic_XML_Data::addArtistDirectory($response, $artist);
         } else {
-            if (Subsonic_XML_Data::isAlbum($id)) {
-                $album = new Album(Subsonic_XML_Data::getAmpacheId($id));
+            if (Subsonic_XML_Data::isAlbum($object_id)) {
+                $album = new Album(Subsonic_XML_Data::getAmpacheId($object_id));
                 Subsonic_XML_Data::addAlbumDirectory($response, $album);
             }
         }
