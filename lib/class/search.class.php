@@ -2521,7 +2521,7 @@ class Search extends playlist_object
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
 
-            $where[] = "`playlist`.`type` = 'public'";
+            $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user`=" . $this->search_user->id . ")";
 
             switch ($rule[0]) {
                 case 'title':
