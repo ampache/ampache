@@ -217,13 +217,13 @@ class Democratic extends Tmp_Playlist
 
         $sql = 'SELECT `tmp_playlist_data`.`object_type`, ' .
             '`tmp_playlist_data`.`object_id`, ' .
-            '`tmp_playlist_data`.`id` ' .
+            'MAX(`tmp_playlist_data`.`id`) ' .
             'FROM `tmp_playlist_data` INNER JOIN `user_vote` ' .
             'ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` ' .
             "WHERE `tmp_playlist_data`.`tmp_playlist` = '" .
             Dba::escape($this->tmp_playlist) . "' " .
             'GROUP BY 1, 2 ' .
-            'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`), `tmp_playlist_data`.`id` ';
+            'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`), MAX(`tmp_playlist_data`.`id`) ';
 
         if ($limit !== null) {
             $sql .= 'LIMIT ' . (string) ($limit);
@@ -516,11 +516,11 @@ class Democratic extends Tmp_Playlist
     public function update(array $data)
     {
         $name     = Dba::escape($data['name']);
-        $base     = Dba::escape($data['democratic']);
-        $cool     = Dba::escape($data['cooldown']);
-        $level    = Dba::escape($data['level']);
-        $default  = Dba::escape($data['make_default']);
-        $id       = Dba::escape($this->id);
+        $base     = (int) Dba::escape($data['democratic']);
+        $cool     = (int) Dba::escape($data['cooldown']);
+        $level    = (int) Dba::escape($data['level']);
+        $default  = (int) Dba::escape($data['make_default']);
+        $id       = (int) Dba::escape($this->id);
 
         $sql = "UPDATE `democratic` SET `name` = ?, `base_playlist` = ?,`cooldown` = ?, `primary` = ?, `level` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $base, $cool, $default, $level, $id));
