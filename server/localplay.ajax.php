@@ -34,7 +34,7 @@ $action  = Core::get_request('action');
 switch ($_REQUEST['action']) {
     case 'set_instance':
         // Make sure they they are allowed to do this
-        if (!Access::check('localplay', '5')) {
+        if (!Access::check('localplay', 5)) {
             debug_event('localplay.ajax', 'Error attempted to set instance without required level', 1);
 
             return false;
@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'command':
         // Make sure they are allowed to do this
-        if (!Access::check('localplay', '50')) {
+        if (!Access::check('localplay', 50)) {
             debug_event('localplay.ajax', 'Attempted to control Localplay without sufficient access', 1);
 
             return false;
@@ -119,7 +119,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'delete_track':
         // Load Connect... yada yada
-        if (!Access::check('localplay', '50')) {
+        if (!Access::check('localplay', 50)) {
             debug_event('localplay.ajax', 'Attempted to delete track without access', 1);
 
             return false;
@@ -150,7 +150,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'delete_instance':
         // Make sure that you have access to do this...
-        if (!Access::check('localplay', '75')) {
+        if (!Access::check('localplay', 75)) {
             debug_event('localplay.ajax', 'Attempted to delete instance without access', 1);
 
             return false;
@@ -165,7 +165,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'repeat':
         // Make sure that they have access to do this again no clue
-        if (!Access::check('localplay', '50')) {
+        if (!Access::check('localplay', 50)) {
             debug_event('localplay.ajax', 'Attempted to set repeat without access', 1);
 
             return false;
@@ -185,7 +185,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'random':
         // Make sure that they have access to do this
-        if (!Access::check('localplay', '50')) {
+        if (!Access::check('localplay', 50)) {
             debug_event('localplay.ajax', 'Attempted to set random without access', 1);
 
             return false;

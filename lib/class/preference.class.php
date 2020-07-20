@@ -74,7 +74,7 @@ class Preference extends database_object
      * update
      * This updates a single preference from the given name or id
      * @param string $preference
-     * @param string $user_id
+     * @param integer $user_id
      * @param array|string $value
      * @param boolean $applytoall
      * @param boolean $applytodefault
@@ -90,7 +90,7 @@ class Preference extends database_object
             $pref_id = $preference;
             $name    = self::name_from_id($preference);
         }
-        if ($applytoall && Access::check('interface', '100')) {
+        if ($applytoall && Access::check('interface', 100)) {
             $user_check = "";
         } else {
             $user_check = " AND `user`='$user_id'";
@@ -100,7 +100,7 @@ class Preference extends database_object
             $value = implode(',', $value);
         }
 
-        if ($applytodefault && Access::check('interface', '100')) {
+        if ($applytodefault && Access::check('interface', 100)) {
             $sql = "UPDATE `preference` SET `value`='$value' WHERE `id`='$pref_id'";
             Dba::write($sql);
         }
@@ -277,7 +277,7 @@ class Preference extends database_object
     /**
      * get_all
      * This returns a nice flat array of all of the possible preferences for the specified user
-     * @param string $user_id
+     * @param integer $user_id
      * @return array
      */
     public static function get_all($user_id)

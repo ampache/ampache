@@ -257,7 +257,7 @@ class JSON_Data
      *
      * @param array $artists (description here...)
      * @param array $include
-     * @param boolean $user_id
+     * @param integer $user_id
      * @param bool $encode
      * @return array|string return JSON
      */
@@ -326,7 +326,7 @@ class JSON_Data
      *
      * @param array $albums (description here...)
      * @param array $include
-     * @param boolean $user_id
+     * @param integer $user_id
      * @param bool $encode
      * @return array|string
      */
@@ -663,7 +663,7 @@ class JSON_Data
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
      * @param $songs
-     * @param boolean $user_id
+     * @param integer $user_id
      * @param bool $encode
      * @return array|string
      */
@@ -807,7 +807,7 @@ class JSON_Data
      * due to the votes and all of that
      *
      * @param integer[] $object_ids Object IDs
-     * @param boolean $user_id
+     * @param integer $user_id
      * @return string    return JSON
      */
     public static function democratic($object_ids=array(), $user_id = false)

@@ -68,7 +68,7 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
@@ -97,7 +97,7 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '75')) { ?>
+        <?php if (Access::check('interface', 75)) { ?>
         <li>
             <a id="<?php echo 'delete_podcast_' . $podcast->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $podcast->id; ?>">
                 <?php echo UI::get_icon('delete', T_('Delete')); ?> &nbsp;<?php echo T_('Delete'); ?>

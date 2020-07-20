@@ -191,7 +191,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
 
     $GLOBALS['user'] = $user;
     // If an admin, check for update
-    if (AmpConfig::get('autoupdate') && Access::check('interface', '100')) {
+    if (AmpConfig::get('autoupdate') && Access::check('interface', 100)) {
         AutoUpdate::is_update_available(true);
     }
     // fix preferences that are missing for user

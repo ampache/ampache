@@ -36,7 +36,7 @@
     <?php echo Core::form_register('update_preference'); ?>
     <input type="hidden" name="tab" value="<?php echo scrub_out(Core::get_request('tab')); ?>" />
     <input type="hidden" name="method" value="<?php echo scrub_out(Core::get_request('action')); ?>" />
-    <?php if (Access::check('interface', '100')) { ?>
+    <?php if (Access::check('interface', 100)) { ?>
         <input type="hidden" name="user_id" value="<?php echo scrub_out(Core::get_request('user_id')); ?>" />
     <?php
     } ?>

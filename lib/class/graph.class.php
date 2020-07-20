@@ -682,7 +682,7 @@ class Graph
             $owner_id = $libitem->get_user_owner();
         }
 
-        if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', '50')) {
+        if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', 50)) {
             UI::access_denied();
         } else {
             $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';

@@ -30,7 +30,7 @@ if (!Core::get_request('action')) {
 
 if (!defined('NO_SESSION')) {
     /* If we are running a demo, quick while you still can! */
-    if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface', '25')) {
+    if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface', 25)) {
         UI::access_denied();
 
         return false;

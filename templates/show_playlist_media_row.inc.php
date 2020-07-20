@@ -21,7 +21,7 @@
  */
 
 // Don't show disabled medias to normal users
-if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface', '50')) { ?>
+if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface', 50)) { ?>
 <td class="cel_play">
     <span class="cel_play_content"><?php echo '<b>' . $playlist_track . '</b>' ?></span>
     <div class="cel_play_hover">
@@ -48,7 +48,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'playlist_add_' . $libitem->id);
-    if (Access::check('interface', '25')) { ?>
+    if (Access::check('interface', 25)) { ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, '<?php echo $object_type ?>', '<?php echo $libitem->id ?>')">
                 <?php echo UI::get_icon('playlist_add', T_('Add to playlist')) ?>
             </a>
@@ -74,7 +74,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     </a>
     <?php
     }
-    if (Access::check('interface', '25')) {
+    if (Access::check('interface', 25)) {
         if (AmpConfig::get('share')) {
             Share::display_ui($object_type, $libitem->id, false);
         }
@@ -84,7 +84,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
             echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']);
         } ?>
     </td>
-    <?php if (Access::check('interface', '50') && get_class($playlist) == "Playlist") { ?>
+    <?php if (Access::check('interface', 50) && get_class($playlist) == "Playlist") { ?>
     <td class="cel_drag">
         <?php echo UI::get_icon('drag', T_('Reorder')) ?>
             </td>

@@ -2046,7 +2046,7 @@ class Song extends database_object implements media, library_item
             // If user is not empty, we're looking directly to user personal info (admin view)
             $sql .= "AND `user`='$user_id' ";
         } else {
-            if (!Access::check('interface', '100')) {
+            if (!Access::check('interface', 100)) {
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
                 $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
                 $current_user     = (int) Core::get_global('user')->id;

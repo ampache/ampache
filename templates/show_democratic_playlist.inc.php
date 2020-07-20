@@ -32,7 +32,7 @@ $web_path = AmpConfig::get('web_path'); ?>
   <col id="col_album" />
   <col id="col_artist" />
   <col id="col_time" />
-  <?php if (Access::check('interface', '100')) { ?>
+  <?php if (Access::check('interface', 100)) { ?>
   <col id="col_admin" />
   <?php
 } ?>
@@ -58,7 +58,7 @@ else { ?>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (Access::check('interface', '100')) { ?>
+        <?php if (Access::check('interface', 100)) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
         <?php
     } ?>
@@ -89,7 +89,7 @@ $democratic = Democratic::get_current_playlist();
     <td class="cel_album"><?php echo $media->f_album_link; ?></td>
     <td class="cel_artist"><?php echo $media->f_artist_link; ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
-    <?php if (Access::check('interface', '100')) { ?>
+    <?php if (Access::check('interface', 100)) { ?>
     <td class="cel_admin">
     <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'disable', T_('Delete'), 'delete_row_' . $item['id']); ?>
     </td>
@@ -107,7 +107,7 @@ $democratic = Democratic::get_current_playlist();
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (Access::check('interface', '100')) { ?>
+        <?php if (Access::check('interface', 100)) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
         <?php
     } ?>

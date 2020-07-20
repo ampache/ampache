@@ -59,7 +59,7 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_browse_music_podcast"><a href="<?php echo $web_path ?>/browse.php?action=podcast"><?php echo T_('Podcasts') ?></a></li>
             <?php
         } ?>
-            <?php if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) { ?>
+            <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
             <li id="sb_home_browse_music_upload"><a href="<?php echo $web_path ?>/upload.php"><?php echo T_('Upload') ?></a></li>
             <?php
         } ?>
@@ -122,10 +122,10 @@ $t_search    = T_('Search'); ?>
         Ajax::start_container('browse_filters');
         Ajax::end_container();
     } ?>
-    <?php if (Access::check('interface', '25')) { ?>
+    <?php if (Access::check('interface', 25)) { ?>
     <li class="sb2_playlist">
     <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo $t_playlists; ?></span><?php echo UI::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
-        <?php if (AmpConfig::get('home_now_playing') || AmpConfig::get('allow_democratic_playback') || Access::check('interface', '50')) { ?>
+        <?php if (AmpConfig::get('home_now_playing') || AmpConfig::get('allow_democratic_playback') || Access::check('interface', 50)) { ?>
         <ul class="sb3" id="sb_home_playlist">
             <li id="sb_home_browse_music_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
             <li id="sb_home_browse_music_smartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo T_('Smart Playlists'); ?></a></li>
@@ -133,7 +133,7 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic') ?></a></li>
             <?php
             } ?>
-            <?php if (($server_allow == AmpConfig::get('allow_localplay_playback')) && ($controller == AmpConfig::get('localplay_controller')) && ($access_check == Access::check('localplay', '5'))) { ?>
+            <?php if (($server_allow == AmpConfig::get('allow_localplay_playback')) && ($controller == AmpConfig::get('localplay_controller')) && ($access_check == Access::check('localplay', 5))) { ?>
             <?php
                 // Little bit of work to be done here
                 $localplay             = new Localplay(AmpConfig::get('localplay_controller'));
@@ -176,7 +176,7 @@ $t_search    = T_('Search'); ?>
                 <li id="sb_home_info_upload"><a href="<?php echo $web_path ?>/stats.php?action=upload"><?php echo T_('Uploads') ?></a></li>
                 <?php
         } ?>
-                <?php if (Access::check('interface', '50')) { ?>
+                <?php if (Access::check('interface', 50)) { ?>
                     <li id="sb_home_info_statistic"><a href="<?php echo $web_path ?>/stats.php?action=show"><?php echo T_('Statistics') ?></a></li>
                 <?php
         } ?>

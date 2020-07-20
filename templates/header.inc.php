@@ -429,7 +429,7 @@ $t_logout    = T_('Log out'); ?>
                 </div>
 
                 <?php
-                    if (AmpConfig::get('userflags') && Access::check('interface', '25')) { ?>
+                    if (AmpConfig::get('userflags') && Access::check('interface', 25)) { ?>
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
@@ -440,7 +440,7 @@ $t_logout    = T_('Log out'); ?>
 
                 <?php
                     }
-                    if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) { ?>
+                    if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/upload.php">
@@ -512,7 +512,7 @@ $t_logout    = T_('Log out'); ?>
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php
-                    if (Access::check('interface', '100')) {
+                    if (Access::check('interface', 100)) {
                         echo '<div id=update_notify>';
                         if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
                             AutoUpdate::show_new_version();

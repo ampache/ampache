@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'add_label':
         // Must be at least a content manager or edit upload enabled
-        if (!Access::check('interface', '50') && !AmpConfig::get('upload_allow_edit')) {
+        if (!Access::check('interface', 50) && !AmpConfig::get('upload_allow_edit')) {
             UI::access_denied();
 
             return false;
@@ -105,7 +105,7 @@ switch ($_REQUEST['action']) {
         }
         // intentional fall through
     case 'show_add_label':
-        if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) {
+        if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
             echo T_('The Label cannot be found');

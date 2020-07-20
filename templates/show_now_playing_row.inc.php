@@ -97,7 +97,7 @@ $(document).ready(function(){
     } ?>
 
 <?php
-    if (Access::check('interface', '25')) { ?>
+    if (Access::check('interface', 25)) { ?>
         <div class="np_group" id="np_group_4">
     <?php
         if (AmpConfig::get('ratings')) { ?>

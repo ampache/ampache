@@ -31,7 +31,7 @@ $action            = Core::get_request('action');
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'update_preferences':
-        if (Core::get_post('method') == 'admin' && !Access::check('interface', '100')) {
+        if (Core::get_post('method') == 'admin' && !Access::check('interface', 100)) {
             UI::access_denied();
 
             return false;
@@ -73,7 +73,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'admin_update_preferences':
         // Make sure only admins here
-        if (!Access::check('interface', '100')) {
+        if (!Access::check('interface', 100)) {
             UI::access_denied();
 
             return false;
@@ -91,7 +91,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'admin':
         // Make sure only admins here
-        if (!Access::check('interface', '100')) {
+        if (!Access::check('interface', 100)) {
             UI::access_denied();
 
             return false;
@@ -100,7 +100,7 @@ switch ($_REQUEST['action']) {
         $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], true);
     break;
     case 'user':
-        if (!Access::check('interface', '100')) {
+        if (!Access::check('interface', 100)) {
             UI::access_denied();
 
             return false;
@@ -111,7 +111,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_user':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface', '25') && Core::get_global('user')->id > 0) {
+        if (!Access::check('interface', 25) && Core::get_global('user')->id > 0) {
             UI::access_denied();
 
             return false;
@@ -159,7 +159,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'grant':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface', '25') && Core::get_global('user')->id > 0) {
+        if (!Access::check('interface', 25) && Core::get_global('user')->id > 0) {
             UI::access_denied();
 
             return false;

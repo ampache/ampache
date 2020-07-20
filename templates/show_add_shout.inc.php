@@ -22,7 +22,7 @@
 
 $object_type = strtolower(get_class($object)); ?>
 <div>
-<?php if (Access::check('interface', '25')) { ?>
+<?php if (Access::check('interface', 25)) { ?>
 <div style="float: right">
 <?php
 $boxtitle = T_('Post to Shoutbox');
@@ -38,7 +38,7 @@ $boxtitle = T_('Post to Shoutbox');
 <tr>
     <td><textarea rows="5" cols="35" maxlength="2000" name="comment"></textarea></td>
 </tr>
-<?php if (Access::check('interface', '50')) { ?>
+<?php if (Access::check('interface', 50)) { ?>
 <tr>
     <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>

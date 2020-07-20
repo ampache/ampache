@@ -971,10 +971,10 @@ class Tag extends database_object implements library_item
         }
 
         if ($uid > 0) {
-            return Access::check('interface', '25');
+            return Access::check('interface', 25);
         }
 
-        if (Access::check('interface', '75')) {
+        if (Access::check('interface', 75)) {
             return true;
         }
 

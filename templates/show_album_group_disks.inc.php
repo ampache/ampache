@@ -28,7 +28,7 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
-$show_playlist_add    = Access::check('interface', '25');
+$show_playlist_add    = Access::check('interface', 25);
 $show_direct_play     = $show_direct_play_cfg;
 $directplay_limit     = AmpConfig::get('direct_play_limit');
 
@@ -96,7 +96,7 @@ if ($directplay_limit > 0) {
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
             <li>
                 <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_group_from_tags&amp;album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
             </li>
@@ -123,7 +123,7 @@ if ($directplay_limit > 0) {
         $c_album->format();
         $c_title           = scrub_out($c_album->name) . "<span class=\"discnb disc" . $c_album->disk . "\">, " . T_('Disk') . " " . $c_album->disk . "</span>";
         $show_direct_play  = $show_direct_play_cfg;
-        $show_playlist_add = Access::check('interface', '25');
+        $show_playlist_add = Access::check('interface', 25);
         if ($directplay_limit > 0) {
             $show_playlist_add = ($c_album->song_count <= $directplay_limit);
             if ($show_direct_play) {
@@ -143,7 +143,7 @@ if ($directplay_limit > 0) {
             echo Ajax::button('?action=basket&type=album&' . $c_album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $c_album->id);
             echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_' . $c_album->id);
         } ?>
-        <?php if (Access::check('interface', '25')) { ?>
+        <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo UI::get_icon('comment', T_('Post shout')) ?></a>
             <?php
@@ -158,7 +158,7 @@ if ($directplay_limit > 0) {
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
         <?php
         } ?>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
             <a onclick="submitNewItemsOrder('<?php echo $c_album->id ?>', 'reorder_songs_table_<?php echo $c_album->id ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
                 <?php echo UI::get_icon('save', T_('Save Track Order')); ?>

@@ -69,7 +69,7 @@ UI::show_box_top($tvshow->f_name, 'info-box'); ?>
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
         <li>
             <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo T_('TV Show Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>

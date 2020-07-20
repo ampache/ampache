@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
         } else {
             $results['random_selection'] = '<!-- None found -->';
 
-            if (Access::check('interface', '75')) {
+            if (Access::check('interface', 75)) {
                 $catalogs = Catalog::get_catalogs();
                 if (count($catalogs) == 0) {
                     /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
@@ -245,7 +245,7 @@ switch ($_REQUEST['action']) {
                 $button = $_REQUEST['button'];
             break;
             case 'admin':
-                if (Access::check('interface', '75')) {
+                if (Access::check('interface', 75)) {
                     $button = $_REQUEST['button'];
                 } else {
                     return false;
@@ -263,7 +263,7 @@ switch ($_REQUEST['action']) {
         ob_end_clean();
     break;
     case 'start_channel':
-        if (Access::check('interface', '75')) {
+        if (Access::check('interface', 75)) {
             ob_start();
             $channel = new Channel((int) Core::get_request('id'));
             if ($channel->id) {
@@ -278,7 +278,7 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'stop_channel':
-        if (Access::check('interface', '75')) {
+        if (Access::check('interface', 75)) {
             ob_start();
             $channel = new Channel((int) Core::get_request('id'));
             if ($channel->id) {

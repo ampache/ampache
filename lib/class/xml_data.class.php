@@ -473,7 +473,7 @@ class XML_Data
      *
      * @param array $artists (description here...)
      * @param array $include Array of other items to include.
-     * @param boolean $user_id
+     * @param integer $user_id
      * @param boolean $full_xml whether to return a full XML document or just the node.
      * @return    string    return xml
      */
@@ -536,7 +536,7 @@ class XML_Data
      *
      * @param integer[] $albums (description here...)
      * @param array $include Array of other items to include.
-     * @param boolean $user_id
+     * @param integer $user_id
      * @param boolean $full_xml whether to return a full XML document or just the node.
      * @return    string    return xml
      */
@@ -824,7 +824,7 @@ class XML_Data
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
      * @param integer[] $songs
-     * @param boolean $user_id
+     * @param integer $user_id
      * @param boolean $full_xml
      * @return string return xml
      */
@@ -928,7 +928,7 @@ class XML_Data
      * This builds the xml document for displaying video objects
      *
      * @param array $videos (description here...)
-     * @param boolean $user_id
+     * @param integer $user_id
      * @return   string   return xml
      */
     public static function videos($videos, $user_id = false)
@@ -964,7 +964,7 @@ class XML_Data
      * due to the votes and all of that
      *
      * @param integer[] $object_ids Object IDs
-     * @param boolean $user_id
+     * @param integer $user_id
      * @return   string     return xml
      */
     public static function democratic($object_ids = array(), $user_id = false)
@@ -1257,7 +1257,7 @@ class XML_Data
     /**
      * podcast
      * @param library_item $libitem
-     * @param boolean $user_id
+     * @param integer $user_id
      * @return string|false
      */
     public static function podcast(library_item $libitem, $user_id = false)

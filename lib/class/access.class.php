@@ -407,7 +407,6 @@ class Access
         if ($user_id !== null) {
             $user = new User($user_id);
         }
-        $level = (int) $level;
 
         // Switch on the type
         switch ($type) {

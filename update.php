@@ -32,7 +32,7 @@ $version = Update::get_version();
 
 if (Core::get_request('action') == 'update') {
     if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'sources') {
-        if (!Access::check('interface', '100')) {
+        if (!Access::check('interface', 100)) {
             UI::access_denied();
 
             return false;

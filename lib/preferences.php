@@ -80,7 +80,7 @@ function update_preferences($user_id = 0)
             Preference::update($pref_id, $user_id, $value, $_REQUEST[$apply_to_all]);
         }
 
-        if (Access::check('interface', '100') && $_REQUEST[$new_level]) {
+        if (Access::check('interface', 100) && $_REQUEST[$new_level]) {
             Preference::update_level($pref_id, $_REQUEST[$new_level]);
         }
     } // end foreach preferences

@@ -22,7 +22,7 @@
 
 require_once '../lib/init.php';
 
-if (!Access::check('interface', '75')) {
+if (!Access::check('interface', 75)) {
     UI::access_denied();
 
     return false;

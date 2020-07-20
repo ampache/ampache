@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
         Tag::add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), (int) $_GET['tag_id'], false);
     break;
     case 'add_tag_by_name':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to add new tag', 1);
 
             return false;
@@ -61,7 +61,7 @@ switch ($_REQUEST['action']) {
         Tag::add(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['tag_name'], false);
     break;
     case 'delete':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to delete tag', 1);
 
             return false;

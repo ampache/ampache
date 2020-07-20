@@ -30,7 +30,7 @@ if (!defined('AJAX_INCLUDE')) {
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'flip_state':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             debug_event('song.ajax', Core::get_global('user')->username . ' attempted to change the state of a song', 1);
 
             return false;

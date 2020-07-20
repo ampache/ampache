@@ -25,7 +25,7 @@ require_once 'lib/init.php';
 UI::show_header();
 
 // Check to see if we've got the rights to be here
-if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', '25')) {
+if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', 25)) {
     UI::access_denied();
 
     return false;
@@ -34,7 +34,7 @@ if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', '
 switch ($_REQUEST['action']) {
     case 'show_add_instance':
         // This requires 50 or better
-        if (!Access::check('localplay', '75')) {
+        if (!Access::check('localplay', 75)) {
             UI::access_denied();
             break;
         }
@@ -46,7 +46,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'add_instance':
         // This requires 50 or better!
-        if (!Access::check('localplay', '75')) {
+        if (!Access::check('localplay', 75)) {
             UI::access_denied();
             break;
         }
@@ -58,7 +58,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_instance':
         // Make sure they gots them rights
-        if (!Access::check('localplay', '75')) {
+        if (!Access::check('localplay', 75)) {
             UI::access_denied();
             break;
         }
@@ -68,7 +68,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'edit_instance':
         // Check to make sure they've got the access
-        if (!Access::check('localplay', '75')) {
+        if (!Access::check('localplay', 75)) {
             UI::access_denied();
             break;
         }
@@ -79,7 +79,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_instances':
         // First build the Localplay object and then get the instances
-        if (!Access::check('localplay', '5')) {
+        if (!Access::check('localplay', 5)) {
             UI::access_denied();
             break;
         }
@@ -90,7 +90,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'show_playlist':
     default:
-        if (!Access::check('localplay', '5')) {
+        if (!Access::check('localplay', 5)) {
             UI::access_denied();
             break;
         }

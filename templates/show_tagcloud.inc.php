@@ -49,7 +49,7 @@ $tag_types = array(
             <span id="click_tag_<?php echo $data['id']; ?>"><?php echo $data['name']; ?></span>
             <?php echo Ajax::observe('click_tag_' . $data['id'], 'click', Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $data['id'], '')); ?>
         </div>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
         <div class="tag_actions">
             <ul>
                 <li>

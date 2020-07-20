@@ -58,7 +58,7 @@ if ($videos) {
         } ?>
         </div>
         <?php
-        if (AmpConfig::get('ratings') && Access::check('interface', '25')) {
+        if (AmpConfig::get('ratings') && Access::check('interface', 25)) {
             echo "<div id=\"rating_" . $video->id . "_video\">";
             show_rating($video->id, 'video');
             echo "</div>";

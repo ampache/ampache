@@ -249,7 +249,7 @@ class Query
             )
         );
 
-        if (Access::check('interface', '50')) {
+        if (Access::check('interface', 50)) {
             array_push(self::$allowed_filters['playlist'], 'playlist_type');
         }
 
@@ -516,7 +516,7 @@ class Query
             break;
             case 'playlist_type':
                 // Must be a content manager to turn this off
-                if (Access::check('interface', '100')) {
+                if (Access::check('interface', 100)) {
                     unset($this->_state['filter'][$key]);
                 } else {
                     $this->_state['filter'][$key] = '1';

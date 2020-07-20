@@ -75,7 +75,7 @@ class Shoutbox
      *
      * Cleans out orphaned shoutbox items
      * @param string $object_type
-     * @param string $object_id
+     * @param integer $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -337,7 +337,7 @@ class Shoutbox
                 $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type . '&' . $this->object_type . '_id=' . $this->object_id, 'play', T_('Play'), 'play_' . $this->object_type . '_' . $this->object_id);
                 $html .= Ajax::button('?action=basket&type=' . $this->object_type . '&id=' . $this->object_id, 'add', T_('Add'), 'add_' . $this->object_type . '_' . $this->object_id);
             }
-            if (Access::check('interface', '25')) {
+            if (Access::check('interface', 25)) {
                 $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>";
             }
             $html .= "</div>";

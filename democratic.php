@@ -39,7 +39,7 @@ switch ($_REQUEST['action']) {
                 $democratic->format();
     // intentional fall through
     case 'show_create':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             UI::access_denied();
             break;
         }
@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_create_democratic.inc.php');
     break;
     case 'delete':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             UI::access_denied();
             break;
         }
@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'create':
         // Only power users here
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             UI::access_denied();
             break;
         }
@@ -89,7 +89,7 @@ switch ($_REQUEST['action']) {
         header("Location: " . AmpConfig::get('web_path') . "/democratic.php?action=show");
     break;
     case 'manage_playlists':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             UI::access_denied();
             break;
         }

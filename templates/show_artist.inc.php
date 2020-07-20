@@ -22,7 +22,7 @@
 
 $web_path          = AmpConfig::get('web_path');
 $show_direct_play  = AmpConfig::get('directplay');
-$show_playlist_add = Access::check('interface', '25');
+$show_playlist_add = Access::check('interface', 25);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
 
 if ($directplay_limit > 0) {
@@ -136,7 +136,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
         </li>
@@ -148,7 +148,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) { ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('comment', $postshout); ?></a>
@@ -165,7 +165,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
-        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', '50')) { ?>
+        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>

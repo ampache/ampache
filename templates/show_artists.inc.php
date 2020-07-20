@@ -80,7 +80,7 @@ $thcount  = 8; ?>
             $libitem = new Artist($artist_id, $_SESSION['catalog']);
             $libitem->format(true, $limit_threshold);
             $show_direct_play  = $show_direct_play_cfg;
-            $show_playlist_add = Access::check('interface', '25');
+            $show_playlist_add = Access::check('interface', 25);
             if ($directplay_limit > 0) {
                 $show_playlist_add = ($libitem->songs <= $directplay_limit);
                 if ($show_direct_play) {

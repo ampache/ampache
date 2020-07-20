@@ -85,14 +85,14 @@ $subtitles = $video->get_subtitles();
         <?php
     } ?>
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'add', T_('Add to temporary playlist'), 'add_video_' . $video->id); ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) { ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
             <?php
         } ?>
         <?php
     } ?>
-    <?php if (Access::check('interface', '25')) { ?>
+    <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
                 <?php Share::display_ui('video', $video->id, false); ?>
             <?php
@@ -104,7 +104,7 @@ $subtitles = $video->get_subtitles();
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
@@ -135,7 +135,7 @@ if (strtolower(get_class($video)) != 'video') {
   $videoprops[T_('Video Bitrate')]   = scrub_out($video->f_video_bitrate);
   $videoprops[T_('Frame Rate')]      = scrub_out($video->f_frame_rate);
   $videoprops[T_('Channels')]        = scrub_out($video->channels);
-  if (Access::check('interface', '75')) {
+  if (Access::check('interface', 75)) {
       $videoprops[T_('Filename')]   = scrub_out($video->file) . " " . $video->f_size;
   }
   if ($video->update_time) {

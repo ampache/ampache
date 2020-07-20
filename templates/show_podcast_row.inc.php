@@ -56,7 +56,7 @@
     } ?>
 <td class="cel_action">
 <?php
-    if (Access::check('interface', '50')) { ?>
+    if (Access::check('interface', 50)) { ?>
     <a id="<?php echo 'edit_podcast_' . $libitem->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_' . $libitem->id ?>', '<?php echo T_('Podcast Edit') ?>', 'podcast_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>
@@ -65,7 +65,7 @@
     </span>
     <?php
     }
-    if (Access::check('interface', '75')) { ?>
+    if (Access::check('interface', 75)) { ?>
     <a id="<?php echo 'delete_podcast_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $libitem->id; ?>">
         <?php echo UI::get_icon('delete', T_('Delete')); ?>
     </a>

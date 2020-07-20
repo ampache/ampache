@@ -31,7 +31,7 @@ UI::show_box_top($string, 'info-box'); ?>
 </li>
 <?php
 } ?>
-<?php if (Access::check('interface', '75')) { ?>
+<?php if (Access::check('interface', 75)) { ?>
 <li>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=manage"><?php echo UI::get_icon('server_lightning', T_('Configure Democratic Playlist')); ?>
     &nbsp;

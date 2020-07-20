@@ -411,7 +411,7 @@ class Stream
         }
         $sql .= "WHERE `np`.`object_type` IN ('song', 'video')";
 
-        if (!Access::check('interface', '100')) {
+        if (!Access::check('interface', 100)) {
             // We need to check only for users which have allowed view of personnal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id) {

@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
         debug_event('playlist.ajax', 'Appending items to playlist {' . Core::get_request('playlist_id') . '}...', 5);
 
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
-            if (!Access::check('interface', '25')) {
+            if (!Access::check('interface', 25)) {
                 debug_event('playlist.ajax', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', 1);
                 break;
             }

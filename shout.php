@@ -28,7 +28,7 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'add_shout':
         // Must be at least a user to do this
-        if (!Access::check('interface', '25')) {
+        if (!Access::check('interface', 25)) {
             UI::access_denied();
 
             return false;

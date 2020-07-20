@@ -30,7 +30,7 @@ if (!defined('AJAX_INCLUDE')) {
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'sync':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             debug_event('podcast.ajax', Core::get_global('user')->username . ' attempted to sync podcast', 1);
 
             return false;

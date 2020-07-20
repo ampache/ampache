@@ -61,7 +61,7 @@ if ($albums) {
         <?php
             } ?>
         <?php
-        if (AmpConfig::get('ratings') && Access::check('interface', '25')) {
+        if (AmpConfig::get('ratings') && Access::check('interface', 25)) {
             echo "<div id=\"rating_" . $album->id . "_album\">";
             show_rating($album->id, 'album');
             echo "</div>";

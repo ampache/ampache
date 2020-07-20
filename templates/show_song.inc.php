@@ -88,7 +88,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <?php
     } ?>
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to temporary playlist'), 'add_song_' . $song->id); ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) { ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
         <?php if (AmpConfig::get('sociable')) { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $song->id; ?>">
             <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
@@ -97,7 +97,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         } ?>
         <?php
     } ?>
-        <?php if (Access::check('interface', '25')) { ?>
+        <?php if (Access::check('interface', 25)) { ?>
         <?php if (AmpConfig::get('share')) { ?>
         <?php Share::display_ui('song', $song->id, false); ?>
         <?php
@@ -109,7 +109,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
         } ?>
-        <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface', '50')) {
+        <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface', 50)) {
             ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
                 ?>
@@ -118,13 +118,13 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
             } ?>
         <?php
         } ?>
-        <?php if (Access::check('interface', '50') || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
+        <?php if (Access::check('interface', 50) || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
         <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_' . $song->id ?>', '<?php echo T_('Song Edit') ?>', '')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php
         } ?>
-        <?php if (Access::check('interface', '75') || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
+        <?php if (Access::check('interface', 75) || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
         <span id="<?php echo($button_flip_state_id); ?>">
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $icon, $icontext, 'flip_song_' . $song->id); ?>
         </span>
@@ -169,7 +169,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     if ($song->replaygain_album_gain != 0) {
         $songprops[T_('ReplayGain Album Gain')]   = scrub_out($song->replaygain_album_gain);
     }
-    if (Access::check('interface', '75')) {
+    if (Access::check('interface', 75)) {
         $songprops[T_('Filename')]   = scrub_out($song->file) . " " . $song->f_size;
     }
     if ($song->update_time) {

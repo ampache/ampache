@@ -2736,7 +2736,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        return (Access::check('interface', '75') || ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove')));
+        return (Access::check('interface', 75) || ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove')));
     }
 
     /**

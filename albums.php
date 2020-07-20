@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_from_tags':
         // Make sure they are a 'power' user at least
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             UI::access_denied();
 
             return false;
@@ -74,7 +74,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'update_group_from_tags':
         // Make sure they are a 'power' user at least
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             UI::access_denied();
 
             return false;
@@ -91,7 +91,7 @@ switch ($_REQUEST['action']) {
     case 'set_track_numbers':
         debug_event('albums', 'Set track numbers called.', 5);
 
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             UI::access_denied();
 
             return false;

@@ -24,17 +24,17 @@
 <?php
 $server_allow = AmpConfig::get('allow_localplay_playback');
 $controller   = AmpConfig::get('localplay_controller');
-$access_check = Access::check('localplay', '5');
+$access_check = Access::check('localplay', 5);
 if ($server_allow && $controller && $access_check) { ?>
 <?php
     // Little bit of work to be done here
     $localplay        = new Localplay(AmpConfig::get('localplay_controller'));
     $current_instance = $localplay->current_instance();
     $class            = $current_instance ? '' : ' class="active_instance"'; ?>
-<?php if (Access::check('localplay', '25')) { ?>
+<?php if (Access::check('localplay', 25)) { ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay'); ?>"><?php echo T_('Localplay'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'localplay', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_localplay')) ? $_COOKIE['sb_localplay'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_localplay_info">
-<?php if (Access::check('localplay', '75')) { ?>
+<?php if (Access::check('localplay', 75)) { ?>
     <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
     <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show Instances'); ?></a></li>
 <?php
