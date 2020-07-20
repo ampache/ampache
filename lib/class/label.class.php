@@ -353,7 +353,7 @@ class Label extends database_object implements library_item
      * @param integer $id
      * @return integer
      */
-    public static function lookup(array $data, $id = 0)
+    public static function lookup(array $data, $label_id = 0)
     {
         $ret  = -1;
         $name = trim((string) $data['name']);
@@ -361,9 +361,9 @@ class Label extends database_object implements library_item
             $ret    = 0;
             $sql    = "SELECT `id` FROM `label` WHERE `name` = ?";
             $params = array($name);
-            if ($id > 0) {
+            if ($label_id > 0) {
                 $sql .= " AND `id` != ?";
-                $params[] = $id;
+                $params[] = $label_id;
             }
             $db_results = Dba::read($sql, $params);
             if ($row = Dba::fetch_assoc($db_results)) {
@@ -555,10 +555,10 @@ class Label extends database_object implements library_item
                 $found   = false;
                 $lstring = '';
 
-                foreach ($editedLabels as  $lk => $lv) {
-                    if ($clabel->name == $lv) {
+                foreach ($editedLabels as  $key => $value) {
+                    if ($clabel->name == $value) {
                         $found   = true;
-                        $lstring = $lk;
+                        $lstring = $key;
                         break;
                     }
                 }
@@ -574,7 +574,7 @@ class Label extends database_object implements library_item
         }
 
         // Look if we need to add some new labels
-        foreach ($editedLabels as  $lk => $lv) {
+        foreach ($editedLabels as  $key => $value) {
             if ($lv != '') {
                 debug_event('label.class', 'Adding new label {' . $lv . '}', 4);
                 $label_id = Label::lookup(array('name' => $lv));

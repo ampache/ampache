@@ -128,7 +128,7 @@ class Localplay
      * is supported in the current player, if so it returns a 'skip to'
      * link, otherwise it returns just the text
      * @param string $name
-     * @param $object_id
+     * @param integer $object_id
      * @return string
      */
     public function format_name($name, $object_id)
@@ -596,7 +596,7 @@ class Localplay
      * delete_track
      * This removes songs from the players playlist it takes a single ID as provided
      * by the get command
-     * @param $object_id
+     * @param integer $object_id
      * @return boolean
      */
     public function delete_track($object_id)

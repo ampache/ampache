@@ -23,8 +23,8 @@
 /**
  * show_rating
  * This takes an artist id and includes the right file
- * @param $object_id
- * @param $type
+ * @param integer $object_id
+ * @param string $type
  */
 function show_rating($object_id, $type)
 {

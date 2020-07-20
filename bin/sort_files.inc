@@ -187,7 +187,7 @@ function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "V
  * This is run on every individual element of the search
  * Before it is put together, this removes / and \ and also
  * once I figure it out, it'll clean other stuff
- * @param $string
+ * @param  string$string
  * @return string|string[]|null
  */
 function sort_clean_name($string) {

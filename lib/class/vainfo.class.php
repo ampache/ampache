@@ -713,7 +713,7 @@ class vainfo
     }
 
     /**
-     * @param $string
+     * @param string $string
      * @return string
      */
     private function trimAscii($string)

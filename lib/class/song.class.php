@@ -1078,7 +1078,7 @@ class Song extends database_object implements media, library_item
     {
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
-        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album');
+        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album', 'time');
         $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt', 'skip_cnt', 'albumartist', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group', 'disabledMetadataFields');
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
@@ -2001,7 +2001,7 @@ class Song extends database_object implements media, library_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
-     * @param integer $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -2009,13 +2009,13 @@ class Song extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
+    public static function play_url($object_id, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
     {
         if (!$uid) {
             $uid = Core::get_global('user')->id;
         }
 
-        return self::generic_play_url('song', $oid, $additional_params, $player, $local, $uid, $original);
+        return self::generic_play_url('song', $object_id, $additional_params, $player, $local, $uid, $original);
     }
 
     /**

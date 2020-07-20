@@ -1869,22 +1869,22 @@ class Subsonic_Api
      */
     public static function scrobble($input)
     {
-        $oid        = self::check_parameter($input, 'id');
+        $object_ids = self::check_parameter($input, 'id');
         $submission = $input['submission'];
         $user       = User::get_from_username($input['u']);
         $client     = (string) $input['c'];
         $time       = time();
 
-        if (!is_array($oid)) {
-            $rid   = array();
-            $rid[] = $oid;
-            $oid   = $rid;
+        if (!is_array($object_ids)) {
+            $rid        = array();
+            $rid[]      = $object_ids;
+            $object_ids = $rid;
         }
 
-        foreach ($oid as $object) {
-            $aid   = Subsonic_XML_Data::getAmpacheId($object);
-            $type  = Subsonic_XML_Data::getAmpacheType($object);
-            $media = new $type($aid);
+        foreach ($object_ids as $subsonic_id) {
+            $ampache_id = Subsonic_XML_Data::getAmpacheId($subsonic_id);
+            $type       = Subsonic_XML_Data::getAmpacheType($subsonic_id);
+            $media      = new $type($ampache_id);
             $media->format();
 
             // scrobble plugins

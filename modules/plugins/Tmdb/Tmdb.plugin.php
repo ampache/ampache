@@ -108,8 +108,8 @@ class AmpacheTmdb
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
-     * @param $gather_types
-     * @param $media_info
+     * @param array $gather_types
+     * @param array $media_info
      * @return array|null
      */
     public function get_metadata($gather_types, $media_info)

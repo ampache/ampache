@@ -277,7 +277,7 @@ class AmpacheHttpq extends localplay_controller
      * delete_track
      * This must take an ID (as returned by our get function)
      * and delete it from httpQ
-     * @param $object_id
+     * @param integer $object_id
      * @return boolean
      */
     public function delete_track($object_id)

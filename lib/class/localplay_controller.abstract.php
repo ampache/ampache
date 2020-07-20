@@ -36,7 +36,7 @@ abstract class localplay_controller
     abstract public function add_url(Stream_URL $url); // Takes an array of song_ids
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @return mixed
      */
     abstract public function delete_track($object_id); // Takes a single object_id and removes it from the playlist

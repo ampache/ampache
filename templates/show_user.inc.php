@@ -197,8 +197,8 @@ if ($client->f_avatar) {
                 if (Preference::get_by_user($client->id, 'allow_personal_info_recent')) {
                     $activities = Useractivity::get_activities($client->id);
                     Useractivity::build_cache($activities);
-                    foreach ($activities as $aid) {
-                        $activity = new Useractivity($aid);
+                    foreach ($activities as $activity_id) {
+                        $activity = new Useractivity($activity_id);
                         $activity->show();
                     }
                 } ?>

@@ -1030,7 +1030,7 @@ class OAuthUtil
     // modifications to the encoding process. However, this method doesn't
     // seem to be used anywhere so leaving it as is.
     /**
-     * @param $string
+     * @param string $string
      * @return string
      */
     public static function urldecode_rfc3986($string)

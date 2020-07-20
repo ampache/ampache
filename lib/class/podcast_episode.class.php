@@ -402,7 +402,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
-     * @param integer $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -410,13 +410,13 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
+    public static function play_url($object_id, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
     {
         if (!$uid) {
             $uid = Core::get_global('user')->id;
         }
 
-        return Song::generic_play_url('podcast_episode', $oid, $additional_params, $player, $local, $uid, $original);
+        return Song::generic_play_url('podcast_episode', $object_id, $additional_params, $player, $local, $uid, $original);
     }
 
     /**

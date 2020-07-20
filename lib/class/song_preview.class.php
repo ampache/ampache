@@ -52,7 +52,7 @@ class Song_Preview extends database_object implements media, playable_item
      * Constructor
      *
      * Song Preview class
-     * @param $object_id
+     * @param integer $object_id
      */
     public function __construct($object_id)
     {
@@ -310,15 +310,15 @@ class Song_Preview extends database_object implements media, playable_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsampling mojo and everything
      * else, this is the true function
-     * @param $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
+    public static function play_url($object_id, $additional_params = '', $player = null, $local = false)
     {
-        $song        = new Song_Preview($oid);
+        $song        = new Song_Preview($object_id);
         $user_id     = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
         $type        = $song->type;
 

@@ -924,7 +924,7 @@ class Catalog_local extends Catalog
     /**
      * check_local_mp3
      * Checks the song to see if it's there already returns true if found, false if not
-     * @param $full_file
+     * @param string $full_file
      * @param string $gather_type
      * @return boolean
      */

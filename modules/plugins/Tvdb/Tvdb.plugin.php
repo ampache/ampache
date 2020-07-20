@@ -102,7 +102,7 @@ class AmpacheTvdb
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
-     * @param $gather_types
+     * @param array $gather_types
      * @param $media_info
      * @return null
      */

@@ -1040,7 +1040,7 @@ class Artist extends database_object implements library_item
 
     /**
      * Update artist last_update time.
-     * @param $object_id
+     * @param integer $object_id
      */
     public static function set_last_update($object_id)
     {

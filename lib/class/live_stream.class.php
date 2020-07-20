@@ -83,7 +83,7 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
-     * @param $stream_id
+     * @param integer $stream_id
      */
     public function __construct($stream_id)
     {
@@ -337,7 +337,7 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * play_url
      * This is needed by the media interface
-     * @param $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -345,9 +345,9 @@ class Live_Stream extends database_object implements media, library_item
      * @param string $force_http
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
+    public static function play_url($object_id, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
     {
-        $radio = new Live_Stream($oid);
+        $radio = new Live_Stream($object_id);
 
         return $radio->url . $additional_params;
     } // play_url

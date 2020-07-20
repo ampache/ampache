@@ -34,7 +34,7 @@ ob_end_clean();
 
 /* These parameters had better come in on the url. */
 $uid          = scrub_in($_REQUEST['uid']);
-$oid          = scrub_in($_REQUEST['oid']);
+$object_id    = scrub_in($_REQUEST['oid']);
 $sid          = scrub_in($_REQUEST['ssid']);
 $type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 $cache        = scrub_in($_REQUEST['cache']);
@@ -103,7 +103,7 @@ debug_event('play/index', 'Asked for type {' . $type . "}", 5);
 
 if ($type == 'playlist') {
     $playlist_type = scrub_in($_REQUEST['playlist_type']);
-    $oid           = $sid;
+    $object_id     = $sid;
 }
 
 /* This is specifically for tmp playlist requests */
@@ -111,7 +111,7 @@ $demo_id    = Dba::escape($_REQUEST['demo_id']);
 $random     = Dba::escape($_REQUEST['random']);
 
 /* First things first, if we don't have a uid/oid stop here */
-if (empty($oid) && empty($demo_id) && empty($random)) {
+if (empty($object_id) && empty($demo_id) && empty($random)) {
     debug_event('play/index', 'No object UID specified, nothing to play', 2);
     header('HTTP/1.1 400 Nothing To Play');
 
@@ -216,7 +216,7 @@ if (!$share_id) {
         return false;
     }
 
-    if (!$share->is_shared_media($oid)) {
+    if (!$share->is_shared_media($object_id)) {
         header('HTTP/1.1 403 Access Unauthorized');
 
         return false;
@@ -249,7 +249,7 @@ if (AmpConfig::get('access_control')) {
 
 // Handle playlist downloads
 if ($type == 'playlist' && isset($playlist_type)) {
-    $playlist = new Stream_Playlist($oid);
+    $playlist = new Stream_Playlist($object_id);
     // Some rudimentary security
     if ($uid != $playlist->user) {
         UI::access_denied();
@@ -273,15 +273,15 @@ if ($demo_id !== '') {
     // If there is a cooldown we need to make sure this song isn't a repeat
     if (!$democratic->cooldown) {
         /* This takes into account votes etc and removes the */
-        $oid = $democratic->get_next_object();
+        $object_id = $democratic->get_next_object();
     } else {
         // Pull history
         $song_cool_check = 0;
-        $oid             = $democratic->get_next_object($song_cool_check);
-        $oids            = $democratic->get_cool_songs();
-        while (in_array($oid, $oids)) {
+        $object_id       = $democratic->get_next_object($song_cool_check);
+        $object_ids      = $democratic->get_cool_songs();
+        while (in_array($object_id, $object_ids)) {
             $song_cool_check++;
-            $oid = $democratic->get_next_object($song_cool_check);
+            $object_id = $democratic->get_next_object($song_cool_check);
             if ($song_cool_check >= '5') {
                 break;
             }
@@ -299,29 +299,29 @@ if ($random !== '') {
         } else {
             $rtype = $type;
         }
-        $oid = Random::get_single_song($rtype);
-        if ($oid) {
+        $object_id = Random::get_single_song($rtype);
+        if ($object_id) {
             // Save this one in case we do a seek
-            $_SESSION['random']['last'] = $oid;
+            $_SESSION['random']['last'] = $object_id;
         }
     } else {
-        $oid = $_SESSION['random']['last'];
+        $object_id = $_SESSION['random']['last'];
     }
 } // if random
 
 if ($type == 'song') {
     /* Base Checks passed create the song object */
-    $media = new Song($oid);
+    $media = new Song($object_id);
     $media->format();
 } elseif ($type == 'song_preview') {
-    $media = new Song_Preview($oid);
+    $media = new Song_Preview($object_id);
     $media->format();
 } elseif ($type == 'podcast_episode') {
-    $media = new Podcast_Episode($oid);
+    $media = new Podcast_Episode($object_id);
     $media->format();
 } else {
     $type  = 'video';
-    $media = new Video($oid);
+    $media = new Video($object_id);
     if (isset($_REQUEST['subtitle'])) {
         $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
     }
@@ -344,7 +344,7 @@ if ($media->catalog) {
         debug_event('play/index', "Error: $media->file is currently disabled, song skipped", 3);
         // Check to see if this is a democratic playlist, if so remove it completely
         if ($demo_id !== '' && isset($democratic)) {
-            $democratic->delete_from_oid($oid, $type);
+            $democratic->delete_from_oid($object_id, $type);
         }
         header('HTTP/1.1 404 File disabled');
 
@@ -373,7 +373,7 @@ if ($media->catalog) {
 if ($media == null) {
     // Handle democratic removal
     if ($demo_id !== '' && isset($democratic)) {
-        $democratic->delete_from_oid($oid, $type);
+        $democratic->delete_from_oid($object_id, $type);
     }
 
     return false;
@@ -385,12 +385,12 @@ if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
     // We need to make sure this isn't democratic play, if it is then remove
     // the media from the vote list
     if (is_object($tmp_playlist)) {
-        $tmp_playlist->delete_track($oid);
+        $tmp_playlist->delete_track($object_id);
     }
     // FIXME: why are these separate?
     // Remove the media votes if this is a democratic song
     if ($demo_id !== '' && isset($democratic)) {
-        $democratic->delete_from_oid($oid, $type);
+        $democratic->delete_from_oid($object_id, $type);
     }
 
     debug_event('play/index', "Media $media->file ($media->title) does not have a valid filename specified", 2);
@@ -719,7 +719,7 @@ if ($transcode && isset($transcoder)) {
 // If this is a democratic playlist remove the entry.
 // We do this regardless of play amount.
 if ($demo_id && isset($democratic)) {
-    $democratic->delete_from_oid($oid, $type);
+    $democratic->delete_from_oid($object_id, $type);
 }
 
 // Close sql connection

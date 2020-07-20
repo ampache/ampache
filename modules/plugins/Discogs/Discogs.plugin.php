@@ -134,7 +134,7 @@ class AmpacheDiscogs
     }
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @return mixed
      */
     protected function get_artist($object_id)
@@ -157,7 +157,7 @@ class AmpacheDiscogs
     }
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @return mixed
      */
     protected function get_album($object_id)
@@ -170,8 +170,8 @@ class AmpacheDiscogs
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
-     * @param $gather_types
-     * @param $media_info
+     * @param array $gather_types
+     * @param array $media_info
      * @return array|null
      */
     public function get_metadata($gather_types, $media_info)

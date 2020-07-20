@@ -457,20 +457,20 @@ class Video extends database_object implements media, library_item
      * play_url
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
-     * @param integer $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @param integer $uid
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false)
+    public static function play_url($object_id, $additional_params = '', $player = '', $local = false, $uid = false)
     {
         if (!$uid) {
             $uid = Core::get_global('user')->id;
         }
 
-        return Song::generic_play_url('video', $oid, $additional_params, $player, $local, $uid);
+        return Song::generic_play_url('video', $object_id, $additional_params, $player, $local, $uid);
     }
 
     /**

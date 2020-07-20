@@ -909,8 +909,8 @@ class mpd
      *     self::SEARCH_ARTIST, self::SEARCH_TITLE, self::SEARCH_ALBUM
      * The search <string> is a case-insensitive locator string. Anything
      * that contains <string> will be returned in the results.
-     * @param $type
-     * @param $string
+     * @param string $type
+     * @param string $string
      * @return array|boolean
      */
     public function Search($type, $string)
@@ -945,8 +945,8 @@ class mpd
      *    self::SEARCH_ARTIST, self::SEARCH_TITLE, self::SEARCH_ALBUM
      * The find <string> is a case-insensitive locator string. Anything that
      * exactly matches <string> will be returned in the results.
-     * @param $type
-     * @param $string
+     * @param string $type
+     * @param string $string
      * @return array|boolean
      */
     public function Find($type, $string)
@@ -1057,7 +1057,7 @@ class mpd
      *
      * Computes numeric value from a version string
      *
-     * @param $string
+     * @param string $string
      * @return float|integer|mixed
      */
     private static function _computeVersionValue($string)

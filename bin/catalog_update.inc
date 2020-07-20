@@ -200,7 +200,7 @@ echo "\n";
 
 /**
  * ob_html_strip
- * @param $string
+ * @param string $string
  * @return string|string[]|null
  */
 function ob_html_strip($string) {

@@ -359,19 +359,19 @@ class Stream
      * insert_now_playing
      *
      * This will insert the Now Playing data.
-     * @param integer $oid
+     * @param integer $object_id
      * @param integer $uid
      * @param integer $length
      * @param string $sid
      * @param string $type
      */
-    public static function insert_now_playing($oid, $uid, $length, $sid, $type)
+    public static function insert_now_playing($object_id, $uid, $length, $sid, $type)
     {
         // Ensure that this client only has a single row
         $sql = 'REPLACE INTO `now_playing` ' .
             '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
             'VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($sid, $oid, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
+        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
     }
 
     /**

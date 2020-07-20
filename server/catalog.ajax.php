@@ -42,8 +42,8 @@ switch ($_REQUEST['action']) {
         $catalog->enabled = (int) $new_enabled;
         $catalog->format();
 
-        //Return the new Ajax::button
-        $id           = 'button_flip_state_' . $catalog->id;
+        // Return the new Ajax::button
+        $id  = 'button_flip_state_' . $catalog->id;
         if ($catalog->enabled) {
             $button     = 'disable';
             $buttontext = T_('Disable');

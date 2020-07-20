@@ -339,7 +339,7 @@ class Catalog_Seafile extends Catalog
      * @param $file
      * @param string $sort_pattern
      * @param string $rename_pattern
-     * @param $gather_types
+     * @param array $gather_types
      * @return array
      * @throws Exception
      */
@@ -430,7 +430,7 @@ class Catalog_Seafile extends Catalog
 
     /**
      * @param media $media
-     * @param $gather_types
+     * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array|null

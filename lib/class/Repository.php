@@ -68,7 +68,7 @@ class Repository
 
     /**
      *
-     * @param $object_id
+     * @param integer $object_id
      * @return DatabaseObject
      */
     public function findById($object_id)
@@ -185,7 +185,7 @@ class Repository
     }
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @param $properties
      */
     protected function updateRecord($object_id, $properties)
@@ -201,7 +201,7 @@ class Repository
     }
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      */
     protected function deleteRecord($object_id)
     {
@@ -281,7 +281,8 @@ class Repository
     }
 
     /**
-     * @param $string
+     * camelCaseToUnderscore
+     * @param  string $string
      * @return string
      */
     public function camelCaseToUnderscore($string)

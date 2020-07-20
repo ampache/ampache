@@ -294,7 +294,7 @@ class Democratic extends Tmp_Playlist
     /**
      * get_uid_from_object_id
      * This takes an object_id and an object type and returns the ID for the row
-     * @param $object_id
+     * @param integer $object_id
      * @param string $object_type
      * @return mixed
      */
@@ -350,7 +350,7 @@ class Democratic extends Tmp_Playlist
     /**
      * has_vote
      * This checks to see if the current user has already voted on this object
-     * @param $object_id
+     * @param integer $object_id
      * @param string $type
      * @return boolean
      */
@@ -385,7 +385,7 @@ class Democratic extends Tmp_Playlist
     /**
      * _add_vote
      * This takes a object id and user and actually inserts the row
-     * @param $object_id
+     * @param integer $object_id
      * @param string $object_type
      * @return boolean
      */
@@ -469,18 +469,18 @@ class Democratic extends Tmp_Playlist
     /**
      * delete_from_oid
      * This takes an OID and type and removes the object from the democratic playlist
-     * @param $oid
+     * @param integer $object_id
      * @param string $object_type
      * @return boolean
      */
-    public function delete_from_oid($oid, $object_type)
+    public function delete_from_oid($object_id, $object_type)
     {
-        $row_id = $this->get_uid_from_object_id($oid, $object_type);
+        $row_id = $this->get_uid_from_object_id($object_id, $object_type);
         if ($row_id) {
-            debug_event('democratic.class', 'Removing Votes for ' . $oid . ' of type ' . $object_type, 5);
+            debug_event('democratic.class', 'Removing Votes for ' . $object_id . ' of type ' . $object_type, 5);
             $this->delete_votes($row_id);
         } else {
-            debug_event('democratic.class', 'Unable to find Votes for ' . $oid . ' of type ' . $object_type, 3);
+            debug_event('democratic.class', 'Unable to find Votes for ' . $object_id . ' of type ' . $object_type, 3);
         }
 
         return true;
@@ -489,7 +489,7 @@ class Democratic extends Tmp_Playlist
     /**
      * delete
      * This deletes a democratic playlist
-     * @param $democratic_id
+     * @param integer $democratic_id
      * @return boolean
      */
     public static function delete($democratic_id)
@@ -643,7 +643,7 @@ class Democratic extends Tmp_Playlist
      * get_voters
      * This returns the users that voted for the specified object
      * This is an array of user ids
-     * @param $object_id
+     * @param integer $object_id
      * @return array|mixed
      */
     public function get_voters($object_id)

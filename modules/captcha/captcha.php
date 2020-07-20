@@ -466,7 +466,7 @@ class easy_captcha
     #-- where's the storage?
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @return string
      */
     public function data_file($object_id = null)

@@ -45,7 +45,7 @@ class Playlist extends playlist_object
      * Constructor
      * This takes a playlist_id as an optional argument and gathers the information
      * if not playlist_id is passed returns false (or if it isn't found
-     * @param $object_id
+     * @param integer $object_id
      */
     public function __construct($object_id)
     {
@@ -590,8 +590,8 @@ class Playlist extends playlist_object
 
     /**
      * delete_track
-     * @param integer $item_id
      * this deletes a single track, you specify the playlist_data.id here
+     * @param integer $item_id
      * @return boolean
      */
     public function delete_track($item_id)
@@ -607,8 +607,8 @@ class Playlist extends playlist_object
 
     /**
      * delete_track_number
-     * @param integer $track
      * this deletes a single track by it's track #, you specify the playlist_data.track here
+     * @param integer $track
      * @return boolean
      */
     public function delete_track_number($track)
@@ -624,9 +624,9 @@ class Playlist extends playlist_object
 
     /**
      * set_by_track_number
+     * this deletes a single track by it's track #, you specify the playlist_data.track here
      * @param integer $object_id
      * @param integer $track
-     * this deletes a single track by it's track #, you specify the playlist_data.track here
      * @return boolean
      */
     public function set_by_track_number($object_id, $track)

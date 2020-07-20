@@ -97,8 +97,8 @@ class AmpacheFriendsTimeline
                 if (count($activities) > 0) {
                     UI::show_box_top(T_('Friends Timeline'));
                     Useractivity::build_cache($activities);
-                    foreach ($activities as $aid) {
-                        $activity = new Useractivity($aid);
+                    foreach ($activities as $activity_id) {
+                        $activity = new Useractivity($activity_id);
                         $activity->show();
                     }
                     UI::show_box_bottom();

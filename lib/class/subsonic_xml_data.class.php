@@ -136,7 +136,7 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @return integer
      */
     private static function cleanId($object_id)
@@ -151,7 +151,7 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @return integer
      */
     public static function getAmpacheId($object_id)
@@ -248,7 +248,7 @@ class Subsonic_XML_Data
     }
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @return string
      */
     public static function getAmpacheType($object_id)
@@ -1126,7 +1126,7 @@ class Subsonic_XML_Data
      * setIfStarred
      * @param SimpleXMLElement $xml
      * @param string $objectType
-     * @param $object_id
+     * @param integer $object_id
      */
     private static function setIfStarred($xml, $objectType, $object_id)
     {

@@ -236,7 +236,7 @@ function charset_rename_file($full_file, $translated_filename) {
  * This is run on every individual element of the search
  * Before it is put together, this removes / and \ and also
  * once I figure it out, it'll clean other stuff
- * @param $string
+ * @param string $string
  * @return string|string[]|null
  */
 function charset_clean_name($string) {

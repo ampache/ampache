@@ -95,7 +95,7 @@ class Stats
      * This inserts a new record for the specified object
      * with the specified information, amazing!
      * @param string $input_type
-     * @param integer $oid
+     * @param integer $object_id
      * @param integer $user
      * @param string $agent
      * @param array $location
@@ -104,14 +104,14 @@ class Stats
      * @param integer $song_time
      * @return boolean
      */
-    public static function insert($input_type, $oid, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
+    public static function insert($input_type, $object_id, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
     {
         if (AmpConfig::get('use_auth') && $user < 0) {
             debug_event('stats.class', 'Invalid user given ' . $user, 3);
 
             return false;
         }
-        if (!self::is_already_inserted($input_type, $oid, $user, $agent)) {
+        if (!self::is_already_inserted($input_type, $object_id, $user, $agent)) {
             $type = self::validate_type($input_type);
 
             $latitude  = null;
@@ -133,10 +133,10 @@ class Stats
 
             $sql = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $db_results = Dba::write($sql, array($type, $oid, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
+            $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
             if (($input_type == 'song') && ($count_type === 'stream') && $user > 1) {
-                Useractivity::post_activity($user, 'play', $type, $oid, $date);
+                Useractivity::post_activity($user, 'play', $type, $object_id, $date);
             }
 
             if (!$db_results) {
@@ -151,12 +151,12 @@ class Stats
      * is_already_inserted
      * Check if the same stat has not already been inserted within a graceful delay
      * @param string $type
-     * @param integer $oid
+     * @param integer $object_id
      * @param integer $user
      * @param string $agent
      * @return boolean
      */
-    public static function is_already_inserted($type, $oid, $user, $agent)
+    public static function is_already_inserted($type, $object_id, $user, $agent)
     {
         $time  = time();
         $agent = Dba::escape($agent);
@@ -171,8 +171,8 @@ class Stats
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            if ($row['id'] == $oid) {
-                debug_event('stats.class', 'Object already inserted {' . (string) $oid . '} count: ' . (string) count($results), 5);
+            if ($row['id'] == $object_id) {
+                debug_event('stats.class', 'Object already inserted {' . (string) $object_id . '} count: ' . (string) count($results), 5);
 
                 return true;
             }
@@ -185,7 +185,7 @@ class Stats
      * get_object_count
      * Get count for an object
      * @param string $object_type
-     * @param $object_id
+     * @param integer $object_id
      * @param string $threshold
      * @param string $count_type
      * @return integer

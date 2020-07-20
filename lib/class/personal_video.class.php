@@ -33,7 +33,7 @@ class Personal_Video extends Video
      * Constructor
      * This pulls the personal video information from the database and returns
      * a constructed object
-     * @param $object_id
+     * @param integer $object_id
      */
     public function __construct($object_id)
     {

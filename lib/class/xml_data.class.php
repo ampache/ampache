@@ -1100,7 +1100,7 @@ class XML_Data
     } // shouts
 
     /**
-     * @param $string
+     * @param string $string
      * @param boolean $full_xml
      * @return string
      */
@@ -1129,10 +1129,10 @@ class XML_Data
     public static function timeline($activities)
     {
         $string = "<timeline>\n";
-        foreach ($activities as $aid) {
-            $activity = new Useractivity($aid);
+        foreach ($activities as $activity_id) {
+            $activity = new Useractivity($activity_id);
             $user     = new User($activity->user);
-            $string .= "\t<activity id=\"" . $aid . "\">\n" .
+            $string .= "\t<activity id=\"" . $activity_id . "\">\n" .
                     "\t\t<date>" . $activity->activity_date . "</date>\n" .
                     "\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n" .
                     "\t\t<object_id>" . $activity->object_id . "</object_id>\n" .

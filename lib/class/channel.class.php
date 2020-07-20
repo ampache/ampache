@@ -168,7 +168,7 @@ class Channel extends database_object implements media, library_item
      * @param string $description
      * @param string $url
      * @param string $object_type
-     * @param string $object_id
+     * @param integer $object_id
      * @param array $interface
      * @param array $port
      * @param string $admin_password
@@ -673,15 +673,15 @@ class Channel extends database_object implements media, library_item
 
     /**
      * play_url
-     * @param integer $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
+    public static function play_url($object_id, $additional_params = '', $player = null, $local = false)
     {
-        $channel = new Channel($oid);
+        $channel = new Channel($object_id);
 
         return $channel->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($channel->name) . '.' . $channel->stream_type . $additional_params;
     }
