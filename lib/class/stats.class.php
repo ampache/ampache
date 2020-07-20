@@ -111,7 +111,7 @@ class Stats
 
             return false;
         }
-        if (!self::is_already_inserted($input_type, $oid, $user, $date, $count_type)) {
+        if (!self::is_already_inserted($input_type, $oid, $user, $agent)) {
             $type = self::validate_type($input_type);
 
             $latitude  = null;
@@ -153,27 +153,29 @@ class Stats
      * @param string $type
      * @param integer $oid
      * @param integer $user
-     * @param $time
-     * @param string $count_type
+     * @param string $agent
      * @return boolean
      */
-    public static function is_already_inserted($type, $oid, $user, $time, $count_type = 'stream')
+    public static function is_already_inserted($type, $oid, $user, $agent)
     {
-        $sql = "SELECT `id` FROM `object_count` " .
-               "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
-               "`object_count`.`object_id` = ? AND `object_count`.`count_type` = ? AND `object_count`.`date` = ? " .
-               "ORDER BY `object_count`.`date` DESC";
+        $time  = time();
+        $agent = Dba::escape($agent);
+        $sql   = "SELECT `id` FROM `object_count` " .
+                "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`date` > ($time - 20) ";
+        if ($agent !== '') {
+            $sql .= "AND `object_count`.`agent` = '$agent' ";
+        }
+        $sql .= "ORDER BY `object_count`.`date` DESC";
 
-        $db_results = Dba::read($sql, array($user, $type, $oid, $count_type, $time));
+        $db_results = Dba::read($sql, array($user, $type));
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-        if (count($results) > 0) {
-            debug_event('stats.class', 'Object already inserted {' . (string) $oid . '} count: ' . (string) count($results), 5);
+            if ($row['id'] == $oid) {
+                debug_event('stats.class', 'Object already inserted {' . (string) $oid . '} count: ' . (string) count($results), 5);
 
-            return true;
+                return true;
+            }
         }
 
         return false;
@@ -279,8 +281,8 @@ class Stats
      */
     public static function skip_last_song($object_id, $agent, $user_id)
     {
-        $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `object_id` = ? AND `agent` = ? AND " .
-               "`user` = ? AND `object_type` = 'song' ORDER BY `object_count`.`date` DESC LIMIT 1";
+        $sql  = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `object_id` = ? AND `agent` = ? AND " .
+                "`user` = ? AND `object_type` = 'song' ORDER BY `object_count`.`date` DESC LIMIT 1";
         Dba::write($sql, array($object_id, $agent, $user_id));
 
         // Now the date for the skipped value is taken

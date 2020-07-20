@@ -1012,7 +1012,6 @@ class Song extends database_object implements media, library_item
             Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date, $this->time);
             Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date, $this->time);
         }
-
         if (!$this->played) {
             /* If it hasn't been played, set it! */
             self::update_played(true, $this->id);
@@ -1032,14 +1031,16 @@ class Song extends database_object implements media, library_item
     public function check_play_history($user, $agent)
     {
         if ($user < 1) {
+            debug_event('song.class', 'Not recording stats for user (' . $user . ')', 5);
+
             return false;
         }
         $previous = Stats::get_last_song($user, $agent);
-        $diff     = time() - $previous['date'];
+        $diff     = time() - (int) $previous['date'];
 
         // this song was your last play and the length between plays is too short.
         if ($previous['object_id'] == $this->id && $diff <= ($this->time - 5)) {
-            debug_event('song.class', 'Repeated the same song too quickly (' . $diff .'s), not recording stats', 3);
+            debug_event('song.class', 'Repeated song too quickly (' . $diff . 's), not recording stats for {' . $previous['object_id'] . '}', 3);
 
             return false;
         }
@@ -1053,8 +1054,8 @@ class Song extends database_object implements media, library_item
         }
 
         // when the difference between recordings is too short, the song has been skipped, so note that
-        if ($diff < $skiptime && !$previous["time"] < $skiptime) {
-            debug_event('song.class', 'Last song played within ' . $diff . ' seconds, skipping ' . $previous['object_id'], 3);
+        if ($diff < $skiptime || ($diff < $skiptime && $previous['time'] > $skiptime)) {
+            debug_event('song.class', 'Last song played within skip limit (' . $diff . 's). Skipping {' . $previous['object_id'] . '}', 3);
             Stats::skip_last_song($previous['object_id'], $previous['agent'], $previous['user']);
             // delete artist and album from object_count to keep stats in line
             Useractivity::del_activity($previous['date'], 'song', $previous['user']);

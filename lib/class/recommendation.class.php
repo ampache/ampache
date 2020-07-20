@@ -207,7 +207,7 @@ class Recommendation
 
                     if ($result = Dba::fetch_assoc($db_result)) {
                         $local_id = $result['id'];
-                        debug_event('recommendation.class', "$name matched local song $local_id", 5);
+                        debug_event('recommendation.class', "$name matched local song $local_id", 4);
                         $similars[] = array(
                             'id' => $local_id,
                             'name' => $name,

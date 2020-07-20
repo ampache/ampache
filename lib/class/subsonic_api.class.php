@@ -1873,6 +1873,7 @@ class Subsonic_Api
         $submission = $input['submission'];
         $user       = User::get_from_username($input['u']);
         $client     = (string) $input['c'];
+        $time       = time();
 
         if (!is_array($oid)) {
             $rid   = array();
@@ -1889,10 +1890,10 @@ class Subsonic_Api
             // scrobble plugins
             if ($submission === 'true' || $submission === '1') {
                 // stream has finished
-                debug_event('subsonic_api.class', 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $client . ' ' . (string) time(), 5);
+                debug_event('subsonic_api.class', $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                 User::save_mediaplay($user, $media);
-                $media->set_played($user->id, $client, time());
             }
+            $media->set_played($user->id, $client, null, $time);
         }
 
         $response = Subsonic_XML_Data::createSuccessResponse('scrobble');
@@ -2346,7 +2347,6 @@ class Subsonic_Api
         if ($position < 1 && $song->id) {
             Stream::garbage_collection();
             Stream::insert_now_playing((int) $song->id, (int) $user_id, (int) $song->time, $username, 'song');
-            $song->set_played($user_id, $client, time());
         }
         // continue to fail saving the queue
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');
