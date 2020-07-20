@@ -87,6 +87,8 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
                 }
             }
             break;
+        default:
+            break;
     }
 
     $totMatches = ($totMatches == 0) ? count($items) : $totMatches;

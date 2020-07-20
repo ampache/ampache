@@ -113,8 +113,7 @@ switch ($_REQUEST['action']) {
             }
             $options[$key] = $word['value'];
             if ($word['important'] && !empty($word['value'])) {
-                    $keyword .= ' ' . $word['value'];
-                }
+                $keyword .= ' ' . $word['value'];
             }
         }
         $options['keyword'] = trim($keyword);

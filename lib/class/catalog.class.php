@@ -1312,8 +1312,7 @@ abstract class Catalog extends database_object
                     foreach ($keywords as $key => $word) {
                         $options[$key] = $word['value'];
                         if ($word['important'] && !empty($word['value'])) {
-                                $keyword .= ' ' . $word['value'];
-                            }
+                            $keyword .= ' ' . $word['value'];
                         }
                     }
                     $options['keyword'] = $keyword;
