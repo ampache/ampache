@@ -27,7 +27,6 @@ UI::show_header();
 $action = Core::get_request('action');
 
 if (!Core::is_session_started()) {
-    debug_event('index', 'no session, calling session_start()', 4);
     session_start();
 }
 $_SESSION['catalog'] = 0;

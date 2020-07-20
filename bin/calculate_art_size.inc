@@ -43,10 +43,10 @@ while ($row = Dba::fetch_assoc($db_results)) {
 
     $art_id     = $row['id'];
     $dimensions = Core::image_dimensions($source);
-    if (!empty($dimensions)) {
+    if (!empty($dimensions) && ((int) $dimensions['width'] > 0 && (int) $dimensions['height'] > 0)) {
         $width  = (int) $dimensions['width'];
         $height = (int) $dimensions['height'];
-        $sql = "Update `image` SET `width`=" . $width . ", `height`=" . $height . " WHERE `id`='" . $art_id . "'";
+        $sql = "UPDATE `image` SET `width`=" . $width . ", `height`=" . $height . " WHERE `id`='" . $art_id . "'";
         Dba::write($sql);
     }
 }
