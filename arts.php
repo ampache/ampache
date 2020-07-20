@@ -112,8 +112,7 @@ switch ($_REQUEST['action']) {
                 $word['value'] = $_REQUEST['option_' . $key];
             }
             $options[$key] = $word['value'];
-            if ($word['important']) {
-                if (!empty($word['value'])) {
+            if ($word['important'] && !empty($word['value'])) {
                     $keyword .= ' ' . $word['value'];
                 }
             }

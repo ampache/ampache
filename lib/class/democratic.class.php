@@ -539,13 +539,13 @@ class Democratic extends Tmp_Playlist
         // Clean up the input
         $name     = Dba::escape($data['name']);
         $base     = Dba::escape($data['democratic']);
-        $cool     = Dba::escape($data['cooldown']);
-        $level    = Dba::escape($data['level']);
+        $cool     = (int) Dba::escape($data['cooldown']);
+        $level    = (int) Dba::escape($data['level']);
         $default  = Dba::escape($data['make_default']);
-        $user     = Dba::escape(Core::get_global('user')->id);
+        $user     = (int) Dba::escape(Core::get_global('user')->id);
 
         $sql = "INSERT INTO `democratic` (`name`, `base_playlist`, `cooldown`, `level`, `user`, `primary`) " .
-            "VALUES ('$name', '$base', '$cool', '$level', '$user', '$default')";
+            "VALUES ('$name', '$base', $cool, $level, $user, '$default')";
         $db_results = Dba::write($sql);
 
         if ($db_results) {
