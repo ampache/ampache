@@ -1869,10 +1869,11 @@ class Subsonic_Api
     public static function scrobble($input)
     {
         $object_ids = self::check_parameter($input, 'id');
+
         $submission = $input['submission'];
         $user       = User::get_from_username($input['u']);
         $client     = (string) $input['c'];
-        $time       = time();
+        $time       = isset($input['time']) ? (int) $input['time'] / 1000 : time();
 
         if (!is_array($object_ids)) {
             $rid        = array();

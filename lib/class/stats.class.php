@@ -160,7 +160,7 @@ class Stats
     {
         $time  = time();
         $agent = Dba::escape($agent);
-        $sql   = "SELECT `id` FROM `object_count` " .
+        $sql   = "SELECT `object_id` FROM `object_count` " .
                 "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`date` > ($time - 20) ";
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = '$agent' ";
@@ -171,7 +171,7 @@ class Stats
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            if ($row['id'] == $object_id) {
+            if ($row['object_id'] == $object_id) {
                 debug_event('stats.class', 'Object already inserted {' . (string) $object_id . '} count: ' . (string) count($results), 5);
 
                 return true;
