@@ -70,7 +70,8 @@
         "ext-json": "*",
         "ext-xml": "*",
         "oomphinc/composer-installers-extender": "^1.1",
-        "jwilsson/spotify-web-api-php": "^3.5"
+        "jwilsson/spotify-web-api-php": "^3.5",
+        "szymach/c-pchart": "2.*"
     },
 
     "repositories":

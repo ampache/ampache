@@ -595,7 +595,7 @@ class Daap_Api
         if (strtolower(get_class($playlist)) == 'search') {
             $isSmart = true;
         }
-        $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
+        $pl_id  = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
         $plist  = self::tlv('dmap.itemid', $pl_id);
         $plist .= self::tlv('dmap.persistentid', $pl_id);
         $plist .= self::tlv('dmap.itemname', $playlist->f_name);
