@@ -62,13 +62,13 @@ class License
     /**
      * has_info
      * does the db call, reads from the license table
-     * @param integer $id
+     * @param integer $license_id
      * @return boolean
      */
-    private function has_info($id)
+    private function has_info($license_id)
     {
         $sql        = "SELECT * FROM `license` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($id));
+        $db_results = Dba::read($sql, array($license_id));
 
         $data = Dba::fetch_assoc($db_results);
 

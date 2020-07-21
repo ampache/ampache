@@ -251,13 +251,13 @@ class Tmp_Playlist extends database_object
      * This deletes any other tmp_playlists associated with this
      * session
      * @param $sessid
-     * @param string|null $id
+     * @param string|null $plist_id
      * @return boolean
      */
-    public static function session_clean($sessid, $id)
+    public static function session_clean($sessid, $plist_id)
     {
         $sql = "DELETE FROM `tmp_playlist` WHERE `session`= ? AND `id` != ?";
-        Dba::write($sql, array($sessid, $id));
+        Dba::write($sql, array($sessid, $plist_id));
 
         /* Remove associated tracks */
         self::prune_tracks();

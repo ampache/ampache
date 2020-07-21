@@ -2152,10 +2152,10 @@ class Subsonic_Api
      */
     public static function deletepodcastchannel($input)
     {
-        $id = (int) self::check_parameter($input, 'id');
+        $podcast_id = (int) self::check_parameter($input, 'id');
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
-            $podcast = new Podcast(Subsonic_XML_Data::getAmpacheId($id));
+            $podcast = new Podcast(Subsonic_XML_Data::getAmpacheId($podcast_id));
             if ($podcast->id) {
                 if ($podcast->remove()) {
                     $response = Subsonic_XML_Data::createSuccessResponse('deletepodcastchannel');

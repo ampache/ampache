@@ -40,15 +40,15 @@ class VlcPlayer
      * This is the constructor, it defaults to localhost
      * with port 8080
      * i would change this to another value then standard 8080, it gets used by more things
-     * @param string $h
-     * @param string $pw
-     * @param integer $p
+     * @param string $host
+     * @param string $password
+     * @param integer $port
      */
-    public function __construct($h = 'localhost', $pw = '', $p = 8080)
+    public function __construct($host = 'localhost', $password = '', $port = 8080)
     {
-        $this->host     = $h;
-        $this->port     = $p;
-        $this->password = $pw;
+        $this->host     = $host;
+        $this->port     = $port;
+        $this->password = $password;
     } // VlcPlayer
 
     /**
