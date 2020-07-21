@@ -14,6 +14,8 @@ It's easy to use a program like github desktop to compare between branches.
 * Commit merge but do not push!
 * Undo commits and tag for new version (e.g. 4.1.0)
 * Browse changes to check for things you've missed in the changelog
+* Add pchart to composer
+  * composer require szymach/c-pchart "2.*"
 * Run composer install
 * Remove broken symbolic links
 

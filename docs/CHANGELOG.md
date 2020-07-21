@@ -156,7 +156,7 @@ API 5.0.0-release will be the first Ampache release to match the release string.
 ### Removed
 
 * Remove non-free lib/composer.* files.
-  * You can enable c-pchart with (composer require 'szymach/c-pchart')
+  * You can enable c-pchart with (composer require szymach/c-pchart "2.*")
 * Remove shoutcast table and preferences. (Dead code)
 
 ### Fixed

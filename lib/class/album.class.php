@@ -379,7 +379,7 @@ class Album extends database_object implements library_item
             $sqlw .= "AND `catalog`.`enabled` = '1' ";
         }
         if ($this->allow_group_disks) {
-            $sqlw .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `catalog_id`"; //TODO mysql8 test
+            $sqlw .= "GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `catalog_id`";
         } else {
             $sqlw .= "GROUP BY `song`.`album`, `catalog_id`";
         }
@@ -404,7 +404,7 @@ class Album extends database_object implements library_item
                    "WHERE `song`.`album` IN (SELECT `id` FROM `album` WHERE " .
                    $name_sql . $where_sql . ") " .
                    "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year` " .
-                   "LIMIT 1"; //TODO mysql8 test (And Shorten/merger with the other query)
+                   "LIMIT 1";
         } else {
             // album_artist is set
             $sql = "SELECT DISTINCT `artist`.`name` AS `artist_name`, " .
@@ -413,7 +413,7 @@ class Album extends database_object implements library_item
                    "FROM `album` " .
                    "LEFT JOIN `artist` ON `artist`.`id`=`album`.`album_artist` WHERE " .
                    $name_sql . $where_sql . " " .
-                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`"; //TODO mysql8 test
+                   "GROUP BY `artist`.`prefix`, `artist`.`name`, `album`.`prefix`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, `album`.`year`";
         }
         $db_results = Dba::read($sql);
         $results    = array_merge($results, Dba::fetch_assoc($db_results));

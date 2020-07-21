@@ -402,7 +402,7 @@ class Stats
             }
             $sql .= " AND `count_type` = '" . $count_type . "'";
             if ($allow_group_disks && $type == 'album') {
-                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `object_count`.`object_type`, `object_count`.`count_type`";  //TODO mysql8 test
+                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`, `object_count`.`object_type`, `object_count`.`count_type`";
             } else {
                 $sql .= " GROUP BY `object_count`.`object_id`, `object_count`.`object_type`, `object_count`.`count_type`";
             }

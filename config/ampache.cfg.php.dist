@@ -555,7 +555,7 @@ sociable = "true"
 ;  http://www.pchart.net/license
 ; REFERENCE: https://github.com/ampache/ampache/wiki/chart-faq
 ; You can enable c-chart with the following command
-;  composer require 'szymach/c-pchart'
+;  composer require szymach/c-pchart "2.*"
 ; DEFAULT: false
 ;statistical_graphs = "false"
 

@@ -1050,7 +1050,7 @@ abstract class Catalog extends database_object
                 "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " .
                 $sql_where .
                 "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist` ORDER BY `artist`.`name` " .
-                $sql_limit;  //TODO mysql8 test
+                $sql_limit;
 
         $results    = array();
         $db_results = Dba::read($sql);
