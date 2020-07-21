@@ -1056,7 +1056,7 @@ class Song extends database_object implements media, library_item
         // when the difference between recordings is too short, the song has been skipped, so note that
         if ($diff < $skiptime || ($diff < $skiptime && $previous['time'] > $skiptime)) {
             debug_event('song.class', 'Last song played within skip limit (' . $diff . 's). Skipping {' . $previous['object_id'] . '}', 3);
-            Stats::skip_last_song($previous['object_id'], $previous['agent'], $previous['user']);
+            Stats::skip_last_song($previous['date'], $previous['agent'], $previous['user']);
             // delete artist and album from object_count to keep stats in line
             Useractivity::del_activity($previous['date'], 'song', $previous['user']);
         }
