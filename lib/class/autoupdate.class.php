@@ -191,12 +191,8 @@ class AutoUpdate
     {
         $git_branch = self::is_force_git_branch();
         if (self::is_develop() || $git_branch !== '') {
-            debug_event('autoupdate.class', 'get_current_version development branch', 5);
-
             return self::get_current_commit();
         } else {
-            debug_event('autoupdate.class', 'get_current_version', 5);
-
             return AmpConfig::get('version');
         }
     }

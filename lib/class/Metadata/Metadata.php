@@ -62,7 +62,7 @@ trait Metadata
     protected function initializeMetadata()
     {
         $this->metadataRepository      = new Repository\Metadata();
-        $this->metadataFieldRepository = new \Lib\Metadata\Repository\MetadataField();
+        $this->metadataFieldRepository = new Repository\MetadataField();
     }
 
 
@@ -107,7 +107,7 @@ trait Metadata
      */
     public function updateOrInsertMetadata(MetadataField $field, $data)
     {
-        /* @var $metadata Model\Metadata */
+        /* @var Model\Metadata $metadata */
         $metadata = $this->metadataRepository->findByObjectIdAndFieldAndType($this->id, $field, get_class($this));
         if ($metadata) {
             $object = reset($metadata);

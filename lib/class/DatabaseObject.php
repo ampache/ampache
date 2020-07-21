@@ -117,7 +117,7 @@ abstract class DatabaseObject
     {
         foreach ($this->fieldClassRelations as $field => $repositoryName) {
             if (class_exists($repositoryName)) {
-                /* @var $repository Repository */
+                /* @var Repository $repository */
                 $repository   = new $repositoryName;
                 $this->$field = $repository->findById($this->$field);
             }

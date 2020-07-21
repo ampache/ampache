@@ -803,13 +803,12 @@ class Query
     } // set_offset
 
     /**
-     *
+     * set_catalog
      * @param integer $catalog_number
      */
     public function set_catalog($catalog_number)
     {
         $this->catalog = $catalog_number;
-        debug_event('query.class', "set catalog id: " . $this->catalog, 5);
     }
 
     /**

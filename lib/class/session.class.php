@@ -290,7 +290,6 @@ class Session
 
             return false;
         }
-        debug_event('session.class', 'Existing session found', 4);
 
         // Set up the cookie params before we start the session.
         // This is vital
