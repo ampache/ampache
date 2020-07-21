@@ -172,7 +172,7 @@ class Tag extends database_object implements library_item
         // Check and see if the tag exists, if not create it, we need the tag id from this
         if (!$tag_id = self::tag_exists($cleaned_value)) {
             debug_event('tag.class', 'Adding new tag {' . $cleaned_value . '}', 5);
-            $tag_id = self::add_tag($cleaned_value);
+            $tag_id = (int) self::add_tag($cleaned_value);
         }
 
         if (!$tag_id) {
@@ -186,14 +186,14 @@ class Tag extends database_object implements library_item
             $map_id = self::add_tag_map($type, $object_id, $tag_id, $uid);
         }
 
-        return $map_id;
+        return (int) $map_id;
     } // add
 
     /**
      * add_tag
      * This function adds a new tag, for now we're going to limit the tagging a bit
      * @param string $value
-     * @return boolean|string|null
+     * @return string|null
      */
     public static function add_tag($value)
     {
@@ -328,9 +328,8 @@ class Tag extends database_object implements library_item
 
             return false;
         }
-        $id = (int) ($object_id);
 
-        if (!$tag_id || !$id) {
+        if (!$tag_id || !$object_id) {
             return false;
         }
 
@@ -347,7 +346,7 @@ class Tag extends database_object implements library_item
                 Dba::write($sql, array($tag['id'], $uid, $type, $id));
             }
         }
-        $insert_id = Dba::insert_id();
+        $insert_id = (int) Dba::insert_id();
 
         parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $id));
 
@@ -429,7 +428,7 @@ class Tag extends database_object implements library_item
 
         parent::add_to_cache('tag_name', $results['name'], $results['id']);
 
-        return $results['id'];
+        return (int) $results['id'];
     } // tag_exists
 
     /**

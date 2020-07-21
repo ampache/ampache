@@ -176,9 +176,9 @@ class UPnPDevice
     */
 
     // helper function for calls that require only an instance id
-    public function instanceOnly($command, $type = 'AVTransport', $id = 0)
+    public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0)
     {
-        $args     = array( 'InstanceID' => $id );
+        $args     = array( 'InstanceID' => $instance_id );
         ///$response = \Format::forge($response, 'xml:ns')->to_array();
         ///return $response['s:Body']['u:' . $command . 'Response'];
 

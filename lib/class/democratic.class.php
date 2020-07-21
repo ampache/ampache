@@ -520,10 +520,10 @@ class Democratic extends Tmp_Playlist
         $cool     = (int) Dba::escape($data['cooldown']);
         $level    = (int) Dba::escape($data['level']);
         $default  = (int) Dba::escape($data['make_default']);
-        $id       = (int) Dba::escape($this->id);
+        $demo_id  = (int) Dba::escape($this->id);
 
         $sql = "UPDATE `democratic` SET `name` = ?, `base_playlist` = ?,`cooldown` = ?, `primary` = ?, `level` = ? WHERE `id` = ?";
-        Dba::write($sql, array($name, $base, $cool, $default, $level, $id));
+        Dba::write($sql, array($name, $base, $cool, $default, $level, $demo_id));
 
         return true;
     } // update

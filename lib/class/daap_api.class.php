@@ -351,7 +351,7 @@ class Daap_Api
 
     /**
      * databases
-     * @param $input
+     * @param array $input
      * @return boolean
      */
     public static function databases($input)
@@ -366,14 +366,14 @@ class Daap_Api
             $output .= self::tlv('dmap.specifiedtotalcount', 1);
             $output .= self::tlv('dmap.returnedcount', 1);
 
-            $r = self::tlv('dmap.itemid', 1);
-            $r .= self::tlv('dmap.persistentid', 1);
-            $r .= self::tlv('dmap.itemname', 'Ampache');
+            $tlv = self::tlv('dmap.itemid', 1);
+            $tlv .= self::tlv('dmap.persistentid', 1);
+            $tlv .= self::tlv('dmap.itemname', 'Ampache');
             $counts = Catalog::count_medias();
-            $r .= self::tlv('dmap.itemcount', $counts['songs']);
-            $r .= self::tlv('dmap.containercount', count(Playlist::get_playlists()));
-            $r = self::tlv('dmap.listingitem', $r);
-            $output .= self::tlv('dmap.listing', $r);
+            $tlv .= self::tlv('dmap.itemcount', $counts['songs']);
+            $tlv .= self::tlv('dmap.containercount', count(Playlist::get_playlists()));
+            $tlv = self::tlv('dmap.listingitem', $tlv);
+            $output .= self::tlv('dmap.listing', $tlv);
 
             $output = self::tlv('daap.serverdatabases', $output);
         } elseif (count($input) == 2) {
@@ -395,16 +395,16 @@ class Daap_Api
                 $output .= self::tlv('dmap.specifiedtotalcount', count($playlists) + count($searches) + 1);
                 $output .= self::tlv('dmap.returnedcount', count($playlists) + count($searches) + 1);
 
-                $l = self::base_library();
+                $library = self::base_library();
                 foreach ($playlists as $playlist_id) {
                     $playlist = new Playlist($playlist_id);
                     $playlist->format();
-                    $l .= self::tlv_playlist($playlist);
+                    $library .= self::tlv_playlist($playlist);
                 }
                 foreach ($searches as $search_id) {
                     $playlist = new Search($search_id, 'song');
                     $playlist->format();
-                    $l .= self::tlv_playlist($playlist);
+                    $library .= self::tlv_playlist($playlist);
                 }
                 $output .= self::tlv('dmap.listing', $l);
 
@@ -479,7 +479,6 @@ class Daap_Api
                 }
             }
         }
-
         self::apiOutput($output);
 
         return true;
@@ -495,80 +494,80 @@ class Daap_Api
         if (array_search('all', $meta) > - 1) {
             $meta = self::$metas;
         }
-        $lo = '';
+        $tlv_out = '';
         foreach ($songs as $song) {
             $song->format();
             $output = self::tlv('dmap.itemkind', 2);
             $output .= self::tlv('dmap.itemid', $song->id);
 
-            foreach ($meta as $m) {
-                switch ($m) {
+            foreach ($meta as $tag) {
+                switch ($tag) {
                     case 'dmap.itemname':
-                        $output .= self::tlv($m, $song->f_title);
+                        $output .= self::tlv($tag, $song->f_title);
                         break;
                     case 'dmap.containeritemid':
                     /* case 'dmap.persistentid': */
-                        $output .= self::tlv($m, $song->id);
+                        $output .= self::tlv($tag, $song->id);
                         break;
                     case 'daap.songalbum':
-                        $output .= self::tlv($m, $song->f_album);
+                        $output .= self::tlv($tag, $song->f_album);
                         break;
                     case 'daap.songartist':
-                        $output .= self::tlv($m, $song->f_artist);
+                        $output .= self::tlv($tag, $song->f_artist);
                         break;
                     case 'daap.songcomposer':
-                        $output .= self::tlv($m, $song->f_composer);
+                        $output .= self::tlv($tag, $song->f_composer);
                         break;
                     case 'daap.songbitrate':
-                        $output .= self::tlv($m, (int) ($song->bitrate / 1000));
+                        $output .= self::tlv($tag, (int) ($song->bitrate / 1000));
                         break;
                     case 'daap.songcomment':
-                        $output .= self::tlv($m, $song->comment);
+                        $output .= self::tlv($tag, $song->comment);
                         break;
                     case 'daap.songdateadded':
-                        $output .= self::tlv($m, $song->addition_time);
+                        $output .= self::tlv($tag, $song->addition_time);
                         break;
                     case 'daap.songdatemodified':
                         if ($song->update_time) {
-                            $output .= self::tlv($m, $song->update_time);
+                            $output .= self::tlv($tag, $song->update_time);
                         }
                         break;
                     case 'daap.songdiscnumber':
                         $album = new Album($song->album);
-                        $output .= self::tlv($m, $album->disk);
+                        $output .= self::tlv($tag, $album->disk);
                         break;
                     case 'daap.songformat':
-                        $output .= self::tlv($m, $song->type);
+                        $output .= self::tlv($tag, $song->type);
                         break;
                     case 'daap.songgenre':
-                        $output .= self::tlv($m, Tag::get_display($song->tags, false, 'song'));
+                        $output .= self::tlv($tag, Tag::get_display($song->tags, false, 'song'));
                         break;
                     case 'daap.songsamplerate':
-                        $output .= self::tlv($m, $song->rate);
+                        $output .= self::tlv($tag, $song->rate);
                         break;
                     case 'daap.songsize':
-                        $output .= self::tlv($m, $song->size);
+                        $output .= self::tlv($tag, $song->size);
                         break;
                     case 'daap.songtime':
-                        $output .= self::tlv($m, $song->time * 1000);
+                        $output .= self::tlv($tag, $song->time * 1000);
                         break;
                     case 'daap.songtracknumber':
-                        $output .= self::tlv($m, $song->track);
+                        $output .= self::tlv($tag, $song->track);
                         break;
                     case 'daap.songuserrating':
                         $rating       = new Rating($song->id, "song");
                         $rating_value = $rating->get_average_rating();
-                        $output .= self::tlv($m, $rating_value);
+                        $output .= self::tlv($tag, $rating_value);
                         break;
                     case 'daap.songyear':
-                        $output .= self::tlv($m, $song->year);
+                        $output .= self::tlv($tag, $song->year);
                         break;
                 }
             }
-            $lo .= self::tlv('dmap.listingitem', $output);
+            $tlv_out .= self::tlv('dmap.listingitem', $output);
         }
 
-        return $lo;
+        return $tlv_out;
     }
 
     /**
@@ -576,14 +575,14 @@ class Daap_Api
      */
     public static function base_library()
     {
-        $p = self::tlv('dmap.itemid', Daap_Api::BASE_LIBRARY);
-        $p .= self::tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
-        $p .= self::tlv('dmap.itemname', 'Music');
-        $p .= self::tlv('daap.baseplaylist', 1);
+        $library = self::tlv('dmap.itemid', Daap_Api::BASE_LIBRARY);
+        $library .= self::tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
+        $library .= self::tlv('dmap.itemname', 'Music');
+        $library .= self::tlv('daap.baseplaylist', 1);
         $stats = Catalog::count_medias();
-        $p .= self::tlv('dmap.itemcount', $stats['songs']);
+        $library .= self::tlv('dmap.itemcount', $stats['songs']);
 
-        return self::tlv('dmap.listingitem', $p);
+        return self::tlv('dmap.listingitem', $library);
     }
 
     /**
@@ -596,16 +595,16 @@ class Daap_Api
         if (strtolower(get_class($playlist)) == 'search') {
             $isSmart = true;
         }
-        $id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
-        $p  = self::tlv('dmap.itemid', $id);
-        $p .= self::tlv('dmap.persistentid', $id);
-        $p .= self::tlv('dmap.itemname', $playlist->f_name);
-        $p .= self::tlv('dmap.itemcount', count($playlist->get_items()));
+        $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
+        $plist  = self::tlv('dmap.itemid', $pl_id);
+        $plist .= self::tlv('dmap.persistentid', $pl_id);
+        $plist .= self::tlv('dmap.itemname', $playlist->f_name);
+        $plist .= self::tlv('dmap.itemcount', count($playlist->get_items()));
         if ($isSmart) {
-            $p .= self::tlv('com.apple.itunes.smart-playlist', 1);
+            $plist .= self::tlv('com.apple.itunes.smart-playlist', 1);
         }
 
-        return self::tlv('dmap.listingitem', $p);
+        return self::tlv('dmap.listingitem', $plist);
     }
 
     /**
@@ -711,9 +710,9 @@ class Daap_Api
      */
     private static function tlv_version($tag, $value)
     {
-        $v = explode('.', $value);
-        if (count($v) == 4) {
-            return $tag . "\x00\x00\x00\x04" . pack("C", $v[0]) . pack("C", $v[1]) . pack("C", $v[2]) . pack("C", $v[3]);
+        $values = explode('.', $value);
+        if (count($values) == 4) {
+            return $tag . "\x00\x00\x00\x04" . pack("C", $values[0]) . pack("C", $values[1]) . pack("C", $values[2]) . pack("C", $values[3]);
         } else {
             debug_event('daap_api.class', 'Malformed `' . $tag . '` version `' . $value . '`.', 3);
         }

@@ -314,7 +314,7 @@ class fs
     }
 }
 
-if (isset($_GET['operation'])) {
+if (filter_has_var(INPUT_GET, 'operation')) {
     $fs = new fs($rootdir);
     try {
         $rslt = null;

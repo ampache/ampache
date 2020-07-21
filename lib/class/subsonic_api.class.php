@@ -955,15 +955,15 @@ class Subsonic_Api
     }
 
     /**
-     * @param $id
+     * @param $playlist_id
      * @param string $name
      * @param array $songsIdToAdd
      * @param array $songIndexToRemove
      * @param boolean $public
      */
-    private static function _updatePlaylist($id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true)
+    private static function _updatePlaylist($playlist_id, $name, $songsIdToAdd = array(), $songIndexToRemove = array(), $public = true)
     {
-        $playlist           = new Playlist($id);
+        $playlist           = new Playlist($playlist_id);
         $songsIdToAdd_count = count($songsIdToAdd);
         $newdata            = array();
         $newdata['name']    = (!empty($name)) ? $name : $playlist->name;
@@ -1141,33 +1141,33 @@ class Subsonic_Api
      */
     public static function getcoverart($input)
     {
-        $id   = str_replace('al-', '', self::check_parameter($input, 'id', true));
-        $id   = str_replace('pl-', '', $id);
-        $size = $input['size'];
+        $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
+        $sub_id = str_replace('pl-', '', $sub_id);
+        $size   = $input['size'];
 
         $art = null;
-        if (Subsonic_XML_Data::isArtist($id)) {
-            $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "artist");
-        } elseif (Subsonic_XML_Data::isAlbum($id)) {
-            $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "album");
-        } elseif (Subsonic_XML_Data::isSong($id)) {
-            $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "song");
+        if (Subsonic_XML_Data::isArtist($sub_id)) {
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "artist");
+        } elseif (Subsonic_XML_Data::isAlbum($sub_id)) {
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "album");
+        } elseif (Subsonic_XML_Data::isSong($sub_id)) {
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "song");
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
-                $song = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($id)));
+                $song = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($sub_id)));
                 $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
             }
-        } elseif (Subsonic_XML_Data::isPodcast($id)) {
-            $art = new Art(Subsonic_XML_Data::getAmpacheId($id), "podcast");
+        } elseif (Subsonic_XML_Data::isPodcast($sub_id)) {
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "podcast");
         } else {
             $listitems = array();
             // playlists and smartlists
-            if (Subsonic_XML_Data::isSmartPlaylist($id)) {
-                $playlist  = new Search(Subsonic_XML_Data::getAmpacheId($id));
+            if (Subsonic_XML_Data::isSmartPlaylist($sub_id)) {
+                $playlist  = new Search(Subsonic_XML_Data::getAmpacheId($sub_id));
                 $listitems = $playlist->get_items();
-            } elseif (Subsonic_XML_Data::isPlaylist($id)) {
-                $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($id));
+            } elseif (Subsonic_XML_Data::isPlaylist($sub_id)) {
+                $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($sub_id));
                 $listitems = $playlist->get_items();
             }
             $item      = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
@@ -2051,12 +2051,12 @@ class Subsonic_Api
      */
     public static function getpodcasts($input)
     {
-        $id              = $input['id'];
+        $podcast_id      = $input['id'];
         $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
 
         if (AmpConfig::get('podcast')) {
-            if ($id) {
-                $podcast = new Podcast(Subsonic_XML_Data::getAmpacheId($id));
+            if ($podcast_id) {
+                $podcast = new Podcast(Subsonic_XML_Data::getAmpacheId($podcast_id));
                 if ($podcast->id) {
                     $response = Subsonic_XML_Data::createSuccessResponse('getpodcasts');
                     Subsonic_XML_Data::addPodcasts($response, array($podcast), $includeEpisodes);
