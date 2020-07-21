@@ -261,7 +261,7 @@ class JSON_Data
      * @param bool $encode
      * @return array|string return JSON
      */
-    public static function artists($artists, $include = [], $user_id = false, $encode = true)
+    public static function artists($artists, $include = [], $user_id = null, $encode = true)
     {
         if (count($artists) > self::$limit or self::$offset > 0) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -330,7 +330,7 @@ class JSON_Data
      * @param bool $encode
      * @return array|string
      */
-    public static function albums($albums, $include = [], $user_id = false, $encode = true)
+    public static function albums($albums, $include = [], $user_id = null, $encode = true)
     {
         if (count($albums) > self::$limit or self::$offset > 0) {
             $albums = array_splice($albums, self::$offset, self::$limit);
@@ -667,7 +667,7 @@ class JSON_Data
      * @param bool $encode
      * @return array|string
      */
-    public static function songs($songs, $user_id = false, $encode = true)
+    public static function songs($songs, $user_id = null, $encode = true)
     {
         if (count($songs) > self::$limit or self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -810,7 +810,7 @@ class JSON_Data
      * @param integer $user_id
      * @return string    return JSON
      */
-    public static function democratic($object_ids=array(), $user_id = false)
+    public static function democratic($object_ids=array(), $user_id = null)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();

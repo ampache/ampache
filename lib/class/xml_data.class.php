@@ -477,7 +477,7 @@ class XML_Data
      * @param boolean $full_xml whether to return a full XML document or just the node.
      * @return    string    return xml
      */
-    public static function artists($artists, $include = [], $user_id = false, $full_xml = true)
+    public static function artists($artists, $include = [], $user_id = null, $full_xml = true)
     {
         if (count($artists) > self::$limit || self::$offset > 0) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -540,7 +540,7 @@ class XML_Data
      * @param boolean $full_xml whether to return a full XML document or just the node.
      * @return    string    return xml
      */
-    public static function albums($albums, $include = [], $user_id = false, $full_xml = true)
+    public static function albums($albums, $include = [], $user_id = null, $full_xml = true)
     {
         if ($include == null || $include == '') {
             $include = array();
@@ -828,7 +828,7 @@ class XML_Data
      * @param boolean $full_xml
      * @return string return xml
      */
-    public static function songs($songs, $user_id = false, $full_xml = true)
+    public static function songs($songs, $user_id = null, $full_xml = true)
     {
         if (count($songs) > self::$limit || self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -931,7 +931,7 @@ class XML_Data
      * @param integer $user_id
      * @return   string   return xml
      */
-    public static function videos($videos, $user_id = false)
+    public static function videos($videos, $user_id = null)
     {
         if (count($videos) > self::$limit or self::$offset > 0) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -967,7 +967,7 @@ class XML_Data
      * @param integer $user_id
      * @return   string     return xml
      */
-    public static function democratic($object_ids = array(), $user_id = false)
+    public static function democratic($object_ids = array(), $user_id = null)
     {
         $democratic = Democratic::get_current_playlist();
         $string     = '';
@@ -1260,7 +1260,7 @@ class XML_Data
      * @param integer $user_id
      * @return string|false
      */
-    public static function podcast(library_item $libitem, $user_id = false)
+    public static function podcast(library_item $libitem, $user_id = null)
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><rss />');
         $xml->addAttribute("xmlns:xmlns:atom", "http://www.w3.org/2005/Atom");
