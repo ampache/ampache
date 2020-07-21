@@ -461,24 +461,24 @@ class AmpacheVlc extends localplay_controller
         // here we look if there are song in the playlist when media libary is used
         if ($list['node']['node'][0]['leaf'][$counter]['attr']['uri']) {
             while ($list['node']['node'][0]['leaf'][$counter]) {
-                $songs[]  = htmlspecialchars_decode($list['node']['node'][0]['leaf'][$counter]['attr']['uri'], ENT_NOQUOTES);
+                $songs[]   = htmlspecialchars_decode($list['node']['node'][0]['leaf'][$counter]['attr']['uri'], ENT_NOQUOTES);
                 $song_id[] = $list['node']['node'][0]['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
             // if there is only one song look here,and media libary is used
         } elseif ($list['node']['node'][0]['leaf']['attr']['uri']) {
-            $songs[]  = htmlspecialchars_decode($list['node']['node'][0]['leaf']['attr']['uri'], ENT_NOQUOTES);
+            $songs[]   = htmlspecialchars_decode($list['node']['node'][0]['leaf']['attr']['uri'], ENT_NOQUOTES);
             $song_id[] = $list['node']['node'][0]['leaf']['attr']['id'];
         }
         // look for songs when media libary isn't used
         elseif ($list['node']['node']['leaf'][$counter]['attr']['uri']) {
             while ($list['node']['node']['leaf'][$counter]) {
-                $songs[]  = htmlspecialchars_decode($list['node']['node']['leaf'][$counter]['attr']['uri'], ENT_NOQUOTES);
+                $songs[]   = htmlspecialchars_decode($list['node']['node']['leaf'][$counter]['attr']['uri'], ENT_NOQUOTES);
                 $song_id[] = $list['node']['node']['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
         } elseif ($list['node']['node']['leaf']['attr']['uri']) {
-            $songs[]  = htmlspecialchars_decode($list['node']['node']['leaf']['attr']['uri'], ENT_NOQUOTES);
+            $songs[]   = htmlspecialchars_decode($list['node']['node']['leaf']['attr']['uri'], ENT_NOQUOTES);
             $song_id[] = $list['node']['node']['leaf']['attr']['id'];
         } else {
             return array();

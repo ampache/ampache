@@ -1187,7 +1187,7 @@ class Search extends playlist_object
         $sql .= ' ' . $limit_sql;
         $sql = trim((string) $sql);
 
-        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
+        debug_event('search.class', 'SQL get_items: ' . $sql, 5);
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
