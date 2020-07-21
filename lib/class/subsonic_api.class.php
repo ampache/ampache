@@ -600,7 +600,7 @@ class Subsonic_Api
                 $albums = Stats::get_recent("album", $size, $offset);
                 break;
             case "starred":
-                $albums = Userflag::get_latest('album', null, $size);
+                $albums = Userflag::get_latest('album', 0, $size);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);
@@ -2152,7 +2152,7 @@ class Subsonic_Api
      */
     public static function deletepodcastchannel($input)
     {
-        $id = self::check_parameter($input, 'id');
+        $id = (int) self::check_parameter($input, 'id');
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
             $podcast = new Podcast(Subsonic_XML_Data::getAmpacheId($id));

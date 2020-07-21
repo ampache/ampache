@@ -59,8 +59,8 @@ class AmpacheHeadphones
             return false;
         }
 
-        Preference::insert('headphones_api_url', T_('Headphones URL'), '', '25', 'string', 'plugins', $this->name);
-        Preference::insert('headphones_api_key', T_('Headphones API key'), '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('headphones_api_url', T_('Headphones URL'), '', 25, 'string', 'plugins', $this->name);
+        Preference::insert('headphones_api_key', T_('Headphones API key'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
     } // install

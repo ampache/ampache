@@ -25,7 +25,7 @@ require_once 'lib/init.php';
 // We special-case this so we can send a 302 if the delete succeeded
 if (Core::get_request('action') == 'delete_playlist') {
     // Check rights
-    $playlist = new Search($_REQUEST['playlist_id'], 'song');
+    $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
     if ($playlist->has_access()) {
         $playlist->delete();
         // Go elsewhere
@@ -78,13 +78,13 @@ switch ($_REQUEST['action']) {
         UI::access_denied();
     break;
     case 'show_playlist':
-        $playlist = new Search($_REQUEST['playlist_id'], 'song');
+        $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
         $playlist->format();
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
     break;
     case 'update_playlist':
-        $playlist = new Search($_REQUEST['playlist_id'], 'song');
+        $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
         if ($playlist->has_access()) {
             $playlist->parse_rules(Search::clean_request($_REQUEST));
             $playlist->update();

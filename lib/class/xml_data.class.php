@@ -106,7 +106,7 @@ class XML_Data
      * This generates a standard XML Error message
      * nothing fancy here...
      *
-     * @param    integer    $code    Error code
+     * @param    string    $code    Error code
      * @param    string    $string    Error message
      * @return    string    return error message xml
      */

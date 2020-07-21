@@ -86,7 +86,7 @@ class JSON_Data
      * This generates a JSON Error message
      * nothing fancy here...
      *
-     * @param    integer    $code    Error code
+     * @param    string    $code    Error code
      * @param    string    $string    Error message
      * @return    string    return error message JSON
      */

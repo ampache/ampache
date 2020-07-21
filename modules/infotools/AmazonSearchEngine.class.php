@@ -196,7 +196,7 @@ class AmazonSearch
     /**
      * Create an XML search string.
      *
-     * @param array() $terms The search terms to include within the query.
+     * @param array $terms The search terms to include within the query.
      * @param string $type The type of result desired.
      * @return array
      */

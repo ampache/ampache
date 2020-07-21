@@ -53,7 +53,7 @@ class AmpacheGoogleMaps
         if (Preference::exists('gmaps_api_key')) {
             return false;
         }
-        Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install

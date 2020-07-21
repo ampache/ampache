@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        $podcast = new Podcast($_REQUEST['podcast_id']);
+        $podcast = new Podcast((int) $_REQUEST['podcast_id']);
         if ($podcast->remove()) {
             show_confirmation(T_('No Problem'), T_('Podcast has been deleted'), AmpConfig::get('web_path') . '/browse.php?action=podcast');
         } else {

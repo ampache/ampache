@@ -56,7 +56,7 @@ class AmpacheTheaudiodb
         }
 
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', '75', 'string', 'plugins', $this->name);
+        Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -105,7 +105,7 @@ class AmpacheTheaudiodb
      * Returns song metadata for what we're passed in.
      * @param array $gather_types
      * @param array $media_info
-     * @return null
+     * @return array
      */
     public function get_metadata($gather_types, $media_info)
     {
@@ -113,9 +113,10 @@ class AmpacheTheaudiodb
         if (!in_array('music', $gather_types)) {
             debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', 5);
 
-            return null;
+            return array();
         }
 
+        $results = array();
         try {
             if (in_array('album', $gather_types)) {
                 debug_event('theaudiodb.plugin', 'Getting album metadata from TheAudioDb...', 5);

@@ -41,7 +41,7 @@ class Preference extends database_object
     /**
      * get_by_user
      * Return a preference for specific user identifier
-     * @param string $user_id
+     * @param integer $user_id
      * @param string $pref_name
      * @return array|mixed
      */
@@ -310,8 +310,8 @@ class Preference extends database_object
      * it does NOT sync up the users, that should be done independently
      * @param string $name
      * @param string $description
-     * @param string $default
-     * @param string $level
+     * @param string|integer $default
+     * @param integer $level
      * @param string $type
      * @param string $category
      * @param string $subcategory

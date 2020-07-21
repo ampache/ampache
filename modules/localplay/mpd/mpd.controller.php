@@ -97,7 +97,7 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::write($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('mpd_active', T_('MPD Active Instance'), '0', '25', 'integer', 'internal', 'mpd');
+        Preference::insert('mpd_active', T_('MPD Active Instance'), 0, 25, 'integer', 'internal', 'mpd');
 
         return true;
     } // install
@@ -546,6 +546,7 @@ class AmpacheMpd extends localplay_controller
     public function status()
     {
         $track = $this->_mpd->status['song'];
+        $array = array();
 
         /* Construct the Array */
         $array['state']     = $this->_mpd->status['state'];

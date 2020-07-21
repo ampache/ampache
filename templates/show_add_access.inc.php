@@ -55,16 +55,16 @@ $all          = T_('All'); ?>
                 <input type="hidden" name="type" value="rpc" />
                 <select name="addtype">
                     <option value="rpc"><?php echo $apirpc; ?></option>
-                    <option selected="selected" value="stream"><?php $apirpc . ' + ' . $streamaccess; ?></option>
-                    <option value="all"><?php $apirpc . ' + ' . $all; ?></option>
+                    <option selected="selected" value="stream"><?php echo $apirpc . ' + ' . $streamaccess; ?></option>
+                    <option value="all"><?php echo $apirpc . ' + ' . $all; ?></option>
         <?php
 } else {
     if ($action == 'show_add_local') { ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
                     <option value="network"><?php echo $localnetwork; ?></option>
-                    <option value="stream"><?php $localnetwork . ' + ' . $streamaccess; ?></option>
-                    <option selected="selected" value="all"><?php $localnetwork . ' + ' . $all; ?></option>
+                    <option value="stream"><?php echo $localnetwork . ' + ' . $streamaccess; ?></option>
+                    <option selected="selected" value="all"><?php echo $localnetwork . ' + ' . $all; ?></option>
         <?php
         } else { ?>
                 <select name="type">

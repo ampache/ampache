@@ -70,7 +70,7 @@ switch ($_REQUEST['action']) {
         }
 
         UI::show_header();
-        $share_id = Share::create_share($_REQUEST['type'], $_REQUEST['id'], $_REQUEST['allow_stream'], $_REQUEST['allow_download'], $_REQUEST['expire'], $_REQUEST['secret'], $_REQUEST['max_counter']);
+        $share_id = Share::create_share($_REQUEST['type'], (int) $_REQUEST['id'], make_bool($_REQUEST['allow_stream']), make_bool($_REQUEST['allow_download']), (int) $_REQUEST['expire'], $_REQUEST['secret'], (int) $_REQUEST['max_counter']);
 
         if (!$share_id) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_share.inc.php');

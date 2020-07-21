@@ -95,7 +95,7 @@ class AmpacheVlc extends localplay_controller
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('vlc_active', T_('VLC Active Instance'), '0', '25', 'integer', 'internal', 'vlc');
+        Preference::insert('vlc_active', T_('VLC Active Instance'), 0, 25, 'integer', 'internal', 'vlc');
 
         return true;
     } // install
@@ -454,41 +454,43 @@ class AmpacheVlc extends localplay_controller
         if (!$list) {
             return array();
         }
-        $counterforarray = 0;
+        $songs   = array();
+        $song_id = array();
+        $results = array();
+        $counter = 0;
         // here we look if there are song in the playlist when media libary is used
-        if ($list['node']['node'][0]['leaf'][$counterforarray]['attr']['uri']) {
-            while ($list['node']['node'][0]['leaf'][$counterforarray]) {
-                $songs[]  = htmlspecialchars_decode($list['node']['node'][0]['leaf'][$counterforarray]['attr']['uri'], ENT_NOQUOTES);
-                $songid[] = $list['node']['node'][0]['leaf'][$counterforarray]['attr']['id'];
-                $counterforarray++;
+        if ($list['node']['node'][0]['leaf'][$counter]['attr']['uri']) {
+            while ($list['node']['node'][0]['leaf'][$counter]) {
+                $songs[]  = htmlspecialchars_decode($list['node']['node'][0]['leaf'][$counter]['attr']['uri'], ENT_NOQUOTES);
+                $song_id[] = $list['node']['node'][0]['leaf'][$counter]['attr']['id'];
+                $counter++;
             }
             // if there is only one song look here,and media libary is used
         } elseif ($list['node']['node'][0]['leaf']['attr']['uri']) {
             $songs[]  = htmlspecialchars_decode($list['node']['node'][0]['leaf']['attr']['uri'], ENT_NOQUOTES);
-            $songid[] = $list['node']['node'][0]['leaf']['attr']['id'];
+            $song_id[] = $list['node']['node'][0]['leaf']['attr']['id'];
         }
         // look for songs when media libary isn't used
-        elseif ($list['node']['node']['leaf'][$counterforarray]['attr']['uri']) {
-            while ($list['node']['node']['leaf'][$counterforarray]) {
-                $songs[]  = htmlspecialchars_decode($list['node']['node']['leaf'][$counterforarray]['attr']['uri'], ENT_NOQUOTES);
-                $songid[] = $list['node']['node']['leaf'][$counterforarray]['attr']['id'];
-                $counterforarray++;
+        elseif ($list['node']['node']['leaf'][$counter]['attr']['uri']) {
+            while ($list['node']['node']['leaf'][$counter]) {
+                $songs[]  = htmlspecialchars_decode($list['node']['node']['leaf'][$counter]['attr']['uri'], ENT_NOQUOTES);
+                $song_id[] = $list['node']['node']['leaf'][$counter]['attr']['id'];
+                $counter++;
             }
         } elseif ($list['node']['node']['leaf']['attr']['uri']) {
             $songs[]  = htmlspecialchars_decode($list['node']['node']['leaf']['attr']['uri'], ENT_NOQUOTES);
-            $songid[] = $list['node']['node']['leaf']['attr']['id'];
+            $song_id[] = $list['node']['node']['leaf']['attr']['id'];
         } else {
             return array();
         }
 
-        $counterforarray = 0;
-
+        $counter = 0;
         foreach ($songs as $key => $entry) {
             $data = array();
 
             /* Required Elements */
-            $data['id']     = $songid[$counterforarray]; // id number of the files in the VLC playlist, needed for other operations
-            $data['raw']    = $entry;
+            $data['id']  = $song_id[$counter]; // id number of the files in the VLC playlist, needed for other operations
+            $data['raw'] = $entry;
 
             $url_data = $this->parse_url($entry);
             switch ($url_data['primary_key']) {
@@ -532,7 +534,7 @@ class AmpacheVlc extends localplay_controller
                         } // end switch on primary key type
 
             $data['track']    = $key + 1;
-            $counterforarray++;
+            $counter++;
             $results[] = $data;
         } // foreach playlist items
 

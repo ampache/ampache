@@ -55,7 +55,7 @@ class AmpacheTvdb
             return false;
         }
 
-        Preference::insert('tvdb_api_key', T_('TVDb API key'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('tvdb_api_key', T_('TVDb API key'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -104,7 +104,7 @@ class AmpacheTvdb
      * Returns song metadata for what we're passed in.
      * @param array $gather_types
      * @param $media_info
-     * @return null
+     * @return array
      */
     public function get_metadata($gather_types, $media_info)
     {
@@ -114,7 +114,7 @@ class AmpacheTvdb
         if (!in_array('tvshow', $gather_types)) {
             debug_event('tvdb.plugin', 'Not a valid media type, skipped.', 5);
 
-            return null;
+            return array();
         }
 
         try {

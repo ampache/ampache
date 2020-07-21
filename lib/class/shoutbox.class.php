@@ -172,7 +172,7 @@ class Shoutbox
      * This takes a type and an ID and returns a created object
      * @param string $type
      * @param integer $object_id
-     * @return null
+     * @return Object
      */
     public static function get_object($type, $object_id)
     {

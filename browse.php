@@ -121,6 +121,7 @@ switch ($_REQUEST['action']) {
         $browse->show_objects();
     break;
     case 'live_stream':
+    case 'tvshow':
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
@@ -142,10 +143,6 @@ switch ($_REQUEST['action']) {
         $browse->show_objects();
     break;
     case 'channel':
-        $browse->set_sort('id', 'ASC');
-        $browse->update_browse_from_session();
-        $browse->show_objects();
-    break;
     case 'broadcast':
         $browse->set_sort('id', 'ASC');
         $browse->update_browse_from_session();
@@ -156,14 +153,6 @@ switch ($_REQUEST['action']) {
             $browse->set_filter('catalog_enabled', '1');
         }
         $browse->set_sort('title', 'ASC');
-        $browse->update_browse_from_session();
-        $browse->show_objects();
-    break;
-    case 'tvshow':
-        if (AmpConfig::get('catalog_disable')) {
-            $browse->set_filter('catalog_enabled', '1');
-        }
-        $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
     break;

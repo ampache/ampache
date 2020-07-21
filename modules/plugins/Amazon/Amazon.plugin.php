@@ -57,11 +57,11 @@ class AmpacheAmazon
             return false;
         }
 
-        Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), '1', '75', 'integer', 'plugins', $this->name);
-        Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name);
+        Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name);
+        Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -131,7 +131,7 @@ class AmpacheAmazon
         }
 
         if (strlen(trim($data['amazon_max_results_pages']))) {
-            $this->amazon_max_results_pages = trim($data['amazon_max_results_pages']);
+            $this->amazon_max_results_pages = (int) trim($data['amazon_max_results_pages']);
         } else {
             $this->amazon_max_results_pages = 1;
         }

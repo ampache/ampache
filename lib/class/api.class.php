@@ -1448,7 +1448,7 @@ class Api
         }
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
-        debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], '5');
+        debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
             $playlist = new Playlist($uid);
@@ -2533,7 +2533,7 @@ class Api
             $description   = isset($input['description']) ? $input['description'] : $podcast->description;
             $stream        = isset($input['stream']) ? $input['stream'] : $podcast->allow_stream;
             $download      = isset($input['download']) ? $input['download'] : $podcast->allow_download;
-            $expires       = isset($input['expires']) ? podcast::get_expiry($input['expires']) : $podcast->expire_days;
+            $expires       = isset($input['expires']) ? Share::get_expiry($input['expires']) : $podcast->expire_days;
 
             $data = array(
                 'max_counter' => $podcast->max_counter,
@@ -2578,8 +2578,8 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = (string) scrub_in($input['filter']);
-        debug_event('api.class', 'User ' . $user->id . ' loading podcast: ' . $input['filter'], '5');
+        $uid  = (int) scrub_in($input['filter']);
+        debug_event('api.class', 'User ' . $user->id . ' loading podcast: ' . $input['filter'], 5);
         $podcast = new Podcast($uid);
         $items   = $podcast->get_episodes();
 

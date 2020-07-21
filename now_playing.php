@@ -56,10 +56,8 @@ $results = Stream::get_now_playing();
 
 if (Core::get_request('user_id') !== '') {
     if (empty($results)) {
-        debug_event('now_playing', 'no result; getting last song played instead', 5);
         $last_song = Stats::get_last_song(Core::get_request('user_id'));
-        $type      = $last_song['object_type'];
-        $media     = new $type($last_song['object_id']);
+        $media     = new Song($last_song['object_id']);
         $media->format();
         $client = new User($last_song['user']);
         $client->format();
@@ -69,6 +67,7 @@ if (Core::get_request('user_id') !== '') {
             'agent' => $last_song['agent'],
             'expire' => ''
         );
+        debug_event('now_playing', 'no result; getting last song played instead: ' . $media->id, 5);
     }
     // If the URL specifies a specific user, filter the results on that user
     $results = array_filter($results, function ($item) {

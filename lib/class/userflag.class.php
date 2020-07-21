@@ -278,7 +278,7 @@ class Userflag extends database_object
     /**
      * get_latest_sql
      * Get the latest sql
-     * @param string|null $type
+     * @param string $type
      * @param string $user_id
      * @return string
      */
@@ -320,11 +320,11 @@ class Userflag extends database_object
      * Get the latest user flagged objects
      * @param string $type
      * @param string $user_id
-     * @param string $count
-     * @param string $offset
+     * @param integer $count
+     * @param integer $offset
      * @return array
      */
-    public static function get_latest($type = null, $user_id = null, $count = '', $offset = '')
+    public static function get_latest($type = null, $user_id = null, $count = null, $offset = null)
     {
         if (!$count) {
             $count = AmpConfig::get('popular_threshold');

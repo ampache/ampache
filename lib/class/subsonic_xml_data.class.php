@@ -939,7 +939,7 @@ class Subsonic_XML_Data
         if ($video->year > 0) {
             $xvideo->addAttribute('year', (string) $video->year);
         }
-        $tags = Tag::get_object_tags('video', (string) $video->id);
+        $tags = Tag::get_object_tags('video', (int) $video->id);
         if (count($tags) > 0) {
             $xvideo->addAttribute('genre', (string) $tags[0]['name']);
         }

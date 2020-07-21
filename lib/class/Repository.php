@@ -69,7 +69,7 @@ class Repository
     /**
      *
      * @param integer $object_id
-     * @return DatabaseObject
+     * @return Model\MetadataField
      */
     public function findById($object_id)
     {

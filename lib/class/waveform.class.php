@@ -121,7 +121,6 @@ class Waveform
                                 Stream::kill_process($transcoder);
 
                                 $waveform = self::create_waveform($tmpfile);
-                                //$waveform = self::create_waveform("C:\\tmp\\test.wav");
 
                                 if (unlink($tmpfile) === false) {
                                     throw new RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked');
@@ -236,7 +235,7 @@ class Waveform
     /**
      * Create waveform from song file.
      * @param string $filename
-     * @return null|string
+     * @return string|null
      */
     protected static function create_waveform($filename)
     {
