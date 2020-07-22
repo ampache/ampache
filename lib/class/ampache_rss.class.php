@@ -108,7 +108,7 @@ class Ampache_RSS
      */
     public function get_description()
     {
-        //FIXME: For now don't do any kind of translating
+        // FIXME: For now don't do any kind of translating
         return 'Ampache RSS Feeds';
     } // get_description
 
@@ -224,7 +224,7 @@ class Ampache_RSS
      */
     public static function load_recently_played()
     {
-        //FIXME: The time stuff should be centralized, it's currently in two places, lame
+        // FIXME: The time stuff should be centralized, it's currently in two places, lame
 
         $time_unit = array('', T_('seconds ago'), T_('minutes ago'), T_('hours ago'), T_('days ago'), T_('weeks ago'), T_('months ago'), T_('years ago'));
         $data      = Song::get_recently_played();

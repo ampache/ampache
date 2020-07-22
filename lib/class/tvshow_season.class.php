@@ -55,7 +55,7 @@ class TVShow_Season extends database_object implements library_item
         } // foreach info
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * garbage_collection

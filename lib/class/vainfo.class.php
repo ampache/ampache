@@ -831,7 +831,7 @@ class vainfo
         $parsed      = array();
 
         foreach ($tags as $tag => $data) {
-            //debug_event('vainfo.class', 'Vorbis tag: ' . $tag . ' value: ' . $data[0], 5);
+            // debug_event('vainfo.class', 'Vorbis tag: ' . $tag . ' value: ' . $data[0], 5);
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
@@ -932,7 +932,7 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //debug_event('vainfo.class', 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0], 5);
+            // debug_event('vainfo.class', 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0], 5);
             switch (strtolower($tag)) {
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
@@ -1250,12 +1250,12 @@ class vainfo
                             if (isset($matches[5])) {
                                 $results['tvshow_episode'] = $matches[5];
                             } else {
-                                //match pattern like 10.episode name.mp4
+                                // match pattern like 10.episode name.mp4
                                 if (preg_match("~^(\d\d)[\_\-\.\s]?(.*)~", $file, $matches)) {
                                     $results['tvshow_episode'] = $matches[1];
                                     $results['original_name']  = $this->formatVideoName($matches[2]);
                                 } else {
-                                    //Fallback to match any 3-digit Season/Episode that fails the standard pattern above.
+                                    // Fallback to match any 3-digit Season/Episode that fails the standard pattern above.
                                     preg_match("~(\d)(\d\d)[\_\-\.\s]?~", $file, $matches);
                                     $results['tvshow_episode'] = $matches[2];
                                 }
@@ -1352,7 +1352,7 @@ class vainfo
         $commonabbr[] = '[1|2][0-9]{3}';   //Remove release year
         $abbr_count   = count($commonabbr);
 
-        //scan for brackets, braces, etc and ignore case.
+        // scan for brackets, braces, etc and ignore case.
         for ($count=0; $count < $abbr_count;$count++) {
             $commonabbr[$count] = "~\[*|\(*|\<*|\{*\b(?i)" . trim((string) $commonabbr[$count]) . "\b\]*|\)*|\>*|\}*~";
         }

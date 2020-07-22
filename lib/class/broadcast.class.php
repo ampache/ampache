@@ -88,7 +88,7 @@ class Broadcast extends database_object implements library_item
         }
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * Update broadcast state.

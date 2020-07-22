@@ -76,6 +76,6 @@ switch ($_REQUEST['action']) {
 
 show_table_render(false, true);
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

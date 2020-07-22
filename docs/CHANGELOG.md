@@ -23,6 +23,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
   * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
 * When labels are enabled, automatically generate and assosciate artists with their publisher/label tag values.
+* Added/enforced stat recording for podcast_episodes and videos.
 * NEW db options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
@@ -50,10 +51,14 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Change to numeric searches renamed is -> equals and is not -> does not equal
 * Allow negative track numbers; reducing the maximum track number to 32767.
 * Localplay volume controll moved to the playlist (rightbar)
+* Podcast_Episode::check_play_history Podcast_Episode::set_played (match song.class versions for stat recording)
+* Video::check_play_history Video::set_played (match song.class versions for stat recording)
+* php_cs rules for line endings
 
 ### Removed
 
 * Removed EchoNest api / song previews
+* Removed function User::update_user_stats (used in play index only and useless)
 
 ### Fixed
 

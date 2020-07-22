@@ -380,7 +380,7 @@ class JSON_Data
                 $songs = $album->song_count;
             }
 
-            //count multiple disks
+            // count multiple disks
             if ($album->allow_group_disks) {
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
@@ -990,6 +990,4 @@ class JSON_Data
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // timeline
-
-    //TODO: Podcast
 } // end json_data.class

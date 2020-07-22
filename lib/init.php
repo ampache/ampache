@@ -115,9 +115,6 @@ $results['cookie_secure'] = $results['session_cookiesecure'];
 // Library and module includes we can't do with the autoloader
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 
-//require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.phpmailer.php';
-//require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.smtp.php';
-
 /* Temp Fixes */
 $results = Preference::fix_preferences($results);
 

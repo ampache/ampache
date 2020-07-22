@@ -179,8 +179,8 @@ class Useractivity extends database_object
 
             return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
         }
-
         // This is probably a good feature to keep by default
+        debug_event('useractivity.class', 'Inserting details for ' . $object_type . '. {' . $object_id . '}', 5);
         $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
 
         return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
@@ -284,14 +284,8 @@ class Useractivity extends database_object
         echo '<div>';
         $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         $fdate       = get_datetime($time_format, (int) $this->activity_date);
-        /*
-        echo '<div class="shoutbox-date">';
-        if ($user->f_avatar_mini) {
-            echo '<a href="' . $user->link . '">' . $user->f_avatar_mini . '</a> ';
-        }
-         */
+
         echo $fdate . ' ';
-        //echo '</div>';
 
         $descr = $user->f_link . ' ';
         switch ($this->action) {
@@ -315,7 +309,6 @@ class Useractivity extends database_object
                 break;
         }
         $descr .= ' ' . $libitem->f_link;
-        //echo '<div>';
         echo $descr;
 
         /*
@@ -344,4 +337,4 @@ class Useractivity extends database_object
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
-} //end useractivity.class
+} // end useractivity.class

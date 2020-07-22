@@ -61,7 +61,7 @@ class Share extends database_object
         }
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * delete_share
@@ -456,7 +456,7 @@ class Share extends database_object
                 $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
             }
         } else {
-            //fall back to config defaults
+            // fall back to config defaults
             $expire_days = AmpConfig::get('share_expire');
         }
 

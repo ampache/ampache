@@ -98,22 +98,21 @@ if (!empty($username) && isset($auth)) {
     $user = User::get_from_username($username);
 
     if ($user->disabled) {
+        // if user disabled
         $auth['success'] = false;
         AmpError::add('general', T_('Account is disabled, please contact the administrator'));
         debug_event('login.class', scrub_out($username) . ' is disabled and attempted to login', 1);
-    } // if user disabled
-    elseif (AmpConfig::get('prevent_multiple_logins')) {
+    } elseif (AmpConfig::get('prevent_multiple_logins')) {
+        // if logged in multiple times
         $session_ip = $user->is_logged_in();
         $current_ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         if ($current_ip && ($current_ip != $session_ip)) {
             $auth['success'] = false;
             AmpError::add('general', T_('User is already logged in'));
             debug_event('login.class', scrub_out($username) . ' is already logged in from ' . (string) $session_ip . ' and attempted to login from ' . $current_ip, 1);
-        } // if logged in multiple times
-    } // if prevent multiple logins
-    elseif (AmpConfig::get('auto_create') && $auth['success'] && ! $user->username) {
-        /* This is run if we want to autocreate users who don't
-        exist (useful for non-mysql auth) */
+        }
+    } elseif (AmpConfig::get('auto_create') && $auth['success'] && ! $user->username) {
+        // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
         $access     = User::access_name_to_level(AmpConfig::get('auto_user', 'guest'));
         $fullname   = array_key_exists('name', $auth) ? $auth['name']    : '';
         $email      = array_key_exists('email', $auth) ? $auth['email']   : '';
@@ -121,7 +120,7 @@ if (!empty($username) && isset($auth)) {
         $state      = array_key_exists('state', $auth) ? $auth['state']   : '';
         $city       = array_key_exists('city', $auth) ? $auth['city']    : '';
 
-        /* Attempt to create the user */
+        // Attempt to create the user
         if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {
             $user = User::get_from_username($username);
 
@@ -132,10 +131,9 @@ if (!empty($username) && isset($auth)) {
             $auth['success'] = false;
             AmpError::add('general', T_('Unable to create a local account'));
         }
-    } // End if auto_create
+    } // end if auto_create
 
-    // This allows stealing passwords validated by external means
-    // such as LDAP
+    // This allows stealing passwords validated by external means such as LDAP
     if (AmpConfig::get('auth_password_save') && $auth['success'] && isset($password)) {
         $user->update_password($password);
     }

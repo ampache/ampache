@@ -1007,13 +1007,16 @@ class Song extends database_object implements media, library_item
      */
     public function set_played($user, $agent, $location, $date = null)
     {
-        if ($this->check_play_history($user, $agent)) {
-            Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
-            Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date, $this->time);
-            Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date, $this->time);
+        // ignore duplicates or skip the last track
+        if (!$this->check_play_history($user, $agent)) {
+            return false;
         }
+        // insert stats for each object type
+        Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date, $this->time);
+        Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date, $this->time);
+        Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
+        // If it hasn't been played, set it
         if (!$this->played) {
-            /* If it hasn't been played, set it! */
             self::update_played(true, $this->id);
         }
 
@@ -1030,16 +1033,11 @@ class Song extends database_object implements media, library_item
      */
     public function check_play_history($user, $agent)
     {
-        if ($user < 1) {
-            debug_event('song.class', 'Not recording stats for user (' . $user . ')', 5);
-
-            return false;
-        }
-        $previous = Stats::get_last_song($user, $agent);
+        $previous = Stats::get_last_play($user, $agent);
         $diff     = time() - (int) $previous['date'];
 
         // this song was your last play and the length between plays is too short.
-        if ($previous['object_id'] == $this->id && $diff <= ($this->time - 5)) {
+        if ($previous['object_id'] == $this->id && $diff <= ($this->time - 5) && $diff > 0) {
             debug_event('song.class', 'Repeated song too quickly (' . $diff . 's), not recording stats for {' . $previous['object_id'] . '}', 3);
 
             return false;
@@ -1054,10 +1052,10 @@ class Song extends database_object implements media, library_item
         }
 
         // when the difference between recordings is too short, the song has been skipped, so note that
-        if ($diff < $skiptime || ($diff < $skiptime && $previous['time'] > $skiptime)) {
-            debug_event('song.class', 'Last song played within skip limit (' . $diff . 's). Skipping {' . $previous['object_id'] . '}', 3);
-            Stats::skip_last_song($previous['date'], $previous['agent'], $previous['user']);
-            // delete artist and album from object_count to keep stats in line
+        if (($diff < $skiptime || ($diff < $skiptime && $previous['time'] > $skiptime)) && $diff > 0) {
+            debug_event('song.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . 's). Skipping {' . $previous['object_id'] . '}', 3);
+            Stats::skip_last_play($previous['date'], $previous['agent'], $previous['user']);
+            // delete song, podcast_episode and video from user_activity to keep stats in line
             Useractivity::del_activity($previous['date'], 'song', $previous['user']);
         }
 
@@ -1501,7 +1499,7 @@ class Song extends database_object implements media, library_item
     {
         self::_update_item('artist', $new_artist, $song_id, 50);
 
-        //migrate stats for the old album
+        // migrate stats for the old artist
         Stats::migrate('artist', $old_artist, $new_artist);
         UserActivity::migrate('artist', $old_artist, $new_artist);
         Recommendation::migrate('artist', $old_artist, $new_artist);
@@ -1524,7 +1522,7 @@ class Song extends database_object implements media, library_item
     {
         self::_update_item('album', $new_album, $song_id, 50, true);
 
-        //migrate stats for the old album
+        // migrate stats for the old album
         Stats::migrate('album', $old_album, $new_album);
         UserActivity::migrate('album', $old_album, $new_album);
         Recommendation::migrate('album', $old_album, $new_album);
@@ -1889,7 +1887,7 @@ class Song extends database_object implements media, library_item
         // Some additional fields
         $fields['tag']     = true;
         $fields['catalog'] = true;
-        //FIXME: These are here to keep the ideas, don't want to have to worry about them for now
+        // FIXME: These are here to keep the ideas, don't want to have to worry about them for now
         //        $fields['rating'] = true;
         //        $fields['recently Played'] = true;
 

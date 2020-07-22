@@ -586,7 +586,7 @@ class XML_Data
                 $songs = $album->song_count;
             }
 
-            //count multiple disks
+            // count multiple disks
             if ($album->allow_group_disks) {
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
@@ -976,7 +976,7 @@ class XML_Data
             $song = new $data['object_type']($data['object_id']);
             $song->format();
 
-            //FIXME: This is duplicate code and so wrong, functions need to be improved
+            // FIXME: This is duplicate code and so wrong, functions need to be improved
             $tag           = new Tag($song->tags['0']);
             $song->genre   = $tag->id;
             $song->f_genre = $tag->name;

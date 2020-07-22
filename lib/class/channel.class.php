@@ -71,7 +71,7 @@ class Channel extends database_object implements media, library_item
         }
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * update_start
@@ -596,7 +596,7 @@ class Channel extends database_object implements media, library_item
                     $this->media_bytes_streamed += strlen((string) $chunk);
 
                     if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string) $this->stream_type) == "ogg") || $this->header_chunk_remainder) {
-                        //debug_event('channel.class', 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
+                        // debug_event('channel.class', 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
                         $clchunk = $chunk;
 
                         if ($this->header_chunk_remainder) {
@@ -624,14 +624,12 @@ class Channel extends database_object implements media, library_item
                                     $this->header_chunk_remainder = (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces - strlen((string) $clchunk));
                                 }
                                 $clchunk = substr($clchunk, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
-                            } else { //no more interesting headers
+                            } else {
+                                // no more interesting headers
                                 $clchunk = '';
                             }
                         }
                     }
-                    //debug_event('channel.class', 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
-                    //debug_event('channel.class', 'CHUNK : ' . $chunk, 5);
-                    //debug_event('channel.class', 'Chunk size: ' . strlen((string) $chunk), 5);
 
                     // End of file, prepare to move on for next call
                     if (feof($this->transcoder['handle'])) {
@@ -707,25 +705,31 @@ class Channel extends database_object implements media, library_item
     }
 
     /**
-     * @param $user
-     * @param $agent
-     * @param $location
-     * @return mixed|void
+     * @param integer $user
+     * @param string $agent
+     * @param array $location
+     * @param integer $date
+     * @return boolean
      */
-    public function set_played($user, $agent, $location)
+    public function set_played($user, $agent, $location, $date = null)
     {
         // Do nothing
+        unset($user, $agent, $location, $date);
+
+        return false;
     }
 
     /**
      * @param $user
      * @param $agent
-     * @return mixed|void
+     * @return boolean
      */
     public function check_play_history($user, $agent)
     {
-        unset($user, $agent);
         // Do nothing
+        unset($user, $agent);
+
+        return false;
     }
 
     /**

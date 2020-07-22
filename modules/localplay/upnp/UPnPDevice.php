@@ -179,8 +179,8 @@ class UPnPDevice
     public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0)
     {
         $args     = array( 'InstanceID' => $instance_id );
-        ///$response = \Format::forge($response, 'xml:ns')->to_array();
-        ///return $response['s:Body']['u:' . $command . 'Response'];
+        //$response = \Format::forge($response, 'xml:ns')->to_array();
+        //return $response['s:Body']['u:' . $command . 'Response'];
 
         return $this->sendRequestToDevice($command, $args, $type);
     }

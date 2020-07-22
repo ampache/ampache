@@ -1408,7 +1408,7 @@ class Api
             // Playlists
             $playlist = new Playlist($uid);
         } else {
-            //Smartlists
+            // Smartlists
             $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
         }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
@@ -1453,7 +1453,7 @@ class Api
             // Playlists
             $playlist = new Playlist($uid);
         } else {
-            //Smartlists
+            // Smartlists
             $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
         }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
@@ -1747,25 +1747,25 @@ class Api
         $user   = User::get_from_username(Session::username($input['auth']));
         $array  = array();
 
-        //count for search rules
+        // count for search rules
         $rule_count = 1;
 
         $array['type'] = 'song';
         if (in_array($mode, array('forgotten', 'recent'), true)) {
             debug_event('api.class', 'playlist_generate ' . $mode, 5);
-            //played songs
+            // played songs
             $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
 
-            //not played for a while or played recently
+            // not played for a while or played recently
             $array['rule_' . $rule_count]               = 'last_play';
             $array['rule_' . $rule_count . '_input']    = AmpConfig::get('stats_threshold');
             $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
             $rule_count++;
         } elseif ($mode == 'unplayed') {
             debug_event('api.class', 'playlist_generate unplayed', 5);
-            //unplayed songs
+            // unplayed songs
             $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 1;
             $rule_count++;
@@ -3229,7 +3229,7 @@ class Api
         // internal scrobbling (user_activity and object_count tables)
         $item->set_played($user_id, $agent, array(), time());
 
-        //scrobble plugins
+        // scrobble plugins
         User::save_mediaplay($user, $item);
 
         self::message('success', 'successfully recorded play: ' . $item->id, null, $input['format']);
@@ -3285,7 +3285,7 @@ class Api
             return false;
         }
 
-        //validate minimum required options
+        // validate minimum required options
         debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
             self::message('error', T_('Invalid input options'), '401', $input['format']);
@@ -3315,7 +3315,7 @@ class Api
             // internal scrobbling (user_activity and object_count tables)
             $item->set_played($user_id, $agent, array(), $date);
 
-            //scrobble plugins
+            // scrobble plugins
             User::save_mediaplay($user, $item);
 
             self::message('success', 'successfully scrobbled: ' . $scrobble_id, null, $input['format']);

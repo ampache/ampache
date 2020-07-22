@@ -23,7 +23,7 @@
  $web_path = AmpConfig::get('web_path');
 UI::show_box_top("Song Lyrics", 'box box_lyrics_song');
 
-/* Prepare the variables */
+// Prepare the variables
 $title  = scrub_out($song->title);
 $album  = scrub_out($song->f_album_full);
 $artist = scrub_out($song->f_artist_full); ?>

@@ -290,7 +290,7 @@ class Shoutbox
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
 
         return true;
-    } //format
+    } // format
 
     /**
      * delete

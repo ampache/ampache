@@ -56,7 +56,7 @@ $results = Stream::get_now_playing();
 
 if (Core::get_request('user_id') !== '') {
     if (empty($results)) {
-        $last_song = Stats::get_last_song(Core::get_request('user_id'));
+        $last_song = Stats::get_last_play(Core::get_request('user_id'));
         $media     = new Song($last_song['object_id']);
         $media->format();
         $client = new User($last_song['user']);

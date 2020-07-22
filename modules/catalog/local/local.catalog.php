@@ -351,7 +351,7 @@ class Catalog_local extends Catalog
 
             /* Skip to the next file */
             return true;
-        } //it's a directory
+        } // it's a directory
 
         $is_audio_file = Catalog::is_audio_file($full_file);
         $is_video_file = false;
@@ -446,8 +446,9 @@ class Catalog_local extends Catalog
                     UI::update_text('add_dir_' . $this->id, scrub_out($file));
                 } // update our current state
             } // if it's not an m3u
+
             return true;
-        } //if it matches the pattern
+        } // if it matches the pattern
         else {
             if ($counter % 1000 == 0) {
                 debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
@@ -718,7 +719,7 @@ class Catalog_local extends Catalog
 
                 // Store it in an array we'll delete it later...
                 $dead[] = $results['id'];
-            } //if error
+            } // if error
             else {
                 if (!Core::is_readable(Core::conv_lc_file($results['file']))) {
                     debug_event('local.catalog', $results['file'] . ' is not readable, but does exist', 1);
@@ -746,13 +747,13 @@ class Catalog_local extends Catalog
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
             $sql = "DELETE FROM `$media_type` WHERE `file` = '" . $file . "'";
             Dba::write($sql);
-        } //if error
+        } // if error
         else {
             if (!Core::is_readable(Core::conv_lc_file($file))) {
                 debug_event('local.catalog', $file . ' is not readable, but does exist', 1);
             }
         }
-    } //clean_file
+    } // clean_file
 
     /**
      * insert_local_song
@@ -940,13 +941,13 @@ class Catalog_local extends Catalog
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($full_file));
 
-        //If it's found then return true
+        // If it's found then return true
         if (Dba::fetch_row($db_results)) {
             return true;
         }
 
         return false;
-    } //check_local_mp3
+    } // check_local_mp3
 
     /**
      * @param string $file_path

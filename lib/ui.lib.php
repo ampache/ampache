@@ -649,7 +649,7 @@ function xml_get_header($type)
         default:
             return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     }
-} //xml_get_header
+} // xml_get_header
 
 /**
  * xml_get_footer

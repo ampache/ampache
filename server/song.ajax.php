@@ -42,7 +42,7 @@ switch ($_REQUEST['action']) {
         $song->enabled = $new_enabled;
         $song->format();
 
-        //Return the new Ajax::button
+        // Return the new Ajax::button
         $id           = 'button_flip_state_' . $song->id;
         if ($new_enabled) {
             $button     = 'disable';

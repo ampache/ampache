@@ -67,7 +67,7 @@
                 <?php echo UI::get_icon('preferences', T_('Preferences')); ?>
             </a>
         <?php
-            //FIXME: Fix this for the extra permission levels
+            // FIXME: Fix this for the extra permission levels
             if ($libitem->disabled == '1') {
                 echo "<a href=\"" . $web_path . "/admin/users.php?action=enable&amp;user_id=$libitem->id\">" . UI::get_icon('enable', T_('Enable')) . "</a>";
             } else {

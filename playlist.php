@@ -188,6 +188,6 @@ switch ($_REQUEST['action']) {
     break;
 } // switch on the action
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

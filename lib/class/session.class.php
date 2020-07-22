@@ -114,11 +114,10 @@ class Session
     /**
      * garbage_collection
      *
-     * This function is randomly called and it cleans up the spoo
+     * This function is randomly called and it cleans up the expired sessions
      */
     public static function garbage_collection()
     {
-        debug_event('session.class', 'Session cleanup started', 4);
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
         Dba::write($sql, array(time()));
 
@@ -130,7 +129,6 @@ class Session
         Tmp_Playlist::garbage_collection();
         Stream_Playlist::garbage_collection();
         Song_Preview::garbage_collection();
-        debug_event('session.class', 'Session cleanup ended', 4);
     }
 
     /**
@@ -159,7 +157,7 @@ class Session
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            //debug_event('session.class', 'Read session from key ' . $key . ' ' . $results[$column], 3);
+            // debug_event('session.class', 'Read session from key ' . $key . ' ' . $results[$column], 3);
             return $results[$column];
         }
 

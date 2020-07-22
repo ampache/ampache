@@ -152,10 +152,10 @@ class scrobbler
             'api_key' => $this->api_key,
             'token' => $token
             );
-            //sign the call
+            // sign the call
             $sig             = $this->get_api_sig($vars);
             $vars['api_sig'] = $sig;
-            //call the getSession API
+            // call the getSession API
             $response=$this->call_url('/2.0/', 'GET', $vars);
             $xml     = simplexml_load_string($response);
             if ($xml) {
@@ -232,14 +232,14 @@ class scrobbler
             return false;
         }
 
-        //sort array by timestamp
+        // sort array by timestamp
         ksort($this->queued_tracks);
 
         // Build the query string (encoded per RFC1738 by the call method)
         $count   = 0;
         $vars    = array();
         foreach ($this->queued_tracks as $track) {
-            //construct array of parameters for each song
+            // construct array of parameters for each song
             $vars["artist[$count]"]      = $track['artist'];
             $vars["track[$count]"]       = $track['title'];
             $vars["timestamp[$count]"]   = $track['time'];

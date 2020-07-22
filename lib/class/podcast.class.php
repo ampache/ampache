@@ -68,7 +68,7 @@ class Podcast extends database_object implements library_item
         } // foreach info
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * garbage_collection
@@ -319,7 +319,7 @@ class Podcast extends database_object implements library_item
      * create
      * @param array $data
      * @param boolean $return_id
-     * @return PDOStatement|boolean|integer
+     * @return PDOStatement|boolean
      */
     public static function create(array $data, $return_id = false)
     {

@@ -166,7 +166,7 @@ class Stream
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
         } elseif ($bit_rate > (int) $options['bitrate'] || $bit_rate = 0) {
-            //use the file bitrate if lower than the gathered
+            // use the file bitrate if lower than the gathered
             $bit_rate = $options['bitrate'];
         }
 
@@ -284,10 +284,8 @@ class Stream
             $cmdPrefix = "start /B ";
         }
 
-
         debug_event('stream.class', "Transcode command prefix: " . $cmdPrefix, 3);
 
-        $parray  = array();
         $process = proc_open($cmdPrefix . $command, $descriptors, $pipes);
         if ($process === false) {
             debug_event('stream.class', 'Transcode command failed to open.', 1);

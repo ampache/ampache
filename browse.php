@@ -84,12 +84,12 @@ switch ($_REQUEST['action']) {
         $browse->show_objects();
     break;
     case 'tag':
-        //FIXME: This whole thing is ugly, even though it works.
+        // FIXME: This whole thing is ugly, even though it works.
         $browse->set_sort('count', 'ASC');
         // This one's a doozy
         $browse_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'artist';
         $browse->set_simple_browse(false);
-        $browse->save_objects(Tag::get_tags($browse_type, 0, 'name'));   // Should add a pager?
+        $browse->save_objects(Tag::get_tags($browse_type, 0, 'name')); // Should add a pager?
         $object_ids = $browse->get_saved();
         $keys       = array_keys($object_ids);
         Tag::build_cache($keys);
@@ -217,6 +217,6 @@ switch ($_REQUEST['action']) {
 
 $browse->store();
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

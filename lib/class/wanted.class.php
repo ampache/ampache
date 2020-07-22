@@ -106,7 +106,7 @@ class Wanted extends database_object
         }
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * get_missing_albums

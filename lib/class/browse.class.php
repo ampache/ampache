@@ -392,14 +392,14 @@ class Browse extends Query
     }
 
     /**
-      * set_filter_from_request
-     * //FIXME
+     * set_filter_from_request
+     * // FIXME
      * @param array $request
      */
     public function set_filter_from_request($request)
     {
         foreach ($request as $key => $value) {
-            //reinterpret v as a list of int
+            // reinterpret v as a list of int
             $list = explode(',', (string) $value);
             $ok   = true;
             foreach ($list as $item) {

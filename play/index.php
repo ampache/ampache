@@ -60,6 +60,7 @@ $bitrate      = 0;
 $maxbitrate   = 0;
 $resolution   = '';
 $quality      = 0;
+$time         = time();
 
 if (isset($_REQUEST['player'])) {
     $player = $_REQUEST['player'];
@@ -449,7 +450,7 @@ if ($action == 'download' && !$original) {
             Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
         }
     } else {
-        Stats::insert($type, $media->id, $uid, 'share.php', null, 'download');
+        Stats::insert($type, $media->id, $uid, 'share.php', array(), 'download');
     }
 
     // Check to see if we should be throttling because we can get away with it
@@ -657,8 +658,6 @@ if ($range_values > 0 && ($start > 0 || $end > 0)) {
             header('Content-Range: bytes ' . $range);
         }
     }
-} else {
-    debug_event('play/index', 'Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 }
 
 if (!isset($_REQUEST['segment'])) {
@@ -677,12 +676,7 @@ if (!isset($_REQUEST['segment'])) {
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
-                if ($use_auth) {
-                    $user = new User($uid);
-                    $user->update_stats($type, $media->id, $agent, $location);
-                } else {
-                    Stats::insert($type, $media->id, 0, $agent, $location, 'stream');
-                }
+                $media->set_played($uid, $agent, $location, $time);
             }
         } elseif (!$share_id && !$record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
@@ -690,7 +684,7 @@ if (!isset($_REQUEST['segment'])) {
                 Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
             }
         } elseif ($share_id) {
-            Stats::insert($type, $media->id, $uid, 'share.php', null, 'stream');
+            Stats::insert($type, $media->id, $uid, 'share.php', array(), 'stream');
         }
     }
 }

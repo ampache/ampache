@@ -755,11 +755,16 @@ class Video extends database_object implements media, library_item
      * @param integer $user
      * @param string $agent
      * @param array $location
+     * @param integer $date
      * @return boolean
      */
-    public function set_played($user, $agent, $location)
+    public function set_played($user, $agent, $location, $date = null)
     {
-        Stats::insert('video', $this->id, $user, $agent, $location);
+        // ignore duplicates or skip the last track
+        if (!$this->check_play_history($user, $agent)) {
+            return false;
+        }
+        Stats::insert('video', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
 
         if ($this->played) {
             return true;
@@ -774,12 +779,37 @@ class Video extends database_object implements media, library_item
     /**
      * @param $user
      * @param $agent
-     * @return mixed|void
+     * @return boolean
      */
     public function check_play_history($user, $agent)
     {
-        unset($user, $agent);
-        // Do nothing
+        $previous = Stats::get_last_play($user, $agent);
+        $diff     = time() - (int) $previous['date'];
+
+        // this song was your last play and the length between plays is too short.
+        if ($previous['object_id'] == $this->id && $diff <= ($this->time - 5) && $diff > 0) {
+            debug_event('video.class', 'Repeated video too quickly (' . $diff . 's), not recording stats for {' . $previous['object_id'] . '}', 3);
+
+            return false;
+        }
+
+        $timekeeper = AmpConfig::get('skip_timer');
+        $skiptime   = 20;
+        if ((int) $timekeeper > 1) {
+            $skiptime = $timekeeper;
+        } elseif ($timekeeper < 1 && $timekeeper > 0) {
+            $skiptime = (int) ($previous['time'] * $timekeeper);
+        }
+
+        // when the difference between recordings is too short, the song has been skipped, so note that
+        if (($diff < $skiptime || ($diff < $skiptime && $previous['time'] > $skiptime)) && $diff > 0) {
+            debug_event('video.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . 's). Skipping {' . $previous['object_id'] . '}', 3);
+            Stats::skip_last_play($previous['date'], $previous['agent'], $previous['user']);
+            // delete song, podcast_episode and video from user_activity to keep stats in line
+            Useractivity::del_activity($previous['date'], 'video', $previous['user']);
+        }
+
+        return true;
     }
 
     /**

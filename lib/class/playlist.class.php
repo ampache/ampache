@@ -531,7 +531,7 @@ class Playlist extends playlist_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
-        //return the duplicate ID
+        // return the duplicate ID
         if (!empty($results)) {
             return $results[0];
         }

@@ -182,9 +182,10 @@ class Upnp_Api
                         break;
                 } // end switch
             } // end if
-        } //end while
+        } // end while
+
         return $retArr;
-    } //end function
+    } // end function
 
 
     /**
@@ -586,8 +587,8 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1: // Get artists list
-                        //$artists = Catalog::get_artists();
-                        //list($maxCount, $artists) = self::_slice($artists, $start, $count);
+                        // $artists = Catalog::get_artists();
+                        // list($maxCount, $artists) = self::_slice($artists, $start, $count);
                         $artists                  = Catalog::get_artists(null, $count, $start);
                         list($maxCount, $artists) = array(999999, $artists);
                         foreach ($artists as $artist) {

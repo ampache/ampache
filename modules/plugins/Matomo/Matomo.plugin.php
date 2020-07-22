@@ -97,7 +97,6 @@ class AmpacheMatomo
         echo "<!-- Matomo -->\n";
         echo "<script>\n";
         echo "var _paq = _paq || [];\n";
-        //echo "_paq.push(['trackPageView']);\n";   // Doesn't work when using Ajax page loading
         echo "_paq.push(['trackLink', '" . $currentUrl . "', 'link']);\n";
         echo "_paq.push(['enableLinkTracking']);\n";
         echo "(function() {\n";

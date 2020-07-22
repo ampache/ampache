@@ -599,4 +599,4 @@ class AmpacheMpd extends localplay_controller
 
         return false;
     } // connect
-} //end of AmpacheMpd
+} // end mpd.controller

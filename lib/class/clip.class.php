@@ -154,7 +154,7 @@ class Clip extends Video
         }
 
         return true;
-    } //format
+    } // format
 
     /**
      * Get item keywords for metadata searches.

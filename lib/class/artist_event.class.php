@@ -29,7 +29,7 @@ class Artist_Event
     private function __construct()
     {
         return false;
-    } //constructor
+    } // constructor
 
     /**
      * get_upcoming_events

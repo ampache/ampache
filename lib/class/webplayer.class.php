@@ -159,8 +159,6 @@ class WebPlayer
             $types['player'] = $types['real'];
         }
 
-        debug_event("webplayer.class", "Types {" . json_encode($types) . "}", 5);
-
         return $types;
     }
 
@@ -295,8 +293,6 @@ class WebPlayer
         if ($item->image_url) {
             $json['poster'] = $item->image_url;
         }
-
-        debug_event("webplayer.class", "Return get_media_js_param {" . json_encode($json) . "}", 5);
 
         return json_encode($json);
     }

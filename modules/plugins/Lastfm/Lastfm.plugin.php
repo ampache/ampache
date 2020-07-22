@@ -124,7 +124,7 @@ class AmpacheLastfm
         }
 
         // Let's pull the last song submitted by this user
-        $previous = Stats::get_last_song($this->user_id);
+        $previous = Stats::get_last_play($this->user_id);
 
         $diff = time() - $previous['date'];
 

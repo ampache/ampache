@@ -68,9 +68,8 @@ class AmpError
             AmpError::$errors[$name]      = $message;
             AmpError::$state              = true;
             $_SESSION['errors'][$name]    = $message;
-        }
-        // They want us to clobber it
-        elseif ($clobber) {
+        } elseif ($clobber) {
+            // They want us to clobber it
             AmpError::$state              = true;
             AmpError::$errors[$name]      = $message;
             $_SESSION['errors'][$name]    = $message;

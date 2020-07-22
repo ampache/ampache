@@ -101,8 +101,6 @@ function run_cron_cache($user_id = 0)
             $artist_info = $catalog->get_artist_ids('info');
             $catalog->gather_artist_info($artist_info);
 
-            //Song_preview::build_cache($song_ids)
-
             /**
              * Fill rating and hear/flag details for each user
              */

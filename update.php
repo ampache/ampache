@@ -45,10 +45,9 @@ if (Core::get_request('action') == 'update') {
 
         return false;
     } else {
-        /* Run the Update Mojo Here */
         Update::run_update();
 
-        /* Get the New Version */
+        // Get the New Version
         $version = Update::get_version();
     }
 }

@@ -215,7 +215,7 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public function format($details = true)
     {
-        unset($details); //dead code but called from other format calls
+        unset($details); // dead code but called from other format calls
         // Format the artist name
         if ($this->artist) {
             $this->f_artist_full = $this->get_artist_name();
@@ -381,25 +381,31 @@ class Song_Preview extends database_object implements media, playable_item
     }
 
     /**
-     * @param $user
-     * @param $agent
-     * @param $location
-     * @return mixed|void
+     * @param integer $user
+     * @param string $agent
+     * @param array $location
+     * @param integer $date
+     * @return boolean
      */
-    public function set_played($user, $agent, $location)
+    public function set_played($user, $agent, $location, $date = null)
     {
         // Do nothing
+        unset($user, $agent, $location, $date);
+
+        return false;
     }
 
     /**
      * @param $user
      * @param $agent
-     * @return mixed|void
+     * @return boolean
      */
     public function check_play_history($user, $agent)
     {
-        unset($user, $agent);
         // Do nothing
+        unset($user, $agent);
+
+        return false;
     }
 
     /**

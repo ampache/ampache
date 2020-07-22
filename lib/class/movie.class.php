@@ -131,7 +131,7 @@ class Movie extends Video
         $this->f_link          = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
 
         return true;
-    } //format
+    } // format
 
     /**
      * get_keywords

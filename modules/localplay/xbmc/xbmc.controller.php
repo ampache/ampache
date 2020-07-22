@@ -720,4 +720,4 @@ class AmpacheXbmc extends localplay_controller
             return false;
         }
     } // connect
-} //end of AmpacheXbmc
+} // end xbmc.controller

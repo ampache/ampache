@@ -69,17 +69,18 @@ interface media
     public function get_stream_name();
 
     /**
-     * @param $user
-     * @param $agent
-     * @param $location
-     * @return mixed
+     * @param integer $user
+     * @param string $agent
+     * @param array $location
+     * @param integer $date
+     * @return boolean
      */
-    public function set_played($user, $agent, $location);
+    public function set_played($user, $agent, $location, $date = null);
 
     /**
-     * @param $user
-     * @param $agent
-     * @return mixed
+     * @param integer $user
+     * @param string $agent
+     * @return boolean
      */
     public function check_play_history($user, $agent);
 } // end media.interface

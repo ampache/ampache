@@ -253,7 +253,7 @@ class Auth
             );
         }
 
-        //FIXME: should we do input sanitization?
+        // FIXME: should we do input sanitization?
         $proc = proc_open($authenticator,
             array(
                 0 => array('pipe', 'r'),

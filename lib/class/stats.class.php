@@ -111,9 +111,8 @@ class Stats
 
             return false;
         }
-        if (!self::is_already_inserted($input_type, $object_id, $user, $agent)) {
-            $type = self::validate_type($input_type);
-
+        $type = self::validate_type($input_type);
+        if (!self::is_already_inserted($type, $object_id, $user, $agent)) {
             $latitude  = null;
             $longitude = null;
             $geoname   = null;
@@ -135,12 +134,13 @@ class Stats
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-            if (($input_type == 'song') && ($count_type === 'stream') && $user > 1) {
+            if (in_array($type, array('song', 'video', 'podcast_episode')) && $count_type === 'stream' && $user > 0) {
+                debug_event('stats.class', 'post_activity for ' . $user . ':' . $count_type . ':' . $type . ':' . $object_id, 3);
                 Useractivity::post_activity($user, 'play', $type, $object_id, $date);
             }
 
             if (!$db_results) {
-                debug_event('stats.class', 'Unable to insert statistics for ' . $user . ':' . $sql, 3);
+                debug_event('stats.class', 'Unable to insert statistics for ' . $user . ':' . $object_id, 3);
             }
         }
 
@@ -161,18 +161,16 @@ class Stats
         $time  = time();
         $agent = Dba::escape($agent);
         $sql   = "SELECT `object_id` FROM `object_count` " .
-                "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`date` > ($time - 20) ";
+                "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`date` = ($time - 5) ";
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = '$agent' ";
         }
         $sql .= "ORDER BY `object_count`.`date` DESC";
 
         $db_results = Dba::read($sql, array($user, $type));
-        $results    = array();
-
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['object_id'] == $object_id) {
-                debug_event('stats.class', 'Object already inserted {' . (string) $object_id . '} count: ' . (string) count($results), 5);
+                debug_event('stats.class', 'Object already inserted {' . (string) $object_id . '} date: ' . (string) $time, 5);
 
                 return true;
             }
@@ -232,8 +230,8 @@ class Stats
     }
 
     /**
-     * get_last_song
-     * This returns the full data for the last song that was played, including when it
+     * get_last_play
+     * This returns the full data for the last song/video/podcast_episode that was played, including when it
      * was played, this is used by, among other things, the LastFM plugin to figure out
      * if we should re-submit or if this is a duplicate / if it's too soon. This takes an
      * optional user_id because when streaming we don't have $GLOBALS()
@@ -241,7 +239,7 @@ class Stats
      * @param string $agent
      * @return array
      */
-    public static function get_last_song($user_id = '', $agent = '')
+    public static function get_last_play($user_id = '', $agent = '')
     {
         if ($user_id === '') {
             $user_id = Core::get_global('user')->id;
@@ -249,17 +247,19 @@ class Stats
 
         $sqlres = array($user_id);
 
-        $sql = "SELECT `object_count`.`id`, `object_count`.`object_id`, `object_count`.`user`, " .
-               "`object_count`.`agent`, `object_count`.`date`, `song`.`time`, `object_count`.`count_type` " .
-               "FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
+        $sql = "SELECT `object_count`.`id`, `object_count`.`object_type`, `object_count`.`object_id`, " .
+               "`object_count`.`user`, `object_count`.`agent`, `object_count`.`date`, `song`.`time`, " .
+               "`object_count`.`count_type` FROM `object_count` " .
+               "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`count_type` IN ('stream', 'skip') ";
+        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` " .
+                "IN ('song', 'video', 'podcast_episode') AND `object_count`.`count_type` IN ('stream', 'skip') ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
-        if (!$agent === '') {
+        if ($agent) {
             $sql .= "AND `object_count`.`agent` = ? ";
             array_push($sqlres, $agent);
         }
@@ -267,29 +267,31 @@ class Stats
         $db_results = Dba::read($sql, $sqlres);
 
         return Dba::fetch_assoc($db_results);
-    } // get_last_song
+    } // get_last_play
 
     /**
-     * skip_last_song
+     * skip_last_play
      * this sets the object_counts count type to skipped
      * Gets called when the next song is played in quick succession
      *
      * @param integer $date
      * @param string $agent
      * @param integer $user_id
-     * @return bool|PDOStatement
+     * @return PDOStatement|boolean
      */
-    public static function skip_last_song($date, $agent, $user_id)
+    public static function skip_last_play($date, $agent, $user_id)
     {
         $sql  = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND " .
-                "`user` = ? AND `object_type` = 'song' ORDER BY `object_count`.`date` DESC LIMIT 1";
+                "`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') " .
+                "ORDER BY `object_count`.`date` DESC LIMIT 1";
         Dba::write($sql, array($date, $agent, $user_id));
 
         // To remove associated album and artist entries
-        $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist')  AND `date` = ?";
+        $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast')  AND `date` = ? " .
+               "AND `agent` = ? AND `user` = ? ";
 
-        return Dba::write($sql, array($date));
-    }
+        return Dba::write($sql, array($date, $agent, $user_id));
+    } // skip_last_play
 
 
     /**
@@ -478,7 +480,7 @@ class Stats
         }
         $sql .= " GROUP BY `object_id` ORDER BY MAX(`date`) " . $ordersql . ", `id` ";
 
-        //playlists aren't the same as other objects so change the sql
+        // playlists aren't the same as other objects so change the sql
         if ($type === 'playlist') {
             $sql = "SELECT `id`, `last_update` as `date` FROM `playlist`";
             if (!empty($user_id)) {
@@ -536,11 +538,11 @@ class Stats
     {
         $type  = self::validate_type($input_type);
 
-        /* If full then don't limit on date */
+        // If full then don't limit on date
         $date = ($full > 0) ? '0' : time() - (86400 * AmpConfig::get('stats_threshold'));
 
-        /* Select Objects based on user */
-        //FIXME:: Requires table scan, look at improving
+        // Select Objects based on user
+        // FIXME:: Requires table scan, look at improving
         $sql = "SELECT `object_id`, COUNT(`id`) AS `count` FROM `object_count`" .
                 " WHERE `object_type` = ? AND `date` >= ? AND `user` = ?" .
                 " GROUP BY `object_id` ORDER BY `count` DESC LIMIT $input_count";

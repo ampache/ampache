@@ -2271,7 +2271,7 @@ class Search extends playlist_object
             } // switch on type
         } // foreach over rules
 
-        //translate metadata queries into sql for each field
+        // translate metadata queries into sql for each field
         foreach ($metadata as $metadata_field => $metadata_queries) {
             $metadata_sql  = "EXISTS (SELECT NULL FROM `metadata` WHERE `metadata`.`object_id` = `song`.`id` AND `metadata`.`field` = {$metadata_field} AND (";
             $metadata_sql .= implode(" $sql_logic_operator ", $metadata_queries);

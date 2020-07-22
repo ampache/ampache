@@ -180,7 +180,7 @@ class Artist extends database_object implements library_item
         } // foreach info
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * construct_from_array
@@ -196,7 +196,7 @@ class Artist extends database_object implements library_item
             $artist->$key = $value;
         }
 
-        //Ack that this is not a real object from the DB
+        // Ack that this is not a real object from the DB
         $artist->_fake = true;
 
         return $artist;
@@ -580,7 +580,7 @@ class Artist extends database_object implements library_item
             // Get the counts
             $extra_info = $this->_get_extra_info($this->catalog_id, $limit_threshold);
 
-            //Format the new time thingy that we just got
+            // Format the new time thingy that we just got
             $min = sprintf("%02d", (floor($extra_info['time'] / 60) % 60));
 
             $sec   = sprintf("%02d", ($extra_info['time'] % 60));

@@ -429,9 +429,9 @@ function command_exists($command)
     $process        = proc_open(
         "$whereIsCommand $command",
         array(
-            0 => array("pipe", "r"), //STDIN
-            1 => array("pipe", "w"), //STDOUT
-            2 => array("pipe", "w"), //STDERR
+            0 => array("pipe", "r"), // STDIN
+            1 => array("pipe", "w"), // STDOUT
+            2 => array("pipe", "w"), // STDERR
         ),
         $pipes
     );

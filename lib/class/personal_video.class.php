@@ -106,7 +106,7 @@ class Personal_Video extends Video
         $this->f_location = $this->location;
 
         return true;
-    } //format
+    } // format
 
     /**
      * Remove the video from disk.

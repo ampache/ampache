@@ -189,7 +189,7 @@ class Stream_Playlist
                     }
                 }
             } else {
-                //FIXME: play_url shouldn't be static
+                // FIXME: play_url shouldn't be static
                 $url['url'] = $type::play_url($object->id, $additional_params);
             }
 
@@ -460,7 +460,7 @@ class Stream_Playlist
             $ret .= "<ENTRY>\n";
             $ret .= '<TITLE>' . scrub_out($url->title) . "</TITLE>\n";
             $ret .= '<AUTHOR>' . scrub_out($url->author) . "</AUTHOR>\n";
-            //FIXME: duration looks hacky and wrong
+            // FIXME: duration looks hacky and wrong
             $ret .= "\t\t" . '<DURATION VALUE="00:00:' . $url->time . '" />' . "\n";
             $ret .= "\t\t" . '<PARAM NAME="Album" Value="' . scrub_out($url->album) . '" />' . "\n";
             $ret .= "\t\t" . '<PARAM NAME="Composer" Value="' . scrub_out($url->author) . '" />' . "\n";
@@ -680,7 +680,7 @@ class Stream_Playlist
         header('Location: ' . $url);
 
         return false;
-    } //create_download
+    } // create_download
 
     /**
      * create_ram

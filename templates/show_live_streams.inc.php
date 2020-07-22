@@ -54,7 +54,7 @@
             <?php require AmpConfig::get('prefix') . UI::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
         <?php
-        } //end foreach ($artists as $artist)?>
+        } // end foreach ($artists as $artist)?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>

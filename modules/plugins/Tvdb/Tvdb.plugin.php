@@ -131,7 +131,7 @@ class AmpacheTvdb
                 $release                   = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
                 $results['tvshow_imdb_id'] = $release->imdbId ;
-                $results['tvshow_summary'] = substr($release->overview, 0, 255);   //Summary column in db is only 256 characters.
+                $results['tvshow_summary'] = substr($release->overview, 0, 255); // Summary column in db is only 256 characters.
                 $results['tvshow']         = $release->name;
 
                 if ($release->FirstAired) {

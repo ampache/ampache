@@ -224,7 +224,6 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('No Problem'), T_('All Now Playing data has been cleared'), AmpConfig::get('web_path') . '/admin/catalog.php');
     break;
     case 'show_disabled':
-        /* Stop the demo hippies */
         if (AmpConfig::get('demo_mode')) {
             break;
         }
@@ -238,7 +237,6 @@ switch ($_REQUEST['action']) {
         }
     break;
     case 'show_delete_catalog':
-        /* Stop the demo hippies */
         if (AmpConfig::get('demo_mode')) {
             UI::access_denied();
             break;
@@ -265,6 +263,6 @@ switch ($_REQUEST['action']) {
     break;
 } // end switch
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

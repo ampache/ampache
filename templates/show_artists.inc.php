@@ -91,7 +91,7 @@ $thcount  = 8; ?>
             <?php require AmpConfig::get('prefix') . UI::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php
-        } //end foreach ($artists as $artist)?>
+        } // end foreach ($artists as $artist)?>
         <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Artist found'); ?></span></td>

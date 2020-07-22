@@ -39,9 +39,6 @@ if ($videos) {
                 $thumb = UI::is_grid_view('video') ? 7 : 6;
                 Art::display('video', $video->id, $video->f_full_title, $thumb, $video->link);
             }
-            //$release_art = $video->get_release_item_art();
-            //$thumb       = UI::is_grid_view('video') ? 6 : 7;
-            //Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), $thumb, $video->link);
         } else { ?>
                 <?php echo $video->get_fullname(); ?>
             <?php

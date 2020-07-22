@@ -367,8 +367,8 @@ class Catalog_dropbox extends Catalog
             $readfile = true;
             $meta     = $dropbox->getMetadata($path);
             $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
-            //Download File
 
+            // Download File
             $this->download($dropbox, $path, -1, $outfile);
 
             $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
@@ -422,8 +422,8 @@ class Catalog_dropbox extends Catalog
             $readfile = true;
             $meta     = $dropbox->getMetadata($path);
             $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
-            //Download File
 
+            // Download File
             $res = $this->download($dropbox, $path, 40960, $outfile);
 
             if ($res) {
@@ -470,15 +470,15 @@ class Catalog_dropbox extends Catalog
      */
     public function download($dropbox, $path, $maxlen, $dropboxFile = null)
     {
-        //Path cannot be null
+        // Path cannot be null
         if (is_null($path)) {
             throw new DropboxClientException("Path cannot be null.");
         }
 
-        //Make Dropbox File if target is specified
+        // Make Dropbox File if target is specified
         $dropboxFile = $dropboxFile ? $dropbox->makeDropboxFile($dropboxFile, $maxlen, null, DropboxFile::MODE_WRITE) : null;
 
-        //Download File
+        // Download File
         $response = $dropbox->postToContent('/files/download', ['path' => $path], null, $dropboxFile);
         if ($response->getHttpStatusCode() == 200) {
             return true;
@@ -522,7 +522,7 @@ class Catalog_dropbox extends Catalog
 
                     $key     = vainfo::get_tag_type($vainfo->tags);
                     $results = vainfo::clean_tag_info($vainfo->tags, $key, $outfile);
-                    //Must compare to original path, not temporary location.
+                    // Must compare to original path, not temporary location.
                     $results['file'] = $path;
                     $info            = self::update_song_from_tags($results, $song);
                     if ($info['change']) {
@@ -651,8 +651,8 @@ class Catalog_dropbox extends Catalog
             $meta    = $dropbox->getMetadata($media->file);
 
             $outfile = sys_get_temp_dir() . "/" . $meta->getName();
-            //Download File
 
+            // Download File
             $this->download($dropbox, $media->file, null, $outfile);
             $media->file = $outfile;
             // Generate browser class for sending headers
@@ -704,9 +704,9 @@ class Catalog_dropbox extends Catalog
                 if ($song->id) {
                     $meta    = $dropbox->getMetadata($song->file);
                     $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
-                    //Download File
 
-                    $res          = $this->download($dropbox, $song->file, 40960, $outfile);
+                    // Download File
+                    $res = $this->download($dropbox, $song->file, 40960, $outfile);
                     if ($res) {
                         $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                         Dba::write($sql, array($outfile, $song->id));

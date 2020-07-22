@@ -1042,7 +1042,7 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT " . $size;
         } elseif ($offset > 0) {
             // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
-            // https://dev.mysql.com/doc/refman/5.0/en/select.html  //TODO mysql8 test
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html  // TODO mysql8 test
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
 
@@ -1177,7 +1177,7 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $size";
         } elseif ($offset > 0) {
             // MySQL doesn't have notation for last row, so we have to use the largest possible BIGINT value
-            // https://dev.mysql.com/doc/refman/5.0/en/select.html  //TODO mysql8 test
+            // https://dev.mysql.com/doc/refman/5.0/en/select.html  // TODO mysql8 test
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
@@ -2249,9 +2249,9 @@ abstract class Catalog extends database_object
         if ($string) {
             $items = explode("\x00", $string);
             $first = trim((string) $items[0]);
-            //if first is the same as string, nothing was exploded, try other delimiters
+            // if first is the same as string, nothing was exploded, try other delimiters
             if ($first === $string) {
-                //try splitting with ; and then /
+                // try splitting with ; and then /
                 $items = explode(";", $string);
                 $first = trim((string) $items[0]);
                 if ($first === $string) {

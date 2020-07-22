@@ -232,7 +232,7 @@ class Art extends database_object
         }
 
         return $test;
-    } //test_image
+    } // test_image
 
     /**
      * get
@@ -510,7 +510,7 @@ class Art extends database_object
         }
 
         return true;
-    } //clean_art_by_dimension
+    } // clean_art_by_dimension
 
     /**
      * get_dir_on_disk

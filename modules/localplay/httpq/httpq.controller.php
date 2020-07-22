@@ -582,4 +582,4 @@ class AmpacheHttpq extends localplay_controller
 
         return false;
     } // connect
-} //end of AmpacheHttpq
+} // end httpq.controller

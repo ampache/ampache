@@ -277,10 +277,7 @@ class easy_captcha
         if ((0 >= $this->tries--) || !$this->is_valid()) {
             // log, this is either a frustrated user or a bot knocking
             $this->log("::solved", "INVALID", "tries exhausted ($this->tries) or expired(?) captcha");
-        }
-
-        #-- test
-        elseif ($this->sent) {
+        } elseif ($this->sent) {
             $input = $_REQUEST[CAPTCHA_PARAM_INPUT];  // might be empty string
 
             #-- check individual modules
@@ -713,8 +710,8 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         for ($n=0; $n < $num; $n++) {
             imagesetthickness($this->img, rand(1, 2));
             imagearc($this->img,
-            rand(0.1 * $x, 0.9 * $x), rand(0.1 * $y, 0.9 * $y),  //x,y
-            rand(0.1 * $x, 0.3 * $x), rand(0.1 * $y, 0.3 * $y),  //w,h
+            rand(0.1 * $x, 0.9 * $x), rand(0.1 * $y, 0.9 * $y),  // x,y
+            rand(0.1 * $x, 0.3 * $x), rand(0.1 * $y, 0.3 * $y),  // w,h
             $s, rand($s + 5, $s + 90),     // s,e
             rand(0, 1) ? 0xFFFFFF : 0x000000   // col
          );

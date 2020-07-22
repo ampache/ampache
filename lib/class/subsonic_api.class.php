@@ -217,7 +217,7 @@ class Subsonic_Api
                 $output = $callback . '(' . json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT) . ')';
             } else {
                 $xmlstr = $xml->asXml();
-                //clean illegal XML characters.
+                // clean illegal XML characters.
                 $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);               // Format xml output
                 $dom       = new DOMDocument();
                 $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
@@ -240,24 +240,24 @@ class Subsonic_Api
     private static function xml2json($xml, $input_options = array())
     {
         $defaults = array(
-            'namespaceSeparator' => ' :', //you may want this to be something other than a colon
-            'attributePrefix' => '', //to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'), //array of xml tag names which should always become arrays
-            'autoArray' => true, //only create arrays for tags which appear more than once
-            'textContent' => 'value', //key used for the text content of elements
-            'autoText' => true, //skip textContent key if node has no attributes or child nodes
-            'keySearch' => false, //optional search and replace on tag and attribute names
-            'keyReplace' => false, //replace values for above search values (as passed to str_replace())
-            'boolean' => true           //replace true and false string with boolean values
+            'namespaceSeparator' => ' :', // you may want this to be something other than a colon
+            'attributePrefix' => '', // to distinguish between attributes and nodes with the same name
+            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'), // array of xml tag names which should always become arrays
+            'autoArray' => true, // only create arrays for tags which appear more than once
+            'textContent' => 'value', // key used for the text content of elements
+            'autoText' => true, // skip textContent key if node has no attributes or child nodes
+            'keySearch' => false, // optional search and replace on tag and attribute names
+            'keyReplace' => false, // replace values for above search values (as passed to str_replace())
+            'boolean' => true           // replace true and false string with boolean values
         );
         $options        = array_merge($defaults, $input_options);
         $namespaces     = $xml->getDocNamespaces();
-        $namespaces[''] = null; //add base (empty) namespace
-        //get attributes from all namespaces
+        $namespaces[''] = null; // add base (empty) namespace
+        // get attributes from all namespaces
         $attributesArray = array();
         foreach ($namespaces as $prefix => $namespace) {
             foreach ($xml->attributes($namespace) as $attributeName => $attribute) {
-                //replace characters in attribute name
+                // replace characters in attribute name
                 if ($options['keySearch']) {
                     $attributeName = str_replace($options['keySearch'], $options['keyReplace'], $attributeName);
                 }
@@ -276,31 +276,31 @@ class Subsonic_Api
 
         // these children must be in an array.
         $forceArray = array('channel', 'share');
-        //get child nodes from all namespaces
+        // get child nodes from all namespaces
         $tagsArray = array();
         foreach ($namespaces as $prefix => $namespace) {
             foreach ($xml->children($namespace) as $childXml) {
-                //recurse into child nodes
+                // recurse into child nodes
                 $childArray = self::xml2json($childXml, $options);
                 foreach ($childArray as $childTagName => $childProperties) {
-                    //replace characters in tag name
+                    // replace characters in tag name
                     if ($options['keySearch']) {
                         $childTagName = str_replace($options['keySearch'], $options['keyReplace'], $childTagName);
                     }
-                    //add namespace prefix, if any
+                    // add namespace prefix, if any
                     if ($prefix) {
                         $childTagName = $prefix . $options['namespaceSeparator'] . $childTagName;
                     }
 
                     if (!isset($tagsArray[$childTagName])) {
-                        //only entry with this key
+                        // only entry with this key
                         if (count($childProperties) === 0) {
                             $tagsArray[$childTagName] = (object) $childProperties;
                         } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
                             $tagsArray[$childTagName] = (object) $childProperties;
                         } else {
 
-                            //test if tags of this type should always be arrays, no matter the element count
+                            // test if tags of this type should always be arrays, no matter the element count
                             $tagsArray[$childTagName] = in_array($childTagName, $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
                         }
                     } elseif (
@@ -313,24 +313,24 @@ class Subsonic_Api
                         $tagsArray[$childTagName] = array($tagsArray[$childTagName], $childProperties);
                     }
                 }
-            } //REPLACING list($childTagName, $childProperties) = each($childArray);
+            } // REPLACING list($childTagName, $childProperties) = each($childArray);
         }
 
-        //get text content of node
+        // get text content of node
         $textContentArray = array();
         $plainText        = (string) $xml;
         if ($plainText !== '') {
             $textContentArray[$options['textContent']] = $plainText;
         }
 
-        //stick it all together
+        // stick it all together
         $propertiesArray = !$options['autoText'] || ! empty($attributesArray) || ! empty($tagsArray) || ($plainText === '') ? array_merge($attributesArray, $tagsArray, $textContentArray) : $plainText;
 
         if (isset($propertiesArray['xmlns'])) {
             unset($propertiesArray['xmlns']);
         }
 
-        //return node as array
+        // return node as array
         return array(
             $xml->getName() => $propertiesArray
         );
@@ -1887,13 +1887,13 @@ class Subsonic_Api
             $media      = new $type($ampache_id);
             $media->format();
 
-            // scrobble plugins
+            // scrobble plugins (Plugin::get_plugins('save_mediaplay'))
             if ($submission === 'true' || $submission === '1') {
                 // stream has finished
                 debug_event('subsonic_api.class', $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                 User::save_mediaplay($user, $media);
             }
-            $media->set_played($user->id, $client, null, $time);
+            $media->set_played($user->id, $client, array(), $time);
         }
 
         $response = Subsonic_XML_Data::createSuccessResponse('scrobble');

@@ -63,7 +63,7 @@ function get_media_files($media_ids)
     }
 
     return array($media_files, $total_size);
-} //get_media_files
+} // get_media_files
 
 /**
  * send_zip

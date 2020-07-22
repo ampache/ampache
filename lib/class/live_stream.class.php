@@ -104,7 +104,7 @@ class Live_Stream extends database_object implements media, library_item
      */
     public function format($details = true)
     {
-        unset($details); //dead code but called from other format calls
+        unset($details); // dead code but called from other format calls
         // Default link used on the rightbar
         $this->f_name         = scrub_out($this->name);
         $this->link           = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
@@ -411,24 +411,30 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     /**
-     * @param $user
-     * @param $agent
-     * @param $location
-     * @return mixed|void
+     * @param integer $user
+     * @param string $agent
+     * @param array $location
+     * @param integer $date
+     * @return boolean
      */
-    public function set_played($user, $agent, $location)
+    public function set_played($user, $agent, $location, $date = null)
     {
         // Do nothing
+        unset($user, $agent, $location, $date);
+
+        return false;
     }
 
     /**
      * @param $user
      * @param $agent
-     * @return mixed|void
+     * @return boolean
      */
     public function check_play_history($user, $agent)
     {
-        unset($user, $agent);
         // Do nothing
+        unset($user, $agent);
+
+        return false;
     }
 } // end live_stream.class

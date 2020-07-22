@@ -39,5 +39,5 @@ class Metadata extends Repository
         Dba::write('DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL');
     }
 
-    //put your code here
+    // put your code here
 }

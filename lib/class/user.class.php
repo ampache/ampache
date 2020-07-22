@@ -31,7 +31,7 @@ declare(strict_types=0);
  */
 class User extends database_object
 {
-    //Basic Components
+    // Basic Components
     /**
      * @var integer $id
      */
@@ -470,24 +470,21 @@ class User extends database_object
                 $data->format();
                 $data->f_link;
                 $items[] = $data;
-            }
-            /* If its an album */
-            elseif ($type == 'album') {
+            } elseif ($type == 'album') {
+                // If its an album
                 $data = new Album($row['object_id']);
                 //$data->count = $row['count'];
                 $data->format();
                 $items[] = $data;
-            }
-            /* If its an artist */
-            elseif ($type == 'artist') {
+            } elseif ($type == 'artist') {
+                // If its an artist
                 $data = new Artist($row['object_id']);
                 //$data->count = $row['count'];
                 $data->format();
                 $data->f_name = $data->f_link;
                 $items[]      = $data;
-            }
-            /* If it's a genre */
-            elseif (($type == 'genre' || $type == 'tag')) {
+            } elseif (($type == 'genre' || $type == 'tag')) {
+                // If it's a genre
                 $data = new Tag($row['object_id']);
                 //$data->count = $row['count'];
                 $data->f_name = $data->name;
@@ -909,45 +906,6 @@ class User extends database_object
         $sql = "UPDATE user SET last_seen='" . time() . "' WHERE `id`='$this->id'";
         Dba::write($sql);
     } // update_last_seen
-
-    /**
-     * update_user_stats
-     * updates the playcount mojo for this specific user
-     * @param string $media_type
-     * @param $media_id
-     * @param string $agent
-     * @param array $location
-     * @param integer $date
-     * @return boolean
-     */
-    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $date = null)
-    {
-        debug_event('user.class', 'Updating stats for {' . $media_type . '/' . $media_id . '} {' . $agent . '}...', 5);
-        $media = new $media_type($media_id);
-        $media->format();
-        $user_id = (int) $this->id;
-
-        // We shouldn't test on file only
-        if (!strlen((string) $media->file)) {
-            return false;
-        }
-
-        $this->set_preferences();
-        // If pthreads available, we call save_mediaplay in a new thread to quickly return
-        if (class_exists("Thread", false)) {
-            $thread = new scrobbler_async(Core::get_global('user'), $media);
-            if ($thread->start()) {
-                debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
-            } else {
-                debug_event('user.class', 'Error when starting the thread.', 1);
-            }
-        } else {
-            self::save_mediaplay(Core::get_global('user'), $media);
-        }
-        $media->set_played($user_id, $agent, $location, $date);
-
-        return true;
-    } // update_stats
 
     /**
      * save_mediaplay
@@ -1581,9 +1539,9 @@ class User extends database_object
             return false;
         }
 
-        //FIXME: Ok really what we will do is check the MD5 of the HTTP_REFERER
-        //FIXME: combined with the song title to make sure that the REFERER
-        //FIXME: is in the access list with full rights
+        // FIXME: Ok really what we will do is check the MD5 of the HTTP_REFERER
+        // FIXME: combined with the song title to make sure that the REFERER
+        // FIXME: is in the access list with full rights
         return true;
     } // is_xmlrpc
 

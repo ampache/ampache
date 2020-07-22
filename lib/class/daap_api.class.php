@@ -163,12 +163,12 @@ class Daap_Api
         $output .= self::tlv('dmap.protocolversion', '0.2.0.0');
         $output .= self::tlv('dmap.itemname', 'Ampache');
         $output .= self::tlv('daap.protocolversion', '0.3.0.0');
-        $output .= self::tlv('daap.supportsextradata', 0);//daap.supportsextradata
+        $output .= self::tlv('daap.supportsextradata', 0); // daap.supportsextradata
         $output .= self::tlv('daap.supportsgroups', 0);
-        $output .= self::tlv('daap.aeMQ', 1);//unknown - used by iTunes
-        $output .= self::tlv('daap.aeTr', 1);//unknown - used by iTunes
-        $output .= self::tlv('daap.aeSL', 1);//unknown - used by iTunes
-        $output .= self::tlv('daap.aeSR', 1);//unknown - used by iTunes
+        $output .= self::tlv('daap.aeMQ', 1); // unknown - used by iTunes
+        $output .= self::tlv('daap.aeTr', 1); // unknown - used by iTunes
+        $output .= self::tlv('daap.aeSL', 1); // unknown - used by iTunes
+        $output .= self::tlv('daap.aeSR', 1); // unknown - used by iTunes
         $output .= self::tlv('dmap.supportsedit', 0);
 
         if (AmpConfig::get('daap_pass')) {
@@ -179,9 +179,9 @@ class Daap_Api
         $output .= self::tlv('dmap.timeoutinterval', 1800);
         $output .= self::tlv('dmap.supportsautologout', 1);
 
-        $output .= self::tlv('dmap.authenticationmethod', 2);//im not shre about this value "2"?
+        $output .= self::tlv('dmap.authenticationmethod', 2); // FIXME im not shre about this value "2"?
         $output .= self::tlv('dmap.supportsupdate', 1);
-        $output .= self::tlv('dmap.supportspersistentids', 1);//im not shuure if ampache supports it
+        $output .= self::tlv('dmap.supportspersistentids', 1); // FIXME im not sure if ampache supports it
         $output .= self::tlv('dmap.supportsextensions', 0);
         $output .= self::tlv('dmap.supportsbrowse', 0);
         $output .= self::tlv('dmap.supportsquery', 0);

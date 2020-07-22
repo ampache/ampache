@@ -573,7 +573,7 @@ class Subsonic_XML_Data
         $album->format();
         $xalbum->addAttribute('coverArt', 'al-' . self::getAlbumId($album->id));
         $xalbum->addAttribute('songCount', (string) $album->song_count);
-        //FIXME total_duration on Album doesn't exist
+        // FIXME total_duration on Album doesn't exist
         $xalbum->addAttribute('duration', (string) $album->total_duration);
         $xalbum->addAttribute('artistId', (string) self::getArtistId($album->artist_id));
         $xalbum->addAttribute('parent', (string) self::getArtistId($album->artist_id));

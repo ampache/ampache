@@ -465,13 +465,12 @@ class AmpacheVlc extends localplay_controller
                 $song_id[] = $list['node']['node'][0]['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
-            // if there is only one song look here,and media libary is used
         } elseif ($list['node']['node'][0]['leaf']['attr']['uri']) {
+            // if there is only one song look here,and media library is used
             $songs[]   = htmlspecialchars_decode($list['node']['node'][0]['leaf']['attr']['uri'], ENT_NOQUOTES);
             $song_id[] = $list['node']['node'][0]['leaf']['attr']['id'];
-        }
-        // look for songs when media libary isn't used
-        elseif ($list['node']['node']['leaf'][$counter]['attr']['uri']) {
+        } elseif ($list['node']['node']['leaf'][$counter]['attr']['uri']) {
+            // look for songs when media library isn't used
             while ($list['node']['node']['leaf'][$counter]) {
                 $songs[]   = htmlspecialchars_decode($list['node']['node']['leaf'][$counter]['attr']['uri'], ENT_NOQUOTES);
                 $song_id[] = $list['node']['node']['leaf'][$counter]['attr']['id'];
@@ -494,44 +493,42 @@ class AmpacheVlc extends localplay_controller
 
             $url_data = $this->parse_url($entry);
             switch ($url_data['primary_key']) {
-                                case 'oid':
-                                        $data['oid'] = $url_data['oid'];
-                                        $song        = new Song($data['oid']);
-                                        $song->format();
-                                        $data['name']   = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
-                                        $data['link']   = $song->f_link;
-                                break;
-                                case 'demo_id':
-                                        $democratic     = new Democratic($url_data['demo_id']);
-                                        $data['name']   = T_('Democratic') . ' - ' . $democratic->name;
-                                        $data['link']   = '';
-                                break;
+                case 'oid':
+                        $data['oid'] = $url_data['oid'];
+                        $song        = new Song($data['oid']);
+                        $song->format();
+                        $data['name']   = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
+                        $data['link']   = $song->f_link;
+                break;
+                case 'demo_id':
+                        $democratic     = new Democratic($url_data['demo_id']);
+                        $data['name']   = T_('Democratic') . ' - ' . $democratic->name;
+                        $data['link']   = '';
+                break;
                 case 'random':
                     $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst($url_data['type']));
                     $data['link'] = '';
                 break;
-                                default:
-                                        /* If we don't know it, look up by filename */
-                                        $filename = Dba::escape($entry);
-                                        $sql      = "SELECT `name` FROM `live_stream` WHERE `url`='$filename' ";
+                default:
+                    // If we don't know it, look up by filename
+                    $filename = Dba::escape($entry);
+                    $sql      = "SELECT `name` FROM `live_stream` WHERE `url`='$filename' ";
 
-                                        $db_results = Dba::read($sql);
-                                        if ($row = Dba::fetch_assoc($db_results)) {
-                                            //if stream is known just send name
-                                            $data['name'] = htmlspecialchars(substr($row['name'], 0, 50));
-                                        }
-                                            //if it's a http stream not in ampacha's database just show the url'
-                                          elseif (strncmp($entry, 'http', 4) == 0) {
-                                              $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
-                                          }
-                                          //if it's a file get the last output after  and show that, hard to take every output possible in account
-                                          else {
-                                              $getlast      = explode("/", $entry);
-                                              $lastis       = count($getlast) - 1;
-                                              $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
-                                          } // end if loop
-                                break;
-                        } // end switch on primary key type
+                    $db_results = Dba::read($sql);
+                    if ($row = Dba::fetch_assoc($db_results)) {
+                        // if stream is known just send name
+                        $data['name'] = htmlspecialchars(substr($row['name'], 0, 50));
+                    } elseif (strncmp($entry, 'http', 4) == 0) {
+                        // if it's a http stream not in ampacha's database just show the url'
+                        $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
+                    } else {
+                        // it's a file get the last output after  and show that, hard to take every output possible in account
+                        $getlast      = explode("/", $entry);
+                        $lastis       = count($getlast) - 1;
+                        $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
+                    } // end if loop
+                break;
+            } // end switch on primary key type
 
             $data['track']    = $key + 1;
             $counter++;
@@ -549,13 +546,13 @@ class AmpacheVlc extends localplay_controller
      */
     public function status()
     {
-        $arrayholder = $this->_vlc->fullstate();    //get status.xml via parser xmltoarray
+        $arrayholder = $this->_vlc->fullstate(); //get status.xml via parser xmltoarray
         /* Construct the Array */
         $currentstat = $arrayholder['root']['state']['value'];
 
         if ($currentstat == 'playing') {
             $state = 'play';
-        }   //change to something ampache understands
+        } // change to something ampache understands
         if ($currentstat == 'stop') {
             $state = 'stop';
         }
@@ -597,11 +594,11 @@ class AmpacheVlc extends localplay_controller
         $this->_vlc = new VlcPlayer($options['host'], $options['password'], $options['port']);
 
         // Test our connection by retriving the version, no version in status file, just need to see if returned
-        //Not yet working all values returned are true for beta testing purpose
+        // Not yet working all values returned are true for beta testing purpose
         if ($this->_vlc->version() !== null) {
             return true;
         }
 
         return false;
     } // connect
-} //end of AmpacheVlc
+} // end vlc.controller

@@ -130,7 +130,7 @@ class Democratic extends Tmp_Playlist
      */
     public static function set_user_preferences()
     {
-        //FIXME: Code in single user stuff
+        // FIXME: Code in single user stuff
 
         $preference_id = Preference::id_from_name('play_type');
         Preference::update_level($preference_id, '75');
@@ -273,7 +273,6 @@ class Democratic extends Tmp_Playlist
         if (count($items) > $offset) {
             return $items[$offset]['object_id'];
         }
-
 
         // If nothing was found and this is a voting playlist then get
         // from base_playlist

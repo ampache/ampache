@@ -116,7 +116,7 @@ class License
     public function format()
     {
         $this->f_link = ($this->external_link) ? '<a href="' . $this->external_link . '">' . $this->name . '</a>' : $this->name;
-    } //format
+    } // format
 
     /**
      * delete

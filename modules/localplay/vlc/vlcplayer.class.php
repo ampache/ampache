@@ -290,7 +290,7 @@ class VlcPlayer
         }
 
         return $results;
-    }  //fullstate
+    } // fullstate
 
 
     /**
@@ -434,9 +434,10 @@ class VlcPlayer
         return $this->xmltoarray($data);
     } // sendCommand
 
-    //this function parses the xml page into an array thx to bin-co
-    //warning VLC returns it's complete media lib if asked for playlist
     /**
+     * xmltoarray
+     * this function parses the xml page into an array thx to bin-co
+     * warning VLC returns it's complete media lib if asked for playlist
      * @param $contents
      * @param integer $get_attributes
      * @param string $priority
@@ -453,7 +454,7 @@ class VlcPlayer
             return array();
         }
 
-        //Get the XML parser of PHP - PHP must have this module for the parser to work
+        // Get the XML parser of PHP - PHP must have this module for the parser to work
         $parser = xml_parser_create('');
         xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
@@ -463,119 +464,120 @@ class VlcPlayer
 
         if (!$xml_values) {
             return;
-        }//Hmm...
+        } // Hmm...
 
-        //Initializations
+        // Initializations
         $bigxml_array = array();
-        //$parents      = array();
-        //$opened_tags  = array();
-        //$arr          = array();
 
-        $current = &$bigxml_array; //Refference
+        $current = &$bigxml_array; // Reference
 
-        //Go through the tags.
-    $repeated_tag_index = array();//Multiple tags with same name will be turned into an array
-    foreach ($xml_values as $data) {
-        unset($attributes, $value);//Remove existing values, or there will be trouble
+        // Go through the tags.
+        // Multiple tags with same name will be turned into an array
+        $repeated_tag_index = array();
+        foreach ($xml_values as $data) {
+            // Remove existing values, or there will be trouble
+            unset($attributes, $value);
 
-        //This command will extract these variables into the foreach scope
-        // tag(string), type(string), level(int), attributes(array).
-        extract($data);//We could use the array by itself, but this cooler.
+            // This command will extract these variables into the foreach scope
+            // tag(string), type(string), level(int), attributes(array).
+            extract($data); // We could use the array by itself, but this cooler.
 
-        $result          = array();
-        $attributes_data = array();
+            $result          = array();
+            $attributes_data = array();
 
-        if (isset($value)) {
-            if ($priority == 'tag') {
-                $result = $value;
-            } else {
-                $result['value'] = $value;
-            } //Put the value in a assoc array if we are in the 'Attribute' mode
-        }
-
-        //Set the attributes too.
-        if (isset($attributes) && $get_attributes) {
-            foreach ($attributes as $attr => $val) {
+            if (isset($value)) {
                 if ($priority == 'tag') {
-                    $attributes_data[$attr] = $val;
+                    $result = $value;
                 } else {
-                    $result['attr'][$attr] = $val;
-                } //Set all the attributes in a array called 'attr'
+                    $result['value'] = $value;
+                } // Put the value in a assoc array if we are in the 'Attribute' mode
             }
-        }
 
-        //See tag status and do the needed.
-        if ($type == "open") {
-            //The starting of the tag '<tag>'
-            $parent[$level - 1] = &$current;
-            if (!is_array($current) || (!in_array($tag, array_keys($current)))) { //Insert New tag
-                $current[$tag] = $result;
-                if ($attributes_data) {
-                    $current[$tag . '_attr'] = $attributes_data;
+            // Set the attributes too.
+            if (isset($attributes) && $get_attributes) {
+                foreach ($attributes as $attr => $val) {
+                    if ($priority == 'tag') {
+                        $attributes_data[$attr] = $val;
+                    } else {
+                        $result['attr'][$attr] = $val;
+                    } // Set all the attributes in a array called 'attr'
                 }
-                $repeated_tag_index[$tag . '_' . $level] = 1;
-
-                $current = &$current[$tag];
-            } else { //There was another element with the same tag name
-
-                if (isset($current[$tag][0])) {
-                    //If there is a 0th element it is already an array
-                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
-                    $repeated_tag_index[$tag . '_' . $level]++;
-                } else {
-                    //This section will make the value an array if multiple tags with the same name appear together
-                    $current[$tag]                           = array($current[$tag], $result);//This will combine the existing item and the new item together to make an array
-                    $repeated_tag_index[$tag . '_' . $level] = 2;
-
-                    if (isset($current[$tag . '_attr'])) { //The attribute of the last(0th) tag must be moved as well
-                        $current[$tag]['0_attr'] = $current[$tag . '_attr'];
-                        unset($current[$tag . '_attr']);
-                    }
-                }
-                $last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
-                $current         = &$current[$tag][$last_item_index];
             }
-        } elseif ($type == "complete") { //Tags that ends in 1 line '<tag />'
-            //See if the key is already taken.
-            if (!isset($current[$tag])) { //New Key
-                $current[$tag]                           = $result;
-                $repeated_tag_index[$tag . '_' . $level] = 1;
-                if ($priority == 'tag' && $attributes_data) {
-                    $current[$tag . '_attr'] = $attributes_data;
-                }
-            } else { //If taken, put all things inside a list(array)
-                if (isset($current[$tag][0]) && is_array($current[$tag])) {
-                    //If it is already an array...
 
-                    // ...push the new element into that array.
-                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
-
-                    if ($priority == 'tag' && $get_attributes && $attributes_data) {
-                        $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
+            // See tag status and do the needed.
+            if ($type == "open") {
+                // The starting of the tag '<tag>'
+                $parent[$level - 1] = &$current;
+                // Insert New tag
+                if (!is_array($current) || (!in_array($tag, array_keys($current)))) {
+                    $current[$tag] = $result;
+                    if ($attributes_data) {
+                        $current[$tag . '_attr'] = $attributes_data;
                     }
-                    $repeated_tag_index[$tag . '_' . $level]++;
-                } else { //If it is not an array...
-                    $current[$tag]                           = array($current[$tag], $result); //...Make it an array using using the existing value and the new value
                     $repeated_tag_index[$tag . '_' . $level] = 1;
-                    if ($priority == 'tag' && $get_attributes) {
-                        if (isset($current[$tag . '_attr'])) { //The attribute of the last(0th) tag must be moved as well
 
+                    $current = &$current[$tag];
+                } else {
+                    // There was another element with the same tag name
+                    if (isset($current[$tag][0])) {
+                        // If there is a 0th element it is already an array
+                        $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
+                        $repeated_tag_index[$tag . '_' . $level]++;
+                    } else {
+                        // This section will make the value an array if multiple tags with the same name appear together
+                        $current[$tag]                           = array($current[$tag], $result); // This will combine the existing item and the new item together to make an array
+                        $repeated_tag_index[$tag . '_' . $level] = 2;
+
+                        if (isset($current[$tag . '_attr'])) { // The attribute of the last(0th) tag must be moved as well
                             $current[$tag]['0_attr'] = $current[$tag . '_attr'];
                             unset($current[$tag . '_attr']);
                         }
+                    }
+                    $last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
+                    $current         = &$current[$tag][$last_item_index];
+                }
+            } elseif ($type == "complete") {
+                // Tags that ends in 1 line '<tag />'
+                // See if the key is already taken.
+                if (!isset($current[$tag])) { //New Key
+                    $current[$tag]                           = $result;
+                    $repeated_tag_index[$tag . '_' . $level] = 1;
+                    if ($priority == 'tag' && $attributes_data) {
+                        $current[$tag . '_attr'] = $attributes_data;
+                    }
+                } else {
+                    // If taken, put all things inside a list(array)
+                    if (isset($current[$tag][0]) && is_array($current[$tag])) {
+                        // If it is already an array push the new element into that array.
+                        $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
 
-                        if ($attributes_data) {
+                        if ($priority == 'tag' && $get_attributes && $attributes_data) {
                             $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                         }
+                        $repeated_tag_index[$tag . '_' . $level]++;
+                    } else {
+                        // If it is not an array...
+                        $current[$tag]                           = array($current[$tag], $result); // ...Make it an array using using the existing value and the new value
+                        $repeated_tag_index[$tag . '_' . $level] = 1;
+                        if ($priority == 'tag' && $get_attributes) {
+                            if (isset($current[$tag . '_attr'])) { // The attribute of the last(0th) tag must be moved as well
+
+                                $current[$tag]['0_attr'] = $current[$tag . '_attr'];
+                                unset($current[$tag . '_attr']);
+                            }
+
+                            if ($attributes_data) {
+                                $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
+                            }
+                        }
+                        $repeated_tag_index[$tag . '_' . $level]++; // 0 and 1 index is already taken
                     }
-                    $repeated_tag_index[$tag . '_' . $level]++; //0 and 1 index is already taken
                 }
+            } elseif ($type == 'close') { // End of tag '</tag>'
+                $current = &$parent[$level - 1];
             }
-        } elseif ($type == 'close') { //End of tag '</tag>'
-            $current = &$parent[$level - 1];
         }
-    }
 
         return($bigxml_array);
-    }   //end xml parser
-} // End VLCPlayer Class
+    }   // xml parser
+} // end vlcplayer.class

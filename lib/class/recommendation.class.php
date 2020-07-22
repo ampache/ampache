@@ -30,7 +30,7 @@ class Recommendation
     private function __construct()
     {
         return false;
-    } //constructor
+    } // constructor
 
     /**
      * get_lastfm_results
