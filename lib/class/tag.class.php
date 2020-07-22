@@ -157,7 +157,7 @@ class Tag extends database_object implements library_item
             return false;
         }
 
-        $cleaned_value = $value;
+        $cleaned_value = str_replace('Folk, World, & Country', 'Folk World & Country', $value);
 
         if (!strlen((string) $cleaned_value)) {
             return false;
@@ -172,7 +172,7 @@ class Tag extends database_object implements library_item
         // Check and see if the tag exists, if not create it, we need the tag id from this
         if (!$tag_id = self::tag_exists($cleaned_value)) {
             debug_event('tag.class', 'Adding new tag {' . $cleaned_value . '}', 5);
-            $tag_id = (int) self::add_tag($cleaned_value);
+            $tag_id = self::add_tag($cleaned_value);
         }
 
         if (!$tag_id) {
@@ -203,7 +203,7 @@ class Tag extends database_object implements library_item
 
         $sql = "REPLACE INTO `tag` SET `name` = ?";
         Dba::write($sql, array($value));
-        $insert_id = Dba::insert_id();
+        $insert_id = (int) Dba::insert_id();
 
         parent::add_to_cache('tag_name', $value, array($insert_id));
 
@@ -341,14 +341,14 @@ class Tag extends database_object implements library_item
         }
         foreach ($merges as $tag) {
             if ($tag['id']) {
-                $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
+                $sql = "REPLACE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
                     "VALUES (?, ?, ?, ?)";
                 Dba::write($sql, array($tag['id'], $uid, $type, $tag_id));
             }
         }
         $insert_id = (int) Dba::insert_id();
 
-        parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $id));
+        parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $tag_id));
 
         return $insert_id;
     } // add_tag_map
