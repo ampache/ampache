@@ -283,7 +283,7 @@ class Stats
     {
         $sql  = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND " .
                 "`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') " .
-                "ORDER BY `object_count`.`date` DESC LIMIT 1";
+                "ORDER BY `object_count`.`date` DESC";
         Dba::write($sql, array($date, $agent, $user_id));
 
         // To remove associated album and artist entries
