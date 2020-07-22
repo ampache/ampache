@@ -322,14 +322,15 @@ class Tag extends database_object implements library_item
             $uid = (int) ($user);
         }
 
-        $tag_id = (int) ($tag_id);
         if (!Core::is_library_item($type)) {
             debug_event('tag.class', $type . " is not a library item.", 3);
 
             return false;
         }
+        $tag_id  = (int) ($tag_id);
+        $item_id = (int) ($object_id);
 
-        if (!$tag_id || !$object_id) {
+        if (!$tag_id || !$item_id) {
             return false;
         }
 
@@ -340,15 +341,13 @@ class Tag extends database_object implements library_item
             $merges[] = array('id' => $parent->id, 'name' => $parent->name);
         }
         foreach ($merges as $tag) {
-            if ($tag['id']) {
-                $sql = "REPLACE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
-                    "VALUES (?, ?, ?, ?)";
-                Dba::write($sql, array($tag['id'], $uid, $type, $tag_id));
-            }
+            $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
+                "VALUES (?, ?, ?, ?)";
+            Dba::write($sql, array($tag['id'], $uid, $type, $item_id));
         }
-        $insert_id = (int) Dba::insert_id();
+        $insert_id = Dba::insert_id();
 
-        parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $tag_id));
+        parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id));
 
         return $insert_id;
     } // add_tag_map
