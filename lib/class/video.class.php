@@ -761,7 +761,7 @@ class Video extends database_object implements media, library_item
     public function set_played($user, $agent, $location, $date = null)
     {
         // ignore duplicates or skip the last track
-        if (!$this->check_play_history($user, $agent)) {
+        if (!$this->check_play_history($user, $agent, $date)) {
             return false;
         }
         Stats::insert('video', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
@@ -777,13 +777,14 @@ class Video extends database_object implements media, library_item
     } // set_played
 
     /**
-     * @param $user
-     * @param $agent
+     * @param integer $user
+     * @param string $agent
+     * @param integer $date
      * @return boolean
      */
-    public function check_play_history($user, $agent)
+    public function check_play_history($user, $agent, $date)
     {
-        return Stats::has_played_history($this, $user, $agent);
+        return Stats::has_played_history($this, $user, $agent, $date);
     }
 
     /**

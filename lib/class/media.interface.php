@@ -80,7 +80,8 @@ interface media
     /**
      * @param integer $user
      * @param string $agent
+     * @param integer $date
      * @return boolean
      */
-    public function check_play_history($user, $agent);
+    public function check_play_history($user, $agent, $date);
 } // end media.interface

@@ -238,7 +238,7 @@ class Stats
      * @param string $agent
      * @return array
      */
-    public static function get_last_play($user_id = '', $agent = '')
+    public static function get_last_play($user_id = '', $agent = '', $date = 0)
     {
         if ($user_id === '') {
             $user_id = Core::get_global('user')->id;
@@ -261,6 +261,10 @@ class Stats
         if ($agent) {
             $sql .= "AND `object_count`.`agent` = ? ";
             array_push($sqlres, $agent);
+        }
+        if ($date > 0) {
+            $sql .= "AND `object_count`.`date` <= ? ";
+            array_push($sqlres, $date);
         }
         $sql .= "ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::read($sql, $sqlres);
@@ -298,23 +302,24 @@ class Stats
      * @param Song|Podcast_Episode|Video $object
      * @param integer $user
      * @param string $agent
+     * @param integer $date
      * @return boolean
      */
-    public static function has_played_history($object, $user, $agent)
+    public static function has_played_history($object, $user, $agent, $date)
     {
-        $previous = self::get_last_play($user, $agent);
-        $diff     = time() - (int) $previous['date'];
+        $previous = self::get_last_play($user, $agent, $date);
+        $diff     = $date - (int) $previous['date'];
         $skiptime = AmpConfig::get_skip_timer($previous['time']);
 
         // this object was your last play and the length between plays is too short.
-        if ($previous['object_id'] == $object->id && $diff <= ($object->time + 5) && $diff > 0) {
+        if ($previous['object_id'] == $object->id && $diff <= ($object->time + 5)) {
             debug_event('stats.class', 'Repeated ' . $object->type . ' too quickly (' . $diff . 's), not recording stats for {' . $previous['object_id'] . '}', 3);
 
             return false;
         }
 
         // when the difference between recordings is too short, the previous object has been skipped, so note that
-        if (($diff < $skiptime || ($diff < $skiptime && $previous['time'] > $skiptime)) && $diff > 0) {
+        if (($diff < $skiptime || ($diff < $skiptime && $previous['time'] > $skiptime))) {
             debug_event('stats.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . 's). Skipping {' . $previous['object_id'] . '}', 3);
             self::skip_last_play($previous['date'], $previous['agent'], $previous['user']);
             // delete song, podcast_episode and video from user_activity to keep stats in line

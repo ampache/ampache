@@ -720,14 +720,15 @@ class Channel extends database_object implements media, library_item
     }
 
     /**
-     * @param $user
-     * @param $agent
+     * @param integer $user
+     * @param string $agent
+     * @param integer $date
      * @return boolean
      */
-    public function check_play_history($user, $agent)
+    public function check_play_history($user, $agent, $date)
     {
         // Do nothing
-        unset($user, $agent);
+        unset($user, $agent, $date);
 
         return false;
     }

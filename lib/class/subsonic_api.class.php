@@ -1869,7 +1869,6 @@ class Subsonic_Api
     public static function scrobble($input)
     {
         $object_ids = self::check_parameter($input, 'id');
-
         $submission = $input['submission'];
         $user       = User::get_from_username($input['u']);
         $client     = (string) $input['c'];
@@ -1882,6 +1881,7 @@ class Subsonic_Api
         }
 
         foreach ($object_ids as $subsonic_id) {
+            sleep(1);
             $ampache_id = Subsonic_XML_Data::getAmpacheId($subsonic_id);
             $type       = Subsonic_XML_Data::getAmpacheType($subsonic_id);
             $media      = new $type($ampache_id);
