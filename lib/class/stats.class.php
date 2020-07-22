@@ -307,20 +307,21 @@ class Stats
      */
     public static function has_played_history($object, $user, $agent, $date)
     {
-        $previous = self::get_last_play($user, $agent, $date);
-        $diff     = $date - (int) $previous['date'];
-        $skiptime = AmpConfig::get_skip_timer($previous['time']);
+        $previous  = self::get_last_play($user, $agent, $date);
+        $diff      = $date - (int) $previous['date'];
+        $item_time = $object->time + 5;
+        $skip_time = AmpConfig::get_skip_timer($previous['time']);
 
         // this object was your last play and the length between plays is too short.
-        if ($previous['object_id'] == $object->id && $diff <= ($object->time + 5)) {
-            debug_event('stats.class', 'Repeated ' . $object->type . ' too quickly (' . $diff . 's), not recording stats for {' . $previous['object_id'] . '}', 3);
+        if ($previous['object_id'] == $object->id && $diff <= $item_time) {
+            debug_event('stats.class', 'Repeated the same ' . get_class($object) . ' too quickly (' . $diff . '/' . $item_time . 's), not recording stats for {' . $object->id . '}', 3);
 
             return false;
         }
 
         // when the difference between recordings is too short, the previous object has been skipped, so note that
-        if (($diff < $skiptime || ($diff < $skiptime && $previous['time'] > $skiptime))) {
-            debug_event('stats.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . 's). Skipping {' . $previous['object_id'] . '}', 3);
+        if (($diff < $skip_time || ($diff < $skip_time && $previous['time'] > $skip_time))) {
+            debug_event('stats.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
             self::skip_last_play($previous['date'], $previous['agent'], $previous['user']);
             // delete song, podcast_episode and video from user_activity to keep stats in line
             Useractivity::del_activity($previous['date'], 'play', $previous['user']);
