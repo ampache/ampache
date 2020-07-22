@@ -343,7 +343,7 @@ class Tag extends database_object implements library_item
             if ($tag['id']) {
                 $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
                     "VALUES (?, ?, ?, ?)";
-                Dba::write($sql, array($tag['id'], $uid, $type, $id));
+                Dba::write($sql, array($tag['id'], $uid, $type, $tag_id));
             }
         }
         $insert_id = (int) Dba::insert_id();
