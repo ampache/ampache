@@ -54,6 +54,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Podcast_Episode::check_play_history Podcast_Episode::set_played (match song.class versions for stat recording)
 * Video::check_play_history Video::set_played (match song.class versions for stat recording)
 * php_cs rules for line endings
+* Simplify play history checks and code a bit more
 
 ### Removed
 

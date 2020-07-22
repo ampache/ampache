@@ -135,7 +135,6 @@ class Stats
             $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
             if (in_array($type, array('song', 'video', 'podcast_episode')) && $count_type === 'stream' && $user > 0) {
-                debug_event('stats.class', 'post_activity for ' . $user . ':' . $count_type . ':' . $type . ':' . $object_id, 3);
                 Useractivity::post_activity($user, 'play', $type, $object_id, $date);
             }
 
@@ -293,6 +292,37 @@ class Stats
         return Dba::write($sql, array($date, $agent, $user_id));
     } // skip_last_play
 
+    /**
+     * has_played_history
+     * this checks to see if the current object has been played recently by the user
+     * @param Song|Podcast_Episode|Video $object
+     * @param integer $user
+     * @param string $agent
+     * @return boolean
+     */
+    public static function has_played_history($object, $user, $agent)
+    {
+        $previous = self::get_last_play($user, $agent);
+        $diff     = time() - (int) $previous['date'];
+        $skiptime = AmpConfig::get_skip_timer($previous['time']);
+
+        // this object was your last play and the length between plays is too short.
+        if ($previous['object_id'] == $object->id && $diff <= ($object->time + 5) && $diff > 0) {
+            debug_event('stats.class', 'Repeated ' . $object->type . ' too quickly (' . $diff . 's), not recording stats for {' . $previous['object_id'] . '}', 3);
+
+            return false;
+        }
+
+        // when the difference between recordings is too short, the previous object has been skipped, so note that
+        if (($diff < $skiptime || ($diff < $skiptime && $previous['time'] > $skiptime)) && $diff > 0) {
+            debug_event('stats.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . 's). Skipping {' . $previous['object_id'] . '}', 3);
+            self::skip_last_play($previous['date'], $previous['agent'], $previous['user']);
+            // delete song, podcast_episode and video from user_activity to keep stats in line
+            Useractivity::del_activity($previous['date'], 'play', $previous['user']);
+        }
+
+        return true;
+    } // has_played_history
 
     /**
      * get_object_history

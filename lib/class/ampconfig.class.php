@@ -129,4 +129,25 @@ class AmpConfig
             self::set($name, $value, $clobber);
         }
     }
+
+    /**
+     * get_skip_timer
+     *
+     * pull the timer and check using the time of the song for %complete skips
+     * @param integer $previous_time
+     * @return integer
+     */
+    public static function get_skip_timer($previous_time)
+    {
+        $timekeeper = AmpConfig::get('skip_timer');
+        $skip_time  = 20;
+        if ((int) $timekeeper > 1) {
+            $skip_time = $timekeeper;
+        }
+        if ($timekeeper < 1 && $timekeeper > 0) {
+            $skip_time = (int) ($previous_time * $timekeeper);
+        }
+
+        return $skip_time;
+    }
 } // end ampconfig.class

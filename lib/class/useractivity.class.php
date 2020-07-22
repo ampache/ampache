@@ -133,7 +133,7 @@ class Useractivity extends database_object
             $mbid_song   = $song->mbid;
             $mbid_artist = $song->artist_mbid;
             $mbid_album  = $song->album_mbid;
-            debug_event('useractivity.class', 'Inserting details for ' . $object_type . '. {' . $object_id . '}', 5);
+            debug_event('useractivity.class', 'Inserting details for user ' . $user_id . ': ' . $object_type . ' {' . $object_id . '}', 5);
 
             if ($name_song && $name_artist && $name_album) {
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_song, $name_artist, $name_album, $mbid_song, $mbid_artist, $mbid_album));
@@ -188,21 +188,17 @@ class Useractivity extends database_object
 
     /**
      * del_activity
-     * Deletes last activity
+     * Delete activity by date
      * @param integer $date
-     * @param string $object_type
+     * @param string $action
      * @param integer $user_id
      * @return PDOStatement|boolean
      */
-    public static function del_activity($date, $object_type = 'song', $user_id = 0)
+    public static function del_activity($date, $action, $user_id = 0)
     {
-        $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `activity_date` = ? ";
-        if ($user_id > 0) {
-            $sql .= "AND `user` = $user_id ";
-        }
-        $sql .= "ORDER BY `activity_date` DESC LIMIT 1";
+        $sql = "DELETE FROM `user_activity` WHERE `activity_date` = ? AND `action` = ? AND `user` = ?";
 
-        return Dba::write($sql, array($object_type, $date));
+        return Dba::write($sql, array($date, $action, $user_id));
     }
 
     /**

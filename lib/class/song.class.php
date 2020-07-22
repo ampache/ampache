@@ -1033,33 +1033,7 @@ class Song extends database_object implements media, library_item
      */
     public function check_play_history($user, $agent)
     {
-        $previous = Stats::get_last_play($user, $agent);
-        $diff     = time() - (int) $previous['date'];
-
-        // this song was your last play and the length between plays is too short.
-        if ($previous['object_id'] == $this->id && $diff <= ($this->time + 5) && $diff > 0) {
-            debug_event('song.class', 'Repeated song too quickly (' . $diff . 's), not recording stats for {' . $previous['object_id'] . '}', 3);
-
-            return false;
-        }
-
-        $timekeeper = AmpConfig::get('skip_timer');
-        $skiptime   = 20;
-        if ((int) $timekeeper > 1) {
-            $skiptime = $timekeeper;
-        } elseif ($timekeeper < 1 && $timekeeper > 0) {
-            $skiptime = (int) ($previous['time'] * $timekeeper);
-        }
-
-        // when the difference between recordings is too short, the song has been skipped, so note that
-        if (($diff < $skiptime || ($diff < $skiptime && $previous['time'] > $skiptime)) && $diff > 0) {
-            debug_event('song.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . 's). Skipping {' . $previous['object_id'] . '}', 3);
-            Stats::skip_last_play($previous['date'], $previous['agent'], $previous['user']);
-            // delete song, podcast_episode and video from user_activity to keep stats in line
-            Useractivity::del_activity($previous['date'], 'song', $previous['user']);
-        }
-
-        return true;
+        return Stats::has_played_history($this, $user, $agent);
     }
 
     /**
