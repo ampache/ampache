@@ -185,7 +185,6 @@ class UPnPDevice
         return $this->sendRequestToDevice($command, $args, $type);
     }
 
-
     //!! UPNP subscription work not for all renderers, and works strange
     //!! so now is not used
     /**

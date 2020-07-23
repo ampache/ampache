@@ -360,7 +360,6 @@ class OAuthRequest
         $this->http_url    = $http_url;
     }
 
-
     /**
      * from_request
      * attempt to build up a request from what was passed to the server
@@ -619,7 +618,6 @@ class OAuthRequest
     {
         return $this->to_url();
     }
-
 
     /**
      * @param $signature_method
@@ -1024,7 +1022,6 @@ class OAuthUtil
             return '';
         }
     }
-
 
     // This decode function isn't taking into consideration the above
     // modifications to the encoding process. However, this method doesn't

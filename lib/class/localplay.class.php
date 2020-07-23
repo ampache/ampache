@@ -607,7 +607,6 @@ class Localplay
             return false;
         }
 
-
         return true;
     } // delete
 

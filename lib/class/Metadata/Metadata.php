@@ -65,7 +65,6 @@ trait Metadata
         $this->metadataFieldRepository = new Repository\MetadataField();
     }
 
-
     /**
      *
      * @return Model\Metadata

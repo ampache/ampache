@@ -26,6 +26,7 @@ html, body {
     color: #000;
     background: #aaa;
 }
+
 .nav h1 {
     font-family: Verdana, sans-serif;
     text-decoration: none;
@@ -40,24 +41,29 @@ html, body {
     height: 70px;
     background: url(images/icecast.png) no-repeat left center;
 }
+
 .nav {
     font-family: Verdana, sans-serif;
     text-decoration: none;
     font-weight: bold;
     font-size: 90%;
 }
+
 .nav a {
     color: white;
     text-decoration: none;
 }
+
 .nav a:hover {
     color: #f8ef64;
 }
+
 .xiphnav_a {
     text-decoration: none;
     font-weight: normal;
     color: #000;
 }
+
 .main {
     font-family: Verdana, sans-serif;
     background-color: #000;
@@ -77,12 +83,14 @@ html, body {
     margin-bottom: 10px;
     background: url(images/icecast.png) no-repeat left center;
 }
+
 .news {
     font-family: Verdana, sans-serif;
     text-decoration: none;
     font-weight: normal;
     color: #fff;
 }
+
 .newsheader {
     font-family: Verdana, sans-serif;
     text-decoration: none;
@@ -91,6 +99,7 @@ html, body {
     color: #f8ef64;
     background: #444;
 }
+
 .streamtd {
     font-family: Verdana, sans-serif;
     text-decoration: none;
@@ -99,6 +108,7 @@ html, body {
     color: #fff;
     padding: 15px;
 }
+
 .streamtd_alt {
     font-family: Verdana, sans-serif;
     text-decoration: none;
@@ -121,6 +131,7 @@ td {
     font-weight: normal;
     color: #fff;
 }
+
 .roundcont {
     background-color: #656565;
     color: #fff;
@@ -128,6 +139,7 @@ td {
     margin: 0;
     border-collapse: collapse;
 }
+
 .roundcont table{
     border: none;
     border-collapse: collapse;
@@ -136,6 +148,7 @@ td {
 .newscontent {
     margin: 0 20px;
 }
+
 h3 {
     margin: 0;
     padding: 0;
@@ -145,10 +158,12 @@ h3 {
     font-size: 110%;
     color: #f8ef64;
 }
+
 .newscontent h3 {
     margin-bottom: 10px;
     border-bottom: 1px groove #ACACAC;
 }
+
 .newscontent h4 {
     margin: 10px 0;
     font-family: Verdana, sans-serif;
@@ -157,6 +172,7 @@ h3 {
     font-size: 110%;
     color: #f8ef64;
 }
+
 .newscontent p {
     margin: 0 0;
     font-family: Verdana, sans-serif;
@@ -164,6 +180,7 @@ h3 {
     font-weight: normal;
     font-size: 90%;
 }
+
 .newscontent td {
     margin: 0 0;
     font-family: Verdana, sans-serif;
@@ -171,6 +188,7 @@ h3 {
     font-weight: normal;
     font-size: 90%;
 }
+
 .newscontent td.streamdata {
     margin: 0 0;
     font-family: Verdana, sans-serif;
@@ -179,27 +197,32 @@ h3 {
     font-size: 90%;
     color: #f8ef64;
 }
+
 .streamheader table {
     width: 100%;
     margin-bottom: 10px;
     border-bottom: 1px groove #ACACAC;
 }
+
 .streamheader td {
     margin: 0;
     padding: 6px 0;
     border: 0 solid cyan;
 }
+
 .streamheader h3 {
     margin: 0;
     border: 0 solid blue;
     vertical-align: lower;
 }
+
 .streamheader a {
     padding: 8px 5px 3px 30px;
     text-decoration: none;
     margin: 0 0 0 20px;
     background: transparent url("images/tunein.png") no-repeat left center;
 }
+
 .streamheader a.auth {
     margin: 0;
     padding-top: 14px;
@@ -212,10 +235,12 @@ h3 {
     font-weight: bold;
     color: #f8ef64;
 }
+
 .newscontent a:hover {
     font-family: Verdana, sans-serif;
     color: #fff;
 }
+
 .newscontent a.nav2 {
     font-family: Verdana, sans-serif;
     text-decoration: none;
@@ -224,6 +249,7 @@ h3 {
     background: #444;
     color: #f8ef64;
 }
+
 .newscontent a.nav2:hover {
     font-family: Verdana, sans-serif;
     text-decoration: none;
@@ -231,6 +257,7 @@ h3 {
     font-weight: bold;
     color: #fff;
 }
+
 .poster {
     font-family: Verdana, sans-serif;
     margin: 50px 0 20px 0;
@@ -243,6 +270,7 @@ h3 {
     color: #f8ef64;
     border-top: 1px groove #ACACAC;
 }
+
 .poster a {
     color: white;
     text-decoration: none;
@@ -252,15 +280,18 @@ h3 {
     color: white;
     background-color: #656565;
 }
+
 .nav a {
     margin: 15px;
     padding: 0;
 }
+
 .nav table {
     font-size: 110%;
     text-align: center;
     border: none;
 }
+
 .roundtop {
     background: url(images/corner_topright.jpg) no-repeat top right;
 }
@@ -273,21 +304,25 @@ h3 {
     font-size: 150%;
     vertical-align: top;
 }
+
 td.topleft {
     background: url("images/corner_topleft.jpg") no-repeat top left;
     height: 15px;
     width: 15px;
 }
+
 td.topright {
     background: url("images/corner_topright.jpg") no-repeat top right;
     height: 15px;
     width: 15px;
 }
+
 td.bottomleft {
     background: url("images/corner_bottomleft.jpg") no-repeat bottom left;
     height: 15px;
     width: 15px;
 }
+
 td.bottomright {
     background: url("images/corner_bottomright.jpg") no-repeat bottom right;
     height: 15px;

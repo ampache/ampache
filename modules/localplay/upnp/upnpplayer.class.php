@@ -65,7 +65,6 @@ class UPnPPlayer
         return $this->_playlist;
     }
 
-
     /**
      * UPnPPlayer
      * This is the constructor,
@@ -346,7 +345,6 @@ class UPnPPlayer
         return "";
     }
 
-
     /**
      * VolumeUp
      * increases the volume
@@ -408,7 +406,6 @@ class UPnPPlayer
 
         return $volume;
     }
-
 
     /**
      * @param $state

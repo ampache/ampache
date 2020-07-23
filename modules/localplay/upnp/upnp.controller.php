@@ -237,7 +237,6 @@ class AmpacheUPnP extends localplay_controller
     {
     }
 
-
     /**
      * @param Stream_URL $url
      * @return boolean|mixed

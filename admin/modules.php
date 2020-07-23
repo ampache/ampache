@@ -28,7 +28,6 @@ if (!Core::get_global('user')->has_access(100)) {
     return false;
 }
 
-
 /* Always show the header */
 UI::show_header();
 

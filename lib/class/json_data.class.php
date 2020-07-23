@@ -688,7 +688,6 @@ class JSON_Data
                 continue;
             }
 
-
             $song->format();
             $rating  = new Rating($song_id, 'song');
             $flag    = new Userflag($song_id, 'song');

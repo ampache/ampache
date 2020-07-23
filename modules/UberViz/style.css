@@ -8,7 +8,7 @@
     background-color: #000;
 }
 
-#uberviz #controls{
+#uberviz #controls {
     position: absolute;
     background-color: #000;
     bottom: 0;
@@ -18,7 +18,7 @@
     display: none;
 }
 
-#uberviz #preloader{
+#uberviz #preloader {
     position: absolute;
     width: 40px;
     height: 40px;
@@ -29,7 +29,7 @@
     background: url(loader.gif) center center no-repeat;
 }
 
-#uberviz #debugText{
+#uberviz #debugText {
     position: absolute;
     background-color: #000;
     height: 38px;
@@ -40,14 +40,14 @@
     padding: 15px 10px 10px;
 }
 
-#uberviz #stats{
+#uberviz #stats {
     position: absolute;
     background-color: #003;
     right: 0;
     top: 0;
 }
 
-#uberviz #audioDebug{
+#uberviz #audioDebug {
     position: fixed;
     background-color: #000;
     width: 250px;
@@ -57,13 +57,13 @@
     z-index: 9999;
 }
 
-#uberviz #settings{
+#uberviz #settings {
     position: absolute;
     background-color: #003;
     top: 248px;
 }
 
-#uberviz #info{
+#uberviz #info {
     position: absolute;
     left: 20px;
     bottom: 20px;

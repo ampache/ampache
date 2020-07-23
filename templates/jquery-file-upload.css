@@ -31,31 +31,31 @@
     line-height: 1;
 }
 
-#dropfile a:hover{
+#dropfile a:hover {
     background-color: #0986a3;
 }
 
-#dropfile input{
+#dropfile input {
     display: none;
 }
 
-#uploadfile ul{
+#uploadfile ul {
     list-style: none;
     margin: 0 -30px;
     border-top: 1px solid #2b2e31;
     border-bottom: 1px solid #3d4043;
 }
 
-#uploadfile ul li{
+#uploadfile ul li {
 
     background-color: #333639;
 
-    background-image: -moz-linear-gradient(to top, #333639, #303335);
-    background-image: -webkit-linear-gradient(to top, #333639, #303335);
-    background-image: -webkit-gradient(to top, #333639, #303335);
-    background-image: -o-linear-gradient(to top, #333639, #303335);
-    background-image: -ms-linear-gradient(to top, #333639, #303335);
-    background-image: linear-gradient(to top, #333639, #303335);
+    background-image: -moz-linear-gradient(top, #333639, #303335);
+    background-image: -webkit-linear-gradient(top, #333639, #303335);
+    background-image: -webkit-gradient(top, #333639, #303335);
+    background-image: -o-linear-gradient(top, #333639, #303335);
+    background-image: -ms-linear-gradient(top, #333639, #303335);
+    background-image: linear-gradient(top, #333639, #303335);
 
     border-top: 1px solid #3d4043;
     border-bottom: 1px solid #2b2e31;
@@ -65,7 +65,7 @@
     position: relative;
 }
 
-#uploadfile ul li input{
+#uploadfile ul li input {
     display: none;
 }
 
@@ -81,20 +81,20 @@
     left: 100px;
 }
 
-#uploadfile ul li i{
+#uploadfile ul li i {
     font-weight: normal;
     font-style: normal;
     color: #7f7f7f;
     display: block;
 }
 
-#uploadfile ul li canvas{
+#uploadfile ul li canvas {
     top: 15px;
     left: 32px;
     position: absolute;
 }
 
-#uploadfile ul li span{
+#uploadfile ul li span {
     width: 15px;
     height: 12px;
     background: url('../images/fileupload-icons.png') no-repeat;
@@ -104,12 +104,12 @@
     cursor: pointer;
 }
 
-#uploadfile ul li.working span{
+#uploadfile ul li.working span {
     height: 16px;
     background-position: 0 -12px;
 }
 
-#uploadfile ul li.error p{
+#uploadfile ul li.error p {
     color: red;
 }
 

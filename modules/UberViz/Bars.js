@@ -55,7 +55,6 @@ var Bars = (function() {
         }
     }
 
-
     function update() {
 
         //slowly move up

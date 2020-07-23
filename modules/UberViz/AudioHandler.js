@@ -315,7 +315,6 @@ var AudioHandler = (function() {
 
     }
 
-
     //called every frame
     //update published viz data
     function update(){
@@ -376,7 +375,6 @@ var AudioHandler = (function() {
                 beatCutOff = Math.max(beatCutOff,BEAT_MIN);
             }
         }
-
 
         bpmTime = (new Date().getTime() - bpmStart)/msecsAvg;
         //trace(bpmStart);

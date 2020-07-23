@@ -29,12 +29,15 @@
 .tag_size1 {
     font-size:.6em;
 }
+
 .tag_size2 {
     font-size:.8em;
 }
+
 .tag_size3 {
     font-size: 1em;
 }
+
 .tag_size4 {
     font-size: 1.2em;
 }
@@ -258,7 +261,6 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     white-space: nowrap;
     display: inline-block;
 }
-
 .topmenu_item img {
     height: 50px;
     width: 50px;

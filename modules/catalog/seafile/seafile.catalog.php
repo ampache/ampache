@@ -519,7 +519,6 @@ class Catalog_Seafile extends Catalog
         return false;
     }
 
-
     /**
      * format
      *

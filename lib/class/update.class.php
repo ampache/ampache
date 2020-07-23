@@ -290,7 +290,6 @@ class Update
             return false;
         }
 
-
         $methods = get_class_methods('Update');
 
         if (!is_array((self::$versions))) {

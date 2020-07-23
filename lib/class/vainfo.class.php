@@ -530,7 +530,6 @@ class vainfo
         return false;
     }
 
-
     /**
      * _get_tags
      *

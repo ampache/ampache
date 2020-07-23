@@ -849,7 +849,6 @@ class XML_Data
                 continue;
             }
 
-
             $song->format();
             $tag_string = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating     = new Rating($song_id, 'song');

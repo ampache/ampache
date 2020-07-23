@@ -298,7 +298,6 @@ class Upnp_Api
         return $xmlDoc;
     }
 
-
     /**
      * @param $prmDIDL
      * @param $prmNumRet

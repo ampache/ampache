@@ -75,9 +75,7 @@ class LDAP
         debug_event('ldap.class', '__construct has been called. This should not happen', 2);
     }
 
-
     /** Utility functions */
-
 
     /**
      * clean_search_results
@@ -170,7 +168,6 @@ class LDAP
     {
         ldap_unbind($link);
     }
-
 
     /**
      * Read attributes for a DN from the LDAP

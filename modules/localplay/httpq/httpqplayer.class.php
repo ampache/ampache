@@ -86,7 +86,6 @@ class HttpQPlayer
             $results = false;
         }
 
-
         return $results;
     } // version
 

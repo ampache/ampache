@@ -241,7 +241,6 @@ class Catalog_dropbox extends Catalog
             $this->authcode = $options['authcode'];
         }
 
-
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
         }
@@ -577,7 +576,6 @@ class Catalog_dropbox extends Catalog
 
         return $dead;
     }
-
 
     /**
      * check_remote_song

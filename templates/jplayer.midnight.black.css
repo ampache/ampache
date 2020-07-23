@@ -581,10 +581,6 @@ div.jp-video-play:hover a.jp-video-play-icon {
     background: url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 -100px no-repeat;
 }
 
-
-
-
-
 div.jp-jplayer audio,
 div.jp-jplayer {
     width: 0;
@@ -597,10 +593,6 @@ div.jp-jplayer {
     top: 10px;
     left: 10px;
 }
-
-
-
-
 
 /* @group TOGGLES */
 
@@ -698,7 +690,6 @@ a.jp-shuffle-off {
 a.jp-shuffle-off:hover {
     background-position: -90px -261px;
 }
-
 
 /* @end */
 

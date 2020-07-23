@@ -408,7 +408,6 @@ class User extends database_object
             }
         }
 
-
         $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value " .
             "FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` " .
             "WHERE `user_preference`.`user` = '$user_id' " . $user_limit .

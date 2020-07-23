@@ -132,7 +132,6 @@ class UPnPFind
     }
 }
 
-
 $devices = UPnPFind::findDevices(); ?>
 
 <pre>
