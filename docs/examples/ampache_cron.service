@@ -3,8 +3,8 @@ Description=ampache_cron
 After=network.target remote-fs.target nss-lookup.target
 Documentation=https://github.com/ampache/ampache/wiki
 
-[Service] 
-PrivateTmp=true 
+[Service]
+PrivateTmp=true
 KillMode=mixed
 Type=oneshot
 User=www-data
@@ -13,5 +13,5 @@ ExecStart= php bin/cron.inc
 WorkingDirectory=/var/www/html
 ProtectSystem=yes
 
-[Install] 
+[Install]
 WantedBy=multi-user.target

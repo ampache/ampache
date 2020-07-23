@@ -142,7 +142,7 @@ API 5.0.0-release will be the first Ampache release to match the release string.
 * API function "playlist_edit": added ability to edit playlist items
   * items  = (array) replace all playlist items with a new list of object_ids //optional
   * tracks = (array) playlisttrack numbers to rearrange matched to items in order //optional
-* Random albums will get songs for all disks if album_group enabled 
+* Random albums will get songs for all disks if album_group enabled
 
 #### Deprecated
 

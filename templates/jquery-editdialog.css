@@ -1,5 +1,5 @@
 /***********************************************
-           jQuery edit dialog                         
+           jQuery edit dialog
 ***********************************************/
 .editdialogstyle.ui-dialog {
     background-image: url('../images/background.png');
@@ -133,7 +133,7 @@
 }
 
 /***********************************************
-           jQuery add to playlist dialog                         
+           jQuery add to playlist dialog
 ***********************************************/
 .playlistdialogstyle.ui-dialog {
     background-color: #222;
@@ -193,7 +193,7 @@
 }
 
 /***********************************************
-           jQuery broadcasts dialog                         
+           jQuery broadcasts dialog
 ***********************************************/
 .broadcastsdialogstyle.ui-dialog {
     background-color: #222;
@@ -253,7 +253,7 @@
 }
 
 /***********************************************
-           jQuery share dialog                         
+           jQuery share dialog
 ***********************************************/
 .sharedialogstyle.ui-dialog {
     background-color: #222;

@@ -155,7 +155,7 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide"(event, ui) {  
+            "slide"(event, ui) {
                 filter1.gain.value = ui.value;
 
              },
@@ -172,7 +172,7 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide"(event, ui) {  
+            "slide"(event, ui) {
                 filter2.gain.value = ui.value;
 
              },
@@ -189,7 +189,7 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide"(event, ui) {  
+            "slide"(event, ui) {
                 filter3.gain.value = ui.value;
 
              },
@@ -206,7 +206,7 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide"(event, ui) {  
+            "slide"(event, ui) {
                 filter4.gain.value = ui.value;
 
              },
@@ -223,7 +223,7 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide"(event, ui) {  
+            "slide"(event, ui) {
                 filter5.gain.value = ui.value;
 
              },

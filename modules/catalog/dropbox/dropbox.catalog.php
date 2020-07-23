@@ -269,7 +269,7 @@ class Catalog_dropbox extends Catalog
         $this->update_last_add();
 
         UI::update_text('', sprintf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count));
- 
+
         return true;
     }
 

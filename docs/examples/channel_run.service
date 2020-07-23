@@ -3,8 +3,8 @@ Description=channel_run
 After=network.target remote-fs.target nss-lookup.target
 Documentation=https://github.com/ampache/ampache/wiki/channel-systemd
 
-[Service] 
-PrivateTmp=true 
+[Service]
+PrivateTmp=true
 KillMode=mixed
 Type=simple
 User=www-data
@@ -12,11 +12,11 @@ Group=www-data
 Restart=always
 RestartSec=3
 ExecStart= php bin/channel_run.inc -- -c 1 -v
-PIDFile=/run/php/ampache_channel_1.pid 
+PIDFile=/run/php/ampache_channel_1.pid
 ExecReload=/bin/kill -HUP $MAINPID
 WorkingDirectory=/var/www/html
 ProtectSystem=yes
 
-[Install] 
+[Install]
 WantedBy=multi-user.target
 

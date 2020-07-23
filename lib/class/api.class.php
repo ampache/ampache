@@ -388,7 +388,7 @@ class Api
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
         self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['format']);
- 
+
         return false;
     } // handshake
 

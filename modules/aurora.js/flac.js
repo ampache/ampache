@@ -8,7 +8,7 @@ require('./src/ogg');
  * FLAC.js - Free Lossless Audio Codec decoder in JavaScript
  * Original C version from FFmpeg (c) 2003 Alex Beregszaszi
  * JavaScript port by Devon Govett and Jens Nockert of Official.fm Labs
- * 
+ *
  * Licensed under the same terms as the original.  The original
  * license follows.
  *
@@ -96,7 +96,7 @@ var FLACDecoder = AV.Decoder.extend(function() {
         if (channels !== this.format.channelsPerFrame)
             throw new Error('Switching channel layout mid-stream not supported.');
 
-        // bits per sample    
+        // bits per sample
         if (bpsCode === 3 || bpsCode === 7)
             throw new Error('Invalid sample size code');
 
@@ -371,7 +371,7 @@ var FLACDecoder = AV.Decoder.extend(function() {
 
                 for (j = 0; j < predictor_order; j++) {
                     // simulate `total += coeffs[j] * decoded[i - j - 1]`
-                    multiply_add(total, coeffs[j], decoded[i - j - 1]);                    
+                    multiply_add(total, coeffs[j], decoded[i - j - 1]);
                 }
 
                 // simulate `decoded[i] += total >> qlevel`
@@ -601,7 +601,7 @@ var FLACDemuxer = AV.Demuxer.extend(function() {
             this.readHeader = true;
         }
 
-        while (stream.available(1) && !this.last) {                     
+        while (stream.available(1) && !this.last) {
             if (!this.readBlockHeaders) {
                 var tmp = stream.readUInt8();
                 this.last = (tmp & 0x80) === 0x80,

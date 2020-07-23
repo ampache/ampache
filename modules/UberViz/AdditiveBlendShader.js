@@ -19,7 +19,7 @@ THREE.AdditiveBlendShader = {
 
         "tBase": { type: "t", value: null },
         "tAdd": { type: "t", value: null },
-        "amount": { type: "f", value: 1.0 } 
+        "amount": { type: "f", value: 1.0 }
 
     },
 

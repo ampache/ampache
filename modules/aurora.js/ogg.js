@@ -40,7 +40,7 @@ var OggDemuxer = AV.Demuxer.extend(function() {
     this._stream = this.stream;
 
     this.callback = Ogg.Runtime.addFunction(function(packet, bytes) {
-      var data = new Uint8Array(Ogg.HEAPU8.subarray(packet, packet + bytes));      
+      var data = new Uint8Array(Ogg.HEAPU8.subarray(packet, packet + bytes));
 
       // find plugin for codec
       if (!plugin) {

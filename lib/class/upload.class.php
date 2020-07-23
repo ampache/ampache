@@ -119,7 +119,7 @@ class Upload
 
                     return self::rerror($targetfile);
                 }
-                
+
                 // Try to create a new album
                 if (Core::get_request('album_name') !== '') {
                     $album_id = Album::check(Core::get_request('album_name'), 0, 0, null, null, $artist_id);

@@ -28,8 +28,8 @@ var WhiteRing = (function() {
         groupHolder = new THREE.Object3D();
         VizHandler.getVizHolder().add(groupHolder);
 
-        material = new THREE.MeshBasicMaterial( { 
-            color: 0xFFFFFF, 
+        material = new THREE.MeshBasicMaterial( {
+            color: 0xFFFFFF,
             wireframe: false,
             //blending: THREE.AdditiveBlending,
             depthWrite:false,

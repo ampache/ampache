@@ -31,8 +31,8 @@ ob_end_clean();
 $meta = 'linux';
 
 // Take input from the command line, two options linux or windows
-if (count($_SERVER['argv']) > 1) { 
-    $meta = ($_SERVER['argv']['1'] == 'windows') ? 'windows' : 'linux';  
+if (count($_SERVER['argv']) > 1) {
+    $meta = ($_SERVER['argv']['1'] == 'windows') ? 'windows' : 'linux';
 }
 
 $catalogs = Catalog::get_catalogs();

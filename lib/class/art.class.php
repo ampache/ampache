@@ -1204,7 +1204,7 @@ class Art extends database_object
         $clientId     = AmpConfig::get('spotify_client_id');
         $clientSecret = AmpConfig::get('spotify_client_secret');
         $session      = null;
-        
+
         if (!isset($accessToken)) {
             try {
                 $session = new SpotifySession($clientId, $clientSecret);
@@ -1257,7 +1257,7 @@ class Art extends database_object
                 );
             }
         }
-  
+
         return $images;
     } // gather_spotify
 
