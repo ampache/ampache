@@ -881,7 +881,7 @@ class Art extends database_object
         } // came from the db
 
         // Check to see if it's a URL
-        if (isset($data['url'])) {
+        if (filter_var($data['url'], FILTER_VALIDATE_URL)) {
             debug_event('art.class', 'CHECKING URL ' . $data['url'], 2);
             $options = array();
             try {
