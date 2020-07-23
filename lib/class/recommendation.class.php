@@ -390,10 +390,6 @@ class Recommendation
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (string) $xml->artist->bio->placeformed;
         $results['yearformed']  = (string) $xml->artist->bio->yearformed;
-        $results['largephoto']  = Art::url($artist->id, 'artist');
-        $results['smallphoto']  = $results['largephoto'];    // TODO: Change to thumb size?
-        $results['mediumphoto'] = $results['largephoto'];   // TODO: Change to thumb size?
-        $results['megaphoto']   = $results['largephoto'];
 
         if ($artist) {
             $results['id'] = $artist->id;
