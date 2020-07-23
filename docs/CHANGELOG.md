@@ -24,6 +24,7 @@ The API changelog for this version has been separated into a new sub-heading bel
   * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
 * When labels are enabled, automatically generate and assosciate artists with their publisher/label tag values.
 * Added/enforced stat recording for podcast_episodes and videos.
+* Added tags (Genres) to Anywhere text searches.
 * NEW db options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the ui. (disabled by default)
@@ -55,6 +56,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Video::check_play_history Video::set_played (match song.class versions for stat recording)
 * php_cs rules for line endings
 * Simplify play history checks and code a bit more
+* Tag (Genre) searches compare each item (e.g Pop) rather than the whole string (Pop,Rock,etc)
 
 ### Removed
 
