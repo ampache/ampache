@@ -2048,14 +2048,14 @@ class Search extends playlist_object
                         $where[]           = "`realtag_$key`.`name` IS NULL ";
                         $join['tag'][$key] = "AND `tag`.`name` = '$input' ";
                     } else {
-                        $where[]       = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0 ";
+                        $where[]           = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0 ";
                         $join['tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0 ";
                     }
                 break;
                 case 'album_tag':
                     $key           = md5($input . $sql_match_operator);
                     $join['album'] = true;
-                    $key = md5($input . $sql_match_operator);
+                    $key           = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE') {
                         $where[]                 = "`realtag_$key`.`name` IS NOT NULL ";
                         $join['album_tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
@@ -2076,21 +2076,21 @@ class Search extends playlist_object
                 case 'artist_tag':
                     $key            = md5($input . $sql_match_operator);
                     $join['artist'] = true;
-                    $key = md5($input . $sql_match_operator);
+                    $key            = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE') {
-                        $where[]                 = "`realtag_$key`.`name` IS NOT NULL ";
+                        $where[]                  = "`realtag_$key`.`name` IS NOT NULL ";
                         $join['artist_tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
                     } elseif ($sql_match_operator == 'NOT LIKE') {
-                        $where[]                 = "`realtag_$key`.`name` IS NULL ";
+                        $where[]                  = "`realtag_$key`.`name` IS NULL ";
                         $join['artist_tag'][$key] = "AND `tag`.`name` LIKE '$input' ";
                     } elseif ($operator['description'] == 'is') {
-                        $where[]                 = "`realtag_$key`.`name` IS NOT NULL ";
+                        $where[]                  = "`realtag_$key`.`name` IS NOT NULL ";
                         $join['artist_tag'][$key] = "AND `tag`.`name` = '$input' ";
                     } elseif ($operator['description'] == 'is not') {
-                        $where[]                 = "`realtag_$key`.`name` IS NULL ";
+                        $where[]                  = "`realtag_$key`.`name` IS NULL ";
                         $join['artist_tag'][$key] = "AND `tag`.`name` = '$input' ";
                     } else {
-                        $where[]                 = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0 ";
+                        $where[]                  = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0 ";
                         $join['artist_tag'][$key] = "AND find_in_set('$input', cast(`name` as char)) $sql_match_operator 0 ";
                     }
                 break;
