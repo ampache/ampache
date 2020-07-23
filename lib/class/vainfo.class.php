@@ -1406,6 +1406,8 @@ class vainfo
      */
     private function parseGenres($data)
     {
+        // get rid of that annoying genre!
+        $data = str_replace('Folk, World, & Country', 'Folk World & Country', $data);
         // read additional id3v2 delimiters from config
         $delimiters = AmpConfig::get('additional_genre_delimiters');
         if (isset($data) && is_array($data) && count($data) === 1 && isset($delimiters)) {
