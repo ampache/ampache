@@ -834,7 +834,7 @@ class Art extends database_object
         } // resized
 
         if ($mime_type === null) {
-            debug_event('art.class', 'Error: No mime type found.', 2);
+            debug_event('art.class', 'Error: No mime type found using: ' . $mime, 2);
 
             return array();
         }
