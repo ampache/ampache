@@ -644,6 +644,10 @@ class Stats
             if ($input_type === 'song') {
                 $sql = "SELECT DISTINCT(`$type`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
             }
+            if ($input_type === 'video') {
+                $sql      = "SELECT DISTINCT(`$type`.`id`) as `id`, `video`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
+                $sql_type = 'video';
+            }
             if ($allow_group_disks && $type == 'album') {
                 $sql .= "LEFT JOIN `album` ON `album`.`id` = `" . $base_type . "`.`album` ";
             }
