@@ -632,7 +632,7 @@ class Stats
 
         $base_type         = 'song';
         $multi_where       = 'WHERE';
-        $sql_type          = ($input_type === 'song' || $input_type === 'playlist') ? $input_type . '`.`id' : $base_type . "`.`" . $type;
+        $sql_type          = ($type === 'song' || $type === 'playlist' || $type === 'video') ? $type . '`.`id' : $base_type . "`.`" . $type;
         $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
 
         // add playlists to mashup browsing
@@ -641,15 +641,16 @@ class Stats
             $sql  = "SELECT `$type` as `id`, MAX(`playlist`.`last_update`) AS `real_atime` FROM `playlist` ";
         } else {
             $sql = "SELECT MAX(`$type`) as `id`, MAX(`song`.`addition_time`) AS `real_atime` FROM `" . $base_type . "` ";
-            if ($input_type === 'song') {
+            if ($type === 'song') {
                 $sql = "SELECT DISTINCT(`$type`.`id`) as `id`, `song`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
-            }
-            if ($input_type === 'video') {
-                $sql      = "SELECT DISTINCT(`$type`.`id`) as `id`, `video`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
-                $sql_type = 'video`.`id';
             }
             if ($allow_group_disks && $type == 'album') {
                 $sql .= "LEFT JOIN `album` ON `album`.`id` = `" . $base_type . "`.`album` ";
+            }
+            if ($type === 'video') {
+                $base_type = 'video';
+                $sql       = "SELECT DISTINCT(`$type`.`id`) as `id`, `video`.`addition_time` AS `real_atime` FROM `" . $base_type . "` ";
+                $type      = 'video`.`id';
             }
             if (AmpConfig::get('catalog_disable')) {
                 $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
