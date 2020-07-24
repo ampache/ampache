@@ -70,13 +70,12 @@ class Tag extends database_object implements library_item
      * build_cache
      * This takes an array of object ids and caches all of their information
      * in a single query, cuts down on the connections
-     * @params array $ids
-     * @param $ids
+     * @param array $ids
      * @return boolean
      */
     public static function build_cache($ids)
     {
-        if (!is_array($ids) || !count($ids)) {
+        if (empty($ids)) {
             return false;
         }
         $idlist     = '(' . implode(',', $ids) . ')';

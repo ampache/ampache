@@ -112,7 +112,7 @@ class Art extends database_object
      */
     public static function build_cache($object_ids, $type = null)
     {
-        if (!count($object_ids)) {
+        if (empty($object_ids)) {
             return false;
         }
         $idlist = '(' . implode(',', $object_ids) . ')';

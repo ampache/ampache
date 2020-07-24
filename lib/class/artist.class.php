@@ -225,7 +225,7 @@ class Artist extends database_object implements library_item
      */
     public static function build_cache($ids, $extra = false, $limit_threshold = '')
     {
-        if (!is_array($ids) || !count($ids)) {
+        if (empty($ids)) {
             return false;
         }
         $idlist     = '(' . implode(',', $ids) . ')';

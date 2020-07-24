@@ -243,9 +243,9 @@ class Video extends database_object implements media, library_item
      * @param integer[] $ids
      * @return boolean
      */
-    public static function build_cache($ids = array())
+    public static function build_cache($ids)
     {
-        if (!count($ids)) {
+        if (empty($ids)) {
             return false;
         }
 

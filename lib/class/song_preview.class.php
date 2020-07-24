@@ -127,7 +127,7 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public static function build_cache($song_ids)
     {
-        if (!is_array($song_ids) || !count($song_ids)) {
+        if (empty($song_ids)) {
             return false;
         }
         $idlist = '(' . implode(',', $song_ids) . ')';
