@@ -199,7 +199,7 @@ while(true)
                 }
                 //$naive = strpos(substr($chunk_buffer, 4), 'OggS') + 4; // naive search for next header
                 //remove 1 whole OggS chunk
-                $chunk_buffer = substr($chunk_buffer, (int) 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
+                $chunk_buffer = substr($chunk_buffer, (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
                 //debug_event('channel_run', '$new chunk buffer : '.substr($chunk_buffer,0,300) . ' $hex: '.strtohex(substr($chunk_buffer,0,600)) . ' $ogg_nr_of_segments: ' .$ogg_nr_of_segments . ' bytes cut off: '.(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces) . ' naive: ' .$naive, 5);
             } elseif (strtolower($channel->stream_type) == "ogg") {
                 debug_event('channel_run', 'Ogg alignament broken! Trying repair...', 4);
