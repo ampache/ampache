@@ -676,8 +676,8 @@ if (!isset($_REQUEST['segment'])) {
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
-                if ($user->id) {
-                    // scrobble for the user
+                if ($user->id && $type == 'song') {
+                    // scrobble songs for the user
                     User::save_mediaplay($user, $media);
                 }
                 // internal stats (object_count, user_activity)
