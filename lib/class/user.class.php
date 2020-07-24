@@ -463,7 +463,7 @@ class User extends database_object
         $items = array();
 
         foreach ($results as $row) {
-            /* If its a song */
+            // If its a song
             if ($type == 'song') {
                 $data        = new Song($row['object_id']);
                 $data->count = $row['count'];
@@ -473,22 +473,18 @@ class User extends database_object
             } elseif ($type == 'album') {
                 // If its an album
                 $data = new Album($row['object_id']);
-                //$data->count = $row['count'];
                 $data->format();
                 $items[] = $data;
             } elseif ($type == 'artist') {
                 // If its an artist
                 $data = new Artist($row['object_id']);
-                //$data->count = $row['count'];
                 $data->format();
                 $data->f_name = $data->f_link;
                 $items[]      = $data;
             } elseif (($type == 'genre' || $type == 'tag')) {
                 // If it's a genre
-                $data = new Tag($row['object_id']);
-                //$data->count = $row['count'];
-                $data->f_name = $data->name;
-                $items[]      = $data;
+                $data    = new Tag($row['object_id']);
+                $items[] = $data;
             }
         } // end foreach
 
@@ -1032,9 +1028,9 @@ class User extends database_object
         }
 
         // Get the insert_id
-        $insert_id = Dba::insert_id();
+        $insert_id = (int) Dba::insert_id();
 
-        /* Populates any missing preferences, in this case all of them */
+        // Populates any missing preferences, in this case all of them
         self::fix_preferences($insert_id);
 
         return (int) $insert_id;
@@ -1477,7 +1473,7 @@ class User extends database_object
             $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, 'user');
 
-            if ($image_data !== null) {
+            if ($image_data !== '') {
                 return $this->update_avatar($image_data, $upload['mime']);
             }
         }
@@ -1605,7 +1601,7 @@ class User extends database_object
     /**
      * toggle_follow
      * @param integer $user_id
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public function toggle_follow($user_id)
     {

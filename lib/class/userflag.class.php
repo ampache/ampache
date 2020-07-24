@@ -201,7 +201,7 @@ class Userflag extends database_object
         if ($this->type == 'song') {
             $user = new User($user_id);
             $song = new Song($this->id);
-            if ($song) {
+            if ($song->id) {
                 $song->format();
                 self::save_flag($user, $song, $flagged);
             }
@@ -300,27 +300,25 @@ class Userflag extends database_object
             $user_id = Core::get_global('user')->id;
         }
         $user_id = (int) ($user_id);
-
-        $sql = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, `user_flag`.`user` as `user` FROM `user_flag`";
+        $type    = Stats::validate_type($type);
+        $sql     = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, " .
+                   "`user_flag`.`user` as `user` FROM `user_flag`";
         if ($user_id < 1) {
             // Get latest only from user rights >= content manager
             $sql .= " LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" .
                     " WHERE `user`.`access` >= 50";
         }
-        if ($type !== null) {
-            if ($user_id < 1) {
-                $sql .= " AND";
-            } else {
-                $sql .= " WHERE";
-            }
-            $type = Stats::validate_type($type);
-            $sql .= " `user_flag`.`object_type` = '" . $type . "'";
-            if ($user_id > 0) {
-                $sql .= " AND `user_flag`.`user` = '" . $user_id . "'";
-            }
-            if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
-                $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
-            }
+        if ($user_id < 1) {
+            $sql .= " AND";
+        } else {
+            $sql .= " WHERE";
+        }
+        $sql .= " `user_flag`.`object_type` = '" . $type . "'";
+        if ($user_id > 0) {
+            $sql .= " AND `user_flag`.`user` = '" . $user_id . "'";
+        }
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
+            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         $sql .= " ORDER BY `user_flag`.`date` DESC ";
 

@@ -28,6 +28,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * 10 second redirect on "Access Denied" to the default web_path
 * Allow "Update from tags" for multi-disk album and artist pages
 * show and hide the rightbar (playlist) using the minimize button in the header
+* Tag->f_name (New property on tag that wasn't being set hackily)
 * NEW database options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the UI. (disabled by default)

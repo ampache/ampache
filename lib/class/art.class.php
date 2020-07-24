@@ -900,7 +900,7 @@ class Art extends database_object
         // Check to see if it's a FILE
         if (isset($data['file'])) {
             $handle     = fopen($data['file'], 'rb');
-            $image_data = fread($handle, Core::get_filesize($data['file']));
+            $image_data = (string) fread($handle, Core::get_filesize($data['file']));
             fclose($handle);
 
             return $image_data;
@@ -922,7 +922,7 @@ class Art extends database_object
             }
         } // if data song
 
-        return null;
+        return '';
     } // get_from_source
 
     /**

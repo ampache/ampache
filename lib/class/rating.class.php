@@ -294,7 +294,7 @@ class Rating extends database_object
 
         parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, array($rating));
 
-        self::save_rating($this->id, $this->type, $rating, $user_id);
+        self::save_rating($this->id, $this->type, (int) $rating, (int) $user_id);
 
         return true;
     } // set_rating
@@ -350,7 +350,7 @@ class Rating extends database_object
 
                 parent::add_to_cache('rating_' . 'album' . '_user' . (int) $user_id, $album_id, array($rating));
             }
-            self::save_rating($album_id, 'album', $rating, $user_id);
+            self::save_rating($album_id, 'album', (int) $rating, (int) $user_id);
         }
 
         return true;

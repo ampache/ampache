@@ -31,6 +31,7 @@ class Tag extends database_object implements library_item
 {
     public $id;
     public $name;
+    public $f_name;
     public $is_hidden;
 
     /**
@@ -49,6 +50,9 @@ class Tag extends database_object implements library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         } // end foreach
+
+        // the ui is sometimes looking for a formatted name...
+        $this->f_name = $this->name;
 
         return true;
     } // constructor
