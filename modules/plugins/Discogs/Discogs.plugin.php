@@ -178,7 +178,7 @@ class AmpacheDiscogs
     {
         debug_event('discogs.plugin', 'Getting metadata from Discogs...', 5);
 
-        // TVShow and Movie metadata only
+        // MUSIC metadata only
         if (!in_array('music', $gather_types)) {
             debug_event('discogs.plugin', 'Not a valid media type, skipped.', 5);
 

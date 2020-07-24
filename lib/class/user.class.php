@@ -914,15 +914,15 @@ class User extends database_object
      */
     public static function save_mediaplay($user, $media)
     {
-        debug_event('user.class', 'save_mediaplay...', 5);
         foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load($user)) {
                     $plugin->_plugin->save_mediaplay($media);
+                    debug_event('user.class', 'save_mediaplay... ' . $plugin->_plugin->name, 5);
                 }
             } catch (Exception $error) {
-                debug_event('user.class', 'Stats plugin error: ' . $error->getMessage(), 1);
+                debug_event('user.class', 'save_mediaplay plugin error: ' . $error->getMessage(), 1);
             }
         }
     }

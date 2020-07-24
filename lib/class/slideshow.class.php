@@ -40,7 +40,7 @@ class Slideshow
     }
 
     /**
-     * @param $artist_name
+     * @param string $artist_name
      * @return array
      */
     protected static function get_images($artist_name)

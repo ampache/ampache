@@ -193,8 +193,8 @@ class Ampachelistenbrainz
     /**
      * set_flag
      * This takes care of spreading your love on ListenBrainz
-     * @param $song
-     * @param $flagged
+     * @param Song $song
+     * @param boolean $flagged
      * @return boolean
      */
     public function set_flag($song, $flagged)

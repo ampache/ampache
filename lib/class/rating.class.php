@@ -294,12 +294,7 @@ class Rating extends database_object
 
         parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, array($rating));
 
-        foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->load(Core::get_global('user'))) {
-                $plugin->_plugin->save_rating($this, $rating);
-            }
-        }
+        self::save_rating($this->id, $this->type, $rating, $user_id);
 
         return true;
     } // set_rating
@@ -355,16 +350,38 @@ class Rating extends database_object
 
                 parent::add_to_cache('rating_' . 'album' . '_user' . (int) $user_id, $album_id, array($rating));
             }
-            foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->load(Core::get_global('user'))) {
-                    $plugin->_plugin->save_rating($album_id, $rating);
-                }
-            }
+            self::save_rating($album_id, 'album', $rating, $user_id);
         }
 
         return true;
     } // set_rating_for_group
+
+    /**
+     * save_rating
+     * Forward rating value to plugins
+     * @param integer $object_id
+     * @param string  $object_type
+     * @param integer $new_rating
+     * @param integer $user_id
+     */
+    public static function save_rating($object_id, $object_type, $new_rating, $user_id)
+    {
+        $rating = new Rating($object_id, $object_type);
+        $user   = new User($user_id);
+        if ($rating->id) {
+            foreach (Plugin::get_plugins('save_rating') as $plugin_name) {
+                try {
+                    $plugin = new Plugin($plugin_name);
+                    if ($plugin->load($user)) {
+                        debug_event('rating.class', 'save_rating...' . $plugin->_plugin->name, 5);
+                        $plugin->_plugin->save_rating($rating, $new_rating);
+                    }
+                } catch (Exception $error) {
+                    debug_event('rating.class', 'save_rating plugin error: ' . $error->getMessage(), 1);
+                }
+            }
+        }
+    }
 
     /**
      * show

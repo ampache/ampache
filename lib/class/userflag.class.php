@@ -198,27 +198,39 @@ class Userflag extends database_object
         }
         Dba::write($sql, $params);
 
-        // Forward flag to last.fm and Libre.fm (song only)
         if ($this->type == 'song') {
             $user = new User($user_id);
             $song = new Song($this->id);
             if ($song) {
                 $song->format();
-                foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
-                    try {
-                        $plugin = new Plugin($plugin_name);
-                        if ($plugin->load($user)) {
-                            $plugin->_plugin->set_flag($song, $flagged);
-                        }
-                    } catch (Exception $error) {
-                        debug_event('userflag.class', 'Stats plugin error: ' . $error->getMessage(), 1);
-                    }
-                }
+                self::save_flag($user, $song, $flagged);
             }
         }
 
         return true;
     } // set_flag
+
+    /**
+     * save_flag
+     * Forward flag to last.fm and Libre.fm (song only)
+     * @param User $user
+     * @param Song $song
+     * @param boolean $flagged
+     */
+    public static function save_flag($user, $song, $flagged)
+    {
+        foreach (Plugin::get_plugins('set_flag') as $plugin_name) {
+            try {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->load($user)) {
+                    debug_event('userflag.class', 'save_flag...' . $plugin->_plugin->name, 5);
+                    $plugin->_plugin->set_flag($song, $flagged);
+                }
+            } catch (Exception $error) {
+                debug_event('userflag.class', 'save_flag plugin error: ' . $error->getMessage(), 1);
+            }
+        }
+    }
 
     /**
      * set_flag_for_group
