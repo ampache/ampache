@@ -191,7 +191,7 @@ while(true)
             if (strtolower($channel->stream_type) == "ogg" && strtohex(substr($chunk_buffer, 0, 4)) == "4F676753") { //maintain ogg chunk alignment --- "4F676753" == "OggS"
                 // read OggS segment length
                 $hex = strtohex(substr($chunk_buffer, 0, 27));
-                $ogg_nr_of_segments = hexdec(substr($hex, 26*2, 2));
+                $ogg_nr_of_segments = (int) hexdec(substr($hex, 26*2, 2));
                 $hex .= strtohex(substr($chunk_buffer, 27, $ogg_nr_of_segments));
                 $ogg_sum_segm_laces = 0;
                 for($segm = 0; $segm < $ogg_nr_of_segments; $segm++){

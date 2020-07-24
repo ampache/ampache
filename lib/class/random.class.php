@@ -103,7 +103,7 @@ class Random
      * nothing special here...
      * @param string $limit
      * @param integer $user_id
-     * @return array
+     * @return integer[]
      */
     public static function get_default($limit = '', $user_id = null)
     {
@@ -140,7 +140,7 @@ class Random
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;

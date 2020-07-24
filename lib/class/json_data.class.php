@@ -284,12 +284,12 @@ class JSON_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums($artist->get_albums(), $include, false, false);
+                $albums = self::albums($artist->get_albums(), $include, null, false);
             } else {
                 $albums = ($artist->albums ?: 0);
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs($artist->get_songs(), false, false);
+                $songs = self::songs($artist->get_songs(), null, false);
             } else {
                 $songs = ($artist->songs ?: 0);
             }
@@ -375,7 +375,7 @@ class JSON_Data
 
             // Handle includes
             if (in_array("songs", $include)) {
-                $songs = self::songs($album->get_songs(), false, false);
+                $songs = self::songs($album->get_songs(), null, false);
             } else {
                 $songs = $album->song_count;
             }
