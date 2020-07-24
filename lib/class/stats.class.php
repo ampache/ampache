@@ -455,16 +455,16 @@ class Stats
      * last stats_threshold days
      * @param string $type
      * @param integer $count
-     * @param string $threshold
-     * @param string $offset
+     * @param integer $threshold
+     * @param integer $offset
      * @param integer $user_id
      * @param boolean $random
      * @return array
      */
-    public static function get_top($type, $count = 0, $threshold = '', $offset = '', $user_id = null, $random = false)
+    public static function get_top($type, $count = 0, $threshold = 0, $offset = 0, $user_id = null, $random = false)
     {
-        if ($count <= 0) {
-            $count = AmpConfig::get('popular_threshold');
+        if ($count < 1) {
+            $count = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
         }
         $limit = (!$offset) ? $count : $offset . "," . $count;
         $sql   = '';
@@ -533,19 +533,17 @@ class Stats
      * get_recent
      * This returns the recent X for type Y
      * @param string $input_type
-     * @param string $count
-     * @param string $offset
+     * @param integer $count
+     * @param integer $offset
      * @param boolean $newest
      * @return array
      */
-    public static function get_recent($input_type, $count = '', $offset = '', $newest = true)
+    public static function get_recent($input_type, $count = 0, $offset = 0, $newest = true)
     {
-        if (!$count) {
-            $count = AmpConfig::get('popular_threshold');
+        if ($count < 1) {
+            $count = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
         }
-
-        $count = (int) ($count);
-        $limit = (!$offset) ? $count : (int) ($offset) . "," . $count;
+        $limit = ($offset > 1) ? $count : $offset . "," . $count;
 
         $type = self::validate_type($input_type);
         $sql  = self::get_recent_sql($type, null, $newest);
@@ -687,17 +685,17 @@ class Stats
      * This returns an array of the newest artists/albums/whatever
      * in this Ampache instance
      * @param string $type
-     * @param string $count
-     * @param string $offset
+     * @param integer $count
+     * @param integer $offset
      * @param integer $catalog
      * @return array
      */
-    public static function get_newest($type, $count = '', $offset = '', $catalog = 0)
+    public static function get_newest($type, $count = 0, $offset = 0, $catalog = 0)
     {
-        if (!$count) {
-            $count = AmpConfig::get('popular_threshold');
+        if ($count < 1) {
+            $count = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
         }
-        if (!$offset) {
+        if ($offset < 1) {
             $limit = $count;
         } else {
             $limit = $offset . ', ' . $count;

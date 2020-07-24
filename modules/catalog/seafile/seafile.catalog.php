@@ -282,7 +282,7 @@ class Catalog_Seafile extends Catalog
                     /* HINT: count of songs updated */
                     sprintf(T_('Total Media: [%s]'), $count));
 
-            if ($count <= 0) {
+            if ($count < 1) {
                 AmpError::add('general', T_('No media was updated, did you respect the patterns?'));
             } else {
                 $success = true;

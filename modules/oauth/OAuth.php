@@ -370,14 +370,8 @@ class OAuthRequest
      */
     public static function from_request($http_method = null, $http_url = null, $parameters = null)
     {
-        $scheme = (!filter_has_var(INPUT_SERVER, 'HTTPS') || Core::get_server('HTTPS') != "on")
-              ? 'http'
-              : 'https';
-        $http_url = ($http_url) ? $http_url : $scheme .
-                              '://' . $_SERVER['SERVER_NAME'] .
-                              ':' .
-                              $_SERVER['SERVER_PORT'] .
-                              $_SERVER['REQUEST_URI'];
+        $scheme      = (!filter_has_var(INPUT_SERVER, 'HTTPS') || Core::get_server('HTTPS') != "on") ? 'http' : 'https';
+        $http_url    = ($http_url) ? $http_url : $scheme . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
         $http_method = ($http_method) ? $http_method : $_SERVER['REQUEST_METHOD'];
 
         // We weren't handed any parameters, so let's find the ones relevant to
@@ -790,9 +784,7 @@ class OAuthServer
      */
     private function get_signature_method($request)
     {
-        $signature_method = $request instanceof OAuthRequest
-        ? $request->get_parameter("oauth_signature_method")
-        : null;
+        $signature_method = $request instanceof OAuthRequest ? $request->get_parameter("oauth_signature_method") : null;
 
         if (!$signature_method) {
             // According to chapter 7 ("Accessing Protected Ressources") the signature-method
@@ -820,9 +812,7 @@ class OAuthServer
      */
     private function get_consumer($request)
     {
-        $consumer_key = $request instanceof OAuthRequest
-        ? $request->get_parameter("oauth_consumer_key")
-        : null;
+        $consumer_key = $request instanceof OAuthRequest ? $request->get_parameter("oauth_consumer_key") : null;
 
         if (!$consumer_key) {
             throw new OAuthException("Invalid consumer key");
@@ -866,12 +856,8 @@ class OAuthServer
     private function check_signature($request, $consumer, $token)
     {
         // this should probably be in a different method
-        $timestamp = $request instanceof OAuthRequest
-        ? $request->get_parameter('oauth_timestamp')
-        : null;
-        $nonce = $request instanceof OAuthRequest
-        ? $request->get_parameter('oauth_nonce')
-        : null;
+        $timestamp = $request instanceof OAuthRequest ? $request->get_parameter('oauth_timestamp') : null;
+        $nonce = $request instanceof OAuthRequest ? $request->get_parameter('oauth_nonce') : null;
 
         $this->check_timestamp($timestamp);
         $this->check_nonce($consumer, $token, $nonce, $timestamp);

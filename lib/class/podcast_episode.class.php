@@ -488,7 +488,7 @@ class Podcast_Episode extends database_object implements media, library_item
                     $key   = vainfo::get_tag_type($vainfo->tags);
                     $infos = vainfo::clean_tag_info($vainfo->tags, $key, $file);
                     // No time information, get it from file
-                    if ($this->time <= 0) {
+                    if ($this->time < 1) {
                         $this->time = $infos['time'];
                     }
                     $this->size = $infos['size'];

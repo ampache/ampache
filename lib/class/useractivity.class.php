@@ -210,8 +210,8 @@ class Useractivity extends database_object
      */
     public static function get_activities($user_id, $limit = 0, $since = 0)
     {
-        if ($limit <= 0) {
-            $limit = AmpConfig::get('popular_threshold');
+        if ($limit < 1) {
+            $limit = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
         }
 
         $params = array($user_id);
@@ -239,8 +239,8 @@ class Useractivity extends database_object
      */
     public static function get_friends_activities($user_id, $limit = 0, $since = 0)
     {
-        if ($limit <= 0) {
-            $limit = AmpConfig::get('popular_threshold');
+        if ($limit < 1) {
+            $limit = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
         }
 
         $params = array($user_id);

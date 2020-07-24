@@ -206,7 +206,7 @@ class SubsonicClient
     {
         $arr = json_decode($response, true);
         if ($arr['subsonic-response']) {
-            $response = (array)$arr['subsonic-response'];
+            $response = (array) $arr['subsonic-response'];
             $data     = $response;
 
             return array("success" => ($response['status'] == "ok"), "data" => $data);

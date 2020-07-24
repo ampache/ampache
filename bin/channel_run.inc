@@ -56,7 +56,7 @@ if ($cargv > 1) {
     }
 }
 
-if ($chanid <= 0) {
+if ($chanid < 1) {
     channel_usage();
     return false;
 }
@@ -75,7 +75,7 @@ if (!$channel->id) {
     die (T_("Unknown channel."));
 }
 
-if ($port <= 0) {
+if ($port < 1) {
     if ($channel->fixed_endpoint) {
         $address = $channel->interface;
         $port = (int) $channel->port;

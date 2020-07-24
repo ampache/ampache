@@ -221,23 +221,22 @@ class Rating extends database_object
      * get_highest
      * Get objects with the highest average rating.
      * @param string $type
-     * @param string $count
-     * @param string $offset
+     * @param integer $count
+     * @param integer $offset
      * @return array
      */
-    public static function get_highest($type, $count = '', $offset = '')
+    public static function get_highest($type, $count = 0, $offset = 0)
     {
-        if (!$count) {
-            $count = AmpConfig::get('popular_threshold');
+        if ($count < 1) {
+            $count = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
         }
-        $count = (int) $count;
-        if (!$offset) {
+        if ($offset < 1) {
             $limit = $count;
         } else {
-            $limit = (int) $offset . "," . $count;
+            $limit = $offset . "," . $count;
         }
 
-        /* Select Top objects counting by # of rows */
+        // Select Top objects counting by # of rows
         $sql = self::get_highest_sql($type);
         $sql .= " LIMIT $limit";
         $db_results = Dba::read($sql, array($type));

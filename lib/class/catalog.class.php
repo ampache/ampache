@@ -564,15 +564,9 @@ abstract class Catalog extends database_object
         $this->link   = AmpConfig::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '" title="' . scrub_out($this->name) . '">' .
             scrub_out($this->f_name) . '</a>';
-        $this->f_update = $this->last_update
-            ? get_datetime($time_format, (int) $this->last_update)
-            : T_('Never');
-        $this->f_add = $this->last_add
-            ? get_datetime($time_format, (int) $this->last_add)
-            : T_('Never');
-        $this->f_clean = $this->last_clean
-            ? get_datetime($time_format, (int) $this->last_clean)
-            : T_('Never');
+        $this->f_update = $this->last_update ? get_datetime($time_format, (int) $this->last_update) : T_('Never');
+        $this->f_add = $this->last_add ? get_datetime($time_format, (int) $this->last_add) : T_('Never');
+        $this->f_clean = $this->last_clean ? get_datetime($time_format, (int) $this->last_clean) : T_('Never');
     }
 
     /**
@@ -2832,7 +2826,7 @@ abstract class Catalog extends database_object
                     }
                 } // end if update
 
-                if ($catalog_id <= 0) {
+                if ($catalog_id < 1) {
                     AmpError::add('general', T_("This subdirectory is not inside an existing Catalog. The update can not be processed."));
                 }
                 break;

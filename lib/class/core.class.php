@@ -216,17 +216,12 @@ class Core
      */
     public static function get_user_ip()
     {
-        $user_ip = '';
-        // Clean incoming variables
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-            $user_ip = (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
-                ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
-                : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP));
-        } else {
-            $user_ip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        // get the x forward if it's valid
+        if (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)) {
+            return filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
         }
 
-        return $user_ip;
+        return filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
     }
     /**
      * Place a new key on a specific position in array

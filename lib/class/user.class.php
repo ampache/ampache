@@ -1360,20 +1360,15 @@ class User extends database_object
      * get_ip_history
      * This returns the ip_history from the
      * last AmpConfig::get('user_ip_cardinality') days
-     * @param string $count
-     * @param string $distinct
+     * @param integer $count
+     * @param boolean $distinct
      * @return array
      */
-    public function get_ip_history($count = '', $distinct = '')
+    public function get_ip_history($count = 1, $distinct = false)
     {
-        $username     = Dba::escape($this->id);
-        $count        = $count ? (int) ($count) : (int) (AmpConfig::get('user_ip_cardinality'));
-
-        // Make sure it's something
-        if ($count < 1) {
-            $count = '1';
-        }
-        $limit_sql = "LIMIT " . (string) ($count);
+        $username  = Dba::escape($this->id);
+        $count     = $count ? (int) ($count) : (int) (AmpConfig::get('user_ip_cardinality'));
+        $limit_sql = ($count > 0) ? " LIMIT " . (string) ($count) : '';
 
         $group_sql = "";
         if ($distinct) {
@@ -1383,7 +1378,7 @@ class User extends database_object
         /* Select ip history */
         $sql = "SELECT `ip`, `date` FROM `ip_history`" .
             " WHERE `user`='$username'" .
-            " $group_sql ORDER BY `date` DESC $limit_sql";
+            " $group_sql ORDER BY `date` DESC$limit_sql";
         $db_results = Dba::read($sql);
 
         $results = array();

@@ -617,9 +617,7 @@ class Query
     {
         // Simple enough, but if we ever move this crap
         // If we ever move this crap what?
-        return isset($this->_state['filter'][$key])
-            ? $this->_state['filter'][$key]
-            : false;
+        return (isset($this->_state['filter'][$key])) ? $this->_state['filter'][$key] : false;
     } // get_filter
 
     /**
@@ -690,9 +688,7 @@ class Query
      */
     public static function get_allowed_filters($type)
     {
-        return isset(self::$allowed_filters[$type])
-            ? self::$allowed_filters[$type]
-            : array();
+        return (isset(self::$allowed_filters[$type])) ? self::$allowed_filters[$type] : array();
     } // get_allowed_filters
 
     /**

@@ -223,7 +223,7 @@ class vainfo
         if ($this->_broken) {
             $this->tags = $this->set_broken();
         } else {
-            $enabled_sources = (array)$this->get_metadata_order();
+            $enabled_sources = (array) $this->get_metadata_order();
 
             if (in_array('getID3', $enabled_sources) && $this->islocal) {
                 try {

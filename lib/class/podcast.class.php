@@ -330,7 +330,7 @@ class Podcast extends database_object implements library_item
         }
 
         $catalog_id = (int) ($data['catalog']);
-        if ($catalog_id <= 0) {
+        if ($catalog_id < 1) {
             AmpError::add('catalog', T_('Target Catalog is required'));
         } else {
             $catalog = Catalog::create_from_id($catalog_id);
@@ -489,7 +489,7 @@ class Podcast extends database_object implements library_item
         if ($pubdatestr) {
             $pubdate = strtotime($pubdatestr);
         }
-        if ($pubdate <= 0) {
+        if ($pubdate < 1) {
             debug_event('podcast.class', 'Invalid episode publication date, skipped', 3);
 
             return false;

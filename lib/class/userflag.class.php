@@ -290,13 +290,13 @@ class Userflag extends database_object
         $user_id = (int) ($user_id);
 
         $sql = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, `user_flag`.`user` as `user` FROM `user_flag`";
-        if ($user_id <= 0) {
+        if ($user_id < 1) {
             // Get latest only from user rights >= content manager
             $sql .= " LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" .
                     " WHERE `user`.`access` >= 50";
         }
         if ($type !== null) {
-            if ($user_id <= 0) {
+            if ($user_id < 1) {
                 $sql .= " AND";
             } else {
                 $sql .= " WHERE";
@@ -324,16 +324,15 @@ class Userflag extends database_object
      * @param integer $offset
      * @return array
      */
-    public static function get_latest($type = null, $user_id = null, $count = null, $offset = null)
+    public static function get_latest($type = null, $user_id = null, $count = 0, $offset = 0)
     {
-        if (!$count) {
-            $count = AmpConfig::get('popular_threshold');
+        if ($count > 1) {
+            $count = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
         }
-        $count = (int) ($count);
-        if (!$offset) {
+        if ($offset > 1) {
             $limit = $count;
         } else {
-            $limit = (int) ($offset) . "," . $count;
+            $limit = $offset . "," . $count;
         }
 
         /* Select Top objects counting by # of rows */

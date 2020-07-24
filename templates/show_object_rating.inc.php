@@ -41,7 +41,7 @@ if ($global_rating) {
     //set the current rating background
     echo '<li class="current-rating" style="width:' . $width . '%" >';
     echo T_('Current rating') . ': ';
-    if ($rate <= 0) {
+    if ($rate < 1) {
         echo T_('not rated yet') . "</li>\n";
     } else {
         /* HINT: object rating */

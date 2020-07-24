@@ -749,7 +749,7 @@ class Subsonic_Api
         $artist = self::check_parameter($input, 'artist');
         $count  = (int) $input['count'];
         $songs  = array();
-        if ($count <= 0) {
+        if ($count < 1) {
             $count = 50;
         }
         if ($artist) {

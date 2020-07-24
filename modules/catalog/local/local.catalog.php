@@ -526,7 +526,7 @@ class Catalog_local extends Catalog
 
         $time_diff = ($current_time - $start_time) ?: 0;
         $rate      = number_format(($time_diff > 0) ? $this->count / $time_diff : 0, 2);
-        if ($rate <= 0) {
+        if ($rate < 1) {
             $rate = T_('N/A');
         }
 

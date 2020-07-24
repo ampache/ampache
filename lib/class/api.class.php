@@ -2230,18 +2230,15 @@ class Api
         }
         // moved type to filter and allowed multipe type selection
         $type   = $input['type'];
-        $offset = $input['offset'];
-        $limit  = $input['limit'];
+        $offset = (int) $input['offset'];
+        $limit  = (int) $input['limit'];
         // original method only searched albums and had poor method inputs
         if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'))) {
             $type            = 'album';
             $input['filter'] = $type;
         }
-        if (!$limit) {
-            $limit = AmpConfig::get('popular_threshold');
-        }
-        if (!$offset) {
-            $offset = '';
+        if ($limit < 1) {
+            $limit = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
         }
 
         $results = null;
@@ -2256,7 +2253,7 @@ class Api
                 break;
             case 'frequent':
                 debug_event('api.class', 'stats frequent', 4);
-                $results = Stats::get_top($type, $limit, '', $offset);
+                $results = Stats::get_top($type, $limit, 0, $offset);
                 break;
             case 'recent':
             case 'forgotten':
@@ -3038,7 +3035,7 @@ class Api
         }
         $limit = (int) ($input['limit']);
         if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold');
+            $limit = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
         }
         $username = $input['username'];
         if (!empty($username)) {

@@ -63,8 +63,8 @@ class UPnPDevice
             $serviceType                                      = $service->serviceType;
             $serviceTypeNames                                 = explode(":", $serviceType);
             $serviceTypeName                                  = $serviceTypeNames[3];
-            $this->_settings['controlURLs'][$serviceTypeName] = (string)$service->controlURL;
-            $this->_settings['eventURLs'][$serviceTypeName]   = (string)$service->eventSubURL;
+            $this->_settings['controlURLs'][$serviceTypeName] = (string) $service->controlURL;
+            $this->_settings['eventURLs'][$serviceTypeName]   = (string) $service->eventSubURL;
         }
 
         $urldata                 = parse_url($descriptionUrl);

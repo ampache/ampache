@@ -306,9 +306,9 @@ switch ($_REQUEST['action']) {
         $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
 
         if (!isset($_REQUEST['all'])) {
-            $history = $working_user->get_ip_history(0, 1);
+            $history = $working_user->get_ip_history(0, true);
         } else {
-            $history = $working_user->get_ip_history();
+            $history = $working_user->get_ip_history(1);
         }
         require AmpConfig::get('prefix') . UI::find_template('show_ip_history.inc.php');
     break;

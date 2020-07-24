@@ -268,7 +268,7 @@ function check_upload_size()
     $post_max   = return_bytes(ini_get('post_max_size'));
     $mini       = 20971520; // 20M
 
-    return (($upload_max >= $mini || $upload_max <= 0) && ($post_max >= $mini || $post_max <= 0));
+    return (($upload_max >= $mini || $upload_max < 1) && ($post_max >= $mini || $post_max < 1));
 }
 
 /**

@@ -22,7 +22,7 @@
 
 $threshold = AmpConfig::get('stats_threshold');
 $user_id   = Core::get_global('user')->id;
-$count     = AmpConfig::get('popular_threshold');
+$count     = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
 
 UI::show('show_mashup_browse_form.inc.php');
 UI::show_box_top(T_('Trending'));

@@ -128,7 +128,7 @@ class UPnPFind
             $result[$key] = $value;
         }
 
-        return (Object)$result;
+        return (Object) $result;
     }
 }
 
