@@ -83,7 +83,7 @@ class Democratic extends Tmp_Playlist
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('democratic_vote', $row['object_id'], $row['count']);
+            parent::add_to_cache('democratic_vote', $row['object_id'], array($row['count']));
         }
 
         return true;
@@ -633,7 +633,7 @@ class Democratic extends Tmp_Playlist
         $db_results = Dba::read($sql, array($id));
 
         $results = Dba::fetch_assoc($db_results);
-        parent::add_to_cache('democratic_vote', $id, $results['count']);
+        parent::add_to_cache('democratic_vote', $id, $results);
 
         return $results['count'];
     } // get_vote

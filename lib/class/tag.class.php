@@ -133,8 +133,8 @@ class Tag extends database_object implements library_item
                 $tags[$tagid]    = null;
                 $tag_map[$tagid] = null;
             }
-            parent::add_to_cache('tag_top_' . $type, $tagid, $tags[$tagid]);
-            parent::add_to_cache('tag_map_' . $type, $tagid, $tag_map[$tagid]);
+            parent::add_to_cache('tag_top_' . $type, $tagid, array($tags[$tagid]));
+            parent::add_to_cache('tag_map_' . $type, $tagid, array($tag_map[$tagid]));
         }
 
         return true;
@@ -415,20 +415,20 @@ class Tag extends database_object implements library_item
      * tag_exists
      * This checks to see if a tag exists, this has nothing to do with objects or maps
      * @param string $value
-     * @return array|mixed
+     * @return integer
      */
     public static function tag_exists($value)
     {
         if (parent::is_cached('tag_name', $value)) {
-            return parent::get_from_cache('tag_name', $value);
+            return parent::get_from_cache('tag_name', $value)[0];
         }
 
-        $sql        = "SELECT * FROM `tag` WHERE `name` = ?";
+        $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
         $db_results = Dba::read($sql, array($value));
 
         $results = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('tag_name', $results['name'], $results['id']);
+        parent::add_to_cache('tag_name', $results['name'], $results);
 
         return (int) $results['id'];
     } // tag_exists

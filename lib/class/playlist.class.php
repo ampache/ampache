@@ -513,10 +513,9 @@ class Playlist extends playlist_object
      * @param string $name
      * @param string $type
      * @param integer $user_id
-     * @param integer $date
      * @return string|null
      */
-    public static function create($name, $type, $user_id = null, $date = null)
+    public static function create($name, $type, $user_id = nulll)
     {
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
@@ -535,11 +534,9 @@ class Playlist extends playlist_object
         if (!empty($results)) {
             return $results[0];
         }
-        if (!is_int($date)) {
-            $date = time();
-        }
 
-        $sql = "INSERT INTO `playlist` (`name`, `user`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?)";
+        $date = time();
+        $sql  = "INSERT INTO `playlist` (`name`, `user`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $user_id, $type, $date, $date));
 
         return Dba::insert_id();

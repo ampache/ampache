@@ -48,7 +48,7 @@ abstract class database_object
         $table_name = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
 
         // Make sure we've got a real id
-        if (!is_numeric($object_id)) {
+        if ($object_id < 1) {
             return array();
         }
 
@@ -129,7 +129,7 @@ abstract class database_object
         }
 
         $value = false;
-        if ($data !== null) {
+        if (!empty($data)) {
             $value = $data;
         }
 

@@ -194,7 +194,7 @@ class Userflag extends database_object
             $params = array($this->id, $this->type, $user_id, $date);
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(1, $date));
 
-            Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id);
+            Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id, time());
         }
         Dba::write($sql, $params);
 
@@ -277,7 +277,7 @@ class Userflag extends database_object
                 "VALUES (?, ?, ?, ?)";
                 $params = array($album_id, 'album', $user_id, time());
 
-                Useractivity::post_activity($user_id, 'userflag', 'album', $album_id);
+                Useractivity::post_activity($user_id, 'userflag', 'album', $album_id, time());
                 Dba::write($sql, $params);
             }
 

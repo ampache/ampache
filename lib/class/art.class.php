@@ -123,8 +123,7 @@ class Art extends database_object
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('art', $row['object_type'] .
-                $row['object_id'] . $row['size'], $row);
+            parent::add_to_cache('art', $row['object_type'] . $row['object_id'] . $row['size'], $row);
         }
 
         return true;
@@ -1754,8 +1753,7 @@ class Art extends database_object
                 if (!count($xmldata)) {
                     return array();
                 }
-                $xalbum = $xmldata->album;
-                if (!$xalbum) {
+                if (!$xmldata->album->image) {
                     return array();
                 }
                 foreach ($xmldata->album->image as $albumart) {

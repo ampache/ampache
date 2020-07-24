@@ -3266,15 +3266,11 @@ class Api
         $song_mbid   = (string) scrub_in($input['song_mbid']); //optional
         $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
         $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
-        $date        = scrub_in($input['date']); //optional
+        $date        = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
         $user        = User::get_from_username(Session::username($input['auth']));
         $user_id     = $user->id;
         $valid       = in_array($user->id, User::get_valid_users());
 
-        // set time to now if not included
-        if (!is_int($date)) {
-            $date = time();
-        }
         // validate supplied user
         if ($valid === false) {
             self::message('error', T_('User_id not found'), '404', $input['format']);

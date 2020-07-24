@@ -1616,7 +1616,7 @@ class User extends database_object
             $sql      = "INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, ?)";
             $params[] = time();
 
-            Useractivity::post_activity($this->id, 'follow', 'user', $user_id);
+            Useractivity::post_activity($this->id, 'follow', 'user', $user_id, time());
         }
 
         return Dba::write($sql, $params);

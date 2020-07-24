@@ -125,7 +125,7 @@ class Stats
                 $geoname = $location['name'];
             }
             // allow setting date for scrobbles
-            if (!is_int($date)) {
+            if (!is_numeric($date)) {
                 $date = time();
             }
 

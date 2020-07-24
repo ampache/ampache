@@ -64,7 +64,7 @@ class Preference extends database_object
         }
         $data = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('get_by_user', $user_id, $data['value']);
+        parent::add_to_cache('get_by_user', $user_id, $data);
 
         return $data['value'];
     } // get_by_user
@@ -229,7 +229,7 @@ class Preference extends database_object
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('id_from_name', $name, $row['id']);
+        parent::add_to_cache('id_from_name', $name, $row);
 
         return $row['id'];
     } // id_from_name

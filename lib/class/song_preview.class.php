@@ -156,6 +156,7 @@ class Song_Preview extends database_object implements media, playable_item
 
     /**
      * has_info
+     * @return array
      */
     private function has_info()
     {

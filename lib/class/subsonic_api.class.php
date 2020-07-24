@@ -621,7 +621,7 @@ class Subsonic_Api
                 $genre = self::check_parameter($input, 'genre');
 
                 $tag_id = Tag::tag_exists($genre);
-                if ($tag_id) {
+                if ($tag_id > 0) {
                     $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
                 }
                 break;

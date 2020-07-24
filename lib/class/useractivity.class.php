@@ -115,11 +115,8 @@ class Useractivity extends database_object
      * @param integer $date
      * @return PDOStatement|boolean
      */
-    public static function post_activity($user_id, $action, $object_type, $object_id, $date = null)
+    public static function post_activity($user_id, $action, $object_type, $object_id, $date)
     {
-        if (!is_int($date)) {
-            $date = time();
-        }
         if ($object_type === 'song') {
             // insert fields to be more like last.fm activity stats
             $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`," .

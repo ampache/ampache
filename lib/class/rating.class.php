@@ -118,7 +118,7 @@ class Rating extends database_object
             } else {
                 $rating = (int) $user_ratings[$object_id];
             }
-            parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, array($rating));
+            parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, array((int) $rating));
 
             // Then store the average
             if (!isset($ratings[$object_id])) {
@@ -126,7 +126,7 @@ class Rating extends database_object
             } else {
                 $rating = round($ratings[$object_id], 1);
             }
-            parent::add_to_cache('rating_' . $type . '_all', $object_id, array($rating));
+            parent::add_to_cache('rating_' . $type . '_all', $object_id, array((int) $rating));
         }
 
         return true;
@@ -159,7 +159,7 @@ class Rating extends database_object
             $rating = $results['rating'];
         }
 
-        parent::add_to_cache($key, $this->id, $rating);
+        parent::add_to_cache($key, $this->id, array((int) $rating));
 
         return (double) $rating;
     } // get_user_rating
@@ -183,7 +183,7 @@ class Rating extends database_object
 
         $results = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('rating_' . $this->type . '_all', $this->id, $results['rating']);
+        parent::add_to_cache('rating_' . $this->type . '_all', $this->id, $results);
 
         return (double) $results['rating'];
     } // get_average_rating

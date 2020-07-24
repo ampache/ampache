@@ -231,7 +231,7 @@ class Shoutbox
             "VALUES (? , ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
 
-        Useractivity::post_activity($user, 'shout', $data['object_type'], $data['object_id']);
+        Useractivity::post_activity($user, 'shout', $data['object_type'], $data['object_id'], time());
 
         $insert_id = Dba::insert_id();
 
