@@ -567,17 +567,6 @@ class Song extends database_object implements media, library_item
     } // build_cache
 
     /**
-     * get_cache_count
-     * This counts the size of the specified index in the cache
-     * @param string $index
-     * @return integer
-     */
-    public static function get_cache_count($index)
-    {
-        return parent::get_cache_count($index);
-    } // get_cache_count
-
-    /**
      * has_info
      * @param string $limit_threshold
      * @return array|boolean

@@ -1065,7 +1065,7 @@ class Api
             return false;
         }
         $user     = User::get_from_username(Session::username($input['auth']));
-        $song_ids = License::get_license_songs(scrub_in($input['filter']));
+        $song_ids = License::get_license_songs((int) scrub_in($input['filter']));
         ob_end_clean();
         switch ($input['format']) {
             case 'json':
@@ -3519,7 +3519,7 @@ class Api
                     $catalog->clean_file($file, $type);
                     break;
                 case 'verify':
-                    Catalog::update_media_from_tags($media, $type);
+                    Catalog::update_media_from_tags($media, array($type));
                     break;
                 case 'add':
                     $catalog->add_file($file);

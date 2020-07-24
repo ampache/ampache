@@ -433,10 +433,11 @@ class Broadcast extends database_object implements library_item
      * @param string $player
      * @param boolean $local
      * @return integer
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function play_url($object_id, $additional_params = '', $player = null, $local = false)
     {
+        unset($additional_params, $player, $local);
+
         return $object_id;
     }
 } // end broadcast.class

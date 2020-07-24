@@ -75,6 +75,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * EchoNest api/song previews
 * User::update_user_stats (used in play index only and useless)
 * Share::generate_secret; use generate_password instead
+* Song::get_cache_count (unused)
 
 ### Fixed
 
