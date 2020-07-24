@@ -94,7 +94,7 @@ class Playlist extends playlist_object
      * @param integer $user_id
      * @param string $playlist_name
      * @param boolean $like
-     * @return array
+     * @return integer[]
      */
     public static function get_playlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
     {
@@ -133,7 +133,7 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;

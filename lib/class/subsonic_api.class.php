@@ -997,15 +997,14 @@ class Subsonic_Api
     {
         $playlistId = self::check_parameter($input, 'playlistId');
         $name       = $input['name'];
-        // Not supported. $comment = $input['comment'];
-        $public = ($input['public'] === "true");
+        $public     = ($input['public'] === "true");
 
         if (!Subsonic_XML_Data::isSmartPlaylist($playlistId)) {
             $songIdToAdd = array();
             if (is_array($input['songIdToAdd'])) {
-                $songIndexToRemove = $input['songIdToAdd'];
+                $songIdToAdd = $input['songIdToAdd'];
             } elseif (is_string($input['songIdToAdd'])) {
-                $songIndexToRemove = explode(',', $input['songIdToAdd']);
+                $songIdToAdd = explode(',', $input['songIdToAdd']);
             }
             $songIndexToRemove = array();
             if (is_array($input['songIndexToRemove'])) {
@@ -1483,7 +1482,6 @@ class Subsonic_Api
             if (is_array($libitem_id) && Subsonic_XML_Data::isSong($libitem_id[0])) {
                 $song_id     = Subsonic_XML_Data::getAmpacheId($libitem_id[0]);
                 $tmp_song    = new Song($song_id);
-                $libitem_id  = $tmp_song->album;
                 $object_id   = Subsonic_XML_Data::getAmpacheId($tmp_song->album);
                 $object_type = 'album';
             } else {
@@ -2339,11 +2337,9 @@ class Subsonic_Api
         $current  = (int) $input['current'];
         $position = (int) $input['position'];
         $username = (string) $input['u'];
-        $client   = (string) $input['c'];
         $user_id  = User::get_from_username($username)->id;
         $song_id  = Subsonic_XML_Data::getAmpacheId($current);
         $song     = new Song($song_id);
-        // only record repeated play stats using this method
         if ($position < 1 && $song->id) {
             Stream::garbage_collection();
             Stream::insert_now_playing((int) $song->id, (int) $user_id, (int) $song->time, $username, 'song');

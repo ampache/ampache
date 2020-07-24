@@ -50,7 +50,7 @@ class AmpConfig
      *
      * This returns a config value.
      * @param string $name
-     * @param string $default
+     * @param mixed $default
      * @return mixed|null
      */
     public static function get($name, $default = null)

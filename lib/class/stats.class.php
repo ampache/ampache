@@ -463,7 +463,7 @@ class Stats
     public static function get_top($type, $count = 0, $threshold = 0, $offset = 0, $user_id = null, $random = false)
     {
         if ($count < 1) {
-            $count = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
+            $count = AmpConfig::get('popular_threshold', 10);
         }
         $limit = (!$offset) ? $count : $offset . "," . $count;
         $sql   = '';
@@ -540,7 +540,7 @@ class Stats
     public static function get_recent($input_type, $count = 0, $offset = 0, $newest = true)
     {
         if ($count < 1) {
-            $count = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
+            $count = AmpConfig::get('popular_threshold', 10);
         }
         $limit = ($offset > 1) ? $count : $offset . "," . $count;
 
@@ -692,7 +692,7 @@ class Stats
     public static function get_newest($type, $count = 0, $offset = 0, $catalog = 0)
     {
         if ($count < 1) {
-            $count = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
+            $count = AmpConfig::get('popular_threshold', 10);
         }
         if ($offset < 1) {
             $limit = $count;

@@ -2238,7 +2238,7 @@ class Api
             $input['filter'] = $type;
         }
         if ($limit < 1) {
-            $limit = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
+            $limit = AmpConfig::get('popular_threshold', 10);
         }
 
         $results = null;
@@ -3035,7 +3035,7 @@ class Api
         }
         $limit = (int) ($input['limit']);
         if ($limit < 1) {
-            $limit = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
+            $limit = AmpConfig::get('popular_threshold', 10);
         }
         $username = $input['username'];
         if (!empty($username)) {

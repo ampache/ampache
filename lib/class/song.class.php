@@ -2000,7 +2000,7 @@ class Song extends database_object implements media, library_item
     public static function get_recently_played($user_id = 0)
     {
         $results = array();
-        $limit   = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
+        $limit   = AmpConfig::get('popular_threshold', 10);
         $sql     = "SELECT `object_id`, `user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` " .
                    "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {

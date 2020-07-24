@@ -58,7 +58,7 @@ class scrobbler
      * @param array $vars
      * @return string
      */
-    public function get_api_sig($vars = null)
+    public function get_api_sig($vars = array())
     {
         ksort($vars);
         $sig = '';

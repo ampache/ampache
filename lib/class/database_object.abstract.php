@@ -82,7 +82,7 @@ abstract class database_object
      * is_cached
      * this checks the cache to see if the specified object is there
      * @param string $index
-     * @param integer $object_id
+     * @param string $object_id
      * @return boolean
      */
     public static function is_cached($index, $object_id)

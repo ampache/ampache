@@ -114,7 +114,7 @@ switch ($_REQUEST['action']) {
             $track = $_GET['offset'] ? ((int) ($_GET['offset']) + 1) : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
-                    $playlist->update_track_number($song_id, $track);
+                    $playlist->update_track_number((int) $song_id, $track);
                     ++$track;
                 }
             }
