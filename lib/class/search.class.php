@@ -1265,8 +1265,7 @@ class Search extends playlist_object
         }
         $this->date = time();
         $this->set_last(count($results), 'last_count');
-
-        self::set_last(self::get_total_duration($results), 'last_duration');
+        $this->set_last(self::get_total_duration($results), 'last_duration');
 
         return $results;
     }

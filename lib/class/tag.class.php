@@ -348,7 +348,7 @@ class Tag extends database_object implements library_item
                 "VALUES (?, ?, ?, ?)";
             Dba::write($sql, array($tag['id'], $uid, $type, $item_id));
         }
-        $insert_id = Dba::insert_id();
+        $insert_id = (int) Dba::insert_id();
 
         parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id));
 

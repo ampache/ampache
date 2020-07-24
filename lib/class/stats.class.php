@@ -101,10 +101,9 @@ class Stats
      * @param array $location
      * @param string $count_type
      * @param integer $date
-     * @param integer $song_time
      * @return boolean
      */
-    public static function insert($input_type, $object_id, $user, $agent = '', $location = [], $count_type = 'stream', $date = null, $song_time = 0)
+    public static function insert($input_type, $object_id, $user, $agent = '', $location = [], $count_type = 'stream', $date = null)
     {
         if (AmpConfig::get('use_auth') && $user < 0) {
             debug_event('stats.class', 'Invalid user given ' . $user, 3);

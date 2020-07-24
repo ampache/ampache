@@ -317,8 +317,8 @@ class Podcast_Episode extends database_object implements media, library_item
             return false;
         }
         // insert stats for each object type
-        Stats::insert('podcast', $this->podcast, $user, $agent, $location, 'stream', $date, $this->time);
-        Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
+        Stats::insert('podcast', $this->podcast, $user, $agent, $location, 'stream', $date);
+        Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date);
 
         if ($this->played) {
             return true;

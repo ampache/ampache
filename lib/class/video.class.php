@@ -764,7 +764,7 @@ class Video extends database_object implements media, library_item
         if (!$this->check_play_history($user, $agent, $date)) {
             return false;
         }
-        Stats::insert('video', $this->id, $user, $agent, $location, 'stream', $date, $this->time);
+        Stats::insert('video', $this->id, $user, $agent, $location, 'stream', $date);
 
         if ($this->played) {
             return true;

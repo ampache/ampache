@@ -422,7 +422,7 @@ if ($action == 'download' && !$original) {
             $sessionkey = $sid ?: Stream::get_session();
             $agent      = Session::agent($sessionkey);
             $location   = Session::get_geolocation($sessionkey);
-            Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+            Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
         }
     }
     $record_stats = false;
@@ -447,10 +447,10 @@ if ($action == 'download' && !$original) {
             $sessionkey = $sid ?: Stream::get_session();
             $agent      = Session::agent($sessionkey);
             $location   = Session::get_geolocation($sessionkey);
-            Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+            Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
         }
     } else {
-        Stats::insert($type, $media->id, $uid, 'share.php', array(), 'download');
+        Stats::insert($type, $media->id, $uid, 'share.php', array(), 'download', $time);
     }
 
     // Check to see if we should be throttling because we can get away with it
@@ -686,10 +686,10 @@ if (!isset($_REQUEST['segment'])) {
         } elseif (!$share_id && !$record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering download for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
-                Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+                Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
             }
         } elseif ($share_id) {
-            Stats::insert($type, $media->id, $uid, 'share.php', array(), 'stream');
+            Stats::insert($type, $media->id, $uid, 'share.php', array(), 'stream', $time);
         }
     }
 }
