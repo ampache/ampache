@@ -185,7 +185,8 @@ $t_logout    = T_('Log out'); ?>
                         if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "ui-autocomplete" ).menu.active ) {
                             event.preventDefault();
                         }
-                    catcomplete({
+                    })
+                    .catcomplete({
                         source: function( request, response ) {
                             $.getJSON( jsAjaxUrl, {
                                 page: 'search',
