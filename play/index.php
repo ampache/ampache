@@ -676,6 +676,9 @@ if (!isset($_REQUEST['segment'])) {
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
+                // scrobble for the user
+                User::save_mediaplay($user, $media);
+                // internal stats (object_count, user_activity)
                 $media->set_played($uid, $agent, $location, $time);
             }
         } elseif (!$share_id && !$record_stats) {
