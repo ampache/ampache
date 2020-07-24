@@ -184,7 +184,7 @@ class Song_Preview extends database_object implements media, playable_item
             return $results;
         }
 
-        return false;
+        return array();
     }
 
     /**

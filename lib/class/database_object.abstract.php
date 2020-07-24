@@ -118,7 +118,7 @@ abstract class database_object
      * add_to_cache
      * This adds the specified object to the specified index in the cache
      * @param string $index
-     * @param integer $object_id
+     * @param integer|string $object_id
      * @param array $data
      * @return boolean
      */

@@ -224,7 +224,7 @@ class Art extends database_object
                 $test = false;
             }
         }
-        if ($test) {
+        if ($test && $image != false) {
             if (imagedestroy($image) === false) {
                 throw new RuntimeException('The image handle ' . $image . ' could not be destroyed');
             }

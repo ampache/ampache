@@ -515,7 +515,7 @@ class Playlist extends playlist_object
      * @param integer $user_id
      * @return string|null
      */
-    public static function create($name, $type, $user_id = nulll)
+    public static function create($name, $type, $user_id = null)
     {
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;

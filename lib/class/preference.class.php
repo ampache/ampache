@@ -48,7 +48,7 @@ class Preference extends database_object
     public static function get_by_user($user_id, $pref_name)
     {
         //debug_event('preference.class', 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', 5);
-        $user_id   = Dba::escape($user_id);
+        $user_id   = (int) Dba::escape($user_id);
         $pref_name = Dba::escape($pref_name);
         $pref_id   = self::id_from_name($pref_name);
 

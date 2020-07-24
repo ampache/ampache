@@ -185,8 +185,8 @@ class Tag extends database_object implements library_item
         }
 
         // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
-        if (!$map_id = self::tag_map_exists($type, $object_id, $tag_id, $uid)) {
-            $map_id = self::add_tag_map($type, $object_id, $tag_id, $uid);
+        if (!$map_id = self::tag_map_exists($type, $object_id, (int) $tag_id, $uid)) {
+            $map_id = self::add_tag_map($type, $object_id, (int) $tag_id, $uid);
         }
 
         return (int) $map_id;
