@@ -1621,7 +1621,7 @@ class Art extends database_object
 
     /**
      * Gather tags from files.
-     * @param media $media
+     * @param Song|Video $media
      * @return array
      */
     protected function gather_media_tags($media)

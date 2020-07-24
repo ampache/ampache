@@ -69,13 +69,13 @@ class Repository
     /**
      *
      * @param integer $object_id
-     * @return Metadata\Repository\MetadataField;
+     * @return Metadata\Repository\MetadataField
      */
     public function findById($object_id)
     {
         $rows = $this->findBy(array('id'), array($object_id));
 
-        return count($rows) ? reset($rows) : null;
+        return reset($rows);
     }
 
     /**

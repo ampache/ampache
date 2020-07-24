@@ -1738,7 +1738,7 @@ abstract class Catalog extends database_object
      * update_media_from_tags
      * This is a 'wrapper' function calls the update function for the media
      * type in question
-     * @param media $media
+     * @param Song|Video|Podcast_Episode $media
      * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
@@ -2041,7 +2041,7 @@ abstract class Catalog extends database_object
 
     /**
      * get_media_tags
-     * @param media $media
+     * @param Song|Video|Podcast_Episode $media
      * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
