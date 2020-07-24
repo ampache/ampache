@@ -457,7 +457,8 @@ class User extends database_object
      */
     public function get_favorites($type)
     {
-        $results = Stats::get_user(AmpConfig::get('popular_threshold'), $type, $this->id, 1);
+        $count   = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10;
+        $results = Stats::get_user($count, $type, $this->id, 1);
 
         $items = array();
 

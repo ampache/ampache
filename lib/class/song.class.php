@@ -2010,8 +2010,10 @@ class Song extends database_object implements media, library_item
      */
     public static function get_recently_played($user_id = 0)
     {
-        $sql = "SELECT `object_id`, `user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` " .
-            "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
+        $results = array();
+        $limit   = (AmpConfig::get('popular_threshold')) ? (int) AmpConfig::get('popular_threshold') : 10
+        $sql     = "SELECT `object_id`, `user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` " .
+                   "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }
@@ -2028,14 +2030,9 @@ class Song extends database_object implements media, library_item
                 }
             }
         }
-        $sql .= "ORDER BY `date` DESC ";
-        if (AmpConfig::get('popular_threshold')) {
-            $sql .= "LIMIT " . (string) (AmpConfig::get('popular_threshold')) . " ";
-        }
+        $sql .= "ORDER BY `date` DESC LIMIT " . (string) $limit . " ";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
         while ($row = Dba::fetch_assoc($db_results)) {
             if (empty($row['geo_name']) && $row['latitude'] && $row['longitude']) {
                 $row['geo_name'] = Stats::get_cached_place_name($row['latitude'], $row['longitude']);
