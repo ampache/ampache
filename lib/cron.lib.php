@@ -122,10 +122,8 @@ function run_cron_cache($user_id = 0)
                 }
                 // playlists
                 $user_playlist = Playlist::get_playlists(true, $user_id);
-                foreach ($user_playlist as $playlist_id) {
-                    Rating::build_cache('playlist', $playlist_id, $user_id);
-                    Userflag::build_cache('playlist', $playlist_id, $user_id);
-                }
+                Rating::build_cache('playlist', $user_playlist, $user_id);
+                Userflag::build_cache('playlist', $user_playlist, $user_id);
                 // podcasts
                 if (AmpConfig::get('podcast')) {
                     $podcasts = $catalog->get_podcast_ids();
