@@ -1665,17 +1665,18 @@ abstract class Catalog extends database_object
         // Because single items are large numbers of things too
         set_time_limit(0);
 
-        $songs  = array();
-        $result = $object_id;
+        $songs   = array();
+        $result  = $object_id;
+        $libitem = 0;
 
         switch ($type) {
             case 'album':
-                $album = new Album($object_id);
-                $songs = $album->get_songs();
+                $libitem = new Album($object_id);
+                $songs   = $libitem->get_songs();
                 break;
             case 'artist':
-                $artist = new Artist($object_id);
-                $songs  = $artist->get_songs();
+                $libitem = new Artist($object_id);
+                $songs   = $libitem->get_songs();
                 break;
             case 'song':
                 $songs[] = $object_id;
@@ -1716,12 +1717,12 @@ abstract class Catalog extends database_object
         // Update the tags for
         switch ($type) {
             case 'album':
-                $tags = self::getSongTags('album', $album->id);
-                Tag::update_tag_list(implode(',', $tags), 'album', $album->id, false);
+                $tags = self::getSongTags('album', $libitem->id);
+                Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, false);
                 break;
             case 'artist':
-                $tags = self::getSongTags('artist', $artist->id);
-                Tag::update_tag_list(implode(',', $tags), 'artist', $artist->id, false);
+                $tags = self::getSongTags('artist', $libitem->id);
+                Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
                 break;
         } // end switch type
 

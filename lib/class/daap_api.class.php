@@ -406,7 +406,7 @@ class Daap_Api
                     $playlist->format();
                     $library .= self::tlv_playlist($playlist);
                 }
-                $output .= self::tlv('dmap.listing', $l);
+                $output .= self::tlv('dmap.listing', $library);
 
                 $output = self::tlv('daap.databaseplaylists', $output);
             }
