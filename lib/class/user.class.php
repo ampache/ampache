@@ -201,6 +201,7 @@ class User extends database_object
     /**
      * has_info
      * This function returns the information for this object
+     * @return array
      */
     private function has_info()
     {
@@ -362,6 +363,7 @@ class User extends database_object
     /**
      * get_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -374,7 +376,7 @@ class User extends database_object
 
         $catalogs = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalogs[] = $row['catalog'];
+            $catalogs[] = (int) $row['catalog'];
         }
 
         parent::add_to_cache('user_catalog', $this->id, $catalogs);

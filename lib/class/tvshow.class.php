@@ -135,6 +135,7 @@ class TVShow extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the tv show, this means totals etc
+     * @return array
      */
     private function _get_extra_info()
     {

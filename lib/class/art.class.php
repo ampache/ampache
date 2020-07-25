@@ -1228,7 +1228,6 @@ class Art extends database_object
             return $images;
         }
 
-        $response = null;
         try {
             $response = $api->search($query, $this->type);
         } catch (SpotifyWebAPIException $error) {

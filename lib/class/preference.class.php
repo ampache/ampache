@@ -43,7 +43,7 @@ class Preference extends database_object
      * Return a preference for specific user identifier
      * @param integer $user_id
      * @param string $pref_name
-     * @return array|mixed
+     * @return integer
      */
     public static function get_by_user($user_id, $pref_name)
     {
@@ -53,7 +53,7 @@ class Preference extends database_object
         $pref_id   = self::id_from_name($pref_name);
 
         if (parent::is_cached('get_by_user', $user_id)) {
-            return parent::get_from_cache('get_by_user', $user_id);
+            return (int) (parent::get_from_cache('get_by_user', $user_id))[0];
         }
 
         $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$pref_id' AND `user`='$user_id'";
@@ -66,7 +66,7 @@ class Preference extends database_object
 
         parent::add_to_cache('get_by_user', $user_id, $data);
 
-        return $data['value'];
+        return (int) $data['value'];
     } // get_by_user
 
 
@@ -215,14 +215,14 @@ class Preference extends database_object
      * id_from_name
      * This takes a name and returns the id
      * @param string $name
-     * @return array|mixed
+     * @return array|integer
      */
     public static function id_from_name($name)
     {
         $name = Dba::escape($name);
 
         if (parent::is_cached('id_from_name', $name)) {
-            return parent::get_from_cache('id_from_name', $name);
+            return (int) (parent::get_from_cache('id_from_name', $name))[0];
         }
 
         $sql        = "SELECT `id` FROM `preference` WHERE `name`='$name'";
@@ -231,7 +231,7 @@ class Preference extends database_object
 
         parent::add_to_cache('id_from_name', $name, $row);
 
-        return $row['id'];
+        return (int) $row['id'];
     } // id_from_name
 
     /**

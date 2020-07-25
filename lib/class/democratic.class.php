@@ -131,7 +131,6 @@ class Democratic extends Tmp_Playlist
     public static function set_user_preferences()
     {
         // FIXME: Code in single user stuff
-
         $preference_id = Preference::id_from_name('play_type');
         Preference::update_level($preference_id, '75');
         Preference::update_all($preference_id, 'democratic');
@@ -620,12 +619,12 @@ class Democratic extends Tmp_Playlist
      * get_vote
      * This returns the current count for a specific song
      * @param integer $id
-     * @return array|mixed
+     * @return integer
      */
     public function get_vote($id)
     {
         if (parent::is_cached('democratic_vote', $id)) {
-            return parent::get_from_cache('democratic_vote', $id);
+            return (int) (parent::get_from_cache('democratic_vote', $id))[0];
         }
 
         $sql = 'SELECT COUNT(`user`) AS `count` FROM `user_vote` ' .
@@ -635,7 +634,7 @@ class Democratic extends Tmp_Playlist
         $results = Dba::fetch_assoc($db_results);
         parent::add_to_cache('democratic_vote', $id, $results);
 
-        return $results['count'];
+        return (int) $results['count'];
     } // get_vote
 
     /**
@@ -643,7 +642,7 @@ class Democratic extends Tmp_Playlist
      * This returns the users that voted for the specified object
      * This is an array of user ids
      * @param integer $object_id
-     * @return array|mixed
+     * @return array
      */
     public function get_voters($object_id)
     {

@@ -126,6 +126,7 @@ class Podcast extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the podcast, this means totals etc
+     * @return array
      */
     private function _get_extra_info()
     {

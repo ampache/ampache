@@ -2228,7 +2228,7 @@ class Api
             $user_id = (int) $input['user_id'];
             $user    = new User($user_id);
         }
-        // moved type to filter and allowed multipe type selection
+        // moved type to filter and allowed multiple type selection
         $type   = $input['type'];
         $offset = (int) $input['offset'];
         $limit  = (int) $input['limit'];

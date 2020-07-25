@@ -147,7 +147,7 @@ class Rating extends database_object
 
         $key = 'rating_' . $this->type . '_user' . $user_id;
         if (parent::is_cached($key, $this->id)) {
-            return parent::get_from_cache($key, $this->id)[0];
+            return (double) parent::get_from_cache($key, $this->id)[0];
         }
 
         $sql = "SELECT `rating` FROM `rating` WHERE `user` = ? " .
@@ -173,7 +173,7 @@ class Rating extends database_object
     public function get_average_rating()
     {
         if (parent::is_cached('rating_' . $this->type . '_all', $this->id)) {
-            return parent::get_from_cache('rating_' . $this->type . '_user', $this->id)[0];
+            return (double) parent::get_from_cache('rating_' . $this->type . '_user', $this->id)[0];
         }
 
         $sql = "SELECT AVG(`rating`) as `rating` FROM `rating` WHERE " .

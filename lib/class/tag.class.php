@@ -420,7 +420,7 @@ class Tag extends database_object implements library_item
     public static function tag_exists($value)
     {
         if (parent::is_cached('tag_name', $value)) {
-            return parent::get_from_cache('tag_name', $value)[0];
+            return (int) (parent::get_from_cache('tag_name', $value))[0];
         }
 
         $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
@@ -611,7 +611,7 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param integer $limit
      * @param string $order
-     * @return array|mixed
+     * @return array
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
