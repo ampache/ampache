@@ -312,12 +312,17 @@ class Stats
         $skip_time = AmpConfig::get_skip_timer($previous['time']);
 
         // this object was your last play and the length between plays is too short.
-        if ($previous['object_id'] == $object->id && $diff <= $item_time) {
-            debug_event('stats.class', 'Repeated the same ' . get_class($object) . ' too quickly (' . $diff . '/' . $item_time . 's), not recording stats for {' . $object->id . '}', 3);
+        if ($previous['object_id'] == $object->id && $diff <= ($item_time + 5)) {
+            debug_event('stats.class', 'Repeated the same ' . get_class($object) . ' too quickly (' . $diff . '/' . ($item_time + 5) . 's), not recording stats for {' . $object->id . '}', 3);
 
             return false;
         }
+        // this object was your last play but submission time is larger than the length of the song
+        if ($previous['object_id'] == $object->id && $diff > ($item_time + 120)) {
+            debug_event('stats.class', 'It took a long time to finish this ' . get_class($object) . '. (' . $diff . '/' . ($item_time + 120) . 's), not recording stats for {' . $object->id . '}', 3);
 
+            return false;
+        }
         // when the difference between recordings is too short, the previous object has been skipped, so note that
         if (($diff < $skip_time || ($diff < $skip_time && $previous['time'] > $skip_time))) {
             debug_event('stats.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
