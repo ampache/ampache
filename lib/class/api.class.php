@@ -1409,7 +1409,7 @@ class Api
             $playlist = new Playlist($uid);
         } else {
             // Smartlists
-            $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
+            $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
         }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['format']);
@@ -1454,7 +1454,7 @@ class Api
             $playlist = new Playlist($uid);
         } else {
             // Smartlists
-            $playlist = new Search(str_replace('smart_', '', $uid), 'song', $user);
+            $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
         }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['format']);

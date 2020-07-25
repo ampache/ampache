@@ -84,7 +84,7 @@ $democratic = Democratic::get_current_playlist();
     <?php
         } ?>
     </td>
-    <td class="cel_votes" ><?php echo scrub_out($democratic->get_vote($item['id'])); ?></td>
+    <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['id'])); ?></td>
     <td class="cel_title"><?php echo $media->f_link; ?></td>
     <td class="cel_album"><?php echo $media->f_album_link; ?></td>
     <td class="cel_artist"><?php echo $media->f_artist_link; ?></td>

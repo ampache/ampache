@@ -480,7 +480,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0)
     static $license_id_cnt = 0;
 
     // Generate key to use for HTML element ID
-    if ($song_id) {
+    if ($song_id > 0) {
         $key = "license_select_" . $song_id;
     } else {
         $key = "license_select_c" . ++$license_id_cnt;

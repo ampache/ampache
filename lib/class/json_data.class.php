@@ -439,7 +439,7 @@ class JSON_Data
                 $playitem_total = $playlist->get_media_count('song');
                 $playlist_type  = $playlist->type;
             } else {
-                $playlist     = new Search(str_replace('smart_', '', (string) $playlist_id));
+                $playlist     = new Search((int) str_replace('smart_', '', (string) $playlist_id));
                 $playlist->format();
 
                 $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));

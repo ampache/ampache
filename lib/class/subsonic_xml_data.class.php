@@ -978,7 +978,7 @@ class Subsonic_XML_Data
             self::addPlaylist($xplaylists, $playlist);
         }
         foreach ($smartplaylists as $splistid) {
-            $smartplaylist = new Search(str_replace('smart_', '', (string) $splistid), 'song');
+            $smartplaylist = new Search((int) str_replace('smart_', '', (string) $splistid), 'song');
             self::addSmartPlaylist($xplaylists, $smartplaylist);
         }
     }
