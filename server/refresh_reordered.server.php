@@ -29,7 +29,7 @@ debug_event('refresh_reordered.server', 'Called for action: {' . Core::get_reque
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'refresh_playlist_medias':
-        $playlist = new Playlist(Core::get_request('id'));
+        $playlist = new Playlist((int) Core::get_request('id'));
         $playlist->format();
         $object_ids = $playlist->get_items();
         $browse     = new Browse();

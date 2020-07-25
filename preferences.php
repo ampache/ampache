@@ -105,7 +105,7 @@ switch ($_REQUEST['action']) {
 
             return false;
         }
-        $client      = new User(Core::get_request('user_id'));
+        $client      = new User((int) Core::get_request('user_id'));
         $fullname    = $client->fullname;
         $preferences = $client->get_preferences($_REQUEST['tab']);
     break;

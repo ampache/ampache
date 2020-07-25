@@ -105,7 +105,7 @@ switch ($_REQUEST['action']) {
         switch ($_REQUEST['type']) {
             case 'playlist':
                 // Check the perms we need to on this
-                $playlist = new Playlist(Core::get_request('id'));
+                $playlist = new Playlist((int) Core::get_request('id'));
                 if (!$playlist->has_access()) {
                     return false;
                 }
@@ -115,7 +115,7 @@ switch ($_REQUEST['action']) {
                 $key = 'playlist_row_' . $playlist->id;
             break;
             case 'smartplaylist':
-                $playlist = new Search(Core::get_request('id'), 'song');
+                $playlist = new Search((int) Core::get_request('id'), 'song');
                 if (!$playlist->has_access()) {
                     return false;
                 }

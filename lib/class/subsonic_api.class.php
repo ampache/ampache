@@ -594,7 +594,7 @@ class Subsonic_Api
                 $albums = Rating::get_highest("album", $size, $offset);
                 break;
             case "frequent":
-                $albums = Stats::get_top("album", $size, '', $offset);
+                $albums = Stats::get_top("album", $size, 0, $offset);
                 break;
             case "recent":
                 $albums = Stats::get_recent("album", $size, $offset);

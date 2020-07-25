@@ -35,8 +35,8 @@ header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 <meta property="og:site_name" content="Ampache"/>
 <?php
 if (!$is_share) {
-     $stream_id = $_REQUEST['playlist_id'];
-     if (is_string($stream_id) || is_integer($stream_id)) {
+     $stream_id = (int) $_REQUEST['playlist_id'];
+     if ($stream_id > 0) {
          $playlist = new Stream_Playlist($stream_id);
      }
  }

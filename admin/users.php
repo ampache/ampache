@@ -198,7 +198,7 @@ switch ($_REQUEST['action']) {
 
     break;
     case 'enable':
-        $client = new User(Core::get_request('user_id'));
+        $client = new User((int) Core::get_request('user_id'));
         $client->enable();
         if (!AmpConfig::get('user_no_email_confirm')) {
             Registration::send_account_enabled($client->username, $client->fullname, $client->email);
@@ -208,7 +208,7 @@ switch ($_REQUEST['action']) {
             sprintf(T_('%s has been enabled'), $client->username . ' (' . $client->fullname . ')'), AmpConfig::get('web_path') . '/admin/users.php');
     break;
     case 'disable':
-        $client = new User(Core::get_request('user_id'));
+        $client = new User((int) Core::get_request('user_id'));
         if ($client->disable()) {
             show_confirmation(T_('No Problem'),
             /* HINT: Username and fullname together: Username (fullname) */
@@ -221,7 +221,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('demo_mode')) {
             break;
         }
-        $client = new User(Core::get_request('user_id'));
+        $client = new User((int) Core::get_request('user_id'));
         $client->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_user.inc.php');
     break;
@@ -234,7 +234,7 @@ switch ($_REQUEST['action']) {
 
             return false;
         }
-        $client = new User(Core::get_request('user_id'));
+        $client = new User((int) Core::get_request('user_id'));
         if ($client->delete()) {
             show_confirmation(T_('No Problem'),
                 /* HINT: Username (Short Name) */
@@ -247,7 +247,7 @@ switch ($_REQUEST['action']) {
         if (AmpConfig::get('demo_mode')) {
             break;
         }
-        $client = new User(Core::get_request('user_id'));
+        $client = new User((int) Core::get_request('user_id'));
         show_confirmation(T_('Are You Sure?'),
             /* HINT: User Fullname */
             sprintf(T_('This will permanently delete the user "%s"'), $client->fullname),
@@ -270,7 +270,7 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        $client = new User(Core::get_request('user_id'));
+        $client = new User((int) Core::get_request('user_id'));
         $client->delete_avatar();
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
@@ -293,7 +293,7 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        $client = new User(Core::get_request('user_id'));
+        $client = new User((int) Core::get_request('user_id'));
         $client->generate_apikey();
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
@@ -302,7 +302,7 @@ switch ($_REQUEST['action']) {
     /* Show IP History for the Specified User */
     case 'show_ip_history':
         /* get the user and their history */
-        $working_user = new User(Core::get_request('user_id'));
+        $working_user = new User((int) Core::get_request('user_id'));
         $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
 
         if (!isset($_REQUEST['all'])) {
@@ -319,7 +319,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_user.inc.php');
     break;
     case 'show_preferences':
-        $client      = new User(Core::get_request('user_id'));
+        $client      = new User((int) Core::get_request('user_id'));
         $preferences = Preference::get_all($client->id);
         require_once AmpConfig::get('prefix') . UI::find_template('show_user_preferences.inc.php');
     break;

@@ -33,7 +33,7 @@ ob_end_clean();
 
 set_time_limit(0);
 
-$channel = new Channel(Core::get_request('channel'));
+$channel = new Channel((int) Core::get_request('channel'));
 if (!$channel->id) {
     debug_event('channel/index', 'Unknown channel.', 1);
 

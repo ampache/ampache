@@ -34,7 +34,7 @@ $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('cust
 switch ($_REQUEST['action']) {
     // Show a Users "Profile" page
     case 'show_user':
-        $client = new User(Core::get_request('user_id'));
+        $client = new User((int) Core::get_request('user_id'));
         require_once AmpConfig::get('prefix') . UI::find_template('show_user.inc.php');
     break;
     // Show stats
