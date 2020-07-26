@@ -36,7 +36,7 @@ class Stream
      * This overrides the normal session value, without adding
      * an additional session into the database, should be called
      * with care
-     * @param integer $sid
+     * @param integer|string $sid
      */
     public static function set_session($sid)
     {
