@@ -37,7 +37,6 @@ $count_types  = [ 'stream', 'download', 'skip' ];
 // TODO fix playlist sql.
 $object_types = [ 'album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast_episode' ];
 
-debug_event('compute_cache', 'started cache process.', 3);
 foreach ($thresholds as $threshold) {
 	foreach ($count_types as $count_type) {
 		foreach ($object_types as $object_type) {
