@@ -40,6 +40,7 @@ class Channel extends database_object implements media, library_item
     public $bitrate;
     public $name;
     public $description;
+    public $fixed_endpoint;
 
     public $header_chunk;
     public $chunk_size              = 4096;

@@ -46,7 +46,7 @@ if (empty($options) || !isset($options['u'])) {
 $username = $options['u'];
 $password = isset($options['p']) ? $options['p'] : mt_rand();
 $access = isset($options['l']) ? $options['l'] : AmpConfig::get('auto_user');
-$access = isset($access) ? $access : 'guest';
+$access = (isset($access)) ? (int) $access : 5;
 $access = is_numeric($access) ? $access : User::access_name_to_level($access);
 $email = isset($options['e']) ? $options['e'] : '';
 $website = isset($options['w']) ? $options['w'] : '';

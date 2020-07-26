@@ -182,7 +182,7 @@ while(true)
     for ($count = 0; $count < $nb_chunks; $count++)  {
 
         $chunk = $channel->get_chunk();
-        $chunklen = strlen($chunk);
+        $chunklen = strlen((string) $chunk);
         $chunk_buffer .= $chunk;
 
         //buffer maintenance
