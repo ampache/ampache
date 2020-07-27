@@ -39,7 +39,7 @@
                 $row_key              = 'duplicate_' . $song_id;
                 $button_flip_state_id = 'button_flip_state_' . $song_id;
                 $current_class        = ($key == '0') ? 'row-highlight' : UI::flip_class();
-                if ($button) {
+                if ($song->enabled) {
                     $button     = 'disable';
                     $buttontext = T_('Disable');
                 } else {
