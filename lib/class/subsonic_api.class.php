@@ -1880,9 +1880,9 @@ class Subsonic_Api
 
         foreach ($object_ids as $subsonic_id) {
             sleep(1);
-            $ampache_id = Subsonic_XML_Data::getAmpacheId($subsonic_id);
-            $type       = Subsonic_XML_Data::getAmpacheType($subsonic_id);
-            $media      = new $type($ampache_id);
+            $media_id = Subsonic_XML_Data::getAmpacheId($subsonic_id);
+            $type     = Subsonic_XML_Data::getAmpacheType($subsonic_id);
+            $media    = Subsonic_XML_Data::getAmpacheObject($media_id);
             $media->format();
 
             // scrobble plugins (Plugin::get_plugins('save_mediaplay'))
@@ -1892,7 +1892,7 @@ class Subsonic_Api
                 User::save_mediaplay($user, $media);
             }
             // submission is true at the end of the song play and it's not helping with dupes
-            if (($submission !== 'true' || $submission !== '1')) {
+            if (($submission !== 'true' || $submission !== '1') && $media->id) {
                 $media->set_played($user->id, $client, array(), $time);
             }
         }
@@ -2341,11 +2341,13 @@ class Subsonic_Api
         $position = (int) $input['position'];
         $username = (string) $input['u'];
         $user_id  = User::get_from_username($username)->id;
-        $song_id  = Subsonic_XML_Data::getAmpacheId($current);
-        $song     = new Song($song_id);
-        if ($position < 1 && $song->id) {
+        $media_id = Subsonic_XML_Data::getAmpacheId($current);
+        $media    = Subsonic_XML_Data::getAmpacheObject($media_id);
+        if ($position < 1 && $media->id) {
             Stream::garbage_collection();
-            Stream::insert_now_playing((int) $song->id, (int) $user_id, (int) $song->time, $username, 'song');
+            Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $song->time, $username, 'song');
+            // repeated plays aren't called by scrobble so make sure we call this too
+            $media->set_played((int) $user_id, (string) $input['c'], array(), time());
         }
         // continue to fail saving the queue
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');

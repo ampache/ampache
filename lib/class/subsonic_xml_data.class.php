@@ -845,6 +845,27 @@ class Subsonic_XML_Data
     }
 
     /**
+     * getAmpacheObject
+     * Return the Ampache media object
+     * @param integer $object_id
+     * @return Song|Video|Podcast_Episode|null
+     */
+    public static function getAmpacheObject($object_id)
+    {
+        if (Subsonic_XML_Data::isSong($object_id)) {
+            return new Song($object_id);
+        }
+        if (Subsonic_XML_Data::isVideo($object_id)) {
+            return new Video($object_id);
+        }
+        if (Subsonic_XML_Data::isPodcastEp($object_id)) {
+            return new Podcast_Episode($object_id);
+        }
+
+        return null;
+    } // getAmpacheObject
+
+    /**
      * addArtistDirectory
      * @param SimpleXMLElement $xml
      * @param Artist $artist

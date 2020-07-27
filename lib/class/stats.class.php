@@ -308,7 +308,7 @@ class Stats
     {
         $previous  = self::get_last_play($user, $agent, $date);
         $diff      = $date - (int) $previous['date'];
-        $item_time = $object->time + 5;
+        $item_time = $object->time;
         $skip_time = AmpConfig::get_skip_timer($previous['time']);
 
         // this object was your last play and the length between plays is too short.
