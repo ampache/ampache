@@ -125,7 +125,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <?php
         } ?>
         <?php if (Access::check('interface', 75) || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
-        <span id="<?php echo($button_flip_state_id); ?>">
+        <span id="<?php echo $button_flip_state_id; ?>">
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $icon, $icontext, 'flip_song_' . $song->id); ?>
         </span>
         <?php

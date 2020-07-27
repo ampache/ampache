@@ -140,7 +140,7 @@ switch ($_REQUEST['action']) {
         }
 
         // Now that it's inserted save the lang preference
-        Preference::update('lang', '-1', AmpConfig::get('lang'));
+        Preference::update('lang', -1, AmpConfig::get('lang'));
     case 'show_create_config':
         require_once 'templates/show_install_config.inc.php';
     break;

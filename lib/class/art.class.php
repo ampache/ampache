@@ -1749,7 +1749,7 @@ class Art extends database_object
             // search for album objects
             if ((!empty($data['artist']) && !empty($data['album']))) {
                 $xmldata = Recommendation::album_search($data['artist'], $data['album']);
-                if (!count($xmldata)) {
+                if (!$xmldata) {
                     return array();
                 }
                 if (!$xmldata->album->image) {

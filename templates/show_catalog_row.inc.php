@@ -54,7 +54,7 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
     </select>
     <input type="button" onClick="NavigateTo('<?php echo $web_path; ?>/admin/catalog.php?action=' + this.form.catalog_action_menu.options[this.form.catalog_action_menu.selectedIndex].value + '&catalogs[]=<?php echo $libitem->id; ?>');" value="<?php echo T_('Go'); ?>">
     <?php if (AmpConfig::get('catalog_disable')) { ?>
-        <span id="<?php echo($button_flip_state_id); ?>">
+        <span id="<?php echo $button_flip_state_id; ?>">
             <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, $icontext, 'flip_state_' . $libitem->id); ?>
         </span>
     <?php

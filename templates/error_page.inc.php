@@ -28,7 +28,7 @@ $t_ampache = T_('Ampache'); ?>
 
 <head>
 <!-- Propelled by Ampache | ampache.org -->
-<meta http-equiv="refresh" content="10;URL=<?php echo($redirect_url);?>" />
+<meta http-equiv="refresh" content="10;URL=<?php echo $redirect_url;?>" />
 <?php UI::show_custom_style(); ?>
 <title><?php echo T_("Ampache Error Page");?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">

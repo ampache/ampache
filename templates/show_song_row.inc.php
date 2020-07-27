@@ -120,7 +120,7 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
             $buttontext = T_('Enable');
         }
         $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
-        <span id="<?php echo($button_flip_state_id); ?>">
+        <span id="<?php echo $button_flip_state_id; ?>">
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $libitem->id, $icon, $buttontext, 'flip_song_' . $libitem->id); ?>
         </span>
 <?php

@@ -51,7 +51,7 @@
                         $buttontext = T_('Enable');
                     } ?>
         <tr id="<?php echo $row_key; ?>" class="<?php echo $current_class; ?>">
-            <td class="cel_disable" id="<?php echo($button_flip_state_id); ?>">
+            <td class="cel_disable" id="<?php echo $button_flip_state_id; ?>">
                 <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song_id, $button, $buttontext, 'flip_state_' . $song_id); ?>
             </td>
             <td class="cel_song"><?php echo $song->f_link; ?></td>
