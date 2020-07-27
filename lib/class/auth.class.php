@@ -72,7 +72,7 @@ class Auth
 
             $results            = array();
             $results['rfc3514'] = '<script>reloadRedirect("' . $target . '")</script>';
-            echo xoutput_from_array($results);
+            echo (string) xoutput_from_array($results);
         } else {
             /* Redirect them to the login page */
             header('Location: ' . $target);

@@ -400,11 +400,11 @@ class Wanted extends database_object
         Dba::write($sql, $params);
 
         if ($accept) {
-            $wantedid = Dba::insert_id();
-            $wanted   = new Wanted((int) $wantedid);
+            $wanted_id = (int) Dba::insert_id();
+            $wanted    = new Wanted($wanted_id);
             $wanted->accept();
 
-            database_object::remove_from_cache('wanted', $wantedid);
+            database_object::remove_from_cache('wanted', $wanted_id);
         }
     }
 

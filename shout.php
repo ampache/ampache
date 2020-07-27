@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
         return false;
     case 'show_add_shout':
         // Get our object first
-        $object = Shoutbox::get_object($_REQUEST['type'], Core::get_request('id'));
+        $object = Shoutbox::get_object($_REQUEST['type'], (int) Core::get_request('id'));
 
         if (!$object || !$object->id) {
             AmpError::add('general', T_('Invalid object selected'));

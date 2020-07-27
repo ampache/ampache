@@ -234,4 +234,4 @@ switch ($action) {
 } // end switch action
 
 // Go ahead and do the echo
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

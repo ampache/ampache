@@ -206,8 +206,10 @@ if (!defined('INSTALL')) { ?>
     <td>
     <?php
         $results = @parse_ini_file($configfile);
-        AmpConfig::set_by_array($results);
-        echo debug_result(check_config_values($results)); ?>
+        if ($results) {
+            AmpConfig::set_by_array($results);
+            echo debug_result(check_config_values($results));
+        } ?>
     </td>
     <td>
     <?php echo T_("This test makes sure that you have set all of the required configuration variables and that Ampache is able to completely parse your config file."); ?>

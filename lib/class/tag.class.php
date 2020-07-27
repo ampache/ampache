@@ -186,7 +186,7 @@ class Tag extends database_object implements library_item
 
         // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
         if (!$map_id = self::tag_map_exists($type, $object_id, (int) $tag_id, $uid)) {
-            $map_id = self::add_tag_map($type, $object_id, (int) $tag_id, $uid);
+            $map_id = self::add_tag_map($type, $object_id, (int) $tag_id, $user);
         }
 
         return (int) $map_id;
@@ -201,7 +201,7 @@ class Tag extends database_object implements library_item
     public static function add_tag($value)
     {
         if (!strlen((string) $value)) {
-            return false;
+            return null;
         }
 
         $sql = "REPLACE INTO `tag` SET `name` = ?";
@@ -233,7 +233,9 @@ class Tag extends database_object implements library_item
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $data['edit_tags']);
             $filterunder = str_replace('_',', ', $filterfolk);
             $filter      = str_replace(';',', ', $filterunder);
-            $tag_names   = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
+            $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
+            $tag_names   = (is_array($filter_list)) ? array_unique($filter_list) : array();
+
             foreach ($tag_names as $tag) {
                 $merge_to = self::construct_from_name($tag);
                 if ($merge_to->id == 0) {
@@ -704,7 +706,8 @@ class Tag extends database_object implements library_item
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
         $filterunder = str_replace('_',', ', $filterfolk);
         $filter      = str_replace(';',', ', $filterunder);
-        $editedTags  = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
+        $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
+        $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : array();
 
         foreach ($ctags as $ctid => $ctv) {
             if ($ctv['id'] != '') {
@@ -751,7 +754,8 @@ class Tag extends database_object implements library_item
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
             $filterunder = str_replace('_',', ', $filterfolk);
             $filter      = str_replace(';',', ', $filterunder);
-            $taglist     = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter));
+            $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
+            $taglist     = (is_array($filter_list)) ? array_unique($filter_list) : array();
         }
 
         $ret = array();

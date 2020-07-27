@@ -126,7 +126,7 @@ switch ($_REQUEST['action']) {
                 if (!Core::get_global('user')->has_access('75')) {
                     return false;
                 }
-                $radio = new Live_Stream(Core::get_request('id'));
+                $radio = new Live_Stream((int) Core::get_request('id'));
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
             break;
@@ -224,4 +224,4 @@ switch ($_REQUEST['action']) {
 $browse->store();
 
 // We always do this
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

@@ -1135,24 +1135,24 @@ class User extends database_object
      * access_name_to_level
      * This takes the access name for the user and returns the level
      * @param string $name
-     * @return string
+     * @return integer
      */
     public static function access_name_to_level($name)
     {
         switch ($name) {
             case 'admin':
-                return '100';
+                return 100;
             case 'user':
-                return '25';
+                return 25;
             case 'manager':
-                return '75';
+                return 75;
             // FIXME why is content manager not here?
             //case 'manager':
-            //    return '50';
+            //    return 50;
             case 'guest':
-                return '5';
+                return 5;
             default:
-                return '0';
+                return 0;
         }
     } // access_name_to_level
 

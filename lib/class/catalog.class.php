@@ -99,6 +99,16 @@ abstract class Catalog extends database_object
      */
     public $f_clean;
     /**
+     * alias for catalog paths, urls, etc etc
+     * @var string $f_full_info
+     */
+    public $f_full_info;
+    /**
+     * alias for catalog paths, urls, etc etc
+     * @var string $f_info
+     */
+    public $f_info;
+    /**
      * @var integer $enabled
      */
     public $enabled;
@@ -2640,7 +2650,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Play Count']   = (int) ($song->played);
                     $xml['dict']['Track Type']   = "URL";
                     $xml['dict']['Location']     = Song::play_url($song->id);
-                    echo xoutput_from_array($xml, true, 'itunes');
+                    echo (string) xoutput_from_array($xml, true, 'itunes');
                     // flush output buffer
                 } // while result
                 echo xml_get_footer('itunes');

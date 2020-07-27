@@ -48,7 +48,7 @@ if (!file_exists($configfile)) {
     // Make sure the config file is set up and parsable
     $results = parse_ini_file($configfile);
 
-    if (!count($results)) {
+    if (empty($results)) {
         $link = $path . '/test.php?action=config';
     }
 }

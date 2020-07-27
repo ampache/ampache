@@ -59,9 +59,8 @@ class Recommendation
         debug_event('recommendation.class', 'search url : ' . $url, 5);
 
         $request = Requests::get($url, array(), Core::requests_options());
-        $content = $request->body;
 
-        return simplexml_load_string($content);
+        return simplexml_load_string((string) $request->body);
     }
 
     /**

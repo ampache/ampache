@@ -567,7 +567,7 @@ class Api
             return false;
         }
         $type   = (string) $input['type'];
-        $filter = (string) $input['filter'];
+        $filter = (int) $input['filter'];
         // confirm the correct data
         if (!in_array($type, array('song', 'artist'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['format']);
@@ -1402,7 +1402,7 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = scrub_in($input['filter']);
+        $uid  = (int) scrub_in($input['filter']);
 
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
@@ -1447,7 +1447,7 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = scrub_in($input['filter']);
+        $uid  = (int) scrub_in($input['filter']);
         debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
@@ -3758,7 +3758,7 @@ class Api
         if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['format'])) {
             return false;
         }
-        $object_id = (string) scrub_in($input['filter']);
+        $object_id = (int) scrub_in($input['filter']);
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             if ($podcast->sync_episodes(true)) {

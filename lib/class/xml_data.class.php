@@ -499,12 +499,12 @@ class XML_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums($artist->get_albums(), $include, false);
+                $albums = self::albums($artist->get_albums(), array(), $user_id, false);
             } else {
                 $albums = ($artist->albums ?: 0);
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs($artist->get_songs(), array(), false);
+                $songs = self::songs($artist->get_songs(), $user_id, false);
             } else {
                 $songs = ($artist->songs ?: 0);
             }
@@ -581,7 +581,7 @@ class XML_Data
 
             // Handle includes
             if (in_array("songs", $include)) {
-                $songs = self::songs($album->get_songs(), array(), false);
+                $songs = self::songs($album->get_songs(), $user_id, false);
             } else {
                 $songs = $album->song_count;
             }

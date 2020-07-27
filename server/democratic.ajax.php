@@ -51,7 +51,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'delete':
         if (!Core::get_global('user')->has_access('75')) {
-            echo xoutput_from_array(array('rfc3514' => '0x1'));
+            echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
             return false;
         }
@@ -61,7 +61,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'send_playlist':
         if (!Access::check('interface', 75)) {
-            echo xoutput_from_array(array('rfc3514' => '0x1'));
+            echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
             return false;
         }
@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'clear_playlist':
         if (!Access::check('interface', 100)) {
-            echo xoutput_from_array(array('rfc3514' => '0x1'));
+            echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
             return false;
         }
@@ -100,4 +100,4 @@ if ($show_browse) {
 }
 
 // We always do this
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

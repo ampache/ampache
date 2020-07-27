@@ -65,7 +65,7 @@ if (Core::get_request('action') == 'show_edit_playlist') {
 
 // Make sure they got them rights
 if (!Access::check('interface', (int) $level) || AmpConfig::get('demo_mode')) {
-    echo xoutput_from_array(array('rfc3514' => '0x1'));
+    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
     return false;
 }
@@ -144,7 +144,7 @@ switch ($_REQUEST['action']) {
 
         xoutput_headers();
         $results = array('id' => $new_id);
-        echo xoutput_from_array($results);
+        echo (string) xoutput_from_array($results);
 
         return false;
     default:

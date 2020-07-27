@@ -115,4 +115,4 @@ switch ($_REQUEST['action']) {
     break;
 }
 
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

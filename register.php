@@ -138,17 +138,17 @@ switch ($_REQUEST['action']) {
         }
 
         /* Attempt to create the new user */
-        $access = '5';
+        $access = 5;
         switch (AmpConfig::get('auto_user')) {
             case 'admin':
-                $access = '100';
+                $access = 100;
             break;
             case 'user':
-                $access = '25';
+                $access = 25;
             break;
             case 'guest':
             default:
-                $access = '5';
+                $access = 5;
             break;
         } // auto-user level
 

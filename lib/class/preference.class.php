@@ -108,7 +108,7 @@ class Preference extends database_object
         $value = Dba::escape($value);
 
         if (self::has_access($name)) {
-            $user_id = Dba::escape($user_id);
+            $user_id = (int) Dba::escape($user_id);
             $sql     = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id'$user_check";
             Dba::write($sql);
             self::clear_from_session();

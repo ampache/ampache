@@ -494,7 +494,7 @@ if (!function_exists('apache_request_headers')) {
 }
 
 /**
- * @return mixed
+ * @return string
  */
 function get_current_path()
 {
@@ -504,17 +504,17 @@ function get_current_path()
         $root = $_SERVER['REQUEST_URI'];
     }
 
-    return $root;
+    return (string) $root;
 }
 
 /**
- * @return string|string[]|null
+ * @return string
  */
 function get_web_path()
 {
     $root = get_current_path();
 
-    return preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
+    return (string) preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
 }
 
 /**

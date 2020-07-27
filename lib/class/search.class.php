@@ -1512,7 +1512,7 @@ class Search extends playlist_object
      * Private convenience function.  Mangles the input according to a set
      * of predefined rules so that we don't have to include this logic in
      * foo_to_sql.
-     * @param array $data
+     * @param array|string $data
      * @param string|false $type
      * @param array $operator
      * @return array|boolean|integer|string|string[]|null

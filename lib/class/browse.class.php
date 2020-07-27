@@ -135,7 +135,7 @@ class Browse extends Query
      * type that we are currently browsing
      *
      * @param array $object_ids
-     * @param boolean|array $argument
+     * @param boolean|array|string $argument
      */
     public function show_objects($object_ids = array(), $argument = false)
     {

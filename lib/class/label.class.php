@@ -546,7 +546,8 @@ class Label extends database_object implements library_item
         debug_event('label.class', 'Updating labels for values {' . $labels_comma . '} artist {' . $artist_id . '}', 5);
 
         $clabels      = Label::get_labels($artist_id);
-        $editedLabels = array_unique(preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels_comma));
+        $filter_list  = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels_comma);
+        $editedLabels = (is_array($filter_list)) ? array_unique($filter_list) : array();
 
         foreach ($clabels as $clid => $clv) {
             if ($clid) {

@@ -85,7 +85,7 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        update_preferences(Core::get_post('user_id'));
+        update_preferences((int) Core::get_post('user_id'));
 
         header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out(Core::get_post('user_id')));
     break;

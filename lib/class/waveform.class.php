@@ -68,7 +68,7 @@ class Waveform
     /**
      * Get a song waveform.
      * @param integer $song_id
-     * @return binary|string|null
+     * @return binary|string|null|boolean
      */
     public static function get($song_id)
     {
@@ -356,7 +356,7 @@ class Waveform
                   (int) ($data_point / $detail),
                   // y2: same as y1, but from the bottom of the image
                   $height - ($height - $value),
-                  imagecolorallocate($img, $red, $green, $blue)
+                  imagecolorallocate($img, (int) $red, (int) $green, (int) $blue)
                 );
                 }
             } else {

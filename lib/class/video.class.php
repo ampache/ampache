@@ -592,7 +592,7 @@ class Video extends database_object implements media, library_item
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array($data['file'], $data['catalog'], $data['title'], $data['video_codec'], $data['audio_codec'], $rezx, $rezy, $data['size'], $data['time'], $data['mime'], $release_date, time(), $bitrate, $mode, $channels, $disx, $disy, $frame_rate, $video_bitrate);
         Dba::write($sql, $params);
-        $vid = Dba::insert_id();
+        $vid = (int) Dba::insert_id();
 
         if (is_array($tags)) {
             foreach ($tags as $tag) {

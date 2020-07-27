@@ -444,7 +444,7 @@ class Song extends database_object implements media, library_item
             return false;
         }
 
-        $song_id = Dba::insert_id();
+        $song_id = (int) Dba::insert_id();
 
         if ($user_upload) {
             Useractivity::post_activity((int) ($user_upload), 'upload', 'song', $song_id, time());
@@ -733,7 +733,7 @@ class Song extends database_object implements media, library_item
      *
      * Gets a list of the disabled songs for and returns an array of Songs
      * @param integer $count
-     * @return integer[]
+     * @return Song[]
      */
     public static function get_disabled($count = 0)
     {
