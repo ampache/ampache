@@ -882,7 +882,7 @@ class Song extends database_object implements media, library_item
                        "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " .
                        "HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` " .
                        "WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL " .
-                       "ORDER BY `file`";
+                       "ORDER BY `album`, `track`";
             }
 
             $db_results = Dba::read($sql);
