@@ -216,12 +216,12 @@ class Democratic extends Tmp_Playlist
 
         $sql = 'SELECT `tmp_playlist_data`.`object_type`, ' .
             '`tmp_playlist_data`.`object_id`, ' .
-            'MAX(`tmp_playlist_data`.`id`) ' .
+            '`tmp_playlist_data`.`id` ' .
             'FROM `tmp_playlist_data` INNER JOIN `user_vote` ' .
             'ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` ' .
             "WHERE `tmp_playlist_data`.`tmp_playlist` = '" .
             Dba::escape($this->tmp_playlist) . "' " .
-            'GROUP BY 1, 2 ' .
+            'GROUP BY 1, 2, 3 ' .
             'ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`), MAX(`tmp_playlist_data`.`id`) ';
 
         if ($limit !== null) {
