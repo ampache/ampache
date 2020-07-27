@@ -36,7 +36,7 @@ if (empty($local_pass)) {
 }
 
 require $prefix . '/templates/install_header.inc.php'; ?>
-        <div class="jumbotron">
+        <div class="jumbotron" style="margin-top: 70px">
             <h1><?php echo T_('Install Progress'); ?></h1>
             <div class="progress">
                 <div class="progress-bar progress-bar-warning"

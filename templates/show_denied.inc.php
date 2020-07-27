@@ -41,7 +41,7 @@ $web_path = AmpConfig::get('web_path'); ?>
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
+            <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
                     <img src="<?php echo $logo_url; ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
                     <?php echo AmpConfig::get('site_title'); ?>
@@ -49,7 +49,7 @@ $web_path = AmpConfig::get('web_path'); ?>
             </div>
         </div>
         <div id="guts" class="container" role="main">
-            <div class="jumbotron">
+            <div class="jumbotron" style="margin-top: 70px">
                 <h1><?php echo T_('Access Denied'); ?></h1>
                 <p><?php echo T_('This event has been logged'); ?></p>
             </div>
