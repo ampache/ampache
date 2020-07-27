@@ -312,7 +312,7 @@ class Stats
         $skip_time = AmpConfig::get_skip_timer($previous['time']);
 
         // this object was your last play and the length between plays is too short.
-        if ($previous['object_id'] == $object->id && $diff <= ($item_time)) {
+        if ($previous['object_id'] == $object->id && $diff < ($item_time)) {
             debug_event('stats.class', 'Repeated the same ' . get_class($object) . ' too quickly (' . $diff . '/' . ($item_time) . 's), not recording stats for {' . $object->id . '}', 3);
 
             return false;
