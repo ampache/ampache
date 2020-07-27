@@ -317,9 +317,9 @@ class Stats
 
             return false;
         }
-        // this object was your last play but submission time is larger than the length of the song * 2 (repeats should start before this)
-        if ($previous['object_id'] == $object->id && $diff > ($item_time * 2)) {
-            debug_event('stats.class', 'It took a long time to finish this ' . get_class($object) . '. (' . $diff . '/' . ($item_time * 2) . 's), not recording stats for {' . $object->id . '}', 3);
+        // this object was your last play but submission time is larger than the length of the song * 2 (+5 to give api programs a chance)
+        if ($previous['object_id'] == $object->id && $diff > (($item_time * 2) + 5)) {
+            debug_event('stats.class', 'It took a long time to finish this ' . get_class($object) . '. (' . $diff . '/' . (($item_time * 2) + 5) . 's), not recording stats for {' . $object->id . '}', 3);
 
             return false;
         }
