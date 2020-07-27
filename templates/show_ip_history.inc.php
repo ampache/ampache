@@ -52,7 +52,7 @@
         <?php echo get_datetime($time_format, (int) $data['date']); ?>
     </td>
     <td class="cel_ipaddress">
-        <?php echo inet_ntop($data['ip']); ?>
+        <?php echo (inet_ntop($data['ip'])) ? inet_ntop($data['ip']) : T_('Invalid'); ?>
     </td>
 </tr>
 <?php
