@@ -188,7 +188,7 @@ class Upload
      * check_artist
      * @param string $artist_name
      * @param integer $user_id
-     * @return int|bool
+     * @return boolean|integer
      */
     public static function check_artist($artist_name, $user_id)
     {
@@ -200,7 +200,7 @@ class Upload
 
                 return false;
             }
-            if ($artist_id == null) {
+            if ((int) $artist_id > 1) {
                 debug_event('upload.class', 'Artist information required, uploaded song skipped.', 3);
 
                 return false;
@@ -210,7 +210,7 @@ class Upload
                 $artist->update_artist_user($user_id);
             }
 
-            return $artist_id;
+            return (int) $artist_id;
         }
 
         return false;
@@ -219,20 +219,20 @@ class Upload
     /**
      * check_album
      * @param string $album_name
-     * @return boolean|string
+     * @return boolean|integer
      */
     public static function check_album($album_name)
     {
         debug_event('upload.class', 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
             $album_id = Album::check(Core::get_request('album_name'), 0, 0, null, null, $album_name);
-            if ($album_id == null) {
+            if ((int) $album_id > 1) {
                 debug_event('upload.class', 'Album information required, uploaded song skipped.', 3);
 
                 return false;
             }
 
-            return $album_id;
+            return (int) $album_id;
         }
 
         return false;
