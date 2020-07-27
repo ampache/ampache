@@ -556,7 +556,7 @@ class Browse extends Query
      */
     public function is_show_header()
     {
-        return make_bool($this->show_header);
+        return $this->show_header;
     }
 
     /**
