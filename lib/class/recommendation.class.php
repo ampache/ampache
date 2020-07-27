@@ -37,7 +37,7 @@ class Recommendation
      * Runs a last.fm query and returns the parsed results
      * @param string $method
      * @param string $query
-     * @return SimpleXMLElement
+     * @return SimpleXMLElement|false
      */
     public static function get_lastfm_results($method, $query)
     {
@@ -68,7 +68,7 @@ class Recommendation
      *
      * @param $artist
      * @param $album
-     * @return SimpleXMLElement
+     * @return SimpleXMLElement|false
      */
     public static function album_search($artist, $album)
     {
