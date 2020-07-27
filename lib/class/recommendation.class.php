@@ -52,7 +52,7 @@ class Recommendation
 
     /**
      * @param string $url
-     * @return SimpleXMLElement
+     * @return SimpleXMLElement|false
      */
     public static function query_lastfm($url)
     {

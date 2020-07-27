@@ -238,7 +238,7 @@ if (!defined('INSTALL')) { ?>
     <td><?php echo T_('Web path'); ?></td>
     <td>
     <?php
-        if (check_config_values($results)) {
+        if ($results && check_config_values($results)) {
             echo "&nbsp;&nbsp;&nbsp;" . UI::get_icon('enable', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
         } else {
             echo debug_result(false, "SKIPPED");

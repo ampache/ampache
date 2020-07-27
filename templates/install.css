@@ -55,6 +55,7 @@ body#install-page {
 .navbar-inverse {
     background-color: #000;
     background-image: none;
+    height: 70px;
 }
 
 .database-update {
