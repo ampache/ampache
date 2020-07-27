@@ -1370,13 +1370,13 @@ class User extends database_object
 
         $group_sql = "";
         if ($distinct) {
-            $group_sql = "GROUP BY `ip`";
+            $group_sql = "GROUP BY `ip`, `date`";
         }
 
         /* Select ip history */
-        $sql = "SELECT `ip`, `date` FROM `ip_history`" .
-            " WHERE `user`='$username'" .
-            " $group_sql ORDER BY `date` DESC$limit_sql";
+        $sql = "SELECT `ip`, `date` FROM `ip_history` " .
+            "WHERE `user`='$username' " .
+            "$group_sql ORDER BY `date` DESC$limit_sql";
         $db_results = Dba::read($sql);
 
         $results = array();
