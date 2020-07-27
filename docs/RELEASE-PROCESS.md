@@ -12,7 +12,7 @@ It's easy to use a program like github desktop to compare between branches.
   * lib/init.php (Set release version)
   * docs/CHANGELOG.md (Update for release)
 * Commit merge but do not push!
-* Undo commits and tag for new version (e.g. 4.1.0)
+* Undo commits and tag for new version (e.g. 4.1.1)
 * Browse changes to check for things you've missed in the changelog
 * Add pchart to composer
   * composer require szymach/c-pchart "2.*"
