@@ -1891,7 +1891,10 @@ class Subsonic_Api
                 debug_event('subsonic_api.class', $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                 User::save_mediaplay($user, $media);
             }
-            $media->set_played($user->id, $client, array(), $time);
+            // submission is true at the end of the song play and it's not helping with dupes
+            if (($submission !== 'true' || $submission !== '1')) {
+                $media->set_played($user->id, $client, array(), $time);
+            }
         }
 
         $response = Subsonic_XML_Data::createSuccessResponse('scrobble');
