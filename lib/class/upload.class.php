@@ -68,8 +68,6 @@ class Upload
                 if (filter_has_var(INPUT_POST, 'license')) {
                     $options['license'] = Core::get_post('license');
                 }
-                $artist_id = (int) (Core::get_request('artist'));
-                $album_id  = (int) (Core::get_request('album'));
 
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
@@ -87,7 +85,7 @@ class Upload
 
                 // Try to create a new album
                 if (Core::get_request('album_name') !== '') {
-                    if (!$album_id = self::check_album(Core::get_request('album_name'), Core::get_global('user')->id)) {
+                    if (!$album_id = self::check_album(Core::get_request('album_name'))) {
                         return self::rerror($targetfile);
                     }
                     $album = new Album($album_id);
@@ -202,24 +200,25 @@ class Upload
 
                 return false;
             }
+            if ($artist_id == null) {
+                debug_event('upload.class', 'Artist information required, uploaded song skipped.', 3);
+
+                return false;
+            }
             $artist = new Artist($artist_id);
             if (!$artist->get_user_owner()) {
                 $artist->update_artist_user($user_id);
             }
-        }
-        if ($artist_id == null) {
-            debug_event('upload.class', 'Artist information required, uploaded song skipped.', 3);
 
-            return false;
+            return $artist_id;
         }
 
-        return $artist_id;
+        return false;
     } // check_artist
 
     /**
      * check_album
-     * @param $album_name
-     * @param integer $user_id
+     * @param string $album_name
      * @return boolean|string
      */
     public static function check_album($album_name)
@@ -227,14 +226,16 @@ class Upload
         debug_event('upload.class', 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
             $album_id = Album::check(Core::get_request('album_name'), 0, 0, null, null, $album_name);
-        }
-        if ($album_id == null) {
-            debug_event('upload.class', 'Album information required, uploaded song skipped.', 3);
+            if ($album_id == null) {
+                debug_event('upload.class', 'Album information required, uploaded song skipped.', 3);
 
-            return false;
+                return false;
+            }
+
+            return $album_id;
         }
 
-        return $album_id;
+        return false;
     } // check_album
 
     /**
