@@ -1357,8 +1357,7 @@ class User extends database_object
 
     /**
      * get_ip_history
-     * This returns the ip_history from the
-     * last AmpConfig::get('user_ip_cardinality') days
+     * This returns the ip_history from the last AmpConfig::get('user_ip_cardinality') days
      * @param integer $count
      * @param boolean $distinct
      * @return array

@@ -26,7 +26,8 @@
         <strong><?php echo T_('Search Type'); ?>:</strong><br />
         <input type="radio" name="search_type" id="title" value="title" /><label for="title"><?php echo T_('Title'); ?></label><br />
         <input type="radio" name="search_type" id="artist_title" value="artist_title" /><label for="artist_title"><?php echo T_('Artist and Title'); ?></label><br />
-        <input type="radio" name="search_type" id="artist_album_title" value="artist_album_title" /><label for="artist_album_title"><?php echo T_('Artist, Album and Title'); ?></label>
+        <input type="radio" name="search_type" id="artist_album_title" value="artist_album_title" /><label for="artist_album_title"><?php echo T_('Artist, Album and Title'); ?></label><br />
+        <input type="radio" name="search_type" id="album" value="album" /><label for="album"><?php echo T_('Album'); ?></label>
     </div>
     <div class="formValidation">
         <input type="submit" value="<?php echo T_('Find Duplicates'); ?>" />
