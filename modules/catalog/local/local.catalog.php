@@ -311,11 +311,13 @@ class Catalog_local extends Catalog
      *
      * @param $full_file
      * @param array $options
+     * @param integer $counter
      * @return boolean
      * @throws Exception
      */
-    public function add_file($full_file, $options, $counter)
+    public function add_file($full_file, $options, $counter = 0)
     {
+        debug_event('local.catalog', "add_file: $full_file", 5);
         // Ensure that we've got our cache
         $this->_create_filecache();
 

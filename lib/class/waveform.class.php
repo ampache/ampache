@@ -69,6 +69,7 @@ class Waveform
      * Get a song waveform.
      * @param integer $song_id
      * @return binary|string|null|boolean
+     * @throws RuntimeException
      */
     public static function get($song_id)
     {

@@ -197,6 +197,7 @@ class Art extends database_object
      * Runs some sanity checks on the putative image
      * @param string $source
      * @return boolean
+     * @throws RuntimeException
      */
     public static function test_image($source)
     {
