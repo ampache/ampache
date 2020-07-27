@@ -853,13 +853,13 @@ class Subsonic_XML_Data
     public static function getAmpacheObject($object_id)
     {
         if (Subsonic_XML_Data::isSong($object_id)) {
-            return new Song($object_id);
+            return new Song(Subsonic_XML_Data::getAmpacheId($object_id));
         }
         if (Subsonic_XML_Data::isVideo($object_id)) {
-            return new Video($object_id);
+            return new Video(Subsonic_XML_Data::getAmpacheId($object_id));
         }
         if (Subsonic_XML_Data::isPodcastEp($object_id)) {
-            return new Podcast_Episode($object_id);
+            return new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($object_id));
         }
 
         return null;

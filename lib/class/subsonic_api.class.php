@@ -2341,11 +2341,11 @@ class Subsonic_Api
         $position = (int) $input['position'];
         $username = (string) $input['u'];
         $user_id  = User::get_from_username($username)->id;
-        $media_id = Subsonic_XML_Data::getAmpacheId($current);
-        $media    = Subsonic_XML_Data::getAmpacheObject($media_id);
+        $media    = Subsonic_XML_Data::getAmpacheObject($current);
         if ($position < 1 && $media->id) {
+            $type = Subsonic_XML_Data::getAmpacheType($current);
             Stream::garbage_collection();
-            Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $song->time, $username, 'song');
+            Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
             // repeated plays aren't called by scrobble so make sure we call this too
             $media->set_played((int) $user_id, (string) $input['c'], array(), time());
         }
