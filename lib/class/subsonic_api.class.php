@@ -1881,12 +1881,11 @@ class Subsonic_Api
         foreach ($object_ids as $subsonic_id) {
             sleep(1);
             $media_id = Subsonic_XML_Data::getAmpacheId($subsonic_id);
-            $type     = Subsonic_XML_Data::getAmpacheType($subsonic_id);
             $media    = Subsonic_XML_Data::getAmpacheObject($media_id);
             $media->format();
 
             // scrobble plugins (Plugin::get_plugins('save_mediaplay'))
-            if (($submission === 'true' || $submission === '1') && $type == 'song') {
+            if (($submission === 'true' || $submission === '1') && get_class($media) == 'Song') {
                 // stream has finished
                 debug_event('subsonic_api.class', $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                 User::save_mediaplay($user, $media);
