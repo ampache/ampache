@@ -23,7 +23,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
   * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
 * When labels are enabled, automatically generate and associate artists with their publisher/label tag values.
-* Enforced stat recording for podcast_episodes and videos.
+* Enforced stat recording for videos. (podcasts and episodes to be added later)
 * Add tags (Genres) to "Anywhere" text searches.
 * 10 second redirect on "Access Denied" to the default web_path
 * Allow "Update from tags" for multi-disk album and artist pages
