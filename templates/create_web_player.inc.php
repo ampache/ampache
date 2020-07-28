@@ -22,7 +22,7 @@
  ?>
 <html>
 <head>
-<title><?php echo AmpConfig::get('site_title'); ?></title>
+<title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
 <script>
 <!-- begin
 function PlayerPopUp(URL)

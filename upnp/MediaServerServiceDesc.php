@@ -19,7 +19,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
     </specVersion>
     <device>
         <deviceType>urn:schemas-upnp-org:device:MediaServer:1</deviceType>
-        <friendlyName><?php echo AmpConfig::get('site_title'); ?></friendlyName>
+        <friendlyName><?php echo scrub_out(AmpConfig::get('site_title')); ?></friendlyName>
         <manufacturer>ampache.org</manufacturer>
         <manufacturerURL>http://ampache.org</manufacturerURL>
         <modelDescription>A web based audio/video streaming application and file manager allowing you to access your music and videos from anywhere, using almost any Internet enabled device.</modelDescription>
