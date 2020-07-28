@@ -57,7 +57,7 @@ class WebPlayer
      * @param string $force_type
      * @return array
      */
-    protected static function get_types($item, $force_type= '')
+    protected static function get_types($item, $force_type = '')
     {
         $types   = array('real' => 'mp3', 'player' => '');
         $urlinfo = Stream_URL::parse($item->url);
@@ -167,7 +167,7 @@ class WebPlayer
      * @param string $force_type
      * @return boolean
      */
-    public static function can_transcode($media, $file_type, $types, $urlinfo, $force_type= '')
+    public static function can_transcode($media, $file_type, $types, $urlinfo, $force_type = '')
     {
         $transcode     = false;
         $transcode_cfg = AmpConfig::get('transcode');

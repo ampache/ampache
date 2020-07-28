@@ -535,7 +535,6 @@ class User extends database_object
         asort($users);
 
         foreach ($users as $user_id => $score) {
-
             /* Find everything they've rated at 4+ */
             $sql = "SELECT `object_id`, `user_rating` FROM `ratings` " .
                 "WHERE `user` = '" . Dba::escape($user_id) . "' AND `user_rating` >='4' AND " .

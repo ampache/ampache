@@ -714,7 +714,7 @@ class Tag extends database_object implements library_item
                 $ctag  = new Tag($ctv['id']);
                 $found = false;
 
-                foreach ($editedTags as  $tk => $tv) {
+                foreach ($editedTags as $tk => $tv) {
                     if ($ctag->name == $tv) {
                         $found = true;
                         break;
@@ -733,7 +733,7 @@ class Tag extends database_object implements library_item
         }
 
         // Look if we need to add some new tags
-        foreach ($editedTags as  $tk => $tv) {
+        foreach ($editedTags as $tk => $tv) {
             if ($tv != '') {
                 self::add($type, $object_id, $tv, false);
             }

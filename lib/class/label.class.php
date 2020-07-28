@@ -556,7 +556,7 @@ class Label extends database_object implements library_item
                 $found   = false;
                 $lstring = '';
 
-                foreach ($editedLabels as  $key => $value) {
+                foreach ($editedLabels as $key => $value) {
                     if ($clabel->name == $value) {
                         $found   = true;
                         $lstring = $key;
@@ -575,7 +575,7 @@ class Label extends database_object implements library_item
         }
 
         // Look if we need to add some new labels
-        foreach ($editedLabels as  $key => $value) {
+        foreach ($editedLabels as $key => $value) {
             if ($value != '') {
                 debug_event('label.class', 'Adding new label {' . $value . '}', 4);
                 $label_id = Label::lookup(array('name' => $value));

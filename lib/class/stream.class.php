@@ -490,7 +490,6 @@ class Stream
             case 'default':
             default:
                 return true;
-
         } // end switch on method
 
         // Load our javascript

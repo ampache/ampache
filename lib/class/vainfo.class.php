@@ -1352,7 +1352,7 @@ class vainfo
         $abbr_count   = count($commonabbr);
 
         // scan for brackets, braces, etc and ignore case.
-        for ($count=0; $count < $abbr_count;$count++) {
+        for ($count=0; $count < $abbr_count; $count++) {
             $commonabbr[$count] = "~\[*|\(*|\<*|\{*\b(?i)" . trim((string) $commonabbr[$count]) . "\b\]*|\)*|\>*|\}*~";
         }
 

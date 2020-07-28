@@ -119,7 +119,7 @@ class Mailer
             break;
             case 'admins':
                 $sql = "SELECT * FROM `user` WHERE `access`='100' AND `email` IS NOT NULL";
-            break ;
+            break;
             case 'inactive':
                 $inactive = time() - (30 * 86400);
                 $sql      = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';

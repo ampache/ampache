@@ -2612,7 +2612,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param integer|null $catalog_id
      */
-    public static function export($type, $catalog_id =null)
+    public static function export($type, $catalog_id = null)
     {
         // Select all songs in catalog
         $params = array();

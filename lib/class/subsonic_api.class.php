@@ -299,7 +299,6 @@ class Subsonic_Api
                         } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
                             $tagsArray[$childTagName] = (object) $childProperties;
                         } else {
-
                             // test if tags of this type should always be arrays, no matter the element count
                             $tagsArray[$childTagName] = in_array($childTagName, $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
                         }
@@ -609,7 +608,7 @@ class Subsonic_Api
                 $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
             case "byYear":
-                $fromYear = $input['fromYear'] < $input['toYear'] ? $input['fromYear']: $input['toYear'] ;
+                $fromYear = $input['fromYear'] < $input['toYear'] ? $input['fromYear']: $input['toYear'];
                 $toYear   = $input['toYear'] > $input['fromYear'] ? $input['toYear'] : $input['fromYear'];
 
                 if ($fromYear || $toYear) {

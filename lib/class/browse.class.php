@@ -109,7 +109,6 @@ class Browse extends Query
         if ($this->is_simple() && $this->get_start() == 0) {
             $name = 'browse_current_' . $this->get_type();
             if (isset($_SESSION[$name]) && isset($_SESSION[$name]['start']) && $_SESSION[$name]['start'] > 0) {
-
                 // Checking if value is suitable
                 $start = $_SESSION[$name]['start'];
                 if ($this->get_offset() > 0) {

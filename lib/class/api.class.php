@@ -260,10 +260,8 @@ class Api
         debug_event('api.class', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
         if ($user_id > 0 && Access::check_network('api', $user_id, 5)) {
-
             // Authentication with user/password, we still need to check the password
             if ($username) {
-
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {

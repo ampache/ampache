@@ -69,7 +69,7 @@ class Upnp_Api
      * @param string $host
      * @param integer $port
      */
-    private static function udpSend($buf, $delay=15, $host="239.255.255.250", $port=1900)
+    private static function udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900)
     {
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);

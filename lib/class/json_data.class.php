@@ -809,7 +809,7 @@ class JSON_Data
      * @param integer $user_id
      * @return string    return JSON
      */
-    public static function democratic($object_ids=array(), $user_id = null)
+    public static function democratic($object_ids = array(), $user_id = null)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();

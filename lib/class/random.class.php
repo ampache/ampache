@@ -355,7 +355,6 @@ class Random
         $time_total = 0;
         $fuzzy_time = 0;
         while ($row = Dba::fetch_assoc($db_results)) {
-
             // If size limit is specified
             if ($data['size_limit']) {
                 // Convert
