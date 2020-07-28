@@ -49,7 +49,7 @@ $share_id = (int) filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT
 $secret   = $_REQUEST['share_secret'];
 
 // allow disabling stat recording from the play url
-if ($cache === '1' || $type == 'podcast_episode') {
+if ($cache === '1' || !in_array($type, array('song', 'video', 'podcast_episode'))) {
     debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
     $record_stats = false;
 }
@@ -676,7 +676,7 @@ if (!isset($_REQUEST['segment'])) {
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
-                if ($user->id && $type == 'song') {
+                if ($user->id && get_class($media) == 'Song') {
                     // scrobble songs for the user
                     User::save_mediaplay($user, $media);
                 }
