@@ -49,7 +49,7 @@ if (!AmpConfig::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
+if (!Session::exists('api', $_REQUEST['auth']) && $_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
     debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']', 3);
     ob_end_clean();
     echo JSON_Data::error('401', T_('Session Expired'));
@@ -66,7 +66,7 @@ if (!Access::check_network('init-api', $username, 5)) {
     exit();
 }
 
-if ($_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
+if ($_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
     Session::extend($_REQUEST['auth']);
     $GLOBALS['user'] = User::get_from_username($username);
 }

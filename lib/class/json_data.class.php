@@ -190,7 +190,7 @@ class JSON_Data
      */
     public static function licenses($licenses)
     {
-        if (count($licenses) > self::$limit or self::$offset > 0) {
+        if (count($licenses) > self::$limit || self::$offset > 0) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
         }
 
@@ -219,7 +219,7 @@ class JSON_Data
      */
     public static function tags($tags)
     {
-        if (count($tags) > self::$limit or self::$offset > 0) {
+        if (count($tags) > self::$limit || self::$offset > 0) {
             $tags = array_splice($tags, self::$offset, self::$limit);
         }
 
@@ -263,7 +263,7 @@ class JSON_Data
      */
     public static function artists($artists, $include = [], $user_id = null, $encode = true)
     {
-        if (count($artists) > self::$limit or self::$offset > 0) {
+        if (count($artists) > self::$limit || self::$offset > 0) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
 
@@ -332,7 +332,7 @@ class JSON_Data
      */
     public static function albums($albums, $include = [], $user_id = null, $encode = true)
     {
-        if (count($albums) > self::$limit or self::$offset > 0) {
+        if (count($albums) > self::$limit || self::$offset > 0) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
 
@@ -669,7 +669,7 @@ class JSON_Data
      */
     public static function songs($songs, $user_id = null, $encode = true)
     {
-        if (count($songs) > self::$limit or self::$offset > 0) {
+        if (count($songs) > self::$limit || self::$offset > 0) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
 
@@ -777,7 +777,7 @@ class JSON_Data
      */
     public static function videos($videos, $user_id)
     {
-        if (count($videos) > self::$limit or self::$offset > 0) {
+        if (count($videos) > self::$limit || self::$offset > 0) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
 

@@ -293,7 +293,7 @@ class XML_Data
         foreach ($array as $key => $value) {
             $attribute = '';
             // See if the key has attributes
-            if (is_array($value) and isset($value['attributes'])) {
+            if (is_array($value) && isset($value['attributes'])) {
                 $attribute = ' ' . $value['attributes'];
                 $key       = $value['value'];
             }
@@ -932,7 +932,7 @@ class XML_Data
      */
     public static function videos($videos, $user_id = null)
     {
-        if (count($videos) > self::$limit or self::$offset > 0) {
+        if (count($videos) > self::$limit || self::$offset > 0) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
         $string = '<total_count>' . count($videos) . "</total_count>\n";

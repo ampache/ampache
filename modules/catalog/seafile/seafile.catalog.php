@@ -346,7 +346,7 @@ class Catalog_Seafile extends Catalog
     private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null)
     {
         // Check for patterns
-        if (!$sort_pattern or !$rename_pattern) {
+        if (!$sort_pattern || !$rename_pattern) {
             $sort_pattern   = $this->sort_pattern;
             $rename_pattern = $this->rename_pattern;
         }

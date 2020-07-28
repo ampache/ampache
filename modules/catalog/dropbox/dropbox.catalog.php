@@ -185,7 +185,7 @@ class Catalog_dropbox extends Catalog
         $path      = $data['path'];
         $getchunk  = $data['getchunk'];
 
-        if (!strlen($apikey) or !strlen($secret) or !strlen($authtoken)) {
+        if (!strlen($apikey) || !strlen($secret) || !strlen($authtoken)) {
             AmpError::add('general', T_('Error: API Key, Secret and Access Token Required for Dropbox Catalogs'));
 
             return false;
