@@ -1141,7 +1141,7 @@ class XML_Data
                            "\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n" .
                            "\t\t</user>\n";
             }
-            $string .= "\n\t</activity>\n";
+            $string .= "\t</activity>\n";
         }
         $string .= "</timeline>";
 
