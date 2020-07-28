@@ -65,7 +65,7 @@ class WebPlayer
 
         if ($media != null) {
             $file_type = $media->type;
-            $transcode = self::can_transcode($media,$file_type, $types, $force_type);
+            $transcode = self::can_transcode($media,$file_type, $types, $urlinfo, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $file_type, $transcode);
         } else {
             if ($item->type == 'live_stream') {
@@ -163,10 +163,11 @@ class WebPlayer
      * @param playable_item $media
      * @param string $file_type
      * @param array $types
+     * @param array $urlinfo
      * @param string $force_type
      * @return boolean
      */
-    public static function can_transcode($media, $file_type, $types, $force_type= '')
+    public static function can_transcode($media, $file_type, $types, $urlinfo, $force_type= '')
     {
         $transcode     = false;
         $transcode_cfg = AmpConfig::get('transcode');
@@ -283,9 +284,7 @@ class WebPlayer
 
             $json[$kmember] = $item->$member;
         }
-        $types = self::get_types($item, $force_type);
-
-        $media    = null;
+        $types    = self::get_types($item, $force_type);
         $item_url = $item->url;
         $urlinfo  = Stream_URL::parse($item_url);
         $url      = $urlinfo['base_url'];

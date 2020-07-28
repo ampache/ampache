@@ -82,4 +82,15 @@ interface playable_item
      * @return integer[]
      */
     public function get_catalogs();
+
+    /**
+     * get_transcode_settings
+     *
+     * This will probably never be implemented
+     * @param string $target
+     * @param string $player
+     * @param array $options
+     * @return false
+     */
+    public function get_transcode_settings($target = null, $player = null, $options = array());
 } // end playable_item.interface
