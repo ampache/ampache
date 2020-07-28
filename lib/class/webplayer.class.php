@@ -91,7 +91,7 @@ class WebPlayer
     /**
      * Check if the playlist is a video playlist.
      * @param array $urlinfo
-     * @return playable_item|null
+     * @return media|null
      */
     public static function get_media_object($urlinfo)
     {
