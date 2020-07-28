@@ -160,7 +160,7 @@ class WebPlayer
 
     /**
      * Check if we can transcode this file type
-     * @param playable_item $media
+     * @param media $media
      * @param string $file_type
      * @param array $types
      * @param array $urlinfo

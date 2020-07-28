@@ -703,10 +703,11 @@ if ($transcode || $demo_id) {
 $mime = $media->mime;
 if ($transcode && isset($transcoder)) {
     $mime = $media->type_to_mime($transcoder['format']);
-    // Non-blocking stream doesn't work in Windows (php bug since 2005 and still here in 2015...)
-    // We don't want to wait indefinitly for a potential error so we just ignore it.
+    // Non-blocking stream doesn't work in Windows (php bug since 2005 and still here in 2020...)
+    // We don't want to wait indefinitely for a potential error so we just ignore it.
+    // https://bugs.php.net/bug.php?id=47918
     if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-        // This to avoid hang, see http://php.net/manual/es/function.proc-open.php#89338
+        // This to avoid hang, see http://php.net/manual/en/function.proc-open.php#89338
         $transcode_error = fread($transcoder['stderr'], 4096);
         if (!empty($transcode_error)) {
             debug_event('play/index', 'Transcode stderr: ' . $transcode_error, 1);
