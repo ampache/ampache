@@ -91,5 +91,4 @@ function print_tags_usage() {
     $text .= "\n\n";
 
     return print $text;
-
 }// print_tags_usage()

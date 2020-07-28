@@ -67,7 +67,6 @@ $sql = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
 $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
-
     $catalog = Catalog::create_from_id($row['id']);
     /* HINT: Catalog Name */
     printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
@@ -104,9 +103,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
             flush();
             sort_move_file($song, $fullpath, $test_mode);
         }
-
     } // end foreach song
-
 } // end foreach catalogs
 
 /************** FUNCTIONS *****************/
@@ -178,7 +175,6 @@ function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "V
     }
 
     return $home;
-
 } // sort_find_home
 
 /**
@@ -198,7 +194,6 @@ function sort_clean_name($string) {
     $string = preg_replace('/[\!\:\*]/', '_', $string);
 
     return $string;
-
 } // sort_clean_name
 
 /**
@@ -228,7 +223,6 @@ function sort_move_file($song, $fullname, $test_mode) {
     unset($data[0]);
 
     foreach ($data as $dir) {
-
         $dir = sort_clean_name($dir);
         $path .= "/" . $dir;
 
@@ -251,7 +245,6 @@ function sort_move_file($song, $fullname, $test_mode) {
                 }
             } // else we aren't in test mode
         } // if it's not a dir
-
     } // foreach dir
 
     /* Now that we've got the correct directory structure let's try to copy it */
@@ -265,7 +258,6 @@ function sort_move_file($song, $fullname, $test_mode) {
         flush();
     }
     else {
-
         /* Check for file existence */
         if (file_exists($fullname)) {
             debug_event('sort_files', 'Error: $fullname already exists', 1);
@@ -317,7 +309,6 @@ function sort_move_file($song, $fullname, $test_mode) {
         /* Update the catalog */
         $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
         Dba::write($sql);
-
     } // end else
 
     return true;

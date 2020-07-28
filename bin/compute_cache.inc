@@ -38,15 +38,14 @@ $count_types  = [ 'stream', 'download', 'skip' ];
 $object_types = [ 'album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast_episode' ];
 
 foreach ($thresholds as $threshold) {
-	foreach ($count_types as $count_type) {
-		foreach ($object_types as $object_type) {
-
-			$sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
-			$sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null);
-			$sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
-			Dba::write($sql);
-		}
-	}
+    foreach ($count_types as $count_type) {
+        foreach ($object_types as $object_type) {
+            $sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
+            $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null);
+            $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
+            Dba::write($sql);
+        }
+    }
 }
 
 $sql = "RENAME TABLE `cache_object_count_run` TO `cache_object_count_tmp`, `cache_object_count` TO `cache_object_count_run`, `cache_object_count_tmp` TO `cache_object_count`";

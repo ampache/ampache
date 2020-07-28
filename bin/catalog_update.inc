@@ -44,7 +44,6 @@ $options = getopt("hn:t:mvcaguio");
 if (count($options) == 0) {
     $operations_string = "\n\t- ". T_('Doing all Catalog operations');
 } else {
-
         if (array_key_exists('h', $options)) {
             usage();
             return false;
@@ -143,7 +142,6 @@ $db_results = Dba::read($sql);
 ob_start("ob_html_strip",'1024',true);
 
 while ($row = Dba::fetch_assoc($db_results)) {
-
     $catalog = Catalog::create_from_id($row['id']);
     /* HINT: Catalog Name */
     printf(T_('Reading Catalog: "%s"'), $catalog->name);

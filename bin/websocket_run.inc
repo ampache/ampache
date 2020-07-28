@@ -34,7 +34,6 @@ $port = 8100;
 $cargv = count($_SERVER['argv']);
 if ($cargv > 1) {
     for ($x = 1; $x < $cargv; $x++) {
-
         if ($_SERVER['argv'][$x] == "-v") {
             $operations_string .= "\n\t- " . T_('Verbose');
             $verbose = true;

@@ -48,7 +48,6 @@ if (empty($_REQUEST['step'])) {
     if (($_POST['username']) ||
         (in_array('http', AmpConfig::get('auth_methods')) &&
         (filter_has_var(INPUT_SERVER, 'REMOTE_USER') || filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')))) {
-
         /* If we are in demo mode let's force auth success */
         if (AmpConfig::get('demo_mode')) {
             $auth['success']                 = true;

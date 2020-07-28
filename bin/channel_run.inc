@@ -40,7 +40,6 @@ $chanid = 0;
 $cargv = count($_SERVER['argv']);
 if ($cargv > 1) {
     for ($x = 1; $x < $cargv; $x++) {
-
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
             $chanid = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t" . T_('Channel') . ' ' . $chanid;
@@ -148,7 +147,6 @@ while(true)
     }
 
     if ($channel->bitrate) {
-
         $time_offset = microtime(true) - $last_stream;
 
         //debug_event('channel_run', 'time_offset : '. $time_offset, 5);
@@ -173,21 +171,18 @@ while(true)
         }
         //debug_event('channel_run', 'mtime '.$mtime, 5);
         //debug_event('channel_run', 'nb_chunks: '.$nb_chunks, 5);
-
     } else {
         $nb_chunks = 1;
     }
 
     // Get multiple chunks according to bitrate to return enough data per second (because sleep with socket select)
     for ($count = 0; $count < $nb_chunks; $count++)  {
-
         $chunk = $channel->get_chunk();
         $chunklen = strlen((string) $chunk);
         $chunk_buffer .= $chunk;
 
         //buffer maintenance
         while (strlen($chunk_buffer) > (15 * $nb_chunks * $channel->chunk_size) ){ // buffer 15 seconds
-
             if (strtolower($channel->stream_type) == "ogg" && strtohex(substr($chunk_buffer, 0, 4)) == "4F676753") { //maintain ogg chunk alignment --- "4F676753" == "OggS"
                 // read OggS segment length
                 $hex = strtohex(substr($chunk_buffer, 0, 27));

@@ -423,6 +423,5 @@ function create_preference_input($name, $value)
                 echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
             }
         break;
-
     }
 } // create_preference_input

@@ -67,13 +67,11 @@ $sql = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
 $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
-
     $catalog = Catalog::create_from_id($row['id']);
     /* HINT: %1 Catalog Name, %2 Catalog Path */
     printf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->path);
     echo "\n";
     charset_directory_correct($catalog->path);
-
 } // end of the catalogs
 
 echo T_('Finished checking file names for valid characters') . "\n";
@@ -118,7 +116,6 @@ function charset_directory_correct($path) {
     }
 
     while ( false !== ($file = readdir($handle) ) ) {
-
         if ($file == '.' || $file == '..') { continue; }
 
         $full_file = $path.$slash_type.$file;
@@ -156,11 +153,9 @@ function charset_directory_correct($path) {
                 charset_rename_file($full_file,$translated_filename);
             }
         }
-
     } // while reading file
 
     return true;
-
 } // charset_directory_correct
 
 /**
@@ -179,7 +174,6 @@ function charset_rename_file($full_file, $translated_filename) {
     $path = '';
 
     foreach ($data as $dir) {
-
         $dir = charset_clean_name($dir);
         $path .= "/" . $dir;
 
@@ -194,7 +188,6 @@ function charset_rename_file($full_file, $translated_filename) {
                 return false;
             }
         } // if the dir doesn't exist
-
     } // end foreach
 
     // Now to copy the file
@@ -227,7 +220,6 @@ function charset_rename_file($full_file, $translated_filename) {
     echo T_("File moved...") . "\n\n";
 
     return true;
-
 } // charset_rename_file
 
 /**
