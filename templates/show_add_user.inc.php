@@ -33,6 +33,23 @@
             </td>
         </tr>
         <tr>
+            <td>
+                <?php echo  T_('Password'); ?>: *
+            </td>
+            <td>
+                <input type="password" name="password_1" value="" />
+                <?php AmpError::display('password'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('Confirm Password'); ?>: *
+            </td>
+            <td>
+                <input type="password" name="password_2" value="" />
+            </td>
+        </tr>
+        <tr>
             <td><?php echo  T_('Full Name'); ?>:</td>
             <td>
                 <input type="text" name="fullname" value="<?php echo scrub_out(Core::get_post('fullname')); ?>" />
@@ -55,23 +72,6 @@
             <td>
                 <input type="text" name="website" value="<?php echo scrub_out(Core::get_post('website')); ?>" />
                 <?php AmpError::display('website'); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <?php echo  T_('Password'); ?>: *
-            </td>
-            <td>
-                <input type="password" name="password_1" value="" />
-                <?php AmpError::display('password'); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <?php echo  T_('Confirm Password'); ?>: *
-            </td>
-            <td>
-                <input type="password" name="password_2" value="" />
             </td>
         </tr>
         <tr>
