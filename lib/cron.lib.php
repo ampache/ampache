@@ -97,10 +97,6 @@ function run_cron_cache($user_id = 0)
                 Video::build_cache($videos);
             }
 
-            // Update artist information and fetch similar artists from last.fm
-            $artist_info = $catalog->get_artist_ids('info');
-            $catalog->gather_artist_info($artist_info);
-
             /**
              * Fill rating and hear/flag details for each user
              */

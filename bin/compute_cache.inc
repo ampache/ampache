@@ -30,7 +30,7 @@ require_once $prefix . '/lib/init.php';
 // Turn off output buffering we don't need it for a command line script
 ob_end_clean();
 
-debug_event('compute_cache', 'started cache process', 3);
+debug_event('compute_cache', 'started cache process', 5);
 
 $thresholds   = [ 0, AmpConfig::get('stats_threshold'), AmpConfig::get('popular_threshold', 10) ];
 $count_types  = [ 'stream', 'download', 'skip' ];
@@ -54,4 +54,4 @@ Dba::write($sql);
 $sql = "TRUNCATE `cache_object_count_run`";
 Dba::write($sql);
 
-debug_event('compute_cache', 'Completed cache process', 4);
+debug_event('compute_cache', 'Completed cache process', 5);

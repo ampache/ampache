@@ -81,6 +81,13 @@ Recommendation::garbage_collection();
  */
 require_once $prefix . '/bin/compute_cache.inc';
 
+// Look for updated artist information. (missing or < 6 months since last update)
+$catalogs = Catalog::get_catalogs();
+foreach ($catalogs as $catalog_id) {
+    $artist_info = $catalog->get_artist_ids('info');
+    $catalog->gather_artist_info($artist_info);
+}
+
 // mark the date this cron was completed.
 set_cron_date();
 debug_event('cron', 'finished cron process', 4);
