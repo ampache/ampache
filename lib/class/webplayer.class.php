@@ -65,7 +65,7 @@ class WebPlayer
 
         if ($media != null) {
             $file_type = $media->type;
-            $transcode = self::can_transcode($media,$file_type, $types);
+            $transcode = self::can_transcode($media,$file_type, $types, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $file_type, $transcode);
         } else {
             if ($item->type == 'live_stream') {
@@ -163,9 +163,10 @@ class WebPlayer
      * @param playable_item $media
      * @param string $file_type
      * @param array $types
-     * @return void
+     * @param string $force_type
+     * @return boolean
      */
-    public static function can_transcode($media, $file_type, $types)
+    public static function can_transcode($media, $file_type, $types, $force_type= '')
     {
         $transcode     = false;
         $transcode_cfg = AmpConfig::get('transcode');
@@ -196,6 +197,8 @@ class WebPlayer
                 }
             }
         }
+
+        return $transcode;
     }
 
     /**
