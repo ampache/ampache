@@ -1322,7 +1322,7 @@ abstract class Catalog extends database_object
                 }
 
                 $parent = $libitem->get_parent();
-                if ($parent != null) {
+                if (!empty($parent)) {
                     self::gather_art_item($parent['object_type'], $parent['object_id'], $db_art_first, $api);
                 }
             }
@@ -1520,8 +1520,7 @@ abstract class Catalog extends database_object
      */
     public function get_song_ids()
     {
-        $songs   = array();
-        $results = array();
+        $songs = array();
 
         $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
         $db_results = Dba::read($sql, array($this->id));
@@ -1706,7 +1705,7 @@ abstract class Catalog extends database_object
             if (($info['change']) && (!$api)) {
                 if ($info['element'][$type]) {
                     $change = explode(' --> ', (string) $info['element'][$type]);
-                    $result = $change[1];
+                    $result = (int) $change[1];
                 }
                 $file   = scrub_out($song->file);
                 echo '<tr class="' . UI::flip_class() . '">' . "\n";
@@ -2432,7 +2431,7 @@ abstract class Catalog extends database_object
                 // New playlist
                 $playlist_id   = Playlist::create($name, 'public');
                 $current_songs = array();
-                $playlist      = new Playlist($playlist_id);
+                $playlist      = ((int) $playlist_id > 0) ? new Playlist((int) $playlist_id) : null;
             } else {
                 // Existing playlist
                 $playlist_id    = $playlist_search[0];

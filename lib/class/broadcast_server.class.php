@@ -91,7 +91,7 @@ class Broadcast_Server implements MessageComponentInterface
                 if (count($cmdinfo) == 2) {
                     switch ($cmdinfo[0]) {
                         case self::BROADCAST_SONG:
-                            $this->notifySong($from, $cmdinfo[1]);
+                            $this->notifySong($from, (int) $cmdinfo[1]);
                         break;
                         case self::BROADCAST_SONG_POSITION:
                             $this->notifySongPosition($from, (int) $cmdinfo[1]);
