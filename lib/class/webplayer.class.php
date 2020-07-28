@@ -127,35 +127,35 @@ class WebPlayer
      */
     public static function get_media_types($urlinfo, $types, $file_type, $transcode)
     {
-            if (!$transcode) {
-                $types['real'] = $file_type;
-            }
+        if (!$transcode) {
+            $types['real'] = $file_type;
+        }
 
-            if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
-                if ($types['real'] == "ogg" || $types['real'] == "opus") {
-                    $types['player'] = "oga";
-                } else {
-                    if ($types['real'] == "mp4") {
-                        $types['player'] = "m4a";
-                    }
-                }
+        if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
+            if ($types['real'] == "ogg" || $types['real'] == "opus") {
+                $types['player'] = "oga";
             } else {
-                if ($urlinfo['type'] == 'video') {
-                    if ($types['real'] == "ogg") {
-                        $types['player'] = "ogv";
+                if ($types['real'] == "mp4") {
+                    $types['player'] = "m4a";
+                }
+            }
+        } else {
+            if ($urlinfo['type'] == 'video') {
+                if ($types['real'] == "ogg") {
+                    $types['player'] = "ogv";
+                } else {
+                    if ($types['real'] == "webm") {
+                        $types['player'] = "webmv";
                     } else {
-                        if ($types['real'] == "webm") {
-                            $types['player'] = "webmv";
-                        } else {
-                            if ($types['real'] == "mp4") {
-                                $types['player'] = "m4v";
-                            }
+                        if ($types['real'] == "mp4") {
+                            $types['player'] = "m4v";
                         }
                     }
                 }
             }
+        }
 
-            return $types;
+        return $types;
     } // get_media_types
 
     /**
