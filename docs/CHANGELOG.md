@@ -30,6 +30,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * show and hide the rightbar (playlist) using the minimize button in the header
 * Tag->f_name (New property on tag that wasn't being set hackily)
 * Add "Album" to Find Duplicates in admin/duplicates.php.
+* "Local Image" added to Artist & Album search. Find out whether you have art stored in Ampache
 * NEW database options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the UI. (disabled by default)
