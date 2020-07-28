@@ -723,17 +723,4 @@ class Playlist extends playlist_object
 
         return true;
     } // sort_tracks
-
-    /**
-     * get_transcode_settings
-     *
-     * @param string $target
-     * @param string $player
-     * @param array $options
-     * @return boolean
-     */
-    public function get_transcode_settings($target = null, $player = null, $options = array())
-    {
-        return false;
-    }
 } // end playlist.class
