@@ -48,6 +48,15 @@ $use_auth     = AmpConfig::get('use_auth');
 $share_id = (int) filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
 $secret   = $_REQUEST['share_secret'];
 
+// This is specifically for tmp playlist requests
+$demo_id    = Dba::escape($_REQUEST['demo_id']);
+$random     = Dba::escape($_REQUEST['random']);
+
+// democratic play url doesn't include these
+if ($demo_id !== '') {
+    $type   = 'song';
+    $action = 'stream';
+}
 // allow disabling stat recording from the play url
 if ($cache === '1' || !in_array($type, array('song', 'video'))) {
     debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
@@ -106,10 +115,6 @@ if ($type == 'playlist') {
     $playlist_type = scrub_in($_REQUEST['playlist_type']);
     $object_id     = $sid;
 }
-
-/* This is specifically for tmp playlist requests */
-$demo_id    = Dba::escape($_REQUEST['demo_id']);
-$random     = Dba::escape($_REQUEST['random']);
 
 /* First things first, if we don't have a uid/oid stop here */
 if (empty($object_id) && empty($demo_id) && empty($random)) {
