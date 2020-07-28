@@ -49,7 +49,7 @@ $share_id = (int) filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT
 $secret   = $_REQUEST['share_secret'];
 
 // allow disabling stat recording from the play url
-if ($cache === '1' || !in_array($type, array('song', 'video', 'podcast_episode'))) {
+if ($cache === '1' || !in_array($type, array('song', 'video'))) {
     debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
     $record_stats = false;
 }
