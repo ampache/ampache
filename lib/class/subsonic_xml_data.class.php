@@ -1155,7 +1155,6 @@ class Subsonic_XML_Data
      */
     private static function setIfStarred($xml, $objectType, $object_id)
     {
-//        $object_type = strtolower(get_class($libitem));
         if (Core::is_library_item($objectType)) {
             if (AmpConfig::get('userflags')) {
                 $starred = new Userflag($object_id, $objectType);

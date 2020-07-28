@@ -96,7 +96,7 @@ class Ampachelistenbrainz
     public function save_mediaplay($song)
     {
         // Only support songs
-        if (strtolower(get_class($song)) != 'song') {
+        if (get_class($song) != 'Song') {
             return false;
         }
 

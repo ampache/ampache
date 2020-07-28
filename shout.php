@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
         }
 
         $object->format();
-        if (strtolower(get_class($object)) == 'song') {
+        if (get_class($object) == 'Song') {
             $data = $_REQUEST['offset'];
         }
 

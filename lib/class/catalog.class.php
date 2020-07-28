@@ -1765,7 +1765,7 @@ abstract class Catalog extends database_object
         }
 
         // Figure out what type of object this is and call the right  function
-        $name     = (strtolower(get_class($media)) == 'song') ? 'song' : 'video';
+        $name     = (get_class($media) == 'Song') ? 'song' : 'video';
         $function = 'update_' . $name . '_from_tags';
 
         // check for files without tags and try to update from their file name instead
