@@ -1993,8 +1993,9 @@ class Search extends playlist_object
             $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
             $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             $sql_match_operator = $operator['sql'];
-            $addition_string    = '';
-            $update_string      = '';
+            $tag_join           = '';
+            $album_tag_join     = '';
+            $artist_tag_join    = '';
 
             switch ($rule[0]) {
                 case 'anywhere':
@@ -2294,19 +2295,18 @@ class Search extends playlist_object
                     $where[] = "`song`.`addition_time` $sql_match_operator $input";
                 break;
                 case 'updated':
-                    $update_string = '';
                     $input         = strtotime($input);
                     $where[]       = "`song`.`update_time` $sql_match_operator $input";
                     break;
                 case 'recent_added':
-                    $where[]          = "`addition_time`.`id` IS NOT NULL";
-                    $addition_string  = "LEFT JOIN (SELECT `id` from `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `addition_time` ON `song`.`id` = `addition_time`.`id`";
-                    $join['addition'] = true;
+                    $key = md5($input . $sql_match_operator);
+                    $where[] = "`addition_time_$key`.`id` IS NOT NULL";
+                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` from `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `addition_time_$key` ON `song`.`id` = `addition_time_$key`.`id`";
                     break;
                 case 'recent_updated':
-                    $where[]        = "`update_time`.`id` IS NOT NULL";
-                    $update_string  = "LEFT JOIN (SELECT `id` from `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `update_time` ON `song`.`id` = `update_time`.`id`";
-                    $join['update'] = true;
+                    $key = md5($input . $sql_match_operator);
+                    $where[] = "`update_time_$key`.`id` IS NOT NULL";
+                    $table['update_' . $key] = "LEFT JOIN (SELECT `id` from `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
                     break;
                 case 'metadata':
                     $field = (int) $rule[3];
@@ -2449,12 +2449,6 @@ class Search extends playlist_object
             if ($join['playlist']) {
                 $table['playlist'] = "LEFT JOIN `playlist` ON `playlist_data`.`playlist`=`playlist`.`id`";
             }
-        }
-        if ($join['addition']) {
-            $table['addition'] = $addition_string;
-        }
-        if ($join['update']) {
-            $table['update'] = $update_string;
         }
         if ($join['catalog']) {
             $table['catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id`=`song`.`catalog`";
