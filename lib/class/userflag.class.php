@@ -348,10 +348,9 @@ class Userflag extends database_object
         /* Select Top objects counting by # of rows */
         $sql = self::get_latest_sql($type, $user_id);
         $sql .= "LIMIT $limit";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($type === null) {
                 $results[] = $row;

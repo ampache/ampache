@@ -500,7 +500,7 @@ class Stats
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $user_sql = (!empty($user_id)) ? " AND `user` = '" . $user_id . "'" : '';
 
-        $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) AS `date` FROM `object_count`" .
+        $sql = "SELECT `object_id` as `id`, MAX(`date`) AS `date` FROM `object_count`" .
                 " WHERE `object_type` = '" . $type . "'" . $user_sql;
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
