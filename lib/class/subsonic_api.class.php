@@ -1878,19 +1878,19 @@ class Subsonic_Api
         }
 
         foreach ($object_ids as $subsonic_id) {
-            sleep(1);
+            $previous = Stats::get_last_play($user->id, $client);
             $media_id = Subsonic_XML_Data::getAmpacheId($subsonic_id);
             $media    = Subsonic_XML_Data::getAmpacheObject($media_id);
             $media->format();
 
-            // scrobble plugins (Plugin::get_plugins('save_mediaplay'))
+            // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
             if (($submission === 'true' || $submission === '1') && get_class($media) == 'Song') {
                 // stream has finished
                 debug_event('subsonic_api.class', $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                 User::save_mediaplay($user, $media);
             }
-            // submission is true at the end of the song play and it's not helping with dupes
-            if (($submission !== 'true' || $submission !== '1') && $media->id) {
+            // Submission is false and not a repeat. let repeats go though to saveplayqueue
+            if (($submission !== 'true' || $submission !== '1') && $media->id && ($previous['object_id'] != $media->id)) {
                 $media->set_played($user->id, $client, array(), $time);
             }
         }
@@ -2341,11 +2341,14 @@ class Subsonic_Api
         $user_id  = User::get_from_username($username)->id;
         $media    = Subsonic_XML_Data::getAmpacheObject($current);
         if ($position < 1 && $media->id) {
-            $type = Subsonic_XML_Data::getAmpacheType($current);
+            $previous = Stats::get_last_play($user_id, (string) $input['c']);
+            $type     = Subsonic_XML_Data::getAmpacheType($current);
             Stream::garbage_collection();
-            Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
+            Stream::insert_now_playing((int)$media->id, (int)$user_id, (int)$media->time, $username, $type);
             // repeated plays aren't called by scrobble so make sure we call this too
-            $media->set_played((int) $user_id, (string) $input['c'], array(), time());
+            if ($previous['object_id'] == $media->id) {
+                $media->set_played((int)$user_id, (string)$input['c'], array(), time());
+            }
         }
         // continue to fail saving the queue
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');

@@ -111,7 +111,7 @@ class Stats
             return false;
         }
         $type = self::validate_type($input_type);
-        if (!self::is_already_inserted($type, $object_id, $user, $agent)) {
+        if (!self::is_already_inserted($type, $object_id, $user, $agent, $date)) {
             $latitude  = null;
             $longitude = null;
             $geoname   = null;
@@ -154,12 +154,12 @@ class Stats
      * @param string $agent
      * @return boolean
      */
-    public static function is_already_inserted($type, $object_id, $user, $agent)
+    public static function is_already_inserted($type, $object_id, $user, $agent, $time)
     {
-        $time  = time();
         $agent = Dba::escape($agent);
         $sql   = "SELECT `object_id` FROM `object_count` " .
-                "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`date` = ($time - 5) ";
+                "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
+                "(`object_count`.`date` >= ($time - 5) OR `object_count`.`date` <= ($time + 5)) ";
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = '$agent' ";
         }
