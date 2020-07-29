@@ -1683,7 +1683,7 @@ class Search extends playlist_object
                     }
                 break;
                 case 'has image':
-                    $where[]            = ($sql_match_operator == '1') ? "`image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
+                    $where[]            = ($sql_match_operator == '1') ? "`image`.`has_image` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'album') as `has_image` ON `album`.`id` = `has_image`.`object_id`";
                 break;
                 case 'image height':
