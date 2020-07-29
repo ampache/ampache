@@ -159,7 +159,7 @@ class Api
      * Parameters must be an array of required elements as a string
      *
      * @param array $input
-     * @param string[] $parameters e.g. array('auth','type')
+     * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
      * @return boolean
      */

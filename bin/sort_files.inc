@@ -34,7 +34,7 @@
  */
 
 define('NO_SESSION', '1');
-$path = dirname(__FILE__);
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
@@ -56,20 +56,20 @@ $alphabet_prefix = true;
 ob_end_clean();
 
 if ($test_mode) {
-    echo "\n". T_('Running in Test Mode. Use -x to execute') . "\n\n";
+    echo "\n" . T_('Running in Test Mode. Use -x to execute') . "\n\n";
 } else {
     echo "\n***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!") . "\n\n";
 }
 
 /* First Clean the catalog to we don't try to write anything we shouldn't */
 
-$sql = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
+$sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
 $db_results = Dba::read($sql);
 
 while ($row = Dba::fetch_assoc($db_results)) {
     $catalog = Catalog::create_from_id($row['id']);
     /* HINT: Catalog Name */
-    printf (T_('Starting Catalog: %s'), stripslashes($catalog->name));
+    printf(T_('Starting Catalog: %s'), stripslashes($catalog->name));
     echo "\n";
     $songs = $catalog->get_songs();
 
@@ -95,10 +95,10 @@ while ($row = Dba::fetch_assoc($db_results)) {
             echo T_("Examine File...");
             echo "\n\t";
             /* HINT: filename (File path) */
-            printf (T_('Source: %s'), $song->file);
+            printf(T_('Source: %s'), $song->file);
             echo "\n\t";
             /* HINT: filename (File path) */
-            printf (T_('Destin: %s'), $fullpath);
+            printf(T_('Destin: %s'), $fullpath);
             echo "\n";
             flush();
             sort_move_file($song, $fullpath, $test_mode);
@@ -117,8 +117,8 @@ while ($row = Dba::fetch_assoc($db_results)) {
  * @param string $various_artist
  * @return false|string
  */
-function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "Various Artists") {
-
+function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "Various Artists")
+{
     $home = '';
     if ($base) {
         $home = rtrim($base, "\/");
@@ -142,7 +142,7 @@ function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "V
     $album_object->format();
     if ($album_object->f_album_artist_name) {
         $artist = $album_object->f_album_artist_name;
-    } else if ($album_object->artist_count != 1) {
+    } elseif ($album_object->artist_count != 1) {
         $artist = $various_artist;
     }
     $disk           = $album_object->disk ?: '%d';
@@ -155,7 +155,7 @@ function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "V
     /* Replace everything we can find */
     $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%d', '%g', '%b');
     $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $disk, $genre, $barcode);
-    $sort_pattern = str_replace($replace_array, $content_array, $sort_pattern);
+    $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
 
     /* Remove non A-Z0-9 chars */
     $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
@@ -163,7 +163,7 @@ function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "V
     // Replace non-critical search patterns
     $post_replace_array = array('%Y', '%c', '%C', '%r', '%g', '%b', ' []', ' ()');
     $post_content_array = array('', '', '', '', '', '', '', '', '');
-    $sort_pattern = str_replace($post_replace_array, $post_content_array, $sort_pattern);
+    $sort_pattern       = str_replace($post_replace_array, $post_content_array, $sort_pattern);
 
     $home .= "/$sort_pattern";
     // dont send a mismatched file!
@@ -171,6 +171,7 @@ function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "V
         /* HINT: $sort_pattern after replacing %x values */
         printf(T_('The sort_pattern has left over variables. %s'), $sort_pattern);
         echo "\n\n";
+
         return false;
     }
 
@@ -186,7 +187,8 @@ function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "V
  * @param  string$string
  * @return string|string[]|null
  */
-function sort_clean_name($string) {
+function sort_clean_name($string)
+{
 
     /* First remove any / or \ chars */
     $string = preg_replace('/[\/\\\]/', '-', $string);
@@ -210,8 +212,8 @@ function sort_clean_name($string) {
  * @param $test_mode
  * @return bool
  */
-function sort_move_file($song, $fullname, $test_mode) {
-
+function sort_move_file($song, $fullname, $test_mode)
+{
     $old_dir   = dirname($song->file);
     $info      = pathinfo($fullname);
     $directory = $info['dirname'];
@@ -231,16 +233,16 @@ function sort_move_file($song, $fullname, $test_mode) {
             if ($test_mode) {
                 echo "\t";
                 /* HINT: Directory (File path) */
-                printf (T_('Create directory "%s"'), $path);
+                printf(T_('Create directory "%s"'), $path);
                 echo "\n";
-            }
-            else {
+            } else {
                 debug_event('sort_files', "Creating $path directory", 4);
                 $results = mkdir($path);
                 if (!$results) {
                     /* HINT: Directory (File path) */
-                    printf (T_("There was a problem creating this directory: %s"), $path);
+                    printf(T_("There was a problem creating this directory: %s"), $path);
                     echo "\n";
+
                     return false;
                 }
             } // else we aren't in test mode
@@ -251,19 +253,19 @@ function sort_move_file($song, $fullname, $test_mode) {
     if ($test_mode) {
         echo "\t";
         // HINT: %1$s: file, %2$s: directory
-        printf (T_('Copying "%1$s" to "%2$s"'), $file, $directory);
+        printf(T_('Copying "%1$s" to "%2$s"'), $file, $directory);
         echo "\n";
         $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
         echo "\tSQL: $sql\n";
         flush();
-    }
-    else {
+    } else {
         /* Check for file existence */
         if (file_exists($fullname)) {
             debug_event('sort_files', 'Error: $fullname already exists', 1);
             /* HINT: filename (File path) */
-            printf (T_("Don't overwrite an existing file: %s"), $fullname);
+            printf(T_("Don't overwrite an existing file: %s"), $fullname);
             echo "\n";
+
             return false;
         }
 
@@ -274,8 +276,7 @@ function sort_move_file($song, $fullname, $test_mode) {
         if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'), "%")) {
             $folder_art  = $directory . DIRECTORY_SEPARATOR . 'folder.jpg';
             $old_art     = $old_dir . DIRECTORY_SEPARATOR . 'folder.jpg';
-        }
-        else {
+        } else {
             $folder_art  = $directory . DIRECTORY_SEPARATOR . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
             $old_art     = $old_dir . DIRECTORY_SEPARATOR . sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
         }
@@ -286,7 +287,12 @@ function sort_move_file($song, $fullname, $test_mode) {
         }
 
         /* HINT: filename (File path) */
-        if (!$results) { printf (T_('There was an error trying to copy file to "%s"'), $fullname); echo "\n"; return false; }
+        if (!$results) {
+            printf(T_('There was an error trying to copy file to "%s"'), $fullname);
+            echo "\n";
+
+            return false;
+        }
 
         /* Check the filesize */
         $new_sum = Core::get_filesize($fullname);
@@ -294,8 +300,9 @@ function sort_move_file($song, $fullname, $test_mode) {
 
         if ($new_sum != $old_sum || !$new_sum) {
             /* HINT: filename (File path) */
-            printf (T_('Size comparison failed. Not deleting: %s'), $song->file);
+            printf(T_('Size comparison failed. Not deleting: %s'), $song->file);
             echo "\n";
+
             return false;
         } // end if sum's don't match
 
@@ -303,7 +310,8 @@ function sort_move_file($song, $fullname, $test_mode) {
         $results = unlink($song->file);
         if (!$results) {
             /* HINT: filename (File path) */
-            printf (T_('There was an error trying to delete "%s"'), $song->file); echo "\n";
+            printf(T_('There was an error trying to delete "%s"'), $song->file);
+            echo "\n";
         }
 
         /* Update the catalog */

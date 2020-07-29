@@ -153,16 +153,15 @@ abstract class Catalog extends \Catalog
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
             $album_id = Album::check($song['album'], $song['year'], $song['disc'], $song['mbid'],
-                $song['mb_releasegroupid'], $song['album_artist'], null, null );
+                $song['mb_releasegroupid'], $song['album_artist'], null, null);
             $song['album_id'] = $album_id;
-            $songId = $this->insertSong($song);
+            $songId           = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
                 $songObj = new Song($songId);
                 $this->addMetadata($songObj, $song);
                 $this->updateUi('add', ++$this->addedSongs, $song);
             }
         }
-
     }
 
     /**
@@ -245,7 +244,7 @@ abstract class Catalog extends \Catalog
      */
     public function verifySong($beetsSong)
     {
-        $song = new Song($this->getIdFromPath($beetsSong['file']));
+        $song                  = new Song($this->getIdFromPath($beetsSong['file']));
         $beetsSong['album_id'] = $song->album;
 
         if ($song->id) {
@@ -272,7 +271,7 @@ abstract class Catalog extends \Catalog
         $parser->start($this->listCommand);
         $count = count($this->songs);
         if ($count > 0) {
-           $this->deleteSongs($this->songs);
+            $this->deleteSongs($this->songs);
         }
         if (Song::isCustomMetadataEnabled()) {
             Metadata::garbage_collection();

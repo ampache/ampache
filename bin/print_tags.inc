@@ -20,23 +20,25 @@
  *
  */
 
-define('NO_SESSION','1');
-$path = dirname(__FILE__);
+define('NO_SESSION', '1');
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 $version = "1.0";
 
 if (count(Core::get_global('argv')) != 2) {
     print_tags_usage();
+
     return false;
 } else {
     $filename = Core::get_global('argv')[1];
 }
 
-if(!file_exists($filename)) {
+if (!file_exists($filename)) {
     print T_("File not found.");
     print "\n";
     print_tags_usage();
+
     return false;
 }
 /* HINT: filename (File path) */
@@ -44,25 +46,25 @@ sprintf(T_('Reading: %s'), $filename);
 print "\n";
 
 /* Attempt to figure out what catalog it comes from */
-$sql = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file` LIKE '%" . Dba::escape($filename) . "'";
+$sql        = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file` LIKE '%" . Dba::escape($filename) . "'";
 $db_results = Dba::read($sql);
-$results = Dba::fetch_assoc($db_results);
+$results    = Dba::fetch_assoc($db_results);
 
 $catalog = Catalog::create_from_id($results['id']);
 
-$dir_pattern = $catalog->sort_pattern;
+$dir_pattern  = $catalog->sort_pattern;
 $file_pattern = $catalog->rename_pattern;
 
 $info = new vainfo($filename, array('music'), '', '', '', $dir_pattern, $file_pattern);
-if(isset($dir_pattern) || isset($file_pattern)) {
+if (isset($dir_pattern) || isset($file_pattern)) {
     /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
     printf(T_('Using: %1$s AND %2$s for file pattern matching'), $dir_pattern, $file_pattern);
     print "\n";
 }
 try {
     $info->get_info();
-    $results = $info->tags;
-    $keys = vainfo::get_tag_type($results);
+    $results         = $info->tags;
+    $keys            = vainfo::get_tag_type($results);
     $ampache_results = vainfo::clean_tag_info($results, $keys, $filename);
 
     echo "\n";
@@ -80,7 +82,8 @@ try {
 /**
  * @return string
  */
-function print_tags_usage() {
+function print_tags_usage()
+{
     global $version;
 
     $text  = 'print_tags.inc' . T_('Version') . ': ' . $version;

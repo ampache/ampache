@@ -20,16 +20,16 @@
  *
  */
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 define('CLI', 1);
 
-$path = dirname(__FILE__);
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 ob_end_flush();
 
 $verbose = false;
-$port = 8100;
+$port    = 8100;
 
 $cargv = count($_SERVER['argv']);
 if ($cargv > 1) {
@@ -37,8 +37,7 @@ if ($cargv > 1) {
         if ($_SERVER['argv'][$x] == "-v") {
             $operations_string .= "\n\t- " . T_('Verbose');
             $verbose = true;
-        }
-        elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
+        } elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
             $port = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t- " . T_('Port') . ' ' . $port;
         }
@@ -46,13 +45,13 @@ if ($cargv > 1) {
 }
 
 $urlinfo = parse_url(AmpConfig::get('websocket_address'));
-$host = $urlinfo['host'];
+$host    = $urlinfo['host'];
 if (empty($host)) {
     $host = "localhost";
 }
 
-$app = new Ratchet\App($host, $port, '0.0.0.0');
-$brserver = new Broadcast_Server();
+$app               = new Ratchet\App($host, $port, '0.0.0.0');
+$brserver          = new Broadcast_Server();
 $brserver->verbose = $verbose;
 $app->route('/broadcast', $brserver);
 $app->route('/echo', new Ratchet\Server\EchoServer, array('*'));

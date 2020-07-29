@@ -711,6 +711,7 @@ class OAuthServer
 
         // Rev A change
         $callback    = $request->get_parameter('oauth_callback');
+
         return $this->data_store->new_request_token($consumer, $callback);
     }
 
@@ -734,6 +735,7 @@ class OAuthServer
 
         // Rev A change
         $verifier    = $request->get_parameter('oauth_verifier');
+
         return $this->data_store->new_access_token($token, $consumer, $verifier);
     }
 
@@ -837,7 +839,7 @@ class OAuthServer
     private function get_token($request, $consumer, $token_type="access")
     {
         $token_field = $request instanceof OAuthRequest ? $request->get_parameter('oauth_token') : null;
-        $token = $this->data_store->lookup_token($consumer, $token_type, $token_field);
+        $token       = $this->data_store->lookup_token($consumer, $token_type, $token_field);
         if (!$token) {
             throw new OAuthException("Invalid $token_type token: $token_field");
         }
@@ -857,7 +859,7 @@ class OAuthServer
     {
         // this should probably be in a different method
         $timestamp = $request instanceof OAuthRequest ? $request->get_parameter('oauth_timestamp') : null;
-        $nonce = $request instanceof OAuthRequest ? $request->get_parameter('oauth_nonce') : null;
+        $nonce     = $request instanceof OAuthRequest ? $request->get_parameter('oauth_nonce') : null;
 
         $this->check_timestamp($timestamp);
         $this->check_nonce($consumer, $token, $nonce, $timestamp);
@@ -1152,8 +1154,8 @@ class OAuthUtil
 
         // Urlencode both keys and values
         $keys       = OAuthUtil::urlencode_rfc3986(array_keys($params));
-        $values = OAuthUtil::urlencode_rfc3986(array_values($params));
-        $params = array_combine($keys, $values);
+        $values     = OAuthUtil::urlencode_rfc3986(array_values($params));
+        $params     = array_combine($keys, $values);
 
         // Parameters are sorted by name, using lexicographical byte value ordering.
         // Ref: Spec: 9.1.1 (1)
