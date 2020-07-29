@@ -2239,7 +2239,7 @@ class Api
             $limit = AmpConfig::get('popular_threshold', 10);
         }
 
-        $results = null;
+        $results = array();
         switch ($input['filter']) {
             case 'newest':
                 debug_event('api.class', 'stats newest', 5);
@@ -2316,7 +2316,7 @@ class Api
 
             return true;
         }
-        self::message('error', 'No Results', '400', $input['format']);
+        self::message('error', 'No Results', '404', $input['format']);
 
         return false;
     } // stats
