@@ -1,5 +1,4 @@
-Acknowledgements
-----------
+# Acknowledgements
 
 * Scott Kveton: Original creator of Ampache
 * Robert Hopson
@@ -31,3 +30,21 @@ Acknowledgements
 * lotan
 * brownl
 * Deathcow
+* kuzi-moto
+* jleipsig
+* AshotN
+* cquike
+* Rhythm-of-Time
+* xoxefdp
+* ruipin
+* rsertelon
+* alejandroliu
+* ahoy
+* Sodki
+* KingOperator
+* DEvmIb
+* BLeeEZ
+* ibmibmibm
+* Tetram76
+* stebe
+* manuelglez86
