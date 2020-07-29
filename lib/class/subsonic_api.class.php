@@ -1879,8 +1879,7 @@ class Subsonic_Api
 
         foreach ($object_ids as $subsonic_id) {
             $previous = Stats::get_last_play($user->id, $client);
-            $media_id = Subsonic_XML_Data::getAmpacheId($subsonic_id);
-            $media    = Subsonic_XML_Data::getAmpacheObject($media_id);
+            $media    = Subsonic_XML_Data::getAmpacheObject($subsonic_id);
             $media->format();
 
             // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
