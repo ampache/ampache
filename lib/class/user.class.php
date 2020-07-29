@@ -1341,8 +1341,8 @@ class User extends database_object
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
 
         $sql = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
-            "ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " " .
-            "GROUP BY `object_id`";
+            "GROUP BY `object_id` ORDER BY `date` " . $ordersql .
+            " LIMIT " . $limit . " ";
         $db_results = Dba::read($sql, array($type, $this->id));
 
         $results = array();
