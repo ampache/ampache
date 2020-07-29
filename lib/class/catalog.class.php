@@ -2180,7 +2180,6 @@ abstract class Catalog extends database_object
      */
     public static function garbage_collection()
     {
-        debug_event('catalog.class', 'Database cleanup started', 4);
         Song::garbage_collection();
         Album::garbage_collection();
         Artist::garbage_collection();
@@ -2198,7 +2197,6 @@ abstract class Catalog extends database_object
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
-        debug_event('catalog.class', 'Database cleanup ended', 4);
     }
 
     /**
