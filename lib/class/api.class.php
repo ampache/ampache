@@ -166,7 +166,7 @@ class Api
     private static function check_parameter($input, $parameters, $method = '')
     {
         foreach ($parameters as $parameter) {
-            if ($input[$parameter] == 0) {
+            if ($input[$parameter] === 0 || $input[$parameter] === '0') {
                 continue;
             }
             if (empty($input[$parameter])) {
