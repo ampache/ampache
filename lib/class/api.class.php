@@ -2282,7 +2282,7 @@ class Api
                     }
         }
 
-        if ($results !== null) {
+        if (!empty($results)) {
             ob_end_clean();
             debug_event('api.class', 'stats found results searching for ' . $type, 5);
             if ($type === 'song') {
@@ -2312,10 +2312,13 @@ class Api
                         echo XML_Data::albums($results, array(), $user->id);
                 }
             }
-        }
-        Session::extend($input['auth']);
+            Session::extend($input['auth']);
 
-        return true;
+            return true;
+        }
+        self::message('error', 'No Results', '400', $input['format']);
+
+        return false;
     } // stats
 
     /**
