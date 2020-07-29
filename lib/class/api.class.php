@@ -2257,7 +2257,7 @@ class Api
             case 'forgotten':
                 debug_event('api.class', 'stats ' . $input['filter'], 4);
                 $newest = $input['filter'] == 'recent';
-                if ($user_id !== null) {
+                if ($user_id > 0) {
                     $results = $user->get_recently_played($limit, $type, $newest);
                 } else {
                     $results = Stats::get_recent($type, $limit, $offset, $newest);
