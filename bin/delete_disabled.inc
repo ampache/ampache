@@ -25,9 +25,11 @@
  * This WILL DELETE MUSIC!!!! it does what it's name would suggest and deletes
  * any disabled songs
  */
+$options = getopt("x");
 
-/* will not delete anything if debug is true */
-$debug = true;
+// will not delete anything if debug is true
+// Require "-x" to disable debug mode
+$debug = !array_key_exists('x', $options);
 
 define('NO_SESSION', '1');
 $path   = dirname(__FILE__);
@@ -35,8 +37,9 @@ $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
 if ($debug) {
-    echo T_('DEBUG ENABLED WILL NOT DELETE FILES!');
-    echo "\n";
+    echo "\n" . T_('Running in Debug Mode. Use -x to execute') . "\n\n";
+} else {
+    echo "\n***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!") . "\n\n";
 }
 
 /* Get a list of filenames */
