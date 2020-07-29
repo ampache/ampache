@@ -169,7 +169,7 @@ class Api
             if ($input[$parameter] == 0) {
                 continue;
             }
-            if ((empty($input[$parameter])) {
+            if (empty($input[$parameter])) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
                 self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['format']);
 
