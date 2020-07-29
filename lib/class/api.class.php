@@ -166,7 +166,10 @@ class Api
     private static function check_parameter($input, $parameters, $method = '')
     {
         foreach ($parameters as $parameter) {
-            if (empty($input[$parameter]) && !$input[$parameter] == 0) {
+            if ($input[$parameter] == 0) {
+                continue;
+            }
+            if ((empty($input[$parameter])) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
                 self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['format']);
 
@@ -2257,7 +2260,7 @@ class Api
             case 'forgotten':
                 debug_event('api.class', 'stats ' . $input['filter'], 4);
                 $newest = $input['filter'] == 'recent';
-                if ($user_id > 0) {
+                if ($user->id) {
                     $results = $user->get_recently_played($limit, $type, $newest);
                 } else {
                     $results = Stats::get_recent($type, $limit, $offset, $newest);
