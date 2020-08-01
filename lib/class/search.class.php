@@ -1641,8 +1641,9 @@ class Search extends playlist_object
                     }
                 break;
                 case 'myplayed':
-                    $where[]                  = "`object_count`.`date` = " . $sql_match_operator;
-                    $join['object_count']     = true;
+                    $group[]              = "`song`.`id`";
+                    $having[]             = "COUNT(`object_count`.`object_id`) = " . $sql_match_operator;
+                    $join['object_count'] = true;
                     break;
                 case 'last_play':
                     $where[]              = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count`  " .
@@ -1874,7 +1875,8 @@ class Search extends playlist_object
                     $join['myrating']  = true;
                 break;
                 case 'myplayed':
-                    $where[]              = "`object_count`.`date` = " . $sql_match_operator;
+                    $group[]              = "`song`.`id`";
+                    $having[]             = "COUNT(`object_count`.`object_id`) = " . $sql_match_operator;
                     $join['object_count'] = true;
                     break;
                 case 'last_play':
@@ -2174,8 +2176,7 @@ class Search extends playlist_object
                     break;
                 case 'myplayed':
                     $group[]              = "`song`.`id`";
-                    $group[]              = "`object_count`.`date`";
-                    $where[]              = "`object_count`.`date` = " . $sql_match_operator;
+                    $having[]             = "COUNT(`object_count`.`object_id`) = " . $sql_match_operator;
                     $join['object_count'] = true;
                     break;
                 case 'myplayedalbum':
