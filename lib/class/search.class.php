@@ -1641,7 +1641,7 @@ class Search extends playlist_object
                     }
                 break;
                 case 'myplayed':
-                    $where[]                  = ($sql_match_operator == '1') ? "`object_count`.`date` IS NOT NULL" : "`object_count`.`date` IS NULL";
+                    $where[]                  = "`object_count`.`date` = " . $sql_match_operator;
                     $join['object_count']     = true;
                     break;
                 case 'last_play':
@@ -1874,7 +1874,7 @@ class Search extends playlist_object
                     $join['myrating']  = true;
                 break;
                 case 'myplayed':
-                    $where[]              = ($sql_match_operator == '1') ? "`object_count`.`date` IS NOT NULL" : "`object_count`.`date` IS NULL";
+                    $where[]              = "`object_count`.`date` = " . $sql_match_operator;
                     $join['object_count'] = true;
                     break;
                 case 'last_play':
@@ -2174,7 +2174,8 @@ class Search extends playlist_object
                     break;
                 case 'myplayed':
                     $group[]              = "`song`.`id`";
-                    $having[]             = ($sql_match_operator == '1') ? "`object_count`.`date` IS NOT NULL" : "`object_count`.`date` IS NULL";
+                    $group[]              = "`object_count`.`date`";
+                    $where[]              = "`object_count`.`date` = " . $sql_match_operator;
                     $join['object_count'] = true;
                     break;
                 case 'myplayedalbum':
