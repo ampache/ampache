@@ -1641,7 +1641,7 @@ class Search extends playlist_object
                     }
                 break;
                 case 'myplayed':
-                    $where[]                  = "`object_count`.`date` IS NOT NULL";
+                    $where[]                  = ($sql_match_operator == '1') ? "`object_count`.`date` IS NOT NULL" : "`object_count`.`date` IS NULL";
                     $join['object_count']     = true;
                     break;
                 case 'last_play':
@@ -1874,7 +1874,7 @@ class Search extends playlist_object
                     $join['myrating']  = true;
                 break;
                 case 'myplayed':
-                    $where[]              = "`object_count`.`date` IS NOT NULL";
+                    $where[]              = ($sql_match_operator == '1') ? "`object_count`.`date` IS NOT NULL" : "`object_count`.`date` IS NULL";
                     $join['object_count'] = true;
                     break;
                 case 'last_play':
@@ -2158,11 +2158,6 @@ class Search extends playlist_object
                 case 'played':
                     $where[] = "`song`.`played` = '$sql_match_operator'";
                 break;
-                case 'myplayed':
-                    $group[]              = "`song`.`id`";
-                    $having[]             = "COUNT(`object_count`.`object_id`) = " . $sql_match_operator;
-                    $join['object_count'] = true;
-                break;
                 case 'last_play':
                     $where[]              = "`object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     $join['object_count'] = true;
@@ -2176,6 +2171,11 @@ class Search extends playlist_object
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' " .
                         "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    break;
+                case 'myplayed':
+                    $group[]              = "`song`.`id`";
+                    $having[]             = ($sql_match_operator == '1') ? "`object_count`.`date` IS NOT NULL" : "`object_count`.`date` IS NULL";
+                    $join['object_count'] = true;
                     break;
                 case 'myplayedalbum':
                     $group[]                     = "`song`.`id`";
