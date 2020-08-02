@@ -98,7 +98,7 @@ class AmpacheCatalogFavorites
     public function display_home()
     {
         if (AmpConfig::get('userflags')) {
-            $userflags = Userflag::get_latest(null, -1, $this->maxitems);
+            $userflags = Userflag::get_latest(null, 0, $this->maxitems);
             $count     = 0;
             echo '<div class="home_plugin">';
             UI::show_box_top(T_('Highlight'));
