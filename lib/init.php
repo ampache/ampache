@@ -106,7 +106,7 @@ if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) 
     $results['user_ip_cardinality'] = 42;
 }
 
-/* Variables needed for Auth class */
+// Variables needed for Auth class
 $results['cookie_path']   = $results['raw_web_path'];
 $results['cookie_domain'] = $results['http_port'];
 $results['cookie_life']   = $results['session_cookielife'];
@@ -115,7 +115,9 @@ $results['cookie_secure'] = $results['session_cookiesecure'];
 // Library and module includes we can't do with the autoloader
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 
-/* Temp Fixes */
+// Make sure all default preferences are set
+Preference::set_defaults();
+// Temp Fixes
 $results = Preference::fix_preferences($results);
 
 AmpConfig::set_by_array($results, true);
@@ -125,13 +127,13 @@ if (AmpConfig::get('ratings')) {
     require_once $prefix . '/lib/rating.lib.php';
 }
 
-/* Set a new Error Handler */
+// Set a new Error Handler
 $old_error_handler = set_error_handler('ampache_error_handler');
 
-/* Check their PHP Vars to make sure we're cool here */
+// Check their PHP Vars to make sure we're cool here
 $post_size = @ini_get('post_max_size');
 if (substr($post_size, strlen((string) $post_size) - 1, strlen((string) $post_size)) != 'M') {
-    /* Sane value time */
+    // Sane value time
     ini_set('post_max_size', '8M');
 }
 
@@ -150,7 +152,7 @@ set_memory_limit($results['memory_limit']);
 
 // If we want a session
 if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
-    /* Verify their session */
+    // Verify their session
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         if (!Session::auth_remember()) {
             Auth::logout($_COOKIE[AmpConfig::get('session_name')]);
@@ -162,17 +164,17 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     // This actually is starting the session
     Session::check();
 
-    /* Create the new user */
+    // Create the new user
     $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 
-    /* If the user ID doesn't exist deny them */
+    // If the user ID doesn't exist deny them
     if (!Core::get_global('user')->id && !AmpConfig::get('demo_mode')) {
         Auth::logout(session_id());
 
         return false;
     }
 
-    /* Load preferences and theme */
+    // Load preferences and theme
     Core::get_global('user')->update_last_seen();
 } elseif (!AmpConfig::get('use_auth')) {
     $auth['success']      = 1;
@@ -240,18 +242,18 @@ if (session_id()) {
     Core::get_global('user')->load_playlist();
 }
 
-/* Add in some variables for ajax done here because we need the user */
+// Add in some variables for ajax done here because we need the user
 AmpConfig::set('ajax_url', AmpConfig::get('web_path') . '/server/ajax.server.php', true);
 AmpConfig::set('ajax_server', AmpConfig::get('web_path') . '/server', true);
 
-/* Set CHARSET */
+// Set CHARSET
 header("Content-Type: text/html; charset=" . AmpConfig::get('site_charset'));
 
-/* Clean up a bit */
+// Clean up a bit
 unset($array);
 unset($results);
 
-/* Check to see if we need to perform an update */
+// Check to see if we need to perform an update
 if (!defined('OUTDATED_DATABASE_OK')) {
     if (Update::need_update()) {
         header("Location: " . AmpConfig::get('web_path') . "/update.php");
