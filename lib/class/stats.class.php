@@ -465,7 +465,7 @@ class Stats
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        $limit = (!$offset) ? $count : $offset . "," . $count;
+        $limit = ($offset < 1) ? $count : $offset . "," . $count;
         $sql   = '';
         if ($user_id !== null) {
             $sql = self::get_top_sql($type, $threshold, 'stream', $user_id, $random);
