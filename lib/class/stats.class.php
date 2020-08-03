@@ -542,7 +542,7 @@ class Stats
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        $limit = ($offset > 1) ? $count : $offset . "," . $count;
+        $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
         $type = self::validate_type($input_type);
         $sql  = self::get_recent_sql($type, null, $newest);
