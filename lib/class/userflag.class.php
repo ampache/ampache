@@ -320,7 +320,7 @@ class Userflag extends database_object
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        $sql .= " GROUP BY `id`, `type` ORDER BY `user_flag`.`date` DESC ";
+        $sql .= " GROUP BY `object_id`, `type` ORDER BY `user_flag`.`date` DESC ";
 
         return $sql;
     }
