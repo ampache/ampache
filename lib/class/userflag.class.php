@@ -339,11 +339,7 @@ class Userflag extends database_object
         if ($count > 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        if ($offset > 1) {
-            $limit = $count;
-        } else {
-            $limit = $offset . "," . $count;
-        }
+        $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
         /* Select Top objects counting by # of rows */
         $sql = self::get_latest_sql($type, $user_id);

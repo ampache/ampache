@@ -465,7 +465,7 @@ class Stats
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        $limit = (!$offset) ? $count : $offset . "," . $count;
+        $limit = ($offset < 1) ? $count : $offset . "," . $count;
         $sql   = '';
         if ($user_id !== null) {
             $sql = self::get_top_sql($type, $threshold, 'stream', $user_id, $random);
@@ -542,7 +542,7 @@ class Stats
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        $limit = ($offset > 1) ? $count : $offset . "," . $count;
+        $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
         $type = self::validate_type($input_type);
         $sql  = self::get_recent_sql($type, null, $newest);
@@ -671,6 +671,8 @@ class Stats
         }
         if ($allow_group_disks && $type == 'album') {
             $sql .= $multi_where . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
+        } elseif ($base_type === 'video') {
+            $sql .= "GROUP BY `$sql_type`, `addition_time` ORDER BY `real_atime` DESC ";
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
         }

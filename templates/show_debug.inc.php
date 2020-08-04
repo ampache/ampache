@@ -89,10 +89,6 @@
                 <td><?php set_time_limit(0); echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
             </tr>
             <tr class="<?php echo UI::flip_class(); ?>">
-                <td><?php echo T_('Safe Mode'); ?></td>
-                <td><?php echo print_bool(ini_get('safe_mode')); ?></td>
-            </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
                 <td><?php T_('Open Basedir'); ?></td>
                 <td><?php echo ini_get('open_basedir'); ?></td>
             </tr>
