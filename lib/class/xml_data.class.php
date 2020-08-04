@@ -946,7 +946,7 @@ class XML_Data
                     "\t<title><![CDATA[" . $video->title . "]]></title>\n" .
                     "\t<name><![CDATA[" . $video->title . "]]></name>\n" .
                     "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
-                    "\t<resolution>" . $video->f_resolution . "</resolution>\n" .
+                    "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" .
                     "\t<size>" . $video->size . "</size>\n" .
                     self::tags_string($video->tags) .
                     "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api', false, $user_id) . "]]></url>\n" .
