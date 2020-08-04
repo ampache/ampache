@@ -336,7 +336,7 @@ class Userflag extends database_object
      */
     public static function get_latest($type = null, $user_id = null, $count = 0, $offset = 0)
     {
-        if ($count > 1) {
+        if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
         $limit = ($offset < 1) ? $count : $offset . "," . $count;
