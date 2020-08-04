@@ -96,7 +96,7 @@ class Userflag extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
+        $types = array('song', 'album', 'artist', 'video', 'playlist', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {
@@ -320,7 +320,7 @@ class Userflag extends database_object
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        $sql .= " GROUP BY `id`, `type` ORDER BY `user_flag`.`date` DESC ";
+        $sql .= " GROUP BY `object_id`, `type` ORDER BY `user_flag`.`date` DESC ";
 
         return $sql;
     }
@@ -336,7 +336,7 @@ class Userflag extends database_object
      */
     public static function get_latest($type = null, $user_id = null, $count = 0, $offset = 0)
     {
-        if ($count > 1) {
+        if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
         $limit = ($offset < 1) ? $count : $offset . "," . $count;

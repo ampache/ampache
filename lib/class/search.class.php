@@ -1852,11 +1852,13 @@ class Search extends playlist_object
                     $join['rating'] = true;
                 break;
                 case 'favorite':
-                    $join['user_flag']  = true;
-                    $where[]            = "(`artist`.`name` $sql_match_operator '$input' " .
+                    $where[] = "(`artist`.`name` $sql_match_operator '$input' " .
                                 " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
-                                "' ', `artist`.`name`)) $sql_match_operator '$input') AND `user_flag`.`user` = $userid";
-                    $where[] .= "`user_flag`.`object_type` = 'artist'";
+                                "' ', `artist`.`name`)) $sql_match_operator '$input') AND `favorite_artist_$userid`.`user` = $userid" .
+                                "`favorite_artist_$userid`.`object_type` = 'artist'";
+                    // flag once per user
+                    $table['favorite'] .= (!strpos($table['favorite'], "favorite_artist_$userid")) ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` from `user_flag` where `user` = $userid) " .
+                        "AS `favorite_artist_$userid` ON `artist`.`id`=`favorite_artist_$userid`.`object_id` AND `favorite_artist_$userid`.`object_type` = 'artist' " : '';
                 break;
                 case 'has image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
@@ -2076,7 +2078,6 @@ class Search extends playlist_object
                     }
                 break;
                 case 'album_tag':
-                    $key           = md5($input . $sql_match_operator);
                     $join['album'] = true;
                     $key           = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE') {
@@ -2097,7 +2098,6 @@ class Search extends playlist_object
                     }
                 break;
                 case 'artist_tag':
-                    $key            = md5($input . $sql_match_operator);
                     $join['artist'] = true;
                     $key            = md5($input . $sql_match_operator);
                     if ($sql_match_operator == 'LIKE') {
@@ -2205,9 +2205,11 @@ class Search extends playlist_object
                     $join['rating'] = true;
                 break;
                 case 'favorite':
-                    $join['user_flag']  = true;
-                    $where[]            = "`song`.`title` $sql_match_operator '$input' AND `user_flag`.`user` = $userid " .
-                                          " AND `user_flag`.`object_type` = 'song'";
+                    $where[] = "`song`.`title` $sql_match_operator '$input' AND `favorite_song_$userid`.`user` = $userid " .
+                               " AND `favorite_song_$userid`.`object_type` = 'song'";
+                    // flag once per user
+                    $table['favorite'] .= (!strpos($table['favorite'], "favorite_song_$userid")) ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` from `user_flag` where `user` = $userid) " .
+                        "AS `favorite_song_$userid` ON `song`.`id`=`favorite_song_$userid`.`object_id`  AND `favorite_song_$userid`.`object_type` = 'song' " : '';
                 break;
                 case 'myrating':
                     $group[]           = "`song`.`id`";
@@ -2246,9 +2248,11 @@ class Search extends playlist_object
                 case 'other_user':
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
-                        $join['other_user_flag'] = true;
-                        $where[]                 = "`user_flag`.`user` = $other_userid " .
-                                   " AND `user_flag`.`object_type` = 'song'";
+                        $where[] = "`favorite_song_$other_userid`.`user` = $other_userid " .
+                                   " AND `favorite_song_$other_userid`.`object_type` = 'song'";
+                        // flag once per user
+                        $table['favorite'] .= (!strpos($table['favorite'], "favorite_song_$other_userid")) ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` from `user_flag` where `user` = $other_userid) " .
+                            "AS `favorite_song_$other_userid` ON `song`.`id`=`favorite_song_$other_userid`.`object_id` " : '';
                     } else {
                         $join['other_rating'] = true;
                         $where[]              = $sql_match_operator .
@@ -2259,9 +2263,11 @@ class Search extends playlist_object
                 case 'other_user_album':
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
-                        $join['other_user_flag_album'] = true;
-                        $where[]                       = "`user_flag`.`user` = $other_userid " .
-                                   " AND `user_flag`.`object_type` = 'album'";
+                        $where[] = "`favorite_album_$other_userid`.`user` = $other_userid " .
+                                   " AND `favorite_album_$other_userid`.`object_type` = 'album'";
+                        // flag once per user
+                        $table['favorite'] .= (!strpos($table['favorite'], "favorite_album_$other_userid")) ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` from `user_flag` where `user` = $other_userid) " .
+                            "AS `favorite_album_$other_userid` ON `song`.`album`=`favorite_album_$other_userid`.`object_id` " : '';
                     } else {
                         $join['other_rating_album'] = true;
                         $where[]                    = $sql_match_operator .
@@ -2272,9 +2278,11 @@ class Search extends playlist_object
                 case 'other_user_artist':
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
-                        $join['other_user_flag_artist'] = true;
-                        $where[]                        = "`user_flag`.`user` = $other_userid " .
-                                   " AND `user_flag`.`object_type` = 'artist'";
+                        $where[] = "`favorite_artist_$other_userid`.`user` = $other_userid " .
+                                   " AND `favorite_artist_$other_userid`.`object_type` = 'artist'";
+                        // flag once per user
+                        $table['favorite'] .= (!strpos($table['favorite'], "favorite_artist_$other_userid")) ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` from `user_flag` where `user` = $other_userid) " .
+                            "AS `favorite_artist_$other_userid` ON `song`.`artist`=`favorite_artist_$other_userid`.`object_id` " : '';
                     } else {
                         $join['other_rating_artist'] = true;
                         $where[]                     = $sql_match_operator .
@@ -2418,19 +2426,6 @@ class Search extends playlist_object
                 $table['rating'] .= "`rating`.`user`='" . $userid . "' AND ";
             }
             $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
-        }
-
-        if ($join['user_flag']) {
-            $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`id`=`user_flag`.`object_id` ";
-        }
-        if ($join['other_user_flag']) {
-            $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`id`=`user_flag`.`object_id` ";
-        }
-        if ($join['other_user_flag_album']) {
-            $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`album`=`user_flag`.`object_id` ";
-        }
-        if ($join['other_user_flag_artist']) {
-            $table['user_flag']  = "LEFT JOIN `user_flag` ON `song`.`artist`=`user_flag`.`object_id` ";
         }
         if ($join['myrating']) {
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";

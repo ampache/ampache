@@ -2268,7 +2268,7 @@ class Api
                 break;
             case 'flagged':
                 debug_event('api.class', 'stats flagged', 4);
-                $results = Userflag::get_latest($type, $user_id);
+                $results = Userflag::get_latest($type, $user_id, $limit, $offset);
                 break;
             case 'random':
             default:
