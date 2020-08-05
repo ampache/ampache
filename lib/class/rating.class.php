@@ -71,6 +71,8 @@ class Rating extends database_object
                 Dba::write("DELETE FROM `rating` USING `rating` LEFT JOIN `$type` ON `$type`.`id` = `rating`.`object_id` WHERE `object_type` = '$type' AND `$type`.`id` IS NULL");
             }
         }
+        // delete 'empty' ratings
+        Dba::write("DELETE FROM `rating` WHERE `rating`.`rating` = 0");
     }
 
     /**
