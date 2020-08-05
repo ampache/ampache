@@ -1145,6 +1145,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `state` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `city` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `fullname_public` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `rsstoken` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;

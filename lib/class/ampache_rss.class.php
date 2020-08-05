@@ -31,6 +31,10 @@ class Ampache_RSS
      *  @var string $type
      */
     private $type;
+    /**
+     *  @var string $rsstoken
+     */
+    private $rsstoken;
     public $data;
 
     /**
@@ -38,9 +42,10 @@ class Ampache_RSS
      * This takes a flagged.id and then pulls in the information for said flag entry
      * @param string $type
      */
-    public function __construct($type)
+    public function __construct($type, $rsstoken = "")
     {
-        $this->type = self::validate_type($type);
+        $this->type     = self::validate_type($type);
+        $this->rsstoken = $rsstoken;
     } // constructor
 
     /**
@@ -70,7 +75,11 @@ class Ampache_RSS
             $data_function     = 'load_' . $this->type;
             $pub_date_function = 'pubdate_' . $this->type;
 
-            $data     = call_user_func(array('Ampache_RSS', $data_function));
+            if ($this->rsstoken) {
+                $data     = call_user_func(array('Ampache_RSS', $data_function), $this->rsstoken);
+            } else {
+                $data     = call_user_func(array('Ampache_RSS', $data_function));
+            }
             $pub_date = null;
             if (method_exists('Ampache_RSS', $pub_date_function)) {
                 $pub_date = call_user_func(array('Ampache_RSS', $pub_date_function));
@@ -137,7 +146,7 @@ class Ampache_RSS
      * @param array|null $params
      * @return string
      */
-    public static function get_display($type = 'now_playing', $title = '', $params = null)
+    public static function get_display($type = 'now_playing', $user_id = -1, $title = '', $params = null)
     {
         // Default to Now Playing
         $type = self::validate_type($type);
@@ -149,7 +158,16 @@ class Ampache_RSS
             }
         }
 
-        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $strparams . '">' . UI::get_icon('feed', T_('RSS Feed'));
+        $rsstoken = "";
+        if ($user_id != -1) {
+            $user = new User($user_id);
+            if (! $user->rsstoken) {
+                $user->generate_rsstoken();
+            }
+            $rsstoken = "&rsstoken=" . $user->rsstoken;
+        }
+
+        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '">' . UI::get_icon('feed', T_('RSS Feed'));
         if (!empty($title)) {
             $string .= ' &nbsp;' . $title;
         }
@@ -222,12 +240,17 @@ class Ampache_RSS
      * This loads in the Recently Played information and formats it up real nice like
      * @return array
      */
-    public static function load_recently_played()
+    public static function load_recently_played($rsstoken = "")
     {
-        // FIXME: The time stuff should be centralized, it's currently in two places, lame
+        if ($rsstoken) {
+            $user = User::get_from_rsstoken($rsstoken);
+        }
 
-        $time_unit = array('', T_('seconds ago'), T_('minutes ago'), T_('hours ago'), T_('days ago'), T_('weeks ago'), T_('months ago'), T_('years ago'));
-        $data      = Song::get_recently_played();
+        if ($user) {
+            $data      = Song::get_recently_played($user->id);
+        } else {
+            $data      = Song::get_recently_played();
+        }
 
         $results = array();
 
@@ -236,38 +259,10 @@ class Ampache_RSS
             $song   = new Song($item['object_id']);
             if ($song->enabled) {
                 $song->format();
-                $amount     = (int) (time() - $item['date'] + 2);
-                $final      = '0';
-                $time_place = '0';
-                while ($amount >= 1) {
-                    $final = $amount;
-                    $time_place++;
-                    if ($time_place <= 2) {
-                        $amount = floor($amount / 60);
-                    }
-                    if ($time_place == '3') {
-                        $amount = floor($amount / 24);
-                    }
-                    if ($time_place == '4') {
-                        $amount = floor($amount / 7);
-                    }
-                    if ($time_place == '5') {
-                        $amount = floor($amount / 4);
-                    }
-                    if ($time_place == '6') {
-                        $amount = floor($amount / 12);
-                    }
-                    if ($time_place > '6') {
-                        $final = $amount . '+';
-                        break;
-                    }
-                } // end while
-
-                $time_string = $final . ' ' . $time_unit[$time_place];
 
                 $xml_array = array('title' => $song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
                             'link' => str_replace('&amp;', '&', $song->link),
-                            'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full . ' - ' . $time_string,
+                            'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full,
                             'comments' => $client->username,
                             'pubDate' => date("r", (int) $item['date']));
                 $results[] = $xml_array;
