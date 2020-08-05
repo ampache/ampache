@@ -31,11 +31,11 @@ use Gettext\Translator;
 function load_gettext()
 {
     $lang   = AmpConfig::get('lang');
-    $popath = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.po';
+    $mopath = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.mo';
 
     $gettext = new Translator();
-    if (file_exists($popath)) {
-        $translations = Gettext\Translations::fromPoFile($popath);
+    if (file_exists($mopath)) {
+        $translations = Gettext\Translations::fromMoFile($mopath);
         $gettext->loadTranslations($translations);
     }
     $gettext->register();
