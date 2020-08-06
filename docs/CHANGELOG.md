@@ -1,10 +1,12 @@
 # CHANGELOG
 
-## 4.2.0-develop
+## 4.3.0-develop
+
+## 4.2.0-release
 
 A big visual change in the interface is that Ampache now defaults to US time for dates. ('Month/Day/Year')
 For everyone who isn't American you have control over date formats using custom_datetime.
-Admin -> Server Config -> Interface -> Custom datetime
+Admin => Server Config => Interface => Custom datetime
 
 e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
 Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
@@ -27,7 +29,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * 10 second redirect on "Access Denied" to the default web_path
 * Allow "Update from tags" for multi-disk album and artist pages
 * show and hide the rightbar (playlist) using the minimize button in the header
-* Tag->f_name (New property on tag that wasn't being set hackily)
+* Tag->f_name (New property on tag that was being set hackily)
 * Add "Album" to Find Duplicates in admin/duplicates.php.
 * "Local Image" added to Artist & Album search. Find out whether you have art stored in Ampache
 * PHP_CodeSniffer checks and settings added to Scrutinizer. (phpcs --standard=.phpcs.xml lib/class) 
@@ -57,7 +59,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Allow searching play times without requiring UI option
 * Stop showing the average rating in the web interface as stars. (show an average when available as text separately)
 * When you don't have a config file redirect to installer
-* Change to numeric searches renamed is -> equals and is not -> does not equal
+* Change to numeric searches: Renamed 'is' => 'equals' and 'is not' => 'does not equal'
 * Allow negative track numbers; reducing the maximum track number to 32767.
 * Localplay volume control moved to the playlist (rightbar)
 * Podcast_Episode::check_play_history Podcast_Episode::set_played (match song.class versions for stat recording)
@@ -107,9 +109,9 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Filter album title with grouping enabled. (seriously deadmau5, stop with the <> everywhere)
 * Share playback without a UID would fail to start
 * Set a default popular_threshold if unauthenticated or unset
-* play/index would be record deomcratic streams as a download
+* play/index would record democratic streams as a download
 * Make sure the default preferences table has all the preferences in them
-* Beets catalog bug; date_dif expecting a datetime but given a string
+* Beets catalog bug; date_diff expecting a datetime but given a string
 * Searches using user data like ratings has been split in the SQL correctly
 * Flagged playlists never had their flag deleted
 * offset and limit were incorrectly used for top/recent searches
@@ -130,6 +132,7 @@ API 5.0.0-release will be the first Ampache release to match the release string.
     * [<http://music.com.au/server/xml.server.php?action=handshake&auth=APIKEY&version=420000>]
   * Call the JSON server:
     * [<http://music.com.au/server/json.server.php?action=handshake&auth=APIKEY&version=420000>]
+  * Example XML and JSON responses available [here](https://github.com/ampache/python3-ampache/tree/master/docs)
 * NEW API functions
   * get_similar: send artist or song id to get related objects from last.fm
   * shares: get a list of shares you can access
@@ -155,14 +158,14 @@ API 5.0.0-release will be the first Ampache release to match the release string.
 #### Changed
 
 * Bump API version to 420000 (4.2.0)
-* All calls that return songs now include <playlisttrack> which can be used to identify track order.
-* <playcount> added to objects with a playcount.
-* <license> added to song objects.
+* All calls that return songs now include ```<playlisttrack>``` which can be used to identify track order.
+* ```<playcount>``` added to objects with a playcount.
+* ```<license>``` added to song objects.
 * Don't gather art when adding songs
 * Added actions to catalog_action. 'verify_catalog' 'gather_art'
 * API function "playlist_edit": added ability to edit playlist items
-  * items  = (array) replace all playlist items with a new list of object_ids //optional
-  * tracks = (array) playlisttrack numbers to rearrange matched to items in order //optional
+  * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
+  * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
 * Random albums will get songs for all disks if album_group enabled
 
 #### Deprecated

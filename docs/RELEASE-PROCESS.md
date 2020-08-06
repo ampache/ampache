@@ -11,12 +11,11 @@ It's easy to use a program like github desktop to compare between branches.
 * Fix merge issues
   * lib/init.php (Set release version)
   * docs/CHANGELOG.md (Update for release)
-* Commit merge but do not push!
-* Undo commits and tag for new version (e.g. 4.1.1)
+* Commit merge for new version (e.g. 4.2.0) but do not push!
 * Browse changes to check for things you've missed in the changelog
 * Add pchart to composer
   * composer require szymach/c-pchart "2.*"
-* Run composer install
+* ~~Run composer install~~ (adding pchart updates everything)
 * Remove broken symbolic links
 
 ```shell
@@ -27,21 +26,21 @@ It's easy to use a program like github desktop to compare between branches.
 
 ```shell
   cd ampache
-  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.1.0_all.zip ./
+  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.2.0_all.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
   * FIXME This might be where unit testing would be helpful.
 * Draft Release page online and save as draft using your changelog
-* When drafting a new release, set target to master branch.
+* When drafting a new release, set the tag to the version **4.2.0** and target to the **master** branch.
 * The "ampache-*.*.*_all.zip" drop-in package is then uploaded.
 * After setting version and title, save as draft
-* Commit your waiting update to master
+* Push your waiting update to master
 * Publish the new release
   * get the md5hash for the release page
 
 ```shell
-md5sum ../ampache-4.1.0_all.zip
+md5sum ../ampache-4.2.0_all.zip
 ```
 
 ## Additional requirements
