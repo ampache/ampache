@@ -1,6 +1,6 @@
 # Ampache
 
-![Logo](http://ampache.org/img/logo/ampache-logo_x64.png) Ampache
+![Logo](http://ampache.org/img/logo/ampache-logo_x64.png)
 
 [www.ampache.org](http://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
