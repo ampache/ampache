@@ -101,7 +101,7 @@ Translation progress so far:
 
 ## Credits
 
-Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS)
+Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS.md)
 
 ## Contact Us
 
@@ -118,4 +118,4 @@ Hate it? Love it? Let us know! Dozens of people send ideas for amazing new featu
 
 We hope to see you soon and that you have fun with this Project!
 
-[Team Ampache](docs/ACKNOWLEDGEMENTS)
+[Team Ampache](docs/ACKNOWLEDGEMENTS.md)
