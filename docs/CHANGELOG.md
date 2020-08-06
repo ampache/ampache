@@ -106,6 +106,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Set a default popular_threshold if unauthenticated or unset
 * play/index would be record deomcratic streams as a download
 * Make sure the default preferences table has all the preferences in them
+* Beets catalog bug; date_dif expecting a datetime but given a string
 
 ### Security
 

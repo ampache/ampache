@@ -45,3 +45,4 @@ phpcs*
 *.swp
 *.v11.suo
 *~
+composer.phar
