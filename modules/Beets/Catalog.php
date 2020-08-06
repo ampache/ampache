@@ -228,7 +228,7 @@ abstract class Catalog extends \Catalog
         debug_event('beets_catalog', 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        /* @var $parser Handler */
+        /* @var Handler $parser */
         $parser = $this->getParser();
         $parser->setHandler($this, 'verifySong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'mtime', $this->last_update));

@@ -122,6 +122,7 @@ switch ($_REQUEST['action']) {
     break;
     case 'live_stream':
     case 'tvshow':
+    case 'label':
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
@@ -149,6 +150,7 @@ switch ($_REQUEST['action']) {
         $browse->show_objects();
     break;
     case 'video':
+    case 'podcast':
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
         }
@@ -174,14 +176,6 @@ switch ($_REQUEST['action']) {
         $browse->update_browse_from_session();
         $browse->show_objects();
     break;
-    case 'label':
-        if (AmpConfig::get('catalog_disable')) {
-            $browse->set_filter('catalog_enabled', '1');
-        }
-        $browse->set_sort('name', 'ASC');
-        $browse->update_browse_from_session();
-        $browse->show_objects();
-        break;
     case 'pvmsg':
         $browse->set_sort('creation_date', 'DESC');
         $folder = $_REQUEST['folder'];
@@ -190,14 +184,6 @@ switch ($_REQUEST['action']) {
         } else {
             $browse->set_filter('to_user', Core::get_global('user')->id);
         }
-        $browse->update_browse_from_session();
-        $browse->show_objects();
-        break;
-    case 'podcast':
-        if (AmpConfig::get('catalog_disable')) {
-            $browse->set_filter('catalog_enabled', '1');
-        }
-        $browse->set_sort('title', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
         break;

@@ -117,6 +117,4 @@ function write_plist_usage()
         $desc6\n\n";
 
     echo $string;
-
-    return;
 } // usage

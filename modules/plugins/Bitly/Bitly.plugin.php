@@ -101,9 +101,8 @@ class AmpacheBitly
         try {
             debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
             $request  = Requests::get($apiurl, array(), Core::requests_options());
-            $shorturl = json_decode($request->body)->data->url;
 
-            return $shorturl;
+            return json_decode($request->body)->data->url;
         } catch (Exception $error) {
             debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
 

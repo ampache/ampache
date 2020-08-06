@@ -111,7 +111,7 @@ use Lib\Metadata\Model\Metadata;
                         <?php
                         $dismetas = $libitem->getDisabledMetadataFields();
                         foreach ($libitem->getMetadata() as $metadata) {
-                            /* @var $metadata Metadata */
+                            /* @var Metadata $metadata */
                             $field = $metadata->getField();
                             if ($field->isPublic() && !in_array($field->getName(), $dismetas)) {
                                 echo '<tr>'
