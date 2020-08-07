@@ -2,6 +2,15 @@
 
 ## 4.3.0-develop
 
+### Added
+
+* NEW files
+  * Include API docs from the wiki. (API.md, API-JSON-methods.md, API-XML-methods.md, API-advanced-search.md)
+
+### Changed
+
+* Use binary (.mo) translation files to speed up translation processing
+
 ## 4.2.0-release
 
 A big visual change in the interface is that Ampache now defaults to US time for dates. ('Month/Day/Year')
