@@ -11,7 +11,7 @@
   * Then put your client ID and secret in your ampache config
   * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
 * JSON support has landed! Documentation [wiki](https://github.com/ampache/ampache/wiki/Ampache-API) and example responses [here](https://github.com/ampache/python3-ampache/tree/master/docs).
-* Multiarch docker images are now available on [Docker Hub](hub.docker.com)
+* Multiarch docker images are now available on [Docker Hub](https://hub.docker.com/r/ampache/ampache)
 
 ## Basics
 
