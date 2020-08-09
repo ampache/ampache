@@ -395,11 +395,12 @@ class Search extends playlist_object
             'widget' => array(
                 'select',
                 array(
-                    '1',
-                    '2',
-                    '3',
+                    '5',
                     '4',
-                    '5'
+                    '3',
+                    '2',
+                    '1',
+                    '0'
                 )
             )
         );
@@ -419,11 +420,12 @@ class Search extends playlist_object
             'widget' => array(
                 'select',
                 array(
-                    '1',
-                    '2',
-                    '3',
+                    '5',
                     '4',
-                    '5'
+                    '3',
+                    '2',
+                    '1',
+                    '0'
                 )
             )
         );
@@ -503,11 +505,12 @@ class Search extends playlist_object
             'widget' => array(
                 'select',
                 array(
-                    '1',
-                    '2',
-                    '3',
+                    '5',
                     '4',
-                    '5'
+                    '3',
+                    '2',
+                    '1',
+                    '0'
                 )
             )
         );
@@ -527,11 +530,12 @@ class Search extends playlist_object
             'widget' => array(
                 'select',
                 array(
-                    '1',
-                    '2',
-                    '3',
+                    '5',
                     '4',
-                    '5'
+                    '3',
+                    '2',
+                    '1',
+                    '0'
                 )
             )
         );

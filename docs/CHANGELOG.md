@@ -4,6 +4,7 @@
 
 ### Added
 
+* Numeric (1-5) searches now include 0 to show unrated objects.
 * NEW files
   * Include API docs from the wiki. (API.md, API-JSON-methods.md, API-XML-methods.md, API-advanced-search.md)
 
