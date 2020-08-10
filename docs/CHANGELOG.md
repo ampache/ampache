@@ -13,6 +13,7 @@
 * Use binary (.mo) translation files to speed up translation processing
 * Don't show 'Generate new API key' if you don't have access
 * QR Code in account page is now just the API Key (redundant link removed too)
+* Require minimum version of Ampache 3.8.2 to upgrade database
 
 ## 4.2.0-release
 
