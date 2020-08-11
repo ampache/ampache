@@ -5,6 +5,10 @@
 ### Added
 
 * Numeric (1-5) searches now include 0 to show unrated objects.
+* Numeric 'Played/Skipped ratio' added to search. (Set using (stream/skip)*100.)
+  * ```> 0 & < 100 ```: skipped more times than played
+  * ```100```: Equal plays and skips
+  * ```> 100```: Played more than skipped.
 * NEW files
   * Include API docs from the wiki. (API.md, API-JSON-methods.md, API-XML-methods.md, API-advanced-search.md)
 

@@ -671,6 +671,13 @@ class Search extends playlist_object
         }
 
         $this->played_times();
+        $this->types[] = array(
+            'name' => 'play_skip_ratio',
+            /* HINT: Percentage of (Times Played / Times skipped) * 100 */
+            'label' => T_('Played/Skipped ratio'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
+        );
 
         $this->types[] = array(
             'name' => 'comment',
@@ -2184,6 +2191,17 @@ class Search extends playlist_object
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' " .
                         "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
+                    break;
+                case 'play_skip_ratio':
+                    $where[] = "`song`.`id` IN (SELECT `song`.`id` FROM `song` " .
+                        "LEFT JOIN (SELECT COUNT(`object_id`) AS `counting`, `object_id`, `count_type` " .
+                        "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' " .
+                        "GROUP BY `object_id`, `count_type`) AS `stream_count` on `song`.`id` = `stream_count`.`object_id`" .
+                        "LEFT JOIN (SELECT COUNT(`object_id`) AS `counting`, `object_id`, `count_type` " .
+                        "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'skip' " .
+                        "GROUP BY `object_id`, `count_type`) AS `skip_count` on `song`.`id` = `skip_count`.`object_id` " .
+                        "WHERE ((IFNULL(`stream_count`.`counting`, 0)/IFNULL(`skip_count`.`counting`, 0)) * 100) " .
+                        "$sql_match_operator '$input' GROUP BY `song`.`id`)";
                     break;
                 case 'myplayed':
                     $group[]       = "`song`.`id`";
