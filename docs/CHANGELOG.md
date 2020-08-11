@@ -10,6 +10,7 @@
   * ```100```: Equal plays and skips
   * ```> 100```: Played more than skipped
 * Ajax refresh localplay "Now Playing" same as the index "Now Playing" section
+* Add 'has not rated' to "Another User" searches.
 * NEW files
   * Include API docs from the wiki. (API.md, API-JSON-methods.md, API-XML-methods.md, API-advanced-search.md)
 
