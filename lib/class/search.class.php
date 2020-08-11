@@ -2262,7 +2262,7 @@ class Search extends playlist_object
                                " AND `rating_" . $my_type ."_" . $userid . "`.`user` = $userid " .
                                " AND `rating_" . $my_type ."_" . $userid . "`.`object_type` = '$my_type'";
                     // rating once per user
-                    $table['rating'] .= (!strpos($table['rating'], "rating_song_$userid")) ?
+                    $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type ."_" . $userid)) ?
                         "LEFT JOIN `rating` AS `rating_" . $my_type ."_" . $userid . "` ON " .
                         "`rating_" . $my_type ."_" . $userid . "`.`object_type`='$my_type' AND " .
                         "`rating_" . $my_type ."_" . $userid . "`.`object_id`=`song`.`$column` AND " .
@@ -2295,7 +2295,7 @@ class Search extends playlist_object
                             " AND `rating_" . $my_type ."_" . $other_userid . "`.`user` = $other_userid " .
                             " AND `rating_" . $my_type ."_" . $other_userid . "`.`object_type` = '$my_type'";
                         // rating once per user
-                        $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type ."_" . $other_userid . "")) ?
+                        $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type ."_" . $other_userid)) ?
                             "LEFT JOIN `rating` AS `rating_" . $my_type ."_" . $other_userid . "` ON " .
                             "`rating_" . $my_type ."_" . $other_userid . "`.`object_type`='$my_type' AND " .
                             "`rating_" . $my_type ."_" . $other_userid . "`.`object_id`=`song`.`$column` AND " .
