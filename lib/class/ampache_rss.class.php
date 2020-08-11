@@ -41,6 +41,7 @@ class Ampache_RSS
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
      * @param string $type
+     * @param string $rsstoken
      */
     public function __construct($type, $rsstoken = "")
     {
@@ -139,9 +140,10 @@ class Ampache_RSS
     } // validate_type
 
     /**
-      * get_display
+     * get_display
      * This dumps out some html and an icon for the type of rss that we specify
      * @param string $type
+     * @param integer $user_id
      * @param string $title
      * @param array|null $params
      * @return string
@@ -238,20 +240,13 @@ class Ampache_RSS
     /**
      * load_recently_played
      * This loads in the Recently Played information and formats it up real nice like
+     * @param string $rsstoken
      * @return array
      */
     public static function load_recently_played($rsstoken = "")
     {
-        if ($rsstoken) {
-            $user = User::get_from_rsstoken($rsstoken);
-        }
-
-        if ($user) {
-            $data      = Song::get_recently_played($user->id);
-        } else {
-            $data      = Song::get_recently_played();
-        }
-
+        $user    = ($rsstoken) ? User::get_from_rsstoken($rsstoken) : null;
+        $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
         $results = array();
 
         foreach ($data as $item) {
