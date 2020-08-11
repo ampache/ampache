@@ -16,11 +16,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 define('CLI', 1);
 
 $path   = dirname(__FILE__);
@@ -31,6 +31,7 @@ ob_end_flush();
 
 if (!AmpConfig::get('cron_cache')) {
     debug_event('cron.inc', 'ENABLE \'Cache computed SQL data (eg. media hits stats) using a cron\'\n * In Admin -> Server Config -> System -> Catalog\n', 5);
+
     return false;
 }
 debug_event('cron', 'started cron process', 3);

@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -414,7 +414,7 @@ class Recommendation
      * Migrate an object associate stats to a new object
      * @param string $object_type
      * @param integer $old_object_id
-     * @param string $new_object_id
+     * @param integer $new_object_id
      * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

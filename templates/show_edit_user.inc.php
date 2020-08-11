@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Editing Existing User')); ?>
@@ -141,7 +141,18 @@
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API Key')); ?></a>
             </td>
             <td>
-                <span><?php echo $client->apikey; ?></span>
+                <span>
+                    <?php if ($client->apikey) { ?>
+                    <br />
+                    <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
+                        <div id="apikey_qrcode"></div>
+                    </div>
+                    <br />
+                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $client->apikey; ?>', background: '#ffffff', foreground: '#000000'});</script>
+                    <?php echo $client->apikey; ?>
+                    <?php
+                } ?>
+                </span>
             </td>
         </tr>
         <?php if ($client->rsstoken) { ?>

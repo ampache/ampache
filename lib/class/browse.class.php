@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -109,7 +109,6 @@ class Browse extends Query
         if ($this->is_simple() && $this->get_start() == 0) {
             $name = 'browse_current_' . $this->get_type();
             if (isset($_SESSION[$name]) && isset($_SESSION[$name]['start']) && $_SESSION[$name]['start'] > 0) {
-
                 // Checking if value is suitable
                 $start = $_SESSION[$name]['start'];
                 if ($this->get_offset() > 0) {

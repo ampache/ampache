@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -40,7 +40,7 @@ header("Content-type: application/json; charset=" . AmpConfig::get('site_charset
 // If we don't even have access control on then we can't use this!
 if (!AmpConfig::get('access_control')) {
     ob_end_clean();
-    debug_event('Access Control','Error Attempted to use JSON API with Access Control turned off', 3);
+    debug_event('Access Control', 'Error Attempted to use JSON API with Access Control turned off', 3);
     echo JSON_Data::error('501', T_('Access Control not Enabled'));
     exit;
 }
@@ -49,8 +49,8 @@ if (!AmpConfig::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
-    debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']', 3);
+if (!Session::exists('api', $_REQUEST['auth']) && $_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
+    debug_event('Access Denied', 'Invalid Session attempt to API [' . $_REQUEST['action'] . ']', 3);
     ob_end_clean();
     echo JSON_Data::error('401', T_('Session Expired'));
     exit();
@@ -60,13 +60,13 @@ if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'hands
 $username = ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping') ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
 
 if (!Access::check_network('init-api', $username, 5)) {
-    debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', 3);
+    debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', 3);
     ob_end_clean();
     echo JSON_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
     exit();
 }
 
-if ($_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
+if ($_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
     Session::extend($_REQUEST['auth']);
     $GLOBALS['user'] = User::get_from_username($username);
 }

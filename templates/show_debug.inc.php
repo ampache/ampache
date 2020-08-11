@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
@@ -87,10 +87,6 @@
             <tr class="<?php echo UI::flip_class(); ?>">
                 <td><?php echo T_('Override Execution Time'); ?></td>
                 <td><?php set_time_limit(0); echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
-            </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
-                <td><?php echo T_('Safe Mode'); ?></td>
-                <td><?php echo print_bool(ini_get('safe_mode')); ?></td>
             </tr>
             <tr class="<?php echo UI::flip_class(); ?>">
                 <td><?php T_('Open Basedir'); ?></td>

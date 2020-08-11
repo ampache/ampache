@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -96,7 +96,7 @@ class Userflag extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
+        $types = array('song', 'album', 'artist', 'video', 'playlist', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {
@@ -301,8 +301,8 @@ class Userflag extends database_object
         }
         $user_id = (int) ($user_id);
         $type    = Stats::validate_type($type);
-        $sql     = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, " .
-                   "`user_flag`.`user` as `user` FROM `user_flag`";
+        $sql     = "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, `user_flag`.`object_type` as `type`, " .
+                   "MAX(`user_flag`.`user`) as `user` FROM `user_flag`";
         if ($user_id < 1) {
             // Get latest only from user rights >= content manager
             $sql .= " LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" .
@@ -320,7 +320,7 @@ class Userflag extends database_object
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        $sql .= " ORDER BY `user_flag`.`date` DESC ";
+        $sql .= " GROUP BY `object_id`, `type` ORDER BY `user_flag`.`date` DESC ";
 
         return $sql;
     }
@@ -336,22 +336,17 @@ class Userflag extends database_object
      */
     public static function get_latest($type = null, $user_id = null, $count = 0, $offset = 0)
     {
-        if ($count > 1) {
+        if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        if ($offset > 1) {
-            $limit = $count;
-        } else {
-            $limit = $offset . "," . $count;
-        }
+        $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
         /* Select Top objects counting by # of rows */
         $sql = self::get_latest_sql($type, $user_id);
         $sql .= "LIMIT $limit";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($type === null) {
                 $results[] = $row;

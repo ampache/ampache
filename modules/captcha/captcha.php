@@ -195,8 +195,8 @@ class easy_captcha
 
         #-- meta information
         $this->created       = time();
-        $this->{'created$'} = gmdate("r", $this->created);
-        $this->expires      = $this->created + CAPTCHA_TIMEOUT;
+        $this->{'created$'}  = gmdate("r", $this->created);
+        $this->expires       = $this->created + CAPTCHA_TIMEOUT;
         //$this->tries = 0;
         $this->passed = 0;
 
@@ -724,12 +724,12 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     {
 
       #-- init
-      $single_pixel = (CAPTCHA_PIXEL <= 1);   // very fast
-      $greyscale2x2 = (CAPTCHA_PIXEL <= 2);   // quicker than exact smooth 2x2 copy
-      $width        = $this->width;
-      $height       = $this->height;
-      $image        = & $this->img;
-      $dest         = $this->create();
+      $single_pixel   = (CAPTCHA_PIXEL <= 1);   // very fast
+      $greyscale2x2   = (CAPTCHA_PIXEL <= 2);   // quicker than exact smooth 2x2 copy
+      $width          = $this->width;
+        $height       = $this->height;
+        $image        = & $this->img;
+        $dest         = $this->create();
 
         #-- URL param ?hires=1 influences used drawing scheme
         if (filter_has_var(INPUT_GET, 'hires')) {
@@ -811,7 +811,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
        $c10 = $this->get_RGB($i, $x + 1, $y);    //  | rx-> |      |
        $c11 = $this->get_RGB($i, $x + 1, $y + 1);  //  +----##+------+
        // weighting by $distortx/$distorty fraction part   //  |    ##|<-ry  |
-       $rx  = $x - floor($x);
+       $rx   = $x - floor($x);
         $rx_ = 1 - $rx;  //  |x0,y1 | x1,y1|
         $ry  = $y - floor($y);
         $ry_ = 1 - $ry;  //  +------+------+
@@ -868,9 +868,9 @@ class easy_captcha_dxy_wave
      */
     public function __construct($max_x, $max_y)
     {
-        $this->dist_x = $this->real_rand(2.5, 3.5);     // max +-x/y delta distance
+        $this->dist_x  = $this->real_rand(2.5, 3.5);     // max +-x/y delta distance
         $this->dist_y  = $this->real_rand(2.5, 3.5);
-        $this->slow_x = $this->real_rand(7.5, 20.0);    // =wave-width in pixel/3
+        $this->slow_x  = $this->real_rand(7.5, 20.0);    // =wave-width in pixel/3
         $this->slow_y  = $this->real_rand(7.5, 15.0);
     }
 
@@ -888,7 +888,7 @@ class easy_captcha_dxy_wave
         $this->dist_y *= 1.000015;
         #-- dest pixels (with x+y together in each of the sin() calcs you get more deformation, else just yields y-ripple effect)
         $distortx  = $this->dist_x * cos(($x / $this->slow_x) - ($y / 1.1 / $this->slow_y));
-        $distorty = $this->dist_y * sin(($y / $this->slow_y) - ($x / 0.9 / $this->slow_x));
+        $distorty  = $this->dist_y * sin(($y / $this->slow_y) - ($x / 0.9 / $this->slow_x));
         #-- result
         return array($distortx, $distorty);
     }
@@ -985,7 +985,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
 
         #-- encolour bg
         $wd  = 20;
-        $x  = 0;
+        $x   = 0;
         while ($x < $this->width) {
             imagefilledrectangle($this->img, $x, 0, $x += $wd, $this->height, $this->random_color(222, 255));
             $wd += max(10, rand(0, 20) - 10);
@@ -1054,7 +1054,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
             $x        = $w1 + $w2 * $p;
             $w1 += rand(-$this->width / 90, $this->width / 40);  // @BUG: last char could be +30 pixel outside of image
             $font              = $this->font();
-            list($r, $g, $b) = array(rand(30, 99), rand(30, 99), rand(30, 99));
+            list($r, $g, $b)   = array(rand(30, 99), rand(30, 99), rand(30, 99));
             imagettftext($this->img, $size, $rotation, $x + 1, $y, $this->rgb($r * 2, $g * 2, $b * 2), $font, $letter);
             imagettftext($this->img, $size, $rotation, $x, $y - 1, $this->rgb($r, $g, $b), $font, $letter);
         }
@@ -1198,7 +1198,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     {
         if (!headers_sent()) {
             setcookie($this->cookie(), $this->validity_token(), time() + 175 * CAPTCHA_TIMEOUT);
-        //} else {
+            //} else {
         //    // $this->log("::grant", "COOKIES", "too late for cookies");
         }
     }
@@ -1333,6 +1333,7 @@ class easy_captcha_utility
                     print $bin;
                 }
             }
+
             return false;
         }
     }

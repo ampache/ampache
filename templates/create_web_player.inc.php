@@ -16,13 +16,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
  ?>
 <html>
 <head>
-<title><?php echo AmpConfig::get('site_title'); ?></title>
+<title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
 <script>
 <!-- begin
 function PlayerPopUp(URL)

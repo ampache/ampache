@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -288,8 +288,8 @@ class Update
 
         // Run a check to make sure that they don't try to upgrade from a version that
         // won't work.
-        if ($current_version < '340002') {
-            echo '<p class="database-update">Database version too old, please upgrade to <a href="http://ampache.org/downloads/ampache-3.3.3.5.tar.gz">Ampache-3.3.3.5</a> first</p>';
+        if ($current_version < '380005') {
+            echo '<p class="database-update">Database version too old, please upgrade to <a href="https://github.com/ampache/ampache/releases/download/3.8.2/ampache-3.8.2_all.zip">Ampache-3.8.2</a> first</p>';
 
             return false;
         }

@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -853,13 +853,13 @@ class Subsonic_XML_Data
     public static function getAmpacheObject($object_id)
     {
         if (Subsonic_XML_Data::isSong($object_id)) {
-            return new Song($object_id);
+            return new Song(Subsonic_XML_Data::getAmpacheId($object_id));
         }
         if (Subsonic_XML_Data::isVideo($object_id)) {
-            return new Video($object_id);
+            return new Video(Subsonic_XML_Data::getAmpacheId($object_id));
         }
         if (Subsonic_XML_Data::isPodcastEp($object_id)) {
-            return new Podcast_Episode($object_id);
+            return new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($object_id));
         }
 
         return null;
@@ -1155,7 +1155,6 @@ class Subsonic_XML_Data
      */
     private static function setIfStarred($xml, $objectType, $object_id)
     {
-//        $object_type = strtolower(get_class($libitem));
         if (Core::is_library_item($objectType)) {
             if (AmpConfig::get('userflags')) {
                 $starred = new Userflag($object_id, $objectType);

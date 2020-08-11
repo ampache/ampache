@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Add User'), 'box box_add_user'); ?>
@@ -30,6 +30,23 @@
             <td>
                 <input type="text" name="username" maxlength="128" value="<?php echo scrub_out(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
                 <?php AmpError::display('username'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('Password'); ?>: *
+            </td>
+            <td>
+                <input type="password" name="password_1" value="" />
+                <?php AmpError::display('password'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo  T_('Confirm Password'); ?>: *
+            </td>
+            <td>
+                <input type="password" name="password_2" value="" />
             </td>
         </tr>
         <tr>
@@ -55,23 +72,6 @@
             <td>
                 <input type="text" name="website" value="<?php echo scrub_out(Core::get_post('website')); ?>" />
                 <?php AmpError::display('website'); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <?php echo  T_('Password'); ?>: *
-            </td>
-            <td>
-                <input type="password" name="password_1" value="" />
-                <?php AmpError::display('password'); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <?php echo  T_('Confirm Password'); ?>: *
-            </td>
-            <td>
-                <input type="password" name="password_2" value="" />
             </td>
         </tr>
         <tr>

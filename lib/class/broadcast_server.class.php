@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -91,7 +91,7 @@ class Broadcast_Server implements MessageComponentInterface
                 if (count($cmdinfo) == 2) {
                     switch ($cmdinfo[0]) {
                         case self::BROADCAST_SONG:
-                            $this->notifySong($from, $cmdinfo[1]);
+                            $this->notifySong($from, (int) $cmdinfo[1]);
                         break;
                         case self::BROADCAST_SONG_POSITION:
                             $this->notifySongPosition($from, (int) $cmdinfo[1]);

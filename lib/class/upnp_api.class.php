@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -69,7 +69,7 @@ class Upnp_Api
      * @param string $host
      * @param integer $port
      */
-    private static function udpSend($buf, $delay=15, $host="239.255.255.250", $port=1900)
+    private static function udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900)
     {
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);

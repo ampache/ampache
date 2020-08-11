@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -355,7 +355,6 @@ class Random
         $time_total = 0;
         $fuzzy_time = 0;
         while ($row = Dba::fetch_assoc($db_results)) {
-
             // If size limit is specified
             if ($data['size_limit']) {
                 // Convert

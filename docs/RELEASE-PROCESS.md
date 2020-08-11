@@ -11,12 +11,11 @@ It's easy to use a program like github desktop to compare between branches.
 * Fix merge issues
   * lib/init.php (Set release version)
   * docs/CHANGELOG.md (Update for release)
-* Commit merge but do not push!
-* Undo commits and tag for new version (e.g. 4.1.1)
+* Commit merge for new version (e.g. 4.2.0) but do not push!
 * Browse changes to check for things you've missed in the changelog
 * Add pchart to composer
   * composer require szymach/c-pchart "2.*"
-* Run composer install
+* ~~Run composer install~~ (adding pchart updates everything)
 * Remove broken symbolic links
 
 ```shell
@@ -27,30 +26,36 @@ It's easy to use a program like github desktop to compare between branches.
 
 ```shell
   cd ampache
-  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.1.0_all.zip ./
+  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.2.0_all.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
   * FIXME This might be where unit testing would be helpful.
 * Draft Release page online and save as draft using your changelog
-* When drafting a new release, set target to master branch.
+* When drafting a new release, set the tag to the version **4.2.0** and target to the **master** branch.
 * The "ampache-*.*.*_all.zip" drop-in package is then uploaded.
 * After setting version and title, save as draft
-* Commit your waiting update to master
+* Push your waiting update to master
 * Publish the new release
   * get the md5hash for the release page
 
 ```shell
-md5sum ../ampache-4.1.0_all.zip
+md5sum ../ampache-4.2.0_all.zip
 ```
+
+## Post release
+
+* Update develop from master **don't push**
+* Set the next version in init.php, (Release + 0.1.0 usually) update the changelog
+* Commit and push "Begin 4.3.0"
 
 ## Additional requirements
 
-* Update ampache-docker README.md with the current version. (This will kick off a build with the new version)
-* Update config file in docker (ampache.cfg.php.dist) if it's changed as well
-* Update and make a release for python3-ampache if api has changed
-  * Use a test file (test.py?) for some basic API function.
-  * FIXME what should it test?
+* Update ampache-docker README.md with the current version. ~~(This will kick off a build with the new version)~~
+* Update config file in docker (ampache.cfg.php.dist)
+* Update and make a release for python3-ampache following the version with a build (4.2.0-1)
+  * run build_docs.py to update the example files
+* Create a new release on GitHub to automatically push to [PyPI](https://pypi.org/project/ampache/).
 
 ## Update ampache-docker images on docker hub
 
@@ -58,8 +63,10 @@ Update the official Ampache docker images [<https://hub.docker.com/r/ampache/amp
 
 * To bump ampache-docker images rebuild for arm and amd64 using buildx [<https://github.com/docker/buildx>]
 * After enabling experimental mode I installed the tools and buildx container.
+* Make sure the docker API is [accessible](https://success.docker.com/article/how-do-i-enable-the-remote-api-for-dockerd)
 
-This should only be needed once obviously
+This part should only be needed once.
+It creates a local builder that can build the other CPU architectures.
 
 ```bash
 aptitude install qemu qemu-user-static qemu-user binfmt-support
@@ -68,9 +75,13 @@ docker buildx use mybuilder
 docker buildx inspect --bootstrap
 ```
 
-Build master images and push to docker hub.
+Log in to your docker account 
 
-latest
+```bash
+docker login -u USER -p PASSWORD
+```
+
+Build latest (master) images and push to docker hub.
 
 ```bash
 git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker/

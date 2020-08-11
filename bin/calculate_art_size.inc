@@ -16,12 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-define('NO_SESSION','1');
-$path = dirname(__FILE__);
+define('NO_SESSION', '1');
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 
@@ -30,9 +30,9 @@ ob_end_clean();
 
 $inDisk = AmpConfig::get('album_art_store_disk');
 
-$sql = "SELECT `image`, `id`, `object_id`, `object_type`, `size` FROM `image`";
+$sql        = "SELECT `image`, `id`, `object_id`, `object_type`, `size` FROM `image`";
 $db_results = Dba::read($sql);
-$results = array();
+$results    = array();
 
 while ($row = Dba::fetch_assoc($db_results)) {
     if ($inDisk) {
@@ -46,7 +46,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
     if (!empty($dimensions) && ((int) $dimensions['width'] > 0 && (int) $dimensions['height'] > 0)) {
         $width  = (int) $dimensions['width'];
         $height = (int) $dimensions['height'];
-        $sql = "UPDATE `image` SET `width`=" . $width . ", `height`=" . $height . " WHERE `id`='" . $art_id . "'";
+        $sql    = "UPDATE `image` SET `width`=" . $width . ", `height`=" . $height . " WHERE `id`='" . $art_id . "'";
         Dba::write($sql);
     }
 }

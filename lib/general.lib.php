@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -87,7 +87,7 @@ function scrub_in($input)
  * This function is used to escape user data that is getting redisplayed
  * onto the page, it htmlentities the mojo
  * This is the inverse of the scrub_in function
- * @param string $string
+ * @param string|null $string
  * @return string
  */
 function scrub_out($string)

@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -65,6 +65,13 @@ switch ($_REQUEST['action']) {
 
         // Switch on valid commands
         switch ($_REQUEST['command']) {
+            case 'refresh':
+                ob_start();
+                $objects = $localplay->get();
+                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
+                $results['localplay_status'] = ob_get_contents();
+                ob_end_clean();
+                break;
             case 'prev':
             case 'next':
             case 'stop':

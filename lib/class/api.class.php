@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -159,14 +159,17 @@ class Api
      * Parameters must be an array of required elements as a string
      *
      * @param array $input
-     * @param string[] $parameters e.g. array('auth','type')
+     * @param string[] $parameters e.g. array('auth', type')
      * @param string $method
      * @return boolean
      */
     private static function check_parameter($input, $parameters, $method = '')
     {
         foreach ($parameters as $parameter) {
-            if (empty($input[$parameter]) && !$input[$parameter] == 0) {
+            if ($input[$parameter] === 0 || $input[$parameter] === '0') {
+                continue;
+            }
+            if (empty($input[$parameter])) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
                 self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['format']);
 
@@ -260,10 +263,8 @@ class Api
         debug_event('api.class', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
         if ($user_id > 0 && Access::check_network('api', $user_id, 5)) {
-
             // Authentication with user/password, we still need to check the password
             if ($username) {
-
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
@@ -2241,7 +2242,7 @@ class Api
             $limit = AmpConfig::get('popular_threshold', 10);
         }
 
-        $results = null;
+        $results = array();
         switch ($input['filter']) {
             case 'newest':
                 debug_event('api.class', 'stats newest', 5);
@@ -2259,7 +2260,7 @@ class Api
             case 'forgotten':
                 debug_event('api.class', 'stats ' . $input['filter'], 4);
                 $newest = $input['filter'] == 'recent';
-                if ($user_id !== null) {
+                if ($user->id) {
                     $results = $user->get_recently_played($limit, $type, $newest);
                 } else {
                     $results = Stats::get_recent($type, $limit, $offset, $newest);
@@ -2267,7 +2268,7 @@ class Api
                 break;
             case 'flagged':
                 debug_event('api.class', 'stats flagged', 4);
-                $results = Userflag::get_latest($type, $user_id);
+                $results = Userflag::get_latest($type, $user_id, $limit, $offset);
                 break;
             case 'random':
             default:
@@ -2284,7 +2285,7 @@ class Api
                     }
         }
 
-        if ($results !== null) {
+        if (!empty($results)) {
             ob_end_clean();
             debug_event('api.class', 'stats found results searching for ' . $type, 5);
             if ($type === 'song') {
@@ -2314,10 +2315,13 @@ class Api
                         echo XML_Data::albums($results, array(), $user->id);
                 }
             }
-        }
-        Session::extend($input['auth']);
+            Session::extend($input['auth']);
 
-        return true;
+            return true;
+        }
+        self::message('error', 'No Results', '404', $input['format']);
+
+        return false;
     } // stats
 
     /**

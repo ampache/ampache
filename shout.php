@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -69,7 +69,7 @@ switch ($_REQUEST['action']) {
         }
 
         $object->format();
-        if (strtolower(get_class($object)) == 'song') {
+        if (get_class($object) == 'Song') {
             $data = $_REQUEST['offset'];
         }
 

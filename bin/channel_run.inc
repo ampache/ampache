@@ -16,40 +16,37 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 define('CLI', 1);
 
-$chunk_buffer = '';
+$chunk_buffer        = '';
 $nb_chunks_remainder = 0;
-$path = dirname(__FILE__);
-$prefix = realpath($path . '/../');
+$path                = dirname(__FILE__);
+$prefix              = realpath($path . '/../');
 require_once $prefix . '/lib/init.php';
 ob_end_flush();
 
 $metadata_interval = 16000;
 
 $start_date = time();
-$verbose = false;
-$port = 0;
-$chanid = 0;
+$verbose    = false;
+$port       = 0;
+$chanid     = 0;
 
 $cargv = count($_SERVER['argv']);
 if ($cargv > 1) {
     for ($x = 1; $x < $cargv; $x++) {
-
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
             $chanid = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t" . T_('Channel') . ' ' . $chanid;
-        }
-        elseif ($_SERVER['argv'][$x] == "-v") {
+        } elseif ($_SERVER['argv'][$x] == "-v") {
             $operations_string .= "\n\t" . T_('Verbose');
             $verbose = true;
-        }
-        elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
+        } elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
             $port = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t" . T_('Port') . ' ' . $port;
         }
@@ -58,6 +55,7 @@ if ($cargv > 1) {
 
 if ($chanid < 1) {
     channel_usage();
+
     return false;
 }
 
@@ -72,13 +70,13 @@ echo T_("Starting Channel...") . $operations_string . "\n";
 
 $channel = new Channel($chanid);
 if (!$channel->id) {
-    die (T_("Unknown channel."));
+    die(T_("Unknown channel."));
 }
 
 if ($port < 1) {
     if ($channel->fixed_endpoint) {
         $address = $channel->interface;
-        $port = (int) $channel->port;
+        $port    = (int) $channel->port;
     } else {
         $address = "127.0.0.1";
         // Try to find an available port
@@ -87,7 +85,7 @@ if ($port < 1) {
             if (is_resource($connection)) {
                 fclose($connection);
             } else {
-                echo T_("Found available port") . " " .$p . "\n";
+                echo T_("Found available port") . " " . $p . "\n";
                 $port = $p;
                 break;
             }
@@ -98,19 +96,17 @@ if ($port < 1) {
 ob_start();
 
 $server_uri = 'tcp://' . $address . ':' . $port;
-$server = stream_socket_server($server_uri, $errno, $errorMessage);
-if ($server === false)
-{
+$server     = stream_socket_server($server_uri, $errno, $errorMessage);
+if ($server === false) {
     die("Could not bind to socket: " . $errorMessage);
 }
 $channel->update_start($start_date, $address, $port, getmypid());
-echo T_("Listening on") . " " .$address . ':' . $port . "\n";
+echo T_("Listening on") . " " . $address . ':' . $port . "\n";
 
 $stream_clients = array();
-$client_socks = array();
-$last_stream = microtime(true);
-while(true)
-{
+$client_socks   = array();
+$last_stream    = microtime(true);
+while (true) {
     //prepare readable sockets
     $read_socks = $client_socks;
     if (count($client_socks) < $channel->max_listeners) {
@@ -118,19 +114,16 @@ while(true)
     }
     //echo "b\n";ob_flush();
     //start reading and use a large timeout
-    if(stream_select ( $read_socks, $write, $except, 1))
-    {
+    if (stream_select($read_socks, $write, $except, 1)) {
         //new client
-        if (in_array($server, $read_socks))
-        {
+        if (in_array($server, $read_socks)) {
             $new_client = stream_socket_accept($server);
 
-            if ($new_client)
-            {
+            if ($new_client) {
                 debug_event('channel_run', 'Connection accepted from ' . stream_socket_get_name($new_client, true) . '.', 5);
                 $client_socks[] = $new_client;
                 $channel->update_listeners(count($client_socks), true);
-                debug_event('channel_run', 'Now there are total '. count($client_socks) . ' clients.', 4);
+                debug_event('channel_run', 'Now there are total ' . count($client_socks) . ' clients.', 4);
                 echo T_("Client connected") . "\n";
                 ob_flush();
             }
@@ -140,15 +133,13 @@ while(true)
         }
 
         // Get new message from existing client
-        foreach($read_socks as $sock)
-        {
+        foreach ($read_socks as $sock) {
             // Handle data parse
             http_serve($channel, $client_socks, $stream_clients, $read_socks, $sock);
         }
     }
 
     if ($channel->bitrate) {
-
         $time_offset = microtime(true) - $last_stream;
 
         //debug_event('channel_run', 'time_offset : '. $time_offset, 5);
@@ -159,52 +150,49 @@ while(true)
         } // always at least 1 second between cycles
 
         $last_stream = microtime(true);
-        $mtime = ($time_offset > 1) ? $time_offset : 1;
-        $nb_chunks = ceil(($mtime * ($channel->bitrate+1/100*$channel->bitrate) * 1000 / 8) / $channel->chunk_size); // channel->bitrate+1% ... leave some headroom for metadata / headers
+        $mtime       = ($time_offset > 1) ? $time_offset : 1;
+        $nb_chunks   = ceil(($mtime * ($channel->bitrate + 1 / 100 * $channel->bitrate) * 1000 / 8) / $channel->chunk_size); // channel->bitrate+1% ... leave some headroom for metadata / headers
 
         // we only send full blocks, save remainder and apply when appropriate: allows more granular/arbitrary average bitrates
         if ($nb_chunks - ($mtime * ($channel->bitrate + 1 / 100 * $channel->bitrate) * 1000 / 8 / $channel->chunk_size) > 0) {
             $nb_chunks_remainder += $nb_chunks - ($mtime * $channel->bitrate * 1000 / 8 / $channel->chunk_size);
         }
-        if ($nb_chunks >= 1 && $nb_chunks_remainder >= 1){
+        if ($nb_chunks >= 1 && $nb_chunks_remainder >= 1) {
             $nb_chunks -= 1;
             $nb_chunks_remainder -= 1;
             //debug_event('channel_run', 'REMAINDER: '.$nb_chunks_remainder, 5);
         }
         //debug_event('channel_run', 'mtime '.$mtime, 5);
         //debug_event('channel_run', 'nb_chunks: '.$nb_chunks, 5);
-
     } else {
         $nb_chunks = 1;
     }
 
     // Get multiple chunks according to bitrate to return enough data per second (because sleep with socket select)
-    for ($count = 0; $count < $nb_chunks; $count++)  {
-
-        $chunk = $channel->get_chunk();
+    for ($count = 0; $count < $nb_chunks; $count++) {
+        $chunk    = $channel->get_chunk();
         $chunklen = strlen((string) $chunk);
         $chunk_buffer .= $chunk;
 
         //buffer maintenance
-        while (strlen($chunk_buffer) > (15 * $nb_chunks * $channel->chunk_size) ){ // buffer 15 seconds
-
+        while (strlen($chunk_buffer) > (15 * $nb_chunks * $channel->chunk_size)) { // buffer 15 seconds
             if (strtolower($channel->stream_type) == "ogg" && strtohex(substr($chunk_buffer, 0, 4)) == "4F676753") { //maintain ogg chunk alignment --- "4F676753" == "OggS"
                 // read OggS segment length
-                $hex = strtohex(substr($chunk_buffer, 0, 27));
-                $ogg_nr_of_segments = (int) hexdec(substr($hex, 26*2, 2));
+                $hex                = strtohex(substr($chunk_buffer, 0, 27));
+                $ogg_nr_of_segments = (int) hexdec(substr($hex, 26 * 2, 2));
                 $hex .= strtohex(substr($chunk_buffer, 27, $ogg_nr_of_segments));
                 $ogg_sum_segm_laces = 0;
-                for($segm = 0; $segm < $ogg_nr_of_segments; $segm++){
-                    $ogg_sum_segm_laces += hexdec(substr($hex, 27*2 + $segm*2, 2));
+                for ($segm = 0; $segm < $ogg_nr_of_segments; $segm++) {
+                    $ogg_sum_segm_laces += hexdec(substr($hex, 27 * 2 + $segm * 2, 2));
                 }
                 //$naive = strpos(substr($chunk_buffer, 4), 'OggS') + 4; // naive search for next header
                 //remove 1 whole OggS chunk
                 $chunk_buffer = substr($chunk_buffer, (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
-                //debug_event('channel_run', '$new chunk buffer : '.substr($chunk_buffer,0,300) . ' $hex: '.strtohex(substr($chunk_buffer,0,600)) . ' $ogg_nr_of_segments: ' .$ogg_nr_of_segments . ' bytes cut off: '.(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces) . ' naive: ' .$naive, 5);
+            //debug_event('channel_run', '$new chunk buffer : '.substr($chunk_buffer,0,300) . ' $hex: '.strtohex(substr($chunk_buffer,0,600)) . ' $ogg_nr_of_segments: ' .$ogg_nr_of_segments . ' bytes cut off: '.(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces) . ' naive: ' .$naive, 5);
             } elseif (strtolower($channel->stream_type) == "ogg") {
                 debug_event('channel_run', 'Ogg alignament broken! Trying repair...', 4);
                 $manual_search = strpos($chunk_buffer, 'OggS');
-                $chunk_buffer = substr($chunk_buffer, $manual_search);
+                $chunk_buffer  = substr($chunk_buffer, $manual_search);
             } else { // no chunk alignment required
                 $chunk_buffer = substr($chunk_buffer, $chunklen);
             }
@@ -212,24 +200,23 @@ while(true)
         }
 
         if ($chunklen > 0) {
-            foreach($stream_clients as $key => $client)
-            {
-                $sock = $client['socket'];
+            foreach ($stream_clients as $key => $client) {
+                $sock    = $client['socket'];
                 $clchunk = $chunk;
 
-                if(!is_resource($sock)) {
+                if (!is_resource($sock)) {
                     client_disconnect($channel, $client_socks, $stream_clients, $sock);
                     continue;
                 }
 
-                if ($client['isnew'] == 1){
+                if ($client['isnew'] == 1) {
                     $client['isnew'] = 0;
                     //fwrite($sock, $channel->header_chunk);
                     //debug_event('channel_run', 'IS NEW' . $channel->header_chunk, 5);
                     $clchunk_buffer = $channel->header_chunk . $chunk_buffer;
-                    if ($client['metadata']){ //stub
+                    if ($client['metadata']) { //stub
                         //if (strtolower($channel->stream_type) == "ogg")
-                        while(strlen($clchunk_buffer) > $metadata_interval){
+                        while (strlen($clchunk_buffer) > $metadata_interval) {
                             fwrite($sock, substr($clchunk_buffer, 0, $metadata_interval) . chr(0x00));
                             $clchunk_buffer = substr($clchunk_buffer, $metadata_interval);
                         }
@@ -239,10 +226,10 @@ while(true)
                     } else {
                         //fwrite($sock, $channel->header_chunk);
                         $buffer_bytes_written = fwrite($sock, $clchunk_buffer);
-                        while ($buffer_bytes_written != strlen($clchunk_buffer)){
+                        while ($buffer_bytes_written != strlen($clchunk_buffer)) {
                             debug_event('channel_run', 'I HERPED WHEN I SHOULD HAVE DERPED!', 5);
                             //debug_event('channel_run', 'chunk_buffer bytes written:' .$buffer_bytes_written .'strlen $chunk_buffer: '.strlen($chunk_buffer), 5);
-                            $clchunk_buffer = substr($clchunk_buffer, $buffer_bytes_written);
+                            $clchunk_buffer       = substr($clchunk_buffer, $buffer_bytes_written);
                             $buffer_bytes_written = fwrite($sock, $clchunk_buffer);
                         }
                     }
@@ -261,7 +248,7 @@ while(true)
                             $metadata = "StreamTitle='" . str_replace('-', ' ', $channel->media->f_artist) . "-" . $channel->media->f_title . "';";
                             $metadata .= chr(0x00);
                             $metadatalen = ceil(strlen($metadata) / 16);
-                            $metadata = str_pad($metadata, $metadatalen * 16, chr(0x00), STR_PAD_RIGHT);
+                            $metadata    = str_pad($metadata, $metadatalen * 16, chr(0x00), STR_PAD_RIGHT);
                             //debug_event('channel_run', 'Sending metadata to client...', 5);
                             fwrite($sock, chr($metadatalen) . $metadata);
                             $client['metadata_lastsong'] = $channel->media->id;
@@ -269,7 +256,7 @@ while(true)
                             fwrite($sock, chr(0x00));
                         }
                         $client['metadata_lastsent'] = $client['length'];
-                        $clchunk = substr($chunk, $subpos);
+                        $clchunk                     = substr($chunk, $subpos);
                     }
                 }
 
@@ -306,7 +293,7 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
         throw new \RuntimeException('The file handle ' . $sock . ' could not be closed');
     }
     $channel->update_listeners(count($client_socks));
-    debug_event('channel_run', 'A client disconnected. Now there are total '. count($client_socks) . ' clients.', 4);
+    debug_event('channel_run', 'A client disconnected. Now there are total ' . count($client_socks) . ' clients.', 4);
     echo T_("Client disconnected") . "\n";
     ob_flush();
 }
@@ -331,9 +318,9 @@ function channel_usage()
 function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $sock)
 {
     $data = fread($sock, 1024);
-    if(!$data)
-    {
+    if (!$data) {
         client_disconnect($channel, $client_socks, $stream_clients, $sock);
+
         return;
     }
 
@@ -354,11 +341,11 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     //debug_event('channel_run', 'HTTP HEADERS: '.$data, 5);
                     for ($count = 1; $count < $h_count; $count++) {
                         $headerpart = explode(":", $headers[$count], 2);
-                        $header = strtolower(trim($headerpart[0]));
-                        $value = trim($headerpart[1]);
+                        $header     = strtolower(trim($headerpart[0]));
+                        $value      = trim($headerpart[1]);
                         switch ($header) {
                             case 'icy-metadata':
-                                $options['metadata'] = ($value == '1');
+                                $options['metadata']          = ($value == '1');
                                 $options['metadata_lastsent'] = 0;
                                 $options['metadata_lastsong'] = 0;
                                 break;
@@ -369,7 +356,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     if ($options['metadata']) {
                         //$http = "ICY 200 OK\r\n");
                         $http = "HTTP/1.0 200 OK\r\n";
-                    } else  {
+                    } else {
                         $http = "HTTP/1.1 200 OK\r\n";
                         $http .= "Cache-Control: no-store, no-cache, must-revalidate\r\n";
                     }
@@ -408,7 +395,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     fwrite($sock, $http);
 
                     // Add to stream clients list
-                    $key = array_search($sock, $read_socks);
+                    $key                  = array_search($sock, $read_socks);
                     $stream_clients[$key] = $options;
                     break;
 
@@ -447,9 +434,9 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "<colgroup align=\"left\"></colgroup>" . "\n";
                     $xsl .= "<colgroup align=\"right\" width=\"300\"></colgroup>" . "\n";
                     $xsl .= "<tr>" . "\n";
-                    $xsl .= "<td><h3>Mount Point: <a href=\"stream.". $channel->stream_type . "\">stream.". $channel->stream_type . "</a></h3></td>" . "\n";
+                    $xsl .= "<td><h3>Mount Point: <a href=\"stream." . $channel->stream_type . "\">stream." . $channel->stream_type . "</a></h3></td>" . "\n";
                     $xsl .= "<td align=\"right\">" . "\n";
-                    $xsl .= "<a href=\"stream.". $channel->stream_type .".m3u\">M3U</a>" . "\n";
+                    $xsl .= "<a href=\"stream." . $channel->stream_type . ".m3u\">M3U</a>" . "\n";
                     $xsl .= "</td>" . "\n";
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "</table>" . "\n";
@@ -586,10 +573,12 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
  * @param string $string
  * @return string
  */
-function strtohex($string) {
+function strtohex($string)
+{
     $hex='';
     foreach (str_split($string) as $char) {
         $hex .= sprintf("%02X", ord($char));
     }
+
     return($hex);
 }

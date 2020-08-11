@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -293,7 +293,7 @@ class XML_Data
         foreach ($array as $key => $value) {
             $attribute = '';
             // See if the key has attributes
-            if (is_array($value) and isset($value['attributes'])) {
+            if (is_array($value) && isset($value['attributes'])) {
                 $attribute = ' ' . $value['attributes'];
                 $key       = $value['value'];
             }
@@ -932,7 +932,7 @@ class XML_Data
      */
     public static function videos($videos, $user_id = null)
     {
-        if (count($videos) > self::$limit or self::$offset > 0) {
+        if (count($videos) > self::$limit || self::$offset > 0) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
         $string = '<total_count>' . count($videos) . "</total_count>\n";
@@ -946,7 +946,7 @@ class XML_Data
                     "\t<title><![CDATA[" . $video->title . "]]></title>\n" .
                     "\t<name><![CDATA[" . $video->title . "]]></name>\n" .
                     "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
-                    "\t<resolution>" . $video->f_resolution . "</resolution>\n" .
+                    "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" .
                     "\t<size>" . $video->size . "</size>\n" .
                     self::tags_string($video->tags) .
                     "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api', false, $user_id) . "]]></url>\n" .
@@ -1141,7 +1141,7 @@ class XML_Data
                            "\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n" .
                            "\t\t</user>\n";
             }
-            $string .= "\n\t</activity>\n";
+            $string .= "\t</activity>\n";
         }
         $string .= "</timeline>";
 

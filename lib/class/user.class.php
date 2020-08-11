@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -558,7 +558,6 @@ class User extends database_object
         asort($users);
 
         foreach ($users as $user_id => $score) {
-
             /* Find everything they've rated at 4+ */
             $sql = "SELECT `object_id`, `user_rating` FROM `ratings` " .
                 "WHERE `user` = '" . Dba::escape($user_id) . "' AND `user_rating` >='4' AND " .
@@ -1389,7 +1388,8 @@ class User extends database_object
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
 
         $sql = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
-            "ORDER BY `date` " . $ordersql . " LIMIT " . $limit;
+            "GROUP BY `object_id` ORDER BY `date` " . $ordersql .
+            " LIMIT " . $limit . " ";
         $db_results = Dba::read($sql, array($type, $this->id));
 
         $results = array();

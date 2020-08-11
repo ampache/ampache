@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -146,7 +146,8 @@ class TVShow extends database_object implements library_item
             $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` " .
                 "LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " .
                 "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " .
-                "WHERE `tvshow_season`.`tvshow` = ?";
+                "WHERE `tvshow_season`.`tvshow` = ? " .
+                "GROUP BY `catalog_id`";
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
 
@@ -387,18 +388,18 @@ class TVShow extends database_object implements library_item
             if ($tvshow_id != $this->id && $tvshow_id != null) {
                 $seasons = $this->get_seasons();
                 foreach ($seasons as $season_id) {
-                    Season::update_tvshow($tvshow_id, $season_id);
+                    TVShow_Season::update_tvshow($tvshow_id, $season_id);
                 }
                 $current_id = $tvshow_id;
-                Stats::migrate('tvshow', $this->id, $tvshow_id);
-                UserActivity::migrate('tvshow', $this->id, $tvshow_id);
-                Recommendation::migrate('tvshow', $this->id, $tvshow_id);
-                Share::migrate('tvshow', $this->id, $tvshow_id);
-                Shoutbox::migrate('tvshow', $this->id, $tvshow_id);
-                Tag::migrate('tvshow', $this->id, $tvshow_id);
-                Userflag::migrate('tvshow', $this->id, $tvshow_id);
-                Rating::migrate('tvshow', $this->id, $tvshow_id);
-                Art::migrate('tvshow', $this->id, $tvshow_id);
+                Stats::migrate('tvshow', $this->id, (int) $tvshow_id);
+                UserActivity::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Recommendation::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Share::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Shoutbox::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Tag::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Userflag::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Rating::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Art::migrate('tvshow', $this->id, (int) $tvshow_id);
                 if (!AmpConfig::get('cron_cache')) {
                     self::garbage_collection();
                 }

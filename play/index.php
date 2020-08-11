@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -48,8 +48,17 @@ $use_auth     = AmpConfig::get('use_auth');
 $share_id = (int) filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
 $secret   = $_REQUEST['share_secret'];
 
+// This is specifically for tmp playlist requests
+$demo_id    = Dba::escape($_REQUEST['demo_id']);
+$random     = Dba::escape($_REQUEST['random']);
+
+// democratic play url doesn't include these
+if ($demo_id !== '') {
+    $type   = 'song';
+    $action = 'stream';
+}
 // allow disabling stat recording from the play url
-if ($cache === '1' || $type == 'podcast_episode') {
+if ($cache === '1' || !in_array($type, array('song', 'video'))) {
     debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
     $record_stats = false;
 }
@@ -106,10 +115,6 @@ if ($type == 'playlist') {
     $playlist_type = scrub_in($_REQUEST['playlist_type']);
     $object_id     = $sid;
 }
-
-/* This is specifically for tmp playlist requests */
-$demo_id    = Dba::escape($_REQUEST['demo_id']);
-$random     = Dba::escape($_REQUEST['random']);
 
 /* First things first, if we don't have a uid/oid stop here */
 if (empty($object_id) && empty($demo_id) && empty($random)) {
@@ -382,7 +387,6 @@ if ($media == null) {
 
 /* If we don't have a file, or the file is not readable */
 if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
-
     // We need to make sure this isn't democratic play, if it is then remove
     // the media from the vote list
     if (is_object($tmp_playlist)) {
@@ -676,7 +680,7 @@ if (!isset($_REQUEST['segment'])) {
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
-                if ($user->id && $type == 'song') {
+                if ($user->id && get_class($media) == 'Song') {
                     // scrobble songs for the user
                     User::save_mediaplay($user, $media);
                 }
@@ -703,10 +707,11 @@ if ($transcode || $demo_id) {
 $mime = $media->mime;
 if ($transcode && isset($transcoder)) {
     $mime = $media->type_to_mime($transcoder['format']);
-    // Non-blocking stream doesn't work in Windows (php bug since 2005 and still here in 2015...)
-    // We don't want to wait indefinitly for a potential error so we just ignore it.
+    // Non-blocking stream doesn't work in Windows (php bug since 2005 and still here in 2020...)
+    // We don't want to wait indefinitely for a potential error so we just ignore it.
+    // https://bugs.php.net/bug.php?id=47918
     if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-        // This to avoid hang, see http://php.net/manual/es/function.proc-open.php#89338
+        // This to avoid hang, see http://php.net/manual/en/function.proc-open.php#89338
         $transcode_error = fread($transcoder['stderr'], 4096);
         if (!empty($transcode_error)) {
             debug_event('play/index', 'Transcode stderr: ' . $transcode_error, 1);

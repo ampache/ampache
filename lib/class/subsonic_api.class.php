@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -299,7 +299,6 @@ class Subsonic_Api
                         } elseif (self::has_Nested_Array($childProperties) && !in_array($childTagName, $forceArray)) {
                             $tagsArray[$childTagName] = (object) $childProperties;
                         } else {
-
                             // test if tags of this type should always be arrays, no matter the element count
                             $tagsArray[$childTagName] = in_array($childTagName, $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
                         }
@@ -609,7 +608,7 @@ class Subsonic_Api
                 $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
             case "byYear":
-                $fromYear = $input['fromYear'] < $input['toYear'] ? $input['fromYear']: $input['toYear'] ;
+                $fromYear = $input['fromYear'] < $input['toYear'] ? $input['fromYear']: $input['toYear'];
                 $toYear   = $input['toYear'] > $input['fromYear'] ? $input['toYear'] : $input['fromYear'];
 
                 if ($fromYear || $toYear) {
@@ -1879,20 +1878,18 @@ class Subsonic_Api
         }
 
         foreach ($object_ids as $subsonic_id) {
-            sleep(1);
-            $media_id = Subsonic_XML_Data::getAmpacheId($subsonic_id);
-            $type     = Subsonic_XML_Data::getAmpacheType($subsonic_id);
-            $media    = Subsonic_XML_Data::getAmpacheObject($media_id);
+            $previous = Stats::get_last_play($user->id, $client);
+            $media    = Subsonic_XML_Data::getAmpacheObject($subsonic_id);
             $media->format();
 
-            // scrobble plugins (Plugin::get_plugins('save_mediaplay'))
-            if (($submission === 'true' || $submission === '1') && $type == 'song') {
+            // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
+            if (($submission === 'true' || $submission === '1') && get_class($media) == 'Song') {
                 // stream has finished
                 debug_event('subsonic_api.class', $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                 User::save_mediaplay($user, $media);
             }
-            // submission is true at the end of the song play and it's not helping with dupes
-            if (($submission !== 'true' || $submission !== '1') && $media->id) {
+            // Submission is false and not a repeat. let repeats go though to saveplayqueue
+            if (($submission !== 'true' || $submission !== '1') && $media->id && ($previous['object_id'] != $media->id)) {
                 $media->set_played($user->id, $client, array(), $time);
             }
         }
@@ -2341,13 +2338,16 @@ class Subsonic_Api
         $position = (int) $input['position'];
         $username = (string) $input['u'];
         $user_id  = User::get_from_username($username)->id;
-        $media_id = Subsonic_XML_Data::getAmpacheId($current);
-        $media    = Subsonic_XML_Data::getAmpacheObject($media_id);
+        $media    = Subsonic_XML_Data::getAmpacheObject($current);
         if ($position < 1 && $media->id) {
+            $previous = Stats::get_last_play($user_id, (string) $input['c']);
+            $type     = Subsonic_XML_Data::getAmpacheType($current);
             Stream::garbage_collection();
-            Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $song->time, $username, 'song');
+            Stream::insert_now_playing((int)$media->id, (int)$user_id, (int)$media->time, $username, $type);
             // repeated plays aren't called by scrobble so make sure we call this too
-            $media->set_played((int) $user_id, (string) $input['c'], array(), time());
+            if ($previous['object_id'] == $media->id) {
+                $media->set_played((int)$user_id, (string)$input['c'], array(), time());
+            }
         }
         // continue to fail saving the queue
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');

@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -579,12 +579,13 @@ class Democratic extends Tmp_Playlist
      * clear
      * This is really just a wrapper function, it clears the entire playlist
      * including all votes etc.
+     * @return boolean
      */
     public function clear()
     {
         $tmp_id = Dba::escape($this->tmp_playlist);
 
-        if ($tmp_id !== false) {
+        if ((int) $tmp_id > 0) {
             /* Clear all votes then prune */
             $sql = "DELETE FROM `user_vote` USING `user_vote` " .
                 "LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` " .
@@ -604,6 +605,7 @@ class Democratic extends Tmp_Playlist
     /**
      * clean_votes
      * This removes in left over garbage in the votes table
+     * @return boolean
      */
     public function clear_votes()
     {

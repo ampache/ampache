@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -1322,7 +1322,7 @@ abstract class Catalog extends database_object
                 }
 
                 $parent = $libitem->get_parent();
-                if ($parent != null) {
+                if (!empty($parent)) {
                     self::gather_art_item($parent['object_type'], $parent['object_id'], $db_art_first, $api);
                 }
             }
@@ -1520,8 +1520,7 @@ abstract class Catalog extends database_object
      */
     public function get_song_ids()
     {
-        $songs   = array();
-        $results = array();
+        $songs = array();
 
         $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
         $db_results = Dba::read($sql, array($this->id));
@@ -1706,7 +1705,7 @@ abstract class Catalog extends database_object
             if (($info['change']) && (!$api)) {
                 if ($info['element'][$type]) {
                     $change = explode(' --> ', (string) $info['element'][$type]);
-                    $result = $change[1];
+                    $result = (int) $change[1];
                 }
                 $file   = scrub_out($song->file);
                 echo '<tr class="' . UI::flip_class() . '">' . "\n";
@@ -1765,7 +1764,7 @@ abstract class Catalog extends database_object
         }
 
         // Figure out what type of object this is and call the right  function
-        $name     = (strtolower(get_class($media)) == 'song') ? 'song' : 'video';
+        $name     = (get_class($media) == 'Song') ? 'song' : 'video';
         $function = 'update_' . $name . '_from_tags';
 
         // check for files without tags and try to update from their file name instead
@@ -2181,7 +2180,6 @@ abstract class Catalog extends database_object
      */
     public static function garbage_collection()
     {
-        debug_event('catalog.class', 'Database cleanup started', 4);
         Song::garbage_collection();
         Album::garbage_collection();
         Artist::garbage_collection();
@@ -2199,7 +2197,6 @@ abstract class Catalog extends database_object
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
-        debug_event('catalog.class', 'Database cleanup ended', 4);
     }
 
     /**
@@ -2432,7 +2429,7 @@ abstract class Catalog extends database_object
                 // New playlist
                 $playlist_id   = Playlist::create($name, 'public');
                 $current_songs = array();
-                $playlist      = new Playlist($playlist_id);
+                $playlist      = ((int) $playlist_id > 0) ? new Playlist((int) $playlist_id) : null;
             } else {
                 // Existing playlist
                 $playlist_id    = $playlist_search[0];
@@ -2613,7 +2610,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param integer|null $catalog_id
      */
-    public static function export($type, $catalog_id =null)
+    public static function export($type, $catalog_id = null)
     {
         // Select all songs in catalog
         $params = array();

@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -71,6 +71,8 @@ class Rating extends database_object
                 Dba::write("DELETE FROM `rating` USING `rating` LEFT JOIN `$type` ON `$type`.`id` = `rating`.`object_id` WHERE `object_type` = '$type' AND `$type`.`id` IS NULL");
             }
         }
+        // delete 'empty' ratings
+        Dba::write("DELETE FROM `rating` WHERE `rating`.`rating` = 0");
     }
 
     /**
@@ -230,11 +232,7 @@ class Rating extends database_object
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        if ($offset < 1) {
-            $limit = $count;
-        } else {
-            $limit = $offset . "," . $count;
-        }
+        $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
         // Select Top objects counting by # of rows
         $sql = self::get_highest_sql($type);

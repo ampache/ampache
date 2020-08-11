@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -146,7 +146,8 @@ class Catalog_beets extends Beets\Catalog
     {
         $date       = new DateTime($song['added']);
         $last_added = date("Y-m-d H:i:s", $this->last_add);
-        if (date_diff($date, $last_added) < 0) {
+        $last_date  = new DateTime($last_added);
+        if (date_diff($date, $last_date) < 0) {
             debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
 
             return true;

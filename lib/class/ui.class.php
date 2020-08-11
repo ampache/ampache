@@ -19,7 +19,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 // A collection of methods related to the user interface
@@ -302,7 +302,7 @@ class UI
                 $svgicon->addAttribute('id', $id_attrib);
             }
 
-            $class_attrib = ($class_attrib) ?: 'icon icon-' . $name ;
+            $class_attrib = ($class_attrib) ?: 'icon icon-' . $name;
             $svgicon->addAttribute('class', $class_attrib);
 
             $tag = explode("\n", $svgicon->asXML(), 2)[1];
@@ -401,7 +401,7 @@ class UI
                 $svgimage->addAttribute('id', $id_attrib);
             }
 
-            $class_attrib = ($class_attrib) ?: 'image image-' . $name ;
+            $class_attrib = ($class_attrib) ?: 'image image-' . $name;
             $svgimage->addAttribute('class', $class_attrib);
 
             $tag = explode("\n", $svgimage->asXML(), 2)[1];

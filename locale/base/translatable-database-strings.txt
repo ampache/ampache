@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 20.06.2020 12:46:26 CEST 
+ # Last Update: 30.07.2020 21:34:18 CEST 
 
  #######################################################################
 
@@ -389,6 +389,10 @@ msgstr ""
 
 #: Database preference table id 173
 msgid "Cache computed SQL data (eg. media hits stats) using a cron"
+msgstr ""
+
+#: Database preference table id 174
+msgid "Only add unique items to playlists"
 msgstr ""
 
 #: Database preference subcategory table id 1

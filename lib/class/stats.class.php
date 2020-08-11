@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -111,7 +111,7 @@ class Stats
             return false;
         }
         $type = self::validate_type($input_type);
-        if (!self::is_already_inserted($type, $object_id, $user, $agent)) {
+        if (!self::is_already_inserted($type, $object_id, $user, $agent, $date)) {
             $latitude  = null;
             $longitude = null;
             $geoname   = null;
@@ -133,7 +133,7 @@ class Stats
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-            if (in_array($type, array('song', 'video', 'podcast_episode')) && $count_type === 'stream' && $user > 0) {
+            if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0) {
                 Useractivity::post_activity($user, 'play', $type, $object_id, $date);
             }
 
@@ -154,12 +154,12 @@ class Stats
      * @param string $agent
      * @return boolean
      */
-    public static function is_already_inserted($type, $object_id, $user, $agent)
+    public static function is_already_inserted($type, $object_id, $user, $agent, $time)
     {
-        $time  = time();
         $agent = Dba::escape($agent);
         $sql   = "SELECT `object_id` FROM `object_count` " .
-                "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`date` = ($time - 5) ";
+                "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
+                "(`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = '$agent' ";
         }
@@ -312,17 +312,12 @@ class Stats
         $skip_time = AmpConfig::get_skip_timer($previous['time']);
 
         // this object was your last play and the length between plays is too short.
-        if ($previous['object_id'] == $object->id && $diff <= ($item_time)) {
+        if ($previous['object_id'] == $object->id && $diff < ($item_time)) {
             debug_event('stats.class', 'Repeated the same ' . get_class($object) . ' too quickly (' . $diff . '/' . ($item_time) . 's), not recording stats for {' . $object->id . '}', 3);
 
             return false;
         }
-        // this object was your last play but submission time is larger than the length of the song * 2 (repeats should start before this)
-        if ($previous['object_id'] == $object->id && $diff > ($item_time * 2)) {
-            debug_event('stats.class', 'It took a long time to finish this ' . get_class($object) . '. (' . $diff . '/' . ($item_time * 2) . 's), not recording stats for {' . $object->id . '}', 3);
 
-            return false;
-        }
         // when the difference between recordings is too short, the previous object has been skipped, so note that
         if (($diff < $skip_time || ($diff < $skip_time && $previous['time'] > $skip_time))) {
             debug_event('stats.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
@@ -470,7 +465,7 @@ class Stats
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        $limit = (!$offset) ? $count : $offset . "," . $count;
+        $limit = ($offset < 1) ? $count : $offset . "," . $count;
         $sql   = '';
         if ($user_id !== null) {
             $sql = self::get_top_sql($type, $threshold, 'stream', $user_id, $random);
@@ -505,7 +500,7 @@ class Stats
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $user_sql = (!empty($user_id)) ? " AND `user` = '" . $user_id . "'" : '';
 
-        $sql = "SELECT DISTINCT(`object_id`) as `id`, MAX(`date`) AS `date` FROM `object_count`" .
+        $sql = "SELECT `object_id` as `id`, MAX(`date`) AS `date` FROM `object_count`" .
                 " WHERE `object_type` = '" . $type . "'" . $user_sql;
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
@@ -547,7 +542,7 @@ class Stats
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        $limit = ($offset > 1) ? $count : $offset . "," . $count;
+        $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
         $type = self::validate_type($input_type);
         $sql  = self::get_recent_sql($type, null, $newest);
@@ -676,6 +671,8 @@ class Stats
         }
         if ($allow_group_disks && $type == 'album') {
             $sql .= $multi_where . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
+        } elseif ($base_type === 'video') {
+            $sql .= "GROUP BY `$sql_type`, `addition_time` ORDER BY `real_atime` DESC ";
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
         }

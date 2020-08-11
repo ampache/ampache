@@ -19,7 +19,7 @@ use Lib\Metadata\Repository\MetadataField;
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * @param integer $user_id
  */
 
@@ -423,6 +423,5 @@ function create_preference_input($name, $value)
                 echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
             }
         break;
-
     }
 } // create_preference_input

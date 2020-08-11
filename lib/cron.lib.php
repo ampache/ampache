@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -96,10 +96,6 @@ function run_cron_cache($user_id = 0)
                 $videos = $catalog->get_video_ids();
                 Video::build_cache($videos);
             }
-
-            // Update artist information and fetch similar artists from last.fm
-            $artist_info = $catalog->get_artist_ids('info');
-            $catalog->gather_artist_info($artist_info);
 
             /**
              * Fill rating and hear/flag details for each user

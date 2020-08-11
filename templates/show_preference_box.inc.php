@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -55,9 +55,8 @@ if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
         if ($pref['subcategory'] != $lastsubcat) {
             $lastsubcat = $pref['subcategory'];
             $fsubcat    = $lastsubcat;
-            if (!empty($fsubcat)) {
-                $fsubcat = ucwords($fsubcat); ?>
-                <tr class="<?php echo UI::flip_class() ?>"><td colspan="4"><h5><?php echo T_($fsubcat) ?></h5></td></tr>
+            if (!empty($fsubcat)) { ?>
+                <tr class="<?php echo UI::flip_class() ?>"><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)) ?></h5></td></tr>
                 <?php
             }
         } ?>

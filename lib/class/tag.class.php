@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -714,7 +714,7 @@ class Tag extends database_object implements library_item
                 $ctag  = new Tag($ctv['id']);
                 $found = false;
 
-                foreach ($editedTags as  $tk => $tv) {
+                foreach ($editedTags as $tk => $tv) {
                     if ($ctag->name == $tv) {
                         $found = true;
                         break;
@@ -733,7 +733,7 @@ class Tag extends database_object implements library_item
         }
 
         // Look if we need to add some new tags
-        foreach ($editedTags as  $tk => $tv) {
+        foreach ($editedTags as $tk => $tv) {
             if ($tv != '') {
                 self::add($type, $object_id, $tv, false);
             }

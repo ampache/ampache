@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -1142,8 +1142,7 @@ class Query
 
         $sql = "WHERE 1=1 AND ";
 
-        foreach ($this->_state['filter']
-            as $key => $value) {
+        foreach ($this->_state['filter'] as $key => $value) {
             $sql .= $this->sql_filter($key, $value);
         }
 
@@ -1182,8 +1181,7 @@ class Query
 
         $sql = 'ORDER BY ';
 
-        foreach ($this->_state['sort']
-            as $key => $value) {
+        foreach ($this->_state['sort'] as $key => $value) {
             $sql .= $this->sql_sort($key, $value);
         }
 
@@ -1322,7 +1320,6 @@ class Query
     {
         $filter_sql = '';
         switch ($this->get_type()) {
-
         case 'song':
             switch ($filter) {
                 case 'tag':

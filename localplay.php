@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -29,6 +29,17 @@ if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', 2
     UI::access_denied();
 
     return false;
+}
+
+/**
+ * Check for the refresh mojo, if it's there then require the
+ * refresh_javascript include. Must be greater then 5, I'm not
+ * going to let them break their servers
+ */
+$refresh_limit = AmpConfig::get('refresh_limit', 0);
+if ($refresh_limit > 5) {
+    $ajax_url      = '?page=localplay&action=command&command=refresh';
+    require_once AmpConfig::get('prefix') . UI::find_template('javascript_refresh.inc.php');
 }
 
 switch ($_REQUEST['action']) {

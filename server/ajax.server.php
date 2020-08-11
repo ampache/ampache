@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -224,7 +224,7 @@ switch ($action) {
         $user        = Core::get_global('user');
         $previous    = Stats::get_last_play($user->id);
         $song        = new Song($object_id);
-        if ($object_type == 'song' && $previous['object_id'] == $object_id && !stats::is_already_inserted($object_type, $object_id, $user->id, '')) {
+        if ($object_type == 'song' && $previous['object_id'] == $object_id && !stats::is_already_inserted($object_type, $object_id, $user->id, '', $time)) {
             User::save_mediaplay($user, $song);
         }
     break;

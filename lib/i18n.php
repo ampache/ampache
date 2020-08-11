@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -31,11 +31,11 @@ use Gettext\Translator;
 function load_gettext()
 {
     $lang   = AmpConfig::get('lang');
-    $popath = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.po';
+    $mopath = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.mo';
 
     $gettext = new Translator();
-    if (file_exists($popath)) {
-        $translations = Gettext\Translations::fromPoFile($popath);
+    if (file_exists($mopath)) {
+        $translations = Gettext\Translations::fromMoFile($mopath);
         $gettext->loadTranslations($translations);
     }
     $gettext->register();

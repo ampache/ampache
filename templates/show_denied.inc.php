@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,7 +33,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         <meta http-equiv="refresh" content="10;URL=<?php echo(AmpConfig::get('web_path'));?>" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php T_("Ampache") . ' -- ' . T_("Debug Page"); ?></title>
+        <title><?php echo T_("Ampache") . ' -- ' . T_("Debug Page"); ?></title>
         <?php UI::show_custom_style(); ?>
         <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
@@ -44,7 +44,7 @@ $web_path = AmpConfig::get('web_path'); ?>
             <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
                     <img src="<?php echo $logo_url; ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
-                    <?php echo AmpConfig::get('site_title'); ?>
+                    <?php echo scrub_out(AmpConfig::get('site_title')); ?>
                 </a>
             </div>
         </div>

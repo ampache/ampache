@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -1352,7 +1352,7 @@ class vainfo
         $abbr_count   = count($commonabbr);
 
         // scan for brackets, braces, etc and ignore case.
-        for ($count=0; $count < $abbr_count;$count++) {
+        for ($count=0; $count < $abbr_count; $count++) {
             $commonabbr[$count] = "~\[*|\(*|\<*|\{*\b(?i)" . trim((string) $commonabbr[$count]) . "\b\]*|\)*|\>*|\}*~";
         }
 

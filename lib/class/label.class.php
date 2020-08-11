@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -556,7 +556,7 @@ class Label extends database_object implements library_item
                 $found   = false;
                 $lstring = '';
 
-                foreach ($editedLabels as  $key => $value) {
+                foreach ($editedLabels as $key => $value) {
                     if ($clabel->name == $value) {
                         $found   = true;
                         $lstring = $key;
@@ -575,7 +575,7 @@ class Label extends database_object implements library_item
         }
 
         // Look if we need to add some new labels
-        foreach ($editedLabels as  $key => $value) {
+        foreach ($editedLabels as $key => $value) {
             if ($value != '') {
                 debug_event('label.class', 'Adding new label {' . $value . '}', 4);
                 $label_id = Label::lookup(array('name' => $value));

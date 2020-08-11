@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -98,7 +98,7 @@ class AmpacheCatalogFavorites
     public function display_home()
     {
         if (AmpConfig::get('userflags')) {
-            $userflags = Userflag::get_latest(null, -1, $this->maxitems);
+            $userflags = Userflag::get_latest(null, 0, $this->maxitems);
             $count     = 0;
             echo '<div class="home_plugin">';
             UI::show_box_top(T_('Highlight'));

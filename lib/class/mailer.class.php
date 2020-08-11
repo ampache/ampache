@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -119,7 +119,7 @@ class Mailer
             break;
             case 'admins':
                 $sql = "SELECT * FROM `user` WHERE `access`='100' AND `email` IS NOT NULL";
-            break ;
+            break;
             case 'inactive':
                 $inactive = time() - (30 * 86400);
                 $sql      = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
