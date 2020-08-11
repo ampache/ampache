@@ -1726,11 +1726,9 @@ class Search extends playlist_object
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'album') as `has_image` ON `album`.`id` = `has_image`.`object_id`";
                 break;
                 case 'image height':
-                    $where[]       = "`image`.`height` $sql_match_operator '$input'";
-                    $join['image'] = true;
-                break;
                 case 'image width':
-                    $where[]       = "`image`.`width` $sql_match_operator '$input'";
+                    $looking       = str_replace('image ', '', $rule[0]);
+                    $where[]       = "`image`.`$looking` $sql_match_operator '$input'";
                     $join['image'] = true;
                 break;
                 case 'artist':
@@ -1885,12 +1883,11 @@ class Search extends playlist_object
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'artist') as `has_image` ON `artist`.`id` = `has_image`.`object_id`";
                     break;
                 case 'image height':
-                    $where[]       = "`image`.`height` $sql_match_operator '$input'";
-                    $join['image'] = true;
-                break;
                 case 'image width':
-                    $where[]       = "`image`.`width` $sql_match_operator '$input'";
+                    $looking       = str_replace('image ', '', $rule[0]);
+                    $where[]       = "`image`.`$looking` $sql_match_operator '$input'";
                     $join['image'] = true;
+                    break;
                 break;
                 case 'myrating':
                     // combine these as they all do the same thing just different tables
