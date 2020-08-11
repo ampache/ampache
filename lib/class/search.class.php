@@ -2263,32 +2263,6 @@ class Search extends playlist_object
                         "`rating_" . $my_type ."_" . $userid . "`.`object_id`=`song`.`id` AND " .
                         "`rating_" . $my_type ."_" . $userid . "`.`user` = $userid " : '';
                 break;
-                case 'albumrating':
-                    $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
-                    $where[] = ($unrated) ? "`song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album' AND `user` = $userid)" :
-                        "`rating_album_$userid`.`rating` $sql_match_operator $input" .
-                        " AND `rating_album_$userid`.`user` = $userid " .
-                        " AND `rating_album_$userid`.`object_type` = 'album'";
-                    // rating once per user
-                    $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
-                    $table['rating'] .= (!strpos($table['rating'], "rating_album_$userid")) ?
-                        "LEFT JOIN `rating` AS `rating_album_$userid` ON " .
-                        "`rating_album_$userid`.`object_type`='album' AND " .
-                        "`rating_album_$userid`.`object_id`=`song`.`album` AND " .
-                        "`rating_album_$userid`.`user` = $userid " : '';
-                break;
-                case 'artistrating':
-                    $where[] = "`rating_artist_$userid`.`rating` $sql_match_operator $input" .
-                        " AND `rating_artist_$userid`.`user` = $userid " .
-                        " AND `rating_artist_$userid`.`object_type` = 'artist'";
-                    // rating once per user
-                    $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
-                    $table['rating'] .= (!strpos($table['rating'], "rating_artist_$userid")) ?
-                        "LEFT JOIN `rating` AS `rating_artist_$userid` ON " .
-                        "`rating_artist_$userid`.`object_type`='artist' AND " .
-                        "`rating_artist_$userid`.`object_id`=`song`.`artist` AND " .
-                        "`rating_artist_$userid`.`user` = $userid " : '';
-                break;
                 case 'catalog':
                     $where[] = "`song`.`catalog` $sql_match_operator '$input'";
                 break;
