@@ -6,9 +6,9 @@
 
 * Numeric (1-5) searches now include 0 to show unrated objects.
 * Numeric 'Played/Skipped ratio' added to search. (Set using (stream/skip)*100.)
-  * ```> 0 & < 100 ```: skipped more times than played
+  * ```> 0 & < 100 ```: Skipped more than played
   * ```100```: Equal plays and skips
-  * ```> 100```: Played more than skipped.
+  * ```> 100```: Played more than skipped
 * NEW files
   * Include API docs from the wiki. (API.md, API-JSON-methods.md, API-XML-methods.md, API-advanced-search.md)
 
@@ -18,6 +18,7 @@
 * Don't show 'Generate new API key' if you don't have access
 * QR Code in account page is now just the API Key (redundant link removed too)
 * Require minimum version of Ampache 3.8.2 to upgrade database
+* Added an icon to webplayer to go to album. Clicking on song title now directs to song
 
 ## 4.2.0-release
 
