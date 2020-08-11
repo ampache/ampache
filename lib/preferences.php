@@ -137,9 +137,9 @@ function create_preference_input($name, $value)
 {
     if (!Preference::has_access($name)) {
         if ($value == '1') {
-            echo "Enabled";
+            echo T_("Enabled");
         } elseif ($value == '0') {
-            echo "Disabled";
+            echo T_("Disabled");
         } else {
             if (preg_match('/_pass$/', $name) || preg_match('/_api_key$/', $name)) {
                 echo "******";

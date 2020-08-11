@@ -40,7 +40,7 @@ abstract class Handler
      * @param $command
      * @return mixed
      */
-    abstract protected function start($command);
+    abstract public function start($command);
 
     /**
      * @param Catalog $handler

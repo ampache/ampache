@@ -1,6 +1,6 @@
 # Ampache
 
-![Logo](http://ampache.org/img/logo/ampache-logo_x64.png) Ampache
+![Logo](http://ampache.org/img/logo/ampache-logo_x64.png)
 
 [www.ampache.org](http://ampache.org/) |
 [ampache.github.io](http://ampache.github.io)
@@ -10,13 +10,8 @@
 * Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
   * Then put your client ID and secret in your ampache config
   * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
-* JSON support has landed! (Documentation for the API in both formats is being written in [flatdoc](http://ricostacruz.com/flatdoc/))
-* Multiarch docker images are now available on hub.docker.com
-* Ampache is getting social! Check out:
-  * [r/Ampache](https://www.reddit.com/r/ampache/)
-  * [Our Telegram Group](https://t.me/ampache)
-  * [Official Twitter](https://twitter.com/ampache)
-  * [Official Mastodon](https://fosstodon.org/@ampache)
+* JSON support has landed! Documentation [wiki](https://github.com/ampache/ampache/wiki/Ampache-API) and example responses [here](https://github.com/ampache/python3-ampache/tree/master/docs).
+* Multiarch docker images are now available on [Docker Hub](https://hub.docker.com/r/ampache/ampache)
 
 ## Basics
 
@@ -44,7 +39,7 @@ You get the latest version with recent changes and fixes but maybe in an unstabl
 
 ## Installation
 
-Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
+Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and don't forget to check out the [basic config](https://github.com/ampache/ampache/wiki/Basic) guide after that.
 
 ## Requirements
 
@@ -69,7 +64,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation)
   * php-xml
   * php-dom
 
-* MySQL 5.x / MariaDB 10.x
+* MySQL 5.x / MySQL 8.x / MariaDB 10.x
 
 ## Upgrading
 
@@ -101,7 +96,7 @@ Translation progress so far:
 
 ## Credits
 
-Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS)
+Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS.md)
 
 ## Contact Us
 
@@ -110,6 +105,10 @@ Hate it? Love it? Let us know! Dozens of people send ideas for amazing new featu
 * For Live discussions, visit us on our IRC Channel at chat.freenode.net #ampache or alternative via a [web based chat client](https://webchat.freenode.net)
 * For harder cases or general discussion about Ampache take a look at our [Google Groups Forum](https://groups.google.com/forum/#!forum/ampache)
 * Found a bug or Ampache isn't working as expected? Please refer to the [Issues Template](https://github.com/ampache/ampache/wiki/Issues) and head over to our [Issue Tracker](https://github.com/ampache/ampache/issues)
+* [r/Ampache](https://www.reddit.com/r/ampache/)
+* [Our Telegram Group](https://t.me/ampache)
+* [Official Twitter](https://twitter.com/ampache)
+* [Official Mastodon](https://fosstodon.org/@ampache)
 
 ## Further Information and basic Help
 
@@ -118,4 +117,4 @@ Hate it? Love it? Let us know! Dozens of people send ideas for amazing new featu
 
 We hope to see you soon and that you have fun with this Project!
 
-[Team Ampache](docs/ACKNOWLEDGEMENTS)
+[Team Ampache](docs/ACKNOWLEDGEMENTS.md)

@@ -31,6 +31,17 @@ if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', 2
     return false;
 }
 
+/**
+ * Check for the refresh mojo, if it's there then require the
+ * refresh_javascript include. Must be greater then 5, I'm not
+ * going to let them break their servers
+ */
+$refresh_limit = AmpConfig::get('refresh_limit', 0);
+if ($refresh_limit > 5) {
+    $ajax_url      = '?page=localplay&action=command&command=refresh';
+    require_once AmpConfig::get('prefix') . UI::find_template('javascript_refresh.inc.php');
+}
+
 switch ($_REQUEST['action']) {
     case 'show_add_instance':
         // This requires 50 or better
