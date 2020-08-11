@@ -43,7 +43,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
 
 ## Requirements
 
-* A web server. All of the following have been used, though Apache receives the most testing with Apache:
+* A web server. All of the following have been used, though Ampache receives the most testing with Apache:
   * Apache
   * lighttpd
   * nginx
