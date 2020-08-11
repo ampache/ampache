@@ -11,6 +11,8 @@
   * ```> 100```: Played more than skipped
 * Ajax refresh localplay "Now Playing" same as the index "Now Playing" section
 * Add 'has not rated' to "Another User" searches.
+* Put '1 Star', '2 Stars', etc added back into numeric searches for ratings
+  * When using a string title numeric searches use the order of the items starting with 0
 * NEW files
   * Include API docs from the wiki. (API.md, API-JSON-methods.md, API-XML-methods.md, API-advanced-search.md)
 

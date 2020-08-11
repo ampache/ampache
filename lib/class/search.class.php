@@ -1646,33 +1646,26 @@ class Search extends playlist_object
                         "AND `favorite_album_$userid`.`object_type` = 'album' " : '';
                 break;
                 case 'myrating':
+                case 'artistrating':
+                    // combine these as they all do the same thing just different tables
+                    $looking = str_replace('rating', '', $rule[0]);
+                    $column  = ($looking == 'my') ? 'id' : 'album_artist';
+                    $my_type = ($looking == 'my') ? 'album' : $looking;
                     $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
-                    $where[] = ($unrated) ? "`album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album' AND `user` = $userid)" :
-                        "`rating_album_$userid`.`rating` $sql_match_operator $input" .
-                        " AND `rating_album_$userid`.`user` = $userid " .
-                        " AND `rating_album_$userid`.`object_type` = 'album'";
+                    $where[] = ($unrated) ? "`album`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)" :
+                        "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input" .
+                        " AND `rating_" . $my_type . "_" . $userid . "`.`user` = $userid " .
+                        " AND `rating_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type'";
                     // include unrated
                     if ($input == 0 && $sql_match_operator != '>=') {
-                        $where[] = "`album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album' AND `user` = $userid)";
+                        $where[] = "`album`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)";
                     }
                     // rating once per user
-                    $table['rating'] .= (!strpos($table['rating'], "rating_album_$userid")) ?
-                        "LEFT JOIN `rating` AS `rating_album_$userid` ON " .
-                        "`rating_album_$userid`.`object_type`='album' AND " .
-                        "`rating_album_$userid`.`object_id`=`album`.`id` AND " .
-                        "`rating_album_$userid`.`user` = $userid " : '';
-                break;
-                case 'artistrating':
-                    $where[] = "`rating_artist_$userid`.`rating` $sql_match_operator $input" .
-                       " AND `rating_artist_$userid`.`user` = $userid " .
-                       " AND `rating_artist_$userid`.`object_type` = 'artist'";
-                    // rating once per user
-                    $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
-                    $table['rating'] .= (!strpos($table['rating'], "rating_artist_$userid")) ?
-                        "LEFT JOIN `rating` AS `rating_artist_$userid` ON " .
-                        "`rating_artist_$userid`.`object_type`='artist' AND " .
-                        "`rating_artist_$userid`.`object_id`=`song`.`artist` AND " .
-                        "`rating_artist_$userid`.`user` = $userid " : '';
+                    $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
+                        "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
+                        "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`album`.`$column` AND " .
+                        "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : '';
                 break;
                 case 'myplayed':
                     $group[]       = "`song`.`id`";
@@ -1900,21 +1893,26 @@ class Search extends playlist_object
                     $join['image'] = true;
                 break;
                 case 'myrating':
+                    // combine these as they all do the same thing just different tables
+                    $looking = str_replace('rating', '', $rule[0]);
+                    $column  = 'id';
+                    $my_type = 'artist';
                     $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
-                    $where[] = ($unrated) ? "`artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'artist' AND `user` = $userid)" :
-                        "`rating_artist_$userid`.`rating` $sql_match_operator $input" .
-                        " AND `rating_artist_$userid`.`user` = $userid " .
-                        " AND `rating_artist_$userid`.`object_type` = 'artist'";
+                    $where[] = ($unrated) ? "`artist`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)" :
+                        "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input" .
+                        " AND `rating_" . $my_type . "_" . $userid . "`.`user` = $userid " .
+                        " AND `rating_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type'";
                     // include unrated
                     if ($input == 0 && $sql_match_operator != '>=') {
-                        $where[] = "`artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'artist' AND `user` = $userid)";
+                        $where[] = "`$my_type`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)";
                     }
                     // rating once per user
-                    $table['rating'] .= (!strpos($table['rating'], "rating_artist_$userid")) ?
-                        "LEFT JOIN `rating` AS `rating_artist_$userid` ON " .
-                        "`rating_artist_$userid`.`object_type`='artist' AND " .
-                        "`rating_artist_$userid`.`object_id`=`artist`.`id` AND " .
-                        "`rating_artist_$userid`.`user` = $userid " : '';
+                    $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
+                        "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
+                        "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`$my_type`.`$column` AND " .
+                        "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : '';
+                    break;
                 break;
                 case 'myplayed':
                     $group[]       = "`song`.`id`";
