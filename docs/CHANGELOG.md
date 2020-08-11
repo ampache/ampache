@@ -9,6 +9,7 @@
   * ```> 0 & < 100 ```: Skipped more than played
   * ```100```: Equal plays and skips
   * ```> 100```: Played more than skipped
+* Ajax refresh localplay "Now Playing" same as the index "Now Playing" section
 * NEW files
   * Include API docs from the wiki. (API.md, API-JSON-methods.md, API-XML-methods.md, API-advanced-search.md)
 

@@ -65,6 +65,13 @@ switch ($_REQUEST['action']) {
 
         // Switch on valid commands
         switch ($_REQUEST['command']) {
+            case 'refresh':
+                ob_start();
+                $objects = $localplay->get();
+                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
+                $results['localplay_status'] = ob_get_contents();
+                ob_end_clean();
+                break;
             case 'prev':
             case 'next':
             case 'stop':
