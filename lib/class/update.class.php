@@ -213,6 +213,9 @@ class Update
         $update_string = "* Add a rss token to allow the use of RSS unauthenticated feeds<br/ >";
         $version[]     = array('version' => '400012', 'description' => $update_string);
 
+        $update_string = "* Add 4.0 CC licenses to database.<br/ >";
+        $version[]     = array('version' => '400013', 'description' => $update_string);
+
 
         return $version;
     }
@@ -1222,6 +1225,26 @@ class Update
     {
         $retval = true;
         $sql    = "ALTER TABLE `user` ADD `rsstoken` VARCHAR(255) NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400013
+     *
+     * Add 4.0 CC licenses to database.
+     */
+    public static function update_400013()
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `license` (`name`, `description`, `external_link`) VALUES " .
+            "('CC BY 4.0', NULL, 'https://creativecommons.org/licenses/by/4.0/'), " .
+            "('CC BY NC 4.0', NULL, 'https://creativecommons.org/licenses/by-nc/4.0/'), " .
+            "('CC BY NC ND 4.0', NULL, 'https://creativecommons.org/licenses/by-nc-nd/4.0/'), " .
+            "('CC BY NC SA 4.0', NULL, 'https://creativecommons.org/licenses/by-nc-sa/4.0/'), " .
+            "('CC BY ND 4.0', NULL, 'https://creativecommons.org/licenses/by-nd/4.0/'), " .
+            "('CC BY SA 4.0', NULL, 'https://creativecommons.org/licenses/by-sa/4.0/') ";
         $retval &= Dba::write($sql);
 
         return $retval;
