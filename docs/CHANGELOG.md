@@ -31,10 +31,14 @@ Look here for the code to change your 'custom_datetime' string [(http://userguid
 * Require minimum version of Ampache 3.8.2 to upgrade database
 * Added an icon to webplayer to go to album. Clicking on song title now directs to song
 * get_datetime(): use IntlDateFormatter to format based on locale. [(https://www.php.net/manual/en/intldateformatter.format.php)]
+* stats.php: Show total 'Item Count'  on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
 
 ### Fixed
 
 * Waveform config option get_tmp_dir was ignored if set
+* Fixed a few issues on the Statistics page
+  * Report 'Catalog Size' correctly for podcasts
+  * Report 'Item Count' correctly for podcasts and video catalogs
 
 ## 4.2.0-release
 

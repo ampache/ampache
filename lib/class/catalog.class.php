@@ -749,8 +749,36 @@ abstract class Catalog extends database_object
         $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
         $params    = $catalog_id ? array($catalog_id) : array();
 
-        $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `song` ' .
-            $where_sql;
+        $catalog = Catalog::create_from_id($catalog_id);
+        if ($catalog->id) {
+            switch ($catalog->gather_types) {
+                case 'clip':
+                case 'tvshow':
+                case 'movie':
+                case 'personal_video':
+                    $table = 'video';
+                    break;
+                case 'podcast':
+                    $table = 'podcast_episode';
+                    break;
+                case 'music':
+                default:
+                    $table = 'song';
+                    break;
+            }
+            if ($table == 'podcast_episode' && $catalog_id) {
+                $where_sql = "WHERE `podcast` IN ( SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
+            }
+            $sql             = "SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `" . $table . "` " . $where_sql;
+            $db_results      = Dba::read($sql, $params);
+            $data            = Dba::fetch_row($db_results);
+            $items           = $data[0];
+            $results['time'] = $data[1];
+            $results['size'] = $data[2];
+        }
+        // reset where after running podcast catalogs
+        $where_sql  = $catalog_id ? 'WHERE `catalog` = ?' : '';
+        $sql        = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `song` ' . $where_sql;
         $db_results = Dba::read($sql, $params);
         $data       = Dba::fetch_row($db_results);
         $songs      = $data[0];
@@ -762,6 +790,13 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, $params);
         $data       = Dba::fetch_row($db_results);
         $videos     = $data[0];
+        $time += $data[1];
+        $size += $data[2];
+
+        $sql              = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `podcast_episode`';
+        $db_results       = Dba::read($sql, $params);
+        $data             = Dba::fetch_row($db_results);
+        $podcast_episodes = $data[0];
         $time += $data[1];
         $size += $data[2];
 
@@ -795,17 +830,23 @@ abstract class Catalog extends database_object
         $data         = Dba::fetch_row($db_results);
         $podcasts     = $data[0];
 
-        $results                   = array();
-        $results['songs']          = $songs;
-        $results['videos']         = $videos;
-        $results['albums']         = $albums;
-        $results['artists']        = $artists;
-        $results['playlists']      = $playlists;
-        $results['smartplaylists'] = $smartplaylists;
-        $results['live_stream']    = $live_streams;
-        $results['podcasts']       = $podcasts;
-        $results['size']           = $size;
-        $results['time']           = $time;
+        $results                     = array();
+        $results['items']            = $items;
+        $results['songs']            = $songs;
+        $results['videos']           = $videos;
+        $results['albums']           = $albums;
+        $results['artists']          = $artists;
+        $results['playlists']        = $playlists;
+        $results['smartplaylists']   = $smartplaylists;
+        $results['live_stream']      = $live_streams;
+        $results['podcasts']         = $podcasts;
+        $results['podcast_episodes'] = $podcast_episodes;
+        if (!isset($array['size'])) {
+            $results['size'] = $size;
+        }
+        if (!isset($array['time'])) {
+            $results['time'] = $time;
+        }
 
         return $results;
     }
