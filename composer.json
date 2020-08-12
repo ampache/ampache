@@ -71,7 +71,9 @@
         "jwilsson/spotify-web-api-php": "^3.5",
         "ext-json": "*",
         "ext-xml": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-intl": "*",
+        "ext-openssl": "*"
     },
 
     "repositories":

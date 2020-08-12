@@ -6,8 +6,11 @@
 This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
 Look here for the code to change your 'custom_datetime' string [(http://userguide.icu-project.org/formatparse/datetime)]
 
+This means Ampache now **requires** php-intl module/dll to be enabled.
+
 ### Added
 
+* php-intl is now required for translation of date formats into your locale
 * Numeric (1-5) searches now include 0 to show unrated objects.
 * Numeric 'Played/Skipped ratio' added to search. (Set using (stream/skip)*100.)
   * ```> 0 & < 100 ```: Skipped more than played
