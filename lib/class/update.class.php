@@ -210,6 +210,10 @@ class Update
                          "* Truncate database tracks to 0 when greater than 32,767<br />";
         $version[]     = array('version' => '400011', 'description' => $update_string);
 
+        $update_string = "* Add a rss token to allow the use of RSS unauthenticated feeds<br/ >";
+        $version[]     = array('version' => '400012', 'description' => $update_string);
+
+
         return $version;
     }
 
@@ -1204,6 +1208,20 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql    = "ALTER TABLE `song` MODIFY COLUMN `track` SMALLINT DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400012
+     *
+     * Add a rss token to use an RSS unauthenticated feed.
+     */
+    public static function update_400012()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `user` ADD `rsstoken` VARCHAR(255) NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;
