@@ -1890,7 +1890,6 @@ class Search extends playlist_object
                 break;
                 case 'myrating':
                     // combine these as they all do the same thing just different tables
-                    $looking = str_replace('rating', '', $rule[0]);
                     $column  = 'id';
                     $my_type = 'artist';
                     $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
