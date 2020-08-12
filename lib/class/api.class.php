@@ -1403,11 +1403,11 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = (int) scrub_in($input['filter']);
+        $uid  = scrub_in($input['filter']);
 
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
-            $playlist = new Playlist($uid);
+            $playlist = new Playlist((int) $uid);
         } else {
             // Smartlists
             $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
@@ -1448,11 +1448,11 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = (int) scrub_in($input['filter']);
+        $uid  = scrub_in($input['filter']);
         debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
-            $playlist = new Playlist($uid);
+            $playlist = new Playlist((int) $uid);
         } else {
             // Smartlists
             $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
