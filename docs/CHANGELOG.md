@@ -2,6 +2,10 @@
 
 ## 4.3.0-develop
 
+**IMPORTANT** instead of using date() to change formats we are now using your locale to identify formats.
+This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
+Look here for the code to change your 'custom_datetime' [(http://userguide.icu-project.org/formatparse/datetime)]
+
 ### Added
 
 * Numeric (1-5) searches now include 0 to show unrated objects.
@@ -29,12 +33,12 @@
 
 ## 4.2.0-release
 
-A big visual change in the interface is that Ampache now defaults to US time for dates. ('Month/Day/Year')
-For everyone who isn't American you have control over date formats using custom_datetime.
-Admin => Server Config => Interface => Custom datetime
+~~A big visual change in the interface is that Ampache now defaults to US time for dates. ('Month/Day/Year')~~
+~~For everyone who isn't American you have control over date formats using custom_datetime.~~
+~~Admin => Server Config => Interface => Custom datetime~~
 
-e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
-Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
+~~e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"~~
+~~Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])~~
 
 The API changelog for this version has been separated into a new sub-heading below to make it easier to follow.
 

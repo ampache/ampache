@@ -569,13 +569,12 @@ abstract class Catalog extends database_object
      */
     public function format()
     {
-        $time_format    = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         $this->f_name   = $this->name;
         $this->link     = AmpConfig::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
         $this->f_link   = '<a href="' . $this->link . '" title="' . scrub_out($this->name) . '">' . scrub_out($this->f_name) . '</a>';
-        $this->f_update = $this->last_update ? get_datetime($time_format, (int) $this->last_update) : T_('Never');
-        $this->f_add    = $this->last_add ? get_datetime($time_format, (int) $this->last_add) : T_('Never');
-        $this->f_clean  = $this->last_clean ? get_datetime($time_format, (int) $this->last_clean) : T_('Never');
+        $this->f_update = $this->last_update ? get_datetime((int) $this->last_update) : T_('Never');
+        $this->f_add    = $this->last_add ? get_datetime((int) $this->last_add) : T_('Never');
+        $this->f_clean  = $this->last_clean ? get_datetime((int) $this->last_clean) : T_('Never');
     }
 
     /**
@@ -2622,8 +2621,7 @@ abstract class Catalog extends database_object
         } else {
             $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
         }
-        $db_results      = Dba::read($sql, $params);
-        $time_format     = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : "Y-m-d\TH:i:s\Z";
+        $db_results = Dba::read($sql, $params);
 
         switch ($type) {
             case 'itunes':
@@ -2641,7 +2639,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Total Time']   = (int) ($song->time) * 1000; // iTunes uses milliseconds
                     $xml['dict']['Track Number'] = (int) ($song->track);
                     $xml['dict']['Year']         = (int) ($song->year);
-                    $xml['dict']['Date Added']   = get_datetime($time_format, (int) $song->addition_time);
+                    $xml['dict']['Date Added']   = get_datetime((int) $song->addition_time, 'short', 'short', "Y-m-d\TH:i:s\Z");
                     $xml['dict']['Bit Rate']     = (int) ($song->bitrate / 1000);
                     $xml['dict']['Sample Rate']  = (int) ($song->rate);
                     $xml['dict']['Play Count']   = (int) ($song->played);
@@ -2665,7 +2663,7 @@ abstract class Catalog extends database_object
                         $song->f_time . '","' .
                         $song->f_track . '","' .
                         $song->year . '","' .
-                        get_datetime($time_format, (int) $song->addition_time) . '","' .
+                        get_datetime((int) $song->addition_time) . '","' .
                         $song->f_bitrate . '","' .
                         $song->played . '","' .
                         $song->file . '"' . "\n";

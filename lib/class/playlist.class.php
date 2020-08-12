@@ -203,9 +203,8 @@ class Playlist extends playlist_object
         $this->link   = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
 
-        $time_format         = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-        $this->f_date        = $this->date ? get_datetime($time_format, (int) $this->date) : T_('Unknown');
-        $this->f_last_update = $this->last_update ? get_datetime($time_format, (int) $this->last_update) : T_('Unknown');
+        $this->f_date        = $this->date ? get_datetime((int) $this->date) : T_('Unknown');
+        $this->f_last_update = $this->last_update ? get_datetime((int) $this->last_update) : T_('Unknown');
     } // format
 
     /**
