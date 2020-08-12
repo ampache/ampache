@@ -750,24 +750,10 @@ abstract class Catalog extends database_object
         $params    = $catalog_id ? array($catalog_id) : array();
         $results   = array();
         $items     = '0';
+        $catalog   = self::create_from_id($catalog_id);
 
-        $catalog = Catalog::create_from_id($catalog_id);
         if ($catalog->id) {
-            switch ($catalog->gather_types) {
-                case 'clip':
-                case 'tvshow':
-                case 'movie':
-                case 'personal_video':
-                    $table = 'video';
-                    break;
-                case 'podcast':
-                    $table = 'podcast_episode';
-                    break;
-                case 'music':
-                default:
-                    $table = 'song';
-                    break;
-            }
+            $table = self::get_table_from_type($catalog->gather_types);
             if ($table == 'podcast_episode' && $catalog_id) {
                 $where_sql = "WHERE `podcast` IN ( SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
             }
@@ -2138,6 +2124,32 @@ abstract class Catalog extends database_object
         }
 
         return $types;
+    }
+
+    /**
+     * get_table_from_type
+     * @param string $gather_type
+     * @return string
+     */
+    public function get_table_from_type($gather_type)
+    {
+        switch ($gather_type) {
+            case 'clip':
+            case 'tvshow':
+            case 'movie':
+            case 'personal_video':
+                $table = 'video';
+                break;
+            case 'podcast':
+                $table = 'podcast_episode';
+                break;
+            case 'music':
+            default:
+                $table = 'song';
+                break;
+        }
+
+        return $table;
     }
 
     /**
