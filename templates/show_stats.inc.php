@@ -32,7 +32,7 @@ $catalogs = Catalog::get_catalogs(); ?>
             <th><?php echo T_('Albums'); ?></th>
             <th><?php echo T_('Artists'); ?></th>
             <th><?php echo T_('Songs'); ?></th>
-            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+            <?php if (Video::get_item_count('Video')) { ?>
                 <th><?php echo T_('Videos'); ?></th>
             <?php
 } ?>
@@ -53,7 +53,7 @@ $catalogs = Catalog::get_catalogs(); ?>
             <td><?php echo $stats['albums']; ?></td>
             <td><?php echo $stats['artists']; ?></td>
             <td><?php echo $stats['songs']; ?></td>
-            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+            <?php if (Video::get_item_count('Video')) { ?>
                 <td><?php echo $stats['videos']; ?></td>
             <?php
     } ?>
