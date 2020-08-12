@@ -748,6 +748,8 @@ abstract class Catalog extends database_object
     {
         $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
         $params    = $catalog_id ? array($catalog_id) : array();
+        $results   = array();
+        $items     = '0';
 
         $catalog = Catalog::create_from_id($catalog_id);
         if ($catalog->id) {
@@ -841,10 +843,10 @@ abstract class Catalog extends database_object
         $results['live_stream']      = $live_streams;
         $results['podcasts']         = $podcasts;
         $results['podcast_episodes'] = $podcast_episodes;
-        if (!isset($array['size'])) {
+        if (!isset($results['size'])) {
             $results['size'] = $size;
         }
-        if (!isset($array['time'])) {
+        if (!isset($results['time'])) {
             $results['time'] = $time;
         }
 
