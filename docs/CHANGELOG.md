@@ -43,6 +43,12 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * Report 'Catalog Size' correctly for podcasts
   * Report 'Item Count' correctly for podcasts and video catalogs
 
+### API 4.3.0
+
+### Fixed
+
+* filter in "playlist" and "playlist_songs" fixed.
+
 ## 4.2.0-release
 
 The API changelog for this version has been separated into a new sub-heading below to make it easier to follow.
