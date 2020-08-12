@@ -31,7 +31,16 @@ $catalogs = Catalog::get_catalogs(); ?>
             <th><?php echo T_('Total Users'); ?></th>
             <th><?php echo T_('Albums'); ?></th>
             <th><?php echo T_('Artists'); ?></th>
-            <th><?php echo T_('Item Count'); ?></th>
+            <th><?php echo T_('Songs'); ?></th>
+            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+                <th><?php echo T_('Videos'); ?></th>
+            <?php
+} ?>
+            <?php if (AmpConfig::get('podcast')) { ?>
+                <th><?php echo T_('Podcasts'); ?></th>
+                <th><?php echo T_('Podcast Episodes'); ?></th>
+            <?php
+    } ?>
             <th><?php echo T_('Tags'); ?></th>
             <th><?php echo T_('Catalog Size'); ?></th>
             <th><?php echo T_('Catalog Time'); ?></th>
@@ -43,7 +52,16 @@ $catalogs = Catalog::get_catalogs(); ?>
             <td><?php echo $stats['users'] ?></td>
             <td><?php echo $stats['albums']; ?></td>
             <td><?php echo $stats['artists']; ?></td>
-            <td><?php echo $stats['items']; ?></td>
+            <td><?php echo $stats['songs']; ?></td>
+            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+                <td><?php echo $stats['videos']; ?></td>
+            <?php
+    } ?>
+            <?php if (AmpConfig::get('podcast')) { ?>
+                <td><?php echo $stats['podcasts']; ?></td>
+                <td><?php echo $stats['podcast_episodes']; ?></td>
+            <?php
+    } ?>
             <td><?php echo $stats['tags']; ?></td>
             <td><?php echo $stats['formatted_size']; ?></td>
             <td><?php echo $stats['time_text']; ?></td>
@@ -74,9 +92,9 @@ $catalogs = Catalog::get_catalogs(); ?>
     </thead>
     <tbody>
 <?php foreach ($catalogs as $catalog_id) {
-    $catalog = Catalog::create_from_id($catalog_id);
-    $catalog->format();
-    $stats = Catalog::get_stats($catalog_id); ?>
+        $catalog = Catalog::create_from_id($catalog_id);
+        $catalog->format();
+        $stats = Catalog::get_stats($catalog_id); ?>
     <tr>
         <td class="cel_catalog"><?php echo $catalog->name; ?></td>
         <td class="cel_path"><?php echo scrub_out($catalog->f_full_info); ?></td>
@@ -87,7 +105,7 @@ $catalogs = Catalog::get_catalogs(); ?>
         <td class="cel_total"><?php echo scrub_out($stats['formatted_size']); ?></td>
     </tr>
 <?php
-} ?>
+    } ?>
     </tbody>
 </table>
 <?php UI::show_box_bottom(); ?>
