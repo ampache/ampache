@@ -717,7 +717,7 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'artist')) {
             return false;
         }
-        $uid     = (int) scrub_in($input['filter']);
+        $uid     = scrub_in($input['filter']);
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
         switch ($input['format']) {
