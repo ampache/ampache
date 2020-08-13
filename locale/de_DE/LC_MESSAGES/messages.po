@@ -1645,7 +1645,7 @@ msgstr "Der Zugriff zu dieser Playlist wurde verweigert"
 
 #: ../../lib/class/api.class.php:1589
 msgid "Nothing was changed"
-msgstr ""
+msgstr "Es wurde nichts geändert"
 
 #: ../../lib/class/api.class.php:1654
 msgid "Can't add a duplicate item when check is enabled"
@@ -9802,7 +9802,7 @@ msgstr ""
 
 #: Database preference table id 171
 msgid "Show # skipped"
-msgstr "# übersprungen anzeigen"
+msgstr "# übersprungene anzeigen"
 
 #: Database preference table id 172
 msgid "Custom datetime"
@@ -9816,7 +9816,7 @@ msgstr ""
 
 #: Database preference table id 174
 msgid "Only add unique items to playlists"
-msgstr ""
+msgstr "Füge Playlisten nur eindeutige Objekte hinzu"
 
 #: Database preference subcategory table id 1
 msgid "feature"
