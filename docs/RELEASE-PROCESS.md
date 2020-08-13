@@ -81,7 +81,7 @@ docker buildx use mybuilder
 docker buildx inspect --bootstrap
 ```
 
-Log in to your docker account 
+Log in to your docker account
 
 ```bash
 docker login -u USER -p PASSWORD

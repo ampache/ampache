@@ -162,12 +162,12 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
             var bytes = stream.readBuffer(4).data;
             var length = (bytes[0] << 21) | (bytes[1] << 14) | (bytes[2] << 7) | bytes[3];
 
-            return { 
-                version: '2.' + major + '.' + minor, 
-                major: major, 
-                minor: minor, 
-                flags: flags, 
-                length: length 
+            return {
+                version: '2.' + major + '.' + minor,
+                major: major,
+                minor: minor,
+                flags: flags,
+                length: length
             };
         }
 
@@ -188,7 +188,7 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
         var tag = stream.readString(4);
         if (tag === 'Xing' || tag === 'Info') {
             var flags = stream.readUInt32();
-            if (flags & 1) 
+            if (flags & 1)
                 frames = stream.readUInt32();
 
             if (flags & 2)
@@ -365,8 +365,8 @@ const BITRATES = [
           64000,  80000,  96000, 112000, 128000, 144000, 160000 ] // II & III
 ];
 
-const SAMPLERATES = [ 
-    44100, 48000, 32000 
+const SAMPLERATES = [
+    44100, 48000, 32000
 ];
 
 MP3FrameHeader.FLAGS = {
@@ -454,31 +454,31 @@ MP3FrameHeader.prototype.decode = function(stream) {
     this.flags        = 0;
     this.private_bits = 0;
 
-    // syncword 
+    // syncword
     stream.advance(11);
 
-    // MPEG 2.5 indicator (really part of syncword) 
+    // MPEG 2.5 indicator (really part of syncword)
     if (stream.read(1) === 0)
         this.flags |= MP3FrameHeader.FLAGS.MPEG_2_5_EXT;
 
-    // ID 
+    // ID
     if (stream.read(1) === 0) {
         this.flags |= MP3FrameHeader.FLAGS.LSF_EXT;
     } else if (this.flags & MP3FrameHeader.FLAGS.MPEG_2_5_EXT) {
         throw new AV.UnderflowError(); // LOSTSYNC
     }
 
-    // layer 
+    // layer
     this.layer = 4 - stream.read(2);
 
     if (this.layer === 4)
         throw new Error('Invalid layer');
 
-    // protection_bit 
+    // protection_bit
     if (stream.read(1) === 0)
         this.flags |= MP3FrameHeader.FLAGS.PROTECTION;
 
-    // bitrate_index 
+    // bitrate_index
     var index = stream.read(4);
     if (index === 15)
         throw new Error('Invalid bitrate');
@@ -489,7 +489,7 @@ MP3FrameHeader.prototype.decode = function(stream) {
         this.bitrate = BITRATES[this.layer - 1][index];
     }
 
-    // sampling_frequency 
+    // sampling_frequency
     index = stream.read(2);
     if (index === 3)
         throw new Error('Invalid sampling frequency');
@@ -503,32 +503,32 @@ MP3FrameHeader.prototype.decode = function(stream) {
             this.samplerate /= 2;
     }
 
-    // padding_bit 
+    // padding_bit
     if (stream.read(1))
         this.flags |= MP3FrameHeader.FLAGS.PADDING;
 
-    // private_bit 
+    // private_bit
     if (stream.read(1))
         this.private_bits |= PRIVATE.HEADER;
 
-    // mode 
+    // mode
     this.mode = 3 - stream.read(2);
 
-    // mode_extension 
+    // mode_extension
     this.mode_extension = stream.read(2);
 
-    // copyright 
+    // copyright
     if (stream.read(1))
         this.flags |= MP3FrameHeader.FLAGS.COPYRIGHT;
 
-    // original/copy 
+    // original/copy
     if (stream.read(1))
         this.flags |= MP3FrameHeader.FLAGS.ORIGINAL;
 
-    // emphasis 
+    // emphasis
     this.emphasis = stream.read(2);
 
-    // crc_check 
+    // crc_check
     if (this.flags & MP3FrameHeader.FLAGS.PROTECTION)
         this.crc_target = stream.read(16);
 };
@@ -4572,7 +4572,7 @@ Layer1.prototype.decode = function(stream, frame) {
                 /*
                  * Scalefactor index 63 does not appear in Table B.1 of
                  * ISO/IEC 11172-3. Nonetheless, other implementations accept it,
-                 * so we do as well 
+                 * so we do as well
                  */
             }
         }
@@ -7313,7 +7313,7 @@ module.exports = MP3Synth;
  * add a 64th entry.
  */
 exports.SF_TABLE = new Float32Array([
-    2.000000000000, 1.587401051968, 1.259921049895, 1.000000000000, 
+    2.000000000000, 1.587401051968, 1.259921049895, 1.000000000000,
     0.793700525984, 0.629960524947, 0.500000000000, 0.396850262992,
     0.314980262474, 0.250000000000, 0.198425131496, 0.157490131237,
     0.125000000000, 0.099212565748, 0.078745065618, 0.062500000000,
@@ -7616,7 +7616,7 @@ exports.IS_LSF_TABLE = [
         0.105112052,
         0.088388348,
         0.074325445
-    ]), 
+    ]),
     new Float32Array([
         0.707106781,
         0.500000000,

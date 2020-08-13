@@ -19,9 +19,9 @@
  *
  */
 
-/***********************************************
+/* ----------------------------------------------
            General style rules
-***********************************************/
+---------------------------------------------- */
 
 body {
     color: #fff;
@@ -63,9 +63,9 @@ input[type=button], input[type=submit] {
     background-image: -webkit-linear-gradient(top,#ff9d00,#cc6200);
     background-image: -o-linear-gradient(top,#ff9d00,#cc6200);
     background-image: linear-gradient(top,#ff9d00,#cc6200);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.2);
     color: #fff;
 }
 
@@ -74,12 +74,12 @@ input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, in
 }
 
 input[type=button]:focus:active, input[type=submit]:focus:active {
-    -webkit-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
-    -moz-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
+    -webkit-box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+    -moz-box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.edit_dialog_content input[type=text] , .edit_dialog_content select {
+.edit_dialog_content input[type=text], .edit_dialog_content select {
     color: #fff;
 }
 
@@ -87,17 +87,17 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #fff;
 }
 
-/***********************************************
+/* ----------------------------------------------
            Main
-***********************************************/
+---------------------------------------------- */
 #ajax-loading {
     color: #ff9d00;
     background-image: url(../images/ajax-loader.gif);
 }
 
-/***********************************************
+/* ----------------------------------------------
            Header
-***********************************************/
+---------------------------------------------- */
 #header {
     background-color: #000;
     border-bottom: 2px solid #2d2d2d;
@@ -120,14 +120,14 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #555;
 }
 
-/***********************************************
+/* ----------------------------------------------
            Login
-***********************************************/
+---------------------------------------------- */
 #loginPage {
     background-color: #000;
 }
 
-#loginPage #maincontainer { /* , #registerPage #maincontainer */
+#loginPage #maincontainer { /*, #registerPage #maincontainer */
     background-color: rgba(0,0,0,0.15);
     border: 2px solid rgba(0,0,0,0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -181,9 +181,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #ff9d00;
 }
 
-/***********************************************
+/* ----------------------------------------------
            Sidebar
-***********************************************/
+---------------------------------------------- */
 #sidebar {
     color: #999;
 }
@@ -222,9 +222,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #fff;
     background-color: #262626;
     border-bottom-color: #0f0f0f;
-    -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
-    -moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
-    box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    -webkit-box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
+    -moz-box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
+    box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
 }
 
 #sidebar-tabs .sb2 li ul li a {
@@ -244,9 +244,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     border-color: #fff;
 }
 
-/***********************************************
+/* ----------------------------------------------
                   Rightbar
-***********************************************/
+---------------------------------------------- */
 #rightbar {
     background-color: #222;
     border-color: rgba(0,0,0,0.15);
@@ -293,9 +293,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #ff9d00;
 }
 
-/***********************************************
+/* ----------------------------------------------
            Content
-***********************************************/
+---------------------------------------------- */
 #content {
     background-color: rgba(0,0,0,0.15);
     border-color: rgba(0,0,0,0.15);
@@ -335,9 +335,9 @@ table.tabledata a:hover, table.tabledata a:focus {
 
 table.tabledata thead .th-top, table.tabledata tfoot .th-bottom {
     background-color: #262626;
-    -webkit-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
-    -moz-box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
-    box-shadow: 0 1px 0 #2a2a2a,inset 0 1px 1px #000;
+    -webkit-box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
+    -moz-box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
+    box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
 }
 
 table.tabledata thead .th-top {
@@ -384,9 +384,9 @@ table.tabledata tbody .cel_cover img:hover {
     border-color: #ff9d00;
 }
 
-/***********************************************
+/* ----------------------------------------------
            Content (info-box)
-***********************************************/
+---------------------------------------------- */
 .random_selection .random_album .art_album img {
     -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
     -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
@@ -407,9 +407,9 @@ table.tabledata tbody .cel_cover img:hover {
     background-image: url('../images/missing.png');
 }
 
-/***********************************************
+/* ----------------------------------------------
     Content (now playing)
-***********************************************/
+---------------------------------------------- */
 #now_playing .cel_albumart img {
     -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
     -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
@@ -420,9 +420,9 @@ table.tabledata tbody .cel_cover img:hover {
     color: #0099CC;
 }
 
-/***********************************************
+/* ----------------------------------------------
     Content (Tag cloud)
-***********************************************/
+---------------------------------------------- */
 span.fatalerror {
     color: #c60;
 }
@@ -441,9 +441,9 @@ span.fatalerror {
     background-image: linear-gradient(top,#cc6200,#c24d00);
 }
 
-/***********************************************
+/* ----------------------------------------------
     Content (information-actions)
-***********************************************/
+---------------------------------------------- */
 .item_properties {
     color: #999;
 }
@@ -474,9 +474,9 @@ span.fatalerror {
     color: #fff;/*#ffc466;*/
 }
 
-/************************************************/
+/* ---------------------------------------------- */
 /*        Styles for user flags                 */
-/************************************************/
+/* ---------------------------------------------- */
 .userflag a.userflag_true, .userflag a:hover.userflag_false {
     background: url(../../../images/icon_flag.png) left top;
 }
@@ -485,16 +485,16 @@ span.fatalerror {
     background: url(../../../images/icon_flag_off.png) left top;
 }
 
-/***********************************************
+/* ----------------------------------------------
         Content (Track view)
-***********************************************/
+---------------------------------------------- */
 dl.media_details dt {
     color: #c60;
 }
 
-/***********************************************
+/* ----------------------------------------------
         Footer
-***********************************************/
+---------------------------------------------- */
 #footer a:hover {
     color: #09c;
 }
@@ -503,9 +503,9 @@ dl.media_details dt {
     color: #555;
 }
 
-/***********************************************
+/* ----------------------------------------------
         Web Player
-***********************************************/
+---------------------------------------------- */
 div.jp-audio,
 div.jp-audio-stream,
 div.jp-video {
@@ -533,11 +533,11 @@ div.jp-playlist {
 }
 
 div.playing_title a {
-    color: #EEE;
+    color: #eee;
 }
 
 div.playing_artist a {
-    color: #EEE;
+    color: #eee;
 }
 
 div.jp-interface {
@@ -550,9 +550,9 @@ div.jp-playlist li {
     /*background: #343433 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;*/
 }
 
-/***********************************************
+/* ----------------------------------------------
         Other
-***********************************************/
+---------------------------------------------- */
 .jscroll-next {
     border-color: #ccc;
     background-color: #eee;

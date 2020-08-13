@@ -1,11 +1,11 @@
-/*----------------------------
+/* ----------------------------
     The file upload form
 
     http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/
------------------------------*/
+----------------------------- */
 
 #dropfile {
-    background-color: #2E3134;
+    background-color: #2e3134;
     padding: 40px 50px;
     margin-bottom: 30px;
     border: 20px solid rgba(0, 0, 0, 0);
@@ -73,7 +73,7 @@
     width: 144px;
     overflow: hidden;
     white-space: nowrap;
-    color: #EEE;
+    color: #eee;
     font-size: 16px;
     font-weight: bold;
     position: absolute;
@@ -113,11 +113,11 @@
     color: red;
 }
 
-/*----------------------------
+/* ----------------------------
     The file tree
------------------------------*/
+----------------------------- */
 
-#container { min-width:620px; margin:0px auto 0 auto; border-radius:0px; padding:0px; overflow:hidden; }
-#tree { float:right; min-width:600px; border-right:1px solid silver; overflow:auto; padding:0px 0; }
+#container { min-width:620px; margin:0px auto 0 auto; border-radius:0; padding:0px; overflow:hidden; }
+#tree { float:right; min-width:600px; border-right:1px solid silver; overflow:auto; padding:0 0; }
 #data { float:left; }
 #data textarea { margin:0; padding:0; height:100%; width:100%; border:0; display:block; line-height:18px; resize:none; }

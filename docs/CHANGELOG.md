@@ -74,7 +74,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Tag->f_name (New property on tag that was being set hackily)
 * Add "Album" to Find Duplicates in admin/duplicates.php.
 * "Local Image" added to Artist & Album search. Find out whether you have art stored in Ampache
-* PHP_CodeSniffer checks and settings added to Scrutinizer. (phpcs --standard=.phpcs.xml lib/class) 
+* PHP_CodeSniffer checks and settings added to Scrutinizer. (phpcs --standard=.phpcs.xml lib/class)
 * NEW database options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the UI. (disabled by default)

@@ -22,25 +22,29 @@
 body {
     background-color: rgba(0, 0, 0, 0);
     margin: 0;
-    font-family: Arial,sans-serif;
+    font-family: Arial, sans-serif;
     font-weight: normal;
     font-size: 16px;
     line-height: 1.5em;
     overflow: hidden;
 }
+
 a {
     color: #ff9d00;
     text-decoration: none;
 }
+
 label {
     color: #fff;
 }
+
 .np_row {
     background-color: rgba(50, 50, 50, 0.7);
     padding: 8px;
     display: flex;
     flex-direction: row;
 }
+
 .box-top, .box-title, .box-bottom, .cel_username, .cel_tags, .similars, .cel_rating, .cel_userflag {
     display: none;
 }
@@ -51,15 +55,19 @@ label {
     flex-direction: column;
     padding-left: 10px;
 }
+
 #np_group_3, .cel_song {
     order: 1;
 }
+
 #np_group_2, .cel_artist {
     order: 2;
 }
+
 .cel_album {
     order: 3;
 }
+
 .item_art {
     box-shadow: 0 0 10px rgba(0,0,0,0.75);
 }

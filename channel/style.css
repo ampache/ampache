@@ -1,4 +1,4 @@
-/******************************************************************************
+/* -----------------------------------------------------------------------------
 
     This file styles the bar that goes across the top of all Xiph.Org
     pages.
@@ -7,7 +7,7 @@
     http://alistapart.com/stories/practicalcss/ in the
     "Splitting the Difference" section.
 
-******************************************************************************/
+----------------------------------------------------------------------------- */
 
 /* This effect doesn't work at all if all content is pinched in a bit. */
 html,

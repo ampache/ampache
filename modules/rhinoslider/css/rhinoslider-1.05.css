@@ -19,25 +19,25 @@
 }
 
 .rhino-prev,
-.rhino-next { bottom:-4px; }
+.rhino-next { bottom: -4px; }
 
 .rhino-prev {
-    left:-6px;
-    background-position:-168px 0;
+    left: -6px;
+    background-position: -168px 0;
 }
 
 .rhino-next {
-    right:-6px;
-    background-position:-106px 0;
+    right: -6px;
+    background-position: -106px 0;
 }
 
-.rhino-prev:hover { background-position:-168px -53px; }
+.rhino-prev:hover { background-position: -168px -53px; }
 
-.rhino-next:hover { background-position:-106px -53px; }
+.rhino-next:hover { background-position: -106px -53px; }
 
 .rhino-toggle {
-    top:-4px;
-    left:-6px;
+    top: -4px;
+    left: -6px;
 }
 
 .rhino-play { background-position:0 0; }

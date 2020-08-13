@@ -1,11 +1,11 @@
-/***********************************************
+/* ----------------------------------------------
            jQuery edit dialog
-***********************************************/
+---------------------------------------------- */
 .editdialogstyle.ui-dialog {
     background-image: url('../images/background.png');
     background-repeat: repeat;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
-    font-family: "DejaVuSansCondensed",Helvetica,Arial,sans-serif;
+    font-family: "DejaVuSansCondensed", Helvetica, Arial, sans-serif;
     font-weight: normal;
     font-size: 16px;
     line-height: 1.5em;
@@ -27,9 +27,6 @@
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     padding: 7px;
-}
-
-.editdialogstyle.ui-dialog  .ui-dialog-title {
 }
 
 .editdialogstyle.ui-dialog .ui-dialog-content {
@@ -67,9 +64,9 @@
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.2);
     cursor: pointer;
     color: #fff;
     min-width: 100px;
@@ -89,9 +86,9 @@
 }
 
 .editdialogstyle.ui-dialog .ui-dialog-buttonset button:focus:active {
-    -webkit-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
-    -moz-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
+    -webkit-box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+    -moz-box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
     -webkit-transition: background-position 0.1s linear;
     -moz-transition: background-position 0.1s linear;
     -ms-transition: background-position 0.1s linear;
@@ -133,9 +130,9 @@
     display: none;
 }
 
-/***********************************************
+/* ----------------------------------------------
            jQuery add to playlist dialog
-***********************************************/
+---------------------------------------------- */
 .playlistdialogstyle.ui-dialog {
     background-color: #222;
     font-size: 10px;
@@ -193,9 +190,9 @@
     display: none;
 }
 
-/***********************************************
+/* ----------------------------------------------
            jQuery broadcasts dialog
-***********************************************/
+---------------------------------------------- */
 .broadcastsdialogstyle.ui-dialog {
     background-color: #222;
     font-size: 10px;
@@ -253,9 +250,9 @@
     display: none;
 }
 
-/***********************************************
+/* ----------------------------------------------
            jQuery share dialog
-***********************************************/
+---------------------------------------------- */
 .sharedialogstyle.ui-dialog {
     background-color: #222;
     font-size: 10px;

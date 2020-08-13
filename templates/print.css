@@ -44,7 +44,7 @@ center,
 dir,
 hr,
 menu,
-pre  {
+pre {
   display: block;
 }
 
@@ -148,7 +148,7 @@ th {
 
 s,
 strike,
-del  {
+del {
   text-decoration: line-through;
 }
 
@@ -168,7 +168,8 @@ ol ul,
 ul ol,
 ul ul,
 ol ol {
-  margin-top: 0; margin-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 u,
@@ -190,12 +191,12 @@ center { text-align: center; }
   text-decoration: underline;
 }
 
-/* :focus { outline: thin invert; }*/
+/* :focus { outline: thin invert; } */
 
 /* Begin bidirectionality settings (do not change) */
 
-BDO[DIR="ltr"]  { direction: ltr; unicode-bidi: bidi-override; }
-BDO[DIR="rtl"]  { direction: rtl; unicode-bidi: bidi-override; }
+bdo[DIR="ltr"] { direction: ltr; unicode-bidi: bidi-override; }
+bdo[DIR="rtl"] { direction: rtl; unicode-bidi: bidi-override; }
 
 *[DIR="ltr"] { direction: ltr; unicode-bidi: embed; }
 *[DIR="rtl"] { direction: rtl; unicode-bidi: embed; }
@@ -221,25 +222,31 @@ BDO[DIR="rtl"]  { direction: rtl; unicode-bidi: bidi-override; }
 }
 
 #sidebar {
-display: none;
+  display: none;
 }
+
 /*
 #topbar {
 display: none;
 }
 */
+
 .alphabet {
 display: none;
 }
+
 li {
-white-space: nowrap;
+  white-space: nowrap;
 }
+
 .button {
-display: none;
+  display: none;
 }
+
 button {
 display: none;
 }
+
 select {
 display: none;
 }
