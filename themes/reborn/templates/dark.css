@@ -1,4 +1,5 @@
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -57,15 +58,15 @@ input[type=password], input[type=text], textarea {
 }
 
 input[type=button], input[type=submit] {
-    background-image: -moz-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: -ms-linear-gradient(top,#ff9d00,#cc6200);
+    background-image: -moz-linear-gradient(top, #ff9d00,#cc6200);
+    background-image: -ms-linear-gradient(top, #ff9d00,#cc6200);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(#ff9d00),to(#cc6200));
-    background-image: -webkit-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: -o-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: linear-gradient(top,#ff9d00,#cc6200);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.2);
+    background-image: -webkit-linear-gradient(top, #ff9d00,#cc6200);
+    background-image: -o-linear-gradient(top, #ff9d00,#cc6200);
+    background-image: linear-gradient(top, #ff9d00,#cc6200);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0, 0.2);
     color: #fff;
 }
 
@@ -128,8 +129,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage #maincontainer { /*, #registerPage #maincontainer */
-    background-color: rgba(0,0,0,0.15);
-    border: 2px solid rgba(0,0,0,0.15);
+    background-color: rgba(0,0,0, 0.15);
+    border: 2px solid rgba(0,0,0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -189,8 +190,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-header {
-    background-color: rgba(0,0,0,0.15);
-    border-color: rgba(0,0,0,0.15);
+    background-color: rgba(0,0,0, 0.15);
+    border-color: rgba(0,0,0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -202,7 +203,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-content, #sidebar-content-light, #sidebar-light {
-    border-color: rgba(0,0,0,0.15);
+    border-color: rgba(0,0,0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -211,8 +212,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 /* Tabs content */
 #sidebar-page {
-    background-color: rgba(0,0,0,0.15);
-    border-color: rgba(0,0,0,0.15);
+    background-color: rgba(0,0,0, 0.15);
+    border-color: rgba(0,0,0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -249,7 +250,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 ---------------------------------------------- */
 #rightbar {
     background-color: #222;
-    border-color: rgba(0,0,0,0.15);
+    border-color: rgba(0,0,0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -267,12 +268,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 #rightbar #rb_current_playlist li a:hover, #rightbar #rb_current_playlist li a:focus {
     color: #fff;
     background-color: #c85a00;
-    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -moz-linear-gradient(top, #cc6200,#c24d00);
+    background-image: -ms-linear-gradient(top, #cc6200,#c24d00);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
-    background-image: linear-gradient(top,#cc6200,#c24d00);
+    background-image: -webkit-linear-gradient(top, #cc6200,#c24d00);
+    background-image: -o-linear-gradient(top, #cc6200,#c24d00);
+    background-image: linear-gradient(top, #cc6200,#c24d00);
 }
 
 #rightbar #rb_current_playlist li.odd {
@@ -297,8 +298,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
            Content
 ---------------------------------------------- */
 #content {
-    background-color: rgba(0,0,0,0.15);
-    border-color: rgba(0,0,0,0.15);
+    background-color: rgba(0,0,0, 0.15);
+    border-color: rgba(0,0,0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -325,7 +326,7 @@ table.tabledata a {
     color: #eee;
 }
 
-#catalog_type_fields table.tabledata a{
+#catalog_type_fields table.tabledata a {
     color: #ff9d00
 }
 
@@ -354,12 +355,12 @@ table.tabledata th a {
 
 table.tabledata tr:hover, table.tabledata tr:focus {
     background-color: #c85a00;
-    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -moz-linear-gradient(top, #cc6200,#c24d00);
+    background-image: -ms-linear-gradient(top, #cc6200,#c24d00);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
-    background-image: linear-gradient(top,#cc6200,#c24d00);
+    background-image: -webkit-linear-gradient(top, #cc6200,#c24d00);
+    background-image: -o-linear-gradient(top, #cc6200,#c24d00);
+    background-image: linear-gradient(top, #cc6200,#c24d00);
 }
 
 table.tabledata .th-top:hover,
@@ -375,9 +376,9 @@ table.tabledata tbody .odd {
 }
 
 table.tabledata tbody .cel_cover img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
 }
 
 table.tabledata tbody .cel_cover img:hover {
@@ -388,15 +389,15 @@ table.tabledata tbody .cel_cover img:hover {
            Content (info-box)
 ---------------------------------------------- */
 .random_selection .random_album .art_album img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
 }
 
 .random_selection .random_video .art_album img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
 }
 
 .random_selection .random_album .art_album img:hover {
@@ -411,9 +412,9 @@ table.tabledata tbody .cel_cover img:hover {
     Content (now playing)
 ---------------------------------------------- */
 #now_playing .cel_albumart img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
 }
 
 #now_playing .cel_lyrics a:hover {
@@ -433,12 +434,12 @@ span.fatalerror {
 
 .box-content #tag_filter .tag_button span:hover {
     background-color: #c85a00;
-    background-image: -moz-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top,#cc6200,#c24d00);
+    background-image: -moz-linear-gradient(top, #cc6200,#c24d00);
+    background-image: -ms-linear-gradient(top, #cc6200,#c24d00);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top,#cc6200,#c24d00);
-    background-image: -o-linear-gradient(top,#cc6200,#c24d00);
-    background-image: linear-gradient(top,#cc6200,#c24d00);
+    background-image: -webkit-linear-gradient(top, #cc6200,#c24d00);
+    background-image: -o-linear-gradient(top, #cc6200,#c24d00);
+    background-image: linear-gradient(top, #cc6200,#c24d00);
 }
 
 /* ----------------------------------------------
@@ -457,16 +458,16 @@ span.fatalerror {
 }
 
 .item_art img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
 }
 
 .item_art:hover {
     border-color: #ff9d00;
 }
 
-#information_actions ul li{
+#information_actions ul li {
     color: #999;
 }
 

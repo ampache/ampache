@@ -73,6 +73,7 @@ div.jp-video-full {
 }
 
 /* The z-index rule is defined in this manner to enable Popcorn plugins that add overlays to video area. EG. Subtitles. */
+
 div.jp-video-full div div {
     z-index: 1000;
 }
@@ -304,7 +305,7 @@ div.jp-seek-bar {
     height: 100%;
     cursor: pointer;
     border-radius: 5px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0,0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0, 0.25);
     overflow: hidden;
 }
 
@@ -314,7 +315,7 @@ div.jp-play-bar {
     width: 0;
     height: 100%;
     border-radius: 4px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0,0.25), 2px 0 5px -2px rgba(0,0,0,0.3);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0, 0.25), 2px 0 5px -2px rgba(0,0,0, 0.3);
 }
 
 div.jp-video div.jp-seek-bar,
@@ -324,6 +325,7 @@ div.jp-video div.jp-play-bar {
 }
 
 /* The seeking class is added/removed inside jPlayer */
+
 div.jp-seeking-bg {
     background: url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.seeking.gif");
 }
@@ -345,6 +347,7 @@ div.jp-audio div.jp-type-single a.jp-unmute {
     top: 12px;
     right: 66px;
 }
+
 div.jp-audio div.jp-type-playlist a.jp-mute,
 div.jp-audio div.jp-type-playlist a.jp-unmute {
     top: 12px;
@@ -447,7 +450,7 @@ div.jp-volume-bar-value {
     width: 0;
     height: 5px;
     border-radius: 5px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0,0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0, 0.25);
 }
 
 /* @end */
@@ -507,7 +510,7 @@ div.jp-title {
     text-align: center;
     color: #fff;
 
-    background-color: rgba(0,0,0,0) !important;
+    background-color: rgba(0,0,0, 0) !important;
     font-size: 0.7em;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -539,7 +542,7 @@ div.jp-playlist {
     width: 100%;
     height: 200px;
     overflow: auto;
-    text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    text-shadow: 0 1px 0 rgba(0,0,0, 0.3);
     z-index: 0;
 }
 
@@ -564,7 +567,7 @@ div.jp-title li {
 
 div.jp-playlist li {
     padding: 6px 15px;
-    text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    text-shadow: 0 1px 0 rgba(0,0,0, 0.3);
 }
 
 div.jp-playlist li div {
@@ -615,11 +618,11 @@ div.jp-type-playlist div.jp-playlist span.jp-free-media {
     margin-right: 10px;
 }
 
-div.jp-type-playlist div.jp-playlist span.jp-free-media a{
+div.jp-type-playlist div.jp-playlist span.jp-free-media a {
     color: #666;
 }
 
-div.jp-type-playlist div.jp-playlist span.jp-free-media a:hover{
+div.jp-type-playlist div.jp-playlist span.jp-free-media a:hover {
     color: #fff;
 }
 
@@ -634,7 +637,7 @@ div.jp-video-play {
     width: 100%;
     overflow: hidden; /* Important for nested negative margins to work in modern browsers */
     cursor: pointer;
-    background-color: rgba(0,0,0,0); /* Makes IE9 work with the active area over the whole video area. IE6/7/8 only have the button as active area. */
+    background-color: rgba(0,0,0, 0); /* Makes IE9 work with the active area over the whole video area. IE6/7/8 only have the button as active area. */
 }
 
 div.jp-video-270p div.jp-video-play {

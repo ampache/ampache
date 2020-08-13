@@ -1,4 +1,5 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -48,7 +49,7 @@ a.tag_size3,
 a.tag_size4 { text-decoration: none; }
 
 .hover-add:hover { color: #347c17; }
-.hover-remove:hover { color: #ff0000; }
+.hover-remove:hover { color: #f00; }
 
 /* ----------------
  * Generic / Misc
@@ -63,7 +64,7 @@ a.tag_size4 { text-decoration: none; }
 }
 
 .item_off {
-    color: #ff0000;
+    color: #f00;
 }
 
 #tabs_wrapper {
@@ -312,8 +313,8 @@ a.tag_size4 { text-decoration: none; }
     margin: 0;
     background-color: #000;
     border-radius: 10px;
-    -webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 4px 12px rgba(0,0,0, 0.5);
+    box-shadow: 0 4px 12px rgba(0,0,0, 0.5);
     -webkit-transition: all 0.5s;
     transition: all 0.5s;
     -webkit-transform: translate(-50%,0);
@@ -324,9 +325,9 @@ a.tag_size4 { text-decoration: none; }
 #notification.notification-out {
     opacity: 0;
     filter: alpha(opacity=0);
-    -webkit-transform: translate(-50%,80px);
-    -ms-transform: translate(-50%,80px);
-    transform: translate(-50%,80px);
+    -webkit-transform: translate(-50%, 80px);
+    -ms-transform: translate(-50%, 80px);
+    transform: translate(-50%, 80px);
 }
 
 #notification img {

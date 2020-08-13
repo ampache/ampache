@@ -10,6 +10,7 @@
 ----------------------------------------------------------------------------- */
 
 /* This effect doesn't work at all if all content is pinched in a bit. */
+
 html,
 body {
     margin: 0;
@@ -141,7 +142,7 @@ td {
     border-collapse: collapse;
 }
 
-.roundcont table{
+.roundcont table {
     border: none;
     border-collapse: collapse;
 }

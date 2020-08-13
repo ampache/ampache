@@ -19,7 +19,7 @@
     color: #7f858a;
 }
 
-#dropfile a{
+#dropfile a {
     background-color: #007a96;
     padding: 12px 26px;
     color: #fff;
@@ -69,7 +69,7 @@
     display: none;
 }
 
-#uploadfile ul li p{
+#uploadfile ul li p {
     width: 144px;
     overflow: hidden;
     white-space: nowrap;
