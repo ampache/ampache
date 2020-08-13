@@ -20,9 +20,9 @@
  *
  */
 
-/* ----------------------------------------------
-           General style rules
----------------------------------------------- */
+/* --------------------------
+   General style rules
+   -------------------------- */
 
 body {
     color: #fff;
@@ -64,9 +64,9 @@ input[type=button], input[type=submit] {
     background-image: -webkit-linear-gradient(top, #ff9d00,#cc6200);
     background-image: -o-linear-gradient(top, #ff9d00,#cc6200);
     background-image: linear-gradient(top, #ff9d00,#cc6200);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0, 0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0, 0.2);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     color: #fff;
 }
 
@@ -88,17 +88,17 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #fff;
 }
 
-/* ----------------------------------------------
-           Main
----------------------------------------------- */
+/* --------------------------
+   Main
+   -------------------------- */
 #ajax-loading {
     color: #ff9d00;
     background-image: url(../images/ajax-loader.gif);
 }
 
-/* ----------------------------------------------
-           Header
----------------------------------------------- */
+/* --------------------------
+   Header
+   -------------------------- */
 #header {
     background-color: #000;
     border-bottom: 2px solid #2d2d2d;
@@ -121,16 +121,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #555;
 }
 
-/* ----------------------------------------------
-           Login
----------------------------------------------- */
+/* --------------------------
+   Login
+   -------------------------- */
 #loginPage {
     background-color: #000;
 }
 
-#loginPage #maincontainer { /*, #registerPage #maincontainer */
-    background-color: rgba(0,0,0, 0.15);
-    border: 2px solid rgba(0,0,0, 0.15);
+#loginPage #maincontainer { /* , #registerPage #maincontainer */
+    background-color: rgba(0, 0, 0, 0.15);
+    border: 2px solid rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -165,9 +165,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage span.error {
-    background: #ff9999;
-    border-color: #cc3333;
-    color: #990000;
+    background: #f99;
+    border-color: #c33;
+    color: #900;
 }
 
 #loginPage #footer {
@@ -182,16 +182,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #ff9d00;
 }
 
-/* ----------------------------------------------
-           Sidebar
----------------------------------------------- */
+/* --------------------------
+   Sidebar
+   -------------------------- */
 #sidebar {
     color: #999;
 }
 
 #sidebar-header {
-    background-color: rgba(0,0,0, 0.15);
-    border-color: rgba(0,0,0, 0.15);
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -203,7 +203,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #sidebar-content, #sidebar-content-light, #sidebar-light {
-    border-color: rgba(0,0,0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -212,8 +212,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 
 /* Tabs content */
 #sidebar-page {
-    background-color: rgba(0,0,0, 0.15);
-    border-color: rgba(0,0,0, 0.15);
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -245,12 +245,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     border-color: #fff;
 }
 
-/* ----------------------------------------------
-                  Rightbar
----------------------------------------------- */
+/* --------------------------
+   Rightbar
+   -------------------------- */
 #rightbar {
     background-color: #222;
-    border-color: rgba(0,0,0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -294,12 +294,12 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #ff9d00;
 }
 
-/* ----------------------------------------------
-           Content
----------------------------------------------- */
+/* --------------------------
+   Content
+   -------------------------- */
 #content {
-    background-color: rgba(0,0,0, 0.15);
-    border-color: rgba(0,0,0, 0.15);
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -327,7 +327,7 @@ table.tabledata a {
 }
 
 #catalog_type_fields table.tabledata a {
-    color: #ff9d00
+    color: #ff9d00;
 }
 
 table.tabledata a:hover, table.tabledata a:focus {
@@ -376,28 +376,28 @@ table.tabledata tbody .odd {
 }
 
 table.tabledata tbody .cel_cover img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 table.tabledata tbody .cel_cover img:hover {
     border-color: #ff9d00;
 }
 
-/* ----------------------------------------------
-           Content (info-box)
----------------------------------------------- */
+/* --------------------------
+   Content (info-box)
+   -------------------------- */
 .random_selection .random_album .art_album img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 .random_selection .random_video .art_album img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 .random_selection .random_album .art_album img:hover {
@@ -408,22 +408,22 @@ table.tabledata tbody .cel_cover img:hover {
     background-image: url('../images/missing.png');
 }
 
-/* ----------------------------------------------
+/* --------------------------
     Content (now playing)
----------------------------------------------- */
+   -------------------------- */
 #now_playing .cel_albumart img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 #now_playing .cel_lyrics a:hover {
     color: #0099CC;
 }
 
-/* ----------------------------------------------
+/* --------------------------
     Content (Tag cloud)
----------------------------------------------- */
+   -------------------------- */
 span.fatalerror {
     color: #c60;
 }
@@ -442,9 +442,9 @@ span.fatalerror {
     background-image: linear-gradient(top, #cc6200,#c24d00);
 }
 
-/* ----------------------------------------------
+/* --------------------------
     Content (information-actions)
----------------------------------------------- */
+   -------------------------- */
 .item_properties {
     color: #999;
 }
@@ -458,9 +458,9 @@ span.fatalerror {
 }
 
 .item_art img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 .item_art:hover {
@@ -475,9 +475,9 @@ span.fatalerror {
     color: #fff;/*#ffc466;*/
 }
 
-/* ---------------------------------------------- */
-/*        Styles for user flags                 */
-/* ---------------------------------------------- */
+/* ------------------------
+    Styles for user flags
+   ------------------------ */
 .userflag a.userflag_true, .userflag a:hover.userflag_false {
     background: url(../../../images/icon_flag.png) left top;
 }
@@ -486,16 +486,16 @@ span.fatalerror {
     background: url(../../../images/icon_flag_off.png) left top;
 }
 
-/* ----------------------------------------------
-        Content (Track view)
----------------------------------------------- */
+/* --------------------------
+   Content (Track view)
+   -------------------------- */
 dl.media_details dt {
     color: #c60;
 }
 
-/* ----------------------------------------------
-        Footer
----------------------------------------------- */
+/* --------------------------
+   Footer
+   -------------------------- */
 #footer a:hover {
     color: #09c;
 }
@@ -504,9 +504,9 @@ dl.media_details dt {
     color: #555;
 }
 
-/* ----------------------------------------------
-        Web Player
----------------------------------------------- */
+/* --------------------------
+   Web Player
+   -------------------------- */
 div.jp-audio,
 div.jp-audio-stream,
 div.jp-video {
@@ -551,9 +551,9 @@ div.jp-playlist li {
     /*background: #343433 url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.playlist.png") repeat-x;*/
 }
 
-/* ----------------------------------------------
-        Other
----------------------------------------------- */
+/* --------------------------
+   Other
+   -------------------------- */
 .jscroll-next {
     border-color: #ccc;
     background-color: #eee;

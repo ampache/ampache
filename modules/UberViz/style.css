@@ -1,6 +1,6 @@
 #uberviz {
-        visibility: hidden;
-        z-index: 99999;
+    visibility: hidden;
+    z-index: 99999;
 }
 
 #uberviz #viz {

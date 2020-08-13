@@ -2,7 +2,7 @@
     The file upload form
 
     http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/
------------------------------ */
+   ----------------------------- */
 
 #dropfile {
     background-color: #2e3134;
@@ -47,21 +47,17 @@
 }
 
 #uploadfile ul li {
-
     background-color: #333639;
-
     background-image: -moz-linear-gradient(top, #333639, #303335);
     background-image: -webkit-linear-gradient(top, #333639, #303335);
     background-image: -webkit-gradient(top, #333639, #303335);
     background-image: -o-linear-gradient(top, #333639, #303335);
     background-image: -ms-linear-gradient(top, #333639, #303335);
     background-image: linear-gradient(top, #333639, #303335);
-
     border-top: 1px solid #3d4043;
     border-bottom: 1px solid #2b2e31;
     padding: 15px;
     height: 52px;
-
     position: relative;
 }
 
@@ -115,9 +111,9 @@
 
 /* ----------------------------
     The file tree
------------------------------ */
+   ----------------------------- */
 
-#container { min-width:620px; margin:0px auto 0 auto; border-radius:0; padding:0px; overflow:hidden; }
-#tree { float:right; min-width:600px; border-right:1px solid silver; overflow:auto; padding:0 0; }
-#data { float:left; }
-#data textarea { margin:0; padding:0; height:100%; width:100%; border:0; display:block; line-height:18px; resize:none; }
+#container { min-width: 620px; margin: 0 auto 0 auto; border-radius: 0; padding: 0; overflow: hidden; }
+#tree { float: right; min-width: 600px; border-right: 1px solid silver; overflow: auto; padding: 0 0; }
+#data { float: left; }
+#data textarea { margin: 0; padding: 0; height: 100%; width: 100%; border: 0; display: block; line-height: 18px; resize: none; }

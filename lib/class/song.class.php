@@ -874,7 +874,7 @@ class Song extends database_object implements media, library_item
                        "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
                        "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
                        "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " .
-                       "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''),  ' ', `album`.`name`)), `disk` " .
+                       "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " .
                        "HAVING `Counting` > 1) AS `dupe_search` ON song.album = `dupe_search`.`dupe_id1` " .
                        "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
                        "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .

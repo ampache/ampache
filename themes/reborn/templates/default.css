@@ -22,12 +22,12 @@
 
 @font-face {
     font-family: 'DejaVuSansCondensed';
-    src: url('fonts/dejavusanscondensed.eot?') format('embedded-opentype'),  url('fonts/dejavusanscondensed.woff') format('woff'), url('fonts/dejavusanscondensed.ttf') format('truetype'), url('fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
+    src: url('fonts/dejavusanscondensed.eot?') format('embedded-opentype'), url('fonts/dejavusanscondensed.woff') format('woff'), url('fonts/dejavusanscondensed.ttf') format('truetype'), url('fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
 }
 
-/* ----------------------------------------------
-           General style rules
----------------------------------------------- */
+/* --------------------------
+   General style rules
+   -------------------------- */
 
 html,
 body,
@@ -107,7 +107,7 @@ html {
 }
 
 body {
-    -webkit-tap-highlight-color: rgba(0,0,0, 0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     margin: 0;
     font-family: "DejaVuSansCondensed", Helvetica, Arial, sans-serif;
     font-weight: normal;
@@ -214,7 +214,7 @@ input[type=submit]:focus {
     -moz-transition: background-position 0.1s linear;
     -o-transition: background-position 0.1s linear;
     transition: background-position 0.1s linear;
-    text-shadow: 0 -1px 0 rgba(0,0,0, 0.5);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
     text-decoration: none;
 }
 
@@ -238,9 +238,9 @@ div#autoupdate > span {
     color: #f00;
 }
 
-/* ----------------------------------------------
-           Main
----------------------------------------------- */
+/* --------------------------
+   Main
+   -------------------------- */
 #maincontainer {
     width: 100%;
     position: relative;
@@ -260,9 +260,9 @@ div#autoupdate > span {
     width: 120px;
 }
 
-/* ----------------------------------------------
-           Header
----------------------------------------------- */
+/* --------------------------
+   Header
+   -------------------------- */
 #header {
     z-index: 5;
     height: 64px;
@@ -359,9 +359,9 @@ div#autoupdate > span {
     vertical-align: bottom;
 }
 
-/* ----------------------------------------------
-           Login / Registration
----------------------------------------------- */
+/* --------------------------
+   Login / Registration
+   -------------------------- */
 #loginPage #maincontainer,
 #registerPage #maincontainer {
     -webkit-border-radius: 2px;
@@ -540,9 +540,9 @@ div#autoupdate > span {
     margin-bottom: 10px;
 }
 
-/* ----------------------------------------------
-           Sidebar
----------------------------------------------- */
+/* --------------------------
+   Sidebar
+   -------------------------- */
 #sidebar {
     font-size: 12px;
 }
@@ -770,9 +770,9 @@ span#sidebar-header-content::after {
     position: absolute;
 }
 
-/* ----------------------------------------------
-                  Rightbar
----------------------------------------------- */
+/* --------------------------
+   Rightbar
+   -------------------------- */
 #rightbar {
     position: fixed;
     right: 10px;
@@ -888,9 +888,9 @@ span#sidebar-header-content::after {
     vertical-align: bottom;
 }
 
-/* ----------------------------------------------
-           Content
----------------------------------------------- */
+/* --------------------------
+   Content
+   -------------------------- */
 #content {
     z-index: 3000000;
     -webkit-transition: top 0.5s;
@@ -944,9 +944,9 @@ span#sidebar-header-content::after {
 
 table.tabledata {
     width: 100%;
-    /*table-layout: fixed;*/
+    /* table-layout: fixed; */
     text-align: left;
-    /*border:1px solid #bbb;*/
+    /* border:1px solid #bbb; */
     font-size: 14px;
     margin-bottom: 20px;
 }
@@ -1006,6 +1006,7 @@ table.tabledata tbody .cel_play_hover {
 table.tabledata tbody tr:hover .cel_play_hover, table.tabledata tbody tr:focus .cel_play_hover {
     display: block;
 }
+
 table.tabledata tbody tr:hover .cel_play_content, table.tabledata tbody tr:focus .cel_play_content {
     display: none;
 }
@@ -1157,9 +1158,9 @@ table.disablegv td.cel_rating {
     display: grid;
 }
 
-/* ----------------------------------------------
-           Content (info-box)
----------------------------------------------- */
+/* --------------------------
+   Content (info-box)
+   -------------------------- */
 #content .info-box h3 {
     margin-top: 10px;
 }
@@ -1246,9 +1247,9 @@ div.box.box_rules {
     overflow: hidden;
 }
 
-/* ----------------------------------------------
+/* --------------------------
     Content (now playing)
----------------------------------------------- */
+   -------------------------- */
 #now_playing {
     margin-bottom: 20px;
     width: auto;
@@ -1329,9 +1330,9 @@ div.box.box_rules {
     margin-right: 30px;
 }
 
-/* ----------------------------------------------
+/* --------------------------
     Content (Tag cloud)
----------------------------------------------- */
+   -------------------------- */
 .box_tag_cloud {
     margin-bottom: 15px;
 }
@@ -1383,9 +1384,9 @@ span.fatalerror {
     background-image: -o-linear-gradient(top, #6d6d6d,#4a4a4a);
     background-image: linear-gradient(top, #6d6d6d,#4a4a4a);
     border-bottom-color: #b3b3b3;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0,0,0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0,0,0, 0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0,0,0, 0.2);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
 }
 
 .box-content #tag_filter .tag_button span:hover {
@@ -1396,16 +1397,16 @@ span.fatalerror {
     height: 16px;
 }
 
-/* ----------------------------------------------
+/* --------------------------
     Content (inline edit)
----------------------------------------------- */
+   -------------------------- */
 .inline-edit select {
     max-width: 200px;
 }
 
-/* ----------------------------------------------
+/* --------------------------
     Content (information-actions)
----------------------------------------------- */
+   -------------------------- */
 #information_actions {
     margin: 20px 0 10px 0;
     width: 300px;
@@ -1563,9 +1564,9 @@ span.fatalerror {
     margin-right: 260px;
 }
 
-/* ---------------------------------------------- */
-/*        Styles for the star ratings           */
-/* ---------------------------------------------- */
+/* -------------------------
+    Styles for star ratings
+   ------------------------- */
 .star-rating {
     position: relative;
 }
@@ -1629,9 +1630,9 @@ span.fatalerror {
     left: 16px;
 }
 
-/* ---------------------------------------------- */
-/*        Styles for user flags                 */
-/* ---------------------------------------------- */
+/* ------------------------
+    Styles for user flags
+   ------------------------ */
 .userflag {
     position: relative;
     width: 16px;
@@ -1653,9 +1654,9 @@ span.fatalerror {
     height: 16px;
 }
 
-/* ----------------------------------------------
-        Content (Track view)
----------------------------------------------- */
+/* --------------------------
+   Content (Track view)
+   -------------------------- */
 .media_details {
     margin-top: 20px;
 }
@@ -1672,9 +1673,9 @@ dl.media_details dd {
     min-height: 24px;
 }
 
-/* ----------------------------------------------
-        Footer
----------------------------------------------- */
+/* --------------------------
+   Footer
+   -------------------------- */
 #footer {
     bottom: 0;
     margin: 15px 250px 0 0;
@@ -1692,9 +1693,9 @@ dl.media_details dd {
     text-decoration: underline;
 }
 
-/* ----------------------------------------------
-        Other
----------------------------------------------- */
+/* --------------------------
+   Other
+   -------------------------- */
 ol, ul, #rightbar ul {
     list-style: none;
 }

@@ -44,13 +44,10 @@ a:focus {
 div.jp-audio,
 div.jp-audio-stream,
 div.jp-video {
-
     /* Edit the font-size to counteract inherited font sizing.
      * Eg. 1.25em = 1 / 0.8em
      */
-
     font-size: 1.25em; /* 1.25em for testing in site pages */ /* No parent CSS that can effect the size in the demos ZIP */
-
     font-family: 'Verdana', Arial, sans-serif;
     line-height: 1.6;
     margin: auto;
@@ -111,7 +108,7 @@ div.jp-video-full div.jp-interface {
 div.jp-video-float div.jp-jplayer {
     position: fixed !important;
     bottom: 100px;
-    border-top: 4px solid #000000;
+    border-top: 4px solid #000;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 }
@@ -188,6 +185,7 @@ div.jp-interface ul.jp-controls a {
     overflow: hidden;
     text-indent: -9999px;
 }
+
 a.jp-play,
 a.jp-pause {
     width: 40px;
@@ -268,6 +266,7 @@ a.jp-stop:hover {
 a.jp-previous {
     background-position: 0 -112px;
 }
+
 a.jp-previous:hover {
     background-position: -29px -112px;
 }
@@ -275,6 +274,7 @@ a.jp-previous:hover {
 a.jp-next {
     background-position: 0 -141px;
 }
+
 a.jp-next:hover {
     background-position: -29px -141px;
 }
@@ -320,7 +320,7 @@ div.jp-seek-bar {
     height: 100%;
     cursor: pointer;
     border-radius: 5px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
     overflow: hidden;
 }
 
@@ -330,7 +330,7 @@ div.jp-play-bar {
     width: 0;
     height: 100%;
     border-radius: 4px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0, 0.25), 2px 0 5px -2px rgba(0,0,0, 0.3);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 2px 0 5px -2px rgba(0, 0, 0, 0.3);
 }
 
 div.jp-video div.jp-seek-bar,
@@ -464,7 +464,7 @@ div.jp-volume-bar-value {
     width: 0;
     height: 5px;
     border-radius: 5px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0,0,0, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
 /* @end */
@@ -525,15 +525,13 @@ div.jp-title {
     font-weight: bold;
     text-align: center;
     color: #fff;
-
-    background-color: rgba(0,0,0, 0) !important;
+    background-color: rgba(0, 0, 0, 0) !important;
     font-size: 0.7em;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: auto;
-
     position: relative;
-    top: 70px !important;;
+    top: 70px !important;
     width: auto !important;
     white-space: nowrap;
 }
@@ -579,7 +577,7 @@ div.playing_features {
 
 div.playing_lyrics {
     position: relative;
-        display: inline;
+    display: inline;
 }
 
 div.playing_lyrics a {
@@ -589,7 +587,7 @@ div.playing_lyrics a {
 
 div.playing_actions {
     position: relative;
-        display: inline;
+    display: inline;
 }
 
 div.playing_actions div {
@@ -629,8 +627,8 @@ div.jp-playlist {
     width: 25%;
     height: 95%;
     overflow: auto;
-    /*background-color: #343433;*/
-    text-shadow: 0 1px 0 rgba(0,0,0, 0.3);
+    /* background-color: #343433; */
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
     z-index: 9999;
     opacity: 0.9;
     position: absolute;
@@ -657,7 +655,7 @@ div.jp-title li {
 
 div.jp-playlist li {
     padding: 6px 15px;
-    text-shadow: 0 1px 0 rgba(0,0,0, 0.3);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
 }
 
 div.jp-playlist li div {
@@ -723,7 +721,7 @@ div.jp-video-play {
     width: 100%;
     overflow: hidden; /* Important for nested negative margins to work in modern browsers */
     cursor: pointer;
-    background-color: rgba(0,0,0, 0); /* Makes IE9 work with the active area over the whole video area. IE6/7/8 only have the button as active area. */
+    background-color: rgba(0, 0, 0, 0); /* Makes IE9 work with the active area over the whole video area. IE6/7/8 only have the button as active area. */
 }
 
 div.jp-video-270p div.jp-video-play {
@@ -745,12 +743,10 @@ a.jp-video-play-icon {
     display: block;
     width: 112px;
     height: 100px;
-
     margin-left: -56px;
     margin-top: -50px;
     left: 50%;
     top: 50%;
-
     background: url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 0 no-repeat;
     text-indent: -9999px;
 }
@@ -766,7 +762,7 @@ div.jp-jplayer {
 }
 
 div.jp-jplayer {
-    background-color: #000000;
+    background-color: #000;
     position: absolute;
     z-index: 9999;
 }

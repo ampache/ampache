@@ -20,9 +20,9 @@
  *
  */
 
-/* ----------------------------------------------
-           General style rules
----------------------------------------------- */
+/* --------------------------
+   General style rules
+   -------------------------- */
 
 body {
     color: #000;
@@ -64,9 +64,9 @@ input[type=button], input[type=submit] {
     background-image: -webkit-linear-gradient(top, #1990db,#1473af);
     background-image: -o-linear-gradient(top, #1990db,#1473af);
     background-image: linear-gradient(top, #1990db,#1473af);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0, 0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0, 0.2);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     color: #fff;
 }
 
@@ -89,16 +89,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 /* ------------------------
-           Main
------------------------- */
+   Main
+   ------------------------ */
 #ajax-loading {
     color: #1990db;
     background-image: url(../images/ajax-loader-light.gif);
 }
 
 /* ------------------------
-           Header
------------------------- */
+   Header
+   ------------------------ */
 #header {
     background-color: #eee;
     border-bottom: 2px solid #d8d8d8;
@@ -122,15 +122,15 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 /* ------------------------
-           Login
------------------------- */
+   Login
+   ------------------------ */
 #loginPage {
     background-color: #eee;
 }
 
 #loginPage #maincontainer, #registerPage #maincontainer {
     background-color: #fff;
-    border: 2px solid rgba(0,0,0, 0.15);
+    border: 2px solid rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -165,9 +165,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #loginPage span.error {
-    background: #ff9999;
-    border-color: #cc3333;
-    color: #990000;
+    background: #f99;
+    border-color: #c33;
+    color: #900;
 }
 
 #loginPage #footer {
@@ -183,8 +183,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 /* ------------------------
-           Sidebar
------------------------- */
+   Sidebar
+   ------------------------ */
 #sidebar {
     color: #000;
 }
@@ -246,8 +246,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 /* ------------------------
-                  Rightbar
------------------------- */
+   Rightbar
+   ------------------------ */
 #rightbar {
     background-color: #f8f8f8;
     border-color: #d8d8d8;
@@ -277,7 +277,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 #rightbar #rb_current_playlist li.odd {
-    background-color: rgba(0,0,0, 0.1);
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 #rightbar .submenu {
@@ -295,8 +295,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
 }
 
 /* ------------------------
-           Content
------------------------- */
+   Content
+   ------------------------ */
 #content {
     background-color: #f8f8f8;
     border-color: #d8d8d8;
@@ -376,9 +376,9 @@ table.tabledata tbody .odd {
 }
 
 table.tabledata tbody .cel_cover img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 table.tabledata tbody .cel_cover img:hover {
@@ -386,18 +386,18 @@ table.tabledata tbody .cel_cover img:hover {
 }
 
 /* ------------------------
-           Content (info-box)
------------------------- */
+     Content (info-box)
+   ------------------------ */
 .random_selection .random_album .art_album img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 .random_selection .random_video .art_album img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 .random_selection .random_album .art_album img:hover {
@@ -410,11 +410,11 @@ table.tabledata tbody .cel_cover img:hover {
 
 /* ------------------------
     Content (now playing)
------------------------- */
+   ------------------------ */
 #now_playing .cel_albumart img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 #now_playing .cel_lyrics a:hover {
@@ -423,7 +423,7 @@ table.tabledata tbody .cel_cover img:hover {
 
 /* ------------------------
     Content (Tag cloud)
------------------------- */
+   ------------------------ */
 span.fatalerror {
     color: #c60;
 }
@@ -442,9 +442,9 @@ span.fatalerror {
     background-image: linear-gradient(top, #1473af,#027ecc);
 }
 
-/* ------------------------
+/* ------------------------------
     Content (information-actions)
------------------------- */
+   ------------------------------ */
 .item_properties {
     color: #999;
 }
@@ -458,9 +458,9 @@ span.fatalerror {
 }
 
 .item_art img {
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.75);
-    box-shadow: 0 0 10px rgba(0,0,0, 0.75);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 .item_art:hover {
@@ -475,9 +475,9 @@ span.fatalerror {
     color: #000;/*#ffc466;*/
 }
 
-/* ------------------------ */
-/*        Styles for user flags                 */
-/* ------------------------ */
+/* ------------------------
+    Styles for user flags
+   ------------------------ */
 .userflag a.userflag_true {
     background: url(../../../images/icon_flag.png) left top;
 }
@@ -495,15 +495,15 @@ span.fatalerror {
 }
 
 /* ------------------------
-        Content (Track view)
------------------------- */
+   Content (Track view)
+   ------------------------ */
 dl.media_details dt {
     color: #c60;
 }
 
 /* ------------------------
-        Footer
------------------------- */
+   Footer
+   ------------------------ */
 #footer a:hover {
     color: #09c;
 }
@@ -513,8 +513,8 @@ dl.media_details dt {
 }
 
 /* ------------------------
-        Web Player
------------------------- */
+   Web Player
+   ------------------------ */
 div.jp-audio,
 div.jp-audio-stream,
 div.jp-video {
@@ -560,8 +560,8 @@ div.jp-playlist li {
 }
 
 /* ------------------------
-        Other
------------------------- */
+   Other
+   ------------------------ */
 .jscroll-next {
     border-color: #ccc;
     background-color: #eee;

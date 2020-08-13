@@ -19,13 +19,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/* -------------------------------------------------------------------------- */
-/* Base Definitions, may be overwritten by themes
-/* -------------------------------------------------------------------------- */
 
-/* ----------------
- * Tag Definitions
- ---------------- */
+/* ----------------------------------------------
+   Base Definitions, may be overwritten by themes
+   ---------------------------------------------- */
+
+/* --------------------------
+   Tag Definitions
+   -------------------------- */
 
 .tag_size1 {
     font-size: 0.6em;
@@ -199,7 +200,7 @@ a.tag_size4 { text-decoration: none; }
 }
 
 .noty_ampache {
-    color: #ffffff;
+    color: #fff;
     background-color: #222;
 }
 
@@ -313,8 +314,8 @@ a.tag_size4 { text-decoration: none; }
     margin: 0;
     background-color: #000;
     border-radius: 10px;
-    -webkit-box-shadow: 0 4px 12px rgba(0,0,0, 0.5);
-    box-shadow: 0 4px 12px rgba(0,0,0, 0.5);
+    -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     -webkit-transition: all 0.5s;
     transition: all 0.5s;
     -webkit-transform: translate(-50%,0);

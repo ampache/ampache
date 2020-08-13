@@ -1067,7 +1067,7 @@ class Upnp_Api
             'restricted' => '1',
             'childCount' => $artist->albums,
             'dc:title' => self::_replaceSpecialSymbols($artist->f_name),
-            'upnp:class' => 'object.container',   // object.container.person.musicArtist
+            'upnp:class' => 'object.container', // object.container.person.musicArtist
         );
     }
 
@@ -1087,7 +1087,7 @@ class Upnp_Api
             'restricted' => '1',
             'childCount' => $album->song_count,
             'dc:title' => self::_replaceSpecialSymbols($album->f_title),
-            'upnp:class' => 'object.container',  // object.container.album.musicAlbum
+            'upnp:class' => 'object.container', // object.container.album.musicAlbum
             'upnp:albumArtURI' => $art_url,
         );
     }
@@ -1105,7 +1105,7 @@ class Upnp_Api
             'restricted' => '1',
             'childCount' => count($playlist->get_items()),
             'dc:title' => self::_replaceSpecialSymbols($playlist->f_name),
-            'upnp:class' => 'object.container',  // object.container.playlistContainer
+            'upnp:class' => 'object.container', // object.container.playlistContainer
         );
     }
 
