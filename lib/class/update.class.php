@@ -288,7 +288,7 @@ class Update
 
         // Run a check to make sure that they don't try to upgrade from a version that
         // won't work.
-        if ($current_version < '380005') {
+        if ($current_version < '380004') {
             echo '<p class="database-update">Database version too old, please upgrade to <a href="https://github.com/ampache/ampache/releases/download/3.8.2/ampache-3.8.2_all.zip">Ampache-3.8.2</a> first</p>';
 
             return false;
