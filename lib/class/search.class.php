@@ -1185,7 +1185,7 @@ class Search extends playlist_object
      * results.
      * @param array $data
      * @param User $user
-     * @return array
+     * @return integer[]
      */
     public static function run($data, $user = null)
     {
@@ -1225,7 +1225,7 @@ class Search extends playlist_object
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;

@@ -94,17 +94,19 @@ foreach ($headers as $key => $value) {
 }
 
 $curl = curl_init($url);
-curl_setopt_array($curl, array(
-    CURLOPT_HTTPHEADER => $reqheaders,
-    CURLOPT_HEADER => false,
-    CURLOPT_RETURNTRANSFER => false,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HEADERFUNCTION => 'output_header',
-    CURLOPT_NOPROGRESS => false,
-    CURLOPT_PROGRESSFUNCTION => 'progress',
-));
-curl_exec($curl);
-curl_close($curl);
+if ($curl) {
+    curl_setopt_array($curl, array(
+        CURLOPT_HTTPHEADER => $reqheaders,
+        CURLOPT_HEADER => false,
+        CURLOPT_RETURNTRANSFER => false,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HEADERFUNCTION => 'output_header',
+        CURLOPT_NOPROGRESS => false,
+        CURLOPT_PROGRESSFUNCTION => 'progress',
+    ));
+    curl_exec($curl);
+    curl_close($curl);
+}
 
 /**
  *

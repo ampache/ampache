@@ -417,7 +417,7 @@ function generate_config($current)
                 }
                 // Else, unable to generate a cryptographically secure token, use the default one
             } elseif (isset($current[$key])) {
-                $line = $key . ' = "' . escape_ini($current[$key]) . '"';
+                $line = $key . ' = "' . escape_ini((string) $current[$key]) . '"';
                 unset($current[$key]);
             }
         }

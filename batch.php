@@ -47,7 +47,7 @@ set_time_limit(0);
 
 $media_ids    = array();
 $default_name = "Unknown.zip";
-$object_type  = (!$object_type) ? (string) scrub_in(Core::get_request('action')) : $object_type;
+$object_type  = (string) scrub_in(Core::get_request('action'));
 $name         = $default_name;
 
 if ($object_type == 'browse') {

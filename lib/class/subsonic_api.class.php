@@ -143,24 +143,26 @@ class Subsonic_Api
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             debug_event('subsonic_api.class', 'Stream proxy: ' . $url, 5);
             $curl = curl_init($url);
-            curl_setopt_array($curl, array(
-                CURLOPT_FAILONERROR => true,
-                CURLOPT_HTTPHEADER => $reqheaders,
-                CURLOPT_HEADER => false,
-                CURLOPT_RETURNTRANSFER => false,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_WRITEFUNCTION => array('Subsonic_Api', 'output_body'),
-                CURLOPT_HEADERFUNCTION => array('Subsonic_Api', 'output_header'),
-                // Ignore invalid certificate
-                // Default trusted chain is crap anyway and currently no custom CA option
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_SSL_VERIFYHOST => false,
-                CURLOPT_TIMEOUT => 0
-            ));
-            if (curl_exec($curl) === false) {
-                debug_event('subsonic_api.class', 'Stream error: ' . curl_error($curl), 1);
+            if ($curl) {
+                curl_setopt_array($curl, array(
+                    CURLOPT_FAILONERROR => true,
+                    CURLOPT_HTTPHEADER => $reqheaders,
+                    CURLOPT_HEADER => false,
+                    CURLOPT_RETURNTRANSFER => false,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_WRITEFUNCTION => array('Subsonic_Api', 'output_body'),
+                    CURLOPT_HEADERFUNCTION => array('Subsonic_Api', 'output_header'),
+                    // Ignore invalid certificate
+                    // Default trusted chain is crap anyway and currently no custom CA option
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_SSL_VERIFYHOST => false,
+                    CURLOPT_TIMEOUT => 0
+                ));
+                if (curl_exec($curl) === false) {
+                    debug_event('subsonic_api.class', 'Stream error: ' . curl_error($curl), 1);
+                }
+                curl_close($curl);
             }
-            curl_close($curl);
         } else {
             // Stream media using http redirect if no curl support
             // Bug fix for android clients looking for /rest/ in destination url
