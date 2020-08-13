@@ -79,11 +79,11 @@
 .editdialogstyle.ui-dialog .ui-dialog-buttonset button:hover {
     background-position: 0 -10px;
     background-color: #cc6200;
-    -webkit-transition: background-position .1s linear;
-    -moz-transition: background-position .1s linear;
-    -ms-transition: background-position .1s linear;
-    -o-transition: background-position .1s linear;
-    transition: background-position .1s linear;
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -ms-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
     text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
     text-decoration: none;
 }
@@ -92,11 +92,11 @@
     -webkit-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
     -moz-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
     box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
-    -webkit-transition: background-position .1s linear;
-    -moz-transition: background-position .1s linear;
-    -ms-transition: background-position .1s linear;
-    -o-transition: background-position .1s linear;
-    transition: background-position .1s linear;
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -ms-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
 }
 
 .edit_dialog_content {
@@ -112,7 +112,8 @@
     padding-bottom: 20px;
 }
 
-.edit_dialog_content input[type=text] , .edit_dialog_content select {
+.edit_dialog_content input[type=text],
+.edit_dialog_content select {
     width: 430px;
     height: 30px;
     background: #333;

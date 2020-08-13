@@ -18,7 +18,8 @@
     user-select: none;
 }
 
-.rhino-prev, .rhino-next { bottom:-4px; }
+.rhino-prev,
+.rhino-next { bottom:-4px; }
 
 .rhino-prev {
     left:-6px;
@@ -74,7 +75,8 @@
     padding: 0;
 }
 
-.rhino-bullets:before, .rhino-bullets:after {
+.rhino-bullets:before,
+.rhino-bullets:after {
     position: absolute;
     display: block;
     left: -16px;
@@ -112,7 +114,8 @@
     user-select: none;
 }
 
-.rhino-bullets li a.rhino-bullet:hover, .rhino-bullets li a.rhino-bullet:focus {
+.rhino-bullets li a.rhino-bullet:hover,
+.rhino-bullets li a.rhino-bullet:focus {
     color: #999;
     background: #eee;
 }

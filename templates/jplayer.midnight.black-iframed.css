@@ -36,7 +36,8 @@ div.jp-area-center {
     margin-top: 0 !important;
 }
 
-a:active, a:focus {
+a:active,
+a:focus {
     outline: none; /* To keep Google Chrome from adding that ugly yellow border/outlune on buttons when clicked */
 }
 
@@ -123,6 +124,7 @@ div.jp-interface {
 div.jp-audio div.jp-type-single div.jp-interface {
     height: 75px;
 }
+
 div.jp-audio div.jp-type-playlist div.jp-interface {
     height: 70px;
 }
@@ -190,7 +192,40 @@ a.jp-pause {
     height: 40px;
 }
 
-a.jp-play, a.jp-play:hover, a.jp-pause, a.jp-pause:hover, a.jp-stop, a.jp-stop:hover, a.jp-previous, a.jp-previous:hover, a.jp-next, a.jp-next:hover, div.jp-seek-bar, div.jp-play-bar, a.jp-mute, a.jp-mute:hover, a.jp-unmute, a.jp-unmute:hover, a.jp-volume-max, a.jp-volume-max:hover, div.jp-volume-bar, div.jp-audio, div.jp-volume-bar, div.jp-volume-bar-value, a.jp-full-screen, a.jp-full-screen:hover, a.jp-restore-screen, a.jp-restore-screen:hover, a.jp-repeat, a.jp-repeat:hover, a.jp-repeat-off, a.jp-repeat-off:hover, a.jp-shuffle, a.jp-shuffle:hover, a.jp-shuffle-off, a.jp-shuffle-off:hover {
+a.jp-play,
+a.jp-play:hover,
+a.jp-pause,
+a.jp-pause:hover,
+a.jp-stop,
+a.jp-stop:hover,
+a.jp-previous,
+a.jp-previous:hover,
+a.jp-next,
+a.jp-next:hover,
+div.jp-seek-bar,
+div.jp-play-bar,
+a.jp-mute,
+a.jp-mute:hover,
+a.jp-unmute,
+a.jp-unmute:hover,
+a.jp-volume-max,
+a.jp-volume-max:hover,
+div.jp-volume-bar,
+div.jp-audio,
+div.jp-volume-bar,
+div.jp-volume-bar-value,
+a.jp-full-screen,
+a.jp-full-screen:hover,
+a.jp-restore-screen,
+a.jp-restore-screen:hover,
+a.jp-repeat,
+a.jp-repeat:hover,
+a.jp-repeat-off,
+a.jp-repeat-off:hover,
+a.jp-shuffle,
+a.jp-shuffle:hover,
+a.jp-shuffle-off,
+a.jp-shuffle-off:hover {
     background: url("../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.png") no-repeat;
 }
 
@@ -208,7 +243,9 @@ a.jp-pause:hover {
     background-position: -41px -42px;
 }
 
-a.jp-stop, a.jp-previous, a.jp-next {
+a.jp-stop,
+a.jp-previous,
+a.jp-next {
     width: 28px;
     height: 28px;
     margin-top: 6px;
@@ -298,7 +335,6 @@ div.jp-seeking-bg {
 /* @end */
 
 /* @group volume controls */
-
 
 a.jp-mute,
 a.jp-unmute,
@@ -550,15 +586,15 @@ div.waveform-time {
     position: absolute;
     display: block;
     height: 100%;
-    width: 0px;
+    width: 0;
     border-left: 1px solid #ffcaca;
-    left: 0px;
+    left: 0;
 }
 
 div.jp-title,
 div.jp-playlist {
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
     width: 25%;
     height: 95%;
     overflow: auto;
@@ -623,15 +659,18 @@ div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove {
 div.jp-type-playlist div.jp-playlist a.jp-playlist-item-remove:hover {
     color: #FFF;
 }
+
 div.jp-type-playlist div.jp-playlist span.jp-free-media {
     float: right;
     display: inline;
     text-align: right;
     margin-right: 10px;
 }
-div.jp-type-playlist div.jp-playlist span.jp-free-media a{
+
+div.jp-type-playlist div.jp-playlist span.jp-free-media a {
     color: #666;
 }
+
 div.jp-type-playlist div.jp-playlist span.jp-free-media a:hover{
     color: #FFF;
 }
@@ -647,17 +686,21 @@ div.jp-video-play {
     cursor: pointer;
     background-color: rgba(0,0,0,0); /* Makes IE9 work with the active area over the whole video area. IE6/7/8 only have the button as active area. */
 }
+
 div.jp-video-270p div.jp-video-play {
     margin-top: -270px;
     height: 270px;
 }
+
 div.jp-video-360p div.jp-video-play {
     margin-top: -360px;
     height: 360px;
 }
+
 div.jp-video-full div.jp-video-play {
     height: 100%;
 }
+
 a.jp-video-play-icon {
     position: relative;
     display: block;
@@ -881,7 +924,7 @@ a.jp-shuffle-off:hover {
     position: fixed;
     z-index: 9999;
     display: none;
-    bottom: 0px;
+    bottom: 0;
     width: 100%;
     height: 100px;
 }

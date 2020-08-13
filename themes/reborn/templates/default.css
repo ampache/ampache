@@ -134,19 +134,19 @@ input[type=button], input[type=submit] {
 
 input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, input[type=submit]:focus {
     background-position: 0 -10px;
-    -webkit-transition: background-position .1s linear;
-    -moz-transition: background-position .1s linear;
-    -o-transition: background-position .1s linear;
-    transition: background-position .1s linear;
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
     text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
     text-decoration: none;
 }
 
 input[type=button]:focus:active, input[type=submit]:focus:active {
-    -webkit-transition: background-position .1s linear;
-    -moz-transition: background-position .1s linear;
-    -o-transition: background-position .1s linear;
-    transition: background-position .1s linear;
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
 }
 
 .box-title {
@@ -154,7 +154,7 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     margin-bottom: 10px;
 }
 
-.alert-danger{
+.alert-danger {
     color: #c33;
 }
 
@@ -609,10 +609,10 @@ div#autoupdate > span {
     width: 100%;
     margin: 0 0 0 5px;
     background-color: transparent;
-    -webkit-transition: color .1s;
-    -moz-transition: color .1s;
-    -o-transition: color .1s;
-    transition: color .1s;
+    -webkit-transition: color 0.1s;
+    -moz-transition: color 0.1s;
+    -o-transition: color 0.1s;
+    transition: color 0.1s;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -817,10 +817,10 @@ span#sidebar-header-content::after {
 ***********************************************/
 #content {
     z-index: 3000000;
-    -webkit-transition: top .5s;
-    -moz-transition: top .5s;
-    -o-transition: top .5s;
-    transition: top .5s;
+    -webkit-transition: top 0.5s;
+    -moz-transition: top 0.5s;
+    -o-transition: top 0.5s;
+    transition: top 0.5s;
     width: auto;
     max-height: 85%;
     -webkit-border-radius: 2px;
@@ -1428,10 +1428,10 @@ span.fatalerror {
 
 #information_actions ul li{
     border-radius: 4px;
-    -webkit-transition: color .1s;
-    -moz-transition: color .1s;
-    -o-transition: color .1s;
-    transition: color .1s;
+    -webkit-transition: color 0.1s;
+    -moz-transition: color 0.1s;
+    -o-transition: color 0.1s;
+    transition: color 0.1s;
 }
 
 #information_actions h3 {
