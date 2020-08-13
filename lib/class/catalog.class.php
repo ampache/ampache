@@ -2131,7 +2131,7 @@ abstract class Catalog extends database_object
      * @param string $gather_type
      * @return string
      */
-    public function get_table_from_type($gather_type)
+    public static function get_table_from_type($gather_type)
     {
         switch ($gather_type) {
             case 'clip':
