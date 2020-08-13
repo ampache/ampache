@@ -196,7 +196,7 @@ if (!$share_id) {
                     // No valid session id given, try with cookie session from web interface
                     $sid = $_COOKIE[AmpConfig::get('session_name')];
                     if (!Session::exists('interface', $sid)) {
-                        debug_event('play/index', 'Streaming access denied: ' . Core::get_global('user')->username . "'s session has expired", 3);
+                        debug_event('play/index', "Streaming access denied: Session $sid has expired", 3);
                         header('HTTP/1.1 403 Session Expired');
 
                         return false;
@@ -232,11 +232,17 @@ if (!$share_id) {
     Preference::init();
 }
 
-/* If we are in demo mode.. die here */
+// If we are in demo mode.. die here
+if (AmpConfig::get('demo_mode')) {
+    debug_event('play/index', "Streaming Access Denied: Disable demo_mode in 'config/ampache.cfg.php'", 3);
+    UI::access_denied();
 
+    return false;
+}
+// Check whether streaming is allowed
 $prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['preferences']['allow_stream_playback'];
-if (AmpConfig::get('demo_mode') || !$prefs) {
-    debug_event('play/index', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . Core::get_global('user')->access, 3);
+if (!$prefs) {
+    debug_event('play/index', "Streaming Access Denied: Enable 'Allow Streaming' in Server Config -> Options", 3);
     UI::access_denied();
 
     return false;
@@ -246,7 +252,7 @@ if (AmpConfig::get('demo_mode') || !$prefs) {
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
         !Access::check_network('network', Core::get_global('user')->id, '25')) {
-        debug_event('play/index', "Streaming Access Denied: " . Core::get_server('REMOTE_ADDR') . " does not have stream level access", 3);
+        debug_event('play/index', "Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 3);
         UI::access_denied();
 
         return false;
