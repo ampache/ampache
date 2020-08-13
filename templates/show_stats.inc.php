@@ -49,17 +49,17 @@ $catalogs = Catalog::get_catalogs(); ?>
     <tbody>
         <tr>
             <td><?php echo $stats['connected']; ?></td>
-            <td><?php echo $stats['users'] ?></td>
-            <td><?php echo $stats['albums']; ?></td>
-            <td><?php echo $stats['artists']; ?></td>
-            <td><?php echo $stats['songs']; ?></td>
+            <td><?php echo $stats['user'] ?></td>
+            <td><?php echo $stats['album']; ?></td>
+            <td><?php echo $stats['artist']; ?></td>
+            <td><?php echo $stats['song']; ?></td>
             <?php if (Video::get_item_count('Video')) { ?>
-                <td><?php echo $stats['videos']; ?></td>
+                <td><?php echo $stats['video']; ?></td>
             <?php
     } ?>
             <?php if (AmpConfig::get('podcast')) { ?>
-                <td><?php echo $stats['podcasts']; ?></td>
-                <td><?php echo $stats['podcast_episodes']; ?></td>
+                <td><?php echo $stats['podcast']; ?></td>
+                <td><?php echo $stats['podcast_episode']; ?></td>
             <?php
     } ?>
             <td><?php echo $stats['tags']; ?></td>
