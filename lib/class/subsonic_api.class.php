@@ -1931,9 +1931,7 @@ class Subsonic_Api
                 ++$count;
             }
 
-            $query = new Search(null, 'song');
-            $songs = Search::run($search);
-
+            $songs    = Search::run($search);
             $response = Subsonic_XML_Data::createSuccessResponse('getlyrics');
             if (count($songs) > 0) {
                 Subsonic_XML_Data::addLyrics($response, $artist, $title, $songs[0]);
