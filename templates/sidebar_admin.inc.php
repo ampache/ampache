@@ -21,6 +21,12 @@
  *
  */ ?>
 <ul class="sb2" id="sb_admin">
+    <?php if (AmpConfig::get('browse_filter')) {
+    echo "<li>";
+    Ajax::start_container('browse_filters');
+    Ajax::end_container();
+    echo "</li>";
+} ?>
   <li>
     <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Catalogs'); ?>"><?php echo T_('Catalogs'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'catalogs', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_catalogs')) ? $_COOKIE['sb_catalogs'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_admin_catalogs">
@@ -58,10 +64,6 @@
         <li id="sb_admin_acl_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo T_('Add ACL'); ?></a></li>
         <li id="sb_admin_acl_ShowAccess"><a href="<?php echo $web_path; ?>/admin/access.php"><?php echo T_('Show ACL(s)'); ?></a></li>
       </ul>
-    </li>
-    <li>
-      <?php Ajax::start_container('browse_filters'); ?>
-      <?php Ajax::end_container(); ?>
     </li>
     <li>
       <ul class="sb2" id="sb_modules">

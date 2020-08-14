@@ -38,7 +38,7 @@
             <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
             <ul id="pl_action_additems" class="submenu">
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to new playlist'), 'rb_create_playlist'); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
                 </li>
             <?php
                 $playlists = Playlist::get_users(Core::get_global('user')->id);

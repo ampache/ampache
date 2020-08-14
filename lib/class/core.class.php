@@ -605,7 +605,9 @@ class Core
      */
     public static function get_tmp_dir()
     {
-        $tmp_dir = AmpConfig::get('tmp_dir_path');
+        if (AmpConfig::get('tmp_dir_path')) {
+            return AmpConfig::get('tmp_dir_path');
+        }
         if (function_exists('sys_get_temp_dir')) {
             $tmp_dir = sys_get_temp_dir();
         } else {
