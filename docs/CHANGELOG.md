@@ -36,6 +36,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Fixed a few issues on the Statistics page
   * Report 'Catalog Size' correctly for podcasts
   * Report 'Item Count' correctly for podcasts and video catalogs
+* Searching albums for artist name
 
 ## 4.2.1-release
 
