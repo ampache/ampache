@@ -108,6 +108,10 @@
                 <td><?php echo T_('Gettext Support'); ?></td>
                 <td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
             </tr>
+            <tr class="<?php echo UI::flip_class(); ?>">
+                <td><?php echo T_('PHP intl extension'); ?></td>
+                <td><?php echo print_bool(check_php_intl()); ?></td>
+            </tr>
             </tbody>
         </table>
     <?php UI::show_box_bottom(); ?>
