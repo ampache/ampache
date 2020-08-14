@@ -1648,11 +1648,11 @@ class Search extends playlist_object
                         break;
                     }
                     if ($input == 0 && $sql_match_operator == '<') {
-                        $input = -1;
+                        $input              = -1;
                         $sql_match_operator = '=';
                     }
                     if ($input == 0 && $sql_match_operator == '<>') {
-                        $input = 1;
+                        $input              = 1;
                         $sql_match_operator = '>=';
                     }
                     $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
@@ -1897,11 +1897,11 @@ class Search extends playlist_object
                         break;
                     }
                     if ($input == 0 && $sql_match_operator == '<') {
-                        $input = -1;
+                        $input              = -1;
                         $sql_match_operator = '=';
                     }
                     if ($input == 0 && $sql_match_operator == '<>') {
-                        $input = 1;
+                        $input              = 1;
                         $sql_match_operator = '>=';
                     }
                     $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
@@ -2260,11 +2260,11 @@ class Search extends playlist_object
                         break;
                     }
                     if ($input == 0 && $sql_match_operator == '<') {
-                        $input = -1;
+                        $input              = -1;
                         $sql_match_operator = '=';
                     }
                     if ($input == 0 && $sql_match_operator == '<>') {
-                        $input = 1;
+                        $input              = 1;
                         $sql_match_operator = '>=';
                     }
                     $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
