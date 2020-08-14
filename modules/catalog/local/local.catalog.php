@@ -556,7 +556,7 @@ class Catalog_local extends Catalog
         $this->update_last_update();
 
         foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type];
+            $total = $stats['items'];
             if ($total == 0) {
                 continue;
             }
@@ -651,7 +651,7 @@ class Catalog_local extends Catalog
         $stats       = self::get_stats($this->id);
         $this->count = 0;
         foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type];
+            $total = $stats['items'];
             if ($total == 0) {
                 continue;
             }
