@@ -57,8 +57,8 @@ md5sum ../ampache-4.x.x_all.zip
 ## Post release
 
 * Update develop from master **don't push**
-* Set the next version in init.php, (Release + 0.1.0 usually) update the changelog
-* Commit and push "Begin 4.3.0"
+* Set the next version in init.php back to 'develop' and update the changelog
+* Commit and push "Begin Ampache develop"
 
 ## Additional requirements
 

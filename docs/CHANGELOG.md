@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 4.3.0-develop
+## Ampache develop
 
 **IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
 This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
@@ -24,6 +24,12 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * get_datetime(): use IntlDateFormatter to format based on locale. [(https://www.php.net/manual/en/intldateformatter.format.php)]
 * stats.php: Show total 'Item Count'  on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
 * ampache.sql updated after about 4 years... no more updates on install!
+
+### Deprecated
+
+* Drop version number from the release string in develop. ('4.3.0-develop' => 'develop')
+  * This should stop a bit of confusion when removing / adding requirements
+* '-release' in version number will be dropped for Ampache 5.0.0
 
 ### Fixed
 
@@ -137,7 +143,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Searches using numeric rules must use an integer. ('1 Star' => 1, '2 Stars' => 2, etc)
 * bin/delete_disabled.inc require -x to execute. (previously you needed to edit the file)
 
-#### Deprecated
+### Deprecated
 
 * Horde_Browser::getIPAddress(). Use Core::get_user_ip() instead.
 
@@ -232,7 +238,7 @@ API 5.0.0-release will be the first Ampache release to match the release string.
   * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
 * Random albums will get songs for all disks if album_group enabled
 
-#### Deprecated
+### Deprecated
 
 * API Build number is depreciated (the last 3 digits of the api version)
   * API 5.0.0 will be released with a string version ("5.0.0-release")

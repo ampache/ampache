@@ -1,4 +1,4 @@
-# JSON Methods 4.3.0
+# JSON Methods Ampache develop
 
 Lets go through come calls and examples that you can do for each JSON method.
 

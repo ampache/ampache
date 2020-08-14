@@ -58,14 +58,14 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * hash
   * session
   * json
-  * intl (Ampache 4.3.0+)
+  * intl (Ampache develop)
   * simplexml (optional)
   * curl (optional)
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml
   * php-dom
-  * php-intl (Ampache 4.3.0+)
+  * php-intl (Ampache develop)
 
 * MySQL 5.x / MySQL 8.x / MariaDB 10.x
 

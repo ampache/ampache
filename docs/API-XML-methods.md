@@ -1,4 +1,4 @@
-# XML Methods 4.3.0
+# XML Methods Ampache develop
 
 Lets go through come calls and examples that you can do for each XML method.
 
