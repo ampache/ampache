@@ -11,20 +11,41 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Added
 
 * php-intl is now required for translation of date formats into your locale
-* Numeric (1-5) searches now include 0 to show unrated objects.
 * Numeric 'Played/Skipped ratio' added to search. (Set using (stream/skip)*100.)
   * ```> 0 & < 100 ```: Skipped more than played
   * ```100```: Equal plays and skips
   * ```> 100```: Played more than skipped
-* Ajax refresh localplay "Now Playing" same as the index "Now Playing" section
-* Add 'has not rated' to "Another User" searches.
-* Put '1 Star', '2 Stars', etc added back into numeric searches for ratings
 * Generate rsstokens for each user allowing unique feed URLs
-  * When using a string title numeric searches use the order of the items starting with 0
 * NEW database options
   * rsstoken: Identify users by token when generating RSS feeds
+
+### Changed
+
+* get_datetime(): use IntlDateFormatter to format based on locale. [(https://www.php.net/manual/en/intldateformatter.format.php)]
+* stats.php: Show total 'Item Count'  on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
+* ampache.sql updated after about 4 years... no more updates on install!
+
+### Fixed
+
+* Fixed a few issues on the Statistics page
+  * Report 'Catalog Size' correctly for podcasts
+  * Report 'Item Count' correctly for podcasts and video catalogs
+
+## 4.2.1-release
+
+**NOTICE** Ampache 4.3.0 will require **php-intl** module/dll to be enabled.
+
+### Added
+
+* Numeric ('1 Star'-'5 Stars') searches now include '0 Stars' to show unrated objects
+* Ajax refresh localplay "Now Playing" same as the index "Now Playing" section
+* Add 'has not rated' to "Another User" searches
+* Add higher bitrates (640, 1280) to search to allow for lossless files
+* Put strings ('1 Star', '2 Stars', etc) back into numeric searches for ratings
+* When using a string title for numeric searches use the order of the items starting with 0
 * NEW files
   * Include API docs from the wiki. (API.md, API-JSON-methods.md, API-XML-methods.md, API-advanced-search.md)
+* 'Filters' added to each sidebar tab if enabled (previously only 'Home' and 'Admin')
 
 ### Changed
 
@@ -33,23 +54,24 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * QR Code in account page is now just the API Key (redundant link removed too)
 * Require minimum version of Ampache 3.8.2 to upgrade database
 * Added an icon to webplayer to go to album. Clicking on song title now directs to song
-* get_datetime(): use IntlDateFormatter to format based on locale. [(https://www.php.net/manual/en/intldateformatter.format.php)]
-* stats.php: Show total 'Item Count'  on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
-* ampache.sql updated after about 4 years... no more updates on install!
 
 ### Fixed
 
-* Waveform config option get_tmp_dir was ignored if set
-* Fixed a few issues on the Statistics page
-  * Report 'Catalog Size' correctly for podcasts
-  * Report 'Item Count' correctly for podcasts and video catalogs
-* Rightbar: 'Add to New Playlist'
+* Waveform config option 'get_tmp_dir' was ignored if set
+* Rightbar: 'Add to New Playlist' not adding on new playlists
+* Translate preference subcategories and status
+* 'podcast_new_download' logic fix
+* Filters box would show up in the Admin tab if you disabled 'browse_filter'
+* Update album when 'release_type' changes
+* Parse 'Release Type' from tags in a less terrible way
 
-### API 4.3.0
+### API 4.2.1
+
+No functional changes from 4.2.0
 
 ### Fixed
 
-* filter in "playlist" and "playlist_songs" fixed.
+* Filter in "playlist" and "playlist_songs" fixed
 
 ## 4.2.0-release
 

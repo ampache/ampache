@@ -32,6 +32,12 @@ if ($server_allow && $controller && $access_check) { ?>
     $current_instance = $localplay->current_instance();
     $class            = $current_instance ? '' : ' class="active_instance"'; ?>
 <?php if (Access::check('localplay', 25)) { ?>
+    <?php if (AmpConfig::get('browse_filter')) {
+        echo "<li>";
+        Ajax::start_container('browse_filters');
+        Ajax::end_container();
+        echo "</li>";
+    } ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay'); ?>"><?php echo T_('Localplay'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'localplay', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_localplay')) ? $_COOKIE['sb_localplay'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_localplay_info">
 <?php if (Access::check('localplay', 75)) { ?>

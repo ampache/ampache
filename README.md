@@ -7,7 +7,7 @@
 
 **News:**
 
-* new **mandatory** requirement of php-intl for date formatting.
+* New **mandatory** requirement of php-intl for date formatting.
 * Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
   * Then put your client ID and secret in your ampache config
   * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
@@ -58,14 +58,14 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * hash
   * session
   * json
-  * intl
+  * intl (Ampache 4.3.0+)
   * simplexml (optional)
   * curl (optional)
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml
   * php-dom
-  * php-intl
+  * php-intl (Ampache 4.3.0+)
 
 * MySQL 5.x / MySQL 8.x / MariaDB 10.x
 

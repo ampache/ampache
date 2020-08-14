@@ -422,10 +422,10 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES ('browse_filter', '1', 'Show filter box on browse',25, 'boolean', 'interface', 'library')";
+            "VALUES ('browse_filter', '0', 'Show filter box on browse',25, 'boolean', 'interface', 'library')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
         $retval &= Dba::write($sql, array($row_id));
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .

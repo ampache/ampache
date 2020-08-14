@@ -1650,15 +1650,22 @@ class Search extends playlist_object
                     $looking = str_replace('rating', '', $rule[0]);
                     $column  = ($looking == 'my') ? 'id' : 'album_artist';
                     $my_type = ($looking == 'my') ? 'album' : $looking;
+                    if ($input == 0 && $sql_match_operator == '>=') {
+                        break;
+                    }
+                    if ($input == 0 && $sql_match_operator == '<') {
+                        $input              = -1;
+                        $sql_match_operator = '=';
+                    }
+                    if ($input == 0 && $sql_match_operator == '<>') {
+                        $input              = 1;
+                        $sql_match_operator = '>=';
+                    }
                     $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
                     $where[] = ($unrated) ? "`album`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)" :
                         "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input" .
                         " AND `rating_" . $my_type . "_" . $userid . "`.`user` = $userid " .
                         " AND `rating_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type'";
-                    // include unrated
-                    if ($input == 0 && $sql_match_operator != '>=') {
-                        $where[] = "`album`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)";
-                    }
                     // rating once per user
                     $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
@@ -1892,15 +1899,22 @@ class Search extends playlist_object
                     // combine these as they all do the same thing just different tables
                     $column  = 'id';
                     $my_type = 'artist';
+                    if ($input == 0 && $sql_match_operator == '>=') {
+                        break;
+                    }
+                    if ($input == 0 && $sql_match_operator == '<') {
+                        $input              = -1;
+                        $sql_match_operator = '=';
+                    }
+                    if ($input == 0 && $sql_match_operator == '<>') {
+                        $input              = 1;
+                        $sql_match_operator = '>=';
+                    }
                     $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
                     $where[] = ($unrated) ? "`artist`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)" :
                         "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input" .
                         " AND `rating_" . $my_type . "_" . $userid . "`.`user` = $userid " .
                         " AND `rating_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type'";
-                    // include unrated
-                    if ($input == 0 && $sql_match_operator != '>=') {
-                        $where[] = "`$my_type`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)";
-                    }
                     // rating once per user
                     $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
@@ -2259,15 +2273,22 @@ class Search extends playlist_object
                     $looking = str_replace('rating', '', $rule[0]);
                     $column  = ($looking == 'my') ? 'id' : $looking;
                     $my_type = ($looking == 'my') ? 'song' : $looking;
+                    if ($input == 0 && $sql_match_operator == '>=') {
+                        break;
+                    }
+                    if ($input == 0 && $sql_match_operator == '<') {
+                        $input              = -1;
+                        $sql_match_operator = '=';
+                    }
+                    if ($input == 0 && $sql_match_operator == '<>') {
+                        $input              = 1;
+                        $sql_match_operator = '>=';
+                    }
                     $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
                     $where[] = ($unrated) ? "`song`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)" :
                                "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input" .
                                " AND `rating_" . $my_type . "_" . $userid . "`.`user` = $userid " .
                                " AND `rating_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type'";
-                    // include unrated
-                    if ($input == 0 && $sql_match_operator != '>=') {
-                        $where[] = "`song`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)";
-                    }
                     // rating once per user
                     $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .

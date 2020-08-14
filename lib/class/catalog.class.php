@@ -1864,7 +1864,7 @@ abstract class Catalog extends database_object
         $disk             = $results['disk'];
         // year is also included in album
         $album_mbid_group = $results['mb_albumid_group'];
-        $releasetype      = $results['releasetype'];
+        $release_type     = $results['release_type'];
         $albumartist      = self::check_length($results['albumartist'] ?: $results['band']);
         $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
@@ -1879,7 +1879,7 @@ abstract class Catalog extends database_object
 
         // check whether this album exists
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
-                                        $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
+                                        $new_song->albumartist, $release_type, false, $original_year, $barcode, $catalog_number);
 
         // set `song`.`update_time` when artist or album details change
         $update_time = time();

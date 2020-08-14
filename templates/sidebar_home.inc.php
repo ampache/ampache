@@ -29,6 +29,12 @@ $t_tagcloud  = T_('Tag Cloud');
 $t_expander  = T_('Expand/Collapse');
 $t_search    = T_('Search'); ?>
 <ul class="sb2" id="sb_home">
+    <?php if (AmpConfig::get('browse_filter')) {
+    echo "<li>";
+    Ajax::start_container('browse_filters');
+    Ajax::end_container();
+    echo "</li>";
+} ?>
     <li class="sb2_music"><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Browse Music'); ?>"><?php echo T_('Music'); ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_music', 'header-img ' . (($_COOKIE['sb_browse_music'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <?php
         $text = (string) scrub_in(Core::get_request('action')) . '_ac';
@@ -116,12 +122,6 @@ $t_search    = T_('Search'); ?>
         } ?>
         </ul>
     </li>
-        <li>
-    <?php
-    if (AmpConfig::get('browse_filter')) {
-        Ajax::start_container('browse_filters');
-        Ajax::end_container();
-    } ?>
     <?php if (Access::check('interface', 25)) { ?>
     <li class="sb2_playlist">
     <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo $t_playlists; ?></span><?php echo UI::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>

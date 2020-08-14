@@ -36,7 +36,12 @@ It's easy to use a program like github desktop to compare between branches.
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
-  * FIXME This might be where unit testing would be helpful.
+
+```shell
+rm -rf /var/www/html && unzip -o ../ampache-4.x.x_all.zip -d /var/www/html/
+```
+
+* FIXME This might be where unit testing would be helpful.
 * Draft Release page online and save as draft using your changelog
 * When drafting a new release, set the tag to the version **4.x.x** and target to the **master** branch.
 * The "ampache-*.*.*_all.zip" drop-in package is then uploaded.
