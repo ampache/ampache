@@ -134,4 +134,4 @@ To search a mixed type like metadata you must search using 4 rules.
     * type = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video'
     * offset = (integer)
     * limit' = (integer)
-    
+

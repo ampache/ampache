@@ -7,7 +7,7 @@
 
 **News:**
 
-* New **mandatory** requirement of php-intl for date formatting.
+* Develop branch now has a **mandatory** requirement of php-intl for date formatting.
 * Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
   * Then put your client ID and secret in your ampache config
   * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
