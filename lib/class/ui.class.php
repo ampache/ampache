@@ -45,7 +45,7 @@ class UI
      * @param string $template
      * @return string
      */
-    public static function find_template($template)
+    public static function find_template($template, bool $extern = false)
     {
         $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
         $realpath  = AmpConfig::get('prefix') . $path;
@@ -53,7 +53,10 @@ class UI
         if (($extension != 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
             return $path;
         } else {
-            return '/templates/' . $template;
+            if ($extern === true) {
+                return '/templates/' . $template;
+            }
+            return '/src/public/templates/' . $template;
         }
     }
 

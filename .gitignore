@@ -1,5 +1,4 @@
 /.maintenance
-/channel/.htaccess
 /config/ampache-doped.cfg.php
 /config/ampache.cfg.php
 /config/registration_agreement.php
@@ -9,8 +8,6 @@
 /logs/
 /modules/plugins/ampache-*
 /nbproject/private/
-/play/.htaccess
-/rest/.htaccess
 /tmp/
 bootstrap/
 components/
@@ -20,7 +17,6 @@ develop/
 master/
 node_modules/
 php-cs-fixer.phar
-public/
 resources/
 robots.txt
 storage/
@@ -46,3 +42,4 @@ phpcs*
 *.v11.suo
 *~
 composer.phar
+/src/public/lib/components
