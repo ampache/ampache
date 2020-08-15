@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 require_once 'lib/init.php';
 
 if (!Core::get_request('action')) {
@@ -80,7 +82,7 @@ switch ($_REQUEST['action']) {
         $object_type = $_REQUEST['object_type'];
         $object_ids  = explode(',', Core::get_get('object_id'));
 
-        if (Core::is_playable_item($object_type)) {
+        if (InterfaceImplementationChecker::is_playable_item($object_type)) {
             foreach ($object_ids as $object_id) {
                 $item      = new $object_type($object_id);
                 $media_ids = array_merge($media_ids, $item->get_medias());

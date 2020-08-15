@@ -22,6 +22,8 @@
 
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 define('NO_SESSION', '1');
 require_once 'lib/init.php';
 
@@ -40,7 +42,7 @@ $type = $_REQUEST['type'];
 
 $user_id     = (int) ($_REQUEST['user_id']);
 $object_type = (string) scrub_in($_REQUEST['object_type']);
-if (!Core::is_library_item($object_type)) {
+if (!InterfaceImplementationChecker::is_library_item($object_type)) {
     $object_type = null;
 }
 $object_id  = (int) ($_REQUEST['object_id']);

@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 require_once 'lib/init.php';
 
 UI::show_header();
@@ -48,7 +50,7 @@ switch ($_REQUEST['action']) {
             unset($_POST['date']);
         }
 
-        if (!Core::is_library_item(Core::get_post('object_type'))) {
+        if (!InterfaceImplementationChecker::is_library_item(Core::get_post('object_type'))) {
             UI::access_denied();
 
             return false;

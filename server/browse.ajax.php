@@ -23,6 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
+
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 require_once '../lib/init.php';
 
 if (!Core::is_session_started()) {
@@ -210,7 +213,7 @@ switch ($_REQUEST['action']) {
         $object_type = Core::get_request('object_type');
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
-        if (Core::is_library_item($object_type) && $object_id > 0) {
+        if (InterfaceImplementationChecker::is_library_item($object_type) && $object_id > 0) {
             Share::display_ui_links($object_type, $object_id);
 
             return false;

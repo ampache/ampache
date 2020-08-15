@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -176,7 +179,7 @@ class Shoutbox
      */
     public static function get_object($type, $object_id)
     {
-        if (!Core::is_library_item($type)) {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
             return null;
         }
 
@@ -218,7 +221,7 @@ class Shoutbox
      */
     public static function create(array $data)
     {
-        if (!Core::is_library_item($data['object_type'])) {
+        if (!InterfaceImplementationChecker::is_library_item($data['object_type'])) {
             return false;
         }
 

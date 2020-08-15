@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 /**
  * XML_Data Class
  *
@@ -1155,7 +1157,7 @@ class Subsonic_XML_Data
      */
     private static function setIfStarred($xml, $objectType, $object_id)
     {
-        if (Core::is_library_item($objectType)) {
+        if (InterfaceImplementationChecker::is_library_item($objectType)) {
             if (AmpConfig::get('userflags')) {
                 $starred = new Userflag($object_id, $objectType);
                 if ($res = $starred->get_flag(null, true)) {

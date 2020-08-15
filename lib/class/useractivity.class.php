@@ -304,9 +304,9 @@ class Useractivity extends database_object
         echo $descr;
 
         /*
-        if (Core::is_library_item($this->object_type)) {
-            echo ' ';
-            $libitem->display_art(10);
+        if (\Ampache\Module\Util\InterfaceImplementationChecker::is_library_item($this->object_type)) {
+        echo ' ';
+        $libitem->display_art(10);
         }
         echo '</div>';
          */

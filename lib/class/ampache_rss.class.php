@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 /**
  * Ampache_RSS Class
  *
@@ -62,7 +64,7 @@ class Ampache_RSS
             if ($params != null && is_array($params)) {
                 $object_type = $params['object_type'];
                 $object_id   = $params['object_id'];
-                if (Core::is_library_item($object_type)) {
+                if (InterfaceImplementationChecker::is_library_item($object_type)) {
                     $libitem = new $object_type($object_id);
                     if ($libitem->id) {
                         $libitem->format();

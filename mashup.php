@@ -20,12 +20,14 @@
  *
  */
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 require_once 'lib/init.php';
 
 session_start();
 
 $object_type = Core::get_request('action');
-if (!Core::is_library_item($object_type)) {
+if (!InterfaceImplementationChecker::is_library_item($object_type)) {
     return UI::access_denied();
 }
 

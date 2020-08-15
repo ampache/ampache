@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -89,7 +92,7 @@ class Graph
         }
 
         $object_id = (int) ($object_id);
-        if (Core::is_library_item($object_type)) {
+        if (InterfaceImplementationChecker::is_library_item($object_type)) {
             $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
             if ($object_id > 0) {
                 $sql .= " AND `object_count`.`object_id` = '" . $object_id . "'";
@@ -677,7 +680,7 @@ class Graph
 
         $libitem  = null;
         $owner_id = 0;
-        if (($object_id) && (Core::is_library_item($object_type))) {
+        if (($object_id) && (InterfaceImplementationChecker::is_library_item($object_type))) {
             $libitem  = new $object_type($object_id);
             $owner_id = $libitem->get_user_owner();
         }

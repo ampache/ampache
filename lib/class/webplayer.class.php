@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -96,7 +99,7 @@ class WebPlayer
     public static function get_media_object($urlinfo)
     {
         $media = null;
-        if ($urlinfo['id'] && Core::is_media($urlinfo['type'])) {
+        if ($urlinfo['id'] && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
             $media = new $urlinfo['type']($urlinfo['id']);
         } else {
             if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
