@@ -18,6 +18,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Generate rsstokens for each user allowing unique feed URLs
 * NEW database options
   * rsstoken: Identify users by token when generating RSS feeds
+* Add 'Original Year', 'Release Type' to Album searches
 
 ### Changed
 

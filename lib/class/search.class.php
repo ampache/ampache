@@ -978,6 +978,13 @@ class Search extends playlist_object
             'widget' => array('input', 'number')
         );
 
+        $this->types[] = array(
+            'name' => 'original_year',
+            'label' => T_('Original Year'),
+            'type' => 'numeric',
+            'widget' => array('input', 'number')
+        );
+
         if (AmpConfig::get('ratings')) {
             $this->myrating();
             $this->rating();
@@ -986,6 +993,13 @@ class Search extends playlist_object
         $this->played_times();
         $this->last_play();
         $this->total_time();
+
+        $this->types[] = array(
+            'name' => 'release_type',
+            'label' => T_('Release Type'),
+            'type' => 'text',
+            'widget' => array('input', 'text')
+        );
 
         if (AmpConfig::get('userflags')) {
             $this->favorite();
@@ -1002,7 +1016,6 @@ class Search extends playlist_object
             'type' => 'user_numeric',
             'widget' => array('select', $users)
         );
-
         $this->types[] = array(
             'name' => 'tag',
             'label' => T_('Tag'),
@@ -1619,7 +1632,8 @@ class Search extends playlist_object
                                "' ', `album`.`name`)) $sql_match_operator '$input')";
                 break;
                 case 'year':
-                    $where[] = "`album`.`year` $sql_match_operator '$input'";
+                case 'original_year':
+                    $where[] = "`album`.`" . $rule[0] . "` $sql_match_operator '$input'";
                 break;
                 case 'time':
                     $input    = $input * 60;
@@ -1687,6 +1701,9 @@ class Search extends playlist_object
                         "WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' " .
                         "GROUP BY `object_count`.`object_id` HAVING COUNT(*) $sql_match_operator '$input')";
                 break;
+                case 'release_type':
+                    $where[] = "`album`.`release_type` $sql_match_operator '$input' ";
+                    break;
                 case 'other_user':
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
