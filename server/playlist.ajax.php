@@ -55,9 +55,6 @@ switch ($_REQUEST['action']) {
     break;
     case 'append_item':
         // Only song item are supported with playlists
-
-        debug_event('playlist.ajax', 'Appending items to playlist {' . Core::get_request('playlist_id') . '}...', 5);
-
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
             if (!Access::check('interface', 25)) {
                 debug_event('playlist.ajax', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', 1);
@@ -66,11 +63,10 @@ switch ($_REQUEST['action']) {
 
             $name        = $_REQUEST['name'];
             if (empty($name)) {
-                $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-                $name        = Core::get_global('user')->username . ' - ' . get_datetime($time_format, time());
+                $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
             }
             $playlist_id = (int) Playlist::create($name, 'private');
-            if ($playlist_id > 0) {
+            if ($playlist_id < 1) {
                 break;
             }
             $playlist = new Playlist($playlist_id);
@@ -81,6 +77,7 @@ switch ($_REQUEST['action']) {
         if (!$playlist->has_access()) {
             break;
         }
+        debug_event('playlist.ajax', 'Appending items to playlist {' . $playlist->id . '}...', 5);
 
         $medias    = array();
         $item_id   = $_REQUEST['item_id'];

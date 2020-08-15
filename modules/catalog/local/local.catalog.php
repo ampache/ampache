@@ -549,14 +549,14 @@ class Catalog_local extends Catalog
         set_time_limit(0);
 
         $stats         = self::get_stats($this->id);
-        $number        = $stats['videos'] + $stats['songs'];
+        $number        = $stats['items'];
         $total_updated = 0;
         $this->count   = 0;
 
         $this->update_last_update();
 
         foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type . 's']; // UGLY
+            $total = $stats['items'];
             if ($total == 0) {
                 continue;
             }
@@ -651,7 +651,7 @@ class Catalog_local extends Catalog
         $stats       = self::get_stats($this->id);
         $this->count = 0;
         foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type . 's']; // UGLY
+            $total = $stats['items'];
             if ($total == 0) {
                 continue;
             }

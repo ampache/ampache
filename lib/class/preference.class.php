@@ -460,7 +460,7 @@ class Preference extends database_object
                "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'), " .
                "(83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'), " .
                "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'library'), " .
-               "(85, 'song_page_title', '1', 'Show current song in Web Player page title', 25, 'boolean', 'interface', 'player'), " .
+               "(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player'), " .
                "(86, 'subsonic_backend', '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend'), " .
                "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player'), " .
                "(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', 25, 'boolean', 'streaming', 'player'), " .

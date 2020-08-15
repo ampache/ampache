@@ -55,7 +55,7 @@ if (!file_exists($configfile)) {
 
 // Verify that a few important but commonly disabled PHP functions exist and
 // that we're on a usable version
-if (!check_php() || !check_dependencies_folder()) {
+if (!check_php() || !check_dependencies_folder() || !check_php_intl()) {
     $link = $path . '/test.php';
 }
 
@@ -68,7 +68,7 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluff nothing more... **/
-$results['version']            = '4.3.0-develop';
+$results['version']            = 'develop';
 $results['int_config_version'] = '44';
 
 if (!empty($results['force_ssl'])) {

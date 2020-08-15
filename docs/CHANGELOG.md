@@ -1,17 +1,60 @@
 # CHANGELOG
 
-## 4.3.0-develop
+## Ampache develop
+
+**IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
+This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
+Look here for the code to change your 'custom_datetime' string [(http://userguide.icu-project.org/formatparse/datetime)]
+
+This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
 
-* Numeric (1-5) searches now include 0 to show unrated objects.
+* php-intl is now required for translation of date formats into your locale
 * Numeric 'Played/Skipped ratio' added to search. (Set using (stream/skip)*100.)
   * ```> 0 & < 100 ```: Skipped more than played
   * ```100```: Equal plays and skips
   * ```> 100```: Played more than skipped
+* Generate rsstokens for each user allowing unique feed URLs
+* NEW database options
+  * rsstoken: Identify users by token when generating RSS feeds
+* Add 'Original Year', 'Release Type' to Album searches
+
+### Changed
+
+* get_datetime(): use IntlDateFormatter to format based on locale. [(https://www.php.net/manual/en/intldateformatter.format.php)]
+* stats.php: Show total 'Item Count'  on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
+* ampache.sql updated after about 4 years... no more updates on install!
+* Searching by "Rating (average)" now ignores private/public and always returns the average.
+
+### Deprecated
+
+* Drop version number from the release string in develop. ('4.3.0-develop' => 'develop')
+  * This should stop a bit of confusion when removing / adding requirements
+* '-release' in version number will be dropped for Ampache 5.0.0
+
+### Fixed
+
+* Fixed a few issues on the Statistics page
+  * Report 'Catalog Size' correctly for podcasts
+  * Report 'Item Count' correctly for podcasts and video catalogs
+* Searching albums for artist name
+
+## 4.2.1-release
+
+**NOTICE** Ampache 4.3.0 will require **php-intl** module/dll to be enabled.
+
+### Added
+
+* Numeric ('1 Star'-'5 Stars') searches now include '0 Stars' to show unrated objects
 * Ajax refresh localplay "Now Playing" same as the index "Now Playing" section
+* Add 'has not rated' to "Another User" searches
+* Add higher bitrates (640, 1280) to search to allow for lossless files
+* Put strings ('1 Star', '2 Stars', etc) back into numeric searches for ratings
+* When using a string title for numeric searches use the order of the items starting with 0
 * NEW files
   * Include API docs from the wiki. (API.md, API-JSON-methods.md, API-XML-methods.md, API-advanced-search.md)
+* 'Filters' added to each sidebar tab if enabled (previously only 'Home' and 'Admin')
 
 ### Changed
 
@@ -21,14 +64,25 @@
 * Require minimum version of Ampache 3.8.2 to upgrade database
 * Added an icon to webplayer to go to album. Clicking on song title now directs to song
 
+### Fixed
+
+* Waveform config option 'get_tmp_dir' was ignored if set
+* Rightbar: 'Add to New Playlist' not adding on new playlists
+* Translate preference subcategories and status
+* 'podcast_new_download' logic fix
+* Filters box would show up in the Admin tab if you disabled 'browse_filter'
+* Update album when 'release_type' changes
+* Parse 'Release Type' from tags in a less terrible way
+
+### API 4.2.1
+
+No functional changes from 4.2.0
+
+### Fixed
+
+* Filter in "playlist" and "playlist_songs" fixed
+
 ## 4.2.0-release
-
-A big visual change in the interface is that Ampache now defaults to US time for dates. ('Month/Day/Year')
-For everyone who isn't American you have control over date formats using custom_datetime.
-Admin => Server Config => Interface => Custom datetime
-
-e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
-Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
 
 The API changelog for this version has been separated into a new sub-heading below to make it easier to follow.
 
@@ -51,7 +105,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Tag->f_name (New property on tag that was being set hackily)
 * Add "Album" to Find Duplicates in admin/duplicates.php.
 * "Local Image" added to Artist & Album search. Find out whether you have art stored in Ampache
-* PHP_CodeSniffer checks and settings added to Scrutinizer. (phpcs --standard=.phpcs.xml lib/class) 
+* PHP_CodeSniffer checks and settings added to Scrutinizer. (phpcs --standard=.phpcs.xml lib/class)
 * NEW database options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the UI. (disabled by default)
@@ -92,7 +146,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Searches using numeric rules must use an integer. ('1 Star' => 1, '2 Stars' => 2, etc)
 * bin/delete_disabled.inc require -x to execute. (previously you needed to edit the file)
 
-#### Deprecated
+### Deprecated
 
 * Horde_Browser::getIPAddress(). Use Core::get_user_ip() instead.
 
@@ -187,7 +241,7 @@ API 5.0.0-release will be the first Ampache release to match the release string.
   * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
 * Random albums will get songs for all disks if album_group enabled
 
-#### Deprecated
+### Deprecated
 
 * API Build number is depreciated (the last 3 digits of the api version)
   * API 5.0.0 will be released with a string version ("5.0.0-release")

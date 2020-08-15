@@ -569,13 +569,12 @@ abstract class Catalog extends database_object
      */
     public function format()
     {
-        $time_format    = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         $this->f_name   = $this->name;
         $this->link     = AmpConfig::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
         $this->f_link   = '<a href="' . $this->link . '" title="' . scrub_out($this->name) . '">' . scrub_out($this->f_name) . '</a>';
-        $this->f_update = $this->last_update ? get_datetime($time_format, (int) $this->last_update) : T_('Never');
-        $this->f_add    = $this->last_add ? get_datetime($time_format, (int) $this->last_add) : T_('Never');
-        $this->f_clean  = $this->last_clean ? get_datetime($time_format, (int) $this->last_clean) : T_('Never');
+        $this->f_update = $this->last_update ? get_datetime((int) $this->last_update) : T_('Never');
+        $this->f_add    = $this->last_add ? get_datetime((int) $this->last_add) : T_('Never');
+        $this->f_clean  = $this->last_clean ? get_datetime((int) $this->last_clean) : T_('Never');
     }
 
     /**
@@ -644,14 +643,13 @@ abstract class Catalog extends database_object
      */
     public static function get_stats($catalog_id = null)
     {
-        $results         = self::count_medias($catalog_id);
-        $results         = array_merge(User::count(), $results);
-        $results['tags'] = self::count_tags();
+        $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::count_server();
+        $counts         = array_merge(User::count(), $counts);
+        $counts['tags'] = self::count_tags();
 
-        $hours = floor($results['time'] / 3600);
+        $counts['formatted_size'] = UI::format_bytes($counts['size']);
 
-        $results['formatted_size'] = UI::format_bytes($results['size']);
-
+        $hours = floor($counts['time'] / 3600);
         $days  = floor($hours / 24);
         $hours = $hours % 24;
 
@@ -660,9 +658,9 @@ abstract class Catalog extends database_object
         $time_text .= ", $hours ";
         $time_text .= nT_('hour', 'hours', $hours);
 
-        $results['time_text'] = $time_text;
+        $counts['time_text'] = $time_text;
 
-        return $results;
+        return $counts;
     }
 
     /**
@@ -738,75 +736,85 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_medias
+     * count_server
      *
      * This returns the current number of songs, videos, albums, and artists
-     * in this catalog.
-     * @param integer|null $catalog_id
+     * across all catalogs on the server
+     * @param bool $enabled
      * @return array
      */
-    public static function count_medias($catalog_id = null)
+    public static function count_server($enabled = false)
+    {
+        // tables with media items to count, song-related tables and the rest
+        $media_tables = array('song', 'video', 'podcast_episode');
+        $song_tables  = array('artist', 'album');
+        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog');
+
+        $results = array();
+        $items   = '0';
+        $time    = '0';
+        $size    = '0';
+        foreach ($media_tables as $table) {
+            $enabled_sql = ($enabled) ? " WHERE `$table`.`enabled`='1'" : '';
+            $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
+            $db_results  = Dba::read($sql);
+            $data        = Dba::fetch_row($db_results);
+            // save the object and add to the current size
+            $results[$table] = $data[0];
+            $items += $data[0];
+            $time += $data[1];
+            $size += $data[2];
+        }
+        // return the totals for all media tables
+        $results['items'] = $items;
+        $results['size']  = $size;
+        $results['time']  = $time;
+
+        foreach ($song_tables as $table) {
+            $sql        = "SELECT COUNT(DISTINCT(`$table`)) FROM `song`";
+            $db_results = Dba::read($sql);
+            $data       = Dba::fetch_row($db_results);
+            // save the object count
+            $results[$table] = $data[0];
+        }
+
+        foreach ($list_tables as $table) {
+            $sql        = "SELECT COUNT(`id`) FROM `$table`";
+            $db_results = Dba::read($sql);
+            $data       = Dba::fetch_row($db_results);
+            // save the object count
+            $results[$table] = $data[0];
+        }
+
+        return $results;
+    }
+
+    /**
+     * count_catalog
+     *
+     * This returns the current number of songs, videos, podcast_episodes in this catalog.
+     * @param integer $catalog_id
+     * @return array
+     */
+    public static function count_catalog($catalog_id)
     {
         $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
         $params    = $catalog_id ? array($catalog_id) : array();
+        $results   = array();
+        $catalog   = self::create_from_id($catalog_id);
 
-        $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `song` ' .
-            $where_sql;
-        $db_results = Dba::read($sql, $params);
-        $data       = Dba::fetch_row($db_results);
-        $songs      = $data[0];
-        $time       = $data[1];
-        $size       = $data[2];
-
-        $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `video` ' .
-            $where_sql;
-        $db_results = Dba::read($sql, $params);
-        $data       = Dba::fetch_row($db_results);
-        $videos     = $data[0];
-        $time += $data[1];
-        $size += $data[2];
-
-        $sql        = 'SELECT COUNT(DISTINCT(`album`)) FROM `song` ' . $where_sql;
-        $db_results = Dba::read($sql, $params);
-        $data       = Dba::fetch_row($db_results);
-        $albums     = $data[0];
-
-        $sql        = 'SELECT COUNT(DISTINCT(`artist`)) FROM `song` ' . $where_sql;
-        $db_results = Dba::read($sql, $params);
-        $data       = Dba::fetch_row($db_results);
-        $artists    = $data[0];
-
-        $sql            = 'SELECT COUNT(`id`) FROM `search`';
-        $db_results     = Dba::read($sql, $params);
-        $data           = Dba::fetch_row($db_results);
-        $smartplaylists = $data[0];
-
-        $sql        = 'SELECT COUNT(`id`) FROM `playlist`';
-        $db_results = Dba::read($sql, $params);
-        $data       = Dba::fetch_row($db_results);
-        $playlists  = $data[0];
-
-        $sql          = 'SELECT COUNT(`id`) FROM `live_stream`';
-        $db_results   = Dba::read($sql, $params);
-        $data         = Dba::fetch_row($db_results);
-        $live_streams = $data[0];
-
-        $sql          = 'SELECT COUNT(`id`) FROM `podcast`';
-        $db_results   = Dba::read($sql, $params);
-        $data         = Dba::fetch_row($db_results);
-        $podcasts     = $data[0];
-
-        $results                   = array();
-        $results['songs']          = $songs;
-        $results['videos']         = $videos;
-        $results['albums']         = $albums;
-        $results['artists']        = $artists;
-        $results['playlists']      = $playlists;
-        $results['smartplaylists'] = $smartplaylists;
-        $results['live_stream']    = $live_streams;
-        $results['podcasts']       = $podcasts;
-        $results['size']           = $size;
-        $results['time']           = $time;
+        if ($catalog->id) {
+            $table = self::get_table_from_type($catalog->gather_types);
+            if ($table == 'podcast_episode' && $catalog_id) {
+                $where_sql = "WHERE `podcast` IN ( SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
+            }
+            $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `" . $table . "` " . $where_sql;
+            $db_results       = Dba::read($sql, $params);
+            $data             = Dba::fetch_row($db_results);
+            $results['items'] = $data[0];
+            $results['time']  = $data[1];
+            $results['size']  = $data[2];
+        }
 
         return $results;
     }
@@ -1856,7 +1864,7 @@ abstract class Catalog extends database_object
         $disk             = $results['disk'];
         // year is also included in album
         $album_mbid_group = $results['mb_albumid_group'];
-        $releasetype      = $results['releasetype'];
+        $release_type     = $results['release_type'];
         $albumartist      = self::check_length($results['albumartist'] ?: $results['band']);
         $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
@@ -1871,7 +1879,7 @@ abstract class Catalog extends database_object
 
         // check whether this album exists
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
-                                        $new_song->albumartist, $releasetype, false, $original_year, $barcode, $catalog_number);
+                                        $new_song->albumartist, $release_type, false, $original_year, $barcode, $catalog_number);
 
         // set `song`.`update_time` when artist or album details change
         $update_time = time();
@@ -2096,6 +2104,32 @@ abstract class Catalog extends database_object
         }
 
         return $types;
+    }
+
+    /**
+     * get_table_from_type
+     * @param string $gather_type
+     * @return string
+     */
+    public static function get_table_from_type($gather_type)
+    {
+        switch ($gather_type) {
+            case 'clip':
+            case 'tvshow':
+            case 'movie':
+            case 'personal_video':
+                $table = 'video';
+                break;
+            case 'podcast':
+                $table = 'podcast_episode';
+                break;
+            case 'music':
+            default:
+                $table = 'song';
+                break;
+        }
+
+        return $table;
     }
 
     /**
@@ -2622,8 +2656,7 @@ abstract class Catalog extends database_object
         } else {
             $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
         }
-        $db_results      = Dba::read($sql, $params);
-        $time_format     = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : "Y-m-d\TH:i:s\Z";
+        $db_results = Dba::read($sql, $params);
 
         switch ($type) {
             case 'itunes':
@@ -2641,7 +2674,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Total Time']   = (int) ($song->time) * 1000; // iTunes uses milliseconds
                     $xml['dict']['Track Number'] = (int) ($song->track);
                     $xml['dict']['Year']         = (int) ($song->year);
-                    $xml['dict']['Date Added']   = get_datetime($time_format, (int) $song->addition_time);
+                    $xml['dict']['Date Added']   = get_datetime((int) $song->addition_time, 'short', 'short', "Y-m-d\TH:i:s\Z");
                     $xml['dict']['Bit Rate']     = (int) ($song->bitrate / 1000);
                     $xml['dict']['Sample Rate']  = (int) ($song->rate);
                     $xml['dict']['Play Count']   = (int) ($song->played);
@@ -2665,7 +2698,7 @@ abstract class Catalog extends database_object
                         $song->f_time . '","' .
                         $song->f_track . '","' .
                         $song->year . '","' .
-                        get_datetime($time_format, (int) $song->addition_time) . '","' .
+                        get_datetime((int) $song->addition_time) . '","' .
                         $song->f_bitrate . '","' .
                         $song->played . '","' .
                         $song->file . '"' . "\n";

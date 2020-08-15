@@ -7,6 +7,7 @@
 
 **News:**
 
+* Develop branch now has a **mandatory** requirement of php-intl for date formatting.
 * Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
   * Then put your client ID and secret in your ampache config
   * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
@@ -43,7 +44,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
 
 ## Requirements
 
-* A web server. All of the following have been used, though Apache receives the most testing with Apache:
+* A web server. All of the following have been used, though Ampache receives the most testing with Apache:
   * Apache
   * lighttpd
   * nginx
@@ -57,12 +58,14 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * hash
   * session
   * json
+  * intl (Ampache develop)
   * simplexml (optional)
   * curl (optional)
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml
   * php-dom
+  * php-intl (Ampache develop)
 
 * MySQL 5.x / MySQL 8.x / MariaDB 10.x
 

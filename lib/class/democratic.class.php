@@ -597,7 +597,7 @@ class Democratic extends Tmp_Playlist
         self::prune_tracks();
 
         // Clean the votes
-        self::clear_votes();
+        $this->clear_votes();
 
         return true;
     } // clear_playlist

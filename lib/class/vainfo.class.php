@@ -785,7 +785,8 @@ class vainfo
                     $parsed['mb_trackid'] = $data[0];
                     break;
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = $data[0];
+                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) :
+                        implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 default:
                     $parsed[$tagname] = $data[0];
@@ -863,7 +864,8 @@ class vainfo
                     $parsed['mb_trackid'] = $data[0];
                     break;
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = $data[0];
+                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) :
+                        implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'unsyncedlyrics':
                 case 'unsynced lyrics':
@@ -1013,7 +1015,8 @@ class vainfo
                         $parsed['mb_albumartistid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'musicbrainz album type':
-                        $parsed['release_type'] = $id3v2['comments']['text'][$txxx['description']];
+                        $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) :
+                            implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), array('')));
                         break;
                     case 'replaygain_track_gain':
                         $parsed['replaygain_track_gain'] = floatval($txxx['data']);
@@ -1129,7 +1132,8 @@ class vainfo
                     $parsed['mb_artistid'] = $data[0];
                 break;
                 case 'musicbrainz album type':
-                $parsed['release_type'] = $data[0];
+                $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) :
+                    implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                 break;
                 case 'track_number':
                     $parsed['track'] = $data[0];

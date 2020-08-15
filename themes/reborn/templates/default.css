@@ -1,4 +1,5 @@
 /* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,13 +22,75 @@
 
 @font-face {
     font-family: 'DejaVuSansCondensed';
-    src: url('fonts/dejavusanscondensed.eot?') format('embedded-opentype'),  url('fonts/dejavusanscondensed.woff') format('woff'), url('fonts/dejavusanscondensed.ttf') format('truetype'), url('fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
+    src: url('fonts/dejavusanscondensed.eot?') format('embedded-opentype'), url('fonts/dejavusanscondensed.woff') format('woff'), url('fonts/dejavusanscondensed.ttf') format('truetype'), url('fonts/dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
 }
 
-/***********************************************
-           General style rules
-***********************************************/
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td {
+/* --------------------------
+   General style rules
+   -------------------------- */
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
     border: 0;
     outline: 0;
     vertical-align: baseline;
@@ -44,9 +107,9 @@ html {
 }
 
 body {
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     margin: 0;
-    font-family: "DejaVuSansCondensed",Helvetica,Arial,sans-serif;
+    font-family: "DejaVuSansCondensed", Helvetica, Arial, sans-serif;
     font-weight: normal;
     font-size: 16px;
     line-height: 1.5em;
@@ -57,11 +120,15 @@ body#main-page {
     min-width: 1024px;
 }
 
-blockquote,q {
+blockquote,
+q {
     quotes: none;
 }
 
-blockquote:before,blockquote:after,q:before,q:after {
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
     content: none;
 }
 
@@ -95,18 +162,23 @@ hr {
   border-left: 0;
 }
 
-input, button, textarea {
+input,
+button,
+textarea {
     margin: 0;
     font-size: 100%;
     vertical-align: middle;
 }
 
-input[type=password], input[type=text] {
+input[type=password],
+input[type=text] {
     line-height: normal;
     height: 23px;
 }
 
-input[type=password], input[type=text], textarea {
+input[type=password],
+input[type=text],
+textarea {
     padding: 4px 6px;
     background-repeat: repeat-x;
     border: 2px solid;
@@ -118,7 +190,8 @@ input[type=password], input[type=text], textarea {
     box-sizing: border-box;
 }
 
-input[type=button], input[type=submit] {
+input[type=button],
+input[type=submit] {
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
     position: relative;
@@ -132,21 +205,24 @@ input[type=button], input[type=submit] {
     cursor: pointer;
 }
 
-input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, input[type=submit]:focus {
+input[type=button]:hover,
+input[type=button]:focus,
+input[type=submit]:hover,
+input[type=submit]:focus {
     background-position: 0 -10px;
-    -webkit-transition: background-position .1s linear;
-    -moz-transition: background-position .1s linear;
-    -o-transition: background-position .1s linear;
-    transition: background-position .1s linear;
-    text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
     text-decoration: none;
 }
 
 input[type=button]:focus:active, input[type=submit]:focus:active {
-    -webkit-transition: background-position .1s linear;
-    -moz-transition: background-position .1s linear;
-    -o-transition: background-position .1s linear;
-    transition: background-position .1s linear;
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
 }
 
 .box-title {
@@ -154,17 +230,17 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     margin-bottom: 10px;
 }
 
-.alert-danger{
+.alert-danger {
     color: #c33;
 }
 
 div#autoupdate > span {
-    color: #FF0000;
+    color: #f00;
 }
 
-/***********************************************
-           Main
-***********************************************/
+/* --------------------------
+   Main
+   -------------------------- */
 #maincontainer {
     width: 100%;
     position: relative;
@@ -184,9 +260,9 @@ div#autoupdate > span {
     width: 120px;
 }
 
-/***********************************************
-           Header
-***********************************************/
+/* --------------------------
+   Header
+   -------------------------- */
 #header {
     z-index: 5;
     height: 64px;
@@ -209,7 +285,7 @@ div#autoupdate > span {
     display: none;
 }
 
-#header #headerlogo, #header #headerbox , #header .box_headerbox, #header .box-inside, #header .box-content {
+#header #headerlogo, #header #headerbox, #header .box_headerbox, #header .box-inside, #header .box-content {
     height: 100%;
     overflow: hidden;
 }
@@ -241,7 +317,7 @@ div#autoupdate > span {
     width: 100%;
 }
 
-#sb_Subsearch , #play_type_switch {
+#sb_Subsearch, #play_type_switch {
     display: inline-block;
     margin: 15px auto auto 50px;
 }
@@ -283,9 +359,9 @@ div#autoupdate > span {
     vertical-align: bottom;
 }
 
-/***********************************************
-           Login / Registration
-***********************************************/
+/* --------------------------
+   Login / Registration
+   -------------------------- */
 #loginPage #maincontainer,
 #registerPage #maincontainer {
     -webkit-border-radius: 2px;
@@ -464,9 +540,9 @@ div#autoupdate > span {
     margin-bottom: 10px;
 }
 
-/***********************************************
-           Sidebar
-***********************************************/
+/* --------------------------
+   Sidebar
+   -------------------------- */
 #sidebar {
     font-size: 12px;
 }
@@ -609,10 +685,10 @@ div#autoupdate > span {
     width: 100%;
     margin: 0 0 0 5px;
     background-color: transparent;
-    -webkit-transition: color .1s;
-    -moz-transition: color .1s;
-    -o-transition: color .1s;
-    transition: color .1s;
+    -webkit-transition: color 0.1s;
+    -moz-transition: color 0.1s;
+    -o-transition: color 0.1s;
+    transition: color 0.1s;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -694,9 +770,9 @@ span#sidebar-header-content::after {
     position: absolute;
 }
 
-/***********************************************
-                  Rightbar
-***********************************************/
+/* --------------------------
+   Rightbar
+   -------------------------- */
 #rightbar {
     position: fixed;
     right: 10px;
@@ -728,7 +804,7 @@ span#sidebar-header-content::after {
     top: 33px !important;
     right: 15px !important;
 }
-/******************************/
+/* ---------------------------- */
 
 #rightbar #rb_action {
     list-style-type: none;
@@ -737,7 +813,7 @@ span#sidebar-header-content::after {
 #rightbar #rb_action li {
     display: inline;
     margin-right: 5px;
-    padding-bottom: 3px
+    padding-bottom: 3px;
 }
 
 #rightbar li #rb_add, #rightbar li #pl_add {
@@ -812,15 +888,15 @@ span#sidebar-header-content::after {
     vertical-align: bottom;
 }
 
-/***********************************************
-           Content
-***********************************************/
+/* --------------------------
+   Content
+   -------------------------- */
 #content {
     z-index: 3000000;
-    -webkit-transition: top .5s;
-    -moz-transition: top .5s;
-    -o-transition: top .5s;
-    transition: top .5s;
+    -webkit-transition: top 0.5s;
+    -moz-transition: top 0.5s;
+    -o-transition: top 0.5s;
+    transition: top 0.5s;
     width: auto;
     max-height: 85%;
     -webkit-border-radius: 2px;
@@ -868,9 +944,9 @@ span#sidebar-header-content::after {
 
 table.tabledata {
     width: 100%;
-    /*table-layout: fixed;*/
+    /* table-layout: fixed; */
     text-align: left;
-    /*border:1px solid #bbb;*/
+    /* border:1px solid #bbb; */
     font-size: 14px;
     margin-bottom: 20px;
 }
@@ -930,6 +1006,7 @@ table.tabledata tbody .cel_play_hover {
 table.tabledata tbody tr:hover .cel_play_hover, table.tabledata tbody tr:focus .cel_play_hover {
     display: block;
 }
+
 table.tabledata tbody tr:hover .cel_play_content, table.tabledata tbody tr:focus .cel_play_content {
     display: none;
 }
@@ -1081,9 +1158,9 @@ table.disablegv td.cel_rating {
     display: grid;
 }
 
-/***********************************************
-           Content (info-box)
-***********************************************/
+/* --------------------------
+   Content (info-box)
+   -------------------------- */
 #content .info-box h3 {
     margin-top: 10px;
 }
@@ -1170,9 +1247,9 @@ div.box.box_rules {
     overflow: hidden;
 }
 
-/***********************************************
+/* --------------------------
     Content (now playing)
-***********************************************/
+   -------------------------- */
 #now_playing {
     margin-bottom: 20px;
     width: auto;
@@ -1253,9 +1330,9 @@ div.box.box_rules {
     margin-right: 30px;
 }
 
-/***********************************************
+/* --------------------------
     Content (Tag cloud)
-***********************************************/
+   -------------------------- */
 .box_tag_cloud {
     margin-bottom: 15px;
 }
@@ -1300,36 +1377,36 @@ span.fatalerror {
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
     border-radius: 2px 4px 4px 2px;
     background-color: #5f5f5f;
-    background-image: -moz-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: -ms-linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -moz-linear-gradient(top, #6d6d6d,#4a4a4a);
+    background-image: -ms-linear-gradient(top, #6d6d6d,#4a4a4a);
     background-image: -webkit-gradient(linear,0 0,0 100%,from(#6d6d6d),to(#4a4a4a));
-    background-image: -webkit-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: -o-linear-gradient(top,#6d6d6d,#4a4a4a);
-    background-image: linear-gradient(top,#6d6d6d,#4a4a4a);
+    background-image: -webkit-linear-gradient(top, #6d6d6d,#4a4a4a);
+    background-image: -o-linear-gradient(top, #6d6d6d,#4a4a4a);
+    background-image: linear-gradient(top, #6d6d6d,#4a4a4a);
     border-bottom-color: #b3b3b3;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),inset -1px 0 0 rgba(0,0,0,0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),inset -1px 0 0 rgba(0,0,0,0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),inset -1px 0 0 rgba(0,0,0,0.2);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
 }
 
 .box-content #tag_filter .tag_button span:hover {
     background-repeat: repeat-x;
 }
 
-.box-content #tag_filter li{
+.box-content #tag_filter li {
     height: 16px;
 }
 
-/***********************************************
+/* --------------------------
     Content (inline edit)
-***********************************************/
+   -------------------------- */
 .inline-edit select {
     max-width: 200px;
 }
 
-/***********************************************
+/* --------------------------
     Content (information-actions)
-***********************************************/
+   -------------------------- */
 #information_actions {
     margin: 20px 0 10px 0;
     width: 300px;
@@ -1426,12 +1503,12 @@ span.fatalerror {
     display: block;
 }
 
-#information_actions ul li{
+#information_actions ul li {
     border-radius: 4px;
-    -webkit-transition: color .1s;
-    -moz-transition: color .1s;
-    -o-transition: color .1s;
-    transition: color .1s;
+    -webkit-transition: color 0.1s;
+    -moz-transition: color 0.1s;
+    -o-transition: color 0.1s;
+    transition: color 0.1s;
 }
 
 #information_actions h3 {
@@ -1487,9 +1564,9 @@ span.fatalerror {
     margin-right: 260px;
 }
 
-/************************************************/
-/*        Styles for the star ratings           */
-/************************************************/
+/* -------------------------
+    Styles for star ratings
+   ------------------------- */
 .star-rating {
     position: relative;
 }
@@ -1553,9 +1630,9 @@ span.fatalerror {
     left: 16px;
 }
 
-/************************************************/
-/*        Styles for user flags                 */
-/************************************************/
+/* ------------------------
+    Styles for user flags
+   ------------------------ */
 .userflag {
     position: relative;
     width: 16px;
@@ -1577,9 +1654,9 @@ span.fatalerror {
     height: 16px;
 }
 
-/***********************************************
-        Content (Track view)
-***********************************************/
+/* --------------------------
+   Content (Track view)
+   -------------------------- */
 .media_details {
     margin-top: 20px;
 }
@@ -1596,9 +1673,9 @@ dl.media_details dd {
     min-height: 24px;
 }
 
-/***********************************************
-        Footer
-***********************************************/
+/* --------------------------
+   Footer
+   -------------------------- */
 #footer {
     bottom: 0;
     margin: 15px 250px 0 0;
@@ -1616,9 +1693,9 @@ dl.media_details dd {
     text-decoration: underline;
 }
 
-/***********************************************
-        Other
-***********************************************/
+/* --------------------------
+   Other
+   -------------------------- */
 ol, ul, #rightbar ul {
     list-style: none;
 }

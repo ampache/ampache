@@ -411,7 +411,7 @@ class XML_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param    array    $licenses    (description here...)
+     * @param    integer[]    $licenses    (description here...)
      * @return    string    return xml
      */
     public static function licenses($licenses)
@@ -471,7 +471,7 @@ class XML_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param array $artists (description here...)
+     * @param integer[] $artists (description here...)
      * @param array $include Array of other items to include.
      * @param integer $user_id
      * @param boolean $full_xml whether to return a full XML document or just the node.

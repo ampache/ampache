@@ -1,4 +1,4 @@
-## advanced_search 4.3.0
+## advanced_search Ampache develop
 
 Advanced search is the API method to access the search rules used in the WEB UI. It can be confusing to process how the rules are generated so this has been split into it's own page.
 
@@ -69,7 +69,7 @@ Select the type of search based on the type of data you are searching for. (song
 
 Select your operator (integer only!) based on the type or your selected search
 
-|rule_1_operator|Text / Tags / Metadata          |Numeric / user_numeric                       |Date     |Boolean, Numeric, Subsearch / Days|        
+|rule_1_operator|Text / Tags / Metadata          |Numeric / user_numeric                       |Date     |Boolean, Numeric, Subsearch / Days|
 |:-------------:|-------------------------------|---------------------------------------------|---------|----------------------------------|
 |0              |contains                       |is greater than or equal to / has loved      |before   |is true / before (x) days ago     |
 |1              |does not contain               |is less than or equal to / has rated 5 stars |after    |is false / after (x) days ago     |
@@ -98,10 +98,10 @@ Currently there is not a simple way to identify what metadata types you have sav
 
 |rule_1_operator | Metadata |
 |--| -- |
-|0 |contains | 
+|0 |contains |
 |1 |does not contain |
 |2 |starts with |
-|3 |ends with | 
+|3 |ends with |
 |4 |is |
 |5 |is not |
 |6 |sounds like (Text Only) |
@@ -134,3 +134,4 @@ To search a mixed type like metadata you must search using 4 rules.
     * type = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video'
     * offset = (integer)
     * limit' = (integer)
+

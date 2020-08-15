@@ -173,9 +173,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         $songprops[T_('Filename')]   = scrub_out($song->file) . " " . $song->f_size;
     }
     if ($song->update_time) {
-        $songprops[T_('Last Updated')]   = get_datetime($time_format, (int) $song->update_time);
+        $songprops[T_('Last Updated')]   = get_datetime((int) $song->update_time);
     }
-    $songprops[T_('Added')]   = get_datetime($time_format, (int) $song->addition_time);
+    $songprops[T_('Added')]   = get_datetime((int) $song->addition_time);
     if (AmpConfig::get('show_played_times')) {
         $songprops[T_('# Played')]   = scrub_out($song->object_cnt);
     }

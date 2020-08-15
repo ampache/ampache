@@ -269,13 +269,13 @@ var FLACDecoder = AV.Decoder.extend(function() {
 
         var a = 0, b = 0, c = 0, d = 0;
 
-        if (predictor_order > 0) 
+        if (predictor_order > 0)
             a = decoded[predictor_order - 1];
 
         if (predictor_order > 1)
             b = a - decoded[predictor_order - 2];
 
-        if (predictor_order > 2) 
+        if (predictor_order > 2)
             c = b - decoded[predictor_order - 2] + decoded[predictor_order - 3];
 
         if (predictor_order > 3)
@@ -445,7 +445,7 @@ var FLACDecoder = AV.Decoder.extend(function() {
             throw new Error('Invalid predictor order ' + predictor_order + ' > ' + samples);
 
         var decoded = this.decoded[channel],
-            sample = predictor_order, 
+            sample = predictor_order,
             i = predictor_order;
 
         for (var partition = 0; partition < (1 << rice_order); partition++) {

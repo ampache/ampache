@@ -255,7 +255,7 @@ class JSON_Data
      * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
-     * @param array $artists (description here...)
+     * @param integer[] $artists (description here...)
      * @param array $include
      * @param integer $user_id
      * @param bool $encode
@@ -324,7 +324,7 @@ class JSON_Data
      *
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
-     * @param array $albums (description here...)
+     * @param integer[] $albums (description here...)
      * @param array $include
      * @param integer $user_id
      * @param bool $encode
@@ -662,7 +662,7 @@ class JSON_Data
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
-     * @param $songs
+     * @param integer[] $songs
      * @param integer $user_id
      * @param bool $encode
      * @return array|string

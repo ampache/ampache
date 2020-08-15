@@ -527,6 +527,10 @@ class Album extends database_object implements library_item
             $sql .= 'AND `album`.`original_year` = ? ';
             $params[] = $original_year;
         }
+        if ($release_type) {
+            $sql .= 'AND `album`.`release_type` = ? ';
+            $params[] = $release_type;
+        }
 
         $db_results = Dba::read($sql, $params);
 

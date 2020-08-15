@@ -47,7 +47,7 @@ set_time_limit(0);
 
 $media_ids    = array();
 $default_name = "Unknown.zip";
-$object_type  = (!$object_type) ? (string) scrub_in(Core::get_request('action')) : $object_type;
+$object_type  = (string) scrub_in(Core::get_request('action'));
 $name         = $default_name;
 
 if ($object_type == 'browse') {
@@ -101,8 +101,7 @@ if (Core::is_playable_item($object_type)) {
                     break;
                 } // switch on type
             } // foreach media_id
-            $time_format = AmpConfig::get('custom_datetime') ? preg_replace("/[^dmY\s]/", "", (string) AmpConfig::get('custom_datetime')) : "m-d-Y";
-            $name        = 'Batch-' . get_datetime($time_format, time());
+            $name = 'Batch-' . get_datetime(time(), 'short', 'none', 'y-MM-dd');
         break;
         default:
             // Rien a faire

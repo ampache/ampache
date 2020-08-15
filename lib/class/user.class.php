@@ -88,6 +88,10 @@ class User extends database_object
      * @var string $apikey
      */
     public $apikey;
+    /**
+     * @var string $rsstoken
+     */
+    public $rsstoken;
 
     // Constructed variables
     /**
@@ -359,6 +363,25 @@ class User extends database_object
 
         return $users;
     } // get_from_website
+
+    /**
+     * get_from_rsstoken
+     * This returns a built user from a rsstoken. This is a
+     * static function so it doesn't require an instance
+     * @param $rsstoken
+     * @return User|null
+     */
+    public static function get_from_rsstoken($rsstoken)
+    {
+        $user_id    = null;
+        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
+        $db_results = Dba::read($sql, array($rsstoken));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user_id = new User($results['id']);
+        }
+
+        return $user_id;
+    } // get_from_rsstoken
 
     /**
      * get_catalogs
@@ -806,7 +829,21 @@ class User extends database_object
         debug_event('user.class', 'Updating apikey', 4);
 
         Dba::write($sql, array($new_apikey, $this->id));
-    } // update_website
+    } // update_apikey
+
+    /**
+     * update_rsstoken
+     * Updates their RSS token
+     * @param string $new_rsstoken
+     */
+    public function update_rsstoken($new_rsstoken)
+    {
+        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
+
+        debug_event('user.class', 'Updating rsstoken', 4);
+
+        Dba::write($sql, array($new_rsstoken, $this->id));
+    } // update_rsstoken
 
     /**
      * generate_apikey
@@ -816,6 +853,16 @@ class User extends database_object
     {
         $apikey = hash('md5', time() . $this->username . $this->get_password());
         $this->update_apikey($apikey);
+    }
+
+    /**
+     * generate_rsstoken
+     * Generate a new user RSS token
+     */
+    public function generate_rsstoken()
+    {
+        $rsstoken = bin2hex(random_bytes(32));
+        $this->update_rsstoken($rsstoken);
     }
 
     /**
@@ -1075,19 +1122,18 @@ class User extends database_object
         if (!$this->id) {
             return;
         }
-        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         /* If they have a last seen date */
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
         } else {
-            $this->f_last_seen = get_datetime($time_format, (int) $this->last_seen);
+            $this->f_last_seen = get_datetime((int) $this->last_seen);
         }
 
         /* If they have a create date */
         if (!$this->create_date) {
             $this->f_create_date = T_('Unknown');
         } else {
-            $this->f_create_date = get_datetime($time_format, (int) $this->create_date);
+            $this->f_create_date = get_datetime((int) $this->create_date);
         }
 
         $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);

@@ -39,7 +39,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '420000';
+    public static $version = '430000';
 
     /**
      *  @var Browse $browse
@@ -334,47 +334,22 @@ class Api
                 $db_results = Dba::read($sql);
                 $row        = Dba::fetch_assoc($db_results);
 
-                // Now we need to quickly get the song totals
-                $sql        = "SELECT COUNT(`id`) AS `song` FROM `song` WHERE `song`.`enabled`='1'";
-                $db_results = Dba::read($sql);
-                $song       = Dba::fetch_assoc($db_results);
+                // Now we need to quickly get the totals
+                $counts = Catalog::count_server(true);
 
-                $sql        = "SELECT COUNT(`id`) AS `album` FROM `album`";
-                $db_results = Dba::read($sql);
-                $album      = Dba::fetch_assoc($db_results);
-
-                $sql        = "SELECT COUNT(`id`) AS `artist` FROM `artist`";
-                $db_results = Dba::read($sql);
-                $artist     = Dba::fetch_assoc($db_results);
-
-                // Next the video counts
-                $sql        = "SELECT COUNT(`id`) AS `video` FROM `video`";
-                $db_results = Dba::read($sql);
-                $vcounts    = Dba::fetch_assoc($db_results);
-
-                // We consider playlists and smartlists to be playlists
-                $sql        = "SELECT COUNT(`id`) AS `playlist` FROM `playlist` WHERE `type` = 'public' OR `user` = " . $user_id;
-                $db_results = Dba::read($sql);
-                $playlist   = Dba::fetch_assoc($db_results);
-                $sql        = "SELECT COUNT(`id`) AS `smartlist` FROM `search` WHERE `type` = 'public' OR `user` = " . $user_id;
-                $db_results = Dba::read($sql);
-                $smartlist  = Dba::fetch_assoc($db_results);
-
-                $sql        = "SELECT COUNT(`id`) AS `catalog` FROM `catalog` WHERE `catalog_type`='local'";
-                $db_results = Dba::read($sql);
-                $catalog    = Dba::fetch_assoc($db_results);
-                $outarray   = array('auth' => $token,
-                                    'api' => self::$version,
-                                    'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-                                    'update' => date("c", (int) $row['update']),
-                                    'add' => date("c", (int) $row['add']),
-                                    'clean' => date("c", (int) $row['clean']),
-                                    'songs' => (int) $song['song'],
-                                    'albums' => (int) $album['album'],
-                                    'artists' => (int) $artist['artist'],
-                                    'playlists' => ((int) $playlist['playlist'] + (int) $smartlist['smartlist']),
-                                    'videos' => (int) $vcounts['video'],
-                                    'catalogs' => (int) $catalog['catalog']);
+                // send the totals
+                $outarray = array('auth' => $token,
+                                  'api' => self::$version,
+                                  'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
+                                  'update' => date("c", (int) $row['update']),
+                                  'add' => date("c", (int) $row['add']),
+                                  'clean' => date("c", (int) $row['clean']),
+                                  'songs' => (int) $counts['song'],
+                                  'albums' => (int) $counts['album'],
+                                  'artists' => (int) $counts['artist'],
+                                  'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
+                                  'videos' => (int) $counts['video'],
+                                  'catalogs' => (int) $counts['catalog']);
                 switch ($input['format']) {
                     case 'json':
                         echo json_encode($outarray, JSON_PRETTY_PRINT);
@@ -1403,11 +1378,11 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = (int) scrub_in($input['filter']);
+        $uid  = scrub_in($input['filter']);
 
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
-            $playlist = new Playlist($uid);
+            $playlist = new Playlist((int) $uid);
         } else {
             // Smartlists
             $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
@@ -1448,11 +1423,11 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = (int) scrub_in($input['filter']);
+        $uid  = scrub_in($input['filter']);
         debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
-            $playlist = new Playlist($uid);
+            $playlist = new Playlist((int) $uid);
         } else {
             // Smartlists
             $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);

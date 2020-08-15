@@ -360,12 +360,12 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/artists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['artists'],
+                            'childCount' => $counts['artist'],
                             'dc:title' => T_('Artists'),
                             'upnp:class' => 'object.container',
                         );
@@ -384,12 +384,12 @@ class Upnp_Api
             case 'albums':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/albums',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['albums'],
+                            'childCount' => $counts['album'],
                             'dc:title' => T_('Albums'),
                             'upnp:class' => 'object.container',
                         );
@@ -408,12 +408,12 @@ class Upnp_Api
             case 'songs':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/songs',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['songs'],
+                            'childCount' => $counts['song'],
                             'dc:title' => T_('Songs'),
                             'upnp:class' => 'object.container',
                         );
@@ -432,12 +432,12 @@ class Upnp_Api
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/playlists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['playlists'],
+                            'childCount' => $counts['playlist'],
                             'dc:title' => T_('Playlists'),
                             'upnp:class' => 'object.container',
                         );
@@ -456,12 +456,12 @@ class Upnp_Api
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['smartplaylists'],
+                            'childCount' => $counts['smartplaylist'],
                             'dc:title' => T_('Smart Playlists'),
                             'upnp:class' => 'object.container',
                         );
@@ -480,12 +480,12 @@ class Upnp_Api
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/live_streams',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['live_streams'],
+                            'childCount' => $counts['live_stream'],
                             'dc:title' => T_('Radio Stations'),
                             'upnp:class' => 'object.container',
                         );
@@ -504,12 +504,12 @@ class Upnp_Api
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/podcasts',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['podcasts'],
+                            'childCount' => $counts['podcast'],
                             'dc:title' => T_('Podcasts'),
                             'upnp:class' => 'object.container',
                         );
@@ -1067,7 +1067,7 @@ class Upnp_Api
             'restricted' => '1',
             'childCount' => $artist->albums,
             'dc:title' => self::_replaceSpecialSymbols($artist->f_name),
-            'upnp:class' => 'object.container',   // object.container.person.musicArtist
+            'upnp:class' => 'object.container', // object.container.person.musicArtist
         );
     }
 
@@ -1087,7 +1087,7 @@ class Upnp_Api
             'restricted' => '1',
             'childCount' => $album->song_count,
             'dc:title' => self::_replaceSpecialSymbols($album->f_title),
-            'upnp:class' => 'object.container',  // object.container.album.musicAlbum
+            'upnp:class' => 'object.container', // object.container.album.musicAlbum
             'upnp:albumArtURI' => $art_url,
         );
     }
@@ -1105,7 +1105,7 @@ class Upnp_Api
             'restricted' => '1',
             'childCount' => count($playlist->get_items()),
             'dc:title' => self::_replaceSpecialSymbols($playlist->f_name),
-            'upnp:class' => 'object.container',  // object.container.playlistContainer
+            'upnp:class' => 'object.container', // object.container.playlistContainer
         );
     }
 
