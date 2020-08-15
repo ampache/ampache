@@ -23,6 +23,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
+
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 if (!defined('AJAX_INCLUDE')) {
     return false;
 }
@@ -83,7 +86,7 @@ switch ($_REQUEST['action']) {
         $item_id   = $_REQUEST['item_id'];
         $item_type = $_REQUEST['item_type'];
 
-        if (!empty($item_type) && Core::is_playable_item($item_type)) {
+        if (!empty($item_type) && InterfaceImplementationChecker::is_playable_item($item_type)) {
             debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
             $item_ids = explode(',', $item_id);
             foreach ($item_ids as $iid) {

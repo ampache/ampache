@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use SpotifyWebAPI\SpotifyWebAPI;
@@ -98,7 +99,7 @@ class Art extends database_object
      */
     public static function is_valid_type($type)
     {
-        return (Core::is_library_item($type) || $type == 'user');
+        return (InterfaceImplementationChecker::is_library_item($type) || $type == 'user');
     }
 
     /**

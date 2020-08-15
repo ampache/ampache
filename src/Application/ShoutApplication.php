@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Access;
+use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use AmpError;
 use Core;
@@ -62,7 +63,7 @@ final class ShoutApplication implements ApplicationInterface
                     unset($_POST['date']);
                 }
 
-                if (!Core::is_library_item(Core::get_post('object_type'))) {
+                if (!InterfaceImplementationChecker::is_library_item(Core::get_post('object_type'))) {
                     UI::access_denied();
 
                     return;

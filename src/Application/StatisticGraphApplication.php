@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
-use Core;
 use Graph;
 use Session;
 
@@ -49,7 +49,7 @@ final class StatisticGraphApplication implements ApplicationInterface
 
         $user_id     = (int) ($_REQUEST['user_id']);
         $object_type = (string) scrub_in($_REQUEST['object_type']);
-        if (!Core::is_library_item($object_type)) {
+        if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             $object_type = null;
         }
         $object_id  = (int) ($_REQUEST['object_id']);

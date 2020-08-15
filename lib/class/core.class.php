@@ -31,6 +31,8 @@ declare(strict_types=0);
 class Core
 {
     /**
+     * @deprecated An empty constructor which returns false? Seems to be garbage
+     *
      * constructor
      * This doesn't do anything
      */
@@ -49,7 +51,6 @@ class Core
      */
     public static function autoload($class)
     {
-        $possiblePaths = array();
         if (strpos($class, '\\') === false) {
             $possiblePaths = self::getNonNamespacedPaths($class);
         } else {
@@ -139,6 +140,8 @@ class Core
     }
 
     /**
+     * @deprecated Not in use
+     *
      * get_cookie
      * Return a $COOKIE variable instead of calling directly
      *
@@ -372,7 +375,6 @@ class Core
      */
     public static function gen_secure_token($length)
     {
-        $buffer = '';
         if (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
@@ -522,49 +524,6 @@ class Core
         }
 
         return false;
-    }
-
-    /**
-     * is_class_typeof
-     *
-     * @param $classname
-     * @param string $typeofname
-     * @return boolean
-     */
-    private static function is_class_typeof($classname, $typeofname)
-    {
-        if (class_exists($classname)) {
-            return in_array($typeofname, array_map('strtolower', class_implements($classname)));
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $classname
-     * @return boolean
-     */
-    public static function is_playable_item($classname)
-    {
-        return self::is_class_typeof($classname, 'playable_item');
-    }
-
-    /**
-     * @param $classname
-     * @return boolean
-     */
-    public static function is_library_item($classname)
-    {
-        return self::is_class_typeof($classname, 'library_item');
-    }
-
-    /**
-     * @param $classname
-     * @return boolean
-     */
-    public static function is_media($classname)
-    {
-        return self::is_class_typeof($classname, 'media');
     }
 
     /**

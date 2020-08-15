@@ -25,6 +25,8 @@
  */
 
 // Set that this is an ajax include
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 define('AJAX_INCLUDE', '1');
 require_once __DIR__ . '/../../lib/init.php';
 
@@ -121,7 +123,7 @@ switch ($action) {
         $object_type = $_REQUEST['type'] ?: $_REQUEST['object_type'];
         $object_id   = $_REQUEST['id'] ?: $_REQUEST['object_id'];
 
-        if (Core::is_playable_item($object_type)) {
+        if (InterfaceImplementationChecker::is_playable_item($object_type)) {
             if (!is_array($object_id)) {
                 $object_id = array($object_id);
             }

@@ -25,6 +25,8 @@
  */
 
 // Set that this is an ajax include
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 define('AJAX_INCLUDE', '1');
 
 require_once __DIR__ . '/../../lib/init.php';
@@ -46,7 +48,7 @@ if (empty($type)) {
     $object_type = implode('_', explode('_', $type, -1));
 }
 
-if (!Core::is_library_item($object_type) && $object_type != 'share') {
+if (!InterfaceImplementationChecker::is_library_item($object_type) && $object_type != 'share') {
     debug_event('edit.server', 'Type `' . $type . '` is not based on an item library.', 3);
 
     return false;

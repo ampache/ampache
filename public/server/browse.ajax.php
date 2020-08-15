@@ -25,6 +25,8 @@
  */
 require_once __DIR__ . '/../../lib/init.php';
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 if (!Core::is_session_started()) {
     session_start();
 }
@@ -210,7 +212,7 @@ switch ($_REQUEST['action']) {
         $object_type = Core::get_request('object_type');
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
-        if (Core::is_library_item($object_type) && $object_id > 0) {
+        if (InterfaceImplementationChecker::is_library_item($object_type) && $object_id > 0) {
             Share::display_ui_links($object_type, $object_id);
 
             return false;

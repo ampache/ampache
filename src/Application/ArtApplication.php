@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Access;
+use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Art;
 use Core;
@@ -39,7 +40,7 @@ final class ArtApplication implements ApplicationInterface
 
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-        if (!Core::is_library_item($object_type)) {
+        if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             UI::access_denied();
 
             return;

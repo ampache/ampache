@@ -24,6 +24,9 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
+
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 if (!defined('AJAX_INCLUDE')) {
     return false;
 }
@@ -82,7 +85,7 @@ switch ($_REQUEST['action']) {
         }
         debug_event('stream.ajax', 'Called for ' . $object_type . ': {' . $object_id . '}', 5);
 
-        if (Core::is_playable_item($object_type)) {
+        if (InterfaceImplementationChecker::is_playable_item($object_type)) {
             $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
             if ($_REQUEST['custom_play_action']) {
                 $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];

@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 if (!defined('NO_SESSION')) {
     if (isset($_REQUEST['ssid'])) {
         define('NO_SESSION', 1);
@@ -61,7 +63,7 @@ if (!check_can_zip($object_type)) {
     return false;
 }
 
-if (Core::is_playable_item($object_type)) {
+if (InterfaceImplementationChecker::is_playable_item($object_type)) {
     $object_id = $_REQUEST['id'];
     if (!is_array($object_id)) {
         $object_id = array($object_id);

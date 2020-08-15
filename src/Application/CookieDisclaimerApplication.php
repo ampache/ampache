@@ -25,7 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
+use Core;
 use UI;
 
 final class CookieDisclaimerApplication implements ApplicationInterface
@@ -33,6 +35,12 @@ final class CookieDisclaimerApplication implements ApplicationInterface
     public function run(): void
     {
         UI::show_header();
+        $object_type = Core::get_request('action');
+        if (!InterfaceImplementationChecker::is_library_item($object_type)) {
+            UI::access_denied();
+
+            return;
+        }
 
         require_once AmpConfig::get('prefix') . UI::find_template('cookie_disclaimer.inc.php');
 

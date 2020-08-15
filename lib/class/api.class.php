@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 /**
  * API Class
  *
@@ -1991,7 +1993,7 @@ class Api
             return false;
         }
         $share = array();
-        if (!Core::is_library_item($object_type) || !$object_id) {
+        if (!InterfaceImplementationChecker::is_library_item($object_type) || !$object_id) {
             self::message('error', T_('Wrong library item type'), '401', $input['format']);
         } else {
             $item = new $object_type($object_id);
@@ -3075,7 +3077,7 @@ class Api
             return false;
         }
 
-        if (!Core::is_library_item($type) || !$object_id) {
+        if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
             self::message('error', T_('Wrong library item type'), '401', $input['format']);
         } else {
             $item = new $type($object_id);
@@ -3133,7 +3135,7 @@ class Api
             return false;
         }
 
-        if (!Core::is_library_item($type) || !$object_id) {
+        if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
             self::message('error', T_('Wrong library item type'), '401', $input['format']);
         } else {
             $item = new $type($object_id);

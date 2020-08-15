@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 /**
  * Tag Class
  *
@@ -107,7 +109,7 @@ class Tag extends database_object implements library_item
             return false;
         }
 
-        if (!Core::is_library_item($type)) {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
             return false;
         }
 
@@ -152,7 +154,7 @@ class Tag extends database_object implements library_item
      */
     public static function add($type, $object_id, $value, $user = true)
     {
-        if (!Core::is_library_item($type)) {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
             return false;
         }
 
@@ -327,7 +329,7 @@ class Tag extends database_object implements library_item
             $uid = (int) ($user);
         }
 
-        if (!Core::is_library_item($type)) {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event('tag.class', $type . " is not a library item.", 3);
 
             return false;
@@ -447,7 +449,7 @@ class Tag extends database_object implements library_item
      */
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
-        if (!Core::is_library_item($type)) {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event('tag.class', 'Requested type is not a library item.', 3);
 
             return false;
@@ -472,7 +474,7 @@ class Tag extends database_object implements library_item
      */
     public static function get_top_tags($type, $object_id, $limit = 10)
     {
-        if (!Core::is_library_item($type)) {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();
         }
 
@@ -504,7 +506,7 @@ class Tag extends database_object implements library_item
      */
     public static function get_object_tags($type, $object_id = null)
     {
-        if (!Core::is_library_item($type)) {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
             return false;
         }
 
@@ -537,7 +539,7 @@ class Tag extends database_object implements library_item
      */
     public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
     {
-        if (!Core::is_library_item($type)) {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();
         }
 
@@ -577,7 +579,7 @@ class Tag extends database_object implements library_item
      */
     public static function get_tag_ids($type, $count = '', $offset = '')
     {
-        if (!Core::is_library_item($type)) {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
             return array();
         }
 
@@ -815,7 +817,7 @@ class Tag extends database_object implements library_item
      */
     public function remove_map($type, $object_id, $user = true)
     {
-        if (!Core::is_library_item($type)) {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
             return false;
         }
 
@@ -983,7 +985,7 @@ class Tag extends database_object implements library_item
             return true;
         }
 
-        if (Core::is_library_item($object_type)) {
+        if (InterfaceImplementationChecker::is_library_item($object_type)) {
             $libitem = new $object_type($object_id);
             $owner   = $libitem->get_user_owner();
 

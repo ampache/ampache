@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+
 $web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
@@ -57,7 +59,7 @@ $web_path = AmpConfig::get('web_path'); ?>
             $object = (array) $object;
         }
         $object_type = $object['object_type'];
-        if (Core::is_library_item($object_type)) {
+        if (InterfaceImplementationChecker::is_library_item($object_type)) {
             $libitem = new $object_type($object['object_id']);
             $libitem->format();
             $playlist_track = $object['track']; ?>
