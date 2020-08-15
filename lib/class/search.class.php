@@ -1626,11 +1626,8 @@ class Search extends playlist_object
                     $having[] = "SUM(`song`.`time`) $sql_match_operator '$input'";
                 break;
                 case 'rating':
-                    if ($this->type != "public") {
-                        $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
-                    } else {
-                        $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
-                    }
+                    // average ratings only
+                    $having[]       = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
                     $join['rating'] = true;
                 break;
                 case 'favorite':
@@ -1776,11 +1773,8 @@ class Search extends playlist_object
             }
         }
         if ($join['rating']) {
-            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND ";
-            if ($this->type != "public") {
-                $table['rating'] .= "`rating`.`user`='" . $userid . "' AND ";
-            }
-            $table['rating'] .= "`rating`.`object_id`=`album`.`id`";
+            // average ratings only
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='album' AND `rating`.`object_id`=`album`.`id`";
         }
         if ($join['count']) {
             $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
@@ -1865,12 +1859,9 @@ class Search extends playlist_object
                     }
                 break;
                 case 'rating':
-                    if ($this->type != "public") {
-                        $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
-                    } else {
-                        $group[]  = "`artist`.`id`";
-                        $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
-                    }
+                    // average ratings only
+                    $group[]        = "`artist`.`id`";
+                    $having[]       = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
                     $join['rating'] = true;
                 break;
                 case 'favorite':
@@ -1998,11 +1989,8 @@ class Search extends playlist_object
             }
         }
         if ($join['rating']) {
-            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND ";
-            if ($this->type != "public") {
-                $table['rating'] .= "`rating`.`user`='" . $userid . "' AND ";
-            }
-            $table['rating'] .= "`rating`.`object_id`=`artist`.`id`";
+            // average ratings only
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='artist' AND `rating`.`object_id`=`artist`.`id`";
         }
         if ($join['count']) {
             $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
@@ -2247,12 +2235,9 @@ class Search extends playlist_object
                     $where[] = "`song`.`bitrate` $sql_match_operator '$input'";
                 break;
                 case 'rating':
-                    if ($this->type != "public") {
-                        $where[] = "COALESCE(`rating`.`rating`,0) $sql_match_operator '$input'";
-                    } else {
-                        $group[]  = "`song`.`id`";
-                        $having[] = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
-                    }
+                    // average ratings only
+                    $group[]        = "`song`.`id`";
+                    $having[]       = "ROUND(AVG(IFNULL(`rating`.`rating`,0))) $sql_match_operator '$input'";
                     $join['rating'] = true;
                 break;
                 case 'favorite':
@@ -2455,11 +2440,8 @@ class Search extends playlist_object
             }
         }
         if ($join['rating']) {
-            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND ";
-            if ($this->type != "public") {
-                $table['rating'] .= "`rating`.`user`='" . $userid . "' AND ";
-            }
-            $table['rating'] .= "`rating`.`object_id`=`song`.`id`";
+            // average ratings only
+            $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND `rating`.`object_id`=`song`.`id`";
         }
         if ($join['count']) {
             $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .

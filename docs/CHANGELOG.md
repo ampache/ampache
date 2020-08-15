@@ -24,6 +24,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * get_datetime(): use IntlDateFormatter to format based on locale. [(https://www.php.net/manual/en/intldateformatter.format.php)]
 * stats.php: Show total 'Item Count'  on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
 * ampache.sql updated after about 4 years... no more updates on install!
+* Searching by "Rating (average)" now ignores private/public and always returns the average.
 
 ### Deprecated
 
