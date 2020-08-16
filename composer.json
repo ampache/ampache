@@ -74,7 +74,6 @@
         "wikimedia/composer-merge-plugin": "1.*",
         "xdan/datetimepicker": "2.*"
     },
-
     "repositories":
     [
         {
@@ -320,7 +319,6 @@
             }
         }
     ],
-
     "extra": {
         "merge-plugin": {
             "include": [
@@ -342,7 +340,6 @@
             "lib/vendor/{$vendor}/{$name}": ["type:library"]
         }
     },
-
     "autoload": {
         "psr-4": {
             "Lib\\": "lib/class",
