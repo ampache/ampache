@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2f44dbcfd55a5990dfb98c7c3ade7a1",
+    "content-hash": "362559e576214144ff19f5dd6510e096",
     "packages": [
         {
             "name": "aehlke/tag-it",
@@ -1138,7 +1138,7 @@
                     ]
                 }
             },
-            "time": "2018-07-02T21:23:22+00:00"
+            "time": "2020-08-15T03:05:13+00:00"
         },
         {
             "name": "jwilsson/spotify-web-api-php",
@@ -1365,7 +1365,7 @@
                     ]
                 }
             },
-            "time": "2017-06-27T10:48:51+00:00"
+            "time": "2020-08-15T03:05:13+00:00"
         },
         {
             "name": "kunalvarma05/dropbox-php-sdk",
@@ -1523,6 +1523,12 @@
                 "musicbrainz",
                 "php"
             ],
+            "funding": [
+                {
+                    "url": "https://github.com/mikealmond",
+                    "type": "github"
+                }
+            ],
             "time": "2020-02-14T19:39:17+00:00"
         },
         {
@@ -1646,21 +1652,27 @@
         },
         {
             "name": "oomphinc/composer-installers-extender",
-            "version": "v1.1.2",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oomphinc/composer-installers-extender.git",
-                "reference": "ca1c4b16b0905c81d1e77e608f36a2eff1a56f56"
+                "reference": "8d3fe38a1723e0e91076920c8bb946b1696e28ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oomphinc/composer-installers-extender/zipball/ca1c4b16b0905c81d1e77e608f36a2eff1a56f56",
-                "reference": "ca1c4b16b0905c81d1e77e608f36a2eff1a56f56",
+                "url": "https://api.github.com/repos/oomphinc/composer-installers-extender/zipball/8d3fe38a1723e0e91076920c8bb946b1696e28ca",
+                "reference": "8d3fe38a1723e0e91076920c8bb946b1696e28ca",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.0",
-                "composer/installers": "^1.0"
+                "composer-plugin-api": "^1.1 || ^2.0",
+                "composer/installers": "^1.0",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0",
+                "phpunit/phpunit": "^7.2",
+                "squizlabs/php_codesniffer": "^3.3"
             },
             "type": "composer-plugin",
             "extra": {
@@ -1680,11 +1692,16 @@
                     "name": "Stephen Beemsterboer",
                     "email": "stephen@oomphinc.com",
                     "homepage": "https://github.com/balbuf"
+                },
+                {
+                    "name": "Nathan Dentzau",
+                    "email": "nate@oomphinc.com",
+                    "homepage": "http://oomph.is/ndentzau"
                 }
             ],
             "description": "Extend the composer/installers plugin to accept any arbitrary package type.",
             "homepage": "http://www.oomphinc.com/",
-            "time": "2017-03-31T16:57:39+00:00"
+            "time": "2020-08-11T21:06:11+00:00"
         },
         {
             "name": "openid/php-openid",
@@ -4044,20 +4061,20 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "james-heinrich/getid3": 20,
-        "mikealmond/musicbrainz": 20,
         "jeromeetienne/jquery-qrcode": 20,
+        "krixon/xbmc-php-rpc": 20,
         "kumailht/responsive-elements": 20,
-        "krixon/xbmc-php-rpc": 20
+        "mikealmond/musicbrainz": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.1.0",
-        "ext-json": "*",
-        "ext-xml": "*",
-        "ext-pdo": "*",
         "ext-intl": "*",
-        "ext-openssl": "*"
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-xml": "*"
     },
     "platform-dev": [],
     "platform-overrides": {

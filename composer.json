@@ -8,7 +8,7 @@
     "config":
     {
         "vendor-dir": "lib/vendor",
-        "component-dir": "lib/components",
+        "component-dir": "src/public/lib/components",
         "platform": {
             "ext-curl": "1.0",
             "ext-gd": "1.0",
@@ -57,7 +57,7 @@
         "maennchen/zipstream-php": "0.4.*",
         "mikealmond/musicbrainz": "dev-master",
         "needim/noty": "2.4.*",
-        "oomphinc/composer-installers-extender": "^1.1",
+        "oomphinc/composer-installers-extender": "^2.0",
         "openid/php-openid": "2.*",
         "phpmailer/phpmailer": "6.1.*",
         "pklauzinski/jscroll": "2.*",
@@ -329,6 +329,15 @@
             "recurse": false,
             "replace": false,
             "merge-extra": false
+        },
+        "sort-packages": true,
+        "installer-types": ["component", "library"],
+        "installer-paths": {
+            "src/public/lib/components/noty/": ["needim/noty"],
+            "src/public/lib/components/jquery-file-upload/": ["blueimp/jquery-file-upload"],
+            "src/public/lib/components/happyworm-jplayer/": ["happyworm/jplayer"],
+            "src/public/lib/components/{$name}/": ["type:component"],
+            "lib/vendor/{$vendor}/{$name}": ["type:library"]
         }
     },
     "autoload": {

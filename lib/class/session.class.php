@@ -463,6 +463,10 @@ class Session
         return true;
     }
 
+    public static function gc() {
+
+    }
+
     /**
      * create_cookie
      *

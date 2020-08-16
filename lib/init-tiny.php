@@ -28,7 +28,7 @@ if (version_compare(phpversion(), '7.1.0', '<')) {
     throw new RuntimeException(T_("Ampache requires PHP version >= 7.1"));
 }
 
-error_reporting(E_ERROR); // Only show fatal errors in production
+//error_reporting(E_ERROR); // Only show fatal errors in production
 
 $load_time_begin = microtime(true);
 
@@ -50,6 +50,7 @@ require_once $prefix . '/lib/cron.lib.php';
 
 // Define some base level config options
 AmpConfig::set('prefix', $prefix);
+AmpConfig::set('prefix-public', $prefix.'/src/public');
 
 // Register autoloaders
 spl_autoload_register(array('Core', 'autoload'), true, true);
