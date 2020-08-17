@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,65 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-UI::show_header();
+use Ampache\Application\ShoutApplication;
 
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'add_shout':
-        // Must be at least a user to do this
-        if (!Access::check('interface', 25)) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        if (!Core::form_verify('add_shout', 'post')) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        // Remove unauthorized defined values from here
-        if (filter_has_var(INPUT_POST, 'user')) {
-            unset($_POST['user']);
-        }
-        if (filter_has_var(INPUT_POST, 'date')) {
-            unset($_POST['date']);
-        }
-
-        if (!Core::is_library_item(Core::get_post('object_type'))) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        $shout_id = Shoutbox::create($_POST);
-        header("Location:" . AmpConfig::get('web_path') . '/shout.php?action=show_add_shout&type=' . $_POST['object_type'] . '&id=' . (int) ($_POST['object_id']));
-
-        return false;
-    case 'show_add_shout':
-        // Get our object first
-        $object = Shoutbox::get_object($_REQUEST['type'], (int) Core::get_request('id'));
-
-        if (!$object || !$object->id) {
-            AmpError::add('general', T_('Invalid object selected'));
-            AmpError::display('general');
-            break;
-        }
-
-        $object->format();
-        if (get_class($object) == 'Song') {
-            $data = $_REQUEST['offset'];
-        }
-
-        // Now go ahead and display the page where we let them add a comment etc
-        require_once AmpConfig::get('prefix') . UI::find_template('show_add_shout.inc.php');
-        break;
-    default:
-        header("Location:" . AmpConfig::get('web_path'));
-        break;
-} // end switch on action
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new ShoutApplication())->run();

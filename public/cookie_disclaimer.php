@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,8 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-UI::show_header();
+use Ampache\Application\CookieDisclaimerApplication;
 
-require_once AmpConfig::get('prefix') . UI::find_template('cookie_disclaimer.inc.php');
-
-UI::show_footer();
+(new CookieDisclaimerApplication())->run();

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,49 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-UI::show_header();
+use Ampache\Application\VideoApplication;
 
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'delete':
-        if (AmpConfig::get('demo_mode')) {
-            break;
-        }
-
-        $video_id = (string) scrub_in(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
-        show_confirmation(T_('Are You Sure?'), T_("The Video will be deleted"),
-            AmpConfig::get('web_path') . "/video.php?action=confirm_delete&video_id=" . $video_id,
-            1,
-            'delete_video'
-        );
-        break;
-    case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) {
-            break;
-        }
-
-        $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
-        if (!Catalog::can_remove($video)) {
-            debug_event('video', 'Unauthorized to remove the video `.' . $video->id . '`.', 1);
-            UI::access_denied();
-
-            return false;
-        }
-
-        if ($video->remove()) {
-            show_confirmation(T_('No Problem'), T_('Video has been deleted'), AmpConfig::get('web_path'));
-        } else {
-            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Video."), AmpConfig::get('web_path'));
-        }
-        break;
-    case 'show_video':
-    default:
-        $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
-        $video->format();
-        require_once AmpConfig::get('prefix') . UI::find_template('show_video.inc.php');
-        break;
-}
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new VideoApplication())->run();

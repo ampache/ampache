@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,24 +23,10 @@
  *
  */
 
+use Ampache\Application\LoginApplication;
+
 define('NO_SESSION', '1');
+
 require_once __DIR__ . '/../lib/init.php';
-// Avoid form login if still connected
-if (AmpConfig::get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
-    $auth = false;
-    if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
-        $auth = true;
-    } else {
-        if (Session::auth_remember()) {
-            $auth = true;
-        }
-    }
-    if ($auth) {
-        header("Location: " . AmpConfig::get('web_path'));
 
-        return false;
-    }
-}
-require_once __DIR__ . '/../lib/login.php';
-
-require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');
+(new LoginApplication())->run();

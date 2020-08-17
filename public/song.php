@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,62 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-UI::show_header();
+use Ampache\Application\SongApplication;
 
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'delete':
-        if (AmpConfig::get('demo_mode')) {
-            break;
-        }
-
-        $song_id = (string) scrub_in($_REQUEST['song_id']);
-        show_confirmation(T_('Are You Sure?'), T_('The Song will be deleted'),
-            AmpConfig::get('web_path') . "/song.php?action=confirm_delete&song_id=" . $song_id,
-            1,
-            'delete_song'
-        );
-        break;
-    case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) {
-            break;
-        }
-
-        $song = new Song($_REQUEST['song_id']);
-        if (!Catalog::can_remove($song)) {
-            debug_event('song', 'Unauthorized to remove the song `.' . $song->id . '`.', 1);
-            UI::access_denied();
-
-            return false;
-        }
-
-        if ($song->remove()) {
-            show_confirmation(T_('No Problem'), T_('Song has been deleted'), AmpConfig::get('web_path'));
-        } else {
-            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Song."), AmpConfig::get('web_path'));
-        }
-        break;
-    case 'show_lyrics':
-        $song = new Song($_REQUEST['song_id']);
-        $song->format();
-        $song->fill_ext_info();
-        $lyrics = $song->get_lyrics();
-        require_once AmpConfig::get('prefix') . UI::find_template('show_lyrics.inc.php');
-        break;
-    case 'show_song':
-    default:
-        $song = new Song($_REQUEST['song_id']);
-        $song->format();
-        $song->fill_ext_info();
-        if (!$song->id) {
-            debug_event('song', 'Requested a song that does not exist', 2);
-            echo T_("You have requested a Song that does not exist.");
-        } else {
-            require_once AmpConfig::get('prefix') . UI::find_template('show_song.inc.php');
-        }
-        break;
-} // end data collection
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new SongApplication())->run();

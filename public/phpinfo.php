@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,10 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-if (!Access::check('interface', 100)) {
-    UI::access_denied();
+use Ampache\Application\PhpInfoApplication;
 
-    return false;
-}
-
-phpinfo();
+(new PhpInfoApplication())->run();

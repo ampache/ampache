@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,16 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-session_start();
+use Ampache\Application\MashupApplication;
 
-$object_type = Core::get_request('action');
-if (!Core::is_library_item($object_type)) {
-    return UI::access_denied();
-}
-
-UI::show_header();
-require_once AmpConfig::get('prefix') . UI::find_template('show_mashup.inc.php');
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new MashupApplication())->run();

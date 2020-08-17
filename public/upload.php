@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,43 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-if (!AmpConfig::get('allow_upload') || !Access::check('interface', 25)) {
-    UI::access_denied();
+use Ampache\Application\UpdateApplication;
 
-    return false;
-}
-
-$upload_max = return_bytes(ini_get('upload_max_filesize'));
-$post_max   = return_bytes(ini_get('post_max_size'));
-if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
-    $upload_max = $post_max;
-}
-// Check to handle POST requests exceeding max post size.
-if (Core::get_server('CONTENT_LENGTH') > 0 && $post_max > 0 && Core::get_server('CONTENT_LENGTH') > $post_max) {
-    Upload::rerror();
-
-    return false;
-}
-
-// Switch on the actions
-switch ($_REQUEST['actionp']) {
-    case 'upload':
-        if (AmpConfig::get('demo_mode')) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        Upload::process();
-
-        return false;
-
-    default:
-        UI::show_header();
-        require AmpConfig::get('prefix') . UI::find_template('show_add_upload.inc.php');
-        break;
-} // switch on the action
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new UpdateApplication())->run();

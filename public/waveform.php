@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,31 +23,8 @@
  *
  */
 
-/**
- * Album Art
- * This pulls album art out of the file using the getid3 library
- * and dumps it to the browser as an image mime type.
- *
- */
-
 require_once __DIR__ . '/../lib/init.php';
 
-if (!AmpConfig::get('waveform')) {
-    return false;
-}
+use Ampache\Application\WaveformApplication;
 
-// Prevent user from aborting script
-ignore_user_abort(true);
-set_time_limit(300);
-
-// Write/close session data to release session lock for this script.
-// This to allow other pages from the same session to be processed
-// Warning: Do not change any session variable after this call
-session_write_close();
-
-$id       = $_REQUEST['song_id'];
-$waveform = Waveform::get($id);
-if ($waveform) {
-    header('Content-type: image/png');
-    echo $waveform;
-}
+(new WaveformApplication())->run();

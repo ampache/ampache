@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,12 +23,8 @@
  *
  */
 
-// This is the logout page. It kills any cookies you have in your browser,
-// kills your session in the database and then redirects you to the login page
-// (or your SSO logout page, if configured).
+use Ampache\Application\LogoutApplication;
 
 require_once __DIR__ . '/../lib/init.php';
 
-// To end a legitimate session, just call logout.
-setcookie(AmpConfig::get('session_name') . '_remember', null, -1);
-Auth::logout('', false);
+(new LogoutApplication())->run();

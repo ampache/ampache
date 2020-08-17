@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,58 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-UI::show_header();
-define('TABLE_RENDERED', 1);
+use Ampache\Application\StatsApplication;
 
-// Temporary workaround to avoid sorting on custom base requests
-define('NO_BROWSE_SORTING', true);
-
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    // Show a Users "Profile" page
-    case 'show_user':
-        $client = new User((int) Core::get_request('user_id'));
-        require_once AmpConfig::get('prefix') . UI::find_template('show_user.inc.php');
-    break;
-    // Show stats
-    case 'newest':
-        require_once AmpConfig::get('prefix') . UI::find_template('show_newest.inc.php');
-        break;
-    case 'popular':
-        require_once AmpConfig::get('prefix') . UI::find_template('show_popular.inc.php');
-        break;
-    case 'highest':
-        require_once AmpConfig::get('prefix') . UI::find_template('show_highest.inc.php');
-        break;
-    case 'userflag':
-        require_once AmpConfig::get('prefix') . UI::find_template('show_userflag.inc.php');
-        break;
-    case 'recent':
-        $user_id = Core::get_request('user_id');
-        require_once AmpConfig::get('prefix') . UI::find_template('show_recent.inc.php');
-        break;
-    case 'wanted':
-        require_once AmpConfig::get('prefix') . UI::find_template('show_wanted.inc.php');
-        break;
-    case 'share':
-        require_once AmpConfig::get('prefix') . UI::find_template('show_shares.inc.php');
-        break;
-    case 'upload':
-        require_once AmpConfig::get('prefix') . UI::find_template('show_uploads.inc.php');
-        break;
-    case 'graph':
-        Graph::display_from_request();
-        break;
-    case 'show':
-    default:
-        if (Access::check('interface', 50)) {
-            require_once AmpConfig::get('prefix') . UI::find_template('show_stats.inc.php');
-        }
-        break;
-} // end switch on action
-
-show_table_render(false, true);
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new StatsApplication())->run();

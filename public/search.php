@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,49 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-UI::show_header();
+use Ampache\Application\SearchApplication;
 
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'search':
-        if (Core::get_request('rule_1') != 'missing_artist') {
-            $browse = new Browse();
-            require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
-            require_once AmpConfig::get('prefix') . UI::find_template('show_search_options.inc.php');
-            $results = Search::run($_REQUEST);
-            $browse->set_type(Core::get_request('type'));
-            $browse->show_objects($results);
-            $browse->store();
-        } else {
-            $wartists = Wanted::search_missing_artists($_REQUEST['rule_1_input']);
-            require_once AmpConfig::get('prefix') . UI::find_template('show_missing_artists.inc.php');
-            echo '<a href="http://musicbrainz.org/search?query=' . rawurlencode($_REQUEST['rule_1_input']) . '&type=artist&method=indexed" target="_blank">' . T_('View on MusicBrainz') . '</a><br />';
-        }
-        break;
-    case 'save_as_smartplaylist':
-        if (!Access::check('interface', 25)) {
-            UI::access_denied();
-
-            return false;
-        }
-        $playlist = new Search();
-        $playlist->parse_rules(Search::clean_request($_REQUEST));
-        $playlist->save();
-        show_confirmation(T_('No Problem'),
-                /* HINT: playlist name */
-                sprintf(T_('Your search has been saved as a Smart Playlist with the name %s'), $playlist->name), AmpConfig::get('web_path') . "/browse.php?action=smartplaylist");
-        break;
-    case 'descriptor':
-        // This is a little special we don't want header/footers so trash what we've got in the OB
-        ob_clean();
-        require_once AmpConfig::get('prefix') . UI::find_template('show_search_descriptor.inc.php');
-
-        return false;
-    default:
-        require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
-        break;
-}
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new SearchApplication())->run();

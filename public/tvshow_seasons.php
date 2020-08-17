@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,50 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-UI::show_header();
+use Ampache\Application\TvShowSeasonApplication;
 
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'delete':
-        if (AmpConfig::get('demo_mode')) {
-            break;
-        }
-
-        $tvshow_season_id = (string) scrub_in($_REQUEST['tvshow_season_id']);
-        show_confirmation(T_('Are You Sure?'), T_("The entire TV Season will be deleted"),
-            AmpConfig::get('web_path') . "/tvshow_seasons.php?action=confirm_delete&tvshow_season_id=" . $tvshow_season_id,
-            1,
-            'delete_tvshow_season'
-        );
-        break;
-    case 'confirm_delete':
-        if (AmpConfig::get('demo_mode')) {
-            break;
-        }
-
-        $tvshow_season = new TVShow_Season($_REQUEST['tvshow_season_id']);
-        if (!Catalog::can_remove($tvshow_season)) {
-            debug_event('tvshow_seasons', 'Unauthorized to remove the tvshow `.' . $tvshow_season->id . '`.', 1);
-            UI::access_denied();
-
-            return false;
-        }
-
-        if ($tvshow_season->remove()) {
-            show_confirmation(T_('No Problem'), T_('TV Season has been deleted'), AmpConfig::get('web_path'));
-        } else {
-            show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this TV Season."), AmpConfig::get('web_path'));
-        }
-        break;
-    case 'show':
-        $season = new TVShow_Season($_REQUEST['season']);
-        $season->format();
-        $object_ids  = $season->get_episodes();
-        $object_type = 'tvshow_episode';
-        require_once AmpConfig::get('prefix') . UI::find_template('show_tvshow_season.inc.php');
-        break;
-} // end switch
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new TvShowSeasonApplication())->run();

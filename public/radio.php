@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,58 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-if (!AmpConfig::get('live_stream')) {
-    UI::access_denied();
+use Ampache\Application\RadioApplication;
 
-    return false;
-}
-
-UI::show_header();
-
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'show_create':
-        if (!Access::check('interface', 75)) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        require_once AmpConfig::get('prefix') . UI::find_template('show_add_live_stream.inc.php');
-
-        break;
-    case 'create':
-        if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        if (!Core::form_verify('add_radio', 'post')) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        // Try to create the sucker
-        $results = Live_Stream::create($_POST);
-
-        if (!$results) {
-            require_once AmpConfig::get('prefix') . UI::find_template('show_add_live_stream.inc.php');
-        } else {
-            $body  = T_('Radio Station created');
-            $title = '';
-            show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=live_stream');
-        }
-        break;
-    case 'show':
-    default:
-        $radio = new Live_Stream($_REQUEST['radio']);
-        $radio->format();
-        require AmpConfig::get('prefix') . UI::find_template('show_live_stream.inc.php');
-        break;
-} // end data collection
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new RadioApplication())->run();

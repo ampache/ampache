@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -23,23 +26,6 @@
 define('NO_SESSION', '1');
 require_once __DIR__ . '/../lib/init.php';
 
-/* Check Perms */
-if (!AmpConfig::get('use_rss') || AmpConfig::get('demo_mode')) {
-    UI::access_denied();
+use Ampache\Application\RssApplication;
 
-    return false;
-}
-
-// Add in our base hearder defining the content type
-header("Content-Type: application/xml; charset=" . AmpConfig::get('site_charset'));
-
-$type      = Core::get_request('type');
-$rsstoken  = Core::get_request('rsstoken');
-$rss       = new Ampache_RSS($type, $rsstoken);
-$params    = null;
-if ($type === "podcast") {
-    $params                = array();
-    $params['object_type'] = Core::get_request('object_type');
-    $params['object_id']   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-}
-echo $rss->get_xml($params);
+(new RssApplication())->run();

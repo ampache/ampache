@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,25 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-UI::show_header();
+use Ampache\Application\RandomApplication;
 
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'get_advanced':
-        $object_ids = Random::advanced($_REQUEST['type'], $_POST);
-
-        // We need to add them to the active playlist
-        if (!empty($object_ids)) {
-            foreach ($object_ids as $object_id) {
-                Core::get_global('user')->playlist->add_object($object_id, 'song');
-            }
-        }
-    case 'advanced':
-    default:
-        require_once AmpConfig::get('prefix') . UI::find_template('show_random.inc.php');
-        break;
-} // end switch
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new RandomApplication())->run();

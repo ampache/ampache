@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -22,77 +25,6 @@
 
 require_once __DIR__ . '/../lib/init.php';
 
-if (!AmpConfig::get('channel')) {
-    UI::access_denied();
+use Ampache\Application\ChannelApplication;
 
-    return false;
-}
-
-UI::show_header();
-
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'show_create':
-        $type = Channel::format_type(Core::get_request('type'));
-        if (!empty($type) && !empty($_REQUEST['id'])) {
-            $object = new $type(Core::get_request('id'));
-            if ($object->id) {
-                $object->format();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_add_channel.inc.php');
-            }
-        }
-        UI::show_footer();
-
-        return false;
-    case 'create':
-        if (AmpConfig::get('demo_mode')) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        if (!Core::form_verify('add_channel', 'post')) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        $created = Channel::create($_REQUEST['name'], $_REQUEST['description'], $_REQUEST['url'], $_REQUEST['type'], $_REQUEST['id'], $_REQUEST['interface'], $_REQUEST['port'], $_REQUEST['admin_password'], isset($_REQUEST['private']) ? 1 : 0, $_REQUEST['max_listeners'], $_REQUEST['random'] ?: 0, $_REQUEST['loop'] ?: 0, $_REQUEST['stream_type'], $_REQUEST['bitrate']);
-
-        if (!$created) {
-            require_once AmpConfig::get('prefix') . UI::find_template('show_add_channel.inc.php');
-        } else {
-            show_confirmation(T_('No Problem'), T_('The Channel has been created'), AmpConfig::get('web_path') . '/browse.php?action=channel');
-        }
-        UI::show_footer();
-
-        return false;
-    case 'show_delete':
-        $object_id = Core::get_request('id');
-
-        $next_url = AmpConfig::get('web_path') . '/channel.php?action=delete&id=' . scrub_out($object_id);
-        show_confirmation(T_('Are You Sure?'), T_('This Channel will be deleted'), $next_url, 1, 'delete_channel');
-        UI::show_footer();
-
-        return false;
-    case 'delete':
-        if (AmpConfig::get('demo_mode')) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        $object_id = Core::get_request('id');
-        $channel   = new Channel((int) $object_id);
-        if ($channel->delete()) {
-            $next_url = AmpConfig::get('web_path') . '/browse.php?action=channel';
-            show_confirmation(T_('No Problem'), T_('The Channel has been deleted'), $next_url);
-        }
-        UI::show_footer();
-
-        return false;
-} // switch on the action
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+(new ChannelApplication())->run();

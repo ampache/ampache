@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,51 +23,8 @@
  *
  */
 
-$prefix = __DIR__;
-require_once $prefix . '/../../lib/init-tiny.php';
+require_once  __DIR__ . '/../lib/init-tiny.php';
 
-switch ($_REQUEST['action']) {
-    case 'config':
-        // Check to see if the config file is working now, if so fall
-        // through to the default, else show the appropriate template
-        $configfile = "$prefix/config/ampache.cfg.php";
+use Ampache\Application\TestApplication;
 
-        if (!count(parse_ini_file($configfile))) {
-            require_once $prefix . '/templates/show_test_config.inc.php';
-            break;
-        }
-    default:
-        // Load config from file
-        $results = array();
-        if (!file_exists($configfile)) {
-            $link = $path . '/install.php';
-            header("Location: " . $link);
-        } else {
-            // Make sure the config file is set up and parsable
-            $results = @parse_ini_file($configfile);
-
-            if (empty($results)) {
-                $link = $path . '/test.php?action=config';
-            }
-        }
-        /* Temp Fixes */
-        $results = Preference::fix_preferences($results);
-
-        AmpConfig::set_by_array($results, true);
-        unset($results);
-
-        // Try to load localization from cookie
-        $session_name = AmpConfig::get('session_name');
-        if (filter_has_var(INPUT_COOKIE, $session_name . '_lang')) {
-            AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
-        }
-        if (!class_exists('Gettext\Translations')) {
-            require_once __DIR__ . '/templates/test_error_page.inc.php';
-            throw new Exception('load_gettext()');
-        } else {
-            load_gettext();
-            // Load template
-            require_once __DIR__ . '/templates/show_test.inc.php';
-        }
-        break;
-} // end switch on action
+(new TestApplication())->run();
