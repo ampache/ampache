@@ -20,7 +20,7 @@
  *
  */
 
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 
 if (!Core::get_request('action')) {
     debug_event('stream', "Asked without action. Exiting...", 5);

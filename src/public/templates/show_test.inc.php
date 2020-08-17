@@ -59,7 +59,7 @@
                     <th><?php echo T_('Status'); ?></th>
                     <th><?php echo T_('Description'); ?></th>
                 </tr>
-                <?php require __DIR__.'/show_test_table.inc.php'; ?>
+                <?php require __DIR__ . '/show_test_table.inc.php'; ?>
             </table>
         </div>
     </body>

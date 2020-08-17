@@ -23,14 +23,14 @@
 if (!defined('NO_SESSION')) {
     if (isset($_REQUEST['ssid'])) {
         define('NO_SESSION', 1);
-        require_once __DIR__.'/../../lib/init.php';
+        require_once __DIR__ . '/../../lib/init.php';
         if (!Session::exists('stream', $_REQUEST['ssid'])) {
             UI::access_denied();
 
             return false;
         }
     } else {
-        require_once __DIR__.'/../../lib/init.php';
+        require_once __DIR__ . '/../../lib/init.php';
     }
 }
 

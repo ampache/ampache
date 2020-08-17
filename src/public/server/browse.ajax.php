@@ -23,7 +23,7 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-require_once __DIR__.'/../../../lib/init.php';
+require_once __DIR__ . '/../../../lib/init.php';
 
 if (!Core::is_session_started()) {
     session_start();

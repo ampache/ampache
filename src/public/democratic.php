@@ -20,7 +20,7 @@
  *
  */
 
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 
 /* Make sure they have access to this */
 if (!AmpConfig::get('allow_democratic_playback')) {

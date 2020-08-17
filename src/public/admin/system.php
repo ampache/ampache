@@ -20,7 +20,7 @@
  *
  */
 
-require_once __DIR__.'/../../../lib/init.php';
+require_once __DIR__ . '/../../../lib/init.php';
 
 if (!Access::check('interface', 100) || AmpConfig::get('demo_mode')) {
     UI::access_denied();

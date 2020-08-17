@@ -20,7 +20,7 @@
  *
  */
 
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 
 $iframed = true;
 require_once AmpConfig::get('prefix') . UI::find_template('show_web_player.inc.php');

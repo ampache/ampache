@@ -20,7 +20,7 @@
  *
  */
 
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 
 if (!AmpConfig::get('podcast')) {
     UI::access_denied();

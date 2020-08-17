@@ -22,7 +22,7 @@
 
 // This is playlist.php, it does playlist things.
 
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 // We special-case this so we can send a 302 if the delete succeeded
 if (Core::get_request('action') == 'delete_playlist') {
     // Check rights

@@ -27,7 +27,7 @@
  *
  */
 
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 
 if (!AmpConfig::get('waveform')) {
     return false;

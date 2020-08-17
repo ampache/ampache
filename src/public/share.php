@@ -25,7 +25,7 @@ $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 if (empty($action) || $action == 'stream' || $action == 'download') {
     define('NO_SESSION', '1');
 }
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 
 Preference::init();
 

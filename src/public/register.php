@@ -22,7 +22,7 @@
 
 define('NO_SESSION', '1');
 $_SESSION['login'] = true;
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 
 /* Check Perms */
 if (!AmpConfig::get('allow_public_registration') && !Mailer::is_mail_enabled()) {

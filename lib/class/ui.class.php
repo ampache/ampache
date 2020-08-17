@@ -56,6 +56,7 @@ class UI
             if ($extern === true) {
                 return '/templates/' . $template;
             }
+
             return '/src/public/templates/' . $template;
         }
     }

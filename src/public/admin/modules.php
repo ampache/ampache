@@ -20,7 +20,7 @@
  *
  */
 
-require_once __DIR__.'/../../../lib/init.php';
+require_once __DIR__ . '/../../../lib/init.php';
 
 if (!Core::get_global('user')->has_access(100)) {
     UI::access_denied();

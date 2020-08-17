@@ -1,6 +1,6 @@
 <?php
 define('NO_SESSION', '1');
-require_once __DIR__.'/../../../lib/init.php';
+require_once __DIR__ . '/../../../lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
     echo T_("Disabled");

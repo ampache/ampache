@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 
 if (!Access::check('interface', 25) || !AmpConfig::get('sociable')) {
     debug_event('pvmsg', 'Access Denied: sociable features are not enabled.', 3);

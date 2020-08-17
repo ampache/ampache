@@ -20,7 +20,7 @@
  *
  */
 
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 
 if (!AmpConfig::get('allow_upload') || !Access::check('interface', 25)) {
     UI::access_denied();

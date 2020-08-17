@@ -20,7 +20,7 @@
  *
  */
 
-require_once __DIR__.'/../../../lib/init.php';
+require_once __DIR__ . '/../../../lib/init.php';
 
 if (!Access::check('interface', 75)) {
     UI::access_denied();

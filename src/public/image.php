@@ -30,7 +30,7 @@
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
 define('NO_SESSION', '1');
-require_once __DIR__.'/../../lib/init.php';
+require_once __DIR__ . '/../../lib/init.php';
 
 if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
     // Check to see if they've got an interface session or a valid API session, if not GTFO

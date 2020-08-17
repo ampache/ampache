@@ -463,8 +463,8 @@ class Session
         return true;
     }
 
-    public static function gc() {
-
+    public static function gc()
+    {
     }
 
     /**

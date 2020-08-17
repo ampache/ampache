@@ -26,7 +26,7 @@
 
 // Set that this is an ajax include
 define('AJAX_INCLUDE', '1');
-require_once __DIR__.'/../../../lib/init.php';
+require_once __DIR__ . '/../../../lib/init.php';
 
 xoutput_headers();
 
@@ -37,63 +37,63 @@ if ($page) {
 
 switch ($page) {
     case 'stats':
-        require_once __DIR__.'/stats.ajax.php';
+        require_once __DIR__ . '/stats.ajax.php';
 
         return false;
     case 'browse':
-        require_once __DIR__.'/browse.ajax.php';
+        require_once __DIR__ . '/browse.ajax.php';
 
         return false;
     case 'random':
-        require_once __DIR__.'/random.ajax.php';
+        require_once __DIR__ . '/random.ajax.php';
 
         return false;
     case 'playlist':
-        require_once __DIR__.'/playlist.ajax.php';
+        require_once __DIR__ . '/playlist.ajax.php';
 
         return false;
     case 'localplay':
-        require_once __DIR__.'/localplay.ajax.php';
+        require_once __DIR__ . '/localplay.ajax.php';
 
         return false;
     case 'tag':
-        require_once __DIR__.'/tag.ajax.php';
+        require_once __DIR__ . '/tag.ajax.php';
 
         return false;
     case 'stream':
-        require_once __DIR__.'/stream.ajax.php';
+        require_once __DIR__ . '/stream.ajax.php';
 
         return false;
     case 'song':
-        require_once __DIR__.'/song.ajax.php';
+        require_once __DIR__ . '/song.ajax.php';
 
         return false;
     case 'democratic':
-        require_once __DIR__.'/democratic.ajax.php';
+        require_once __DIR__ . '/democratic.ajax.php';
 
         return false;
     case 'index':
-        require_once __DIR__.'/index.ajax.php';
+        require_once __DIR__ . '/index.ajax.php';
 
         return false;
     case 'catalog':
-        require_once __DIR__.'/catalog.ajax.php';
+        require_once __DIR__ . '/catalog.ajax.php';
 
         return false;
     case 'search':
-        require_once __DIR__.'/search.ajax.php';
+        require_once __DIR__ . '/search.ajax.php';
 
         return false;
     case 'player':
-        require_once __DIR__.'/player.ajax.php';
+        require_once __DIR__ . '/player.ajax.php';
 
         return false;
     case 'user':
-        require_once __DIR__.'/user.ajax.php';
+        require_once __DIR__ . '/user.ajax.php';
 
         return false;
     case 'podcast':
-        require_once __DIR__.'/podcast.ajax.php';
+        require_once __DIR__ . '/podcast.ajax.php';
 
         return false;
     default:
