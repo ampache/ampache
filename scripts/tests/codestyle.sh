@@ -3,9 +3,9 @@
 if [ -e "php-cs-fixer.phar" ]
 then
     PHPCSFIXER="php php-cs-fixer.phar"
-elif [ -e "php-cs-fixer" ]
+elif [ -e "bin/php-cs-fixer" ]
 then
-    PHPCSFIXER="php php-cs-fixer"
+    PHPCSFIXER="php bin/php-cs-fixer"
 else
     echo -e "\e[1;31mPlease install or download latest stable php-cs-fixer\e[00m";
     echo -e "\e[1;31mhttp://cs.sensiolabs.org/\e[00m";
