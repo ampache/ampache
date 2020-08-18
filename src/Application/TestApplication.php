@@ -42,7 +42,7 @@ final class TestApplication implements ApplicationInterface
                 $configfile = __DIR__ . '/../../config/ampache.cfg.php';
 
                 if (!count(parse_ini_file($configfile))) {
-                    require_once __DIR__ . '/../../templates/show_test_config.inc.php';
+                    require_once __DIR__ . '/../../public/templates/show_test_config.inc.php';
                     break;
                 }
             default:
@@ -71,12 +71,12 @@ final class TestApplication implements ApplicationInterface
                     AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
                 }
                 if (!class_exists('Gettext\Translations')) {
-                    require_once __DIR__ . '/../../templates/test_error_page.inc.php';
+                    require_once __DIR__ . '/../../public/templates/test_error_page.inc.php';
                     throw new Exception('load_gettext()');
                 } else {
                     load_gettext();
                     // Load template
-                    require_once __DIR__ . '/../../templates/show_test.inc.php';
+                    require_once __DIR__ . '/../../public/templates/show_test.inc.php';
                 }
                 break;
         } // end switch on action

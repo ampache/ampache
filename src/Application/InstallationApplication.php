@@ -119,7 +119,7 @@ final class InstallationApplication implements ApplicationInterface
         AmpConfig::set('lang', $htmllang, true);
         AmpConfig::set('site_charset', $charset ?: 'UTF-8', true);
         if (!class_exists('Gettext\Translations')) {
-            require_once __DIR__ . '/../../templates/test_error_page.inc.php';
+            require_once __DIR__ . '/../../public/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
         } else {
             load_gettext();
@@ -146,14 +146,14 @@ final class InstallationApplication implements ApplicationInterface
 
                     if (!strlen($new_user) || !strlen($new_pass)) {
                         AmpError::add('general', T_('The Ampache database username or password is missing'));
-                        require_once 'templates/show_install.inc.php';
+                        require_once __DIR__ . '/../../public/templates/show_install.inc.php';
                         break;
                     }
                 }
 
                 if (!$skip_admin) {
                     if (!install_insert_db($new_user, $new_pass, $_REQUEST['create_db'], $_REQUEST['overwrite_db'], $_REQUEST['create_tables'])) {
-                        require_once 'templates/show_install.inc.php';
+                        require_once __DIR__ . '/../../public/templates/show_install.inc.php';
                         break;
                     }
                 }
@@ -161,7 +161,7 @@ final class InstallationApplication implements ApplicationInterface
                 // Now that it's inserted save the lang preference
                 Preference::update('lang', -1, AmpConfig::get('lang'));
             case 'show_create_config':
-                require_once 'templates/show_install_config.inc.php';
+                require_once __DIR__ . '/../../public/templates/show_install_config.inc.php';
                 break;
             case 'create_config':
                 $all  = (filter_has_var(INPUT_POST, 'create_all'));
@@ -225,14 +225,14 @@ final class InstallationApplication implements ApplicationInterface
                 header("Location: " . $web_path . '/index.php');
                 break;
             case 'init':
-                require_once 'templates/show_install.inc.php';
+                require_once __DIR__ . '/../../public/templates/show_install.inc.php';
                 break;
             case 'check':
-                require_once 'templates/show_install_check.inc.php';
+                require_once __DIR__ . '/../../public/templates/show_install_check.inc.php';
                 break;
             default:
                 // Show the language options first
-                require_once 'templates/show_install_lang.inc.php';
+                require_once __DIR__ . '/../../public/templates/show_install_lang.inc.php';
                 break;
         } // end action switch
     }
