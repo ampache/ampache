@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
@@ -23,30 +23,22 @@ declare(strict_types=0);
  *
  */
 
-namespace Ampache\Application;
-
-use Ampache\Config\ConfigContainerInterface;
-use Auth;
+namespace Ampache\Config;
 
 /**
- * This is the logout page. It kills any cookies you have in your browser,
- * kills your session in the database and then redirects you to the login page
- * (or your SSO logout page, if configured).
+ * The ConfigContainer is a containment for all of ampaches configuration data
  */
-final class LogoutApplication implements ApplicationInterface
+interface ConfigContainerInterface
 {
-    private $configContainer;
+    /**
+     * Compatibility accessor for direct access to the config array
+     *
+     * @deprecated Use a single method for each config key
+     */
+    public function get(string $configKey);
 
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
-    }
-    public function run(): void
-    {
-        // To end a legitimate session, just call logout.
-        setcookie($this->configContainer->getSessionName() . '_remember', null, -1);
-
-        Auth::logout('', false);
-    }
+    /**
+     * Returns the name of the PHP session
+     */
+    public function getSessionName(): string;
 }

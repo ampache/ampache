@@ -27,4 +27,6 @@ use Ampache\Application\LogoutApplication;
 
 require_once __DIR__ . '/../lib/init.php';
 
-(new LogoutApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(LogoutApplication::class)->run();

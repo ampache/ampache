@@ -25,18 +25,26 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
-use AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
 use Session;
 use UI;
 
 final class LoginApplication implements ApplicationInterface
 {
+    private $configContainer;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->configContainer = $configContainer;
+    }
+
     public function run(): void
     {
         // Avoid form login if still connected
-        if (AmpConfig::get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
+        if ($this->configContainer->get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
             $auth = false;
-            if (Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
+            if (Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()])) {
                 $auth = true;
             } else {
                 if (Session::auth_remember()) {
@@ -44,13 +52,13 @@ final class LoginApplication implements ApplicationInterface
                 }
             }
             if ($auth) {
-                header("Location: " . AmpConfig::get('web_path'));
+                header("Location: " . $this->configContainer->get('web_path'));
 
                 return;
             }
         }
         require_once __DIR__ . '/../../lib/login.php';
 
-        require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');
+        require $this->configContainer->get('prefix') . UI::find_template('show_login_form.inc.php');
     }
 }

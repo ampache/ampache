@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
@@ -23,30 +23,23 @@ declare(strict_types=0);
  *
  */
 
-namespace Ampache\Application;
-
-use Ampache\Config\ConfigContainerInterface;
-use Auth;
-
 /**
- * This is the logout page. It kills any cookies you have in your browser,
- * kills your session in the database and then redirects you to the login page
- * (or your SSO logout page, if configured).
+ * This file creates and initializes the central DI-Container
  */
-final class LogoutApplication implements ApplicationInterface
-{
-    private $configContainer;
+namespace Ampache\Config;
 
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
-    }
-    public function run(): void
-    {
-        // To end a legitimate session, just call logout.
-        setcookie($this->configContainer->getSessionName() . '_remember', null, -1);
+use AmpConfig;
+use DI\ContainerBuilder;
+use function DI\factory;
 
-        Auth::logout('', false);
-    }
-}
+$builder = new ContainerBuilder();
+$builder->addDefinitions([
+    ConfigContainerInterface::class => factory(static function (): ConfigContainerInterface {
+        return new ConfigContainer(AmpConfig::get_all());
+    }),
+]);
+$builder->addDefinitions(
+    require_once __DIR__ . '/../Application/ServiceDefinition.php'
+);
+
+return $builder->build();

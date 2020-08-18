@@ -29,4 +29,6 @@ define('NO_SESSION', '1');
 
 require_once __DIR__ . '/../lib/init.php';
 
-(new LoginApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(LoginApplication::class)->run();
