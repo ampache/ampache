@@ -345,7 +345,7 @@ class UI
         }
 
         $path       = AmpConfig::get('theme_path') . '/images/icons/';
-        $filesearch = glob(AmpConfig::get('prefix') . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+        $filesearch = glob(AmpConfig::get('prefix-public') . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
         if (empty($filesearch)) {
             // if the theme is missing an icon. fall back to default images folder
             $filename = 'icon_' . $name . '.png';

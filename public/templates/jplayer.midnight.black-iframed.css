@@ -226,7 +226,7 @@ a.jp-shuffle,
 a.jp-shuffle:hover,
 a.jp-shuffle-off,
 a.jp-shuffle-off:hover {
-    background: url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.png") no-repeat;
+    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.png") no-repeat;
 }
 
 a.jp-play {
@@ -341,7 +341,7 @@ div.jp-video div.jp-play-bar {
 
 /* The seeking class is added/removed inside jPlayer */
 div.jp-seeking-bg {
-    background: url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.seeking.gif");
+    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.seeking.gif");
 }
 
 /* @end */
@@ -747,12 +747,12 @@ a.jp-video-play-icon {
     margin-top: -50px;
     left: 50%;
     top: 50%;
-    background: url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 0 no-repeat;
+    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 0 no-repeat;
     text-indent: -9999px;
 }
 
 div.jp-video-play:hover a.jp-video-play-icon {
-    background: url("../../../modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 -100px no-repeat;
+    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.video.play.png") 0 -100px no-repeat;
 }
 
 div.jp-jplayer audio,
