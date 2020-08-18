@@ -477,7 +477,7 @@ class User extends database_object
     /**
      * get_favorites
      * returns an array of your $type favorites
-     * @param $type
+     * @param string $type
      * @return array
      */
     public function get_favorites($type)
