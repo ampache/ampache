@@ -426,7 +426,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_channel_list
-     * @return array
+     * @return integer[]
      */
     public static function get_channel_list()
     {
@@ -435,7 +435,7 @@ class Channel extends database_object implements media, library_item
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
